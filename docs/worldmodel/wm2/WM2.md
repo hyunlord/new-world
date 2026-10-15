@@ -33,14 +33,14 @@ under `runs/`; intervals are world-level paired bootstrap 95 % intervals over th
   predicts the censoring day for every world: split-day MAE 40.1 days vs `ridge_day` 29.2, +10.9 [+3.7, +17.6],
   **W5 NONE**; M1-long and M1b-act make identical predictions, **W5b TIE** with a degenerate interval [0, 0]. Long
   memory does not let the model anticipate the split.
-- **Control (W6).** The action-blind M1b trained on 400 fresh `game_v16` worlds (one seed) ties the validation-selected `an5` at 168 h: 0.210 vs 0.207, +0.002 [-0.003, +0.007], **W6 TIE**; at 24 h it beats `an5_off` (0.133 vs 0.155, -0.021 [-0.023, -0.019], the rule would give WEAK; reported). WM-1.3's Y1 (three seeds, `an5` 0.207, −0.013 [−0.019, −0.008], WEAK) is therefore not replicated at 168 h by this one seed on fresh worlds; the analog baseline scored the same on fresh worlds (0.207 both times).
+- **Control (W6).** The action-blind M1b trained on 400 fresh `game_v16` worlds (one seed) ties the validation-selected `an5` at 168 h: 0.210 vs 0.207, +0.002 [−0.003, +0.007], **W6 TIE**; at 24 h it beats `an5_off` (0.133 vs 0.155, −0.021 [−0.023, −0.019]; not pre-registered — W6 is defined at 168 h). WM-1.3's Y1 (three seeds 0.193–0.195 vs `an5` 0.207, −0.013 [−0.019, −0.008], WEAK) is therefore not replicated at 168 h by this one seed on fresh worlds: the analog baseline scored the same (0.207 both times), the model did not (0.210 vs 0.194).
 - **Why the models fail on effects and splits (diagnostics, validation only, not pre-registered).** The models do
   not learn even the mechanical one-hour effect of an act: one hour after a gift of 240 the true store is +237, the
   models predict between +6 and −19; after a spoil of 240, −222 true against −13 to −45 predicted
   (`runs/diag/effect_lag.json`). Their rolled-out `fissions_total` never rises by more than 0.0006 (M1b-act) or 0.11
   (M1-long) above its start in 96 days, while 72 % of the eligible validation worlds split (a true rate of 4.4 × 10⁻⁴
   per hour; `runs/diag/fission_s0.json`). Cast rows are 0.03 % of the training rows and a split is a single +1 step
-  in 2,880 rows: a mean (L1-weighted) next-hour predictor treats both as noise. The data contain the effects (the
+  in 2,880 rows; a next-hour predictor trained with an L1 (median-seeking) term would treat both as noise — a hypothesis consistent with these diagnostics, not tested by an ablation. The data contain the effects (the
   arm-mean and analog effect baselines predict the 7-day effects well, section 4); the training recipe does not
   extract them. (Diagnostics: `effect_lag` uses the four s0 / s1 runs on 40 validation worlds, `fission_s0` the two
   s0 runs on 79.) The action input is wired correctly — training and evaluation feed the requested amount at the cast
@@ -78,8 +78,8 @@ configuration can reach WEAK at most.
 | `wm2_m1long_v19_s1` | max_steps | 11700 / 12000 | no | 0.38 | 1.7 | 4841 | 0.0782 |
 
 M1b-act s0 and s1 stopped on patience; s2 and both M1-long runs reached the 12,000-step cap with their best step in
-the last 10 % ("not converged"). M1-long costs 0.40 s/step against M1b-act's 1.56 s/step, so it got a quarter of the
-compute; its validation score was still falling (0.0774 / 0.0782 at the cap vs M1b-act's 0.059–0.061). The validation
+the last 10 % ("not converged"). M1-long costs 0.38–0.41 s/step against M1b-act's 1.56–1.58 s/step, so it got about a quarter of the
+compute per step (≈ 0.29 of M1b-act's wall-clock time); its validation score was still falling (0.0774 / 0.0782 at the cap vs M1b-act's 0.059–0.061). The validation
 pass was batched across episodes (`--val-batch 512`, DECISIONS H4.1); no start subsample was needed.
 
 ## 3. Factual forecasting and the floor (W1, W1b, W2)
@@ -96,8 +96,8 @@ Raw T2, every-hour starts, `v2_v19_fact` test (replicate 0 of `none`, 80 worlds)
 | persistence | 0.150 | 0.463 |
 | ridge | 0.189 | 0.302 |
 
-Each M1b-act seed − `an5_off`: 168 h −0.007 [−0.011, −0.003], −0.008 [−0.012, −0.003], −0.015 [−0.019, −0.010];
-24 h −0.010 [−0.012, −0.008], −0.011 [−0.013, −0.009], −0.015 [−0.017, −0.013]. The margin over the analog forecaster
+Each M1b-act seed − `an5_off`: 168 h −0.007 [−0.011, −0.003], −0.008 [−0.012, −0.003], −0.014 [−0.019, −0.010];
+24 h −0.010 [−0.012, −0.007], −0.011 [−0.013, −0.009], −0.015 [−0.017, −0.013]. The margin over the analog forecaster
 (5 % at 168 h, 10 % at 24 h) is smaller than WM-1.3's on `game_v16` (6 % and 16 %), on worlds that split.
 
 **Floor** (`runs/floor_v19/floor.json`; METRICS.md 3). The floor estimates the error of the predictor that knows the
@@ -178,7 +178,7 @@ Readings:
   and the simple effect baselines capture them: on the same 12 cells at 7 days (not pre-registered) `an5_arm` 0.485,
   `arm_mean` 0.497, `zero` 0.612, M1b-act 0.592 (seeds 0.650, 0.566, 0.559): the model ties `zero` (−0.020 [−0.052,
   +0.023]) and loses to `arm_mean` (+0.095 [+0.044, +0.151]). It gets the sign of the 7-day food effect right in 88–97 %
-  of the spoil and gift cases but predicts about a tenth of its size (−5 to −12 vs −90; +3 to +4 vs +40) and none of the
+  of the `sp240L` and `gf240E` cases (77–78 % for `sp120L`) but predicts about a tenth of its size (−5 to −12 vs −90; +3 to +4 vs +40) and none of the
   rot-wood deaths.
 - **Split shift.** The models never predict a split, so their predicted shift is 0 everywhere; the effect baselines are
   no better on test (`an5_arm` 12.49 days, `arm_mean` 12.30, `zero` 12.21) although `an5_arm` and `arm_mean` have the
@@ -197,12 +197,12 @@ From day 25, 06:00, the 80 test worlds have not split yet (eligible 80 / 80; 393
 |---|---:|---:|---:|
 | `median_day` | 37.0 | 0.075 | — |
 | `an5_day` | 28.8 | 0.225 | — |
-| `ridge_day` | 29.2 | 0.088 | — |
+| `ridge_day` | 29.2 | 0.087 | — |
 | M1b-act (each seed) | 40.1 | 0.450 | 1.00 |
 | M1-long (each seed) | 40.1 | 0.450 | 1.00 |
 
-The models' 45 % within ± 7 days is the censored worlds (predicting "no split" is exactly right for them); on the
-worlds that do split they are off by the full remaining time. **Theta** (read only after every prediction existed,
+The models' 45 % within ± 7 days is the 34 censored worlds (predicting "no split" is exactly right for them) and 2
+worlds that split after day 114; on the other worlds they are off by 121 minus the split day. **Theta** (read only after every prediction existed,
 `runs/split_explain/`): the hidden threshold of the home village (mean 1,127, std 1,155 over the 80 test worlds)
 correlates 0.49 with the true split day; adding it to a ridge on the 24-row window summary raises the leave-one-out R²
 of every predictor's signed error by about 0.33 (`ridge_day` −0.07 → 0.27, `an5_day` −0.07 → 0.28, `median_day` and
@@ -224,24 +224,26 @@ optimistic): the hidden threshold carries much of what the observable predictors
    after rotted wood) and heavy-tailed month-scale effects through village splits (a spoil brings the split forward by
    20 days on average).
 2. *Factual forecasting is not saturated on this world*: the best calendar baseline is at least 0.059 (168 h) and
-   0.032 (24 h) above the conditional-mean floor (intervals in section 3), so there is room for better forecasters.
+   0.032 (24 h) above the conditional-mean floor (intervals in section 3), so there is room for forecasters that know more of the state; what a forecaster that sees
+   only the observable history can gain is not established (the floor is a full-state floor).
 3. *On every-hour starts, a learned autoregressive world model is a slightly better factual forecaster than the
    strongest simple baseline* — 5 % (168 h) and 10 % (24 h) below the validation-selected analog forecaster with
-   intervals below 0 on 80 fresh test worlds, every seed (W1, W1b WEAK) — the same direction as WM-1.3's `game_v16`
-   result, with a smaller margin on worlds that split. Caveat: at the three 06:00 floor starts the same model is worse
-   than `an5_off` (seed mean − `an5_off`, not pre-registered: 168 h +0.023 [+0.016, +0.031], 24 h +0.007 [+0.004,
-   +0.009]), so the advantage depends on the start set.
+   intervals below 0 on 80 fresh test worlds, every seed (W1, W1b WEAK). Caveats: at the three 06:00 floor starts the
+   same model is worse than `an5_off` (seed mean − `an5_off`, not pre-registered: 168 h +0.023 [+0.015, +0.031], 24 h
+   +0.007 [+0.004, +0.009]), so the advantage depends on the start set; and on fresh `game_v16` worlds the one control
+   seed ties `an5` at 168 h (W6 TIE, 0.210 vs 0.207), so WM-1.3's `game_v16` advantage did not replicate.
 4. *A negative result with a mechanism*: trained on 3,780 factual and intervention trajectories with the action as an
    input, the same model does **not** predict intervention effects better than predicting none (W3 NONE, interval
-   [+0.006, +0.027]), loses at 7 days to the arm-mean effect (not pre-registered), predicts no splits at all (W4 TIE
-   with the zero predictor, W5 NONE), and a GRU that reads the whole history does not change this (W3-long NONE, W5b
-   TIE). The diagnostics show why: the models miss even the one-hour mechanical effect of an act, and their mean
-   rollouts never accumulate a split.
+   [+0.006, +0.027]), loses at 7 days to the arm-mean effect (not pre-registered), predicts no splits at all (W4 TIE vs `an5_arm`, its predictions identical to the zero predictor's; W5 NONE), and a GRU that reads the whole history does not change this (W3-long NONE, W5b
+   TIE). The diagnostics show what fails — the models miss even the one-hour mechanical effect of an act, and their
+   rollouts never accumulate a split; the cause (rare cast rows and splits under a median-seeking loss) is a hypothesis
+   consistent with them, not tested.
 
 **Not supported.**
 
 - That a learned world model of this kind predicts what the god's acts will do (W3, W4) — neither at 30 days nor, on
   a side analysis, at 7 days against the arm-mean baseline.
+- That WM-1.3's `game_v16` 168-hour advantage replicates on fresh worlds (W6 TIE, one seed).
 - That long memory anticipates a village's split (W5, W5b): no model predicts any split; the comparison is
   degenerate, not informative about memory.
 - That forecasting on `game_v19` is near its irreducible error (the headroom is large); and anything about the

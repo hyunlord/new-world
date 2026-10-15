@@ -215,7 +215,6 @@
     "sp240L|shift",
     "gf240E|shift"
    ],
-   "censored_pred": {},
    "ci_diff": {
     "B": 2000,
     "hi": 1.9723967883795273,
@@ -266,7 +265,6 @@
     "sp240L|shift",
     "gf240E|shift"
    ],
-   "censored_pred": {},
    "ci_diff": {
     "B": 2000,
     "hi": 1.9723967883795273,
@@ -566,7 +564,6 @@
      "sp240L|shift",
      "gf240E|shift"
     ],
-    "censored_pred": {},
     "ci_diff": {
      "B": 2000,
      "hi": 1.9723967883795273,
@@ -617,7 +614,6 @@
      "sp240L|shift",
      "gf240E|shift"
     ],
-    "censored_pred": {},
     "ci_diff": {
      "B": 2000,
      "hi": 1.9723967883795273,

@@ -29,7 +29,7 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 02:14:09 | 06:37:11 | `wm2_m1bact_v19_s0`: stop `patience` at step 10,350, best step 8,550 (val T2 24 h 0.0608) → converged (best < 0.9 × last), 15,729 s (training ≈ 1.58 s/step at k = 168 including validation; ≈ 500 s end-of-run validation report); rounding True |
 | 4.2 | 06:37:11 | 06:55:48 | its finals from `b57ef7bb` (beside the next training): `_fact` (factual T2 on `v2_v19_fact`) 06:46:27, `_effects`, `_split` 06:55:48, exit 0 |
 | 4.1 | 06:37:11 | | `wm2_m1long_v19_s0` started (`--burn-in full`) |
-| 4.1 | 06:37:11 | 08:03:11 | `wm2_m1long_v19_s0`: stop `max_steps` (12,000), best step 10,950 (val 0.0774) → not converged (best >= 0.9 × last), 5,112 s (≈ 0.40 s/step) |
+| 4.1 | 06:37:11 | 08:03:11 | `wm2_m1long_v19_s0`: stop `max_steps` (12,000), best step 10,950 (val 0.0774) → not converged (best >= 0.9 × last), 5,112 s (≈ 0.41 s/step) |
 | 4.2 | 08:03:11 | 08:07:58 | its finals from `b57ef7bb`: `_fact` 08:04:46, `_effects` 08:07:52, `_split` 08:07:58, exit 0 |
 | 4.1 | 08:03:11 | | `wm2_m1bact_v19_s1` started |
 | 4.1 | 08:03:11 | 13:03:14 | `wm2_m1bact_v19_s1`: stop `patience` at step 11,700, best step 9,900 (val 0.0603) → converged, 17,966 s; one transient validation spike (0.206 at step 6,600) |
@@ -41,7 +41,7 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 14:24:15 | 19:29:17 | `wm2_m1bact_v19_s2`: stop `max_steps` (12,000), best step 10,950 (val 0.0589) → not converged, 18,288 s |
 | 4.2 | 19:29:17 | 19:52:06 | its finals from `b57ef7bb`: `_fact` 19:41:32, `_effects` 19:51:46, `_split` 19:52:06, exit 0 |
 | 4.1 | 19:29:17 | | `wm2_m1b_v16_s0` (control, action-blind, `v2_v16`) started (`--max-seconds 21600`) |
-| 5 (W2) | 19:31 | 19:53 | `floor.py --scene game_v19` from `b57ef7bb` with the five `game_v19` runs (`floor_v19`, 1,292 s, exit 0): floor 24 h 0.0084, 168 h 0.0203; headroom (`an5_off` − floor) +0.032 [+0.029, +0.035] and +0.059 [+0.051, +0.067] |
+| 5 (W2) | 19:29:45 | 19:51:18 | `floor.py --scene game_v19` from `b57ef7bb` with the five `game_v19` runs (`floor_v19`, 1,292 s, exit 0): floor 24 h 0.0084, 168 h 0.0203; headroom (`an5_off` − floor) +0.032 [+0.029, +0.035] and +0.059 [+0.051, +0.067] |
 | 5 (7.7) | 19:53:05 | 19:53:30 | `split_task.py explain` from `b57ef7bb`, after every test split prediction existed (latest `split.json` 19:52:05): θ (home settlement's `fission_threshold` at row 574) read for the 80 test worlds |
 | 4.1 | 19:29:17 | 23:50:20 | `wm2_m1b_v16_s0`: stop `patience` at step 10,200, best step 8,400 (val 0.0769) → converged, 15,637 s. Queue done: all six runs of 9.1 trained, none dropped |
 | 4.2 | 23:50:20 | 23:56:08 | its `final` on `v2_v16` from `b57ef7bb`, exit 0 |

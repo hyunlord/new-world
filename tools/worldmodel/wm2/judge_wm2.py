@@ -135,7 +135,6 @@ def effects_block(runs: Path, fact_seeds: dict[str, list[str]]) -> dict:
             else:
                 res["others"] = {n: ef.cell_stat(errs[n], cells, worlds) for n in ("zero", "arm_mean", "an5_arm")}
                 res["right_direction"] = {r: {a: out["tables"][r]["cells"][f"{a}|shift"]["right_direction"] for a in v2.W4_ARMS} for r in have}
-                res["censored_pred"] = {}
             out["W"][f"{w}{'' if label == 'm1bact' else '-' + label}"] = res
     out["drift"] = {r: load(runs, f"{r}_effects", "effects.json")["drift"] for label, names in fact_seeds.items()
                     for r in names if load(runs, f"{r}_effects", "effects.json") is not None}
