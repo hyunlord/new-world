@@ -1078,6 +1078,8 @@ Run by Claude Code (Opus 5.5) unattended in `/Users/rexxa/work/new-world-pass4`,
   - E8 (tuning build): tuning ran on `997ed3ab` (Part 2 at C4); `git diff 997ed3ab 57c47981` touches only the routine/decision files, whose identity is proven on v19–v22; the tuning decision does not enter the held-out verdict.
   - B4 (7.2f's "reuse in the Idle cascade"): deviation named — instead of passing chosen tiles to the Idle cascade, the exit test asks only existence (`any` over the choosers' own filters) and memoises it per input version; on an exit tick the Idle cascade still computes the actual choice once, as in Pass 17. Same values; the exit test no longer runs the choosers' minimisation at all.
 
+- G5: final-build identity on the Part 3 build `57c47981` (`bin_p3f`; every later commit changes only tests and documents) 03:41–04:31 KST — I1–I6 zero non-timing differences from the base, 20 I2 hashes equal, determinism PASS ×5 ([validation](probe/p18-4_final/validation.txt)); pins 68/68 in release on the same tree; review A1 closed.
+
 ### RUNLOG
 
 | Part | start (KST) | end (KST) | notes |
