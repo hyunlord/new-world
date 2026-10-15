@@ -1,0 +1,335 @@
+{
+	"complete": true,
+	"elapsed_seconds": 200.007,
+	"failures": [],
+	"options": {
+		"mode": "live"
+	},
+	"rows": [
+		{
+			"activity_snapshot": {
+				"ids": [
+					4294967297,
+					4294967301,
+					4294967310,
+					4294967312,
+					4294967313,
+					4294967314,
+					8589934605
+				],
+				"kinds": "[3, 6, 0, 6, 3, 3, 5]",
+				"place_x": [
+					22,
+					22,
+					21,
+					24,
+					24,
+					20,
+					21
+				],
+				"place_y": [
+					18,
+					19,
+					19,
+					18,
+					20,
+					20,
+					17
+				],
+				"until_tick": [
+					41968,
+					41905,
+					-1,
+					41983,
+					-1,
+					41947,
+					-1
+				]
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					75
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1]",
+				"xs": [
+					22,
+					20,
+					24,
+					22,
+					24,
+					21
+				],
+				"ys": [
+					20,
+					19,
+					19,
+					22,
+					22,
+					18
+				]
+			},
+			"clock": {
+				"day_index": 29,
+				"day_of_season": 2,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 41880,
+				"ticks_per_day": 1440,
+				"time_of_day": 10.0,
+				"winter_severity": -1
+			},
+			"five_families": [
+				{
+					"agent_id": 34,
+					"detail": {
+						"agent_id": 34,
+						"found": true,
+						"hunger": 25.1401615142822,
+						"sleep": 7.20000000000002,
+						"state_tag": 4,
+						"target_kind": 8,
+						"thirst": 40.2239999999997,
+						"x": 21,
+						"y": 18
+					},
+					"entity_bits": 8589934605,
+					"family": {
+						"children": [],
+						"father": 30,
+						"female": true,
+						"found": true,
+						"mother": 31,
+						"partner": -1
+					},
+					"temperament": {
+						"found": true,
+						"ha": 400,
+						"ns": 587,
+						"p": 373,
+						"rd": 594
+					}
+				},
+				{
+					"agent_id": 35,
+					"detail": {
+						"agent_id": 35,
+						"found": true,
+						"hunger": 3.53999710083008,
+						"sleep": 3.53999999999999,
+						"state_tag": 0,
+						"target_kind": 0,
+						"thirst": 5.664,
+						"x": 23,
+						"y": 18
+					},
+					"entity_bits": 8589934599,
+					"family": {
+						"children": [],
+						"father": 25,
+						"female": true,
+						"found": true,
+						"mother": 15,
+						"partner": -1
+					},
+					"temperament": {
+						"found": true,
+						"ha": 480,
+						"ns": 717,
+						"p": 454,
+						"rd": 509
+					}
+				},
+				{
+					"agent_id": 26,
+					"detail": {
+						"agent_id": 26,
+						"found": true,
+						"hunger": 6.20108556747437,
+						"sleep": 11.880000000001,
+						"state_tag": 0,
+						"target_kind": 0,
+						"thirst": 38.751999999946,
+						"x": 19,
+						"y": 26
+					},
+					"entity_bits": 4294967323,
+					"family": {
+						"children": [],
+						"father": 1,
+						"female": true,
+						"found": true,
+						"mother": 0,
+						"partner": -1
+					},
+					"temperament": {
+						"found": true,
+						"ha": 499,
+						"ns": 554,
+						"p": 535,
+						"rd": 780
+					}
+				},
+				{
+					"agent_id": 28,
+					"detail": {
+						"agent_id": 28,
+						"found": true,
+						"hunger": 17.9027481079102,
+						"sleep": 7.20000000000002,
+						"state_tag": 0,
+						"target_kind": 0,
+						"thirst": 33.4719999999477,
+						"x": 22,
+						"y": 26
+					},
+					"entity_bits": 4294967325,
+					"family": {
+						"children": [],
+						"father": 1,
+						"female": false,
+						"found": true,
+						"mother": 0,
+						"partner": -1
+					},
+					"temperament": {
+						"found": true,
+						"ha": 420,
+						"ns": 319,
+						"p": 624,
+						"rd": 556
+					}
+				},
+				{
+					"agent_id": 29,
+					"detail": {
+						"agent_id": 29,
+						"found": true,
+						"hunger": 24.5160636901855,
+						"sleep": 6.69000000000001,
+						"state_tag": 0,
+						"target_kind": 0,
+						"thirst": 38.031999999986,
+						"x": 39,
+						"y": 7
+					},
+					"entity_bits": 8589934611,
+					"family": {
+						"children": [],
+						"father": 0,
+						"female": true,
+						"found": true,
+						"mother": 1,
+						"partner": -1
+					},
+					"temperament": {
+						"found": true,
+						"ha": 743,
+						"ns": 360,
+						"p": 525,
+						"rd": 483
+					}
+				}
+			],
+			"label": "day30_1000",
+			"lit_fire_count": 0,
+			"lit_night": false,
+			"population": 29,
+			"settlement_count": 1,
+			"settlements": {
+				"centroid_xs": [
+					25
+				],
+				"centroid_ys": [
+					21
+				],
+				"fire_lit": "[0]",
+				"food_stocks": [
+					138
+				],
+				"formation_xs": [
+					22
+				],
+				"formation_ys": [
+					20
+				],
+				"ids": [
+					1
+				],
+				"member_counts": [
+					29
+				],
+				"settlement_ids": [
+					1
+				],
+				"wood_stocks": [
+					18
+				],
+				"wood_targets": [
+					39
+				]
+			},
+			"state_tag4_agents": [
+				{
+					"agent_id": 34,
+					"entity_bits": 8589934605,
+					"kind": 5
+				},
+				{
+					"agent_id": 17,
+					"entity_bits": 4294967313,
+					"kind": 3
+				},
+				{
+					"agent_id": 1,
+					"entity_bits": 4294967297,
+					"kind": 3
+				},
+				{
+					"agent_id": 5,
+					"entity_bits": 4294967301,
+					"kind": 6
+				},
+				{
+					"agent_id": 18,
+					"entity_bits": 4294967314,
+					"kind": 3
+				},
+				{
+					"agent_id": 16,
+					"entity_bits": 4294967312,
+					"kind": 6
+				},
+				{
+					"agent_id": 14,
+					"entity_bits": 4294967310,
+					"kind": 0
+				}
+			],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 3,
+				"Play": 1,
+				"Repair": 0,
+				"SitByFire": 2,
+				"TendFire": 1
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261010,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		}
+	],
+	"schema_version": 1,
+	"source": "WorldSimNode reset + deterministic advance_ticks; no interventions"
+}

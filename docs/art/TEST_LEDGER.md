@@ -580,3 +580,9 @@ Each row is one changed assertion. Hearth arguments are hoisted once per refresh
 | `harness_d_phase_a_runtime_warnings.rs` / A5 signature | First `_ids: PackedInt64Array` unused input | Exactly one active `events: Array` input; unique-function assertion retained | Batched reader removed unused IDs entirely; no unused-parameter suppression required. Original failure preserved in `production9/gates/p1-full/cargo_test.log`; rerun pending. |
 | `harness_d_phase_a_runtime_warnings.rs` / A6 signature | First unused `_ids` and `_agent_ids` inputs | Exactly one active `events: Array` input; unique-function assertion retained | Same unused-parameter intent; obsolete two-input parser helper removed. Original failure preserved in `production9/gates/p1-full/cargo_test.log`; rerun pending. |
 | `harness_d_phase_a_runtime_warnings.rs` / A7 active arguments | Reject `_xs`, `_ys`, `_n` on two ingestion functions | Also reject `_events` and `_tick`; include new batched collector in same assertion | Preserves and extends active-parameter anti-suppression guard to migrated signatures. Rerun pending. |
+
+## Art Pass 10
+
+| Test / pin | Before | After | Meaning and evidence |
+|---|---|---|---|
+| `harness_art_p9_sim_reads.rs` / safe diagnostic dispatch paths | Exact original and P9 framing-script paths | Also exact P10 framing-script copy | Keeps identical literal-method allowlist and validation of every `_draw_counter` caller; no protected getter exemption. Initial failure retained in `production10/gates/p0/cargo_test.log`; rerun pending. |
