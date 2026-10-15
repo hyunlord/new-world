@@ -2839,3 +2839,136 @@ Placebo (`game_v20_inert`, round 1, valid for both rounds): every |ρ| ≤ 0.074
 | T6 | (a) inert +1.9 %; (a′) v20 0.3145 ms (+2.7 %); (a″) quick 0.3038 → 0.3044 ms; (b) decision stress slope 1.094 (ref 1.06) | ≤ +15 %; ≤ 4.0 ms; < 1.7 | PASS |
 
 Trace bookkeeping (all three scenes): 0 born-event misses, 0 component mismatches, 0 cancelled fissions. On the evaluation seeds `game_v20_inert` = `game_v19` too (154,491 shared values, only `scene` differs).
+
+## Pass 17 — daily routine v1 (`game_v21`), Stage A pre-registration
+
+This text fixes the Stage A estimands, thresholds and evidence requirements from `PASS17_GOAL.md` sections 6.6–6.8 before either evaluation arm runs. Part 2 evidence is complete and published as `09eb5c2671d86334683b2273115635c34580dcea`. No Stage A evaluation-seed probe has run. Commit and publish this registration before launching either evaluation arm; retain the registration commit and first launch time in the separate evaluation receipt. Corrected-build identity evidence is **PASS** and performance is a valid measured **FAIL**; held-out R1–R3 outcomes remain **PENDING**. Tuning outcomes are separate evidence and do not fill evaluation cells.
+
+### Parameter configuration, producer correction and tuning boundary
+
+The original Stage A parameter freeze was recorded at `9a0bd85470f4ddbe26d51b8c5062107bf5c1f371`, using retained release binaries built from `8de4073adbd152ecdf91ab28a1a348085e87a20f`; the original tuning run recorded revision `753b51942c20489538faac59c15c5ac45ab48075`, with unchanged simulation Rust. That source freeze is **superseded for final observation evidence**: routine events created during a decision tick could be lost when the person died later in the same tick, before the post-tick trace observed them. The read-only pre-death snapshot repair is implemented, built and published as corrected producer **`50a73474e06d3a9abbb535729e9c7e1e134954b7`**, with **no simulation-parameter changes**. Corrected smoke and the unchanged-parameter tuning rerun are complete; corrected final identity passed all six checks, and the completed performance protocol yields a valid R5 FAIL with no missing evidence or execution error. `game_v21` continues to inherit `game_v20` and enable `WorldRules::V21_ROUTINE`; `game_v20` is the paired control.
+
+| Parameter | Frozen value |
+|---|---|
+| Day start / exclusive end | 420 / 1080 display-clock minutes; individual start adds lineage key modulo 60 |
+| Base duration / persistence span / minimum | 90 / 60 / 20 minutes, counted from arrival |
+| Walk timeout | 150 minutes |
+| Rest window | 20–60 minutes, inclusive |
+| Adult base weights, TendFire / Craft / Repair / HearthCircle / Explore | 180 / 180 / 140 / 200 / 120 |
+| Elder base weights, HearthCircle / SitByFire | 500 / 500 |
+| Child kind | Play |
+| Temperament scaling, with `d = axis − 500` | TendFire: `(1000+d_HA)/1000`; Craft and Repair: `(1000+d_P)/1000`; HearthCircle, including elders: `(1000+d_RD)/1000`; Explore: `max(0,1000+2*d_NS)/1000` |
+
+The original tuning round 1 used seeds **17100–17115**, 16 paired worlds per scene, **60 days**, traced and twin-checked. Its recorded R1, all R2 subchecks and all three R3 checks passed under the original observer. Preserve that report as historical evidence: [original round 1 JSON](probe/p17-a_tuning/r1/eval.json) and [Markdown](probe/p17-a_tuning/r1/eval.md), JSON SHA256 `3cc8885778171d4d6860e74185db673d1f237c37f77c7b59601caee00b98010f`. Its overall status was PENDING because R4/R5 were separate evidence requirements. Those original measurements are not substituted for the corrected observer's results.
+
+The corrected observer reran the **same unchanged round-1 parameter configuration and tuning cohort** on 2026-10-15: v21 from 07:55:37.916149 to 07:58:49.730344 UTC, then v20 from 07:58:50.003730 to 08:00:13.181094 UTC, both exit 0. Its [corrected JSON](probe/p17-a_tuning/r1-observerfix/eval.json) has SHA256 `78fc5514cb285350352ba5a372e9e14f1dfbc3461cec606030fbb3bb60a2ec46`; [corrected Markdown](probe/p17-a_tuning/r1-observerfix/eval.md) and [run log](probe/p17-a_tuning/r1-observerfix/runlog.txt) are retained. R1, all R2 subchecks and R3-P/NS/RD again **PASS**, with the same reported estimates as the original round; the overall result remains **PENDING** for R4/R5. Strict original-versus-corrected summary comparisons find zero non-timing differences for [v21](verification/p17-a_tuning_r1_observerfix/game_v21_old_r1_identity.txt) and [v20](verification/p17-a_tuning_r1_observerfix/game_v20_old_r1_identity.txt). **No second parameter-tuning round was run or is planned**; this observer-correction rerun is not a parameter adjustment. Evaluation seeds do not participate in tuning, observer regression tests or this correction, and none has run.
+
+### Evaluation population, sampling and uncertainty
+
+Run `game_v21` and `game_v20` on the same **32 seeds, 17000–17031 inclusive** (`--seeds 17000..17032`), each for **120 simulation days**, with `--agent-trace` and deterministic twins. Pair worlds by seed. Evaluate the complete cohort once after the pre-registration commit; there is no subset, seed replacement or post-evaluation parameter selection. Tests use seeds below 1000.
+
+The trace samples each display-clock hour after the corresponding system tick: **24 × 120 = 2,880 hourly records per world**. R1 uses the ten samples **08:00, 09:00, …, 17:00 inclusive**, or 1,200 hourly records per world. Store measures use exactly one **12:00** sample per simulation day, 120 per world; display-day labels may span an additional calendar day because the simulation starts with a clock offset. The evaluator requires continuous hourly coverage, complete requested duration, complete seed sets, exact ever-adult inventories, declared trace kind order, and zero routine-observation misses.
+
+“Non-elder adult” means neither `Child` nor `Elder` at the observed tick. Adult days are the person's cumulative non-elder-adult ticks divided by **1,440**, including qualifying exposure from people who subsequently die or become elders. R1 and R2 use all applicable observations/exposure; the ten-day eligibility filter applies only to R3. R3 includes every person with **at least 14,400 non-elder-adult ticks**, without requiring consecutive days, current survival or activity participation.
+
+Every R1, R2 and R3 statistical estimate receives a **95% percentile interval** from **B = 2,000 world-level bootstrap draws**, starting a fresh **`numpy.random.default_rng(0)` for each statistic**. Each draw samples 32 world indices with replacement. R2 keeps candidate/control seed pairs together; R3 takes every eligible person from each sampled world, retaining a world's multiplicity when it is drawn again. Individuals are never resampled independently. Percentiles are the NumPy 2.5th and 97.5th percentiles using its default linear interpolation. Report the valid-draw count out of 2,000 for each estimate.
+
+R3 is **Spearman rho over pooled people**, computed as Pearson correlation of average ranks for ties. Its bars require both the stated point-estimate threshold and a **strictly positive lower 95% confidence bound**. R1/R2 bars apply to point estimates only; their intervals are descriptive and need not lie wholly inside the acceptance range. All numerical limits in the tables are inclusive except the R3 lower confidence bound (`> 0`) and the performance slope (`< 1.7`).
+
+### Pre-registered R table
+
+| Rule | Estimand / requirement | Bar | Evaluation value and 95% interval | Verdict |
+|---|---|---|---|---|
+| R1 | Pooled share of non-elder-adult observations with Idle state 0 at 08:00–17:00 | **0.10 ≤ v21 share ≤ 0.45**; v20 share and interval reported beside it | PENDING | PENDING |
+| R2 | All six paired health comparisons defined below | Every R2 subcheck passes | PENDING | PENDING |
+| R3-P | rho(P, mean adult consuming minutes in normally completed activities), among R3-eligible people with **≥3 completed activities** | **rho ≥ 0.25**, lower 95% bound **>0** | PENDING | PENDING |
+| R3-NS | rho(NS, Explore share of adult activity minutes), all R3-eligible people | **rho ≥ 0.25**, lower 95% bound **>0** | PENDING | PENDING |
+| R3-RD | rho(RD, HearthCircle share of adult activity minutes), all R3-eligible people | **rho ≥ 0.20**, lower 95% bound **>0** | PENDING | PENDING |
+| R4 | Final I1–I4 versus the base, plus v19/v20 pins | All six verified checks identical | Corrected producer: 6/6 checks identical; manifest below | **PASS** |
+| R5 | Complete section 6.6 performance protocol below | All four timing checks pass, with required provenance and ancillary runs | Mean +33.0401%; p99.9 +339.8637%; absolute 0.469883 ms; slope 1.001316 | **FAIL** |
+
+R1 is **sum of Idle adult counts / sum of all adult state counts**, pooling the specified hour samples over all worlds and days. It is not a mean of hourly shares or a mean of world shares. The control's share is a measured reference, not a fixed assumed value or acceptance bar.
+
+Activity minutes are ticks actually in `Consuming{Activity}`; walking in `Seeking{Activity}` contributes no activity minutes. The seven-kind order is `TendFire, Craft, Repair, HearthCircle, Explore, Play, SitByFire`. Each NS/RD share divides that person's selected-kind adult minutes by their total adult minutes across all seven kinds. **A person with zero total activity minutes has share 0 and remains included** in NS and RD. Report their count, the complete ten-day adult count, the per-statistic eligible count and no-place redraws; place contention can cause redraws toward Explore and is not filtered out.
+
+For P, a completed activity must have arrived and ended through the normal completion exit specified in section 6.2(6), including its day-end completion case. The trace contributes the episode's adult consuming minutes when positive. Mean duration is **adult completed minutes / adult completed activity count**, after requiring at least three completions. An episode begun as a child can contribute adult minutes and an adult completion after maturation; adult completions are therefore not constrained by adult starts. Interrupted, abandoned, unarrived or still-open episodes do not enter the completed-duration numerator or denominator. Their actual consuming minutes still enter NS/RD shares.
+
+### R2 estimands and denominators
+
+Let `C_w` and `B_w` be the candidate and control quantity for paired seed `w`. World means give each of the **same 32 worlds equal weight** unless an exposure-pooled definition is explicitly specified below. Report candidate and control levels, the comparison estimate, and its paired-world bootstrap interval. R2 passes only when all six rows pass.
+
+| R2 check | Registered calculation | Bar | Evaluation value and 95% interval | Verdict |
+|---|---|---|---|---|
+| Alive | `mean_w(alive_C,w at elapsed day 120) / mean_w(alive_B,w at elapsed day 120) − 1` | **−0.10 ≤ change ≤ +0.10** | PENDING | PENDING |
+| Non-old-age deaths | `mean_w((total_deaths_C,w − old_age_C,w) − (total_deaths_B,w − old_age_B,w))`, accumulated over the full 120 days | **difference ≤ +1.5 deaths/world** | PENDING | PENDING |
+| Shelters completed | `mean_w(new_complete_shelters_C,w) / mean_w(new_complete_shelters_B,w)` | **ratio ≥ 0.90** | PENDING | PENDING |
+| Social interactions per non-elder adult day | For each arm: `sum_w,sum_person(adult social_completed) / (sum_w,sum_person(adult_ticks)/1440)`; compare candidate pooled rate / baseline pooled rate | **ratio ≥ 0.90** | PENDING | PENDING |
+| Food in store | At each day's 12:00 sample sum food over settlements, average those 120 samples within each world, then average the 32 world means; candidate / baseline − 1 | **−0.15 ≤ change ≤ +0.15** | PENDING | PENDING |
+| Wood in store | The same two-level mean using 12:00 wood totals; candidate / baseline − 1 | **−0.15 ≤ change ≤ +0.15** | PENDING | PENDING |
+
+The death census must reconcile its total with its cause counts. Non-old-age deaths include **every cause except `old_age`**; an absent `old_age` key in a valid sparse cause map means zero. Old-age deaths are reported separately and are not subtracted twice or substituted for missing census data.
+
+“New complete shelters” is **final complete Shelter count minus initial complete Shelter count, including complete shelters inserted when daughter camps are founded**. The current runtime never removes entries from the building-kind inventory; the net difference is exact for this definition. The measure is not limited to construction-completion jobs, and initial boot shelters are excluded by the subtraction.
+
+The social numerator is the trace's sum of completed **person-interactions while non-elder adult**, not a unique-pair counter or all-life-stage tally. The retained trace recognizes a completion when the person leaves `Consuming{Agent}` with a loneliness drop of at least `min(25, previous loneliness)`. The denominator integrates every non-elder-adult tick of every traced person, not just the ten-day R3 cohort or people who socialized. The arithmetic mean of per-world social rates is reported only as a **sensitivity measure**; worlds with zero adult exposure are omitted from that sensitivity, and its contributing-world count is reported. The registered primary rate remains exposure-pooled, and the paired bootstrap recomputes both pooled rates on each draw.
+
+The food/wood denominator is **120 noon samples per world, followed by 32 equally weighted world means**. Stores are first summed across settlements; a world with more settlements is not given more observations or more weight. These measures are stockpile inventory, not carried resources, harvested totals, percentile summaries or final-day-only stocks.
+
+### Undefined values, errors and reporting
+
+- A missing required field, incomplete or duplicated cohort, mismatched seed/duration pair, malformed value, missing hour, inconsistent exposure/duration, nonzero routine-observation misses, or missing required proof is **ERROR**, never implicit zero or PASS. Input JSON must not contain nonfinite numerical literals.
+- A zero pooled exposure or zero baseline for a ratio/relative-change estimate is **ERROR**, including a 0/0 comparison. There is no imputed ratio of 1, pseudocount or automatic waiver. R2 death differences do not require a positive baseline.
+- A correlation with fewer than three eligible observations, a constant rank axis/behavior, or a nonfinite original statistic is **ERROR**. An undefined bootstrap replicate is excluded from the percentile calculation, and the valid count remains visible. An undefined original estimate or no valid bootstrap replicates is **ERROR**. No minimum valid-draw fraction beyond at least one was added after tuning.
+- A measured estimate missing its bar is **FAIL** and retains its numeric value and interval. An actually undefined estimate is labeled ERROR with its reason and null value/interval; it is not presented as a valid failed experiment. Resolve missing/incomplete artifacts rather than omitting worlds or claiming a successful rule.
+- During tuning only, absent R4/R5 evidence is **PENDING**. In formal evaluation it is **ERROR**. Aggregate severity is ERROR, then FAIL, then PENDING, then PASS. Consequently an all-PASS stage requires valid evidence for every rule.
+- Publish the full R table, all six R2 comparisons, hourly state shares by adult/child/elder stage, activity-kind minutes (adult and all-life-stage totals), world-level health rows, eligibility counts, no-place redraw/failure counts, all reported intervals and valid bootstrap counts. Empty descriptive denominators are explicitly undefined and retain their zero observation count.
+
+### R4 identity evidence, PASS
+
+I1 is the 32-world, 120-day `game_v19` summary check on seeds 0–31; I2 is byte-identical recorder array SHA256s for `game_v19` seeds 12000–12001; I3 is the 32-world, 120-day `game_v16` summary check on seeds 0–31; I4 is the corresponding `game_v20` summary check. Summary comparisons exclude only the established timing fields and require exact remaining key sets, types and values. The v19 and v20 frozen pins must also pass unchanged.
+
+The evaluator accepts an explicit verified identity manifest, **schema_version 1, stage `a`**, with checks exactly `I1`, `I2`, `I3`, `I4`, `v19_pins`, `v20_pins`. Each check has `passed` and a nonempty list of `{path, sha256}` evidence records. The manifest's verdict/passed/errors must agree with the individual checks, and the evaluator verifies every referenced file hash. A file's existence alone does not establish equality or a passing pin. The corrected producer's [completed identity manifest](verification/p17-2_a_identity_observerfix/identity.json) reports **PASS for all six checks**, `passed: true`, and no errors. Its SHA256 is **`692f27584155b429f2e105f6cd54d3d600c2a2333b47ce7793085dda3b59a2c6`**. The identity sequence completed at **2026-10-15 08:19:54.298138 UTC**.
+
+### R5 performance protocol and provenance, measured FAIL
+
+Use the local quiet-lock protocol and the frozen release builds. Run **three interleaved paired repeats**, old `game_v20` then new `game_v21` for each repeat, with `worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules <scene>`. Compare the **medians across the three runs** for each arm, separately for mean tick and p99.9 tick; do not pool ticks or select a favorable repeat.
+
+| Timing check | Registered calculation | Bar | Measured result | Verdict |
+|---|---|---|---|---|
+| Mean relative | `median(new mean_ms) / median(old mean_ms) − 1` | **≤ +0.15** | 0.33040145588540026 (+33.0401%) | **FAIL** |
+| Mean absolute | `median(new mean_ms)` | **≤ 4.0 ms** | 0.4698833333333333 ms | **PASS** |
+| p99.9 relative | `median(new p999_ms) / median(old p999_ms) − 1` | **≤ +0.35** | 3.3986371379897786 (+339.8637%) | **FAIL** |
+| Decision-system slope | `AgentDecisionSystem` three-size log-log OLS slope under v21, using the existing `perf_p15.py` fit | **< 1.7**; historical 1.06 is reported as reference, not an additional acceptance bound | 1.0013160279134086 | **PASS** |
+
+Also run and retain `quick` on the base and final builds. Measure the decision-system sweep for **both v21 and v20** with `--seeds 15100..15101 --agents 100,500,1000 --side 64 --days 2 --feed fed`. Fit mean `AgentDecisionSystem` microseconds per call against observed mean alive population at 06:00; report both slopes, fit intervals and points. The strict 1.7 gate applies to v21. Quick outputs and the control slope are required reporting evidence, without an invented additional performance bar.
+
+Retain all raw timing records, the complete command ledger, commands and exit statuses, run-index hashes, build commits, binary hashes before/after commands, machine identity and quiet-hold owner/start/end/contention evidence. `evaluate_perf_pass17.py` emits a schema-1 stage-a result with the four numeric checks, repeat records, medians, slopes, quick records and provenance. The Stage A metric evaluator re-verifies the raw performance directory and requires its checks and measurements to match the supplied result and manifest SHA256. A failed workload command, missing output, invalid provenance, inconsistent record or tampered artifact is **ERROR**. A complete, valid measurement that misses a timing bar is a measured **FAIL**, retaining its numeric values and evidence. Completed result: **FAIL**, with `errors: []`, in [perf.json](perf/p17-a/perf.json), SHA256 `4c88573122101832e3c526d8e99d2476bc4d52f3b908d9ab7cf7d04117f8150f`; [full report](perf/p17-a/perf.md) and [raw provenance](perf/p17-a/raw/provenance.json). All ten commands exited zero. Quiet hold 2026-10-15 08:20:08–08:20:23 UTC lasted 15.0 seconds, starting at load 3.66, uncontended, with 0.1 seconds of prerequisite checking. The independent old/new medians are mean 0.3531891304347826 / 0.4698833333333333 ms and p99.9 0.587 / 2.582 ms. Old/new decision slopes are 1.0516753956326028 / 1.0013160279134086, intervals [0.5366352310018206, 1.5667155602633849] / [0.3216198913424435, 1.6810121644843736]. Both quick fingerprints match; base/final means are 0.3047492753623188 / 0.30321884057971016 ms. Preserve the relative mean/tail failures without selecting favorable repeats, changing thresholds or parameters, or replacing relative limits with the passing absolute budget.
+
+### Artifact and publication ordering
+
+The **original** tuning raw files remain under `/Users/rexxa/work/p17-data/a-tuning/r1/`; their committed summaries, raw SHA256 inventory and binary hashes remain under `docs/revitalize/probe/p17-a_tuning/r1/`. Original probe SHA256: `91e920c8abfb21a431e88e8fbc71038118b6c87d3d0e93ac663a9419be06d7a7`; original performance binary SHA256: `5b827e604ef137778a1e6dca136a21775e6c9f9bc2dc8e92c06fbb8a08c96e34`. These identify **historical, superseded observer artifacts**, not the corrected final producer. Retain the original identity run under its own producer label. The coordinator stopped the old pending performance launcher before timing began; it provides no performance result.
+
+Corrected-producer receipts below identify the actual new artifacts without overwriting the original evidence. Five retained executable hashes match the recorded producer, as confirmed by [binary verification](verification/p17-a_tuning_r1_observerfix/binaries_verified.txt).
+
+| Corrected evidence receipt | Value |
+|---|---|
+| Producer commit / parameter freeze confirmation | `50a73474e06d3a9abbb535729e9c7e1e134954b7`, built/retained 2026-10-15 07:54:37 UTC and pushed; original routine parameters unchanged |
+| Probe binary path / SHA256 | `/Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_probe`; `7a3808ee397b254841ef811f50798332c777be2abb184a89dc906dfa1cafa0f4` |
+| Performance binary path / SHA256 | `/Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf`; `2e36152b1c8961e66a2fbfe0a3c200cc89a4225f561e60e3b99e030e0793ac38` |
+| Recorder binary path / SHA256 | `/Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_wm`; `596dfc81409e7ce6d0008a97e49dfa87088789a5afea05cb763620e66ce3de21` |
+| v19 pin binary path / SHA256 | `/Users/rexxa/work/p17-data/a-observerfix-bin/v19_pins`; `ae879eed1dc80bfbb47851f4ed244fa095e43f57d8906dd9625513ebb0b0a905` |
+| v20 pin binary path / SHA256 | `/Users/rexxa/work/p17-data/a-observerfix-bin/v20_pins`; `0f4728c23924ba5e412eb3bdf90d62021bb07d285acc0fbe79c22a03a436ac5d` |
+| Observer regression evidence | [68 focused tests, including seven observer regressions](verification/p17-2_observer_fix/green.log); [warning-denied Clippy](verification/p17-2_observer_fix/clippy.log) |
+| Traced smoke evidence | `probe/p17-a_observerfix_smoke/` and `verification/p17-a_observerfix_smoke/`; v20/v21 seeds 42–43 × 3 days; both strict trace-on/off summaries have zero non-timing differences; independent recomputation matches 53 people, 43 adults and 105 completed activities with zero discrepancies/misses |
+| Corrected round-1 tuning raw path / report path / report SHA256 | `/Users/rexxa/work/p17-data/a-tuning/r1-observerfix/`; `probe/p17-a_tuning/r1-observerfix/eval.json`; `78fc5514cb285350352ba5a372e9e14f1dfbc3461cec606030fbb3bb60a2ec46` |
+| Corrected counter audit | [All 16 candidate tuning worlds, with input hashes and every changed counter linked to raw episodes](verification/p17-a_tuning_r1_observerfix/counter_delta_audit.md) |
+| Corrected final I1–I4 and pins manifest path / SHA256 | **PASS, 6/6**; [identity.json](verification/p17-2_a_identity_observerfix/identity.json); `692f27584155b429f2e105f6cd54d3d600c2a2333b47ce7793085dda3b59a2c6`; sequence 2026-10-15 08:00:24.958590–08:19:54.298138 UTC, I1 start 08:00:25 UTC |
+| Corrected final performance report path / SHA256 | `perf/p17-a/perf.json`; `4c88573122101832e3c526d8e99d2476bc4d52f3b908d9ab7cf7d04117f8150f`; valid measured **FAIL**, no errors; all ten workloads exit 0; quiet hold 08:20:08–08:20:23 UTC |
+
+The [actual tuning-cohort death-event hand check](probe/p17-a_tuning/r1-observerfix/death_recovery_handcheck.md) confirms recovery of **11 completed-on-death episodes and four same-tick starts** across the 16 v21 traces. Seed 17101/person 27's completion and death at tick 55200 retain exactly 112 consuming minutes since arrival at 55088, with no death-tick minute added; the episode is elder-only and adds no adult completion minutes. The original observer incorrectly classified that explicit completion as an incomplete disappearance. This proves the correction on actual cohort events while leaving the original evidence available. The unchanged adult-metric estimates do not imply that no trace correction occurred.
+
+The [exhaustive counter audit](verification/p17-a_tuning_r1_observerfix/counter_delta_audit.md) compares 80 input files per run across all 16 candidate worlds: 1,125 lifetime people and 1,075 adult rows. **Every adult agents file and every hourly file is byte-identical** between original and corrected runs. Every per-person activity-minute value, adult counter and adult exposure value is unchanged. The lifetime-only deltas are **+11 elder completions, +682 completed minutes, +3 elder HearthCircle starts and +1 elder SitByFire start**. The completed-minute delta reclassifies already recorded consuming minutes; it adds no activity minute. All changed counters are joined to explicit pre-lethal raw events. Both observers reported zero observation misses, so that metadata value alone did not reveal the original coverage gap; the direct counter/episode audit supplies the additional evidence.
+
+The corrected Part 2 evidence and receipt fields are complete. Commit and publish this pre-registration before either arm's first seed-17000 evaluation launch. Retain that commit and the first launch time as ordering evidence. Record the corrected evaluation producer revision, exact command lines, executable SHA256s, interpreter/NumPy versions, raw artifact locations and hashes. The metric report includes SHA256 for every input summary, agents, people, hourly and trace-meta file, plus the identity/performance evidence files. Preserve raw trace events, including the corrected pre-death observations, for independent spot checks. The old producer hashes must not be relabeled as corrected final hashes.
+
+Run `tools/revitalize/evaluate_pass17.py --stage a` without `--tuning`, passing the complete v21 candidate and v20 baseline directories and verified `--identity-json` / `--perf-json` evidence. Write **`docs/revitalize/probe/p17-a_eval/eval.md` and `eval.json`**. Commit the measured Stage A verdicts, including every failed or undefined result and its explanation, **before Stage B implementation starts**. The registration commit, publication and first launch timestamp will be recorded in the separate evaluation receipt so this registration does not refer to its own commit hash. Held-out evaluation results remain **PENDING**; no forecast or substituted tuning result is entered for them.
