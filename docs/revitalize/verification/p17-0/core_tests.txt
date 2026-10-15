@@ -314,4 +314,3 @@ test components::temperament::tests::founder_mean_and_sd_over_20000_keys ... ok
 test components::temperament::tests::child_slope_on_mid_parent_is_about_half ... ok
 
 test result: ok. 309 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
-

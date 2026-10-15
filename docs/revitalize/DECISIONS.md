@@ -873,7 +873,7 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 
 | Part | start (UTC) | end (UTC) | notes |
 |---|---|---|---|
-| 0 | 2026-10-15 06:01:55 | in progress | Contract, standalone pins and opt-in rule fields committed; base I1/I3 complete, I4 and recorder running. |
+| 0 | 2026-10-15 06:01:55 | 2026-10-15 06:36:24 | Pins and optional fields verified; baseline I1/I3/I4 32 × 120 days each, determinism PASS; I2 two episodes and 20 hashes. |
 
 - Part 0 standalone pin commit `4f10de75`: seeds 0–4, v20/inert, 1,440 and 40,320 ticks, every pre-existing rule leaf separately asserted. Capture source unchanged from `adfdecfe`. Release 3/3 (12.91 s), debug 3/3 (221.44 s), scoped clippy clean; original pin artifact SHA256 `39d8a65f2a6fa479e72b3e76550aee43a3fad6babf1d5e6efaffe8d2015a8161`. The later optional-fields commit adds only `routine == None` and `family == None` assertions, not replacement expected values.
 - The optional-field change passed sim-core 309 tests, release v19/v20 frozen harnesses 6 tests, and workspace/all-target clippy with warnings denied. All previous full rule literals gained the corresponding `None` line; the two new rule types do not yet enable any behavior.
@@ -881,3 +881,5 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 - Stage A R2 social rate will use pooled adult completed interactions divided by pooled non-elder adult days, bootstrapping worlds; the mean of world rates is reported as sensitivity. Noon stores are sums across settlements, averaged per world/day. The final table will be committed before either evaluation arm runs.
 
 - Part 0 operations checks: strict identity comparator 10 tests pass; quiet-lock, wait, identity and performance command sequencing 9 mock-process checks pass. The initial macOS orphan-group cleanup failures are retained in `verification/p17-0/operations_initial_failure.txt`; reaping the exited group leader before the escalation check resolved them. Tests use isolated fake paths, never the real shared lock. Gate keeps inherited checks and treats its quick sample as untimed validation, separate from R5/F8.
+
+- Part 0 base complete: I1 v19 06:06:16–06:13:25 UTC, I3 v16 06:13:48–06:27:37 UTC, I4 v20 06:27:37–06:35 UTC, then recorder (14.4 s). I1/I3 have zero strict differences from Pass 16; all 20 I2 hashes match Pass 16. The new I4 is the frozen v20 reference. No quiet hold or lock wait occurred. Raw logs remain byte-for-byte external; committed text copies trim surplus final blank lines only.
