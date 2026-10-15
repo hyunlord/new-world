@@ -1,4 +1,4 @@
-use super::{is_activity, Change, RoutineTick};
+use super::{is_activity, Change, PlacesCache, RoutineTick};
 use hecs::{Entity, World};
 use sim_core::components::{
     ActivityRest, AgentId, AgentState, RoutineObservation, RoutineObservationBatch, RoutineOutcome,
@@ -77,10 +77,12 @@ fn note_insert<T: hecs::Component>(world: &World, entity: Entity) {
 }
 
 impl RoutineTick {
-    pub(in crate::runtime::decision) fn finish(self, world: &mut World) {
+    /// Apply the tick's component changes; hand back the place cache.
+    pub(in crate::runtime::decision) fn finish(self, world: &mut World) -> PlacesCache {
         scope!("routine_finish", { apply(world, self.pending) });
         #[cfg(feature = "subprofile")]
         crate::subprofile::flush_moves("routine_finish_moves");
+        self.places
     }
 
     pub(in crate::runtime::decision) fn interrupt(&mut self, id: AgentId, entity: Entity) {
@@ -159,6 +161,7 @@ impl RoutineTick {
         if let Some(count) = self.occupancy.get_mut(&activity.place) {
             *count = count.saturating_sub(1);
         }
+        self.memo.clear();
         self.pending.push((id, entity, Change::Activity(None)));
         self.observe(
             id,

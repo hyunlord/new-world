@@ -65,7 +65,7 @@ use sim_core::components::{
 use sim_core::rules::{FirewoodRule, ForageRule, NightRestRule, TemperamentRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
-use super::routine::{idle_equivalent, is_activity, RoutineTick};
+use super::routine::{idle_equivalent, is_activity, PlacesCache, RoutineTick};
 use crate::runtime::memory::MAX_RECENCY_TICKS;
 use crate::runtime::settlement::firewood::{urgent_with, wood_in_hand, wood_target};
 use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
@@ -655,16 +655,20 @@ fn gather_tile_exists(
     })
 }
 
-/// Phase 5-β decision system. Stateless — all per-agent state lives
-/// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
-/// sparse `food_tiles` / `water_tiles` maps on [`SimResources`].
+/// Phase 5-β decision system. All per-agent state lives in the
+/// [`AgentState`], [`Hunger`], [`Thirst`] components and the sparse
+/// `food_tiles` / `water_tiles` maps on [`SimResources`]. Pass 18: the only
+/// field is a cache of the routine's candidate places, recomputed whenever
+/// one of its inputs differs, so results never depend on it.
 #[derive(Debug, Default)]
-pub struct AgentDecisionSystem;
+pub struct AgentDecisionSystem {
+    places: PlacesCache,
+}
 
 impl AgentDecisionSystem {
     /// Construct a fresh instance.
     pub fn new() -> Self {
-        Self
+        Self::default()
     }
 }
 
@@ -692,7 +696,7 @@ impl RuntimeSystem for AgentDecisionSystem {
             .rules
             .agent
             .routine
-            .map(|rule| RoutineTick::new(world, resources, rule));
+            .map(|rule| RoutineTick::new(world, resources, rule, std::mem::take(&mut self.places)));
         #[cfg(feature = "subprofile")]
         let pre_timer = crate::subprofile::Timer::start();
         let availability = NeedAvailability::from_resources(resources);
@@ -1989,6 +1993,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     !adult,
                                     elders.contains(&agent.id),
                                     temperament,
+                                    resources,
                                 ) })
                             }) {
                                 *state = AgentState::Seeking {
@@ -3015,7 +3020,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         #[cfg(feature = "subprofile")]
         post_timer.stop("decision_post_pass");
         if let Some(routine) = routine {
-            routine.finish(world);
+            self.places = routine.finish(world);
         }
     }
 }

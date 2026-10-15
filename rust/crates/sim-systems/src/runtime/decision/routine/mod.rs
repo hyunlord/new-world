@@ -1,8 +1,10 @@
 mod lifecycle;
 mod places;
 
+pub(in crate::runtime::decision) use places::PlacesCache;
+
 use hecs::{Entity, World};
-use places::{Occupancy, Places, KINDS};
+use places::{Occupancy, Tile, KINDS};
 use sim_core::components::{
     Activity, ActivityKind, ActivityRest, Agent, AgentId, AgentState, Lineage, RoutineObservation,
     RoutineOutcome, SettlementId, TargetKind, Temperament,
@@ -46,13 +48,25 @@ pub(super) struct RoutineTick {
     rests: BTreeMap<AgentId, u64>,
     interrupted: BTreeSet<AgentId>,
     invitations: BTreeSet<AgentId>,
-    places: Places,
+    /// Pass 18: the cross-tick place cache, checked against its inputs on the
+    /// first `place()` of a tick (`checked`); none at night.
+    places: PlacesCache,
+    checked: bool,
+    /// Pass 18: this tick's `place()` results by (settlement, kind index); a
+    /// result depends only on the candidates and `occupancy`, so the memo is
+    /// cleared whenever `occupancy` changes (every `start` and `end`).
+    memo: BTreeMap<(SettlementId, usize), Option<Tile>>,
     occupancy: Occupancy,
     pending: Vec<(AgentId, Entity, Change)>,
 }
 
 impl RoutineTick {
-    pub(super) fn new(world: &mut World, resources: &SimResources, rule: RoutineRule) -> Self {
+    pub(super) fn new(
+        world: &mut World,
+        resources: &SimResources,
+        rule: RoutineRule,
+        places: PlacesCache,
+    ) -> Self {
         let tick = resources.current_tick;
         #[cfg(feature = "subprofile")]
         let timer = crate::subprofile::Timer::start();
@@ -122,7 +136,6 @@ impl RoutineTick {
             .collect();
         #[cfg(feature = "subprofile")]
         timer.stop("routine_new_maps");
-        let places = scope!("routine_places_collect", { places::collect(resources) });
         Self {
             rule,
             tick,
@@ -139,6 +152,8 @@ impl RoutineTick {
             interrupted,
             invitations: BTreeSet::new(),
             places,
+            checked: false,
+            memo: BTreeMap::new(),
             occupancy,
             pending: Vec::new(),
         }
@@ -166,6 +181,7 @@ impl RoutineTick {
         child: bool,
         elder: bool,
         temperament: Option<&Temperament>,
+        resources: &SimResources,
     ) -> bool {
         if self.interrupted.contains(&id) {
             self.rest(id, entity, 1);
@@ -181,18 +197,18 @@ impl RoutineTick {
         let selected = self.draw(&weights, key, 0);
         let mut redrawn = false;
         let choice = selected
-            .and_then(|kind| self.place(sid, kind, key).map(|place| (kind, place)))
+            .and_then(|kind| self.place(sid, kind, resources).map(|place| (kind, place)))
             .or_else(|| {
                 redrawn = true;
                 let available = std::array::from_fn(|index| {
-                    if self.place(sid, KINDS[index], key).is_some() {
+                    if self.place(sid, KINDS[index], resources).is_some() {
                         weights[index]
                     } else {
                         0
                     }
                 });
                 self.draw(&available, key, 1)
-                    .and_then(|kind| self.place(sid, kind, key).map(|place| (kind, place)))
+                    .and_then(|kind| self.place(sid, kind, resources).map(|place| (kind, place)))
             });
         let Some((kind, place)) = choice else {
             self.rest(id, entity, 30);
@@ -208,6 +224,7 @@ impl RoutineTick {
             until_tick: None,
         };
         *self.occupancy.entry(place).or_default() += 1;
+        self.memo.clear();
         self.active.insert(id, activity);
         self.pending
             .push((id, entity, Change::Activity(Some(activity))));
@@ -238,14 +255,21 @@ impl RoutineTick {
         None
     }
 
-    fn place(&self, sid: SettlementId, kind: ActivityKind, key: u64) -> Option<(u32, u32)> {
-        places::choose(
-            &self.places.get(&sid)?[kind.index()],
-            &self.occupancy,
-            self.seed,
-            key,
-            self.tick,
-            self.replicate,
-        )
+    /// The free place of `kind` for settlement `sid` (memoised; see `memo`).
+    fn place(&mut self, sid: SettlementId, kind: ActivityKind, resources: &SimResources) -> Option<Tile> {
+        if let Some(memo) = self.memo.get(&(sid, kind.index())) {
+            return *memo;
+        }
+        if !self.checked {
+            self.places.refresh(resources);
+            self.checked = true;
+        }
+        let place = self
+            .places
+            .places()
+            .get(&sid)
+            .and_then(|lists| places::choose(&lists[kind.index()], &self.occupancy));
+        self.memo.insert((sid, kind.index()), place);
+        place
     }
 }
