@@ -1,0 +1,18 @@
+{
+  "observed_utc": "2026-10-15T15:54:30.813609+00:00",
+  "checkout": "/Users/rexxa/work/art-p10-base",
+  "head": "0caabf5fd1c62b9d3c99845daab1805e79799db7",
+  "tracked_diff_empty": true,
+  "hashes": {
+    "rust/target/debug/libsim_bridge.dylib": "f41bd469ac5d2b67c7f50375189e306a7872513566140f096bf8716c513faa1c",
+    "scripts/test/art/capture_identity_p10.gd": "abd16022df6b9af4712eba3c2bcff5a68a3310aabf578242991bea520ec7c2b4",
+    "scripts/test/capture_framings_p10.gd": "b29b68c503bc3cf17f7e29344e415875f81653b73202c0641277d88e13b61922",
+    "scripts/test/art/capture_running_identity_p10.gd": "8793b4763bbb4ee81d9d5766948e66d6e56953abd160dee6f51f15fec2698917",
+    "scripts/test/art/perf_frames_p10.gd": "6e3390f52997cca09ad64f05b605dbe5e8cc8dda707a7565e8a2d53dcdc6be40"
+  },
+  "observation_scope": "Current baseline checkout while A captures run; not a retroactive pre-launch attestation.",
+  "running_base_manifests_match_current_library": [
+    "W0",
+    "W200"
+  ]
+}
