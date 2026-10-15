@@ -842,14 +842,16 @@ impl WorldRules {
         rules
     }
 
-    /// The `game_v20` temperament rule (Pass 16 section 6.2).
+    /// The `game_v20` temperament rule (Pass 16 section 6.2; tuning round 2
+    /// (8.3) raised P's spans, food 2 -> 3 and wood 1 -> 2, after T1-P missed
+    /// its bar on the tuning seeds: rho 0.159 < 0.25).
     pub const V20_TEMPERAMENT: TemperamentRule = TemperamentRule {
         effects: true,
         ns_tether_span: 4,
         ha_bedtime_span_minutes: 60,
         rd_social_rate_span_permille: 500,
-        p_food_haul_span: 2,
-        p_wood_haul_span: 1,
+        p_food_haul_span: 3,
+        p_wood_haul_span: 2,
         ns_departure_weight: 1000,
     };
 
@@ -1593,11 +1595,16 @@ mod tests {
         assert_eq!(r.social_rate(0.04, &hi), 0.04 * 1500.0 / 1000.0);
         assert!((r.social_rate(0.04, &lo) - 0.02).abs() < 1e-15);
         assert!((r.social_rate(0.04, &hi) - 0.06).abs() < 1e-15);
-        // P → food haul (base 4): 2, 4, 6; wood haul (base 2): 1, 2, 3.
-        assert_eq!([r.food_haul(4, &lo), r.food_haul(4, &mid), r.food_haul(4, &hi)], [2, 4, 6]);
-        assert_eq!([r.wood_haul(2, &lo), r.wood_haul(2, &mid), r.wood_haul(2, &hi)], [1, 2, 3]);
+        // P → food haul (base 4, span 3): 1, 4, 7; wood haul (base 2, span 2):
+        // 0 clamps to 1, 2, 4.
+        assert_eq!([r.food_haul(4, &lo), r.food_haul(4, &mid), r.food_haul(4, &hi)], [1, 4, 7]);
+        assert_eq!([r.wood_haul(2, &lo), r.wood_haul(2, &mid), r.wood_haul(2, &hi)], [1, 2, 4]);
+        // Section 6.2's start spans (food 2, wood 1): 2, 4, 6 and 1, 2, 3.
+        let start = TemperamentRule { p_food_haul_span: 2, p_wood_haul_span: 1, ..r };
+        assert_eq!([start.food_haul(4, &lo), start.food_haul(4, &mid), start.food_haul(4, &hi)], [2, 4, 6]);
+        assert_eq!([start.wood_haul(2, &lo), start.wood_haul(2, &mid), start.wood_haul(2, &hi)], [1, 2, 3]);
         // The clamps of 1 and 8.
-        assert_eq!(TemperamentRule { p_wood_haul_span: 2, ..r }.wood_haul(2, &lo), 1);
+        assert_eq!(TemperamentRule { p_wood_haul_span: 3, ..r }.wood_haul(2, &lo), 1);
         assert_eq!(TemperamentRule { p_food_haul_span: 6, ..r }.food_haul(4, &hi), 8);
         // NS → departure key: NS 0 subtracts 0, NS 500 subtracts 0.5, NS 1000 subtracts 1.0.
         assert_eq!(r.departure_key(0.25, &lo), 0.25);
@@ -1608,11 +1615,15 @@ mod tests {
         assert_eq!([r.tether(8, &minus), r.tether(8, &plus)], [8, 8]);
         assert_eq!([r.bedtime(1260, &minus), r.bedtime(1260, &plus)], [1260, 1260]);
         assert_eq!([r.food_haul(4, &minus), r.food_haul(4, &plus)], [4, 4]);
-        // d = ±125: tether 8 ± 1, bedtime 1260 ∓ 15, food 4 ± 0 (2 × 125 / 500 = 0).
+        // d = ±125: tether 8 ± 1, bedtime 1260 ∓ 15, food 4 ± 0 (3 × 125 / 500 = 0).
         let (q1, q3) = (axes(375, 375, 375, 375), axes(625, 625, 625, 625));
         assert_eq!([r.tether(8, &q1), r.tether(8, &q3)], [7, 9]);
         assert_eq!([r.bedtime(1260, &q1), r.bedtime(1260, &q3)], [1275, 1245]);
         assert_eq!([r.food_haul(4, &q1), r.food_haul(4, &q3)], [4, 4]);
+        // d = ±200: food 4 ± 1 (3 × 200 / 500 = 1), wood 2 (2 × 200 / 500 = 0).
+        let (f1, f4) = (axes(300, 300, 300, 300), axes(700, 700, 700, 700));
+        assert_eq!([r.food_haul(4, &f1), r.food_haul(4, &f4)], [3, 5]);
+        assert_eq!([r.wood_haul(2, &f1), r.wood_haul(2, &f4)], [2, 2]);
     }
 
     #[test]
