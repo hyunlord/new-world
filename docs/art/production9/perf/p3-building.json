@@ -1,0 +1,1076 @@
+{
+  "source": "/Users/rexxa/work/art-production9-evidence/p3-building/after-W500-attempt1.json",
+  "world": "W500",
+  "phase": "after",
+  "build_profile": "debug",
+  "ablation_only": true,
+  "actual_alive": 500,
+  "ranked": [
+    {
+      "cost_ms": 45.78350000220536,
+      "descendants_disabled_as_group": [
+        "AgentRenderer/FoundingGroups"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_WorldRenderer",
+        "on_after_AgentRenderer"
+      ],
+      "node": "AgentRenderer",
+      "off_block": "off_AgentRenderer",
+      "reported_cost_ms": 45.7835000022054,
+      "off_statistics": {
+        "count": 150,
+        "median": 5.615499999940395,
+        "p90": 5.91899999523163,
+        "p99": 6.31200001072884,
+        "maximum": 6.86299999094009,
+        "over_budget": 0
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.399000002145755,
+        "p90": 52.07300000453,
+        "p99": 52.6340000067949,
+        "maximum": 53.1710000066757,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 1.0200000029206535,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_BuildingRenderer/NightChillLayer",
+        "on_after_NatureRenderer"
+      ],
+      "node": "NatureRenderer",
+      "off_block": "off_NatureRenderer",
+      "reported_cost_ms": 1.02000000292063,
+      "off_statistics": {
+        "count": 150,
+        "median": 50.3994999975562,
+        "p90": 51.042000014782,
+        "p99": 51.3289999911785,
+        "maximum": 51.3940000114441,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.41950000047685,
+        "p90": 52.1309999939203,
+        "p99": 52.919999986887,
+        "maximum": 53.4460000038147,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.7914999970197485,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_NatureRenderer",
+        "on_after_WorldEffects"
+      ],
+      "node": "WorldEffects",
+      "off_block": "off_WorldEffects",
+      "reported_cost_ms": 0.79149999701977,
+      "off_statistics": {
+        "count": 150,
+        "median": 50.68900000584125,
+        "p90": 51.2789999952316,
+        "p99": 52.0160000026226,
+        "maximum": 52.2540000040531,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.480500002861,
+        "p90": 52.2440000092983,
+        "p99": 52.9389999909401,
+        "maximum": 53.4460000038147,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.6784999959468436,
+      "descendants_disabled_as_group": [
+        "SettlementLabels/@Label@3824",
+        "SettlementLabels/@Control@3825"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_UI/GodHandPanel",
+        "on_after_SettlementLabels"
+      ],
+      "node": "SettlementLabels",
+      "off_block": "off_SettlementLabels",
+      "reported_cost_ms": 0.678499995946886,
+      "off_statistics": {
+        "count": 150,
+        "median": 50.749500003039856,
+        "p90": 51.4099999864101,
+        "p99": 51.8030000071526,
+        "maximum": 52.07300000453,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.4279999989867,
+        "p90": 52.2309999979734,
+        "p99": 52.9670000050068,
+        "maximum": 53.2479999873638,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.6045000052451996,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_AgentRenderer/FoundingGroups",
+        "on_after_ActivityTrailRenderer"
+      ],
+      "node": "ActivityTrailRenderer",
+      "off_block": "off_ActivityTrailRenderer",
+      "reported_cost_ms": 0.604500005245214,
+      "off_statistics": {
+        "count": 150,
+        "median": 50.8005000060797,
+        "p90": 51.5010000067949,
+        "p99": 51.8529999864101,
+        "maximum": 52.1389999992847,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.4050000113249,
+        "p90": 52.1540000092983,
+        "p99": 52.6790000121593,
+        "maximum": 52.8819999923706,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.2844999969303501,
+      "descendants_disabled_as_group": [],
+      "layer_only": true,
+      "neighbour_blocks": [
+        "on_after_Shadows",
+        "on_after_WorldObjects"
+      ],
+      "node": "WorldObjects",
+      "off_block": "off_WorldObjects",
+      "reported_cost_ms": 0.284499996930364,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.13399999961255,
+        "p90": 51.8919999972582,
+        "p99": 52.6810000013113,
+        "maximum": 52.7640000019073,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.4184999965429,
+        "p90": 52.1740000100136,
+        "p99": 52.8779999952316,
+        "maximum": 53.0640000038147,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.18999998176099808,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_WorldEffects",
+        "on_after_GodHandEffects"
+      ],
+      "node": "GodHandEffects",
+      "off_block": "off_GodHandEffects",
+      "reported_cost_ms": 0.189999981760977,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.280500009894354,
+        "p90": 51.9049999923706,
+        "p99": 52.2740000092983,
+        "maximum": 52.3550000085831,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.47049999165535,
+        "p90": 52.2440000092983,
+        "p99": 53.1020000112057,
+        "maximum": 56.9850000128746,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.18649999862904565,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_SeekVizRenderer",
+        "on_after_NeedBarRenderer"
+      ],
+      "node": "NeedBarRenderer",
+      "off_block": "off_NeedBarRenderer",
+      "reported_cost_ms": 0.186499998629102,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.32699999928475,
+        "p90": 52.0320000066757,
+        "p99": 52.4019999957085,
+        "maximum": 52.8980000100136,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.5134999979138,
+        "p90": 52.1379999923706,
+        "p99": 52.8159999923706,
+        "maximum": 53.8340000026226,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.18599997955559644,
+      "descendants_disabled_as_group": [
+        "UI/HudTopbar/@PanelContainer@1082",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1086",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1086/@Sprite2D@1085",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Label@1087",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1088",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1090",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1090/@Sprite2D@1089",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Label@1091",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1092",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@HBoxContainer@1093",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@HBoxContainer@1093/@Control@1095",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@HBoxContainer@1093/@Control@1095/@Sprite2D@1094",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@HBoxContainer@1093/@Label@1096",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@HBoxContainer@1093/@Control@1097",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1099",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1099/@Sprite2D@1098",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Label@1100",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1101",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1103",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1103/@Sprite2D@1102",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Label@1104",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Control@1105",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1084/@Label@1106",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1109",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1109/@Sprite2D@1108",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Label@1110",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1111",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@HBoxContainer@1112",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@HBoxContainer@1112/@Label@1113",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Label@1114",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@TextureRect@1115",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1117",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1117/@Sprite2D@1116",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Label@1118",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1119",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1121",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1121/@Sprite2D@1120",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Label@1122",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1123",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1125",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1125/@Sprite2D@1124",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Label@1126",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1127",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1128",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1130",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1130/@Sprite2D@1129",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1132",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1132/@Sprite2D@1131",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Label@1133",
+        "UI/HudTopbar/@PanelContainer@1082/@VBoxContainer@1083/@HBoxContainer@1107/@Control@1134"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_ZoomLodController",
+        "on_after_UI/HudTopbar"
+      ],
+      "node": "UI/HudTopbar",
+      "off_block": "off_UI/HudTopbar",
+      "reported_cost_ms": 0.185999979555604,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.3205000078082,
+        "p90": 51.9560000019073,
+        "p99": 52.7670000147819,
+        "maximum": 53.0060000026226,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.506499987363796,
+        "p90": 52.1539999985695,
+        "p99": 52.8579999945164,
+        "maximum": 53.1530000126362,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.14950000214579973,
+      "descendants_disabled_as_group": [
+        "UI/HudStatusPanel/@PanelContainer@1162",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163/@HBoxContainer@1164",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163/@HBoxContainer@1164/@Control@1166",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163/@HBoxContainer@1164/@Control@1166/@Sprite2D@1165",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163/@HBoxContainer@1164/@Label@1167",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163/@HBoxContainer@1164/@Control@1168",
+        "UI/HudStatusPanel/@PanelContainer@1162/@VBoxContainer@1163/@VBoxContainer@1169"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_UI/AgentInspectorPanel",
+        "on_after_UI/HudStatusPanel"
+      ],
+      "node": "UI/HudStatusPanel",
+      "off_block": "off_UI/HudStatusPanel",
+      "reported_cost_ms": 0.149500002145757,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.27649999952315,
+        "p90": 51.8049999985695,
+        "p99": 52.5380000100136,
+        "maximum": 52.5419999876022,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.42600000166895,
+        "p90": 52.0800000100136,
+        "p99": 52.6790000138283,
+        "maximum": 53.1079999928474,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.12449999874834816,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_NeedBarRenderer",
+        "on_after_DeathVizRenderer"
+      ],
+      "node": "DeathVizRenderer",
+      "off_block": "off_DeathVizRenderer",
+      "reported_cost_ms": 0.124499998748306,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.45799999856945,
+        "p90": 52.1269999856949,
+        "p99": 53.2,
+        "maximum": 53.5749999997616,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.5824999973178,
+        "p90": 52.2729999916553,
+        "p99": 53.0169999988079,
+        "maximum": 53.8340000026226,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.10299999374149138,
+      "descendants_disabled_as_group": [
+        "TerrainRenderer/water",
+        "TerrainRenderer/grass",
+        "TerrainRenderer/forest_floor",
+        "TerrainRenderer/camp_earth",
+        "TerrainRenderer/hill",
+        "TerrainRenderer/rock",
+        "TerrainRenderer/Decals",
+        "TerrainRenderer/Decals/@Sprite2D@1198",
+        "TerrainRenderer/Decals/@Sprite2D@1199",
+        "TerrainRenderer/Decals/@Sprite2D@1200",
+        "TerrainRenderer/Decals/@Sprite2D@1201",
+        "TerrainRenderer/Decals/@Sprite2D@1202",
+        "TerrainRenderer/Decals/@Sprite2D@1203",
+        "TerrainRenderer/Decals/@Sprite2D@1204",
+        "TerrainRenderer/Decals/@Sprite2D@1205",
+        "TerrainRenderer/Decals/@Sprite2D@1206",
+        "TerrainRenderer/Decals/@Sprite2D@1207",
+        "TerrainRenderer/Decals/@Sprite2D@1208",
+        "TerrainRenderer/Decals/@Sprite2D@1209",
+        "TerrainRenderer/Decals/@Sprite2D@1210",
+        "TerrainRenderer/Decals/@Sprite2D@1211",
+        "TerrainRenderer/Decals/@Sprite2D@1212",
+        "TerrainRenderer/Decals/@Sprite2D@1213",
+        "TerrainRenderer/Decals/@Sprite2D@1214",
+        "TerrainRenderer/Decals/@Sprite2D@1215",
+        "TerrainRenderer/Decals/@Sprite2D@1216",
+        "TerrainRenderer/Decals/@Sprite2D@1217",
+        "TerrainRenderer/Decals/@Sprite2D@1218",
+        "TerrainRenderer/Decals/@Sprite2D@1219",
+        "TerrainRenderer/Decals/@Sprite2D@1220",
+        "TerrainRenderer/Decals/@Sprite2D@1221",
+        "TerrainRenderer/Decals/@Sprite2D@1222",
+        "TerrainRenderer/Decals/@Sprite2D@1223",
+        "TerrainRenderer/Decals/@Sprite2D@1224",
+        "TerrainRenderer/Decals/@Sprite2D@1225",
+        "TerrainRenderer/Decals/@Sprite2D@1226",
+        "TerrainRenderer/Decals/@Sprite2D@1227",
+        "TerrainRenderer/Decals/@Sprite2D@1228",
+        "TerrainRenderer/Decals/@Sprite2D@1229",
+        "TerrainRenderer/Decals/@Sprite2D@1230",
+        "TerrainRenderer/Decals/@Sprite2D@1231",
+        "TerrainRenderer/Decals/@Sprite2D@1232",
+        "TerrainRenderer/Decals/@Sprite2D@1233",
+        "TerrainRenderer/Decals/@Sprite2D@1234",
+        "TerrainRenderer/Decals/@Sprite2D@1235",
+        "TerrainRenderer/Decals/@Sprite2D@1236",
+        "TerrainRenderer/Decals/@Sprite2D@1237",
+        "TerrainRenderer/Decals/@Sprite2D@1238",
+        "TerrainRenderer/Decals/@Sprite2D@1239",
+        "TerrainRenderer/Decals/@Sprite2D@1240",
+        "TerrainRenderer/Decals/@Sprite2D@1241",
+        "TerrainRenderer/Decals/@Sprite2D@1242",
+        "TerrainRenderer/Decals/@Sprite2D@1243",
+        "TerrainRenderer/Decals/@Sprite2D@1244",
+        "TerrainRenderer/Decals/@Sprite2D@1245",
+        "TerrainRenderer/Decals/@Sprite2D@1246",
+        "TerrainRenderer/Decals/@Sprite2D@1247",
+        "TerrainRenderer/Decals/@Sprite2D@1248",
+        "TerrainRenderer/Decals/@Sprite2D@1249",
+        "TerrainRenderer/Decals/@Sprite2D@1250",
+        "TerrainRenderer/Decals/@Sprite2D@1251",
+        "TerrainRenderer/Decals/@Sprite2D@1252",
+        "TerrainRenderer/Decals/@Sprite2D@1253",
+        "TerrainRenderer/Decals/@Sprite2D@1254",
+        "TerrainRenderer/Decals/@Sprite2D@1255",
+        "TerrainRenderer/Decals/@Sprite2D@1256",
+        "TerrainRenderer/Decals/@Sprite2D@1257",
+        "TerrainRenderer/Decals/@Sprite2D@1258",
+        "TerrainRenderer/Decals/@Sprite2D@1259",
+        "TerrainRenderer/Decals/@Sprite2D@1260",
+        "TerrainRenderer/Decals/@Sprite2D@1261",
+        "TerrainRenderer/Decals/@Sprite2D@1262",
+        "TerrainRenderer/Decals/@Sprite2D@1263",
+        "TerrainRenderer/Decals/@Sprite2D@1264",
+        "TerrainRenderer/Decals/@Sprite2D@1265",
+        "TerrainRenderer/Decals/@Sprite2D@1266",
+        "TerrainRenderer/Decals/@Sprite2D@1267",
+        "TerrainRenderer/Decals/@Sprite2D@1268",
+        "TerrainRenderer/Decals/@Sprite2D@1269",
+        "TerrainRenderer/Decals/@Sprite2D@1270",
+        "TerrainRenderer/Decals/@Sprite2D@1271",
+        "TerrainRenderer/Decals/@Sprite2D@1272",
+        "TerrainRenderer/Decals/@Sprite2D@1273",
+        "TerrainRenderer/Decals/@Sprite2D@1274",
+        "TerrainRenderer/Decals/@Sprite2D@1275",
+        "TerrainRenderer/Decals/@Sprite2D@1276",
+        "TerrainRenderer/Decals/@Sprite2D@1277",
+        "TerrainRenderer/Decals/@Sprite2D@1278",
+        "TerrainRenderer/Decals/@Sprite2D@1279",
+        "TerrainRenderer/Decals/@Sprite2D@1280",
+        "TerrainRenderer/Decals/@Sprite2D@1281",
+        "TerrainRenderer/Decals/@Sprite2D@1282",
+        "TerrainRenderer/Decals/@Sprite2D@1283",
+        "TerrainRenderer/Decals/@Sprite2D@1284",
+        "TerrainRenderer/Decals/@Sprite2D@1285",
+        "TerrainRenderer/Decals/@Sprite2D@1286",
+        "TerrainRenderer/Decals/@Sprite2D@1287",
+        "TerrainRenderer/Decals/@Sprite2D@1288",
+        "TerrainRenderer/Decals/@Sprite2D@1289",
+        "TerrainRenderer/Decals/@Sprite2D@1290",
+        "TerrainRenderer/Decals/@Sprite2D@1291",
+        "TerrainRenderer/Decals/@Sprite2D@1292",
+        "TerrainRenderer/Decals/@Sprite2D@1293",
+        "TerrainRenderer/Decals/@Sprite2D@1294",
+        "TerrainRenderer/Decals/@Sprite2D@1295",
+        "TerrainRenderer/Decals/@Sprite2D@1296",
+        "TerrainRenderer/Decals/@Sprite2D@1297",
+        "TerrainRenderer/Decals/@Sprite2D@1298",
+        "TerrainRenderer/Decals/@Sprite2D@1299",
+        "TerrainRenderer/Decals/@Sprite2D@1300",
+        "TerrainRenderer/Decals/@Sprite2D@1301",
+        "TerrainRenderer/Decals/@Sprite2D@1302"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_WorldObjects",
+        "on_after_TerrainRenderer"
+      ],
+      "node": "TerrainRenderer",
+      "off_block": "off_TerrainRenderer",
+      "reported_cost_ms": 0.102999993741513,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.31950000077485,
+        "p90": 52.0589999992847,
+        "p99": 52.867999999404,
+        "maximum": 52.9970000063181,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.42249999451634,
+        "p90": 52.3489999959469,
+        "p99": 53.2520000100136,
+        "maximum": 53.3919999871254,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.09600000721214741,
+      "descendants_disabled_as_group": [
+        "UI/GodHandPanel/@VBoxContainer@1170",
+        "UI/GodHandPanel/@VBoxContainer@1170/@Label@1171",
+        "UI/GodHandPanel/@VBoxContainer@1170/@HBoxContainer@1172",
+        "UI/GodHandPanel/@VBoxContainer@1170/@HBoxContainer@1172/@Label@1173",
+        "UI/GodHandPanel/@VBoxContainer@1170/@HBoxContainer@1172/@Control@1174",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1176",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1177",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1178",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1179",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1180",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1181",
+        "UI/GodHandPanel/@VBoxContainer@1170/@GridContainer@1175/@Button@1182",
+        "UI/GodHandPanel/@VBoxContainer@1170/@Label@1183",
+        "UI/GodHandPanel/@VBoxContainer@1170/@Label@1184",
+        "UI/GodHandPanel/@VBoxContainer@1170/@Button@1185",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1187",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1188",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1189",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1190",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1191",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1192",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1193",
+        "UI/GodHandPanel/@VBoxContainer@1170/@VBoxContainer@1186/@Label@1194"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_UI/HudStatusPanel",
+        "on_after_UI/GodHandPanel"
+      ],
+      "node": "UI/GodHandPanel",
+      "off_block": "off_UI/GodHandPanel",
+      "reported_cost_ms": 0.0960000072121616,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.38500000083445,
+        "p90": 52.1219999883175,
+        "p99": 52.4199999992847,
+        "maximum": 52.5290000081062,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.4810000080466,
+        "p90": 52.1940000023842,
+        "p99": 53.1060000033379,
+        "maximum": 53.2479999873638,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.08599999457594265,
+      "descendants_disabled_as_group": [],
+      "layer_only": true,
+      "neighbour_blocks": [
+        "ablation_all_on_0",
+        "on_after_Shadows"
+      ],
+      "node": "Shadows",
+      "off_block": "off_Shadows",
+      "reported_cost_ms": 0.0859999945759782,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.273000000357655,
+        "p90": 52.0779999967814,
+        "p99": 53.0509999966621,
+        "maximum": 53.1160000009537,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.3589999949336,
+        "p90": 52.1339999979734,
+        "p99": 53.0050000114441,
+        "maximum": 53.77600000453,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.08000000673530394,
+      "descendants_disabled_as_group": [
+        "BuildingRenderer/NightChillLayer",
+        "BuildingRenderer/NightChillLayer/NightChillTint",
+        "BuildingRenderer/@Label@1487",
+        "BuildingRenderer/@Label@1487/Wood"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_TerrainRenderer",
+        "on_after_BuildingRenderer"
+      ],
+      "node": "BuildingRenderer",
+      "off_block": "off_BuildingRenderer",
+      "reported_cost_ms": 0.0800000067353253,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.38549999421835,
+        "p90": 51.9689999909401,
+        "p99": 52.5230000040531,
+        "maximum": 52.8389999959469,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.465500000953654,
+        "p90": 52.4550000133514,
+        "p99": 53.2520000100136,
+        "maximum": 53.3919999871254,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.06850001335139666,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_AgentRenderer",
+        "on_after_AgentRenderer/FoundingGroups"
+      ],
+      "node": "AgentRenderer/FoundingGroups",
+      "off_block": "off_AgentRenderer/FoundingGroups",
+      "reported_cost_ms": 0.0685000133514393,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.4194999884367,
+        "p90": 52.0980000081062,
+        "p99": 52.9290000126362,
+        "maximum": 53.00200000453,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.488000001788095,
+        "p90": 52.2199999909401,
+        "p99": 52.6549999964237,
+        "maximum": 52.7779999952316,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.06350000524524546,
+      "descendants_disabled_as_group": [
+        "DaylightController/CanvasModulate",
+        "DaylightController/@Sprite2D@2390"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_GodHandEffects",
+        "on_after_DaylightController"
+      ],
+      "node": "DaylightController",
+      "off_block": "off_DaylightController",
+      "reported_cost_ms": 0.0635000052452028,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.28700000083445,
+        "p90": 51.9320000126362,
+        "p99": 52.6550000121593,
+        "maximum": 53.2829999957085,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.3505000060797,
+        "p90": 52.0160000081062,
+        "p99": 52.9729999930859,
+        "maximum": 56.9850000128746,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": 0.029999995529649937,
+      "descendants_disabled_as_group": [],
+      "layer_only": true,
+      "neighbour_blocks": [
+        "on_after_BuildingRenderer",
+        "on_after_BuildingRenderer/NightChillLayer"
+      ],
+      "node": "BuildingRenderer/NightChillLayer",
+      "off_block": "off_BuildingRenderer/NightChillLayer",
+      "reported_cost_ms": 0.0299999955296499,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.4440000039935,
+        "p90": 52.244000014782,
+        "p99": 52.8590000052452,
+        "maximum": 52.8820000002384,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.47399999952315,
+        "p90": 52.2220000027418,
+        "p99": 52.919999986887,
+        "maximum": 53.0089999997616,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": -0.01799998617174481,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_SettlementOverviewRenderer",
+        "on_after_ZoomLodController"
+      ],
+      "node": "ZoomLodController",
+      "off_block": "off_ZoomLodController",
+      "reported_cost_ms": -0.0179999861717164,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.513499994873996,
+        "p90": 52.221999992609,
+        "p99": 52.8429999904633,
+        "maximum": 53.1579999990463,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.49550000870225,
+        "p90": 52.126999986887,
+        "p99": 52.8689999909401,
+        "maximum": 53.1530000126362,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": -0.0329999911784995,
+      "descendants_disabled_as_group": [
+        "WorldRenderer/@Sprite2D@1074"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_DaylightController",
+        "on_after_WorldRenderer"
+      ],
+      "node": "WorldRenderer",
+      "off_block": "off_WorldRenderer",
+      "reported_cost_ms": -0.0329999911785137,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.37599999713895,
+        "p90": 52.0079999923706,
+        "p99": 52.6089999959469,
+        "maximum": 52.6160000019074,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.34300000596045,
+        "p90": 52.0440000027418,
+        "p99": 52.8899999911785,
+        "maximum": 53.1710000066757,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": -0.07200000584124666,
+      "descendants_disabled_as_group": [
+        "UI/AgentInspectorPanel/@PanelContainer@1135",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1137",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Control@1138",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Control@1138/@Sprite2D@1139",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1140",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1141",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1142",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1143",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1144",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1148",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1148/@Control@1146",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1148/@Control@1146/@Sprite2D@1145",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1148/@Label@1147",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@ProgressBar@1149",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1153",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1153/@Control@1151",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1153/@Control@1151/@Sprite2D@1150",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1153/@Label@1152",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@ProgressBar@1154",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1158",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1158/@Control@1156",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1158/@Control@1156/@Sprite2D@1155",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@HBoxContainer@1158/@Label@1157",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@ProgressBar@1159",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1160",
+        "UI/AgentInspectorPanel/@PanelContainer@1135/@VBoxContainer@1136/@Label@1161"
+      ],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_UI/HudTopbar",
+        "on_after_UI/AgentInspectorPanel"
+      ],
+      "node": "UI/AgentInspectorPanel",
+      "off_block": "off_UI/AgentInspectorPanel",
+      "reported_cost_ms": -0.0720000058412467,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.444999997615795,
+        "p90": 52.1170000067949,
+        "p99": 52.8099999871254,
+        "maximum": 52.8969999854565,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.37299999177455,
+        "p90": 52.0539999985695,
+        "p99": 52.5289999992847,
+        "maximum": 52.8579999945164,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": -0.08199999511240463,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_DeathVizRenderer",
+        "on_after_SettlementOverviewRenderer"
+      ],
+      "node": "SettlementOverviewRenderer",
+      "off_block": "off_SettlementOverviewRenderer",
+      "reported_cost_ms": -0.0819999951124188,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.4604999964237,
+        "p90": 52.2190000059605,
+        "p99": 52.6860000104904,
+        "maximum": 52.8180000007153,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.378500001311295,
+        "p90": 52.126999986887,
+        "p99": 52.9450000119209,
+        "maximum": 53.5920000121593,
+        "over_budget": 300
+      }
+    },
+    {
+      "cost_ms": -0.1845000045299443,
+      "descendants_disabled_as_group": [],
+      "layer_only": false,
+      "neighbour_blocks": [
+        "on_after_ActivityTrailRenderer",
+        "on_after_SeekVizRenderer"
+      ],
+      "node": "SeekVizRenderer",
+      "off_block": "off_SeekVizRenderer",
+      "reported_cost_ms": -0.184500004529951,
+      "off_statistics": {
+        "count": 150,
+        "median": 51.4230000036955,
+        "p90": 51.9850000019074,
+        "p99": 52.5859999979734,
+        "maximum": 52.9709999978542,
+        "over_budget": 150
+      },
+      "neighbour_statistics": {
+        "count": 300,
+        "median": 51.238499999165555,
+        "p90": 51.8810000052452,
+        "p99": 52.725999989748,
+        "maximum": 52.8819999923706,
+        "over_budget": 300
+      }
+    }
+  ],
+  "top_three": [
+    "AgentRenderer",
+    "NatureRenderer",
+    "WorldEffects"
+  ],
+  "floor": {
+    "count": 150,
+    "median": 0.0140000001043081,
+    "p90": 0.0170000004321337,
+    "p99": 0.020000000923872,
+    "maximum": 0.0239999997168779,
+    "over_budget": 0
+  },
+  "comparison": [
+    {
+      "node": "ActivityTrailRenderer",
+      "before_cost_ms": 0.5650000033379001,
+      "after_cost_ms": 0.6045000052451996,
+      "status": "COMPARABLE",
+      "saved_ms": -0.03950000190729952
+    },
+    {
+      "node": "AgentRenderer",
+      "before_cost_ms": 45.6474999949336,
+      "after_cost_ms": 45.78350000220536,
+      "status": "COMPARABLE",
+      "saved_ms": -0.1360000072717611
+    },
+    {
+      "node": "AgentRenderer/FoundingGroups",
+      "before_cost_ms": 0.08149998486039323,
+      "after_cost_ms": 0.06850001335139666,
+      "status": "COMPARABLE",
+      "saved_ms": 0.012999971508996566
+    },
+    {
+      "node": "BuildingRenderer",
+      "before_cost_ms": 0.2814999968409495,
+      "after_cost_ms": 0.08000000673530394,
+      "status": "COMPARABLE",
+      "saved_ms": 0.20149999010564557
+    },
+    {
+      "node": "BuildingRenderer/NightChillLayer",
+      "before_cost_ms": 0.1874999971986,
+      "after_cost_ms": 0.029999995529649937,
+      "status": "COMPARABLE",
+      "saved_ms": 0.15750000166895006
+    },
+    {
+      "node": "DaylightController",
+      "before_cost_ms": -0.022000021934502456,
+      "after_cost_ms": 0.06350000524524546,
+      "status": "COMPARABLE",
+      "saved_ms": -0.08550002717974792
+    },
+    {
+      "node": "DeathVizRenderer",
+      "before_cost_ms": -0.017999998688694063,
+      "after_cost_ms": 0.12449999874834816,
+      "status": "COMPARABLE",
+      "saved_ms": -0.14249999743704223
+    },
+    {
+      "node": "GodHandEffects",
+      "before_cost_ms": 0.28400001680854814,
+      "after_cost_ms": 0.18999998176099808,
+      "status": "COMPARABLE",
+      "saved_ms": 0.09400003504755006
+    },
+    {
+      "node": "NatureRenderer",
+      "before_cost_ms": 1.0370000024437473,
+      "after_cost_ms": 1.0200000029206535,
+      "status": "COMPARABLE",
+      "saved_ms": 0.016999999523093834
+    },
+    {
+      "node": "NeedBarRenderer",
+      "before_cost_ms": 0.34400000017879506,
+      "after_cost_ms": 0.18649999862904565,
+      "status": "COMPARABLE",
+      "saved_ms": 0.1575000015497494
+    },
+    {
+      "node": "SeekVizRenderer",
+      "before_cost_ms": -0.10850000101329726,
+      "after_cost_ms": -0.1845000045299443,
+      "status": "COMPARABLE",
+      "saved_ms": 0.07600000351664704
+    },
+    {
+      "node": "SettlementLabels",
+      "before_cost_ms": 0.7919999955296504,
+      "after_cost_ms": 0.6784999959468436,
+      "status": "COMPARABLE",
+      "saved_ms": 0.11349999958280677
+    },
+    {
+      "node": "SettlementOverviewRenderer",
+      "before_cost_ms": -0.09100000709295841,
+      "after_cost_ms": -0.08199999511240463,
+      "status": "COMPARABLE",
+      "saved_ms": -0.00900001198055378
+    },
+    {
+      "node": "Shadows",
+      "before_cost_ms": -0.05150000399349608,
+      "after_cost_ms": 0.08599999457594265,
+      "status": "COMPARABLE",
+      "saved_ms": -0.13749999856943873
+    },
+    {
+      "node": "TerrainRenderer",
+      "before_cost_ms": 0.1474999940991495,
+      "after_cost_ms": 0.10299999374149138,
+      "status": "COMPARABLE",
+      "saved_ms": 0.04450000035765811
+    },
+    {
+      "node": "UI/AgentInspectorPanel",
+      "before_cost_ms": -0.041500002145753,
+      "after_cost_ms": -0.07200000584124666,
+      "status": "COMPARABLE",
+      "saved_ms": 0.03050000369549366
+    },
+    {
+      "node": "UI/GodHandPanel",
+      "before_cost_ms": 0.06650000274179746,
+      "after_cost_ms": 0.09600000721214741,
+      "status": "COMPARABLE",
+      "saved_ms": -0.02950000447034995
+    },
+    {
+      "node": "UI/HudStatusPanel",
+      "before_cost_ms": -0.017500005900856763,
+      "after_cost_ms": 0.14950000214579973,
+      "status": "COMPARABLE",
+      "saved_ms": -0.1670000080466565
+    },
+    {
+      "node": "UI/HudTopbar",
+      "before_cost_ms": -0.035999986648597826,
+      "after_cost_ms": 0.18599997955559644,
+      "status": "COMPARABLE",
+      "saved_ms": -0.22199996620419427
+    },
+    {
+      "node": "WorldEffects",
+      "before_cost_ms": 0.8159999793172048,
+      "after_cost_ms": 0.7914999970197485,
+      "status": "COMPARABLE",
+      "saved_ms": 0.024499982297456313
+    },
+    {
+      "node": "WorldObjects",
+      "before_cost_ms": 0.16399999594689518,
+      "after_cost_ms": 0.2844999969303501,
+      "status": "COMPARABLE",
+      "saved_ms": -0.12050000098345492
+    },
+    {
+      "node": "WorldRenderer",
+      "before_cost_ms": -0.09250000572210126,
+      "after_cost_ms": -0.0329999911784995,
+      "status": "COMPARABLE",
+      "saved_ms": -0.059500014543601765
+    },
+    {
+      "node": "ZoomLodController",
+      "before_cost_ms": -0.08649999976159961,
+      "after_cost_ms": -0.01799998617174481,
+      "status": "COMPARABLE",
+      "saved_ms": -0.0685000135898548
+    }
+  ],
+  "before_source": "/Users/rexxa/work/art-production9-evidence/p3-agent/after-W500-attempt1.json"
+}

@@ -41,6 +41,9 @@ var _tint_strength: float = 0.0
 var _tint_target: float = 0.0
 var _tint_start: float = 0.0
 var _tint_elapsed: float = 0.0
+var _sleeper_world: Node
+var _sleeper_inputs: Array = []
+var _sleeper_counts: Dictionary = {}
 
 func _ready() -> void:
 	z_index = 5
@@ -503,6 +506,9 @@ func _setup_chill_tint() -> void:
 	_chill_tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func _reset_cold() -> void:
+	_sleeper_world = null
+	_sleeper_inputs.clear()
+	_sleeper_counts.clear()
 	_tint_strength = 0.0
 	_tint_target = 0.0
 	_tint_start = 0.0
@@ -515,7 +521,17 @@ func _reset_cold() -> void:
 
 func _update_shelter_cold(delta: float) -> void:
 	var agents: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot") if _world_sim.has_method("get_agent_snapshot") else {}
-	var counts: Dictionary = SHELTER_COLD.sleeper_counts(agents, SimReads.read(_world_sim, "get_building_snapshot"))
+	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var inputs: Array = []
+	for key: String in ["xs", "ys", "states", "target_kinds", "colds"]:
+		inputs.append([agents.has(key), typeof(agents.get(key)), agents.get(key)])
+	for key: String in ["xs", "ys", "kinds"]:
+		inputs.append([buildings.has(key), typeof(buildings.get(key)), buildings.get(key)])
+	if _sleeper_world != _world_sim or inputs != _sleeper_inputs:
+		_sleeper_world = _world_sim
+		_sleeper_inputs = inputs.duplicate(true)
+		_sleeper_counts = SHELTER_COLD.sleeper_counts(agents, buildings)
+	var counts: Dictionary = _sleeper_counts
 	for sprite: Sprite2D in _buildings.values():
 		if int(sprite.get_meta("building_kind", -1)) == 1:
 			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))

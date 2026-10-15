@@ -19,3 +19,11 @@ No shader, asset, localization, simulation parameter, process priority or render
 ## Row 1 result
 
 The pre-edit semantic test, post-edit cache test, ten existing focused tests and strict parser/FFI check passed. All six fresh B captures have exactly zero RGBA differences; independent visual review opened P1/P5 and recomputed all six. AgentRenderer's measured ablation cost changed from46.6435ms to45.6475ms (150-frame off blocks with300 neighbouring reference samples). The initial session was contended and the new session was not, so this modest difference is an observation rather than an isolated causal speedup claim. The retained cache removes proven repeated scans without changing animation; AgentRenderer remains the dominant cost. Evidence: `gates/p3-agent/`, `identity/p3-agent-attempt1/`, `perf/p3-agent*`.
+
+## Row 2 concrete boundary: BuildingRenderer
+
+Cache only SHELTER_COLD.sleeper_counts. Compare exact duplicated agent columns xs/ys/states/target_kinds/colds and building columns xs/ys/kinds, including presence and packed type, plus world identity. Reset in _reset_cold. Keep cold apply, frost fade, breath, tint, elapsed flame animation, resource updates and label processing live. Same-tick/in-place edits must invalidate through content comparison, not tick or hash. First add regression coverage against the uncached function for repeated inputs with advancing delta, each relevant column mutation, missing/wrong-type columns, shelter insertion/removal, and reset. Run existing shelter_cold,structure_states,every_hearth,ysort tests. Then six exact identity captures and a fresh alternating cost session, comparing to row1's unchanged BuildingRenderer cost under the same protocol.
+
+## Row 2 result
+
+The56-reference behavior test passed before and after; cache-reuse assertion, four existing focused tests and strict42-file/FFI checks passed. All six B frames remain exactly identical; independent review opened P2/P6 and decoded every framing. BuildingRenderer cost changed from0.2815ms in the preceding row1 session to0.0800ms in the row2 session, both admitted noncontended. Initial selection cost1.3675ms came from the earlier contended session and is retained separately. The modest measured reduction does not remove the dominant AgentRenderer cost.

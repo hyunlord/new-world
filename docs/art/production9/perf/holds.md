@@ -85,3 +85,15 @@
 - 2026-10-15T03:06:50Z pid=48646 HOLD_END owner=codex-art-pass9 purpose=p3-agent-W500-attempt1 start=1792033143 end=1792033610 elapsed=467 load_before=3.84 load_after=2.90 contended=false exit=0
 <!-- art-p9-last-release 1792033610 -->
 - 2026-10-15T03:08:02Z pid=47536 WAIT_COOLDOWN remaining=528s
+- 2026-10-15T03:20:28Z pid=47536 CHECK load=2.42 processes= waited=1885s
+- 2026-10-15T03:20:28Z pid=47536 HOLD_START owner=codex-art-pass9 purpose=baseline-W200-attempt1 start=1792034428 load_before=2.42 contended=false waited=1885s
+- 2026-10-15T03:23:03Z pid=47536 HOLD_END owner=codex-art-pass9 purpose=baseline-W200-attempt1 start=1792034428 end=1792034583 elapsed=155 load_before=2.42 load_after=6.91 contended=false exit=0
+<!-- art-p9-last-release 1792034583 -->
+- 2026-10-15T03:23:18Z pid=41098 WAIT_START owner=codex-art-pass9 purpose=a30-before hold_limit=3600
+- 2026-10-15T03:23:18Z pid=41098 WAIT_COOLDOWN remaining=585s
+- 2026-10-15T03:23:48Z pid=42489 WAIT_START owner=codex-art-pass9 purpose=p3-building-W500-attempt1 hold_limit=3600
+- 2026-10-15T03:23:48Z pid=42489 WAIT_COOLDOWN remaining=555s
+- 2026-10-15T03:33:04Z pid=42489 CHECK load=1.71 processes= waited=555s
+- 2026-10-15T03:33:04Z pid=42489 HOLD_START owner=codex-art-pass9 purpose=p3-building-W500-attempt1 start=1792035184 load_before=1.71 contended=false waited=556s
+- 2026-10-15T03:40:52Z pid=42489 HOLD_END owner=codex-art-pass9 purpose=p3-building-W500-attempt1 start=1792035184 end=1792035652 elapsed=468 load_before=1.71 load_after=3.43 contended=false exit=0
+<!-- art-p9-last-release 1792035652 -->

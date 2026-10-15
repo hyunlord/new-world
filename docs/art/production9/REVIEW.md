@@ -53,3 +53,24 @@ Independently opened the full A/P1.png and B/P1.png pair, then the full A/P4.png
 Read comparison/comparison.json and independently recomputed all six pairs using RGBA differences, including alpha, with no masks. Every image is 1920×1080. P1, P2, P3, P4, P5, and P6 each have A/A′ = 0 differing pixels / 0 maximum channel difference and A/B = 0 differing pixels / 0 maximum channel difference. These independent results agree with all six official comparison rows. F5 pixel identity is supported as PASS for these captured states. Timing/performance conclusions are not inferred from image equality.
 
 No additional graft calls were needed; cumulative call count remains one and reported savings remain approximately 1,857,527 tokens.
+
+## Round 1 continuation — baseline timing and derived caches
+
+Reviewed baseline.json and the four original raw session files named in its sources list. Independently calculated the median of `process_ms + render_cpu_ms` from each first `frozen_Z4_0` block's 300 counted samples, excluding its 30 discarded warmup samples. Results agree with stored summaries to floating-point rounding:
+
+| World | Independently recomputed first-block median (ms) |
+|---|---:|
+| W0 | 10.198000000059604 |
+| W500 | 68.07550000619888 |
+| W1 | 15.985999997496606 |
+| W200 | 35.17900000566244 |
+
+These are individual first-block medians, not pooled-condition values. All four sessions record debug build, `res://rust/target/debug/libsim_bridge.dylib`, forced drawing, no contention at admission, 1920×1080, VSync disabled, uncapped FPS, and restored camera/layers/VSync/probes. The four required worlds are present; W1000/W2000 remain explicitly unmeasured. GPU samples report unavailable and must not be interpreted as measured zero GPU cost.
+
+Read with_quiet_lock_p9.sh and holds.md. Recorded baseline holds lasted 437/934/331/155 seconds for W0/W500/W1/W200, respectively, with admission loads below 4, empty competing-process lists, and exit 0. The ledger preserves cooldowns and waits. The separate p3-initial-W500 run is explicitly `contended=true` after waiting 3847 seconds, rather than being mislabeled quiet; the later p3-agent-W500 hold records `contended=false`. `contended=false` describes admission checks, not continuous proof that no external workload appeared during a hold: W0/W500 exit loads rose to 13.05/12.98. Final comparison should retain this environmental evidence. Completed final-after holds remain pending.
+
+Reviewed the agent cache delta associated with `9f4a7eab541363f6e06869d63a0061f37e6b378e` and current building sleeper-count cache. No production correction identified. Agent base appearance depends only on ID, is made read-only, and elder adjustment duplicates before editing (`agent_activity.gd:76–82`); retirement/reset bounds and clears cache state. Talk deltas depend on ordered coordinates and index; coordinate copies detect same-frame packed-array mutation and preserve tie order. Per-tile contexts are limited to one process invocation. Building sleeper-count cache tracks every input used by `shelter_cold.gd:9–28`, including key presence, Variant type and packed-array content, plus world identity. It deep-copies keys and resets cache state on cold reset; frost fading and breath animation still execute each frame.
+
+Regression source covers coordinate ordering/length/in-place edits, appearance-stage changes, retirement/reset, and all sleeper input key mutation/removal/type transitions/world replacement. The building regression log records PASS with 56 checks. These are targeted regression evidence, not a substitute for the final full gate after both optimizations.
+
+Independently hash-checked every source_sha256 entry in `identity/p3-agent-attempt1/provenance.json` and `identity/p3-building-attempt1/provenance.json` against current files: all match. Independently recomputed baseline A versus each new B at full RGBA resolution for all six framings: both candidate sets have zero differing pixels and zero maximum channel difference in every framing. The supplementary provenance files provide source binding; the generic B manifest's empty git_sha alone would not. Thus identity evidence covers the currently reviewed agent/building cache implementations. Final after timings, F1–F7 synthesis and final full/publication gate remain pending.
