@@ -1283,6 +1283,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                             fatigue_threshold,
                         )
                         .is_some();
+                        // Pass 18: the row's settlement, looked up once for the
+                        // three trip predicates (`member_of` is fixed during the loop).
+                        let member = member_of.get(&agent.id);
                         // Pass 18: the trip predicates only ask whether a choice
                         // exists (`choose_bush` / `choose_spot` /
                         // `nearest_gather_tile` filter candidates independently of
@@ -1293,7 +1296,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             forage_rule
                                 .filter(|_| forage_window && worker && !no_trips)
                                 .and_then(|rule| {
-                                    let sid = member_of.get(&agent.id)?;
+                                    let sid = member?;
                                     let plan = forage_plans.get(sid)?;
                                     let inv = inventory_opt.as_ref()?;
                                     let room = inv.total() < INVENTORY_CAPACITY;
@@ -1324,7 +1327,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             firewood_rule
                                 .filter(|_| worker && !no_trips)
                                 .and_then(|rule| {
-                                    let sid = member_of.get(&agent.id)?;
+                                    let sid = member?;
                                     let plan = wood_plans.get(sid)?;
                                     if !(if plan.urgent {
                                         urgent_window
@@ -1367,8 +1370,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             let bounded = forage_rule.is_none_or(|rule| {
                                 inventory_opt.as_ref().is_some_and(|inv| {
                                     inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold)
-                                }) && member_of
-                                    .get(&agent.id)
+                                }) && member
                                     .and_then(|sid| forage_plans.get(sid))
                                     .is_none_or(|plan| {
                                         let cap = resources
