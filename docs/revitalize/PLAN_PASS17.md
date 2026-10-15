@@ -9,8 +9,8 @@ Authority: `PASS17_GOAL.md`, preserved unchanged. This plan implements the entir
 | 0 | completed | Original brief, standalone v20 pins, two opt-in rule fields, baseline I1–I4 | Current checkout/remote/lock inspection |
 | 1 | completed | Complete routine v1, v21 wiring, activity bridge/trace | Part 0 complete and compatibility inventory recorded |
 | 2 | completed | Stage A tuning freeze, I1–I4, performance | Part 1 verified |
-| 3 | in_progress | Committed Stage A pre-registration, evaluation, committed verdicts, saved I5 baseline | Part 2 freeze |
-| 4 | pending | Complete family v1, v22 wiring, family bridge/trace | Part 3 verdict commit exists |
+| 3 | completed | Committed Stage A pre-registration, evaluation, committed verdicts, saved I5 baseline | Part 2 freeze |
+| 4 | in_progress | Complete family v1, v22 wiring, family bridge/trace | Part 3 verdict commit exists |
 | 5 | pending | Stage B tuning freeze, I1–I5, performance | Part 4 verified |
 | 6 | pending | Committed Stage B pre-registration, evaluation and verdicts | Part 5 freeze |
 | 8 | pending | English mechanics docs, independent review, exact-head gate, publication, Korean report | Parts 0–6, or explicitly recorded brief-authorized drop |

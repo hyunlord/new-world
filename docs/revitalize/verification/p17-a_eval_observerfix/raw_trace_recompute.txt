@@ -1,0 +1,46 @@
+Pass 17 Stage A corrected evaluation trace recomputation
+Scope: v21 seeds 17000..17031; existing completed artifacts only; not Part 8 fresh review.
+Command: python3 -u /Users/rexxa/work/p17-data/trace_recompute_corrected.py /Users/rexxa/work/p17-data/a-evaluation-observerfix/game_v21 17000,17001,17002,17003,17004,17005,17006,17007,17008,17009,17010,17011,17012,17013,17014,17015,17016,17017,17018,17019,17020,17021,17022,17023,17024,17025,17026,17027,17028,17029,17030,17031
+Helper SHA-256: 3f1b9ed9eb7148a7304ac1ccf138c3c303304bcdd2862afa104b9c4481544789
+Started UTC: 2026-10-15T08:56:29.194796+00:00
+Historical negative control: invalid_360_rejections uses the deliberately wrong fixed offset 360. It is not an acceptance metric or a discrepancy count. The real clock assertion uses the offset derived independently from each hourly file. Nonzero negative-control rejections demonstrate why the historical 360 assumption was wrong. The helper is preserved unchanged.
+
+Combined stdout/stderr:
+PASS seed=17000 people=89 adults=87 offset=480 completed=7366 invalid_360_rejections=1452 discrepancies=0 misses=0
+PASS seed=17001 people=142 adults=141 offset=480 completed=11331 invalid_360_rejections=1979 discrepancies=0 misses=0
+PASS seed=17002 people=238 adults=225 offset=480 completed=18401 invalid_360_rejections=3294 discrepancies=0 misses=0
+PASS seed=17003 people=109 adults=93 offset=480 completed=7467 invalid_360_rejections=1367 discrepancies=0 misses=0
+PASS seed=17004 people=215 adults=206 offset=480 completed=14073 invalid_360_rejections=3211 discrepancies=0 misses=0
+PASS seed=17005 people=119 adults=100 offset=480 completed=7482 invalid_360_rejections=1542 discrepancies=0 misses=0
+PASS seed=17006 people=196 adults=193 offset=480 completed=14750 invalid_360_rejections=2771 discrepancies=0 misses=0
+PASS seed=17007 people=144 adults=144 offset=480 completed=12568 invalid_360_rejections=2151 discrepancies=0 misses=0
+PASS seed=17008 people=246 adults=232 offset=480 completed=15788 invalid_360_rejections=2957 discrepancies=0 misses=0
+PASS seed=17009 people=64 adults=63 offset=480 completed=4650 invalid_360_rejections=937 discrepancies=0 misses=0
+PASS seed=17010 people=98 adults=95 offset=480 completed=7470 invalid_360_rejections=1473 discrepancies=0 misses=0
+PASS seed=17011 people=233 adults=225 offset=480 completed=17127 invalid_360_rejections=3436 discrepancies=0 misses=0
+PASS seed=17012 people=129 adults=126 offset=480 completed=11258 invalid_360_rejections=2063 discrepancies=0 misses=0
+PASS seed=17013 people=92 adults=88 offset=480 completed=7233 invalid_360_rejections=1508 discrepancies=0 misses=0
+PASS seed=17014 people=93 adults=88 offset=480 completed=7402 invalid_360_rejections=1250 discrepancies=0 misses=0
+PASS seed=17015 people=133 adults=129 offset=480 completed=10006 invalid_360_rejections=2035 discrepancies=0 misses=0
+PASS seed=17016 people=132 adults=122 offset=480 completed=9544 invalid_360_rejections=1766 discrepancies=0 misses=0
+PASS seed=17017 people=113 adults=108 offset=480 completed=9473 invalid_360_rejections=1795 discrepancies=0 misses=0
+PASS seed=17018 people=100 adults=94 offset=480 completed=6780 invalid_360_rejections=1245 discrepancies=0 misses=0
+PASS seed=17019 people=69 adults=69 offset=480 completed=4937 invalid_360_rejections=1056 discrepancies=0 misses=0
+PASS seed=17020 people=179 adults=174 offset=480 completed=13709 invalid_360_rejections=2375 discrepancies=0 misses=0
+PASS seed=17021 people=101 adults=98 offset=480 completed=8005 invalid_360_rejections=1546 discrepancies=0 misses=0
+PASS seed=17022 people=90 adults=86 offset=480 completed=6431 invalid_360_rejections=1380 discrepancies=0 misses=0
+PASS seed=17023 people=231 adults=217 offset=480 completed=14686 invalid_360_rejections=3146 discrepancies=0 misses=0
+PASS seed=17024 people=183 adults=179 offset=480 completed=10475 invalid_360_rejections=2012 discrepancies=0 misses=0
+PASS seed=17025 people=165 adults=158 offset=480 completed=10390 invalid_360_rejections=2339 discrepancies=0 misses=0
+PASS seed=17026 people=97 adults=91 offset=480 completed=8791 invalid_360_rejections=1461 discrepancies=0 misses=0
+PASS seed=17027 people=81 adults=81 offset=480 completed=6404 invalid_360_rejections=1164 discrepancies=0 misses=0
+PASS seed=17028 people=94 adults=91 offset=480 completed=8334 invalid_360_rejections=1546 discrepancies=0 misses=0
+PASS seed=17029 people=135 adults=135 offset=480 completed=9255 invalid_360_rejections=1829 discrepancies=0 misses=0
+PASS seed=17030 people=147 adults=134 offset=480 completed=9043 invalid_360_rejections=1701 discrepancies=0 misses=0
+PASS seed=17031 people=169 adults=166 offset=480 completed=14959 invalid_360_rejections=2712 discrepancies=0 misses=0
+
+Exit code: 0
+Finished UTC: 2026-10-15T08:56:46.412371+00:00
+Elapsed seconds: 17.217
+Helper SHA-256 after: 3f1b9ed9eb7148a7304ac1ccf138c3c303304bcdd2862afa104b9c4481544789
+Helper unchanged: true

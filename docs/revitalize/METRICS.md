@@ -2972,3 +2972,37 @@ The [exhaustive counter audit](verification/p17-a_tuning_r1_observerfix/counter_
 The corrected Part 2 evidence and receipt fields are complete. Commit and publish this pre-registration before either arm's first seed-17000 evaluation launch. Retain that commit and the first launch time as ordering evidence. Record the corrected evaluation producer revision, exact command lines, executable SHA256s, interpreter/NumPy versions, raw artifact locations and hashes. The metric report includes SHA256 for every input summary, agents, people, hourly and trace-meta file, plus the identity/performance evidence files. Preserve raw trace events, including the corrected pre-death observations, for independent spot checks. The old producer hashes must not be relabeled as corrected final hashes.
 
 Run `tools/revitalize/evaluate_pass17.py --stage a` without `--tuning`, passing the complete v21 candidate and v20 baseline directories and verified `--identity-json` / `--perf-json` evidence. Write **`docs/revitalize/probe/p17-a_eval/eval.md` and `eval.json`**. Commit the measured Stage A verdicts, including every failed or undefined result and its explanation, **before Stage B implementation starts**. The registration commit, publication and first launch timestamp will be recorded in the separate evaluation receipt so this registration does not refer to its own commit hash. Held-out evaluation results remain **PENDING**; no forecast or substituted tuning result is entered for them.
+
+
+### Stage A measured held-out verdict (after registration)
+
+The registration above remains an immutable historical record. Registration commit `000d3706c6463dd19cd6b1efce20ae60a7acaa9f` at 2026-10-15 08:35:22 UTC preceded the first held-out launch at 08:35:38.982376 UTC. Both complete 32-world, 120-day arms passed deterministic twins: v21 ended 08:54:12.869140 and v20 ended 09:01:40.388893 UTC. No held-out parameter change or repeated evaluation occurred. The single formal evaluator finished at 09:18:38.526719 UTC with **FAIL solely because of R5**, no ERROR or missing metric. All 2,000 bootstrap draws are valid for every statistical metric.
+
+| Rule | Verdict |
+|---|---|
+| R1 | PASS |
+| R3-P | PASS |
+| R3-NS | PASS |
+| R3-RD | PASS |
+| R2 | PASS |
+| R4 | PASS |
+| R5 | FAIL |
+
+| Metric | Candidate | Baseline | Estimate | 95% CI | Valid bootstrap draws | Bar | Verdict |
+|---|---:|---:|---:|---|---:|---|---|
+| R1 | 0.116436 | 0.595078 | 0.116436 | [0.10948, 0.124192] | 2000/2000 | 0.10 <= pooled adult Idle share <= 0.45 | PASS |
+| R1-baseline | undefined | undefined | 0.595078 | [0.578528, 0.610544] | 2000/2000 | reference only | PASS |
+| R2-alive | 60.1875 | 59.5312 | 0.0110236 | [-0.00328975, 0.0283783] | 2000/2000 | relative change within +/-0.10 | PASS |
+| R2-deaths | 0.90625 | 0.8125 | 0.09375 | [-0.125, 0.375] | 2000/2000 | non-old-age deaths difference <= +1.5/world | PASS |
+| R2-shelters | 6.5625 | 6.375 | 1.02941 | [0.994381, 1.0765] | 2000/2000 | completed shelters ratio >= 0.90 | PASS |
+| R2-food | 475.382 | 469.534 | 0.0124547 | [-0.00516335, 0.0310675] | 2000/2000 | noon food relative change within +/-0.15 | PASS |
+| R2-wood | 116.592 | 113.965 | 0.0230494 | [-0.00428097, 0.0541416] | 2000/2000 | noon wood relative change within +/-0.15 | PASS |
+| R2-social | 1.7195 | 1.73121 | 0.993232 | [0.98699, 0.999905] | 2000/2000 | pooled adult social rate ratio >= 0.90 | PASS |
+| R3-P | undefined | undefined | 0.89793 | [0.881573, 0.915361] | 2000/2000 | rho >= 0.25; CI excludes zero | PASS |
+| R3-NS | undefined | undefined | 0.491714 | [0.450427, 0.535105] | 2000/2000 | rho >= 0.25; CI excludes zero | PASS |
+| R3-RD | undefined | undefined | 0.350282 | [0.325262, 0.378364] | 2000/2000 | rho >= 0.20; CI excludes zero | PASS |
+
+
+The complete hourly stage tables, activity-kind totals and world-health rows are retained in [evaluation Markdown](probe/p17-a_eval/eval.md) and [JSON](probe/p17-a_eval/eval.json), SHA256 `78db3dc6748c2f79762fbffef4708c3f7167c8790c56e43bbff8c12be9c074a3`. R3 includes 3,943 people with at least ten adult days; 3,928 qualify for P, zero have no activity minutes, and 48,885 no-place redraws are retained. The separate raw-event reconstruction verifies 4,426 lifetime people, 4,238 ever-adult rows and 325,588 completed episodes with zero discrepancies.
+
+I5 baseline capture completed 09:01:40.516299–09:18:21.673304 UTC before Stage B source work: v21 seeds 0–31, 120 days, 32/32 deterministic twins, exit 0. [I5 summary](probe/p17-a_eval/i5_v21/summary.json) SHA256 `a11aa8bfec756179865fa35ff8f040d7b933af241a93b1beaa0a1806af4ed587`. Corrected producer `50a73474e06d3a9abbb535729e9c7e1e134954b7` is retained in `/Users/rexxa/work/p17-data/stage-a-bin`; all five binary hashes match the producer archive. This establishes the comparison baseline; Stage B I5 equality is not yet claimed.
