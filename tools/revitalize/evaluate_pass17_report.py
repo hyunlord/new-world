@@ -102,7 +102,7 @@ def display(value: JsonValue) -> str:
 
 
 def render(report: Mapping[str, JsonValue]) -> str:
-    lines = [f"# Pass 17 Stage A — {report['verdict']}", "", f"Mode: {report['mode']}.", "",
+    lines = [f"# Pass 17 Stage {str(report['stage']).upper()} — {report['verdict']}", "", f"Mode: {report['mode']}.", "",
         "| Rule | Verdict |", "|---|---|"]
     for key, value in mapping(required(report, "rules"), "rules").items():
         lines.append(f"| {key} | {value} |")
@@ -128,6 +128,12 @@ def render(report: Mapping[str, JsonValue]) -> str:
             lines.append("| " + " | ".join([display(row["minute"]), display(row["stage"]), display(row["observations"])] + [display(shares[state]) for state in STATES]) + " |")
         for field in ("activity_minutes", "health_by_world"):
             lines += ["", f"### {field}", "", "```json", json.dumps(cohort[field], indent=2, allow_nan=False), "```"]
+    if "family" in report:
+        family = mapping(report["family"], "family")
+        worlds = [{key: value for key, value in mapping(row, "world").items() if key != "pair_eligibility"}
+            for row in array(family["worlds"], "worlds")]
+        lines += ["", "## Family observations", "", "Full pair IDs, first snapshots, life-stage categories and file hashes are retained in the JSON report.",
+            "", "```json", json.dumps({"births_by_day": family["births_by_day"], "worlds": worlds}, indent=2, allow_nan=False), "```"]
     for field in ("identity", "performance"):
         lines += ["", f"## {field}", "", "```json", json.dumps(report[field], indent=2, allow_nan=False), "```"]
     return "\n".join(lines) + "\n"
@@ -138,6 +144,6 @@ def write_report(report: Mapping[str, JsonValue], out_json: Path, out_md: Path) 
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
     if report.get("error") is not None:
-        out_md.write_text(f"# Pass 17 Stage A — ERROR\n\n{report['error']}\n")
+        out_md.write_text(f"# Pass 17 Stage {str(report['stage']).upper()} — ERROR\n\n{report['error']}\n")
     else:
         out_md.write_text(render(report))

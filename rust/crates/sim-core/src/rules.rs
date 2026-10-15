@@ -900,6 +900,19 @@ impl WorldRules {
         rules
     }
 
+    /// Initial family settings, before the separately recorded Stage B tuning.
+    pub const V22_FAMILY: FamilyRule = FamilyRule {
+        min_familiarity_permille: 300,
+        pair_minute: 1200,
+    };
+
+    /// Pass 17 Stage B: all v21 rules with family formation enabled.
+    pub const fn game_v22(seed: u64) -> Self {
+        let mut rules = Self::game_v21(seed);
+        rules.society.family = Some(Self::V22_FAMILY);
+        rules
+    }
+
     /// The placebo of [`Self::game_v20`]: temperament is drawn and stored but
     /// `effects` is false, so no choice leans with it (must equal `game_v19`).
     pub const fn game_v20_inert(seed: u64) -> Self {

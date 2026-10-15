@@ -93,9 +93,11 @@ pub const STREAM_ROUTINE: u64 = 0x524F_5554_494E_455F;
 pub const STREAM_ROUTINE_PLACE: u64 = 0x5254_4E50_4C41_4345;
 /// Children's bounded play steps; slots zero and one are the two axes.
 pub const STREAM_ROUTINE_PLAY: u64 = 0x5254_4E50_4C41_595F;
+/// Family sex identity; lineage subject and fixed tick, slot and replicate zero.
+pub const STREAM_SEX: u64 = 0x5345_585F_4944_454E;
 
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 20] = [
+pub const STREAMS: [u64; 21] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -116,6 +118,7 @@ pub const STREAMS: [u64; 20] = [
     STREAM_ROUTINE,
     STREAM_ROUTINE_PLACE,
     STREAM_ROUTINE_PLAY,
+    STREAM_SEX,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

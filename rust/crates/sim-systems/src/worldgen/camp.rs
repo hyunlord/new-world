@@ -165,6 +165,15 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                     }
                 }
             }
+            if engine.resources.rules.society.family.is_some() {
+                let _ = engine.world.insert_one(
+                    entity,
+                    sim_core::components::Sex::from_lineage(cfg.seed, lineage.key),
+                );
+                let _ = engine
+                    .world
+                    .insert_one(entity, sim_core::components::Kin::default());
+            }
         }
         // Pass 4: founders start already aged, from their own aging stream.
         if let Some(rule) = engine.resources.rules.society.aging {

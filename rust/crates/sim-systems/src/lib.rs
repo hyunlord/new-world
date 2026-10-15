@@ -325,6 +325,7 @@ pub fn register_shelter_planning_systems(engine: &mut SimEngine) {
 /// Register rules-gated child maturation, owned-shelter bed assignments and aging.
 pub fn register_rhythm_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::agent::MaturationSystem));
+    engine.register_system(Box::new(runtime::agent::PairingSystem));
     engine.register_system(Box::new(runtime::agent::BedAssignmentSystem::default()));
     engine.register_system(Box::new(runtime::agent::AgingSystem));
 }

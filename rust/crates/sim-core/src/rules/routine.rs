@@ -103,10 +103,25 @@ pub struct FamilyRule {
     pub pair_minute: u32,
 }
 
+impl FamilyRule {
+    /// Convert the configured integer threshold to the relationship scale.
+    pub const fn familiarity_threshold(&self) -> f64 {
+        self.min_familiarity_permille as f64 / 1000.0
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::rules::WorldRules;
+
+    #[test]
+    fn family_familiarity_threshold_preserves_integer_extremes() {
+        for value in [0, 200, 300, 1000, u16::MAX] {
+            let rule = FamilyRule { min_familiarity_permille: value, pair_minute: 1200 };
+            assert_eq!(rule.familiarity_threshold(), f64::from(value) / 1000.0);
+        }
+    }
 
     #[test]
     fn adult_weights_follow_each_axis_at_extremes_and_midpoint() {

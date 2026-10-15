@@ -15,9 +15,11 @@
 //! Godot dictionaries. Sim-test exercises the collectors directly.
 
 pub mod activity;
+pub mod family;
 pub mod world_node;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
+pub use family::{collect_agent_family, AgentFamilyRow};
 
 pub use world_node::enqueue_building_placed;
 pub use world_node::{

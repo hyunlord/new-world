@@ -518,10 +518,9 @@ pub enum CausalEvent {
         parent: Option<EventId>,
         /// The newly spawned agent's `AgentId`.
         agent: AgentId,
-        /// Two parent agents that produced this birth (V7 Phase 10-γ /
-        /// P10γ-A10). Populated by `SettlementSystem.run_births` with the
-        /// two lowest-id distinct members of the birth settlement. Empty
-        /// for world-seed spawns (`parent == None`).
+        /// Parent agents in lineage/inheritance order. Family-enabled births
+        /// use mother then father; otherwise the two lowest-id distinct
+        /// settlement members remain the fallback. Empty for world-seed spawns.
         parent_ids: Vec<AgentId>,
         /// Simulation tick at which the agent was born.
         tick: u64,

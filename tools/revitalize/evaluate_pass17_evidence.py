@@ -41,9 +41,9 @@ def text_value(value: JsonValue, location: str) -> str:
     raise InputError(location, "expected a nonempty string")
 
 
-def verify_header(payload: Mapping[str, JsonValue]) -> Verdict:
-    if integer(required(payload, "schema_version"), "schema_version") != 1 or required(payload, "stage") != "a":
-        raise InputError("evidence", "requires schema_version 1 and stage a")
+def verify_header(payload: Mapping[str, JsonValue], stage: Literal["a", "b"] = "a") -> Verdict:
+    if integer(required(payload, "schema_version"), "schema_version") != 1 or required(payload, "stage") != stage:
+        raise InputError("evidence", f"requires schema_version 1 and stage {stage}")
     verdict = required(payload, "verdict")
     errors = array(required(payload, "errors"), "errors")
     if verdict == "ERROR":
@@ -57,11 +57,13 @@ def verify_header(payload: Mapping[str, JsonValue]) -> Verdict:
     return "PASS" if verdict == "PASS" else "FAIL"
 
 
-def verify_identity(payload: Mapping[str, JsonValue], source: Path) -> None:
+def verify_identity(payload: Mapping[str, JsonValue], source: Path, stage: Literal["a", "b"] = "a") -> None:
     checks = mapping(required(payload, "checks"), "checks")
     names = {"I1", "I2", "I3", "I4", "v19_pins", "v20_pins"}
+    if stage == "b":
+        names.add("I5")
     if set(checks) != names:
-        raise InputError("identity checks", "requires I1-I4 and v19_pins/v20_pins exactly")
+        raise InputError("identity checks", f"requires {', '.join(sorted(names))} exactly")
     outcomes = []
     for name, value in checks.items():
         check = mapping(value, name)
@@ -81,7 +83,7 @@ def verify_identity(payload: Mapping[str, JsonValue], source: Path) -> None:
         raise InputError("identity", "aggregate verdict disagrees with individual checks")
 
 
-def verify_performance(payload: Mapping[str, JsonValue]) -> None:
+def verify_performance(payload: Mapping[str, JsonValue], stage: Literal["a", "b"] = "a") -> None:
     checks = mapping(required(payload, "checks"), "checks")
     limits = {"mean_relative": (0.15, "<="), "mean_absolute": (4.0, "<="),
         "p999_relative": (0.35, "<="), "slope": (1.7, "<")}
@@ -107,7 +109,7 @@ def verify_performance(payload: Mapping[str, JsonValue]) -> None:
         raise InputError("repeats", "requires three old and three new measurements")
     provenance = mapping(required(payload, "provenance"), "provenance")
     directory = Path(text_value(required(provenance, "input_directory"), "input_directory"))
-    verified = evaluate_performance(directory, "a")
+    verified = evaluate_performance(directory, stage)
     if verified["verdict"] == "ERROR":
         raise InputError("performance", f"raw evidence verification failed: {verified['errors']}")
     for field in ("checks", "repeats", "medians", "slopes", "quick"):
@@ -117,19 +119,20 @@ def verify_performance(payload: Mapping[str, JsonValue]) -> None:
         raise InputError("provenance", "performance manifest changed")
 
 
-def load_evidence(path: Path | None, kind: Literal["identity", "performance"], tuning: bool) -> Evidence:
+def load_evidence(path: Path | None, kind: Literal["identity", "performance"], tuning: bool,
+                  stage: Literal["a", "b"] = "a") -> Evidence:
     if path is None:
         return Evidence("PENDING" if tuning else "ERROR", None, None, None, f"{kind} evidence was not supplied")
     try:
         payload = mapping(read_json(path), kind)
         sha = digest(path)
-        verdict = verify_header(payload)
+        verdict = verify_header(payload, stage)
         if verdict == "ERROR":
             return Evidence(verdict, str(path), sha, payload, "producer reported ERROR")
         if kind == "identity":
-            verify_identity(payload, path)
+            verify_identity(payload, path, stage)
         else:
-            verify_performance(payload)
+            verify_performance(payload, stage)
         return Evidence(verdict, str(path), sha, payload)
     except InputError as error:
         return Evidence("ERROR", str(path), None, None, str(error))

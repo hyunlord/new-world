@@ -226,6 +226,17 @@ pub fn game_v21_scene(seed: u64) -> SimEngine {
     engine
 }
 
+/// Pass 17 fixture with family rules on the routine world's generation inputs.
+pub fn game_v22_scene(seed: u64) -> SimEngine {
+    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v22(seed),
+        sim_core::rules::WorldRules::game_v22(seed),
+    );
+    engine.resources.world_variety = Some(variety);
+    engine
+}
+
 /// Pass 16 placebo: world `seed` under `game_v20_inert` (temperament drawn
 /// and stored, no lean acts — the same world as `game_v19`).
 pub fn game_v20_inert_scene(seed: u64) -> SimEngine {

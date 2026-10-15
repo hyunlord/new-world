@@ -591,6 +591,21 @@ impl FissionSystem {
             if (adults.len() as u32) < rule.min_adults || (ranked.len() as u32) < k {
                 continue;
             }
+            let family = resources.rules.society.family.map(|_| {
+                let members = settlement.member_agents.iter().copied().collect();
+                (
+                    crate::runtime::agent::households::households(world, &members),
+                    crate::runtime::agent::households::couples(world, &members),
+                )
+            });
+            let group = if let Some((households, _)) = &family {
+                let Some(group) = crate::runtime::agent::households::select_departure(
+                    &ranked, households, rule, k,
+                ) else {
+                    continue;
+                };
+                group
+            } else {
             let mut group: BTreeSet<AgentId> = adults.iter().take(rule.min_adults as usize).copied().collect();
             for (_, id, _) in &ranked {
                 if group.len() as u32 >= k {
@@ -598,11 +613,41 @@ impl FissionSystem {
                 }
                 group.insert(*id);
             }
+            group
+            };
             let Some(leader) = group.iter().copied().find(|id| roster.get(id).is_some_and(|row| row.2)) else {
                 continue; // no adult in the group (only with `min_adults` 0)
             };
             self.next_id += 1;
             let fission_id = self.next_id;
+            if let Some((households, couples)) = family {
+                let couples_split = couples
+                    .iter()
+                    .filter(|pair| group.contains(&pair[0]) != group.contains(&pair[1]))
+                    .count() as u32;
+                let households_split = households
+                    .iter()
+                    .filter(|household| {
+                        household.iter().any(|id| group.contains(id))
+                            && household.iter().any(|id| !group.contains(id))
+                    })
+                    .count() as u32;
+                crate::runtime::agent::pairing::record_family_event(
+                    world,
+                    tick,
+                    sim_core::components::FamilyEvent::Departed {
+                        fission_id,
+                        parent: sid,
+                        leader,
+                        members: group.iter().copied().collect(),
+                        households,
+                        couples_total: couples.len() as u32,
+                        couples,
+                        couples_split,
+                        households_split,
+                    },
+                );
+            }
             let (food, wood) = if rule.stock_share {
                 let share = |held: u32| (u64::from(held) * u64::from(k) / u64::from(members.max(1))) as u32;
                 let Some(parent) = resources.settlements.get_mut(&sid) else { continue };

@@ -50,6 +50,7 @@ use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::family::{agent_family_to_dict, collect_agent_family};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
@@ -184,12 +185,12 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
 }
 
-/// Revitalize Pass 16 — the live game's world of `seed`: `game_v20` (the
-/// `game_v19` world with temperament). Pure (no Godot) so the harness can
+/// Revitalize Pass 17 — the live game's world of `seed`: `game_v22`, with
+/// temperament, routines and families. Pure (no Godot) so the harness can
 /// check it; `WorldSimNode::init` and `reset_world` call it, while
 /// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::game_v20(seed), WorldRules::game_v20(seed))
+    build_world_with(&WorldGenConfig::game_v22(seed), WorldRules::game_v22(seed))
 }
 
 /// Revitalize Pass 16 — the temperament of the agent whose
@@ -219,7 +220,7 @@ fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperame
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            // Revitalize Pass 16: the live game runs `game_v20` (temperament).
+            // Revitalize Pass 17: the live game runs `game_v22` (families).
             engine: build_game_engine(DEFAULT_GAME_SEED),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -491,6 +492,19 @@ impl WorldSimNode {
     #[func]
     fn get_agent_temperament(&self, entity_bits: i64) -> VarDictionary {
         agent_temperament_to_dict(collect_agent_temperament(&self.engine.world, entity_bits as u64))
+    }
+
+    /// Pass 17 family as exactly `{found, female, mother, father, partner, children}`.
+    /// Input uses snapshot `ids` (entity bits); links use `agent_ids` (AgentId).
+    /// Missing links are -1; children are a sorted PackedInt64Array of living
+    /// offspring at any life stage. Missing family components return found=false,
+    /// female=false, -1 links and empty children; recorded absent parents remain ids.
+    #[func]
+    fn get_agent_family(&self, entity_bits: i64) -> VarDictionary {
+        agent_family_to_dict(collect_agent_family(
+            &self.engine.world,
+            u64::from_ne_bytes(entity_bits.to_ne_bytes()),
+        ))
     }
 
     /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
@@ -2875,17 +2889,17 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
-    fn live_game_is_game_v20() {
-        // Pass 16 6.6: init and reset_world build game_v20; the stress world stays v19.
+    fn live_game_is_game_v22() {
+        // Pass 17 7.5: init and reset_world build game_v22; the stress world stays v19.
         let engine = super::build_game_engine(20_261_010);
-        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v20(20_261_010));
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v22(20_261_010));
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
     }
 
     #[test]
     fn collect_agent_temperament_reads_the_component() {
-        // Pass 16 6.6: every founder of game_v20 has one; stale bits and v19 agents give None.
+        // Live v22 retains founder temperament; stale bits and v19 agents give None.
         let engine = super::build_game_engine(7);
         let mut seen = 0;
         for (entity, t) in engine.world.query::<&sim_core::components::Temperament>().iter() {
@@ -2898,6 +2912,39 @@ mod revitalize_tooling_tests {
         let v19 = super::build_stress_engine(7, 3);
         for (entity, _) in v19.world.query::<&sim_core::components::Agent>().iter() {
             assert_eq!(super::collect_agent_temperament(&v19.world, entity.to_bits().get()), None);
+        }
+    }
+
+    #[test]
+    fn live_founders_have_family_while_stress_founders_do_not() {
+        // Given the live v22 and stress v19 builders used by init and resets.
+        let live = super::build_game_engine(7);
+        let stress = super::build_stress_engine(7, 3);
+        let mut seen = 0;
+        // When reading every live founder's family through entity bits.
+        for (entity, _) in live.world.query::<&sim_core::components::Agent>().iter() {
+            let row = super::collect_agent_family(&live.world, entity.to_bits().get())
+                .expect("live founder family");
+            let sex = live
+                .world
+                .get::<&sim_core::components::Sex>(entity)
+                .expect("founder sex");
+            // Then sex is preserved and unknown founder links remain empty.
+            assert_eq!(
+                row,
+                crate::ffi::AgentFamilyRow {
+                    female: sex.female,
+                    ..Default::default()
+                }
+            );
+            seen += 1;
+        }
+        assert!(seen > 0);
+        for (entity, _) in stress.world.query::<&sim_core::components::Agent>().iter() {
+            assert_eq!(
+                super::collect_agent_family(&stress.world, entity.to_bits().get()),
+                None
+            );
         }
     }
 

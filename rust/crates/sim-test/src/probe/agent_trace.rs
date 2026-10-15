@@ -29,7 +29,7 @@
 use serde_json::{json, Value};
 use sim_core::causal::CausalEvent;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Elder, Inventory, Lineage, Position, ResourceKind, Social, TargetKind,
+    Agent, AgentId, AgentState, Child, Elder, FamilyEvent, Inventory, Lineage, Position, ResourceKind, Social, TargetKind,
     Temperament, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_engine::SimEngine;
@@ -112,6 +112,7 @@ pub(crate) struct AgentTracer {
     /// People whose computed temperament differs from their component.
     component_mismatches: u64,
     routine: super::pass17::RoutineTracer,
+    family: Option<super::family_trace::FamilyTracer>,
 }
 
 /// The clock minute of the engine's last system tick.
@@ -140,7 +141,7 @@ impl AgentTracer {
     /// Starts the trace on a freshly built engine (tick 0): every person
     /// present is a founder.
     pub(crate) fn start(engine: &SimEngine) -> Self {
-        let mut tracer = Self { seed: engine.resources.world_seed, routine: super::pass17::RoutineTracer::start(engine), ..Self::default() };
+        let mut tracer = Self { seed: engine.resources.world_seed, routine: super::pass17::RoutineTracer::start(engine), family: super::family_trace::FamilyTracer::start(engine), ..Self::default() };
         for (_, (agent, lineage, temperament)) in
             engine.world.query::<(&Agent, Option<&Lineage>, Option<&Temperament>)>().iter()
         {
@@ -209,6 +210,16 @@ impl AgentTracer {
 
     /// Observes the engine right after one `engine.tick()`.
     pub(crate) fn after_tick(&mut self, engine: &SimEngine) {
+        let births = self.family.as_mut().map(|family| family.after_tick(engine)).unwrap_or_default();
+        for event in births {
+            let FamilyEvent::Born { child, mother, father, lineage_key, temperament, .. } = event else { continue };
+            if self.people.contains_key(&child) { continue; }
+            let parents: Vec<_> = [mother, father].into_iter().flatten().collect();
+            let parent_temperaments = [mother, father].map(|id| id.and_then(|id| self.people.get(&id)).and_then(|person| person.temperament));
+            let computed = Some(Temperament::child(self.seed, lineage_key, parent_temperaments));
+            let person = self.person(lineage_key, Some(engine.resources.current_tick), computed, Some(&temperament), parents, parent_temperaments, true);
+            self.people.insert(child, person);
+        }
         let r = &engine.resources;
         let sys_tick = r.current_tick;
         let minute = clock_minute(engine);
@@ -424,6 +435,10 @@ impl AgentTracer {
 
     pub(crate) fn routine_output(&self) -> [(&'static str, Vec<Value>); 2] {
         self.routine.output()
+    }
+
+    pub(super) fn family_output(&self, engine: &SimEngine) -> Option<super::family_trace::FamilyOutput> {
+        self.family.as_ref().map(|family| family.output(engine))
     }
 }
 
