@@ -1,0 +1,7 @@
+i1_v19 vs p17-0_base: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i3_v16 vs p17-0_base: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i4_v20 vs p17-0_base: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i5_v21 vs p17-5_b_identity: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i2_sha256 equals p17-0_base (20 arrays)
+i6_v22: new reference (Pass 17 recorded no 32-world game_v22 identity summary)
+   5 DETERMINISM PASS
