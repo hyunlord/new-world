@@ -1,0 +1,10 @@
+2026-10-15 19:43:58 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:43:59 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:00 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:01 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:02 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:03 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:04 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:04 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:05 KST owned lock permitted: stage b performance; pid=38429
+2026-10-15 19:44:10 KST owned lock permitted: stage b performance; pid=38429

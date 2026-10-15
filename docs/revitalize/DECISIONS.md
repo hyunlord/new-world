@@ -973,7 +973,7 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 
 | Part | start (UTC) | end (UTC) | notes |
 |---|---|---|---|
-| 5 | 2026-10-15 09:59:08 | in progress | Stage B tuning, identity I1–I5 and performance; original 300 threshold starts round 1. |
+| 5 | 2026-10-15 09:59:08 | 2026-10-15 10:45:31 | Original300 frozen, I1–I5/pins PASS, F8 PASS; tuning F5FAIL retained; no quiet wait. |
 
 - Part 4 closure preserves the two literal trailing spaces in `verification/p17-4_smoke/build/commands.txt`, produced by the command recorder. The normal staged whitespace check passes with only that exact generated receipt excluded; no authored source whitespace exception is used.
 
@@ -982,3 +982,15 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 - Stage B tuning round 1 completes 09:59:28.670758–10:03:00.360668 UTC for v22 and 10:03:00.541464–10:06:22.081104 for v21, each 16 worlds × 60 days with deterministic twins PASS. Evaluation ends 10:06:39.335311 (valid measured FAIL, exit1). F1=292/539=0.5417439703153989, CI[0.49160195448791183,0.5963951476544374], passes the point-estimate bar, so freeze300 and do not run round2. F2=593/597, F3=0.09268879140165058 with positive CI, F4=7459/7493, all F6 bars PASS. F5=9/80=0.1125, CI[0.0549413,0.180556], FAIL is retained without changing household rules. F7/F8 remain pending. Verified 353 raw hashes; final retained binaries are copied byte-identically from producer47b into `b-final-bin`. An initial external completion check looked for `raw_sha256.json`; the established runner actually writes `raw_sha256.txt`, and verification used that original manifest unchanged.
 
 - Full Stage B tuning raw-family audit: 16 worlds,8,333,090 checks,zero discrepancies;138 input hashes verified. Eight completed fissions contribute9/80; one pending1/9 is excluded. All nine split couples are adult–elder pairs at the exact departure and ±60-minute samples, with the adult leaving and elder staying. Final group sizes12–14 plus the terminal top-up-to6 code rule out individual top-up on those departures (source-supported inference; branch markers are not traced). Preserve the specified elder exclusion and F5FAIL. Nightly observations contain49 bedless person-samples and8,350 unused slot-samples; these do not measure actual sleep or distinct people. The detailed66-input-hash forensic joins are retained.
+
+- Final Stage B F7 PASS: I1 v19 10:08:31–10:15:27, I3 v16 10:15:27–10:19:59, I4 v20 10:19:59–10:27:22, I2 10:27:22–10:27:36, I5 v21 10:27:36–10:43:32 UTC. All four 32-world/120-day summaries have zero non-timing differences; all20 recorder hashes and both three-test frozen pin suites pass. Workloads finish10:43:47.947316. Identity manifestSHA256 `6b627b091095b84f1f207ddadd77706ce068dc1ef431f18edf60bb7d83c7d7a4`; all306 original raw hashes reverified. The producer remains47b72440, with no source changes since freeze.
+
+- Final Stage B F8 PASS: quiet hold10:43:58–10:44:15 UTC,16.8seconds,load3.75,uncontended,0.1seconds prerequisite checking and no actual wait. All10 commands exit0. Three-repeat median v21/v22 mean0.4660202898550725/0.4716239130434782ms(+1.20244%); p99.9 2.543/2.595ms(+2.04483%); new slope0.9881343412222895,95%CI[0.356730089072417,1.619538593372162]. All four bars pass. Quick fingerprints match, and all42 raw files have byte-identical committed copies. PerformanceSHA256 `2338579e7538b790e686b2ba97d60176a50ddd00695c18e6942a9b3d91e61e3b`. These results do not overwrite Stage A R5FAIL or Stage B tuning F5FAIL.
+
+- The Stage B preregistration draft initially repeated F1–F8 in a status table, which the strict registration parser would count twice. Before registration or any reserved seed launch, that redundant status table was converted to prose; the exact eight-row rule table and every statistical method are unchanged.
+
+- Part5 preserves ten command-log trailing spaces in `perf/p17-b/raw/runs.log` and final blank lines in the two pin receipts. Normal staged whitespace validation passes with only those three generated paths excluded; original raw hashes and bytes stay intact.
+
+| Part | start (UTC) | end (UTC) | notes |
+|---|---|---|---|
+| 6 | 2026-10-15 10:45:31 | in progress | Register frozen Stage B criteria, then run the reserved paired32×120-day cohort. |
