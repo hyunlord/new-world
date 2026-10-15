@@ -169,3 +169,11 @@ Validation scores, `v2_v16` (bold `cal_best`, "(fair)" `cal_best_fair`; 400 trai
 | persistence (reference) | 0.1433 | 0.1302 | 0.4644 | 0.2134 | 0.5829 | 0.1403 | 0.4707 | 0.2228 | 0.5895 |
 | ridge (reference) | 0.1103 | 0.1731 | 0.3099 | 0.2240 | 0.3149 | 0.1445 | 0.2180 | 0.2102 | 0.2793 |
 
+
+## Amendment 1 (2026-10-15 20:25 KST, review round 1, R8)
+
+After the pre-registration commit `b57ef7bb` the following files under `tools/` changed; none of them computes a test
+score or a verdict differently: `wm2/judge_wm2.py` (`149e8fe7`, 14:31) adds two report-only fields per effect cell
+(`mean_pred`, `mean_true`); `wm2/diag_fission.py` and `wm2/diag_effect_lag.py` are new validation-only diagnostics;
+`wm2/launch/floor.sh` and `floor_post.sh` are launch scripts. Every test number was computed by code at `b57ef7bb`
+(`floor.py`, `effects.py`, `split_task.py`, `m1_gru.py final`, `climatology.py final` ran from the `b57ef7bb` worktree).
