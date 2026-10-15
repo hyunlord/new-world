@@ -9,7 +9,7 @@ Start checkpoint: 2026-10-15T07:19:58+09:00 (GOAL.md filesystem birth epoch 1792
 | 2 | 2026-10-15T08:32:03.123340+09:00 | 2026-10-15T09:09:31.091049+09:00 | PASS: six A/A-prime controls and six A/B comparisons all0pixels/0channel; two independent visual checks PASS; WIP2e16580e pushed/ls-remote matches |
 | 3 | 2026-10-15T10:18:28+09:00 | 2026-10-15T13:22:18+09:00 | DONE: all three selected rows implemented/tested; each six-frame exact identity PASS and alternating cost recorded. Agent46.6435→45.6475ms (contention differs); Building0.2815→0.0800ms; Nature1.0200→1.3425ms, no saving. Row3 46193a03 pushed and remoteverified. |
 | 4 | 2026-10-15T13:23:00+09:00 | 2026-10-15T16:29:05+09:00 | DONE (3h06m05s): required four-world after matrix and A30 validated; final comparison F1/F4/F5 PASS, F2/F3 FAIL; F6 no qualifying measured stress size; F7 report-only ON10.8075/OFF9.7590ms. A30 contended after3798s wait. |
-| 5 | 2026-10-15T14:55:07.895108+09:00 | | In progress: final gate73/73,2146Rust PASS at15:06:57;94sourcehashes unchanged; rebuilt-library six-frame identity exact PASS. Independent round1 review continues; publication waits A30 and final comparison. |
+| 5 | 2026-10-15T14:55:07.895108+09:00 | publication.json finished_at | Gate73/73,2146Rust PASS;94sourcehashes unchanged; final six-frame exact PASS; blind independent Round1 complete without correction findings; baseline worktree removed16:36:19. Exact final report commit, remote heads and elapsed recorded after publication in external publication.json and final response. |
 
 Re-read GOAL.md current Part at every Part transition and after compaction.
 
