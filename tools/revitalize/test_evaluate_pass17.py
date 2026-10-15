@@ -141,6 +141,27 @@ def write_cohort(root: Path, scene: str) -> Path:
 
 
 class Pass17InputTests(unittest.TestCase):
+    def test_activity_started_as_child_and_completed_as_adult_loads(self) -> None:
+        row: dict[str, reader.JsonValue] = {
+            "id": 7, "temperament": {axis: 500 for axis in data.AXES},
+            "adult_ticks": 30, "adult_days": 30 / 1440, "social_completed": 0,
+            "routine": {"activities_started": [0] * 7, "activity_minutes": [0, 0, 0, 0, 0, 30, 0],
+                "completed_activities": 1, "completed_minutes": 30,
+                "no_place_redraws": 0, "no_place_failures": 0},
+        }
+        parsed = reader.parse_person(row)
+        self.assertEqual(parsed.completed_activities, 1)
+        self.assertEqual(sum(parsed.activities_started), 0)
+        self.assertEqual(parsed.completed_minutes, 30)
+        self.assertEqual(stage_a.routine_pairs((parsed,), "p"), [])
+        for minutes, completed, duration in ((31, 1, 30), (30, 1, 31), (30, 0, 30)):
+            row["routine"] = {"activities_started": [0] * 7, "activity_minutes": [0, 0, 0, 0, 0, minutes, 0],
+                "completed_activities": completed, "completed_minutes": duration,
+                "no_place_redraws": 0, "no_place_failures": 0}
+            with self.subTest(minutes=minutes, completed=completed, duration=duration):
+                with self.assertRaises(data.InputError):
+                    reader.parse_person(row)
+
     def test_complete_synthetic_cohort_loads_exact_numeric_values(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = write_cohort(Path(temporary) / "v21", "game_v21")

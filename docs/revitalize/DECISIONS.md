@@ -888,7 +888,7 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 
 | Part | start (UTC) | end (UTC) | notes |
 |---|---|---|---|
-| 1 | 2026-10-15 06:37:47 | in progress | Daily routine implementation and observer/bridge integration. |
+| 1 | 2026-10-15 06:37:47 | 2026-10-15 07:15:30 | Routine implementation, focused checks, traced probe identity and actual Godot getter QA passed. |
 
 - R2 shelter count: completed shelters are all newly present complete Shelter buildings, including daughter-camp boot shelters. `building_kinds` has no runtime removal; production insertions are construction completion and new daughter-camp placements. Therefore final minus initial Shelter count is exact for this definition. It will be frozen in the pre-registration and evaluator output, rather than mislabeled as construction work only.
 - Routine core verification: sim-core 344 tests passed (including five new formula/boundary tests); sim-core all-target Clippy passed. No stage verdict follows from these code checks; measured tuning/evaluation and identity proofs remain pending.
@@ -899,3 +899,13 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 
 - Part 1 retained failures: Clippy initially rejected an explicit nested movement-map type; collection type inference removed that warning without changing data or behavior. A new social regression incorrectly expected its progress map to clear on the completion tick. Existing control and old/new paired runtime tests prove progress 3 remains at tick 604 and is cleared at 605, with one Started at 601 and one Completed at 604. Only the new test expectation changed. LSP status was unavailable because its MCP transport was closed; compiler/Clippy/test evidence is recorded separately. Final metric evaluator has 24 passing tests, including complete ever-adult inventory validation.
 - Part 1 code freeze checks: 16 routine integration cases, 87 probe library cases, 344 core cases, 27 bridge cases and 24 metric/20 performance/10 identity Python cases pass; workspace all-target Clippy exits 0 (90 s). Actual traced probe and Godot getter QA remain in Part 1 before its completion/push.
+
+- Part 1 actual smoke: producer `8de4073a`, v20/v21 each seeds 42–43 × 3 days, hourly sampling, deterministic twin checks, trace on/off. Both strict summaries match except timing. Loader accepts 43 ever-adult records and 144 hourly rows per scene; v21 records 542 starts, 10,262 consuming minutes and zero routine observation misses. The live v20 Godot getter contract passes all 23 checks.
+- Cross-maturation trace semantics: starts belong to the life stage at start, while a completed episode contributes to adult completions if it has positive adult consuming minutes. The evaluator no longer assumes adult completions cannot exceed adult starts. Its new child-to-adult regression preserves exposure and duration consistency checks; all 25 evaluator tests pass. No simulation behavior changed.
+- Retained external smoke runner failure: macOS Bash 3.2 with `set -u` rejected an empty flags array before any probe launched. The corrected runner initializes a nonempty flags array and writes a fresh `part1-smoke-r2` directory; the failed original remains in `p17-data`.
+
+- Part 1 raw-trace hand check: the coordinator initially guessed a 360-minute clock offset and rejected valid 18:00 completions. The actual offset is 480 minutes, confirmed by the hour-zero records. Independent recomputation finds zero discrepancies in all 53 people and 43 adult records across both smoke seeds, including all 105 completed activities. Seed 42 adult 0 completes an 8-minute day-end episode and a 103-minute deadline episode: 111 / 2 = 55.5 minutes. No production change was required.
+
+| Part | start (UTC) | end (UTC) | notes |
+|---|---|---|---|
+| 2 | 2026-10-15 07:15:30 | in progress | Stage A tuning round 1, then frozen identity and performance proofs. |

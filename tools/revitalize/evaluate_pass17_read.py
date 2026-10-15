@@ -106,7 +106,7 @@ def parse_person(row: Mapping[str, JsonValue]) -> Person:
     started = counts(required(routine, "activities_started"), 7, "activities_started")
     completed = integer(required(routine, "completed_activities"), "completed_activities")
     duration = integer(required(routine, "completed_minutes"), "completed_minutes")
-    if sum(minutes) > adult_ticks or duration > sum(minutes) or completed > sum(started):
+    if sum(minutes) > adult_ticks or duration > sum(minutes):
         raise InputError("routine", "activity exposure/counts are inconsistent")
     if completed == 0 and duration != 0:
         raise InputError("completed_minutes", "duration exists without completed activities")
