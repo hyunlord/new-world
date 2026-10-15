@@ -101,14 +101,37 @@ fn choose_bush(
     let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     food_tiles
         .iter()
-        .filter(|(tile, amount)| {
-            **amount >= 1
-                && Some(**tile) != exclude
-                && chebyshev(**tile, home) <= rule.forage_radius
-                && claims.get(*tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
-        })
+        .filter(|(tile, amount)| bush_eligible(rule, home, claims, exclude, **tile, **amount))
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// The candidate filter of [`choose_bush`]; it does not depend on the person.
+fn bush_eligible(
+    rule: &ForageRule,
+    home: (u32, u32),
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+    tile: (u32, u32),
+    amount: u8,
+) -> bool {
+    amount >= 1
+        && Some(tile) != exclude
+        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.forage_radius
+        && claims.get(&tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+}
+
+/// Pass 18: whether [`choose_bush`] (without `exclude`) returns `Some` for
+/// this `home` and `claims`, whoever asks.
+fn bush_exists(
+    rule: &ForageRule,
+    home: (u32, u32),
+    food_tiles: &HashMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+) -> bool {
+    food_tiles
+        .iter()
+        .any(|(tile, amount)| bush_eligible(rule, home, claims, None, *tile, *amount))
 }
 
 /// Per-settlement firewood inputs computed once per decision tick (Pass 5).
@@ -149,19 +172,42 @@ fn choose_spot(
     let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     wood_tiles
         .iter()
-        .filter(|(tile, amount)| {
-            **amount >= 1
-                && Some(**tile) != exclude
-                && chebyshev(**tile, home) <= rule.wood_radius
-                && claims.get(*tile).copied().unwrap_or(0)
-                    < if rule.claims_bounded_by_amount {
-                        rule.max_gatherers_per_spot.min(u32::from(**amount))
-                    } else {
-                        rule.max_gatherers_per_spot
-                    }
-        })
+        .filter(|(tile, amount)| spot_eligible(rule, home, claims, exclude, **tile, **amount))
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// The candidate filter of [`choose_spot`]; it does not depend on the person.
+fn spot_eligible(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+    tile: (u32, u32),
+    amount: u8,
+) -> bool {
+    amount >= 1
+        && Some(tile) != exclude
+        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.wood_radius
+        && claims.get(&tile).copied().unwrap_or(0)
+            < if rule.claims_bounded_by_amount {
+                rule.max_gatherers_per_spot.min(u32::from(amount))
+            } else {
+                rule.max_gatherers_per_spot
+            }
+}
+
+/// Pass 18: whether [`choose_spot`] (without `exclude`) returns `Some` for
+/// this `home` and `claims`, whoever asks.
+fn spot_exists(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    wood_tiles: &BTreeMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+) -> bool {
+    wood_tiles
+        .iter()
+        .any(|(tile, amount)| spot_eligible(rule, home, claims, None, *tile, *amount))
 }
 
 /// Resource presence used to select actionable survival needs.
@@ -590,6 +636,23 @@ pub fn nearest_gather_tile(
         })
         .map(|(k, _)| *k)
         .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
+}
+
+/// Pass 18: whether [`nearest_gather_tile`] returns `Some` (the same filters,
+/// without choosing the nearest).
+fn gather_tile_exists(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    radius: u32,
+    local: Option<((u32, u32), u32)>,
+) -> bool {
+    tiles.iter().any(|((tx, ty), v)| {
+        *v > 0
+            && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
+            && local.is_none_or(|(home, catchment)| {
+                tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+            })
+    })
 }
 
 /// Phase 5-β decision system. Stateless — all per-agent state lives
@@ -1186,59 +1249,57 @@ impl RuntimeSystem for AgentDecisionSystem {
                             fatigue_threshold,
                         )
                         .is_some();
-                        let forage = forage_rule
-                            .filter(|_| forage_window && worker && !no_trips)
-                            .and_then(|rule| {
-                                let sid = member_of.get(&agent.id)?;
-                                let plan = forage_plans.get(sid)?;
-                                let inv = inventory_opt.as_ref()?;
-                                let room = inv.total() < INVENTORY_CAPACITY;
-                                let light =
-                                    inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold);
-                                if !(room && light && (plan.in_hand as f64) < plan.target) {
-                                    return None;
-                                }
-                                choose_bush(
-                                    &rule,
-                                    plan.home,
-                                    (pos.x, pos.y),
-                                    &resources.food_tiles,
-                                    &claims,
-                                    None,
-                                )
-                            })
-                            .is_some();
-                        let firewood = firewood_rule
-                            .filter(|_| worker && !no_trips)
-                            .and_then(|rule| {
-                                let sid = member_of.get(&agent.id)?;
-                                let plan = wood_plans.get(sid)?;
-                                if !(if plan.urgent {
-                                    urgent_window
-                                } else {
-                                    wood_window
-                                }) {
-                                    return None;
-                                }
-                                let inv = inventory_opt.as_ref()?;
-                                let room = inv.total() < INVENTORY_CAPACITY;
-                                let light =
-                                    inv.get(ResourceKind::Wood) < wood_haul(rule.haul_threshold);
-                                if !(room && light && (plan.in_hand as f64) < plan.target) {
-                                    return None;
-                                }
-                                let rule = urgent_rule(rule, plan.urgent);
-                                choose_spot(
-                                    &rule,
-                                    plan.home,
-                                    (pos.x, pos.y),
-                                    &resources.wood_tiles,
-                                    &wood_claims,
-                                    None,
-                                )
-                            })
-                            .is_some();
-                        let gather = {
+                        // Pass 18: the trip predicates only ask whether a choice
+                        // exists (`choose_bush` / `choose_spot` /
+                        // `nearest_gather_tile` filter candidates independently of
+                        // the person's position or rank), and run only after the
+                        // cheap predicates are false. All are pure, so the verdict
+                        // is the eager OR of Pass 17.
+                        let forage = || {
+                            forage_rule
+                                .filter(|_| forage_window && worker && !no_trips)
+                                .and_then(|rule| {
+                                    let sid = member_of.get(&agent.id)?;
+                                    let plan = forage_plans.get(sid)?;
+                                    let inv = inventory_opt.as_ref()?;
+                                    let room = inv.total() < INVENTORY_CAPACITY;
+                                    let light = inv.get(ResourceKind::Food)
+                                        < food_haul(rule.haul_threshold);
+                                    if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                        return None;
+                                    }
+                                    bush_exists(&rule, plan.home, &resources.food_tiles, &claims)
+                                        .then_some(())
+                                })
+                                .is_some()
+                        };
+                        let firewood = || {
+                            firewood_rule
+                                .filter(|_| worker && !no_trips)
+                                .and_then(|rule| {
+                                    let sid = member_of.get(&agent.id)?;
+                                    let plan = wood_plans.get(sid)?;
+                                    if !(if plan.urgent {
+                                        urgent_window
+                                    } else {
+                                        wood_window
+                                    }) {
+                                        return None;
+                                    }
+                                    let inv = inventory_opt.as_ref()?;
+                                    let room = inv.total() < INVENTORY_CAPACITY;
+                                    let light = inv.get(ResourceKind::Wood)
+                                        < wood_haul(rule.haul_threshold);
+                                    if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                        return None;
+                                    }
+                                    let rule = urgent_rule(rule, plan.urgent);
+                                    spot_exists(&rule, plan.home, &resources.wood_tiles, &wood_claims)
+                                        .then_some(())
+                                })
+                                .is_some()
+                        };
+                        let gather = || {
                             let has_room = inventory_opt
                                 .as_ref()
                                 .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
@@ -1261,13 +1322,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 && has_room
                                 && bounded
                                 && !no_trips
-                                && nearest_gather_tile(
+                                && gather_tile_exists(
                                     pos,
                                     &resources.food_tiles,
                                     GATHER_SCAN_RADIUS,
                                     local_home.get(&agent.id).map(|home| (*home, catchment)),
                                 )
-                                .is_some()
                         };
                         let social = social_ready
                             && social_eligible_by_pos
@@ -1287,12 +1347,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 })
                         });
                         if need
-                            || forage
-                            || firewood
-                            || gather
                             || assigned_builders.contains_key(&agent.id)
                             || social
                             || meal
+                            || forage()
+                            || firewood()
+                            || gather()
                         {
                             routine.interrupt(agent.id, entity);
                             *state = AgentState::Idle;
