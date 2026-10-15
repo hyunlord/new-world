@@ -1,6 +1,8 @@
 # Family v1 (`game_v22`)
 
-Pass 17 Stage B enables recorded parents, mutual partnerships and household-aware beds and fission. `WorldRules::game_v22(seed)` inherits every v21 rule and sets only `society.family`. Stage B starts after the committed Stage A verdict and I5 baseline in `44aebafa5acf5668d21418f611d8f0ce3a5d13d3`. Its 16-world tuning cohort is complete; final identity, performance and held-out verdicts follow the frozen configuration.
+Pass 17 Stage B enables recorded parents, mutual partnerships and household-aware beds and fission. `WorldRules::game_v22(seed)` inherits every v21 rule and sets only `society.family`. Stage B starts after the committed Stage A verdict and I5 baseline in `44aebafa5acf5668d21418f611d8f0ce3a5d13d3`. Its 16-world tuning and 32-world held-out cohorts are complete with the original familiarity threshold 300.
+
+The held-out overall verdict is **FAIL**: F1 is 527/1064 = 0.495301, below 0.50. F2–F8 pass. Corrected literal-brief F3 is 0.104923 with 95% interval [0.082794, 0.126084]; the original registered analysis and post-launch correction are preserved separately as described below. Completed fissions split 18/234 couples, passing F5, while the earlier tuning failure 9/80 remains a separate result. All 18 held-out split couples consist of an adult departing and an elder staying under the unchanged elder-exclusion rule. Identity I1–I5 and both pin suites pass. Median mean tick cost rises 1.20% and p99.9 rises 2.04% from v21 to v22; the decision-system scaling slope is 0.988134, so F8 passes. These results do not erase Stage A's R5 performance failure. See [the complete held-out evaluation](probe/p17-b_eval/eval.md).
 
 ## Identity and kinship
 

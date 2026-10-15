@@ -13,7 +13,9 @@ Authority: `PASS17_GOAL.md`, preserved unchanged. This plan implements the entir
 | 4 | completed | Complete family v1, v22 wiring, family bridge/trace | Part 3 verdict commit exists |
 | 5 | completed | Stage B tuning freeze, I1–I5, performance | Part 4 verified |
 | 6 | completed | Committed Stage B pre-registration, evaluation and verdicts | Part 5 freeze |
-| 8 | in_progress | English mechanics docs, independent review, exact-head gate, publication, Korean report | Parts 0–6, or explicitly recorded brief-authorized drop |
+| 8 | docs_sealed; completion_receipt_pending | Mechanics docs, Korean report, review findings and terminal C gate evidence sealed; exact-R gate, publication and authorized cleanup require the external completion receipt | Parts 0–6 completed; C gate PASS |
+
+Part 8 status distinguishes this committed documentation snapshot from terminal completion. C is `21d2b478a81d55ac138f0a60b830e06719ec0af3`; its full 15-step gate passed. R denotes the commit containing this sealed report and evidence, without inserting an unknown self-referential SHA. C's gate does not certify R. The same second round's C gate supplement is sealed with REVIEW_PASS17.md. Exact-R gate results, verified remote heads, draft PR #510 update, authorized base-worktree cleanup and actual Part 8 end time must be recorded in `/Users/rexxa/work/p17-data/final_publication_pass17.complete.json` before claiming Part 8 complete. The separate `final_publication_pass17.json` is a retained PENDING template, not completion evidence. No future result is implied by this seal.
 
 At each Part start and after compaction, re-read that Part's source sections in `PASS17_GOAL.md`. Record wall start/end, active duration, waits/pauses and notes in the RUNLOG. Push WIP after each Part. Finish the current step after 16 active hours, push and proceed to Part 8; preserve required Stage A/identity/performance evidence. Apply the brief's drop order only: family fission, household beds, all Stage B, Stage A tuning round 2. A missed metric bar is a recorded FAIL, never grounds to rewrite its bar or omit its value.
 
