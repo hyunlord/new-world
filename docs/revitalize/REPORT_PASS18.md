@@ -177,9 +177,9 @@ Apple M4 Max, CPU 14개, 메모리 38.65 GB, macOS 27.0.1 (Darwin 27.0.0), rustc
 | 1 | 00:27 | 02:41 | 2시간 14분 (Part 0·2와 겹침) | subprofile, Part 1 I1–I6, 조용 잠금 01:42:44 |
 | 2 | 00:42 | 03:39 | 2시간 57분 (겹침) | C1–C7, 개발 측정 3회, 최종 I1–I6 02:40–03:32, 공식 측정 03:38 |
 | 3 | 01:00 | 03:40 | 2시간 40분 (겹침) | `game_v23`, 튜닝 01:10–01:19, 등록 02:39, 평가 02:40–03:16 |
-| 4 | 03:41 | (최종 게이트 기록 커밋에서 확정) | |  최종 빌드 I1–I6, 리뷰 2회, 게이트, 보고 |
+| 4 | 03:41 | 06:18 | 2시간 37분 |  최종 빌드 I1–I6, 리뷰 2회, 게이트, 보고 |
 
-총 작업 시간은 최종 게이트 기록 커밋에서 확정(대기 포함, 12시간 한도 이내). 일시정지 없음.
+총 작업 시간 6시간 13분(00:05–06:18 KST, 대기 포함, 12시간 한도 이내). 일시정지 없음.
 
 ### 확인된 제한사항
 
@@ -193,7 +193,9 @@ Apple M4 Max, CPU 14개, 메모리 38.65 GB, macOS 27.0.1 (Darwin 27.0.0), rustc
 
 ### 게이트 결과
 
-**첫 게이트(`a0d656d0`, 03:52:23–05:05:32 KST): 15/15 단계 exit 0 — 녹색.** prepare_bridge, prepare_import, test_debug 2,262 통과·0 실패·0 무시, test_release 2,262/0/0, clippy, clippy --all-targets, 금지 수학 없음, bridge_build, godot_import, strict_check, smoke(오류 0), python 246 실행·0 건너뜀 OK, worldmodel 49 실행·24 건너뜀 OK, perf_quick(미측정 검증: 평균 0.307 ms, p99.9 0.695 ms), allowed_paths(섹션 2 밖 변경 없음). 기록: [verification/p18_gate/first_a0d656d0](verification/p18_gate/first_a0d656d0/gate.txt). 그 뒤 바뀐 것은 문서와 검증 기록뿐이며, 이 보고서를 담은 최종 커밋에서 같은 게이트를 다시 돌린다(결과는 다음 기록 커밋 `verification/p18_gate/`와 최종 메시지).
+**첫 게이트(`a0d656d0`, 03:52:23–05:05:32 KST): 15/15 단계 exit 0 — 녹색.** prepare_bridge, prepare_import, test_debug 2,262 통과·0 실패·0 무시, test_release 2,262/0/0, clippy, clippy --all-targets, 금지 수학 없음, bridge_build, godot_import, strict_check, smoke(오류 0), python 246 실행·0 건너뜀 OK, worldmodel 49 실행·24 건너뜀 OK, perf_quick(미측정 검증: 평균 0.307 ms, p99.9 0.695 ms), allowed_paths(섹션 2 밖 변경 없음). 기록: [verification/p18_gate/first_a0d656d0](verification/p18_gate/first_a0d656d0/gate.txt). 그 뒤 바뀐 것은 문서와 검증 기록뿐이다.
+
+**최종 게이트(이 보고서를 담은 커밋 `4ef34b97`, 05:06:42–06:16:45 KST): 15/15 단계 exit 0 — 녹색.** test_debug 2,262 통과·0 실패·0 무시, test_release 2,262/0/0, clippy 2종, 금지 수학 없음, bridge_build, godot_import, strict_check, smoke(오류 0), python 246 OK, worldmodel 49 실행·24 건너뜀 OK, perf_quick(미측정 검증: 평균 0.306 ms, p99.9 0.601 ms), allowed_paths(섹션 2 밖 변경 없음). 기록: [verification/p18_gate](verification/p18_gate/gate.txt). 이 게이트 동안 아트 런의 조용 잠금 보유 기록은 없다(마지막 기록 04:39). `codex/revitalize-2026-10`은 `8cbb697c` → `4ef34b97`로 fast-forward(원격 확인), WIP에는 그 뒤 이 기록 커밋만 더 있다. PR #510에 Pass 18 절을 덧붙였고(초안·미병합 유지, 앞 절은 그대로), 기준 워크트리 `../new-world-p18-base`는 제거했다.
 
 ### 정직한 판단
 
