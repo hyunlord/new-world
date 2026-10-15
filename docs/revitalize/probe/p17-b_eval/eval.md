@@ -17,17 +17,17 @@ Mode: evaluation.
 |---|---:|---:|---:|---|---:|---|---|
 | F1 | undefined | undefined | 0.495301 | [0.454451, 0.532409] | 2000/2000 | pooled living mutually partnered adult share at elapsed day60 >= 0.50 | FAIL |
 | F2 | undefined | undefined | 0.967101 | [0.932075, 0.99375] | 2000/2000 | couple-parent births from elapsed simulation day20 inclusive >= 0.90 | PASS |
-| F3 | undefined | undefined | 0.108624 | [0.0862283, 0.130078] | 2000/2000 | mean four-axis sibling Pearson minus unrelated Pearson >= 0.06; lower CI > 0 | PASS |
-| F3-siblings | undefined | undefined | 0.12118 | [0.0969236, 0.142339] | 2000/2000 | descriptive reference | PASS |
-| F3-siblings-ha | undefined | undefined | 0.112353 | [0.0771057, 0.144321] | 2000/2000 | descriptive reference | PASS |
-| F3-siblings-ns | undefined | undefined | 0.14423 | [0.108634, 0.179695] | 2000/2000 | descriptive reference | PASS |
-| F3-siblings-p | undefined | undefined | 0.102016 | [0.0579897, 0.148218] | 2000/2000 | descriptive reference | PASS |
-| F3-siblings-rd | undefined | undefined | 0.126121 | [0.0853351, 0.165427] | 2000/2000 | descriptive reference | PASS |
-| F3-unrelated | undefined | undefined | 0.0125563 | [0.00511908, 0.0179032] | 2000/2000 | descriptive reference | PASS |
-| F3-unrelated-ha | undefined | undefined | 0.00012083 | [-0.012945, 0.0144567] | 2000/2000 | descriptive reference | PASS |
-| F3-unrelated-ns | undefined | undefined | 0.0231976 | [0.00388838, 0.0414886] | 2000/2000 | descriptive reference | PASS |
-| F3-unrelated-p | undefined | undefined | 0.00779574 | [-0.00700439, 0.0198295] | 2000/2000 | descriptive reference | PASS |
-| F3-unrelated-rd | undefined | undefined | 0.0191112 | [0.0030208, 0.0324138] | 2000/2000 | descriptive reference | PASS |
+| F3 | undefined | undefined | 0.104923 | [0.0827943, 0.126084] | 2000/2000 | mean four-axis sibling Pearson minus unrelated Pearson >= 0.06; lower CI > 0 | PASS |
+| F3-siblings | undefined | undefined | 0.118315 | [0.0941586, 0.13964] | 2000/2000 | descriptive reference | PASS |
+| F3-siblings-ha | undefined | undefined | 0.110631 | [0.0763676, 0.141173] | 2000/2000 | descriptive reference | PASS |
+| F3-siblings-ns | undefined | undefined | 0.135286 | [0.100653, 0.170299] | 2000/2000 | descriptive reference | PASS |
+| F3-siblings-p | undefined | undefined | 0.103465 | [0.0603387, 0.149833] | 2000/2000 | descriptive reference | PASS |
+| F3-siblings-rd | undefined | undefined | 0.12388 | [0.0829858, 0.164896] | 2000/2000 | descriptive reference | PASS |
+| F3-unrelated | undefined | undefined | 0.013392 | [0.00700584, 0.0180557] | 2000/2000 | descriptive reference | PASS |
+| F3-unrelated-ha | undefined | undefined | 0.00104087 | [-0.010085, 0.0130726] | 2000/2000 | descriptive reference | PASS |
+| F3-unrelated-ns | undefined | undefined | 0.0227913 | [0.00646302, 0.0396728] | 2000/2000 | descriptive reference | PASS |
+| F3-unrelated-p | undefined | undefined | 0.0094591 | [-0.00275636, 0.0201497] | 2000/2000 | descriptive reference | PASS |
+| F3-unrelated-rd | undefined | undefined | 0.0202768 | [0.00415638, 0.033491] | 2000/2000 | descriptive reference | PASS |
 | F4 | undefined | undefined | 0.996182 | [0.993906, 0.998185] | 2000/2000 | same-shelter share of living mutual bedded couple-nights at20:00 >= 0.90 | PASS |
 | F5 | undefined | undefined | 0.0769231 | [0.0389592, 0.122581] | 2000/2000 | split couples / parent couples at completed fission departures <= 0.10 | PASS |
 | F6-alive | 57.2188 | 56.8438 | 0.00659703 | [-0.0101409, 0.0308809] | 2000/2000 | relative change within +/-0.10 | PASS |
@@ -43,7 +43,7 @@ Mode: evaluation.
 - F1: Pooled living nonelder adults at exact elapsed day60 (after tick86399); partner must be alive and mutual; dead partner pointers do not count
 - F2: Pooled births with fallback=false from one-based elapsed simulation day20; simulation_day=tick//1440+1, tick>=27360; display-clock offset does not change inclusion; all daily births/fallbacks retained
 - F3: Pooled Pearson for each temperament axis, then mean four axes for siblings minus unrelated; each unique unordered pair contributes both orientations; bar>=0.06 and lower95%CI>0; exact per-world integer sufficient statistics preserve whole-world bootstrap
-- F3_eligibility: Full siblings have both known matching mother/father, including fallback births; first shared hourly snapshot fixes sibling life-stage pair. Unrelated controls exclude direct parent-child or any shared known parent across either slot, and use first shared hourly snapshot with a stage-pair category present among that world's eligible siblings. Unassigned settlement=null observations cannot form same-settlement pairs; their counts are reported. Unknown founder kinship is not inferred. Empty worlds remain in resampling; pair IDs/ticks/stages reported
+- F3_eligibility: Full siblings are all recorded people with both known matching ordered mother/father, including fallback births, independent of residence or coexistence. Their first shared hourly snapshot in a non-null settlement supplies reference tick/settlement/stages when present; otherwise all three are null, without excluding the pair. Unrelated controls exclude direct parent-child or any shared known parent across either slot, and use their first shared hourly snapshot in the same non-null settlement regardless of life-stage categories. Sibling stage-pair categories describe observed shared context only and never filter either population. Unassigned settlement=null observations cannot form unrelated same-settlement pairs; their counts are reported. Unknown founder kinship is not inferred. Empty worlds remain in resampling; pair IDs/ticks/stages reported
 - F4: 20:00 snapshots; each mutual living couple counted once if both have beds; same bed tile means shared shelter; bedless person-nights separately reported
 - F5: Only completed fissions; pooled split couples / mutual living couples in parent settlements at departure; raw membership and household partitions verify numerator; zero denominator ERROR
 - F6: Identical R2 definitions: equal-world alive/death/shelter means, noon settlement-summed stores averaged within worlds then across worlds; primary social rate pools adult completions/adult-days, mean world rate sensitivity
@@ -68,8 +68,8 @@ Mode: evaluation.
     "zero_denominator_worlds": 0
   },
   "F3": {
-    "sibling_unordered_pairs": 6783,
-    "unrelated_unordered_pairs": 78583,
+    "sibling_unordered_pairs": 7054,
+    "unrelated_unordered_pairs": 107049,
     "sibling_worlds": 32,
     "unrelated_worlds": 32,
     "zero_sibling_worlds": 0,
@@ -2043,8 +2043,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 1.0,
       "completed_departure_households_kept": 31,
       "completed_departure_households_split": 1,
-      "sibling_unordered_pairs": 377,
-      "unrelated_unordered_pairs": 3910,
+      "sibling_unordered_pairs": 384,
+      "unrelated_unordered_pairs": 5140,
       "excluded_close_kin_pairs": 367,
       "stage_pair_categories": [
         [
@@ -2079,7 +2079,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 72,
-      "unrelated_unordered_pairs": 1604,
+      "unrelated_unordered_pairs": 2499,
       "excluded_close_kin_pairs": 157,
       "stage_pair_categories": [
         [
@@ -2113,8 +2113,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 105,
-      "unrelated_unordered_pairs": 1479,
+      "sibling_unordered_pairs": 107,
+      "unrelated_unordered_pairs": 2131,
       "excluded_close_kin_pairs": 140,
       "stage_pair_categories": [
         [
@@ -2149,7 +2149,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 68,
-      "unrelated_unordered_pairs": 1350,
+      "unrelated_unordered_pairs": 1880,
       "excluded_close_kin_pairs": 163,
       "stage_pair_categories": [
         [
@@ -2183,8 +2183,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 2.0,
       "completed_departure_households_kept": 23,
       "completed_departure_households_split": 2,
-      "sibling_unordered_pairs": 347,
-      "unrelated_unordered_pairs": 1840,
+      "sibling_unordered_pairs": 354,
+      "unrelated_unordered_pairs": 3008,
       "excluded_close_kin_pairs": 301,
       "stage_pair_categories": [
         [
@@ -2219,7 +2219,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 98,
-      "unrelated_unordered_pairs": 769,
+      "unrelated_unordered_pairs": 1374,
       "excluded_close_kin_pairs": 124,
       "stage_pair_categories": [
         [
@@ -2253,8 +2253,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 49,
-      "unrelated_unordered_pairs": 1393,
+      "sibling_unordered_pairs": 51,
+      "unrelated_unordered_pairs": 2312,
       "excluded_close_kin_pairs": 144,
       "stage_pair_categories": [
         [
@@ -2288,8 +2288,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 2.0,
       "completed_departure_households_kept": 27,
       "completed_departure_households_split": 2,
-      "sibling_unordered_pairs": 343,
-      "unrelated_unordered_pairs": 4938,
+      "sibling_unordered_pairs": 349,
+      "unrelated_unordered_pairs": 6650,
       "excluded_close_kin_pairs": 378,
       "stage_pair_categories": [
         [
@@ -2323,8 +2323,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 2.0,
       "completed_departure_households_kept": 20,
       "completed_departure_households_split": 2,
-      "sibling_unordered_pairs": 672,
-      "unrelated_unordered_pairs": 1487,
+      "sibling_unordered_pairs": 684,
+      "unrelated_unordered_pairs": 2683,
       "excluded_close_kin_pairs": 329,
       "stage_pair_categories": [
         [
@@ -2358,8 +2358,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 1.0,
       "completed_departure_households_kept": 21,
       "completed_departure_households_split": 1,
-      "sibling_unordered_pairs": 312,
-      "unrelated_unordered_pairs": 1821,
+      "sibling_unordered_pairs": 335,
+      "unrelated_unordered_pairs": 2733,
       "excluded_close_kin_pairs": 227,
       "stage_pair_categories": [
         [
@@ -2393,8 +2393,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 53,
-      "unrelated_unordered_pairs": 673,
+      "sibling_unordered_pairs": 55,
+      "unrelated_unordered_pairs": 1125,
       "excluded_close_kin_pairs": 108,
       "stage_pair_categories": [
         [
@@ -2429,7 +2429,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 71,
-      "unrelated_unordered_pairs": 1752,
+      "unrelated_unordered_pairs": 2459,
       "excluded_close_kin_pairs": 166,
       "stage_pair_categories": [
         [
@@ -2463,8 +2463,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 30,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 285,
-      "unrelated_unordered_pairs": 4129,
+      "sibling_unordered_pairs": 300,
+      "unrelated_unordered_pairs": 5175,
       "excluded_close_kin_pairs": 379,
       "stage_pair_categories": [
         [
@@ -2499,7 +2499,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 61,
-      "unrelated_unordered_pairs": 1176,
+      "unrelated_unordered_pairs": 1684,
       "excluded_close_kin_pairs": 142,
       "stage_pair_categories": [
         [
@@ -2533,8 +2533,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 51,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 504,
-      "unrelated_unordered_pairs": 3157,
+      "sibling_unordered_pairs": 523,
+      "unrelated_unordered_pairs": 4141,
       "excluded_close_kin_pairs": 335,
       "stage_pair_categories": [
         [
@@ -2569,7 +2569,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 69,
-      "unrelated_unordered_pairs": 1792,
+      "unrelated_unordered_pairs": 2628,
       "excluded_close_kin_pairs": 165,
       "stage_pair_categories": [
         [
@@ -2603,8 +2603,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 26,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 198,
-      "unrelated_unordered_pairs": 2620,
+      "sibling_unordered_pairs": 216,
+      "unrelated_unordered_pairs": 3456,
       "excluded_close_kin_pairs": 240,
       "stage_pair_categories": [
         [
@@ -2638,8 +2638,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 1.0,
       "completed_departure_households_kept": 36,
       "completed_departure_households_split": 1,
-      "sibling_unordered_pairs": 397,
-      "unrelated_unordered_pairs": 4697,
+      "sibling_unordered_pairs": 404,
+      "unrelated_unordered_pairs": 6289,
       "excluded_close_kin_pairs": 339,
       "stage_pair_categories": [
         [
@@ -2673,8 +2673,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 2.0,
       "completed_departure_households_kept": 61,
       "completed_departure_households_split": 2,
-      "sibling_unordered_pairs": 390,
-      "unrelated_unordered_pairs": 5493,
+      "sibling_unordered_pairs": 420,
+      "unrelated_unordered_pairs": 7020,
       "excluded_close_kin_pairs": 441,
       "stage_pair_categories": [
         [
@@ -2708,8 +2708,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 61,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 275,
-      "unrelated_unordered_pairs": 4051,
+      "sibling_unordered_pairs": 301,
+      "unrelated_unordered_pairs": 5460,
       "excluded_close_kin_pairs": 374,
       "stage_pair_categories": [
         [
@@ -2743,8 +2743,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 128,
-      "unrelated_unordered_pairs": 589,
+      "sibling_unordered_pairs": 129,
+      "unrelated_unordered_pairs": 1194,
       "excluded_close_kin_pairs": 100,
       "stage_pair_categories": [
         [
@@ -2778,8 +2778,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 24,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 191,
-      "unrelated_unordered_pairs": 2656,
+      "sibling_unordered_pairs": 205,
+      "unrelated_unordered_pairs": 3482,
       "excluded_close_kin_pairs": 271,
       "stage_pair_categories": [
         [
@@ -2813,8 +2813,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 1.0,
       "completed_departure_households_kept": 25,
       "completed_departure_households_split": 1,
-      "sibling_unordered_pairs": 228,
-      "unrelated_unordered_pairs": 2886,
+      "sibling_unordered_pairs": 244,
+      "unrelated_unordered_pairs": 3729,
       "excluded_close_kin_pairs": 246,
       "stage_pair_categories": [
         [
@@ -2848,8 +2848,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 64,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 321,
-      "unrelated_unordered_pairs": 5468,
+      "sibling_unordered_pairs": 355,
+      "unrelated_unordered_pairs": 5699,
       "excluded_close_kin_pairs": 423,
       "stage_pair_categories": [
         [
@@ -2887,8 +2887,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 1.0,
       "completed_departure_households_kept": 61,
       "completed_departure_households_split": 1,
-      "sibling_unordered_pairs": 294,
-      "unrelated_unordered_pairs": 3832,
+      "sibling_unordered_pairs": 305,
+      "unrelated_unordered_pairs": 4976,
       "excluded_close_kin_pairs": 402,
       "stage_pair_categories": [
         [
@@ -2922,8 +2922,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 45,
-      "unrelated_unordered_pairs": 746,
+      "sibling_unordered_pairs": 46,
+      "unrelated_unordered_pairs": 1272,
       "excluded_close_kin_pairs": 102,
       "stage_pair_categories": [
         [
@@ -2957,8 +2957,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 4.0,
       "completed_departure_households_kept": 54,
       "completed_departure_households_split": 4,
-      "sibling_unordered_pairs": 234,
-      "unrelated_unordered_pairs": 2805,
+      "sibling_unordered_pairs": 242,
+      "unrelated_unordered_pairs": 3727,
       "excluded_close_kin_pairs": 275,
       "stage_pair_categories": [
         [
@@ -2992,8 +2992,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 31,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 322,
-      "unrelated_unordered_pairs": 3656,
+      "sibling_unordered_pairs": 324,
+      "unrelated_unordered_pairs": 4772,
       "excluded_close_kin_pairs": 273,
       "stage_pair_categories": [
         [
@@ -3028,7 +3028,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 41,
-      "unrelated_unordered_pairs": 653,
+      "unrelated_unordered_pairs": 1098,
       "excluded_close_kin_pairs": 100,
       "stage_pair_categories": [
         [
@@ -3062,8 +3062,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 1.0,
       "completed_departure_households_kept": 23,
       "completed_departure_households_split": 1,
-      "sibling_unordered_pairs": 86,
-      "unrelated_unordered_pairs": 2327,
+      "sibling_unordered_pairs": 91,
+      "unrelated_unordered_pairs": 3095,
       "excluded_close_kin_pairs": 199,
       "stage_pair_categories": [
         [
@@ -3098,7 +3098,7 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
       "sibling_unordered_pairs": 85,
-      "unrelated_unordered_pairs": 1544,
+      "unrelated_unordered_pairs": 2015,
       "excluded_close_kin_pairs": 148,
       "stage_pair_categories": [
         [
@@ -3132,8 +3132,8 @@ Full pair IDs, first snapshots, life-stage categories and file hashes are retain
       "split_couples": 0.0,
       "completed_departure_households_kept": 0,
       "completed_departure_households_split": 0,
-      "sibling_unordered_pairs": 62,
-      "unrelated_unordered_pairs": 1290,
+      "sibling_unordered_pairs": 65,
+      "unrelated_unordered_pairs": 2143,
       "excluded_close_kin_pairs": 137,
       "stage_pair_categories": [
         [

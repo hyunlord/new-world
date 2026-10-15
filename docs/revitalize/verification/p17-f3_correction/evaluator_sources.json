@@ -1,0 +1,22 @@
+{
+  "evaluator_commit": "51e1629a059ada0aa6ea9c8434b348d7587cc9aa",
+  "simulation_producer_commit": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+  "created_at": "2026-10-15T11:24:42.108500+00:00",
+  "files_sha256": {
+    "tools/revitalize/evaluate_pass17.py": "d44ba4351f1279b54c08fb6aa04a2cd1fed142a0ec896d105ae63474cc675612",
+    "tools/revitalize/evaluate_pass17_data.py": "9fbfb85c2900a6943f398e8cc5cb0aa4c4ce0c32449cd0f3cf0418df3a43033c",
+    "tools/revitalize/evaluate_pass17_evidence.py": "a5ba5b51ddcab8b47ca11a62d2528a9b52e2a1d5a9d20e4fbd9b9c8926654fc8",
+    "tools/revitalize/evaluate_pass17_family_data.py": "3022a0e000e306d7c92c63153a59d9343fa3dd9ff0e7101e5820fd59be7e1c8b",
+    "tools/revitalize/evaluate_pass17_family_pairs.py": "745fc1d6a4c230975af2b0cef947ab6928f866997768019cbfb094046a388eda",
+    "tools/revitalize/evaluate_pass17_family_read.py": "7d929a705391fac249dcd84855f49ca2b5c8970970856c213298e5d6f40844aa",
+    "tools/revitalize/evaluate_pass17_family_report.py": "49b680c2f9cb24a66c8e62f3135747beab37418aba81813c8b980bf9d180d507",
+    "tools/revitalize/evaluate_pass17_family_rows.py": "92b11bba680bbe46d073e0d94088524ac34645e64afe8681d8a3cf2adfb2f96a",
+    "tools/revitalize/evaluate_pass17_read.py": "b25fe0850702b91406d410dedc2ac64c3dae2daf5f5df4fdda71a0d1d5498e07",
+    "tools/revitalize/evaluate_pass17_report.py": "2e71fde9c3b99f67e0421fb3373a53af3293f356a1f0f8a04e4958bc6a0733ad",
+    "tools/revitalize/evaluate_pass17_stage_a.py": "7f7c7de56da2ac375e81df10617f49884048b7e6d9b9781bc625086af7616a0e",
+    "tools/revitalize/evaluate_pass17_stage_b.py": "99a58629cf92b994ec6d32c8d0d8a9c9ecbbdc16061c1d16e385953f5f5c3901",
+    "tools/revitalize/evaluate_pass17_statistics.py": "1bdf1f6e67ea18f6a7681645bf3a77ee21a1ae46918f970dc3780b3d6d4f97e0",
+    "tools/revitalize/evaluate_perf_pass17.py": "8235cda4ea6d49c0ca7128f6f128dcdeab4fbfa8c65ca40ac9b5bd3e472f4123"
+  },
+  "original_evaluator_manifest_sha256": "82cce0613079e6296aeba5dd957d96af4f3d0d9b8a4202310d436631364d31fa"
+}

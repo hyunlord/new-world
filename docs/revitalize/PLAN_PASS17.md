@@ -12,8 +12,8 @@ Authority: `PASS17_GOAL.md`, preserved unchanged. This plan implements the entir
 | 3 | completed | Committed Stage A pre-registration, evaluation, committed verdicts, saved I5 baseline | Part 2 freeze |
 | 4 | completed | Complete family v1, v22 wiring, family bridge/trace | Part 3 verdict commit exists |
 | 5 | completed | Stage B tuning freeze, I1–I5, performance | Part 4 verified |
-| 6 | in_progress | Committed Stage B pre-registration, evaluation and verdicts | Part 5 freeze |
-| 8 | pending | English mechanics docs, independent review, exact-head gate, publication, Korean report | Parts 0–6, or explicitly recorded brief-authorized drop |
+| 6 | completed | Committed Stage B pre-registration, evaluation and verdicts | Part 5 freeze |
+| 8 | in_progress | English mechanics docs, independent review, exact-head gate, publication, Korean report | Parts 0–6, or explicitly recorded brief-authorized drop |
 
 At each Part start and after compaction, re-read that Part's source sections in `PASS17_GOAL.md`. Record wall start/end, active duration, waits/pauses and notes in the RUNLOG. Push WIP after each Part. Finish the current step after 16 active hours, push and proceed to Part 8; preserve required Stage A/identity/performance evidence. Apply the brief's drop order only: family fission, household beds, all Stage B, Stage A tuning round 2. A missed metric bar is a recorded FAIL, never grounds to rewrite its bar or omit its value.
 
