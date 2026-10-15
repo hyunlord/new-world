@@ -62,6 +62,15 @@ var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
 
+func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
+	if change_id != "seat-input-cache":
+		return false
+	_camp_seats.set_input_cache_enabled(enabled)
+	return true
+
+func get_perf_candidate_p10() -> Dictionary:
+	return {"change_id": "seat-input-cache", "candidate_enabled": _camp_seats.input_cache_enabled()}
+
 func _ready() -> void:
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
 	_shadow_layer = SpriteLibrary.shared_layer(self, "Shadows", 3)

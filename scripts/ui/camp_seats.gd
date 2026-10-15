@@ -6,8 +6,26 @@ var _hearths: Array[Vector2i] = []
 var _blocked: Dictionary = {}
 var _candidates: Array[Dictionary] = []
 var _assignments: Dictionary = {}
+var _input_cache_enabled: bool = true
+var _input_cache_valid: bool = false
+var _input_cache_rows: Array = []
+var _input_cache_result: Dictionary = {}
+
+func set_input_cache_enabled(enabled: bool) -> void:
+	if _input_cache_enabled != enabled:
+		_input_cache_enabled = enabled
+		_invalidate_input_cache()
+
+func input_cache_enabled() -> bool:
+	return _input_cache_enabled
+
+func _invalidate_input_cache() -> void:
+	_input_cache_valid = false
+	_input_cache_rows.clear()
+	_input_cache_result.clear()
 
 func clear() -> void:
+	_invalidate_input_cache()
 	_hearths.clear()
 	_blocked.clear()
 	_candidates.clear()
@@ -21,12 +39,21 @@ func update(hearths: Array[Vector2i], blocked: Dictionary, agents: Array[Diction
 	var rows: Dictionary = {}
 	for row: Dictionary in agents:
 		rows[int(row["id"])] = row
+	var ids: Array = rows.keys()
+	ids.sort()
+	var input_rows: Array = []
+	if _input_cache_enabled:
+		for agent_id: int in ids:
+			var row: Dictionary = rows[agent_id]
+			input_rows.append([agent_id, bool(row.get("visible", false)), _walking(row),
+				not (float(row.get("stationary_seconds", 0.0)) < 0.3),
+				bool(row.get("meal", false)), str(row.get("pose", "")), row["tile"], row["ipos"]])
+		if _input_cache_valid and input_rows == _input_cache_rows:
+			return _input_cache_result.duplicate()
 	for agent_id: int in _assignments.keys():
 		var seat: Dictionary = _assignments[agent_id]
 		if not rows.has(agent_id) or not _eligible(rows[agent_id], seat["hearth"]):
 			_assignments.erase(agent_id)
-	var ids: Array = rows.keys()
-	ids.sort()
 	for agent_id: int in ids:
 		if _assignments.has(agent_id):
 			continue
@@ -47,9 +74,14 @@ func update(hearths: Array[Vector2i], blocked: Dictionary, agents: Array[Diction
 	var result: Dictionary = {}
 	for agent_id: int in _assignments:
 		result[agent_id] = _assignments[agent_id]["position"]
+	if _input_cache_enabled:
+		_input_cache_rows = input_rows
+		_input_cache_result = result.duplicate()
+		_input_cache_valid = true
 	return result
 
 func _rebuild(hearths: Array[Vector2i], blocked: Dictionary) -> void:
+	_invalidate_input_cache()
 	_hearths = hearths.duplicate()
 	_blocked = blocked.duplicate()
 	_candidates.clear()

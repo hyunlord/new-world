@@ -6,7 +6,7 @@
   "fix": "Await two process frames before measuring or setting control; no production renderer change",
   "artifacts": {
     "session.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
-    "journal.md": "25e41abc0d9e1577ee4a958110694aaf0b0b30f7f8aa42dcc16ae5faac23c6e7",
+    "journal.md": "ce12241514cd415f38230b09097eb323361f134bb17c922bdfaa66810d10e517",
     "session.log": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
     "frames.json": "ed72c591dad2125faec2166b7709f7484715911d01f0e5dc1452e3786d2e9bcc",
     "launch.json": "6642048b48836883d38bdca57780333bee51c44359794c73dce4d8dcf521b943",

@@ -128,3 +128,19 @@
 - 2026-10-15T20:49:58Z pid=1269 HOLD_START owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 start=1792097398 load_before=5.49 contended=true waited=3859s
 - 2026-10-15T20:50:17Z pid=1269 HOLD_END owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 start=1792097398 end=1792097417 elapsed=19 load_before=5.49 load_after=6.27 contended=true exit=1
 <!-- art-p10-last-release 1792097417 -->
+- 2026-10-15T20:53:03Z pid=34276 WAIT_START owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 hold_limit=3600
+- 2026-10-15T20:53:03Z pid=34276 WAIT_COOLDOWN remaining=434s
+- 2026-10-15T21:00:17Z pid=34276 CHECK load=6.38 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=434s
+- 2026-10-15T21:00:17Z pid=34276 WAIT_BUSY next_poll=300s
+- 2026-10-15T21:05:17Z pid=34276 CHECK load=4.72 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;68609 68603 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=734s
+- 2026-10-15T21:05:17Z pid=34276 WAIT_BUSY next_poll=300s
+- 2026-10-15T21:10:17Z pid=34276 CHECK load=4.09 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;68609 68603 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1034s
+- 2026-10-15T21:10:17Z pid=34276 WAIT_BUSY next_poll=300s
+- 2026-10-15T21:15:17Z pid=34276 CHECK load=4.87 processes=92622 92621 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=1334s
+- 2026-10-15T21:15:17Z pid=34276 WAIT_BUSY next_poll=300s
+- 2026-10-15T21:20:17Z pid=34276 CHECK load=4.02 processes= waited=1634s
+- 2026-10-15T21:20:17Z pid=34276 WAIT_BUSY next_poll=300s
+- 2026-10-15T21:25:17Z pid=34276 CHECK load=2.07 processes= waited=1934s
+- 2026-10-15T21:25:17Z pid=34276 HOLD_START owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 start=1792099517 load_before=2.07 contended=false waited=1934s
+- 2026-10-15T21:26:19Z pid=34276 HOLD_END owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 start=1792099517 end=1792099579 elapsed=62 load_before=2.07 load_after=2.22 contended=false exit=0
+<!-- art-p10-last-release 1792099579 -->
