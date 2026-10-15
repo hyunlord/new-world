@@ -2,11 +2,11 @@ extends SceneTree
 
 const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 ## One launch = one world. The caller owns quiet/window locks and the 10 minute gap.
-## --world W0|W1|W200|W500|W1000|W2000 --phase baseline|after --out <session.json>
+## --world W0|W1|W200|W500|W1000 --phase baseline|after --out <session.json>
 
 const Session = preload("res://scripts/test/art/frame_measure_session_p10.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
-const WORLDS: Dictionary = {"W0": [20261010, 40560, 0], "W1": [20261013, 126994, 0], "W200": [15100, 1440, 200], "W500": [15100, 1440, 500], "W1000": [15100, 1440, 1000], "W2000": [15100, 1440, 2000]}
+const WORLDS: Dictionary = {"W0": [20261010, 40560, 0], "W1": [20261013, 126994, 0], "W200": [15100, 1440, 200], "W500": [15100, 1440, 500], "W1000": [15100, 1440, 1000]}
 const METRICS: Array[String] = ["primary_cpu_ms", "process_ms", "render_cpu_ms", "setup_cpu_ms", "gpu_ms", "pacing_ms", "ticks_run"]
 
 class MeasurementRuntime extends Session.Runtime:
@@ -54,8 +54,8 @@ func _run() -> void:
 		push_error("Requires valid --world, --phase and --out")
 		quit(2)
 		return
-	if bool(_options["skip-ablation"]) and _options["phase"] == "baseline":
-		push_error("Baseline ablation cannot be dropped")
+	if bool(_options["skip-ablation"]) and _options["world"] in ["W0", "W500"]:
+		push_error("W0/W500 ablation cannot be dropped in either phase")
 		quit(2)
 		return
 	if bool(_options["ablation-only"]) and (_options["world"] != "W500" or _options["phase"] != "after" or bool(_options["skip-ablation"])):
@@ -67,6 +67,21 @@ func _run() -> void:
 		quit(2)
 		return
 	_result = {"schema_version": 1, "world": _options["world"], "phase": _options["phase"], "started": Time.get_datetime_string_from_system(true), "build_profile": "debug", "library": "res://rust/target/debug/libsim_bridge.dylib", "godot": Engine.get_version_info(), "machine": _machine(), "load_before": _command("/usr/sbin/sysctl", ["-n", "vm.loadavg"]), "contended": OS.get_environment("P10_CONTENDED") == "1", "metric": "process_ms + render_cpu_ms", "warmup_frames": 30, "counted_frames": 300, "ablation_counted_frames": 150, "forced_draw": true, "process_priorities": [-1000, 1000], "harness_reads": "peek_uncounted(raw getter) when Main/SimReads exists; direct fallback otherwise"}
+	_result["checkout"] = ProjectSettings.globalize_path("res://").trim_suffix("/")
+	_result["build_sha256"] = FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib")
+	_result["collector_sha256"] = FileAccess.get_sha256("res://scripts/test/art/perf_frames_p10.gd")
+	# Git's cwd is the runner repository, so bind HEAD explicitly to the selected checkout.
+	_result["build_commit"] = _command("/usr/bin/git", ["-C", _result["checkout"], "rev-parse", "HEAD"])
+	for pair: Array in [["checkout", "P10_MEASURE_CHECKOUT"], ["build_commit", "P10_MEASURE_HEAD"], ["build_sha256", "P10_MEASURE_DYLIB_SHA256"], ["collector_sha256", "P10_MEASURE_SCRIPT_SHA256"]]:
+		if str(_result[pair[0]]) != OS.get_environment(pair[1]) or str(_result[pair[0]]).is_empty():
+			push_error("Missing or mismatched measurement provenance: " + str(pair[0]))
+			quit(2)
+			return
+	if _options["world"] == "W1000" and _options["phase"] != "after":
+		push_error("W1000 is an after-only frozen Z4 measurement")
+		quit(2)
+		return
+
 	var packed: PackedScene = load("res://scenes/main.tscn") as PackedScene
 	_main = packed.instantiate()
 	_world = _main.get_node("WorldSim")
@@ -119,7 +134,7 @@ func _run() -> void:
 		Engine.max_fps = prior_max_fps
 		_finish()
 		return
-	for zoom: int in [4, 1]:
+	for zoom: int in ([4] if _options["world"] == "W1000" else [4, 1]):
 		_camera.zoom = Vector2.ONE * zoom
 		for repeat: int in range(3):
 			await _block("frozen_Z%d_%d" % [zoom, repeat], 300, "frozen", zoom, 0.0)
@@ -127,7 +142,7 @@ func _run() -> void:
 	if _options["world"] in ["W0", "W500"] and not bool(_options["skip-ablation"]):
 		await _run_ablation()
 	Engine.max_fps = 60
-	for speed: float in [2.0, 4.0]:
+	for speed: float in ([] if _options["world"] == "W1000" else [2.0, 4.0]):
 		_world.call("set_sim_speed", speed)
 		for repeat: int in range(3):
 			await _block("running_%dx_%d" % [int(speed), repeat], 300, "running", 4, speed)

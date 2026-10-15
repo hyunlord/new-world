@@ -5,3 +5,6 @@
 - Use GOAL's decision-complete Parts as execution plan; skill planning/approval defaults do not introduce an owner question or extra out-of-scope plan files.
 - Copy historical measurement tools to p10 names; never alter historical evidence or reinterpret its verdicts.
 - Merge 0caabf5fd1c62b9d3c99845daab1805e79799db7 was conflict-free; no manual resolution files.
+- 2026-10-15T15:23Z: P9 final P6 PNG is byte-identical to P1 and visibly lacks the inspector. `agent_inspector_panel.gd` connects world_reset to close; P9 fixture opens before deferred reset delivery. P10 fixture retains world-state frame10/capture130 but opens inspector at frame12 after reset delivery, then requires visible-in-tree at capture. This is a new-baseline fixture repair, not a reinterpretation of P9's historical verdict or a production rendering change.
+
+- Part0 measurement review: bind baseline to exact merge HEAD, canonical checkout, dylib and collector hashes; require terminal exit0 before resume. Keep W0/W500 ablation mandatory for both phases and optional W1000 frozen Z4 only. No prior evidence changed.

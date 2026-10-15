@@ -67,7 +67,10 @@ func _run() -> void:
 	_camera.zoom = Vector2.ONE * int(spec[2])
 	_camera.reset_smoothing()
 	_camera.force_update_scroll()
+	var state_frame: int = Engine.get_process_frames()
 	if framing == "P6":
+		# reset_world emits a deferred signal that closes the inspector.
+		await _until_frame(12)
 		var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
 		var agent_ids: PackedInt64Array = agents["agent_ids"]
 		if agent_ids.is_empty():
@@ -85,8 +88,10 @@ func _run() -> void:
 		var renderer: Node = _main.get_node(name)
 		if renderer.has_method("refresh_snapshot"):
 			renderer.call("refresh_snapshot")
-	var state_frame: int = Engine.get_process_frames()
 	await _until_frame(130)
+	if framing == "P6" and not _main.get_node("UI/AgentInspectorPanel").is_visible_in_tree():
+		_fail("P6 requires the inspector to remain visible at capture")
+		return
 	RenderingServer.force_draw(false)
 	var image: Image = root.get_texture().get_image()
 	var time: Dictionary = ReadRoute.read(_world, "get_time_snapshot")

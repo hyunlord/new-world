@@ -31,3 +31,9 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 - Base debug sim-bridge built independently in 38.42s; base Godot import running. New comparison Python tests 10/10 PASS; shell syntax checks PASS. Running/capture tools remain runtime-unverified until live captures.
 - 2026-10-15T15:14Z: Live day30 10:00 census completed, tick41880, population29, settlements1, seven activity-state holders across TendFire/HearthCircle/Play/SitByFire, zero unknown kinds, five family/temperament samples. Raw JSON archived under baseline/. Started six-framing census (exec53982), bounded1800s.
 - Base independent debug build and full Godot import completed exit0; 6241 assets imported, no ERROR/SCRIPT ERROR. Running-dump script check-only exits0 without errors.
+- 2026-10-15T15:20Z: Initial full gate terminal exit1 solely from now-fixed source boundary; all remaining legs passed, including W0/W500 600-frame consumer test (299s) and read equivalence (177s). Started full p0-attempt2 rerun at b0d3ab6c, preserving p0 failure logs.
+- Original P1 census: population29, settlement1, unlit at40560. Original P2: population29, settlement1, lit at31320. Remaining framing census still live; do not restart.
+
+- 2026-10-15T15:29Z: W200 running baseline/control comparison PASS: 600 exact frame rows, 300 SimReads mutations, tick1440→1740. Harness validation only; final Part1 H5 remains pending. Started baseline W0 running dump (session56844).
+- 2026-10-15T15:34Z: P5 merge-baseline capture exactly equals P9 final B in decoded RGBA pixels (1920x1080), evidence baseline/p5-consistency.json. W0 baseline running dump exit0; control capture session83648 active.
+- 2026-10-15T15:35Z: Measurement provenance/resume fixes verified: 17 P10 Python tests PASS, Bash syntax PASS, Godot perf collector check-only exit0. Updated collector copied unchanged into detached merge base.

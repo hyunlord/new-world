@@ -1,0 +1,13 @@
+{
+  "valid": true,
+  "reference": "/Users/rexxa/work/art-production9-evidence/identity/final-post-gate-attempt1/B/P5.png",
+  "candidate": "/Users/rexxa/work/art-production10-evidence/identity/p5-consistency/P5.png",
+  "reference_sha256": "7f99ecb1303926e3c40c560630427484156cb829ea6a84c629970ca467cb466a",
+  "candidate_sha256": "7f99ecb1303926e3c40c560630427484156cb829ea6a84c629970ca467cb466a",
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "method": "decoded RGBA byte-for-byte equality",
+  "baseline_commit": "0caabf5fd1c62b9d3c99845daab1805e79799db7"
+}

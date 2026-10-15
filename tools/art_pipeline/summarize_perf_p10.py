@@ -27,7 +27,7 @@ METRICS: Final = (
     "gpu_ms", "pacing_ms", "ticks_run",
 )
 REQUIRED: Final = frozenset({"W0", "W1", "W200", "W500"})
-OPTIONAL: Final = frozenset({"W1000", "W2000"})
+OPTIONAL: Final = frozenset({"W1000"})
 
 
 class EvidenceError(ValueError):
@@ -105,10 +105,24 @@ def load_session(path: Path) -> Session:
         raise EvidenceError(f"Invalid world/phase in {path}")
     if payload.get("ablation_only"):
         raise EvidenceError(f"Part 3 ablation-only evidence cannot enter the full matrix: {path}")
+    for key, length in (("build_commit", 40), ("build_sha256", 64), ("collector_sha256", 64)):
+        value = payload.get(key)
+        if not isinstance(value, str) or len(value) != length or any(character not in "0123456789abcdef" for character in value):
+            raise EvidenceError(f"Missing or invalid measurement provenance: {key}")
+    if not isinstance(payload.get("checkout"), str) or not Path(str(payload["checkout"])).is_absolute():
+        raise EvidenceError("Missing absolute checkout provenance")
+    if phase == "baseline" and payload["build_commit"] != "0caabf5fd1c62b9d3c99845daab1805e79799db7":
+        raise EvidenceError("Baseline must use Part 0 merge commit")
+    if world == "W1000" and phase != "after":
+        raise EvidenceError("W1000 is after-only")
     blocks = [mapping(block) for block in sequence(payload["blocks"])]
     matrix = [block for block in blocks if str(block["condition"]) in {"frozen", "running"}]
     expected = [f"frozen_Z{zoom}_{repeat}" for zoom in (4, 1) for repeat in range(3)]
     expected.extend(f"running_{speed}x_{repeat}" for speed in (2, 4) for repeat in range(3))
+    if world == "W1000":
+        expected = [f"frozen_Z4_{repeat}" for repeat in range(3)]
+        if len(blocks) != 3:
+            raise EvidenceError("W1000 requires only three frozen Z4 blocks")
     if [str(block["label"]) for block in matrix] != expected:
         raise EvidenceError(f"Missing, duplicate or reordered matrix block in {path}")
     for block in blocks:
@@ -182,8 +196,10 @@ def validate_measurements(session: Session, blocks: Sequence[Mapping[str, Json]]
                     context = mapping(sample.get("direct_read_context"))
                     if context.get("inspector_visible") is not False or context.get("influence_channel") != -1:
                         raise EvidenceError(f"F4 requires closed inspector and influence overlay in {label}")
-    required_ablation = session.world in {"W0", "W500"} and (session.phase == "baseline" or payload.get("ablation_dropped") is not True)
+    required_ablation = session.world in {"W0", "W500"}
     if required_ablation:
+        if payload.get("ablation_dropped") is True:
+            raise EvidenceError("W0/W500 ablation cannot be dropped")
         rows = [mapping(row) for row in sequence(payload["ablation"])]
         labels = {str(block["label"]) for block in blocks}
         layers = {str(row["node"]).split("/")[-1] for row in rows if row.get("layer_only") is True}
