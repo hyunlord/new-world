@@ -2,7 +2,7 @@
 
 Pass 17 Stage A gives need-satisfied residents visible daytime activities near their home. Activities are economy-neutral: tending a fire burns no extra fuel, crafting produces no item, repairing changes no building, and exploring harvests nothing. Existing work and needs take priority.
 
-This is the Part 1 implementation reference. The values below are the initial, **untuned** values. Stage A tuning, the R1–R5 evaluation, identity proofs and performance verdicts are pending; this document does not claim they have passed. The governing requirements are [PASS17_GOAL.md](PASS17_GOAL.md), section 6. Final measurements belong in the Pass 17 report and evaluation artifacts.
+The values below are **frozen at their original defaults** after the sixteen-world Stage A tuning round passed R1–R3 and all R2 point-estimate bars. No second parameter-tuning round was used. The initial freeze `9a0bd85470f4ddbe26d51b8c5062107bf5c1f371` passed I1–I4 and both pin suites. A subsequent audit identified a same-tick death observation gap; its probe-only correction and unchanged-parameter rerun are pending. The reserved R1–R5 evaluation, corrected-build identity proofs and performance verdicts are still pending; tuning does not establish those verdicts. The governing requirements are [PASS17_GOAL.md](PASS17_GOAL.md), section 6. Final measurements belong in the Pass 17 report and evaluation artifacts.
 
 ## Scene and components
 
@@ -28,7 +28,7 @@ The hearth anchor is the settlement's `formation_tile`. Places must be walkable 
 
 The decision arm follows the existing Gather arm and precedes the settlement fallback. A resident must have reached it Idle, belong to a settlement, have no haul load or other `no_trips` restriction, have no live rest timer, and be inside the resident's daytime window. Earlier decision arms remain responsible for needs, meals, construction, social behavior and resource collection.
 
-The display clock includes `clock_offset_ticks`. The initial window is:
+The display clock includes `clock_offset_ticks`. The frozen window is:
 
 ```text
 start = 420 + lineage_key % 60   # 07:00–07:59
@@ -39,7 +39,7 @@ The stagger spreads starts across an hour. Kind selection uses the resident's li
 
 With `d_axis = axis - 500`, integer-adjusted worker weights are:
 
-| Kind | Initial weight | Adjustment |
+| Kind | Base weight | Adjustment |
 |---|---:|---|
 | TendFire | 180 | `weight × (1000 + d_HA) / 1000` |
 | Craft | 180 | `weight × (1000 + d_P) / 1000` |
@@ -64,7 +64,7 @@ duration = max(20, 90 + 60 × (P - 500) / 500) minutes
 until_tick = arrived_tick + duration
 ```
 
-The initial range is 30–150 minutes. Walking does not consume this duration. A resident still walking after 150 minutes abandons the activity. A regular end or timeout schedules a keyed rest uniformly over the inclusive initial range 20–60 minutes.
+The frozen range is 30–150 minutes. Walking does not consume this duration. A resident still walking after 150 minutes abandons the activity. A regular end or timeout schedules a keyed rest uniformly over the inclusive range 20–60 minutes.
 
 Before the main state match, an active resident returns to Idle when one of these responses is available:
 
@@ -96,7 +96,7 @@ Existing no-trace summaries keep their schema and values for older scenes. The o
 | `_routine.jsonl` | Started, arrived, ended and no-place events, plus compressed consuming intervals |
 | `_trace_meta.json` | Existing metadata plus the `pass17` schema, shelter completions, redraw/failure totals and observation-miss count |
 
-The `routine` object contains `activities_started[7]`, `activity_minutes[7]`, `completed_activities`, `completed_minutes`, `no_place_redraws` and `no_place_failures`. Array order is the kind table above. Mean completed duration is `completed_minutes / completed_activities`, defined only when the count is positive. Adult counters include only non-elder adult consuming ticks; a life-stage change splits the raw interval.
+The `routine` object contains `activities_started[7]`, `activity_minutes[7]`, `completed_activities`, `completed_minutes`, `no_place_redraws` and `no_place_failures`. Array order is the kind table above. Mean completed duration is `completed_minutes / completed_activities`, defined only when the count is positive. Adult counters include only non-elder adult consuming ticks; a life-stage change splits the raw interval. Starts are attributed to the life stage at start, while an adult completion requires positive adult consuming minutes. An activity begun as a child can therefore contribute an adult completion without an adult start.
 
 An hourly row has `tick`, one-based display `day`, display `minute`, `states: {child: [5], adult: [5], elder: [5]}`, `stockpile_food` and `stockpile_wood`. State indices are 0 Idle, 1 non-activity Seeking, 2 Consuming Agent, 3 other Consuming, and 4 Seeking/Consuming Activity. R1 selects minutes 480–1020 inclusive. R2 store means select minute 720. Display-day labels may extend into the next day because the simulation begins with a clock offset; the full elapsed-day run still contains exactly 24 hourly samples, ten R1 samples and one noon sample per elapsed day.
 
@@ -125,4 +125,4 @@ The pure collector sorts rows by AgentId and exposes only agents with an Activit
 
 ## Current limits
 
-Activities produce no objects, repair progress, learning, fuel benefit or exploration reward. HearthCircle is a visible routine choice; the existing social system still determines actual completed social interactions. Play's movement does not create a new navigation system. Place tie-breaking follows the literal rank contract described above. This document's implementation descriptions do not substitute for the pending paired-seed health, temperament-effect, identity and performance measurements.
+Activities produce no objects, repair progress, learning, fuel benefit or exploration reward. HearthCircle is a visible routine choice; the existing social system still determines actual completed social interactions. Play's movement does not create a new navigation system. Place tie-breaking follows the literal rank contract described above. This document's implementation descriptions do not substitute for the reserved paired-seed evaluation, final identity and performance measurements. Tuning evidence is retained in `probe/p17-a_tuning/r1/`.
