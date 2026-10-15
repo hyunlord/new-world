@@ -206,14 +206,22 @@ mod tests {
     #[test]
     fn an_elder_partner_leaves_with_the_departing_adult_only_when_following() {
         // Adults 1..=6; 1 is partnered with elder 50; 2 with child 100.
-        let households = vec![vec![1, 50], vec![2, 100], vec![3], vec![4], vec![5], vec![6]];
+        let households = vec![
+            vec![1, 50],
+            vec![2, 100],
+            vec![3],
+            vec![4],
+            vec![5],
+            vec![6],
+        ];
         let rows = ranked(&[1, 2, 3, 4, 5, 6, 100]);
         let couples = [[1, 50]];
         let old = select_departure(&rows, &households, &rule(), 7, None).expect("p17 group");
         // Seed 1, 2+100, 3, 4 (four adults), fill 5 and 6 up to k = 7.
         assert_eq!(old, set(&[1, 2, 3, 4, 5, 6, 100]));
         // The elder takes a slot: seed 1+50, 2+100, 3, 4; fill 5; 6 no longer fits.
-        let new = select_departure(&rows, &households, &rule(), 7, Some(&couples)).expect("p18 group");
+        let new =
+            select_departure(&rows, &households, &rule(), 7, Some(&couples)).expect("p18 group");
         assert_eq!(new, set(&[1, 50, 2, 100, 3, 4, 5]));
     }
 
@@ -233,9 +241,75 @@ mod tests {
         ];
         let rows = ranked(&[101, 1, 2, 3, 4, 5, 6]);
         let couples = [[61, 62]];
-        let group = select_departure(&rows, &households, &rule(), 7, Some(&couples)).expect("group");
+        let group =
+            select_departure(&rows, &households, &rule(), 7, Some(&couples)).expect("group");
         assert!(group.iter().all(|id| *id < 60 || *id == 101), "{group:?}");
-        assert_eq!(group, select_departure(&rows, &households, &rule(), 7, None).expect("p17"));
+        assert_eq!(
+            group,
+            select_departure(&rows, &households, &rule(), 7, None).expect("p17")
+        );
+    }
+
+    #[test]
+    fn only_the_group_min_top_up_takes_an_adult_without_their_elder_partner() {
+        // Adult 1's household (elder partner 50 and thirteen children) is too
+        // big for group_max, so neither the seed nor the fill takes it; the
+        // top-up then takes adult 1 alone - the registered G3 exception.
+        let mut big = vec![1, 50];
+        big.extend(100..=112);
+        let households = vec![big, vec![2], vec![3], vec![4]];
+        let mut order = vec![1, 2, 3, 4];
+        order.extend(100..=112);
+        let rows = ranked(&order);
+        let rule = rule();
+        let group =
+            select_departure(&rows, &households, &rule, 7, Some(&[[1, 50]])).expect("group");
+        assert_eq!(group, set(&[1, 2, 3, 4, 100, 101]));
+        assert_eq!(group.len(), rule.group_min as usize);
+        assert!(!group.contains(&50));
+    }
+
+    #[test]
+    fn no_couples_select_exactly_as_pass17() {
+        let households = vec![
+            vec![1, 50],
+            vec![2, 100],
+            vec![3, 51],
+            vec![4],
+            vec![5],
+            vec![6],
+            vec![60, 61],
+        ];
+        let rows = ranked(&[3, 1, 100, 2, 4, 5, 6]);
+        for k in 6..=14 {
+            assert_eq!(
+                select_departure(&rows, &households, &rule(), k, Some(&[])),
+                select_departure(&rows, &households, &rule(), k, None),
+                "k {k}"
+            );
+        }
+    }
+
+    #[test]
+    fn the_seed_skips_a_household_its_elder_pushes_over_group_max() {
+        // Adults 2, 3, 4 seed first; adult 1's household (elder partner 50 and
+        // ten children) then fits exactly without the elder (3 + 11 = 14 =
+        // group_max) but not with it, so the seed and the fill skip it and
+        // adults 5, 6, 7 leave instead (no top-up is needed).
+        let mut big = vec![1, 50];
+        big.extend(100..=109);
+        let households = vec![vec![2], vec![3], vec![4], big, vec![5], vec![6], vec![7]];
+        let mut order = vec![2, 3, 4, 1, 5, 6, 7];
+        order.extend(100..=109);
+        let rows = ranked(&order);
+        let rule = rule();
+        let old = select_departure(&rows, &households, &rule, 14, None).expect("p17 group");
+        let mut expected = vec![1, 2, 3, 4];
+        expected.extend(100..=109);
+        assert_eq!(old, set(&expected));
+        let new =
+            select_departure(&rows, &households, &rule, 14, Some(&[[1, 50]])).expect("p18 group");
+        assert_eq!(new, set(&[2, 3, 4, 5, 6, 7]));
     }
 
     #[test]
@@ -247,13 +321,21 @@ mod tests {
         let couples: Vec<[AgentId; 2]> = (1..=7).map(|i| [i, 50 + i]).collect();
         let rows = ranked(&[1, 2, 3, 4, 5, 6, 7, 8, 9]);
         for k in rule.group_min..=rule.group_max {
-            let group = select_departure(&rows, &households, &rule, k, Some(&couples)).expect("group");
+            let group =
+                select_departure(&rows, &households, &rule, k, Some(&couples)).expect("group");
             assert!(group.len() <= rule.group_max as usize, "k {k}: {group:?}");
-            assert!(group.len() <= (k as usize).max(2 * rule.min_adults as usize), "k {k}: {group:?}");
+            assert!(
+                group.len() <= (k as usize).max(2 * rule.min_adults as usize),
+                "k {k}: {group:?}"
+            );
             let adults = group.iter().filter(|id| **id < 50).count();
             assert!(adults >= rule.min_adults as usize, "k {k}: {group:?}");
             for i in 1..=7 {
-                assert_eq!(group.contains(&i), group.contains(&(50 + i)), "k {k}: couple {i} split");
+                assert_eq!(
+                    group.contains(&i),
+                    group.contains(&(50 + i)),
+                    "k {k}: couple {i} split"
+                );
             }
         }
     }

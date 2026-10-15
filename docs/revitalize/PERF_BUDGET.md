@@ -143,3 +143,18 @@ Producer `50a73474e06d3a9abbb535729e9c7e1e134954b7`; unchanged original routine 
 The new slope interval is [0.321620, 1.681012], old [0.536635, 1.566716]; each fit uses all three observed populations (100, 500, 1000) and the inherited log-log OLS. The held-out acceptance bar applies to the point slope. Base/final quick means are 0.304749 / 0.303219 ms with identical `54ac4928a770f238` fingerprints. The independent medians use three interleaved same-build old/new pairs, seed 15100, 500 agents, one fed day; the slope uses two fed days.
 
 Apple M4 Max, 14 CPUs, 38,654,705,664 bytes RAM, rustc 1.93.1. Quiet hold 2026-10-15 08:20:08–08:20:23 UTC, 15.0 seconds, initial load 3.66, no contention and no lock wait. The relative mean and tail regressions remain failures despite the sub-millisecond mean and near-linear scaling. No favorable-repeat selection, retiming, parameter adjustment or threshold change follows this result. Stage A evaluation is still pending at this record.
+
+## Pass 18 — the routine's cost fixed without changing behaviour (new references)
+
+Pass 18 made the Pass 17 routine cheap while keeping every result bit-identical (I1–I6 and all pins; [DECISIONS.md](DECISIONS.md) Pass 18, [ROUTINE.md](ROUTINE.md) "Performance structure"). Official quiet-lock re-judgement on the final Part 2 build `d3fc22f7`, Pass 17's procedure ([rejudgement](perf/p18-2/official/rejudgement.md)):
+
+| rules (500 agents, 64 × 64, fed, seed 15100; medians of three) | mean tick | p99.9 | decision µs/call (attribution runs) | slope (100/500/1000) |
+|---|---:|---:|---:|---:|
+| `game_v20` | 0.3165 ms | 0.607 ms | 194.9 | 1.06 |
+| `game_v21` | 0.3603 ms (+13.9 %) | 0.815 ms (+34.3 %) | 235.6 | 1.00 |
+| `game_v22` | 0.3649 ms | 0.859 ms | 236.9 | 1.00 |
+| `game_v23` (Part 3) | 0.3683 ms | 0.859 ms | — | 0.97 |
+
+R5 (v21 vs v20) and F8 (v22 vs v21) now pass (Pass 17: +33.0 % / ×4.40 for R5); G6 (v23 vs v22: mean −1.1 %, p99.9 −1.6 %) passes. `quick` (v19 stress) 0.304 → 0.305 ms, same fingerprint. The p99.9 margin (0.7 points) is inside run-to-run noise — v20's p99.9 moved 0.553–0.607 ms between repeats — and is set by the **18:00 edge** (all daytime activities end in one tick: 0.82–0.84 ms vs v20's 0.49 ms; 06:01's wake-up spike, 0.81–0.84 ms, is shared with v20 and is the largest tick in both). **References for later passes:** use the rows above (same workload) and, for a routine/family change, compare against `game_v23`.
+
+To see where a tick's time goes, build `worldsim_perf` with `--features subprofile` in a separate target directory (`CARGO_TARGET_DIR=target/subprofile cargo build --release -p sim-test --features subprofile`); its JSON gains a `subprofile` block (per-scope totals, the slowest ticks' scope breakdown, per-tick arrays). The feature costs ~1 % on v20 and ~4–6 % on v21/v22 and is never used for identity runs or the gate.
