@@ -44,6 +44,6 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 5 (W2) | 19:31 | 19:53 | `floor.py --scene game_v19` from `b57ef7bb` with the five `game_v19` runs (`floor_v19`, 1,292 s, exit 0): floor 24 h 0.0084, 168 h 0.0203; headroom (`an5_off` − floor) +0.032 [+0.029, +0.035] and +0.059 [+0.051, +0.067] |
 | 5 (7.7) | 19:53:05 | 19:53:30 | `split_task.py explain` from `b57ef7bb`, after every test split prediction existed (latest `split.json` 19:52:05): θ (home settlement's `fission_threshold` at row 574) read for the 80 test worlds |
 | 4.1 | 19:29:17 | 23:50:20 | `wm2_m1b_v16_s0`: stop `patience` at step 10,200, best step 8,400 (val 0.0769) → converged, 15,637 s. Queue done: all six runs of 9.1 trained, none dropped |
-| 4.2 | 23:50:20 | 00:01 | its `final` on `v2_v16` from `b57ef7bb`, exit 0 |
-| 5 (W2) | 23:52 | 00:01 | `floor.py --scene game_v16` from `b57ef7bb` with the control run (`floor_v16`, exit 0): floor 24 h 0.0170, 168 h 0.0343; headroom (`an5_off` / `an5` − floor) +0.054 [+0.049, +0.060], +0.084 [+0.077, +0.091] |
-| 6 | 20:00 | 00:05 | WM2.md assembled from `runs/judge_wm2/` (final judge after the control run) |
+| 4.2 | 23:50:20 | 23:56:08 | its `final` on `v2_v16` from `b57ef7bb`, exit 0 |
+| 5 (W2) | 23:53:51 | 23:55:46 | `floor.py --scene game_v16` from `b57ef7bb` with the control run (`floor_v16`, exit 0): floor 24 h 0.0170, 168 h 0.0343; headroom (`an5_off` / `an5` − floor) +0.054 [+0.049, +0.060], +0.084 [+0.077, +0.091] |
+| 6 | 20:00 | 23:57 | WM2.md assembled from `runs/judge_wm2/` (final judge after the control run) |
