@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "stage": "a",
+  "status": 0,
+  "builds": {
+    "final": {
+      "path": "/Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf",
+      "commit": "50a73474e06d3a9abbb535729e9c7e1e134954b7",
+      "sha256": "2e36152b1c8961e66a2fbfe0a3c200cc89a4225f561e60e3b99e030e0793ac38"
+    },
+    "baseline": {
+      "path": "/Users/rexxa/work/p17-data/base-bin/worldsim_perf",
+      "commit": "adfdecfece79ab019964729319389fd602685fab",
+      "sha256": "774ec9c383a2580770e6d8b487928f5cbd0df7f85eb4517aa4bc3bec93951ded"
+    }
+  },
+  "quiet": {
+    "owner": "pass17-sim (Codex, new-world-pass4)",
+    "pid": "24639",
+    "purpose": "Stage A corrected-build performance",
+    "started": "2026-10-15T08:20:08Z",
+    "log": "/Users/rexxa/work/p17-data/a-perf-observerfix/quiet.log",
+    "prefix_bytes": 178,
+    "prefix_sha256": "74be75ba1be87ded142d6dd7920997e90a59517b636e8145e8ea240dca45b874",
+    "contended": false
+  },
+  "commands": {
+    "file": "commands.jsonl",
+    "sha256": "2ee5b361c678b83237518fdadf8ac4da20494b97879e46132379f7adcc5a292f"
+  },
+  "runlog": {
+    "file": "RUNLOG.txt",
+    "sha256": "3c03c15fba1b03bf66b14b7ac0745947ba556132a82828018a0a5ab842375991"
+  },
+  "indexes": {
+    "quick_final/runs.json": "1f1c5433072e6935567c92f64ed9e2a39a90242a5ef710cbdcfd529f7d43a493",
+    "b_game_v21/runs.json": "c4864a3d924e60836e322d4d05c6579133b8ef644793b7a09b8640b6e59d17ad",
+    "b_game_v20/runs.json": "f00b469612661cc5f79db3d66f4e14f6f4d42a8342576224fd58f138f0e728be",
+    "quick_base/runs.json": "8f91108365cfe0a4f8f5b2b89be53333ed64833120df6a905ade959c0a75a8f7",
+    "a/r1/runs.json": "f14ca8a99273a0d5a04558b27e1cc211eec5f41e76bf472ad659ee60dc178adc",
+    "a/r3/runs.json": "29373f16c285309c9e2b5962c82ae3032b197d8e528898083282fd70e2fd61fb",
+    "a/r2/runs.json": "41d3f20c15c0b64d44fb95260df887bf0851c3aab2bf033d90c757b6df4a1476"
+  }
+}

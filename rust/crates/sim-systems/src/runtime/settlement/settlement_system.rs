@@ -799,11 +799,16 @@ impl SettlementSystem {
         }
 
         for (sid, spawn_pos) in births {
-            // Two-parent chain (V7 Phase 10-γ / P10γ-A10): take the two
-            // lowest-id distinct members of the birth settlement as the
-            // canonical parents. With ≥3 founders at formation and no
-            // intervening despawns, both ids exist and are distinct.
-            let parent_ids: Vec<AgentId> = match resources.settlements.get(&sid) {
+            let family_parents = resources.rules.society.family.and_then(|_| {
+                let members = &resources.settlements.get(&sid)?.member_agents;
+                crate::runtime::agent::pairing::birth_parents(world, members)
+            });
+            // A qualifying family supplies mother then father; the original
+            // two-lowest-member parent chain remains the disabled/fallback path.
+            let parent_ids: Vec<AgentId> = if let Some((_, mother, father)) = family_parents {
+                vec![mother, father]
+            } else {
+                match resources.settlements.get(&sid) {
                 Some(s) => {
                     let mut members: Vec<AgentId> =
                         s.member_agents.iter().copied().collect();
@@ -811,6 +816,7 @@ impl SettlementSystem {
                     members.into_iter().take(2).collect()
                 }
                 None => Vec::new(),
+                }
             };
 
             // Pass 9: under keyed draws the newborn's lineage key comes from the
@@ -832,6 +838,26 @@ impl SettlementSystem {
                     births: 0,
                 })
             });
+            if let Some((mother, _, _)) = family_parents {
+                if let Ok(mut kin) = world.get::<&mut sim_core::components::Kin>(mother) {
+                    kin.last_birth_tick = Some(tick);
+                }
+            }
+            // Pass 16 inheritance uses the selected named parents' temperaments.
+            let parent_temperaments: [Option<sim_core::components::Temperament>; 2] =
+                if resources.rules.agent.temperament.is_some() && lineage.is_some() {
+                    let mut found = [None; 2];
+                    for (_, (agent, temperament)) in world.query::<(&Agent, &sim_core::components::Temperament)>().iter() {
+                        for (slot, id) in parent_ids.iter().take(2).enumerate() {
+                            if agent.id == *id {
+                                found[slot] = Some(*temperament);
+                            }
+                        }
+                    }
+                    found
+                } else {
+                    [None; 2]
+                };
             let new_agent_id = resources.issue_agent_id();
             let entity = world.spawn((
                 Position::new(spawn_pos.0, spawn_pos.1),
@@ -876,6 +902,48 @@ impl SettlementSystem {
                 // (replicate 0: an identity trait, not noise).
                 if resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
                     let _ = world.insert_one(entity, sim_core::components::Hardiness::draw(resources.world_seed, lineage.key));
+                }
+                // Pass 16: a newborn's temperament from its lineage key and the
+                // named parents' (`game_v20`); with effects its loneliness rate
+                // leans with RD (a mutation: no archetype change).
+                if let Some(rule) = resources.rules.agent.temperament {
+                    let temperament = sim_core::components::Temperament::child(resources.world_seed, lineage.key, parent_temperaments);
+                    let _ = world.insert_one(entity, temperament);
+                    if rule.effects {
+                        if let Ok(mut social) = world.get::<&mut Social>(entity) {
+                            social.growth_rate = rule.social_rate(social.growth_rate, &temperament);
+                        }
+                    }
+                }
+                if resources.rules.society.family.is_some() {
+                    let sex =
+                        sim_core::components::Sex::from_lineage(resources.world_seed, lineage.key);
+                    let kin = sim_core::components::Kin {
+                        mother: parent_ids.first().copied(),
+                        father: parent_ids.get(1).copied(),
+                        ..sim_core::components::Kin::default()
+                    };
+                    let _ = world.insert_one(entity, sex);
+                    let _ = world.insert_one(entity, kin);
+                    let temperament = world
+                        .get::<&sim_core::components::Temperament>(entity)
+                        .ok()
+                        .map(|t| *t);
+                    if let Some(temperament) = temperament {
+                        crate::runtime::agent::pairing::record_family_event(
+                            world,
+                            tick,
+                            sim_core::components::FamilyEvent::Born {
+                                child: new_agent_id,
+                                mother: kin.mother,
+                                father: kin.father,
+                                fallback: family_parents.is_none(),
+                                lineage_key: lineage.key,
+                                female: sex.female,
+                                temperament,
+                            },
+                        );
+                    }
                 }
             }
             if resources.rules.society.life_stage.is_some() {

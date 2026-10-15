@@ -1,0 +1,18 @@
+{
+  "verified_at_utc": "2026-10-15T10:45:01.195718+00:00",
+  "identity_sha256": "6b627b091095b84f1f207ddadd77706ce068dc1ef431f18edf60bb7d83c7d7a4",
+  "raw_manifest_sha256": "0b4a2e822e1d4010b556e4a9c2c06aa2af1b5bc6a266c8868d4efd7c46012a9e",
+  "raw_files_verified": 306,
+  "manifest_schema": 1,
+  "checks": [
+    "I1",
+    "I2",
+    "I3",
+    "I4",
+    "I5",
+    "v19_pins",
+    "v20_pins"
+  ],
+  "verdict": "PASS",
+  "hash_mismatches": 0
+}

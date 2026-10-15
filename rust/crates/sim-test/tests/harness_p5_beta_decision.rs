@@ -1003,6 +1003,7 @@ fn harness_p5_beta_target_kind_has_exactly_two_variants() {
             TargetKind::GatherFood => "gather_food",
             // Revitalize Pass 5 — firewood pickup target (authorized addition).
             TargetKind::GatherWood => "gather_wood",
+            TargetKind::Activity => "activity",
         }
     }
     assert_eq!(discriminator(TargetKind::Food), "food");
@@ -1014,6 +1015,7 @@ fn harness_p5_beta_target_kind_has_exactly_two_variants() {
     );
     assert_eq!(discriminator(TargetKind::GatherFood), "gather_food");
     assert_eq!(discriminator(TargetKind::GatherWood), "gather_wood");
+    assert_eq!(discriminator(TargetKind::Activity), "activity");
     println!(
         "[β-19/γ/P6α/D2-2] TargetKind variants (Food, Water, Sleep, ConstructionSite, Agent, GatherFood) ✓"
     );

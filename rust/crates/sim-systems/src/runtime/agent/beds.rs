@@ -62,6 +62,32 @@ impl RuntimeSystem for BedAssignmentSystem {
                 .filter(|id| live.contains(id) && !assigned.contains_key(id))
                 .collect();
             members.sort();
+            if resources.rules.society.family.is_some() {
+                let capacity = rule.residents_per_shelter as usize;
+                if capacity == 0 {
+                    continue;
+                }
+                let groups = super::households::households(world, &members.into_iter().collect());
+                let (mut shelter, mut used) = (0, 0);
+                for group in groups {
+                    if used > 0 && group.len() > capacity - used {
+                        shelter += 1;
+                        used = 0;
+                    }
+                    for id in group {
+                        let Some(&bed) = beds.get(shelter) else {
+                            break;
+                        };
+                        assigned.insert(id, bed);
+                        used += 1;
+                        if used == capacity {
+                            shelter += 1;
+                            used = 0;
+                        }
+                    }
+                }
+                continue;
+            }
             for (index, id) in members.into_iter().enumerate() {
                 let Some(bed_index) = index.checked_div(rule.residents_per_shelter as usize) else {
                     break;

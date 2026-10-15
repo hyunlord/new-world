@@ -1,0 +1,1740 @@
+{
+  "schema_version": 1,
+  "stage": "b",
+  "audit_scope": "independent completed performance artifacts only; no timing rerun or cohort evaluator",
+  "audit_verdict": "PASS",
+  "performance_verdict_recomputed": "PASS",
+  "report": {
+    "path": "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/perf.json",
+    "sha256": "2338579e7538b790e686b2ba97d60176a50ddd00695c18e6942a9b3d91e61e3b"
+  },
+  "checks": [
+    {
+      "name": "report_hash",
+      "passed": true,
+      "detail": "2338579e7538b790e686b2ba97d60176a50ddd00695c18e6942a9b3d91e61e3b"
+    },
+    {
+      "name": "complete_report",
+      "passed": true,
+      "detail": {
+        "schema": 1,
+        "stage": "b",
+        "verdict": "PASS"
+      }
+    },
+    {
+      "name": "raw_copy_42_files",
+      "passed": true,
+      "detail": {
+        "files": 42,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "manifest_binding",
+      "passed": true,
+      "detail": {
+        "manifest_sha256": "8e8193193e62f480355ad2253fff450512e007a176668e8c5f31f3bbfd6c0640"
+      }
+    },
+    {
+      "name": "commands_hash",
+      "passed": true,
+      "detail": {
+        "file": "commands.jsonl",
+        "sha256": "d7ff1bcfa3892f83e1cbecf2d483632456a8cb1ed3a1d25fe2a788f61efcdbde"
+      }
+    },
+    {
+      "name": "runlog_hash",
+      "passed": true,
+      "detail": {
+        "file": "RUNLOG.txt",
+        "sha256": "636ced85f0dc80259f3e9744bc0a38c19790c4ce4b37226f92f6862c9f6fb15c"
+      }
+    },
+    {
+      "name": "index_hash:quick_final/runs.json",
+      "passed": true,
+      "detail": "1ec46415d46a8fdea4c3f7d876eb2d119bd0539f25f2b49caf9ad9039941356c"
+    },
+    {
+      "name": "index_hash:b_game_v21/runs.json",
+      "passed": true,
+      "detail": "c4800fd03cc51cf56f461af4feaa9571bbdbb8b295b5e383132883d81376c6a2"
+    },
+    {
+      "name": "index_hash:b_game_v22/runs.json",
+      "passed": true,
+      "detail": "f4438bb15df7a7b64f28fbf91357aa4406e6530a3fcddd000bc1fc479888ce93"
+    },
+    {
+      "name": "index_hash:quick_base/runs.json",
+      "passed": true,
+      "detail": "49bc21e7f9156dd592508a7f07fc042fb25f8c3eb491d2d671d05da9a424fd6f"
+    },
+    {
+      "name": "index_hash:a/r1/runs.json",
+      "passed": true,
+      "detail": "264551da332ad018ee39d83849d758cc558c8a33ef1405afc2932383cb2bc07c"
+    },
+    {
+      "name": "index_hash:a/r3/runs.json",
+      "passed": true,
+      "detail": "544b0a1e95b8aa9d488363bebb4bd590c50001bd291dd17e5bee6049cb3c883a"
+    },
+    {
+      "name": "index_hash:a/r2/runs.json",
+      "passed": true,
+      "detail": "8c5ae0f452097b48760707228a8e729c7afa7cbb2cbcb4573fb83d85ce1db347"
+    },
+    {
+      "name": "ledger_matches_embedded",
+      "passed": true,
+      "detail": {
+        "commands": 10
+      }
+    },
+    {
+      "name": "binary:final",
+      "passed": true,
+      "detail": {
+        "path": "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "commit": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "sha256": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+      }
+    },
+    {
+      "name": "binary:baseline",
+      "passed": true,
+      "detail": {
+        "path": "/Users/rexxa/work/p17-data/stage-a-bin/worldsim_perf",
+        "commit": "50a73474e06d3a9abbb535729e9c7e1e134954b7",
+        "sha256": "2e36152b1c8961e66a2fbfe0a3c200cc89a4225f561e60e3b99e030e0793ac38"
+      }
+    },
+    {
+      "name": "launch_binding",
+      "passed": true,
+      "detail": {
+        "producer": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "stage_a_producer": "50a73474e06d3a9abbb535729e9c7e1e134954b7",
+        "launch": "f0410d398d72045b69e621d0d244395d85286a21"
+      }
+    },
+    {
+      "name": "command_00",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v21",
+        "agents": "500",
+        "days": "1",
+        "out": "a/r1"
+      }
+    },
+    {
+      "name": "command_output:a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "0d09c30b7ce0f3f16f904f880b8278b976592b7cbec89ab0eddcee8dbe127fc8"
+    },
+    {
+      "name": "raw_run_contract:a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v21",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "54b5ce8d6df0804a66325e631c7f1e3cc80462403964904f782245b9719fffb5",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.4706,
+          "p999_ms": 2.583,
+          "max_ms": 2.834
+        }
+      }
+    },
+    {
+      "name": "decision_mean:a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 344.1830746376812
+      }
+    },
+    {
+      "name": "command_01",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v22",
+        "agents": "500",
+        "days": "1",
+        "out": "a/r1"
+      }
+    },
+    {
+      "name": "command_output:a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "8e261b07d9573e17817bf527df9ce5790e717fdaf3428b713760f186e7d150a9"
+    },
+    {
+      "name": "raw_run_contract:a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v22",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "4bcae58d82692e117b970b00f4b182100b369051b91a47e2a629a11f555406e3",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.47577971014492754,
+          "p999_ms": 2.595,
+          "max_ms": 3.137
+        }
+      }
+    },
+    {
+      "name": "decision_mean:a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 347.4572173913043
+      }
+    },
+    {
+      "name": "command_02",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v21",
+        "agents": "500",
+        "days": "1",
+        "out": "a/r2"
+      }
+    },
+    {
+      "name": "command_output:a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "6075e93117b297a4212fde93ad8691df21e8fa2dc91f1ead1ec6b6f2d5ce923b"
+    },
+    {
+      "name": "raw_run_contract:a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v21",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "2339b65bd4b1e104418d646d293de527927207d774194256dd1f119a50d7fd38",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.466018115942029,
+          "p999_ms": 2.539,
+          "max_ms": 3.071
+        }
+      }
+    },
+    {
+      "name": "decision_mean:a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 341.061734057971
+      }
+    },
+    {
+      "name": "command_03",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v22",
+        "agents": "500",
+        "days": "1",
+        "out": "a/r2"
+      }
+    },
+    {
+      "name": "command_output:a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "5287416a758f9ed2ecdee43f9afd7fb919cb0f994a1a028167c7cda4306f43b1"
+    },
+    {
+      "name": "raw_run_contract:a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v22",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "36b328983e3896794a12be5db00d6180a6b8769b517b3b16804dfd84c3e8e975",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.47132246376811593,
+          "p999_ms": 2.624,
+          "max_ms": 3.07
+        }
+      }
+    },
+    {
+      "name": "decision_mean:a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 344.10375217391305
+      }
+    },
+    {
+      "name": "command_04",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v21",
+        "agents": "500",
+        "days": "1",
+        "out": "a/r3"
+      }
+    },
+    {
+      "name": "command_output:a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "6f2a8df10e2859db0ba1c1fb7a1de3eb56860f19b2c2006320da972052f00bc0"
+    },
+    {
+      "name": "raw_run_contract:a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v21",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "58c248d37d11905671b51ecbbf53785c3d30a151c55d1af1115bd199d857f577",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.4660202898550725,
+          "p999_ms": 2.543,
+          "max_ms": 3.024
+        }
+      }
+    },
+    {
+      "name": "decision_mean:a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 340.9403079710145
+      }
+    },
+    {
+      "name": "command_05",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v22",
+        "agents": "500",
+        "days": "1",
+        "out": "a/r3"
+      }
+    },
+    {
+      "name": "command_output:a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "74aeec136018dcf4c4d96a4d993e9b5f19393bd337d266bc3c86ac947c96ea87"
+    },
+    {
+      "name": "raw_run_contract:a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v22",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "943a6ad3540481e7d257ecf1c226aa5b5f7f8d21160d15ecf2dd4df5634b2ab2",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.4716239130434782,
+          "p999_ms": 2.56,
+          "max_ms": 3.076
+        }
+      }
+    },
+    {
+      "name": "decision_mean:a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 344.49191231884055
+      }
+    },
+    {
+      "name": "command_06",
+      "passed": true,
+      "detail": {
+        "build": "baseline",
+        "mode": "quick",
+        "scene": null,
+        "agents": null,
+        "days": null,
+        "out": "quick_base"
+      }
+    },
+    {
+      "name": "command_output:quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "e588dae8b2bcd84859625d91feb08c3981f1aa701387d2853521381d39461810"
+    },
+    {
+      "name": "raw_run_contract:quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "50a73474e06d3a9abbb535729e9c7e1e134954b7",
+        "scene": "stress_v19",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "be0e72e6fbcf26b4ec325821d852e6a9e97bfae8b65bc51509b7ffb906866a49",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.3039905797101449,
+          "p999_ms": 0.615,
+          "max_ms": 0.811
+        }
+      }
+    },
+    {
+      "name": "decision_mean:quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 184.16406594202897
+      }
+    },
+    {
+      "name": "command_07",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "quick",
+        "scene": null,
+        "agents": null,
+        "days": null,
+        "out": "quick_final"
+      }
+    },
+    {
+      "name": "command_output:quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "28c0177d7395ffcf63c0ca01c37b98af4f6dbdc7545f9be16bddc06d761fc34d"
+    },
+    {
+      "name": "raw_run_contract:quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v19",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 1.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "e36d0e4da55e88efbe6daef51064aa8111eb2ed8ddba8f62f559decdfdfe39a7",
+        "recalculated": {
+          "ticks": 1380,
+          "mean_ms": 0.3055442028985507,
+          "p999_ms": 0.588,
+          "max_ms": 0.832
+        }
+      }
+    },
+    {
+      "name": "decision_mean:quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 1380,
+        "mean_us_per_call": 186.8194956521739
+      }
+    },
+    {
+      "name": "command_08",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v22",
+        "agents": "100,500,1000",
+        "days": "2",
+        "out": "b_game_v22"
+      }
+    },
+    {
+      "name": "command_output:b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": "5f29476907a3fce6495276a60a54631ad3febb05e7aa5c5d33f26cfea5409b79"
+    },
+    {
+      "name": "raw_run_contract:b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v22",
+        "seed": 15100,
+        "agents_requested": 100,
+        "days": 2.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "b020ade52ccfce2405587e68a23dc335726f664935c97c3eeaea0ff99ee87647",
+        "recalculated": {
+          "ticks": 2820,
+          "mean_ms": 0.11577695035460993,
+          "p999_ms": 0.26,
+          "max_ms": 0.343
+        }
+      }
+    },
+    {
+      "name": "decision_mean:b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 2820,
+        "mean_us_per_call": 81.14816489361702
+      }
+    },
+    {
+      "name": "command_output:b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "f383fbf91ca3cdf9bb15422dc2c3932ec456664a52da493545636ec0c5d3d019"
+    },
+    {
+      "name": "raw_run_contract:b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v22",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 2.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "8c1a9c5c093f5e696672213aea9849af9627ace5f9a52ab603b2f2bfa538a0eb",
+        "recalculated": {
+          "ticks": 2820,
+          "mean_ms": 0.49998156028368795,
+          "p999_ms": 2.734,
+          "max_ms": 3.162
+        }
+      }
+    },
+    {
+      "name": "decision_mean:b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 2820,
+        "mean_us_per_call": 365.28208758865253
+      }
+    },
+    {
+      "name": "command_output:b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": "5acfd9c264603adbb124edb99aba44c01c8495c2d1dcaf0b434f9cdb40023cec"
+    },
+    {
+      "name": "raw_run_contract:b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v22",
+        "seed": 15100,
+        "agents_requested": 1000,
+        "days": 2.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "ac305d64034b02cecd219fee8c3a717dfb56de46e3e2c48ad6cf765e64cd34ab",
+        "recalculated": {
+          "ticks": 2820,
+          "mean_ms": 1.0780354609929077,
+          "p999_ms": 5.566,
+          "max_ms": 6.484
+        }
+      }
+    },
+    {
+      "name": "decision_mean:b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 2820,
+        "mean_us_per_call": 810.643595035461
+      }
+    },
+    {
+      "name": "command_09",
+      "passed": true,
+      "detail": {
+        "build": "final",
+        "mode": "stress",
+        "scene": "game_v21",
+        "agents": "100,500,1000",
+        "days": "2",
+        "out": "b_game_v21"
+      }
+    },
+    {
+      "name": "command_output:b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": "709e9d2d3dc93c85a32c9d6d8ce6d0a9f68939825750e0c12dbf5fd52f7bca35"
+    },
+    {
+      "name": "raw_run_contract:b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v21",
+        "seed": 15100,
+        "agents_requested": 100,
+        "days": 2.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "09cf0e7b9cea125a0475d90a6c6048625fdcd4f54bbd850755749a8062f2784d",
+        "recalculated": {
+          "ticks": 2820,
+          "mean_ms": 0.11312765957446809,
+          "p999_ms": 0.265,
+          "max_ms": 0.33
+        }
+      }
+    },
+    {
+      "name": "decision_mean:b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 2820,
+        "mean_us_per_call": 79.25254113475178
+      }
+    },
+    {
+      "name": "command_output:b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": "74f12df1bb3780d2724776460bc3156832077a05831345f3b5650b58d13dd90b"
+    },
+    {
+      "name": "raw_run_contract:b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v21",
+        "seed": 15100,
+        "agents_requested": 500,
+        "days": 2.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "12162deb088cf0892b4a32acf5594017489a3ca95a60f1d40c0c283d3c53647e",
+        "recalculated": {
+          "ticks": 2820,
+          "mean_ms": 0.49170709219858155,
+          "p999_ms": 2.714,
+          "max_ms": 3.067
+        }
+      }
+    },
+    {
+      "name": "decision_mean:b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 2820,
+        "mean_us_per_call": 358.57689290780144
+      }
+    },
+    {
+      "name": "command_output:b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": "701d0ede899ffaf0a115225d22134d4e6fe294dc8e896434b940ef8d56fe9600"
+    },
+    {
+      "name": "raw_run_contract:b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+        "scene": "stress_v21",
+        "seed": 15100,
+        "agents_requested": 1000,
+        "days": 2.0,
+        "feed": "fed"
+      }
+    },
+    {
+      "name": "raw_ticks:b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "tick_sidecar_sha256": "79ce7b5440b7482007ca9606355d86ee07dfb010da0869df3986e40b4f73dd10",
+        "recalculated": {
+          "ticks": 2820,
+          "mean_ms": 1.0567570921985816,
+          "p999_ms": 5.479,
+          "max_ms": 6.308
+        }
+      }
+    },
+    {
+      "name": "decision_mean:b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "calls": 2820,
+        "mean_us_per_call": 791.3486322695036
+      }
+    },
+    {
+      "name": "all_14_outputs",
+      "passed": true,
+      "detail": {
+        "raw_runs": 14,
+        "index_rows": 14
+      }
+    },
+    {
+      "name": "index_values:quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.3055442028985507,
+        "p999_ms": 0.588
+      }
+    },
+    {
+      "name": "index_values:b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.11312765957446808,
+        "p999_ms": 0.265
+      }
+    },
+    {
+      "name": "index_values:b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4917070921985815,
+        "p999_ms": 2.714
+      }
+    },
+    {
+      "name": "index_values:b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 1.0567570921985816,
+        "p999_ms": 5.479
+      }
+    },
+    {
+      "name": "index_values:b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.11577695035460991,
+        "p999_ms": 0.26
+      }
+    },
+    {
+      "name": "index_values:b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4999815602836879,
+        "p999_ms": 2.734
+      }
+    },
+    {
+      "name": "index_values:b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 1.0780354609929077,
+        "p999_ms": 5.566
+      }
+    },
+    {
+      "name": "index_values:quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.3039905797101449,
+        "p999_ms": 0.615
+      }
+    },
+    {
+      "name": "index_values:a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4706,
+        "p999_ms": 2.583
+      }
+    },
+    {
+      "name": "index_values:a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.47577971014492754,
+        "p999_ms": 2.595
+      }
+    },
+    {
+      "name": "index_values:a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4660202898550725,
+        "p999_ms": 2.543
+      }
+    },
+    {
+      "name": "index_values:a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4716239130434782,
+        "p999_ms": 2.56
+      }
+    },
+    {
+      "name": "index_values:a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.466018115942029,
+        "p999_ms": 2.539
+      }
+    },
+    {
+      "name": "index_values:a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.47132246376811593,
+        "p999_ms": 2.624
+      }
+    },
+    {
+      "name": "report_raw_link:a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "0d09c30b7ce0f3f16f904f880b8278b976592b7cbec89ab0eddcee8dbe127fc8"
+      }
+    },
+    {
+      "name": "report_raw_link:a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "6075e93117b297a4212fde93ad8691df21e8fa2dc91f1ead1ec6b6f2d5ce923b"
+      }
+    },
+    {
+      "name": "report_raw_link:a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "6f2a8df10e2859db0ba1c1fb7a1de3eb56860f19b2c2006320da972052f00bc0"
+      }
+    },
+    {
+      "name": "report_raw_link:a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "8e261b07d9573e17817bf527df9ce5790e717fdaf3428b713760f186e7d150a9"
+      }
+    },
+    {
+      "name": "report_raw_link:a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "5287416a758f9ed2ecdee43f9afd7fb919cb0f994a1a028167c7cda4306f43b1"
+      }
+    },
+    {
+      "name": "report_raw_link:a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "74aeec136018dcf4c4d96a4d993e9b5f19393bd337d266bc3c86ac947c96ea87"
+      }
+    },
+    {
+      "name": "report_raw_link:b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "709e9d2d3dc93c85a32c9d6d8ce6d0a9f68939825750e0c12dbf5fd52f7bca35"
+      }
+    },
+    {
+      "name": "report_raw_link:b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "74f12df1bb3780d2724776460bc3156832077a05831345f3b5650b58d13dd90b"
+      }
+    },
+    {
+      "name": "report_raw_link:b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "701d0ede899ffaf0a115225d22134d4e6fe294dc8e896434b940ef8d56fe9600"
+      }
+    },
+    {
+      "name": "report_raw_link:b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "5f29476907a3fce6495276a60a54631ad3febb05e7aa5c5d33f26cfea5409b79"
+      }
+    },
+    {
+      "name": "report_raw_link:b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "f383fbf91ca3cdf9bb15422dc2c3932ec456664a52da493545636ec0c5d3d019"
+      }
+    },
+    {
+      "name": "report_raw_link:b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "5acfd9c264603adbb124edb99aba44c01c8495c2d1dcaf0b434f9cdb40023cec"
+      }
+    },
+    {
+      "name": "report_raw_link:quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "e588dae8b2bcd84859625d91feb08c3981f1aa701387d2853521381d39461810"
+      }
+    },
+    {
+      "name": "report_raw_link:quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+      "passed": true,
+      "detail": {
+        "sha256": "28c0177d7395ffcf63c0ca01c37b98af4f6dbdc7545f9be16bddc06d761fc34d"
+      }
+    },
+    {
+      "name": "median_old",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4660202898550725,
+        "p999_ms": 2.543
+      }
+    },
+    {
+      "name": "median_new",
+      "passed": true,
+      "detail": {
+        "mean_ms": 0.4716239130434782,
+        "p999_ms": 2.595
+      }
+    },
+    {
+      "name": "independent_OLS_old",
+      "passed": true,
+      "detail": {
+        "b": 0.9885316536105887,
+        "a": -0.19856894975199513,
+        "n": 3,
+        "se": 0.047107594848563986,
+        "ci": [
+          0.3899729088359659,
+          1.5870903983852114
+        ],
+        "r2": 0.997734231292559,
+        "points": [
+          [
+            100.0,
+            79.25254113475178
+          ],
+          [
+            500.0,
+            358.57689290780144
+          ],
+          [
+            1000.0,
+            791.3486322695036
+          ]
+        ],
+        "t_critical_df1": 12.706204736174703
+      }
+    },
+    {
+      "name": "independent_OLS_new",
+      "passed": true,
+      "detail": {
+        "b": 0.9881343412222895,
+        "a": -0.17413654248912458,
+        "n": 3,
+        "se": 0.04969259234051691,
+        "ci": [
+          0.35673008907241477,
+          1.6195385933721642
+        ],
+        "r2": 0.9974773652695818,
+        "points": [
+          [
+            100.0,
+            81.14816489361702
+          ],
+          [
+            500.0,
+            365.28208758865253
+          ],
+          [
+            1000.0,
+            810.643595035461
+          ]
+        ],
+        "t_critical_df1": 12.706204736174703
+      }
+    },
+    {
+      "name": "bar_mean_relative",
+      "passed": true,
+      "detail": {
+        "value": 0.01202441891564071,
+        "limit": 0.15,
+        "operator": "<=",
+        "passed": true
+      }
+    },
+    {
+      "name": "bar_mean_absolute",
+      "passed": true,
+      "detail": {
+        "value": 0.4716239130434782,
+        "limit": 4.0,
+        "operator": "<=",
+        "passed": true
+      }
+    },
+    {
+      "name": "bar_p999_relative",
+      "passed": true,
+      "detail": {
+        "value": 0.020448289421942586,
+        "limit": 0.35,
+        "operator": "<=",
+        "passed": true
+      }
+    },
+    {
+      "name": "bar_slope",
+      "passed": true,
+      "detail": {
+        "value": 0.9881343412222895,
+        "limit": 1.7,
+        "operator": "<",
+        "passed": true
+      }
+    },
+    {
+      "name": "quiet_hash_and_prefix",
+      "passed": true,
+      "detail": {
+        "full": "9f4118c9a3702485bfc5bfd9cf9c3a7ec05e6585b2f176c7dd22bdc026c0003f",
+        "prefix": "97e484d7f68f1808254ba4b3f48f636ba6535ae437281b117565c44d498668cc"
+      }
+    },
+    {
+      "name": "quiet_protocol",
+      "passed": true,
+      "detail": {
+        "started_utc": "2026-10-15T10:43:58+00:00",
+        "ended_utc": "2026-10-15T10:44:15+00:00",
+        "held_seconds": 16.8,
+        "waited_seconds": 0.1,
+        "load": 3.75,
+        "contended": false,
+        "owner": "pass17-sim (Codex, new-world-pass4)",
+        "pid": "38429",
+        "first_command_epoch": 1792061038.784953,
+        "last_command_epoch": 1792061055.4371798
+      }
+    },
+    {
+      "name": "all_commands_lock_permission",
+      "passed": true,
+      "detail": {
+        "lines": 10,
+        "pid": "38429"
+      }
+    },
+    {
+      "name": "runner_exit",
+      "passed": true,
+      "detail": {
+        "runner_exit": 0,
+        "manifest_status": 0
+      }
+    }
+  ],
+  "failed_checks": [],
+  "medians_recomputed": {
+    "old": {
+      "mean_ms": 0.4660202898550725,
+      "p999_ms": 2.543
+    },
+    "new": {
+      "mean_ms": 0.4716239130434782,
+      "p999_ms": 2.595
+    }
+  },
+  "ols_recomputed": {
+    "old": {
+      "b": 0.9885316536105887,
+      "a": -0.19856894975199513,
+      "n": 3,
+      "se": 0.047107594848563986,
+      "ci": [
+        0.3899729088359659,
+        1.5870903983852114
+      ],
+      "r2": 0.997734231292559,
+      "points": [
+        [
+          100.0,
+          79.25254113475178
+        ],
+        [
+          500.0,
+          358.57689290780144
+        ],
+        [
+          1000.0,
+          791.3486322695036
+        ]
+      ],
+      "t_critical_df1": 12.706204736174703
+    },
+    "new": {
+      "b": 0.9881343412222895,
+      "a": -0.17413654248912458,
+      "n": 3,
+      "se": 0.04969259234051691,
+      "ci": [
+        0.35673008907241477,
+        1.6195385933721642
+      ],
+      "r2": 0.9974773652695818,
+      "points": [
+        [
+          100.0,
+          81.14816489361702
+        ],
+        [
+          500.0,
+          365.28208758865253
+        ],
+        [
+          1000.0,
+          810.643595035461
+        ]
+      ],
+      "t_critical_df1": 12.706204736174703
+    }
+  },
+  "bars_recomputed": {
+    "mean_relative": {
+      "value": 0.01202441891564071,
+      "limit": 0.15,
+      "operator": "<=",
+      "passed": true
+    },
+    "mean_absolute": {
+      "value": 0.4716239130434782,
+      "limit": 4.0,
+      "operator": "<=",
+      "passed": true
+    },
+    "p999_relative": {
+      "value": 0.020448289421942586,
+      "limit": 0.35,
+      "operator": "<=",
+      "passed": true
+    },
+    "slope": {
+      "value": 0.9881343412222895,
+      "limit": 1.7,
+      "operator": "<",
+      "passed": true
+    }
+  },
+  "quiet": {
+    "started_utc": "2026-10-15T10:43:58+00:00",
+    "ended_utc": "2026-10-15T10:44:15+00:00",
+    "held_seconds": 16.8,
+    "waited_seconds": 0.1,
+    "load": 3.75,
+    "contended": false,
+    "owner": "pass17-sim (Codex, new-world-pass4)",
+    "pid": "38429",
+    "first_command_epoch": 1792061038.784953,
+    "last_command_epoch": 1792061055.4371798
+  },
+  "commands": [
+    {
+      "index": 0,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/a/r1"
+      ],
+      "started": 1792061038.784953,
+      "finished": 1792061039.888675,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 1,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/a/r1"
+      ],
+      "started": 1792061039.951224,
+      "finished": 1792061040.721879,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 2,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/a/r2"
+      ],
+      "started": 1792061040.78246,
+      "finished": 1792061041.5382771,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 3,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/a/r2"
+      ],
+      "started": 1792061041.600702,
+      "finished": 1792061042.364175,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 4,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/a/r3"
+      ],
+      "started": 1792061042.426471,
+      "finished": 1792061043.1825862,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 5,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/a/r3"
+      ],
+      "started": 1792061043.243872,
+      "finished": 1792061044.008727,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 6,
+      "build": "baseline",
+      "argv": [
+        "/Users/rexxa/work/p17-data/stage-a-bin/worldsim_perf",
+        "quick",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/quick_base"
+      ],
+      "started": 1792061044.071317,
+      "finished": 1792061044.84062,
+      "exit_code": 0,
+      "binary_sha256_before": "2e36152b1c8961e66a2fbfe0a3c200cc89a4225f561e60e3b99e030e0793ac38",
+      "binary_sha256_after": "2e36152b1c8961e66a2fbfe0a3c200cc89a4225f561e60e3b99e030e0793ac38"
+    },
+    {
+      "index": 7,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "quick",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/quick_final"
+      ],
+      "started": 1792061044.903966,
+      "finished": 1792061045.423543,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 8,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "100,500,1000",
+        "--side",
+        "64",
+        "--days",
+        "2",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22"
+      ],
+      "started": 1792061045.485229,
+      "finished": 1792061050.47699,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    },
+    {
+      "index": 9,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "100,500,1000",
+        "--side",
+        "64",
+        "--days",
+        "2",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21"
+      ],
+      "started": 1792061050.538188,
+      "finished": 1792061055.4371798,
+      "exit_code": 0,
+      "binary_sha256_before": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+      "binary_sha256_after": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f"
+    }
+  ],
+  "raw_runs_recomputed": {
+    "a/r1/stress_stress_v21_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.4706,
+      "p999_ms": 2.583,
+      "max_ms": 2.834,
+      "alive": 500.0,
+      "decision_us": 344.1830746376812,
+      "decision_share": 0.731370749336339,
+      "fingerprint": "14458e1fa711de0c"
+    },
+    "a/r1/stress_stress_v22_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.47577971014492754,
+      "p999_ms": 2.595,
+      "max_ms": 3.137,
+      "alive": 500.0,
+      "decision_us": 347.4572173913043,
+      "decision_share": 0.7302901111219418,
+      "fingerprint": "14458e1fa711de0c"
+    },
+    "a/r2/stress_stress_v21_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.466018115942029,
+      "p999_ms": 2.539,
+      "max_ms": 3.071,
+      "alive": 500.0,
+      "decision_us": 341.061734057971,
+      "decision_share": 0.7318636816694007,
+      "fingerprint": "14458e1fa711de0c"
+    },
+    "a/r2/stress_stress_v22_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.47132246376811593,
+      "p999_ms": 2.624,
+      "max_ms": 3.07,
+      "alive": 500.0,
+      "decision_us": 344.10375217391305,
+      "decision_share": 0.730081374485913,
+      "fingerprint": "14458e1fa711de0c"
+    },
+    "a/r3/stress_stress_v21_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.4660202898550725,
+      "p999_ms": 2.543,
+      "max_ms": 3.024,
+      "alive": 500.0,
+      "decision_us": 340.9403079710145,
+      "decision_share": 0.7315997079806191,
+      "fingerprint": "14458e1fa711de0c"
+    },
+    "a/r3/stress_stress_v22_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.4716239130434782,
+      "p999_ms": 2.56,
+      "max_ms": 3.076,
+      "alive": 500.0,
+      "decision_us": 344.49191231884055,
+      "decision_share": 0.7304377551506436,
+      "fingerprint": "14458e1fa711de0c"
+    },
+    "quick_base/quick_stress_v19_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.3039905797101449,
+      "p999_ms": 0.615,
+      "max_ms": 0.811,
+      "alive": 500.0,
+      "decision_us": 184.16406594202897,
+      "decision_share": 0.6058216215700811,
+      "fingerprint": "54ac4928a770f238"
+    },
+    "quick_final/quick_stress_v19_s15100_n500_side64_fed.json": {
+      "ticks": 1380,
+      "mean_ms": 0.3055442028985507,
+      "p999_ms": 0.588,
+      "max_ms": 0.832,
+      "alive": 500.0,
+      "decision_us": 186.8194956521739,
+      "decision_share": 0.6114319757334857,
+      "fingerprint": "54ac4928a770f238"
+    },
+    "b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json": {
+      "ticks": 2820,
+      "mean_ms": 0.11577695035460993,
+      "p999_ms": 0.26,
+      "max_ms": 0.343,
+      "alive": 100.0,
+      "decision_us": 81.14816489361702,
+      "decision_share": 0.70090086709894,
+      "fingerprint": "bea6a0b9ada4edc7"
+    },
+    "b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json": {
+      "ticks": 2820,
+      "mean_ms": 0.49998156028368795,
+      "p999_ms": 2.734,
+      "max_ms": 3.162,
+      "alive": 500.0,
+      "decision_us": 365.28208758865253,
+      "decision_share": 0.7305911189632526,
+      "fingerprint": "7ce50f96939b36b6"
+    },
+    "b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json": {
+      "ticks": 2820,
+      "mean_ms": 1.0780354609929077,
+      "p999_ms": 5.566,
+      "max_ms": 6.484,
+      "alive": 1000.0,
+      "decision_us": 810.643595035461,
+      "decision_share": 0.7519637566363822,
+      "fingerprint": "fbf486f2e08c29ff"
+    },
+    "b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json": {
+      "ticks": 2820,
+      "mean_ms": 0.11312765957446809,
+      "p999_ms": 0.265,
+      "max_ms": 0.33,
+      "alive": 100.0,
+      "decision_us": 79.25254113475178,
+      "decision_share": 0.7005584790922199,
+      "fingerprint": "bea6a0b9ada4edc7"
+    },
+    "b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json": {
+      "ticks": 2820,
+      "mean_ms": 0.49170709219858155,
+      "p999_ms": 2.714,
+      "max_ms": 3.067,
+      "alive": 500.0,
+      "decision_us": 358.57689290780144,
+      "decision_share": 0.7292489748408714,
+      "fingerprint": "7ce50f96939b36b6"
+    },
+    "b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json": {
+      "ticks": 2820,
+      "mean_ms": 1.0567570921985816,
+      "p999_ms": 5.479,
+      "max_ms": 6.308,
+      "alive": 1000.0,
+      "decision_us": 791.3486322695036,
+      "decision_share": 0.7488462941120214,
+      "fingerprint": "fbf486f2e08c29ff"
+    }
+  },
+  "inputs_sha256": {
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/perf.json": "2338579e7538b790e686b2ba97d60176a50ddd00695c18e6942a9b3d91e61e3b",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/RUNLOG.txt": "636ced85f0dc80259f3e9744bc0a38c19790c4ce4b37226f92f6862c9f6fb15c",
+    "/Users/rexxa/work/p17-data/b-perf-final/RUNLOG.txt": "636ced85f0dc80259f3e9744bc0a38c19790c4ce4b37226f92f6862c9f6fb15c",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r1/runs.json": "264551da332ad018ee39d83849d758cc558c8a33ef1405afc2932383cb2bc07c",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r1/runs.json": "264551da332ad018ee39d83849d758cc558c8a33ef1405afc2932383cb2bc07c",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r1/stress_stress_v21_s15100_n500_side64_fed.json": "0d09c30b7ce0f3f16f904f880b8278b976592b7cbec89ab0eddcee8dbe127fc8",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r1/stress_stress_v21_s15100_n500_side64_fed.json": "0d09c30b7ce0f3f16f904f880b8278b976592b7cbec89ab0eddcee8dbe127fc8",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r1/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "54b5ce8d6df0804a66325e631c7f1e3cc80462403964904f782245b9719fffb5",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r1/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "54b5ce8d6df0804a66325e631c7f1e3cc80462403964904f782245b9719fffb5",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r1/stress_stress_v22_s15100_n500_side64_fed.json": "8e261b07d9573e17817bf527df9ce5790e717fdaf3428b713760f186e7d150a9",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r1/stress_stress_v22_s15100_n500_side64_fed.json": "8e261b07d9573e17817bf527df9ce5790e717fdaf3428b713760f186e7d150a9",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r1/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "4bcae58d82692e117b970b00f4b182100b369051b91a47e2a629a11f555406e3",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r1/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "4bcae58d82692e117b970b00f4b182100b369051b91a47e2a629a11f555406e3",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r2/runs.json": "8c5ae0f452097b48760707228a8e729c7afa7cbb2cbcb4573fb83d85ce1db347",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r2/runs.json": "8c5ae0f452097b48760707228a8e729c7afa7cbb2cbcb4573fb83d85ce1db347",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r2/stress_stress_v21_s15100_n500_side64_fed.json": "6075e93117b297a4212fde93ad8691df21e8fa2dc91f1ead1ec6b6f2d5ce923b",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r2/stress_stress_v21_s15100_n500_side64_fed.json": "6075e93117b297a4212fde93ad8691df21e8fa2dc91f1ead1ec6b6f2d5ce923b",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r2/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "2339b65bd4b1e104418d646d293de527927207d774194256dd1f119a50d7fd38",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r2/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "2339b65bd4b1e104418d646d293de527927207d774194256dd1f119a50d7fd38",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r2/stress_stress_v22_s15100_n500_side64_fed.json": "5287416a758f9ed2ecdee43f9afd7fb919cb0f994a1a028167c7cda4306f43b1",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r2/stress_stress_v22_s15100_n500_side64_fed.json": "5287416a758f9ed2ecdee43f9afd7fb919cb0f994a1a028167c7cda4306f43b1",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r2/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "36b328983e3896794a12be5db00d6180a6b8769b517b3b16804dfd84c3e8e975",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r2/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "36b328983e3896794a12be5db00d6180a6b8769b517b3b16804dfd84c3e8e975",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r3/runs.json": "544b0a1e95b8aa9d488363bebb4bd590c50001bd291dd17e5bee6049cb3c883a",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r3/runs.json": "544b0a1e95b8aa9d488363bebb4bd590c50001bd291dd17e5bee6049cb3c883a",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r3/stress_stress_v21_s15100_n500_side64_fed.json": "6f2a8df10e2859db0ba1c1fb7a1de3eb56860f19b2c2006320da972052f00bc0",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r3/stress_stress_v21_s15100_n500_side64_fed.json": "6f2a8df10e2859db0ba1c1fb7a1de3eb56860f19b2c2006320da972052f00bc0",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r3/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "58c248d37d11905671b51ecbbf53785c3d30a151c55d1af1115bd199d857f577",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r3/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "58c248d37d11905671b51ecbbf53785c3d30a151c55d1af1115bd199d857f577",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r3/stress_stress_v22_s15100_n500_side64_fed.json": "74aeec136018dcf4c4d96a4d993e9b5f19393bd337d266bc3c86ac947c96ea87",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r3/stress_stress_v22_s15100_n500_side64_fed.json": "74aeec136018dcf4c4d96a4d993e9b5f19393bd337d266bc3c86ac947c96ea87",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/a/r3/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "943a6ad3540481e7d257ecf1c226aa5b5f7f8d21160d15ecf2dd4df5634b2ab2",
+    "/Users/rexxa/work/p17-data/b-perf-final/a/r3/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "943a6ad3540481e7d257ecf1c226aa5b5f7f8d21160d15ecf2dd4df5634b2ab2",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/runs.json": "c4800fd03cc51cf56f461af4feaa9571bbdbb8b295b5e383132883d81376c6a2",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/runs.json": "c4800fd03cc51cf56f461af4feaa9571bbdbb8b295b5e383132883d81376c6a2",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json": "701d0ede899ffaf0a115225d22134d4e6fe294dc8e896434b940ef8d56fe9600",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json": "701d0ede899ffaf0a115225d22134d4e6fe294dc8e896434b940ef8d56fe9600",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.tick_us.bin": "79ce7b5440b7482007ca9606355d86ee07dfb010da0869df3986e40b4f73dd10",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.tick_us.bin": "79ce7b5440b7482007ca9606355d86ee07dfb010da0869df3986e40b4f73dd10",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json": "709e9d2d3dc93c85a32c9d6d8ce6d0a9f68939825750e0c12dbf5fd52f7bca35",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json": "709e9d2d3dc93c85a32c9d6d8ce6d0a9f68939825750e0c12dbf5fd52f7bca35",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/stress_stress_v21_s15100_n100_side64_fed.tick_us.bin": "09cf0e7b9cea125a0475d90a6c6048625fdcd4f54bbd850755749a8062f2784d",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/stress_stress_v21_s15100_n100_side64_fed.tick_us.bin": "09cf0e7b9cea125a0475d90a6c6048625fdcd4f54bbd850755749a8062f2784d",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json": "74f12df1bb3780d2724776460bc3156832077a05831345f3b5650b58d13dd90b",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json": "74f12df1bb3780d2724776460bc3156832077a05831345f3b5650b58d13dd90b",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v21/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "12162deb088cf0892b4a32acf5594017489a3ca95a60f1d40c0c283d3c53647e",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v21/stress_stress_v21_s15100_n500_side64_fed.tick_us.bin": "12162deb088cf0892b4a32acf5594017489a3ca95a60f1d40c0c283d3c53647e",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/runs.json": "f4438bb15df7a7b64f28fbf91357aa4406e6530a3fcddd000bc1fc479888ce93",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/runs.json": "f4438bb15df7a7b64f28fbf91357aa4406e6530a3fcddd000bc1fc479888ce93",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json": "5acfd9c264603adbb124edb99aba44c01c8495c2d1dcaf0b434f9cdb40023cec",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json": "5acfd9c264603adbb124edb99aba44c01c8495c2d1dcaf0b434f9cdb40023cec",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.tick_us.bin": "ac305d64034b02cecd219fee8c3a717dfb56de46e3e2c48ad6cf765e64cd34ab",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.tick_us.bin": "ac305d64034b02cecd219fee8c3a717dfb56de46e3e2c48ad6cf765e64cd34ab",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json": "5f29476907a3fce6495276a60a54631ad3febb05e7aa5c5d33f26cfea5409b79",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json": "5f29476907a3fce6495276a60a54631ad3febb05e7aa5c5d33f26cfea5409b79",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/stress_stress_v22_s15100_n100_side64_fed.tick_us.bin": "b020ade52ccfce2405587e68a23dc335726f664935c97c3eeaea0ff99ee87647",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/stress_stress_v22_s15100_n100_side64_fed.tick_us.bin": "b020ade52ccfce2405587e68a23dc335726f664935c97c3eeaea0ff99ee87647",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json": "f383fbf91ca3cdf9bb15422dc2c3932ec456664a52da493545636ec0c5d3d019",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json": "f383fbf91ca3cdf9bb15422dc2c3932ec456664a52da493545636ec0c5d3d019",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/b_game_v22/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "8c1a9c5c093f5e696672213aea9849af9627ace5f9a52ab603b2f2bfa538a0eb",
+    "/Users/rexxa/work/p17-data/b-perf-final/b_game_v22/stress_stress_v22_s15100_n500_side64_fed.tick_us.bin": "8c1a9c5c093f5e696672213aea9849af9627ace5f9a52ab603b2f2bfa538a0eb",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/commands.jsonl": "d7ff1bcfa3892f83e1cbecf2d483632456a8cb1ed3a1d25fe2a788f61efcdbde",
+    "/Users/rexxa/work/p17-data/b-perf-final/commands.jsonl": "d7ff1bcfa3892f83e1cbecf2d483632456a8cb1ed3a1d25fe2a788f61efcdbde",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/launch_receipt.json": "843000a5b26bcb5212a73cda19e0672468bad82de52298a7eb0098b891b84445",
+    "/Users/rexxa/work/p17-data/b-perf-final/launch_receipt.json": "843000a5b26bcb5212a73cda19e0672468bad82de52298a7eb0098b891b84445",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/provenance.json": "8e8193193e62f480355ad2253fff450512e007a176668e8c5f31f3bbfd6c0640",
+    "/Users/rexxa/work/p17-data/b-perf-final/provenance.json": "8e8193193e62f480355ad2253fff450512e007a176668e8c5f31f3bbfd6c0640",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quick_base/quick_stress_v19_s15100_n500_side64_fed.json": "e588dae8b2bcd84859625d91feb08c3981f1aa701387d2853521381d39461810",
+    "/Users/rexxa/work/p17-data/b-perf-final/quick_base/quick_stress_v19_s15100_n500_side64_fed.json": "e588dae8b2bcd84859625d91feb08c3981f1aa701387d2853521381d39461810",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quick_base/quick_stress_v19_s15100_n500_side64_fed.tick_us.bin": "be0e72e6fbcf26b4ec325821d852e6a9e97bfae8b65bc51509b7ffb906866a49",
+    "/Users/rexxa/work/p17-data/b-perf-final/quick_base/quick_stress_v19_s15100_n500_side64_fed.tick_us.bin": "be0e72e6fbcf26b4ec325821d852e6a9e97bfae8b65bc51509b7ffb906866a49",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quick_base/runs.json": "49bc21e7f9156dd592508a7f07fc042fb25f8c3eb491d2d671d05da9a424fd6f",
+    "/Users/rexxa/work/p17-data/b-perf-final/quick_base/runs.json": "49bc21e7f9156dd592508a7f07fc042fb25f8c3eb491d2d671d05da9a424fd6f",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quick_final/quick_stress_v19_s15100_n500_side64_fed.json": "28c0177d7395ffcf63c0ca01c37b98af4f6dbdc7545f9be16bddc06d761fc34d",
+    "/Users/rexxa/work/p17-data/b-perf-final/quick_final/quick_stress_v19_s15100_n500_side64_fed.json": "28c0177d7395ffcf63c0ca01c37b98af4f6dbdc7545f9be16bddc06d761fc34d",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quick_final/quick_stress_v19_s15100_n500_side64_fed.tick_us.bin": "e36d0e4da55e88efbe6daef51064aa8111eb2ed8ddba8f62f559decdfdfe39a7",
+    "/Users/rexxa/work/p17-data/b-perf-final/quick_final/quick_stress_v19_s15100_n500_side64_fed.tick_us.bin": "e36d0e4da55e88efbe6daef51064aa8111eb2ed8ddba8f62f559decdfdfe39a7",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quick_final/runs.json": "1ec46415d46a8fdea4c3f7d876eb2d119bd0539f25f2b49caf9ad9039941356c",
+    "/Users/rexxa/work/p17-data/b-perf-final/quick_final/runs.json": "1ec46415d46a8fdea4c3f7d876eb2d119bd0539f25f2b49caf9ad9039941356c",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/quiet.log": "9f4118c9a3702485bfc5bfd9cf9c3a7ec05e6585b2f176c7dd22bdc026c0003f",
+    "/Users/rexxa/work/p17-data/b-perf-final/quiet.log": "9f4118c9a3702485bfc5bfd9cf9c3a7ec05e6585b2f176c7dd22bdc026c0003f",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/runner.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/Users/rexxa/work/p17-data/b-perf-final/runner.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/raw/runs.log": "86c9b15c35f3ae81c488fe11d376729e69bf507d4ed7740f6746c992d9680df8",
+    "/Users/rexxa/work/p17-data/b-perf-final/runs.log": "86c9b15c35f3ae81c488fe11d376729e69bf507d4ed7740f6746c992d9680df8",
+    "/Users/rexxa/work/p17-data/b-final-bin/worldsim_perf": "89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f",
+    "/Users/rexxa/work/p17-data/stage-a-bin/worldsim_perf": "2e36152b1c8961e66a2fbfe0a3c200cc89a4225f561e60e3b99e030e0793ac38",
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/perf/p17-b/launch_receipt.json": "843000a5b26bcb5212a73cda19e0672468bad82de52298a7eb0098b891b84445"
+  },
+  "limitations": [
+    "Quiet-state verification is retrospective validation of the recorded lock/load/process-permission evidence, not a new live timing observation.",
+    "No simulation parameters, sources, runners, or cohort metrics were changed or re-evaluated."
+  ]
+}

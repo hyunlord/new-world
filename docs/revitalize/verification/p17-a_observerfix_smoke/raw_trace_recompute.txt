@@ -1,0 +1,2 @@
+PASS seed=42 people=24 adults=19 offset=480 completed=70 invalid_360_rejections=20 discrepancies=0 misses=0
+PASS seed=43 people=29 adults=24 offset=480 completed=35 invalid_360_rejections=7 discrepancies=0 misses=0

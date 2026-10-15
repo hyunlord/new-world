@@ -1,0 +1,8 @@
+2026-10-15T08:35:38.899217Z runner start producer=50a73474e06d3a9abbb535729e9c7e1e134954b7 bin=/Users/rexxa/work/p17-data/a-observerfix-bin
+2026-10-15T08:35:38.982376Z game_v21 start
+2026-10-15T08:54:12.869140Z game_v21 end exit=0
+2026-10-15T08:54:12.993499Z game_v20 start
+2026-10-15T09:01:40.388893Z game_v20 end exit=0
+2026-10-15T09:01:40.516299Z i5_v21 start
+2026-10-15T09:18:21.673304Z i5_v21 end exit=0
+2026-10-15T09:18:38.526719Z workloads end exit=1

@@ -490,6 +490,7 @@ fn harness_p7_alpha_a24_target_kind_five_variants_exhaustive() {
         TargetKind::Agent(0),
         TargetKind::GatherFood,
         TargetKind::GatherWood,
+        TargetKind::Activity,
     ];
     for k in kinds {
         match k {
@@ -500,6 +501,7 @@ fn harness_p7_alpha_a24_target_kind_five_variants_exhaustive() {
             TargetKind::Agent(_) => {}
             TargetKind::GatherFood => {}
             TargetKind::GatherWood => {}
+            TargetKind::Activity => {}
         }
     }
     // (b) Payload discrimination — distinct AgentId payloads compare
@@ -613,6 +615,7 @@ fn harness_p7_alpha_a28_target_kind_variant_set_audit() {
             TargetKind::Agent(_) => "agent",
             TargetKind::GatherFood => "gather_food",
             TargetKind::GatherWood => "gather_wood",
+            TargetKind::Activity => "activity",
         }
     }
     assert_eq!(classify(TargetKind::Food), "food");
@@ -621,6 +624,7 @@ fn harness_p7_alpha_a28_target_kind_variant_set_audit() {
     assert_eq!(classify(TargetKind::ConstructionSite), "construction_site");
     assert_eq!(classify(TargetKind::Agent(0)), "agent");
     assert_eq!(classify(TargetKind::GatherFood), "gather_food");
+    assert_eq!(classify(TargetKind::Activity), "activity");
 }
 
 // ─── A29: AgentState variant set — exact enumeration (source audit) ───

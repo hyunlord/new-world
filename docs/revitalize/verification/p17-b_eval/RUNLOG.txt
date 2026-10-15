@@ -1,0 +1,8 @@
+2026-10-15T10:46:45.538266Z runner start producer=47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21 bin=/Users/rexxa/work/p17-data/b-final-bin
+2026-10-15T10:46:45.675898Z game_v22 start
+2026-10-15T11:03:45.004757Z game_v22 end exit=0
+2026-10-15T11:03:45.186389Z game_v21 start
+2026-10-15T11:19:47.416748Z game_v21 end exit=0
+2026-10-15T11:19:47.566059Z evaluator start mode=evaluation
+2026-10-15T11:21:00.254612Z evaluator end exit=1
+2026-10-15T11:21:00.456354Z workloads end exit=1

@@ -1,0 +1,23 @@
+{
+  "syntax": "PASS",
+  "only_population_function_changed": true,
+  "numeric_and_kin_definitions_ast_unchanged": [
+    "full_siblings",
+    "close_kin",
+    "Moments",
+    "moments",
+    "axis_correlation",
+    "PairMoments",
+    "pair_moments",
+    "sibling_mean",
+    "unrelated_mean",
+    "resemblance_difference"
+  ],
+  "rust_diff_from_frozen_producer": [],
+  "files_sha256": {
+    "tools/revitalize/evaluate_pass17_family_data.py": "3022a0e000e306d7c92c63153a59d9343fa3dd9ff0e7101e5820fd59be7e1c8b",
+    "tools/revitalize/evaluate_pass17_family_pairs.py": "745fc1d6a4c230975af2b0cef947ab6928f866997768019cbfb094046a388eda",
+    "tools/revitalize/evaluate_pass17_family_report.py": "49b680c2f9cb24a66c8e62f3135747beab37418aba81813c8b980bf9d180d507",
+    "tools/revitalize/test_evaluate_pass17_stage_b.py": "d5982c0665e546fb3a4876a269693150be29e30c29f026df053ae35c397e9e70"
+  }
+}

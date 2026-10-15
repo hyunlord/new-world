@@ -1,0 +1,24 @@
+head da8e45c7858b7973330ebecef8ff35ae5ee936ee
+started 2026-10-15 01:45:22 KST
+prepare_bridge exit 0
+prepare_import exit 0
+test_debug exit 0
+test_debug passed 2134 failed 0 ignored 0
+test_release exit 0
+test_release passed 2134 failed 0 ignored 0
+clippy exit 0
+clippy_all_targets exit 0
+forbidden_math exit 0
+bridge_build exit 0
+godot_import exit 0
+strict_check exit 0
+smoke exit 0
+smoke_errors none
+python_unittest exit 0
+python_unittest ran 163 skipped 0 result OK
+python_worldmodel exit 0
+python_worldmodel ran 49 skipped 24 result OK (skipped=24)
+perf_quick exit 0
+quick mean_ms 0.3023057971014493 p999_ms 0.913 max_ms 2.195
+allowed_paths exit 0
+finished 2026-10-15 02:35:30 KST status 0

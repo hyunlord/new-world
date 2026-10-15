@@ -47,6 +47,7 @@ fn state_name(state: AgentState) -> String {
         TargetKind::Agent(_) => "Agent",
         TargetKind::GatherFood => "GatherFood",
         TargetKind::GatherWood => "GatherWood",
+        TargetKind::Activity => "Activity",
     };
     format!("{tag}{{{kind}}}")
 }

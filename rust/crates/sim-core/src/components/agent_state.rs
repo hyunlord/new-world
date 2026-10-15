@@ -65,6 +65,8 @@ pub enum TargetKind {
     ///
     /// [`Inventory`]: crate::components::Inventory
     GatherWood,
+    /// A reserved, economy-neutral routine place in an opted-in world.
+    Activity,
 }
 
 /// Per-agent FSM state. Lives alongside [`Hunger`]/[`Thirst`] and is

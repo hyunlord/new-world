@@ -49,6 +49,9 @@ use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
+use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::family::{agent_family_to_dict, collect_agent_family};
+
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
 /// Default grid extent until Godot configures it (Phase 2 default).
@@ -182,14 +185,43 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
 }
 
+/// Revitalize Pass 17 — the live game's world of `seed`: `game_v22`, with
+/// temperament, routines and families. Pure (no Godot) so the harness can
+/// check it; `WorldSimNode::init` and `reset_world` call it, while
+/// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
+pub fn build_game_engine(seed: u64) -> SimEngine {
+    build_world_with(&WorldGenConfig::game_v22(seed), WorldRules::game_v22(seed))
+}
+
+/// Revitalize Pass 16 — the temperament of the agent whose
+/// `hecs::Entity::to_bits()` is `entity_bits`, or `None` when the bits are
+/// not a live entity or it carries no `Temperament` (every scene before
+/// `game_v20`). Bridge Identity Contract: `WorldSimNode::get_agent_temperament`
+/// only forwards here.
+pub fn collect_agent_temperament(world: &hecs::World, entity_bits: u64) -> Option<sim_core::components::Temperament> {
+    let entity = hecs::Entity::from_bits(entity_bits)?;
+    world.get::<&sim_core::components::Temperament>(entity).ok().map(|t| *t)
+}
+
+/// Marshals [`collect_agent_temperament`] into `{found, ns, ha, rd, p}`
+/// (ints; `found: false` and zeros when missing).
+fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperament>) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let t = temperament.unwrap_or(sim_core::components::Temperament { ns: 0, ha: 0, rd: 0, p: 0 });
+    dict.set("found", temperament.is_some());
+    dict.set("ns", i64::from(t.ns));
+    dict.set("ha", i64::from(t.ha));
+    dict.set("rd", i64::from(t.rd));
+    dict.set("p", i64::from(t.p));
+    dict
+}
+
 #[godot_api]
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            engine: build_world_with(
-                &WorldGenConfig::game_v19(DEFAULT_GAME_SEED),
-                WorldRules::game_v19(DEFAULT_GAME_SEED),
-            ),
+            // Revitalize Pass 17: the live game runs `game_v22` (families).
+            engine: build_game_engine(DEFAULT_GAME_SEED),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
             sim_speed: 1.0,
@@ -233,10 +265,7 @@ impl WorldSimNode {
     #[func]
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_world_with(
-            &WorldGenConfig::game_v19(self.world_seed),
-            WorldRules::game_v19(self.world_seed),
-        );
+        self.engine = build_game_engine(self.world_seed);
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
@@ -487,6 +516,39 @@ impl WorldSimNode {
     fn get_agent_detail(&self, entity_bits: i64) -> VarDictionary {
         let row = collect_agent_detail(&self.engine.world, entity_bits as u64);
         agent_detail_to_dict(row)
+    }
+
+    /// Revitalize Pass 16 FFI — one agent's temperament as
+    /// `{found: bool, ns, ha, rd, p}` (permille ints, 0–1,000; `found: false`
+    /// and zeros when the agent or the component is missing). A separate
+    /// getter: `get_agent_detail` keeps exactly its nine keys. Displaying
+    /// temperament is the art line's job.
+    #[func]
+    fn get_agent_temperament(&self, entity_bits: i64) -> VarDictionary {
+        agent_temperament_to_dict(collect_agent_temperament(&self.engine.world, entity_bits as u64))
+    }
+
+    /// Pass 17 family as exactly `{found, female, mother, father, partner, children}`.
+    /// Input uses snapshot `ids` (entity bits); links use `agent_ids` (AgentId).
+    /// Missing links are -1; children are a sorted PackedInt64Array of living
+    /// offspring at any life stage. Missing family components return found=false,
+    /// female=false, -1 links and empty children; recorded absent parents remain ids.
+    #[func]
+    fn get_agent_family(&self, entity_bits: i64) -> VarDictionary {
+        agent_family_to_dict(collect_agent_family(
+            &self.engine.world,
+            u64::from_ne_bytes(entity_bits.to_ne_bytes()),
+        ))
+    }
+
+    /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
+    /// `ids` are entity bits matching the agent snapshot. `kinds` use 0..6
+    /// (TendFire, Craft, Repair, HearthCircle, Explore, Play, SitByFire).
+    /// `place_x`, `place_y` identify the chosen place; `until_tick` is -1
+    /// until arrival. Existing agent snapshot and detail schemas stay unchanged.
+    #[func]
+    fn get_activity_snapshot(&self) -> VarDictionary {
+        activity_rows_to_dict(&collect_activity_snapshot(&self.engine.world))
     }
 
     /// V7 Phase 12-β.2 (A3) FFI — construction-site snapshot for the
@@ -1453,9 +1515,10 @@ fn event_views_to_variant_array(views: &[CausalEventView]) -> VarArray {
 ///
 /// Tag table (locked, §2-A-1):
 ///   - `0` = `AgentState::Idle`
-///   - `1` = `AgentState::Seeking { .. }` (any `TargetKind`)
+///   - `1` = `AgentState::Seeking { .. }` (non-Activity target)
 ///   - `2` = `AgentState::Consuming { target: TargetKind::Agent(_) }`
-///   - `3` = `AgentState::Consuming { .. }` (any non-`Agent` `TargetKind`)
+///   - `3` = `AgentState::Consuming { .. }` (non-Agent, non-Activity target)
+///   - `4` = Seeking or Consuming with `TargetKind::Activity` (Pass 17)
 // `Eq` intentionally NOT derived: viz-B added `f32` need fields (hunger/
 // thirst/sleep) which are not `Eq`. `PartialEq` (used by the harness
 // `assert_eq!` on `Vec<AgentSnapshotRow>`) is sufficient; no `HashSet`/
@@ -1515,7 +1578,7 @@ pub struct AgentSnapshotRow {
     /// `Inventory`. Read-only; drives a future stick-carry glyph.
     pub carried_wood: i32,
     /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
-    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood (Pass 5).
+    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood, 8 Activity.
     pub target_kind: u8,
     /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
     /// (Pass 4, live Elder component).
@@ -1586,6 +1649,8 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     {
         let state_tag: u8 = match maybe_state {
             None | Some(AgentState::Idle) => 0,
+            Some(AgentState::Seeking { target: TargetKind::Activity }
+                | AgentState::Consuming { target: TargetKind::Activity }) => 4,
             Some(AgentState::Seeking { .. }) => 1,
             Some(AgentState::Consuming { target: TargetKind::Agent(_) }) => 2,
             Some(AgentState::Consuming { .. }) => 3,
@@ -1628,6 +1693,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::Agent(_)) => 5,
             Some(TargetKind::GatherFood) => 6,
             Some(TargetKind::GatherWood) => 7,
+            Some(TargetKind::Activity) => 8,
         };
         let life_stage = if maybe_child.is_some() {
             1
@@ -1806,16 +1872,16 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
 /// - `agent_id` — `Agent.id` (AgentId domain, matches snapshot.agent_ids[i])
 /// - `x`, `y` — tile coordinates as `i32` (matches the snapshot's
 ///   `xs`/`ys` type contract — Bridge Identity Contract type lock)
-/// - `state_tag` — same locked Phase 4-γ A5 mapping as
+/// - `state_tag` — same mapping as
 ///   [`AgentSnapshotRow`] (0=Idle, 1=Seeking, 2=Consuming(Agent),
-///   3=Consuming(other))
+///   3=Consuming(other), 4=Seeking/Consuming(Activity))
 /// - `hunger` — `Hunger.value` (`f32`; `[0, SATURATION=100]`)
 /// - `thirst` — `Thirst.value` (`f64`; `[0, SATURATION=100]`)
 /// - `sleep` — `Sleep.fatigue` (`f64`; `[0, SATURATION=100]`)
 /// - `target_kind` — `i32` encoding of `Option<TargetKind>`:
 ///   0=None (Idle), 1=Food, 2=Water, 3=Sleep, 4=ConstructionSite,
-///   5=Agent (inner `AgentId` NOT surfaced in the Conservative scope;
-///   relationship surfacing deferred to Section 16+)
+///   5=Agent (inner `AgentId` not surfaced), 6=GatherFood, 7=GatherWood,
+///   8=Activity.
 ///
 /// The `found` field distinguishes "row populated" (entity is a live
 /// agent carrying the full component bundle) from "entity not found / not
@@ -1920,6 +1986,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
     };
     let state_tag: u8 = match state {
         AgentState::Idle => 0,
+        AgentState::Seeking { target: TargetKind::Activity }
+            | AgentState::Consuming { target: TargetKind::Activity } => 4,
         AgentState::Seeking { .. } => 1,
         AgentState::Consuming {
             target: TargetKind::Agent(_),
@@ -1937,6 +2005,7 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(TargetKind::GatherFood) => 6,
         // Revitalize Pass 5 — firewood pickup target.
         Some(TargetKind::GatherWood) => 7,
+        Some(TargetKind::Activity) => 8,
     };
     AgentDetailRow {
         found: true,
@@ -3128,6 +3197,66 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
+    fn live_game_is_game_v22() {
+        // Pass 17 7.5: init and reset_world build game_v22; the stress world stays v19.
+        let engine = super::build_game_engine(20_261_010);
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v22(20_261_010));
+        assert_eq!(engine.resources.world_seed, 20_261_010);
+        assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
+    }
+
+    #[test]
+    fn collect_agent_temperament_reads_the_component() {
+        // Live v22 retains founder temperament; stale bits and v19 agents give None.
+        let engine = super::build_game_engine(7);
+        let mut seen = 0;
+        for (entity, t) in engine.world.query::<&sim_core::components::Temperament>().iter() {
+            assert_eq!(super::collect_agent_temperament(&engine.world, entity.to_bits().get()), Some(*t));
+            seen += 1;
+        }
+        assert_eq!(seen, engine.world.query::<&sim_core::components::Agent>().iter().count());
+        assert_eq!(super::collect_agent_temperament(&engine.world, 0), None);
+        assert_eq!(super::collect_agent_temperament(&engine.world, u64::MAX), None);
+        let v19 = super::build_stress_engine(7, 3);
+        for (entity, _) in v19.world.query::<&sim_core::components::Agent>().iter() {
+            assert_eq!(super::collect_agent_temperament(&v19.world, entity.to_bits().get()), None);
+        }
+    }
+
+    #[test]
+    fn live_founders_have_family_while_stress_founders_do_not() {
+        // Given the live v22 and stress v19 builders used by init and resets.
+        let live = super::build_game_engine(7);
+        let stress = super::build_stress_engine(7, 3);
+        let mut seen = 0;
+        // When reading every live founder's family through entity bits.
+        for (entity, _) in live.world.query::<&sim_core::components::Agent>().iter() {
+            let row = super::collect_agent_family(&live.world, entity.to_bits().get())
+                .expect("live founder family");
+            let sex = live
+                .world
+                .get::<&sim_core::components::Sex>(entity)
+                .expect("founder sex");
+            // Then sex is preserved and unknown founder links remain empty.
+            assert_eq!(
+                row,
+                crate::ffi::AgentFamilyRow {
+                    female: sex.female,
+                    ..Default::default()
+                }
+            );
+            seen += 1;
+        }
+        assert!(seen > 0);
+        for (entity, _) in stress.world.query::<&sim_core::components::Agent>().iter() {
+            assert_eq!(
+                super::collect_agent_family(&stress.world, entity.to_bits().get()),
+                None
+            );
+        }
+    }
+
+    #[test]
     fn stress_engine_has_the_requested_founders() {
         // Pass 15 6.4.
         let engine = super::build_stress_engine(15100, 500);
@@ -3686,7 +3815,8 @@ mod pass3_agent_snapshot_tests {
         let mut world = hecs::World::new();
         let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
             Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
-            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood)];
+            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood),
+            Some(TargetKind::Activity)];
         let mut expected = Vec::new();
         for (code, target) in targets.into_iter().enumerate() {
             for consuming in [false, true] {
@@ -3701,7 +3831,14 @@ mod pass3_agent_snapshot_tests {
                 if consuming {
                     world.insert_one(entity, Child { born_tick: 5 }).expect("child fixture");
                 }
-                expected.push((entity, code as u8, u8::from(consuming)));
+                let state_code = match (code, consuming) {
+                    (0, _) => 0,
+                    (8, _) => 4,
+                    (5, true) => 2,
+                    (_, false) => 1,
+                    (_, true) => 3,
+                };
+                expected.push((entity, code as u8, u8::from(consuming), state_code));
             }
         }
         let rows = collect_agent_snapshot(&world);
@@ -3711,13 +3848,15 @@ mod pass3_agent_snapshot_tests {
         assert_eq!(rows.len(), expected.len());
         assert_eq!([ids.len(), xs.len(), ys.len(), states.len(), target_kinds.len(),
             life_stages.len()], [expected.len(); 6]);
-        for (entity, target, stage) in expected {
+        for (entity, target, stage, state_code) in expected {
             let index = rows.iter().position(|row| row.entity_bits == entity.to_bits().get())
                 .expect("fixture row present across archetypes");
             let detail = collect_agent_detail(&world, entity.to_bits().get());
             assert!(detail.found);
             assert_eq!((target_kinds[index], life_stages[index]), (target, stage));
             assert_eq!(i32::from(target_kinds[index]), detail.target_kind);
+            assert_eq!(states[index], state_code);
+            assert_eq!(detail.state_tag, state_code);
         }
     }
 

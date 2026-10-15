@@ -53,8 +53,11 @@ fn pass11_v17_seed0_literal() -> WorldRules {
             preempt_gathering: true,
             keyed_draws: true,
             local_food_availability: false,
+            temperament: None,
+            routine: None,
         },
         society: SocietyRules {
+            family: None,
             birth: BirthRule::Provisioned {
                 cooldown_ticks: 720,
                 food_cost: 10,

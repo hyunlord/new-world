@@ -13,6 +13,7 @@
 //! "decision tier" of the schedule.
 
 pub mod agent_decision;
+mod routine;
 
 pub use agent_decision::{
     arm_priority_index, cascade_arm_memory_tag, nearest_resource_tile, AgentDecisionSystem,
