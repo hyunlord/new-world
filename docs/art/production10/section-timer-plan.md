@@ -68,3 +68,34 @@ There are 22 test files mentioning `agent_renderer.gd`; count includes broad fil
 - `harness_art_p9_sim_reads.rs` scans protected raw getters/mutators across `.gd` files. An instrumented/generated script must retain `SimReads.read` and approved mutation routing; naming a diagnostic file does not exempt direct world getter calls. Do not relax scanner rules.
 
 After implementation, inspect actual failing assertions and only re-pin moved equivalent semantics with one Art Pass 10 ledger row each. No source-static assertion should be changed merely because profiling changes a file hash. Validate generated diagnostic behavior against the original using running dumps and frozen captures, then validate ordinary off-path identity after any production edits.
+
+## Prepared diagnostic implementation (offline checks only)
+
+The strict off-cost choice is now implemented in new diagnostic files:
+
+- `tools/art_pipeline/generate_agent_sections_p10.py`: indentation-sensitive unique markers in `_process` and `_apply_drawn_positions`; rejects missing/duplicate/reordered markers, unexpected return counts, diagnostic-name collisions and reinstrumentation. It verifies that removing only its tagged insertion lines restores every nonblank ordinary statement in original order. Emits SHA-256 for source, generated script, helper and generator in `OUTPUT.manifest.json`. Source files are never rewritten.
+- `scripts/test/art/agent_section_clock_p10.gd`: 25 exclusive counters (all planned spans plus `other_usec`), whole callback, frame number, call count, agent/tile counts, early-return/incomplete status. Adjacent intervals telescope to total; timer/mark overhead is included in measured intervals and is not corrected away. `FoundingGroups` is explicitly unavailable, never included in parent total.
+- `scripts/test/art/section_profile_loader_p10.gd`: debug-only opt-in installation on detached Main, validates source/output/helper hashes before replacing only the detached AgentRenderer's script; readout rejects stale probe frames.
+- `tools/art_pipeline/test_generate_agent_sections_p10.py`: current-source statement preservation, all section indexes, both early returns and normal completion, removed markers, duplicate markers, new return and reinstrumentation rejection.
+
+Generation command (generated output is a diagnostic artifact, not a production source replacement):
+
+```sh
+python3 tools/art_pipeline/generate_agent_sections_p10.py \
+  scripts/ui/agent_renderer.gd \
+  scripts/test/art/generated_p10/agent_renderer_profile_p10.gd
+python3 tools/art_pipeline/test_generate_agent_sections_p10.py
+```
+
+The generator was exercised against the current source into `/tmp/agent_renderer_profile_p10.gd`, not installed in the project. Offline tests passed. Runtime parsing, loader replacement, visual identity and time sampling remain NOT VERIFIED until Part 0 completes. An existing future optimized renderer may legitimately fail the current marker map; inspect changed flow and revise markers explicitly before regenerating, never silently skip sections.
+
+Harness integration sequence:
+
+1. Explicit `--agent-sections` diagnostic flag must be opt-in and rejected outside debug builds. Instantiate main; keep it detached. Ordinary runs omit loader calls entirely.
+2. Preload `section_profile_loader_p10.gd` in the diagnostic harness and call `install(main, "res://scripts/test/art/generated_p10/agent_renderer_profile_p10.gd", "res://scripts/test/art/generated_p10/agent_renderer_profile_p10.manifest.json")`. Abort and preserve the error if `valid` is false; do not fall back to uninstrumented timings. Copy the successful installation provenance into session metadata.
+3. Only after successful install, perform the existing world setup, add main to the tree and follow the normal W500 frozen Z4 session setup. Do not change renderer priority or give it a second manual `_process` call.
+4. After `await runtime.next_frame()`, set `sample["agent_sections"] = Loader.collect(main.get_node("AgentRenderer"), int(sample["process_frame"]))`. Abort classification on incomplete/invalid/misaligned samples. This readout allocation occurs after the CPU bracket.
+5. Save raw samples and summaries under production10 evidence. Call the generated renderer only through the normal scene process surface. Restore/quit through existing runtime cleanup. Treat instrumented section results as diagnostic attribution, not H1–H4 timing evidence.
+6. Before accepting the generator in live measurements, run the required pixel/running identity between generated and ordinary renderers and check every protected getter scan. No baseline or final benchmark should accidentally load the generated script.
+
+No full launch harness was added: wiring it into existing measurement control flow before the baseline finishes risks changing active tooling. The two-method loader is the bounded integration surface; its Godot behavior is still unverified. Production scripts and scenes are unchanged by this subtask.
