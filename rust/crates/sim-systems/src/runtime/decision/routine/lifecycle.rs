@@ -180,7 +180,7 @@ impl RoutineTick {
         if let Some(count) = self.occupancy.get_mut(&activity.place) {
             *count = count.saturating_sub(1);
         }
-        self.memo.clear();
+        self.rewind(activity.place);
         self.pending.push((id, entity, Change::Activity(None)));
         self.observe(
             id,

@@ -4,7 +4,7 @@ mod places;
 pub(in crate::runtime::decision) use places::PlacesCache;
 
 use hecs::{Entity, World};
-use places::{Occupancy, Tile, KINDS};
+use places::{Cursor, Occupancy, Tile, KINDS};
 use sim_core::components::{
     Activity, ActivityKind, ActivityRest, Agent, AgentId, AgentState, RoutineObservation,
     RoutineOutcome, SettlementId, TargetKind, Temperament,
@@ -53,10 +53,9 @@ pub(super) struct RoutineTick {
     /// first `place()` of a tick (`checked`); none at night.
     places: PlacesCache,
     checked: bool,
-    /// Pass 18: this tick's `place()` results by (settlement, kind index); a
-    /// result depends only on the candidates and `occupancy`, so the memo is
-    /// cleared whenever `occupancy` changes (every `start` and `end`).
-    memo: BTreeMap<(SettlementId, usize), Option<Tile>>,
+    /// Pass 18: this tick's scan positions by (settlement, kind index); a
+    /// place depends only on the candidates and `occupancy` (see [`Cursor`]).
+    cursors: BTreeMap<(SettlementId, usize), Cursor>,
     occupancy: Occupancy,
     pending: Vec<(AgentId, Entity, Change)>,
 }
@@ -149,7 +148,7 @@ impl RoutineTick {
             invitations: BTreeSet::new(),
             places,
             checked: false,
-            memo: BTreeMap::new(),
+            cursors: BTreeMap::new(),
             occupancy,
             pending: Vec::new(),
         }
@@ -190,6 +189,8 @@ impl RoutineTick {
         resources: &SimResources,
     ) -> bool {
         if self.interrupted.contains(&id) {
+            #[cfg(feature = "subprofile")]
+            crate::subprofile::count("start_interrupted", 1);
             self.rest(id, entity, 1);
             return false;
         }
@@ -216,6 +217,15 @@ impl RoutineTick {
                 self.draw(&available, key, 1)
                     .and_then(|kind| self.place(sid, kind, resources).map(|place| (kind, place)))
             });
+        #[cfg(feature = "subprofile")]
+        crate::subprofile::count(
+            match (&choice, redrawn) {
+                (None, _) => "start_noplace",
+                (Some(_), true) => "start_redrawn",
+                (Some(_), false) => "start_first_draw",
+            },
+            1,
+        );
         let Some((kind, place)) = choice else {
             self.rest(id, entity, 30);
             self.observe(id, entity, selected, RoutineOutcome::NoPlace { redrawn });
@@ -230,7 +240,6 @@ impl RoutineTick {
             until_tick: None,
         };
         *self.occupancy.entry(place).or_default() += 1;
-        self.memo.clear();
         self.active.insert(id, activity);
         self.pending
             .push((id, entity, Change::Activity(Some(activity))));
@@ -261,21 +270,29 @@ impl RoutineTick {
         None
     }
 
-    /// The free place of `kind` for settlement `sid` (memoised; see `memo`).
+    /// The free place of `kind` for settlement `sid`: Pass 17's choice
+    /// over its candidates, resumed from this tick's [`Cursor`].
     fn place(&mut self, sid: SettlementId, kind: ActivityKind, resources: &SimResources) -> Option<Tile> {
-        if let Some(memo) = self.memo.get(&(sid, kind.index())) {
-            return *memo;
-        }
+        #[cfg(feature = "subprofile")]
+        crate::subprofile::count("place_calls", 1);
         if !self.checked {
             self.places.refresh(resources);
             self.checked = true;
         }
-        let place = self
-            .places
-            .places()
-            .get(&sid)
-            .and_then(|lists| places::choose(&lists[kind.index()], &self.occupancy));
-        self.memo.insert((sid, kind.index()), place);
-        place
+        let lists = self.places.places().get(&sid)?;
+        self.cursors
+            .entry((sid, kind.index()))
+            .or_default()
+            .choose(&lists[kind.index()], &self.occupancy)
+    }
+
+    /// `tile`'s occupancy fell: every cursor whose list holds it rescans from it.
+    fn rewind(&mut self, tile: Tile) {
+        let places = self.places.places();
+        for ((sid, index), cursor) in &mut self.cursors {
+            if let Some(lists) = places.get(sid) {
+                cursor.rewind(&lists[*index], tile);
+            }
+        }
     }
 }

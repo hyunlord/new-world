@@ -210,12 +210,14 @@ impl PlacesCache {
     }
 }
 
-/// The free candidate with the fewest occupants, first in `(y, x)` order.
+/// The free candidate with the fewest occupants, first in `(y, x)` order:
+/// the reference [`Cursor::choose`] is tested against.
 ///
 /// Pass 17 minimised `(occupancy, rank, y, x)` with a rank keyed by the
 /// person and tick but not the tile, so the rank never decides; candidates
 /// are generated in `(y, x)` order, so the result is the first tile with no
 /// occupant, else the first with one (a tile with two is full).
+#[cfg(test)]
 pub(super) fn choose(candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile> {
     let mut single = None;
     for tile in candidates {
@@ -226,6 +228,43 @@ pub(super) fn choose(candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile>
         }
     }
     single
+}
+
+/// Pass 18: a per-tick scan position over one candidate list, giving
+/// [`choose`]'s answer without rescanning the occupied front of the list.
+///
+/// Invariants: every tile before `zero` has an occupant; every tile before
+/// `one` has two (`one` advances only when no tile is free). Occupancy only
+/// grows within a tick except at `end`, which calls [`Cursor::rewind`].
+#[derive(Clone, Copy, Debug, Default)]
+pub(super) struct Cursor {
+    zero: usize,
+    one: usize,
+}
+
+impl Cursor {
+    /// The same tile as [`choose`]`(candidates, occupancy)`.
+    pub(super) fn choose(&mut self, candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile> {
+        let count = |tile: &Tile| occupancy.get(tile).copied().unwrap_or(0);
+        while candidates.get(self.zero).is_some_and(|tile| count(tile) != 0) {
+            self.zero += 1;
+        }
+        if let Some(tile) = candidates.get(self.zero) {
+            return Some(*tile);
+        }
+        while candidates.get(self.one).is_some_and(|tile| count(tile) != 1) {
+            self.one += 1;
+        }
+        candidates.get(self.one).copied()
+    }
+
+    /// `tile`'s occupancy fell: rescan from it (lists are in `(y, x)` order).
+    pub(super) fn rewind(&mut self, candidates: &[Tile], tile: Tile) {
+        if let Ok(index) = candidates.binary_search_by_key(&(tile.1, tile.0), |t| (t.1, t.0)) {
+            self.zero = self.zero.min(index);
+            self.one = self.one.min(index);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -258,6 +297,36 @@ mod tests {
             }
             for key in [0, 7, u64::MAX] {
                 assert_eq!(choose(&candidates, &occupancy), choose_p17(&candidates, &occupancy, 3, key, pattern));
+            }
+        }
+    }
+
+    #[test]
+    fn cursor_matches_choose_under_starts_and_ends() {
+        let candidates: Vec<Tile> = (0..5).flat_map(|y| (0..5).map(move |x| (x * 2, y))).collect();
+        for run in 0_u64..300 {
+            let mut occupancy = Occupancy::new();
+            let mut cursor = Cursor::default();
+            let mut state = run.wrapping_mul(0x9e37_79b9_7f4a_7c15) | 1;
+            let mut held: Vec<Tile> = Vec::new();
+            for _ in 0..200 {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                assert_eq!(cursor.choose(&candidates, &occupancy), choose(&candidates, &occupancy), "run {run}");
+                if state % 4 == 0 && !held.is_empty() {
+                    let tile = held.swap_remove((state as usize / 4) % held.len());
+                    if let Some(count) = occupancy.get_mut(&tile) {
+                        *count = count.saturating_sub(1);
+                    }
+                    cursor.rewind(&candidates, tile);
+                } else if let Some(tile) = choose(&candidates, &occupancy) {
+                    *occupancy.entry(tile).or_default() += 1;
+                    held.push(tile);
+                } else if state % 3 == 0 {
+                    // A start of another kind on a tile outside this list.
+                    *occupancy.entry((99, 99)).or_default() += 1;
+                }
             }
         }
     }
