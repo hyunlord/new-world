@@ -32,3 +32,11 @@
 <!-- art-p10-last-release 1792082519 -->
 - 2026-10-15T16:41:59Z pid=52416 WAIT_START owner=codex-art-pass10 purpose=baseline-W500-attempt1 hold_limit=3600
 - 2026-10-15T16:41:59Z pid=52416 WAIT_COOLDOWN remaining=600s
+- 2026-10-15T16:51:59Z pid=52416 CHECK load=10.33 processes= 1714  1709 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=600s
+- 2026-10-15T16:51:59Z pid=52416 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:56:59Z pid=52416 CHECK load=2.45 processes= waited=900s
+- 2026-10-15T16:56:59Z pid=52416 HOLD_START owner=codex-art-pass10 purpose=baseline-W500-attempt1 start=1792083419 load_before=2.45 contended=false waited=900s
+- 2026-10-15T17:08:15Z pid=52416 HOLD_END owner=codex-art-pass10 purpose=baseline-W500-attempt1 start=1792083419 end=1792084095 elapsed=676 load_before=2.45 load_after=2.73 contended=false exit=0
+<!-- art-p10-last-release 1792084095 -->
+- 2026-10-15T17:08:16Z pid=56164 WAIT_START owner=codex-art-pass10 purpose=baseline-W1-attempt1 hold_limit=3600
+- 2026-10-15T17:08:16Z pid=56164 WAIT_COOLDOWN remaining=599s
