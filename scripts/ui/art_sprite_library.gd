@@ -83,14 +83,33 @@ static func shared_layer(owner: Node, layer_name: String, z: int, sorted: bool =
 	return layer
 
 static var _variant_materials: Dictionary = {}
+static var _variant_regions: Dictionary = {}
+static var _variant_regions_cache_enabled: bool = true
+
+static func set_variant_regions_cache_enabled(enabled: bool) -> void:
+	_variant_regions_cache_enabled = enabled
+	_variant_regions.clear()
+
+static func variant_regions_cache_enabled() -> bool:
+	return _variant_regions_cache_enabled
+
+static func _regions_for_page(page: String) -> String:
+	if _variant_regions_cache_enabled and _variant_regions.has(page):
+		return str(_variant_regions[page])
+	var regions: String = page.get_basename() + "_regions.png"
+	var result: String = regions if ResourceLoader.exists(regions) else ""
+	if _variant_regions_cache_enabled:
+		_variant_regions[page] = result
+	return result
+
 
 static func apply_variant(sprite: Sprite2D, look: Dictionary) -> bool:
 	var entry: Dictionary = frame(str(sprite.get_meta("sprite_id", "")))
 	if entry.is_empty():
 		return false
 	var page: String = str(entry["page"])
-	var regions: String = page.get_basename() + "_regions.png"
-	if not ResourceLoader.exists(regions):
+	var regions: String = _regions_for_page(page)
+	if regions.is_empty():
 		sprite.material = null
 		sprite.self_modulate = Color.WHITE
 		return false

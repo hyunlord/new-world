@@ -62,18 +62,32 @@ var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
+const SelectionIndex = preload("res://scripts/ui/agent_selection_index_p10.gd")
+var _selection_index = SelectionIndex.new()
+var _selection_lookup_enabled: bool = true
+const FrameChoices = preload("res://scripts/ui/agent_frame_choices_p10.gd")
+var _frame_choices = FrameChoices.new()
+var _frame_choices_ready: bool = false
+var _allocation_candidate: bool = true
+var _pose_output: Dictionary = {}
 
 func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
-	if change_id != "spatial-hash":
+	if change_id != "allocation-cache":
 		return false
 	_camp_seats.set_input_cache_enabled(true)
-	_spatial_hash_enabled = enabled
+	_spatial_hash_enabled = true
+	_allocation_candidate = enabled
+	_selection_lookup_enabled = enabled
+	_selection_index.begin_frame()
+	_frame_choices_ready = false
+	SpriteLibrary.set_variant_regions_cache_enabled(enabled)
 	return true
 
 func get_perf_candidate_p10() -> Dictionary:
-	return {"change_id": "spatial-hash", "candidate_enabled": _spatial_hash_enabled}
+	return {"change_id": "allocation-cache", "candidate_enabled": _allocation_candidate}
 
 func _ready() -> void:
+	set_perf_candidate_p10("allocation-cache", _allocation_candidate)
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
 	_shadow_layer = SpriteLibrary.shared_layer(self, "Shadows", 3)
 	var founding_layer := FoundingGroups.new()
@@ -105,6 +119,8 @@ func _process(delta: float) -> void:
 	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
 		return
+	if _selection_lookup_enabled:
+		_selection_index.begin_frame()
 	_prepare_talk_cache(xs, ys)
 	var new_checksum: int = _snapshot_checksum_from(agent_ids, xs, ys, n)
 	if new_checksum != _snapshot_checksum:
@@ -158,7 +174,12 @@ func _process(delta: float) -> void:
 		var has_targets: bool = target >= 0
 		var carried: float = float(snap["carried_foods"][i]) if snap.has("carried_foods") and i < snap["carried_foods"].size() else 0.0
 		var wood: int = Activity.snapshot_wood(snap, i)
-		var moments: Dictionary = _pose_moments.update(agent_id, i, snap, Vector2i(xs[i], ys[i]), not moving, bool(tile.get("wood", false)), context["hearths"], delta)
+		var moments: Dictionary
+		if _allocation_candidate:
+			_pose_moments.update_into(agent_id, i, snap, Vector2i(xs[i], ys[i]), not moving, bool(tile.get("wood", false)), context["hearths"], delta, _pose_output)
+			moments = _pose_output
+		else:
+			moments = _pose_moments.update(agent_id, i, snap, Vector2i(xs[i], ys[i]), not moving, bool(tile.get("wood", false)), context["hearths"], delta)
 		var activity: String = Activity.resolve(state, target, has_targets, movement.length_squared() > 0.000001, carried, tile, hour, wood)
 		if bool(moments["pickup"]):
 			activity = "gather_wood"
@@ -185,6 +206,8 @@ func _process(delta: float) -> void:
 		sprite.set_meta("sheltered_sleep", sheltered_sleep)
 		sprite.visible = _capture_visible and not sheltered_sleep and not sprite_id.is_empty()
 		sprite.set_meta("entity_bits", int(ids[i]))
+		if _selection_lookup_enabled:
+			_selection_index.observe(int(ids[i]), agent_id)
 		sprite.set_meta("body", body)
 		sprite.set_meta("variant", {"tone": look["tone"], "hair": look["hair"]})
 		sprite.set_meta("tile_x", int(xs[i]))
@@ -316,6 +339,9 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
+	_frame_choices_ready = false
+	_pose_output.clear()
+	_selection_index.begin_frame()
 	_talk_xs = PackedInt32Array()
 	_talk_ys = PackedInt32Array()
 	_talk_deltas.clear()
@@ -448,6 +474,11 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 func frame_choice(body: String, activity: String, facing: String, phase: float) -> Dictionary:
 	if _frame_groups.is_empty():
 		_frame_groups = Activity.build_frame_groups(SpriteLibrary.entries())
+	if _allocation_candidate:
+		if not _frame_choices_ready:
+			_frame_choices.configure(_frame_groups, SpriteLibrary.entries())
+			_frame_choices_ready = true
+		return _frame_choices.choose(body, activity, facing, _animation_time, phase)
 	return Activity.choose_frame(_frame_groups, body, activity, facing, _animation_time, phase)
 
 func _animation_frame(body: String, activity: String, facing: String, phase: float, _agent_id: int) -> String:
@@ -674,17 +705,25 @@ func _update_selection_ring() -> void:
 	if inspector == null or not _capture_visible:
 		return
 	var selected: int = int(inspector.call("get_selected_entity_bits"))
-	for sprite: Sprite2D in _sprites.values():
-		if int(sprite.get_meta("entity_bits", -1)) != selected or not sprite.visible:
-			continue
-		var pulse: int = posmod(floori(_animation_time * 2.0), 2)
-		var extent: float = float(7 + pulse)
-		_selection_ring.points = PackedVector2Array([Vector2(-extent, -1), Vector2(-extent + 2, -3), Vector2(extent - 2, -3), Vector2(extent, -1), Vector2(extent, 1), Vector2(extent - 2, 3), Vector2(-extent + 2, 3), Vector2(-extent, 1), Vector2(-extent, -1)])
-		_selection_ring.position = sprite.position
-		_selection_ring.set_meta("art_id", int(sprite.get_meta("art_id")))
-		_selection_ring.set_meta("frame_id", pulse)
-		_selection_ring.visible = true
+	var selected_sprite: Sprite2D
+	if _selection_lookup_enabled:
+		selected_sprite = _selection_index.find(_sprites, selected)
+	else:
+		for candidate: Sprite2D in _sprites.values():
+			if int(candidate.get_meta("entity_bits", -1)) == selected and candidate.visible:
+				selected_sprite = candidate
+				break
+	if selected_sprite == null:
 		return
+	var sprite: Sprite2D = selected_sprite
+	var pulse: int = posmod(floori(_animation_time * 2.0), 2)
+	var extent: float = float(7 + pulse)
+	_selection_ring.points = PackedVector2Array([Vector2(-extent, -1), Vector2(-extent + 2, -3), Vector2(extent - 2, -3), Vector2(extent, -1), Vector2(extent, 1), Vector2(extent - 2, 3), Vector2(-extent + 2, 3), Vector2(-extent, 1), Vector2(-extent, -1)])
+	_selection_ring.position = sprite.position
+	_selection_ring.set_meta("art_id", int(sprite.get_meta("art_id")))
+	_selection_ring.set_meta("frame_id", pulse)
+	_selection_ring.visible = true
+
 
 func get_active_agent_sprites() -> Array[Sprite2D]:
 	var active: Array[Sprite2D] = []

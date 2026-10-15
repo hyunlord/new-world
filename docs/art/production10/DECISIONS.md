@@ -22,3 +22,5 @@
 - Seat cache accepted at measured 1.43639x frozen W500 speedup with exact pixels/running state. The first reset-race attempt remains failed; its samples are not pooled. No final H threshold inferred from this candidate test.
 
 - Rejected metadata and child-reference wrapper caches: measured allocation bundle slows W500 by19.5%; isolated100k-call diagnostics show higher GDScript call/validation overhead than native set_meta/get_node_or_null. Restore native paths and measure remaining allocation improvements; do not report rejected subitems as optimized.
+
+- Reduced allocation accepted after measured1.06642x improvement with exact frozen/running identity. Keep native metadata/child-node calls because attempted helper caches regressed; retain frame/variant/pose/selection optimizations only.
