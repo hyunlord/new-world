@@ -54,6 +54,8 @@ pub(super) struct RoutineTick {
 impl RoutineTick {
     pub(super) fn new(world: &mut World, resources: &SimResources, rule: RoutineRule) -> Self {
         let tick = resources.current_tick;
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let mut pending = Vec::new();
         let mut interrupted = BTreeSet::new();
         for (entity, (agent, activity, state)) in world
@@ -83,6 +85,13 @@ impl RoutineTick {
             }
         }
         lifecycle::apply(world, pending);
+        #[cfg(feature = "subprofile")]
+        {
+            timer.stop("routine_new_cleanup");
+            crate::subprofile::flush_moves("routine_new_moves");
+        }
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let mut active_rows: Vec<_> = world
             .query::<(&Agent, &Activity)>()
             .iter()
@@ -101,6 +110,19 @@ impl RoutineTick {
                 members.entry(id).or_insert(sid);
             }
         }
+        let entities = world
+            .query::<&Agent>()
+            .iter()
+            .map(|(entity, agent)| (agent.id, entity))
+            .collect();
+        let keys = world
+            .query::<(&Agent, &Lineage)>()
+            .iter()
+            .map(|(_, (agent, lineage))| (agent.id, lineage.key))
+            .collect();
+        #[cfg(feature = "subprofile")]
+        timer.stop("routine_new_maps");
+        let places = scope!("routine_places_collect", { places::collect(resources) });
         Self {
             rule,
             tick,
@@ -110,21 +132,13 @@ impl RoutineTick {
                 tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day
             }),
             active: active_rows.into_iter().collect(),
-            entities: world
-                .query::<&Agent>()
-                .iter()
-                .map(|(entity, agent)| (agent.id, entity))
-                .collect(),
-            keys: world
-                .query::<(&Agent, &Lineage)>()
-                .iter()
-                .map(|(_, (agent, lineage))| (agent.id, lineage.key))
-                .collect(),
+            entities,
+            keys,
             members,
             rests,
             interrupted,
             invitations: BTreeSet::new(),
-            places: places::collect(resources),
+            places,
             occupancy,
             pending: Vec::new(),
         }

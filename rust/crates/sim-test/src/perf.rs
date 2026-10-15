@@ -287,10 +287,14 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
     let mut days: BTreeMap<u64, DayBucket> = BTreeMap::new();
     let mut slowest = SlowestTicks::default();
     let mut gifts: Vec<Value> = Vec::new();
+    #[cfg(feature = "subprofile")]
+    let mut subprofile = crate::subprofile_report::SubprofileLog::new();
     for _ in 0..spec.ticks {
         let tick = engine.current_tick();
         engine.tick_profiled(&mut profile);
         let us = *profile.tick_us.last().unwrap_or(&0);
+        #[cfg(feature = "subprofile")]
+        subprofile.record(tick, us);
         if tick + 1 == WARMUP_TICKS {
             warm_systems = profile.systems.clone();
             warm_prune_ns = profile.prune_ns;
@@ -404,6 +408,12 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         "gifts": gifts,
         "snapshot_timings": snapshots,
     });
+    #[cfg(feature = "subprofile")]
+    let json = {
+        let mut json = json;
+        json["subprofile"] = subprofile.summary(offset, tpd);
+        json
+    };
     RunOutput { json, tick_us: profile.tick_us }
 }
 

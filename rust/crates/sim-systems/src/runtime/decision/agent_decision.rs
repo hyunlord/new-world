@@ -630,6 +630,8 @@ impl RuntimeSystem for AgentDecisionSystem {
             .agent
             .routine
             .map(|rule| RoutineTick::new(world, resources, rule));
+        #[cfg(feature = "subprofile")]
+        let pre_timer = crate::subprofile::Timer::start();
         let availability = NeedAvailability::from_resources(resources);
         // Pass 12 (`local_food_availability`, `game_v18`, the J6 fix): a
         // member's food availability is whether a food tile with food lies in
@@ -1055,6 +1057,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         // leaves settlement migrants frozen (P10-γ owns their pathing; p10
         // birth tests lock that). Robust to fluctuating settlement membership
         // and independent of loneliness magnitude.
+        #[cfg(feature = "subprofile")]
+        pre_timer.stop("decision_pre_loop");
         let mut social_seek_entities: HashSet<hecs::Entity> = HashSet::new();
         // V7 Phase 10-γ — settlement-migration FSM wiring.
         // `settlement_migrant_tag`: entities that ENTERED Seeking{Agent} via the
@@ -1072,6 +1076,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut preempt_clear_seek: Vec<hecs::Entity> = Vec::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
         loop {
+            #[cfg(feature = "subprofile")]
+            let round_timer = crate::subprofile::Timer::start();
+            #[cfg(feature = "subprofile")]
+            let replay_round = routine_replay.is_some();
             let mut query = world.query::<(
                 &Position,
                 &Agent,
@@ -1169,7 +1177,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     preempt_clear_seek.push(entity);
                 }
                 if is_activity(*state) {
-                    if let Some(routine) = routine.as_mut() {
+                    if let Some(routine) = routine.as_mut() { scope!("decision_exit_test", {
                         let need = actionable_need_with_fatigue_threshold(
                             hunger_opt.as_deref(),
                             thirst_opt.as_deref(),
@@ -1290,7 +1298,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             *state = AgentState::Idle;
                             preempt_clear_seek.push(entity);
                         }
-                    }
+                    }) }
                 }
                 match *state {
                     AgentState::Idle if founding.contains_key(&agent.id) => {
@@ -1915,13 +1923,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 .is_some_and(|routine| routine.can_enter(agent.id))
                         {
                             if routine.as_mut().is_some_and(|routine| {
-                                routine.start(
+                                scope!("routine_start", { routine.start(
                                     agent.id,
                                     entity,
                                     !adult,
                                     elders.contains(&agent.id),
                                     temperament,
-                                )
+                                ) })
                             }) {
                                 *state = AgentState::Seeking {
                                     target: TargetKind::Activity,
@@ -2584,10 +2592,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
             drop(query); // release the &mut World borrow before the SeekTarget pass
+            #[cfg(feature = "subprofile")]
+            round_timer.stop(if replay_round {
+                "decision_round_replay"
+                } else {
+                "decision_round_main"
+            });
             let Some(routine) = routine.as_mut() else {
                 break;
             };
-            let replay = routine.replay(world);
+            let replay = scope!("routine_replay_collect", { routine.replay(world) });
             if replay.is_empty() {
                 break;
             }
@@ -2600,6 +2614,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         // `seek_opt.is_none()` and re-resolves a fresh resource goal (the new
         // state is Seeking{Food/Water/Sleep}). Done here, not in the post-pass,
         // precisely so the resource set-once attach fires this same tick.
+        #[cfg(feature = "subprofile")]
+        let post_timer = crate::subprofile::Timer::start();
         for e in &preempt_clear_seek {
             let _ = world.remove_one::<SeekTarget>(*e);
         }
@@ -2936,6 +2952,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         for e in &migrant_clear {
             let _ = world.remove_one::<SettlementMigrant>(*e);
         }
+        #[cfg(feature = "subprofile")]
+        post_timer.stop("decision_post_pass");
         if let Some(routine) = routine {
             routine.finish(world);
         }

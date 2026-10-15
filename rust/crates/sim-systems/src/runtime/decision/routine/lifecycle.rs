@@ -31,18 +31,30 @@ pub(super) fn apply(world: &mut World, mut pending: Vec<(AgentId, Entity, Change
     for (_, entity, change) in pending {
         match change {
             Change::Activity(Some(activity)) => {
+                #[cfg(feature = "subprofile")]
+                note_insert::<sim_core::components::Activity>(world, entity);
                 let _ = world.insert_one(entity, activity);
             }
             Change::Activity(None) => {
-                let _ = world.remove_one::<sim_core::components::Activity>(entity);
+                let removed = world.remove_one::<sim_core::components::Activity>(entity);
+                #[cfg(feature = "subprofile")]
+                crate::subprofile::note_move(removed.is_ok());
+                let _ = removed;
             }
             Change::Rest(Some(rest)) => {
+                #[cfg(feature = "subprofile")]
+                note_insert::<ActivityRest>(world, entity);
                 let _ = world.insert_one(entity, rest);
             }
             Change::Rest(None) => {
-                let _ = world.remove_one::<ActivityRest>(entity);
+                let removed = world.remove_one::<ActivityRest>(entity);
+                #[cfg(feature = "subprofile")]
+                crate::subprofile::note_move(removed.is_ok());
+                let _ = removed;
             }
             Change::Observation(observation) => {
+                #[cfg(feature = "subprofile")]
+                note_insert::<RoutineObservation>(world, entity);
                 let _ = world.insert_one(entity, observation);
             }
         }
@@ -50,14 +62,25 @@ pub(super) fn apply(world: &mut World, mut pending: Vec<(AgentId, Entity, Change
     for (_, entity, events) in batches {
         if events.len() > 1 {
             let tick = events[0].tick;
+            #[cfg(feature = "subprofile")]
+            note_insert::<RoutineObservationBatch>(world, entity);
             let _ = world.insert_one(entity, RoutineObservationBatch { tick, events });
         }
     }
 }
 
+/// Pass 18 (`subprofile` only): an insert moves the entity to another
+/// archetype only when it lacks the component (a replacement does not).
+#[cfg(feature = "subprofile")]
+fn note_insert<T: hecs::Component>(world: &World, entity: Entity) {
+    crate::subprofile::note_move(world.contains(entity) && world.get::<&T>(entity).is_err());
+}
+
 impl RoutineTick {
     pub(in crate::runtime::decision) fn finish(self, world: &mut World) {
-        apply(world, self.pending);
+        scope!("routine_finish", { apply(world, self.pending) });
+        #[cfg(feature = "subprofile")]
+        crate::subprofile::flush_moves("routine_finish_moves");
     }
 
     pub(in crate::runtime::decision) fn interrupt(&mut self, id: AgentId, entity: Entity) {

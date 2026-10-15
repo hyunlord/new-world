@@ -9,3 +9,8 @@ hecs = { workspace = true }
 serde = { workspace = true }
 sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }
+
+[features]
+# Pass 18: per-scope timing of the decision system (`subprofile` module and
+# `scope!`). Never on by default; built only in a separate target directory.
+subprofile = []

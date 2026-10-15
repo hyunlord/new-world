@@ -11,6 +11,9 @@ pub mod perf;
 pub mod probe;
 /// Shared production-scene fixtures.
 pub mod scenes;
+/// Pass 18: `worldsim_perf`'s `subprofile` block (feature `subprofile` only).
+#[cfg(feature = "subprofile")]
+pub mod subprofile_report;
 /// World-model tooling: schedules, the state digest and the recorder (Pass 7).
 pub mod worldmodel;
 
