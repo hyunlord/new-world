@@ -1,0 +1,39 @@
+{
+  "source_commit": "46193a0301d335fc04dcfd6460e59cc0f1370d08",
+  "library_sha256": "b2ba6ef135c366862b5d016357d42353c5feb2493f39e9150c059ca974bae706",
+  "hold_start": "2026-10-15T16:23:38+09:00",
+  "hold_end": "2026-10-15T16:29:05+09:00",
+  "hold_seconds": 327,
+  "wait_seconds": 3798,
+  "load_before": 6.59,
+  "load_after": 7.82,
+  "contended": true,
+  "validation": "Original A30, 12 blocks x 50 frames; 300 samples each ON/OFF; receipt0 and clean log. Foreign probe at admission untouched.",
+  "files": [
+    {
+      "file": "frame_times_soc_layers.json",
+      "source": "/Users/rexxa/work/art-production9-evidence/a30-after/frame_times_soc_layers.json",
+      "sha256": "34ed4059f43e41df7b8e3cdab0486bf5700bcfcbf22e529824465121f69ca0f9"
+    },
+    {
+      "file": "manifest.json",
+      "source": "/Users/rexxa/work/art-production9-evidence/a30-after/manifest.json",
+      "sha256": "9de37ebdccdc8b4dce58c74eed65753ff90c8d3240239b19f8da4103122f012e"
+    },
+    {
+      "file": "session.exit",
+      "source": "/Users/rexxa/work/art-production9-evidence/a30-after/session.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "session.log",
+      "source": "/Users/rexxa/work/art-production9-evidence/a30-after/session.log",
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    },
+    {
+      "file": "session_metadata.json",
+      "source": "/Users/rexxa/work/art-production9-evidence/a30-after/session_metadata.json",
+      "sha256": "c3dbe673686a200f591c91eeb6779513d5eaf417d1d8548ec5a404190896bba7"
+    }
+  ]
+}

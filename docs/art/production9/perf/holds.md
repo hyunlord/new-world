@@ -109,3 +109,67 @@
 - 2026-10-15T04:14:29Z pid=56833 HOLD_START owner=codex-art-pass9 purpose=p3-nature-W500-attempt1 start=1792037669 load_before=2.63 contended=false waited=575s
 - 2026-10-15T04:22:18Z pid=56833 HOLD_END owner=codex-art-pass9 purpose=p3-nature-W500-attempt1 start=1792037669 end=1792038138 elapsed=469 load_before=2.63 load_after=3.41 contended=false exit=0
 <!-- art-p9-last-release 1792038138 -->
+- 2026-10-15T04:23:54Z pid=10201 WAIT_START owner=codex-art-pass9 purpose=after-W0-attempt1 hold_limit=3600
+- 2026-10-15T04:23:54Z pid=10201 WAIT_COOLDOWN remaining=504s
+- 2026-10-15T04:32:18Z pid=10201 CHECK load=2.64 processes= waited=504s
+- 2026-10-15T04:32:18Z pid=10201 HOLD_START owner=codex-art-pass9 purpose=after-W0-attempt1 start=1792038738 load_before=2.64 contended=false waited=504s
+- 2026-10-15T04:34:33Z pid=10201 HOLD_END owner=codex-art-pass9 purpose=after-W0-attempt1 start=1792038738 end=1792038873 elapsed=135 load_before=2.64 load_after=2.51 contended=false exit=0
+<!-- art-p9-last-release 1792038873 -->
+- 2026-10-15T04:34:33Z pid=40574 WAIT_START owner=codex-art-pass9 purpose=after-W500-attempt1 hold_limit=3600
+- 2026-10-15T04:34:33Z pid=40574 WAIT_COOLDOWN remaining=600s
+- 2026-10-15T04:44:34Z pid=40574 CHECK load=3.53 processes= waited=600s
+- 2026-10-15T04:44:34Z pid=40574 HOLD_START owner=codex-art-pass9 purpose=after-W500-attempt1 start=1792039474 load_before=3.53 contended=false waited=601s
+- 2026-10-15T04:55:52Z pid=40574 HOLD_END owner=codex-art-pass9 purpose=after-W500-attempt1 start=1792039474 end=1792040152 elapsed=678 load_before=3.53 load_after=3.82 contended=false exit=0
+<!-- art-p9-last-release 1792040152 -->
+- 2026-10-15T04:55:52Z pid=97936 WAIT_START owner=codex-art-pass9 purpose=after-W1-attempt1 hold_limit=3600
+- 2026-10-15T04:55:52Z pid=97936 WAIT_COOLDOWN remaining=600s
+- 2026-10-15T05:05:52Z pid=97936 CHECK load=7.15 processes= waited=600s
+- 2026-10-15T05:05:52Z pid=97936 WAIT_BUSY next_poll=300s
+- 2026-10-15T05:10:52Z pid=97936 CHECK load=2.20 processes= waited=900s
+- 2026-10-15T05:10:52Z pid=97936 HOLD_START owner=codex-art-pass9 purpose=after-W1-attempt1 start=1792041052 load_before=2.20 contended=false waited=900s
+- 2026-10-15T05:15:56Z pid=97936 HOLD_END owner=codex-art-pass9 purpose=after-W1-attempt1 start=1792041052 end=1792041356 elapsed=304 load_before=2.20 load_after=7.38 contended=false exit=0
+<!-- art-p9-last-release 1792041356 -->
+- 2026-10-15T05:15:56Z pid=51646 WAIT_START owner=codex-art-pass9 purpose=after-W200-attempt1 hold_limit=3600
+- 2026-10-15T05:15:56Z pid=51646 WAIT_COOLDOWN remaining=600s
+- 2026-10-15T05:25:56Z pid=51646 CHECK load=4.53 processes= waited=600s
+- 2026-10-15T05:25:56Z pid=51646 WAIT_BUSY next_poll=300s
+- 2026-10-15T05:30:56Z pid=51646 CHECK load=38.12 processes= waited=900s
+- 2026-10-15T05:30:56Z pid=51646 WAIT_BUSY next_poll=300s
+- 2026-10-15T05:35:56Z pid=51646 CHECK load=17.58 processes= waited=1200s
+- 2026-10-15T05:35:56Z pid=51646 WAIT_BUSY next_poll=300s
+- 2026-10-15T05:40:57Z pid=51646 CHECK load=25.24 processes= waited=1500s
+- 2026-10-15T05:40:57Z pid=51646 WAIT_BUSY next_poll=300s
+- 2026-10-15T05:45:57Z pid=51646 CHECK load=7.97 processes= waited=1801s
+- 2026-10-15T05:45:57Z pid=51646 WAIT_BUSY next_poll=300s
+- 2026-10-15T05:50:57Z pid=51646 CHECK load=16.08 processes= waited=2101s
+- 2026-10-15T05:50:57Z pid=51646 WAIT_BUSY next_poll=300s
+- 2026-10-15T06:16:54Z pid=51646 CHECK load=14.90 processes=28675 28651 /Users/rexxa/work/new-world-p17-base/rust/target/release/worldsim_probe waited=3658s
+- 2026-10-15T06:16:54Z pid=51646 HOLD_START owner=codex-art-pass9 purpose=after-W200-attempt1 start=1792045014 load_before=14.90 contended=true waited=3658s
+- 2026-10-15T06:19:34Z pid=51646 HOLD_END owner=codex-art-pass9 purpose=after-W200-attempt1 start=1792045014 end=1792045174 elapsed=160 load_before=14.90 load_after=6.92 contended=true exit=0
+<!-- art-p9-last-release 1792045174 -->
+- 2026-10-15T06:20:20Z pid=62782 WAIT_START owner=codex-art-pass9 purpose=a30-after hold_limit=3600
+- 2026-10-15T06:20:20Z pid=62782 WAIT_COOLDOWN remaining=554s
+- 2026-10-15T06:33:37Z pid=62782 CHECK load=6.85 processes=78701 28651 /Users/rexxa/work/new-world-p17-base/rust/target/release/worldsim_probe waited=797s
+- 2026-10-15T06:33:37Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T06:38:37Z pid=62782 CHECK load=19.83 processes= waited=1097s
+- 2026-10-15T06:38:37Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T06:43:37Z pid=62782 CHECK load=5.41 processes= waited=1397s
+- 2026-10-15T06:43:37Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T06:48:37Z pid=62782 CHECK load=9.06 processes= waited=1697s
+- 2026-10-15T06:48:37Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T06:53:38Z pid=62782 CHECK load=6.26 processes= waited=1997s
+- 2026-10-15T06:53:38Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T06:58:38Z pid=62782 CHECK load=5.16 processes= waited=2298s
+- 2026-10-15T06:58:38Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T07:03:38Z pid=62782 CHECK load=6.58 processes= waited=2598s
+- 2026-10-15T07:03:38Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T07:08:38Z pid=62782 CHECK load=15.46 processes= waited=2898s
+- 2026-10-15T07:08:38Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T07:13:38Z pid=62782 CHECK load=9.56 processes= waited=3198s
+- 2026-10-15T07:13:38Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T07:18:38Z pid=62782 CHECK load=6.06 processes=64041 64033 /Users/rexxa/work/p17-data/a-r1-bin/worldsim_probe waited=3498s
+- 2026-10-15T07:18:38Z pid=62782 WAIT_BUSY next_poll=300s
+- 2026-10-15T07:23:38Z pid=62782 CHECK load=6.59 processes=93837 93828 /Users/rexxa/work/p17-data/a-final-bin/worldsim_probe waited=3798s
+- 2026-10-15T07:23:38Z pid=62782 HOLD_START owner=codex-art-pass9 purpose=a30-after start=1792049018 load_before=6.59 contended=true waited=3798s
+- 2026-10-15T07:29:05Z pid=62782 HOLD_END owner=codex-art-pass9 purpose=a30-after start=1792049018 end=1792049345 elapsed=327 load_before=6.59 load_after=7.82 contended=true exit=0
+<!-- art-p9-last-release 1792049345 -->
