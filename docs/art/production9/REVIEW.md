@@ -1,6 +1,6 @@
 # Art Pass 9 independent review — round 1, preparation
 
-Status: SOURCE PREPARATION AND PIXEL IDENTITY REVIEW COMPLETE; FINAL REVIEW PENDING. No confirmed production defect found in the reviewed source. Six-framing pixel identity passes. Performance and publication approval remain pending.
+Status: ROUND 1 INDEPENDENT REVIEW COMPLETE — ACCEPT EVIDENCE WITH PERFORMANCE FAILURES RETAINED. No confirmed production defect or evidence discrepancy requiring correction found. F1/F4/F5 PASS; F2/F3 FAIL; F6/F7 REPORT_ONLY. This is not full performance acceptance. Publication and documentation-only commit steps remain the leader's responsibility. Earlier pending statements below are dated progress checkpoints, superseded by the final sections.
 
 ## Independence and scope
 
@@ -74,3 +74,58 @@ Reviewed the agent cache delta associated with `9f4a7eab541363f6e06869d63a0061f3
 Regression source covers coordinate ordering/length/in-place edits, appearance-stage changes, retirement/reset, and all sleeper input key mutation/removal/type transitions/world replacement. The building regression log records PASS with 56 checks. These are targeted regression evidence, not a substitute for the final full gate after both optimizations.
 
 Independently hash-checked every source_sha256 entry in `identity/p3-agent-attempt1/provenance.json` and `identity/p3-building-attempt1/provenance.json` against current files: all match. Independently recomputed baseline A versus each new B at full RGBA resolution for all six framings: both candidate sets have zero differing pixels and zero maximum channel difference in every framing. The supplementary provenance files provide source binding; the generic B manifest's empty git_sha alone would not. Thus identity evidence covers the currently reviewed agent/building cache implementations. Final after timings, F1–F7 synthesis and final full/publication gate remain pending.
+
+## Round 1 continuation — NatureRenderer derived opacity cache
+
+Reviewed NatureRenderer's current delta and nature_canopy.gd's complete dependency calculation. No production correction identified. CANOPY.alpha depends on head-bucket contents, tree position, and get_rect geometry; the cache compares those exact inputs. Head buckets are freshly allocated every invocation, so retained cache keys do not alias a mutable FFI snapshot. Agent movement/visibility changes clear cached geometry; tree position, offsets, regions and texture dimensions are covered by position/get_rect comparisons. Kind changes and removed sprites retire entries, and refresh/reconciliation clear them. Season tint is recomputed every invocation, including cache hits; only redundant identical modulate writes are skipped.
+
+Read the regression source and `gates/p3-nature/final-cache-test.log`, which records 20 fresh-reference color comparisons passing, together with cache identity reuse/retirement/refresh assertions in the source. Coverage includes direct same-frame movement and visibility changes, tree geometry and kind changes, season change, insertion/removal and reset. This focused evidence does not replace the pending final full gate.
+
+Independently checked all four current-file SHA-256 values in `identity/p3-nature-attempt1/provenance.json` (agent renderer, building renderer, nature renderer and nature regression): all match. Read the official comparison and independently recomputed all six baseline A versus nature candidate B RGBA pairs without masks. Each pair is 1920×1080 with zero differing pixels and zero maximum channel difference. This establishes exact captured-state preservation for the source-bound three-cache candidate. Final after measurements, F1–F7 synthesis and final publication gates remain pending. This remains the same round 1 review; graft count remains one.
+
+## Round 1 continuation — partial final-after evidence
+
+Independently read after-W0-attempt1.json, after-W500-attempt1.json and after-W1-attempt1.json in `/Users/rexxa/work/art-production9-evidence/perf-after`. Recomputed first-block `frozen_Z4_0` medians from process_ms plus render_cpu_ms (300 counted samples, 30 warmup samples excluded): W0 **4.048499995529651 ms**, W500 **51.437499997198586 ms**, W1 **9.039999995827674 ms**. These are block medians; W500's three-block pooled median is separately **51.5325 ms**, with nearest-rank p99 **53.021 ms** (rounded).
+
+Checked every counted sample in those three sessions for matching ffi_counter_frame/process_frame and closed inspector/influence-overlay context. No mismatched frame or open context was found. All 900 W500 frozen Z4 samples contain exactly 11 total recorded getter calls, at most one per getter, and zero terrain calls after warmup. All three sessions record debug library/build, valid=true, empty errors, contended=false and restored controls. These are measured facts, not yet a final F1–F7 verdict.
+
+Independently hashed all 94 entries in gates/final-source-manifest.json against current file bytes: all match. The manifest binds source commit `46193a0301d335fc04dcfd6460e59cc0f1370d08`; it is not itself gate acceptance. W200, A30, assembled final comparison and final full/publication checks are still pending at this checkpoint. Same round 1, no additional graft call or runtime launch.
+
+## Round 1 continuation — final gate and binary provenance
+
+Final source gate is now independently verified: `gates/final/results.tsv` has 73 rows, every exit status zero; session.exit is 0. Summing successful Rust test-result counts in cargo_test.log gives 2146. Results SHA-256 independently recomputes to `a0504297823f2272dd96f9155d390f42176d4fe64a1979e545f7f5b3859171a5`, matching provenance. Rechecked all 94 source-manifest entries against current bytes with zero mismatches. Gate source is `46193a0301d335fc04dcfd6460e59cc0f1370d08`; completion recorded at 2026-10-15 15:06:57 +09:00. Later documentation commits are covered through source-manifest equality, not an assertion that their future commit hashes were executed.
+
+Both inspected bridge build logs (p1-full-attempt2 and final) explicitly show `dev` profile `[unoptimized + debuginfo]`. The final library is independently measured as 12,521,344 bytes with SHA-256 `b2ba6ef135c366862b5d016357d42353c5feb2493f39e9150c059ca974bae706`. Provenance preserves the pre-gate hash `69c336daf1d952bcb0ca40bf5faad3edf5f437611c000c4a4a7a1e6675a6239d`. Identical committed source, file size and profile do not prove byte-identical binaries or explain the difference. The byte-difference cause remains unestablished.
+
+After W0/W500/W1 timings were captured with the earlier library hash; subsequent W200/A30 are scheduled with the post-gate hash. Keep both hashes explicitly associated with their sessions. Source/profile continuity supports comparing these as the stated build configuration, but the matrix is not one byte-identical binary run. Six final B captures against the new library and assembled F comparisons remain pending; earlier image equality is not silently transferred to the new binary. No reviewer runtime/build was launched.
+
+## Round 1 continuation — F1–F6 threshold audit
+
+Read the required-world after aggregate and preliminary comparison-pre-a30.json. Independently recomputed pooled primary-CPU statistics directly as process_ms plus render_cpu_ms; p99 uses nearest rank. Each row below uses 900 counted frames, and F3 filters running Z4 2× frames to ticks_run > 0 (all 900 selected frames carry ticks).
+
+| Rule | Before median (ms) | After median (ms) | After p99 (ms) | Audited outcome |
+|---|---:|---:|---:|---|
+| F1 W0 frozen Z4 | 10.214000 | 3.968000 | 4.761000 | PASS: median ≤ 8 |
+| F2 W500 frozen Z4 | 67.579500 | 51.532500 | 53.021000 | FAIL: median > 12 and p99 > 16.67 |
+| F3 W500 running Z4 2×, tick-only | 68.298000 | 36.133500 | 168.294000 | FAIL: median > 16.67 |
+
+F4 PASS agrees with the previously independently verified 900 frozen W500 samples: all total 11 actual counted getter calls, each getter at most once, zero warm terrain calls, aligned frames and closed inspector/overlay context. The ceiling is 20, and the reported baseline counts remain unmeasured rather than invented. F5 PASS is now independently re-established against the post-gate binary evidence: all 94 source hashes and all six recorded B PNG hashes match; all six A/B full RGBA comparisons again have zero changed pixels and zero maximum channel difference. The bound binary hash is b2ba6ef135c366862b5d016357d42353c5feb2493f39e9150c059ca974bae706.
+
+F6 is REPORT_ONLY, with no qualifying measured population before or after. Independently recomputed W200 frozen Z4 median/p99 as 35.199000/37.522000 ms before and 29.690500/32.834000 ms after; W500 also misses the 12/16.67 rule. Actual frozen populations are 200 and 500. W1000/W2000 remain unmeasured, so no extrapolated capacity claim is justified. The after W200 session is explicitly contended: its hold waited 3658 seconds including gate/identity pause, admitted at load 14.90 with another worldsim probe present, and ended at load 6.92. Preserve this caveat alongside its measured result.
+
+Independently listed the committed merge-base-to-final-source delta (`49bc0b7c` → `46193a03`): all 676 changed paths are within permitted script/scene/tool/production9-doc/TEST_LEDGER paths or narrow Rust bridge/static-test areas. No unexpected path was found. This does not include unrelated uncommitted ignore files. The preliminary F1–F6 outcomes match the inspected threshold implementation and recomputed evidence. F7 remains NOT_VERIFIED pending actual A30; the whole independent review is not yet complete.
+
+## Final round 1 verdict — A30 and completion
+
+Read both A30 raw frame_times_soc_layers.json files, their session metadata and exit records, and the final perf/comparison.json. Both raw runs are valid with empty errors, exactly twelve blocks of 50 frames, and 300 counted frames for each layer state. Independently recomputed medians from process_ms plus render_cpu_ms:
+
+| A30 state | Before (ms) | After (ms) | Before/after speed-up |
+|---|---:|---:|---:|
+| Layers ON | 17.767999986171723 | 10.807500000715255 | 1.64404349× |
+| Layers OFF | 15.96550000357628 | 9.759000007271766 | 1.63597705× |
+
+These agree with the final F7 report. F7 is REPORT_ONLY, not PASS. Both session exits are 0; metadata records debug profile, non-fixed-FPS measurement and the respective baseline/final source commits. The after A30 hold ran 16:23:38–16:29:05 +09:00 with contended=true, wait 3798 seconds and load 6.59→7.82. This contention limits causal attribution of timing differences and remains part of the accepted evidence, not a hidden quiet-run claim.
+
+Rechecked all 94 current source hashes once more with zero mismatches. The completed 73/73 final gate and 2146 Rust tests, source-bound post-gate six-framing RGBA identity, independently recomputed baseline/after blocks and pooled thresholds, allowed-path audit, and hold/binary provenance collectively support the recorded result. No outstanding reviewer correction request remains. F2/F3 performance targets were not achieved, F6 has no qualifying measured population, W1000/W2000 are unmeasured, after W200/A30 were contended, and the timing matrix spans two same-source/profile library hashes whose byte difference is unexplained. None of these limitations is waived or converted to PASS.
+
+Round 1 is complete with the final classifications F1 PASS, F2 FAIL, F3 FAIL, F4 PASS, F5 PASS, F6 REPORT_ONLY, F7 REPORT_ONLY. No second review round was needed because no correction finding was raised. Approval here concerns correctness and faithful evidence reporting, not a claim that every performance target passed. Leader publication/doc-only finalization is outside this read-only review slice. Blind-review boundaries remained intact, and this reviewer changed only REVIEW.md. Graft total remains one call, approximately 1,857,527 reported tokens saved.
