@@ -68,3 +68,12 @@ Part 2 adds first eight: active=5229, total=5234. Part 3 adds remaining six: act
 - Live day30 10:00/15:00 and chosen populous day60 10:00 captures at Z4/Z1 with every activity-holder pose/override sidecar and zero mismatches. Population selection uses the specified release probe with four workers and 30-minute cap; stress v19 worlds cannot substitute.
 - Partnered-parent inspector capture with household rings. English/Korean UI inspection without raw localization keys.
 - Freeze 14 labelled crop IDs and hidden answer key, then send only crops plus seven names to a fresh blind reviewer; save answers before revealing key. Report per-kind and aggregate accuracy, no invented pass bar.
+
+## Probe execution details verified during Part 1 waiting
+
+- The requested literal `--seeds 20261011..20261027` is half-open: 16 seeds, 20261011 through 20261026 (`rust/crates/sim-test/src/probe/args.rs:53` range parser). Preserve that command and report the actual cohort.
+- Existing art-local release probe predates merged Pass17 sources; rebuild with `CARGO_BUILD_JOBS=6 cargo build --manifest-path rust/Cargo.toml -p sim-test --bin worldsim_probe --release` before selection. No build or probe was launched during diagnostic profiling.
+- Run the requested 60-day/four-worker cohort with `--clock-samples 10:00` into a fresh evidence directory under the original task deadline and 1,800-second cap. Bind `WORLDSIM_GIT_SHA` to the actual source HEAD and record the resulting binary SHA.
+- Rank complete seeds by raw `sample_kind=day`, `tick=86400`, `day=60.0`, `alive`; use smallest seed for equal populations. This is an explicit deterministic selection policy. `summary.json` mirrors the endpoint in `runs[].alive_daily[59]`.
+- Capture displayed day60 10:00 separately at tick85080 (`sample_kind=clock`, `minute_of_day=600`, raw elapsed day about59.083333). Report endpoint population used for ranking and capture-time population independently.
+- On timeout, summary files may be absent because they are written only after all workers finish. Preserve streamed JSONL tails and admit only parseable exact terminal day/tick rows, corroborated by post-flush `PROBE seed=...` completion markers. Do not rank by a seed's latest partial row; report omitted seeds. Workers partition the cohort, so the completed subset need not be contiguous.

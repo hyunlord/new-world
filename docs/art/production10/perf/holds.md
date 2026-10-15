@@ -70,3 +70,31 @@
 - 2026-10-15T18:32:13Z pid=36285 HOLD_START owner=codex-art-pass10 purpose=baseline-W200-attempt1 start=1792089133 load_before=3.27 contended=true waited=3603s
 - 2026-10-15T18:34:24Z pid=36285 HOLD_END owner=codex-art-pass10 purpose=baseline-W200-attempt1 start=1792089133 end=1792089264 elapsed=131 load_before=3.27 load_after=3.54 contended=true exit=0
 <!-- art-p10-last-release 1792089264 -->
+- 2026-10-15T18:36:52Z pid=54445 WAIT_START owner=codex-art-pass10 purpose=agent-sections-W500 hold_limit=3600
+- 2026-10-15T18:36:52Z pid=54445 WAIT_COOLDOWN remaining=452s
+- 2026-10-15T18:44:24Z pid=54445 CHECK load=6.21 processes=73617 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=452s
+- 2026-10-15T18:44:24Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:49:24Z pid=54445 CHECK load=6.15 processes= 3052  3045 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo; 3067  3052 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/rustc; 1488  1479 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;98806 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=752s
+- 2026-10-15T18:49:24Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:54:24Z pid=54445 CHECK load=17.03 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;15512 15511 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;15497 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=1052s
+- 2026-10-15T18:54:24Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:59:24Z pid=54445 CHECK load=7.36 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;15512 15511 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;15497 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=1352s
+- 2026-10-15T18:59:24Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:04:24Z pid=54445 CHECK load=9.79 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;15512 15511 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;42540 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=1652s
+- 2026-10-15T19:04:24Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:09:25Z pid=54445 CHECK load=8.80 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;42540 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=1952s
+- 2026-10-15T19:09:25Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:14:25Z pid=54445 CHECK load=8.78 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;42540 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=2253s
+- 2026-10-15T19:14:25Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:19:25Z pid=54445 CHECK load=7.48 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;91342 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=2553s
+- 2026-10-15T19:19:25Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:24:25Z pid=54445 CHECK load=9.23 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;91342 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=2853s
+- 2026-10-15T19:24:25Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:29:25Z pid=54445 CHECK load=7.06 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;91342 73592 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=3153s
+- 2026-10-15T19:29:25Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:34:25Z pid=54445 CHECK load=7.88 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3453s
+- 2026-10-15T19:34:25Z pid=54445 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:39:25Z pid=54445 CHECK load=4.38 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3753s
+- 2026-10-15T19:39:25Z pid=54445 HOLD_START owner=codex-art-pass10 purpose=agent-sections-W500 start=1792093165 load_before=4.38 contended=true waited=3753s
+- 2026-10-15T19:39:56Z pid=54445 HOLD_END owner=codex-art-pass10 purpose=agent-sections-W500 start=1792093165 end=1792093196 elapsed=31 load_before=4.38 load_after=5.00 contended=true exit=0
+<!-- art-p10-last-release 1792093196 -->
