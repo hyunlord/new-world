@@ -83,3 +83,6 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 
 - 2026-10-16T03:15:51Z: Final attempt1 terminal1,82 rows (81 PASS, cargo101 stale target label count8 versus actual9), source/HEAD stable. Retained raw evidence; static pin updated to9 with explicit Activity key8 and existing5/6/7 unchanged. Full retry required.
 - Targeted ninth-label regression rerun: cargo test -p sim-test --test harness_p14_gamma_click_inspector harness_revitalize_inspector_gather_food_is_not_social_target, exit0,1 passed/33 filtered; full gate still required.
+
+- 2026-10-16T03:36:43Z: Root observed final attempt2 terminal0 and82/82 PASS at02f8721d04494dedc176a1ef34f1601338d89374; source stable. Independent round2 verifies all83 artifact hashes and same verdict. Performance remains NOT_VERIFIED.
+- 2026-10-16T03:37:12Z: Archived/verified9 baseline files, removed only owned art-p10-base after fresh process/status checks. Own caffeinate58923 terminated; terminal143. Publication/report next; no production source changed after gate.
