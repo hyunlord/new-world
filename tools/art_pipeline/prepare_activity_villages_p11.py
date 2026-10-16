@@ -37,17 +37,18 @@ def main(args: list[str]) -> int:
         source_hashes[str(path.with_name('capture.png'))] = hashlib.sha256(path.with_name('capture.png').read_bytes()).hexdigest()
         for row in sorted(data['village_labels']['activity_summaries'], key=lambda row: row['id']):
             activities = row['activities']
-            if not row['visible'] or not activities or counts.get(row['id'], 0) >= 2:
+            village = (data['seed'], row['id'])
+            if not row['visible'] or not activities or counts.get(village, 0) >= 2:
                 continue
             if len(activities) >= 2 and activities[0]['count'] == activities[1]['count']:
-                excluded.append({'source': name, 'village': row['id'], 'reason': 'top_two_tie'})
+                excluded.append({'source': name, 'seed': data['seed'], 'village': row['id'], 'reason': 'top_two_tie'})
                 continue
             x, y, w, h = row['screen_rect']
             if w <= 0 or h <= 0 or x < 0 or y < 0 or x + w > 1920 or y + h > 1080:
-                excluded.append({'source': name, 'village': row['id'], 'reason': 'summary_outside_frame'})
+                excluded.append({'source': name, 'seed': data['seed'], 'village': row['id'], 'reason': 'summary_outside_frame'})
                 continue
-            selected.append({'source': name, 'village': row['id'], 'box': [x, y, x + w, y + h], 'kind': activities[0]['kind']})
-            counts[row['id']] = counts.get(row['id'], 0) + 1
+            selected.append({'source': name, 'seed': data['seed'], 'village': row['id'], 'box': [x, y, x + w, y + h], 'kind': activities[0]['kind']})
+            counts[village] = counts.get(village, 0) + 1
             if len(selected) == 6:
                 break
         if len(selected) == 6:

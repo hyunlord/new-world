@@ -36,3 +36,5 @@ Synthetic Godot test is WRITTEN, NOT_RUN due quiet-lock/no-runtime instruction. 
 ## Leader verification after installation
 
 Synthetic Godot ordering test exited0 with no ERROR lines; strict check50files and6FFI bindings PASS. Main Python protocol6/6 and original pose oracle17/17 PASS. No blind crops made before this change.
+
+Static hierarchy audit found no known unsupported WorldObjects nodes: agent/building/nature/effect roots and their rendered children are Sprite2D. Other line/canvas effects are outside this subtree; UI overlap remains unverified. Village summary quota identity includes seed plus village ID because IDs are world-local; synthetic test preserves maximum two pairs per village across independent worlds.

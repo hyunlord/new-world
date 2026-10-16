@@ -10,6 +10,7 @@ import math
 import tempfile
 import unittest
 from pathlib import Path
+from PIL import Image
 
 from plan_activity_blind_p11 import covered_fraction, main as prepare_c
 from prepare_activity_villages_p11 import main as prepare_d
@@ -79,6 +80,29 @@ class ProtocolTests(unittest.TestCase):
             with self.assertRaises(EvidenceError):
                 prepare_c([temp, str(out), 'same.json', 'same.json', 'third.json'])
             self.assertFalse(out.exists())
+
+    def test_village_identity_includes_seed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            answers = base / 'frozen.json'
+            answers.write_text('{"frozen": true}')
+            sources = []
+            # Each world's village1 may contribute two pairs; IDs are world-local.
+            for index, seed in enumerate([100, 100, 100, 200, 200, 200, 300, 300]):
+                folder = base / str(index)
+                folder.mkdir()
+                source = folder / 'capture.json'
+                source.write_text(json.dumps({'seed': seed, 'zoom': 1, 'complete': True, 'errors': [],
+                    'village_labels': {'activity_summaries': [{'id': 1, 'visible': True,
+                        'screen_rect': [0, 0, 10, 10], 'activities': [{'kind': 0, 'count': 3}, {'kind': 1, 'count': 1}]}]}}))
+                Image.new('RGB', (1920, 1080)).save(folder / 'capture.png')
+                sources.append(str(source))
+            out = base / 'questions'
+            self.assertEqual(prepare_d([str(answers), str(out), *sources]), 0)
+            pairs = json.loads((out / 'key.json').read_text())['pairs']
+            self.assertEqual(len(pairs), 6)
+            self.assertEqual([row['seed'] for row in pairs], [100, 100, 200, 200, 300, 300])
+            self.assertTrue(all(row['village'] == 1 for row in pairs))
 
     def test_d_duplicate_capture_refused(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
