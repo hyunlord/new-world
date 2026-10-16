@@ -40,3 +40,8 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.2 | 21:13:29 | 21:24:51 | `wm3_full_s2` finals from `aa763da8`: `_effects` 21:19:21, `_split` 21:19:30, `_fact` 21:24:19, lag curve 21:24:42, `_calib` 21:24:51, exit 0 (DGX otherwise idle) |
 | 5 | 21:25 | 21:27 | runs fetched (`22cedd4e`); `judge3.py` on the committed files (`de4bfba7`): V1 NONE, V2 TIE, V3 TIE, V4 NONE, V5 NONE / TIE / TIE, V6 no seed worse; `posthoc.py` (DECISIONS K5.1) |
 | 6 | 21:27 | 21:30 | WM3.md; WM2.md pointer line |
+| 7 (review 1) | 21:30 | 21:45 | review round 1 (fresh subagent, read-only; HEAD `2cd90099`): no BLOCKING, 1 MAJOR, 5 MINOR, 3 NOTE; three hand checks match; fixes `b007fc65` |
+| gate (pre) | 21:31 | 21:34 | `ed214bd8`: Mac 182 OK / 27 skipped; DGX 182 OK / 0 skipped (175 s) |
+| 7 (review 2) | 21:46 | 21:54 | review round 2 (fresh subagent, HEAD `b007fc65`): no BLOCKING, 1 MAJOR, 7 MINOR, 8 NOTE; fixes `55981501` |
+| gate | 21:56:27 | 21:59:22 | `55981501`: Mac 182 OK / 27 skipped; DGX 182 OK / 0 skipped (`wm3/gate_55981501`, 175 s); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `3cde2e91..55981501`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6216034826 |
+| 7 | 22:00 | | REPORT.md (Korean, section 13 format); this record is a docs-only commit; the gate is re-run on it and the green branch moved to it |

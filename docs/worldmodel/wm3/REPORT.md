@@ -40,7 +40,15 @@ WM-2의 행동 인지 트랜스포머(M1b-act)는 신의 개입 효과를 "효�
 - **논문이 주장할 수 있는 것**: 잡음 공유 짝 갈래가 있는 결정적 행위자 기반 세계에서, 사실 예측이 좋은 학습 세계 모델도 드문 개입의 효과를 무시하며 그 원인은 버그가 아니다(투입 창 비율만 올려서는 바뀌지 않으므로 "손실에서의 몫"은 가설일 뿐이다); 짝 구성(짝 손실·위험도 항·짝 창, 분리되지 않음)은 168 h 사실 정확도를 해치지 않고(V6; 24 h에서는 1–3 % 나빠짐) 첫 1주일의 효과를 배우게 한다(사후 비교; 사전 등록 V2는 동률). **주장할 수 없는 것**: 효과 예측이 단순 기준선보다 낫다는 것(V1 NONE, V2 TIE), 분열 예측(V3·V4), 1스텝 역학의 해결, 30일 효과.
 
 ### 변경된 파일 목록
-REPORT_COMMITS
+(허용 경로만: `tools/worldmodel/wm3/**`, `docs/worldmodel/wm3/**`, `docs/worldmodel/wm2/WM2.md` 한 줄)
+- **Part 0**: `2218652b` GOAL.md(변경 없음); `dcbc3808` DECISIONS.md, RUNLOG.md.
+- **Part 1**: `62b89d4c` `wm3/__init__.py`, `audit.py`, `test_wm3.py`(스텁 테스트), `launch/`(launch, code, audit); `505e659b` AUDIT.md, `runs/audit/`, DECISIONS K1, RUNLOG.
+- **Part 2**: `bbae1a0c` `model.py`, `sampling.py`, `losses.py`, `effects3.py`, `finetune.py`, `judge3.py`, `final_fact.py`, `diag_lag.py`, `launch/cost.sh`, `gate.sh`, 테스트; `10dc7333` `effects3.py`(묶음 `val_eff`), `launch/queue.sh`, `finals.sh`, `queue.txt`; `f0ebe7e5` `launch/fetch.sh`, DECISIONS K2.
+- **Part 3**: `aa763da8` METRICS.md, DECISIONS K3, `launch/code.sh`(잠금).
+- **Part 4**: `4d6c2b9c` RUNLOG; `cc18dc3b` `finetune.py`(평가 단계 출력·스택 덤프); `edb1c4d3` DECISIONS K4.1, RUNLOG; `0bfdb816` `runs/wm3_full_s0*`, `runs/diag/`; `8b6e9395` `runs/wm3_ctrl_s0*`; `a64377da` `runs/wm3_os_s0*`, DECISIONS K4.2, RUNLOG; `85a1bb5a` `runs/wm3_full_s1*`; `22cedd4e` `runs/wm3_full_s2*`, RUNLOG.
+- **Part 5**: `f0a60453` `test_wm3.py`(judge3 테스트); `de4bfba7` `runs/judge3/`.
+- **Part 6**: `2cd90099` WM3.md, `posthoc.py`, `runs/posthoc/`, `docs/worldmodel/wm2/WM2.md`(한 줄), DECISIONS K5–K6, RUNLOG; `ed214bd8` RUNLOG.
+- **Part 7**: `b007fc65` 리뷰 1차 수정(WM3.md, AUDIT.md, REPORT.md, REVIEW.md, `judge3.py` 드리프트, `runs/judge3/`); `55981501` 리뷰 2차 수정(WM3.md, REPORT.md, REVIEW.md, RUNLOG) — 게이트 녹색, `codex/worldmodel-2026-10` 빠른 전진; 이 보고서 확정 커밋(문서만, 최종 메시지에 해시).
 
 ### 측정 결과
 **감사 (train·val, 3,592 사례).** 구조 불일치 0, 행동 비율 [0.5, 1.5] 밖 4개(0.11 %, 모두 `sp120L` 최초 투입 행, 1.63–1.77), A3 위반 0 / 306 × 3(최대 허용치의 0.6 %).
@@ -104,7 +112,9 @@ val_eff 궤적(* = 부적격): full_s0 0.615, 0.530, **0.525**, 0.549, 0.519*, 0
 - 끊김: wm3_full_s0 1차 시도가 step 250 평가에서 정지(주 스레드 사용자 CPU 100 %, GPU 2 %, 환경 요인, 15분 후 수동 중단·재시작; K4.1). Mac 덮개 닫힘 수면 16:55:10–약 18:52(이 세션의 호출 없음, DGX 작업은 계속; 일시정지로 기록, K4.2). 그 외 연결 끊김 없음.
 
 ### 독립 리뷰
-REPORT_REVIEW
+두 번(GOAL.md 0.3.3 최대), 매번 새 `general-purpose` 서브에이전트, 읽기 전용(REVIEW.md).
+- **1차** (`2cd90099`): BLOCKING 0, MAJOR 1, MINOR 5, NOTE 3. 손 계산 3건이 모두 커밋 수치와 일치 — 감사 사례 `40417:gf240E:0`(투입 행 490, 행동 2.0, c + 1 점프 +238, A2 예측 점프 +7.6324, A3 lag-1 7.632385), 짝 손실 한 창(`wm3_losses` 0.11108799 vs 손 계산 0.11108802), 기대 분열일 한 사례(시험 `40480:sp240L:0`, E_arm 43.832626, E_factual 44.364538, 이동 −0.531912). METRICS.md(11:58:44) 이전 시험 수치 없음(최초 시험 출력 +6,161 s), 선택은 val만, 모든 판정 재도출(V1·V2 독립 재계산 일치). 지적: (MAJOR) "손실에서의 몫" 설명이 `os` 결과와 맞지 않음; 1스텝 비율이 갈래별로 다름; 분열 이동 범위; `full` vs `os`의 혼재 요인; 드리프트 미보고; 위험도 손실 표기. → 모두 수정(`b007fc65`).
+- **2차** (`b007fc65`): BLOCKING 0, MAJOR 1, MINOR 7, NOTE 8. 지적: (MAJOR) 1차 수정이 REPORT 정직한 판단에 빠짐; V3 기준선이 시험에서 "이동 0"보다 약간 나쁨; 24 h 사실 정확도 1–3 % 악화 미보고; 사후 표기 누락; 30일 반전 원인 단정; 보정 단조성·드리프트 예외·"0.01 이내" 등 문구. → 모두 수정(`55981501`).
 
 ### 자율 결정 목록
 - K0.1 graft의 `.gitignore`/`.ignore` 미스테이징, 훅 없음, `ssh -F` 임시 설정. K0.2 마감 2026-10-17 23:19:46. K0.3 입력 sha256 확인.
@@ -115,7 +125,17 @@ REPORT_REVIEW
 - K5.1 사후 비교는 명시 표기. K6.1 WM2.md 한 줄.
 
 ### 실행 기록
-REPORT_TIMES
+시각은 KST(Mac 시계). 시작 2026-10-16 11:19:46.
+- Part 0: 11:19:46–11:20 (≈ 1분)
+- Part 1: 11:21–11:30 (≈ 9분; DGX 감사 11:24:40–11:25:41, 61 s)
+- Part 2: 11:30–11:53 (≈ 23분; 비용 점검 1 11:36:12–11:52:26)
+- Part 3: 11:53–11:58:44 (≈ 6분; 비용 점검 2 11:53:26–11:58:07, DGX 게이트 11:53:57–11:56:47)
+- Part 4: 11:59:02–21:24:51 (≈ 9시간 26분; 그중 Mac 수면 일시정지 16:55:10–≈18:52, ≈ 1시간 57분)
+- Part 5: 21:25–21:27
+- Part 6: 21:27–21:30
+- Part 7: 21:30–22:05 (리뷰 1차 21:30–21:45, 2차 21:46–21:54, 게이트 21:56:27–21:59:22, 빠른 전진·PR 댓글 22:00)
+- **멈춘 구간**: `wm3_full_s0` 1차 시도 step 250 평가 정지(12:08:42–12:23:59, 중단·재시작); Mac 덮개 닫힘 수면(16:55:10–≈18:52).
+- **학습 대기열 타임라인** (한 번에 하나): wm3_full_s0 1차 11:59:02–12:23:59(정지) → wm3_full_s0 12:24:25–13:41:25 → wm3_ctrl_s0 13:41:25–15:39:26 → wm3_os_s0 15:39:26–16:40:27 → wm3_full_s1 16:40:27–18:46:28 → wm3_full_s2 18:46:28–21:13:29; 각 실행의 시험·검증 평가는 다음 학습 옆에서(마지막 21:24:51 종료). 드롭 없음. 36시간 마감(2026-10-17 23:19:46)까지 여유 ≈ 26시간.
 
 ### 확인된 제한사항
 - 대조군은 스텝 일치이지 계산량 일치가 아니다(32 vs 48 시퀀스/스텝); `full` vs `os`도 48 vs 32로 계산량이 다르다; `ctrl`은 미수렴(최적이 마지막 10 %).
@@ -127,7 +147,10 @@ REPORT_TIMES
 - 30일 반전의 원인(채집 행동)은 가설이며 확인하지 않았다.
 
 ### 게이트 결과
-REPORT_GATE
+- `55981501` (리뷰 2차 수정 후): Mac `python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'` 182개 OK, 27개 skip(기록기·데이터가 필요한 테스트); DGX 같은 discovery(venv, `WM_BIN`/`PROBE_BIN` = `_build/src_wm2`, `WM_DATA_ROOT`) 182개 OK, **0개 skip**, 175 s (`wm3/gate_55981501`). → `codex/worldmodel-2026-10` 빠른 전진 `3cde2e91..55981501`.
+- 사전 점검: `f0ebe7e5` DGX 181 OK / 0 skip; `ed214bd8` Mac 182 OK / 27 skip, DGX 182 OK / 0 skip.
+- `git diff --name-only 3cde2e91..HEAD`: `tools/worldmodel/wm3/**`, `docs/worldmodel/wm3/**` 외에는 `docs/worldmodel/wm2/WM2.md`(한 줄 삽입)뿐. WM-1/WM-2 코드와 WM-2의 커밋된 수치는 바뀌지 않음(WM-2 테스트 167개 모두 통과).
+- 이 보고서 확정 커밋(문서만)에서도 게이트를 다시 돌려 녹색이면 녹색 브랜치를 그 커밋으로 옮긴다(결과는 최종 메시지).
 
 ### 정직한 판단
 - **WM-2의 "효과 예측 실패"는 무엇 때문이었나?** 버그가 아니라 학습이다. 데이터·행동 인코딩·하네스는 모두 맞았고(불일치 0), 모델은 행동을 보지만 1스텝 반응을 거의 배우지 않았다. 투입 창 비율을 올려도(`os`) 바뀌지 않으므로 "손실에서 개입의 몫이 작다"는 설명은 가설일 뿐이다.
