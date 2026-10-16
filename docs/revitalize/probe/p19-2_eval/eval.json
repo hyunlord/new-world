@@ -1,0 +1,458 @@
+{
+ "H": {
+  "H1": {
+   "all_ends": {
+    "largest_tick_minute_game_v23": {
+     "16:01": 100,
+     "16:31": 5,
+     "17:01": 4,
+     "17:06": 6,
+     "17:21": 3,
+     "17:31": 5,
+     "17:36": 4,
+     "18:00": 3700
+    },
+    "largest_tick_minute_game_v24": {
+     "16:00": 94,
+     "16:01": 1510,
+     "16:30": 96,
+     "16:31": 59,
+     "17:30": 56,
+     "17:31": 50,
+     "17:45": 47,
+     "18:01": 1003
+    },
+    "mean_game_v23": 36.63828125,
+    "mean_game_v24": 13.582291666666666,
+    "median_game_v23": 31.0,
+    "median_game_v24": 10.0,
+    "metric": {
+     "bar": "median per-world-day largest end tick in 16:00-20:00: v24 <= 0.15 x v23",
+     "baseline": null,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": null,
+     "ci95": [
+      0.26666666666666666,
+      0.375
+     ],
+     "details": null,
+     "error": null,
+     "unit": "ratio",
+     "value": 0.3225806451612903,
+     "verdict": "FAIL"
+    }
+   },
+   "day_end_exits": {
+    "largest_tick_minute_game_v23": {
+     "18:00": 3831
+    },
+    "largest_tick_minute_game_v24": {
+     "17:38": 118,
+     "17:42": 130,
+     "17:46": 147,
+     "17:48": 204,
+     "17:50": 125,
+     "17:52": 117,
+     "17:54": 165,
+     "18:00": 142
+    },
+    "mean_game_v23": 18.63359375,
+    "mean_game_v24": 2.031510416666667,
+    "median_game_v23": 16.0,
+    "median_game_v24": 2.0,
+    "metric": {
+     "bar": "median per-world-day largest end tick in 16:00-20:00: v24 <= 0.15 x v23",
+     "baseline": null,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": null,
+     "ci95": [
+      0.10526315789473684,
+      0.14285714285714285
+     ],
+     "details": null,
+     "error": null,
+     "unit": "ratio",
+     "value": 0.125,
+     "verdict": "PASS"
+    }
+   },
+   "interrupted_ends": {
+    "largest_tick_minute_game_v23": {
+     "16:01": 708,
+     "16:31": 23,
+     "17:01": 19,
+     "17:06": 25,
+     "17:21": 13,
+     "17:31": 18,
+     "17:36": 11,
+     "18:00": 2937
+    },
+    "largest_tick_minute_game_v24": {
+     "16:00": 130,
+     "16:01": 1537,
+     "16:08": 49,
+     "16:30": 117,
+     "16:31": 62,
+     "17:30": 72,
+     "17:31": 51,
+     "18:01": 1003
+    },
+    "mean_game_v23": 19.103645833333335,
+    "mean_game_v24": 13.276302083333333,
+    "median_game_v23": 17.0,
+    "median_game_v24": 10.0,
+    "metric": {
+     "bar": "median per-world-day largest end tick in 16:00-20:00: v24 <= 0.15 x v23",
+     "baseline": null,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": null,
+     "ci95": [
+      0.5,
+      0.65
+     ],
+     "details": null,
+     "error": null,
+     "unit": "ratio",
+     "value": 0.5882352941176471,
+     "verdict": "FAIL"
+    }
+   },
+   "verdict": "FAIL"
+  },
+  "H2": {
+   "exit_minutes_game_v23": {
+    "18:00": 71553
+   },
+   "exit_minutes_game_v24": {
+    "17:00": 1841,
+    "17:30": 32396,
+    "18:00": 28201,
+    "18:30": 2931
+   },
+   "metric": {
+    "bar": "Spearman rho(P, mean day-end exit minute) >= 0.5",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.8398086003096877,
+     0.8567291781437029
+    ],
+    "details": null,
+    "error": null,
+    "unit": "rho",
+    "value": 0.8492456684888894,
+    "verdict": "PASS"
+   },
+   "people": 4419,
+   "verdict": "PASS"
+  },
+  "H3": {
+   "F1": {
+    "bar": "pooled living mutually partnered adult share at elapsed day60 >= 0.50",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.6452244859713001,
+     0.7080298713757048
+    ],
+    "details": {
+     "denominator": 1369.0,
+     "numerator": 929.0,
+     "worlds": 32,
+     "zero_denominator_worlds": 0
+    },
+    "error": null,
+    "unit": "share",
+    "value": 0.6785975164353543,
+    "verdict": "PASS"
+   },
+   "F1_game_v23": {
+    "bar": "pooled living mutually partnered adult share at elapsed day60 >= 0.50",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.6506016015773355,
+     0.7087621376104897
+    ],
+    "details": {
+     "denominator": 1369.0,
+     "numerator": 932.0,
+     "worlds": 32,
+     "zero_denominator_worlds": 0
+    },
+    "error": null,
+    "unit": "share",
+    "value": 0.6807888970051132,
+    "verdict": "PASS"
+   },
+   "F5": {
+    "bar": "reference",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "details": {
+     "denominator": 431.0,
+     "numerator": 0.0,
+     "worlds": 32,
+     "zero_denominator_worlds": 9
+    },
+    "error": null,
+    "unit": "share",
+    "value": 0.0,
+    "verdict": "PASS"
+   },
+   "F5_game_v23": {
+    "bar": "reference",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "details": {
+     "denominator": 435.0,
+     "numerator": 0.0,
+     "worlds": 32,
+     "zero_denominator_worlds": 9
+    },
+    "error": null,
+    "unit": "share",
+    "value": 0.0,
+    "verdict": "PASS"
+   },
+   "differences": {
+    "F1": -0.0021913805697589828,
+    "F5": 0.0
+   },
+   "family_within_0_05": true,
+   "health": {
+    "R2-alive": {
+     "bar": "relative change within +/-0.10",
+     "baseline": 70.65625,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": 70.625,
+     "ci95": [
+      -0.010876081935342076,
+      0.010996485351416682
+     ],
+     "details": null,
+     "error": null,
+     "unit": "relative change",
+     "value": -0.0004422821760283061,
+     "verdict": "PASS"
+    },
+    "R2-deaths": {
+     "bar": "non-old-age deaths difference <= +1.5/world",
+     "baseline": 1.5,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": 1.6875,
+     "ci95": [
+      -0.28125,
+      0.71875
+     ],
+     "details": null,
+     "error": null,
+     "unit": "deaths/world",
+     "value": 0.1875,
+     "verdict": "PASS"
+    },
+    "R2-food": {
+     "bar": "noon food relative change within +/-0.15",
+     "baseline": 532.6572916666667,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": 530.8416666666667,
+     "ci95": [
+      -0.008424451619047504,
+      0.0013913040463035618
+     ],
+     "details": null,
+     "error": null,
+     "unit": "relative change",
+     "value": -0.0034086175640606355,
+     "verdict": "PASS"
+    },
+    "R2-shelters": {
+     "bar": "completed shelters ratio >= 0.90",
+     "baseline": 8.03125,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": 8.0625,
+     "ci95": [
+      0.991701244813278,
+      1.0185202395704256
+     ],
+     "details": {
+      "definition": "final minus initial complete Shelter count, including daughter-camp boot shelters"
+     },
+     "error": null,
+     "unit": "ratio",
+     "value": 1.0038910505836576,
+     "verdict": "PASS"
+    },
+    "R2-social": {
+     "bar": "pooled adult social rate ratio >= 0.90",
+     "baseline": 1.7515109184789714,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": 1.7570775713377513,
+     "ci95": [
+      0.9975537310854417,
+      1.0088832755443973
+     ],
+     "details": {
+      "baseline_mean_world_rate": 1.7275689314860863,
+      "baseline_sensitivity_worlds": 32,
+      "candidate_mean_world_rate": 1.7360401081575048,
+      "candidate_sensitivity_worlds": 32
+     },
+     "error": null,
+     "unit": "ratio",
+     "value": 1.0031782004896743,
+     "verdict": "PASS"
+    },
+    "R2-wood": {
+     "bar": "noon wood relative change within +/-0.15",
+     "baseline": 132.01770833333333,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": 132.52942708333333,
+     "ci95": [
+      -0.001999214185850075,
+      0.010721022402705995
+     ],
+     "details": null,
+     "error": null,
+     "unit": "relative change",
+     "value": 0.003876137197503491,
+     "verdict": "PASS"
+    }
+   },
+   "verdict": "PASS"
+  },
+  "H4": {
+   "daytime_game_v23": {
+    "bar": "reference",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.1043816680806057,
+     0.1167578114646719
+    ],
+    "details": null,
+    "error": null,
+    "unit": "share",
+    "value": 0.10996266778416307,
+    "verdict": "PASS"
+   },
+   "daytime_game_v24": {
+    "bar": "reference",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.10361978445360201,
+     0.11556084941474637
+    ],
+    "details": null,
+    "error": null,
+    "unit": "share",
+    "value": 0.10902666934284012,
+    "verdict": "PASS"
+   },
+   "difference": -0.0009359984413229439,
+   "evening_game_v23": {
+    "bar": "reference",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.4625642945234377,
+     0.48558623747594815
+    ],
+    "details": null,
+    "error": null,
+    "unit": "share",
+    "value": 0.47395114230341295,
+    "verdict": "PASS"
+   },
+   "evening_game_v24": {
+    "bar": "reference",
+    "baseline": null,
+    "bootstrap_replicates": 2000,
+    "bootstrap_valid": 2000,
+    "candidate": null,
+    "ci95": [
+     0.3625698604603053,
+     0.3874883079693116
+    ],
+    "details": null,
+    "error": null,
+    "unit": "share",
+    "value": 0.37500185707524447,
+    "verdict": "PASS"
+   },
+   "verdict": "PASS"
+  }
+ },
+ "baseline": "game_v23",
+ "candidate": "game_v24",
+ "days": 120,
+ "schema_version": 19,
+ "seeds": [
+  19200,
+  19201,
+  19202,
+  19203,
+  19204,
+  19205,
+  19206,
+  19207,
+  19208,
+  19209,
+  19210,
+  19211,
+  19212,
+  19213,
+  19214,
+  19215,
+  19216,
+  19217,
+  19218,
+  19219,
+  19220,
+  19221,
+  19222,
+  19223,
+  19224,
+  19225,
+  19226,
+  19227,
+  19228,
+  19229,
+  19230,
+  19231
+ ]
+}

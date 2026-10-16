@@ -1,4 +1,4 @@
-# Daily routine v1 (`game_v21`, unchanged in `game_v22`/`game_v23`)
+# Daily routine v1 (`game_v21`, unchanged in `game_v22`/`game_v23`; own day ends in `game_v24`)
 
 Pass 17 Stage A gives need-satisfied residents visible daytime activities near their home. Activities are economy-neutral: tending a fire burns no extra fuel, crafting produces no item, repairing changes no building, and exploring harvests nothing. Existing work and needs take priority.
 
@@ -81,6 +81,18 @@ Inside the Activity arms, reaching the duration deadline or 18:00 ends the activ
 Under the routine rule, active residents participate in builder selection and the social/combat peer maps as Idle residents do. Higher-priority selection can therefore interrupt visible leisure rather than making a resident unavailable to village life. If a later-processed resident selects an activity holder who was already processed, targeted replay sends that selected holder through the same Idle decision body. A person may therefore start and end an activity within one tick. The trace preserves both events and any redraw, records zero consuming minutes when no end-of-tick consumption occurred, and leaves unobserved place/arrival/deadline fields absent rather than fabricating them.
 
 Adult and elder activity consumption remains stationary. A child consuming Play takes keyed x/y steps on each movement tick using `STREAM_ROUTINE_PLAY`, constrained to Chebyshev distance 1 from its reserved place and to the map bounds. The reservation stays at the original place. Activities do not add need decay or any resource debit or credit.
+
+## `game_v24` (Pass 19): everyone ends their day at their own time
+
+`WorldRules::game_v24(seed)` = `game_v23(seed)` with `RoutineRule::end_stagger = Some(EndStagger { base_minute: 1065, key_span: 30, p_span_minutes: 45 })` (`None` in `game_v21`–`game_v23`). A person's activities end at
+
+```text
+end_minute = 1065 + (lineage_key / 60) % 30 + 45 × (P − 500) / 500     (i64, truncating; no temperament = P 500)
+```
+
+— 17:00 (P 0, key term 0) to 18:59 (P 1,000, key term 29); `key / 60` keeps it independent of the start's `key % 60`. Both readers of `day_end_minute` go through `RoutineRule::end_minute`: `can_enter` admits a person only while `start_minute(key) ≤ minute < end_minute(key, t)` and `deadline` ends their activity at their own end minute (without a stagger both return the shared 18:00, so `game_v21`–`game_v23` are bit-identical, I5–I7). Bedtime, pairing (20:00), fission (06:00), forage (until 18:00) and the evening tether (from 18:00) are unchanged: early enders fall through to the normal cascade, late enders join the tether when they stop. The live game builds `game_v24`.
+
+Measured on 32 worlds × 120 days against `game_v23` ([eval](probe/p19-2_eval/eval.md)): non-interrupted day-end exits fall 17:00–17:29 1,841, 17:30–17:59 32,396, 18:00–18:29 28,201, 18:30–18:59 2,931 (`game_v23`: all 71,553 at 18:00); Spearman ρ(P, a person's mean exit minute) = 0.849 [0.840, 0.857] over 4,419 people (H2 PASS). The largest number of activity ends in one tick between 16:00 and 20:00 fell from a median of 31 to 10 per world-day — H1 (≤ 0.15×) **misses** at 0.32×: the day-end exits alone give 0.125×, but two other edges remain, both food-gathering trips becoming available to many activity holders at once (16:01 in both rule sets; 18:01 in `game_v24`; the trigger at those minutes was not traced further), outside this pass's scope. Health, F1, F5 and daytime idle are unchanged (H3, H4 PASS); the 17:00–19:00 adult idle share fell from 0.474 to 0.375. The 18:00 tick's cost fell from 0.87 to 0.61 ms and p99.9 is back within 35 % of `game_v20` (H5's mean bar still misses, +17.6 %; [PERF_BUDGET](PERF_BUDGET.md)).
 
 ## Performance structure (Pass 18)
 
