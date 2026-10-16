@@ -189,7 +189,7 @@ func _save(stem: String) -> bool:
 func _advance_exact(amount: int, expected_tick: int) -> bool:
 	var advanced: int = int(ReadRoute.mutate(_world, "advance_ticks", [amount]))
 	var clock: Dictionary = ReadRoute.read(_world, "get_time_snapshot")
-	if advanced != amount or int(clock["tick"]) != expected_tick:
+	if advanced != expected_tick or int(clock["tick"]) != expected_tick:
 		_fail("advance mismatch: requested %d returned %d expected tick %d actual %d" % [amount, advanced, expected_tick, int(clock["tick"])])
 		return false
 	return true
