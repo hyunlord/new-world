@@ -390,6 +390,7 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
     enc_deadline = t0 + max_seconds * hp["enc_time_share"]
     n_ep = epochs_for(hp["enc_epochs"], len(tr.raws), PAPER_TRAIN, hp["enc_batch"], hp.get("paper_steps", True))
     every = max(1, n_ep // 100)
+    steps = 0
     for ep in range(n_ep):
         enc.head.alpha = alpha_at(ep / n_ep, hp["alpha"])
         seqs = tr.seqs(train_phases(tr, mode, rng), norm)
@@ -403,13 +404,14 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
             loss = mse + cls
             opt.zero_grad(); loss.backward(); opt.step()
             losses.append((mse.item(), cls.item()))
+            steps += 1
         last = ep == n_ep - 1 or time.time() > enc_deadline
         if ep % every == 0 or last:
             enc.eval()
             with torch.no_grad():
                 _, opred, _ = enc(vb)
                 vloss = float(((opred[:, :-1] - targets(vb, nt)) ** 2).mean())
-            log({"stage": "encoder", "epoch": ep, "epochs": n_ep, "alpha": enc.head.alpha,
+            log({"stage": "encoder", "epoch": ep, "epochs": n_ep, "steps": steps, "alpha": enc.head.alpha,
                  "mse": float(np.mean([x[0] for x in losses])), "ce": float(np.mean([x[1] for x in losses])),
                  "val_one_step": vloss, "t": time.time() - t0})
             if vloss < best:
@@ -433,6 +435,7 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
     n_ep = epochs_for(hp["dec_epochs"], len(tr.raws) * (starts + 1), PAPER_TRAIN * PAPER_WINDOWS, hp["dec_batch"],
                       hp.get("paper_steps", True))
     every = max(1, n_ep // 50)
+    steps = 0
     for ep in range(n_ep):
         dec.head.alpha = alpha_at(ep / n_ep, hp["alpha"])
         seqs = tr.seqs(train_phases(tr, mode, rng), norm)
@@ -458,9 +461,12 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
             loss = mse + cls
             opt.zero_grad(); loss.backward(); opt.step()
             losses.append((mse.item(), cls.item()))
+            steps += 1
         if ep % every == 0 or ep == n_ep - 1 or time.time() - t0 > max_seconds:
+            te = time.time()
             vloss = roll_loss(model, vjobs, device)
-            log({"stage": "decoder", "epoch": ep, "epochs": n_ep, "alpha": dec.head.alpha,
+            log({"stage": "decoder", "epoch": ep, "epochs": n_ep, "steps": steps, "eval_s": time.time() - te,
+                 "alpha": dec.head.alpha,
                  "mse": float(np.mean([x[0] for x in losses])), "ce": float(np.mean([x[1] for x in losses])),
                  "val_roll": vloss, "t": time.time() - t0})
             if vloss < best:
@@ -490,6 +496,7 @@ def train_ct(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, se
     best, best_ep, best_state, stop = float("inf"), -1, None, "epochs"
     n_ep = epochs_for(hp["epochs"], len(tr.raws), PAPER_TRAIN, hp["batch"], hp.get("paper_steps", True))
     every = max(1, n_ep // 50)
+    steps = 0
     for ep in range(n_ep):
         alpha = alpha_at(ep / n_ep, hp["alpha"])
         seqs = tr.seqs(train_phases(tr, mode, rng), norm)
@@ -513,12 +520,14 @@ def train_ct(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, se
             loss1 = alpha * ce(tpred[:, :-1], cls_t).mean()
             opt0.zero_grad(); opt1.zero_grad(); loss1.backward(); opt1.step(); ema_t.update()
             losses.append((mse.item(), conf.item(), loss1.item()))
+            steps += 1
         if ep % every == 0 or ep == n_ep - 1 or time.time() - t0 > max_seconds:
             ema_t.swap(); ema_o.swap()
+            te = time.time()
             vloss = roll_loss(model, vjobs, device)
             state = copy.deepcopy(net.state_dict())
             ema_t.swap(); ema_o.swap()
-            log({"stage": "ct", "epoch": ep, "epochs": n_ep, "alpha": alpha, "mse": float(np.mean([x[0] for x in losses])),
+            log({"stage": "ct", "epoch": ep, "epochs": n_ep, "steps": steps, "eval_s": time.time() - te, "alpha": alpha, "mse": float(np.mean([x[0] for x in losses])),
                  "conf": float(np.mean([x[1] for x in losses])), "cls": float(np.mean([x[2] for x in losses])),
                  "val_roll": vloss, "t": time.time() - t0})
             if vloss < best:
