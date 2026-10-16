@@ -141,7 +141,8 @@ def main() -> int:
     with (output / 'session.log').open('x') as stream:
         process = subprocess.Popen(command, env=environment, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
         try:
-            code = process.wait(timeout=remaining)
+            # Admission closes at the task deadline; finish one bounded hold.
+            code = process.wait(timeout=remaining + 3600 + 10)
         except subprocess.TimeoutExpired:
             os.killpg(process.pid, signal.SIGTERM)
             try:

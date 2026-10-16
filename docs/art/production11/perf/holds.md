@@ -101,3 +101,32 @@
 - 2026-10-16T14:09:44Z pid=40976 HOLD_START owner=codex-art-pass11 purpose=agent-sections-W500 start=1792159784 load_before=3.24 contended=false waited=3291s
 - 2026-10-16T14:09:58Z pid=40976 HOLD_END owner=codex-art-pass11 purpose=agent-sections-W500 start=1792159784 end=1792159798 elapsed=14 load_before=3.24 load_after=3.78 contended=false exit=0
 <!-- art-p11-last-release 1792159798 -->
+- 2026-10-16T14:20:32Z pid=22343 WAIT_START owner=codex-art-pass11 purpose=pair-declump-input-cache-W500 hold_limit=3600
+- 2026-10-16T14:20:32Z pid=22343 CHECK load=3.35 processes=20368 20367 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=0s
+- 2026-10-16T14:20:32Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:25:32Z pid=22343 CHECK load=2.86 processes=40999 40987 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=300s
+- 2026-10-16T14:25:32Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:30:33Z pid=22343 CHECK load=3.42 processes=40999 40987 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=600s
+- 2026-10-16T14:30:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:35:33Z pid=22343 CHECK load=8.72 processes=40999 40987 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=901s
+- 2026-10-16T14:35:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:40:33Z pid=22343 CHECK load=16.51 processes=97409 97408 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1201s
+- 2026-10-16T14:40:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:45:33Z pid=22343 CHECK load=7.70 processes= waited=1501s
+- 2026-10-16T14:45:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:50:33Z pid=22343 CHECK load=6.06 processes= waited=1801s
+- 2026-10-16T14:50:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:55:33Z pid=22343 CHECK load=5.63 processes= waited=2101s
+- 2026-10-16T14:55:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:00:33Z pid=22343 CHECK load=10.97 processes= waited=2401s
+- 2026-10-16T15:00:33Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:05:34Z pid=22343 CHECK load=9.60 processes= waited=2701s
+- 2026-10-16T15:05:34Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:10:34Z pid=22343 CHECK load=39.58 processes= waited=3002s
+- 2026-10-16T15:10:34Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:15:34Z pid=22343 CHECK load=54.70 processes= waited=3302s
+- 2026-10-16T15:15:34Z pid=22343 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:20:34Z pid=22343 CHECK load=111.32 processes= waited=3602s
+- 2026-10-16T15:20:34Z pid=22343 HOLD_START owner=codex-art-pass11 purpose=pair-declump-input-cache-W500 start=1792164034 load_before=111.32 contended=true waited=3602s
+- 2026-10-16T15:21:51Z pid=22343 HOLD_END owner=codex-art-pass11 purpose=pair-declump-input-cache-W500 start=1792164034 end=1792164111 elapsed=77 load_before=111.32 load_after=51.64 contended=true exit=0
+<!-- art-p11-last-release 1792164111 -->

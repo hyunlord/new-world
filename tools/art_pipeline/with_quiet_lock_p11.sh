@@ -142,9 +142,7 @@ while :; do
     started=$(epoch)
     printf 'owner=%s\npid=%s\npurpose=%s\nstarted=%s\n' "$owner" "$$" "$purpose" "$(iso)" > "$lock/info.txt"
     check_deadline
-    if (( deadline > 0 && deadline-started < limit )); then
-      limit=$((deadline-started))
-    fi
+    # The task deadline closes admission; an admitted hold retains its own cap.
     break
   fi
   log 'ACQUIRE_RACE retry'
