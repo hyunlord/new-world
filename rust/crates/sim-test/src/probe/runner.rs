@@ -71,6 +71,12 @@ pub fn run(args: &ProbeArgs) -> Result<(), String> {
 /// [`run`] with this pass's options (Pass 16: `--agent-trace` writes the
 /// per-person files next to the usual outputs, which stay unchanged).
 pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> {
+    run_with_chronicle(args, options, None)
+}
+
+/// [`run_with`] that also writes each seed's chronicle to `chronicle_out`
+/// (Pass 19 `--chronicle-out`; the other outputs are unchanged).
+pub fn run_with_chronicle(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std::path::Path>) -> Result<(), String> {
     fs::create_dir_all(&args.out).map_err(|e| e.to_string())?;
     let results = std::thread::scope(|scope| {
         let mut handles = Vec::new();
@@ -78,7 +84,7 @@ pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> 
             handles.push(scope.spawn(move || {
                 let mut runs = Vec::new();
                 for seed in args.seeds.clone().skip(worker).step_by(args.workers) {
-                    runs.push(run_seed(args, options, seed)?);
+                    runs.push(run_seed(args, options, chronicle_out, seed)?);
                 }
                 Ok::<_, String>(runs)
             }));
@@ -176,7 +182,7 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
     }
 }
 
-fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunResult, String> {
+fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std::path::Path>, seed: u64) -> Result<RunResult, String> {
     let started = Instant::now();
     let make_scene = || scene_engine(&args.scene, seed);
     let mut engine = make_scene();
@@ -206,6 +212,8 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
     let mut deaths = DeathTracker::install(&mut engine);
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
+    // Pass 19: chronicle entries already compared with the twin's.
+    let mut chronicle_seen = 0usize;
     let ticks_per_day = engine.resources.ticks_per_day;
     if ticks_per_day == 0 {
         return Err("probe requires positive ticks_per_day".into());
@@ -411,7 +419,8 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
                     || (engine.resources.rules.agent.routine.is_some()
                         && !super::pass17::twins_match(&engine, twin))
                     || (engine.resources.rules.society.family.is_some()
-                        && !super::family_trace::twins_match(&engine, twin)))
+                        && !super::family_trace::twins_match(&engine, twin))
+                    || !super::chronicle_out::twins_match(&engine, twin, &mut chronicle_seen))
             {
                 return Err(format!(
                     "{} tick trace mismatch seed={seed} tick={}",
@@ -425,6 +434,14 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
     death_output.flush().map_err(|e| e.to_string())?;
     if let Some(tracer) = &tracer {
         write_trace(args, seed, &engine, tracer, &git_sha)?;
+    }
+    if let Some(twin) = &twin {
+        if engine.resources.chronicle != twin.resources.chronicle {
+            return Err(format!("{} chronicle mismatch seed={seed}", args.scene));
+        }
+    }
+    if let Some(dir) = chronicle_out {
+        super::chronicle_out::write(dir, &engine, &args.scene, seed, &git_sha)?;
     }
     let agent_days = agent_ticks as f64 / ticks_per_day as f64;
     eprintln!(

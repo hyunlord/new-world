@@ -62,6 +62,17 @@ pub fn despawn_agent(
     reason: DeathReason,
     tick: u64,
 ) {
+    // Pass 19 chronicle: read the person, their age and recorded partner
+    // before the entity is gone (reads only).
+    let person = crate::runtime::chronicle_log::person_record(world, entity);
+    let partner = world
+        .get::<&sim_core::components::Kin>(entity)
+        .ok()
+        .and_then(|kin| kin.partner);
+    let age = world
+        .get::<&sim_core::components::Life>(entity)
+        .ok()
+        .map_or(-1, |life| life.age_ticks(tick));
     let _ = world.despawn(entity);
     resources.social_chase_since.remove(&agent_id);
     resources.social_retry_after.remove(&agent_id);
@@ -84,11 +95,15 @@ pub fn despawn_agent(
         .retain(|(a, d), _| *a != agent_id && *d != agent_id);
 
     // Settlement roster + population stats (no-op when the agent is bandless).
-    for settlement in resources.settlements.values_mut() {
+    // Pass 19: the roster the agent left (lowest id if ever several) is
+    // remembered for the chronicle only.
+    let mut last_roster: Option<sim_core::components::SettlementId> = None;
+    for (sid, settlement) in resources.settlements.iter_mut() {
         if settlement.remove_member_agent(agent_id) {
             settlement.population_stats.current = settlement.member_agents.len() as u32;
             settlement.population_stats.total_deaths =
                 settlement.population_stats.total_deaths.saturating_add(1);
+            last_roster = Some(last_roster.map_or(*sid, |known| known.min(*sid)));
         }
     }
 
@@ -126,6 +141,33 @@ pub fn despawn_agent(
         reason,
         tick: tick as u32,
     });
+
+    // Pass 19 chronicle (write-only): close the person's record, record the
+    // death and, if the recorded partner is alive, their widowhood.
+    resources
+        .chronicle
+        .close_person(agent_id, tick, reason.as_u8(), || person);
+    crate::runtime::chronicle_log::record(
+        world,
+        resources,
+        sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Died)
+            .subject(agent_id)
+            .other(partner)
+            .settlement(last_roster)
+            .cause(reason.as_u8())
+            .value(age),
+    );
+    if let Some(partner) = partner {
+        if crate::runtime::chronicle_log::alive_entity(world, partner).is_some() {
+            crate::runtime::chronicle_log::record(
+                world,
+                resources,
+                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Widowed)
+                    .subject(partner)
+                    .other(Some(agent_id)),
+            );
+        }
+    }
 }
 
 /// Needs → frailty → death system (priority 139, interval 1).

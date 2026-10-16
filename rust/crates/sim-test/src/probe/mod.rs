@@ -2,6 +2,7 @@
 pub mod ablation;
 mod agent_trace;
 mod args;
+pub mod chronicle_out;
 mod deaths;
 mod deaths_observer;
 mod family_events;
@@ -28,7 +29,7 @@ mod summary;
 pub use agent_trace::ProbeOptions;
 pub use args::ProbeArgs;
 pub use fingerprint::fingerprint;
-pub use runner::{run, run_with};
+pub use runner::{run, run_with, run_with_chronicle};
 pub(crate) use runner::scene_engine;
 
 #[cfg(test)]

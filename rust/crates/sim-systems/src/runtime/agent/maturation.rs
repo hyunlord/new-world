@@ -30,10 +30,21 @@ impl RuntimeSystem for MaturationSystem {
             .map(|(entity, (agent, _))| (agent.id, entity))
             .collect();
         due.sort_by_key(|&(id, _)| id);
-        for (_, entity) in due {
+        for (id, entity) in due {
             if world.remove_one::<Child>(entity).is_err() {
                 continue;
             }
+            // Pass 19 chronicle (write-only).
+            crate::runtime::chronicle_log::ensure_entity(world, resources, id, entity);
+            crate::runtime::chronicle_log::record(
+                world,
+                resources,
+                sim_core::chronicle::ChronicleEntry::new(
+                    resources.current_tick,
+                    sim_core::chronicle::ChronicleKind::CameOfAge,
+                )
+                .subject(id),
+            );
             if let Ok(mut hunger) = world.get::<&mut Hunger>(entity) {
                 hunger.growth_rate = 0.05;
             }

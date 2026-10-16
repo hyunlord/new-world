@@ -50,6 +50,10 @@ use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::chronicle::{
+    collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
+    collect_settlement_chronicle, person_to_dict, rows_to_dict,
+};
 use super::family::{agent_family_to_dict, collect_agent_family};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
@@ -505,6 +509,44 @@ impl WorldSimNode {
             &self.engine.world,
             u64::from_ne_bytes(entity_bits.to_ne_bytes()),
         ))
+    }
+
+    /// Pass 19 chronicle: the AgentId (as i64) of the agent with snapshot
+    /// entity bits `entity_bits`, or -1.
+    #[func]
+    fn get_agent_id(&self, entity_bits: i64) -> i64 {
+        collect_agent_id(&self.engine.world, entity_bits)
+            .map_or(-1, |id| i64::from_ne_bytes(id.to_ne_bytes()))
+    }
+
+    /// Pass 19 chronicle: the person table's record of `agent_id` (works for
+    /// the dead) as `{found, alive, female (-1/0/1), born_tick, died_tick,
+    /// death_reason, mother, father, ns, ha, rd, p}`; unknown values are -1.
+    #[func]
+    fn get_person(&self, agent_id: i64) -> VarDictionary {
+        person_to_dict(collect_person(&self.engine.world, &self.engine.resources.chronicle, agent_id))
+    }
+
+    /// Pass 19 chronicle: every entry naming `agent_id`, in chronicle order, as
+    /// `{found, tick, kind, subject, other, third, settlement, settlement2,
+    /// cause, value}` packed columns (ids -1 when absent).
+    #[func]
+    fn get_person_chronicle(&self, agent_id: i64) -> VarDictionary {
+        rows_to_dict(collect_person_chronicle(&self.engine.resources.chronicle, agent_id), false)
+    }
+
+    /// Pass 19 chronicle: every entry naming `settlement_id` (same shape as
+    /// `get_person_chronicle`).
+    #[func]
+    fn get_settlement_chronicle(&self, settlement_id: i64) -> VarDictionary {
+        rows_to_dict(collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id), false)
+    }
+
+    /// Pass 19 chronicle feed: entries from index `start`, at most `max`
+    /// (clamped to 1..=512), same shape plus `next` and `total`.
+    #[func]
+    fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
+        rows_to_dict(collect_chronicle_since(&self.engine.resources.chronicle, start, max), true)
     }
 
     /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
