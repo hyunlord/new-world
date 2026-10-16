@@ -55,3 +55,6 @@ Potential cheaper candidate discovered: the duplicated settlement-outline call c
 ## Status
 
 Completed for this diagnosis: code/source tracing, offline attribution of all three rejected P5 pixel differences, and narrow reader inventory. Historical REJECTED verdicts remain unchanged. Historical render-clock divergence is not proven; harness reproducibility, current section measurements, candidate speedup and all identity acceptance gates require separate runtime artifacts. This document does not claim any of them passed and does not accept a cache optimization.
+
+## P5 acceptance guard (2026-10-16T13:06Z)
+The P11 pixel comparator now explicitly rejects any nonzero P5 A/A′ control or A/B difference. Other framings retain the unchanged Art Pass 10 two-dimensional control bound. Alpha-only image regressions reproduced two false-accept cases in the inherited generic comparator before the fix. The P11 and P9 comparator tests pass (14 tests, 5 subtests); this is comparator verification, not an actual identity verdict.

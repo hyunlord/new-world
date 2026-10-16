@@ -114,7 +114,11 @@ def compare(captures: tuple[Capture, Capture, Capture], output: Path) -> Result:
             preview.save(output / "previews" / f"{framing}-{label}.png")
         hashes = tuple(hashlib.sha256(image.convert("RGBA").tobytes()).hexdigest() for image in (a, ap, b))
     cause = "bit-reproducible" if control.pixels == 0 else "not bit-reproducible; cause unresolved, inspect control diff"
-    return Result(framing, control, changed, control.pixels == 0, accepts(control, changed), cause,
+    passed = accepts(control, changed)
+    if framing == "P5" and (control.pixels != 0 or changed.pixels != 0):
+        passed = False
+        cause = "P5 requires exact A/A′ and A/B RGBA identity; inspect preserved differences"
+    return Result(framing, control, changed, control.pixels == 0, passed, cause,
                   (hashes[0], hashes[1], hashes[2]), baseline.capture_frame, baseline.state_change_frame)
 
 
@@ -129,7 +133,7 @@ def main(a: Path, aprime: Path, b: Path, output: Path) -> None:
         captures = tuple(Capture.read(folder / f"{framing}.png") for folder in (a, aprime, b))
         results.append(compare((captures[0], captures[1], captures[2]), output))
     (output / "comparison.json").write_text(json.dumps({"schema_version": 1, "passed": all(row.passed for row in results), "framings": [asdict(row) for row in results]}, indent=2) + "\n")
-    lines = ["# Art Pass 11 pixel identity", "", "RGBA comparison; both differing-pixel count and maximum channel difference must be no greater than the A/A′ control.", "", "| Framing | A/A′ pixels | A/A′ max | A/B pixels | A/B max | Result | Reproducibility |", "|---|---:|---:|---:|---:|---|---|"]
+    lines = ["# Art Pass 11 pixel identity", "", "RGBA comparison; both differing-pixel count and maximum channel difference must be no greater than the A/A′ control. P5 additionally requires zero differing pixels in both A/A′ and A/B.", "", "| Framing | A/A′ pixels | A/A′ max | A/B pixels | A/B max | Result | Reproducibility |", "|---|---:|---:|---:|---:|---|---|"]
     for row in results:
         lines.append(f"| {row.framing} | {row.control.pixels} | {row.control.max_channel} | {row.candidate.pixels} | {row.candidate.max_channel} | {'PASS' if row.passed else 'FAIL'} | {row.cause} |")
     lines.extend(["", "Previews are downscaled for review only. Metrics use full-resolution RGBA; diff images show the maximum absolute channel difference, with x16 previews.", ""])
