@@ -18,7 +18,8 @@ dataset `v2_v19` read through the manifest exactly as training reads them); no t
 - A3: **0 violations** in 3 × 306 validation replicate-0 cases; the largest deviation is 0.6 % of the tolerance
   (float32 batch differences).
 - A2: the three WM-2 checkpoints see the action (their teacher-forced response at the cast row differs between the arm
-  member and its partner, whose inputs differ only in that one action entry) but respond with 1–8 % of the recorded jump,
+  member and its partner, whose inputs differ only in that one action entry) but respond with a small part of the recorded jump
+  (3–8 % of the gift's recorded jump, 1–3 % of the `rot_wood` wood jump, 10–19 % (`sp240L`) and 23–37 % (`sp120L`) of the spoils'),
   in the wrong direction for `gf240E` in s1 (−12 for +238), and move food by −20 to −67 for `rot_wood` (true 0).
 
 So WM-2's "effects no better than zero" is not a misalignment of the training pairs, the action encoding or the

@@ -82,6 +82,8 @@ val_eff trajectories (step: val_eff, * = not eligible):
 | rw120E | split shift, event (days) | — | -2.2 (8.3) | 1.9 | 4.9 / 0.67 | 5.0 / 0.86 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 | 3.7 / 0.00 |
 | rw120E | split shift, expected (days) | — | | |  |  |  |  |  |  | 3.8 / 0.86 | 4.2 / 0.14 | 6.0 / 0.86 |  |  |
 
+Drift of the factual rollouts after each test cast row (T2 nMAE of the 8 V, test split std): `wm3_full_s0` 7d 0.106, 30d 0.329, 45d 0.618; `wm3_full_s1` 7d 0.117, 30d 0.336, 45d 0.638; `wm3_full_s2` 7d 0.094, 30d 0.282, 45d 0.544; `wm3_ctrl_s0` 7d 0.107, 30d 0.328, 45d 0.597; `wm3_os_s0` 7d 0.123, 30d 0.287, 45d 0.561
+
 Mean predicted vs mean true effect per cell (food store, `rw120E` wood is not an outcome):
 
 | arm | lag | true | `an5_arm` | `arm_mean` | `zero` | `wm2_m1bact_v19_s0` | `wm2_m1bact_v19_s1` | `wm2_m1bact_v19_s2` | `wm3_full_s0` | `wm3_full_s1` | `wm3_full_s2` | `wm3_ctrl_s0` | `wm3_os_s0` |

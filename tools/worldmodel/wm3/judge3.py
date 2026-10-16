@@ -299,6 +299,10 @@ def markdown(j: dict) -> str:
             L.append(f"| {arm} | split shift, expected (days) | — | | | " + " | ".join(
                 (f"{fmt(e['tables'][p + '|expected']['cells'][key]['mae'], 1)} / {fmt(e['tables'][p + '|expected']['cells'][key].get('right_direction'), 2)}"
                  if p + "|expected" in e["tables"] else "") for p in preds) + " |")
+    if e.get("meta"):
+        L += ["", "Drift of the factual rollouts after each test cast row (T2 nMAE of the 8 V, test split std): " +
+              "; ".join(f"`{r}` " + ", ".join(f"{k} {fmt(v['mean'])}" for k, v in sorted(m["drift"].items(), key=lambda kv: int(kv[0][:-1])))
+                        for r, m in e["meta"].items())]
     L += ["", "Mean predicted vs mean true effect per cell (food store, `rw120E` wood is not an outcome):", "",
           "| arm | lag | true | " + " | ".join(f"`{p}`" for p in preds) + " |", "|---|---|---|" + "---|" * len(preds)]
     for arm in v2.ARMS:
