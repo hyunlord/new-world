@@ -562,7 +562,7 @@ def load(run: Path, device) -> tuple[dict, dict]:
 
 
 def run_train(method: str, dataset: str, seed: int, out: Path, overrides: dict, max_seconds: float, root: Path,
-              device_name: str = "auto", data=None) -> dict:
+              device_name: str = "auto", data=None, heartbeat: Path | None = None) -> dict:
     t0 = time.time()
     out.mkdir(parents=True, exist_ok=True)
     device = g.pick_device(device_name)
@@ -575,6 +575,9 @@ def run_train(method: str, dataset: str, seed: int, out: Path, overrides: dict, 
 
     def log(rec):
         logf.write(json.dumps(rec) + "\n"); logf.flush()
+        if heartbeat is not None:          # the grid's own log: the queue's watchdog reads OUT/train_log.jsonl
+            with open(heartbeat, "a") as hb:
+                hb.write(json.dumps({"grid_member": str(out.name)} | rec) + "\n")
         print(json.dumps(rec), flush=True)
 
     cfg = {"method": method, "dataset": dataset, "seed": seed, "hyper": hp, "overrides": overrides,
@@ -601,13 +604,16 @@ def cmd_grid(a) -> int:
     `OUT/grid/<i>`; the best is copied to OUT (it is the method's `_obs_s0` run)."""
     t0 = time.time()
     out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    hb = out / "train_log.jsonl"            # every member's records, live (the queue's watchdog reads it)
     data = load_data("obs_v19", Path(a.root))
     res = []
     for i, ov in enumerate(GRID[a.method]):
         info = run_train(a.method, "obs_v19", a.seed, out / "grid" / str(i), ov, a.max_seconds_each, Path(a.root),
-                         a.device, data)
+                         a.device, data, heartbeat=hb)
         res.append({"config": i, "overrides": ov, "val_roll": info["val_roll"], "seconds": info["seconds"]})
     best = min(res, key=lambda r: (r["val_roll"], r["config"]))
+    hb.rename(out / "grid_log.jsonl")
     for f in ("config.json", "model.pt", "train_log.jsonl", "val_metrics.json"):
         shutil.copy(out / "grid" / str(best["config"]) / f, out / f)
     c.write_json(out / "grid.json", {"method": a.method, "results": res, "chosen": best["config"],
