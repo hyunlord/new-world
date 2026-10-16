@@ -130,3 +130,5 @@
 - 2026-10-16T15:20:34Z pid=22343 HOLD_START owner=codex-art-pass11 purpose=pair-declump-input-cache-W500 start=1792164034 load_before=111.32 contended=true waited=3602s
 - 2026-10-16T15:21:51Z pid=22343 HOLD_END owner=codex-art-pass11 purpose=pair-declump-input-cache-W500 start=1792164034 end=1792164111 elapsed=77 load_before=111.32 load_after=51.64 contended=true exit=0
 <!-- art-p11-last-release 1792164111 -->
+- 2026-10-16T15:25:48Z pid=27548 WAIT_START owner=codex-art-pass11 purpose=after-W0-attempt1 hold_limit=3600
+- 2026-10-16T15:25:48Z pid=27548 WAIT_COOLDOWN remaining=363s

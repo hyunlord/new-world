@@ -8,8 +8,8 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 | 0 | Merge, delivered contract, tools, gate, release baseline | 07:50 | 14:09:58 | COMPLETE; optional Art10 after dropped |
 | 1 | Names, cached reads, life and records, chronicle, tests and captures | 10:17 (approx.) | 10:47 (approx.) | COMPLETE; H8 FAIL (44/45 correct) |
 | 2 | Seven icons, village summary, blind test | 10:35 | 12:36 | COMPLETE_WITH_LIMITATIONS; H7 NOT_VERIFIED, C12/14 shortage, D round2 PASS |
-| 3 | Timed optimization with identity and pan proof | 12:37 | | IN_PROGRESS; identity reference f0d04f8e5bb698385b4751f0e0ea9f401ebef5ac |
-| 4 | Frozen release matrix and H1–H8 | | | PENDING |
+| 3 | Timed optimization with identity and pan proof | 12:37 | 15:25:03 | COMPLETE; candidate REJECTED; no optimization adopted |
+| 4 | Frozen release matrix and H1–H8 | 15:25:03 | | IN_PROGRESS; frozen5ee5e1ee |
 | 5 | Independent review, final gate, report, publication, cleanup | | | PENDING |
 
 ## Initial provenance
@@ -35,3 +35,7 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 - 2026-10-16T14:42Z: Candidate1dc641b5 B capture completed with unchanged source/build/HEAD. All six full render-event sequences match A/A′ and all six RGBA comparisons have zero differing pixels/max-channel zero, including unmasked P5. W0/W200600-frame and W500 frozen/2x240-frame pan property comparisons all PASS. Alternating release pairs still queued; candidate acceptance remains pending speed evidence.
 
 - 2026-10-16T15:24Z: Part3 declump-input-cache REJECTED. Three alternating150-frame pairs:39.1445→37.8680,63.8485→65.8330,64.7850→65.9935ms; pooled450 median62.8585000098→63.947ms (0.9829780914x). Hold15:20:34–15:21:51Z contended=true, load111.32→51.64. Structural validation and all identity checks PASS do not establish faster. Restore both production files byte-for-byte to d74f740 (same runtime as Part2 final f0d04f8e); remove candidate-only test after preserving committed source/evidence. No Part3 optimization accepted; stop further optimization to freeze and complete Part4.
+
+- Freeze receipt: {"frozen_commit": "5ee5e1ee98df24a16756360b8b125d582f68fdd0", "freeze_utc": "2026-10-16T15:25:03.021297+00:00", "reference_commit": "f0d04f8e5bb698385b4751f0e0ea9f401ebef5ac", "runtime_paths": ["scripts/ui", "scripts/core", "scripts/rendering", "scenes", "shaders", "assets", "localization", "project.godot", "data", "rust"], "runtime_diff_empty": false, "candidate_rejected": "1dc641b5cd161cf9683349f367194935e8213b3f", "deadline_epoch": 1792180200, "world_order": ["W0", "W500", "W200", "W1"]}
+
+- Freeze exact receipt15:25:03Z; preceding15:24:41 was the decision clock. Product sources equal Part2f0d after excluding five static-source Rust test repins, whose exact diff is retained. Part4 runtime remains5ee5e1ee although evidence/docs commits advance WIP.
