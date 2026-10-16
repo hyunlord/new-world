@@ -1,0 +1,5107 @@
+{
+ "all_ok": true,
+ "bad": [],
+ "families": 160,
+ "rows": [
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 73320,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46400
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 95,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 76200,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46401
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 114,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 63240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46402
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 46,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 18600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46403
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 35,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 58920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46404
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 58920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46405
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 139,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46406
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 70440,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46407
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 30120,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46408
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 86,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 61800,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46409
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 42,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 200,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 9960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46410
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 69000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46411
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 33000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46412
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 131,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 43080,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46413
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 20,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 60360,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46414
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 44,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 92,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 9960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46415
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 22920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46416
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 64680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46417
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 33000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46418
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 31560,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46419
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 28,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 134,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 11400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46420
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 40,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46421
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 162,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46422
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 8,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46423
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 36,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 11400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46424
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 191,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 15720,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46425
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 25800,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46426
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 70440,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46427
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 25,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 84840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46428
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 176,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 48840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46429
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 22920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46430
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 17,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 133,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 50280,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46431
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 0,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 183,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 38760,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46432
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 15,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 197,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46433
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 70440,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46434
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 25800,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46435
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 16,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 196,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 12840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46436
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 66120,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46437
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 29,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 216,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 45960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46438
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 30120,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46439
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 40,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 48840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46440
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 66120,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46441
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 0,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 209,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 40200,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46442
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 26,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 56040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46443
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 37,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46444
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 66120,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46445
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 33000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46446
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 78,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 35880,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46447
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 28,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 54600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46448
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 34,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46449
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 23,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 41,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 79080,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46450
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 77640,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46451
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 39,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 209,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 50280,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46452
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 28,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 115,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 11400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46453
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 28680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46454
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 25,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 76200,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46455
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 63240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46456
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 47,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46457
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 78,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 21480,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46458
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 24360,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46459
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 22920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46460
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 28680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46461
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 27240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46462
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 18,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 12840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46463
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 50,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 145,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 9960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46464
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 56,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 224,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46465
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 50,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 40200,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46466
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 64680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46467
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 34440,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46468
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 36,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 54600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46469
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 19,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 15720,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46470
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 31560,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46471
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 18,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 54600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46472
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 33,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46473
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 21480,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46474
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 32,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 37320,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46475
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 31,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46476
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 31,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 79,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 9960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46477
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 9,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 58920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46478
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 26,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 17160,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46479
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 23,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 132,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 12840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46480
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 67560,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46481
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 21,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 192,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46482
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 60360,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46483
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 27240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46484
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 28680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46485
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 31,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 218,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46486
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 69000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46487
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 67560,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46488
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 64680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46489
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 69000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46490
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 43,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 168,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46491
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 18,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46492
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 12840,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46493
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 33000,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46494
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 14,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 58920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46495
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 75,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 37320,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46496
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 38,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 15720,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46497
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 29,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46498
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 94,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 74760,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46499
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 27240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46500
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46501
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 31560,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46502
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 41,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 15720,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46503
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 13,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 14280,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46504
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 53,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46505
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 9,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 60360,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46506
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 61,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 37320,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46507
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 27,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 57480,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46508
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 0,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 142,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 38760,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46509
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 27240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46510
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 0,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 80520,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46511
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 57480,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46512
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 172,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46513
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 165,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46514
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 71880,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46515
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 39,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 18600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46516
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 32,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 11400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46517
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 28680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46518
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 56,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 37320,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46519
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 24360,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46520
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 24,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 189,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46521
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 14,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 58920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46522
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 31,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46523
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 25800,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46524
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 44,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 18600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46525
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 66120,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46526
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 65,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 79080,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46527
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 28,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 218,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46528
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 30,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 135,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46529
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 27,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46530
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 32,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 196,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 83400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46531
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 25,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 150,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 9960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46532
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 213,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 44520,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46533
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 63,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 35880,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46534
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 40,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46535
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 40,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 236,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 45960,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46536
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 27,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 157,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46537
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 45,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 189,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 50280,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46538
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 33,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 174,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46539
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 38,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 151,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 11400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46540
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 50,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 142,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 83400,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46541
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 13,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 214,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 37320,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46542
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 27240,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46543
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 64680,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46544
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 23,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46545
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 29,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 18600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46546
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 32,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 58920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46547
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 78,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 21480,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46548
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 0,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 221,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 38760,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46549
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 22920,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46550
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 31,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 17160,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46551
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 120,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 70440,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46552
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 22,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46553
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 37,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 20040,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46554
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 27,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 54600,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46555
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 39,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 17160,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46556
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 31,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 216,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 50280,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46557
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 67,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 41640,
+   "members": 4,
+   "none_equal_factual": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46558
+  },
+  {
+   "all": true,
+   "arms": [
+    "gf240",
+    "rw120",
+    "sp240"
+   ],
+   "casts": {
+    "gf240": {
+     "applied": 240,
+     "ok": true
+    },
+    "rw120": {
+     "applied": 36,
+     "ok": true
+    },
+    "sp240": {
+     "applied": 240,
+     "ok": true
+    }
+   },
+   "diffs": [],
+   "fork_ok": true,
+   "fork_tick": 14280,
+   "members": 4,
+   "none_equal_factual": true,
+   "observed_equal_member": true,
+   "ok": true,
+   "replicates": 1,
+   "scene": "game_v19",
+   "seed": 46559
+  }
+ ],
+ "seconds": 1.6094999313354492
+}
