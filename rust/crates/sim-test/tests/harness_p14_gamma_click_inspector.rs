@@ -1151,8 +1151,9 @@ fn harness_revitalize_inspector_gather_food_is_not_social_target() {
         .filter(|line| line.starts_with('"'))
         .map(|line| line.trim_end_matches(',').trim_matches('"'))
         .collect();
-    assert_eq!(keys.len(), 8, "all FFI target codes including GatherFood and GatherWood map explicitly");
+    assert_eq!(keys.len(), 9, "all FFI target codes including GatherFood, GatherWood and Activity map explicitly");
     assert_eq!(keys[5], "INSPECTOR_TARGET_AGENT");
     assert_eq!(keys[6], "INSPECTOR_TARGET_FOOD");
     assert_eq!(keys[7], "INSPECTOR_TARGET_WOOD");
+    assert_eq!(keys[8], "INSPECTOR_TARGET_ACTIVITY_PLACE_FMT");
 }

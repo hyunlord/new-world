@@ -80,3 +80,6 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 - 2026-10-16T02:42:40Z: Parent capture terminal0, source/HEAD stable5fa4b317,6EN/KO screenshots; four actual family signal-click selections pass. Independent visual review all6inspector views PASS; no pointer hit-test claim. Part4 prioritymatrix begins with original03:03UTCcutoff and unmodifiedquiet policy; W1000/rings dropped.
 
 - 2026-10-16T03:03:01Z: Originalcutoff closed finalmatrix before anyGodot launch. Ownwaitingwrapper143,runner1,source/buildstable. Foreignprocess/load checks preserved; no afterdata fabricated. H1-H4/H6/aftersections NOT_VERIFIED. ProceedmandatoryPart5.
+
+- 2026-10-16T03:15:51Z: Final attempt1 terminal1,82 rows (81 PASS, cargo101 stale target label count8 versus actual9), source/HEAD stable. Retained raw evidence; static pin updated to9 with explicit Activity key8 and existing5/6/7 unchanged. Full retry required.
+- Targeted ninth-label regression rerun: cargo test -p sim-test --test harness_p14_gamma_click_inspector harness_revitalize_inspector_gather_food_is_not_social_target, exit0,1 passed/33 filtered; full gate still required.
