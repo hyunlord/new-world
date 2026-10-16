@@ -350,21 +350,25 @@ def cmd_m1(a) -> int:
     from wm4 import m1_obs
     m1_obs.register()
     t0 = time.time()
-    target = Path(a.out) / "effects.json"
+    target = Path(a.out) / ("effects.json" if a.role == "test" else "effects_val.json")
     if target.exists():
         raise SystemExit(f"{target} exists: computed once per run")
     pred, config = g.load_predictor(Path(a.run), a.device)
     hz = e3.is_hazard_run(config)
-    _, test, _, _ = load_obs_base(Path(a.obs_base))
-    tests = c.load_groups(["test"], Path(a.root), "obs_v19")
-    test_std = b.split_std([ep.bench for ep in tests["test"]])
-    fams = e3.load_families(family_dirs(Path(a.root), "test"), "test")
+    if a.role == "test":
+        _, test, _, _ = load_obs_base(Path(a.obs_base))
+    else:                                    # a dry run of the code path on the val families (before part b)
+        test = load_cases(Path(a.root), "val")
+    tests = c.load_groups([a.role], Path(a.root), "obs_v19")
+    test_std = b.split_std([ep.bench for ep in tests[a.role]])
+    fams = e3.load_families(family_dirs(Path(a.root), a.role), a.role)
     preds, drift = e3.predictions(pred, fams, test, None, test_std, hazard=hz)
     out = {"run": a.run, "model": config["model"], "dataset": config.get("dataset"), "seed": config["seed"],
            "hazard": hz, "selected": config.get("selected"), "round_counts": pred.round_counts,
            "code_commit": c.git_commit(), "train_code_commit": config.get("code_commit"), "argv": sys.argv,
            "predictions": preds, "drift": drift, "test_std": test_std.tolist(),
-           "obs_base_sha256": ef._sha(Path(a.obs_base)), "seconds": time.time() - t0}
+           "role": a.role, "obs_base_sha256": ef._sha(Path(a.obs_base)) if a.obs_base else None,
+           "seconds": time.time() - t0}
     if target.exists():
         raise SystemExit(f"{target} exists: computed once per run")
     c.write_json(target, out)
@@ -384,7 +388,8 @@ def main(argv=None) -> int:
     p = sub.add_parser("m1")
     p.add_argument("--run", required=True)
     p.add_argument("--root", default=str(c.DEFAULT_ROOT))
-    p.add_argument("--obs-base", dest="obs_base", required=True, help="obs_base.json (cases)")
+    p.add_argument("--obs-base", dest="obs_base", default=None, help="obs_base.json (the test cases)")
+    p.add_argument("--role", default="test", choices=["test", "val"])
     p.add_argument("--device", default="auto")
     p.add_argument("--out", required=True)
     a = ap.parse_args(argv)

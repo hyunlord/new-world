@@ -663,26 +663,30 @@ def cmd_effects(a) -> int:
     from wm4 import m1_obs
     m1_obs.register()
     t0 = time.time()
-    target = Path(a.out) / "effects.json"
+    role = a.role
+    target = Path(a.out) / ("effects.json" if role == "test" else "effects_val.json")
     if target.exists():
         raise SystemExit(f"{target} exists: computed once per run")
     device = g.pick_device(a.device)
     model, cfg = load(Path(a.run), device)
     root = Path(a.root)
-    j = json.loads(Path(a.cases).read_text())
-    cases = [ef.case_from(x) for x in j["cases"]["test"]]
-    paths = e4.family_dirs(root, "test") if a.split == "obs" else ef.family_dirs(root, "test")
-    fams = e3.load_families(paths, "test")
+    if role == "val" and a.split == "obs":           # a dry run on the val families (before part b)
+        cases = e4.load_cases(root, "val")
+    else:
+        cases = [ef.case_from(x) for x in json.loads(Path(a.cases).read_text())["cases"][role]]
+    paths = e4.family_dirs(root, role) if a.split == "obs" else ef.family_dirs(root, role)
+    fams = e3.load_families(paths, role)
     preds = predict_cases(model, fams, cases, device)
     # factual test loss (reported): val_roll's construction on the test factual episodes
     ds = "obs_v19" if a.split == "obs" else "v2_v19_fact"
     variant = g.dataset_variant(c.dataset(ds), "sev-blind_action-aware")
-    te = Data(c.load_groups(["test"], root, ds)["test"], variant)
+    te = Data(c.load_groups([role], root, ds)[role], variant)
     phases = [tk.PHASE_06] if a.split == "obs" else [tk.PHASE_06, tk.PHASE_18]
     fact = roll_loss(model, val_jobs(val_seqs(te, phases, model["norm"])), device)
     out = {"run": a.run, "method": cfg["method"], "dataset": cfg["dataset"], "seed": cfg["seed"], "split": a.split,
            "code_commit": c.git_commit(), "train_code_commit": cfg["code_commit"], "argv": sys.argv,
-           "predictions": preds, "test_fact_roll": fact, "cases_sha256": ef._sha(Path(a.cases)),
+           "role": role, "predictions": preds, "test_fact_roll": fact,
+           "cases_sha256": ef._sha(Path(a.cases)) if a.cases else None,
            "seconds": time.time() - t0}
     if target.exists():
         raise SystemExit(f"{target} exists")
@@ -707,7 +711,8 @@ def main(argv=None) -> int:
     p = sub.add_parser("effects")
     p.add_argument("--run", required=True)
     p.add_argument("--split", required=True, choices=["obs", "v2"])
-    p.add_argument("--cases", required=True, help="obs_base.json (obs) or effects_base.json (v2)")
+    p.add_argument("--cases", default=None, help="obs_base.json (obs) or effects_base.json (v2)")
+    p.add_argument("--role", default="test", choices=["test", "val"])
     for p in sub.choices.values():
         p.add_argument("--root", default=str(c.DEFAULT_ROOT))
         p.add_argument("--device", default="auto")
