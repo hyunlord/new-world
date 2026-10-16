@@ -42,6 +42,8 @@ func _run() -> void:
 	if FileAccess.file_exists(_out.path_join("capture.json")) or FileAccess.file_exists(_out.path_join("capture.png")):
 		_fail("refusing to overwrite capture evidence")
 		return
+	# Renderer oracle metadata is gated by the original P10 capture environment.
+	OS.set_environment("P10_ACTIVITY_OUT", _out)
 	root.size = Vector2i(1920, 1080)
 	var scene: PackedScene = load("res://scenes/main.tscn") as PackedScene
 	_main = scene.instantiate()

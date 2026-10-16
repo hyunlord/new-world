@@ -19,6 +19,16 @@ from run_activity_captures_p11 import bridge_identity, InvalidInput
 
 
 class ProtocolTests(unittest.TestCase):
+    def test_capture_enables_oracle_before_scene_load(self) -> None:
+        root = Path(__file__).resolve().parents[2]
+        source = (root / 'scripts/test/art/capture_activities_p11.gd').read_text()
+        producer = (root / 'scripts/ui/agent_renderer.gd').read_text()
+        bridge = 'OS.set_environment("P10_ACTIVITY_OUT", _out)'
+        self.assertIn('OS.get_environment("P10_ACTIVITY_OUT")', producer)
+        self.assertIn(bridge, source)
+        self.assertLess(source.index('if _out.is_empty()'), source.index(bridge))
+        self.assertLess(source.index(bridge), source.index('load("res://scenes/main.tscn")'))
+
     def test_explicit_debug_and_strict_release_identity(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             checkout = Path(temp)
