@@ -1,0 +1,2268 @@
+{
+  "schema": 1,
+  "reviewer_input": "/Users/rexxa/work/art-production11-evidence/life-review-round1.json",
+  "reviewer_input_sha256": "c5686f5216ba25597ff05ff04e8ef750fba1936d0edf20ee682a5b44fa1680d9",
+  "raw_input": "/Users/rexxa/work/art-production11-evidence/life-attempt2/reference-data.json",
+  "raw_sha256": "d49fcb57338546c7a57bf447a778228e96370d28aabbee75306056b62a770b9f",
+  "scope": "Every direct_visible_statements item retained verbatim; inferences excluded, presentation-only statements explicitly separated from simulation facts. Original reader receives no key.",
+  "source_identity": {
+    "scripts/ui/person_names.gd": {
+      "current_sha256": "545be725432cf09506416752c8b7eed570e752c93e542592135faeaee8b86e8c",
+      "capture_sha256": "545be725432cf09506416752c8b7eed570e752c93e542592135faeaee8b86e8c"
+    },
+    "scripts/ui/art_hash.gd": {
+      "current_sha256": "f8ae78e27ee7bab414a9cb56262fe753b6cd4d4eebbb405564da916dec5b349d",
+      "capture_sha256": "f8ae78e27ee7bab414a9cb56262fe753b6cd4d4eebbb405564da916dec5b349d"
+    }
+  },
+  "method": {
+    "name_mapping": "Python equivalent of double ArtHash.mix +0x2545F491 xor, 46-syllable table, shared EN/KO blocklist, 46-attempt suffix carry; source SHA matches capture.",
+    "day": "floor((event.tick+world_info.clock_offset_ticks)/ticks_per_day)+1; offset480 tpd1440",
+    "age": "floor(event.value/1440) for death age; floor((capturetick-born_tick)/1440) for current age",
+    "event_enum": "Born0 Founder1 Paired2 Adult3 Elder4 Departed5 Widowed10 Died11; deathcause3 OldAge",
+    "script": "/Users/rexxa/work/art-production11-evidence/life/build_comparison.py"
+  },
+  "name_key": {
+    "0": [
+      "Nitiso",
+      "니티소"
+    ],
+    "1": [
+      "Baho",
+      "바호"
+    ],
+    "7": [
+      "Sikino",
+      "시키노"
+    ],
+    "12": [
+      "Dewa",
+      "데와"
+    ],
+    "25": [
+      "Ikimu",
+      "이키무"
+    ],
+    "26": [
+      "Timiga",
+      "티미가"
+    ],
+    "27": [
+      "Mabito",
+      "마비토"
+    ],
+    "28": [
+      "Yubama",
+      "유바마"
+    ],
+    "29": [
+      "Simowa",
+      "시모와"
+    ],
+    "30": [
+      "Wano",
+      "와노"
+    ],
+    "31": [
+      "Gakaho",
+      "가카호"
+    ],
+    "32": [
+      "Tahuku",
+      "타후쿠"
+    ],
+    "35": [
+      "Buyobi",
+      "부요비"
+    ],
+    "36": [
+      "Totosu",
+      "토토수"
+    ],
+    "39": [
+      "Bimuo",
+      "비무오"
+    ],
+    "40": [
+      "Yori",
+      "요리"
+    ],
+    "48": [
+      "Katago",
+      "카타고"
+    ],
+    "49": [
+      "Kohua",
+      "코후아"
+    ],
+    "50": [
+      "Gawa",
+      "가와"
+    ],
+    "53": [
+      "Nuyoe",
+      "누요에"
+    ],
+    "54": [
+      "Ohuti",
+      "오후티"
+    ],
+    "55": [
+      "Demu",
+      "데무"
+    ],
+    "56": [
+      "Haritu",
+      "하리투"
+    ]
+  },
+  "statement_counts": {
+    "PASS": 44,
+    "FAIL": 1,
+    "NOT_VERIFIED": 0
+  },
+  "h8": "FAIL",
+  "h8_reason": "P3-S07 reads 오후디; original raw subject54 maps to 오후티. Every non-inference statement must be correct, so H8 remains FAIL. Seven previously missing raw-state items now independently corroborated; speed text is a UI-setting observation only.",
+  "departures": {
+    "days": [
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90
+    ],
+    "status": "N/A",
+    "reason": "No kind5 Departed rows in31 actual day references60–90; all five cause codes0–4 remain N/A."
+  },
+  "statements": [
+    {
+      "id": "P1-S01",
+      "review_json_pointer": "/pages/0/direct_visible_statements/0",
+      "statement": "An elder aged 58 days in Village 1, at position (23, 18).",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 881,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 1,
+            "female": 0,
+            "found": true,
+            "ha": 261,
+            "mother": 0,
+            "ns": 478,
+            "p": 590,
+            "rd": 320
+          }
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 11,
+          "fields": {
+            "tick": 67140,
+            "kind": 4,
+            "subject": 25,
+            "other": -1,
+            "third": -1,
+            "settlement": -1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 47
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/persons/25/detail",
+          "fields": {
+            "agent_id": 25,
+            "found": true,
+            "hunger": 32.2765769958496,
+            "sleep": 7.20000000000002,
+            "state_tag": 4,
+            "target_kind": 8,
+            "thirst": 40.9119999998701,
+            "x": 23,
+            "y": 18
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_agent_snapshot",
+          "fields": {
+            "parallel_array_index": 27,
+            "agent_id": 25,
+            "ages_days": 58,
+            "life_stages": 2
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_society_snapshot",
+          "fields": {
+            "current_tick": 85079,
+            "fission_cancelled_ticks": [],
+            "fission_daughters": [],
+            "fission_depart_ticks": [],
+            "fission_food_taken": [],
+            "fission_founded_ticks": [],
+            "fission_ids": [],
+            "fission_parents": [],
+            "fission_pressures": [
+              262
+            ],
+            "fission_site_xs": [],
+            "fission_site_ys": [],
+            "fission_sizes": [],
+            "fission_thresholds": [
+              1072
+            ],
+            "founded_ticks": [
+              0
+            ],
+            "founder_agent_ids": [],
+            "founder_fission_ids": [],
+            "founder_leader": "[]",
+            "founder_since_ticks": [],
+            "founder_site_xs": [],
+            "founder_site_ys": [],
+            "home_agent_ids": [
+              25,
+              27,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              53,
+              54,
+              55,
+              56
+            ],
+            "home_settlement_ids": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "member_counts": [
+              29
+            ],
+            "parent_ids": [
+              -1
+            ],
+            "retired_hearth_xs": [],
+            "retired_hearth_ys": [],
+            "settlement_ids": [
+              1
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS: detail x23/y18; agent snapshot age58/stage2(Elder); society home_agent_ids index0=25 maps home_settlement_ids index0=1."
+    },
+    {
+      "id": "P1-S02",
+      "review_json_pointer": "/pages/0/direct_visible_statements/1",
+      "statement": "Resting by the fire; target is Place (23, 18); carrying 0 food.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/persons/25/detail",
+          "fields": {
+            "agent_id": 25,
+            "found": true,
+            "hunger": 32.2765769958496,
+            "sleep": 7.20000000000002,
+            "state_tag": 4,
+            "target_kind": 8,
+            "thirst": 40.9119999998701,
+            "x": 23,
+            "y": 18
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_activity_snapshot",
+          "fields": {
+            "ids": [
+              8589934617,
+              4294967324,
+              12884901896
+            ],
+            "kinds": "[6, 3, 5]",
+            "place_x": [
+              23,
+              22,
+              21
+            ],
+            "place_y": [
+              18,
+              18,
+              17
+            ],
+            "until_tick": [
+              85164,
+              85171,
+              -1
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_agent_snapshot/carried_foods",
+          "fields": {
+            "parallel_array_index": 27,
+            "value": 0
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS: state4 Activity, target8 ActivityPlace; matching entity8589934617 activity index0 kind6 SitByFire, place23/18; carried_foods index27=0."
+    },
+    {
+      "id": "P1-S03",
+      "review_json_pointer": "/pages/0/direct_visible_statements/2",
+      "statement": "Male; spouse Bimuo / 비무오.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 881,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 1,
+            "female": 0,
+            "found": true,
+            "ha": 261,
+            "mother": 0,
+            "ns": 478,
+            "p": 590,
+            "rd": 320
+          }
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 10,
+          "fields": {
+            "tick": 66960,
+            "kind": 2,
+            "subject": 39,
+            "other": 25,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 47
+        }
+      ],
+      "assessment": "female=0; latest Paired other participant39=Bimuo/비무오; no subsequent pair/loss/death39 in world history through capture tick."
+    },
+    {
+      "id": "P1-S04",
+      "review_json_pointer": "/pages/0/direct_visible_statements/3",
+      "statement": "Mother Nitiso / 니티소 is deceased (fully readable in Korean; English status is ellipsized).",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 881,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 1,
+            "female": 0,
+            "found": true,
+            "ha": 261,
+            "mother": 0,
+            "ns": 478,
+            "p": 590,
+            "rd": 320
+          }
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/person",
+          "fields": {
+            "alive": false,
+            "born_tick": -50047,
+            "death_reason": 3,
+            "died_tick": 31800,
+            "father": -1,
+            "female": 0,
+            "found": true,
+            "ha": 428,
+            "mother": -1,
+            "ns": 261,
+            "p": 565,
+            "rd": 645
+          }
+        }
+      ],
+      "assessment": "mother0=Nitiso/니티소; alive=false. English ellipsis remains a visual finding."
+    },
+    {
+      "id": "P1-S05",
+      "review_json_pointer": "/pages/0/direct_visible_statements/4",
+      "statement": "Father Baho / 바호 is deceased.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 881,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 1,
+            "female": 0,
+            "found": true,
+            "ha": 261,
+            "mother": 0,
+            "ns": 478,
+            "p": 590,
+            "rd": 320
+          }
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 135,
+          "fields": {
+            "tick": 55740,
+            "kind": 11,
+            "subject": 1,
+            "other": -1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 3,
+            "value": 80593
+          },
+          "derived_day": 40
+        }
+      ],
+      "assessment": "father1=Baho/바호; died at55740 before85080."
+    },
+    {
+      "id": "P1-S06",
+      "review_json_pointer": "/pages/0/direct_visible_statements/5",
+      "statement": "Three children: Totosu / 토토수, Yori / 요리, Gawa / 가와.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 6,
+          "fields": {
+            "tick": 42481,
+            "kind": 0,
+            "subject": 36,
+            "other": 12,
+            "third": 25,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 30
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 7,
+          "fields": {
+            "tick": 45361,
+            "kind": 0,
+            "subject": 40,
+            "other": 12,
+            "third": 25,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 32
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 12,
+          "fields": {
+            "tick": 68833,
+            "kind": 0,
+            "subject": 50,
+            "other": 39,
+            "third": 25,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 49
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/persons/25/family",
+          "fields": {
+            "children": [
+              36,
+              40,
+              50
+            ],
+            "father": 1,
+            "female": false,
+            "found": true,
+            "mother": 0,
+            "partner": 39
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/persons/36/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 42481,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 25,
+            "female": 0,
+            "found": true,
+            "ha": 560,
+            "mother": 12,
+            "ns": 465,
+            "p": 413,
+            "rd": 680
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/persons/40/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 45361,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 25,
+            "female": 1,
+            "found": true,
+            "ha": 651,
+            "mother": 12,
+            "ns": 351,
+            "p": 426,
+            "rd": 469
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/persons/50/person",
+          "fields": {
+            "alive": true,
+            "born_tick": 68833,
+            "death_reason": -1,
+            "died_tick": -1,
+            "father": 25,
+            "female": 1,
+            "found": true,
+            "ha": 698,
+            "mother": 39,
+            "ns": 509,
+            "p": 803,
+            "rd": 92
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS: family children exactly36,40,50; all alive=true and names Totosu/Yori/Gawa."
+    },
+    {
+      "id": "P1-S07",
+      "review_json_pointer": "/pages/0/direct_visible_statements/6",
+      "statement": "Day 1: born in Village 1; parents Nitiso and Baho, with explicit qualification that these are parents by the village's reckoning / 마을이 정한 부모.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 0,
+          "fields": {
+            "tick": 881,
+            "kind": 0,
+            "subject": 25,
+            "other": 0,
+            "third": 1,
+            "settlement": 1,
+            "cause": 1,
+            "value": 0
+          },
+          "derived_day": 1
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S08",
+      "review_json_pointer": "/pages/0/direct_visible_statements/7",
+      "statement": "Day 5: came of age.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 1,
+          "fields": {
+            "tick": 6660,
+            "kind": 3,
+            "subject": 25,
+            "other": -1,
+            "third": -1,
+            "settlement": -1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 5
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S09",
+      "review_json_pointer": "/pages/0/direct_visible_statements/8",
+      "statement": "Day 6: became partners with Sikino / 시키노.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 2,
+          "fields": {
+            "tick": 7920,
+            "kind": 2,
+            "subject": 7,
+            "other": 25,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 6
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S10",
+      "review_json_pointer": "/pages/0/direct_visible_statements/9",
+      "statement": "Day 30: lost partner Sikino.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 4,
+          "fields": {
+            "tick": 41340,
+            "kind": 10,
+            "subject": 25,
+            "other": 7,
+            "third": -1,
+            "settlement": -1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 30
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S11",
+      "review_json_pointer": "/pages/0/direct_visible_statements/10",
+      "statement": "Day 30: became partners with Dewa / 데와.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 5,
+          "fields": {
+            "tick": 42480,
+            "kind": 2,
+            "subject": 12,
+            "other": 25,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 300
+          },
+          "derived_day": 30
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S12",
+      "review_json_pointer": "/pages/0/direct_visible_statements/11",
+      "statement": "Day 30: child Totosu was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 6,
+          "fields": {
+            "tick": 42481,
+            "kind": 0,
+            "subject": 36,
+            "other": 12,
+            "third": 25,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 30
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S13",
+      "review_json_pointer": "/pages/0/direct_visible_statements/12",
+      "statement": "Day 32: child Yori was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 7,
+          "fields": {
+            "tick": 45361,
+            "kind": 0,
+            "subject": 40,
+            "other": 12,
+            "third": 25,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 32
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S14",
+      "review_json_pointer": "/pages/0/direct_visible_statements/13",
+      "statement": "Day 47: lost partner Dewa.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 9,
+          "fields": {
+            "tick": 66000,
+            "kind": 10,
+            "subject": 25,
+            "other": 12,
+            "third": -1,
+            "settlement": -1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 47
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S15",
+      "review_json_pointer": "/pages/0/direct_visible_statements/14",
+      "statement": "Day 47: became partners with Bimuo.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 10,
+          "fields": {
+            "tick": 66960,
+            "kind": 2,
+            "subject": 39,
+            "other": 25,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 47
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S16",
+      "review_json_pointer": "/pages/0/direct_visible_statements/15",
+      "statement": "Day 47: became an elder.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 11,
+          "fields": {
+            "tick": 67140,
+            "kind": 4,
+            "subject": 25,
+            "other": -1,
+            "third": -1,
+            "settlement": -1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 47
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S17",
+      "review_json_pointer": "/pages/0/direct_visible_statements/16",
+      "statement": "Day 49: child Gawa was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/living_dead_parent/chronicle",
+          "parallel_array_index": 12,
+          "fields": {
+            "tick": 68833,
+            "kind": 0,
+            "subject": 50,
+            "other": 39,
+            "third": 25,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 49
+        }
+      ],
+      "assessment": "Event kind, participant roles, settlement where stated and derived day agree; deterministic names verified. Village-parent qualifier is a visible localized qualification, not a biological assertion."
+    },
+    {
+      "id": "P1-S18",
+      "review_json_pointer": "/pages/0/direct_visible_statements/17",
+      "statement": "Temperament labels: Curiosity, Caution, Warmth, Persistence; shown as bars without numeric values.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "living_dead_parent_en_top.png",
+          "basis": "screen-only presentation observation"
+        }
+      ],
+      "assessment": "Labels/bars without numbers are presentation observations; no temperament numeric value asserted."
+    },
+    {
+      "id": "P2-S01",
+      "review_json_pointer": "/pages/1/direct_visible_statements/0",
+      "statement": "Deceased; a founder; died on day 23; cause of death old age / 노환.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/person",
+          "fields": {
+            "alive": false,
+            "born_tick": -50047,
+            "death_reason": 3,
+            "died_tick": 31800,
+            "father": -1,
+            "female": 0,
+            "found": true,
+            "ha": 428,
+            "mother": -1,
+            "ns": 261,
+            "p": 565,
+            "rd": 645
+          }
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 0,
+          "fields": {
+            "tick": 0,
+            "kind": 1,
+            "subject": 0,
+            "other": -1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 1
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 8,
+          "fields": {
+            "tick": 31800,
+            "kind": 11,
+            "subject": 0,
+            "other": 1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 3,
+            "value": 81847
+          },
+          "derived_day": 23
+        }
+      ],
+      "assessment": "alive=false, founderkind1, died31800=>day23, cause3=old age."
+    },
+    {
+      "id": "P2-S02",
+      "review_json_pointer": "/pages/1/direct_visible_statements/1",
+      "statement": "Male; spouse Baho / 바호 is deceased.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/person",
+          "fields": {
+            "alive": false,
+            "born_tick": -50047,
+            "death_reason": 3,
+            "died_tick": 31800,
+            "father": -1,
+            "female": 0,
+            "found": true,
+            "ha": 428,
+            "mother": -1,
+            "ns": 261,
+            "p": 565,
+            "rd": 645
+          }
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 5,
+          "fields": {
+            "tick": 5040,
+            "kind": 2,
+            "subject": 1,
+            "other": 0,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 4
+        },
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 135,
+          "fields": {
+            "tick": 55740,
+            "kind": 11,
+            "subject": 1,
+            "other": -1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 3,
+            "value": 80593
+          },
+          "derived_day": 40
+        }
+      ],
+      "assessment": "female0; paired0+1; Baho death precedes capture."
+    },
+    {
+      "id": "P2-S03",
+      "review_json_pointer": "/pages/1/direct_visible_statements/2",
+      "statement": "Mother: None; Father: None.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/person",
+          "fields": {
+            "alive": false,
+            "born_tick": -50047,
+            "death_reason": 3,
+            "died_tick": 31800,
+            "father": -1,
+            "female": 0,
+            "found": true,
+            "ha": 428,
+            "mother": -1,
+            "ns": 261,
+            "p": 565,
+            "rd": 645
+          }
+        }
+      ],
+      "assessment": "mother=-1 and father=-1."
+    },
+    {
+      "id": "P2-S04",
+      "review_json_pointer": "/pages/1/direct_visible_statements/3",
+      "statement": "Day 1: one of the founders of Village 1.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 0,
+          "fields": {
+            "tick": 0,
+            "kind": 1,
+            "subject": 0,
+            "other": -1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 1
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S05",
+      "review_json_pointer": "/pages/1/direct_visible_statements/4",
+      "statement": "Day 1: child Ikimu was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 1,
+          "fields": {
+            "tick": 881,
+            "kind": 0,
+            "subject": 25,
+            "other": 0,
+            "third": 1,
+            "settlement": 1,
+            "cause": 1,
+            "value": 0
+          },
+          "derived_day": 1
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S06",
+      "review_json_pointer": "/pages/1/direct_visible_statements/5",
+      "statement": "Day 2: child Timiga / 티미가 was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 2,
+          "fields": {
+            "tick": 1601,
+            "kind": 0,
+            "subject": 26,
+            "other": 0,
+            "third": 1,
+            "settlement": 1,
+            "cause": 1,
+            "value": 0
+          },
+          "derived_day": 2
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S07",
+      "review_json_pointer": "/pages/1/direct_visible_statements/6",
+      "statement": "Day 2: child Mabito / 마비토 was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 3,
+          "fields": {
+            "tick": 2321,
+            "kind": 0,
+            "subject": 27,
+            "other": 0,
+            "third": 1,
+            "settlement": 1,
+            "cause": 1,
+            "value": 0
+          },
+          "derived_day": 2
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S08",
+      "review_json_pointer": "/pages/1/direct_visible_statements/7",
+      "statement": "Day 3: child Yubama / 유바마 was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 4,
+          "fields": {
+            "tick": 3191,
+            "kind": 0,
+            "subject": 28,
+            "other": 0,
+            "third": 1,
+            "settlement": 1,
+            "cause": 1,
+            "value": 0
+          },
+          "derived_day": 3
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S09",
+      "review_json_pointer": "/pages/1/direct_visible_statements/8",
+      "statement": "Day 4: became partners with Baho.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 5,
+          "fields": {
+            "tick": 5040,
+            "kind": 2,
+            "subject": 1,
+            "other": 0,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 4
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S10",
+      "review_json_pointer": "/pages/1/direct_visible_statements/9",
+      "statement": "Day 12: became an elder.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 6,
+          "fields": {
+            "tick": 16200,
+            "kind": 4,
+            "subject": 0,
+            "other": -1,
+            "third": -1,
+            "settlement": -1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 12
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S11",
+      "review_json_pointer": "/pages/1/direct_visible_statements/10",
+      "statement": "Day 18: child Simowa / 시모와 was born.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 7,
+          "fields": {
+            "tick": 25201,
+            "kind": 0,
+            "subject": 29,
+            "other": 1,
+            "third": 0,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 18
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S12",
+      "review_json_pointer": "/pages/1/direct_visible_statements/11",
+      "statement": "Day 23: died aged 56 days of old age.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/captures/dead_parent/chronicle",
+          "parallel_array_index": 8,
+          "fields": {
+            "tick": 31800,
+            "kind": 11,
+            "subject": 0,
+            "other": 1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 3,
+            "value": 81847
+          },
+          "derived_day": 23
+        }
+      ],
+      "assessment": "Event roles/day/name agree; death age floor(81847/1440)=56 and cause3 where asserted."
+    },
+    {
+      "id": "P2-S13",
+      "review_json_pointer": "/pages/1/direct_visible_statements/12",
+      "statement": "Temperament labels: Curiosity, Caution, Warmth, Persistence; shown as bars without numeric values.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "dead_parent_en_top.png",
+          "basis": "screen-only presentation observation"
+        }
+      ],
+      "assessment": "Labels/bars presentation only; no numerical temperament claim."
+    },
+    {
+      "id": "P3-S01",
+      "review_json_pointer": "/pages/2/direct_visible_statements/0",
+      "statement": "Day 59: Katago / 카타고 became partners with Kohua / 코후아.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 184,
+          "fields": {
+            "tick": 84240,
+            "kind": 2,
+            "subject": 48,
+            "other": 49,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 59
+        }
+      ],
+      "assessment": "Event participants, deterministic names, day and settlement agree; death age floor(value/1440) and cause3=OldAge agree where asserted."
+    },
+    {
+      "id": "P3-S02",
+      "review_json_pointer": "/pages/2/direct_visible_statements/1",
+      "statement": "Day 58: Simowa / 시모와 became partners with Nuyoe / 누요에.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 183,
+          "fields": {
+            "tick": 82800,
+            "kind": 2,
+            "subject": 29,
+            "other": 53,
+            "third": -1,
+            "settlement": 1,
+            "cause": 0,
+            "value": 200
+          },
+          "derived_day": 58
+        }
+      ],
+      "assessment": "Event participants, deterministic names, day and settlement agree; death age floor(value/1440) and cause3=OldAge agree where asserted."
+    },
+    {
+      "id": "P3-S03",
+      "review_json_pointer": "/pages/2/direct_visible_statements/2",
+      "statement": "Day 58: Haritu / 하리투 was born in Village 1; parents Buyobi / 부요비 and Totosu / 토토수.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 182,
+          "fields": {
+            "tick": 82381,
+            "kind": 0,
+            "subject": 56,
+            "other": 35,
+            "third": 36,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 58
+        }
+      ],
+      "assessment": "Event participants, deterministic names, day and settlement agree; death age floor(value/1440) and cause3=OldAge agree where asserted."
+    },
+    {
+      "id": "P3-S04",
+      "review_json_pointer": "/pages/2/direct_visible_statements/3",
+      "statement": "Day 58: Yubama / 유바마 died aged 54 days of old age.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 180,
+          "fields": {
+            "tick": 82380,
+            "kind": 11,
+            "subject": 28,
+            "other": 32,
+            "third": -1,
+            "settlement": 1,
+            "cause": 3,
+            "value": 79189
+          },
+          "derived_day": 58
+        }
+      ],
+      "assessment": "Event participants, deterministic names, day and settlement agree; death age floor(value/1440) and cause3=OldAge agree where asserted."
+    },
+    {
+      "id": "P3-S05",
+      "review_json_pointer": "/pages/2/direct_visible_statements/4",
+      "statement": "Day 57: Demu / 데무 was born in Village 1; parents Tahuku / 타후쿠 and Yubama / 유바마.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 178,
+          "fields": {
+            "tick": 81301,
+            "kind": 0,
+            "subject": 55,
+            "other": 32,
+            "third": 28,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 57
+        }
+      ],
+      "assessment": "Event participants, deterministic names, day and settlement agree; death age floor(value/1440) and cause3=OldAge agree where asserted."
+    },
+    {
+      "id": "P3-S06",
+      "review_json_pointer": "/pages/2/direct_visible_statements/5",
+      "statement": "Day 57: Timiga / 티미가 died aged 55 days of old age (complete in Korean; English bottom entry clipped).",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 177,
+          "fields": {
+            "tick": 81300,
+            "kind": 11,
+            "subject": 26,
+            "other": -1,
+            "third": -1,
+            "settlement": 1,
+            "cause": 3,
+            "value": 79699
+          },
+          "derived_day": 57
+        }
+      ],
+      "assessment": "Event participants, deterministic names, day and settlement agree; death age floor(value/1440) and cause3=OldAge agree where asserted."
+    },
+    {
+      "id": "P3-S07",
+      "review_json_pointer": "/pages/2/direct_visible_statements/6",
+      "statement": "A further Korean day-57 birth entry for 오후디 in Village 1 is partially visible; its parent line is incomplete and is not reconstructed.",
+      "status": "FAIL",
+      "evidence": [
+        {
+          "file": "reference-data.json",
+          "json_pointer": "/reference_days/0/chronicle_pages/0",
+          "parallel_array_index": 176,
+          "fields": {
+            "tick": 80401,
+            "kind": 0,
+            "subject": 54,
+            "other": 31,
+            "third": 30,
+            "settlement": 1,
+            "cause": 0,
+            "value": 0
+          },
+          "derived_day": 57
+        }
+      ],
+      "assessment": "FAIL: world event index176 subject54 maps to Ohuti/오후티, but frozen reviewer wrote 오후디. Day57 and Village1 agree. Clipped parent names are not reconstructed."
+    },
+    {
+      "id": "P4-S01",
+      "review_json_pointer": "/pages/3/direct_visible_statements/0",
+      "statement": "Day 60, 10:00, daytime, spring day 4.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "living_dead_parent_en_top.json",
+          "json_pointer": "/clock",
+          "fields": {
+            "day_index": 59,
+            "day_of_season": 4,
+            "days_per_season": 7,
+            "season": 0,
+            "tick": 85080,
+            "ticks_per_day": 1440,
+            "time_of_day": 10.0,
+            "winter_severity": -1
+          }
+        }
+      ],
+      "assessment": "day_index59=>Day60; time10; season0=spring; day_of_season4. Daytime at10 corroborated."
+    },
+    {
+      "id": "P4-S02",
+      "review_json_pointer": "/pages/3/direct_visible_statements/1",
+      "statement": "Population 29; shelter 4; under construction 0.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_agent_snapshot/ids",
+          "fields": [
+            8589934619,
+            8589934621,
+            8589934596,
+            8589934598,
+            8589934605,
+            8589934612,
+            8589934604,
+            8589934608,
+            8589934599,
+            8589934616,
+            8589934610,
+            8589934594,
+            8589934593,
+            8589934602,
+            8589934609,
+            8589934597,
+            8589934592,
+            8589934611,
+            8589934603,
+            8589934606,
+            8589934607,
+            8589934615,
+            8589934613,
+            8589934601,
+            8589934595,
+            8589934614,
+            12884901896,
+            8589934617,
+            4294967324
+          ],
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_building_snapshot",
+          "fields": {
+            "ids": [
+              0,
+              7,
+              14,
+              21,
+              28,
+              75
+            ],
+            "kinds": "[0, 1, 1, 1, 2, 1]",
+            "xs": [
+              22,
+              20,
+              24,
+              22,
+              24,
+              21
+            ],
+            "ys": [
+              20,
+              19,
+              19,
+              22,
+              22,
+              18
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_construction_snapshot",
+          "fields": {
+            "ids": [],
+            "progresses": [],
+            "required_progresses": [],
+            "xs": [],
+            "ys": []
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS:29 live entities; four building kind1 shelters; zero construction IDs."
+    },
+    {
+      "id": "P4-S03",
+      "review_json_pointer": "/pages/3/direct_visible_statements/2",
+      "statement": "Food 174; firewood 20; cold 0; berries 48; births 32; deaths 28; speed 1.0x.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_settlement_snapshot",
+          "fields": {
+            "centroid_xs": [
+              21
+            ],
+            "centroid_ys": [
+              23
+            ],
+            "fire_lit": "[0]",
+            "food_stocks": [
+              174
+            ],
+            "formation_xs": [
+              22
+            ],
+            "formation_ys": [
+              20
+            ],
+            "ids": [
+              1
+            ],
+            "member_counts": [
+              29
+            ],
+            "settlement_ids": [
+              1
+            ],
+            "wood_stocks": [
+              20
+            ],
+            "wood_targets": [
+              39
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_agent_snapshot/colds",
+          "fields": "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]",
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_tallies",
+          "fields": {
+            "area_floor_placed": 0,
+            "births": 32,
+            "cold_member_hours": 927,
+            "deaths_combat": 0,
+            "deaths_dehydration": 0,
+            "deaths_exposure": 1,
+            "deaths_old_age": 27,
+            "deaths_starvation": 0,
+            "fissions": 0,
+            "fissions_cancelled": 0,
+            "gather_preempted": 2,
+            "ground_meals": 197,
+            "meals_from_store": 3788,
+            "remnant_merges": 0,
+            "wet_burn_wood": 0,
+            "wood_gathered": 1492,
+            "wood_trips": 874
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_resource_snapshot",
+          "fields": {
+            "kinds": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "amounts": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              0,
+              0,
+              0,
+              0,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              255,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              3,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              4,
+              6,
+              6,
+              6,
+              6,
+              6,
+              4,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS for raw quantities: food174,wood20,cold0,berries48(sum kind0 amounts<255),births32,deaths28(sum five death counters). Speed1.0x is solely the visible UI setting, not evidence of running at1x: HUD _display_speed defaults1.0 while capture/replay deliberately disable simulation processing. No runtime speed claim verified."
+    },
+    {
+      "id": "P4-S04",
+      "review_json_pointer": "/pages/3/direct_visible_statements/3",
+      "statement": "Map label Village 1 (29).",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_settlement_snapshot",
+          "fields": {
+            "centroid_xs": [
+              21
+            ],
+            "centroid_ys": [
+              23
+            ],
+            "fire_lit": "[0]",
+            "food_stocks": [
+              174
+            ],
+            "formation_xs": [
+              22
+            ],
+            "formation_ys": [
+              20
+            ],
+            "ids": [
+              1
+            ],
+            "member_counts": [
+              29
+            ],
+            "settlement_ids": [
+              1
+            ],
+            "wood_stocks": [
+              20
+            ],
+            "wood_targets": [
+              39
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS: settlement_ids[0]=1,member_counts[0]=29."
+    },
+    {
+      "id": "P4-S05",
+      "review_json_pointer": "/pages/3/direct_visible_statements/4",
+      "statement": "Village news panel is empty in these captures.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "living_dead_parent_en_top.png",
+          "basis": "screen-only presentation observation"
+        }
+      ],
+      "assessment": "Empty panel is a visible observation, not a claim no historical village news exists."
+    },
+    {
+      "id": "P4-S06",
+      "review_json_pointer": "/pages/3/direct_visible_statements/5",
+      "statement": "God's hand for Village 1 offers Gift food, Spoil food, Gift wood, Rot wood, Rain, Cold snap, Windfall, Recent acts; Korean captures show translated controls.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "living_dead_parent_en_top.png",
+          "basis": "screen-only presentation observation"
+        },
+        {
+          "file": "dead_parent_ko_top.png",
+          "basis": "screen-only presentation observation"
+        }
+      ],
+      "assessment": "Control labels/translations are presentation-only; no intervention execution or effect claimed."
+    },
+    {
+      "id": "P4-S07",
+      "review_json_pointer": "/pages/3/direct_visible_statements/6",
+      "statement": "Small resource map label reads 식량 174 장작 20/39, including in English captures.",
+      "status": "PASS",
+      "evidence": [
+        {
+          "file": "living_dead_parent_en_top.png",
+          "basis": "locale-mixing observation only"
+        },
+        {
+          "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+          "json_pointer": "/snapshots/get_settlement_snapshot",
+          "fields": {
+            "centroid_xs": [
+              21
+            ],
+            "centroid_ys": [
+              23
+            ],
+            "fire_lit": "[0]",
+            "food_stocks": [
+              174
+            ],
+            "formation_xs": [
+              22
+            ],
+            "formation_ys": [
+              20
+            ],
+            "ids": [
+              1
+            ],
+            "member_counts": [
+              29
+            ],
+            "settlement_ids": [
+              1
+            ],
+            "wood_stocks": [
+              20
+            ],
+            "wood_targets": [
+              39
+            ]
+          },
+          "basis": "independent deterministic replay, same bridge/seed/tick"
+        }
+      ],
+      "assessment": "PASS: food_stocks[0]=174,wood_stocks[0]=20,wood_targets[0]=39; Korean text in English remains a screenshot-observed localization defect."
+    }
+  ],
+  "excluded_inferences": [
+    {
+      "page": 1,
+      "statements": [
+        "Ikimu appears alive at the captured moment because a current activity, needs, position, and target are displayed.",
+        "The village-parent qualifier suggests social attribution rather than proof of biological parentage.",
+        "The recorded partnerships imply a sequence Sikino, Dewa, Bimuo; the reason for partner loss is not stated in these entries."
+      ]
+    },
+    {
+      "page": 2,
+      "statements": [
+        "The deceased person's biography remains available after death.",
+        "The screenshots explicitly label Nitiso male while Ikimu's family labels Nitiso mother; the village-parent qualification may explain this, but biological parentage cannot be concluded."
+      ]
+    },
+    {
+      "page": 3,
+      "statements": [
+        "Chronicle entries appear in reverse day order.",
+        "Underlined person and village names look interactive, but interaction behavior was not tested."
+      ]
+    },
+    {
+      "page": 4,
+      "statements": []
+    }
+  ],
+  "visual_findings_retained": {
+    "raw_localization_keys": [],
+    "unfilled_percent_placeholders": [],
+    "clipping_or_readability": [
+      "living_dead_parent_en_scroll_556.png: mother status ends in an ellipsis, approximately 'Mother: Nitiso · Deceas…'; full deceased label is unavailable in that row.",
+      "Several scroll captures cut text at the upper/lower viewport edge. Overlapping captures recover the complete personal histories; chronicle bottom entries remain incomplete.",
+      "Korean life-event links wrap names across character boundaries, such as 토/토수, 요/리, 가/와 and 이키/무. Readable across lines but less easy to scan.",
+      "The English chronicle displays fewer complete entries than Korean because its lines wrap more.",
+      "No unreadable full central text block observed; map resource text is small but legible at supplied image resolution."
+    ],
+    "locale_mixing": [
+      "English screenshots retain Korean resource-map labels 식량 and 장작."
+    ]
+  },
+  "limitations": [
+    "Replay ran separately under Part2 UI; original source/bridge provenance remains preserved. Replay lacks its own run-HEAD stamp.",
+    "PASS for presentation means visible wording/layout only, not interaction or runtime behavior; speed1.0x is a UI setting, not active simulation speed.",
+    "Original clipping/wrapping and English Korean labels remain; independent misread 오후디 is not corrected in the frozen review."
+  ],
+  "replay_provenance": {
+    "file": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.json",
+    "sha256": "8544b71bc94beaaa04829c2d2b0faab94145e12760f5af0d6a0b8e63d5a18cd4",
+    "script": "/Users/rexxa/work/art-production11-evidence/life/raw-life-replay.gd",
+    "script_sha256": "af33881fab2060da6a9db02895145876935c827047720ce8ab2de59d83278f47",
+    "bridge_sha256": "aa6da070ff17861f8dc21d8f6203643dec3d8c44a8d94b90525c388eb89cdd8a",
+    "bridge_matches_original": true,
+    "seed": 20261010,
+    "tick": 85080,
+    "original_capture_head": "327239189218223c0564bd9389c0d7fa7339a935",
+    "original_scene": "game_v24",
+    "replay_ui_phase": "Part2 UI; replay is supplementary raw simulation evidence, not replacement of original PNG source identity",
+    "checkout_head_observed_after_replay": "94cc19609f27af7cda20e7f67ba38ded5354cfed",
+    "head_limit": "Replay JSON does not itself serialize HEAD or source manifest; after-run checkout HEAD is contextual, not an independently stamped run HEAD. Same bridge hash and exact person+chronicle equality for0/25 establish simulation comparison basis.",
+    "original_person_and_chronicle_equal_for_ids": [
+      0,
+      25
+    ],
+    "packed_byte_arrays": "Godot JSON.stringify encoded PackedByteArray as bracket strings; parsed with json.loads for indexing/counting; original retained."
+  }
+}
