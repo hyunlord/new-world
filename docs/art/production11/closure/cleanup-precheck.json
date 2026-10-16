@@ -1,0 +1,7 @@
+{
+  "verified_utc": "2026-10-16T19:54:06.869691+00:00",
+  "base_changes_exactly_manifest": true,
+  "all_saved_source_sha_match": true,
+  "measure_clean": true,
+  "caffeinate": "No surviving task-owned 12:20 process found after interruption; preexisting07:51 process and foreign short-lived process left untouched."
+}

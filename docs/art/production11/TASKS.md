@@ -43,3 +43,5 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 - 2026-10-16T17:11Z: Turn interruption terminated W500 attempt1 while waiting (no hold or measurement); preserved empty log and explicit interrupted receipt, no invented exit status. Confirmed old runner absent and removed only its empty runner mutex. Resumed matrix from valid W0; next W500 attempt2, original deadline unchanged.
 
 - 2026-10-16T19:50Z: Original12h admission cutoff reached. Four after worlds accepted; W500 interrupted waitattempt1 retained, attempt2valid. After sectionattemptneveracquiredhold,exit124/driver1/noframes:NOT_MEASURED. No further performance attempts. Fullgate started19:50:19Z at519d3916; frozenmeasurementHEAD5ee5e1ee unchanged.
+
+- 2026-10-16T20:15:01Z: Part5 full gate1 completed88/88 exit0 at unchanged519d3916; all logs scanned, no SCRIPT ERROR/ERROR/FAILED/Traceback. Part4 evidence published382d9c3e. Owned base/measure worktrees removed after exact saved-source verification; foreign worktree/processes and user ignore edits preserved. Final report/publication remains.
