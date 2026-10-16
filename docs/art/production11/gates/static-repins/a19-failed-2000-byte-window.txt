@@ -1,0 +1,42 @@
+func display_agent(detail: Dictionary) -> void:
+	if not bool(detail.get("found", false)):
+		return
+	var agent_id: int = int(detail.get("agent_id", 0))
+	var x: int = int(detail.get("x", 0))
+	var y: int = int(detail.get("y", 0))
+	var state_tag: int = int(detail.get("state_tag", 0))
+	var target_kind: int = int(detail.get("target_kind", 0))
+	var hunger: float = float(detail.get("hunger", 0.0))
+	var thirst: float = float(detail.get("thirst", 0.0))
+	var sleep_val: float = float(detail.get("sleep", 0.0))
+	_person_cache.sync(_world_sim)
+	var previous_selection: int = _selected_entity_bits
+	if _selected_person != agent_id:
+		_formatted_person = -1
+		_life_expanded = false
+	_selected_person = agent_id
+	_record_mode = false
+	_set_live_visible(true)
+	_selected_entity_bits = _resolve_entity_bits(agent_id)
+	if previous_selection != _selected_entity_bits:
+		_scroll.scroll_vertical = 0
+	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.display_name(agent_id, Chronicle.language(_locale)), agent_id]
+	var home: int = SettlementSelection.home_for_agent(agent_id)
+	_village_label.visible = home >= 0
+	_village_label.text = SettlementSelection.name_for(home, _locale) if home >= 0 else ""
+	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
+	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
+	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
+	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _target_text(target_kind, activity)
+	_hunger_bar.value = hunger
+	_thirst_bar.value = thirst
+	_sleep_bar.value = sleep_val
+	
+	_bar_headers[0].text = _loc("UI_HUNGER")
+	_bar_headers[1].text = _loc("NEED_THIRST")
+	_bar_headers[2].text = _loc("NEED_SLEEP")
+	_label_age.text = _age_line(agent_id)
+	_label_age.visible = not _label_age.text.is_empty()
+	_update_portrait(agent_id)
+	var carried_wood: int = _carried_amount(agent_id, "carried_woods")
+	_carried_label.text = (_loc("INSPECTOR_CARRYING_WOOD_FMT") % carried_wood) if carrie

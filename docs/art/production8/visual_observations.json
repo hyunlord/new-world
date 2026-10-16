@@ -1,0 +1,1660 @@
+{
+  "sources": [
+    {
+      "path": "docs/art/production8/review/originals/observer-a-hud-art.json",
+      "sha256": "b94a65b90f2e1aedbc73284ccded301d2325518a24a6beb12e93e93a47b7461d"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-b-hud-art.json",
+      "sha256": "0a2a2dc7c4dff6346099d619dbc782bafc1f0e889cdf7e5c9a15187083f5c9b2"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "sha256": "28dad1e0d2cd42c2810d99a0f147db26256c4291aa5b845dabe9cdf347b6d745",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-a/long-objects.json"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "sha256": "06d0b27c52d0bfb72b6fb5cda5d6d3e71d00c845ab95716796f4b25083f0b232",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-b/long-objects.json"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "sha256": "a356e2d1eb3d27cb1befdcd230bb7ba6e2455f32316fe8c1bb5ed4fcc1aa0da6",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-a/god-live-objects.json"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "sha256": "54947fe9f50bdab10ca09c4713df673861c6c3b5c03d9241970c606574daf01a",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-b/god-live-objects.json"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-a-god-society-objects.json",
+      "sha256": "9aa9c4d071f65faee91fbb7456589913fa4709195bd0221dd088cd1173681e3b",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-a/god-society-objects.json"
+    }
+  ],
+  "frames": {
+    "a_d1_0830_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "e85d18e83a3bd26109cd7d9757fc8281d55b8eab52a385639ccd075ee49640cf",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1200_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "99e40225f2c065bc836d332e47d929213257901ab6c026638521342aee6c6f5f",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1200_F2A": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "eccc994a20733b3e51edd325b7e163626f3b8347a69051299b2028cb49869d51",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1200_F2Z": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "e3d2063e0581c931626fa33774551b64790a29f03868be6f510ee33db48bc5c2",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1200_F3": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "cc0add443d3a50c58db82bf2ae93e92ea5dab4ba22c52440667a7d71a1eaf8b4",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1200_F4": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "3fcfe457bd7181cf967cc591c672fcc58a0df9747de92cfd6a80ad434451e390",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1200_F1": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "2e4fe452d3ce83f0822a435431ca9f86bbf13329a67ebd5fa83576ee937a62d3",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_00": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a8c710ba52f31a96f214e54a088c8899ee9cae7a056ad2d43f44934a6d28c4af",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_01": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a1a796225543f16bd3303066a52d2436072739293cd9da67afe14b3250b9c10f",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_02": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "c63b710290ecf2ab13711265640aee3ba4be77f1d39e8ca190a3ac61ed3c08d5",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_03": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "bd12aa8792a19ec9aebfb46c4f02c5cdd41944cfae5ce0a00e7c9af94495188c",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_04": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "87ee53cfc99e3dc263dd2840107948109e5353539076f824aa0a72ec569420c6",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_05": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "533ca77fd33d74d27eff7420e38082ae6fffad8753c326868084bbf7cf5ab189",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_06": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a35503e467371298d14587506ba10699bcea13ac2b3a41a3b25957ceb3103baf",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_07": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "de7f9ef62c05e908bb1b9a049dfe98493f4d4be1c3e91fb4e3f185a775dbf9ec",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_08": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "6b4961c9f1f9b55946224a61bc8d6d4440d9ad31ff9f39a2afb0317798cf1f17",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_09": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "0039f41e1b0fe34725b7ca10a452f583dc7b5a61125574b726302cd3b256de39",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_10": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "e6c0a45e5ad9474e0d66fd8644d44627f531d3b79b424d3f5678a003674f2707",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_11": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "8980d9e2568dcc96dcbba1f5305242599695b88a0c291cf97ac5ca8fac5ec4bb",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_12": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "7f8ec7553ec5daf54826b1835ccb19c4e25e3f40e746cd684bea068a6bea63cf",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_13": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "f462e483c38c9714aeecabaa3cf3be1e28fe76fab4e1294dff8499d722fef46b",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_14": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "f435b507231895faf27c6d2393ffbae33f842bd64854a7bdbd6b1a3055d24d22",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_15": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "ed6e07bb393f69537e2fd12c9bd73bbc7339e1c72cb29211318d1a9c01572ff5",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_16": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "d62e5af65845915b83e21b37f6ee49848ed33addb7c09cc6c1a6ff82bc72b52d",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_17": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "b47dfb819f9c7e647250268352c683caaa22ec604b477dd336e152f070c2adbc",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_18": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "33827eb9d259ee451860cebe83c0b9d50098189637a87b2f49ac4365c456152f",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_19": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "881635755ef2805046a4611f243f86e0f83595806c8f76e863e6935c77502026",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_20": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "e7dfb38e276fa36c329650c0b9c47b3f8b4046b19d9b32bf6a3b271b2348f7a1",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_21": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "9f47c49a4a8fa11ecbe2f6f595d0366debb7ac7ba3faaac9087b0c2ac72c1c2e",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_22": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "568ec98d50d86d81fa14641b5879058fb532bd59432dad2fb34c1c1b3d9bab11",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_23": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "8c7899e521d331da12ee0ff3c31125a6a7deedf76b4927e1fc8019db625afd69",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_24": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "12a63216830c864fba6194a47e7f86e5335873fa451e2e73e657c0d1f8de4061",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_25": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "41cbb013a050cfd6397ba2047583545c4ed278b1089fc4e7b3c4213f2c7abc72",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_26": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "63d17f75bb301225c45afa575ffd5b0e41f24a6e39b55298d4c58314c271bf40",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_27": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "87ba306403c002951da2252227aa326f44bf8fcd44e94621507ae8d219c3f1fd",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_28": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "0cd434a97532de6c05abb5dead8dddbafbf4b036101db7a1e03814cfe38211da",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_29": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "9e0fce632b6db875c06d3f543cd9119a18129fedd971087437364c28876b1e73",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_30": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "ce5a6837624495e10fa817c9a77c3fe05bd6dbb92f756fdae5d2fe7e995a70f9",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_31": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "f61924aaa03ba81be99ba5ae6d27b37cc36a374efd1ad18cda1bb0c76073f3c1",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_32": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "63ed50bfeddf570461d2024e421b579ed31fcd4b830116f3fac95448aed00795",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_33": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "f2f64ccbedbba960fc18de934089c0b4f1e5b598da574623599835044e0751b2",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_34": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "953c24920c7ec1cf456718fca34567d3ef66d23000c78aeb77cb50b5bf66cd62",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_35": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "04152eb13198e147cd024f92911efe2175c43a9713d6d6378b7195a912a5bea0",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_36": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "141e3cc262ab28e064546bc8a76f5a1439c0b2d994be124d0f13d178517869a9",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_37": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "3b00c7ce3edc85351dc01561e2c2d73e38f606d4399bfb9afa9addd14f962d10",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_38": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "50266a8bb8fd3a3d6aaf808c8ae914d46efbd9d84518943c3c29c1bd5c9a3c13",
+      "observer_id": "blind_observer_a"
+    },
+    "a_strip_39": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "c83b4f3aa434fce1049a4651116323d10835986903c755c42f1d070ea838d58c",
+      "observer_id": "blind_observer_a"
+    },
+    "a_d2_1930_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "24d0a3580a275be4e8d4ac9338d39d5fa8e49b549e5ba3775ce3eb1faa2863d4",
+      "observer_id": "blind_observer_a"
+    },
+    "a_evening_00": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "de7ea9fedb027aab037719e05efa1c4045f8d3f585f1d9fad591ddd5885cd8eb",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_01": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "d8db1b76b74caa14a5d6f724f8ee1864816e3704b17bc4e8e1a3008dc2877235",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_02": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a86282de9b73876f649b88fa66dbe09a25b037ae606d61864d241d4f3e7f4ffd",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_03": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "19a710c3e77271aba00acf16f147faaa56c57452be290b653f9bbc4be88c1632",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_04": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "7cc06e9f5ae416705e55c4e57acd35a275999a471ae0b2d6d13c5b58fd41033d",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_05": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "beac6127b1c805010385b0a58325eb3f48bbd2013d35bdd01b39d881b13560ca",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_06": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "44c24a517c6510943d6c7e3499fb39be5b8953b21213b741235e849154de52ef",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_07": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "9ab22ef4eed2f116b49ffd7def4c3f18432d6b231aa89626210951edf4f6cee5",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_08": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "1bf3c56a40fd63b80685bdca388d8e1c5af0805251829fa4402606ce00a844a3",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_09": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "55d8e47699330bd859490ab99ae6f0772a21a8ab585285334f62f81df439f849",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_10": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "902ecb60e6bf627a45423758c91256599c76ae005827eca6aa07fff5dd83d15c",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_11": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "9302146be8a6dbf98b1bfe28f301c26fff5e13f53761ec67c0609ae698d986e9",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_12": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "e14de0bf3760cc3e6b8754c555ffc3cac14fead10a7ffc850b35e687f25b09ec",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_13": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "250f987b67a382909f4811e7188847a2c9f9ebf8a8b55bf60f402945e2f1ff92",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_14": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a982d44b54b38d00f60f204b8929bba597c90f081a20932ca8f7558db6e8f66f",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_15": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "c2326f091721667beb1e2de1b9273124ff386eb67bae460857339ec5d6f63c76",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_16": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "5d8f1fd7adfa331d499e0de08fe27846ae1dabf2f2eb9e729776cdd6293d6ca4",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_17": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "778843d6ef5f4cf42e2ee19152eb569cb6fdf005f639fcc7d1939ef6d637a77d",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_18": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "19f924d66f26121dcee35b4f675746fb031d0114241d77160f0fef88a5305204",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_19": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a3d66fa4c02dd0860f230abbff9c75b253016ce968999b89233ea812213bd98b",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_20": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "40854f5dbdf978749bcccfd2b5f249d8428ea8897e99e18ad35c16cb67154c57",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_21": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "d6bddff7e225acce3a6e24188f2c979443c2c04e1ac61680de0e343eaeedbf1f",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_22": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "b7ebec749c0e42a2b4cbc33738bd784425d41cc4df912d9d1a6f5eb0831405bd",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_23": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "395cff85b68f9e5029adec8685994b6e4ae3121ce3137d65b1d4eea5deebbd01",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_24": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "f0ba8d43c04cd3fb41a819906ce121d65401dbd0abd469dcf17f407e28bc2ede",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_25": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "4df5d4c1d71449bfe1f72e36981cfd57483a085bba621c62a9154530bd51c94c",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_26": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "e765c1f2e7082a39b9abf61d6a8a54495b7d691a813435b3154ffc5f28e041c4",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_27": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "2b84753bca439e699f6b7464f60c950a161a3bd7d35aa75b05722ab0fb36933f",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_28": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "1161924ee8352bfaccd4bf7b6adb46fd771c432757f886378a29bc756e395bcd",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_29": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "2fed0db2de7cab09bf5195ec693475d824c9d85e559fb1da93c6a6fd84c31a19",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_30": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "ec59707c9a85a9af565840e6c00b307a51e7a056451401561b27161d42def83c",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_31": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "994971916146eba2a8a267d9776bae8b4e738955253870d67585899be21d3783",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_32": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "a04ef7436385b5a92be7470e4389640e1df0ccd365cf9d98e7f55be44a9bded8",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_33": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "8a1e367e8aa6d3a33afb71513cf98a10eda90ea48b101446fab50335f19406df",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_34": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "663bdd60f4c4e06675f89f7a98e2be7cdd34d5f42e2de5fa59e767a92f5c2f99",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_35": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "9b7bc791438f97622618e50b37d9ac53d2df1545964188c5e1d41960ec8c8f93",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_36": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "934bd826527ca251954bd7049e0186a6a88c4777c2d6c3b2c6e97a198cb12e47",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_37": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "ef36af06d2848c906ccc1c451b32e7b14af0f75e88fca49011d8760f47dfdeca",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_38": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "9b37b52c929b2ccea2afa71a17b09bcc79da4a5460f818ed3911765a59dfde72",
+      "observer_id": "blind_observer_b"
+    },
+    "a_evening_39": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "f739eea12e00dcc0eae4c1d54396048dedfe65e1ecb32095b6681f74661c09a8",
+      "observer_id": "blind_observer_b"
+    },
+    "a_d2_2300_F2N": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "c0658eb222bb105b110faae21ad0da076dad0d69b706b76d6b54dea95566630f",
+      "observer_id": "blind_observer_b"
+    },
+    "a_d6_1200_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "sha256": "0975d89ed9000721cb282f1814b4ff3e1877d67b0c55be1239ba3c84d6f64e55",
+      "observer_id": "blind_observer_b"
+    },
+    "l_d10_1200_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A14, A22, A25 and A10 have short blue bars beneath their feet. A19 is a squat white-haired figure beside B0. B0 is a pale stone ring with a dark center, no visible flame. B7, B14, B21 and B75 are brown shelters with dark outlines; B28 is a basket with red contents. No distinct clouds are visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "62c717f37e47713cedf31beedbfd233ca5a7196fcc94124bdc6a910a1b7bbbfe",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O001",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d10_1500_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A5 and A22 have blue foot bars. A19 is crouched below the shelters; A6 has a broad orange object across the torso. B0 has pale stones and a black center, without visible flame. B7, B14, B21 and B75 remain brown shelters; B28 is a red-filled basket. No distinct clouds are visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "b668636ba32542cb49c924c8a897a1981e34560d2e313ead78171bc17b8096f8",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O002",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d10_1500_F5": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A22 has a blue foot bar. A19 is crouched, A6 has an orange horizontal torso shape, and A10/A15/A28 are near bushes with orange/red objects. A21 is partly hidden by foliage. B21 is a brown shelter, B28 a filled basket, B0 a pale dark-centered stone ring near the top. No distinct clouds are visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "ceddf05d3d531aef12118250ff8dd3e29b88e0cdba440082b18e765b2dd08a80",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O003",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d15_1500_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A10 has arms raised beside a tree; A7 and A23 are partly obscured by translucent foliage. A17 appears seated and A4 holds an orange object. B0 is an unlit-looking stone ring. B7, B14, B21 and B75 are brown shelters with dark outlines and B28 is a basket. No distinct cloud around a person is visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "1c18c7144978e5ac9060f639311e8786d58062d0ee0569899d8a45842008292d",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O004",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d15_1500_FC": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A3 and A25 hold both arms out; A22 has an arm projecting beside its head. A13 is obscured by foliage; A16 stands beside the river. B21 and B28 are partly hidden by the top HUD. No distinct floating mark or cloud is visible around the clearly seen people.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "1027e3c30015cbd73cda9b49f5b9d9f0fbfe79f068a0c6d3298ba09a511dc2c2",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O005",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d16_1500_FC": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A10 and A16 have arms out, A22 extends an arm toward A7, and A26 is under translucent foliage. A21 has a blue foot bar. B0 is a stone ring without a visible flame; B7, B14, B21 and B75 are brown shelters. B28 is largely behind the lower-right HUD. No distinct cloud is visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "f28a48b1921d0b1e5d2c655c9c4ee3b0cf7d538cb2bcd3af60bd64141e28f403",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O006",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d18_1200_F2": {
+      "hud_text": "추위 0",
+      "severity_visible": false,
+      "observations": "A18, A4, A3, A7 and A17 appear seated or squat around B75; A28 is in a walking pose at lower right. Several upright people have blue foot bars. B0 is a dark-centered stone ring without visible flame. B7, B14, B21 and B75 are brown shelters and B28 is a filled basket. No distinct floating particle cloud is visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "996a46725a49fd519a8cd17c17e65b67d75448c4e2f62f66d58a0366842d48e1",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O007",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d23_0200_F2N": {
+      "hud_text": "23일차 02:00 · 밤 · 겨울 2일째; 추위 0; 보통 겨울",
+      "severity_visible": true,
+      "observations": "No people are visible in the still. B0 has a red-orange flame in its stone ring and a soft warm surrounding glow. A pale lavender cloud is above it, by the lower right of B75. B7, B14, B21 and B75 are dark brown shelters. B28 contains red and green objects.",
+      "sequence_observations": "B75 has a pale lavender puff at its lower right that repeatedly changes shape and size across samples. The shelter structures stay in place. Brief brown head-like shapes appear above B14, B21 and B75 near the middle sample. B7 shows little obvious change. The sequence does not include a dedicated B0 row.",
+      "sha256": "227cda497cf8e596f11ab122f18d036425065d9cb15043583384cf9940e171cb",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O008",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d24_1200_F2": {
+      "hud_text": "24일차 12:00 · 낮 · 겨울 3일째; 추위 0; 보통 겨울",
+      "severity_visible": true,
+      "observations": "A26, A27 and A28 have blue foot bars. Many people near B7/B21 are squat or seated; A30 is a small upright figure. B0 is a pale stone ring without visible flame. B7, B14, B21 and B75 are brown shelters; B28 is filled. No clear floating cloud or colored silhouette border is visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "26ef5dafa1e3eb79b4c0a92da756573c5e2effb34e6c1847685d52c2044f7e56",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O009",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d24_1200_F1": {
+      "hud_text": "24일차 12:00 · 낮 · 겨울 3일째; 추위 0; 보통 겨울",
+      "severity_visible": true,
+      "observations": "Zoomed-out view: the A-labeled people cluster around B7, B14, B21, B75, B0 and B28, with others dispersed. They are too small for confident judgments about fine sprite marks. The shelter area has a broad tan circular patch; no distinct flame or cloud can be resolved at this scale.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "62514905e97264d239ad237de98d1bcab34129ee7da6acc6d30f85e48832b0c9",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O010",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "unknown"
+      }
+    },
+    "l_d24_2300_F2N": {
+      "hud_text": "24일차 23:00 · 밤 · 겨울 3일째; 추위 0; 보통 겨울",
+      "severity_visible": true,
+      "observations": "No people are visible in the still. B0 has a red flame and warm glow; a pale cloud floats above it near the right foot of B75. B7, B14, B21 and B75 are brown shelters with dark edges; B28 is a basket with red contents.",
+      "sequence_observations": "The lavender puff at the lower right of B75 repeatedly changes outline. Brief brown head-like shapes appear above B14, B21 and B75 around 1.576 seconds. B7 and the shelter structures otherwise stay in place. B0 is not separately sampled.",
+      "sha256": "0e3a65f1262f343c7a17cf27fbf8f9d606448904da01bcb290337045cc62648a",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O011",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d26_0715_F2": {
+      "hud_text": "26일차 07:15 · 낮 · 겨울 5일째; 추위 0; 보통 겨울",
+      "severity_visible": true,
+      "observations": "A31 and A32 are small upright people. A3 and A11 appear seated; several overlapping A labels at the right edge of B14 prevent precise individual attribution. B0 is a pale stone ring with black center and no visible flame. B7, B14, B21 and B75 are brown shelters, B28 a basket. No clear cloud or pale silhouette halo is visible.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "2cbd398a00fbb50381cdba9d0b298aafc04df212722b79e8a1cdffac7f951221",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O012",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d28_0200_F2N": {
+      "hud_text": "28일차 02:00 · 밤 · 겨울 7일째; 추위 28 *; 보통 겨울",
+      "severity_visible": true,
+      "observations": "No people are visible. B7, B14, B21 and B75 have pale blue edging along roof tops. B75 has a large translucent gray X across its front and a round gray mark above the X. B0 is blue-gray stones with no visible flame or warm glow. B28 is a muted basket. Small pale squares appear around the shelters; no large cloud is visible.",
+      "sequence_observations": "The blue roof borders remain on B7, B14, B21 and B75. Pale little blocks near the entrances appear and disappear. The X and round gray mark on B75 remain throughout these samples. No flame appears in the provided building rows; B0 has no dedicated row.",
+      "sha256": "8498a86698e510d72779902c78cf31ae4931a4905a07b610a65cc606cb3dfaa3",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O013",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d28_0200_F2Z": {
+      "hud_text": "28일차 02:00 · 밤 · 겨울 7일째; 추위 28 *; 보통 겨울",
+      "severity_visible": true,
+      "observations": "No people are visible. B7, B14, B21 and B75 have thin pale blue roof-edge marks. B75 has a large translucent gray X and a round gray upper-front mark. B0 is a blue-gray unlit-looking stone ring. B28 is a basket; no flame or orange halo is visible. Small pale squares are scattered nearby.",
+      "sequence_observations": "Blue roof borders persist. Pale entrance blocks change across samples; a brown head-like shape briefly appears above B14, B21 and B75 near 0.370 seconds. The gray X and round mark on B75 persist throughout. No dedicated B0 row is provided.",
+      "sha256": "3e68fb63169fd75bb76d9755330cce7f03dbb596f9af7862fa741d7f4bf58cf5",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O014",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d28_0715_F2": {
+      "hud_text": "28일차 07:15 · 낮 · 겨울 7일째; 추위 0; 보통 겨울",
+      "severity_visible": true,
+      "observations": "Pale gray-green silhouette outlines surround many people, clearly A3, A29, A4, A25, A1 and A14. Small pale squares float above A3, A4 and A1. Pale stacked blue-gray puffs appear above the overlapping A23/A24/A27 group; individual ownership is unsure. A3, A13, A17 and A18 sit with folded legs. B75 has two pale yellow oval front marks. B0 is pale stones without flame; B7, B14 and B21 are brown shelters and B28 is filled.",
+      "sequence_observations": "No sequence image provided for this frame.",
+      "sha256": "e03a7f26bb50912750ebae98d6930ec7cba3a4ae360daacac305755d6fc4006e",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O015",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        3,
+        29,
+        4,
+        25,
+        1,
+        14
+      ],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d29_0200_F2N": {
+      "hud_text": "29일차 02:00 · 밤 · 겨울 7일째 밤; 추위 29 *; 보통 겨울",
+      "severity_visible": true,
+      "observations": "A8 stands north of B75 holding a reddish object to one side; its outline is dark, with no clearly separable pale cloud. B7, B14, B21 and B75 have thin blue roof edges. B75 has no large X in this still. B0 is dark blue-gray stones without visible flame or warm glow. B28 is a basket. Small pale squares are visible near the roofs.",
+      "sequence_observations": "Blue roof borders persist. Pale blocks at the entrances intermittently appear and disappear. Brief brown head-like shapes rise above B14 and B75 near 0.777 and 4.779 seconds. B75 has no large gray X throughout this strip. B0 is not separately sampled.",
+      "sha256": "a07fa6bcb7f062efb047e1e0d1a59dccadc710043491f8b6b2a2bc984c0e78a0",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "opaque_frame": "O016",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d29_0630_F2": {
+      "hud_text": "추위 0; 낮 · 겨울 7일째 밤; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. Pale blue-white contours surround many tightly overlapping people, including A11, A17, A26 and A29. A11 and A17 sit cross-legged. Small pale rectangular pixels occur above the central group. Crowding prevents reliable assignment of every overlapping contour. No broad cloud visible.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "bab359fe777c7e593eec9d567621127930427e5608fba8450f0922a221324a7f",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O017",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        11,
+        17,
+        26,
+        29
+      ],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d29_0715_F2": {
+      "hud_text": "추위 0; 낮 · 봄 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A7, A3, A11 and A17 appear seated. A2 stands separately at right; A25 below B21 and A31 farther south have pale gray contours. Several other people overlap near B7. Small pale blocks float above the people near A7. No distinct smoke cloud visible.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "4dac9184fd0642f9d85eede90d7c93ec1d58db5d6a0c7eea2a48660480e73a57",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O018",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        25,
+        31
+      ],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d32_1200_F2": {
+      "hud_text": "추위 0; 낮 · 봄 4일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A1 and A18 stand north of shelters. A3, A9 and A11 appear seated with bent legs. A31, A14 and A28 stand to the right, with black outlines rather than a conspicuous blue contour. A25 is partially covered by a tree. No distinct particles or clouds are identifiable.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "0465c8b19aa454cf3c9a44cd9e6b55ec6b3710852a8e7cfc2e56c804ca67693c",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O019",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d40_1200_F2": {
+      "hud_text": "추위 0; 낮 · 여름 5일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A29 and A42 stand left of the river. A36 stands at the top of a dense crowd; A46 and A44 are smaller figures. A33 and A41 stand south; A37 has bent legs. People have dark outlines; no clear pale halo or cloud seen. Shelters are partly obscured by the crowd.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "0e0898e784db48b2369fa4db082e74afc4ad08bd03f3cc4a0e681d732d27546e",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O020",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d43_1500_FC": {
+      "hud_text": "추위 0; 낮 · 가을 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a partly visible gray ring at upper right without a visible flame. B21 is a brown shelter; B28 a red-filled basket. B7, B75 and B14 are mostly under the HUD at the top. A26 is beside a stump at lower left; A36 beside a stump near center. A31, A33, A34 and A42 are obscured by translucent-looking tree foliage. A27, A14, A12 and A46 are visible near the settlement. No distinct airborne cloud or particle pattern identified.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "d37740224c05f51d32b79ace37dc78174dc415fba5bf21362eb4fd55a969e972",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O021",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d55_0200_F2N": {
+      "hud_text": "추위 29; 밤 · 겨울 6일째; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. No A-labeled person is visible in the original still. Small pale specks are visible near roof edges; no substantial cloud.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible.",
+      "sha256": "b01c640889cc4270d6190296061e37d24c709216108d3ed13242b042914f4d38",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O022",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash",
+        "tint"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d56_0200_F2N": {
+      "hud_text": "추위 29; 밤 · 겨울 7일째; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A38 is partly visible between B7 and B75, with gray-white waist detail and a dark outline. Four elongated brown objects lie to the right of B14, without A/B labels. No large cloud visible.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible. A person beside B7 and in front of B75 shifts pose/position between samples.",
+      "sha256": "7b75140292a02147bcb93e1e849eba13c1bb4d96ebc921875cef1d5b5229030d",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O023",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash",
+        "tint"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d57_0200_F2N": {
+      "hud_text": "추위 29; 밤 · 겨울 7일째 밤; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A37 stands near the river at the bottom; A29 is only partly visible below the bottom foliage. Neither has an obvious large marker. No broad smoke cloud visible.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible.",
+      "sha256": "3c98296616f051be8906991694c06e40dafc54e58d7c2b30b67ac16ca10d3d79",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O024",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash",
+        "tint"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d57_0401_DE": {
+      "hud_text": "추위 28; 밤 · 겨울 7일째 밤; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A large blue X overlays the front of B21. A50 stands immediately left of B21. A47 stands in front of B75, A42 to its right. A32 and A46 are clipped by the HUD. No clear flame or cloud.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible. The blue X on B21 remains present in every sample. Adjacent figures change poses slightly.",
+      "sha256": "8f8bca898e5cee940e3e2dd06e1e82d9a6def040da375b101300cf6329d01272",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O025",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash",
+        "tint"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d57_0715_F2": {
+      "hud_text": "추위 0; 낮 · 봄 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. The blue X is no longer visible on B21. Pale outlines surround much of the north crowd and the southern group around A38 and A35. A45 stands in front of B21. A52 is a small figure left of B0. A40 and A41 stand lower right. Pale short rectangular marks float above the north crowd. Many A labels overlap, so exact individual contour ownership is uncertain.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "909db7c2623d7f08d15f8a661c2a6ef308d106ef1698988b28820fb95d980faa",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O026",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d71_1500_FC": {
+      "hud_text": "추위 0; 낮 · 가을 1일째",
+      "severity_visible": false,
+      "observations": "A32 stands center with both arms spread; A34 stands at right with arms close to the torso. A52 and A37 are mostly hidden by the lower-left UI panel. The visible people have black outlines, without a clear pale halo. No labeled buildings or fire appear in this view. No distinct cloud or airborne particles identified.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "9998d4a4d8addb02c05a42454f0f1ad28e47c08342b7c097847a79b0625dd827",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O027",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d84_0200_F2N": {
+      "hud_text": "추위 29; 밤 · 겨울 7일째; 혹독한 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A small tan head-like form protrudes above B14 and beside B75, without an A label. A few pale blue squares are visible nearby and near B0. No clear cloud or orange flame.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible.",
+      "sha256": "a3fdb9142767c855b1ab39b7541f107b4ac97e47da7f62c2290fb33c4d35fc96",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O028",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash",
+        "tint"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d85_0200_F2N": {
+      "hud_text": "추위 28; 밤 · 겨울 7일째 밤; 혹독한 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A conspicuous irregular gray-white clustered shape covers the entrance/front of B75. Its precise meaning is unclear: it looks like stacked stones or a pale cloud-like object. No A-labeled people are visible. No obvious orange flame.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible. The gray clustered shape in front of B75 remains in place throughout the sequence, without an obvious rising or dissipating motion.",
+      "sha256": "f875c1b7cc31d081d1bdd587cdc195fc60eec1902f1770fe044828ab423a08d2",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O029",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "frost",
+        "cold_ash",
+        "tint"
+      ],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "l_d85_0715_F2": {
+      "hud_text": "추위 0; 낮 · 봄 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A pale gray-green clustered shape remains at the front of B75. Pale contours outline many people, including A34, A36, A38, A45, A49 and the southern A58/A59 area. Small pale rectangles are visible over the north group. A61 is a small figure below the main cluster. A44 appears seated to the right of B75; another seated figure is near A48. Overlapping A labels make some identity assignments uncertain. No distinct smoke plume or orange flame.",
+      "sequence_observations": "No sequence image provided.",
+      "sha256": "c4cf855334f2fa441e4335952dce48d7bd35747f2a757052e7035c2acd6ca6f2",
+      "observer_id": "blind_observer_b",
+      "observer_source": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "opaque_frame": "O030",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        34,
+        36,
+        38,
+        45,
+        49
+      ],
+      "doorway_cycle_visible": false,
+      "visible_cues": [
+        "hud_count",
+        "cold_ash"
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    "god_d10_1200_F2_spoil": {
+      "toast_text": "패널: 1번 마을: 식량 썩히기 60 — 적용 60\n소식: 1번 마을에 신의 손: 식량 썩히기",
+      "observations": "Daytime green terrain. B75, B7, B14 and B21 are intact brown shelters. B0 is a pale stone ring with a dark center and no visible flame. B28 is a brown basket with reddish contents; nearby text shows 식량 238 장작 36/19. A19 is crouched left of B0, A17 is above B28, and A2 is beside B21. No distinct falling objects, weather streaks, colored particle burst or expanding ring is identifiable. A thin pale circle sits in open ground east of camp and also appears in the other frames. The panel/news confirm an action in text; I cannot identify a corresponding live world effect in this still.",
+      "world_effect_visibly_identified": false,
+      "observer_id": "blind_observer_a",
+      "sha256": "e3defa3c732abe4e41556d2ed0f4d4a894a461519daac366a9d88ff80752ed01",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "opaque_frame": "O001",
+      "intervention_effects": [],
+      "intervention_identification_status": "not_identified"
+    },
+    "god_d10_1205_F2_rot_wood": {
+      "toast_text": "패널: 1번 마을: 장작 썩히기 40 — 적용 36\n소식: 1번 마을에 신의 손: 식량 썩히기\n1번 마을에 신의 손: 장작 썩히기",
+      "observations": "Daytime green terrain. B75, B7, B14 and B21 remain brown shelters. B0 has a dark center with no visible flame. B28 has bright reddish contents. A19 is left of B0, A17 is in front of B14, A2 is below B21 and A9 is farther below. No distinct falling objects, rain/snow streaks, local colored burst or new ring is identifiable. The pale circle east of camp persists. The HUD shows wood 0, but this number and the panel confirmation are text evidence; they do not show a live world effect.",
+      "world_effect_visibly_identified": false,
+      "observer_id": "blind_observer_a",
+      "sha256": "2f728d038d836905df3db4d400affa064992605bf0a0deb06d2607f8376d2e8e",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "opaque_frame": "O002",
+      "intervention_effects": [],
+      "intervention_identification_status": "not_identified"
+    },
+    "god_d10_1210_F2_gift_food": {
+      "toast_text": "패널: 1번 마을: 식량 내리기 60 — 적용 60\n소식: 1번 마을에 신의 손: 식량 썩히기\n1번 마을에 신의 손: 장작 썩히기\n1번 마을에 신의 손: 식량 내리기",
+      "observations": "Daytime green terrain. B28 contains red/green marks. B0 remains an unlit-looking pale stone ring. B75, B7, B14 and B21 remain intact brown shelters. A19 is beside B0, A17 is right of B14, A22 is north of B75, A25 is northeast, A14 is west and A2 is south. No distinct falling food objects, particle burst or new intervention ring is visible. The pale circular outline east of camp remains. Food 298 is visible as a HUD count, separate from any world effect; the action is confirmed by panel/news text only.",
+      "world_effect_visibly_identified": false,
+      "observer_id": "blind_observer_a",
+      "sha256": "00a1e3e395021e27754b19bf240ee9f4e8d5953a264085b478307b705ec158f1",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "opaque_frame": "O003",
+      "intervention_effects": [],
+      "intervention_identification_status": "not_identified"
+    },
+    "god_d17_0200_F2N_cold_snap": {
+      "toast_text": "패널: 한파: 1밤\n1번 마을: 한파 1밤 — 적용 1",
+      "observations": "The world has a broad washed gray-blue tint and low contrast, while the interface remains brighter. The HUD reads 17일차 02:00 · 밤 · 가을 3일째. B0 contains a visible red-orange flame and a small warm glow. A lavender smoke-like puff is visible above the bench immediately right of B75. B75, B7, B14 and B21 have muted blue-gray/brown shading; no distinct bright roof outline is apparent. B28 is darkened. I cannot pick out an A-labeled person here. No clear snowflakes, rain streaks, falling objects or new local ring is identifiable. The cool tint is visible, but this nighttime still alone does not distinguish a cold-wave effect from night shading. The panel explicitly confirms 한파 in text.",
+      "world_effect_visibly_identified": "unknown",
+      "observer_id": "blind_observer_a",
+      "sha256": "e26613303015d57be329c87f8d20fb7d4a76c77122bb3bce7954e20a8e9e8a69",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "opaque_frame": "O004",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown"
+    },
+    "god_d23_1200_F2_gift": {
+      "toast_text": "패널: 1번 마을: 장작 내리기 40 — 적용 40\n소식: 1번 마을에 신의 손: 장작 내리기",
+      "observations": "Daytime green terrain; the HUD reads 23일차 12:00 · 낮 · 겨울 2일째 and 보통 겨울. B0 is a pale stone ring without a visible flame. Multiple brown logs form a visible pile left of B21. B28 has bright red/green contents, and B75, B7, B14 and B21 are brown shelters. A16 is beside the log pile, A6 is seated left of B0, A23 is above B75, A17 is upper-right of B75, A5 is northeast of B14 and A21 is southeast. A14 has a blue mark near the feet to the west. No falling log, distinct colored particle burst or new ring is identifiable. The pale circle east of camp persists. The log pile is visible, but this later still does not establish a live change to it caused by the action; the panel/news provide explicit textual confirmation.",
+      "world_effect_visibly_identified": "unknown",
+      "observer_id": "blind_observer_a",
+      "sha256": "e15beba7f934fae7f33cce0f4f2d4ae1ddde5c0ee8cfd4fa0e9ae056f97d941f",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "opaque_frame": "O005",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown"
+    },
+    "god_d23_1205_F2_windfall_0200ms": {
+      "toast_text": "1번 마을: 바람 20 — 적용 20",
+      "observations": "Panel confirmation says wind applied. Separately, cream-colored circular rings visibly overlay several brown stump/log objects at left and bottom; they are not A/B-labeled. B0 is a gray stone ring without visible orange flame. B7, B14, B21 and B75 remain brown shelters; B28 is a red-filled basket. A12 and A14 stand at left, while A8 and A28 are partly hidden by trees. No obvious airborne log, directional wind streak, rain, or smoke is identifiable. The rings are a visible world overlay, but their specific meaning is unknown.",
+      "world_effect_visibly_identified": true,
+      "observer_id": "blind_observer_b",
+      "sha256": "41b89373fb694201eab5dd2f6700edc2ea9999b44c300b291942953b7a066765",
+      "observer_source": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "opaque_frame": "O006",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown",
+      "observed_world_features": [
+        "cream_rings_over_stumps_or_logs"
+      ],
+      "windfall_dust_status": "unknown",
+      "windfall_drop_status": "unknown"
+    },
+    "god_d23_1205_F2_windfall_1000ms": {
+      "toast_text": "1번 마을: 바람 20 — 적용 20",
+      "observations": "Cream rings remain over the same scattered stump/log objects and appear larger than in O006. This is a visible change in world graphics, not merely the text confirmation. A14 and A28 have slightly different poses. B0 still has no visible orange flame; B7, B14, B21, B75 and B28 remain recognizable. No distinct airborne object or directional wind streak is identifiable.",
+      "world_effect_visibly_identified": true,
+      "observer_id": "blind_observer_b",
+      "sha256": "cc03e92c2af23fa19476492e5ca15cced1d453225cd41df12d38c62e0e563ec8",
+      "observer_source": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "opaque_frame": "O007",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown",
+      "observed_world_features": [
+        "cream_rings_over_stumps_or_logs"
+      ],
+      "windfall_dust_status": "unknown",
+      "windfall_drop_status": "unknown"
+    },
+    "god_d24_1830_F2_rain": {
+      "toast_text": "1번 마을: 비 13시간 — 적용 13",
+      "observations": "Numerous fine short blue-gray vertical streaks visibly cover the world, including ground and river, consistent with rain. This is visible separately from the panel and news text saying rain. B0 has a dark center without obvious orange flame. B7, B14, B21 and B75 are crowded by people. A25, A14 and A4 are a separated group near the bottom. No cream rings, falling supplies or large smoke cloud are visible.",
+      "world_effect_visibly_identified": true,
+      "observer_id": "blind_observer_b",
+      "sha256": "a3d03ce1137666f5aa8b7ea56eab7774d41fa99efd81c65bb94499702fd6a42c",
+      "observer_source": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "opaque_frame": "O008",
+      "intervention_effects": [
+        "rain"
+      ],
+      "intervention_identification_status": "identified"
+    },
+    "god_d25_0200_F2N_rain_night": {
+      "toast_text": "1번 마을: 비 13시간 — 적용 13",
+      "observations": "Short blue-gray streaks remain distributed over the world. The scene has a dark blue-green tint, with a night label in the HUD; the tint alone does not establish an intervention. B7, B14, B21 and B75 have pale blue roof-edge accents and small pale entrance patches. B0 is a dark gray stone ring without visible orange flame. B28 remains a basket. No A-labeled people or falling supplies are visible. Rain-like streaks are visible independently of the panel confirmation.",
+      "world_effect_visibly_identified": true,
+      "observer_id": "blind_observer_b",
+      "sha256": "e3bf166d59ed60a8d457710b98116027a9ca43d1c32848501d5b312703a293ef",
+      "observer_source": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "opaque_frame": "O009",
+      "intervention_effects": [
+        "rain"
+      ],
+      "intervention_identification_status": "identified"
+    },
+    "god_d25_0200_F2_panel_log": {
+      "toast_text": "1번 마을: 비 13시간 — 적용 13\n최근의 손길\n식량 썩히기 60 — 적용 60\n장작 썩히기 40 — 적용 36\n식량 내리기 60 — 적용 60\n한파 1밤 — 적용 1\n장작 내리기 40 — 적용 40\n바람 20 — 적용 20\n비 13시간 — 적용 13",
+      "observations": "The expanded right panel lists earlier actions; that list is text confirmation only and does not prove those separate effects in this frame. World pixels show many fine rain-like blue-gray vertical streaks and an overall dark blue-green tint. B0 remains a gray ring without visible orange flame. B7, B14, B21 and B75 retain pale roof accents; small tan head-like forms appear near B14, B75 and above B21 without A labels. B28 remains a basket. No obvious food/log fall or cream ring is visible.",
+      "world_effect_visibly_identified": true,
+      "observer_id": "blind_observer_b",
+      "sha256": "a4cc3cdf55be958a45ef7af6d45ae5cdd95fdf37291b9773078ca05e9c138b16",
+      "observer_source": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "opaque_frame": "O010",
+      "intervention_effects": [
+        "rain",
+        "panel"
+      ],
+      "intervention_identification_status": "identified"
+    },
+    "god_d50_1700_F2_soc_rain_daughter": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13\n소식: 2번 마을에 신의 손: 비",
+      "observations": "The nearest central village label is 2번 마을 · 1번에서 (36); 1번 마을 (30) is visible farther up. B10873 at the front/bottom of the central camp is a pale stone ring with a dark center, partly bordered or obscured by people; no orange flame is visible in it. B10880, B12791, B14827, B11252 and B10887 are brown shelters. Many people have blue outlines, including A22 and A83 near B10873. Fine blue vertical dash-like marks are visible across the lower gray area and around the camp; these look rain-like. Their full extent is difficult to isolate because the lower gray area extends to the image boundaries and the upper area is crowded. The weather marks are nearest the village 2 camp, but confinement to only that village is uncertain in this close view. The panel/news explicitly confirm rain as text; no separate floating toast is visible.",
+      "world_effect_visibly_identified": true,
+      "sha256": "7c30cc32f4f656dae2aa266b960b6f05b6046e834e84fe3c9cfcf728d5cee1a8",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-society-objects.json",
+      "opaque_frame": "O001",
+      "intervention_effects": [
+        "rain"
+      ],
+      "ash_hearth_ids": [
+        10873
+      ],
+      "lit_hearth_ids": [],
+      "rain_settlement_ids": [],
+      "observed_rain_near_settlement_ids": [
+        2
+      ],
+      "rain_confinement_status": "unknown",
+      "settlement_label_identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d50_1700_F2_soc_rain_daughter.entities.json",
+        "sha256": "d1fc655a126cb009a0b98fc5756305a3c934016163cd1d40fbae4db6e3353577",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    },
+    "god_d51_0200_F2N_soc_rain_night_daughter": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13",
+      "observations": "The world is dark blue-gray and the HUD says 밤. The central village label reads 2번 마을 · 1번에서 (36); 1번 마을 (30) is above it. B10873 is clearly an unlit dark-centered gray stone ring, without an orange/yellow flame or warm glow. B10880, B12791, B14827, B11252 and B10887 are shelters with pale blue/gray edging. No A-labeled people are visible. Fine blue vertical rain-like dashes cover the gray lower area and appear over/near the central camp. This close view does not establish a clear weather boundary or exclusive village confinement. Panel text remains a rain confirmation; the left news instead shows daily food accounting.",
+      "world_effect_visibly_identified": true,
+      "sha256": "e20968b43df97e22379e8b9cf3a73c5bbc1bffb830d3ee28ba0e33e7f6296518",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-society-objects.json",
+      "opaque_frame": "O002",
+      "intervention_effects": [
+        "rain"
+      ],
+      "ash_hearth_ids": [
+        10873
+      ],
+      "lit_hearth_ids": [],
+      "rain_settlement_ids": [],
+      "observed_rain_near_settlement_ids": [
+        2
+      ],
+      "rain_confinement_status": "unknown",
+      "settlement_label_identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_F2N_soc_rain_night_daughter.entities.json",
+        "sha256": "9dd4be05807291db27260cd663a8b09e67be67e5f3b04b19bbb696c70a8c4df5",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    },
+    "god_d51_0200_F2N_soc_original_night_orig": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13",
+      "observations": "The centered village is labeled 1번 마을 (30). B0 has an actual orange/red/yellow flame inside its pale stone ring, a warm surrounding glow and a pale smoke-like puff above it. B344, B1220, B7, B14 and B21 are brown shelters; B28 is a filled basket. No A-labeled people are visible. The image is generally dark blue-gray, consistent with the visible 밤 HUD label. I cannot identify a distinct localized rain curtain or rain-area boundary around this village from this still; the scattered tiny terrain marks are not enough to establish it. A label for 2번 마을 · 1번에서 (36) is partially visible at the bottom edge. The panel heading selects 1번 마을 but the confirmation text still names 2번 마을; that text does not establish rain over village 1.",
+      "world_effect_visibly_identified": "unknown",
+      "sha256": "22bcaa62f08af8b827441d72b41ff77b9c0e0b9d6648a1a7c1b3c8d35392ad7e",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-society-objects.json",
+      "opaque_frame": "O003",
+      "intervention_effects": [],
+      "ash_hearth_ids": [],
+      "lit_hearth_ids": [
+        0
+      ],
+      "rain_settlement_ids": [],
+      "observed_rain_near_settlement_ids": [],
+      "rain_confinement_status": "unknown",
+      "settlement_label_identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_F2N_soc_original_night_orig.entities.json",
+        "sha256": "32ce53ba39b109aa74516471bea47a14a68948f4b9980d65592e0264d3fea71d",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    },
+    "god_d51_0200_FV_soc_both_night_all": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13",
+      "observations": "The wider view shows 1번 마을 (30) in the upper-middle and 2번 마을 · 1번에서 (36) below it near the bottom map edge. Village 1 has a warm pale-yellow circular glow around B0, whose small orange flame is visible. Village 2 has a blue circular tinted area centered around its front stone-ring area B10873 and extending below the map boundary; B10873 appears dark and unlit, with no orange flame. Fine blue rain-like dashes are visible around the lower village and across parts of the gray area below the map. The blue circular tint is localized near village 2 and does not cover village 1. The dash distribution is less sharply bounded than that circle, so I cannot say every weather mark is confined inside it. Village 1 shelters include B344, B1220, B7, B14 and B21, with basket B28. Village 2 shelter labels overlap at this scale but include B10880, B12791, B14827, B11252 and B10887. No people are discernible. The panel heading names village 1 while the retained rain-confirmation text names village 2.",
+      "world_effect_visibly_identified": true,
+      "sha256": "0b320141545a4cf7b7c4b9a1ff71eeca93ebbeba856e680a2b657343d13b2404",
+      "observer_id": "blind_observer_a",
+      "observer_source": "docs/art/production8/review/originals/observer-a-god-society-objects.json",
+      "opaque_frame": "O004",
+      "intervention_effects": [
+        "rain"
+      ],
+      "ash_hearth_ids": [
+        10873
+      ],
+      "lit_hearth_ids": [
+        0
+      ],
+      "rain_settlement_ids": [],
+      "observed_rain_near_settlement_ids": [
+        2
+      ],
+      "rain_confinement_status": "unknown",
+      "settlement_label_identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_FV_soc_both_night_all.entities.json",
+        "sha256": "13c38c15c947e444aa3a82d9a3a11aad6983d770dc8c3201c386bfa8c35fc8b1",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    }
+  }
+}

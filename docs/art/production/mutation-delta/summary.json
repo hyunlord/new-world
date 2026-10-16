@@ -1,0 +1,12 @@
+{
+  "target_head": "a4c168fb684bd17e743d03bb152acfa71b8c558f",
+  "previous_audit_head": "0189eead423c0496bda04d93b2e2da57a3efea27",
+  "previous_killed": 467,
+  "delta_killed": 7,
+  "delta_survived": 0,
+  "delta_invalid": 0,
+  "previous_ledger_rows": 336,
+  "delta_ledger_rows": 7,
+  "elapsed_seconds": 2.673496961593628,
+  "worktree_clean": true
+}

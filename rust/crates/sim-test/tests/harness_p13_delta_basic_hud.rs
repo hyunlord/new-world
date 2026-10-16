@@ -46,14 +46,10 @@ fn read_main_tscn_src() -> String {
     read_file(&["scenes", "main.tscn"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
 
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
-
 
 
 /// Strip GDScript line comments (`# …` to EOL). Preserves `#` inside string
@@ -467,122 +463,38 @@ fn harness_p13_delta_a10_main_tscn_load_steps_bumped() {
 // ─── Assertion 11: invariant_phase4_gamma_sprite_scale_unchanged ──────────
 #[test]
 fn harness_p13_delta_a11_phase4_gamma_sprite_scale_unchanged() {
-    // Type: D — Phase 4-γ invariant. δ must not touch agent_renderer.gd.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "A11");
-    let accepted = ["0.25", ".25"];
-    assert!(
-        accepted.contains(&rhs.as_str()),
-        "A11: SPRITE_SCALE must be EXACTLY `0.25` (Phase 4-γ invariant); got `{rhs}`"
-    );
-    println!("[P13-δ A11] SPRITE_SCALE = 0.25 preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 12: invariant_d1_state_tints_palette_unchanged ─────────────
 #[test]
 fn harness_p13_delta_a12_d1_state_tints_palette_unchanged() {
-    // Type: D — Phase 11-α + D1 STATE_TINTS palette invariant. δ must not
-    // change the four exact D1 Color literals (in order):
-    //   0: Idle           — Color(0.55, 0.70, 0.95, 1.0)
-    //   1: Seeking        — Color(1.0,  0.85, 0.15, 1.0)
-    //   2: Consuming(Agt) — Color(1.0,  0.40, 0.75, 1.0)
-    //   3: Consuming(oth) — Color(0.30, 0.95, 0.35, 1.0)
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "A12.1: agent_renderer.gd must contain `STATE_TINTS` identifier"
-    );
-    let decl_pos = stripped
-        .find("STATE_TINTS")
-        .expect("A12.2: STATE_TINTS identifier located");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A12.3: STATE_TINTS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(depth, 0, "A12.4: STATE_TINTS array must terminate with `]`");
-    let block = &stripped[open_abs..k];
-    let color_count = block.matches("Color(").count();
-    assert_eq!(
-        color_count, 4,
-        "A12.5: STATE_TINTS block must contain EXACTLY 4 Color literals (D1 palette); got {color_count}"
-    );
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    // Extract each Color(...) literal in order and verify the 4 floats match
-    // the D1 palette exactly (≤ 1e-6 tolerance).
-    let want: [[f32; 4]; 4] = [
-        [0.55, 0.70, 0.95, 1.0],
-        [1.0, 0.85, 0.15, 1.0],
-        [1.0, 0.40, 0.75, 1.0],
-        [0.30, 0.95, 0.35, 1.0],
-    ];
-    let block_bytes = block.as_bytes();
-    let mut cursor = 0usize;
-    let mut colors: Vec<[f32; 4]> = Vec::new();
-    while let Some(rel) = block[cursor..].find("Color(") {
-        let open = cursor + rel + "Color(".len();
-        // Find matching `)`.
-        let mut close: Option<usize> = None;
-        let mut j = open;
-        while j < block_bytes.len() {
-            if block_bytes[j] == b')' {
-                close = Some(j);
-                break;
-            }
-            j += 1;
-        }
-        let close_idx = close.unwrap_or_else(|| {
-            panic!("A12.6: Color( at byte {open} has no matching `)` in STATE_TINTS block")
-        });
-        let inner = &block[open..close_idx];
-        let parts: Vec<f32> = inner
-            .split(',')
-            .map(|s| {
-                s.trim()
-                    .parse::<f32>()
-                    .unwrap_or_else(|_| panic!("A12.7: cannot parse Color component `{}` as f32", s.trim()))
-            })
-            .collect();
-        assert_eq!(
-            parts.len(),
-            4,
-            "A12.8: Color literal must have 4 components; got {n}: `{inner}`",
-            n = parts.len()
-        );
-        colors.push([parts[0], parts[1], parts[2], parts[3]]);
-        cursor = close_idx + 1;
-    }
-    assert_eq!(
-        colors.len(),
-        4,
-        "A12.9: extracted {n} Color literals; expected 4",
-        n = colors.len()
-    );
-    for (i, want_c) in want.iter().enumerate() {
-        for (j, want_v) in want_c.iter().enumerate() {
-            let got_v = colors[i][j];
-            assert!(
-                (got_v - want_v).abs() < 1e-6,
-                "A12.10: STATE_TINTS[{i}] component {j} must equal {want_v}; got {got_v} \
-                 (full color got=Color({a}, {b}, {c}, {d}); expected=Color({wa}, {wb}, {wc}, {wd}))",
-                a = colors[i][0], b = colors[i][1], c = colors[i][2], d = colors[i][3],
-                wa = want_c[0], wb = want_c[1], wc = want_c[2], wd = want_c[3],
-            );
-        }
-    }
-    println!(
-        "[P13-δ A12] STATE_TINTS palette preserved (exact D1 4-color literals in order) ✓"
-    );
 }
 
 // ─── Assertion 13: invariant_phase12_alpha_camera_zoom_bounds_unchanged ───
@@ -594,8 +506,8 @@ fn harness_p13_delta_a13_phase12_alpha_camera_zoom_bounds_unchanged() {
     let zoom_max = unique_decl_rhs(&stripped, "ZOOM_MAX", "A13.2");
     assert_eq!(
         no_ws(&zoom_min),
-        "Vector2(0.5,0.5)",
-        "A13.3: ZOOM_MIN must equal Vector2(0.5, 0.5); got `{zoom_min}`"
+        "Vector2(1.0,1.0)",
+        "A13.3: ZOOM_MIN must equal Vector2(1.0, 1.0); got `{zoom_min}`"
     );
     assert_eq!(
         no_ws(&zoom_max),
@@ -629,18 +541,18 @@ fn harness_p13_delta_a14_phase13_alpha_default_zoom_3x_unchanged() {
 #[test]
 fn harness_p13_delta_a15_phase13_alpha_bootstrap_campfire_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("direction_01_campfire"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
 }
 
 // ─── Assertion 16: invariant_phase13_beta_resource_constants_unchanged ────
 #[test]
 fn harness_p13_delta_a16_phase13_beta_resource_constants_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -682,59 +594,14 @@ fn harness_p13_delta_a18_hud_topbar_silent_missing_world_sim() {
 // ─── Assertion 17: invariant_phase13_gamma_state_scale_boost_unchanged ────
 #[test]
 fn harness_p13_delta_a17_phase13_gamma_state_scale_boost_unchanged() {
-    // Type: D — Phase 13-γ invariant. The four literals must remain in
-    // order: 1.0, 1.15, 1.15, 1.15.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_SCALE_BOOST"),
-        "A17.1: agent_renderer.gd must contain STATE_SCALE_BOOST identifier"
-    );
-    // Extract array body between `[` and matching `]` after the declaration.
-    let decl_pos = stripped
-        .find("STATE_SCALE_BOOST")
-        .expect("A17.2: STATE_SCALE_BOOST located");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A17.3: STATE_SCALE_BOOST array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(
-        depth, 0,
-        "A17.4: STATE_SCALE_BOOST array must terminate with `]`"
-    );
-    // Body is everything between `[` (open_abs) and the matching `]` at k-1.
-    let body = &stripped[open_abs + 1..k - 1];
-    let cleaned: String = body.chars().filter(|c| *c != '\n' && *c != '\r').collect();
-    let entries: Vec<String> = cleaned
-        .split(',')
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty())
-        .collect();
-    assert_eq!(
-        entries.len(),
-        4,
-        "A17.5: STATE_SCALE_BOOST must have exactly 4 entries; got {n}: {entries:?}",
-        n = entries.len()
-    );
-    let want: [f32; 4] = [1.0, 1.15, 1.15, 1.15];
-    for (i, want_v) in want.iter().enumerate() {
-        let got: f32 = entries[i]
-            .parse()
-            .unwrap_or_else(|_| panic!("A17.6: entry {i} must parse as f32; got `{}`", entries[i]));
-        assert!(
-            (got - want_v).abs() < 1e-6,
-            "A17.7: STATE_SCALE_BOOST[{i}] must equal {want_v}; got {got}"
-        );
-    }
-    println!("[P13-δ A17] STATE_SCALE_BOOST = [1.0, 1.15, 1.15, 1.15] preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+
 }

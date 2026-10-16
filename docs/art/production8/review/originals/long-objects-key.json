@@ -1,0 +1,4281 @@
+{
+  "created_ns": 1791947324409748000,
+  "frames": {
+    "O001": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d10_1200_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O001.png",
+      "sha256": "62c717f37e47713cedf31beedbfd233ca5a7196fcc94124bdc6a910a1b7bbbfe",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O001_ids.png",
+      "annotated_sha256": "60444463cc16b2be7f7fba27a3d8054d7f669d90747da4d2bc081f377659fabc",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A0",
+          "id": 0,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O002": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d10_1500_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O002.png",
+      "sha256": "b668636ba32542cb49c924c8a897a1981e34560d2e313ead78171bc17b8096f8",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O002_ids.png",
+      "annotated_sha256": "4b779790e2f53ddbe3af158179c9e9aafb192a73440a9787df8ea124cc87011b",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A0",
+          "id": 0,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A20",
+          "id": 20,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O003": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d10_1500_F5.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O003.png",
+      "sha256": "ceddf05d3d531aef12118250ff8dd3e29b88e0cdba440082b18e765b2dd08a80",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O003_ids.png",
+      "annotated_sha256": "a2c544f36115464b0fa6c3e656d375a2b647b41a256c2fe6ad4d1c2104232220",
+      "objects": [
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A21",
+          "id": 21,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O004": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d15_1500_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O004.png",
+      "sha256": "1c18c7144978e5ac9060f639311e8786d58062d0ee0569899d8a45842008292d",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O004_ids.png",
+      "annotated_sha256": "075fc578c9f83b6608653fc352605a656fc1df765c026fd9f3db65021430af6a",
+      "objects": [
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A0",
+          "id": 0,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A21",
+          "id": 21,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A20",
+          "id": 20,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O005": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d15_1500_FC.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O005.png",
+      "sha256": "1027e3c30015cbd73cda9b49f5b9d9f0fbfe79f068a0c6d3298ba09a511dc2c2",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O005_ids.png",
+      "annotated_sha256": "1924558f625987b50b9a0f1d380261d583f5f110893d86a98fcd983f16791a93",
+      "objects": [
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        }
+      ]
+    },
+    "O006": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d16_1500_FC.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O006.png",
+      "sha256": "f28a48b1921d0b1e5d2c655c9c4ee3b0cf7d538cb2bcd3af60bd64141e28f403",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O006_ids.png",
+      "annotated_sha256": "f537f33a51c07dfea100185a9da3b93d6ac2bcfe74982c2905258ef54a0235da",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A0",
+          "id": 0,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A21",
+          "id": 21,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A20",
+          "id": 20,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O007": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d18_1200_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O007.png",
+      "sha256": "996a46725a49fd519a8cd17c17e65b67d75448c4e2f62f66d58a0366842d48e1",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O007_ids.png",
+      "annotated_sha256": "b9c4888c448e44c21874bda5daa315bd4c3f266a702e057c813c444d5216d9e3",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A0",
+          "id": 0,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A21",
+          "id": 21,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A20",
+          "id": 20,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O008": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O008.png",
+      "sha256": "227cda497cf8e596f11ab122f18d036425065d9cb15043583384cf9940e171cb",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O008_ids.png",
+      "annotated_sha256": "79fb9f5f6831b95c275c87ba5cb184fd3dbbb0daa3131cd2c2b9d23aad62f883",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O009": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_1200_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O009.png",
+      "sha256": "26ef5dafa1e3eb79b4c0a92da756573c5e2effb34e6c1847685d52c2044f7e56",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O009_ids.png",
+      "annotated_sha256": "7133743e88f7ecfb0e6fdb2436372952069ae432717237406e1d84950c4bf096",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A21",
+          "id": 21,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O010": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_1200_F1.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O010.png",
+      "sha256": "62514905e97264d239ad237de98d1bcab34129ee7da6acc6d30f85e48832b0c9",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O010_ids.png",
+      "annotated_sha256": "e3fe24d6c9f1f470ae4a510612e2cbf6522f6351eac224845dcff38ec351614d",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A21",
+          "id": 21,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O011": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O011.png",
+      "sha256": "0e3a65f1262f343c7a17cf27fbf8f9d606448904da01bcb290337045cc62648a",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O011_ids.png",
+      "annotated_sha256": "1b8ceeacb999ee7c03c1afcccd1d9e42cf3e75f4f5b4cb0078a041c4832a595e",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O012": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d26_0715_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O012.png",
+      "sha256": "2cbd398a00fbb50381cdba9d0b298aafc04df212722b79e8a1cdffac7f951221",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O012_ids.png",
+      "annotated_sha256": "4cfa6de264e98c9401b2c8807aff9d89e0c657bb84cdc5e003feac55263e0617",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A6",
+          "id": 6,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O013": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O013.png",
+      "sha256": "8498a86698e510d72779902c78cf31ae4931a4905a07b610a65cc606cb3dfaa3",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O013_ids.png",
+      "annotated_sha256": "dbd5407bfc92e1ae4af8191928edeca6f8f9125142e487f0e61a1a91dc5527b3",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O014": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O014.png",
+      "sha256": "3e68fb63169fd75bb76d9755330cce7f03dbb596f9af7862fa741d7f4bf58cf5",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O014_ids.png",
+      "annotated_sha256": "275bf78d89e01683d9c3fc0076f8eca6dfd2ec95fc828be161fee0392b80ef9e",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O015": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0715_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O015.png",
+      "sha256": "e03a7f26bb50912750ebae98d6930ec7cba3a4ae360daacac305755d6fc4006e",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O015_ids.png",
+      "annotated_sha256": "c5dac52addd570acfe955a90ca7a84ed68884312051d8e0088a26e3f1f2e916b",
+      "objects": [
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O016": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O016.png",
+      "sha256": "a07fa6bcb7f062efb047e1e0d1a59dccadc710043491f8b6b2a2bc984c0e78a0",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O016_ids.png",
+      "annotated_sha256": "a718fffb0a1a5e8a8dfae27a0bc30fff69d358a6e5853b4aca96f8e95f9f41e9",
+      "objects": [
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O017": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0630_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O017.png",
+      "sha256": "bab359fe777c7e593eec9d567621127930427e5608fba8450f0922a221324a7f",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O017_ids.png",
+      "annotated_sha256": "fa9486dd34949a16543df6d222771bbd36c69b33a0f557ebce0e3cb89c34392d",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O018": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0715_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O018.png",
+      "sha256": "4dac9184fd0642f9d85eede90d7c93ec1d58db5d6a0c7eea2a48660480e73a57",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O018_ids.png",
+      "annotated_sha256": "85af63fde66e1b7b0afd9725fd98b8ccf1e9e5e809fc7c5a2ad007f6f980d78f",
+      "objects": [
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A10",
+          "id": 10,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A17",
+          "id": 17,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A7",
+          "id": 7,
+          "kind": "agent"
+        },
+        {
+          "label": "A24",
+          "id": 24,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A16",
+          "id": 16,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O019": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d32_1200_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O019.png",
+      "sha256": "0465c8b19aa454cf3c9a44cd9e6b55ec6b3710852a8e7cfc2e56c804ca67693c",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O019_ids.png",
+      "annotated_sha256": "de6d1ebf910acce2fb24692c6a82ecfa7f4b19dbe2981927a4d33a09f2c8ee3a",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A3",
+          "id": 3,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A18",
+          "id": 18,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A39",
+          "id": 39,
+          "kind": "agent"
+        },
+        {
+          "label": "A1",
+          "id": 1,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A11",
+          "id": 11,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A38",
+          "id": 38,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        },
+        {
+          "label": "A35",
+          "id": 35,
+          "kind": "agent"
+        },
+        {
+          "label": "A36",
+          "id": 36,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O020": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d40_1200_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O020.png",
+      "sha256": "0e0898e784db48b2369fa4db082e74afc4ad08bd03f3cc4a0e681d732d27546e",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O020_ids.png",
+      "annotated_sha256": "493841384902b90f0ea07fbb66acdb1946c1a6764a26ef1bb297d2b19f1e3529",
+      "objects": [
+        {
+          "label": "A9",
+          "id": 9,
+          "kind": "agent"
+        },
+        {
+          "label": "A44",
+          "id": 44,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A2",
+          "id": 2,
+          "kind": "agent"
+        },
+        {
+          "label": "A45",
+          "id": 45,
+          "kind": "agent"
+        },
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A46",
+          "id": 46,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A42",
+          "id": 42,
+          "kind": "agent"
+        },
+        {
+          "label": "A15",
+          "id": 15,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A39",
+          "id": 39,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A41",
+          "id": 41,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A40",
+          "id": 40,
+          "kind": "agent"
+        },
+        {
+          "label": "A38",
+          "id": 38,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        },
+        {
+          "label": "A35",
+          "id": 35,
+          "kind": "agent"
+        },
+        {
+          "label": "A36",
+          "id": 36,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O021": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d43_1500_FC.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O021.png",
+      "sha256": "d37740224c05f51d32b79ace37dc78174dc415fba5bf21362eb4fd55a969e972",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O021_ids.png",
+      "annotated_sha256": "dfd77fcfc843a2d5396294e59244cc85349a21e3a08b44c2aa593584618dc9ea",
+      "objects": [
+        {
+          "label": "A4",
+          "id": 4,
+          "kind": "agent"
+        },
+        {
+          "label": "A46",
+          "id": 46,
+          "kind": "agent"
+        },
+        {
+          "label": "A14",
+          "id": 14,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A43",
+          "id": 43,
+          "kind": "agent"
+        },
+        {
+          "label": "A42",
+          "id": 42,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A8",
+          "id": 8,
+          "kind": "agent"
+        },
+        {
+          "label": "A12",
+          "id": 12,
+          "kind": "agent"
+        },
+        {
+          "label": "A47",
+          "id": 47,
+          "kind": "agent"
+        },
+        {
+          "label": "A38",
+          "id": 38,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        },
+        {
+          "label": "A36",
+          "id": 36,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O022": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O022.png",
+      "sha256": "b01c640889cc4270d6190296061e37d24c709216108d3ed13242b042914f4d38",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O022_ids.png",
+      "annotated_sha256": "199c60272fb53c8b3106d96d5b1affe40113d0a212668ddc6ba50144e4e382e7",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O023": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O023.png",
+      "sha256": "7b75140292a02147bcb93e1e849eba13c1bb4d96ebc921875cef1d5b5229030d",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O023_ids.png",
+      "annotated_sha256": "26927d48abe9d529a37848d0a89f49175d12a5dbdfbaf0e5cab8b8bd85396f2c",
+      "objects": [
+        {
+          "label": "A38",
+          "id": 38,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O024": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O024.png",
+      "sha256": "3c98296616f051be8906991694c06e40dafc54e58d7c2b30b67ac16ca10d3d79",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O024_ids.png",
+      "annotated_sha256": "eaef40f98b33b704b2e5e3f38a469a9a562781a96f540fedd4a4a11241b84162",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O025": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O025.png",
+      "sha256": "8f8bca898e5cee940e3e2dd06e1e82d9a6def040da375b101300cf6329d01272",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O025_ids.png",
+      "annotated_sha256": "b092e9b363f8a34bed418fc1d136573989cba7ea0cc3f874a7059c73b5700e5b",
+      "objects": [
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A46",
+          "id": 46,
+          "kind": "agent"
+        },
+        {
+          "label": "A42",
+          "id": 42,
+          "kind": "agent"
+        },
+        {
+          "label": "A50",
+          "id": 50,
+          "kind": "agent"
+        },
+        {
+          "label": "A47",
+          "id": 47,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O026": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0715_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O026.png",
+      "sha256": "909db7c2623d7f08d15f8a661c2a6ef308d106ef1698988b28820fb95d980faa",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O026_ids.png",
+      "annotated_sha256": "551eb36ec7b89d1a1fcafad52b8822567741c14b028cc4077d825690b337e344",
+      "objects": [
+        {
+          "label": "A52",
+          "id": 52,
+          "kind": "agent"
+        },
+        {
+          "label": "A49",
+          "id": 49,
+          "kind": "agent"
+        },
+        {
+          "label": "A44",
+          "id": 44,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A54",
+          "id": 54,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A45",
+          "id": 45,
+          "kind": "agent"
+        },
+        {
+          "label": "A51",
+          "id": 51,
+          "kind": "agent"
+        },
+        {
+          "label": "A46",
+          "id": 46,
+          "kind": "agent"
+        },
+        {
+          "label": "A33",
+          "id": 33,
+          "kind": "agent"
+        },
+        {
+          "label": "A26",
+          "id": 26,
+          "kind": "agent"
+        },
+        {
+          "label": "A43",
+          "id": 43,
+          "kind": "agent"
+        },
+        {
+          "label": "A42",
+          "id": 42,
+          "kind": "agent"
+        },
+        {
+          "label": "A27",
+          "id": 27,
+          "kind": "agent"
+        },
+        {
+          "label": "A39",
+          "id": 39,
+          "kind": "agent"
+        },
+        {
+          "label": "A50",
+          "id": 50,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A41",
+          "id": 41,
+          "kind": "agent"
+        },
+        {
+          "label": "A48",
+          "id": 48,
+          "kind": "agent"
+        },
+        {
+          "label": "A40",
+          "id": 40,
+          "kind": "agent"
+        },
+        {
+          "label": "A47",
+          "id": 47,
+          "kind": "agent"
+        },
+        {
+          "label": "A38",
+          "id": 38,
+          "kind": "agent"
+        },
+        {
+          "label": "A31",
+          "id": 31,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A29",
+          "id": 29,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        },
+        {
+          "label": "A35",
+          "id": 35,
+          "kind": "agent"
+        },
+        {
+          "label": "A36",
+          "id": 36,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O027": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d71_1500_FC.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O027.png",
+      "sha256": "9998d4a4d8addb02c05a42454f0f1ad28e47c08342b7c097847a79b0625dd827",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O027_ids.png",
+      "annotated_sha256": "068599daec7a336f9713dde5166b46e4b5c854210de123985600f319df5dfc76",
+      "objects": [
+        {
+          "label": "A52",
+          "id": 52,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        }
+      ]
+    },
+    "O028": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O028.png",
+      "sha256": "a3fdb9142767c855b1ab39b7541f107b4ac97e47da7f62c2290fb33c4d35fc96",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O028_ids.png",
+      "annotated_sha256": "b2cc7c59fd2326982e2dd20ec8ab330e1dc5442eb6bb91520018e2c5f24a81f9",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O029": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O029.png",
+      "sha256": "f875c1b7cc31d081d1bdd587cdc195fc60eec1902f1770fe044828ab423a08d2",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O029_ids.png",
+      "annotated_sha256": "e8bc749a964679ac3bac8c5801939fb4b1f45353dff68380a4a18dc24b514f07",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        }
+      ]
+    },
+    "O030": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0715_F2.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O030.png",
+      "sha256": "c4cf855334f2fa441e4335952dce48d7bd35747f2a757052e7035c2acd6ca6f2",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O030_ids.png",
+      "annotated_sha256": "187218e482842fe4cfc162b5b0ce4d3cbb1e6c88c76ae7f1f51b3fe026fffc3d",
+      "objects": [
+        {
+          "label": "A52",
+          "id": 52,
+          "kind": "agent"
+        },
+        {
+          "label": "A49",
+          "id": 49,
+          "kind": "agent"
+        },
+        {
+          "label": "A44",
+          "id": 44,
+          "kind": "agent"
+        },
+        {
+          "label": "A54",
+          "id": 54,
+          "kind": "agent"
+        },
+        {
+          "label": "A45",
+          "id": 45,
+          "kind": "agent"
+        },
+        {
+          "label": "A51",
+          "id": 51,
+          "kind": "agent"
+        },
+        {
+          "label": "A46",
+          "id": 46,
+          "kind": "agent"
+        },
+        {
+          "label": "A57",
+          "id": 57,
+          "kind": "agent"
+        },
+        {
+          "label": "A63",
+          "id": 63,
+          "kind": "agent"
+        },
+        {
+          "label": "A43",
+          "id": 43,
+          "kind": "agent"
+        },
+        {
+          "label": "A42",
+          "id": 42,
+          "kind": "agent"
+        },
+        {
+          "label": "A55",
+          "id": 55,
+          "kind": "agent"
+        },
+        {
+          "label": "A60",
+          "id": 60,
+          "kind": "agent"
+        },
+        {
+          "label": "A39",
+          "id": 39,
+          "kind": "agent"
+        },
+        {
+          "label": "A50",
+          "id": 50,
+          "kind": "agent"
+        },
+        {
+          "label": "A59",
+          "id": 59,
+          "kind": "agent"
+        },
+        {
+          "label": "A41",
+          "id": 41,
+          "kind": "agent"
+        },
+        {
+          "label": "A58",
+          "id": 58,
+          "kind": "agent"
+        },
+        {
+          "label": "A56",
+          "id": 56,
+          "kind": "agent"
+        },
+        {
+          "label": "A48",
+          "id": 48,
+          "kind": "agent"
+        },
+        {
+          "label": "A40",
+          "id": 40,
+          "kind": "agent"
+        },
+        {
+          "label": "A47",
+          "id": 47,
+          "kind": "agent"
+        },
+        {
+          "label": "A38",
+          "id": 38,
+          "kind": "agent"
+        },
+        {
+          "label": "A61",
+          "id": 61,
+          "kind": "agent"
+        },
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B75",
+          "id": 75,
+          "kind": "building"
+        },
+        {
+          "label": "A62",
+          "id": 62,
+          "kind": "agent"
+        },
+        {
+          "label": "A35",
+          "id": 35,
+          "kind": "agent"
+        },
+        {
+          "label": "A36",
+          "id": 36,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        }
+      ]
+    }
+  },
+  "cycles": [
+    {
+      "stem": "l_d23_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.png",
+      "sha256": "227cda497cf8e596f11ab122f18d036425065d9cb15043583384cf9940e171cb",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "1a3aeb8efcbf1b7c8263eee0cc5e71b7a86da20e0f17c2f02cfbfbcef8200364",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d23_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "c223f3473cb6a08e609d962d78eb6c12b41cca29b825e05f52fb32dab40bb454",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_00.png",
+          "sha256": "5c972ec8df6d0736f57a7910b233e400740981764bcddffbe069d2e44c662cbc",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_04.png",
+          "sha256": "a12caacd7e65a2f42a76eaaba9d336a720549e3dd31ae5ba0e9932191b7d4e30",
+          "relative_seconds": 0.380892
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_08.png",
+          "sha256": "05df23cff14514e369b790620027803ea2b659f480d97da1d0ac740f84782247",
+          "relative_seconds": 0.768819
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_12.png",
+          "sha256": "e6390482db1e06b6383aa6195900b9ac9d15a7819f24e6ddb4b7feebf16be961",
+          "relative_seconds": 1.17456
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_16.png",
+          "sha256": "5be867a0c760439c891fee670554a93695afa1749e2901931a11f144b90e52c2",
+          "relative_seconds": 1.57732
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_20.png",
+          "sha256": "abcd292d1353e08c982352a772eac9803e4963ba72c74c487fcb72e12a3715a6",
+          "relative_seconds": 1.976379
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_24.png",
+          "sha256": "5724f702008fc073e1a66778ca4eaa2e8703cfb5018d1ebc85d7fef23fab55c5",
+          "relative_seconds": 2.381075
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_28.png",
+          "sha256": "6a7d69601256a36d724344d92a4674afba7f32e9ab7ac787bdfe6fd7de5b7e80",
+          "relative_seconds": 2.767832
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_32.png",
+          "sha256": "daef3033a1b6afc93583d68e907eb3bf799d4a3d952b105865f69cef93d44813",
+          "relative_seconds": 3.175374
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_36.png",
+          "sha256": "966ae168012b4d215051f9c11b629b3ffe2ea6bbe43fe82dcebc18e34154879f",
+          "relative_seconds": 3.575976
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_40.png",
+          "sha256": "78fbccbc4264fda93b563f954d21c8aaf8eb743fe7ee678881f5aff6dceeaeca",
+          "relative_seconds": 3.986063
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_44.png",
+          "sha256": "f13b589febd0834f7bedd95fd5c9c70b54a0f279c8cb127dae9228bc9cb4d7e8",
+          "relative_seconds": 4.367647
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d23_0200_F2N.cold_cycle_48.png",
+          "sha256": "1c83d79fe4890219fb460c8868fda45a66e6f67edf1adc4f6c4507cdef6a3b0e",
+          "relative_seconds": 4.769972
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch001/O008_sequence.png",
+      "observer_sha256": "28cbd4db541289dd5572c1601e119cce955e239f5c8213d39a9dbaab340aa2e6"
+    },
+    {
+      "stem": "l_d24_2300_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.png",
+      "sha256": "0e3a65f1262f343c7a17cf27fbf8f9d606448904da01bcb290337045cc62648a",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle.json",
+      "cycle_sha256": "af00a173638dc24297cfd3aaab00c12866e905b9ee477ee0816578dfe5f348a6",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d24_2300_F2N.cold_cycle_contact.png",
+      "contact_sha256": "1987c894f26418a82fd2a562c0027f072af6218c2b5111cdf07b134213f6da41",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_00.png",
+          "sha256": "49ff8bf969a5aac70324f1505c87d7f225e3d1139002298c642c48bdd7588393",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_04.png",
+          "sha256": "f30ac4d9a6eb2c8906008386f9a6f4bef4a61c49059f66da8c6d517c726f8a5b",
+          "relative_seconds": 0.375507
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_08.png",
+          "sha256": "e86e0aea933a7b398d9614ae8be2b9a89f3231cde1cfb3a4c9e2233195e5050f",
+          "relative_seconds": 0.774617
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_12.png",
+          "sha256": "35fdb1640c6a9a4bc03fb9164f3048069016776d343555b18bcd30622895484f",
+          "relative_seconds": 1.174871
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_16.png",
+          "sha256": "a8324b8340820e10ba9789c13eb669c93c8c65b1b179a0c0c2f4a9afd8004fdd",
+          "relative_seconds": 1.575817
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_20.png",
+          "sha256": "f44dac48b8dae6afcd7057713582b0e763ee8553f37b91691b310f83605ea522",
+          "relative_seconds": 1.975558
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_24.png",
+          "sha256": "18d087a7d81a07ce09eb314aec8c32dd165d466ce647cba323966eb5d6fac727",
+          "relative_seconds": 2.373605
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_28.png",
+          "sha256": "f5a8000f02576ce8d904c13facd40c78b50d01221fd4a0753fbd33e38d9942a8",
+          "relative_seconds": 2.774874
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_32.png",
+          "sha256": "f2733457d91c394ca80129376d6c54b64c281df5e8d372a87366a6a7c36ec71f",
+          "relative_seconds": 3.175478
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_36.png",
+          "sha256": "ccf6c8a41463f097c051025e1b44c3a234a60482440d1c6b7a2595e7f0b38b30",
+          "relative_seconds": 3.575372
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_40.png",
+          "sha256": "a973141a1ba528f2afe609f6080f40c2dd60be8c1b9ca0400d8125f458352a04",
+          "relative_seconds": 3.974912
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_44.png",
+          "sha256": "5d17c5dc7160f7bd5a4889c57d1e323000d23cb5a65bba03d7e2738452da1b58",
+          "relative_seconds": 4.375273
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d24_2300_F2N.cold_cycle_48.png",
+          "sha256": "763bbf5fe502dedb9f8d792f8ccf9c647885352568ae95cc2fc13b4fbab7eb29",
+          "relative_seconds": 4.776167
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O011_sequence.png",
+      "observer_sha256": "d6e74853d0439632ce50c266da69b21a9e2e8765662fad1f4485f584cb046ad5"
+    },
+    {
+      "stem": "l_d28_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.png",
+      "sha256": "8498a86698e510d72779902c78cf31ae4931a4905a07b610a65cc606cb3dfaa3",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "57ccd424197b7d51e6a5d57e3637f058043256f10a952cb46cac10e9241d1c86",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d28_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "237a25f0254a834babac96e08f6e2416d39aa3d959175abf7a8752b378b74042",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_00.png",
+          "sha256": "4443648ecc415a470e9f1194718df52a30e01db1e4747fd4210ad6ac4e047aa8",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_04.png",
+          "sha256": "c2a39391d89588e309869bc86322a03d376b4275f0bba51ce0f7352c357d0a39",
+          "relative_seconds": 0.37031
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_08.png",
+          "sha256": "aae4aedbded3612d23f503ae8c95223aa144adce0b7da8fcc3dc5657bc6ca185",
+          "relative_seconds": 0.771884
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_12.png",
+          "sha256": "cb50124d6f86f47fc51072c6ecc2c05fd287035dd4b50aa23e8b05b56aeba9ce",
+          "relative_seconds": 1.182165
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_16.png",
+          "sha256": "60595e5064e8c5942cfd7393dc3ecfb4ae18855e244e1f16e632b9906373964a",
+          "relative_seconds": 1.58685
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_20.png",
+          "sha256": "95f050ad2e92c5f5847dc799091db2b50b23796fcf74499791b39f03efb3ce6d",
+          "relative_seconds": 1.991926
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_24.png",
+          "sha256": "552a2225ffa07aa4b8f91c166e533bc1810819e0d7842b62655029cd79378638",
+          "relative_seconds": 2.382188
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_28.png",
+          "sha256": "e2ca4f70332601ccf6d8ab2a44fed785e0eddac29e188592da7a4c815c76ce1d",
+          "relative_seconds": 2.778032
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_32.png",
+          "sha256": "acaf5dbf804daa7b854e30a536c0d4177c866afe999847d0ea8a9c63a2e9711a",
+          "relative_seconds": 3.187791
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_36.png",
+          "sha256": "e54b24983cbdecea88b9e7a9cf308461a53663d9cad7194dec89c14f6b2f599a",
+          "relative_seconds": 3.581763
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_40.png",
+          "sha256": "93fb6b0d944b1bd54789b5dee50f8d4fe4bba2dfe862a9abad3e4230d6dfc0a0",
+          "relative_seconds": 3.974308
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_44.png",
+          "sha256": "0d4d44af2927fce22e9e03558636b98cd20c660a6bf6cb579809cb1101ad1731",
+          "relative_seconds": 4.407216
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2N.cold_cycle_48.png",
+          "sha256": "7a6136ffd6205c93d8e67dbfd8a064781757b23c8d591b750c470b6f16d83c70",
+          "relative_seconds": 4.770572
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O013_sequence.png",
+      "observer_sha256": "a50e5c5466a52055d2c5cf04c84f6d35b931608f17b46fe61893794f77d4665e"
+    },
+    {
+      "stem": "l_d28_0200_F2Z",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.png",
+      "sha256": "3e68fb63169fd75bb76d9755330cce7f03dbb596f9af7862fa741d7f4bf58cf5",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle.json",
+      "cycle_sha256": "79ec9e1e0edfdd292479b757d6827c9d0089cee19a5ffae850f29d7c9733b8f9",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d28_0200_F2Z.cold_cycle_contact.png",
+      "contact_sha256": "8165eb8adea935b08792ee0837af5205f1fb6370b7383a04105d8ac0a70c9728",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_00.png",
+          "sha256": "3fb1816e82e7a63e731169d9b7b1603f0dbea27c3abe4b49c9430941aa0b4a4b",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_04.png",
+          "sha256": "7da027d66159a59c01402c0465bb32d26a896619fa59a024982f763eff8e84b9",
+          "relative_seconds": 0.370159
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_08.png",
+          "sha256": "51886198c1665901ba3781fca09429e5aa2a09f7c4f4baffe504b63d3ea889fa",
+          "relative_seconds": 0.767337
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_12.png",
+          "sha256": "dd4f33304bf416d89cfcaa789eb9c805ba836264ab856713cba15c0358e01b80",
+          "relative_seconds": 1.168558
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_16.png",
+          "sha256": "bfef6b532e7c0e6594052998e3c02cdb5174e8e1164c1c94535b99edaa7271c3",
+          "relative_seconds": 1.579705
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_20.png",
+          "sha256": "efd8846dea244d9a7168d2d892d49e71214880980e31e1b51a19d44f1a9e9236",
+          "relative_seconds": 1.981985
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_24.png",
+          "sha256": "6747625a08bbe7263b9df6369560db454cace53303c076cef9ca38257b833363",
+          "relative_seconds": 2.378248
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_28.png",
+          "sha256": "b3bc5264675fda16dd196a1931ab0f96742ef669069e29e4ca629eb0fc2cb863",
+          "relative_seconds": 2.772572
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_32.png",
+          "sha256": "1edccfd5164aa32a8804b99de70b5906537b06983227791ef36c923c79f72215",
+          "relative_seconds": 3.180215
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_36.png",
+          "sha256": "1cac9243a348f56d714d7f4e4c5e548d8a5871ac35b3067ce19553e44046115e",
+          "relative_seconds": 3.57256
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_40.png",
+          "sha256": "6b868c18cc5a8a2d61adf9bbf0d0fb4b77df7943203c77ebdc1252008b2a46a0",
+          "relative_seconds": 3.976453
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_44.png",
+          "sha256": "1ca8c54c71106003b2471ca5013b67fa3c89545a82e178857601c23b6696161f",
+          "relative_seconds": 4.377447
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d28_0200_F2Z.cold_cycle_48.png",
+          "sha256": "1137972ccbe134743d1cb3ff32e9d4566d517cc251a8c55e771dc2f983e4f7d8",
+          "relative_seconds": 4.77882
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O014_sequence.png",
+      "observer_sha256": "bc764ea4fe3f7bf024a6127ab0fa6952f4e33df5bbe4d6ad40aaa9b620729f48"
+    },
+    {
+      "stem": "l_d29_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.png",
+      "sha256": "a07fa6bcb7f062efb047e1e0d1a59dccadc710043491f8b6b2a2bc984c0e78a0",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "ac6f6053195ccef971015d54114a07b00a31b12185eb4c560b5b903d36a2bd3b",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d29_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "330d960aa5eff1ef7e4d1c796a411639140959f0ccf9c0e22832b3ccde930d60",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_00.png",
+          "sha256": "5f715d4488af3af12e79fa033d96fbcdd1946aeb25af70139490dbbbdd68daa2",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_04.png",
+          "sha256": "e9c89744fca7c4a60e29a1a8bc06b253247895741213e9d9415569ac48b55d51",
+          "relative_seconds": 0.343218
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_08.png",
+          "sha256": "a77edfb26a891940369de3f2bd40e913d081339f32006a19d66865e812c5e508",
+          "relative_seconds": 0.777262
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_12.png",
+          "sha256": "68ccc4fe2d1c455e0248cc39e2ed4ce72d818145457ec75b6698075680955328",
+          "relative_seconds": 1.17695
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_16.png",
+          "sha256": "d4d9adb48554fd3fa80dd00da89c48c5adf64d3468adad853d9dc571f0f8b396",
+          "relative_seconds": 1.587151
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_20.png",
+          "sha256": "713dd7eb12a9192fceab74e8a86a1306d9981f9c8d451971d070c9b410c7392f",
+          "relative_seconds": 1.979952
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_24.png",
+          "sha256": "f256bde00e881f3d5860da66a377e37d9981ca42259df6abee2130333f49a50b",
+          "relative_seconds": 2.375907
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_28.png",
+          "sha256": "114d673112bb48a4441689c0fb5a31cd3e1dce2b2af071956a425b77580c4b7a",
+          "relative_seconds": 2.775939
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_32.png",
+          "sha256": "6c6c7ee6745fe4584e1883c176c8c5a339fe597ed2d143a5beb548cb493e76e8",
+          "relative_seconds": 3.17916
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_36.png",
+          "sha256": "88f8ecbbc4c212f06ef184acc289d4e743c83bb99530e4e5c9c3487e8723f3ec",
+          "relative_seconds": 3.583069
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_40.png",
+          "sha256": "da43c01b572f9d8f107ca24de32c83fa1d12b188be334151ea2c66d54e34c145",
+          "relative_seconds": 3.984953
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_44.png",
+          "sha256": "97bbe226d5bc5871a8d94917a9865526cd18c06ceaa3fc284f79ca03c489e53b",
+          "relative_seconds": 4.378778
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0200_F2N.cold_cycle_48.png",
+          "sha256": "fb14017a6a773deb8b24b4f1522f3613514c121bd11834245b828d6906c4a784",
+          "relative_seconds": 4.778867
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch002/O016_sequence.png",
+      "observer_sha256": "f2c925143601789d5ea5698592ea5838c776225a024abbafb5b925687232ea37"
+    },
+    {
+      "stem": "l_d55_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.png",
+      "sha256": "b01c640889cc4270d6190296061e37d24c709216108d3ed13242b042914f4d38",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "d0be7d9390d955f27749b1ed28699264bd33d6e9f17e9bd9b37f908fe76b7ade",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d55_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "3397e549d35ff6d5c62f30509c9ce4f1672e29b5e90a3d26c4c1d59441984320",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_00.png",
+          "sha256": "036936c494e6b5408f2b1b8711f6bbf1a80800fc797adc74c1d468f87ce52c90",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_04.png",
+          "sha256": "a39f8d3e3977234cb5a5b60155940a90d0d75590a747993e2ad86cbe60b9b706",
+          "relative_seconds": 0.37293
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_08.png",
+          "sha256": "e6da5e35244d51bc8c329fc2db10c4b1f2def3d2eead3a01b6ef21670b55b459",
+          "relative_seconds": 0.74591
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_12.png",
+          "sha256": "7fec9e47f834b9e92ada5f36a0c4d712464ba87eaff181a4cffff14f3c7a442d",
+          "relative_seconds": 1.161791
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_16.png",
+          "sha256": "f1b12ad7f2c97f26bb729bb727c9ad7f71b51bb6c13fd396a2b1ff0be09cc622",
+          "relative_seconds": 1.573338
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_20.png",
+          "sha256": "5543833aad0cb75ab2979113c28d9d892f0f8bb6e2aad46be4131a8d99fcf91d",
+          "relative_seconds": 1.970246
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_24.png",
+          "sha256": "117ea3733d2c7454362533a5b76b1a58b3d495a16c41a1915b9b3f1e725c2ff9",
+          "relative_seconds": 2.372654
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_28.png",
+          "sha256": "b0bc9b5b4eddad2aa2417737a26c6f200a16cd917b241f8b3d8bb2dfda623594",
+          "relative_seconds": 2.778826
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_32.png",
+          "sha256": "a97cefe9b1d1ab8a5db11b43d339b5c6976fba7c86a370825734760e26ff212d",
+          "relative_seconds": 3.16922
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_36.png",
+          "sha256": "38da774b0bd4da6d26806cc283a13c052af08b49770daab26a0ae460cfdfca15",
+          "relative_seconds": 3.573984
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_40.png",
+          "sha256": "4ced1d294c67704334486578e7d80ce80ac04f8ca7ae596e50f3c4a569ac1558",
+          "relative_seconds": 3.978216
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_44.png",
+          "sha256": "8738cf10ff7aa7c845d86ff95a33abc5022a3cb955ab560d9e6b50fe515a2663",
+          "relative_seconds": 4.374618
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d55_0200_F2N.cold_cycle_48.png",
+          "sha256": "c9f12ed1c1d5a6bd71a46a7b631a2e24a2aa895be2fdeaf48afea778d9c94346",
+          "relative_seconds": 4.792225
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O022_sequence.png",
+      "observer_sha256": "1e0afcd1052b86f0420602fbf44dafb792e46deffe45768ba109ab10184b7395"
+    },
+    {
+      "stem": "l_d56_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.png",
+      "sha256": "7b75140292a02147bcb93e1e849eba13c1bb4d96ebc921875cef1d5b5229030d",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "736b688877bcfaa292fbe9459341538a5a7a55e6225941ca3ea6dbc655f46d03",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d56_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "c939a8767144268c2d373e46fd57aa52591f59409c9c1083b9106bd69e936fa3",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_00.png",
+          "sha256": "4e9b001bcd07301c502a6f4f5a08bbaf2bb7b0aad1635d92e5e5c569900c25d4",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_04.png",
+          "sha256": "1d4141959f69e3deb699e8519e20656fc4f9a20d4f68f6be6536f58ddff145e6",
+          "relative_seconds": 0.371284
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_08.png",
+          "sha256": "c5e2df56b9430ec55cf6533fa516b8e11174dcf20a01b4df2f43871f1cfd0f86",
+          "relative_seconds": 0.746725
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_12.png",
+          "sha256": "fdb43cf24bf9fa76913ebd66c4c183e9655f8a1efbd22f9e17f6a17c7b8c387d",
+          "relative_seconds": 1.173759
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_16.png",
+          "sha256": "b8163187f165c394be34abee9baeb12a0a2a52b1729ed5de0a04edbff60c62c1",
+          "relative_seconds": 1.569064
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_20.png",
+          "sha256": "0e3b186e847bfabc8971cf96216a68f6f152453c10134dea0a6f90b5dd803182",
+          "relative_seconds": 1.964078
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_24.png",
+          "sha256": "b77557809b9ae3f356e03c6f00f8664c936713b164e061c4123c38410ce2c6ed",
+          "relative_seconds": 2.376416
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_28.png",
+          "sha256": "f545f48d5737a27b6f269ff16ca93ee6a68aba342c441818b3fd9442ec3341da",
+          "relative_seconds": 2.772488
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_32.png",
+          "sha256": "6370b3ed287f6acf62249def3b5093722b99ee22cedfdcbd885bd612a3b16e41",
+          "relative_seconds": 3.188274
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_36.png",
+          "sha256": "72e994ee2733f810303b5ae97005ba933b4cadb24ee80126e3b94219fc6acb73",
+          "relative_seconds": 3.575994
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_40.png",
+          "sha256": "728dde6d466b708cdc1c3187d124c894a7f7069278d3159dd2042cff8c875940",
+          "relative_seconds": 3.964258
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_44.png",
+          "sha256": "3adedd9f20c256502d43902524cc96fa1ecabfa48bde27c46d231766173dbd82",
+          "relative_seconds": 4.375224
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d56_0200_F2N.cold_cycle_48.png",
+          "sha256": "e7b58062a3e94fdf175e4d6dff6287d64da745f2a3dec6b8c5aed3029c7a9a0a",
+          "relative_seconds": 4.778659
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O023_sequence.png",
+      "observer_sha256": "983c6dbcb8d53aefc7988582b907b39339dd76cc88841bf964ca0af9f9d9e5ba"
+    },
+    {
+      "stem": "l_d57_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.png",
+      "sha256": "3c98296616f051be8906991694c06e40dafc54e58d7c2b30b67ac16ca10d3d79",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "1950f477f6e49c25d21077449bd873460d960e46266f3da8c7f7d3f76eca5589",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d57_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "060f9c30ef366f460a6eb2b90290e53d10bf16b6cb413889bee926ce79c066c3",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_00.png",
+          "sha256": "9432e7cd191594f1832cc6b3817b064f7b8143a25fd7237f292c1f6fc6c26ae0",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_04.png",
+          "sha256": "d444af9bd57221084a310760821e465b6417dae60ed327448878e64f27788696",
+          "relative_seconds": 0.374466
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_08.png",
+          "sha256": "3fb215adfdb7c6432861736e892c080f077b9b412d870ebfcdda3cbe10b79cb0",
+          "relative_seconds": 0.776185
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_12.png",
+          "sha256": "5d922f84cf76985f9ba5126c699f0283cda21e8773966a8c4c36e7f3a01a8ee6",
+          "relative_seconds": 1.175089
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_16.png",
+          "sha256": "6dabf9ab317c74aee99d55a278fe447d45b8055ee53429c85afc4e97014a853c",
+          "relative_seconds": 1.558116
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_20.png",
+          "sha256": "6ed12e6d0150c525f5083728531d5a4db042782b644a3dbaf0a7588d6e54aa38",
+          "relative_seconds": 1.965612
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_24.png",
+          "sha256": "003bf17ce9e4e37a912a50beac8d386c2f74e8824a9c5c606800a60861634707",
+          "relative_seconds": 2.381782
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_28.png",
+          "sha256": "0573e2ca6457b08ebb92fd09834798361e42210f38edb50d4cf4168691e457ac",
+          "relative_seconds": 2.773716
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_32.png",
+          "sha256": "75782930a39fe596f18a59860b504c48e1f4c2d4f69bb179b51ec9da4e8c30ce",
+          "relative_seconds": 3.173315
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_36.png",
+          "sha256": "b747a497b8d0f7f44df60ab8f32fc00c9ce0090ed729777646c1b9a0f4560f3f",
+          "relative_seconds": 3.576688
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_40.png",
+          "sha256": "510610f77d0b15b2dd5689960127bb073b03152ff24744ae58a3e05a3d95ca20",
+          "relative_seconds": 3.977869
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_44.png",
+          "sha256": "a70cc7c5f9c7ccd4b2b893c31d277cce2149ec49598473eb02764e619ce217ce",
+          "relative_seconds": 4.361678
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0200_F2N.cold_cycle_48.png",
+          "sha256": "27874f91ed3efa22b5ba07d5890454ce74ed42bb4ede21745437b7931a708a9d",
+          "relative_seconds": 4.77013
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch003/O024_sequence.png",
+      "observer_sha256": "e5a160626929727241f3ebde5e6cf1716092f78d0ebb9ae0c36a664c0e9abfbd"
+    },
+    {
+      "stem": "l_d57_0401_DE",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.png",
+      "sha256": "8f8bca898e5cee940e3e2dd06e1e82d9a6def040da375b101300cf6329d01272",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle.json",
+      "cycle_sha256": "702451480e20a2adb2a877641f87a84555c00b784839324f84c7b8add4428778",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d57_0401_DE.cold_cycle_contact.png",
+      "contact_sha256": "659c70872e7cee0668d1cfda8fc3b00c9c6474f8b165c595a786051bc5e6c5a3",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_00.png",
+          "sha256": "4a7ccce8e035c79948c86914149565ba2f53feb22dc5c18b915af313cf08c9f2",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_04.png",
+          "sha256": "d495471dacef13c44e84199a8ed411af61496e178f7e36b50d6b36abc9efd5b8",
+          "relative_seconds": 0.372729
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_08.png",
+          "sha256": "cfbce0a95a6b69628471585ba622033eda5d289ab2f19dcd934b9eed5776aeee",
+          "relative_seconds": 0.809832
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_12.png",
+          "sha256": "8292787fdc8e0afcc047521e53cf74cacba1786c50800ae42b23785b7c4d53d0",
+          "relative_seconds": 1.164637
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_16.png",
+          "sha256": "69faf7aed5e924d2f46a1224b59ec9288ec825489ec069bc000163ba18c67bbc",
+          "relative_seconds": 1.580291
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_20.png",
+          "sha256": "0dad11e1609883ba056f425ce463e81e695b187ddc2f78c14e28fd5b325f79c8",
+          "relative_seconds": 1.96237
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_24.png",
+          "sha256": "14c4c489ed7a1931fa76243ea7a7b9baac4173575b8ed66cf2985e253ca476f4",
+          "relative_seconds": 2.388357
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_28.png",
+          "sha256": "e6fe65e29d4fc19bd4ce1faa5803ac0fd25dfe7405b11468d403f27797f04f89",
+          "relative_seconds": 2.755568
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_32.png",
+          "sha256": "dccae7f83121fa6de797c4dcd37582f1db90c5df2d05f6942216c297ba6ba9b5",
+          "relative_seconds": 3.156653
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_36.png",
+          "sha256": "034d233a326eb87732128a41016c54552403567fb1cfba7b1682e61ca0ca7db2",
+          "relative_seconds": 3.574973
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_40.png",
+          "sha256": "3832d5fdacb07f890174bf3b4d47ccb8647c9aa5d2eed1d86275ccc4c2920c66",
+          "relative_seconds": 3.979087
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_44.png",
+          "sha256": "80e6e996d093257756e2c0529a724ff2403ba2401985d48f425e771cdfc7a6b3",
+          "relative_seconds": 4.369563
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d57_0401_DE.cold_cycle_48.png",
+          "sha256": "50a464e7abcdba90482892ef3717414adbf25d19edb9dc79e9045fee53674d75",
+          "relative_seconds": 4.770763
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O025_sequence.png",
+      "observer_sha256": "afab07e865807becdabe0c42f5c9cb6932b470e0f5cc48e2e36ffa352348d237"
+    },
+    {
+      "stem": "l_d84_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.png",
+      "sha256": "a3fdb9142767c855b1ab39b7541f107b4ac97e47da7f62c2290fb33c4d35fc96",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "28682fe8ebba0128397f744cf6a99eb6798e053efd3c3c823053cf2da49271d0",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d84_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "0abd5ae273b90f54bf4771a431bbc6bfee007d38ba687ea03008067ac44be4ca",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_00.png",
+          "sha256": "0c6bc51c9cfdfe61601c77295b430fb464a84af86406a6369713af0021db1099",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_04.png",
+          "sha256": "2f743fddea187fbe2fb3b0d4ce32d8114085112eb90319995ed271a1ad0f02a3",
+          "relative_seconds": 0.38745
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_08.png",
+          "sha256": "6bf80c463c945c2f0c5f858a89f3800feba20b6abb73f5efe8a2081a11c2f10d",
+          "relative_seconds": 0.787025
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_12.png",
+          "sha256": "477928dfd26591e2508e7961891267372dea3c4736e384ed78fb3b5cb68cff53",
+          "relative_seconds": 1.172825
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_16.png",
+          "sha256": "dbf23062e981865a39ba5089caa13258d2a808f425e0cec4c6e1c18a4b13665a",
+          "relative_seconds": 1.55725
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_20.png",
+          "sha256": "27d97c695857f5858d3afa811670fc8ce9916f5767202a1ed28ecf4ce099d501",
+          "relative_seconds": 1.95909
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_24.png",
+          "sha256": "d928f34935834824d369fbb994cf70507ac41b13fedfcd2656f06bfbbab053cb",
+          "relative_seconds": 2.379228
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_28.png",
+          "sha256": "2f724c6dbe6c383d55d07a74c5414e778e76e8e34652667194eb5f4164566368",
+          "relative_seconds": 2.778941
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_32.png",
+          "sha256": "dff5155d59eca9e8a63064af67aec2d2767fedbef1ce4531079ba7cd11330491",
+          "relative_seconds": 3.168457
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_36.png",
+          "sha256": "2fe82f4635671851e69e42c8eb9fcead81bf2a2bafc2b76d6e1c9bcb59dca33c",
+          "relative_seconds": 3.566386
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_40.png",
+          "sha256": "c0b07a6b5554073cab00bbc4cf88e0994f8dc93d4c146a646afa0bcb3400e3d8",
+          "relative_seconds": 3.948758
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_44.png",
+          "sha256": "c273249f1bc3bba272c0364edf8f2cc7fef71ae3e51092ed06b3a9ecaf0f62c7",
+          "relative_seconds": 4.368501
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d84_0200_F2N.cold_cycle_48.png",
+          "sha256": "2da65583831ab784b3603a05147572ed4c2098732ef0abe925d78753fc769560",
+          "relative_seconds": 4.773244
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O028_sequence.png",
+      "observer_sha256": "9d5497057cb801f901b2de2e5b0f8b3aa3ca6f027885db4c22c885e6ff93efb0"
+    },
+    {
+      "stem": "l_d85_0200_F2N",
+      "source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.png",
+      "sha256": "f875c1b7cc31d081d1bdd587cdc195fc60eec1902f1770fe044828ab423a08d2",
+      "cycle_source": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle.json",
+      "cycle_sha256": "ac6a0a05bbf9ff3e605390d88793b22ba21e8384036625e53a2ccef5b845bad3",
+      "contact": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/cycle_sources/l_d85_0200_F2N.cold_cycle_contact.png",
+      "contact_sha256": "bdccfecbc1a404462a0e66cb32d54f8f69aecebcd8642ccec6d8018872fbc759",
+      "shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "samples": [
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_00.png",
+          "sha256": "06a183d723c82d0ccf69472760e15bcafcf0834868d453d6612ecf7dba878768",
+          "relative_seconds": 0.0
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_04.png",
+          "sha256": "cf239222ed22d5381ce72fbf2f116136a64f73ffbb8e0ede09281cb796545373",
+          "relative_seconds": 0.384604
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_08.png",
+          "sha256": "689368df861b5af92a4b6cdb7073713e2fdfa75d21135077d630a34fda72b50a",
+          "relative_seconds": 0.766072
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_12.png",
+          "sha256": "017c42fd2394394d5cba4dbbe17f332a0ae9ac123bb8a7a67c74a40054b8bcd6",
+          "relative_seconds": 1.174919
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_16.png",
+          "sha256": "a917611adf6001f82ffeaf3aa3fcebb0983d64ba01dbb728ebfd8a741cfc56d9",
+          "relative_seconds": 1.570074
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_20.png",
+          "sha256": "afc52a46c67871b11ff3d85dd9106a041e96a17bda4efa53ba55261675fcab85",
+          "relative_seconds": 1.976279
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_24.png",
+          "sha256": "9d350ee0b2f7823ed64992b34f711c35c0ec5d3f32028f18053c2696f48f9006",
+          "relative_seconds": 2.378164
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_28.png",
+          "sha256": "795a34a7aef935a50fc43a6da3a7d662a112345b73a8a8a66a51e2aa7893ad66",
+          "relative_seconds": 2.775638
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_32.png",
+          "sha256": "eef1334e7654f9ad1419a6e34d0e47916241794cdb825e8ee4045d44ca39e44a",
+          "relative_seconds": 3.183421
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_36.png",
+          "sha256": "325b28031014731631e7183f45d713c3205e1c83f010e8c714c5a901215c6584",
+          "relative_seconds": 3.56752
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_40.png",
+          "sha256": "acb8598ce16cec5416cb6bce5b645cf48d9a8e16f77b8c3ae5604439987b47a6",
+          "relative_seconds": 3.992558
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_44.png",
+          "sha256": "1dba45ac5c4ddb45f07d29720efdb3cc12cfb8e007790b05f9ffcf199e580357",
+          "relative_seconds": 4.360497
+        },
+        {
+          "file": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d85_0200_F2N.cold_cycle_48.png",
+          "sha256": "66f55d0614b779fe2fe32cdf85b68fdc99d2537d1a08fbb00766760ecee2d540",
+          "relative_seconds": 4.775772
+        }
+      ],
+      "observer_image": "/Users/rexxa/work/art-production8-evidence/blind-round1/long-review/packets/objects/batch004/O029_sequence.png",
+      "observer_sha256": "2a9dd4957a129f87b7e02d13d10db39e4280788ddbc655e5ffda2809d85bb1ea"
+    }
+  ]
+}

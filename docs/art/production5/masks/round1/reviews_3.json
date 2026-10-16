@@ -1,0 +1,284 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_b4_11",
+      "candidate_id": "V_b4_11@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The wood load reads at 2x; the rear hair recolours coherently in flaxen and black without changing the load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_12",
+      "candidate_id": "V_b4_12@1:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The rear hair mask contains an interior unselected strip and selects several pixels on the carried wood; the flaxen preview leaves a dark hair patch.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_13",
+      "candidate_id": "V_b4_13@1:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The crown retains a dark interior patch in the flaxen preview; the overlay also reaches the ground-level wood at the left.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_14",
+      "candidate_id": "V_b4_14@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The diagonal branch and gathering stance read at 2x; flaxen and black stay on the visible hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_15",
+      "candidate_id": "V_b4_15@1:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Only a small rear-crown patch is selected; a broad brown section of visible hair remains unchanged in the flaxen preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_16",
+      "candidate_id": "V_b4_16@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The held branch remains legible at 2x; the hair colour changes preserve the face and clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_E_eat_01",
+      "candidate_id": "P2V_b_E_eat_01:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The hand-to-mouth eating pose reads at 2x; white and black previews preserve the profile and hand. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_E_eat_02",
+      "candidate_id": "P2V_b_E_eat_02:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The eating gesture reads at 2x and the hair previews retain the tan face and hands. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_drink_01",
+      "candidate_id": "P2V_b_S_drink_01:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Only the upper-left hair patch is selected; most of the crown and side hair stay brown in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_drink_02",
+      "candidate_id": "P2V_b_S_drink_02:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The crown changes colour, but the hanging side hair remains dark brown below the selected region on both sides.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_01",
+      "candidate_id": "V_b1_01:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The idle identity matches the adjacent reference; crown recolouring preserves face and clothing. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_02",
+      "candidate_id": "V_b1_02:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The mask selects the left half of the scalp while the large right hair section stays brown in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_03",
+      "candidate_id": "V_b1_03:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The rear hair has an unselected dark interior channel extending into its lower tail, visible in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_04",
+      "candidate_id": "V_b1_04:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The long hair descending behind the shoulder is largely outside the mask and stays brown in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_05",
+      "candidate_id": "V_b1_05:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The right half of the scalp remains brown; the white preview recolours only the left hair section.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_06",
+      "candidate_id": "V_b1_06:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The walking silhouette reads at 2x; white and black hair remain distinct from the face and tunic. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_07",
+      "candidate_id": "V_b1_07:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The walking pose and reference colour family are retained; recolouring follows the visible head hair. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_08",
+      "candidate_id": "V_b1_08:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The walking stance reads at 2x and the hair previews preserve skin and clothing. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The carried red-and-brown load reads at 2x; hair and beard recolour while the visible facial opening remains. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The load is visible at 2x; the side-facing facial strip remains tan in the hair previews. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_07",
+      "candidate_id": "V_b2_07:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The carrying action remains readable at 2x; the visible face opening and load remain outside the recolouring. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_08",
+      "candidate_id": "V_b2_08:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The carried load and stepping stance read at 2x; white and black previews preserve the small facial strip. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_11",
+      "candidate_id": "V_b2_11:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Gathering vegetation reads at 2x; crown recolouring leaves face, hands and plants intact. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_12",
+      "candidate_id": "V_b2_12:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The gathered plant and raised hands remain legible; hair recolouring preserves the face and red fruit. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_15",
+      "candidate_id": "V_b2_15:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The raised building tool clearly reads at 2x; white and black hair previews retain skin and tool colours. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_16",
+      "candidate_id": "V_b2_16:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The lowered tool is visible against the stone at 2x; the recolouring preserves face and construction objects. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_03",
+      "candidate_id": "V_b3_03:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The hand reaches the mouth at 2x; the side hair recolours without whitening the raised hand. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_05",
+      "candidate_id": "V_b3_05:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The red food and eating gesture read at 2x; hair previews preserve the central face and hands. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_06",
+      "candidate_id": "V_b3_06:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The food-at-mouth pose reads at 2x; white and black hair remain separate from the food and skin. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_07",
+      "candidate_id": "V_b3_07:mask5",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Side hair below the crown remains brown beside the face in the white preview, beyond a couple of edge texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_09",
+      "candidate_id": "V_b3_09:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The conversational raised hand reads at 2x; recoloured hair surrounds a preserved tan face. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_10",
+      "candidate_id": "V_b3_10:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Both raised hands and the talking pose remain legible; the white preview preserves skin and tunic. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_12",
+      "candidate_id": "V_b3_12:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east-facing talking gesture reads at 2x; recolouring preserves the facial profile and outstretched hand. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_14",
+      "candidate_id": "V_b3_14:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The crouched silhouette reads at 2x; the crown previews preserve the face, arms and clothing. Raw is unavailable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_15",
+      "candidate_id": "V_b3_15:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The crouching pose and reference colour family remain coherent; white and black previews preserve the central face. Raw is unavailable.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+	"camera": [
+		1016.0,
+		500.0
+	],
+	"capture_frame": 130,
+	"debug_build": true,
+	"delta_tolerance": 0.000000001,
+	"fixed_fps": 60,
+	"framing": "P5",
+	"seed": 15100,
+	"settle_frames": 120,
+	"sim_reads": true,
+	"state_change_frame": 10,
+	"tick": 1440,
+	"validated_delta_samples": 131,
+	"zoom": 4
+}

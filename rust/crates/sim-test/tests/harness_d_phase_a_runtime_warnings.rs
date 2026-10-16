@@ -13,9 +13,9 @@
 //! Assertion → test mapping (locked thresholds):
 //!   A3 — no `float(... TILE_SIZE / 2 ...)` pattern in agent_renderer.gd
 //!   A4 — no `float(... TILE_SIZE / 2 ...)` pattern in world_renderer.gd
-//!   A5 — `_ingest_memory_recalls(_ids: PackedInt64Array …)` exists exactly once
-//!   A6 — `_ingest_combat_events(_ids: …, _agent_ids: …)` exists exactly once
-//!   A7 — active params (xs/ys/n) NOT underscored inside the two ingest fns
+//!   A5 — `_ingest_memory_recalls(events: Array)` exists exactly once
+//!   A6 — `_ingest_combat_events(events: Array)` exists exactly once
+//!   A7 — active params (events/tick/xs/ys) NOT underscored inside the two ingest fns
 //!   A8 — `fn get_construction_snapshot` survives in sim-bridge/src/ffi/
 //!   A9 — `fn get_settlement_snapshot` survives in sim-bridge/src/ffi/
 //!
@@ -218,32 +218,11 @@ fn first_param_matches(params: &str, param_name: &str, type_name: &str) -> bool 
     lhs == param_name && rhs == type_name
 }
 
-/// Check that the parameter list's first TWO parameters match the expected
-/// names and types.
-fn first_two_params_match(
-    params: &str,
-    n1: &str,
-    t1: &str,
-    n2: &str,
-    t2: &str,
-) -> bool {
-    let mut it = params.split(',');
-    let first = it.next().unwrap_or("").trim();
-    let second = it.next().unwrap_or("").trim();
-    let mut p1 = first.splitn(2, ':');
-    let mut p2 = second.splitn(2, ':');
-    let n1a = p1.next().map(str::trim).unwrap_or("");
-    let t1a = p1.next().map(str::trim).unwrap_or("");
-    let n2a = p2.next().map(str::trim).unwrap_or("");
-    let t2a = p2.next().map(str::trim).unwrap_or("");
-    n1a == n1 && t1a == t1 && n2a == n2 && t2a == t2
-}
-
-/// Returns true if any param name in the list is one of `_xs`, `_ys`, `_n`.
+/// Returns true if any param name in the list is an underscored active input.
 fn any_param_over_prefixed(params: &str) -> bool {
     for chunk in params.split(',') {
         let nm = chunk.trim().split(':').next().unwrap_or("").trim();
-        if nm == "_xs" || nm == "_ys" || nm == "_n" {
+        if matches!(nm, "_xs" | "_ys" | "_n" | "_events" | "_tick") {
             return true;
         }
     }
@@ -307,7 +286,7 @@ fn harness_d_phase_a_no_integer_division_in_world_renderer() {
     println!("[D-A A4] world_renderer.gd integer-division pattern absent ✓");
 }
 
-// ── A5 — memory_recall signature has leading-underscore _ids ──────────────
+// ── A5 — memory_recall signature has no obsolete unused IDs ──────────────
 #[test]
 fn harness_d_phase_a_memory_recall_signature_underscored() {
     // Type: D
@@ -320,17 +299,17 @@ fn harness_d_phase_a_memory_recall_signature_underscored() {
          definition; found {}",
         lists.len()
     );
-    let ok = first_param_matches(&lists[0], "_ids", "PackedInt64Array");
+    let ok = first_param_matches(&lists[0], "events", "Array") && !lists[0].contains(',');
     assert!(
         ok,
-        "A5: first param of _ingest_memory_recalls must be \
-         `_ids: PackedInt64Array`; got `{}`",
+        "A5: only active param of _ingest_memory_recalls must be \
+         `events: Array`; got `{}`",
         lists[0]
     );
-    println!("[D-A A5] _ingest_memory_recalls(_ids: PackedInt64Array, …) ✓");
+    println!("[D-A A5] _ingest_memory_recalls(events: Array) ✓");
 }
 
-// ── A6 — combat_event signature has _ids AND _agent_ids ───────────────────
+// ── A6 — combat_event signature has no obsolete unused IDs ───────────────────
 #[test]
 fn harness_d_phase_a_combat_event_signature_underscored() {
     // Type: D
@@ -343,31 +322,25 @@ fn harness_d_phase_a_combat_event_signature_underscored() {
          definition; found {}",
         lists.len()
     );
-    let ok = first_two_params_match(
-        &lists[0],
-        "_ids",
-        "PackedInt64Array",
-        "_agent_ids",
-        "PackedInt64Array",
-    );
+    let ok = first_param_matches(&lists[0], "events", "Array") && !lists[0].contains(',');
     assert!(
         ok,
-        "A6: first two params of _ingest_combat_events must be \
-         `_ids: PackedInt64Array, _agent_ids: PackedInt64Array`; got `{}`",
+        "A6: only active param of _ingest_combat_events must be \
+         `events: Array`; got `{}`",
         lists[0]
     );
     println!(
-        "[D-A A6] _ingest_combat_events(_ids, _agent_ids, …) ✓"
+        "[D-A A6] _ingest_combat_events(events: Array) ✓"
     );
 }
 
-// ── A7 — active params (xs/ys/n) MUST NOT be underscored ──────────────────
+// ── A7 — active params (events/tick/xs/ys) MUST NOT be underscored ──────────────────
 #[test]
 fn harness_d_phase_a_active_params_not_underscored() {
     // Type: A — over-correction guard
     let body = strip_gd_comments(&read_agent_renderer_src());
     let mut offenders: Vec<String> = Vec::new();
-    for name in ["_ingest_memory_recalls", "_ingest_combat_events"] {
+    for name in ["_ingest_memory_recalls", "_ingest_combat_events", "_ingest_causal_events"] {
         for params in extract_param_lists(&body, name) {
             if any_param_over_prefixed(&params) {
                 offenders.push(format!("{name}({params})"));
@@ -376,10 +349,10 @@ fn harness_d_phase_a_active_params_not_underscored() {
     }
     assert!(
         offenders.is_empty(),
-        "A7: active params (xs, ys, n) must remain unprefixed; found \
+        "A7: active params (events, tick, xs, ys) must remain unprefixed; found \
          over-prefixed in: {offenders:?}"
     );
-    println!("[D-A A7] active params (xs, ys, n) not over-prefixed ✓");
+    println!("[D-A A7] active params (events, tick, xs, ys) not over-prefixed ✓");
 }
 
 // ── A8 — FFI get_construction_snapshot survives in sim-bridge ────────────

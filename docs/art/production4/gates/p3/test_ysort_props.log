@@ -1,0 +1,76 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+ERROR: agent feet use snapshot tile and stable jitter
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://scripts/test/art/test_ysort_props.gd:10)
+       [1] _run (res://scripts/test/art/test_ysort_props.gd:59)
+test_ysort_props: FAIL

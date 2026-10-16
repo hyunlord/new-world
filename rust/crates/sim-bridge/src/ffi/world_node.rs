@@ -335,6 +335,25 @@ impl WorldSimNode {
         intervention_reply_to_dict(apply_intervention_command(&mut self.engine, &kind.to_string(), settlement_id, amount))
     }
 
+    /// Art Pass 6: read intervention presentation state without advancing the world.
+    #[func]
+    fn get_intervention_state(&self) -> VarDictionary {
+        let state = collect_intervention_state(&self.engine.resources, self.engine.current_tick());
+        let mut dict = VarDictionary::new();
+        dict.set("rain_settlement_ids", PackedInt32Array::from(state.rain_settlement_ids.as_slice()));
+        dict.set("rain_ticks_left", PackedInt32Array::from(state.rain_ticks_left.as_slice()));
+        dict.set("cold_snap_nights_left", i64::from(state.cold_snap_nights_left));
+        dict.set("cold_snap_tonight", state.cold_snap_tonight);
+        dict.set("log_ticks", PackedInt64Array::from(state.log_ticks.as_slice()));
+        dict.set("log_ids", PackedInt64Array::from(state.log_ids.as_slice()));
+        dict.set("log_settlement_ids", PackedInt32Array::from(state.log_settlement_ids.as_slice()));
+        let kinds: Vec<GString> = state.log_kinds.iter().map(|kind| GString::from(*kind)).collect();
+        dict.set("log_kinds", PackedStringArray::from(kinds.as_slice()));
+        dict.set("log_amounts", PackedInt64Array::from(state.log_amounts.as_slice()));
+        dict.set("log_applied", PackedInt64Array::from(state.log_applied.as_slice()));
+        dict
+    }
+
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
@@ -417,6 +436,21 @@ impl WorldSimNode {
     fn get_tile_causal_history(&self, x: i32, y: i32) -> VarArray {
         let views = try_collect_tile_causal_history(&self.engine.resources, x, y);
         event_views_to_variant_array(&views)
+    }
+
+    /// Art Pass 9: filtered causal events in input-tile/ring order, once per id.
+    #[func]
+    fn get_tile_causal_events(
+        &self,
+        xs: PackedInt32Array,
+        ys: PackedInt32Array,
+        kinds: PackedStringArray,
+    ) -> VarArray {
+        let tiles: Vec<(i32, i32)> = xs.as_slice().iter().copied()
+            .zip(ys.as_slice().iter().copied()).collect();
+        let names: Vec<String> = kinds.as_slice().iter().map(ToString::to_string).collect();
+        let kinds: Vec<&str> = names.iter().map(String::as_str).collect();
+        event_views_to_variant_array(&collect_tile_causal_events(&self.engine.resources, &tiles, &kinds))
     }
 
     /// γ-1: walk the causal chain backwards from `event_id` on tile
@@ -626,6 +660,13 @@ impl WorldSimNode {
         // Pass 6 — additive floor of each settlement's wood target.
         let wood_targets = collect_settlement_wood_targets(&rows, &self.engine.resources);
         settlement_rows_to_dict(&rows, &self.engine.resources.fires, &wood_targets)
+    }
+
+    /// Art Pass 7: read settlement lineage, roster identity and founding history.
+    #[func]
+    fn get_society_snapshot(&self) -> VarDictionary {
+        let snapshot = collect_society_snapshot(&self.engine.world, &self.engine.resources);
+        society_snapshot_to_dict(&snapshot)
     }
 
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
@@ -1336,6 +1377,76 @@ pub fn collect_event_chain(
         .iter()
         .map(|ev| CausalEventView::from_event(ev))
         .collect()
+}
+
+/// Collect matching events once, preserving tile input order and oldest-first rings.
+/// Invalid coordinates are ignored, just like the single-tile getter.
+pub fn collect_tile_causal_events(
+    resources: &SimResources,
+    tiles: &[(i32, i32)],
+    kinds: &[&str],
+) -> Vec<CausalEventView> {
+    let mut seen = std::collections::BTreeSet::new();
+    let mut events = Vec::new();
+    for &(x, y) in tiles {
+        for event in try_collect_tile_causal_history(resources, x, y) {
+            if kinds.contains(&event.kind) && seen.insert(event.id) {
+                events.push(event);
+            }
+        }
+    }
+    events
+}
+
+#[cfg(test)]
+mod art_p9_causal_batch_tests {
+    use super::*;
+
+    fn fixture() -> SimEngine {
+        let mut engine = SimEngine::new(2, 2, MaterialRegistry::new());
+        let placed = |id| CausalEvent::BuildingPlaced {
+            id, parent: None, position: (0, 0), radius: 1, tick: 3,
+        };
+        engine.resources.causal_log.push(0, placed(9));
+        engine.resources.causal_log.push(0, placed(2));
+        engine.resources.causal_log.push(1, placed(2));
+        engine.resources.causal_log.push(1, placed(7));
+        engine.resources.causal_log.push(1, CausalEvent::InfluenceChanged {
+            id: 11, parent: None, channel: InfluenceChannel::Warmth,
+            position: (1, 0), old: 0.0, new: 1.0, tick: 4,
+        });
+        engine
+    }
+
+    #[test]
+    fn empty_input_and_invalid_tiles_are_empty() {
+        let engine = fixture();
+        assert!(collect_tile_causal_events(&engine.resources, &[], &["building_placed"]).is_empty());
+        assert!(collect_tile_causal_events(&engine.resources, &[(-1, 0), (2, 2)], &["building_placed"]).is_empty());
+    }
+
+    #[test]
+    fn shared_events_are_emitted_once() {
+        let engine = fixture();
+        let events = collect_tile_causal_events(&engine.resources, &[(0, 0), (1, 0), (0, 0)], &["building_placed"]);
+        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![9, 2, 7]);
+    }
+
+    #[test]
+    fn kinds_filter_excludes_other_events() {
+        let engine = fixture();
+        assert!(collect_tile_causal_events(&engine.resources, &[(0, 0)], &["combat_started"]).is_empty());
+        assert!(collect_tile_causal_events(&engine.resources, &[(0, 0)], &[]).is_empty());
+        let events = collect_tile_causal_events(&engine.resources, &[(0, 0), (1, 0)], &["influence_changed"]);
+        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![11]);
+    }
+
+    #[test]
+    fn input_tile_and_ring_order_win_over_event_id_order() {
+        let engine = fixture();
+        let events = collect_tile_causal_events(&engine.resources, &[(1, 0), (0, 0)], &["building_placed"]);
+        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![2, 7, 9]);
+    }
 }
 
 /// γ-1 pure-Rust FFI-mirror of `WorldSimNode::get_tile_causal_history`.
@@ -2488,6 +2599,135 @@ pub fn collect_settlement_snapshot(
     rows
 }
 
+#[derive(Debug, Default, PartialEq, Eq)]
+struct SocietySnapshot {
+    settlement_ids: Vec<i32>,
+    parent_ids: Vec<i32>,
+    founded_ticks: Vec<i64>,
+    member_counts: Vec<i32>,
+    fission_pressures: Vec<i64>,
+    fission_thresholds: Vec<i64>,
+    home_agent_ids: Vec<i64>,
+    home_settlement_ids: Vec<i32>,
+    founder_agent_ids: Vec<i64>,
+    founder_fission_ids: Vec<i32>,
+    founder_site_xs: Vec<i32>,
+    founder_site_ys: Vec<i32>,
+    founder_leader: Vec<u8>,
+    founder_since_ticks: Vec<i64>,
+    fission_ids: Vec<i32>,
+    fission_parents: Vec<i32>,
+    fission_site_xs: Vec<i32>,
+    fission_site_ys: Vec<i32>,
+    fission_sizes: Vec<i32>,
+    fission_depart_ticks: Vec<i64>,
+    fission_founded_ticks: Vec<i64>,
+    fission_cancelled_ticks: Vec<i64>,
+    fission_daughters: Vec<i32>,
+    fission_food_taken: Vec<i64>,
+    retired_hearth_xs: Vec<i32>,
+    retired_hearth_ys: Vec<i32>,
+    current_tick: i64,
+}
+
+fn collect_society_snapshot(world: &hecs::World, resources: &SimResources) -> SocietySnapshot {
+    use sim_core::components::Founding;
+
+    // Match the existing bridge's integer representation, including u64 AgentId bits.
+    let mut snapshot = SocietySnapshot {
+        current_tick: resources.current_tick as i64,
+        ..SocietySnapshot::default()
+    };
+    for row in collect_settlement_snapshot(world, &resources.settlements) {
+        let settlement = &resources.settlements[&row.settlement_id];
+        snapshot.settlement_ids.push(settlement.settlement_id as i32);
+        snapshot.parent_ids.push(settlement.parent.map_or(-1, |id| id as i32));
+        snapshot.founded_ticks.push(settlement.founded_at as i64);
+        snapshot.member_counts.push(settlement.member_agents.len() as i32);
+        snapshot.fission_pressures.push(i64::try_from(settlement.fission_pressure).unwrap_or(i64::MAX));
+        snapshot.fission_thresholds.push(i64::try_from(settlement.fission_threshold).unwrap_or(i64::MAX));
+    }
+    let mut homes: Vec<_> = resources.settlements.values()
+        .flat_map(|settlement| settlement.member_agents.iter()
+            .map(|&agent_id| (agent_id, settlement.settlement_id)))
+        .collect();
+    homes.sort_unstable();
+    for (agent_id, settlement_id) in homes {
+        snapshot.home_agent_ids.push(agent_id as i64);
+        snapshot.home_settlement_ids.push(settlement_id as i32);
+    }
+    let mut founders: Vec<_> = world.query::<(&Agent, &Founding)>().iter()
+        .map(|(_, (agent, founding))| (agent.id, *founding)).collect();
+    founders.sort_unstable_by_key(|(agent_id, _)| *agent_id);
+    for (agent_id, founding) in founders {
+        snapshot.founder_agent_ids.push(agent_id as i64);
+        snapshot.founder_fission_ids.push(founding.fission_id as i32);
+        snapshot.founder_site_xs.push(founding.site.0 as i32);
+        snapshot.founder_site_ys.push(founding.site.1 as i32);
+        snapshot.founder_leader.push(u8::from(agent_id == founding.leader));
+        snapshot.founder_since_ticks.push(founding.since_tick as i64);
+    }
+    let mut fissions: Vec<_> = resources.fission_log.iter().collect();
+    fissions.sort_unstable_by_key(|record| record.fission_id);
+    for record in fissions {
+        snapshot.fission_ids.push(record.fission_id as i32);
+        snapshot.fission_parents.push(record.parent as i32);
+        snapshot.fission_site_xs.push(record.site.0 as i32);
+        snapshot.fission_site_ys.push(record.site.1 as i32);
+        snapshot.fission_sizes.push(record.members.len() as i32);
+        snapshot.fission_depart_ticks.push(record.depart_tick as i64);
+        snapshot.fission_founded_ticks.push(record.founded_tick.map_or(-1, |tick| tick as i64));
+        snapshot.fission_cancelled_ticks.push(record.cancelled_tick.map_or(-1, |tick| tick as i64));
+        snapshot.fission_daughters.push(record.daughter.map_or(-1, |id| id as i32));
+        snapshot.fission_food_taken.push(i64::from(record.food_taken));
+    }
+    for &(x, y) in &resources.retired_hearths {
+        snapshot.retired_hearth_xs.push(x as i32);
+        snapshot.retired_hearth_ys.push(y as i32);
+    }
+    snapshot
+}
+
+fn society_snapshot_to_dict(snapshot: &SocietySnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    for (key, values) in [
+        ("settlement_ids", &snapshot.settlement_ids),
+        ("parent_ids", &snapshot.parent_ids),
+        ("member_counts", &snapshot.member_counts),
+        ("home_settlement_ids", &snapshot.home_settlement_ids),
+        ("founder_fission_ids", &snapshot.founder_fission_ids),
+        ("founder_site_xs", &snapshot.founder_site_xs),
+        ("founder_site_ys", &snapshot.founder_site_ys),
+        ("fission_ids", &snapshot.fission_ids),
+        ("fission_parents", &snapshot.fission_parents),
+        ("fission_site_xs", &snapshot.fission_site_xs),
+        ("fission_site_ys", &snapshot.fission_site_ys),
+        ("fission_sizes", &snapshot.fission_sizes),
+        ("fission_daughters", &snapshot.fission_daughters),
+        ("retired_hearth_xs", &snapshot.retired_hearth_xs),
+        ("retired_hearth_ys", &snapshot.retired_hearth_ys),
+    ] {
+        dict.set(key, PackedInt32Array::from(values.as_slice()));
+    }
+    for (key, values) in [
+        ("founded_ticks", &snapshot.founded_ticks),
+        ("fission_pressures", &snapshot.fission_pressures),
+        ("fission_thresholds", &snapshot.fission_thresholds),
+        ("home_agent_ids", &snapshot.home_agent_ids),
+        ("founder_agent_ids", &snapshot.founder_agent_ids),
+        ("founder_since_ticks", &snapshot.founder_since_ticks),
+        ("fission_depart_ticks", &snapshot.fission_depart_ticks),
+        ("fission_founded_ticks", &snapshot.fission_founded_ticks),
+        ("fission_cancelled_ticks", &snapshot.fission_cancelled_ticks),
+        ("fission_food_taken", &snapshot.fission_food_taken),
+    ] {
+        dict.set(key, PackedInt64Array::from(values.as_slice()));
+    }
+    dict.set("founder_leader", PackedByteArray::from(snapshot.founder_leader.as_slice()));
+    dict.set("current_tick", snapshot.current_tick);
+    dict
+}
+
 /// Marshal a [`SettlementSnapshotRow`] slice into the FFI dictionary
 /// shape consumed by `WorldRenderer._update_settlement_furniture`.
 /// Eight parallel `PackedArray`s, lengths always equal to `rows.len()`.
@@ -2840,6 +3080,74 @@ pub fn parse_intervention(
     intervention_from_kind(kind, settlement, amount)
 }
 
+/// Read-only intervention presentation columns, ordered by settlement and log time.
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct InterventionState {
+    /// Settlement IDs with active rain, ascending.
+    pub rain_settlement_ids: Vec<i32>,
+    /// Remaining ticks paired with the settlement IDs, saturated to the FFI range.
+    pub rain_ticks_left: Vec<i32>,
+    /// Pending cold-snap nights, including tonight when active.
+    pub cold_snap_nights_left: u32,
+    /// Whether the simulation has booked tonight as a cold snap.
+    pub cold_snap_tonight: bool,
+    /// Ticks of the last 32 records, oldest first.
+    pub log_ticks: Vec<i64>,
+    /// Absolute record indices, stable across the bounded presentation window.
+    pub log_ids: Vec<i64>,
+    /// Actual target settlement, or -1 for world-wide interventions.
+    pub log_settlement_ids: Vec<i32>,
+    /// Canonical intervention names, paired with log ticks.
+    pub log_kinds: Vec<&'static str>,
+    /// Requested units, hours or nights for each record.
+    pub log_amounts: Vec<i64>,
+    /// Applied amounts for each record.
+    pub log_applied: Vec<i64>,
+}
+
+/// Collect presentation state without mutating resources or consuming randomness.
+pub fn collect_intervention_state(resources: &SimResources, now: u64) -> InterventionState {
+    use sim_engine::Intervention;
+    use sim_systems::runtime::intervention::KINDS;
+    let mut state = InterventionState {
+        cold_snap_nights_left: resources.cold_snap_nights,
+        cold_snap_tonight: resources.cold_snap_tonight,
+        ..InterventionState::default()
+    };
+    let mut rain: Vec<_> = resources.fire_blocked_until.iter().filter(|(_, until)| **until > now).collect();
+    rain.sort_unstable_by_key(|(id, _)| **id);
+    for (id, until) in rain {
+        state.rain_settlement_ids.push(i32::try_from(*id).unwrap_or(i32::MAX));
+        state.rain_ticks_left.push(i32::try_from(*until - now).unwrap_or(i32::MAX));
+    }
+    for (index, record) in resources.intervention_log.iter().enumerate().skip(resources.intervention_log.len().saturating_sub(32)) {
+        let (kind, amount) = match record.intervention {
+            Intervention::GiftFood { amount, .. } => (KINDS[0], amount),
+            Intervention::SpoilFood { amount, .. } => (KINDS[1], amount),
+            Intervention::GiftWood { amount, .. } => (KINDS[2], amount),
+            Intervention::RotWood { amount, .. } => (KINDS[3], amount),
+            Intervention::Rain { hours, .. } => (KINDS[4], hours),
+            Intervention::ColdSnap { nights } => (KINDS[5], nights),
+            Intervention::Windfall { units } => (KINDS[6], units),
+        };
+        let settlement = match record.intervention {
+            Intervention::GiftFood { settlement, .. }
+            | Intervention::SpoilFood { settlement, .. }
+            | Intervention::GiftWood { settlement, .. }
+            | Intervention::RotWood { settlement, .. }
+            | Intervention::Rain { settlement, .. } => i32::try_from(settlement).unwrap_or(i32::MAX),
+            Intervention::ColdSnap { .. } | Intervention::Windfall { .. } => -1,
+        };
+        state.log_ids.push(i64::try_from(index).unwrap_or(i64::MAX));
+        state.log_settlement_ids.push(settlement);
+        state.log_ticks.push(i64::try_from(record.tick).unwrap_or(i64::MAX));
+        state.log_kinds.push(kind);
+        state.log_amounts.push(i64::from(amount));
+        state.log_applied.push(i64::try_from(record.applied).unwrap_or(i64::MAX));
+    }
+    state
+}
+
 /// Pass 7: result of the `apply_intervention` command.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct InterventionReply {
@@ -3075,6 +3383,59 @@ mod revitalize_tooling_tests {
         assert_eq!(super::parse_intervention("gift_wood", -1, -1, Some(4)), None);
         assert_eq!(super::parse_intervention("rot_wood", -1, 1, None), None);
         assert_eq!(super::parse_intervention("spoil_food", i64::MAX, 1, Some(4)), None);
+    }
+
+    #[test]
+    fn intervention_state_is_read_only_sorted_bounded_and_preserves_variant_amounts() {
+        use sim_engine::{InterventionRecord, SimResources};
+        use sim_systems::runtime::intervention::{intervention_from_kind, KINDS};
+        let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
+        assert_eq!(super::collect_intervention_state(&resources, 0), super::InterventionState::default());
+        resources.fire_blocked_until.extend([(9, 30), (2, 20), (3, 10), (4, 9)]);
+        resources.cold_snap_nights = 2;
+        resources.cold_snap_tonight = true;
+        for tick in 0..35 {
+            resources.intervention_log.push(InterventionRecord {
+                tick,
+                intervention: intervention_from_kind(KINDS[usize::try_from(tick % 7).unwrap()], 2, u32::try_from(tick + 1).unwrap()).unwrap(),
+                applied: tick,
+                soaked_wood: 0,
+            });
+        }
+        let state = super::collect_intervention_state(&resources, 10);
+        assert_eq!(state.rain_settlement_ids, [2, 9]);
+        assert_eq!(state.rain_ticks_left, [10, 20]);
+        assert_eq!((state.cold_snap_nights_left, state.cold_snap_tonight), (2, true));
+        assert_eq!(state.log_ticks, (3..35).collect::<Vec<i64>>());
+        assert_eq!(state.log_ids, (3..35).collect::<Vec<i64>>());
+        assert_eq!(state.log_settlement_ids, (3..35).map(|index| if index % 7 < 5 { 2 } else { -1 }).collect::<Vec<i32>>());
+        assert_eq!(state.log_amounts, (4..36).collect::<Vec<i64>>());
+        assert_eq!(state.log_applied, state.log_ticks);
+        for (offset, kind) in state.log_kinds.iter().enumerate() {
+            assert_eq!(*kind, KINDS[(offset + 3) % 7]);
+        }
+        assert_eq!(state, super::collect_intervention_state(&resources, 10));
+        assert_eq!(resources.intervention_log.len(), 35);
+        assert_eq!(resources.fire_blocked_until.len(), 4);
+    }
+
+    #[test]
+    fn intervention_feed_identity_distinguishes_equal_casts_and_targets() {
+        use sim_engine::{Intervention, InterventionRecord, SimResources};
+        let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
+        for settlement in [7, 42, 7] {
+            resources.intervention_log.push(InterventionRecord {
+                tick: 12,
+                intervention: Intervention::GiftFood { settlement, amount: 60 },
+                applied: 60,
+                soaked_wood: 0,
+            });
+        }
+        let state = super::collect_intervention_state(&resources, 12);
+        assert_eq!(state.log_ids, [0, 1, 2]);
+        assert_eq!(state.log_ticks, [12, 12, 12]);
+        assert_eq!(state.log_settlement_ids, [7, 42, 7]);
+        assert_eq!(state.log_applied, [60, 60, 60]);
     }
 
     #[test]
@@ -3337,6 +3698,134 @@ mod revitalize_world_snapshot_tests {
     }
 }
 
+
+#[cfg(test)]
+mod society_snapshot_tests {
+    use super::*;
+    use sim_core::components::Founding;
+    use sim_engine::FissionRecord;
+
+    #[test]
+    fn society_joins_built_world_agents_and_preserves_order_filter_and_history() {
+        let seed = 20_261_013;
+        let mut engine = build_world_with(
+            &WorldGenConfig::game_v17(seed), WorldRules::game_v17(seed),
+        );
+        advance_engine_ticks(&mut engine, 1_440);
+        let agent_rows = collect_agent_snapshot(&engine.world);
+        let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
+        assert!(!snapshot.home_agent_ids.is_empty());
+        assert_eq!(snapshot.fission_pressures, vec![0; snapshot.settlement_ids.len()]);
+        assert_eq!(snapshot.fission_thresholds, vec![0; snapshot.settlement_ids.len()]);
+        for (&agent_id, &home_id) in snapshot.home_agent_ids.iter().zip(&snapshot.home_settlement_ids) {
+            assert!(agent_rows.iter().any(|row| row.agent_id as i64 == agent_id));
+            assert!(engine.resources.settlements[&(home_id as u32)].member_agents.contains(&(agent_id as u64)));
+        }
+        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+
+        let first = snapshot.home_agent_ids[0] as u64;
+        let second = snapshot.home_agent_ids[1] as u64;
+        let parent = snapshot.home_settlement_ids[0] as u32;
+        let mut daughter = Settlement::new_with_id(20, 120);
+        daughter.parent = Some(parent);
+        daughter.fission_pressure = 850;
+        daughter.fission_threshold = 1_200;
+        daughter.add_member_agent(second);
+        let parent_settlement = engine.resources.settlements.get_mut(&parent).unwrap();
+        parent_settlement.member_agents.remove(&second);
+        parent_settlement.fission_pressure = 325;
+        parent_settlement.fission_threshold = 900;
+        engine.resources.settlements.insert(20, daughter);
+        let mut hidden = Settlement::new_with_id(30, 130);
+        hidden.add_member_agent(u64::MAX);
+        hidden.fission_pressure = 777;
+        hidden.fission_threshold = 888;
+        engine.resources.settlements.insert(30, hidden);
+        let first_entity = engine.world.query::<&Agent>().iter()
+            .find(|(_, agent)| agent.id == first).map(|(entity, _)| entity).unwrap();
+        engine.world.insert_one(first_entity, Founding {
+            site: (8, 9), fission_id: 2, leader: first, since_tick: 100,
+        }).unwrap();
+        engine.resources.fission_log = vec![
+            FissionRecord {
+                fission_id: 2, parent, site: (8, 9), depart_tick: 100,
+                members: vec![first], adults: 1, daughter: None, founded_tick: None,
+                cancelled_tick: None, food_taken: 23, wood_taken: 0, settled_at_leader: false,
+                pressure_at_split: 0, threshold_at_split: 0,
+            },
+            FissionRecord {
+                fission_id: 1, parent, site: (2, 3), depart_tick: 80,
+                members: vec![second], adults: 1, daughter: Some(20), founded_tick: Some(120),
+                cancelled_tick: Some(90), food_taken: 17, wood_taken: 0, settled_at_leader: false,
+                pressure_at_split: 0, threshold_at_split: 0,
+            },
+        ];
+        engine.resources.retired_hearths.extend([(9, 4), (2, 5)]);
+        let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
+        let settlement_rows = collect_settlement_snapshot(&engine.world, &engine.resources.settlements);
+        assert_eq!(snapshot.settlement_ids, settlement_rows.iter().map(|row| row.settlement_id as i32).collect::<Vec<_>>());
+        assert_eq!(snapshot.settlement_ids, vec![parent as i32, 20]);
+        assert_eq!(snapshot.parent_ids, vec![-1, parent as i32]);
+        assert_eq!(snapshot.fission_pressures, [325, 850]);
+        assert_eq!(snapshot.fission_thresholds, [900, 1_200]);
+        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+        assert_eq!(snapshot.founded_ticks[1], 120);
+        assert_eq!(snapshot.member_counts[0] as usize, engine.resources.settlements[&parent].member_agents.len());
+        let member_index = snapshot.home_agent_ids.iter().position(|&id| id == first as i64).unwrap();
+        assert_eq!(snapshot.home_settlement_ids[member_index], parent as i32);
+        assert_eq!(snapshot.home_agent_ids.last(), Some(&-1));
+        assert_eq!(snapshot.home_settlement_ids.last(), Some(&30));
+        assert_eq!(snapshot.founder_agent_ids, vec![first as i64]);
+        assert_eq!(snapshot.founder_fission_ids, vec![2]);
+        assert_eq!(snapshot.founder_site_xs, vec![8]);
+        assert_eq!(snapshot.founder_site_ys, vec![9]);
+        assert_eq!(snapshot.founder_leader, vec![1]);
+        assert_eq!(snapshot.founder_since_ticks, vec![100]);
+        assert_eq!(snapshot.fission_ids, vec![1, 2]);
+        assert_eq!(snapshot.fission_parents, vec![parent as i32, parent as i32]);
+        assert_eq!(snapshot.fission_site_xs, vec![2, 8]);
+        assert_eq!(snapshot.fission_site_ys, vec![3, 9]);
+        assert_eq!(snapshot.fission_sizes, vec![1, 1]);
+        assert_eq!(snapshot.fission_depart_ticks, vec![80, 100]);
+        assert_eq!(snapshot.fission_founded_ticks, vec![120, -1]);
+        assert_eq!(snapshot.fission_cancelled_ticks, vec![90, -1]);
+        assert_eq!(snapshot.fission_daughters, vec![20, -1]);
+        assert_eq!(snapshot.fission_food_taken, vec![17, 23]);
+        assert_eq!(snapshot.retired_hearth_xs, vec![2, 9]);
+        assert_eq!(snapshot.retired_hearth_ys, vec![5, 4]);
+        assert_eq!(snapshot.current_tick, engine.resources.current_tick as i64);
+    }
+
+    #[test]
+    fn society_pressure_columns_read_v19_values_and_saturate_without_mutation() {
+        let seed = 20_261_010;
+        let mut engine = build_world_with(
+            &WorldGenConfig::game_v19(seed), WorldRules::game_v19(seed),
+        );
+        advance_engine_ticks(&mut engine, 1_440);
+        let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
+        assert!(!snapshot.settlement_ids.is_empty());
+        assert_eq!(snapshot.fission_pressures.len(), snapshot.settlement_ids.len());
+        assert_eq!(snapshot.fission_thresholds.len(), snapshot.settlement_ids.len());
+        for (index, &id) in snapshot.settlement_ids.iter().enumerate() {
+            let settlement = &engine.resources.settlements[&(id as u32)];
+            assert_eq!(snapshot.fission_pressures[index], i64::try_from(settlement.fission_pressure).unwrap());
+            assert_eq!(snapshot.fission_thresholds[index], i64::try_from(settlement.fission_threshold).unwrap());
+            assert!(snapshot.fission_thresholds[index] > 0);
+        }
+        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+        let first = snapshot.settlement_ids[0] as u32;
+        let settlement = engine.resources.settlements.get_mut(&first).unwrap();
+        settlement.fission_pressure = u64::MAX;
+        settlement.fission_threshold = u64::MAX;
+        let saturated = collect_society_snapshot(&engine.world, &engine.resources);
+        assert_eq!(saturated.fission_pressures[0], i64::MAX);
+        assert_eq!(saturated.fission_thresholds[0], i64::MAX);
+        assert_eq!(engine.resources.settlements[&first].fission_pressure, u64::MAX);
+        assert_eq!(engine.resources.settlements[&first].fission_threshold, u64::MAX);
+    }
+
+}
 
 #[cfg(test)]
 mod pass3_agent_snapshot_tests {

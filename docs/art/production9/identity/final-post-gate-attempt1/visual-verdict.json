@@ -1,0 +1,139 @@
+{
+  "score": 100,
+  "threshold": 100,
+  "verdict": "PASS",
+  "reviewer": "p9_visual_review",
+  "category_match": true,
+  "differences": [],
+  "suggestions": [],
+  "reasoning": "Original-resolution P1/P4 pairs visually match, including sprites, vegetation, terrain and UI. Independent RGBA decoding of all six control/candidate triples proves every pixel unchanged. Existing baseline visual defects are not regressions.",
+  "opened_pairs": [
+    "P1",
+    "P4"
+  ],
+  "opened_paths": [
+    "/Users/rexxa/work/art-production9-evidence/identity/attempt2/A/P1.png",
+    "/Users/rexxa/work/art-production9-evidence/identity/final-post-gate-attempt1/B/P1.png",
+    "/Users/rexxa/work/art-production9-evidence/identity/attempt2/A/P4.png",
+    "/Users/rexxa/work/art-production9-evidence/identity/final-post-gate-attempt1/B/P4.png"
+  ],
+  "decoded_rgba_framings": [
+    {
+      "framing": "P1",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "rgba_sha256": "47785c7a85cfc635fa7aca4efa93b4daa36ff7d78b2f25e431a0de18372c97f2",
+      "report_matches": true,
+      "candidate_png_provenance_matches": true
+    },
+    {
+      "framing": "P2",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "rgba_sha256": "39d798fdd859f1cf3bd231317df514997ff9e8b47cf5a2e0e6ce999c87f8549f",
+      "report_matches": true,
+      "candidate_png_provenance_matches": true
+    },
+    {
+      "framing": "P3",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "rgba_sha256": "113af7d1259d84b29984f958be8201d9a8dd738f0c1d4599b5505a205fabc800",
+      "report_matches": true,
+      "candidate_png_provenance_matches": true
+    },
+    {
+      "framing": "P4",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "rgba_sha256": "182146e5c1f435d4c30336f64d6d92cf71ec702b1dff05553b5afe49703b767c",
+      "report_matches": true,
+      "candidate_png_provenance_matches": true
+    },
+    {
+      "framing": "P5",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "rgba_sha256": "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+      "report_matches": true,
+      "candidate_png_provenance_matches": true
+    },
+    {
+      "framing": "P6",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "rgba_sha256": "47785c7a85cfc635fa7aca4efa93b4daa36ff7d78b2f25e431a0de18372c97f2",
+      "report_matches": true,
+      "candidate_png_provenance_matches": true
+    }
+  ],
+  "provenance_library_sha256": "b2ba6ef135c366862b5d016357d42353c5feb2493f39e9150c059ca974bae706",
+  "provenance_source_head": "46193a0301d335fc04dcfd6460e59cc0f1370d08",
+  "limitations": [
+    "Visual viewing covers P1/P4; exact RGBA verification covers all six captured framings.",
+    "Uncaptured runtime states and animation are not established.",
+    "Library/source binding is recorded provenance, not an independent build audit.",
+    "Full-resolution candidates verified at external provenance paths; repository B/P1.png is absent.",
+    "No performance claim; earlier timing sessions retain their own provenance."
+  ]
+}

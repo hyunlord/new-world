@@ -8,10 +8,12 @@ extends Control
 # Mount: scenes/main.tscn → UI (CanvasLayer) → CausalPanel (Control + this script).
 # Default visibility: hidden. Q toggles via _unhandled_input.
 
+const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+
 const PANEL_TITLE_KEY := "UI_CAUSAL_PANEL_TITLE"
 const PANEL_PLACEHOLDER_KEY := "UI_CAUSAL_PANEL_PLACEHOLDER"
-const PANEL_WIDTH := 320.0
-const PANEL_HEIGHT := 200.0
+const PANEL_WIDTH := 620.0
+const PANEL_HEIGHT := 480.0
 const PANEL_MARGIN := 16.0
 
 # V7 Phase 9-δ — FFI dict-key constants declared at file scope so the combat
@@ -36,47 +38,50 @@ func _ready() -> void:
 	_build_layout()
 
 func _build_layout() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color(0.0, 0.0, 0.0, 0.78)
-	bg.position = Vector2(PANEL_MARGIN, PANEL_MARGIN)
-	bg.size = Vector2(PANEL_WIDTH, PANEL_HEIGHT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	position = Vector2(12, 124)
+	size = Vector2(PANEL_WIDTH, PANEL_HEIGHT)
+	ArtUI.panel(self, Rect2(Vector2.ZERO, size))
 
 	_title_label = Label.new()
 	_title_label.text = _ltr(PANEL_TITLE_KEY)
-	_title_label.position = Vector2(PANEL_MARGIN + 12.0, PANEL_MARGIN + 8.0)
-	_title_label.add_theme_color_override("font_color", Color(1.0, 0.92, 0.5, 1.0))
+	_title_label.position = Vector2(12.0, 8.0)
 	add_child(_title_label)
 
 	_placeholder_label = Label.new()
 	_placeholder_label.text = _ltr(PANEL_PLACEHOLDER_KEY)
-	_placeholder_label.position = Vector2(PANEL_MARGIN + 12.0, PANEL_MARGIN + 40.0)
-	_placeholder_label.size = Vector2(PANEL_WIDTH - 24.0, PANEL_HEIGHT - 56.0)
+	_placeholder_label.position = Vector2(12.0, 40.0)
+	_placeholder_label.clip_text = true
 	_placeholder_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_placeholder_label.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 1.0))
+	_placeholder_label.size = Vector2(PANEL_WIDTH - 24.0, 76.0)
 	add_child(_placeholder_label)
+	_placeholder_label.set_deferred("size", Vector2(PANEL_WIDTH - 24.0, 76.0))
 
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.position = Vector2(12, 128)
+	scroll.size = Vector2(PANEL_WIDTH - 24, PANEL_HEIGHT - 144)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroll)
 	_history_container = VBoxContainer.new()
-	_history_container.position = Vector2(PANEL_MARGIN + 12.0, PANEL_MARGIN + 88.0)
-	_history_container.size = Vector2(PANEL_WIDTH - 24.0, PANEL_HEIGHT - 104.0)
+	_history_container.position = Vector2(12.0, 128.0)
+	_history_container.size = Vector2(PANEL_WIDTH - 24.0, PANEL_HEIGHT - 144.0)
 	_history_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_history_container)
+	_history_container.position = Vector2.ZERO
+	_history_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_history_container)
 
 func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 	if _history_container == null:
 		return
 	for child in _history_container.get_children():
+		_history_container.remove_child(child)
 		child.queue_free()
 	var header := Label.new()
 	var tmpl := _ltr("UI_CAUSAL_TILE_HEADER")
 	header.text = tmpl.replace("{x}", str(tile_x)).replace("{y}", str(tile_y))
-	header.add_theme_color_override("font_color", Color(1.0, 0.92, 0.5, 1.0))
 	_history_container.add_child(header)
 	if history.is_empty():
 		var empty := Label.new()
 		empty.text = _ltr("UI_CAUSAL_NO_HISTORY")
-		empty.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 1.0))
 		_history_container.add_child(empty)
 		return
 	for ev in history:
@@ -84,7 +89,8 @@ func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 			continue
 		var lbl := Label.new()
 		lbl.text = _format_event(ev as Dictionary)
-		lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 1.0))
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.custom_minimum_size.x = 570
 		_history_container.add_child(lbl)
 
 func _format_event(ev: Dictionary) -> String:
@@ -215,6 +221,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func toggle_visible() -> void:
 	visible = not visible
+	var chronicle: Control = get_node_or_null("../ChroniclePanel") as Control
+	if visible and chronicle != null:
+		chronicle.hide()
 
 func is_panel_visible() -> bool:
 	return visible

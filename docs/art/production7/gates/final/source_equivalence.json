@@ -1,0 +1,14 @@
+{
+  "capture_source": "28f58e56a2289bde129946b7f630192cd94496b2",
+  "gate_source": "847f96b928352cd48d7e5e49bf3c748ee8cfffdc",
+  "production_path_differences": [],
+  "GOAL_sha256": "7b41130c8516c0c349876747a9b2ee4ab4e22c5479dda2cf50bd82eed93e5ca4",
+  "simulation_merged": "31559232e0a24af12d29f490d440d1c5ee5f3661",
+  "followup_source": "90d8e6dc85153b842b48e315603f36f77948f2a5",
+  "capture_to_followup_differences": [
+    "scripts/test/art/test_capture_plans_p6.gd"
+  ],
+  "production_runtime_differences": [],
+  "postmerge_allowed_scope_paths": 543,
+  "forbidden_scope_paths": []
+}

@@ -1,0 +1,24 @@
+{
+  "attempts_by_body": {
+    "adult_a": 20,
+    "adult_b": 73,
+    "child": 113
+  },
+  "candidate_attempts": 206,
+  "lineage_context_records": 206,
+  "native_bytes_unchanged": true,
+  "note": "142 physical slots contain206 distinct attempts; all attempts remain reviewable. P3 base selection excludes7 later reprocess approvals.",
+  "p3_target_dispositions": {
+    "absent": 8,
+    "accepted": 7,
+    "unfilled": 78
+  },
+  "physical_by_body": {
+    "adult_a": 18,
+    "adult_b": 50,
+    "child": 74
+  },
+  "physical_slots": 142,
+  "sprite_bytes_unchanged": true,
+  "target_slots": 93
+}

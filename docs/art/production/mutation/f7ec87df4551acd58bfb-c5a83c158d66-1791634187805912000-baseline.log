@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.06s
+     Running tests/harness_show_agent_needs_bars.rs (target/debug/deps/harness_show_agent_needs_bars-9d30a7e07c826392)
+
+running 1 test
+test harness_needs_a6_scene_wiring_additive ... [viz-B A6] load_steps 19, ext 18; NeedBarRenderer wired, prior nodes preserved ✓
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+

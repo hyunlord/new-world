@@ -105,7 +105,8 @@ func _handle_tile_click(pos: Vector2) -> void:
 
 # V7 Phase 14-γ — agent click probe.
 #
-# Iterates the most recent agent snapshot (parallel arrays of
+# First selects the topmost drawn opaque villager rectangle, then falls
+# back to the most recent agent snapshot (parallel arrays of
 # entity_bits / xs / ys) and finds the agent whose tile centre is closest
 # to the mouse world coords, within CLICK_RADIUS_WORLD_PX. On a hit,
 # queries `get_agent_detail` for the 8-field row and forwards it to the
@@ -115,13 +116,22 @@ func _handle_tile_click(pos: Vector2) -> void:
 # call (i.e. `found == true` in the detail dict). On a miss, the caller
 # falls through to the tile causal-history dispatch.
 #
-# Ties are resolved by lower snapshot iteration index because the
+# Tile-centre ties are resolved by lower snapshot iteration index because the
 # comparison is strict less-than: the first candidate to set `best_idx`
 # at a given distance wins (Assertion 21).
 func _try_agent_click(world_pos: Vector2) -> bool:
 	if world_sim == null:
 		return false
-	var snap: Dictionary = world_sim.get_agent_snapshot()
+	var agents: Node = get_node_or_null("../AgentRenderer")
+	if agents != null:
+		var drawn_entity: int = int(agents.call("drawn_entity_at", world_pos))
+		if drawn_entity >= 0:
+			var drawn_detail: Dictionary = world_sim.get_agent_detail(drawn_entity)
+			var drawn_panel: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+			if bool(drawn_detail.get("found", false)) and drawn_panel != null and drawn_panel.has_method("display_agent"):
+				drawn_panel.call("display_agent", drawn_detail)
+				return true
+	var snap: Dictionary = SimReads.read(world_sim, "get_agent_snapshot")
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())

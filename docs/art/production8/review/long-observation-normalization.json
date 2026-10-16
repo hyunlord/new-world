@@ -1,0 +1,539 @@
+{
+  "sources": [
+    {
+      "path": "docs/art/production8/review/originals/observer-a-long-objects.json",
+      "sha256": "28dad1e0d2cd42c2810d99a0f147db26256c4291aa5b845dabe9cdf347b6d745",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-a/long-objects.json"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-b-long-objects.json",
+      "sha256": "06d0b27c52d0bfb72b6fb5cda5d6d3e71d00c845ab95716796f4b25083f0b232",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-b/long-objects.json"
+    }
+  ],
+  "identity_key": {
+    "path": "docs/art/production8/review/originals/long-objects-key.json",
+    "sha256": "5008ada9ce3e50497a9d1e40403fc11c9cd73489e1e0f37b4b4816f2db15aa40"
+  },
+  "preserved_art_rows": 90,
+  "added_long_rows": 30,
+  "total_rows": 120,
+  "policy": {
+    "expected_metadata_used": false,
+    "identity_map_only": true,
+    "original_prose_preserved": true,
+    "doorway": "Cycling entrance pixels are observed, but breath semantics are unknown; false does not assert visual absence.",
+    "chill": "Only explicitly attributed pale contours count. Ambiguous groups are unknown and omitted, never completed from expected IDs.",
+    "frost": "Explicit pale blue roof-edge marks map to frost.",
+    "ash": "Explicit gray/stone dark-centered B0 without flame maps to cold ash; unresolved zoom excluded.",
+    "observers": "A observes 16 distinct frames; B observes 14 distinct frames. These are not two opinions on every frame."
+  },
+  "rows": [
+    {
+      "opaque_frame": "O001",
+      "stem": "l_d10_1200_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O002",
+      "stem": "l_d10_1500_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O003",
+      "stem": "l_d10_1500_F5",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O004",
+      "stem": "l_d15_1500_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O005",
+      "stem": "l_d15_1500_FC",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O006",
+      "stem": "l_d16_1500_FC",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O007",
+      "stem": "l_d18_1200_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O008",
+      "stem": "l_d23_0200_F2N",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O009",
+      "stem": "l_d24_1200_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O010",
+      "stem": "l_d24_1200_F1",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "unknown"
+      }
+    },
+    {
+      "opaque_frame": "O011",
+      "stem": "l_d24_2300_F2N",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O012",
+      "stem": "l_d26_0715_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O013",
+      "stem": "l_d28_0200_F2N",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O014",
+      "stem": "l_d28_0200_F2Z",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O015",
+      "stem": "l_d28_0715_F2",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        3,
+        29,
+        4,
+        25,
+        1,
+        14
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O016",
+      "stem": "l_d29_0200_F2N",
+      "observer_id": "blind_observer_a",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O017",
+      "stem": "l_d29_0630_F2",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        11,
+        17,
+        26,
+        29
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O018",
+      "stem": "l_d29_0715_F2",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        25,
+        31
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O019",
+      "stem": "l_d32_1200_F2",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O020",
+      "stem": "l_d40_1200_F2",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O021",
+      "stem": "l_d43_1500_FC",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O022",
+      "stem": "l_d55_0200_F2N",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O023",
+      "stem": "l_d56_0200_F2N",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O024",
+      "stem": "l_d57_0200_F2N",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O025",
+      "stem": "l_d57_0401_DE",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O026",
+      "stem": "l_d57_0715_F2",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O027",
+      "stem": "l_d71_1500_FC",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O028",
+      "stem": "l_d84_0200_F2N",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O029",
+      "stem": "l_d85_0200_F2N",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [
+        7,
+        14,
+        21,
+        75
+      ],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [],
+      "observation_status": {
+        "doorway_breath": "unknown",
+        "chill_identity_completeness": "explicit_observation_only",
+        "ash": "explicit_observation_only"
+      }
+    },
+    {
+      "opaque_frame": "O030",
+      "stem": "l_d85_0715_F2",
+      "observer_id": "blind_observer_b",
+      "frosted_shelter_ids": [],
+      "ash_hearth_ids": [
+        0
+      ],
+      "chill_agent_ids": [
+        34,
+        36,
+        38,
+        45,
+        49
+      ],
+      "observation_status": {
+        "doorway_breath": "not_observed",
+        "chill_identity_completeness": "unknown",
+        "ash": "explicit_observation_only"
+      }
+    }
+  ]
+}

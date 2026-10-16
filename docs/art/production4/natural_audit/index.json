@@ -1,0 +1,269 @@
+{
+  "adult_a": [
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_a_01.png",
+      "sha256": "0ddbbcc323121e6b244c4e3e6acfcacc919d0ec2185c7c6d66128cf1c611bc5a",
+      "frames": [
+        "V_a3_13",
+        "V_a2_13",
+        "V_a2_14",
+        "P2V_a_N_build_01",
+        "P2V_a_N_build_02",
+        "V_a2_15",
+        "V_a2_16",
+        "V_a2_05",
+        "V_a2_06",
+        "V_a2_07",
+        "V_a2_08",
+        "V_a3_01"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_a_02.png",
+      "sha256": "bbe244510887f3211ffb2497b601bcc6e8561e314c888060021258eeae5c0222",
+      "frames": [
+        "V_a3_02",
+        "V_a2_01",
+        "V_a2_02",
+        "V_a2_03",
+        "V_a2_04",
+        "V_a3_16",
+        "V_a3_14",
+        "V_a3_15",
+        "V_a3_03",
+        "V_a3_04",
+        "P2V_a_N_drink_01",
+        "P2V_a_N_drink_02"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_a_03.png",
+      "sha256": "9e690d4d8cb1d5a42401ef3041860aba4d3c8cb8fb306cb84a400868432551a1",
+      "frames": [
+        "V_a3_05",
+        "V_a3_06",
+        "V_a2_09",
+        "V_a2_10",
+        "V_a2_11",
+        "V_a2_12",
+        "V_a1_04",
+        "V_a1_03",
+        "V_a1_01",
+        "V_a1_02",
+        "V_a3_08",
+        "V_a3_07"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_a_04.png",
+      "sha256": "d201154e3db8f35826e629095c732f99394095b911438d50529b490110c61498",
+      "frames": [
+        "V_a3_11",
+        "V_a3_12",
+        "V_a3_09",
+        "V_a3_10",
+        "V_a1_09",
+        "V_a1_10",
+        "V_a1_11",
+        "V_a1_12",
+        "V_a1_13",
+        "V_a1_14",
+        "V_a1_15",
+        "V_a1_16"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_a_05.png",
+      "sha256": "7195161b26c7fac2672b33c77027e18547eb90328643b560fe6f8e6869c61770",
+      "frames": [
+        "V_a1_05",
+        "V_a1_06",
+        "V_a1_07",
+        "V_a1_08"
+      ]
+    }
+  ],
+  "adult_b": [
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_b_01.png",
+      "sha256": "c7c16599047c85fcd86f7edc039e8ab9694426183e7ca8f6b16a6332e6b301e9",
+      "frames": [
+        "V_b3_13",
+        "P2V_b_N_asleep_01",
+        "P2V_b_S_asleep_01",
+        "V_b2_13",
+        "V_b2_14",
+        "P2V_b_N_build_01",
+        "P2V_b_N_build_02",
+        "V_b2_15",
+        "V_b2_16",
+        "V_b2_05",
+        "V_b2_06",
+        "V_b2_07"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_b_02.png",
+      "sha256": "9aea7f769dac63d23507fcc851eaa0604960a349d58281163f942717e55fe069",
+      "frames": [
+        "V_b2_08",
+        "V_b3_01",
+        "V_b3_02",
+        "V_b2_01",
+        "V_b2_02",
+        "V_b2_03",
+        "V_b2_04",
+        "V_b3_16",
+        "V_b3_14",
+        "V_b3_15",
+        "V_b3_03",
+        "V_b3_04"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_b_03.png",
+      "sha256": "fb3c1547b8592a8ac14eda5a719a12b7c69abd783dcf42de8740888fb262a3d8",
+      "frames": [
+        "P2V_b_N_drink_01",
+        "P2V_b_N_drink_02",
+        "P2V_b_S_drink_01",
+        "P2V_b_S_drink_02",
+        "P2V_b_E_eat_01",
+        "P2V_b_E_eat_02",
+        "P2V_b_N_eat_01",
+        "P2V_b_N_eat_02",
+        "V_b3_05",
+        "V_b3_06",
+        "V_b2_09",
+        "V_b2_10"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_b_04.png",
+      "sha256": "4e5470540802e459ed01638b8bd5d63a54f9a89bde49a5df9fb47c45189320e2",
+      "frames": [
+        "P2V_b_N_gather_01",
+        "P2V_b_N_gather_02",
+        "V_b2_11",
+        "V_b2_12",
+        "V_b1_04",
+        "V_b1_03",
+        "V_b1_01",
+        "V_b1_02",
+        "V_b3_08",
+        "P2V_b_N_sit_01",
+        "V_b3_07",
+        "V_b3_11"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_b_05.png",
+      "sha256": "ac339240c926db366de8120590379b98219ba0c4a7ea928b78107b3a6ade027e",
+      "frames": [
+        "V_b3_12",
+        "V_b3_09",
+        "V_b3_10",
+        "V_b1_09",
+        "V_b1_10",
+        "V_b1_11",
+        "V_b1_12",
+        "V_b1_13",
+        "V_b1_14",
+        "V_b1_15",
+        "V_b1_16",
+        "V_b1_05"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/adult_b_06.png",
+      "sha256": "419bd85f4a7688c2989523d1bcbad9b3d8edc06d336e5d81f18bb174c4a7e172",
+      "frames": [
+        "V_b1_06",
+        "V_b1_07",
+        "V_b1_08"
+      ]
+    }
+  ],
+  "child": [
+    {
+      "path": "docs/art/production4/natural_audit/pages/child_01.png",
+      "sha256": "2cb524905a89f0191de4edc6d852679dcad009ef46c68072d6f5004dcd195938",
+      "frames": [
+        "V_c2_13",
+        "P2V_c_E_build_01",
+        "P2V_c_E_build_02",
+        "P2V_c_S_build_01",
+        "P2V_c_S_build_02",
+        "P2V_c_E_carry_01",
+        "P2V_c_E_carry_02",
+        "P2V_c_E_carry_03",
+        "P2V_c_E_carry_04",
+        "P2V_c_S_carry_01",
+        "P2V_c_S_carry_02",
+        "P2V_c_S_carry_03"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/child_02.png",
+      "sha256": "ce7ded68e442744e6a834c8bc437b355378574d3d106f9f07adec12baae87ff9",
+      "frames": [
+        "P2V_c_S_carry_04",
+        "P2V_c_E_drink_01",
+        "P2V_c_E_drink_02",
+        "V_c2_14",
+        "V_c2_15",
+        "P2V_c_E_gather_01",
+        "P2V_c_E_gather_02",
+        "P2V_c_S_gather_01",
+        "P2V_c_S_gather_02",
+        "V_c2_03",
+        "V_c2_04",
+        "V_c2_16"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/child_03.png",
+      "sha256": "1f76ac4bf7581b8308c60c6b779843dc2a4d04e1f203856022b7a0ff56f1c431",
+      "frames": [
+        "V_c1_04",
+        "V_c1_03",
+        "V_c1_01",
+        "V_c1_02",
+        "V_c2_05",
+        "V_c2_06",
+        "V_c2_07",
+        "V_c2_08",
+        "V_c2_02",
+        "V_c2_01",
+        "V_c2_11",
+        "V_c2_12"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/child_04.png",
+      "sha256": "90ff85e9d479c4601a980b84d38b812527bb89e97d775617a52d11d775fde63a",
+      "frames": [
+        "V_c2_09",
+        "V_c2_10",
+        "V_c1_09",
+        "V_c1_10",
+        "V_c1_11",
+        "V_c1_12",
+        "V_c1_13",
+        "V_c1_14",
+        "V_c1_15",
+        "V_c1_16",
+        "V_c1_05",
+        "V_c1_06"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/pages/child_05.png",
+      "sha256": "269ad7915b6bdda2db561c7305ef0a5f65909698d01ce7ccb7d4206367422bc7",
+      "frames": [
+        "V_c1_07",
+        "V_c1_08"
+      ]
+    }
+  ]
+}

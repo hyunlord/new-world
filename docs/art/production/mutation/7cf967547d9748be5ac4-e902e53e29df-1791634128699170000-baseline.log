@@ -1,0 +1,10 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running tests/harness_p14_delta_status_panel.rs (target/debug/deps/harness_p14_delta_status_panel-5a66635364273358)
+
+running 1 test
+test harness_p14_delta_a6_anchored_top_right_with_mouse_filter_ignore ... [P14-δ A6] top-right anchors + MOUSE_FILTER_IGNORE present ✓
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.00s
+

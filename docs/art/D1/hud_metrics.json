@@ -1,0 +1,21 @@
+{
+  "selection": "Lowest-saturation entry in lower/upper luminance quartile; fallback to full-palette darkest/lightest pair if contrast <4.5",
+  "roles": {
+    "dark": "#16140F",
+    "fill": "#223123",
+    "text": "#D1B681",
+    "accent": "#86633F"
+  },
+  "text_fill_wcag_contrast": 6.998667309475884,
+  "target": 4.5,
+  "target_pass": true,
+  "palette_colors_only": true,
+  "font_sizes_native": {
+    "Galmuri11": 12,
+    "Galmuri11-Bold": 12,
+    "Galmuri9": 10
+  },
+  "fontmode": "1",
+  "integer_ui_scale": 2,
+  "ui_tinted_at_night": false
+}

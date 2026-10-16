@@ -1,0 +1,36 @@
+{
+  "removed_at": "2026-10-15T16:36:19.531068+09:00",
+  "path": "/Users/rexxa/work/art-p9-base",
+  "tracked_changes": false,
+  "untracked_owned_helpers_archived": [
+    {
+      "path": "scripts/test/art/capture_identity_p9.gd",
+      "sha256": "050fdd4d2def0a08df096566cdfebfab71459fe025988fafa50d955eea885b60",
+      "archive": "/Users/rexxa/work/art-production9-evidence/baseline-helper-archive/scripts/test/art/capture_identity_p9.gd"
+    },
+    {
+      "path": "scripts/test/art/perf_frames_p9.gd",
+      "sha256": "d2fbcc0d3ac03e3761a2f40648d2ed3d5f6776b934275d781e1e72627fc1a5b9",
+      "archive": "/Users/rexxa/work/art-production9-evidence/baseline-helper-archive/scripts/test/art/perf_frames_p9.gd"
+    },
+    {
+      "path": "scripts/test/art/test_fixed_delta_p9.gd",
+      "sha256": "83074d18ffeb4971aeae8392f2875db4ed747658d8e579fda099f3b2a00d51ef",
+      "archive": "/Users/rexxa/work/art-production9-evidence/baseline-helper-archive/scripts/test/art/test_fixed_delta_p9.gd"
+    },
+    {
+      "path": "scripts/test/art/test_sim_reads_equivalence_p9.gd",
+      "sha256": "06d5c7111d016641838a98457b867774838331ff5231d6f8fc1a25c849058e37",
+      "archive": "/Users/rexxa/work/art-production9-evidence/baseline-helper-archive/scripts/test/art/test_sim_reads_equivalence_p9.gd"
+    },
+    {
+      "path": "scripts/test/capture_framings_p9.gd",
+      "sha256": "988d9b723724c8e9ab3c77c59a8d68027ac70615d80c67e8666e81cd3b2db1ee",
+      "archive": "/Users/rexxa/work/art-production9-evidence/baseline-helper-archive/scripts/test/capture_framings_p9.gd"
+    }
+  ],
+  "command": "git worktree remove --force /Users/rexxa/work/art-p9-base",
+  "exit_code": 0,
+  "exists_after": false,
+  "other_worktrees_untouched": true
+}

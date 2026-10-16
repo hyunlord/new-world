@@ -1,0 +1,56 @@
+{
+  "count": 24,
+  "absent_activities": [
+    "build",
+    "drink",
+    "sleep",
+    "child"
+  ],
+  "observer_labels_sha256": "b32d76447e14b10675e1f0262d4d9f94161ef55e192112b93a00403b131cafd4",
+  "confusion": {
+    "4x": {
+      "talk": {
+        "gather": 2
+      },
+      "sit_or_idle": {
+        "carry": 1,
+        "unidentifiable": 5
+      },
+      "gather": {
+        "gather": 3
+      },
+      "carry": {
+        "unidentifiable": 5,
+        "gather": 1
+      },
+      "walk": {
+        "carry": 4,
+        "walk": 1,
+        "unidentifiable": 2
+      }
+    },
+    "2x": {
+      "talk": {
+        "gather": 2
+      },
+      "sit_or_idle": {
+        "carry": 1,
+        "unidentifiable": 5
+      },
+      "gather": {
+        "gather": 3
+      },
+      "carry": {
+        "unidentifiable": 5,
+        "gather": 1
+      },
+      "walk": {
+        "carry": 4,
+        "walk": 1,
+        "unidentifiable": 2
+      }
+    }
+  },
+  "accuracy_4x": 0.16666666666666666,
+  "accuracy_2x": 0.16666666666666666
+}

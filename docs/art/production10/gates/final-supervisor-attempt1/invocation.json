@@ -1,0 +1,17 @@
+{
+  "checkout": "/Users/rexxa/work/new-world-art-prod",
+  "command": [
+    "bash",
+    "tools/art_pipeline/gate.sh",
+    "final"
+  ],
+  "deadline": null,
+  "environment": {
+    "CARGO_BUILD_JOBS": "6",
+    "CARGO_PROFILE_TEST_OPT_LEVEL": "2",
+    "GATE_OUTPUT_DIR": "docs/art/production10/gates/final"
+  },
+  "quiet_lock": "/Users/rexxa/work/.mac_quiet.lock",
+  "quiet_poll_seconds": 300,
+  "supervisor_sha256": "b81d6710a4997e5371e0588e594f860ea8e57f24ce93575c84b069c6b71a6efa"
+}

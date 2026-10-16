@@ -1,0 +1,393 @@
+{
+  "world": "W200",
+  "phase": "baseline",
+  "matrix_complete": true,
+  "missing_required_worlds": [],
+  "source": "/Users/rexxa/work/art-production10-evidence/perf/baseline-W200-attempt1.json",
+  "sha256": "56b5e182a628042cf1d482c3abcfafabaa88f4d186ed60e77d145c89e2a6f727",
+  "terminal_exit": 0,
+  "contended": true,
+  "build_commit": "0caabf5fd1c62b9d3c99845daab1805e79799db7",
+  "build_sha256": "f41bd469ac5d2b67c7f50375189e306a7872513566140f096bf8716c513faa1c",
+  "initial": {
+    "alive_settlements": 1,
+    "camera": [
+      1016.0,
+      500.0
+    ],
+    "population": 200,
+    "selected_id": -1,
+    "tick": 1440,
+    "zoom": [
+      4.0,
+      4.0
+    ]
+  },
+  "conditions": {
+    "frozen_Z4_0.0x": {
+      "count": 900,
+      "median": 29.02800000190735,
+      "p90": 29.58099999547,
+      "p99": 30.0660000002384,
+      "maximum": 30.6749999995232,
+      "over_budget": 900
+    },
+    "frozen_Z1_0.0x": {
+      "count": 900,
+      "median": 29.16200000584125,
+      "p90": 29.6860000109673,
+      "p99": 30.3529999907017,
+      "maximum": 31.0719999885559,
+      "over_budget": 900
+    },
+    "running_Z4_2.0x": {
+      "count": 900,
+      "median": 37.37750000059605,
+      "p90": 40.972000005722,
+      "p99": 44.468999999404,
+      "maximum": 46.2460000100136,
+      "over_budget": 900
+    },
+    "running_Z4_4.0x": {
+      "count": 900,
+      "median": 24.16899999821185,
+      "p90": 31.6679999911785,
+      "p99": 33.263000014782,
+      "maximum": 36.8520000042915,
+      "over_budget": 853
+    }
+  },
+  "running_blocks": [
+    {
+      "label": "running_2x_0",
+      "first_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "tick": 1516,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "last_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "tick": 2259,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "all_frames": {
+        "count": 300,
+        "median": 39.40949999934435,
+        "p90": 42.3940000056028,
+        "p99": 45.7780000054836,
+        "maximum": 46.2460000100136,
+        "over_budget": 300
+      },
+      "tick_frames": {
+        "count": 300,
+        "median": 39.40949999934435,
+        "p90": 42.3940000056028,
+        "p99": 45.7780000054836,
+        "maximum": 46.2460000100136,
+        "over_budget": 300
+      },
+      "ticks_per_frame": {
+        "count": 300,
+        "median": 2.0,
+        "p90": 3.0,
+        "p99": 3.0,
+        "maximum": 3.0,
+        "over_budget": 300
+      }
+    },
+    {
+      "label": "running_2x_1",
+      "first_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "tick": 2336,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "last_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "tick": 2912,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "all_frames": {
+        "count": 300,
+        "median": 28.863999999642402,
+        "p90": 38.1359999959469,
+        "p99": 40.2630000063181,
+        "maximum": 40.9239999947548,
+        "over_budget": 300
+      },
+      "tick_frames": {
+        "count": 300,
+        "median": 28.863999999642402,
+        "p90": 38.1359999959469,
+        "p99": 40.2630000063181,
+        "maximum": 40.9239999947548,
+        "over_budget": 300
+      },
+      "ticks_per_frame": {
+        "count": 300,
+        "median": 2.0,
+        "p90": 3.0,
+        "p99": 3.0,
+        "maximum": 3.0,
+        "over_budget": 300
+      }
+    },
+    {
+      "label": "running_2x_2",
+      "first_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "tick": 2987,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "last_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 169,
+        "selected_id": -1,
+        "tick": 3686,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "all_frames": {
+        "count": 300,
+        "median": 37.24600000202655,
+        "p90": 40.4580000002384,
+        "p99": 42.289000005722,
+        "maximum": 42.7910000023842,
+        "over_budget": 300
+      },
+      "tick_frames": {
+        "count": 300,
+        "median": 37.24600000202655,
+        "p90": 40.4580000002384,
+        "p99": 42.289000005722,
+        "maximum": 42.7910000023842,
+        "over_budget": 300
+      },
+      "ticks_per_frame": {
+        "count": 300,
+        "median": 2.0,
+        "p90": 3.0,
+        "p99": 3.0,
+        "maximum": 3.0,
+        "over_budget": 300
+      }
+    },
+    {
+      "label": "running_4x_0",
+      "first_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 163,
+        "selected_id": -1,
+        "tick": 3810,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "last_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 143,
+        "selected_id": -1,
+        "tick": 4867,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "all_frames": {
+        "count": 300,
+        "median": 30.73399999535085,
+        "p90": 32.4899999961853,
+        "p99": 34.6210000035763,
+        "maximum": 36.8520000042915,
+        "over_budget": 300
+      },
+      "tick_frames": {
+        "count": 300,
+        "median": 30.73399999535085,
+        "p90": 32.4899999961853,
+        "p99": 34.6210000035763,
+        "maximum": 36.8520000042915,
+        "over_budget": 300
+      },
+      "ticks_per_frame": {
+        "count": 300,
+        "median": 4.0,
+        "p90": 4.0,
+        "p99": 5.0,
+        "maximum": 5.0,
+        "over_budget": 300
+      }
+    },
+    {
+      "label": "running_4x_1",
+      "first_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 140,
+        "selected_id": -1,
+        "tick": 4984,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "last_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 126,
+        "selected_id": -1,
+        "tick": 5787,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "all_frames": {
+        "count": 300,
+        "median": 19.061499999940402,
+        "p90": 27.5850000063181,
+        "p99": 29.9459999980927,
+        "maximum": 30.8590000042915,
+        "over_budget": 261
+      },
+      "tick_frames": {
+        "count": 300,
+        "median": 19.061499999940402,
+        "p90": 27.5850000063181,
+        "p99": 29.9459999980927,
+        "maximum": 30.8590000042915,
+        "over_budget": 261
+      },
+      "ticks_per_frame": {
+        "count": 300,
+        "median": 3.0,
+        "p90": 4.0,
+        "p99": 4.0,
+        "maximum": 4.0,
+        "over_budget": 261
+      }
+    },
+    {
+      "label": "running_4x_2",
+      "first_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 125,
+        "selected_id": -1,
+        "tick": 5890,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "last_counted_state": {
+        "alive_settlements": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 121,
+        "selected_id": -1,
+        "tick": 6790,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "all_frames": {
+        "count": 300,
+        "median": 24.5594999958873,
+        "p90": 26.7100000042915,
+        "p99": 28.5859999927282,
+        "maximum": 29.390000002265,
+        "over_budget": 292
+      },
+      "tick_frames": {
+        "count": 300,
+        "median": 24.5594999958873,
+        "p90": 26.7100000042915,
+        "p99": 28.5859999927282,
+        "maximum": 29.390000002265,
+        "over_budget": 292
+      },
+      "ticks_per_frame": {
+        "count": 300,
+        "median": 3.0,
+        "p90": 4.0,
+        "p99": 4.0,
+        "maximum": 4.0,
+        "over_budget": 292
+      }
+    }
+  ],
+  "ablation": []
+}

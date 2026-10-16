@@ -1,0 +1,20 @@
+{
+  "closed": true,
+  "events": [
+    {
+      "event": "CUTOFF_CLOSED",
+      "epoch": 1792119780.08078,
+      "pid": 19795
+    },
+    {
+      "event": "WAITING_OWNED_WRAPPER_TERM_20279",
+      "epoch": 1792119780.198633,
+      "pid": 19795
+    },
+    {
+      "event": "WAITING_OWNED_WRAPPER_TERM_21405",
+      "epoch": 1792119780.199438,
+      "pid": 19795
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "source_commit": "4739738ebbf8160e4456add220d31cdb06562005",
+  "checks": 34,
+  "all_pass": true,
+  "rust_tests": 1912,
+  "rust_suites": 123,
+  "python_tests": 243,
+  "godot_tests": 27,
+  "note": "Source gate before temporary latest-simulation compatibility merge. Exact publication HEAD repeated externally."
+}

@@ -1,0 +1,33 @@
+{
+  "acceptance": "REJECTED",
+  "reason": "Three P5 pixel identity failures; zero threshold preserved. All differences water animation phase. Running check not launched after pixel failure.",
+  "attempt_different_pixels": [
+    1680,
+    816,
+    1680
+  ],
+  "other_five": "exact; reused original five in attempts2/3 with explicit source provenance",
+  "performance": {
+    "valid": true,
+    "control": {
+      "count": 450,
+      "median": 29.993000004768348,
+      "p90": 31.656999992609,
+      "p99": 33.9710000066757,
+      "maximum": 37.3639999861717,
+      "over_budget": 450
+    },
+    "candidate": {
+      "count": 450,
+      "median": 28.57400000739095,
+      "p90": 30.0719999883175,
+      "p99": 32.2240000021458,
+      "maximum": 33.2820000100136,
+      "over_budget": 450
+    },
+    "median_speedup": 1.0496605304476223
+  },
+  "contended": true,
+  "retained_part1_commit": "ebadc0b967c55c1a6ed8ece72f4ba2c2c224d5ea",
+  "archive_sha256": "ed84ff190b910adb26efa73fc79f04433f0b067d29d589c54c8a4401f702fe23"
+}

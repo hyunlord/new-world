@@ -1,0 +1,130 @@
+[
+  {
+    "sprite_id": "P2_fill_02_01",
+    "candidate_id": "P2_fill_02_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing stride, long brown hair and cream outfit remain coherent; brown boots are now separated into the other region.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_02",
+    "candidate_id": "P2_fill_02_02@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing close-step walk retains identity and readable limbs; footwear no longer merges with skin in the region map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_03",
+    "candidate_id": "P2_fill_02_03@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing walking stride is readable with consistent identity; corrected footwear regions resolve the previous objection.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_04",
+    "candidate_id": "P2_fill_02_04@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing passing-step pose remains coherent; boot regions are now separated from skin.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_05",
+    "candidate_id": "P2_fill_02_05@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "South-facing basket carry retains identity and coherent hands; basket and boots are now assigned other regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_06",
+    "candidate_id": "P2_fill_02_06@1:derived",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing basket carry and corrected basket region are readable, but an isolated blue texel remains at the outer right thigh/hip edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_07",
+    "candidate_id": "P2_fill_02_07@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "South-facing carrying stride remains readable; basket and footwear classification now distinguish props from skin.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_08",
+    "candidate_id": "P2_fill_02_08@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing basket carry has a corrected prop region, but a blue stray texel remains at the outer right thigh/hip edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_09",
+    "candidate_id": "P2_fill_02_09@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing extended-step basket carry retains identity and coherent arms; basket and footwear are now separated from body regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_10",
+    "candidate_id": "P2_fill_02_10@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing compact-step carrying pose remains legible; basket body is now other and held forearm remains skin.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_11",
+    "candidate_id": "P2_fill_02_11@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing carrying stride and identity are consistent; corrected basket and boot regions resolve the earlier objection.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_12",
+    "candidate_id": "P2_fill_02_12@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing close-step basket carry remains coherent; basket is distinguished from skin and clothing.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_13",
+    "candidate_id": "P2_fill_02_13@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing gathering pose and identity remain coherent; two isolated peach skin pixels still appear inside the separate berry bush.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_14",
+    "candidate_id": "P2_fill_02_14@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing gathering pose remains clear; bush and footwear are now consistently separated from body regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_15",
+    "candidate_id": "P2_fill_02_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing raised-tool build pose and identity remain coherent; tool and boots are now other regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_02_16",
+    "candidate_id": "P2_fill_02_16@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing bent build strike remains readable with consistent identity; stone pile and flying fragments are now other regions.",
+    "unfitted_acceptable": null
+  }
+]

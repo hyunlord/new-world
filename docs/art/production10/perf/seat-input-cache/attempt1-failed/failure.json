@@ -1,0 +1,16 @@
+{
+  "status": "FAIL",
+  "accepted": false,
+  "reason": "Deferred world_reset replaced CampSeats after control toggle; first-block readback changed",
+  "source_build_unchanged": true,
+  "fix": "Await two process frames before measuring or setting control; no production renderer change",
+  "artifacts": {
+    "session.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "journal.md": "ce12241514cd415f38230b09097eb323361f134bb17c922bdfaa66810d10e517",
+    "session.log": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
+    "frames.json": "ed72c591dad2125faec2166b7709f7484715911d01f0e5dc1452e3786d2e9bcc",
+    "launch.json": "6642048b48836883d38bdca57780333bee51c44359794c73dce4d8dcf521b943",
+    "repro.log": "d15048f4e9663a36e1642f2f7492bfa5d0157597c5f35d9443bd220885d3cc2e",
+    "repro.gd": "7f33381be507b0ca914c7392c3d0e08ff79086fc094cce3464e205d0be233197"
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "round": 2,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "candidates_sha256": "6b441e013e2df0c33c51ed87998de812e3f42cd49b8df213b912189bf504cf0a",
+  "preview_sha256": "79815f117c82ce839c4766714b8173c651c9cf576ae9dc99dc343ae9c88e8c24",
+  "source_parts": {
+    "docs/art/production2/fills/review/P2_fill_02/round2/verdicts_reviewer.json": "68d67441c00fa13807aa71902752cefe07e9414c5f6579381940192d5eb69663"
+  },
+  "references": {
+    "adult_a": "V_a1_01@1",
+    "adult_b": "V_b1_01@2",
+    "child": "V_c1_01@1"
+  },
+  "previews": {
+    "P2_fill_02_01": "P2_fill_02_01@1",
+    "P2_fill_02_02": "P2_fill_02_02@1",
+    "P2_fill_02_03": "P2_fill_02_03@1",
+    "P2_fill_02_04": "P2_fill_02_04@1",
+    "P2_fill_02_05": "P2_fill_02_05@1",
+    "P2_fill_02_06": "P2_fill_02_06@1:derived",
+    "P2_fill_02_07": "P2_fill_02_07@1",
+    "P2_fill_02_08": "P2_fill_02_08@1",
+    "P2_fill_02_09": "P2_fill_02_09@1",
+    "P2_fill_02_10": "P2_fill_02_10@1",
+    "P2_fill_02_11": "P2_fill_02_11@1",
+    "P2_fill_02_12": "P2_fill_02_12@1",
+    "P2_fill_02_13": "P2_fill_02_13@1",
+    "P2_fill_02_14": "P2_fill_02_14@1",
+    "P2_fill_02_15": "P2_fill_02_15@1",
+    "P2_fill_02_16": "P2_fill_02_16@1"
+  },
+  "candidate_fingerprints": {
+    "P2_fill_02_01": "513c4199ba1325ab2f43eabc5e6d41914e44123ba50be992defdac75e27ad7fb",
+    "P2_fill_02_02": "dae96187abd877e88cb76be5292964110a1c4b6e2737426d515b5fee186e9982",
+    "P2_fill_02_03": "de97e69cf12e4a244a6e9b1e5c51e6657f89a23dea9b7c24bc4e48e784631741",
+    "P2_fill_02_04": "9d31d90600c46b0ac7f8600c0b4b13af0054141b14fc6f5de235130f9b136455",
+    "P2_fill_02_05": "29f846c75255c643c997b3480df9482c96368d9abd746c430d80cdb3f7ccc8ad",
+    "P2_fill_02_06": "f74768ae2ea1539b9627ec2f6c54be8bfcad80d20005043bba2d88abdeab7b00",
+    "P2_fill_02_07": "fc2c5618cab7f4568356a1912946f452732fe364c2d26bd043f5f2428101b625",
+    "P2_fill_02_08": "ee03435ebce9b94b8c6a056701e873b30c345b746bf42f28962a2fe3d8897716",
+    "P2_fill_02_09": "7616013b157fba3284e7b8d8369d89bd8e2154efbde090710c271f94ffcfc54c",
+    "P2_fill_02_10": "ea2127f082b24e9978038dea029cff8156a75e94d648e602c6cef41d59568bd8",
+    "P2_fill_02_11": "1e87f5390cd406ee39d4cc3c975735cdf0918ca75caae1f9cbd2bb2f7219e119",
+    "P2_fill_02_12": "72e7adf91db48b5446478e6341d5a31f215a1d59a711b82d1a82eb12e71fdb77",
+    "P2_fill_02_13": "b4ba30f0dea32ddca6ba6fe9905e92ce7dfdfe6f6ad42cff40fcdffba546392f",
+    "P2_fill_02_14": "89f86e37625c6705d9d43df5d7e960fbc0b675c85e8042d91674f2ffccf3322c",
+    "P2_fill_02_15": "2b1079fd529a4bb521489f592d9546062da4e0d47e506405521718df299c7e9e",
+    "P2_fill_02_16": "72ffb42965877d98be572decec2fb2a4359308d5c9d2dda7f001d9a49524b201"
+  },
+  "rendered_fingerprints": {
+    "P2_fill_02_01": "92c7cace388a72301b9a24875f420864abfb7aa0790c6404fbfaa924c8422d11",
+    "P2_fill_02_02": "46c9f4f730d711c5c036562e1074e9b1fe328e4128edccf8345c535c7e5f145d",
+    "P2_fill_02_03": "aafe8d93a6af81d887d456444a05093b08e3c9b44f3db55207bdddfea1cb1a8e",
+    "P2_fill_02_04": "d148393edba87cf6780b76ced3a4e8bfe56d5556c49fb27e392122977a6c3c30",
+    "P2_fill_02_05": "ccdc2fa4fd0db7eac329afff346519c8054ee570f3ae1f41276c00182f739240",
+    "P2_fill_02_06": "85135711129acf30c13bb4e7b4b9b8c3a19991437650c61eef9f1b4701db308b",
+    "P2_fill_02_07": "a27ccb55f7a1c36cd95a1838f4768259fae1955a1e320f8b59e3f475bbea0e34",
+    "P2_fill_02_08": "376fb0af7a1aeb969eac681fefe60bc3d4c0f9b69aca8b5dc67669a0541897a0",
+    "P2_fill_02_09": "32a821550466fcc6666170deb4021cc58f3464117907c1de33a9f6250ea37cba",
+    "P2_fill_02_10": "8f4fbfcd27ebdcc780d43e38644127c487f33e58d4083169a50bdd32d278b6c2",
+    "P2_fill_02_11": "cd6ae208f676d0034677a1ec9695466dddfea3a52901f84f48089a3c46038649",
+    "P2_fill_02_12": "b5cc38d5621066d11aaaac7db851137c7bc2382c162f3fbceb65e2240e192df4",
+    "P2_fill_02_13": "edcb91cd565fb530684e11b46e5b8c1953d287b237b9612b4389668483065810",
+    "P2_fill_02_14": "a4851fb4b6109e053a84e309b3feceebbec42ba63e89c5823556ef7adb2de195",
+    "P2_fill_02_15": "c9d79079b54886ea84c4cf354c85ff5555da9943fa1527af85b174ecff2e6cef",
+    "P2_fill_02_16": "fd8571d5f1ecfc2c96ec80f91a2290e3bb5f82f4769da782475a19ddbeda9c78"
+  },
+  "review_images_sha256": {
+    "P2_fill_02.png": "613004e6ae82b3c615fb4b8a47729533477cbc7254a40ccec2d3d2bfc773aa30",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previous_round_sha256": "a1bd939a67240ac4204cd23a606c9b1c17ceece1c66424e6d9498ca03a38df5b",
+  "expected_slots": [
+    "P2_fill_02_01",
+    "P2_fill_02_02",
+    "P2_fill_02_03",
+    "P2_fill_02_04",
+    "P2_fill_02_05",
+    "P2_fill_02_06",
+    "P2_fill_02_07",
+    "P2_fill_02_08",
+    "P2_fill_02_09",
+    "P2_fill_02_10",
+    "P2_fill_02_11",
+    "P2_fill_02_12",
+    "P2_fill_02_13",
+    "P2_fill_02_14",
+    "P2_fill_02_15",
+    "P2_fill_02_16"
+  ],
+  "verdicts": [
+    {
+      "sprite_id": "P2_fill_02_01",
+      "candidate_id": "P2_fill_02_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing stride, long brown hair and cream outfit remain coherent; brown boots are now separated into the other region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_02",
+      "candidate_id": "P2_fill_02_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing close-step walk retains identity and readable limbs; footwear no longer merges with skin in the region map.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_03",
+      "candidate_id": "P2_fill_02_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing walking stride is readable with consistent identity; corrected footwear regions resolve the previous objection.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_04",
+      "candidate_id": "P2_fill_02_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing passing-step pose remains coherent; boot regions are now separated from skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_05",
+      "candidate_id": "P2_fill_02_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing basket carry retains identity and coherent hands; basket and boots are now assigned other regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_06",
+      "candidate_id": "P2_fill_02_06@1:derived",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "South-facing basket carry and corrected basket region are readable, but an isolated blue texel remains at the outer right thigh/hip edge.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_07",
+      "candidate_id": "P2_fill_02_07@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing carrying stride remains readable; basket and footwear classification now distinguish props from skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_08",
+      "candidate_id": "P2_fill_02_08@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "South-facing basket carry has a corrected prop region, but a blue stray texel remains at the outer right thigh/hip edge.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_09",
+      "candidate_id": "P2_fill_02_09@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing extended-step basket carry retains identity and coherent arms; basket and footwear are now separated from body regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_10",
+      "candidate_id": "P2_fill_02_10@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing compact-step carrying pose remains legible; basket body is now other and held forearm remains skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_11",
+      "candidate_id": "P2_fill_02_11@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing carrying stride and identity are consistent; corrected basket and boot regions resolve the earlier objection.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_12",
+      "candidate_id": "P2_fill_02_12@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing close-step basket carry remains coherent; basket is distinguished from skin and clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_13",
+      "candidate_id": "P2_fill_02_13@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing gathering pose and identity remain coherent; two isolated peach skin pixels still appear inside the separate berry bush.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_14",
+      "candidate_id": "P2_fill_02_14@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing gathering pose remains clear; bush and footwear are now consistently separated from body regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_15",
+      "candidate_id": "P2_fill_02_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing raised-tool build pose and identity remain coherent; tool and boots are now other regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_16",
+      "candidate_id": "P2_fill_02_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing bent build strike remains readable with consistent identity; stone pile and flying fragments are now other regions.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

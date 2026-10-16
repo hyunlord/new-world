@@ -1,0 +1,50 @@
+[
+  {
+    "file": "masks/candidates.json",
+    "before": 935461,
+    "after": 567419,
+    "semantic_equal": true
+  },
+  {
+    "file": "masks/final_candidates.json",
+    "before": 941129,
+    "after": 572169,
+    "semantic_equal": true
+  },
+  {
+    "file": "masks/round2/candidates.json",
+    "before": 947114,
+    "after": 577182,
+    "semantic_equal": true
+  },
+  {
+    "file": "keys/processed/V_a6_attempt_1/source_candidates.json",
+    "before": 229332,
+    "after": 142561,
+    "semantic_equal": true
+  },
+  {
+    "file": "keys/processed/V_c4_attempt_1/source_candidates.json",
+    "before": 229173,
+    "after": 142376,
+    "semantic_equal": true
+  },
+  {
+    "file": "harvest/search.json",
+    "before": 160420,
+    "after": 116808,
+    "semantic_equal": true
+  },
+  {
+    "file": "masks/harvest/search.json",
+    "before": 190675,
+    "after": 142459,
+    "semantic_equal": true
+  },
+  {
+    "file": "harvest/baseline_content.json",
+    "before": 90066,
+    "after": 55565,
+    "semantic_equal": true
+  }
+]

@@ -1,0 +1,124 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (14 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | a_calib_z4.jpg[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | a_calib_z6.jpg[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | a_d1_0830_F2.jpg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | a_d2_1200_F1.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | a_d2_1200_F2.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | a_d2_1200_F2A.jpg[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | a_d2_1200_F2Z.jpg[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | a_d2_1200_F3.jpg[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | a_d2_1200_F4.jpg[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | a_d2_1930_F2.jpg[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | a_d2_2300_F2N.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | a_d6_1200_F2.jpg[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | a_lineup_z2.jpg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | a_lineup_z4.jpg[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (10 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | a_d1_0830_F2.jpg[39m[0m
+[   9% ] [90m[1mreimport[22m | a_d2_1200_F1.png[39m[0m
+[  18% ] [90m[1mreimport[22m | a_d2_1200_F2.png[39m[0m
+[  27% ] [90m[1mreimport[22m | a_d2_1200_F2A.jpg[39m[0m
+[  36% ] [90m[1mreimport[22m | a_d2_1200_F2Z.jpg[39m[0m
+[  45% ] [90m[1mreimport[22m | a_d2_1200_F3.jpg[39m[0m
+[  54% ] [90m[1mreimport[22m | a_d2_1200_F4.jpg[39m[0m
+[  63% ] [90m[1mreimport[22m | a_d2_1930_F2.jpg[39m[0m
+[  72% ] [90m[1mreimport[22m | a_d2_2300_F2N.png[39m[0m
+[  81% ] [90m[1mreimport[22m | a_d6_1200_F2.jpg[39m[0m
+[  90% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (10 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Max
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+capture start: l_d10_1200_F2 tick=13200 usec=770437
+capture saved: l_d10_1200_F2 tick=13200 usec=12312088
+capture start: l_d10_1500_F2 tick=13380 usec=12312151
+capture saved: l_d10_1500_F2 tick=13380 usec=13708233
+capture start: l_d10_1500_F5 tick=13380 usec=13708291
+capture saved: l_d10_1500_F5 tick=13380 usec=14923144
+capture start: l_d15_1500_F2 tick=20580 usec=14923206
+capture saved: l_d15_1500_F2 tick=20580 usec=23009822
+capture start: l_d15_1530_FC tick=20610 usec=23009879
+capture saved: l_d15_1530_FC tick=20610 usec=24247485
+capture start: l_d16_1500_FC tick=22020 usec=24247537
+capture saved: l_d16_1500_FC tick=22020 usec=26832806
+capture start: l_d18_1200_F2 tick=24720 usec=26832863
+capture saved: l_d18_1200_F2 tick=24720 usec=30665720
+capture start: l_d23_0200_F2N tick=31320 usec=30665782
+capture saved: l_d23_0200_F2N tick=31320 usec=38555251
+capture start: l_d24_1200_F2 tick=33360 usec=45645478
+capture saved: l_d24_1200_F2 tick=33360 usec=48920495
+capture start: l_d24_1200_F1 tick=33360 usec=48920547
+capture saved: l_d24_1200_F1 tick=33360 usec=50147413
+capture start: l_d24_2300_F2N tick=34020 usec=50147464
+capture saved: l_d24_2300_F2N tick=34020 usec=52059877
+capture start: l_d25_0200_F2N tick=34200 usec=59176462
+capture saved: l_d25_0200_F2N tick=34200 usec=60575523
+capture start: l_d27_0200_F2N tick=37080 usec=67664027
+capture saved: l_d27_0200_F2N tick=37080 usec=71801606
+capture start: l_d27_0715_F2 tick=37395 usec=78887341
+capture saved: l_d27_0715_F2 tick=37395 usec=80404356
+capture start: l_d28_0200_F2N tick=38520 usec=80404412
+capture saved: l_d28_0200_F2N tick=38520 usec=82843448
+capture start: l_d28_0200_F2Z tick=38520 usec=89869338
+capture saved: l_d28_0200_F2Z tick=38520 usec=91091423
+capture start: l_d29_0200_F2N tick=39960 usec=98050833
+capture saved: l_d29_0200_F2N tick=39960 usec=101248756
+capture start: l_d29_0630_F2 tick=40230 usec=108272037
+capture saved: l_d29_0630_F2 tick=40230 usec=109893515
+capture start: l_d29_0715_F2 tick=40275 usec=109893568
+capture saved: l_d29_0715_F2 tick=40275 usec=111173942
+capture start: l_d32_1200_F2 tick=44880 usec=111173996
+capture saved: l_d32_1200_F2 tick=44880 usec=118905379
+capture start: l_d40_1200_F2 tick=56400 usec=118905435
+capture saved: l_d40_1200_F2 tick=56400 usec=138159225
+capture start: l_d56_0200_F2N tick=78840 usec=138159286
+capture saved: l_d56_0200_F2N tick=78840 usec=176607380
+capture start: l_d57_0200_F2N tick=80280 usec=183665006
+capture saved: l_d57_0200_F2N tick=80280 usec=186971143
+capture start: l_d57_0301_DE tick=80341 usec=194000915
+capture saved: l_d57_0301_DE tick=80341 usec=195311840
+capture start: l_d84_0200_F2N tick=119160 usec=202335879
+capture saved: l_d84_0200_F2N tick=119160 usec=263917585
+capture start: l_d85_0200_F2N tick=120600 usec=270962728
+capture saved: l_d85_0200_F2N tick=120600 usec=274292307
+capture start: l_d85_0401_DE tick=120721 usec=281313737
+capture saved: l_d85_0401_DE tick=120721 usec=282698072
+Published 27 captures; raw framebuffers: /Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long

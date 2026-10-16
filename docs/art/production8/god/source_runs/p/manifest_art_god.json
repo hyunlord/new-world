@@ -1,0 +1,1563 @@
+{
+  "captures": [
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "cast",
+        "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+      },
+      "capture_plan_row": [
+        30.0,
+        "06:00",
+        "F2",
+        "spoil_food",
+        60.0,
+        0.5,
+        "p_spoil_cast",
+        "orig",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "cast",
+          "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+        }
+      ],
+      "entities": "god_p_spoil_d30_0600_F2_cast_orig.entities.json.gz",
+      "file": "god_p_spoil_d30_0600_F2_cast_orig.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 41640,
+      "tile_x": 22.0,
+      "tile_y": 40.0,
+      "time_of_day": 6.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d30_0600_F2_cast_orig.png",
+      "raw_sha256": "62549286a401a7ace81d1ac4d90d827a27ecfd747840b6ebe3d601b546ca4457",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d30_0600_F2_cast_orig.entities.json",
+      "raw_entities_sha256": "0ac3bb5f8b47b32a94c8148250f7c7fa22d5c6150f66a5d3a7ff876720ddb82e",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d30_0600_F2_cast_orig.1920.png",
+      "published_file": "god_p_spoil_d30_0600_F2_cast_orig.jpg",
+      "published_width": 960,
+      "published_height": 540
+    },
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "morning",
+        "stem_override": "p_spoil_d31_0600_F2_morning_orig"
+      },
+      "capture_plan_row": [
+        31.0,
+        "06:00",
+        "F2",
+        "",
+        0.0,
+        1.15,
+        "p_spoil_morning",
+        "orig",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "morning",
+          "stem_override": "p_spoil_d31_0600_F2_morning_orig"
+        }
+      ],
+      "entities": "god_p_spoil_d31_0600_F2_morning_orig.entities.json.gz",
+      "file": "god_p_spoil_d31_0600_F2_morning_orig.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 43080,
+      "tile_x": 22.0,
+      "tile_y": 40.0,
+      "time_of_day": 6.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d31_0600_F2_morning_orig.png",
+      "raw_sha256": "303154cbd5d546835502d7d7a55d3f991f75e0b022bc1f515f175889fbde0ca0",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d31_0600_F2_morning_orig.entities.json",
+      "raw_entities_sha256": "46dcc6bd54c32354bc77bb30a61f1b98962d211bfa09c69c38fe19155dd75113",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d31_0600_F2_morning_orig.1920.png",
+      "published_file": "god_p_spoil_d31_0600_F2_morning_orig.jpg",
+      "published_width": 960,
+      "published_height": 540
+    },
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "cast",
+        "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+      },
+      "capture_plan_row": [
+        31.0,
+        "06:00",
+        "F2",
+        "spoil_food",
+        60.0,
+        0.5,
+        "p_spoil_cast",
+        "orig",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "cast",
+          "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+        }
+      ],
+      "entities": "god_p_spoil_d31_0600_F2_cast_orig.entities.json.gz",
+      "file": "god_p_spoil_d31_0600_F2_cast_orig.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 153,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 203,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 30,
+              "day_of_season": 3,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 43080,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 43080
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 43080,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 43080,
+      "tile_x": 22.0,
+      "tile_y": 40.0,
+      "time_of_day": 6.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d31_0600_F2_cast_orig.png",
+      "raw_sha256": "68d5cd2cc8ed6dc153bea729cd538738f3c37afa9b56c712fbd6141926146ad8",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d31_0600_F2_cast_orig.entities.json",
+      "raw_entities_sha256": "a63bb0d7cc9ca8b85aba6844b1427a7da9ff0c985c457fdaf0786e27ef4c6e50",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d31_0600_F2_cast_orig.1920.png",
+      "published_file": "god_p_spoil_d31_0600_F2_cast_orig.jpg",
+      "published_width": 960,
+      "published_height": 540
+    },
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "morning",
+        "stem_override": "p_spoil_d32_0600_F2_morning_orig"
+      },
+      "capture_plan_row": [
+        32.0,
+        "06:00",
+        "F2",
+        "",
+        0.0,
+        1.15,
+        "p_spoil_morning",
+        "orig",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "morning",
+          "stem_override": "p_spoil_d32_0600_F2_morning_orig"
+        }
+      ],
+      "entities": "god_p_spoil_d32_0600_F2_morning_orig.entities.json.gz",
+      "file": "god_p_spoil_d32_0600_F2_morning_orig.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 153,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 203,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 30,
+              "day_of_season": 3,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 43080,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 43080
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 43080,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 44520,
+      "tile_x": 22.0,
+      "tile_y": 40.0,
+      "time_of_day": 6.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d32_0600_F2_morning_orig.png",
+      "raw_sha256": "5d86fdf379139809319bf5d23c6d93b7812cfafe24384d8d2a57fac8015b9fd1",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d32_0600_F2_morning_orig.entities.json",
+      "raw_entities_sha256": "a2fac26735fbf060ccf45ab7910d4bb3b670cf508f515cab688cf1feb02ee75e",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d32_0600_F2_morning_orig.1920.png",
+      "published_file": "god_p_spoil_d32_0600_F2_morning_orig.jpg",
+      "published_width": 960,
+      "published_height": 540
+    },
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "cast",
+        "stem_override": "p_spoil_d32_0600_F2_cast_orig"
+      },
+      "capture_plan_row": [
+        32.0,
+        "06:00",
+        "F2",
+        "spoil_food",
+        60.0,
+        0.5,
+        "p_spoil_cast",
+        "orig",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "cast",
+          "stem_override": "p_spoil_d32_0600_F2_cast_orig"
+        }
+      ],
+      "entities": "god_p_spoil_d32_0600_F2_cast_orig.entities.json.gz",
+      "file": "god_p_spoil_d32_0600_F2_cast_orig.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 153,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 203,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 30,
+              "day_of_season": 3,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 43080,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 43080
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 43080,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d32_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 76,
+            "found": true,
+            "members": 25,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 0,
+            "scarcity_days": 4.0,
+            "scarcity_line": 240,
+            "settlement_id": 1,
+            "threshold": 2792,
+            "time_snapshot": {
+              "day_index": 31,
+              "day_of_season": 4,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 44520,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 44520
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 44520,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 44520,
+      "tile_x": 22.0,
+      "tile_y": 40.0,
+      "time_of_day": 6.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d32_0600_F2_cast_orig.png",
+      "raw_sha256": "3b4fb5b55cbe1fdd9ec2cb05b79bc9807dd69cc19f6556c730ceb5f6305d71a7",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d32_0600_F2_cast_orig.entities.json",
+      "raw_entities_sha256": "ee39bcc33191d969d4151f83e7f2be092b74b62b2ef5a202a6f341c6bcf31c31",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d32_0600_F2_cast_orig.1920.png",
+      "published_file": "god_p_spoil_d32_0600_F2_cast_orig.jpg",
+      "published_width": 960,
+      "published_height": 540
+    },
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "morning",
+        "stem_override": "p_spoil_d33_0600_F2_morning_orig"
+      },
+      "capture_plan_row": [
+        33.0,
+        "06:00",
+        "F2",
+        "",
+        0.0,
+        1.15,
+        "p_spoil_morning",
+        "orig",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "morning",
+          "stem_override": "p_spoil_d33_0600_F2_morning_orig"
+        }
+      ],
+      "entities": "god_p_spoil_d33_0600_F2_morning_orig.entities.json.gz",
+      "file": "god_p_spoil_d33_0600_F2_morning_orig.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 153,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 203,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 30,
+              "day_of_season": 3,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 43080,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 43080
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 43080,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d32_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 76,
+            "found": true,
+            "members": 25,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 0,
+            "scarcity_days": 4.0,
+            "scarcity_line": 240,
+            "settlement_id": 1,
+            "threshold": 2792,
+            "time_snapshot": {
+              "day_index": 31,
+              "day_of_season": 4,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 44520,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 44520
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 44520,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 45960,
+      "tile_x": 22.0,
+      "tile_y": 40.0,
+      "time_of_day": 6.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d33_0600_F2_morning_orig.png",
+      "raw_sha256": "6ec2b2d6208b6435d252610b1ef7561d218a36d110644c846e6a8900e10b6a93",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d33_0600_F2_morning_orig.entities.json",
+      "raw_entities_sha256": "1beffeb397851cd26f5bf122bbe410ccd8ac0074c7912944a0b6c68055925ed3",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d33_0600_F2_morning_orig.1920.png",
+      "published_file": "god_p_spoil_d33_0600_F2_morning_orig.jpg",
+      "published_width": 960,
+      "published_height": 540
+    },
+    {
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "final",
+        "stem_override": "p_spoil_d120_1200_FV_final_all"
+      },
+      "capture_plan_row": [
+        120.0,
+        "12:00",
+        "FV",
+        "",
+        0.0,
+        1.15,
+        "p_spoil_final",
+        "all",
+        {
+          "case_id": "a33",
+          "paired_world": "P",
+          "role": "final",
+          "stem_override": "p_spoil_d120_1200_FV_final_all"
+        }
+      ],
+      "entities": "god_p_spoil_d120_1200_FV_final_all.entities.json.gz",
+      "file": "god_p_spoil_d120_1200_FV_final_all.png",
+      "framing": "FV",
+      "height": 1080,
+      "intervention_casts": [
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 197,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 85,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 29,
+              "day_of_season": 2,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 41640,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 41640
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 41640,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 153,
+            "found": true,
+            "members": 36,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 203,
+            "scarcity_days": 4.0,
+            "scarcity_line": 345,
+            "settlement_id": 1,
+            "threshold": 332,
+            "time_snapshot": {
+              "day_index": 30,
+              "day_of_season": 3,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 43080,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 43080
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 43080,
+          "world_epoch": 1,
+          "world_label": "P"
+        },
+        {
+          "amount": 60,
+          "capture_options": {
+            "case_id": "a33",
+            "paired_world": "P",
+            "role": "cast",
+            "stem_override": "p_spoil_d32_0600_F2_cast_orig"
+          },
+          "input_surface": "GodHandPanel button pressed",
+          "kind": "spoil_food",
+          "precast_original": {
+            "adult_need_per_day": 2.4,
+            "below_scarcity_line": true,
+            "food": 76,
+            "found": true,
+            "members": 25,
+            "need_provenance": {
+              "adult_need_per_day": 2.4,
+              "food_consume_amount": 30.0,
+              "growth_per_tick": 0.05,
+              "scarcity_days": 4.0,
+              "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+              "source_files": [
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+                  "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+                },
+                {
+                  "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+                  "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+                },
+                {
+                  "path": "res://rust/crates/sim-core/src/rules.rs",
+                  "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+                }
+              ],
+              "ticks_per_day": 1440,
+              "valid": true
+            },
+            "pressure": 0,
+            "scarcity_days": 4.0,
+            "scarcity_line": 240,
+            "settlement_id": 1,
+            "threshold": 2792,
+            "time_snapshot": {
+              "day_index": 31,
+              "day_of_season": 4,
+              "days_per_season": 7,
+              "season": 0,
+              "tick": 44520,
+              "ticks_per_day": 1440,
+              "time_of_day": 6.0,
+              "winter_severity": -1
+            }
+          },
+          "reply": {
+            "applied": 60,
+            "ok": true,
+            "tick": 44520
+          },
+          "run_id": "83505-401184",
+          "seed": 20261013,
+          "settlement_id": 1,
+          "tick": 44520,
+          "world_epoch": 1,
+          "world_label": "P"
+        }
+      ],
+      "run_id": "83505-401184",
+      "scenario": "INTERVENTION SCENARIO",
+      "seed": 20261013,
+      "tick": 171600,
+      "tile_x": 14.5,
+      "tile_y": 39.5,
+      "time_of_day": 12.0,
+      "width": 1920,
+      "world_epoch": 1,
+      "world_label": "P",
+      "zoom": 1.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d120_1200_FV_final_all.png",
+      "raw_sha256": "e793510b109f1ebfaf64832dc5b83a536e30f2aaa7147e92d741d47233178089",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d120_1200_FV_final_all.entities.json",
+      "raw_entities_sha256": "45951ecd46661baf70cf77cdf50435fede31537e84cab12c0735dae7adb86a72",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/final-god-p/shots/art_god/god_p_spoil_d120_1200_FV_final_all.1920.png",
+      "published_file": "god_p_spoil_d120_1200_FV_final_all.jpg",
+      "published_width": 960,
+      "published_height": 540
+    }
+  ],
+  "git_sha": "cefc77b088d6fa3baf21b766cdc40e3fdf045d36",
+  "intervention_casts": [
+    {
+      "amount": 60,
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "cast",
+        "stem_override": "p_spoil_d30_0600_F2_cast_orig"
+      },
+      "input_surface": "GodHandPanel button pressed",
+      "kind": "spoil_food",
+      "precast_original": {
+        "adult_need_per_day": 2.4,
+        "below_scarcity_line": true,
+        "food": 197,
+        "found": true,
+        "members": 36,
+        "need_provenance": {
+          "adult_need_per_day": 2.4,
+          "food_consume_amount": 30.0,
+          "growth_per_tick": 0.05,
+          "scarcity_days": 4.0,
+          "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+          "source_files": [
+            {
+              "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+              "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+            },
+            {
+              "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+              "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+            },
+            {
+              "path": "res://rust/crates/sim-core/src/rules.rs",
+              "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+            }
+          ],
+          "ticks_per_day": 1440,
+          "valid": true
+        },
+        "pressure": 85,
+        "scarcity_days": 4.0,
+        "scarcity_line": 345,
+        "settlement_id": 1,
+        "threshold": 332,
+        "time_snapshot": {
+          "day_index": 29,
+          "day_of_season": 2,
+          "days_per_season": 7,
+          "season": 0,
+          "tick": 41640,
+          "ticks_per_day": 1440,
+          "time_of_day": 6.0,
+          "winter_severity": -1
+        }
+      },
+      "reply": {
+        "applied": 60,
+        "ok": true,
+        "tick": 41640
+      },
+      "run_id": "83505-401184",
+      "seed": 20261013,
+      "settlement_id": 1,
+      "tick": 41640,
+      "world_epoch": 1,
+      "world_label": "P"
+    },
+    {
+      "amount": 60,
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "cast",
+        "stem_override": "p_spoil_d31_0600_F2_cast_orig"
+      },
+      "input_surface": "GodHandPanel button pressed",
+      "kind": "spoil_food",
+      "precast_original": {
+        "adult_need_per_day": 2.4,
+        "below_scarcity_line": true,
+        "food": 153,
+        "found": true,
+        "members": 36,
+        "need_provenance": {
+          "adult_need_per_day": 2.4,
+          "food_consume_amount": 30.0,
+          "growth_per_tick": 0.05,
+          "scarcity_days": 4.0,
+          "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+          "source_files": [
+            {
+              "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+              "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+            },
+            {
+              "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+              "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+            },
+            {
+              "path": "res://rust/crates/sim-core/src/rules.rs",
+              "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+            }
+          ],
+          "ticks_per_day": 1440,
+          "valid": true
+        },
+        "pressure": 203,
+        "scarcity_days": 4.0,
+        "scarcity_line": 345,
+        "settlement_id": 1,
+        "threshold": 332,
+        "time_snapshot": {
+          "day_index": 30,
+          "day_of_season": 3,
+          "days_per_season": 7,
+          "season": 0,
+          "tick": 43080,
+          "ticks_per_day": 1440,
+          "time_of_day": 6.0,
+          "winter_severity": -1
+        }
+      },
+      "reply": {
+        "applied": 60,
+        "ok": true,
+        "tick": 43080
+      },
+      "run_id": "83505-401184",
+      "seed": 20261013,
+      "settlement_id": 1,
+      "tick": 43080,
+      "world_epoch": 1,
+      "world_label": "P"
+    },
+    {
+      "amount": 60,
+      "capture_options": {
+        "case_id": "a33",
+        "paired_world": "P",
+        "role": "cast",
+        "stem_override": "p_spoil_d32_0600_F2_cast_orig"
+      },
+      "input_surface": "GodHandPanel button pressed",
+      "kind": "spoil_food",
+      "precast_original": {
+        "adult_need_per_day": 2.4,
+        "below_scarcity_line": true,
+        "food": 76,
+        "found": true,
+        "members": 25,
+        "need_provenance": {
+          "adult_need_per_day": 2.4,
+          "food_consume_amount": 30.0,
+          "growth_per_tick": 0.05,
+          "scarcity_days": 4.0,
+          "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day",
+          "source_files": [
+            {
+              "path": "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs",
+              "sha256": "233adb4b45562bb487da941d17f1830736568e3bca7c2cb70aeb81bb04bebe10"
+            },
+            {
+              "path": "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs",
+              "sha256": "d88c10a9fe6b0cb3eab13448b069025eeab1f5f568c7c64a7738a1b89ec822df"
+            },
+            {
+              "path": "res://rust/crates/sim-core/src/rules.rs",
+              "sha256": "277128ece9f1b4744a3b1e6ade37fb9128354eac28915217430cb687ef16b4b5"
+            }
+          ],
+          "ticks_per_day": 1440,
+          "valid": true
+        },
+        "pressure": 0,
+        "scarcity_days": 4.0,
+        "scarcity_line": 240,
+        "settlement_id": 1,
+        "threshold": 2792,
+        "time_snapshot": {
+          "day_index": 31,
+          "day_of_season": 4,
+          "days_per_season": 7,
+          "season": 0,
+          "tick": 44520,
+          "ticks_per_day": 1440,
+          "time_of_day": 6.0,
+          "winter_severity": -1
+        }
+      },
+      "reply": {
+        "applied": 60,
+        "ok": true,
+        "tick": 44520
+      },
+      "run_id": "83505-401184",
+      "seed": 20261013,
+      "settlement_id": 1,
+      "tick": 44520,
+      "world_epoch": 1,
+      "world_label": "P"
+    }
+  ],
+  "performance_only": false,
+  "plan": "art_god",
+  "run_id": "83505-401184",
+  "scenario": "INTERVENTION SCENARIO",
+  "schema_version": 3,
+  "seed": 20261013,
+  "worktree_changed_paths": 51
+}

@@ -1,0 +1,38 @@
+   Compiling sim-core v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+warning: unused import: `sim_test::worldmodel::sha256::sha256_hex`
+  --> crates/sim-test/tests/harness_p14_delta_status_panel.rs:22:5
+   |
+22 | use sim_test::worldmodel::sha256::sha256_hex;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `sim-test` (test "harness_p14_delta_status_panel") generated 1 warning (run `cargo fix --test "harness_p14_delta_status_panel" -p sim-test` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.05s
+     Running tests/harness_p14_delta_status_panel.rs (rust/target/debug/deps/harness_p14_delta_status_panel-c75d086991d7c713)
+
+running 17 tests
+test harness_p14_delta_a15_phase_14_gamma_agent_inspector_panel_present ... ok
+test harness_p14_delta_a11_main_tscn_load_steps_updated_from_7_to_8 ... ok
+test harness_p14_delta_a10_main_tscn_registers_hud_status_panel ... ok
+test harness_p14_delta_a14_phase_14_beta_resource_registry_preserved ... ok
+test harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer ... ok
+test harness_p14_delta_a12_phase_13_delta_a4_a5_a6_invariants_preserved_in_hud_topbar ... ok
+test harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head ... ok
+test harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved ... ok
+test harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control ... ok
+test harness_p14_delta_a6_anchored_top_right_with_mouse_filter_ignore ... ok
+test harness_p14_delta_a3_days_per_year_constant_present ... ok
+test harness_p14_delta_a2_ticks_per_day_constant_present ... ok
+test harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta ... ok
+test harness_p14_delta_a7_polls_all_three_existing_snapshots ... ok
+test harness_p14_delta_a5_resource_labels_array_exact_order ... ok
+test harness_p14_delta_a8_variant_safe_pattern_matches_hud_topbar_idiom ... ok
+test harness_p14_delta_a9_notification_feed_constants_present ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

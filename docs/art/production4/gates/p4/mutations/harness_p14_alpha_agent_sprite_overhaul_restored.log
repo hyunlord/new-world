@@ -1,0 +1,40 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.63s
+     Running tests/harness_p14_alpha_agent_sprite_overhaul.rs (rust/target/debug/deps/harness_p14_alpha_agent_sprite_overhaul-6857a1b5da9c330a)
+
+running 19 tests
+test harness_p14_alpha_a12_state_tints_palette_preserved ... ok
+test harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved ... FAILED
+test harness_p14_alpha_a11_sprite_scale_preserved ... ok
+test harness_p14_alpha_a13_state_scale_boost_preserved ... ok
+test harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved ... ok
+test harness_p14_alpha_a17_phase13_beta_resource_constants_preserved ... ok
+test harness_p14_alpha_a15_camera_zoom_invariants_preserved ... ok
+test harness_p14_alpha_a18_agent_base_png_asset_exists ... ok
+test harness_p14_alpha_a19_palette_lut_png_asset_exists ... ok
+test harness_p14_alpha_a10_head_icon_position_helper_declared ... ok
+test harness_p14_alpha_a2_role_bucket_function_signature_present ... ok
+test harness_p14_alpha_a3_role_bucket_body_uses_agent_id_knuth_hash ... ok
+test harness_p14_alpha_a5_palette_body_channel_keyed_off_role_bucket ... ok
+test harness_p14_alpha_a6_palette_hair_and_skin_preserve_entity_bits_hashing ... ok
+test harness_p14_alpha_a7_palette_call_site_passes_both_ids ... ok
+test harness_p14_alpha_a1_role_bucket_count_declared ... ok
+test harness_p14_alpha_a4_palette_for_id_signature_extended ... ok
+test harness_p14_alpha_a8_icon_offset_px_declared ... ok
+test harness_p14_alpha_a9_icon_size_px_declared ... ok
+
+failures:
+
+---- harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved stdout ----
+
+thread 'harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved' (61268755) panicked at crates/sim-test/tests/harness_p14_alpha_agent_sprite_overhaul.rs:433:5:
+assertion failed: src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved
+
+test result: FAILED. 18 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_p14_alpha_agent_sprite_overhaul`

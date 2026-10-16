@@ -1,0 +1,188 @@
+{
+  "verdicts": [
+    {
+      "candidate_id": "V_a1_09@3:p3",
+      "observation": "East-facing walking stride remains readable at 2x; tan skin and cream clothing match the reference, and the white-hair preview preserves the face.",
+      "reason": "",
+      "sprite_id": "V_a1_09",
+      "target_slot": "V_a1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_a2_10@2:p3",
+      "observation": "East-facing gatherer reaches into the visible berry bush at 2x; scalp coverage is continuous and the white preview leaves skin and clothing unchanged.",
+      "reason": "",
+      "sprite_id": "V_a2_10",
+      "target_slot": "V_a2_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_a2_10@3:p3",
+      "observation": "The blue overlay contains no visible scalp coverage; the white-hair preview retains the entire dark head of hair.",
+      "reason": "hair_mask_wrong",
+      "sprite_id": "V_a2_10",
+      "target_slot": "V_a2_10",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_a2_15@3:p3",
+      "observation": "Raised hammer and work stone read as building at 2x; the south-facing body, cream garment, and white-hair preview remain coherent.",
+      "reason": "",
+      "sprite_id": "V_a2_15",
+      "target_slot": "V_a2_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_a3_11@1:p3",
+      "observation": "East-facing speaker extends a hand visibly at 2x; the mask follows the scalp and the white preview retains tan face and arms.",
+      "reason": "",
+      "sprite_id": "V_a3_11",
+      "target_slot": "V_a3_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_a3_03@2:p3",
+      "observation": "The east-facing crouched figure brings hands to the mouth at 2x; head coverage changes to white without whitening the hands.",
+      "reason": "",
+      "sprite_id": "V_a3_03",
+      "target_slot": "V_a3_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_a3_13@2:p3",
+      "observation": "East-facing sleeping figure lies curled on the bedding with coherent limbs and cream clothing; the intentionally empty hair mask is appropriate.",
+      "reason": "",
+      "sprite_id": "V_a3_13",
+      "target_slot": "V_a3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_a3_13@3:p3",
+      "observation": "Side-lying sleeping silhouette reads at 2x, with head resting near the hand and legs extending right; empty hair mask is appropriate.",
+      "reason": "",
+      "sprite_id": "V_a3_13",
+      "target_slot": "V_a3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P2_fill_04_02@1:p3",
+      "observation": "Blue covers scattered forehead and side strands but leaves broad brown scalp and rear-hair areas uncovered; these remain dark in the white-hair preview, exceeding the edge allowance.",
+      "reason": "hair_mask_wrong",
+      "sprite_id": "P2_fill_04_02",
+      "target_slot": "V_a2_06",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "P3_fill_01_01@1:p3",
+      "observation": "South-facing carrier holds a distinct red-filled basket across the torso at 2x; cream garment and tan skin remain in the reference colour families, with coherent white hair.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_01",
+      "target_slot": "V_a2_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_02@1:p3",
+      "observation": "Front-facing carrier and bent stepping leg are readable at 2x, with the basket separated from the garment; white-hair preview preserves the face and load.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_02",
+      "target_slot": "V_a2_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_03@1:p3",
+      "observation": "South-facing carry frame shows a clear basket held across the chest at 2x; the stepping pose and scalp-only white recolouring remain legible.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_03",
+      "target_slot": "V_a2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_04@1:p3",
+      "observation": "South-facing carry frame retains a visible basket and narrow stepping silhouette at 2x; the white preview preserves face, hands, and cream clothing.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_04",
+      "target_slot": "V_a2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_05@1:p3",
+      "observation": "The unchanged main sprite contains cyan strips behind the left edge of the hair and behind the rear foot; these are stray non-character pixels.",
+      "reason": "artefact",
+      "sprite_id": "P3_fill_01_05",
+      "target_slot": "V_a2_05",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "P3_fill_01_06@1:p3",
+      "observation": "East-facing carrier holds a distinct dark basket in front of the chest at 2x; tan skin and cream garment match the reference families, and white hair stays on the scalp.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_06",
+      "target_slot": "V_a2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_07@1:p3",
+      "observation": "East-facing walking carrier has a visible basket and separated stride at 2x; head recolouring leaves the face and load intact.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_07",
+      "target_slot": "V_a2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_08@1:p3",
+      "observation": "A cyan vertical strip protrudes behind the left edge of the hair in the unchanged main sprite.",
+      "reason": "artefact",
+      "sprite_id": "P3_fill_01_08",
+      "target_slot": "V_a2_08",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "P3_fill_01_13@1:p3",
+      "observation": "South-facing builder raises a clearly visible hammer at 2x; the tool, arm, and body are coherent and the white-hair preview preserves tan skin.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_13",
+      "target_slot": "V_a2_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_14@1:p3",
+      "observation": "South-facing downward building stroke shows both hands on a handle above a grey hammer head at 2x; cream garment and scalp recolouring remain coherent.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_14",
+      "target_slot": "V_a2_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "P3_fill_01_16@1:p3",
+      "observation": "A cyan vertical strip is visible behind the rear ankle at the left edge of the unchanged east-facing building sprite.",
+      "reason": "artefact",
+      "sprite_id": "P3_fill_01_16",
+      "target_slot": "V_a2_14",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    }
+  ],
+  "board_sha256": {
+    "docs/art/production4/recovery/boards/adult_a_01.png": "7469abe516f7c21f1d3040995d956e5d1f34f5ce81aaafdd68541cdfdb2f6fc7",
+    "docs/art/production4/recovery/boards/adult_a_02.png": "5ab2646fda765981060bceda59cdddf53a1a702ab83b4336c2bdf7cec2359894"
+  }
+}

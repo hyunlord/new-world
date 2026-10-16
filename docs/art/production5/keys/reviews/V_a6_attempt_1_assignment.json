@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "ledger_path": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates.json",
+  "ledger_sha256": "7ec5a1a3423c55b61f37467e97abebaa07e787074800d7b257aceea7e1aeb7a7",
+  "rubric_path": "docs/art/production5/keys/REVIEW_RUBRIC.md",
+  "boards": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_01.png",
+      "sha256": "e2ceaddf884dfb01f418b8dd8889a046c4f55c7766b9bda3dcb1d0eb9c29d99a",
+      "candidate_ids": [
+        "V_a6_01@1",
+        "V_a6_02@1",
+        "V_a6_03@1",
+        "V_a6_04@1"
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_02.png",
+      "sha256": "a1e4586b1f99aa479d281596e0a52054d49387b514ee0969e111f4aa13abffc8",
+      "candidate_ids": [
+        "V_a6_05@1",
+        "V_a6_06@1",
+        "V_a6_07@1",
+        "V_a6_08@1"
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_03.png",
+      "sha256": "4c20e86c26387d0c9f01a477fa425e2ca4c93a7ff08cd3bd01b28880a303303f",
+      "candidate_ids": [
+        "V_a6_09@1",
+        "V_a6_10@1",
+        "V_a6_11@1",
+        "V_a6_12@1"
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_04.png",
+      "sha256": "e5e546133c5f7fb6b6076e46a77ac8a2bb26ca60a8ff8e40e4d02edef59a17f1",
+      "candidate_ids": [
+        "V_a6_13@1",
+        "V_a6_14@1",
+        "V_a6_15@1",
+        "V_a6_16@1"
+      ]
+    }
+  ],
+  "output_path": "docs/art/production5/keys/reviews/V_a6_attempt_1.json",
+  "candidate_ids": [
+    "V_a6_01@1",
+    "V_a6_02@1",
+    "V_a6_03@1",
+    "V_a6_04@1",
+    "V_a6_05@1",
+    "V_a6_06@1",
+    "V_a6_07@1",
+    "V_a6_08@1",
+    "V_a6_09@1",
+    "V_a6_10@1",
+    "V_a6_11@1",
+    "V_a6_12@1",
+    "V_a6_13@1",
+    "V_a6_14@1",
+    "V_a6_15@1",
+    "V_a6_16@1"
+  ]
+}

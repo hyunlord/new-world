@@ -1,0 +1,7 @@
+{
+  "path": "docs/art/production10/activity/seed-probe-evidence.zip",
+  "sha256": "b64641d31a040749220c8c03754186c30350d16de71cc72dcf7070b1250e1cb2",
+  "bytes": 2553640,
+  "external_source": "/Users/rexxa/work/art-production10-evidence/activity-probe-prep",
+  "contains": "all original probe results, build/probe logs, source hashes, validator attempts, selection"
+}

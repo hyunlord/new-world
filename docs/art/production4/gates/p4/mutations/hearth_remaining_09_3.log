@@ -1,0 +1,22 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
+     Running tests/harness_p14_beta_resource_building_variety.rs (rust/target/debug/deps/harness_p14_beta_resource_building_variety-0ee03251737b99b9)
+
+running 1 test
+test harness_p14_beta_a12_village_fixture_positions_match_diamond_layout ... FAILED
+
+failures:
+
+---- harness_p14_beta_a12_village_fixture_positions_match_diamond_layout stdout ----
+
+thread 'harness_p14_beta_a12_village_fixture_positions_match_diamond_layout' (61262888) panicked at crates/sim-test/tests/harness_p14_beta_resource_building_variety.rs:187:5:
+assertion failed: src.contains("return WOOD.hearth_frame({}, hour, elapsed)")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    harness_p14_beta_a12_village_fixture_positions_match_diamond_layout
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 21 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_p14_beta_resource_building_variety`

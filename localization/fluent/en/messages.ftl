@@ -162,8 +162,8 @@ ALERT_HUD_INJURED_FMT = {n} injured
 ALERT_HUD_LOW_FOOD = Low food
 ALERT_HUD_TECH_RISK_FMT = {n} tech at risk
 HUD_STOCKPILE_FOOD = Food
-HUD_FEED_STOCKPILE_DEPOSIT = Settlement %d stored %d Food
-HUD_FEED_STOCKPILE_CONSUME = Settlement %d used %d Food (famine)
+HUD_FEED_STOCKPILE_DEPOSIT = Village %d stored %d Food
+HUD_FEED_STOCKPILE_CONSUME = Village %d ate %d Food
 ALERT_HUNGER = Hungry - food low
 ALERT_HUNGRY = Hungry
 ALERT_HUNGRY_DETAIL = Low food
@@ -5152,9 +5152,9 @@ HUD_PHASE_NIGHT = Night
 
 HUD_BERRIES = Berries
 
-HUD_FEED_SETTLEMENT_FORMED = Settlement %d founded
+HUD_FEED_SETTLEMENT_FORMED = Village %d formed
 
-HUD_FEED_SETTLEMENT_DISSOLVED = Settlement %d abandoned
+HUD_FEED_SETTLEMENT_DISSOLVED = Village %d abandoned
 
 HUD_FEED_SITE_STARTED = Construction %d started
 
@@ -5191,3 +5191,129 @@ HUD_ACTIVITY_LEGEND = Activity markers
 HUD_ACTIVITY_OTHER = Other target
 
 HUD_ACTIVITY_BUSY = Busy
+
+# Art production interface
+HUD_NEWS_TITLE = Village news
+INSPECTOR_CARRYING_FMT = Carrying %d food
+HUD_SPEED_FMT = Speed %s×
+
+# Art production pass 2: death news and optional seasons
+HUD_FEED_DEATH_STARVATION = A villager starved
+HUD_FEED_DEATH_DEHYDRATION = A villager died of thirst
+HUD_FEED_DEATH_COMBAT = A villager died in a fight
+HUD_FEED_DEATH_OLD_AGE = A villager died of old age
+HUD_SEASON_SPRING = Spring
+HUD_SEASON_SUMMER = Summer
+HUD_SEASON_AUTUMN = Autumn
+HUD_SEASON_WINTER = Winter
+HUD_SEASON_DAY_FMT = %s, day %d
+
+INSPECTOR_AGE_FMT = Age %d days
+INSPECTOR_STAGE_CHILD = Child
+INSPECTOR_STAGE_ADULT = Adult
+INSPECTOR_STAGE_ELDER = Elder
+
+HUD_STOCKPILE_WOOD = Firewood
+INSPECTOR_TARGET_WOOD = Firewood
+INSPECTOR_CARRYING_WOOD_FMT = Carrying %d wood
+
+HUD_COLD = Cold
+INSPECTOR_COLD = Cold — the fire is out
+
+HUD_SEASON_LAST_NIGHT_FMT = %s, night of day %d
+HUD_WINTER_MILD = Mild winter
+HUD_WINTER_NORMAL = Winter
+HUD_WINTER_HARSH = Harsh winter
+GOD_HAND_TITLE = God's hand
+GOD_HAND_GIFT_FOOD = Gift food
+GOD_HAND_SPOIL_FOOD = Spoil food
+GOD_HAND_GIFT_WOOD = Gift wood
+GOD_HAND_ROT_WOOD = Rot wood
+GOD_HAND_RAIN = Rain
+GOD_HAND_COLD_SNAP = Cold snap
+GOD_HAND_WINDFALL = Windfall
+GOD_HAND_APPLIED_FMT = %s %s — applied %d
+GOD_HAND_FAILED = Nothing happened
+GOD_HAND_COLD_SNAP_ACTIVE = Cold snap: %d nights
+GOD_HAND_LOG = Recent acts
+GOD_HAND_UNIT_HOURS = h
+GOD_HAND_UNIT_NIGHTS = nights
+HUD_FEED_DEATH_EXPOSURE = A villager froze to death
+
+# Art Pass 7: many villages and founding
+SETTLEMENT_LABEL_FMT = Village %d
+SETTLEMENT_LABEL_DAUGHTER_FMT = Village %d · from %d
+SETTLEMENT_ABANDONED_FMT = Abandoned village %d
+HUD_SETTLEMENTS_FMT = Villages %d
+GOD_HAND_TARGET_FMT = God's hand — %s
+GOD_HAND_APPLIED_TARGET_FMT = %s: %s %s — applied %d
+HUD_FEED_FISSION_DEPARTED = %d people left Village %d
+HUD_FEED_SETTLEMENT_FOUNDED = Village %d was founded
+HUD_FEED_FISSION_CANCELLED = A group turned back
+HUD_FEED_SETTLEMENT_ABANDONED = Village %d was abandoned
+HUD_FEED_DAY_SUMMARY_FMT = Village %d today: food %+d (stored %d, eaten %d)
+HUD_FEED_MORE_FMT = +%d more
+HUD_FEED_GOD_CAST_FMT = God's hand on Village %d: %s
+
+FOUNDING_SITE_DISTANCE_FMT = %d tiles
+
+VILLAGE_RESTLESS_CALM = Calm
+VILLAGE_RESTLESS_UNEASY = Uneasy
+VILLAGE_RESTLESS_READY = Ready to split
+VILLAGE_RESTLESS_TITLE = Restlessness
+
+# Art Pass 10
+UI_ACTIVITY_TEND_FIRE = Tending the fire
+UI_ACTIVITY_CRAFT = Making things
+UI_ACTIVITY_REPAIR = Mending a shelter
+UI_ACTIVITY_HEARTH_CIRCLE = Sitting at the hearth
+UI_ACTIVITY_EXPLORE = Looking around afar
+UI_ACTIVITY_PLAY = Playing
+UI_ACTIVITY_SIT_BY_FIRE = Resting by the fire
+INSPECTOR_TARGET_ACTIVITY_PLACE_FMT = Place (%d, %d)
+
+# Art Pass 10
+UI_INSPECTOR_TEMPERAMENT = Temperament
+UI_TEMPERAMENT_NS = Curiosity
+UI_TEMPERAMENT_HA = Caution
+UI_TEMPERAMENT_RD = Warmth
+UI_TEMPERAMENT_P = Persistence
+UI_FAMILY_CHILDREN_FMT = Children: %d
+
+## Art Pass 11: names and life records
+INSPECTOR_PERSON_FMT = %s · #%d
+INSPECTOR_RECORD_LIFE_FMT = Born day %d · died day %d
+INSPECTOR_RECORD_FOUNDER_LIFE_FMT = A founder · died day %d
+UI_CHRONICLE_MORE_FMT = %d earlier entries
+CHRONICLE_DAY_FMT = Day %d
+CHRON_BORN_FMT = Born in %s. Parents: %s and %s.
+CHRON_BORN_FALLBACK_NOTE = (parents by the village's reckoning)
+CHRON_CHILD_BORN_FMT = A child, %s, was born.
+CHRON_FOUNDER_FMT = One of the founders of %s.
+CHRON_PAIRED_FMT = Became partners with %s.
+CHRON_CAME_OF_AGE = Came of age.
+CHRON_BECAME_ELDER = Became an elder.
+CHRON_DEPARTED_FMT = Left %s in %s's group: %s
+CHRON_CAUSE_RANKED = chosen to go.
+CHRON_CAUSE_SEED = among the first to go.
+CHRON_CAUSE_HOUSEHOLD = went with the household.
+CHRON_CAUSE_ELDER_PARTNER = followed their partner.
+CHRON_CAUSE_TOP_UP = joined to make the group large enough.
+CHRON_DEPARTURE_CANCELLED_FMT = The move from %s was called off.
+CHRON_SETTLED_FMT = Settled the new village %s, from %s.
+CHRON_JOINED_FMT = Joined %s.
+CHRON_LEFT_FMT = Left %s.
+CHRON_LEFT_BROKE_UP_FMT = Left %s when it broke up.
+CHRON_WIDOWED_FMT = Lost their partner %s.
+CHRON_DIED_FMT = Died aged %d days, of %s.
+CHRON_DIED_NO_AGE_FMT = Died of %s.
+CHRON_DEATH_STARVATION = hunger
+CHRON_DEATH_DEHYDRATION = thirst
+CHRON_DEATH_COMBAT = a fight
+CHRON_DEATH_OLD_AGE = old age
+CHRON_DEATH_EXPOSURE = the cold
+CHRON_SETTLEMENT_FORMED_FMT = %s was founded by %d people.
+CHRON_FISSION_STARTED_FMT = %s began to split; %s leads a group away.
+CHRON_DAUGHTER_FOUNDED_FMT = %s was founded by people from %s.
+CHRON_FISSION_CANCELLED_FMT = The split of %s was called off.
+CHRON_SETTLEMENT_DISSOLVED_FMT = %s was abandoned.

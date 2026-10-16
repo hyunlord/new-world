@@ -1,0 +1,106 @@
+{
+  "source": "/Users/rexxa/work/art-production9-evidence/identity/attempt2/A",
+  "framings": [
+    {
+      "camera": [
+        808.0,
+        356.0
+      ],
+      "capture_frame": 130,
+      "debug_build": true,
+      "delta_tolerance": 1e-09,
+      "fixed_fps": 60,
+      "framing": "P1",
+      "seed": 20261010,
+      "settle_frames": 120,
+      "sim_reads": false,
+      "state_change_frame": 10,
+      "tick": 40560,
+      "validated_delta_samples": 131,
+      "zoom": 4
+    },
+    {
+      "camera": [
+        808.0,
+        356.0
+      ],
+      "capture_frame": 130,
+      "debug_build": true,
+      "delta_tolerance": 1e-09,
+      "fixed_fps": 60,
+      "framing": "P2",
+      "seed": 20261010,
+      "settle_frames": 120,
+      "sim_reads": false,
+      "state_change_frame": 10,
+      "tick": 31320,
+      "validated_delta_samples": 131,
+      "zoom": 4
+    },
+    {
+      "capture_frame": 121,
+      "delta_tolerance": 1e-09,
+      "fixed_fps": 60,
+      "framing": "P3",
+      "seed": 20261013,
+      "state_change_frame": 1,
+      "tick": 46189,
+      "validated_delta_samples": 122
+    },
+    {
+      "camera": [
+        808.0,
+        676.0
+      ],
+      "capture_frame": 130,
+      "debug_build": true,
+      "delta_tolerance": 1e-09,
+      "fixed_fps": 60,
+      "framing": "P4",
+      "seed": 20261013,
+      "settle_frames": 120,
+      "sim_reads": false,
+      "state_change_frame": 10,
+      "tick": 126994,
+      "validated_delta_samples": 131,
+      "zoom": 1
+    },
+    {
+      "camera": [
+        1016.0,
+        500.0
+      ],
+      "capture_frame": 130,
+      "debug_build": true,
+      "delta_tolerance": 1e-09,
+      "fixed_fps": 60,
+      "framing": "P5",
+      "seed": 15100,
+      "settle_frames": 120,
+      "sim_reads": false,
+      "state_change_frame": 10,
+      "tick": 1440,
+      "validated_delta_samples": 131,
+      "zoom": 4
+    },
+    {
+      "camera": [
+        808.0,
+        356.0
+      ],
+      "capture_frame": 130,
+      "debug_build": true,
+      "delta_tolerance": 1e-09,
+      "fixed_fps": 60,
+      "framing": "P6",
+      "seed": 20261010,
+      "settle_frames": 120,
+      "sim_reads": false,
+      "state_change_frame": 10,
+      "tick": 40560,
+      "validated_delta_samples": 131,
+      "zoom": 4
+    }
+  ],
+  "status": "captured; repeat and candidate comparison pending"
+}

@@ -1,0 +1,86 @@
+{
+  "review_round": 1,
+  "method": "Independent direct visual inspection of all eight candidate boards at native, 2x, and 4x scales. No pipeline code, manifests, prior verdicts, or goal documents read.",
+  "verdicts": [
+    {
+      "group": "adult_a_carry_N",
+      "board": "boards/candidate_adult_a_carry_N.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "A small load projects from the right hip and stays contiguous with the figure; it reads as carrying a container, though food details are too small to resolve.",
+        "2x": "The shallow tan container and pale contents are visible beside the hip, with no background gap at the arm connection.",
+        "4x": "The dark container outline and light contents form a basket-like load held low at the side. The visible pose does not bring this load toward the face."
+      }
+    },
+    {
+      "group": "adult_a_carry_E",
+      "board": "boards/candidate_adult_a_carry_E.png",
+      "verdict": "reads_as_eat",
+      "visible_reasons_by_scale": {
+        "1x": "The low side load is visible, but the bent upper arm and bright patch near the face compete with the carrying gesture.",
+        "2x": "The red and tan cluster under the chin and the raised forearm retain a hand-to-mouth impression despite the attached hip container.",
+        "4x": "The container is connected low in front, but the other hand and colored chest/face cluster make the overall action look like eating while holding a container. This is strongest in rows 1 and 3."
+      }
+    },
+    {
+      "group": "adult_a_carry_S",
+      "board": "boards/candidate_adult_a_carry_S.png",
+      "verdict": "reads_as_eat",
+      "visible_reasons_by_scale": {
+        "1x": "A bright red central cluster and raised arm dominate the tiny figure; the side basket is secondary.",
+        "2x": "The hand is held high across the chest below the mouth while the small container projects from the hip.",
+        "4x": "The high hand and red object-like patch under the face preserve an eating gesture in all four rows. Adding the low basket does not make the action unambiguously carrying."
+      }
+    },
+    {
+      "group": "adult_a_carry_wood_N",
+      "board": "boards/candidate_adult_a_carry_wood_N.png",
+      "verdict": "floating",
+      "visible_reasons_by_scale": {
+        "1x": "The small brown load is visibly separated from the right side of the body.",
+        "2x": "Background is visible between the hip and rectangular brown load in every row, while both arms are raised.",
+        "4x": "The supposed wood bundle floats beside the hip without a hand connection. The raised hands are near shoulder level, well away from this load."
+      }
+    },
+    {
+      "group": "adult_b_carry_N",
+      "board": "boards/candidate_adult_b_carry_N.png",
+      "verdict": "reads_as_eat",
+      "visible_reasons_by_scale": {
+        "1x": "The hand and red patch beside the face remain prominent; the small hip load does not resolve the action as carrying.",
+        "2x": "One hand is raised toward the face with a red item-like patch while the other side has a low tan container.",
+        "4x": "The raised hand and red cluster beside the mouth/head strongly suggest eating from the low container. The basket itself appears attached, but the pose remains ambiguous in favor of eating."
+      }
+    },
+    {
+      "group": "adult_b_carry_E",
+      "board": "boards/candidate_adult_b_carry_E.png",
+      "verdict": "reads_as_eat",
+      "visible_reasons_by_scale": {
+        "1x": "The bright red patch immediately below the face and inward bent arm dominate over the tiny low container.",
+        "2x": "The upper hand and red cluster read as a food-to-mouth action above an attached container.",
+        "4x": "A red item-like shape sits below the chin with the arm folded toward it. The hip basket is connected, but the figure still appears to be eating while holding it."
+      }
+    },
+    {
+      "group": "adult_b_carry_S",
+      "board": "boards/candidate_adult_b_carry_S.png",
+      "verdict": "reads_as_eat",
+      "visible_reasons_by_scale": {
+        "1x": "The central raised-hand/red cluster is more legible than the side container, leaving an eating impression.",
+        "2x": "The arm remains bent up across the torso toward the mouth; the basket stays low on the right.",
+        "4x": "The high hand and red patch directly below the face suggest eating in every row. The attached hip container does not remove that reading."
+      }
+    },
+    {
+      "group": "adult_b_carry_wood_N",
+      "board": "boards/candidate_adult_b_carry_wood_N.png",
+      "verdict": "floating",
+      "visible_reasons_by_scale": {
+        "1x": "A detached brown rectangle sits to the right of the figure.",
+        "2x": "There is a clear background gap between the right hip and load, with no reaching hand.",
+        "4x": "The brown/yellow bundle remains disconnected from the body in every row. Both hands are raised near the shoulders rather than touching the hip-level load."
+      }
+    }
+  ]
+}

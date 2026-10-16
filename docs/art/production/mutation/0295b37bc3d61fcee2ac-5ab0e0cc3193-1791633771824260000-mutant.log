@@ -1,0 +1,19 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running tests/harness_g_phase_a_agent_frame_zoom.rs (target/debug/deps/harness_g_phase_a_agent_frame_zoom-9bf2d4a111c2b609)
+
+running 1 test
+test harness_g_a1_sheet_cols_equals_4 ... 
+thread 'harness_g_a1_sheet_cols_equals_4' (49057316) panicked at crates/sim-test/tests/harness_g_phase_a_agent_frame_zoom.rs:168:5:
+assertion failed: atlas.contains("sprite.scale = Vector2.ONE")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_g_a1_sheet_cols_equals_4
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_g_phase_a_agent_frame_zoom`

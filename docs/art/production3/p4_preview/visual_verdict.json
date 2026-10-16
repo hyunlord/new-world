@@ -1,0 +1,11 @@
+{
+  "status": "pass_with_spec_discrepancy",
+  "inspected": [
+    "d40_noon_inspector.png",
+    "first_death_reason_3.png"
+  ],
+  "age_line": "visible and fits",
+  "old_age_news": "visible with death1 onfirst event",
+  "d40_season": "summer5, not brief spring",
+  "simulation_modified": false
+}

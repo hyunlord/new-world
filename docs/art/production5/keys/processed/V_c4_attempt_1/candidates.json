@@ -1,0 +1,2407 @@
+{
+  "schema_version": 1,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "candidates": [
+    {
+      "id": "V_c4_01@1",
+      "slot_id": "V_c4_01",
+      "target_slot": "P2V_c_S_carry_01",
+      "source_sheet": "V_c4",
+      "source_cell": 1,
+      "sheet": "V_c4",
+      "cell": 1,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "carry",
+      "frame": 0,
+      "name": "carry_S_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_01.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_01_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_01_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_01_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_01_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_01_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6176470588235294,
+      "metrics": {
+        "native_before": [
+          17,
+          33
+        ],
+        "native_after": [
+          11,
+          21
+        ],
+        "period_xy": [
+          6.74,
+          6.74
+        ],
+        "new_period_xy": [
+          10.912380952380952,
+          10.912380952380952
+        ],
+        "phase_xy": [
+          0.4,
+          2.0
+        ],
+        "phase_origin_xy": [
+          -6.34,
+          -4.74
+        ],
+        "sampling_phase_xy": [
+          4.572380952380952,
+          6.172380952380951
+        ],
+        "outlined_canvas": [
+          13,
+          23
+        ],
+        "factor": 0.6176470588235294,
+        "mean_delta_e": 11.886517192216097,
+        "common_opaque": 163,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 5,
+        "fire_texels": 3,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.06748466257668712
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          99,
+          57,
+          214,
+          281
+        ],
+        "detected_period_xy": [
+          6.74,
+          6.12
+        ],
+        "period_xy": [
+          6.74,
+          6.74
+        ],
+        "phase_xy": [
+          0.4,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          1.7336302470219038
+        ],
+        "native_size": [
+          17,
+          33
+        ],
+        "spill_removed": 42,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [
+          "pending_cycle_completion"
+        ],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_02@1",
+      "slot_id": "V_c4_02",
+      "target_slot": "P2V_c_S_carry_02",
+      "source_sheet": "V_c4",
+      "source_cell": 2,
+      "sheet": "V_c4",
+      "cell": 2,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "carry",
+      "frame": 1,
+      "name": "carry_S_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_02.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_02_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_02_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_02_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_02_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_02_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6176470588235294,
+      "metrics": {
+        "native_before": [
+          18,
+          35
+        ],
+        "native_after": [
+          12,
+          22
+        ],
+        "period_xy": [
+          6.58,
+          6.58
+        ],
+        "new_period_xy": [
+          10.653333333333332,
+          10.653333333333332
+        ],
+        "phase_xy": [
+          0.30000000000000004,
+          2.2
+        ],
+        "phase_origin_xy": [
+          -6.28,
+          -4.38
+        ],
+        "sampling_phase_xy": [
+          4.373333333333332,
+          6.2733333333333325
+        ],
+        "outlined_canvas": [
+          14,
+          24
+        ],
+        "factor": 0.6176470588235294,
+        "mean_delta_e": 13.1112333162596,
+        "common_opaque": 181,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 5,
+        "fire_texels": 6,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.07734806629834254
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          57,
+          215,
+          283
+        ],
+        "detected_period_xy": [
+          6.84,
+          6.12
+        ],
+        "period_xy": [
+          6.58,
+          6.58
+        ],
+        "phase_xy": [
+          0.30000000000000004,
+          2.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.1464982813365359,
+          0.819375739516661
+        ],
+        "native_size": [
+          18,
+          35
+        ],
+        "spill_removed": 48,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [
+          "pending_cycle_completion"
+        ],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_03@1",
+      "slot_id": "V_c4_03",
+      "target_slot": "P2V_c_S_carry_03",
+      "source_sheet": "V_c4",
+      "source_cell": 3,
+      "sheet": "V_c4",
+      "cell": 3,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "carry",
+      "frame": 2,
+      "name": "carry_S_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_03.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_03_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_03_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_03_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_03_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_03_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6176470588235294,
+      "metrics": {
+        "native_before": [
+          17,
+          42
+        ],
+        "native_after": [
+          11,
+          26
+        ],
+        "period_xy": [
+          6.84,
+          5.42
+        ],
+        "new_period_xy": [
+          11.074285714285713,
+          8.775238095238095
+        ],
+        "phase_xy": [
+          5.7,
+          3.5
+        ],
+        "phase_origin_xy": [
+          -1.1399999999999997,
+          -1.92
+        ],
+        "sampling_phase_xy": [
+          9.934285714285714,
+          6.855238095238095
+        ],
+        "outlined_canvas": [
+          13,
+          28
+        ],
+        "factor": 0.6176470588235294,
+        "mean_delta_e": 12.602863847281368,
+        "common_opaque": 201,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 8,
+        "fire_texels": 6,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.06467661691542288
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error",
+          "standing_height"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          99,
+          57,
+          214,
+          281
+        ],
+        "detected_period_xy": [
+          6.84,
+          5.42
+        ],
+        "period_xy": [
+          6.84,
+          5.42
+        ],
+        "phase_xy": [
+          5.7,
+          3.5
+        ],
+        "axis_periods_separate": true,
+        "axis_improvement_xy": [
+          0.15511716586987334,
+          0.5723282055046384
+        ],
+        "native_size": [
+          17,
+          42
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [
+          "pending_cycle_completion"
+        ],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_04@1",
+      "slot_id": "V_c4_04",
+      "target_slot": "P2V_c_S_carry_04",
+      "source_sheet": "V_c4",
+      "source_cell": 4,
+      "sheet": "V_c4",
+      "cell": 4,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "carry",
+      "frame": 3,
+      "name": "carry_S_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_04.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_04_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_04_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_04_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_04_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_04_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6176470588235294,
+      "metrics": {
+        "native_before": [
+          17,
+          33
+        ],
+        "native_after": [
+          11,
+          21
+        ],
+        "period_xy": [
+          6.74,
+          6.74
+        ],
+        "new_period_xy": [
+          10.912380952380952,
+          10.912380952380952
+        ],
+        "phase_xy": [
+          6.7,
+          2.0
+        ],
+        "phase_origin_xy": [
+          -0.040000000000000036,
+          -4.74
+        ],
+        "sampling_phase_xy": [
+          10.87238095238095,
+          6.172380952380951
+        ],
+        "outlined_canvas": [
+          13,
+          23
+        ],
+        "factor": 0.6176470588235294,
+        "mean_delta_e": 12.535487435064796,
+        "common_opaque": 162,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 2,
+        "fire_texels": 5,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.06172839506172839
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          57,
+          215,
+          281
+        ],
+        "detected_period_xy": [
+          6.74,
+          6.12
+        ],
+        "period_xy": [
+          6.74,
+          6.74
+        ],
+        "phase_xy": [
+          6.7,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          1.2613515359289378
+        ],
+        "native_size": [
+          17,
+          33
+        ],
+        "spill_removed": 40,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [
+          "pending_cycle_completion"
+        ],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_05@1",
+      "slot_id": "V_c4_05",
+      "target_slot": "P2V_c_S_gather_01",
+      "source_sheet": "V_c4",
+      "source_cell": 5,
+      "sheet": "V_c4",
+      "cell": 5,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "gather",
+      "frame": 0,
+      "name": "gather_S_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_05.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_05_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_05_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_05_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_05_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_05_1/sprite_hair_mask.png"
+      },
+      "factor": 0.5454545454545454,
+      "metrics": {
+        "native_before": [
+          28,
+          34
+        ],
+        "native_after": [
+          15,
+          19
+        ],
+        "period_xy": [
+          7.08,
+          7.08
+        ],
+        "new_period_xy": [
+          12.98,
+          12.98
+        ],
+        "phase_xy": [
+          2.7,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -4.38,
+          -2.1799999999999997
+        ],
+        "sampling_phase_xy": [
+          8.600000000000001,
+          10.8
+        ],
+        "outlined_canvas": [
+          17,
+          21
+        ],
+        "factor": 0.5454545454545454,
+        "mean_delta_e": 13.952022281325464,
+        "common_opaque": 189,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 13,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.06349206349206349
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          79,
+          49,
+          273,
+          288
+        ],
+        "detected_period_xy": [
+          6.76,
+          5.82
+        ],
+        "period_xy": [
+          7.08,
+          7.08
+        ],
+        "phase_xy": [
+          2.7,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.14799667181087026,
+          0.39150259699881457
+        ],
+        "native_size": [
+          28,
+          34
+        ],
+        "spill_removed": 74,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [
+          "empty_group"
+        ],
+        "warnings": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "V_c4_06@1",
+      "slot_id": "V_c4_06",
+      "target_slot": "P2V_c_S_gather_02",
+      "source_sheet": "V_c4",
+      "source_cell": 6,
+      "sheet": "V_c4",
+      "cell": 6,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "gather",
+      "frame": 1,
+      "name": "gather_S_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_06.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_06_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_06_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_06_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_06_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_06_1/sprite_hair_mask.png"
+      },
+      "factor": 0.5454545454545454,
+      "metrics": {
+        "native_before": [
+          31,
+          43
+        ],
+        "native_after": [
+          17,
+          23
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "new_period_xy": [
+          10.633333333333335,
+          10.633333333333335
+        ],
+        "phase_xy": [
+          2.5,
+          2.9000000000000004
+        ],
+        "phase_origin_xy": [
+          -3.3,
+          -2.8999999999999995
+        ],
+        "sampling_phase_xy": [
+          7.333333333333335,
+          7.733333333333335
+        ],
+        "outlined_canvas": [
+          19,
+          25
+        ],
+        "factor": 0.5454545454545454,
+        "mean_delta_e": 12.856840397892677,
+        "common_opaque": 250,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 18,
+        "fire_texels": 3,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.052
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          93,
+          49,
+          266,
+          292
+        ],
+        "detected_period_xy": [
+          6.62,
+          6.04
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "phase_xy": [
+          2.5,
+          2.9000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.031332033222679606,
+          0.10068255371135816
+        ],
+        "native_size": [
+          31,
+          43
+        ],
+        "spill_removed": 94,
+        "fringe_repaired": 2
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [
+          "empty_group"
+        ],
+        "warnings": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "V_c4_07@1",
+      "slot_id": "V_c4_07",
+      "target_slot": "P2V_c_E_gather_01",
+      "source_sheet": "V_c4",
+      "source_cell": 7,
+      "sheet": "V_c4",
+      "cell": 7,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "E",
+      "activity": "gather",
+      "frame": 0,
+      "name": "gather_E_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_07.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_07_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_07_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_07_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_07_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_07_1/sprite_hair_mask.png"
+      },
+      "factor": 0.56,
+      "metrics": {
+        "native_before": [
+          38,
+          40
+        ],
+        "native_after": [
+          21,
+          23
+        ],
+        "period_xy": [
+          6.02,
+          6.02
+        ],
+        "new_period_xy": [
+          10.749999999999998,
+          10.749999999999998
+        ],
+        "phase_xy": [
+          3.0,
+          0.8
+        ],
+        "phase_origin_xy": [
+          -3.0199999999999996,
+          -5.22
+        ],
+        "sampling_phase_xy": [
+          7.729999999999999,
+          5.5299999999999985
+        ],
+        "outlined_canvas": [
+          23,
+          25
+        ],
+        "factor": 0.56,
+        "mean_delta_e": 9.915492516879793,
+        "common_opaque": 296,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 13,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.02702702702702703
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          59,
+          53,
+          282,
+          291
+        ],
+        "detected_period_xy": [
+          6.640000000000001,
+          5.96
+        ],
+        "period_xy": [
+          6.02,
+          6.02
+        ],
+        "phase_xy": [
+          3.0,
+          0.8
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.3309878088428295,
+          0.08685265229494049
+        ],
+        "native_size": [
+          38,
+          40
+        ],
+        "spill_removed": 120,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [
+          "empty_group"
+        ],
+        "warnings": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "V_c4_08@1",
+      "slot_id": "V_c4_08",
+      "target_slot": "P2V_c_E_gather_02",
+      "source_sheet": "V_c4",
+      "source_cell": 8,
+      "sheet": "V_c4",
+      "cell": 8,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "E",
+      "activity": "gather",
+      "frame": 1,
+      "name": "gather_E_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_08.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_08_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_08_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_08_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_08_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_08_1/sprite_hair_mask.png"
+      },
+      "factor": 0.56,
+      "metrics": {
+        "native_before": [
+          31,
+          35
+        ],
+        "native_after": [
+          18,
+          20
+        ],
+        "period_xy": [
+          6.9399999999999995,
+          6.9399999999999995
+        ],
+        "new_period_xy": [
+          12.39285714285714,
+          12.39285714285714
+        ],
+        "phase_xy": [
+          0.9,
+          5.300000000000001
+        ],
+        "phase_origin_xy": [
+          -6.039999999999999,
+          -1.6399999999999988
+        ],
+        "sampling_phase_xy": [
+          6.352857142857141,
+          10.752857142857142
+        ],
+        "outlined_canvas": [
+          20,
+          22
+        ],
+        "factor": 0.56,
+        "mean_delta_e": 10.420293655803787,
+        "common_opaque": 217,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 13,
+        "fire_texels": 4,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.03686635944700461
+      },
+      "guards": {
+        "errors": [
+          "geometry",
+          "feet_baseline"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          65,
+          53,
+          282,
+          291
+        ],
+        "detected_period_xy": [
+          6.98,
+          5.96
+        ],
+        "period_xy": [
+          6.9399999999999995,
+          6.9399999999999995
+        ],
+        "phase_xy": [
+          0.9,
+          5.300000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.07031354181153109,
+          1.2505792871898778
+        ],
+        "native_size": [
+          31,
+          35
+        ],
+        "spill_removed": 96,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [
+          "empty_group"
+        ],
+        "warnings": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "V_c4_09@1",
+      "slot_id": "V_c4_09",
+      "target_slot": "P2V_c_E_drink_01",
+      "source_sheet": "V_c4",
+      "source_cell": 9,
+      "sheet": "V_c4",
+      "cell": 9,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "E",
+      "activity": "drink",
+      "frame": 0,
+      "name": "drink_E_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_09.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_09_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_09_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_09_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_09_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_09_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6222563652326603,
+      "metrics": {
+        "native_before": [
+          21,
+          26
+        ],
+        "native_after": [
+          13,
+          16
+        ],
+        "period_xy": [
+          7.4,
+          7.4
+        ],
+        "new_period_xy": [
+          11.892204585537918,
+          11.892204585537918
+        ],
+        "phase_xy": [
+          4.4,
+          6.4
+        ],
+        "phase_origin_xy": [
+          -3.0,
+          -1.0
+        ],
+        "sampling_phase_xy": [
+          8.892204585537918,
+          10.892204585537918
+        ],
+        "outlined_canvas": [
+          15,
+          18
+        ],
+        "factor": 0.6222563652326603,
+        "mean_delta_e": 11.166846270058757,
+        "common_opaque": 136,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 5,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.03676470588235294
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          76,
+          65,
+          224,
+          257
+        ],
+        "detected_period_xy": [
+          7.4,
+          6.9399999999999995
+        ],
+        "period_xy": [
+          7.4,
+          7.4
+        ],
+        "phase_xy": [
+          4.4,
+          6.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.29083977341915196
+        ],
+        "native_size": [
+          21,
+          26
+        ],
+        "spill_removed": 43,
+        "fringe_repaired": 2
+      },
+      "factor_source": "attempt_standing_median",
+      "group_guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_10@1",
+      "slot_id": "V_c4_10",
+      "target_slot": "P2V_c_E_drink_02",
+      "source_sheet": "V_c4",
+      "source_cell": 10,
+      "sheet": "V_c4",
+      "cell": 10,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "E",
+      "activity": "drink",
+      "frame": 1,
+      "name": "drink_E_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_10.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_10_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_10_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_10_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_10_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_10_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6222563652326603,
+      "metrics": {
+        "native_before": [
+          20,
+          26
+        ],
+        "native_after": [
+          13,
+          16
+        ],
+        "period_xy": [
+          7.4,
+          7.4
+        ],
+        "new_period_xy": [
+          11.892204585537918,
+          11.892204585537918
+        ],
+        "phase_xy": [
+          3.4000000000000004,
+          6.4
+        ],
+        "phase_origin_xy": [
+          -4.0,
+          -1.0
+        ],
+        "sampling_phase_xy": [
+          7.892204585537918,
+          10.892204585537918
+        ],
+        "outlined_canvas": [
+          15,
+          18
+        ],
+        "factor": 0.6222563652326603,
+        "mean_delta_e": 12.017120257538016,
+        "common_opaque": 138,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 6,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.036231884057971016
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          77,
+          65,
+          220,
+          257
+        ],
+        "detected_period_xy": [
+          7.4,
+          6.6
+        ],
+        "period_xy": [
+          7.4,
+          7.4
+        ],
+        "phase_xy": [
+          3.4000000000000004,
+          6.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.47007102044569415
+        ],
+        "native_size": [
+          20,
+          26
+        ],
+        "spill_removed": 52,
+        "fringe_repaired": 0
+      },
+      "factor_source": "attempt_standing_median",
+      "group_guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_11@1",
+      "slot_id": "V_c4_11",
+      "target_slot": "P2V_c_E_build_01",
+      "source_sheet": "V_c4",
+      "source_cell": 11,
+      "sheet": "V_c4",
+      "cell": 11,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "E",
+      "activity": "build",
+      "frame": 0,
+      "name": "build_E_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_11.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_11_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_11_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_11_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_11_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_11_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6461538461538462,
+      "metrics": {
+        "native_before": [
+          31,
+          34
+        ],
+        "native_after": [
+          20,
+          23
+        ],
+        "period_xy": [
+          6.54,
+          6.54
+        ],
+        "new_period_xy": [
+          10.12142857142857,
+          10.12142857142857
+        ],
+        "phase_xy": [
+          5.300000000000001,
+          0.6000000000000001
+        ],
+        "phase_origin_xy": [
+          -1.2399999999999993,
+          -5.9399999999999995
+        ],
+        "sampling_phase_xy": [
+          8.881428571428572,
+          4.181428571428571
+        ],
+        "outlined_canvas": [
+          22,
+          25
+        ],
+        "factor": 0.6461538461538462,
+        "mean_delta_e": 9.993879631991707,
+        "common_opaque": 266,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 5,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.03007518796992481
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          63,
+          47,
+          261,
+          269
+        ],
+        "detected_period_xy": [
+          6.9399999999999995,
+          6.54
+        ],
+        "period_xy": [
+          6.54,
+          6.54
+        ],
+        "phase_xy": [
+          5.300000000000001,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.6574001599968297,
+          0.0
+        ],
+        "native_size": [
+          31,
+          34
+        ],
+        "spill_removed": 69,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [
+          "empty_group"
+        ],
+        "warnings": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "V_c4_12@1",
+      "slot_id": "V_c4_12",
+      "target_slot": "P2V_c_E_build_02",
+      "source_sheet": "V_c4",
+      "source_cell": 12,
+      "sheet": "V_c4",
+      "cell": 12,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "E",
+      "activity": "build",
+      "frame": 1,
+      "name": "build_E_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_12.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_12_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_12_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_12_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_12_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_12_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6461538461538462,
+      "metrics": {
+        "native_before": [
+          34,
+          31
+        ],
+        "native_after": [
+          22,
+          21
+        ],
+        "period_xy": [
+          6.58,
+          6.58
+        ],
+        "new_period_xy": [
+          10.183333333333334,
+          10.183333333333334
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          1.4000000000000001
+        ],
+        "phase_origin_xy": [
+          -3.28,
+          -5.18
+        ],
+        "sampling_phase_xy": [
+          6.903333333333334,
+          5.003333333333334
+        ],
+        "outlined_canvas": [
+          24,
+          23
+        ],
+        "factor": 0.6461538461538462,
+        "mean_delta_e": 9.261574053452096,
+        "common_opaque": 264,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 3,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.03409090909090909
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          52,
+          65,
+          272,
+          270
+        ],
+        "detected_period_xy": [
+          6.9,
+          6.58
+        ],
+        "period_xy": [
+          6.58,
+          6.58
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          1.4000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.0903811803973291,
+          0.0
+        ],
+        "native_size": [
+          34,
+          31
+        ],
+        "spill_removed": 80,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [
+          "empty_group"
+        ],
+        "warnings": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "V_c4_13@1",
+      "slot_id": "V_c4_13",
+      "target_slot": "V_c2_03",
+      "source_sheet": "V_c4",
+      "source_cell": 13,
+      "sheet": "V_c4",
+      "cell": 13,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "hop",
+      "frame": 0,
+      "name": "hop_S_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_13.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_13_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_13_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_13_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_13_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_13_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6268656716417911,
+      "metrics": {
+        "native_before": [
+          20,
+          34
+        ],
+        "native_after": [
+          13,
+          21
+        ],
+        "period_xy": [
+          7.140000000000001,
+          7.140000000000001
+        ],
+        "new_period_xy": [
+          11.39,
+          11.39
+        ],
+        "phase_xy": [
+          7.0,
+          4.3
+        ],
+        "phase_origin_xy": [
+          -0.14000000000000057,
+          -2.8400000000000007
+        ],
+        "sampling_phase_xy": [
+          11.25,
+          8.55
+        ],
+        "outlined_canvas": [
+          15,
+          23
+        ],
+        "factor": 0.6268656716417911,
+        "mean_delta_e": 9.827448519665543,
+        "common_opaque": 148,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.04054054054054054
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          85,
+          24,
+          226,
+          261
+        ],
+        "detected_period_xy": [
+          7.140000000000001,
+          5.66
+        ],
+        "period_xy": [
+          7.140000000000001,
+          7.140000000000001
+        ],
+        "phase_xy": [
+          7.0,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          1.283861181585371
+        ],
+        "native_size": [
+          20,
+          34
+        ],
+        "spill_removed": 76,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_14@1",
+      "slot_id": "V_c4_14",
+      "target_slot": "V_c2_04",
+      "source_sheet": "V_c4",
+      "source_cell": 14,
+      "sheet": "V_c4",
+      "cell": 14,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "hop",
+      "frame": 1,
+      "name": "hop_S_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_14.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_14_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_14_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_14_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_14_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_14_1/sprite_hair_mask.png"
+      },
+      "factor": 0.6268656716417911,
+      "metrics": {
+        "native_before": [
+          20,
+          33
+        ],
+        "native_after": [
+          13,
+          22
+        ],
+        "period_xy": [
+          7.1,
+          7.1
+        ],
+        "new_period_xy": [
+          11.326190476190474,
+          11.326190476190474
+        ],
+        "phase_xy": [
+          0.4,
+          1.9000000000000001
+        ],
+        "phase_origin_xy": [
+          -6.699999999999999,
+          -5.199999999999999
+        ],
+        "sampling_phase_xy": [
+          4.626190476190475,
+          6.126190476190475
+        ],
+        "outlined_canvas": [
+          15,
+          24
+        ],
+        "factor": 0.6268656716417911,
+        "mean_delta_e": 10.869185813113127,
+        "common_opaque": 149,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.026845637583892617
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          85,
+          24,
+          227,
+          261
+        ],
+        "detected_period_xy": [
+          7.1,
+          5.78
+        ],
+        "period_xy": [
+          7.1,
+          7.1
+        ],
+        "phase_xy": [
+          0.4,
+          1.9000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.3914843280878764
+        ],
+        "native_size": [
+          20,
+          33
+        ],
+        "spill_removed": 52,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_15@1",
+      "slot_id": "V_c4_15",
+      "target_slot": "V_c2_09",
+      "source_sheet": "V_c4",
+      "source_cell": 15,
+      "sheet": "V_c4",
+      "cell": 15,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "talk",
+      "frame": 0,
+      "name": "talk_S_0",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_15.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_15_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_15_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_15_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_15_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_15_1/sprite_hair_mask.png"
+      },
+      "factor": 0.7,
+      "metrics": {
+        "native_before": [
+          24,
+          30
+        ],
+        "native_after": [
+          17,
+          21
+        ],
+        "period_xy": [
+          7.359999999999999,
+          7.359999999999999
+        ],
+        "new_period_xy": [
+          10.514285714285714,
+          10.514285714285714
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          7.2
+        ],
+        "phase_origin_xy": [
+          -1.5599999999999987,
+          -0.15999999999999925
+        ],
+        "sampling_phase_xy": [
+          8.954285714285716,
+          10.354285714285716
+        ],
+        "outlined_canvas": [
+          19,
+          23
+        ],
+        "factor": 0.7,
+        "mean_delta_e": 9.057162547739063,
+        "common_opaque": 196,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.04081632653061224
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "despeckle_over_3_percent",
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          77,
+          32,
+          251,
+          253
+        ],
+        "detected_period_xy": [
+          6.78,
+          7.859999999999999
+        ],
+        "period_xy": [
+          7.359999999999999,
+          7.359999999999999
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          7.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.04427562693102149,
+          0.10635640733581946
+        ],
+        "native_size": [
+          24,
+          30
+        ],
+        "spill_removed": 75,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "V_c4_16@1",
+      "slot_id": "V_c4_16",
+      "target_slot": "V_c2_10",
+      "source_sheet": "V_c4",
+      "source_cell": 16,
+      "sheet": "V_c4",
+      "cell": 16,
+      "budget_alias": null,
+      "attempt": 1,
+      "body": "child",
+      "view": "S",
+      "activity": "talk",
+      "frame": 1,
+      "name": "talk_S_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production5-raw/V_c4/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/art-production5-raw/V_c4/cells_attempt_1/V_c4_16.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_16_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_16_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_16_1/sprite.png",
+        "hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_16_1/hair_mask.png",
+        "sprite_hair_mask": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/processed/V_c4_attempt_1/cells/V_c4_16_1/sprite_hair_mask.png"
+      },
+      "factor": 0.7,
+      "metrics": {
+        "native_before": [
+          24,
+          30
+        ],
+        "native_after": [
+          17,
+          21
+        ],
+        "period_xy": [
+          7.359999999999999,
+          7.359999999999999
+        ],
+        "new_period_xy": [
+          10.514285714285714,
+          10.514285714285714
+        ],
+        "phase_xy": [
+          5.0,
+          7.2
+        ],
+        "phase_origin_xy": [
+          -2.3599999999999994,
+          -0.15999999999999925
+        ],
+        "sampling_phase_xy": [
+          8.154285714285715,
+          10.354285714285716
+        ],
+        "outlined_canvas": [
+          19,
+          23
+        ],
+        "factor": 0.7,
+        "mean_delta_e": 9.571661758830908,
+        "common_opaque": 195,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ],
+        "despeckle_change_fraction": 0.02564102564102564
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "conversion_error": null,
+      "review_status": "pending_independent_visual_review",
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          57,
+          32,
+          231,
+          253
+        ],
+        "detected_period_xy": [
+          7.32,
+          7.859999999999999
+        ],
+        "period_xy": [
+          7.359999999999999,
+          7.359999999999999
+        ],
+        "phase_xy": [
+          5.0,
+          7.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.05376144016413304,
+          0.012584527721052645
+        ],
+        "native_size": [
+          24,
+          30
+        ],
+        "spill_removed": 53,
+        "fringe_repaired": 0
+      },
+      "factor_source": "standing_group",
+      "group_guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      }
+    }
+  ],
+  "selected": {},
+  "references": {
+    "adult_a": "V_a1_01@1",
+    "adult_b": "V_b1_01@2",
+    "child": "V_c1_01@1"
+  },
+  "groups": [],
+  "guard_context": [
+    "N2_01@2",
+    "N2_02@2",
+    "N2_03@2",
+    "N2_04@2",
+    "V_a1_01@1",
+    "V_a1_03@1",
+    "V_a1_04@1",
+    "V_a2_11@3",
+    "V_a2_12@3:derived",
+    "V_a3_05@3",
+    "V_a3_06@3",
+    "V_a3_07@3",
+    "V_a3_09@2",
+    "V_a3_10@2:derived",
+    "V_a3_16@3",
+    "V_b1_01@2",
+    "V_b1_02@2",
+    "V_b1_03@2",
+    "V_b1_04@2",
+    "V_b1_05@2",
+    "V_b1_06@2",
+    "V_b1_07@2",
+    "V_b1_08@2",
+    "V_b1_13@2:derived",
+    "V_b1_14@2",
+    "V_b1_15@2",
+    "V_b1_16@2:derived",
+    "V_b2_11@3",
+    "V_b2_12@3",
+    "V_b2_15@2",
+    "V_b2_16@2",
+    "V_b3_01@2",
+    "V_b3_02@2",
+    "V_b3_03@3",
+    "V_b3_04@3",
+    "V_b3_05@1",
+    "V_b3_06@1",
+    "V_b3_07@1",
+    "V_b3_08@3",
+    "V_b3_09@1",
+    "V_b3_10@1",
+    "V_b3_11@2",
+    "V_b3_12@2",
+    "V_b3_14@1",
+    "V_b3_15@1",
+    "V_c1_01@1",
+    "V_c1_02@1",
+    "V_c1_03@3",
+    "V_c1_04@1",
+    "V_c2_01@2",
+    "V_c2_02@2",
+    "V_c2_09@1",
+    "V_c2_11@3",
+    "V_c2_12@3",
+    "V_c2_15@1"
+  ],
+  "review_catalog": {
+    "schema_version": 1,
+    "sheets": [
+      {
+        "id": "V_c4",
+        "body": "child",
+        "derive_missing": false,
+        "key_hair": false,
+        "reference_candidate": "V_c1_01@1",
+        "cells": [
+          {
+            "cell": 1,
+            "target_slot": "P2V_c_S_carry_01",
+            "name": "carry_S_0",
+            "activity": "carry",
+            "view": "S",
+            "frame": 0
+          },
+          {
+            "cell": 2,
+            "target_slot": "P2V_c_S_carry_02",
+            "name": "carry_S_1",
+            "activity": "carry",
+            "view": "S",
+            "frame": 1
+          },
+          {
+            "cell": 3,
+            "target_slot": "P2V_c_S_carry_03",
+            "name": "carry_S_2",
+            "activity": "carry",
+            "view": "S",
+            "frame": 2
+          },
+          {
+            "cell": 4,
+            "target_slot": "P2V_c_S_carry_04",
+            "name": "carry_S_3",
+            "activity": "carry",
+            "view": "S",
+            "frame": 3
+          },
+          {
+            "cell": 5,
+            "target_slot": "P2V_c_S_gather_01",
+            "name": "gather_S_0",
+            "activity": "gather",
+            "view": "S",
+            "frame": 0
+          },
+          {
+            "cell": 6,
+            "target_slot": "P2V_c_S_gather_02",
+            "name": "gather_S_1",
+            "activity": "gather",
+            "view": "S",
+            "frame": 1
+          },
+          {
+            "cell": 7,
+            "target_slot": "P2V_c_E_gather_01",
+            "name": "gather_E_0",
+            "activity": "gather",
+            "view": "E",
+            "frame": 0
+          },
+          {
+            "cell": 8,
+            "target_slot": "P2V_c_E_gather_02",
+            "name": "gather_E_1",
+            "activity": "gather",
+            "view": "E",
+            "frame": 1
+          },
+          {
+            "cell": 9,
+            "target_slot": "P2V_c_E_drink_01",
+            "name": "drink_E_0",
+            "activity": "drink",
+            "view": "E",
+            "frame": 0
+          },
+          {
+            "cell": 10,
+            "target_slot": "P2V_c_E_drink_02",
+            "name": "drink_E_1",
+            "activity": "drink",
+            "view": "E",
+            "frame": 1
+          },
+          {
+            "cell": 11,
+            "target_slot": "P2V_c_E_build_01",
+            "name": "build_E_0",
+            "activity": "build",
+            "view": "E",
+            "frame": 0
+          },
+          {
+            "cell": 12,
+            "target_slot": "P2V_c_E_build_02",
+            "name": "build_E_1",
+            "activity": "build",
+            "view": "E",
+            "frame": 1
+          },
+          {
+            "cell": 13,
+            "target_slot": "V_c2_03",
+            "name": "hop_S_0",
+            "activity": "hop",
+            "view": "S",
+            "frame": 0
+          },
+          {
+            "cell": 14,
+            "target_slot": "V_c2_04",
+            "name": "hop_S_1",
+            "activity": "hop",
+            "view": "S",
+            "frame": 1
+          },
+          {
+            "cell": 15,
+            "target_slot": "V_c2_09",
+            "name": "talk_S_0",
+            "activity": "talk",
+            "view": "S",
+            "frame": 0
+          },
+          {
+            "cell": 16,
+            "target_slot": "V_c2_10",
+            "name": "talk_S_1",
+            "activity": "talk",
+            "view": "S",
+            "frame": 1
+          }
+        ]
+      }
+    ]
+  },
+  "acceptance_status": "pending_independent_visual_review",
+  "raw_sha256": "07e9fa815487a2660c4ad976638ab5f9cba1df290f490817e42c01839671145e",
+  "attempted_cells": 16,
+  "checkpoint_attempted_cells": 16,
+  "cross_guards": {
+    "errors": [],
+    "warnings": [],
+    "passed": true
+  },
+  "boards": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_c4_attempt_1/page_01.png",
+      "sha256": "6f5d36c8fa8ae01453490121eaf5a9be4ed79611cfbeae54f714143bcc33ca9b",
+      "candidate_ids": [
+        "V_c4_01@1",
+        "V_c4_02@1",
+        "V_c4_03@1",
+        "V_c4_04@1"
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_c4_attempt_1/page_02.png",
+      "sha256": "753adef7125b6309502a120bd69884423e14ef8866499e751cc5be67ee23f89b",
+      "candidate_ids": [
+        "V_c4_05@1",
+        "V_c4_06@1",
+        "V_c4_07@1",
+        "V_c4_08@1"
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_c4_attempt_1/page_03.png",
+      "sha256": "97103b0c46d30724f752485fe146efea5bfc373e51205f7c8aab7c3795ed6f46",
+      "candidate_ids": [
+        "V_c4_09@1",
+        "V_c4_10@1",
+        "V_c4_11@1",
+        "V_c4_12@1"
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_c4_attempt_1/page_04.png",
+      "sha256": "c9feb03d535bcbeb6ab6efe0241a36382b65e69efa6d2d97811d3bae1323679a",
+      "candidate_ids": [
+        "V_c4_13@1",
+        "V_c4_14@1",
+        "V_c4_15@1",
+        "V_c4_16@1"
+      ]
+    }
+  ],
+  "reference_manifest": "docs/art/production5/references/approved_manifest.json",
+  "reference_sha256": "ca07df81cf280615e4e7d171e52ef0c6593c53127d4ad21a03ebfcfeda8db96c",
+  "key_hair": false,
+  "key_error_free_cells": 16,
+  "candidate_fingerprints": {
+    "V_c4_01@1": "8f3a0bcb46e0f33eee3a05813ca5db59f74b6da28e8d30b6d84a34c3f6a398e2",
+    "V_c4_02@1": "ca3c40edce55cd2f38a2d633fa80e00283387bc38bd7c98938b96be7109b7e07",
+    "V_c4_03@1": "4238bd93768cb50194ccad8c31671d51a5f472a11c71d2dc80beaa47d55ebda4",
+    "V_c4_04@1": "021660b469f7e5ddb4aaf4b2edc58944a80633ded96fc4750d432d91d355b8e9",
+    "V_c4_05@1": "302d15f22c4ed4eada907d8be53b38e2f681206b826d34e97168d6e90809db5c",
+    "V_c4_06@1": "60bed1b5e7cc35d1aac7a26b91d1c594d623968b4cf3ccfb10ad950611ec64e2",
+    "V_c4_07@1": "afe61df9e81e8998f7e30afa831244b6309f62df24e8a78773623ec2ae82d35b",
+    "V_c4_08@1": "3c4642b41d92a04339ff4eb5461ad2508bfdd7e9b6d9ddc8d449320233fe427c",
+    "V_c4_09@1": "4e7c68a86d8a22b68d18d6f7a37ed9583dc52c99ef6adea2f46b22d66f459c94",
+    "V_c4_10@1": "b5e8808b1717ca287b0d4f05ab36993f4520611b6eed4becb0e4ac18aa70eff5",
+    "V_c4_11@1": "25df1006d118e547ff2ce1179fd07d2247b7e7883043f1a7f4af12f1699e3481",
+    "V_c4_12@1": "937b596151bd38d1052d9912e495a78ed55303b776435d5f66e866f3a2a56c04",
+    "V_c4_13@1": "8b42a462566b80a6b04bfb256280e71ad540b866f382e9d57a62c1004ad02e69",
+    "V_c4_14@1": "57b0be93caeaf18ce145bfe7945873d3f75d85d8c70b9b9af733d8b47d7ec166",
+    "V_c4_15@1": "001f9ca256bc7588cb685c6b2dcda9d910195f34d31ade94326cfa027bcb10d9",
+    "V_c4_16@1": "67798aa605fef35413d11cdd28fcbbb9966137b112ea2c0fe7475cdbb0099ae4"
+  }
+}

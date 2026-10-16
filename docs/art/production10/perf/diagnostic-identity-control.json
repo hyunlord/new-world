@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "framings": [
+    {
+      "framing": "P1",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "dbcc8955b95af44a1634cb48e25eb0ba57612e69782ba67a88f5b56df2c387bc",
+        "dbcc8955b95af44a1634cb48e25eb0ba57612e69782ba67a88f5b56df2c387bc",
+        "dbcc8955b95af44a1634cb48e25eb0ba57612e69782ba67a88f5b56df2c387bc"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P2",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "7ffc9c649159d66442c2fff653b6aa7c5b10bf27f646bc7bcdd4eca1cb2737a1",
+        "7ffc9c649159d66442c2fff653b6aa7c5b10bf27f646bc7bcdd4eca1cb2737a1",
+        "7ffc9c649159d66442c2fff653b6aa7c5b10bf27f646bc7bcdd4eca1cb2737a1"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P3",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "8084b400298407eb4b1e23cc4995260bb77b9fe9f378ccfdcdf5f3db1ddf8634",
+        "8084b400298407eb4b1e23cc4995260bb77b9fe9f378ccfdcdf5f3db1ddf8634",
+        "8084b400298407eb4b1e23cc4995260bb77b9fe9f378ccfdcdf5f3db1ddf8634"
+      ],
+      "capture_frame": 121,
+      "state_change_frame": 1
+    },
+    {
+      "framing": "P4",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "d153ad0663c431baa878f1d8bfed861856f0ccf99fef1325fad9c64da1aad77a",
+        "d153ad0663c431baa878f1d8bfed861856f0ccf99fef1325fad9c64da1aad77a",
+        "d153ad0663c431baa878f1d8bfed861856f0ccf99fef1325fad9c64da1aad77a"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P5",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+        "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+        "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P6",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "0a63fa176a1848a13cbe507d4f9b22087c9ee91ca0bb9dab13311064feb980a3",
+        "0a63fa176a1848a13cbe507d4f9b22087c9ee91ca0bb9dab13311064feb980a3",
+        "0a63fa176a1848a13cbe507d4f9b22087c9ee91ca0bb9dab13311064feb980a3"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    }
+  ],
+  "scope": "diagnostic generated renderer versus ordinary merged baseline; not final optimized H5",
+  "sources": {
+    "captures": "/Users/rexxa/work/art-production10-evidence/diagnostic-identity-prep/all-six",
+    "comparison": "/Users/rexxa/work/art-production10-evidence/diagnostic-identity-prep/all-six-comparison",
+    "preparation": "/Users/rexxa/work/art-production10-evidence/diagnostic-identity-prep/preparation.json",
+    "remaining_preparation": "/Users/rexxa/work/art-production10-evidence/diagnostic-identity-prep/remaining-preparation.json"
+  }
+}

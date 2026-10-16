@@ -1,0 +1,9 @@
+{
+  "terminal_exit_observed": 0,
+  "terminal_session": 97113,
+  "head_after": "0c044ec543eb6f4e5f2c425e7cf605b70cbd992c",
+  "source_digest_after": "6c83a7768c2691a1a9d901600c67d07658048462d69c05ed9ce3bab5686ddd39",
+  "six_cases_pass": true,
+  "source_stable": true,
+  "bridge_stable": true
+}

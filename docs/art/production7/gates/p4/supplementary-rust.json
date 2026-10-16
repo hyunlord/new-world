@@ -1,0 +1,22 @@
+[
+  {
+    "log": "/Users/rexxa/work/art-production7-evidence/p0-excluding-bridge.log",
+    "sha256": "6d3ded808ea247054200e6dc902109390ebec08e18c69eed347380f970f68bdd",
+    "exit": 0,
+    "suites": 140,
+    "passed": 2057,
+    "failed": 0,
+    "ignored": 0,
+    "note": "Supplementary execution, not the full workspace gate and not exact final head."
+  },
+  {
+    "log": "/Users/rexxa/work/new-world-art-prod/docs/art/production7/gates/p4/static-contracts.log",
+    "sha256": "9c06161c048361a1c5846a9f2131690fad2e38c1e387f70eef09cf2bf6d0a5a3",
+    "exit": 0,
+    "suites": 5,
+    "passed": 88,
+    "failed": 0,
+    "ignored": 0,
+    "note": "Supplementary execution, not the full workspace gate and not exact final head."
+  }
+]

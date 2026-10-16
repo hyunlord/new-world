@@ -1,0 +1,1315 @@
+{
+  "version": 2,
+  "direction": "D1",
+  "source": "/Users/rexxa/work/art-direction-raw/D1/D1_sheet.png",
+  "source_sha256": "8ce6a252533ce710e0371a9040c723ed7ab75242faac32b675b18db8200f5687",
+  "jpeg_fallback": false,
+  "palette": {
+    "scene_count": 31,
+    "sprite_median_cut_count": 32,
+    "final_count": 67,
+    "added_colors": [
+      {
+        "role": "berry_red",
+        "color": "#84120B",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "berry_red",
+        "color": "#F95813",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "skin",
+        "color": "#5D3921",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "skin",
+        "color": "#E18B4F",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "skin",
+        "color": "#E9D4BA",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "fire_orange",
+        "color": "#7B330E",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "fire_yellow",
+        "color": "#9B9074",
+        "source": "native opaque texel"
+      },
+      {
+        "role": "water_highlight",
+        "color": "#F2ECE3",
+        "source": "native opaque texel"
+      }
+    ],
+    "accent_ramps": {
+      "berry_red": [
+        "#84120B",
+        "#F95813"
+      ],
+      "skin": [
+        "#694B31",
+        "#86633F",
+        "#A2804B",
+        "#AE8C50",
+        "#D1B681",
+        "#B29453",
+        "#BEA366",
+        "#B29B5A",
+        "#E6C17F",
+        "#CAA55A",
+        "#E79752",
+        "#B07F50",
+        "#5D3921",
+        "#E18B4F",
+        "#E9D4BA",
+        "#9B9074"
+      ],
+      "fire_orange": [
+        "#7B330E"
+      ],
+      "fire_yellow": [
+        "#9B9074"
+      ],
+      "fire_hot_white": [
+        "#E9D4BA"
+      ],
+      "water_highlight": [
+        "#F2ECE3"
+      ]
+    },
+    "missing_accents": [],
+    "classification": "Skin: HSV H12..48 S.15...65 V>=.35; palette shades within \u0394E12 of native adult candidates. Color proxy can include clothing. Water: nearest native to #BEDCE6; no water sprite."
+  },
+  "semantics": {
+    "passed": false,
+    "checks": {
+      "berry_stages": true,
+      "fire": true,
+      "skin": true,
+      "child_smaller": true,
+      "basket_smaller": true,
+      "fidelity": false,
+      "palette_membership": true,
+      "binary_alpha": true,
+      "accent_ramps": true
+    },
+    "metrics": {
+      "berry_red_counts": {
+        "full": 112,
+        "two": 20,
+        "one": 9,
+        "bare": 0
+      },
+      "fire_orange_yellow_texels": 196,
+      "adult_skin_ratios": {
+        "09_villager_gatherer": 0.30256410256410254,
+        "10_villager_builder": 0.33152173913043476,
+        "11_villager_elder": 0.2709497206703911
+      },
+      "child_height": 32,
+      "adult_heights": {
+        "09_villager_gatherer": 43,
+        "10_villager_builder": 44,
+        "11_villager_elder": 39
+      },
+      "basket_box_area": 812,
+      "bush_box_areas": {
+        "05_berry_bush_full": 1476,
+        "06_berry_bush_two": 1224,
+        "07_berry_bush_one": 1190,
+        "08_berry_bush_bare": 1156
+      },
+      "mean_delta_e": 6.69524310417799
+    },
+    "sprites": {
+      "01_campfire": {
+        "opaque_texels": 570,
+        "size": [
+          33,
+          40
+        ],
+        "mean_delta_e": 13.00543590633321,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "02_lean_to": {
+        "opaque_texels": 751,
+        "size": [
+          32,
+          45
+        ],
+        "mean_delta_e": 5.917881882800127,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "03_storage_pit": {
+        "opaque_texels": 1206,
+        "size": [
+          46,
+          35
+        ],
+        "mean_delta_e": 5.8817329643183935,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "04_shelter_frame": {
+        "opaque_texels": 483,
+        "size": [
+          30,
+          41
+        ],
+        "mean_delta_e": 7.564125197492428,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "05_berry_bush_full": {
+        "opaque_texels": 916,
+        "size": [
+          41,
+          36
+        ],
+        "mean_delta_e": 6.833870667664272,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "06_berry_bush_two": {
+        "opaque_texels": 746,
+        "size": [
+          36,
+          34
+        ],
+        "mean_delta_e": 6.065717879266947,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "07_berry_bush_one": {
+        "opaque_texels": 733,
+        "size": [
+          36,
+          34
+        ],
+        "mean_delta_e": 5.977584494153423,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "08_berry_bush_bare": {
+        "opaque_texels": 686,
+        "size": [
+          35,
+          34
+        ],
+        "mean_delta_e": 5.8524751095094585,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "09_villager_gatherer": {
+        "opaque_texels": 585,
+        "size": [
+          23,
+          43
+        ],
+        "mean_delta_e": 5.688716100577326,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "10_villager_builder": {
+        "opaque_texels": 736,
+        "size": [
+          33,
+          44
+        ],
+        "mean_delta_e": 4.924134695022971,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "11_villager_elder": {
+        "opaque_texels": 716,
+        "size": [
+          32,
+          39
+        ],
+        "mean_delta_e": 5.162917704906277,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "12_villager_child": {
+        "opaque_texels": 358,
+        "size": [
+          17,
+          32
+        ],
+        "mean_delta_e": 4.568507352585247,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "13_boulder": {
+        "opaque_texels": 667,
+        "size": [
+          39,
+          29
+        ],
+        "mean_delta_e": 9.02756745768407,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "14_young_tree": {
+        "opaque_texels": 740,
+        "size": [
+          33,
+          44
+        ],
+        "mean_delta_e": 7.708956983596569,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "15_reed_tuft": {
+        "opaque_texels": 621,
+        "size": [
+          35,
+          37
+        ],
+        "mean_delta_e": 7.7303748819433125,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      },
+      "16_berry_basket": {
+        "opaque_texels": 566,
+        "size": [
+          30,
+          28
+        ],
+        "mean_delta_e": 6.685515243183244,
+        "palette_membership": 1.0,
+        "binary_alpha": true,
+        "silhouette_unchanged": false
+      }
+    },
+    "definitions": {
+      "red": "R>130, G<90, B<90",
+      "fire": "HSV H15..65 degrees, S>=0.35, V>=0.45",
+      "skin": "Skin: HSV H12..48 S.15...65 V>=.35; palette shades within \u0394E12 of native adult candidates. Color proxy can include clothing. Water: nearest native to #BEDCE6; no water sprite.",
+      "spill": "Silhouette changes are diagnostic because native spill removal is intentional. Lost opaque texels still contribute to fidelity against final RGB.",
+      "size": "Opaque bounding-box height for child; opaque bounding-box area for basket.",
+      "fidelity": "Opaque-texel weighted direction mean and every sprite mean must be <=6 \u0394E76. Input native is pre-spill step 3; final is before outline."
+    }
+  },
+  "sprites": [
+    {
+      "name": "01_campfire",
+      "file": "01_campfire.png",
+      "class": "campfire",
+      "native_size": [
+        33,
+        40
+      ],
+      "class_max": [
+        24,
+        26
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          61,
+          35,
+          254,
+          267
+        ],
+        "detected_period_xy": [
+          5.9,
+          5.85
+        ],
+        "period_xy": [
+          5.875,
+          5.875
+        ],
+        "phase_xy": [
+          4.5,
+          2.75
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1689.66459249997,
+          2170.9101028204673
+        ],
+        "native_size": [
+          33,
+          40
+        ],
+        "spill_removed": 17,
+        "fringe_repaired": 18
+      },
+      "canvas_size": [
+        35,
+        42
+      ],
+      "anchor": [
+        17,
+        41
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "02_lean_to",
+      "file": "02_lean_to.png",
+      "class": "building",
+      "native_size": [
+        32,
+        45
+      ],
+      "class_max": [
+        34,
+        30
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          18,
+          30,
+          289,
+          288
+        ],
+        "detected_period_xy": [
+          8.45,
+          5.8
+        ],
+        "period_xy": [
+          8.45,
+          5.8
+        ],
+        "phase_xy": [
+          2.5,
+          4.25
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          2326.843437499996,
+          2644.079180454592
+        ],
+        "native_size": [
+          32,
+          45
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 1
+      },
+      "canvas_size": [
+        34,
+        47
+      ],
+      "anchor": [
+        17,
+        46
+      ],
+      "footprint_tiles": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "03_storage_pit",
+      "file": "03_storage_pit.png",
+      "class": "building",
+      "native_size": [
+        46,
+        35
+      ],
+      "class_max": [
+        34,
+        30
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          24,
+          74,
+          293,
+          278
+        ],
+        "detected_period_xy": [
+          6.05,
+          5.8
+        ],
+        "period_xy": [
+          5.925,
+          5.925
+        ],
+        "phase_xy": [
+          5.5,
+          3.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2158.7993284090644,
+          4151.101907352875
+        ],
+        "native_size": [
+          46,
+          35
+        ],
+        "spill_removed": 1,
+        "fringe_repaired": 3
+      },
+      "canvas_size": [
+        48,
+        37
+      ],
+      "anchor": [
+        24,
+        36
+      ],
+      "footprint_tiles": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "04_shelter_frame",
+      "file": "04_shelter_frame.png",
+      "class": "building",
+      "native_size": [
+        30,
+        41
+      ],
+      "class_max": [
+        34,
+        30
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          33,
+          48,
+          277,
+          283
+        ],
+        "detected_period_xy": [
+          8.4,
+          5.8
+        ],
+        "period_xy": [
+          8.4,
+          5.8
+        ],
+        "phase_xy": [
+          5.0,
+          3.5
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          2364.95344965515,
+          2837.1569149999314
+        ],
+        "native_size": [
+          30,
+          41
+        ],
+        "spill_removed": 49,
+        "fringe_repaired": 2
+      },
+      "canvas_size": [
+        32,
+        43
+      ],
+      "anchor": [
+        16,
+        42
+      ],
+      "footprint_tiles": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "05_berry_bush_full",
+      "file": "05_berry_bush_full.png",
+      "class": "small object",
+      "native_size": [
+        41,
+        36
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          47,
+          50,
+          269,
+          258
+        ],
+        "detected_period_xy": [
+          5.4,
+          5.85
+        ],
+        "period_xy": [
+          5.4,
+          5.85
+        ],
+        "phase_xy": [
+          0.75,
+          3.25
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          1618.7845732499704,
+          2392.0688225714152
+        ],
+        "native_size": [
+          41,
+          36
+        ],
+        "spill_removed": 16,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        43,
+        38
+      ],
+      "anchor": [
+        21,
+        37
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "06_berry_bush_two",
+      "file": "06_berry_bush_two.png",
+      "class": "small object",
+      "native_size": [
+        36,
+        34
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          50,
+          56,
+          262,
+          258
+        ],
+        "detected_period_xy": [
+          6.15,
+          5.85
+        ],
+        "period_xy": [
+          6.0,
+          6.0
+        ],
+        "phase_xy": [
+          4.0,
+          0.0
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1502.5015176470486,
+          2350.321572941113
+        ],
+        "native_size": [
+          36,
+          34
+        ],
+        "spill_removed": 9,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        38,
+        36
+      ],
+      "anchor": [
+        19,
+        35
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "07_berry_bush_one",
+      "file": "07_berry_bush_one.png",
+      "class": "small object",
+      "native_size": [
+        36,
+        34
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          51,
+          56,
+          263,
+          258
+        ],
+        "detected_period_xy": [
+          6.05,
+          5.85
+        ],
+        "period_xy": [
+          5.95,
+          5.95
+        ],
+        "phase_xy": [
+          1.75,
+          1.0
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1613.2152267647232,
+          2127.380628823456
+        ],
+        "native_size": [
+          36,
+          34
+        ],
+        "spill_removed": 21,
+        "fringe_repaired": 1
+      },
+      "canvas_size": [
+        38,
+        36
+      ],
+      "anchor": [
+        19,
+        35
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "08_berry_bush_bare",
+      "file": "08_berry_bush_bare.png",
+      "class": "small object",
+      "native_size": [
+        35,
+        34
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          48,
+          61,
+          262,
+          258
+        ],
+        "detected_period_xy": [
+          6.2,
+          5.85
+        ],
+        "period_xy": [
+          6.2,
+          5.85
+        ],
+        "phase_xy": [
+          0.25,
+          4.0
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          1511.4175850000192,
+          2198.356694545452
+        ],
+        "native_size": [
+          35,
+          34
+        ],
+        "spill_removed": 17,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        37,
+        36
+      ],
+      "anchor": [
+        18,
+        35
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "09_villager_gatherer",
+      "file": "09_villager_gatherer.png",
+      "class": "villager",
+      "native_size": [
+        23,
+        43
+      ],
+      "class_max": [
+        18,
+        28
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          86,
+          20,
+          209,
+          266
+        ],
+        "detected_period_xy": [
+          5.4,
+          5.75
+        ],
+        "period_xy": [
+          5.4,
+          5.75
+        ],
+        "phase_xy": [
+          5.0,
+          4.5
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          3409.6565781817476,
+          1847.8229095237086
+        ],
+        "native_size": [
+          23,
+          43
+        ],
+        "spill_removed": 39,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        25,
+        45
+      ],
+      "anchor": [
+        12,
+        44
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "10_villager_builder",
+      "file": "10_villager_builder.png",
+      "class": "villager",
+      "native_size": [
+        33,
+        44
+      ],
+      "class_max": [
+        18,
+        28
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          66,
+          20,
+          231,
+          271
+        ],
+        "detected_period_xy": [
+          5.0,
+          5.75
+        ],
+        "period_xy": [
+          5.0,
+          5.75
+        ],
+        "phase_xy": [
+          0.0,
+          4.5
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          2827.8196624999855,
+          2098.3840511626813
+        ],
+        "native_size": [
+          33,
+          44
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        35,
+        46
+      ],
+      "anchor": [
+        17,
+        45
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "11_villager_elder",
+      "file": "11_villager_elder.png",
+      "class": "villager",
+      "native_size": [
+        32,
+        39
+      ],
+      "class_max": [
+        18,
+        28
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          80,
+          42,
+          231,
+          266
+        ],
+        "detected_period_xy": [
+          4.8,
+          5.75
+        ],
+        "period_xy": [
+          4.8,
+          5.75
+        ],
+        "phase_xy": [
+          4.25,
+          5.5
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          3130.2002703226003,
+          2267.9118078946567
+        ],
+        "native_size": [
+          32,
+          39
+        ],
+        "spill_removed": 76,
+        "fringe_repaired": 3
+      },
+      "canvas_size": [
+        34,
+        41
+      ],
+      "anchor": [
+        17,
+        40
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "12_villager_child",
+      "file": "12_villager_child.png",
+      "class": "child",
+      "native_size": [
+        17,
+        32
+      ],
+      "class_max": [
+        14,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          110,
+          82,
+          195,
+          266
+        ],
+        "detected_period_xy": [
+          5.0,
+          5.75
+        ],
+        "period_xy": [
+          5.0,
+          5.75
+        ],
+        "phase_xy": [
+          0.0,
+          0.0
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          3177.272437499939,
+          1479.06677580641
+        ],
+        "native_size": [
+          17,
+          32
+        ],
+        "spill_removed": 34,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        19,
+        34
+      ],
+      "anchor": [
+        9,
+        33
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "13_boulder",
+      "file": "13_boulder.png",
+      "class": "small object",
+      "native_size": [
+        39,
+        29
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          47,
+          78,
+          269,
+          244
+        ],
+        "detected_period_xy": [
+          5.65,
+          5.9
+        ],
+        "period_xy": [
+          5.775,
+          5.775
+        ],
+        "phase_xy": [
+          5.5,
+          3.0
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1308.227998205104,
+          2471.5268844443176
+        ],
+        "native_size": [
+          39,
+          29
+        ],
+        "spill_removed": 13,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        41,
+        31
+      ],
+      "anchor": [
+        20,
+        30
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "14_young_tree",
+      "file": "14_young_tree.png",
+      "class": "tall",
+      "native_size": [
+        33,
+        44
+      ],
+      "class_max": [
+        24,
+        34
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          60,
+          13,
+          250,
+          268
+        ],
+        "detected_period_xy": [
+          5.7,
+          5.95
+        ],
+        "period_xy": [
+          5.825,
+          5.825
+        ],
+        "phase_xy": [
+          2.25,
+          1.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2012.5924278787897,
+          1941.4254569048487
+        ],
+        "native_size": [
+          33,
+          44
+        ],
+        "spill_removed": 19,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        35,
+        46
+      ],
+      "anchor": [
+        17,
+        45
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "15_reed_tuft",
+      "file": "15_reed_tuft.png",
+      "class": "small object",
+      "native_size": [
+        35,
+        37
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          51,
+          48,
+          262,
+          268
+        ],
+        "detected_period_xy": [
+          6.0,
+          5.95
+        ],
+        "period_xy": [
+          5.975,
+          5.975
+        ],
+        "phase_xy": [
+          1.25,
+          5.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2584.548205714177,
+          1954.9131791666866
+        ],
+        "native_size": [
+          35,
+          37
+        ],
+        "spill_removed": 8,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        37,
+        39
+      ],
+      "anchor": [
+        18,
+        38
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "16_berry_basket",
+      "file": "16_berry_basket.png",
+      "class": "small object",
+      "native_size": [
+        30,
+        28
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6",
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          61,
+          78,
+          244,
+          244
+        ],
+        "detected_period_xy": [
+          6.25,
+          5.9
+        ],
+        "period_xy": [
+          6.25,
+          5.9
+        ],
+        "phase_xy": [
+          4.75,
+          0.25
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          2581.848425862033,
+          5813.585114073771
+        ],
+        "native_size": [
+          30,
+          28
+        ],
+        "spill_removed": 42,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        32,
+        30
+      ],
+      "anchor": [
+        16,
+        29
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ]
+    }
+  ]
+}

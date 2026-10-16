@@ -1,0 +1,8 @@
+{
+  "assets_limit": 25000000,
+  "docs_limit": 40000000,
+  "scope": "Deliverable files excluding ignored Godot .import sidecars; production5 sidecars removed after final verification",
+  "passed": true,
+  "assets_bytes": 1343613,
+  "docs_bytes": 39915384
+}

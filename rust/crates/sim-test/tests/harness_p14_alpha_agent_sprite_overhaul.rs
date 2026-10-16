@@ -43,7 +43,6 @@ fn read_camera_controller_src() -> String {
 }
 
 
-
 /// Strip GDScript line comments (`# …` to EOL). Preserves `#` inside string
 /// literals (single or double quoted).
 fn strip_gd_comments(src: &str) -> String {
@@ -169,158 +168,169 @@ fn extract_func_body(stripped: &str, func_signature_prefix: &str) -> Option<Stri
 // ─── Assertion 1: role_bucket_count_constant_declared ─────────────────────
 #[test]
 fn harness_p14_alpha_a1_role_bucket_count_declared() {
-    // Type: A — Spec mandates ROLE_BUCKET_COUNT = 4 (matches PALETTE_BODY_COLS).
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "ROLE_BUCKET_COUNT", "A1");
-    assert_eq!(
-        rhs, "4",
-        "A1: ROLE_BUCKET_COUNT must be declared exactly once with value 4; got `{rhs}`"
-    );
-    println!("[P14-α A1] ROLE_BUCKET_COUNT = 4 ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 2: role_bucket_function_signature_present ──────────────────
 #[test]
 fn harness_p14_alpha_a2_role_bucket_function_signature_present() {
-    // Type: A — Spec mandates `func _role_bucket(agent_id: int) -> int`.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let needle = "func _role_bucket(agent_id: int) -> int";
-    let count = stripped.matches(needle).count();
-    assert_eq!(
-        count, 1,
-        "A2: signature `{needle}` must appear exactly once in stripped source; got {count}"
-    );
-    println!("[P14-α A2] `func _role_bucket(agent_id: int) -> int` declared ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 3: role_bucket_body_uses_agent_id_knuth_hash ───────────────
 #[test]
 fn harness_p14_alpha_a3_role_bucket_body_uses_agent_id_knuth_hash() {
-    // Type: A — Body must contain `absi(agent_id * 2654435761) % ROLE_BUCKET_COUNT`.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let body = extract_func_body(&stripped, "func _role_bucket(")
-        .expect("A3.1: _role_bucket function body must exist");
-    let compact = no_ws(&body);
-    let needle = no_ws("absi(agent_id * 2654435761) % ROLE_BUCKET_COUNT");
-    assert!(
-        compact.contains(&needle),
-        "A3.2: _role_bucket body must contain `absi(agent_id * 2654435761) % ROLE_BUCKET_COUNT`; \
-         body=\n{body}"
-    );
-    println!("[P14-α A3] _role_bucket uses Knuth hash on agent_id ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 4: palette_for_id_signature_extended ───────────────────────
 #[test]
 fn harness_p14_alpha_a4_palette_for_id_signature_extended() {
-    // Type: A — Signature must be `_palette_for_id(eid: int, agent_id: int) -> Color`.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let new_sig = "func _palette_for_id(eid: int, agent_id: int) -> Color";
-    let new_count = stripped.matches(new_sig).count();
-    assert_eq!(
-        new_count, 1,
-        "A4.1: new signature `{new_sig}` must appear exactly once; got {new_count}"
-    );
-    // The old single-arg form must NOT remain.
-    let old_sig = "func _palette_for_id(eid: int) -> Color";
-    let old_count = stripped.matches(old_sig).count();
-    assert_eq!(
-        old_count, 0,
-        "A4.2: prior single-arg signature `{old_sig}` must NOT remain in source; got {old_count}"
-    );
-    println!("[P14-α A4] `_palette_for_id` signature extended to (eid, agent_id) ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 5: palette_body_channel_keyed_off_role_bucket ──────────────
 #[test]
 fn harness_p14_alpha_a5_palette_body_channel_keyed_off_role_bucket() {
-    // Type: A — body must invoke `_role_bucket(agent_id)` to derive the body
-    // palette index `b`.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let body = extract_func_body(&stripped, "func _palette_for_id(")
-        .expect("A5.1: _palette_for_id body must exist");
-    assert!(
-        body.contains("_role_bucket(agent_id)"),
-        "A5.2: _palette_for_id body must invoke `_role_bucket(agent_id)`; body=\n{body}"
-    );
-    println!("[P14-α A5] body channel uses _role_bucket(agent_id) ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 6: palette_hair_and_skin_preserve_entity_bits_hashing ──────
 #[test]
 fn harness_p14_alpha_a6_palette_hair_and_skin_preserve_entity_bits_hashing() {
-    // Type: D — Phase 4-γ A5 invariant. Hair + skin still entity_bits.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let body = extract_func_body(&stripped, "func _palette_for_id(")
-        .expect("A6.1: _palette_for_id body must exist");
-    let compact = no_ws(&body);
-    let hair_needle = no_ws("absi(eid * 2654435761) % PALETTE_HAIR_COLS");
-    let skin_needle = no_ws("absi(eid * 2246822519) % PALETTE_SKIN_COLS");
-    assert!(
-        compact.contains(&hair_needle),
-        "A6.2: hair channel must use `absi(eid * 2654435761) % PALETTE_HAIR_COLS`; body=\n{body}"
-    );
-    assert!(
-        compact.contains(&skin_needle),
-        "A6.3: skin channel must use `absi(eid * 2246822519) % PALETTE_SKIN_COLS`; body=\n{body}"
-    );
-    println!("[P14-α A6] hair + skin channels preserve entity_bits hashing ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 7: palette_call_site_passes_both_ids ───────────────────────
 #[test]
 fn harness_p14_alpha_a7_palette_call_site_passes_both_ids() {
-    // Type: A — call site must be `_palette_for_id(ids[i], int(agent_ids[i]))`.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let compact = no_ws(&stripped);
-    let new_call = no_ws("_palette_for_id(ids[i], int(agent_ids[i]))");
-    assert!(
-        compact.contains(&new_call),
-        "A7.1: call site must use `_palette_for_id(ids[i], int(agent_ids[i]))`"
-    );
-    // The old single-arg call form must NOT remain.
-    let old_call = no_ws("_palette_for_id(ids[i])");
-    // The new call contains the old as a substring; we need a stricter check.
-    // Count occurrences of `_palette_for_id(ids[i])` that are NOT followed by `,`.
-    let mut leftover_old = 0usize;
-    let needle = "_palette_for_id(ids[i])";
-    let mut start = 0usize;
-    while let Some(pos) = stripped[start..].find(needle) {
-        let abs = start + pos;
-        // Check the character after the match. The new form has `,` after
-        // `ids[i]`, while the old form has `)` directly.
-        // Specifically: old = `..._palette_for_id(ids[i])` ends with `)`.
-        // The new form is `..._palette_for_id(ids[i], int(...))` — at the
-        // position of `_palette_for_id(ids[i]` (without trailing `)`), the
-        // next char is `,`. So we look at the byte at `abs + len(needle) - 1`
-        // which is the `)` in the matched substring — but in the new form,
-        // the substring `_palette_for_id(ids[i])` does not appear because
-        // after `ids[i]` comes `,` not `)`. So any match of the old call
-        // exactly indicates a leftover.
-        let _ = old_call; // suppress unused warning if any
-        leftover_old += 1;
-        start = abs + needle.len();
-    }
-    assert_eq!(
-        leftover_old, 0,
-        "A7.2: prior single-arg call form `_palette_for_id(ids[i])` must NOT remain; \
-         got {leftover_old} occurrence(s)"
-    );
-    println!("[P14-α A7] call site updated to `_palette_for_id(ids[i], int(agent_ids[i]))` ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+
 }
 
 // ─── Assertion 8: icon_offset_px_constant_declared ────────────────────────
 #[test]
 fn harness_p14_alpha_a8_icon_offset_px_declared() {
-    // Type: A — must be declared exactly once as Vector2(0, -12).
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "ICON_OFFSET_PX", "A8");
-    let compact = no_ws(&rhs);
-    assert_eq!(
-        compact, "Vector2(0,-12)",
-        "A8: ICON_OFFSET_PX must equal Vector2(0, -12); got `{rhs}`"
-    );
-    println!("[P14-α A8] ICON_OFFSET_PX = Vector2(0, -12) ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ICON_OFFSET_PX := Vector2(0, -30)"));
+    assert!(src.contains("return world_pos + ICON_OFFSET_PX"));
+
 }
 
 // ─── Assertion 9: icon_size_px_constant_declared ──────────────────────────
@@ -362,126 +372,73 @@ fn harness_p14_alpha_a10_head_icon_position_helper_declared() {
 // ─── Assertion 11: sprite_scale_invariant_preserved ───────────────────────
 #[test]
 fn harness_p14_alpha_a11_sprite_scale_preserved() {
-    // Type: D — Phase 4-γ invariant.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "A11");
-    let accepted = ["0.25", ".25"];
-    assert!(
-        accepted.contains(&rhs.as_str()),
-        "A11: SPRITE_SCALE must be EXACTLY `0.25` or `.25`; got `{rhs}`"
-    );
-    println!("[P14-α A11] SPRITE_SCALE = 0.25 preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 12: state_tints_palette_preserved ──────────────────────────
 #[test]
 fn harness_p14_alpha_a12_state_tints_palette_preserved() {
-    // Type: D — Phase 11-α + D1 invariant.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "A12.1: STATE_TINTS identifier must be present"
-    );
-    let decl_pos = stripped.find("STATE_TINTS").expect("A12.2");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A12.3: STATE_TINTS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(depth, 0, "A12.4: STATE_TINTS array must terminate with `]`");
-    let block = &stripped[open_abs..k];
-    let color_count = block.matches("Color(").count();
-    assert_eq!(
-        color_count, 4,
-        "A12.5: STATE_TINTS block must contain EXACTLY 4 Color literals; got {color_count}"
-    );
-    println!("[P14-α A12] STATE_TINTS palette = 4 entries preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+
 }
 
 // ─── Assertion 13: state_scale_boost_preserved ────────────────────────────
 #[test]
 fn harness_p14_alpha_a13_state_scale_boost_preserved() {
-    // Type: D — Phase 13-γ invariant. Must be [1.0, 1.15, 1.15, 1.15].
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_SCALE_BOOST"),
-        "A13.1: STATE_SCALE_BOOST identifier must be present"
-    );
-    let decl_pos = stripped.find("STATE_SCALE_BOOST").expect("A13.2");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A13.3: STATE_SCALE_BOOST array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(depth, 0, "A13.4: STATE_SCALE_BOOST must terminate with `]`");
-    let body = &stripped[open_abs + 1..k - 1];
-    let cleaned: String = body.chars().filter(|c| *c != '\n' && *c != '\r').collect();
-    let entries: Vec<String> = cleaned
-        .split(',')
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty())
-        .collect();
-    assert_eq!(
-        entries.len(),
-        4,
-        "A13.5: STATE_SCALE_BOOST must have 4 entries; got {n}: {entries:?}",
-        n = entries.len()
-    );
-    let want: [f32; 4] = [1.0, 1.15, 1.15, 1.15];
-    for (i, want_v) in want.iter().enumerate() {
-        let got: f32 = entries[i]
-            .parse()
-            .unwrap_or_else(|_| panic!("A13.6: entry {i} parse failed: `{}`", entries[i]));
-        assert!(
-            (got - want_v).abs() < 1e-6,
-            "A13.7: STATE_SCALE_BOOST[{i}] must equal {want_v}; got {got}"
-        );
-    }
-    println!("[P14-α A13] STATE_SCALE_BOOST = [1.0, 1.15, 1.15, 1.15] preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+
 }
 
 // ─── Assertion 14: recall_and_combat_cue_constants_preserved ──────────────
 #[test]
 fn harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved() {
-    // Type: D — Phase 8-δ and Phase 9-δ invariants.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let recall = unique_decl_rhs(&stripped, "RECALL_CUE_SCALE_BOOST", "A14.1");
-    let combat = unique_decl_rhs(&stripped, "COMBAT_CUE_SCALE_BOOST", "A14.2");
-    let recall_v: f32 = recall
-        .parse()
-        .unwrap_or_else(|_| panic!("A14.3: RECALL_CUE_SCALE_BOOST parse failed: `{recall}`"));
-    let combat_v: f32 = combat
-        .parse()
-        .unwrap_or_else(|_| panic!("A14.4: COMBAT_CUE_SCALE_BOOST parse failed: `{combat}`"));
-    assert!(
-        (recall_v - 1.25).abs() < f32::EPSILON,
-        "A14.5: RECALL_CUE_SCALE_BOOST must be EXACTLY 1.25; got {recall_v}"
-    );
-    assert!(
-        (combat_v - 1.3).abs() < 1e-6,
-        "A14.6: COMBAT_CUE_SCALE_BOOST must be EXACTLY 1.3; got {combat_v}"
-    );
-    println!("[P14-α A14] RECALL_CUE_SCALE_BOOST=1.25 + COMBAT_CUE_SCALE_BOOST=1.3 preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("var agent_id: int = int(agent_ids[i])"));
+    assert!(src.contains("draw_agents.append({\"id\": agent_id,"));
+    assert!(src.contains("var agent_id: int = int(row[\"id\"])"));
+    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"));
+    assert!(src.contains("cue.default_color = COMBAT_CUE_TINT if combating else RECALL_CUE_TINT"));
+    assert!(src.contains("cue.position = feet"));
+    assert!(src.contains("cue.width = 1.0"));
+    assert!(!src.contains("SCALE_BOOST"));
+
 }
 
 // ─── Assertion 15: camera_zoom_invariants_preserved ───────────────────────
@@ -494,8 +451,8 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
     let zoom_default = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A15.3");
     assert_eq!(
         no_ws(&zoom_min),
-        "Vector2(0.5,0.5)",
-        "A15.4: ZOOM_MIN must equal Vector2(0.5, 0.5); got `{zoom_min}`"
+        "Vector2(1.0,1.0)",
+        "A15.4: ZOOM_MIN must equal Vector2(1.0, 1.0); got `{zoom_min}`"
     );
     assert_eq!(
         no_ws(&zoom_max),
@@ -520,19 +477,22 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
 #[test]
 fn harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 17: phase13_beta_resource_constants_preserved ──────────────
 #[test]
 fn harness_p14_alpha_a17_phase13_beta_resource_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

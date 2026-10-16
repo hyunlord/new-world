@@ -1,0 +1,19 @@
+{
+  "head": "5fa4b3178c894f0ea0131c42f66d1ba4d1908dad",
+  "source_digest": "5574e9d31f9920b772568c0511cf1e7272d8dde94e2f36d5d3a8284d48d08587",
+  "bindings": {
+    "/Users/rexxa/work/art-production10-evidence/parent-capture-final-prep/capture_parent_locales_p10.gd": "2fb1bf7db2eee2fa6c5b0ec977ff47a387958edd0bad5873d6c4990048f6f48a",
+    "/Users/rexxa/work/art-production10-evidence/parent-capture-final-prep/run_parent.py": "48c58b297b88a6e3d765b1adc4665f29a0bbdebbe1057e0babdbce950f9e080a",
+    "/Users/rexxa/work/new-world-art-prod/rust/target/debug/libsim_bridge.dylib": "c757571424054d7f916103a87773b63c069c94a26779ff6bb22465d9fcf12e3f",
+    "/Users/rexxa/work/new-world-art-prod/sim_bridge.gdextension": "6c47616cc217caf4b9dfcecfba4c6157f98b8ee8954c18602081ab8a63eb1b5a",
+    "/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge/src/ffi/world_node.rs": "13295eefc9344c2fe667f247a46a0ff03d579e47d5d847441bd1266b47ddbe78",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_activity_captures_p10.py": "8581bcfe2372914e32700468bcf56e085099c5e3ec90820d63fa9042b5bf281c",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/with_window_lock.sh": "66e60dd691d549bf5a185949789a8a64a740d13bbabeb223c1d7a708d442a196",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_bounded.sh": "66cd80da02a08f3abc660d750d094c8efc9877757672a3120e8338935c79e8c8",
+    "/Users/rexxa/work/new-world-art-prod/localization/key_registry.json": "861a23d670ecac4120d808806cdf744bceff6b767e28c10dd8d2ae565da7db7c",
+    "/Users/rexxa/work/new-world-art-prod/localization/compiled/en.json": "76806a7d6dd0c8f02816e7b4858b1df277f7b202592bfe680f89b703de89766b",
+    "/Users/rexxa/work/new-world-art-prod/localization/compiled/ko.json": "21923ea22adbed6ec873701de567a95574eaf2505052d84a11fd9df6fb2536c1",
+    "/Users/rexxa/work/new-world-art-prod/localization/fluent/en/messages.ftl": "be0c7c6637950e7998327f9df4bae27d4aa7650693bae6056bdc4881ad72258d",
+    "/Users/rexxa/work/new-world-art-prod/localization/fluent/ko/messages.ftl": "826348ffa540715abeb9e32c1cf1462b3a1e9031e537c1bde3b07166fcefffd4"
+  }
+}

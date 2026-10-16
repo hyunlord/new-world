@@ -1,0 +1,13 @@
+{
+  "phase": "before",
+  "checkout": "/Users/rexxa/work/art-p9-base",
+  "git_sha": "49bc0b7c87159340b8024d6b9327bc394dc6daa0",
+  "started": "2026-10-15T03:23:18Z",
+  "finished": "2026-10-15T04:04:29.114828+00:00",
+  "exit_code": 0,
+  "build_profile": "debug",
+  "fixed_fps": false,
+  "plan": "art_society",
+  "CAPTURE_SOCIETY_PERF_ONLY": "1",
+  "measurement": "/Users/rexxa/work/art-production9-evidence/a30-before/frame_times_soc_layers.json"
+}

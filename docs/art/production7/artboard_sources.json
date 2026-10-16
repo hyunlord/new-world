@@ -1,0 +1,191 @@
+[
+  {
+    "file": "docs/art/production7/villages.png",
+    "sha256": "241bb33e203f693bd4f03dca2251bdd9720716e6d4d03dd8c24f65e3b5cc6831",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_1200_FV_all.png",
+        "sha256": "a4f8fbefeaf2b615fcb6d761aa7953d7207363a272a84b571a1036ec2e6eb9ec",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_1200_FV_all_selected_orig.png",
+        "sha256": "cb5b995a170c3131fd1f1aca0d4cb52e49a9b6fe949a92c41f7088c438d4bdd5",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_1200_FV_all_selected_daughter.png",
+        "sha256": "70c1dfedb4d606763da52b727207e023e3871c7143be06c64f5d32285daa6058",
+        "board_rect": [
+          0,
+          2276,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d85_0842_FV_all.png",
+        "sha256": "e6deae612ddcf8e93f64de30e401c689f87f9a2c1a2ec6584971343b73b138ba",
+        "board_rect": [
+          0,
+          3384,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "Natural society seed 20261013; unselected / selected original / selected daughter / three villages. Pixels 1x."
+  },
+  {
+    "file": "docs/art/production7/founding.png",
+    "sha256": "e1bc6ddce2abbc330b742156510449ce369aa6bde5b7048cf4a02707eba2fa99",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0630_FD_leader.png",
+        "sha256": "4f4cd903876f77ffbc2b7290adbd172a5353400f184678f244b01064167b88f6",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0800_FD_leader.png",
+        "sha256": "6bfe02b672b66da362c2f53c074f9c571d863abb63c0ba757d0a12476efd1b16",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0630_FT_site.png",
+        "sha256": "c172673c34c53375dd4bb39caf746098fdd859d3b08fbfb0946854b8b33c8855",
+        "board_rect": [
+          0,
+          2276,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0819_FS_daughter.png",
+        "sha256": "f8993260fcff59df9435963728321837a79ea79c2cc2844250aa592b62f1659a",
+        "board_rect": [
+          0,
+          3384,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "Natural departure, walking, proposed site, founded daughter. Off-screen markers remain unobserved. Pixels 1x."
+  },
+  {
+    "file": "docs/art/production7/before-after-live.png",
+    "sha256": "6ca032f59654c055474ab4fdab0fcda6ed724d1bed4252f9629724483c7cd85f",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/baseline_bound/shots/art/a_d2_1200_F2.png",
+        "sha256": "08061a34c7087f460e9407862e0326777d5e66a2e96d08552e13def37e9eb5c8",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art/a_d2_1200_F2.png",
+        "sha256": "faed8647343107d8f4ca3dac698f3ea2351193132e297e3ea37dd9b8d78d4870",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "Merged baseline / final live seed, day 2 noon F2. Pixels 1x."
+  },
+  {
+    "file": "docs/art/production7/before-after-society.png",
+    "sha256": "fe498b0bcd6ff53f46127ce3febadcbe0115801184a73684222b0d5933f2990c",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/baseline_bound/shots/art_society/soc_d29_0909_FV_all.png",
+        "sha256": "c0d7fcba46cb6a158e7afaff237af01ab8fadd594215ff8621522c4b68732543",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0909_FV_all.png",
+        "sha256": "aa6356793d9a4bdf71195535ff1c726e3b3d3232e7e7fe68464b44328f1791b1",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "Merged baseline / final society seed, day 29 09:09 FV. Pixels 1x."
+  },
+  {
+    "file": "docs/art/production7/deaths.png",
+    "sha256": "274dba537951e9e853ff66c4c13d0d29446837fe04156428f4540215b946550b",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/calibration_attempt2/calibration_deaths_p7.png",
+        "sha256": "977683bcdc1fb55be5643c51a52efaa1c6a5e2c96dd238efbfd24a050f1cec0b",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d85_0101_DE_daughter.png",
+        "sha256": "cd429df979168e4832b667f76e1f7bf6061d969adb32ec6a37d0a9e2935353ff",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "Five-reason controlled production-renderer fixture / natural daughter exposure and feed. Pixels 1x."
+  }
+]

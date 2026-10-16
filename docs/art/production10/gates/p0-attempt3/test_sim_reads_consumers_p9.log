@@ -1,0 +1,10 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+P9_CONSUMER_WORLD {"all_layers_enabled":true,"frames":600,"god_hand_open":true,"inspector_open":true,"overlay_channel":0,"passed":true,"reset_after_cache":true,"start_frame":0,"target_tick":40560,"world":"W0","zoom1_frames":300,"zoom4_frames":300}
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+P9_CONSUMER_WORLD {"all_layers_enabled":true,"frames":600,"god_hand_open":true,"inspector_open":true,"overlay_channel":0,"passed":true,"reset_after_cache":true,"start_frame":604,"target_tick":1440,"world":"W500","zoom1_frames":300,"zoom4_frames":300}
+P9_CONSUMERS_PASS worlds=W0,W500 frames_per_world=600 reset_after_cached_state=true

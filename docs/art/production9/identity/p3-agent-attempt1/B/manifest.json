@@ -1,0 +1,43 @@
+{
+	"captures": [
+		{
+			"capture_options": {
+
+			},
+			"capture_plan_row": [
+				33.0,
+				"09:49",
+				"FV",
+				"all"
+			],
+			"entities": "soc_d33_0949_FV_all.entities.json",
+			"file": "soc_d33_0949_FV_all.png",
+			"framing": "FV",
+			"height": 1080,
+			"identity_capture_frame": 121,
+			"identity_p9": true,
+			"identity_state_frame": 1,
+			"intervention_casts": [],
+			"run_id": "13075-333275",
+			"scenario": "SOCIETY SCENARIO seed 20261013",
+			"seed": 20261013,
+			"tick": 46189,
+			"tile_x": 23.0,
+			"tile_y": 51.5,
+			"time_of_day": 9.81666666666667,
+			"width": 1920,
+			"world_epoch": 1,
+			"world_label": "default",
+			"zoom": 1.0
+		}
+	],
+	"git_sha": "",
+	"intervention_casts": [],
+	"performance_only": false,
+	"plan": "art_society",
+	"run_id": "13075-333275",
+	"scenario": "SOCIETY SCENARIO seed 20261013",
+	"schema_version": 3,
+	"seed": 20261013,
+	"worktree_changed_paths": 0
+}

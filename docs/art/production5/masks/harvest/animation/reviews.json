@@ -1,0 +1,16 @@
+{
+  "verdicts": [
+    {
+      "id": "adult_a_N_carry_wood_e6e605d391",
+      "verdict": "ok",
+      "reason": null,
+      "observation": "Reviewed frames 0–3 in order on the 4x gray and 2x grass board and all four GIF frames. The rear-facing wood-carry pose remains readable. Alternating foot placement and slight head/log bob form a coherent cycle; body proportions, hair, clothing and palette remain consistent with the reference. No disqualifying cycle pop or identity change observed."
+    },
+    {
+      "id": "adult_b_N_carry_wood_082c6163a1",
+      "verdict": "ok",
+      "reason": null,
+      "observation": "Reviewed frames 0–3 in order on the 4x gray and 2x grass board and all four GIF frames. Raised arms and the horizontal wood load remain consistent with a rear-facing carry pose. Small vertical bob and alternating legs read as walking; hair, cream clothing and body proportions retain the reference identity. No disqualifying cycle pop observed at the loop boundary."
+    }
+  ]
+}

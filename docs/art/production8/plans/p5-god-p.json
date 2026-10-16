@@ -1,0 +1,118 @@
+[
+  [
+    "RESET",
+    20261013
+  ],
+  [
+    30,
+    "06:00",
+    "F2",
+    "spoil_food",
+    60,
+    0.5,
+    "p_spoil_cast",
+    "orig",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d30_0600_F2_cast_orig",
+      "role": "cast"
+    }
+  ],
+  [
+    31,
+    "06:00",
+    "F2",
+    "",
+    0,
+    1.15,
+    "p_spoil_morning",
+    "orig",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d31_0600_F2_morning_orig",
+      "role": "morning"
+    }
+  ],
+  [
+    31,
+    "06:00",
+    "F2",
+    "spoil_food",
+    60,
+    0.5,
+    "p_spoil_cast",
+    "orig",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d31_0600_F2_cast_orig",
+      "role": "cast"
+    }
+  ],
+  [
+    32,
+    "06:00",
+    "F2",
+    "",
+    0,
+    1.15,
+    "p_spoil_morning",
+    "orig",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d32_0600_F2_morning_orig",
+      "role": "morning"
+    }
+  ],
+  [
+    32,
+    "06:00",
+    "F2",
+    "spoil_food",
+    60,
+    0.5,
+    "p_spoil_cast",
+    "orig",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d32_0600_F2_cast_orig",
+      "role": "cast"
+    }
+  ],
+  [
+    33,
+    "06:00",
+    "F2",
+    "",
+    0,
+    1.15,
+    "p_spoil_morning",
+    "orig",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d33_0600_F2_morning_orig",
+      "role": "morning"
+    }
+  ],
+  [
+    120,
+    "12:00",
+    "FV",
+    "",
+    0,
+    1.15,
+    "p_spoil_final",
+    "all",
+    {
+      "paired_world": "P",
+      "case_id": "a33",
+      "stem_override": "p_spoil_d120_1200_FV_final_all",
+      "role": "final"
+    }
+  ]
+]

@@ -1,0 +1,26 @@
+{
+  "generation_calls": 4,
+  "attempted_cells": 64,
+  "visual_approvals": 24,
+  "visual_approvals_by_sheet": {
+    "V_a4": 0,
+    "V_b4": 0,
+    "V_c3": 11,
+    "W1": 13
+  },
+  "technical_frame_pass_ceiling": 20,
+  "installed_selection_count": 4,
+  "generation_stopped": true,
+  "reason": "First four calls: 24/64 visual approvals and at most20/64 technical approvals, both below half; no retries authorized by checkpoint.",
+  "accepted_ids": {
+    "W1_06": "W1_06@1",
+    "W1_09": "W1_09@1",
+    "W1_11": "W1_11@1",
+    "W1_13": "W1_13@1"
+  },
+  "p2_six_preserved": true,
+  "stage": "applied",
+  "no_production_writes": false,
+  "production_count": 273,
+  "accepted_production_count": 152
+}

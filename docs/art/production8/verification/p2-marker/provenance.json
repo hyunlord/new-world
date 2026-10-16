@@ -1,0 +1,34 @@
+{
+  "scenario": "SOCIETY SCENARIO seed 20261013",
+  "tick": 45991,
+  "source_head": "5e9ac2955281f625bbd872d33d1edf682d420a30",
+  "working_tree": "Part2 implementation pending commit",
+  "artifacts": [
+    {
+      "source": "/Users/rexxa/work/art-production8-evidence/marker-input/after.png",
+      "sha256": "6d7d535407251a5b69e2669e266021c1616ab3c5b685868ab64f5f00abd9d8cb",
+      "published": "after.png"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production8-evidence/marker-input/before.png",
+      "sha256": "25ad1aba7543f49ada8ef15a89589242ba5227e8fd4e2aa8316044ac0c604293",
+      "published": "before.png"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production8-evidence/marker-input/result.json",
+      "sha256": "07abe95554acb713d4883f09ec809a643db54acb7ada36db8acbb6a760c99d51",
+      "published": "result.json"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production8-evidence/marker-input/selected-after.png",
+      "sha256": "f097ee3af6ab70c0e24e6474a86a5425d3884af2f3d476b16d7b090800a167ce",
+      "published": "selected-after.png"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production8-evidence/marker-input/selected-before.png",
+      "sha256": "ff8ef7b75ebb739b1f655dd7f722d577c4f74b5c20daa153b3031f5d91b627bf",
+      "published": "selected-before.png"
+    }
+  ],
+  "limitation": "Windowed input QA, not A31 feed census; first attempt terminated after no output, retained externally. Warmth overlay was active in this QA window."
+}

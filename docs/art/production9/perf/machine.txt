@@ -1,0 +1,8 @@
+2026-10-15T07:22:12+09:00
+Apple M4 Max
+14
+38654705664
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+{ 19.74 9.58 6.42 }

@@ -1,0 +1,49 @@
+{
+  "verified_utc": "2026-10-13T04:23:22Z",
+  "verification_source": "90d8e6dc85153b842b48e315603f36f77948f2a5",
+  "capture_pairs": 154,
+  "capture_hash_mismatches": 0,
+  "final_capture_console_errors": 0,
+  "native_board_pixel_identical_source_rectangles": 14,
+  "measurement_rows": 30,
+  "measurement_pass": 25,
+  "measurement_fail": [
+    "A18",
+    "A22",
+    "A24",
+    "A28",
+    "A30"
+  ],
+  "measurement_provisional_gate": false,
+  "independent_screen_reviews": [
+    "ACCEPT",
+    "ACCEPT"
+  ],
+  "blind_A27_correct": [
+    4,
+    4
+  ],
+  "blind_A28_correct": [
+    2,
+    2
+  ],
+  "python_unittest_pass": 275,
+  "measurement_pytest_pass": 10,
+  "original_full_gate": {
+    "pass": 50,
+    "checks": 53
+  },
+  "followup_plan_and_scoped_strict_pass": true,
+  "unresolved_gate_checks": [
+    "cargo_test",
+    "clippy"
+  ],
+  "GOAL_sha256": "7b41130c8516c0c349876747a9b2ee4ab4e22c5479dda2cf50bd82eed93e5ca4",
+  "image_calls": 0,
+  "image_budget": 4,
+  "initial_local_settings_preserved": [
+    ".gitignore",
+    ".ignore"
+  ],
+  "note": "Final commit and remote-head publication receipt is recorded externally after push; no self-referential commit hash is invented."
+}

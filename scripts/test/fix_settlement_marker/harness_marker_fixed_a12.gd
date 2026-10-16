@@ -237,7 +237,7 @@ func _read_agent_positions() -> Dictionary:
 	var out: Dictionary = {}
 	if _world_sim == null or not _world_sim.has_method("get_agent_snapshot"):
 		return out
-	var snap: Variant = _world_sim.call("get_agent_snapshot")
+	var snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snap is Dictionary):
 		return out
 	var d := snap as Dictionary

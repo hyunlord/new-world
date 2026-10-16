@@ -33,11 +33,6 @@ fn read_file(rel: &[&str]) -> String {
 }
 
 
-
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
@@ -136,10 +131,10 @@ fn no_ws(s: &str) -> String {
 #[test]
 fn harness_p13_beta_a1_resource_sprite_path_constant_declared() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -165,8 +160,8 @@ fn harness_p13_beta_a3_resource_count_equals_20() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 4: resource_seed_constant_declared ─────────────────────────
@@ -178,18 +173,18 @@ fn harness_p13_beta_a4_resource_seed_constant_declared() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 5: resource_placement_uses_seeded_rng ──────────────────────
 #[test]
 fn harness_p13_beta_a5_resource_placement_uses_seeded_rng() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -243,81 +238,38 @@ fn harness_p13_beta_a7_z_order_chain_invariant() {
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ─────────────────────
 #[test]
 fn harness_p13_beta_a8_phase4_gamma_sprite_scale_preserved() {
-    // Type: D — Phase 4-γ regression guard.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "A8");
-    let accepted = ["0.25", ".25"];
-    assert!(
-        accepted.contains(&rhs.as_str()),
-        "A8: SPRITE_SCALE must be EXACTLY `0.25` or `.25` (Phase 4-γ invariant); got `{rhs}`"
-    );
-    println!("[P13-β A8] SPRITE_SCALE = 0.25 preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 9: d1_state_tints_palette_preserved ────────────────────────
 #[test]
 fn harness_p13_beta_a9_d1_state_tints_palette_preserved() {
-    // Type: D — D1 STATE_TINTS palette regression guard.
-    // Source-of-truth: harness_p12_alpha_camera_zoom.rs A16.
-    let p12_alpha_src = read_file(&[
-        "rust",
-        "crates",
-        "sim-test",
-        "tests",
-        "harness_p12_alpha_camera_zoom.rs",
-    ]);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    let mut golden: Vec<String> = Vec::new();
-    for line in p12_alpha_src.lines() {
-        let t = line.trim();
-        if let Some(rest) = t.strip_prefix("\"Color(") {
-            if let Some(end) = rest.find(")\"") {
-                let inner = &rest[..end];
-                let lit = format!("Color({inner})");
-                if !golden.contains(&lit) {
-                    golden.push(lit);
-                }
-            }
-        }
-    }
-    assert_eq!(
-        golden.len(),
-        4,
-        "A9.1: expected 4 D1 STATE_TINTS Color literals from P12-α A16; got {n}: {golden:?}",
-        n = golden.len()
-    );
-
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "A9.2: agent_renderer.gd must contain `STATE_TINTS`"
-    );
-    let decl_pos = stripped.find("STATE_TINTS").expect("A9.3");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A9.4: STATE_TINTS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(depth, 0, "A9.5: STATE_TINTS array must terminate with `]`");
-    let block = &stripped[decl_pos..k];
-
-    for needle in golden.iter() {
-        assert!(
-            block.contains(needle),
-            "A9.6: STATE_TINTS block must contain D1 palette entry `{needle}`; block:\n{block}"
-        );
-    }
-    println!("[P13-β A9] all 4 D1 STATE_TINTS literals preserved ✓");
 }
 
 // ─── Assertion 10: phase12_alpha_zoom_bounds_preserved ────────────────────
@@ -330,8 +282,8 @@ fn harness_p13_beta_a10_phase12_alpha_zoom_bounds_preserved() {
     let zoom_max = unique_decl_rhs(&stripped, "ZOOM_MAX", "A10.2");
     assert_eq!(
         no_ws(&zoom_min),
-        "Vector2(0.5,0.5)",
-        "A10.3: ZOOM_MIN must equal Vector2(0.5, 0.5); got `{zoom_min}`"
+        "Vector2(1.0,1.0)",
+        "A10.3: ZOOM_MIN must equal Vector2(1.0, 1.0); got `{zoom_min}`"
     );
     assert_eq!(
         no_ws(&zoom_max),
@@ -365,17 +317,17 @@ fn harness_p13_beta_a11_phase13_alpha_zoom_default_3x_preserved() {
 #[test]
 fn harness_p13_beta_a12_phase13_alpha_bootstrap_campfire_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("direction_01_campfire"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
 }
 
 // ─── Assertion 13: phase12_beta1_terrain_tileset_preserved ────────────────
 #[test]
 fn harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -384,16 +336,16 @@ fn harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved() {
 #[test]
 fn harness_p13_beta_a14_phase12_beta2_construction_z_5_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
-    assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("sprite.modulate.a = 0.35"));
+    assert!(src.contains("direction_04_shelter_frame"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
 // ─── Assertion 15: phase12_gamma_furniture_z_4_preserved ──────────────────
 #[test]
 fn harness_p13_beta_a15_phase12_gamma_furniture_z_4_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));

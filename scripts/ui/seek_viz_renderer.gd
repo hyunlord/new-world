@@ -31,6 +31,7 @@ const LINE_ALPHA := 0.8       # faint goal line — never obscures sprites
 const COLOR_FOOD: Color = Color(0.9, 0.2, 0.2)
 const COLOR_WATER: Color = Color(0.2, 0.5, 1.0)
 const COLOR_SLEEP: Color = Color(0.95, 0.75, 0.2)
+const COLOR_WOOD: Color = Color(0.55, 0.32, 0.16)
 const COLOR_GRAY: Color = Color(0.6, 0.6, 0.6)
 
 # V7 slice 2-5b — carry indicator (Food being hauled). Deliberately DISTINCT
@@ -49,11 +50,14 @@ var _drawn_segment_count: int = 0
 var _world_sim: Node = null
 var _inspector: Node = null
 var _camera: Camera2D = null
+var _agent_renderer: Node = null
+var _agent_ids: PackedInt64Array = PackedInt64Array()
 var _ids: PackedInt64Array = PackedInt64Array()
 var _xs: PackedInt32Array = PackedInt32Array()
 var _ys: PackedInt32Array = PackedInt32Array()
 var _states: PackedByteArray = PackedByteArray()
 var _seek_kinds: PackedByteArray = PackedByteArray()
+var _target_kinds: PackedByteArray = PackedByteArray()
 var _target_xs: PackedInt32Array = PackedInt32Array()
 var _target_ys: PackedInt32Array = PackedInt32Array()
 var _carried_foods: PackedInt32Array = PackedInt32Array()  # slice 2-5b (additive)
@@ -63,16 +67,19 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	_inspector = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	_camera = get_node_or_null("/root/Main/Camera2D") as Camera2D
+	_agent_renderer = get_node_or_null("/root/Main/AgentRenderer")
 	z_index = Z_SEEK_VIZ
 
 
 func _process(_delta: float) -> void:
 	if _world_sim == null:
 		return
-	var snap: Variant = _world_sim.call("get_agent_snapshot")
+	var snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap
+	var agent_ids: Variant = snap_dict.get("agent_ids", null)
+	_agent_ids = agent_ids if agent_ids is PackedInt64Array else PackedInt64Array()
 	var ids: Variant = snap_dict.get("ids", null)
 	if ids is PackedInt64Array:
 		_ids = ids
@@ -82,6 +89,8 @@ func _process(_delta: float) -> void:
 	var ys: Variant = snap_dict.get("ys", null)
 	var states: Variant = snap_dict.get("states", null)
 	var seek_kinds: Variant = snap_dict.get("seek_kinds", null)
+	var target_kinds: Variant = snap_dict.get("target_kinds", null)
+	_target_kinds = target_kinds if target_kinds is PackedByteArray else PackedByteArray()
 	var target_xs: Variant = snap_dict.get("target_xs", null)
 	var target_ys: Variant = snap_dict.get("target_ys", null)
 	if not (xs is PackedInt32Array and ys is PackedInt32Array \
@@ -112,36 +121,17 @@ func _draw() -> void:
 		return
 	# slice 2-5b — carry glyph only when its parallel array matches (additive,
 	# never blocks the head-dot/goal-line overlays).
-	var has_carry: bool = _carried_foods.size() == n
 	var selected: int = int(_inspector.call("get_selected_entity_bits")) if _inspector != null else -1
 	var zoom: float = _camera.zoom.x if _camera != null else 1.0
 	for i in n:
-		var agent_px: Vector2 = _tile_to_px(_xs[i], _ys[i])
+		var agent_px: Vector2 = _agent_origin(i)
 		var tag: int = int(_states[i])
 		var kind: int = int(_seek_kinds[i])
 		# B — goal line for resource-Seeking agents that carry a target.
 		if tag == 1 and _target_xs[i] >= 0 and _ids.size() == n and _ids[i] == selected:
 			var target_px: Vector2 = _tile_to_px(_target_xs[i], _target_ys[i])
-			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA), LINE_WIDTH / maxf(zoom, 0.01))
+			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA, int(_target_kinds[i]) if i < _target_kinds.size() else 0), LINE_WIDTH / maxf(zoom, 0.01))
 			_drawn_segment_count += 1
-		# A — head dot above the agent.
-		var head: Vector2 = agent_px + Vector2(0.0, HEAD_OFFSET_Y)
-		if tag == 1:
-			draw_circle(head, HEAD_RADIUS, _kind_color(kind, 1.0))
-		elif tag == 3:
-			draw_circle(head, HEAD_RADIUS, Color.WHITE)
-		# Idle (0) / Consuming-Agent (2) → no head-dot.
-		# slice 2-5b — carry indicator: a grain-tinted square BESIDE the agent
-		# (distinct anchor + shape from the head-dot circle ABOVE) whenever the
-		# agent is hauling Food. Reconciled every frame from the snapshot — it
-		# disappears the frame carried_food returns to 0 (deposit complete).
-		if has_carry and _carried_foods[i] > 0:
-			var carry_c: Vector2 = agent_px + CARRY_OFFSET
-			var carry_r: Rect2 = Rect2(
-				carry_c - Vector2(CARRY_HALF, CARRY_HALF),
-				Vector2(CARRY_HALF * 2.0, CARRY_HALF * 2.0))
-			draw_rect(carry_r, Color(COLOR_CARRY.r, COLOR_CARRY.g, COLOR_CARRY.b, CARRY_FILL_ALPHA), true)
-			draw_rect(carry_r, Color(COLOR_CARRY.r, COLOR_CARRY.g, COLOR_CARRY.b, CARRY_STROKE_ALPHA), false, CARRY_STROKE_W)
 
 
 func _tile_to_px(tx: int, ty: int) -> Vector2:
@@ -150,9 +140,11 @@ func _tile_to_px(tx: int, ty: int) -> Vector2:
 	return Vector2(px, py)
 
 
-func _kind_color(kind: int, a: float) -> Color:
+func _kind_color(kind: int, a: float, target_kind: int = 0) -> Color:
 	var c: Color = COLOR_GRAY
-	if kind == 1:
+	if target_kind == 7:
+		c = COLOR_WOOD
+	elif kind == 1:
 		c = COLOR_FOOD
 	elif kind == 2:
 		c = COLOR_WATER
@@ -163,3 +155,14 @@ func _kind_color(kind: int, a: float) -> Color:
 
 func get_drawn_segment_count() -> int:
 	return _drawn_segment_count if is_visible_in_tree() else 0
+
+func get_drawn_head_dot_count() -> int:
+	return 0
+
+
+func _agent_origin(index: int) -> Vector2:
+	if _agent_renderer != null and index < _agent_ids.size():
+		var agent_id: int = _agent_ids[index]
+		if bool(_agent_renderer.call("has_drawn_position", agent_id)):
+			return _agent_renderer.call("get_drawn_position", agent_id) as Vector2
+	return _tile_to_px(_xs[index], _ys[index])

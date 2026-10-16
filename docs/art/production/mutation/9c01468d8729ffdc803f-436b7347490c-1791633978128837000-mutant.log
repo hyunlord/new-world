@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/harness_p13_gamma_interaction_cues.rs (target/debug/deps/harness_p13_gamma_interaction_cues-3d900739fa1981d4)
+
+running 1 test
+test harness_p13_gamma_a12_phase12_alpha_zoom_min_max_preserved ... 
+thread 'harness_p13_gamma_a12_phase12_alpha_zoom_min_max_preserved' (49336407) panicked at crates/sim-test/tests/harness_p13_gamma_interaction_cues.rs:320:5:
+assertion `left == right` failed: A12.3: ZOOM_MIN must equal Vector2(1.0, 1.0); got `__MUTATED__`
+  left: "__MUTATED__"
+ right: "Vector2(1.0,1.0)"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_p13_gamma_a12_phase12_alpha_zoom_min_max_preserved
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_p13_gamma_interaction_cues`

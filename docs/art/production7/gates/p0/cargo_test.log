@@ -1,0 +1,13 @@
+   Compiling sim-core v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+error[E0063]: missing field `soaked_wood` in initializer of `InterventionRecord`
+    --> crates/sim-bridge/src/ffi/world_node.rs:2954:45
+     |
+2954 |             resources.intervention_log.push(InterventionRecord {
+     |                                             ^^^^^^^^^^^^^^^^^^ missing `soaked_wood`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `sim-bridge` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

@@ -1,0 +1,31 @@
+{
+  "reference": "f0d04f8e5bb698385b4751f0e0ea9f401ebef5ac",
+  "frozen": "5ee5e1ee98df24a16756360b8b125d582f68fdd0",
+  "checked_utc": "2026-10-16T15:30:36.085522+00:00",
+  "compared_paths": [
+    "scripts",
+    "scenes",
+    "shaders",
+    "assets",
+    "localization",
+    "project.godot",
+    "data",
+    "rust",
+    "sim_bridge.gdextension"
+  ],
+  "all_changed_paths": [
+    "rust/crates/sim-test/tests/harness_p14_epsilon_activity_trails.rs",
+    "rust/crates/sim-test/tests/harness_p14_gamma_click_inspector.rs",
+    "rust/crates/sim-test/tests/harness_p14_zeta_zoom_adaptive.rs",
+    "rust/crates/sim-test/tests/harness_show_agent_needs_bars.rs",
+    "rust/crates/sim-test/tests/harness_show_death_visual.rs",
+    "scripts/test/art/capture_identity_p11.gd",
+    "scripts/test/art/capture_running_identity_p11.gd",
+    "scripts/test/art/identity_draw_clock_p11.gd",
+    "scripts/test/art/probe_baseline_p11.gd",
+    "scripts/test/capture_framings_p11.gd"
+  ],
+  "production_changed_paths": [],
+  "production_sources_byte_identical": true,
+  "qualification": "Source equivalence is not a new capture at the frozen commit; measured candidate identity belongs to 1dc641b5."
+}

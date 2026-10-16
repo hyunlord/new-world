@@ -1,0 +1,3293 @@
+   Compiling sim-core v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [optimized + debuginfo] target(s) in 1m 48s
+     Running unittests src/lib.rs (rust/target/debug/deps/sim_bridge-d3121a060bc6d0e4)
+
+running 46 tests
+test ffi::chronicle::tests::agent_id_resolves_from_entity_bits ... ok
+test ffi::activity::tests::snapshot_is_empty_when_agents_have_no_activity ... ok
+test ffi::chronicle::tests::a_founder_has_no_parents_and_a_child_names_both ... ok
+test ffi::chronicle::tests::a_dead_person_keeps_their_record_and_history ... ok
+test ffi::activity::tests::snapshot_orders_identity_across_archetypes_and_preserves_entity_bits ... ok
+test ffi::activity::tests::snapshot_exposes_each_activity_code_and_omits_removed_components ... ok
+test ffi::chronicle::tests::unknown_ids_are_not_found ... ok
+test ffi::family::tests::children_are_living_offspring_of_either_parent_sorted_across_life_stages ... ok
+test ffi::family::tests::founder_family_has_no_fabricated_links ... ok
+test ffi::chronicle::tests::the_feed_clamps_its_page_and_reports_next_and_total ... ok
+test ffi::family::tests::links_are_agent_ids_and_preserve_absent_recorded_relatives ... ok
+test ffi::family::tests::missing_family_returns_none_for_invalid_stale_and_incomplete_entities ... ok
+test ffi::family::tests::pending_dead_children_are_excluded_without_changing_target_lookup ... ok
+test ffi::world_node::art_p9_causal_batch_tests::empty_input_and_invalid_tiles_are_empty ... ok
+test ffi::world_node::art_p9_causal_batch_tests::input_tile_and_ring_order_win_over_event_id_order ... ok
+test ffi::world_node::art_p9_causal_batch_tests::kinds_filter_excludes_other_events ... ok
+test ffi::world_node::art_p9_causal_batch_tests::shared_events_are_emitted_once ... ok
+test ffi::world_node::depleted_food_snapshot_tests::game_snapshot_keeps_depleted_bush_and_sorts_without_duplicates ... ok
+test ffi::world_node::depleted_food_snapshot_tests::legacy_snapshot_omits_source_without_live_food ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::colds_follow_snapshot_order ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::elders_report_stage_two_and_ages_follow_snapshot_order ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::empty_world_has_empty_parallel_snapshot_rows ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::maturation_removes_child_flag_from_next_snapshot ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::missing_state_and_child_default_to_none_and_adult ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::mixed_snapshot_targets_match_detail_and_live_child_markers ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::wood_targets_floor_the_target_per_settlement_row ... ok
+test ffi::world_node::revitalize_tooling_tests::harness_economy_clock_snapshot_rolls_day_at_offset_midnight ... ok
+test ffi::world_node::revitalize_tooling_tests::intervention_feed_identity_distinguishes_equal_casts_and_targets ... ok
+test ffi::world_node::revitalize_tooling_tests::intervention_state_is_read_only_sorted_bounded_and_preserves_variant_amounts ... ok
+test ffi::world_node::revitalize_tooling_tests::apply_intervention_command_reports_ok_applied_and_tick ... ok
+test ffi::world_node::revitalize_tooling_tests::parse_intervention_resolves_home_and_rejects_bad_input ... ok
+test ffi::world_node::revitalize_tooling_tests::tallies_collector_preserves_all_four_counters ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_handles_disabled_clock ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_reports_seasons_from_the_display_day ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_uses_completed_ticks_and_resource_clock ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_reports_winter_severity_with_night_booking ... ok
+test ffi::world_node::revitalize_world_snapshot_tests::building_snapshot_sorts_ids_and_defaults_legacy_to_hearth ... ok
+test ffi::world_node::revitalize_world_snapshot_tests::terrain_snapshot_preserves_all_codes_and_row_major_elevation ... ok
+test ffi::world_node::revitalize_world_snapshot_tests::world_info_reads_world_seed_dimensions_and_rules ... ok
+test ffi::world_node::revitalize_tooling_tests::tooling_advance_clamps_negative_and_excessive_requests ... ok
+test ffi::world_node::revitalize_tooling_tests::live_game_is_game_v24 ... ok
+test ffi::world_node::revitalize_tooling_tests::stress_engine_has_the_requested_founders ... ok
+test ffi::world_node::revitalize_tooling_tests::live_founders_have_family_while_stress_founders_do_not ... ok
+test ffi::world_node::revitalize_tooling_tests::collect_agent_temperament_reads_the_component ... ok
+test ffi::world_node::society_snapshot_tests::society_joins_built_world_agents_and_preserves_order_filter_and_history ... ok
+test ffi::world_node::society_snapshot_tests::society_pressure_columns_read_v19_values_and_saturate_without_mutation ... ok
+
+test result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests src/lib.rs (rust/target/debug/deps/sim_core-8b6322109019df7b)
+
+running 328 tests
+test causal::event::tests::accessors_round_trip ... ok
+test causal::event::tests::agent_decision_accessors_and_reasons ... ok
+test causal::event::tests::building_placed_records_fields ... ok
+test causal::event::tests::construction_completed_records_fields ... ok
+test causal::event::tests::clone_preserves_equality ... ok
+test causal::event::tests::construction_started_records_fields ... ok
+test causal::event::tests::death_reason_as_str ... ok
+test causal::event::tests::decision_reason_construction_as_str ... ok
+test causal::event::tests::decision_reason_social_as_str ... ok
+test causal::event::tests::exposure_death_reason_encoding_is_locked ... ok
+test causal::event::tests::influence_changed_carries_delta ... ok
+test causal::event::tests::agent_died_records_fields_and_round_trips ... ok
+test causal::event::tests::social_interaction_completed_records_fields ... ok
+test causal::event::tests::social_interaction_started_records_fields ... ok
+test causal::event::tests::stamp_dirty_carries_region ... ok
+test causal::ring_buffer::tests::fifo_eviction_at_capacity ... ok
+test causal::ring_buffer::tests::new_log_is_empty ... ok
+test causal::ring_buffer::tests::mixed_variants_share_ring ... ok
+test causal::ring_buffer::tests::push_appends_to_back ... ok
+test causal::ring_buffer::tests::ring_never_exceeds_capacity ... ok
+test causal::ring_buffer::tests::ring_size_is_eight ... ok
+test causal::storage::tests::clear_resets_all_tiles ... ok
+test causal::storage::tests::fifo_eviction_per_tile ... ok
+test causal::storage::tests::find_recent_stamp_dirty_returns_newest_match ... ok
+test causal::storage::tests::multi_event_single_tile ... ok
+test causal::storage::tests::multi_tile_isolation ... ok
+test causal::storage::tests::new_storage_is_empty ... ok
+test causal::storage::tests::push_allocates_lazily ... ok
+test causal::storage::tests::trace_parents_missing_tile_returns_empty ... ok
+test causal::storage::tests::trace_parents_terminates_on_evicted_parent ... ok
+test causal::storage::tests::trace_parents_walks_chain ... ok
+test chronicle::tests::discriminants_are_stable ... ok
+test chronicle::tests::approx_bytes_counts_entries_indexes_and_people ... ok
+test chronicle::tests::entries_keep_append_order ... ok
+test chronicle::tests::founding_member_lookup_reads_only_that_kind ... ok
+test chronicle::tests::person_table_is_created_once_and_outlives_death ... ok
+test components::agent::tests::agent_carries_public_id ... ok
+test chronicle::tests::push_indexes_every_distinct_agent_and_settlement_once ... ok
+test components::agent::tests::agent_is_copy_and_eq ... ok
+test components::agent::tests::agent_size_equals_agent_id ... ok
+test components::agent_state::tests::default_is_idle ... ok
+test components::agent::tests::serde_round_trip_preserves_id ... ok
+test components::agent_state::tests::suppresses_movement_truth_table ... ok
+test components::agent_state::tests::serde_round_trip_each_variant ... ok
+test components::agent_state::tests::target_helper_returns_inner_kind ... ok
+test components::agent_state::tests::target_kind_serde_round_trip ... ok
+test components::body_health::tests::apply_damage_reduces_hp ... ok
+test components::body_health::tests::apply_damage_saturates_at_zero ... ok
+test components::body_health::tests::heal_increases_hp ... ok
+test components::body_health::tests::heal_saturates_at_max_hp ... ok
+test components::body_health::tests::is_dead_at_zero ... ok
+test components::body_health::tests::is_dead_false_above_zero ... ok
+test components::body_health::tests::new_initialises_full_hp ... ok
+test components::body_health::tests::new_with_max_clamps_to_epsilon ... ok
+test components::body_health::tests::new_with_max_custom ... ok
+test components::building_kind::tests::stable_codes_and_shelter_work ... ok
+test components::body_health::tests::serde_round_trip ... ok
+test components::child::tests::child_marker_preserves_the_birth_tick ... ok
+test components::cold::tests::cold_is_a_zero_sized_marker ... ok
+test components::construction::tests::advance_fires_completion_edge_exactly_once ... ok
+test components::construction::tests::advance_increments_one_per_call ... ok
+test components::construction::tests::advance_required_one_fires_immediately ... ok
+test components::construction::tests::advance_saturates_at_required ... ok
+test components::construction::tests::blueprint_id_is_u64 ... ok
+test components::construction::tests::blueprint_serde_round_trip ... ok
+test components::construction::tests::footprint_returns_width_then_height ... ok
+test components::construction::tests::is_complete_uses_ge_semantics ... ok
+test components::construction::tests::new_sets_all_fields_verbatim ... ok
+test components::construction::tests::required_zero_is_trivially_complete ... ok
+test components::construction::tests::site_constructor_zeroes_progress ... ok
+test components::construction::tests::site_serde_round_trip_mid_construction ... ok
+test components::exposure_clock::tests::healing_is_blocked_for_the_marked_hour_and_the_block ... ok
+test components::family::tests::close_kin_is_symmetric_for_parents_children_and_half_siblings ... ok
+test components::family::tests::family_identity_round_trips_without_fabricating_founder_ancestors ... ok
+test components::family::tests::sex_draw_uses_only_seed_and_lineage_including_extremes ... ok
+test components::family::tests::v22_changes_only_family_and_v21_remains_disabled ... ok
+test components::family::tests::v23_changes_only_the_family_rule_of_v22 ... ok
+test components::family_events::tests::family_witnesses_round_trip_with_birth_and_departure_identities ... ok
+test components::hunger::tests::new_clamps_negative_initial ... ok
+test components::hunger::tests::new_clamps_over_saturation_initial ... ok
+test components::hunger::tests::saturation_constant_is_100 ... ok
+test components::hunger::tests::serde_round_trip ... ok
+test components::hunger::tests::tick_adds_growth_rate ... ok
+test components::hardiness::tests::draws_stay_in_range_and_depend_on_the_key ... ok
+test components::hunger::tests::tick_clamps_at_saturation ... ok
+test components::inventory::tests::add_accumulates_into_existing_key ... ok
+test components::inventory::tests::add_respects_capacity_and_returns_overflow ... ok
+test components::inventory::tests::add_zero_is_noop_no_key ... ok
+test components::inventory::tests::default_is_empty ... ok
+test components::inventory::tests::remove_returns_actual_and_drops_zero ... ok
+test components::inventory::tests::remove_zero_keeps_positive_key ... ok
+test components::inventory::tests::serde_round_trip ... ok
+test components::life::tests::founder_age_counts_ticks_before_world_start ... ok
+test components::lineage::tests::children_follow_the_parent_and_its_birth_count ... ok
+test components::lineage::tests::founders_depend_on_seed_and_index_only ... ok
+test components::memory::tests::arm_is_stored_and_survives_serde ... ok
+test components::memory::tests::arm_participates_in_equality ... ok
+test components::memory::tests::constants_are_stable ... ok
+test components::memory::tests::decay_empty_is_noop ... ok
+test components::memory::tests::decay_reduces_salience_uniformly ... ok
+test components::memory::tests::decay_saturates_at_zero ... ok
+test components::memory::tests::default_constructs_empty_memory ... ok
+test components::memory::tests::entry_construction_clamps_valence_and_salience ... ok
+test components::memory::tests::find_by_event_id_hits_and_misses ... ok
+test components::memory::tests::insert_at_cap_evicts_lowest_salience ... ok
+test components::memory::tests::insert_eviction_ties_break_oldest_tick ... ok
+test components::memory::tests::insert_under_cap_appends ... ok
+test components::memory::tests::memory_new_is_empty_and_preallocates ... ok
+test components::memory::tests::reinforce_boosts_and_saturates ... ok
+test components::memory::tests::reinforce_increments_count_under_cap ... ok
+test components::memory::tests::reinforce_invalid_index_returns_false ... ok
+test components::memory::tests::serde_round_trip_entry ... ok
+test components::memory::tests::serde_round_trip_memory ... ok
+test components::position::tests::copy_semantics_preserve_value ... ok
+test components::position::tests::equality_holds_for_same_coords ... ok
+test components::position::tests::new_stores_coordinates ... ok
+test components::position::tests::serde_round_trip_preserves_coordinates ... ok
+test components::relationship::tests::bump_accumulates ... ok
+test components::relationship::tests::bump_floors_at_zero ... ok
+test components::relationship::tests::bump_hostility_accumulates_and_saturates ... ok
+test components::relationship::tests::bump_hostility_nan_no_op ... ok
+test components::relationship::tests::bump_neg_inf_floors ... ok
+test components::relationship::tests::bump_pos_inf_saturates ... ok
+test components::relationship::tests::bump_sanitises_nan_no_op ... ok
+test components::relationship::tests::bump_saturates_at_one ... ok
+test components::relationship::tests::hostility_bump_constant_value ... ok
+test components::relationship::tests::key_accepts_same_id_pair ... ok
+test components::relationship::tests::key_accessors_return_fields ... ok
+test components::relationship::tests::key_canonicalises_smaller_first ... ok
+test components::relationship::tests::key_serde_round_trip ... ok
+test components::relationship::tests::state_new_starts_at_zero ... ok
+test components::relationship::tests::state_serde_round_trip ... ok
+test components::resource_kind::tests::btreemap_iterates_in_ord_order_regardless_of_insertion ... ok
+test components::resource_kind::tests::ord_is_declaration_order ... ok
+test components::resource_kind::tests::serde_round_trip ... ok
+test components::seek_target::tests::equality_holds_for_same_tile ... ok
+test components::seek_target::tests::new_stores_tile ... ok
+test components::seek_target::tests::serde_round_trip ... ok
+test components::settlement::tests::add_remove_member_agent_hashset_contract ... ok
+test components::settlement::tests::add_remove_member_building_hashset_contract ... ok
+test components::settlement::tests::append_history_saturating_ring_buffer ... ok
+test components::settlement::tests::building_id_type_alias_u64 ... ok
+test components::settlement::tests::constants_stable_values ... ok
+test components::settlement::tests::new_with_id_creates_empty_settlement ... ok
+test components::settlement::tests::population_count_and_is_dissolved ... ok
+test components::settlement::tests::settlement_id_type_alias_u32 ... ok
+test components::settlement_migrant::tests::default_equals_unit ... ok
+test components::settlement::tests::settlement_serde_roundtrip ... ok
+test components::settlement_migrant::tests::serde_round_trip ... ok
+test components::sleep::tests::new_clamps_negative_initial ... ok
+test components::sleep::tests::new_clamps_over_saturation_initial ... ok
+test components::sleep::tests::saturation_constant_is_100 ... ok
+test components::sleep::tests::serde_round_trip ... ok
+test components::sleep::tests::tick_adds_growth_rate ... ok
+test components::sleep::tests::tick_clamps_at_saturation ... ok
+test components::social::tests::new_clamps_negative_initial ... ok
+test components::social::tests::new_clamps_over_saturation_initial ... ok
+test components::social::tests::new_preserves_negative_growth_rate ... ok
+test components::social::tests::saturation_constant_is_100 ... ok
+test components::social::tests::serde_round_trip ... ok
+test components::social::tests::tick_adds_growth_rate ... ok
+test components::social::tests::tick_clamps_at_saturation ... ok
+test components::social::tests::tick_floors_at_zero_on_negative_growth_rate ... ok
+test components::temperament::tests::child_exact_arithmetic ... ok
+test components::temperament::tests::axes_are_drawn_independently ... ok
+test components::thirst::tests::new_clamps_over_saturation_initial ... ok
+test components::thirst::tests::new_clamps_negative_initial ... ok
+test components::temperament::tests::founder_is_bounded_and_deterministic ... ok
+test components::thirst::tests::saturation_constant_is_100 ... ok
+test components::thirst::tests::serde_round_trip ... ok
+test components::thirst::tests::tick_adds_growth_rate ... ok
+test fission_threshold::tests::laws ... ok
+test components::thirst::tests::tick_clamps_at_saturation ... ok
+test fission_threshold::tests::table_ends_and_interpolation ... ok
+test influence::blocking::tests::test_build_from_registry_populates_all_pairs ... ok
+test influence::blocking::tests::test_danger_and_social_pass_through ... ok
+test influence::blocking::tests::test_empty_cache_returns_zero ... ok
+test influence::blocking::tests::test_get_missing_material_returns_zero ... ok
+test influence::blocking::tests::test_light_blocking_is_one_for_solid ... ok
+test influence::channel::tests::test_agg_kind_serde_roundtrip ... ok
+test influence::channel::tests::test_aggregation_others_max ... ok
+test influence::channel::tests::test_aggregation_social_additive ... ok
+test influence::channel::tests::test_aggregation_warmth_additive ... ok
+test influence::channel::tests::test_channel_count_8 ... ok
+test influence::channel::tests::test_channel_def_ron_parse ... ok
+test influence::channel::tests::test_repr_u8_indexing ... ok
+test influence::channel::tests::test_update_tier_classification ... ok
+test influence::channel::tests::test_update_tier_serde_roundtrip ... ok
+test influence::grid::tests::test_clear_pending ... ok
+test influence::grid::tests::test_dirty_region_normalises_corners ... ok
+test influence::grid::tests::test_dirty_region_tracking ... ok
+test components::temperament::tests::child_is_bounded_deterministic_and_falls_back ... ok
+test influence::grid::tests::test_grid_new_initializes_zero ... ok
+test influence::grid::tests::test_idx_matches_tile_grid_layout ... ok
+test influence::grid::tests::test_len_and_empty ... ok
+test influence::grid::tests::test_sample_after_swap ... ok
+test influence::grid::tests::test_swap_idempotent_two_swaps ... ok
+test influence::propagate::tests::test_bfs_aggregation_additive_warmth ... ok
+test influence::propagate::tests::test_bfs_aggregation_max_others ... ok
+test influence::propagate::tests::test_bfs_blocked_by_wall_full ... ok
+test influence::propagate::tests::test_bfs_open_field_reaches_radius ... ok
+test influence::propagate::tests::test_bfs_source_self_blocking_exempt ... ok
+test influence::propagate::tests::test_lod_tier_is_active ... ok
+test influence::propagate::tests::test_propagate_danger_capped_at_15 ... ok
+test influence::propagate::tests::test_propagate_noise_linear_decay ... ok
+test influence::propagate::tests::test_shadowcast_open_field_lit ... ok
+test influence::propagate::tests::test_shadowcast_symmetric_open ... ok
+test influence::propagate::tests::test_shadowcast_wall_blocks_line ... ok
+test influence::propagate::tests::test_stamp_social_diamond_radius_5 ... ok
+test influence::propagate::tests::test_stamp_social_lod_skip_far_and_dormant ... ok
+test material::category::tests::mod_0_ron_roundtrip ... ok
+test material::category::tests::mod_255_ron_roundtrip ... ok
+test material::category::tests::mod_carries_u8 ... ok
+test material::category::tests::six_variants_match_exhaustively ... ok
+test material::definition::tests::natural_in_default_empty_vec ... ok
+test material::definition::tests::seven_named_fields_destructure_in_locked_order ... ok
+test material::derivation::tests::all_variants_has_23_entries ... ok
+test material::derivation::tests::derive_all_produces_finite_values_for_three_fixtures ... ok
+test material::derivation::tests::derive_iron_equivalent_matches_locked_baselines_within_tolerance ... ok
+test material::derivation::tests::derive_outputs_are_pairwise_distinct_for_six_representative_stats ... ok
+test material::derivation::tests::iron_baselines_have_locked_values ... ok
+test material::derivation::tests::snake_case_matches_struct_field_for_each_variant ... ok
+test material::error::tests::implements_std_error_send_sync_static ... ok
+test material::error::tests::io_variant_constructs_from_std_io_error ... ok
+test material::error::tests::six_variants_cover_match ... ok
+test material::explanation::tests::explain_locks_specific_input_lists ... ok
+test material::explanation::tests::explain_returns_well_formed_for_every_variant ... ok
+test material::explanation::tests::explain_sources_substantive_distinct_with_keywords ... ok
+test material::explanation::tests::property_kind_has_15_variants ... ok
+test material::explanation::tests::property_kind_snake_case_order_matches_spec ... ok
+test material::id::tests::display_format_is_hex_padded ... ok
+test material::id::tests::distinct_inputs_distinct_ids_for_known_set ... ok
+test material::id::tests::djb2_deterministic_across_calls ... ok
+test material::id::tests::djb2_seed_for_empty_string ... ok
+test material::loader::tests::load_directory_nonexistent_returns_io_error ... ok
+test material::loader::tests::schema_version_constants_match ... ok
+test components::temperament::tests::founder_mean_and_sd_over_20000_keys ... ok
+test material::loader::tests::load_directory_empty_dir_returns_empty_vec ... ok
+test material::properties::tests::boundary_aesthetic_value ... ok
+test material::properties::tests::boundary_cultural_value ... ok
+test material::properties::tests::boundary_density ... ok
+test material::properties::tests::boundary_flammability ... ok
+test material::properties::tests::boundary_fracture_toughness ... ok
+test material::properties::tests::boundary_hardness ... ok
+test material::properties::tests::boundary_impact_yield ... ok
+test material::properties::tests::boundary_melting_point ... ok
+test material::properties::tests::boundary_preservation ... ok
+test material::properties::tests::boundary_rarity ... ok
+test material::properties::tests::boundary_shear_yield ... ok
+test material::loader::tests::schema_mismatch_rejected ... ok
+test material::loader::tests::property_out_of_range_rejected_by_loader ... ok
+test material::loader::tests::valid_ron_roundtrip ... ok
+test material::properties::tests::boundary_thermal_conductivity ... ok
+test material::properties::tests::boundary_work_difficulty ... ok
+test material::properties::tests::boundary_workability ... ok
+test material::properties::tests::density_nan_rejected ... ok
+test material::properties::tests::distribution_empty_passes_validate ... ok
+test material::properties::tests::distribution_with_duplicates_passes_validate ... ok
+test material::properties::tests::fifteen_named_fields_destructure_with_exact_types ... ok
+test material::properties::tests::hardness_infinity_rejected ... ok
+test material::properties::tests::shear_yield_neg_infinity_rejected ... ok
+test material::properties::tests::valid_fixture_passes_validate ... ok
+test material::registry::tests::by_category_insert_sync ... ok
+test material::registry::tests::bulk_register_100_with_collision_precheck ... ok
+test material::registry::tests::by_category_unload_sync ... ok
+test material::registry::tests::category_counts_aggregates_correctly ... ok
+test material::registry::tests::derive_cache_hit_via_call_counter ... ok
+test material::registry::tests::derive_cache_hit_via_sentinel ... ok
+test material::registry::tests::duplicate_id_rejected_no_overwrite ... ok
+test material::registry::tests::iter_category_empty ... ok
+test material::registry::tests::iter_category_multiple_same_category ... ok
+test material::registry::tests::mod_category_isolated_from_base ... ok
+test material::registry::tests::register_and_get_roundtrip ... ok
+test material::registry::tests::unload_mod_scoped_with_cache_flush ... ok
+test material::registry::tests::unload_unknown_mod_returns_zero ... ok
+test material::registry::tests::warm_cache_populates_both_caches ... ok
+test material::terrain::tests::ten_variants_match_exhaustively ... ok
+test rng::tests::below_stays_in_range_and_steps_are_unit ... ok
+test rng::tests::every_field_changes_the_draw ... ok
+test rng::tests::fork_replicate_starts_at_its_tick ... ok
+test rng::tests::mix_is_the_splitmix64_reference ... ok
+test rng::tests::streams_are_distinct ... ok
+test rules::routine::tests::adult_weights_follow_each_axis_at_extremes_and_midpoint ... ok
+test rules::routine::tests::duration_uses_signed_integer_truncation_and_floor ... ok
+test rules::routine::tests::end_minute_is_the_shared_end_without_a_stagger_and_spans_17_to_19_with_one ... ok
+test rules::routine::tests::family_familiarity_threshold_preserves_integer_extremes ... ok
+test rules::routine::tests::stage_limits_children_to_play_and_elders_to_hearth_activities ... ok
+test rules::routine::tests::v21_changes_only_the_optional_routine_rule ... ok
+test rules::routine::tests::start_stagger_and_rest_draw_have_exact_clock_and_key_boundaries ... ok
+test rules::tests::game_v10_is_v9_plus_pass4_rules ... ok
+test rules::tests::game_v11_is_v10_plus_pass5_rules ... ok
+test rules::tests::game_v12_is_v11_plus_pass6_fields ... ok
+test rules::tests::game_v13_is_v12_plus_pass7_fields ... ok
+test rules::tests::game_v13_sets_the_pass7_fields ... ok
+test rules::tests::game_v14_is_v13_plus_pass8_fields ... ok
+test rules::tests::game_v14_sets_the_pass8_fields ... ok
+test rules::tests::game_v15_is_v14_plus_keyed_draws ... ok
+test rules::tests::game_v16_neutral_is_v15_plus_exposure ... ok
+test rules::tests::game_v17_is_v16_plus_pass11_fields ... ok
+test rules::tests::game_v18_hazard_is_valid_and_v18_nofission_has_no_fission ... ok
+test rules::tests::game_v20_is_game_v19_with_temperament ... ok
+test rules::tests::legacy_has_no_opt_in_behavior ... ok
+test rules::tests::pass11_fields_are_neutral_before_v17 ... ok
+test rules::tests::pass12_fields_are_neutral_before_v18 ... ok
+test rules::tests::pass3_fields_are_neutral_in_frozen_rules ... ok
+test rules::tests::pass5_fields_are_neutral_in_frozen_rules ... ok
+test rules::tests::pass6_firewood_fields_reproduce_pass5_in_v11 ... ok
+test rules::tests::pass7_firewood_fields_reproduce_pass6_in_v11_and_v12 ... ok
+test rules::tests::pass8_firewood_fields_reproduce_pass7_in_v11_to_v13 ... ok
+test rules::tests::temperament_functions_at_the_extremes_and_the_mean ... ok
+test rules::tests::temperament_without_effects_returns_every_base ... ok
+test tests::material_schema_version_is_one ... ok
+test tests::v7_version_present ... ok
+test tile::grid::tests::test_idx_correct ... ok
+test tile::grid::tests::test_is_outdoor_default_true ... ok
+test tile::grid::tests::test_is_wall_after_set ... ok
+test tile::grid::tests::test_is_wall_default_false ... ok
+test tile::grid::tests::test_len_and_is_empty ... ok
+test tile::grid::tests::test_neighbors_4_corner ... ok
+test tile::grid::tests::test_neighbors_4_edge ... ok
+test tile::grid::tests::test_neighbors_4_interior ... ok
+test tile::grid::tests::test_neighbors_8_corner ... ok
+test tile::grid::tests::test_neighbors_8_interior ... ok
+test tile::grid::tests::test_terrain_default_plain ... ok
+test variety::tests::neutral_is_the_v15_world_and_scales_nothing ... ok
+test variety::tests::v18_draws_share_every_slot_but_the_region_sizes ... ok
+test variety::tests::draws_stay_in_their_ranges ... ok
+test components::temperament::tests::child_slope_on_mid_parent_is_about_half ... ok
+
+test result: ok. 328 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/material_harness.rs (rust/target/debug/deps/material_harness-27423b4de60d2f5c)
+
+running 8 tests
+test harness_material_boundary_clamp_audit ... ok
+test harness_material_load_all_105 ... ok
+test harness_material_fixture_consistency ... ok
+test harness_material_categories_balance ... ok
+test harness_material_no_duplicate_id ... ok
+test harness_material_terrain_distribution_valid ... ok
+test harness_material_tier_distribution ... ok
+test harness_material_validate_no_failure ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/material_loader_integration.rs (rust/target/debug/deps/material_loader_integration-943c2ab5041b375b)
+
+running 22 tests
+test loads_granite_from_ron ... ok
+test registry_with_loaded_granite ... ok
+test test_load_plant_directory ... ok
+test test_load_mineral_directory ... ok
+test test_animal_property_ranges_valid ... ok
+test test_load_specific_minerals_by_name ... ok
+test test_load_specific_animals_by_name ... ok
+test test_load_animal_directory ... ok
+test test_load_specific_plants_by_name ... ok
+test test_mineral_property_ranges_valid ... ok
+test test_load_specific_woods_by_name ... ok
+test test_plant_property_ranges_valid ... ok
+test test_load_wood_directory ... ok
+test test_load_specific_stones_by_name ... ok
+test test_load_stone_directory ... ok
+test test_registry_with_15_minerals ... ok
+test test_registry_with_15_plants ... ok
+test test_registry_with_20_animals ... ok
+test test_registry_with_25_woods ... ok
+test test_wood_property_ranges_valid ... ok
+test test_registry_with_30_stones ... ok
+test test_stone_property_ranges_valid ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (rust/target/debug/deps/sim_engine-607abc5f3c78a08f)
+
+running 12 tests
+test intervention::tests::records_compare_by_value ... ok
+test tests::noise_fork_starts_at_the_current_tick_and_replicate_zero_is_a_no_op ... ok
+test tests::generated_world_resources_start_legacy_and_empty ... ok
+test tests::profiled_and_plain_ticks_advance_the_same_clock ... ok
+test tests::test_engine_new ... ok
+test tests::tick_profile_counts_due_ticks_and_every_whole_tick ... ok
+test tests::test_engine_tick_no_systems ... ok
+test tests::tick_profile_with_the_wrong_system_count_is_rebuilt ... ok
+test tests::test_tick_interval_skip ... ok
+test tests::test_resources_access_initial_zero ... ok
+test tests::test_priority_sort_lower_first ... ok
+test tests::test_register_and_run_single_system ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration.rs (rust/target/debug/deps/integration-8c540eac6b509e52)
+
+running 5 tests
+test test_tick_loop_no_panic ... ok
+test test_zero_systems_baseline ... ok
+test test_multiple_systems_priority_order ... ok
+test test_resources_modification_via_tick ... ok
+test test_resources_initial_state ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (rust/target/debug/deps/sim_systems-1bad9980817041a0)
+
+running 154 tests
+test runtime::agent::aging::tests::founders_keep_the_minimum_remaining_life ... ok
+test runtime::agent::aging::tests::lifespan_stays_in_range_and_never_advances_movement_streams ... ok
+test runtime::agent::aging::tests::keyed_lifespans_ignore_the_birth_tick_and_stay_in_range ... ok
+test runtime::agent::aging::tests::keyed_founders_keep_the_minimum_remaining_life ... ok
+test runtime::agent::beds::tests::disabled_rules_leave_assignments_untouched ... ok
+test runtime::agent::aging::tests::absent_rule_is_a_no_op ... ok
+test runtime::agent::beds::tests::recomputes_on_shelter_change_and_at_twenty_hundred ... ok
+test runtime::agent::aging::tests::system_promotes_then_retires_in_agent_order ... ok
+test runtime::agent::beds::tests::assigns_sorted_live_members_with_per_shelter_capacity ... ok
+test runtime::agent::households::tests::elder_only_households_widowed_elders_and_elder_couples_stay ... ok
+test runtime::agent::households::tests::an_elder_partner_leaves_with_the_departing_adult_only_when_following ... ok
+test runtime::agent::households::tests::explained_labels_each_phase ... ok
+test runtime::agent::households::tests::only_the_group_min_top_up_takes_an_adult_without_their_elder_partner ... ok
+test runtime::agent::households::tests::no_couples_select_exactly_as_pass17 ... ok
+test runtime::agent::households::tests::kept_elders_count_toward_group_max_but_not_min_adults ... ok
+test runtime::agent::households::tests::the_seed_skips_a_household_its_elder_pushes_over_group_max ... ok
+test runtime::agent::maturation::tests::disabled_rule_preserves_even_due_child_components ... ok
+test runtime::agent::maturation::tests::due_children_restore_rates_without_resetting_needs ... ok
+test runtime::agent::movement::tests::agent_moves_after_one_tick ... ok
+test runtime::agent::movement::tests::consuming_state_freezes_movement_in_runtime ... ok
+test runtime::agent::movement::tests::distinct_seeds_diverge ... ok
+test runtime::agent::movement::tests::boundary_clamp_low ... ok
+test runtime::agent::movement::tests::haul_due_needs_a_load_or_the_end_of_the_window_and_distance ... ok
+test runtime::agent::movement::tests::hauls_home_generalises_haul_due_to_wood ... ok
+test runtime::agent::movement::tests::idle_state_still_moves ... ok
+test runtime::agent::movement::tests::keyed_mix_is_one_movement_rng_output ... ok
+test runtime::agent::movement::tests::metadata ... ok
+test runtime::agent::movement::tests::same_seed_produces_same_stream ... ok
+test runtime::agent::movement::tests::seeking_with_target_moves_toward ... ok
+test runtime::agent::movement::tests::seeking_without_target_freezes ... ok
+test runtime::agent::movement::tests::splitmix_escapes_zero_seed ... ok
+test runtime::chronicle_log::tests::records_living_people_from_components_and_skips_the_dead ... ok
+test runtime::combat::combat_system::tests::metadata ... ok
+test runtime::construction::construction_system::tests::empty_world_tick_is_no_op ... ok
+test runtime::construction::construction_system::tests::metadata ... ok
+test runtime::decision::agent_decision::tests::choose_bush_prefers_unclaimed_then_near_then_row_major ... ok
+test runtime::decision::agent_decision::tests::breach_emits_agent_decision_event ... ok
+test runtime::decision::agent_decision::tests::before_bedtime_sleep_is_the_legacy_one_shot ... ok
+test runtime::decision::agent_decision::tests::consuming_decrements_food_and_hunger_then_idles ... ok
+test runtime::decision::agent_decision::tests::consuming_removes_tile_when_counter_hits_zero ... ok
+test runtime::decision::agent_decision::tests::food_tallies_distinguish_finite_empty_and_infinite_sources ... ok
+test runtime::decision::agent_decision::tests::gather_tallies_count_only_finite_units_removed ... ok
+test runtime::decision::agent_decision::tests::idle_stays_idle_when_both_below ... ok
+test runtime::decision::agent_decision::tests::idle_to_seeking_on_hunger_breach ... ok
+test runtime::decision::agent_decision::tests::idle_cautious_person_seeks_bed_at_its_own_bedtime ... ok
+test runtime::decision::agent_decision::tests::cautious_sleeper_stays_asleep_from_twenty_hundred ... ok
+test runtime::decision::agent_decision::tests::idle_to_seeking_on_thirst_when_hunger_below ... ok
+test runtime::decision::agent_decision::tests::inert_temperament_keeps_the_global_window ... ok
+test runtime::decision::agent_decision::tests::metadata ... ok
+test runtime::decision::agent_decision::tests::person_night_rest_is_the_own_window ... ok
+test runtime::decision::agent_decision::tests::seeking_transitions_to_consuming_on_food_tile ... ok
+test runtime::decision::routine::places::tests::next_to_is_chebyshev_distance_one ... ok
+test runtime::influence::agent_sample::tests::many_agents_read_own_tile ... ok
+test runtime::influence::agent_sample::tests::metadata ... ok
+test runtime::influence::agent_sample::tests::out_of_bounds_position_is_skipped ... ok
+test runtime::influence::agent_sample::tests::samples_warmth_after_manual_write_and_swap ... ok
+test runtime::influence::agent_sample::tests::samples_zero_when_grid_empty ... ok
+test runtime::influence::building_stamp::tests::empty_queue_is_no_op ... ok
+test runtime::influence::building_stamp::tests::metadata ... ok
+test runtime::influence::building_stamp::tests::out_of_bounds_event_is_skipped ... ok
+test runtime::influence::building_stamp::tests::radius_clamps_to_grid ... ok
+test runtime::influence::building_stamp::tests::shell_does_not_mutate_tile_grid ... ok
+test runtime::influence::building_stamp::tests::single_event_marks_stamped_channels_dirty ... ok
+test runtime::influence::building_stamp::tests::tick_does_not_panic ... ok
+test runtime::influence::update::tests::metadata ... ok
+test runtime::influence::update::tests::baseline_remains_zero_after_ticks ... ok
+test runtime::influence::update::tests::pending_write_cleared_before_swap ... ok
+test runtime::influence::update::tests::tick_does_not_panic_on_empty_world ... ok
+test runtime::influence::visualization::tests::digest_captures_warmth_total_and_danger_peak ... ok
+test runtime::influence::visualization::tests::digest_zero_on_fresh_engine ... ok
+test runtime::influence::visualization::tests::interval_6_fires_at_correct_ticks ... ok
+test runtime::influence::visualization::tests::metadata ... ok
+test runtime::intervention::tests::kinds_round_trip_and_unknown_kinds_are_none ... ok
+test runtime::intervention::tests::rain_keeps_the_later_end ... ok
+test runtime::intervention::tests::spoil_never_goes_below_zero_and_every_call_is_logged ... ok
+test runtime::memory::memory_system::tests::classify_construction_completed_two_hop_walk ... ok
+test runtime::memory::memory_system::tests::classify_construction_started_walks_parent ... ok
+test runtime::memory::memory_system::tests::classify_construction_with_evicted_parent_returns_none ... ok
+test runtime::memory::memory_system::tests::classify_event_returns_correct_mapping_for_each_actor_variant ... ok
+test runtime::memory::memory_system::tests::classify_event_returns_none_for_non_actor_and_anti_recursion ... ok
+test runtime::memory::memory_system::tests::priority_is_136_interval_is_1 ... ok
+test runtime::needs::hunger_decay::tests::priority_is_130_interval_is_1 ... ok
+test runtime::needs::hunger_decay::tests::tick_advances_hunger ... ok
+test runtime::needs::hunger_decay::tests::tick_is_noop_when_no_hunger_components ... ok
+test runtime::needs::sleep_decay::tests::priority_is_132_interval_is_1 ... ok
+test runtime::needs::sleep_decay::tests::tick_advances_fatigue ... ok
+test runtime::needs::sleep_decay::tests::tick_respects_saturation_clamp ... ok
+test runtime::needs::social_decay::tests::priority_is_135_interval_is_1 ... ok
+test runtime::needs::social_decay::tests::tick_advances_loneliness ... ok
+test runtime::needs::social_decay::tests::tick_respects_saturation_clamp ... ok
+test runtime::needs::thirst_decay::tests::priority_is_131_interval_is_1 ... ok
+test runtime::needs::thirst_decay::tests::tick_advances_thirst ... ok
+test runtime::needs::thirst_decay::tests::tick_is_noop_when_no_thirst_components ... ok
+test runtime::needs::thirst_decay::tests::tick_respects_saturation_clamp ... ok
+test runtime::resource_regen::tests::caps_at_max ... ok
+test runtime::resource_regen::tests::empty_registry_is_noop ... ok
+test runtime::resource_regen::tests::interval_exceeds_one ... ok
+test runtime::resource_regen::tests::metadata ... ok
+test runtime::resource_regen::tests::never_touches_sentinel ... ok
+test runtime::resource_regen::tests::refills_a_removed_tile_from_zero ... ok
+test runtime::resource_regen::tests::regen_channel_counts_regrowth_lost_at_the_ceiling ... ok
+test runtime::resource_regen::tests::stale_seek_exits_to_idle_when_no_source_remains ... ok
+test runtime::resource_regen::tests::stale_seek_metadata ... ok
+test runtime::resource_regen::tests::stale_seek_noop_on_sentinel_target ... ok
+test runtime::resource_regen::tests::stale_seek_noop_when_target_present ... ok
+test runtime::resource_regen::tests::stale_seek_reroutes_to_present_tile ... ok
+test runtime::settlement::fire::tests::metadata ... ok
+test runtime::settlement::fire::tests::no_rule_is_a_no_op ... ok
+test runtime::settlement::firewood::tests::burn_window_is_thirteen_hours_and_burn_per_day_scales ... ok
+test runtime::settlement::firewood::tests::night_season_belongs_to_the_evening_only_when_enabled ... ok
+test runtime::settlement::firewood::tests::severity_draw_follows_the_weights ... ok
+test runtime::settlement::firewood::tests::severity_is_minus_one_without_weights_and_booked_by_evening ... ok
+test runtime::settlement::firewood::tests::target_adds_a_winter_of_burn_in_summer_and_autumn_only ... ok
+test runtime::settlement::firewood::tests::urgent_needs_the_rule_and_less_than_tonights_burn ... ok
+test runtime::settlement::firewood::tests::winter_burn_reads_the_severity_and_matches_pass6_without_weights ... ok
+test runtime::settlement::firewood::tests::wood_in_hand_counts_stockpile_and_members_only ... ok
+test runtime::settlement::fission::tests::hazard_terms_follow_the_formula ... ok
+test runtime::settlement::fission::tests::metadata ... ok
+test runtime::settlement::food_economy::tests::ten_bushes_support_forty_two_adults_and_twenty_four_founders_need_fifty_seven ... ok
+test runtime::settlement::settlement_system::tests::birth_cooldown_constant_is_200 ... ok
+test runtime::settlement::housing::tests::overlapping_radius_and_owned_capacity_are_distinct ... ok
+test runtime::settlement::settlement_system::tests::chebyshev_distance_is_symmetric ... ok
+test runtime::settlement::settlement_system::tests::empty_world_tick_is_no_op ... ok
+test runtime::settlement::settlement_system::tests::metadata ... ok
+test runtime::settlement::settlement_system::tests::hearth_first_formation_is_opt_in ... ok
+test runtime::settlement::settlement_system::tests::tick_run_count_increments_each_tick ... ok
+test runtime::settlement::shelter_planning::tests::legacy_planning_is_inert ... ok
+test runtime::settlement::settlement_system::tests::newborn_life_stage_rates_are_rule_gated ... ok
+test runtime::settlement::stockpile_consume::tests::chebyshev_is_max_axis_distance ... ok
+test runtime::settlement::stockpile_consume::tests::metadata ... ok
+test runtime::settlement::stockpile_consume::tests::relief_constants_mirror_ground_eat ... ok
+test runtime::settlement::stockpile_deposit::tests::chebyshev_is_max_axis_distance ... ok
+test runtime::settlement::stockpile_deposit::tests::metadata ... ok
+test runtime::settlement::stockpile_deposit::tests::only_members_who_hauled_count_as_haul_deposits ... ok
+test runtime::social::social_interaction_system::tests::completed_pair_is_counted_once_without_changing_social_outputs ... ok
+test runtime::social::social_interaction_system::tests::empty_world_tick_no_op ... ok
+test runtime::social::social_interaction_system::tests::metadata ... ok
+test runtime::survival::tests::damage_constants_are_locked ... ok
+test runtime::survival::tests::death_removes_the_assigned_bed ... ok
+test runtime::survival::tests::metadata ... ok
+test worldgen::camp::tests::chebyshev_distance_matches_rings ... ok
+test worldgen::noise::tests::lattice_values_and_unit_interval ... ok
+test worldgen::tests::default_configuration_is_explicit ... ok
+test worldgen::tests::game_v11_adds_only_deadwood_to_v10 ... ok
+test worldgen::tests::game_v12_is_the_v11_world ... ok
+test worldgen::tests::game_v13_is_the_v12_world ... ok
+test worldgen::tests::game_v14_is_the_v13_world ... ok
+test worldgen::tests::stress_v19_changes_only_the_founders_and_the_map ... ok
+test worldgen::terrain::tests::river_and_exact_coverage ... ok
+test worldgen::tests::explicit_world_rules_are_retained_without_enabling_future_state ... ok
+test worldgen::tests::stress_v19_world_starts_with_the_requested_founders ... ok
+test runtime::decision::routine::places::tests::short_circuit_choice_equals_the_pass17_minimum ... ok
+test runtime::decision::routine::places::tests::cursor_matches_choose_under_starts_and_ends ... ok
+test runtime::agent::households::tests::explained_selection_chooses_exactly_pass18s_set ... ok
+
+test result: ok. 154 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/integration.rs (rust/target/debug/deps/integration-9acfdc2fc6400096)
+
+running 15 tests
+test harness_building_stamp_tick_interval ... ok
+test harness_building_stamp_priority ... ok
+test harness_building_stamp_isolation ... ok
+test harness_influence_update_clear_before_swap ... ok
+test harness_agent_sample_oob_ignored ... ok
+test harness_agent_sample_reads_current ... ok
+test harness_influence_update_name ... ok
+test harness_influence_update_priority ... ok
+test harness_influence_update_tick_interval ... ok
+test harness_phase2_baseline_zero ... ok
+test harness_register_phase2_count ... ok
+test harness_register_phase2_order ... ok
+test harness_viz_priority ... ok
+test harness_viz_tick_interval ... ok
+test harness_viz_warmth_total_danger_peak ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (rust/target/debug/deps/sim_test-453a9071ad57dfe1)
+
+running 103 tests
+test perf::tests::display_clock_uses_the_offset ... ok
+test perf::tests::nearest_rank_percentiles ... ok
+test perf::tests::cli_parses_each_subcommand ... ok
+test perf::tests::slowest_ticks_keep_the_twenty_largest ... ok
+test perf::tests::natural_spec_names_the_scene_founders ... ok
+test perf::tests::rules_flag_picks_the_stress_rules_and_label ... ok
+test probe::ablation::tests::reverting_exposure_gives_v16_exposure ... ok
+test probe::agent_trace::tests::children_and_elders_are_not_counted ... ok
+test probe::agent_trace::tests::nights_run_from_six_pm_to_three_am ... ok
+test probe::agent_trace::tests::options_split_removes_only_the_trace_flag ... ok
+test probe::agent_trace::tests::scripted_adult_counters ... ok
+test probe::args::tests::clock_minutes_validate_sort_deduplicate_and_convert_with_offset ... ok
+test probe::args::tests::validates_half_open_range_and_hard_worker_limit ... ok
+test probe::chronicle_out::tests::split_takes_the_flag_and_its_directory ... ok
+test probe::ablation::tests::each_scene_differs_from_its_base_in_one_place ... ok
+test probe::deaths::tests::a_new_thirst_crossing_resets_history_without_double_counting ... ok
+test probe::deaths::tests::dead_social_partner_is_recorded_as_dead ... ok
+test probe::deaths::tests::death_metadata_survives_membership_and_bed_cleanup ... ok
+test probe::deaths::tests::dehydration_reads_first_saturation_on_death_tick_and_takes_precedence ... ok
+test probe::deaths::tests::mismatch_is_an_error_not_silently_relabelled ... ok
+test probe::deaths::tests::old_age_reads_the_recorded_reason_and_age_and_matches_the_tally ... ok
+test probe::deaths::tests::other_death_uses_precombat_frame_and_crosschecks_combat_counter ... ok
+test probe::deaths::tests::real_drink_is_seen_before_idle_reset_and_death_keeps_flags ... ok
+test probe::deaths::tests::starvation_reads_first_saturation_on_death_tick ... ok
+test probe::ablation::tests::each_v18_scene_differs_from_v18_nofission_in_one_place ... ok
+test probe::family_trace::tests::current_tick_events_are_observed_once_and_stale_batches_are_ignored ... ok
+test probe::family_trace::tests::daily_births_use_elapsed_day_twenty_and_include_zero_days ... ok
+test probe::family_trace::tests::departure_rows_join_all_fission_statuses_and_retain_source_partitions ... ok
+test probe::deaths_observer::tests::observation_does_not_change_fingerprint ... ok
+test probe::family_trace::tests::durable_birth_and_pairing_survive_subject_removal_and_reconcile_base_people ... ok
+test probe::family_trace::tests::family_none_has_no_trace_and_twins_compare_sex_kin_and_durable_events ... ok
+test probe::family_trace::tests::hourly_households_and_exact_twenty_hour_beds_preserve_all_life_stages ... ok
+test probe::fingerprint::tests::fnv_matches_known_vector ... ok
+test probe::family_trace::tests::exact_day_sixty_snapshot_uses_completed_elapsed_ticks_not_display_day ... ok
+test probe::fingerprint::tests::independent_legacy_engines_match ... ok
+test probe::fingerprint::tests::tally_changes_are_observable ... ok
+test probe::long_run::tests::maturation_completed_tick_bounds_and_death_are_distinct ... ok
+test probe::long_run::tests::owned_beds_children_food_and_idle_hearth_have_exact_values ... ok
+test probe::chronicle_out::tests::twins_compare_new_entries_and_people ... ok
+test probe::metrics::tests::idle_actionable_falls_through_unavailable_food_and_counts_sleep ... ok
+test probe::metrics::tests::idle_actionable_uses_night_threshold_and_preserves_v8 ... ok
+test probe::metrics::tests::legacy_helper_actionability_does_not_hide_physical_unavailability ... ok
+test probe::metrics::tests::quantiles_interpolate_and_empty_is_finite ... ok
+test probe::metrics::tests::states_partition_population_and_snapshot_does_not_mutate ... ok
+test probe::pass10::tests::seed_winter_windows_count_deaths_and_dark_nights ... ok
+test probe::metrics::tests::game_boot_shelters_are_initial_not_new_completions ... ok
+test probe::long_run::tests::reporting_is_additive_finite_and_partitions_population ... ok
+test probe::pass17::batch_tests::batch_wins_over_latest_once_then_stale_batch_yields_to_current_event ... ok
+test probe::pass17::batch_tests::same_tick_completion_and_new_start_keep_separate_episode_totals ... ok
+test probe::pass17::batch_tests::transient_start_and_end_preserve_redraw_without_fabricating_consumption ... ok
+test probe::pass17::batch_tests::twin_comparison_detects_batch_difference_with_same_latest_event ... ok
+test probe::pass10::tests::v15_world_reports_full_health_and_no_variety ... ok
+test probe::pass17::death_tests::completed_episode_survives_later_same_tick_despawn_with_exact_prior_minutes ... ok
+test probe::pass17::death_tests::death_tick_does_not_add_a_consuming_minute_or_completion ... ok
+test probe::pass17::death_tests::no_place_and_redraw_survive_same_tick_old_age_despawn ... ok
+test probe::pass17::death_tests::observer_is_absent_from_old_worlds_and_checks_tick_and_single_drain ... ok
+test probe::pass17::death_tests::start_and_redraw_survive_same_tick_old_age_despawn ... ok
+test probe::pass17::death_tests::start_end_batch_survives_same_tick_old_age_despawn ... ok
+test probe::pass17::tests::completed_minutes_equal_consuming_intervals_when_walking_precedes_arrival ... ok
+test probe::pass17::death_tests::surviving_holder_is_not_counted_twice ... ok
+test probe::pass17::tests::hourly_cadence_covers_exactly_one_day_without_initial_double_count ... ok
+test probe::pass17::tests::hourly_rows_use_display_clock_and_exact_stage_state_counts_and_stores ... ok
+test probe::pass17::tests::interrupted_and_open_activities_never_enter_completed_mean ... ok
+test probe::pass17::tests::life_stage_change_splits_intervals_and_excludes_elder_minutes ... ok
+test probe::pass17::tests::new_state_tag_preserves_existing_codes ... ok
+test probe::pass17::tests::no_place_failures_are_counted_once_on_the_event_tick ... ok
+test probe::pass17::tests::shelter_completions_exclude_initial_shelters ... ok
+test probe::pass17::tests::twin_comparison_detects_routine_timers_without_changing_fingerprint ... ok
+test probe::pass4::tests::v9_world_reports_neutral_pass4_values ... ok
+test probe::pass5::tests::v10_world_reports_neutral_pass5_values ... ok
+test probe::pass6::tests::gatherers_elders_and_urgent_have_exact_values ... ok
+test probe::pass5::tests::v11_world_reports_its_deadwood ... ok
+test probe::pass6::tests::v11_world_reports_neutral_pass6_values ... ok
+test probe::pass7::tests::v12_world_reports_neutral_pass7_values ... ok
+test probe::pass7::tests::rain_and_cold_snap_and_tallies_have_exact_values ... ok
+test probe::pass8::tests::winter_fall_and_rules_block_read_the_rule ... ok
+test probe::runner::tests::both_v16_scenes_take_both_twin_checks ... ok
+test probe::runner::tests::reports_first_observed_divergence_with_seed_and_tick ... ok
+test probe::summary::tests::distribution_covers_extrema_and_interpolated_quantiles ... ok
+test probe::tests::display_social_counter_does_not_change_legacy_fingerprint ... ok
+test probe::tests::schema_thirteen_is_exactly_additive ... ok
+test scenes::tests::game_scene_preserves_seed_and_starts_with_twenty_four_agents ... ok
+test scenes::tests::legacy_boot_buildings_are_queued_without_advancing_time ... ok
+test tests::shared_scene_starts_at_tick_zero ... ok
+test worldmodel::digest::tests::digest_sees_what_the_fingerprint_misses ... ok
+test probe::pass8::tests::v13_world_reports_neutral_pass8_values_outside_winter ... ok
+test worldmodel::digest::tests::fnv_matches_known_vector ... ok
+test worldmodel::export::tests::arguments_validate ... ok
+test perf::tests::files_and_index_round_trip ... ok
+test probe::pass12::tests::work_classes_add_up_to_the_work_share_numerator ... ok
+test worldmodel::export::tests::first_row_is_the_fresh_engine_and_shapes_match_the_fields ... ok
+test worldmodel::export::tests::resume_keeps_only_the_requested_episode ... ok
+test worldmodel::export::tests::schema_two_hides_the_weather_and_lists_observable_fields ... ok
+test worldmodel::npy::tests::data_follows_the_header_little_endian ... ok
+test worldmodel::npy::tests::header_bytes_are_exact_and_aligned ... ok
+test worldmodel::schedule::tests::due_rows_apply_in_file_order_at_their_tick ... ok
+test worldmodel::schedule::tests::parses_rows_and_rejects_bad_schedules ... ok
+test worldmodel::sha256::tests::matches_the_standard_test_vectors ... ok
+test worldmodel::export::tests::schedules_are_recorded_and_change_the_rows_after_their_tick ... ok
+test worldmodel::export::tests::schema_five_records_hardiness_regions_and_parent_slots ... ok
+test worldmodel::export::tests::schema_four_records_the_hidden_world_variety_of_game_v16 ... ok
+test perf::tests::profiled_and_plain_game_v19_reach_the_same_fingerprint ... ok
+test perf::tests::a_short_fed_stress_run_reports_consistent_numbers ... ok
+
+test result: ok. 103 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running unittests src/bin/worldsim_perf.rs (rust/target/debug/deps/worldsim_perf-a8d0173907d1ae69)
+
+running 1 test
+test tests::cli_rejects_unknown_subcommands ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/worldsim_probe.rs (rust/target/debug/deps/worldsim_probe-32cb34b50cff9c84)
+
+running 1 test
+test tests::cli_rejects_unknown_flags ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/worldsim_wm.rs (rust/target/debug/deps/worldsim_wm-249e992b54265ca2)
+
+running 1 test
+test tests::cli_rejects_unknown_flags ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_a15_controlled_determinism.rs (rust/target/debug/deps/harness_a15_controlled_determinism-3db2891fcf9852e9)
+
+running 4 tests
+test harness_a15_baseline_registry_consistency ... ok
+test harness_a15_process_seeded_lockstep ... ok
+test harness_a15_controlled_forced_divergence_lockstep ... ok
+test harness_a15_multi_permutation_robustness ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.69s
+
+     Running tests/harness_art_p9_sim_reads.rs (rust/target/debug/deps/harness_art_p9_sim_reads-5e081a581ef23cb8)
+
+running 4 tests
+test hearth_hoisting_keeps_original_snapshot_inputs_and_elapsed_clock ... ok
+test reader_resource_and_node_are_additive_immediately_after_world ... ok
+test scanner_detects_calls_comments_fakes_and_dynamic_helpers ... ok
+test every_game_test_capture_and_transitive_support_script_routes_world_reads ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.74s
+
+     Running tests/harness_b1_zoom_default_raise.rs (rust/target/debug/deps/harness_b1_zoom_default_raise-c10509a61bc6996f)
+
+running 6 tests
+test harness_b1_a2_zoom_min_preserved ... ok
+test harness_b1_a3_zoom_max_preserved ... ok
+test harness_b1_a4_default_within_bounds ... ok
+test harness_b1_a6_zoom_lod_close_tier ... ok
+test harness_b1_a1_zoom_default_equals_five ... ok
+test harness_b1_a5_sprite_scale_untouched ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_carry_viz_2_5b.rs (rust/target/debug/deps/harness_carry_viz_2_5b-9351ec55a00d63ee)
+
+running 2 tests
+test harness_carry_viz_agent_snapshot_carried_food ... ok
+test harness_carry_viz_carried_food_tracks_inventory_change ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_count_guard_static.rs (rust/target/debug/deps/harness_count_guard_static-180f0bebfe65b420)
+
+running 8 tests
+test harness_count_guard_a2_rejects_assert_true_plus_stray_comparison ... ok
+test harness_count_guard_a2_rejects_comment_and_rawstring_spoof ... ok
+test harness_count_guard_a2_accepts_wellformed_guard ... ok
+test harness_count_guard_floor_value_in_band ... ok
+test harness_count_guard_a26_name_and_attribute_preserved ... ok
+test harness_count_guard_a26_body_compares_against_floor ... ok
+test harness_count_guard_no_nested_cargo_subprocess ... ok
+test harness_count_guard_independent_count_meets_floor ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/harness_d_phase_a_runtime_warnings.rs (rust/target/debug/deps/harness_d_phase_a_runtime_warnings-9b99c46ac7d0ef19)
+
+running 7 tests
+test harness_d_phase_a_combat_event_signature_underscored ... ok
+test harness_d_phase_a_active_params_not_underscored ... ok
+test harness_d_phase_a_no_integer_division_in_agent_renderer ... ok
+test harness_d_phase_a_memory_recall_signature_underscored ... ok
+test harness_d_phase_a_no_integer_division_in_world_renderer ... ok
+test harness_d_phase_a_ffi_get_settlement_snapshot_present ... ok
+test harness_d_phase_a_ffi_get_construction_snapshot_present ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_fix_d_memory_arm.rs (rust/target/debug/deps/harness_fix_d_memory_arm-c7440104273145ba)
+
+running 3 tests
+test harness_fix_d_a1_encode_stores_classified_arm ... ok
+test harness_fix_d_a3_cascade_flip_is_relative_uniform_shift_invariant ... ok
+test harness_fix_d_a2_scarcity_scene_lockstep_deterministic ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.03s
+
+     Running tests/harness_fix_inspector_overlap.rs (rust/target/debug/deps/harness_fix_inspector_overlap-cf6bb18bd7b59e59)
+
+running 4 tests
+test harness_inspector_anchors_and_width_untouched_regression ... ok
+test harness_inspector_no_overlap_invariant_cross_file ... ok
+test harness_inspector_top_offset_const_exists_and_value ... ok
+test harness_inspector_ready_applies_offset_to_panel_rect ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_g_phase_a_agent_frame_zoom.rs (rust/target/debug/deps/harness_g_phase_a_agent_frame_zoom-5ed7a64da3b7edc8)
+
+running 15 tests
+test harness_g_a12_zoom_lod_controller_thresholds_intact ... ok
+test harness_g_a14_existing_p13_alpha_a3_updated_to_eight ... ok
+test harness_g_a13_existing_p12_alpha_a4_updated_to_eight ... ok
+test harness_g_a11_palette_shader_color_path ... ok
+test harness_g_a10_zoom_min_and_default_preserved ... ok
+test harness_g_a15_existing_p14_zeta_regression_literal_updated ... ok
+test harness_g_a1_sheet_cols_equals_4 ... ok
+test harness_g_a2_sheet_rows_equals_3 ... ok
+test harness_g_a3_agent_frame_index_declared_and_int ... ok
+test harness_g_a4_ready_reuses_quadmesh_arrays ... ok
+test harness_g_a5_ready_builds_frame_subrect_via_arraymesh ... ok
+test harness_g_a6_multimesh_uses_frame_mesh_not_whole_quad ... ok
+test harness_g_a7_sprite_scale_preserved ... ok
+test harness_g_a8_agent_renderer_cue_invariants_intact ... ok
+test harness_g_a9_zoom_max_equals_eight ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_h_phase_a_input_camera_color.rs (rust/target/debug/deps/harness_h_phase_a_input_camera_color-fd1a0f6e062a6ad1)
+
+running 18 tests
+test harness_h_a10_space_not_repurposed_in_camera ... ok
+test harness_h_a13_shader_rowselect_logic_preserved ... ok
+test harness_h_a11_shader_vertex_tint_capture ... ok
+test harness_h_a14_agent_renderer_untouched_invariants ... ok
+test harness_h_a15_world_renderer_space_overlay_intact ... ok
+test harness_h_a12_shader_multiplies_v_tint_and_bug_removed ... ok
+test harness_h_a16_zoom_lod_thresholds_intact ... ok
+test harness_h_a1_trackpad_pan_gesture_handled ... ok
+test harness_h_a2_trackpad_magnify_gesture_handled ... ok
+test harness_h_a3_mouse_wheel_path_preserved ... ok
+test harness_h_a4_pause_key_p_in_input ... ok
+test harness_h_a5_pause_toggles_process_mode ... ok
+test harness_h_a6_camera_track_in_process ... ok
+test harness_h_a7_resolves_world_sim_node ... ok
+test harness_h_a8_tracking_coordinate_constants ... ok
+test harness_h_a9_zoom_invariants_unchanged ... ok
+test harness_revitalize_camera_frames_settlement_before_optional_tracking ... ok
+test harness_revitalize_camera_reset_preserves_explicit_framing_only ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_inventory_2_1_data.rs (rust/target/debug/deps/harness_inventory_2_1_data-1256aeec4a6b7a2a)
+
+running 10 tests
+test harness_inventory_add_capacity_accumulate_overflow ... ok
+test harness_inventory_empty_default_boundary ... ok
+test harness_inventory_remove_actual_and_drops_zero ... ok
+test harness_resource_kind_exactly_four_variants ... ok
+test harness_inventory_total_get_exact_multi_kind ... ok
+test harness_resource_kind_ord_total_order ... ok
+test harness_settlement_additive_field_regression ... ok
+test harness_serde_ron_roundtrip_inventory_and_settlement ... ok
+test harness_settlement_stockpile_store_withdraw_symmetry ... ok
+test harness_settlement_store_saturating_add_boundary ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_membership_belonging.rs (rust/target/debug/deps/harness_membership_belonging-2d41047c1378a0a3)
+
+running 10 tests
+test harness_membership_a2_dead_member_leaves_within_one_sync ... ok
+test harness_membership_a1_member_outside_radius_persists ... ok
+test harness_membership_a4_nonmember_entering_radius_joins ... ok
+test harness_membership_a3_dissolution_means_all_live_members_gone ... ok
+test harness_membership_a5_membership_is_exclusive ... ok
+test harness_membership_a8_member_migrates_as_transfer ... ok
+test harness_membership_a9_join_does_not_exceed_max_pop ... ok
+test harness_membership_a7_formation_count_regression_preserved ... ok
+test harness_membership_a10_mass_roster_does_not_collapse ... ok
+test harness_membership_a6_lockstep_determinism_fingerprint ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/harness_newborn_mobile.rs (rust/target/debug/deps/harness_newborn_mobile-55dec37879bf4c28)
+
+running 10 tests
+test harness_newborn_bootstrap_agents_unaffected ... ok
+test harness_newborn_birth_logic_preserved ... ok
+test harness_newborn_actually_moves ... ok
+test harness_newborn_deterministic_birth_seed ... ok
+test harness_newborn_birth_occurs_non_vacuity ... ok
+test harness_newborn_growth_rate_parity_with_bootstrap ... ok
+test harness_newborn_need_values_rise_over_time ... ok
+test harness_newborn_has_movement_rng ... ok
+test harness_newborn_component_completeness ... ok
+test harness_newborn_enters_seeking ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+
+     Running tests/harness_next_a_postverify.rs (rust/target/debug/deps/harness_next_a_postverify-4f3f8aa14c0b3a0b)
+
+running 13 tests
+test harness_ffi_bridge_baseline_dirty_regions_warmth_zero_on_fresh_engine ... ok
+test harness_ffi_bridge_baseline_queue_empty_on_fresh_engine ... ok
+test harness_ffi_bridge_ffi_enqueue_path_drains_queue_via_full_pipeline ... ok
+test harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty ... ok
+test harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates ... ok
+test harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path ... ok
+test harness_ffi_bridge_idempotent_retick_dirty_regions_stable_at_3_after_5_idle_ticks ... ok
+test harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_ticks ... ok
+test harness_ffi_bridge_oob_ffi_returns_false ... ok
+test harness_ffi_bridge_pre_tick_dirty_regions_zero_after_enqueue_before_tick ... ok
+test harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2 ... ok
+test harness_ffi_bridge_pre_tick_queue_len_equals_2_after_2_inbounds_1_oob ... ok
+test harness_ffi_bridge_pre_tick_queue_len_equals_3_after_3_ffi_enqueue_calls ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p10_alpha_settlement.rs (rust/target/debug/deps/harness_p10_alpha_settlement-d1d05d659ba5fbee)
+
+running 21 tests
+test harness_p10_alpha_a10_add_remove_member_agent_roundtrip ... ok
+test harness_p10_alpha_a13_population_count_equals_member_agents_len ... ok
+test harness_p10_alpha_a11_add_remove_member_building_roundtrip ... ok
+test harness_p10_alpha_a14_is_dissolved_transitions ... ok
+test harness_p10_alpha_a12_append_history_saturates_at_cap ... ok
+test harness_p10_alpha_a15_settlement_serde_roundtrip ... ok
+test harness_p10_alpha_a16_sim_resources_settlements_empty_at_init ... ok
+test harness_p10_alpha_a18_causal_event_agent_born_variant_and_accessors ... ok
+test harness_p10_alpha_a17_issue_settlement_id_monotonically_increases ... ok
+test harness_p10_alpha_a19_agent_born_clone_and_partial_eq ... ok
+test harness_p10_alpha_a1_settlement_id_is_u32 ... ok
+test harness_p10_alpha_a20_components_re_exports ... ok
+test harness_p10_alpha_a2_building_id_is_u64 ... ok
+test harness_p10_alpha_a3_settlement_history_cap_equals_32 ... ok
+test harness_p10_alpha_a4_formation_agent_threshold_equals_3 ... ok
+test harness_p10_alpha_a5_formation_building_threshold_equals_2 ... ok
+test harness_p10_alpha_a6_dissolution_threshold_equals_0 ... ok
+test harness_p10_alpha_a7_max_pop_equals_50 ... ok
+test harness_p10_alpha_a8_proximity_radius_equals_5 ... ok
+test harness_p10_alpha_a9_new_with_id_initializes_empty ... ok
+test harness_p10_alpha_a21_phase9_phase8_regression_guard ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p10_beta_settlement_system.rs (rust/target/debug/deps/harness_p10_beta_settlement_system-a2c75458f8bf1c79)
+
+running 35 tests
+test harness_p10_beta_a11_founding_members_deterministic_ordering ... ok
+test harness_p10_beta_a10_settlement_id_no_reuse ... ok
+test harness_p10_beta_a17_no_settlement_reason_when_already_member ... ok
+test harness_p10_beta_a18_max_pop_caps_migration_pull ... ok
+test harness_p10_beta_a16_settlement_reason_fires_for_outsider ... ok
+test harness_p10_beta_a1_settlement_runs_after_construction_and_building_stamp ... ok
+test harness_p10_beta_a20_settlement_events_not_memory_encoded ... ok
+test harness_p10_beta_a13_birth_fires_after_cooldown_under_max_pop ... ok
+test harness_p10_beta_a19_anti_recursion_settlement_reason_not_re_emitted ... ok
+test harness_p10_beta_a15_birth_spawns_inside_radius ... ok
+test harness_p10_beta_a22_history_fifo_eviction_at_overflow ... ok
+test harness_p10_beta_a25_building_registry_via_ffi_path ... ok
+test harness_p10_beta_a24_dissolved_parent_chains_to_formed ... ok
+test harness_p10_beta_a12_birth_does_not_fire_before_cooldown ... ok
+test harness_p10_beta_a26_building_registry_via_construction_path ... ok
+test harness_p10_beta_a28_settlement_system_executes_per_tick ... ok
+test harness_p10_beta_a27_membership_sync_removes_despawned_within_one_tick ... ok
+test harness_p10_beta_a3_dissolved_only_when_both_conditions_hold ... ok
+test harness_p10_beta_a2_settlement_formed_event_field_population ... ok
+test harness_p10_beta_a4_dissolved_final_population_pre_clearing ... ok
+test harness_p10_beta_a6_no_formation_below_agent_threshold ... ok
+test harness_p10_beta_a5_positive_formation_when_thresholds_met ... ok
+test harness_p10_beta_a7_no_formation_below_building_threshold ... ok
+test harness_p10_beta_a8_no_formation_inside_existing_radius ... ok
+test harness_p10_beta_edge_decision_reason_settlement_str ... ok
+test harness_p10_beta_edge_max_pop_and_radius_constants ... ok
+test harness_p10_beta_a9_formation_idempotent_within_tick ... ok
+test harness_p10_beta_a21_community_history_ingests_qualifying_events ... ok
+test harness_p10_beta_edge_settlement_dissolved_variant_schema ... ok
+test harness_p10_beta_edge_settlement_formed_variant_schema ... ok
+test harness_p10_beta_edge_settlement_system_in_default_runtime ... ok
+test harness_p10_beta_a23_agent_born_parent_chains_to_formed ... ok
+test harness_p10_beta_edge_settlement_id_never_zero ... ok
+test harness_p10_beta_a14_no_birth_when_at_max_pop ... ok
+test harness_p10_beta_a29_regression_clean_2000_ticks ... ok
+
+test result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/harness_p10_gamma_settlement_chronicle.rs (rust/target/debug/deps/harness_p10_gamma_settlement_chronicle-f3b4c7dadd4c2491)
+
+running 5 tests
+test harness_p10_gamma_a2b_negative_control_two_founders ... ok
+test harness_p10_gamma_a2b_negative_control_one_building ... ok
+test harness_p10_gamma_a_settlement_chronicle ... ok
+test harness_p10_gamma_a20_determinism_two_runs ... ok
+test harness_p10_gamma_a18_regression_default_scenario_2000_ticks ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+
+     Running tests/harness_p10_gamma_settlement_migration.rs (rust/target/debug/deps/harness_p10_gamma_settlement_migration-cda3926a360f5257)
+
+running 21 tests
+test harness_p10_gamma_a11_on_member_tile ... ok
+test harness_p10_gamma_a12_concurrent_migrants ... ok
+test harness_p10_gamma_a15_need_preemption ... ok
+test harness_p10_gamma_a16_serde_round_trip ... ok
+test harness_p10_gamma_a17_nearest_selection_determinism ... ok
+test harness_p10_gamma_a18_no_ffi_exposure ... ok
+test harness_p10_gamma_a19_no_settlement_empty_roster ... ok
+test harness_p10_gamma_a1_transition_marker_intent ... ok
+test harness_p10_gamma_a20_full_settlement_no_permanent_freeze ... ok
+test harness_p10_gamma_a2_seektarget_nearest_member_tile ... ok
+test harness_p10_gamma_a2b_decoy_closer_non_member_not_selected ... ok
+test harness_p10_gamma_a3_directed_step_chebyshev_minus_one ... ok
+test harness_p10_gamma_a4_radius_independent_convergence ... ok
+test harness_p10_gamma_a7_social_not_migrant ... ok
+test harness_p10_gamma_a5_arrival_autojoin ... ok
+test harness_p10_gamma_a8_dissolve_abort ... ok
+test harness_p10_gamma_a6_post_join_exit_one_tick ... ok
+test harness_p10_gamma_a9_target_despawn_abort ... ok
+test harness_p10_gamma_a13_cross_feature_regression ... ok
+test harness_p10_gamma_a14_marker_hygiene ... ok
+test harness_p10_gamma_a10_prod_long_run_guard ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.52s
+
+     Running tests/harness_p11_alpha_agent_renderer.rs (rust/target/debug/deps/harness_p11_alpha_agent_renderer-1b5aee0bf3a84619)
+
+running 24 tests
+test harness_p11_alpha_agent_renderer_applies_state_tints ... ok
+test harness_p11_alpha_agent_renderer_enables_use_colors ... ok
+test harness_p11_alpha_agent_id_matches_component ... ok
+test harness_p11_alpha_consuming_agent_state_tag_is_two ... ok
+test harness_p11_alpha_checksum_covers_all_rows ... ok
+test harness_p11_alpha_agent_renderer_interpolates_positions ... ok
+test harness_p11_alpha_agent_renderer_reads_states_array ... ok
+test harness_p11_alpha_consuming_food_state_tag_is_three ... ok
+test harness_p11_alpha_checksum_is_identity_aware ... ok
+test harness_p11_alpha_d1_idle_tint_is_cool_blue ... ok
+test harness_p11_alpha_d1_no_idle_white_identity_tint ... ok
+test harness_p11_alpha_idle_state_tag_is_zero ... ok
+test harness_p11_alpha_d1_state_tints_exact_ordered_palette ... ok
+test harness_p11_alpha_consuming_sleep_state_tag_is_three ... ok
+test harness_p11_alpha_no_state_component_defaults_idle ... ok
+test harness_p11_alpha_position_x_matches_ecs ... ok
+test harness_p11_alpha_position_y_matches_ecs ... ok
+test harness_p11_alpha_seeking_state_tag_is_one ... ok
+test harness_p11_alpha_snapshot_count_matches_agent_count ... ok
+test harness_p11_alpha_shader_captures_instance_color ... ok
+test harness_p11_alpha_shader_modulates_palette_output ... ok
+test harness_p11_alpha_state_tag_in_valid_range ... ok
+test harness_revitalize_agent_shadows_follow_interpolated_feet ... ok
+test harness_revitalize_agent_reset_discards_old_world_interpolation ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p12_alpha_camera_zoom.rs (rust/target/debug/deps/harness_p12_alpha_camera_zoom-a1cbbfd653fbd7a5)
+
+running 18 tests
+test harness_p12_alpha_a10_zoom_clamp ... ok
+test harness_p12_alpha_a11_create_tween_used ... ok
+test harness_p12_alpha_a12_input_handled_marked ... ok
+test harness_p12_alpha_a13_main_tscn_camera_zoom_default_2x ... ok
+test harness_p12_alpha_a14_main_tscn_camera_script_attached ... ok
+test harness_p12_alpha_a15_phase4_gamma_sprite_scale_invariant ... ok
+test harness_p12_alpha_a17_no_rust_crate_source_modified ... ok
+test harness_p12_alpha_a18_shader_and_locale_unchanged ... ok
+test harness_p12_alpha_a16_d1_state_tints_palette_preserved ... ok
+test harness_p12_alpha_a1_camera_controller_file_exists ... ok
+test harness_p12_alpha_a2_extends_camera2d ... ok
+test harness_p12_alpha_a3_zoom_min_constant ... ok
+test harness_p12_alpha_a4_zoom_max_constant ... ok
+test harness_p12_alpha_a5_zoom_default_constant ... ok
+test harness_p12_alpha_a6_zoom_factor_geometric ... ok
+test harness_p12_alpha_a7_tween_duration_constant ... ok
+test harness_p12_alpha_a9_wheel_down_handler ... ok
+test harness_p12_alpha_a8_wheel_up_handler ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p12_beta2_construction_sites.rs (rust/target/debug/deps/harness_p12_beta2_construction_sites-48eb612b3c9d0e3d)
+
+running 14 tests
+test harness_p12_beta2_a11_reaper_loop_frees_despawned_sprites ... ok
+test harness_p12_beta2_a10_renderer_calls_ffi_snapshot_method ... ok
+test harness_p12_beta2_a13_d1_state_tints_palette_preserved ... ok
+test harness_p12_beta2_a12_phase4_gamma_sprite_scale_invariant_preserved ... ok
+test harness_p12_beta2_a1_collector_function_symbol_exists ... ok
+test harness_p12_beta2_a2_snapshot_row_struct_has_five_required_fields ... ok
+test harness_p12_beta2_a4_ffi_method_exposed_with_godot_func_attribute ... ok
+test harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved ... ok
+test harness_p12_beta2_a5_dict_marshaller_sets_five_parallel_array_keys ... ok
+test harness_p12_beta2_a3_collector_queries_correct_component_tuple ... ok
+test harness_p12_beta2_a8_renderer_declares_construction_sprite_path_constant ... ok
+test harness_p12_beta2_a7_empty_world_returns_empty_vec ... ok
+test harness_p12_beta2_a9_alpha_remap_constants_have_exact_values ... ok
+test harness_p12_beta2_a6_collector_smoke_test_returns_matching_row ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_p12_beta_terrain.rs (rust/target/debug/deps/harness_p12_beta_terrain-3f52ffabebaa165c)
+
+running 25 tests
+test harness_p12_beta_a12_z_order_constants_match_spec ... ok
+test harness_p12_beta_a10_bootstrap_building_sprite_loaded ... ok
+test harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile ... ok
+test harness_p12_beta_a13_z_order_constants_are_assigned_to_nodes ... ok
+test harness_p12_beta_a14_overlay_alpha_in_valid_translucent_range ... ok
+test harness_p12_beta_a15_runtime_harness_script_present_and_extends_scenetree ... ok
+test harness_p12_beta_a16_runtime_harness_emits_pipeline_artefacts ... ok
+test harness_p12_beta_a17_runtime_harness_exit_code_nonzero_on_failure ... ok
+test harness_p12_beta_a1_tileset_resource_exists_and_nonempty ... ok
+test harness_p12_beta_a18_runtime_harness_verifies_tilemaplayer_present_and_loaded ... ok
+test harness_p12_beta_a19_runtime_harness_verifies_bootstrap_building_sprite_distinct ... ok
+test harness_p12_beta_a20_runtime_harness_verifies_overlay_z_and_alpha ... ok
+test harness_p12_beta_a21_phase4_gamma_sprite_scale_invariant_preserved ... ok
+test harness_p12_beta_a22_d1_state_tints_palette_preserved ... ok
+test harness_p12_beta_a24_no_rust_crate_modifications_in_scope_paths ... ok
+test harness_p12_beta_a23_phase12_alpha_camera_zoom_invariant_preserved ... ok
+test harness_p12_beta_a6_world_renderer_loads_terrain_tileset ... ok
+test harness_p12_beta_a2_tileset_tile_size_is_16 ... ok
+test harness_p12_beta_a3_tileset_has_nine_atlas_sources ... ok
+test harness_p12_beta_a4_tileset_references_all_three_floor_materials ... ok
+test harness_p12_beta_a7_world_renderer_instantiates_tilemaplayer_with_tileset ... ok
+test harness_p12_beta_a5_tileset_references_three_variants_per_material ... ok
+test harness_p12_beta_a8_world_renderer_populates_all_grid_cells ... ok
+test harness_p12_beta_a9_terrain_placement_is_deterministic ... ok
+test harness_p12_beta_a25_gdscript_parses_cleanly_in_godot_headless ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.54s
+
+     Running tests/harness_p12_gamma_settlement_furniture.rs (rust/target/debug/deps/harness_p12_gamma_settlement_furniture-37f2313847239627)
+
+running 15 tests
+test harness_p12_gamma_a10_world_renderer_polls_ffi_and_reaps_stale_sprites ... ok
+test harness_p12_gamma_a15_world_renderer_reads_formation_arrays ... ok
+test harness_p12_gamma_a11_phase4_gamma_and_d1_invariants_preserved ... ok
+test harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved ... ok
+test harness_p12_gamma_a13_snapshot_row_declares_formation_fields ... ok
+test harness_p12_gamma_a2_snapshot_row_struct_has_five_required_fields ... ok
+test harness_p12_gamma_a1_settlement_snapshot_collector_exists ... ok
+test harness_p12_gamma_a14_dict_marshaller_sets_formation_keys ... ok
+test harness_p12_gamma_a3_collector_queries_settlement_and_agent_position ... ok
+test harness_p12_gamma_a4_get_settlement_snapshot_func_attribute_and_signature ... ok
+test harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_constants ... ok
+test harness_p12_gamma_a7_zero_member_settlement_produces_no_row ... ok
+test harness_p12_gamma_a6_collector_returns_correct_centroid_for_known_membership ... ok
+test harness_p12_gamma_a8_settlement_with_missing_member_position_is_handled ... ok
+test harness_p12_gamma_a5_dict_marshaller_sets_five_named_keys ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p13_alpha_camera_and_buildings.rs (rust/target/debug/deps/harness_p13_alpha_camera_and_buildings-f043db5947c2f986)
+
+running 15 tests
+test harness_p13_alpha_a11_phase12_beta1_terrain_tileset_preserved ... ok
+test harness_p13_alpha_a12_phase12_beta2_construction_z_preserved ... ok
+test harness_p13_alpha_a14_three_distinct_building_sprite_paths ... ok
+test harness_p13_alpha_a15_main_tscn_camera2d_script_attached ... ok
+test harness_p13_alpha_a13_phase12_gamma_furniture_z_preserved ... ok
+test harness_p13_alpha_a10_d1_state_tints_palette_preserved ... ok
+test harness_p13_alpha_a4_bootstrap_building_path_campfire ... ok
+test harness_p13_alpha_a5_bootstrap_no_longer_points_to_cairn ... ok
+test harness_p13_alpha_a6_construction_sprite_path_unchanged ... ok
+test harness_p13_alpha_a7_furniture_sprite_path_unchanged ... ok
+test harness_p13_alpha_a1_camera_controller_zoom_default_3x ... ok
+test harness_p13_alpha_a2_camera_controller_zoom_min_unchanged ... ok
+test harness_p13_alpha_a3_camera_controller_zoom_max_unchanged ... ok
+test harness_p13_alpha_a9_phase4_gamma_sprite_scale_invariant_preserved ... ok
+test harness_p13_alpha_a8_campfire_sprite_file_exists_and_nonempty ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p13_beta_resource_placeholders.rs (rust/target/debug/deps/harness_p13_beta_resource_placeholders-24ac4d4fc547ef6c)
+
+running 15 tests
+test harness_p13_beta_a12_phase13_alpha_bootstrap_campfire_preserved ... ok
+test harness_p13_beta_a14_phase12_beta2_construction_z_5_preserved ... ok
+test harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved ... ok
+test harness_p13_beta_a15_phase12_gamma_furniture_z_4_preserved ... ok
+test harness_p13_beta_a11_phase13_alpha_zoom_default_3x_preserved ... ok
+test harness_p13_beta_a10_phase12_alpha_zoom_bounds_preserved ... ok
+test harness_p13_beta_a2_z_resource_constant_equals_3 ... ok
+test harness_p13_beta_a1_resource_sprite_path_constant_declared ... ok
+test harness_p13_beta_a3_resource_count_equals_20 ... ok
+test harness_p13_beta_a4_resource_seed_constant_declared ... ok
+test harness_p13_beta_a5_resource_placement_uses_seeded_rng ... ok
+test harness_p13_beta_a7_z_order_chain_invariant ... ok
+test harness_p13_beta_a8_phase4_gamma_sprite_scale_preserved ... ok
+test harness_p13_beta_a9_d1_state_tints_palette_preserved ... ok
+test harness_p13_beta_a6_storage_pit_asset_file_exists ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p13_delta_basic_hud.rs (rust/target/debug/deps/harness_p13_delta_basic_hud-476b6f1b495794b1)
+
+running 18 tests
+test harness_p13_delta_a10_main_tscn_load_steps_bumped ... ok
+test harness_p13_delta_a15_phase13_alpha_bootstrap_campfire_unchanged ... ok
+test harness_p13_delta_a12_d1_state_tints_palette_unchanged ... ok
+test harness_p13_delta_a11_phase4_gamma_sprite_scale_unchanged ... ok
+test harness_p13_delta_a13_phase12_alpha_camera_zoom_bounds_unchanged ... ok
+test harness_p13_delta_a14_phase13_alpha_default_zoom_3x_unchanged ... ok
+test harness_p13_delta_a16_phase13_beta_resource_constants_unchanged ... ok
+test harness_p13_delta_a17_phase13_gamma_state_scale_boost_unchanged ... ok
+test harness_p13_delta_a1_hud_topbar_file_exists ... ok
+test harness_p13_delta_a2_hud_topbar_extends_control ... ok
+test harness_p13_delta_a4_hud_topbar_polls_three_snapshot_ffi_methods ... ok
+test harness_p13_delta_a5_hud_topbar_uses_variant_safe_ffi_pattern ... ok
+test harness_p13_delta_a3_hud_topbar_declares_four_label_members ... ok
+test harness_p13_delta_a18_hud_topbar_silent_missing_world_sim ... ok
+test harness_p13_delta_a8_main_tscn_registers_hud_topbar_node ... ok
+test harness_p13_delta_a6_hud_topbar_does_not_intercept_mouse ... ok
+test harness_p13_delta_a9_main_tscn_ext_resource_points_to_hud_script ... ok
+test harness_p13_delta_a7_hud_topbar_does_not_mutate_sim_state ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p13_epsilon_bootstrap_seed.rs (rust/target/debug/deps/harness_p13_epsilon_bootstrap_seed-e6f8d8cdb23cb75c)
+
+running 16 tests
+test harness_p13_epsilon_a12_phase13_alpha_centre_bootstrap_preserved ... ok
+test harness_p13_epsilon_a10_phase12_alpha_zoom_invariants_preserved ... ok
+test harness_p13_epsilon_a15_phase13_delta_hud_topbar_present ... ok
+test harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved ... ok
+test harness_p13_epsilon_a14_phase13_gamma_state_scale_boost_preserved ... ok
+test harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved ... ok
+test harness_p13_epsilon_a16_no_rust_simulation_crate_modification ... ok
+test harness_p13_epsilon_a1_bootstrap_x_left_constant_declared ... ok
+test harness_p13_epsilon_a2_bootstrap_x_right_constant_declared ... ok
+test harness_p13_epsilon_a3_three_on_building_placed_calls_total ... ok
+test harness_p13_epsilon_a4_on_building_placed_arg_signatures ... ok
+test harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex ... ok
+test harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building ... ok
+test harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y ... ok
+test harness_p13_epsilon_a8_phase4_gamma_sprite_scale_preserved ... ok
+test harness_p13_epsilon_a9_d1_state_tints_palette_preserved ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_p13_gamma_interaction_cues.rs (rust/target/debug/deps/harness_p13_gamma_interaction_cues-8334dd06b0a24cb0)
+
+running 16 tests
+test harness_p13_gamma_a14_phase13_alpha_bootstrap_campfire_preserved ... ok
+test harness_p13_gamma_a15_phase13_beta_resource_constants_preserved ... ok
+test harness_p13_gamma_a12_phase12_alpha_zoom_min_max_preserved ... ok
+test harness_p13_gamma_a13_phase13_alpha_zoom_default_3x_preserved ... ok
+test harness_p13_gamma_a11_state_tints_palette_preserved ... ok
+test harness_p13_gamma_a10_sprite_scale_baseline_preserved ... ok
+test harness_p13_gamma_a16_state_scale_boost_lookup_guards_bounds ... ok
+test harness_p13_gamma_a1_state_scale_boost_array_declared ... ok
+test harness_p13_gamma_a2_state_scale_boost_idle_index_is_baseline ... ok
+test harness_p13_gamma_a3_state_scale_boost_active_indices_are_1_15 ... ok
+test harness_p13_gamma_a4_state_scale_boost_array_length_is_four ... ok
+test harness_p13_gamma_a5_state_scale_boost_used_in_render_loop ... ok
+test harness_p13_gamma_a6_recall_cue_scale_boost_preserved ... ok
+test harness_p13_gamma_a7_combat_cue_scale_boost_preserved ... ok
+test harness_p13_gamma_a8_boost_cascade_uses_max_composition ... ok
+test harness_p13_gamma_a9_state_tag_clamp_uses_zero_three_bounds ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p14_alpha_agent_sprite_overhaul.rs (rust/target/debug/deps/harness_p14_alpha_agent_sprite_overhaul-1141ed7834e00ad1)
+
+running 19 tests
+test harness_p14_alpha_a12_state_tints_palette_preserved ... ok
+test harness_p14_alpha_a13_state_scale_boost_preserved ... ok
+test harness_p14_alpha_a11_sprite_scale_preserved ... ok
+test harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved ... ok
+test harness_p14_alpha_a15_camera_zoom_invariants_preserved ... ok
+test harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved ... ok
+test harness_p14_alpha_a17_phase13_beta_resource_constants_preserved ... ok
+test harness_p14_alpha_a18_agent_base_png_asset_exists ... ok
+test harness_p14_alpha_a19_palette_lut_png_asset_exists ... ok
+test harness_p14_alpha_a1_role_bucket_count_declared ... ok
+test harness_p14_alpha_a2_role_bucket_function_signature_present ... ok
+test harness_p14_alpha_a10_head_icon_position_helper_declared ... ok
+test harness_p14_alpha_a3_role_bucket_body_uses_agent_id_knuth_hash ... ok
+test harness_p14_alpha_a4_palette_for_id_signature_extended ... ok
+test harness_p14_alpha_a5_palette_body_channel_keyed_off_role_bucket ... ok
+test harness_p14_alpha_a6_palette_hair_and_skin_preserve_entity_bits_hashing ... ok
+test harness_p14_alpha_a7_palette_call_site_passes_both_ids ... ok
+test harness_p14_alpha_a8_icon_offset_px_declared ... ok
+test harness_p14_alpha_a9_icon_size_px_declared ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p14_beta_resource_building_variety.rs (rust/target/debug/deps/harness_p14_beta_resource_building_variety-3126f4b833e1b5fb)
+
+running 22 tests
+test harness_p14_beta_a10_water_modulate_branch_present ... ok
+test harness_p14_beta_a13_z_village_fixture_equals_five ... ok
+test harness_p14_beta_a11_village_fixture_paths_has_exactly_four_literals ... ok
+test harness_p14_beta_a14_village_fixture_placement_loop_present ... ok
+test harness_p14_beta_a12_village_fixture_positions_match_diamond_layout ... ok
+test harness_p14_beta_a15_phase_13_beta_resource_constants_preserved ... ok
+test harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved ... ok
+test harness_p14_beta_a17_phase_12_construction_constants_preserved ... ok
+test harness_p14_beta_a18_phase_12_gamma_furniture_constants_preserved ... ok
+test harness_p14_beta_a1_resource_type_paths_array_declared ... ok
+test harness_p14_beta_a19_phase_14_alpha_agent_renderer_constants_preserved ... ok
+test harness_p14_beta_a22_no_rust_crate_modifications ... ok
+test harness_p14_beta_a2_resource_type_paths_has_exactly_five_entries ... ok
+test harness_p14_beta_a4_resource_type_paths_index_1_wood_literal ... ok
+test harness_p14_beta_a3_resource_type_paths_index_0_references_legacy_constant ... ok
+test harness_p14_beta_a5_resource_type_paths_index_2_stone_literal ... ok
+test harness_p14_beta_a6_resource_type_paths_index_3_water_literal ... ok
+test harness_p14_beta_a7_resource_type_paths_index_4_food_literal ... ok
+test harness_p14_beta_a8_resource_water_tint_constant_value ... ok
+test harness_p14_beta_a9_resource_scatter_loop_uses_modulo_cycle_and_indexed_iterator ... ok
+test harness_p14_beta_a21_new_village_fixture_assets_exist_on_disk ... ok
+test harness_p14_beta_a20_new_resource_sprite_assets_exist_on_disk ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p14_delta_status_panel.rs (rust/target/debug/deps/harness_p14_delta_status_panel-35e033f39f8c59b6)
+
+running 17 tests
+test harness_p14_delta_a14_phase_14_beta_resource_registry_preserved ... ok
+test harness_p14_delta_a15_phase_14_gamma_agent_inspector_panel_present ... ok
+test harness_p14_delta_a10_main_tscn_registers_hud_status_panel ... ok
+test harness_p14_delta_a11_main_tscn_load_steps_updated_from_7_to_8 ... ok
+test harness_p14_delta_a12_phase_13_delta_a4_a5_a6_invariants_preserved_in_hud_topbar ... ok
+test harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved ... ok
+test harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer ... ok
+test harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head ... ok
+test harness_p14_delta_a2_ticks_per_day_constant_present ... ok
+test harness_p14_delta_a3_days_per_year_constant_present ... ok
+test harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta ... ok
+test harness_p14_delta_a5_resource_labels_array_exact_order ... ok
+test harness_p14_delta_a6_anchored_top_right_with_mouse_filter_ignore ... ok
+test harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control ... ok
+test harness_p14_delta_a7_polls_all_three_existing_snapshots ... ok
+test harness_p14_delta_a8_variant_safe_pattern_matches_hud_topbar_idiom ... ok
+test harness_p14_delta_a9_notification_feed_constants_present ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p14_epsilon_activity_trails.rs (rust/target/debug/deps/harness_p14_epsilon_activity_trails-475609f10e00bec3)
+
+running 16 tests
+test harness_p14_epsilon_a11_main_tscn_registers_activity_trail_renderer_node ... ok
+test harness_p14_epsilon_a12_main_tscn_load_steps_equals_12 ... ok
+test harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact ... ok
+test harness_p14_epsilon_a13_regression_guard_agent_renderer_phase_invariants_intact ... ok
+test harness_p14_epsilon_a15_regression_guard_hud_topbar_phase_13_delta_intact ... ok
+test harness_p14_epsilon_a16_regression_guard_hud_status_panel_phase_14_delta_intact ... ok
+test harness_p14_epsilon_a10_idle_agents_skipped_in_draw ... ok
+test harness_p14_epsilon_a1_activity_trail_renderer_file_exists_and_extends_node2d ... ok
+test harness_p14_epsilon_a2_trail_length_constant_equals_16 ... ok
+test harness_p14_epsilon_a3_trail_width_constant_equals_2_0 ... ok
+test harness_p14_epsilon_a4_trail_alpha_constant_equals_0_4 ... ok
+test harness_p14_epsilon_a5_z_index_set_to_two_in_ready ... ok
+test harness_p14_epsilon_a6_three_distinct_state_tag_trail_colours_declared ... ok
+test harness_p14_epsilon_a7_snapshot_scope_limited_to_agent_only ... ok
+test harness_p14_epsilon_a8_variant_safe_pattern_present_for_four_packed_types ... ok
+test harness_p14_epsilon_a9_draw_polyline_present_inside_draw_function ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p14_gamma_click_inspector.rs (rust/target/debug/deps/harness_p14_gamma_click_inspector-8840473a9abbf035)
+
+running 34 tests
+test harness_p14_gamma_a11c_dict_key_set_is_exactly_nine ... ok
+test harness_p14_gamma_a15_ffi_collector_separate_from_func ... ok
+test harness_p14_gamma_a14_ffi_dict_returns_nine_keys ... ok
+test harness_p14_gamma_a10_consuming_other_implies_target_set ... ok
+test harness_p14_gamma_a16_inspector_panel_script_exists_and_extends_control ... ok
+test harness_p14_gamma_a13_ffi_func_signature_declared ... ok
+test harness_p14_gamma_a12_seeking_existence_and_target_constraint ... ok
+test harness_p14_gamma_a17_inspector_panel_display_agent_populates_three_bars ... ok
+test harness_p14_gamma_a18_inspector_panel_max_value_equals_saturation ... ok
+test harness_p14_gamma_a19_inspector_panel_hidden_until_display_agent ... ok
+test harness_p14_gamma_a1_detail_found_for_live_agent_entity ... ok
+test harness_p14_gamma_a24_main_tscn_registers_inspector_panel ... ok
+test harness_p14_gamma_a20_world_renderer_click_probe_present_and_radius_symbolic ... ok
+test harness_p14_gamma_a22_world_renderer_tile_fallback_preserved ... ok
+test harness_p14_gamma_a21_world_renderer_closest_agent_wins_within_radius ... ok
+test harness_p14_gamma_a23_world_renderer_no_extra_ffi_added ... ok
+test harness_p14_gamma_a25_existing_collect_agent_snapshot_shape_preserved ... ok
+test harness_p14_gamma_a27_phase14_beta_invariants_preserved ... ok
+test harness_p14_gamma_a29_workspace_gate_clean ... ok
+test harness_p14_gamma_a26_phase14_alpha_invariants_preserved ... ok
+test harness_p14_gamma_a2_detail_not_found_for_zero_bits_sentinel ... ok
+test harness_p14_gamma_a30_gdscript_parse_clean ... ok
+test harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved ... ok
+test harness_p14_gamma_a32_detail_empty_world_returns_not_found ... ok
+test harness_p14_gamma_a31_detail_not_found_after_despawn ... ok
+test harness_p14_gamma_a3_detail_not_found_for_two_hostile_i64_values ... ok
+test harness_p14_gamma_a4_detail_agent_id_matches_snapshot ... ok
+test harness_p14_gamma_a5_detail_position_matches_snapshot_typed ... ok
+test harness_p14_gamma_a6_detail_state_tag_matches_snapshot ... ok
+test harness_revitalize_inspector_gather_food_is_not_social_target ... ok
+test harness_p14_gamma_a11_consuming_agent_implies_target_kind_five ... ok
+test harness_p14_gamma_a9_idle_implies_target_none ... ok
+test harness_p14_gamma_a7_detail_needs_in_saturation_range_with_clamp_floor ... ok
+test harness_p14_gamma_a8_detail_target_kind_in_domain ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/harness_p14_zeta_zoom_adaptive.rs (rust/target/debug/deps/harness_p14_zeta_zoom_adaptive-40b71dfb7c455bf1)
+
+running 27 tests
+test harness_zoom_a12_overview_alpha_equals_0_28 ... ok
+test harness_zoom_a13_reads_only_settlement_snapshot ... ok
+test harness_zoom_a15_radius_is_fixed_region ... ok
+test harness_zoom_a14_starts_hidden_and_guards_when_hidden ... ok
+test harness_zoom_a10_overview_exists_and_extends_node2d ... ok
+test harness_zoom_a11_z_overview_equals_one ... ok
+test harness_zoom_a16_centroid_uses_world_renderer_coordinate_basis ... ok
+test harness_zoom_a18_main_tscn_registers_both_new_nodes ... ok
+test harness_zoom_a17_main_tscn_load_steps_equals_12 ... ok
+test harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact ... ok
+test harness_zoom_a20_phase14a_agent_renderer_invariants_intact ... ok
+test harness_zoom_a1_controller_exists_and_extends_node ... ok
+test harness_zoom_a21_phase14b_world_renderer_invariants_intact ... ok
+test harness_zoom_a22_phase14e_activity_trail_renderer_intact ... ok
+test harness_zoom_a24_phase13d_hud_topbar_intact ... ok
+test harness_zoom_a23_phase14d_hud_status_panel_intact ... ok
+test harness_zoom_a25_process_reads_formation_not_centroid ... ok
+test harness_zoom_a26_region_radius_tiles_equals_five_and_used ... ok
+test harness_zoom_a2_zoom_far_max_equals_one ... ok
+test harness_zoom_a27_member_scaling_fully_removed ... ok
+test harness_zoom_a3_zoom_close_min_equals_two ... ok
+test harness_zoom_a4_tier_enum_has_three_named_tiers ... ok
+test harness_zoom_a5_tier_for_zoom_uses_both_thresholds ... ok
+test harness_zoom_a6_apply_tier_toggles_both_renderers ... ok
+test harness_zoom_a7_resolves_three_sibling_node_paths ... ok
+test harness_zoom_a9_ready_applies_initial_tier ... ok
+test harness_zoom_a8_process_reads_live_camera_zoom ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p3_alpha_event_recording.rs (rust/target/debug/deps/harness_p3_alpha_event_recording-3d2063b62ab9de05)
+
+running 10 tests
+test harness_p3_alpha_fresh_log_is_empty ... ok
+test harness_p3_alpha_centre_tile_log_after_one_tick ... ok
+test harness_p3_alpha_fifo_eviction_retains_recent_eight ... ok
+test harness_p3_alpha_no_event_no_records ... ok
+test harness_p3_alpha_multi_event_isolation ... ok
+test harness_p3_alpha_oob_event_does_not_record ... ok
+test harness_p3_alpha_building_placed_fields_round_trip ... ok
+test harness_p3_alpha_sparse_storage_single_active_tile ... ok
+test harness_p3_alpha_tick_stamp_matches_current_tick ... ok
+test harness_p3_alpha_per_tile_fifo_eviction_across_ticks ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p3_beta_causal_chain.rs (rust/target/debug/deps/harness_p3_beta_causal_chain-a45371fc76e4380c)
+
+running 8 tests
+test harness_p3_beta_chain_depth_three ... ok
+test harness_p3_beta_building_placed_has_no_parent ... ok
+test harness_p3_beta_event_id_monotonic ... ok
+test harness_p3_beta_cross_channel_isolation ... ok
+test harness_p3_beta_multi_tick_chains_independent ... ok
+test harness_p3_beta_influence_changed_parent_is_stamp_dirty ... ok
+test harness_p3_beta_no_parent_after_eviction ... ok
+test harness_p3_beta_stamp_dirty_parent_is_building ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p3_gamma_1_ffi.rs (rust/target/debug/deps/harness_p3_gamma_1_ffi-861b8f677105d6c7)
+
+running 12 tests
+test harness_p3_gamma_1_chain_invalid_event_id_returns_empty ... ok
+test harness_p3_gamma_1_chain_root_event_returns_single ... ok
+test harness_p3_gamma_1_collectors_are_publicly_reexported ... ok
+test harness_p3_gamma_1_enumerator_dict_schema_building_placed ... ok
+test harness_p3_gamma_1_chain_returns_three_events ... ok
+test harness_p3_gamma_1_cross_channel_chain_isolation ... ok
+test harness_p3_gamma_1_enumerator_dict_schema_influence_changed ... ok
+test harness_p3_gamma_1_enumerator_dict_schema_stamp_dirty ... ok
+test harness_p3_gamma_1_enumerator_empty_on_unstamped_tile ... ok
+test harness_p3_gamma_1_enumerator_returns_all_events_after_building ... ok
+test harness_p3_gamma_1_ffi_oob_and_negative_id_return_empty ... ok
+test harness_p3_gamma_1_parent_none_serialized_as_minus_one ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p3_gamma_2_alpha_locale_panel_scaffold.rs (rust/target/debug/deps/harness_p3_gamma_2_alpha_locale_panel_scaffold-b1414b58e4213093)
+
+running 11 tests
+test harness_p3_gamma_2_alpha_causal_panel_gd_scaffold_present ... ok
+test harness_p3_gamma_2_alpha_causal_panel_gd_geometry_locked ... ok
+test harness_p3_gamma_2_alpha_causal_panel_gd_q_toggle_wired ... ok
+test harness_p3_gamma_2_alpha_causal_panel_gd_uses_locale_keys ... ok
+test harness_p3_gamma_2_alpha_gamma_1_ffi_surface_preserved ... ok
+test harness_p3_gamma_2_alpha_locale_en_panel_keys_present ... ok
+test harness_p3_gamma_2_alpha_locale_gd_loads_json_with_fallback ... ok
+test harness_p3_gamma_2_alpha_locale_gd_public_api_complete ... ok
+test harness_p3_gamma_2_alpha_main_tscn_mounts_causal_panel ... ok
+test harness_p3_gamma_2_alpha_project_godot_locale_autoload_registered ... ok
+test harness_p3_gamma_2_alpha_locale_ko_panel_keys_paired ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_p3_gamma_2_beta_tile_click_chain.rs (rust/target/debug/deps/harness_p3_gamma_2_beta_tile_click_chain-4614a804f58cd283)
+
+running 23 tests
+test harness_p3_gamma_2_beta_causal_panel_defines_channel_name ... ok
+test harness_p3_gamma_2_beta_causal_panel_defines_display_history ... ok
+test harness_p3_gamma_2_beta_causal_panel_defines_format_event ... ok
+test harness_p3_gamma_2_beta_causal_panel_q_toggle_preserved ... ok
+test harness_p3_gamma_2_beta_causal_panel_reads_new_value_key ... ok
+test harness_p3_gamma_2_beta_causal_panel_reads_old_value_key ... ok
+test harness_p3_gamma_2_beta_causal_panel_uses_vbox_container ... ok
+test harness_p3_gamma_2_beta_locale_compiled_loader_path_preserved ... ok
+test harness_p3_gamma_2_beta_main_tscn_causal_panel_mount_preserved ... ok
+test harness_p3_gamma_2_beta_compiled_en_has_all_13_keys ... ok
+test harness_p3_gamma_2_beta_ko_translations_have_hangul ... ok
+test harness_p3_gamma_2_beta_compiled_ko_has_all_13_keys ... ok
+test harness_p3_gamma_2_beta_world_renderer_channel_switched_log ... ok
+test harness_p3_gamma_2_beta_total_ui_causal_keys_at_least_15 ... ok
+test harness_p3_gamma_2_beta_world_renderer_defines_fetch_causal_history ... ok
+test harness_p3_gamma_2_beta_world_renderer_defines_handle_tile_click ... ok
+test harness_p3_gamma_2_beta_world_renderer_does_not_consume_get_event_chain ... ok
+test harness_p3_gamma_2_beta_world_renderer_invokes_get_tile_causal_history ... ok
+test harness_p3_gamma_2_beta_world_renderer_left_mouse_button_only ... ok
+test harness_p3_gamma_2_beta_world_renderer_space_branch_preserved ... ok
+test harness_p3_gamma_2_beta_world_renderer_sprite_origin_x ... ok
+test harness_p3_gamma_2_beta_world_renderer_sprite_origin_y ... ok
+test harness_p3_gamma_2_beta_key_registry_active_count_consistent ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p4_alpha_agent_core.rs (rust/target/debug/deps/harness_p4_alpha_agent_core-5a29ee405bfd8e57)
+
+running 12 tests
+test harness_p4_alpha_agent_marker_zero_sized ... ok
+test harness_p4_alpha_agent_sample_re_exports_canonical ... ok
+test harness_p4_alpha_position_equality ... ok
+test harness_p4_alpha_components_mod_exports ... ok
+test harness_p4_alpha_multiple_spawns_unique_entities ... ok
+test harness_p4_alpha_agent_sample_runtime_integration ... ok
+test harness_p4_alpha_position_new_stores_fields ... ok
+test harness_p4_alpha_position_struct_fields_u32 ... ok
+test harness_p4_alpha_pre_existing_entity_excluded_from_agent_query ... ok
+test harness_p4_alpha_spawn_agent_returns_entity ... ok
+test harness_p4_alpha_spawned_agent_has_marker ... ok
+test harness_p4_alpha_spawned_agent_has_position ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p4_beta_movement.rs (rust/target/debug/deps/harness_p4_beta_movement-5fe713f13a26a271)
+
+running 11 tests
+test harness_p4_beta_movement_system_export_resolves ... ok
+test harness_p4_beta_distinct_seeds_diverge ... ok
+test harness_p4_beta_determinism_full_trajectory ... ok
+test harness_p4_beta_boundary_clamp ... ok
+test harness_p4_beta_multi_agent_independence ... ok
+test harness_p4_beta_influence_sampler_still_reads_canonical_position ... ok
+test harness_p4_beta_one_tick_brownian_step ... ok
+test harness_p4_beta_register_and_progress ... ok
+test harness_p4_beta_rng_escapes_zero_seed ... ok
+test harness_p4_beta_rng_export_resolves ... ok
+test harness_p4_beta_system_metadata ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p4_gamma_rendering.rs (rust/target/debug/deps/harness_p4_gamma_rendering-57d7aadee5aec813)
+
+running 11 tests
+test harness_p4_gamma_a1_symbol_resolves ... ok
+test harness_p4_gamma_a2_empty_world_is_empty_vec ... ok
+test harness_p4_gamma_a5_entity_bits_identity ... ok
+test harness_p4_gamma_a4_three_agents_multiset_match ... ok
+test harness_p4_gamma_a6_order_stable_across_calls ... ok
+test harness_p4_gamma_a3_single_agent_position_preserved ... ok
+test harness_p4_gamma_a10_three_parallel_arrays_length_and_values ... ok
+test harness_p4_gamma_a7_boundary_positions_preserved ... ok
+test harness_p4_gamma_a9_position_without_agent_excluded ... ok
+test harness_p4_gamma_d11_perf_smoke_1024_agents_under_5ms ... ok
+test harness_p4_gamma_d8_post_tick_reflects_beta_motion ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p5_alpha_agent_id_hunger.rs (rust/target/debug/deps/harness_p5_alpha_agent_id_hunger-f897a97b6d33482a)
+
+running 12 tests
+test harness_p5_alpha_agent_default_derive_is_absent ... ok
+test harness_p5_alpha_agent_id_is_u64_alias ... ok
+test harness_p5_alpha_agent_struct_exposes_public_id_field ... ok
+test harness_p5_alpha_agent_layout_matches_agent_id ... ok
+test harness_p5_alpha_hunger_constructor_clamps_initial_value ... ok
+test harness_p5_alpha_counter_advance_and_spawn_share_state ... ok
+test harness_p5_alpha_hunger_system_metadata_matches_locked_priority_band ... ok
+test harness_p5_alpha_hunger_system_advances_value_at_unit_rate_per_engine_tick ... ok
+test harness_p5_alpha_hunger_tick_floors_at_zero_under_negative_rate ... ok
+test harness_p5_alpha_full_stack_phase2_agent_needs_coexist_without_interference ... ok
+test harness_p5_alpha_hunger_tick_saturates_at_upper_bound_and_is_stable ... ok
+test harness_p5_alpha_spawn_mints_ids_strictly_monotonic_from_zero ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p5_beta_decision.rs (rust/target/debug/deps/harness_p5_beta_decision-3c1be601ec1e823a)
+
+running 19 tests
+test harness_p5_beta_agent_state_default_and_movement_suppression_truth_table ... ok
+test harness_p5_beta_consume_amount_constants_locked_to_thirty ... ok
+test harness_p5_beta_causal_event_view_maps_agent_decision_and_preserves_legacy_none ... ok
+test harness_p5_beta_causal_event_agent_decision_accessors_return_correct_fields ... ok
+test harness_p5_beta_agent_decision_system_executes_between_movement_and_decay ... ok
+test harness_p5_beta_decision_reason_discriminator_returns_locked_strings ... ok
+test harness_p5_beta_consuming_water_on_absent_tile_decrements_thirst_and_idles ... ok
+test harness_p5_beta_consuming_food_decrements_tile_to_zero_then_idles_with_tile_removed ... ok
+test harness_p5_beta_consuming_food_on_absent_tile_decrements_hunger_and_idles ... ok
+test harness_p5_beta_consuming_water_decrements_nonzero_counter_then_idles_with_tile_retained ... ok
+test harness_p5_beta_agent_decision_parent_none_and_some_branches ... ok
+test harness_p5_beta_hunger_wins_when_both_needs_breach_simultaneously ... ok
+test harness_p5_beta_idle_agent_with_hunger_above_threshold_transitions_to_seeking_food ... ok
+test harness_p5_beta_idle_agent_with_only_thirst_breaching_transitions_to_seeking_water ... ok
+test harness_p5_beta_target_kind_has_exactly_two_variants ... ok
+test harness_p5_beta_thirst_construct_clamps_initial_to_saturation_range ... ok
+test harness_p5_beta_thirst_tick_saturates_at_ceiling_and_floors_at_zero ... ok
+test harness_p5_beta_seeking_position_frozen_idle_baseline_moves ... ok
+test harness_p5_beta_hunger_decay_regression_and_p3_alpha_match_sites ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p5_gamma_sleep_daynight_chronicle.rs (rust/target/debug/deps/harness_p5_gamma_sleep_daynight_chronicle-cedd3c06c71af9fc)
+
+running 18 tests
+test harness_p5_gamma_decision_reason_fatigue_discriminator ... ok
+test harness_p5_gamma_idle_to_seeking_sleep_on_fatigue_breach ... ok
+test harness_p5_gamma_need_priority_order_locked ... ok
+test harness_p5_gamma_idle_stability_below_thresholds ... ok
+test harness_p5_gamma_consuming_sleep_decrements_then_idles ... ok
+test harness_p5_gamma_phase4_phase5alpha_phase5beta_regression_clean ... ok
+test harness_p5_gamma_seeking_with_no_tile_remains_seeking ... ok
+test harness_p5_gamma_seeking_to_consuming_transition ... ok
+test harness_p5_gamma_sleep_clamps_and_ticks ... ok
+test harness_p5_gamma_sleep_decay_system_behavior_isolated ... ok
+test harness_p5_gamma_sleep_decay_system_metadata ... ok
+test harness_p5_gamma_sleep_serde_round_trip ... ok
+test harness_p5_gamma_target_kind_sleep_variant_exists ... ok
+test harness_p5_gamma_ticks_per_day_zero_guard ... ok
+test harness_p5_gamma_time_of_day_advances_linearly ... ok
+test harness_p5_gamma_time_of_day_starts_at_zero ... ok
+test harness_p5_gamma_time_of_day_wraps_at_boundary ... ok
+test harness_p5_gamma_full_day_chronicle_visits_all_three_needs ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p6_alpha_construction_components.rs (rust/target/debug/deps/harness_p6_alpha_construction_components-d11158e1eb064edb)
+
+running 27 tests
+test harness_p6_alpha_a11_advance_required_one_boundary ... ok
+test harness_p6_alpha_a10_advance_one_shot_completion_edge ... ok
+test harness_p6_alpha_a13_is_complete_inclusive ... ok
+test harness_p6_alpha_a12_advance_saturates ... ok
+test harness_p6_alpha_a14_required_zero_trivially_complete ... ok
+test harness_p6_alpha_a15_target_kind_four_variants ... ok
+test harness_p6_alpha_a16_seeking_construction_suppresses_movement ... ok
+test harness_p6_alpha_a17_consuming_construction_does_not_suppress ... ok
+test harness_p6_alpha_a18_idle_regression ... ok
+test harness_p6_alpha_a19_target_accessor_surfaces_construction ... ok
+test harness_p6_alpha_a1_blueprint_id_is_u64_alias ... ok
+test harness_p6_alpha_a20_agent_state_three_variants_only ... ok
+test harness_p6_alpha_a21_causal_event_no_construction_variant ... ok
+test harness_p6_alpha_a22_serde_blueprint ... ok
+test harness_p6_alpha_a23_serde_site_mid_construction ... ok
+test harness_p6_alpha_a24_serde_target_kind_and_agent_state ... ok
+test harness_p6_alpha_a25_progress_types_are_u32 ... ok
+test harness_p6_alpha_a26_module_reexports ... ok
+test harness_p6_alpha_a27_phase5_archetype_regression ... ok
+test harness_p6_alpha_a2_blueprint_id_wired_to_field ... ok
+test harness_p6_alpha_a3_constructor_populates_fields_verbatim ... ok
+test harness_p6_alpha_a4_footprint_tuple_order ... ok
+test harness_p6_alpha_a5_blueprint_derives ... ok
+test harness_p6_alpha_a6_site_constructor_initializes_progress_zero ... ok
+test harness_p6_alpha_a7_site_derives ... ok
+test harness_p6_alpha_a8_progress_field_pub_writable ... ok
+test harness_p6_alpha_a9_advance_increments_one_returns_false ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p6_beta_construction_system.rs (rust/target/debug/deps/harness_p6_beta_construction_system-39d0738f2ef2b409)
+
+running 16 tests
+test harness_p6_beta_a13_phase6_alpha_construction_site_shape_regression ... ok
+test harness_p6_beta_a15_two_agents_complete_required_progress_two_in_one_tick ... ok
+test harness_p6_beta_a10_absent_site_fallback_no_panic ... ok
+test harness_p6_beta_a14_multiple_sites_independence ... ok
+test harness_p6_beta_a11_site_without_consuming_construction_agent_does_not_advance ... ok
+test harness_p6_beta_a12_phase5_cascade_regression_hunger_preempts_construction ... ok
+test harness_p6_beta_a16_already_complete_site_does_not_trigger_construction_and_unwedges_agent ... ok
+test harness_p6_beta_a2_decision_reason_enumeration_and_discriminator ... ok
+test harness_p6_beta_a1_construction_system_metadata_and_registry ... ok
+test harness_p6_beta_a3_causal_event_enumeration_accessors_and_channel ... ok
+test harness_p6_beta_a4_idle_to_seeking_when_only_site_colocated ... ok
+test harness_p6_beta_a5_need_priority_dominates_construction ... ok
+test harness_p6_beta_a6_seeking_to_consuming_emits_construction_started_correct_parent ... ok
+test harness_p6_beta_a7_progress_increments_under_consuming_agent ... ok
+test harness_p6_beta_a8_completion_emits_completed_then_placed_chained ... ok
+test harness_p6_beta_a9_full_4_link_causal_chain_walk ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p6_gamma_construction_chronicle.rs (rust/target/debug/deps/harness_p6_gamma_construction_chronicle-e9595b54cb05baba)
+
+running 1 test
+test harness_p6_gamma_construction_chronicle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p7_alpha_social_components.rs (rust/target/debug/deps/harness_p7_alpha_social_components-07a1999797f75406)
+
+running 37 tests
+test harness_p7_alpha_a13_key_accepts_same_id_pair ... ok
+test harness_p7_alpha_a12_key_canonicalises_ordering ... ok
+test harness_p7_alpha_a14_key_accessors_return_canonical ... ok
+test harness_p7_alpha_a10_social_no_default_impl ... ok
+test harness_p7_alpha_a15_key_hash_eq_hashmap_dedup ... ok
+test harness_p7_alpha_a16_relationship_state_saturation_constant ... ok
+test harness_p7_alpha_a17_relationship_state_new_default_zero ... ok
+test harness_p7_alpha_a18_bump_accumulates_exactly ... ok
+test harness_p7_alpha_a19_bump_saturates_at_one ... ok
+test harness_p7_alpha_a1_social_saturation_constant ... ok
+test harness_p7_alpha_a20_bump_floors_at_zero_on_negative ... ok
+test harness_p7_alpha_a21_bump_sanitises_pathological ... ok
+test harness_p7_alpha_a22_relationship_state_field_set_audit ... ok
+test harness_p7_alpha_a23_relationship_serde_round_trip ... ok
+test harness_p7_alpha_a24_target_kind_five_variants_exhaustive ... ok
+test harness_p7_alpha_a25_agent_state_suppresses_movement_contract ... ok
+test harness_p7_alpha_a26_agent_state_target_accessor_propagates_payload ... ok
+test harness_p7_alpha_a27_agent_state_target_kind_serde_round_trip ... ok
+test harness_p7_alpha_a28_target_kind_variant_set_audit ... ok
+test harness_p7_alpha_a29_agent_state_variant_set_audit ... ok
+test harness_p7_alpha_a2_social_new_clamps_above_saturation ... ok
+test harness_p7_alpha_a30_multi_component_archetype ... ok
+test harness_p7_alpha_a11_make_stage1_engine_helper_attaches_social ... ok
+test harness_p7_alpha_a31_phase6_alpha_regression ... ok
+test harness_p7_alpha_a33_agent_decision_system_priority_unchanged ... ok
+test harness_p7_alpha_a34_sim_resources_schema_unchanged ... ok
+test harness_p7_alpha_a35_no_phase7_beta_constants ... ok
+test harness_p7_alpha_a37_derives_locked ... ok
+test harness_p7_alpha_a32_agent_decision_system_inertness_for_agent_target ... ok
+test harness_p7_alpha_a3_social_new_clamps_below_zero ... ok
+test harness_p7_alpha_a4_social_tick_monotonic_accumulation ... ok
+test harness_p7_alpha_a5_social_tick_saturates ... ok
+test harness_p7_alpha_a6_social_new_identity_in_range ... ok
+test harness_p7_alpha_a7_social_field_set_audit ... ok
+test harness_p7_alpha_a8_social_new_preserves_negative_growth_rate_and_tick_floors ... ok
+test harness_p7_alpha_a9_social_serde_round_trip_bit_exact ... ok
+test harness_p7_alpha_a36_agent_decision_named_arms_audit ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p7_beta_social_system.rs (rust/target/debug/deps/harness_p7_beta_social_system-2d39553ede90a1b6)
+
+running 39 tests
+test harness_p7_beta_a11_asymmetric_partner_fallback ... ok
+test harness_p7_beta_a12_single_increment_per_pair_per_tick ... ok
+test harness_p7_beta_a12b_n_ticks_yields_n_progress ... ok
+test harness_p7_beta_a11b_progress_cleanup_when_pair_stops_consuming ... ok
+test harness_p7_beta_a13_familiarity_saturates ... ok
+test harness_p7_beta_a10_three_link_causal_chain ... ok
+test harness_p7_beta_a13b_loneliness_saturating_subtract_at_zero ... ok
+test harness_p7_beta_a15_relationships_and_progress_initialize_empty ... ok
+test harness_p7_beta_a13c_mid_range_familiarity_bump ... ok
+test harness_p7_beta_a16_constants_locked_values ... ok
+test harness_p7_beta_a17_smaller_agent_id_emits_invariant ... ok
+test harness_p7_beta_a17b_three_agents_no_panic ... ok
+test harness_p7_beta_a17c_loneliness_below_threshold_does_not_trigger_social ... ok
+test harness_p7_beta_a1_system_metadata_priority_interval_and_ordering ... ok
+test harness_p7_beta_a1b_system_registered_in_default_runtime_systems ... ok
+test harness_p7_beta_a18_co_location_strict_same_tile_required ... ok
+test harness_p7_beta_a21_hot_tier_production_schedule ... ok
+test harness_p7_beta_a22_real_partner_despawn_mid_interaction ... ok
+test harness_p7_beta_a2_decision_reason_social_as_str ... ok
+test harness_p7_beta_a3_decision_reason_variant_count ... ok
+test harness_p7_beta_a4_causal_event_new_variant_field_shapes ... ok
+test harness_p7_beta_a5_idle_cascade_social_triggers ... ok
+test harness_p7_beta_a18b_no_eligible_agents_emits_no_events ... ok
+test harness_p7_beta_a5b_sub_threshold_loneliness_does_not_fire_social ... ok
+test harness_p7_beta_a5c_partial_breach_does_not_handshake ... ok
+test harness_p7_beta_a5d_non_co_located_breach_does_not_handshake ... ok
+test harness_p7_beta_a5e_strict_threshold_boundary ... ok
+test harness_p7_beta_a6a_hunger_wins_over_social ... ok
+test harness_p7_beta_a6b_thirst_wins_over_social ... ok
+test harness_p7_beta_a6c_fatigue_wins_over_social ... ok
+test harness_p7_beta_a7_construction_wins_over_social ... ok
+test harness_p7_beta_a7b_decision_runs_before_social_interaction ... ok
+test harness_p7_beta_a8_mutual_handshake_single_started_event ... ok
+test harness_p7_beta_a8b_agents_tuple_canonical_under_reversed_iteration ... ok
+test harness_p7_beta_a9_completion_after_required_progress_ticks ... ok
+test harness_p7_beta_a18p_canonical_emergent_social_run ... ok
+test harness_p7_beta_a14_two_run_regression_bounded ... ok
+test harness_p7_beta_a20_same_seed_determinism ... ok
+test harness_p7_beta_a19_three_seed_cross_seed_robustness ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running tests/harness_p7_delta_social_ui.rs (rust/target/debug/deps/harness_p7_delta_social_ui-f8414490a02453fd)
+
+running 23 tests
+test harness_end_to_end_socializing_pair_produces_snapshot_state_tag_2 ... ok
+test harness_end_to_end_state_tag_idle_after_interaction ... ok
+test harness_end_to_end_relationship_snapshot_after_completed_interaction ... ok
+test harness_relationship_snapshot_empty_when_no_relationships ... ok
+test harness_relationship_snapshot_excludes_negative_values ... ok
+test harness_relationship_snapshot_filters_zero_pairs ... ok
+test harness_relationship_snapshot_id_a_lt_id_b_canonical ... ok
+test harness_relationship_snapshot_includes_familiarity_only_pair ... ok
+test harness_relationship_snapshot_includes_hostility_only_pair ... ok
+test harness_relationship_snapshot_includes_mixed_pair_both_fields_preserved ... ok
+test harness_relationship_snapshot_one_row_per_pair_after_two_inserts_same_pair ... ok
+test harness_state_tag_consuming_other ... ok
+test harness_state_tag_consuming_agent ... ok
+test harness_state_tag_idle_default ... ok
+test harness_state_tag_row_count_matches_agent_count ... ok
+test harness_state_tag_seeking_agent ... ok
+test harness_state_tag_seeking_non_agent_target ... ok
+test harness_locale_compiled_contains_all_seven_keys_en ... ok
+test harness_state_tag_matches_live_agentstate_same_query ... ok
+test harness_locale_seven_keys_pairwise_distinct_en ... ok
+test harness_locale_compiled_contains_all_seven_keys_ko ... ok
+test harness_agent_snapshot_state_tag_byte_range ... ok
+test harness_state_tag_stream_deterministic_across_two_runs_same_seed ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_p7_gamma_social_chronicle.rs (rust/target/debug/deps/harness_p7_gamma_social_chronicle-304e9a62f0735ad1)
+
+running 1 test
+test harness_p7_gamma_social_chronicle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p8_alpha_memory_components.rs (rust/target/debug/deps/harness_p8_alpha_memory_components-ef41d5ffee5c1504)
+
+running 20 tests
+test harness_p8_alpha_a10_decay_saturates_at_zero ... ok
+test harness_p8_alpha_a11_decay_empty_is_noop ... ok
+test harness_p8_alpha_a13_reinforce_zero_boost_increments_count ... ok
+test harness_p8_alpha_a14_reinforce_invalid_index_no_side_effects ... ok
+test harness_p8_alpha_a12_reinforce_saturates_and_increments ... ok
+test harness_p8_alpha_a15_find_by_event_id_hit_and_miss ... ok
+test harness_p8_alpha_a16_entry_serde_round_trip ... ok
+test harness_p8_alpha_a17_memory_serde_round_trip ... ok
+test harness_p8_alpha_a18_constants_stable ... ok
+test harness_p8_alpha_a19_import_path_audit ... ok
+test harness_p8_alpha_a1_entry_clamps_valence ... ok
+test harness_p8_alpha_a20_phase_7_alpha_exports_regression ... ok
+test harness_p8_alpha_a2_entry_clamps_salience ... ok
+test harness_p8_alpha_a3_entry_initial_reinforcement_count_zero ... ok
+test harness_p8_alpha_a4_memory_new_empty_with_reserved_capacity ... ok
+test harness_p8_alpha_a5_insert_under_cap_preserves_fields ... ok
+test harness_p8_alpha_a6_insert_at_cap_evicts_lowest_salience ... ok
+test harness_p8_alpha_a7_insert_eviction_tiebreak_oldest_tick ... ok
+test harness_p8_alpha_a8_eviction_salience_primary_tick_secondary ... ok
+test harness_p8_alpha_a9_decay_reduces_uniformly ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p8_beta_memory_system.rs (rust/target/debug/deps/harness_p8_beta_memory_system-05319edcefb80f9c)
+
+running 28 tests
+test harness_p8_beta_a15_decay_one_tick_uniform_delta_contiguous_window ... ok
+test harness_p8_beta_a14_same_tick_duplicate_event_id_idempotency ... ok
+test harness_p8_beta_a12_anti_recursion_memory_recalled_not_encoded ... ok
+test harness_p8_beta_a11_anti_recursion_memory_reason_not_encoded ... ok
+test harness_p8_beta_a16_cascade_flip_social_bias_target ... ok
+test harness_p8_beta_a17_cascade_flip_construction_bias_target ... ok
+test harness_p8_beta_a1_system_metadata_priority_interval_name ... ok
+test harness_p8_beta_a10_natural_social_interaction_completed_both_participants ... ok
+test harness_p8_beta_a18_paired_scenario_state_divergence_structural_partialeq ... ok
+test harness_p8_beta_a1b_system_registered_in_default_runtime ... ok
+test harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory ... ok
+test harness_p8_beta_a20_cascade_non_flip_zero_memory_recalled ... ok
+test harness_p8_beta_a24_phase6_gamma_regression_clean ... ok
+test harness_p8_beta_a23_phase7_gamma_regression_clean ... ok
+test harness_p8_beta_a27_causal_log_lookup_contract ... ok
+test harness_p8_beta_a2_natural_hunger_breach_encoded ... ok
+test harness_p8_beta_a3_natural_thirst_breach_encoded ... ok
+test harness_p8_beta_a4_natural_fatigue_breach_encoded ... ok
+test harness_p8_beta_a5_natural_construction_reason_encoded ... ok
+test harness_p8_beta_a6_natural_social_reason_encoded ... ok
+test harness_p8_beta_a7_natural_construction_started_encoded ... ok
+test harness_p8_beta_a8_natural_construction_completed_encoded ... ok
+test harness_p8_beta_a9_natural_social_interaction_started_both_participants ... ok
+test harness_p8_beta_a13_non_actor_events_not_encoded_production_run ... ok
+test harness_p8_beta_a26_test_count_regression_guard ... ok
+test harness_p8_beta_a21_full_year_only_cascade_bias_trigger_and_upper_bound ... ok
+test harness_p8_beta_a22_panic_free_full_year_and_no_unwrap_in_cascade_helpers ... ok
+test harness_p8_beta_a25_behavioral_signature_triple_regression ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/harness_p8_delta_memory_ui.rs (rust/target/debug/deps/harness_p8_delta_memory_ui-f4f0839b8f8049bf)
+
+running 18 tests
+test harness_p8_delta_memory_imports_compile ... ok
+test harness_p8_delta_memory_decision_reason_memory_reason_as_str_exact ... ok
+test harness_p8_delta_memory_ffi_event_agent_id_matches_constructed_agent_id ... ok
+test harness_p8_delta_memory_ffi_dict_schema_single_source_of_truth ... ok
+test harness_p8_delta_memory_causal_panel_no_hardcoded_english_for_recalled_event ... ok
+test harness_p8_delta_memory_locale_compiled_en_seven_keys_present ... ok
+test harness_p8_delta_memory_recalled_ffi_dict_includes_triggered_by_cascade_bias_via_godot_marshaller ... ok
+test harness_p8_delta_memory_recalled_ffi_kind_string_literal_via_godot_marshaller ... ok
+test harness_p8_delta_memory_locale_seven_keys_pairwise_distinct_en ... ok
+test harness_p8_delta_memory_locale_seven_keys_pairwise_distinct_ko ... ok
+test harness_p8_delta_memory_renderer_recall_lookup_uses_agent_id_domain ... ok
+test harness_p8_delta_memory_recalling_cue_has_real_caller ... ok
+test harness_p8_delta_memory_snapshot_agent_id_distinct_from_entity_bits ... ok
+test harness_p8_delta_memory_snapshot_exposes_agent_id_matching_component_id ... ok
+test harness_p8_delta_memory_locale_compiled_ko_seven_keys_present_with_hangul ... ok
+test harness_p8_delta_memory_locale_compiled_json_structural_integrity ... ok
+test harness_p8_delta_memory_phase7_delta_state_tag_regression_guard ... ok
+test harness_p8_delta_memory_recalled_triggered_by_only_cascade_in_phase8_run ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_p8_gamma_memory_chronicle.rs (rust/target/debug/deps/harness_p8_gamma_memory_chronicle-39d5eed339941271)
+
+running 1 test
+test harness_p8_gamma_a_complete_memory_chronicle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p9_alpha_body_health.rs (rust/target/debug/deps/harness_p9_alpha_body_health-df9d1d47a9bdbc8d)
+
+running 34 tests
+test harness_p9_alpha_a12_body_health_is_copy ... ok
+test harness_p9_alpha_a10_is_dead_true_at_zero ... ok
+test harness_p9_alpha_a11_is_dead_false_when_alive_epsilon_boundary ... ok
+test harness_p9_alpha_a14_partial_eq_distinguishes_both_fields ... ok
+test harness_p9_alpha_a13_serde_round_trip ... ok
+test harness_p9_alpha_a15_apply_damage_zero_is_noop ... ok
+test harness_p9_alpha_a16_heal_zero_is_noop ... ok
+test harness_p9_alpha_a17_heal_on_zero_hp_restores ... ok
+test harness_p9_alpha_a18_negative_apply_damage_invariant ... ok
+test harness_p9_alpha_a19_relationship_hostility_default_zero ... ok
+test harness_p9_alpha_a1_default_max_hp_constant ... ok
+test harness_p9_alpha_a20_hostility_bump_constant ... ok
+test harness_p9_alpha_a21_saturation_literal ... ok
+test harness_p9_alpha_a22_bump_hostility_accumulates ... ok
+test harness_p9_alpha_a23_bump_hostility_saturates_at_one ... ok
+test harness_p9_alpha_a24_bump_hostility_nan_is_noop ... ok
+test harness_p9_alpha_a25_bump_familiarity_nan_parity ... ok
+test harness_p9_alpha_a26_bump_hostility_negative_does_not_underflow ... ok
+test harness_p9_alpha_a27_familiarity_semantics_preserved ... ok
+test harness_p9_alpha_a29_components_reexports_body_health ... ok
+test harness_p9_alpha_a28_relationship_serde_includes_hostility ... ok
+test harness_p9_alpha_a2_new_initializes_full_hp ... ok
+test harness_p9_alpha_a30_components_reexports_hostility_bump ... ok
+test harness_p9_alpha_a31_phase8_alpha_exports_intact ... ok
+test harness_p9_alpha_a32_phase7_alpha_exports_intact ... ok
+test harness_p9_alpha_a33_relationship_state_size_exact ... ok
+test harness_p9_alpha_a34_body_health_size_exact ... ok
+test harness_p9_alpha_a3_new_with_max_custom_value ... ok
+test harness_p9_alpha_a4_new_with_max_clamps_nonpositive_to_epsilon ... ok
+test harness_p9_alpha_a5_apply_damage_subtracts ... ok
+test harness_p9_alpha_a6_apply_damage_saturates_at_zero ... ok
+test harness_p9_alpha_a7_apply_damage_exact_yields_zero ... ok
+test harness_p9_alpha_a8_heal_adds_correctly ... ok
+test harness_p9_alpha_a9_heal_saturates_at_max_hp ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p9_beta_combat_system.rs (rust/target/debug/deps/harness_p9_beta_combat_system-b020d0dde1ec635d)
+
+running 27 tests
+test harness_p9_beta_a17c_no_combat_when_either_not_idle ... ok
+test harness_p9_beta_a17b_no_combat_when_not_colocated ... ok
+test harness_p9_beta_a12b_defender_survives_just_above_damage ... ok
+test harness_p9_beta_a12_defender_despawned_at_zero_hp ... ok
+test harness_p9_beta_a13_dead_defender_resource_purge ... ok
+test harness_p9_beta_a17_no_combat_without_memory_trigger_but_decisions_alive ... ok
+test harness_p9_beta_a19b_combat_pairs_inserted_before_combat_runs ... ok
+test harness_p9_beta_a1_damage_per_combat_tick_constant ... ok
+test harness_p9_beta_a18_pair_dedup_smaller_id_only_emitter ... ok
+test harness_p9_beta_a20_memory_anti_recursion_combat_decision ... ok
+test harness_p9_beta_a21_memory_encoding_combat_completed_negative_valence ... ok
+test harness_p9_beta_a23_phase9_alpha_constants_regression ... ok
+test harness_p9_beta_a24_phase8_alpha_memory_exports ... ok
+test harness_p9_beta_a28_defender_without_body_health_no_panic ... ok
+test harness_p9_beta_a2_required_combat_progress_constant ... ok
+test harness_p9_beta_a29_two_pairs_independent ... ok
+test harness_p9_beta_a30_default_max_hp_cap ... ok
+test harness_p9_beta_a3_combat_system_priority ... ok
+test harness_p9_beta_a3b_priority_ordering_relations ... ok
+test harness_p9_beta_a4_combat_tick_interval ... ok
+test harness_p9_beta_a5_decision_reason_combat_str ... ok
+test harness_p9_beta_a6_memory_recall_trigger_combat_context_schema ... ok
+test harness_p9_beta_a7_combat_started_schema_exhaustive ... ok
+test harness_p9_beta_a8_combat_completed_schema_exhaustive ... ok
+test harness_p9_beta_a9_a16_combat_chain_survive_case ... ok
+test harness_p9_beta_a17d_no_self_target_combat ... ok
+test harness_p9_beta_a27_determinism_byte_identical_log ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_p9_delta_combat_ui.rs (rust/target/debug/deps/harness_p9_delta_combat_ui-dbc49a2ca939c2bb)
+
+running 9 tests
+test harness_p9_delta_combat_ffi_defender_id_exposed ... ok
+test harness_p9_delta_combat_completed_ffi_kind_string ... ok
+test harness_p9_delta_combat_panel_no_hardcoded_english ... ok
+test harness_p9_delta_combat_reason_decision_as_str ... ok
+test harness_p9_delta_combat_started_ffi_kind_string ... ok
+test harness_p9_delta_combat_phase8_recall_regression ... ok
+test harness_p9_delta_combat_locale_pairwise_distinct_en ... ok
+test harness_p9_delta_combat_locale_en_five_keys ... ok
+test harness_p9_delta_combat_locale_ko_five_keys ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_p9_gamma_combat_chronicle.rs (rust/target/debug/deps/harness_p9_gamma_combat_chronicle-0f680574270ea80e)
+
+running 1 test
+test harness_p9_gamma_a_complete_combat_chronicle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2.rs (rust/target/debug/deps/harness_phase2-5bf8151fbaf74b62)
+
+running 18 tests
+test harness_building_stamp_priority ... ok
+test harness_building_stamp_tick_interval ... ok
+test harness_building_stamp_isolation ... ok
+test harness_agent_sample_oob_ignored ... ok
+test harness_agent_sample_per_agent_tile ... ok
+test harness_agent_sample_reads_current ... ok
+test harness_influence_update_clear_before_swap ... ok
+test harness_influence_update_name ... ok
+test harness_influence_update_priority ... ok
+test harness_influence_update_tick_interval ... ok
+test harness_phase2_baseline_zero ... ok
+test harness_register_phase2_count ... ok
+test harness_register_phase2_order ... ok
+test harness_viz_fire_count_20_ticks ... ok
+test harness_viz_priority ... ok
+test harness_viz_tick_field ... ok
+test harness_viz_tick_interval ... ok
+test harness_viz_warmth_total_danger_peak ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_determinism.rs (rust/target/debug/deps/harness_phase2_determinism-b7daa1c4c825ce6e)
+
+running 13 tests
+test harness_det_b1_propagate_bfs_byte_identical ... ok
+test harness_det_a2_dirty_regions_content_byte_identical ... ok
+test harness_det_a3_bss_clamp_oob_deterministic ... ok
+test harness_det_a1_queue_fifo_drain_order ... ok
+test harness_det_a5_viz_digest_tick_boundary_6 ... ok
+test harness_det_a4_ius_clear_swap_idempotent_30_ticks ... ok
+test harness_det_b2_propagate_shadowcast_byte_identical ... ok
+test harness_det_b3_propagate_noise_byte_identical ... ok
+test harness_det_b4_stamp_social_aggregate_lod_filter ... ok
+test harness_det_b5_blocking_cache_lookup_byte_identical ... ok
+test harness_det_b6_ec2_source_self_blocking_exempt ... ok
+test harness_det_b7_ec3_multi_source_additive_vs_max ... ok
+test harness_det_b8_propagate_danger_byte_identical ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_ffi.rs (rust/target/debug/deps/harness_phase2_ffi-c973bca50b2acabb)
+
+running 22 tests
+test harness_ffi_isolation_invariant_survives_empty_queue_tick ... ok
+test harness_ffi_all_8_channels_overlay_buffer_length_correct ... ok
+test harness_ffi_dirty_regions_all_channels_empty_at_construction ... ok
+test harness_ffi_all_8_channels_overlay_buffer_zeros_on_fresh_engine ... ok
+test harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bounds ... ok
+test harness_ffi_dirty_region_coordinate_bounds_match_input ... ok
+test harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break ... ok
+test harness_ffi_no_dirty_regions_accumulate_on_empty_queue_tick ... ok
+test harness_ffi_non_stamped_channels_produce_zero_dirty_regions ... ok
+test harness_ffi_on_building_placed_inbounds_enqueues_and_returns_true ... ok
+test harness_ffi_on_building_placed_oob_does_not_enqueue_and_returns_false ... ok
+test harness_ffi_oob_event_discarded_no_dirty_regions_queue_drained ... ok
+test harness_ffi_queue_field_init_empty ... ok
+test harness_ffi_radius_zero_produces_single_pixel_dirty_region ... ok
+test harness_ffi_stamp_marks_exactly_beauty_dirty ... ok
+test harness_ffi_stamp_marks_exactly_light_dirty ... ok
+test harness_ffi_stamp_marks_exactly_noise_dirty ... ok
+test harness_ffi_stamp_marks_exactly_spiritual_dirty ... ok
+test harness_ffi_stamp_marks_exactly_warmth_dirty ... ok
+test harness_ffi_three_events_all_4_stamped_channels_three_dirty_regions ... ok
+test harness_ffi_three_events_all_drained_in_single_tick ... ok
+test harness_ffi_tile_detail_all_8_channels_zero_on_fresh_engine ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_substantial.rs (rust/target/debug/deps/harness_phase2_substantial-f832ef3c7e73b88e)
+
+running 15 tests
+test harness_substantial_dirty_region_bounds_preserved_through_full_pipeline_tick ... ok
+test harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipeline ... ok
+test harness_substantial_causal_chain_queue_drains_and_warmth_dirty_marked ... ok
+test harness_substantial_1k_agents_ais_warmth_all_zero_phase2_baseline ... ok
+test harness_substantial_agent_warmth_sentinel_overwritten_to_zero_by_ais ... ok
+test harness_substantial_empty_queue_1tick_all_channels_zero_dirty ... ok
+test harness_substantial_dirty_regions_3_events_1_tick_count_3 ... ok
+test harness_substantial_four_corner_stamps_clamp_no_oob_dirty ... ok
+test harness_substantial_phase2_shell_current_warmth_zero_inside_stamp_radius ... ok
+test harness_substantial_register_phase2_twice_no_panic ... ok
+test harness_substantial_idle_4380_no_systems_all_channels_zero ... ok
+test harness_substantial_phase2_shell_pending_all_zero_after_full_pipeline_tick ... ok
+test harness_substantial_oob_guard_mixed_5events_3inbounds_dirty3 ... ok
+test harness_substantial_two_events_same_tick_yields_two_dirty_regions_per_stamped_channel ... ok
+test harness_substantial_burst_100_events_single_tick_drain ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_resource_deposit_to_stockpile.rs (rust/target/debug/deps/harness_resource_deposit_to_stockpile-d1784bb781fbf8cc)
+
+running 13 tests
+test harness_resource_deposit_a2_controlled_fixture_exact_transfer ... ok
+test harness_resource_deposit_a3_member_outside_radius_no_deposit ... ok
+test harness_resource_deposit_a1_stockpile_food_zero_at_baseline ... ok
+test harness_resource_deposit_a4_empty_inventory_member_noop ... ok
+test harness_resource_deposit_a5_missing_member_entity_no_panic ... ok
+test harness_resource_deposit_a6_non_member_within_radius_no_deposit ... ok
+test harness_resource_deposit_a7_conserves_total_food ... ok
+test harness_resource_deposit_a8_only_food_is_deposited ... ok
+test harness_resource_deposit_a9_own_settlement_attribution ... ok
+test harness_resource_deposit_a11_lockstep_determinism ... ok
+test harness_resource_deposit_a13_settlement_and_membership_unaffected ... ok
+test harness_resource_deposit_to_stockpile ... ok
+test harness_resource_deposit_a12_no_agent_freeze_regression ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+     Running tests/harness_resource_gather_pickup.rs (rust/target/debug/deps/harness_resource_gather_pickup-d20ac3f59894fb2c)
+
+running 18 tests
+test harness_gather_a11_hunger_preempts_gather ... ok
+test harness_gather_a10_gather_does_not_reduce_hunger ... ok
+test harness_gather_a17_suppresses_movement_fsm ... ok
+test harness_gather_a1_inventories_empty_at_tick_zero ... ok
+test harness_gather_a16_lockstep_determinism ... ok
+test harness_gather_a2_pickup_increases_food_nonvacuous ... ok
+test harness_gather_a12_no_targetless_seeking ... ok
+test harness_gather_a5_finite_conservation_single_agent ... ok
+test harness_gather_a14_consuming_single_tick_and_cycles ... ok
+test harness_gather_a13_no_stuck_gather_streak ... ok
+test harness_gather_a8_concurrent_conservation ... ok
+test harness_gather_a9_agent_moves_to_target ... ok
+test harness_gather_a9b_radius_confounder_selects_in_range_tile ... ok
+test harness_gather_a6_infinite_source_no_sentinel_corruption ... ok
+test harness_gather_a7_capacity_boundary_conservation ... ok
+test harness_gather_a3_never_exceeds_capacity ... ok
+test harness_gather_a4_food_only ... ok
+test harness_gather_a15_member_persistence_under_gathering ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+
+     Running tests/harness_resource_scarcity.rs (rust/target/debug/deps/harness_resource_scarcity-e146a24af175fa18)
+
+running 29 tests
+test harness_scarcity_a10_water_consume_depletes_removes_and_regenerates ... ok
+test harness_scarcity_a16_production_init_seeds_all_three_kinds_finite ... ok
+test harness_scarcity_a17_regen_system_registered_in_runtime_schedule ... ok
+test harness_scarcity_a18_regen_respects_interval_cadence ... ok
+test harness_scarcity_a19_sleep_path_depletes_and_regenerates ... ok
+test harness_scarcity_a1_finite_seeding_overwrites_infinite ... ok
+test harness_scarcity_a20_single_kind_wipe_yields_none ... ok
+test harness_scarcity_a21_ceiling_survives_tile_removal ... ok
+test harness_scarcity_a22_seeking_reroutes_when_alternative_remains ... ok
+test harness_scarcity_a23_consume_never_decrements_sentinel ... ok
+test harness_scarcity_a14_depleted_corner_recovers_via_regen ... ok
+test harness_scarcity_a25_seeking_exits_when_only_source_vanishes ... ok
+test harness_scarcity_a26_regen_no_panic_on_orphan_tile ... ok
+test harness_scarcity_a27_regen_touches_only_registered_coords ... ok
+test harness_scarcity_a2_consume_depletes_noncon_control_untouched ... ok
+test harness_scarcity_a3_sustained_consume_monotonic_then_removed ... ok
+test harness_scarcity_a4_regen_refills_recreates_never_overshoots ... ok
+test harness_scarcity_a5_regen_caps_skips_sentinel_and_254_boundary ... ok
+test harness_scarcity_a6_scarcity_causes_sustained_mortality ... ok
+test harness_scarcity_a12_dehydration_specific_death ... ok
+test harness_scarcity_a8_food_gathering_loop_satiates_survivor ... ok
+test harness_scarcity_a9_water_gathering_loop_satiates_survivor ... ok
+test harness_scarcity_a13_scarce_kind_depletion ... ok
+test harness_scarcity_a11_finite_vs_infinite_differential ... ok
+test harness_scarcity_a24_mortality_direction_second_seed ... ok
+test harness_scarcity_a7_population_stays_in_equilibrium ... ok
+test harness_scarcity_agents_gather_under_need ... ok
+test harness_scarcity_regen_is_bounded_trickle ... ok
+test harness_scarcity_a15_determinism_of_scarcity_run ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.91s
+
+     Running tests/harness_revitalize_legacy_pin.rs (rust/target/debug/deps/harness_revitalize_legacy_pin-7a560c57257969ef)
+
+running 1 test
+test tests::harness_population_legacy_scene_pinned ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s
+
+     Running tests/harness_revitalize_loop.rs (rust/target/debug/deps/harness_revitalize_loop-064633422374b48c)
+
+running 7 tests
+test harness_population_rules_default_is_legacy ... ok
+test harness_population_movement_only_steps_on_configured_tick_multiples ... ok
+test harness_building_assigned_builder_walks_and_clears_missing_site ... ok
+test harness_population_births_gated_by_food_and_housing ... ok
+test harness_social_idle_agents_stay_near_home ... ok
+test harness_building_shelters_planned_and_completed ... ok
+test harness_population_game_world_survives_3_days ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+     Running tests/harness_revitalize_pass10_exposure.rs (rust/target/debug/deps/harness_revitalize_pass10_exposure-56378540456e3bb7)
+
+running 6 tests
+test harness_exposure_blocks_healing ... ok
+test harness_exposure_adult_survives_one_night ... ok
+test harness_exposure_kills_a_cold_elder ... ok
+test harness_exposure_order_independent ... ok
+test harness_exposure_inert_before_v16 ... ok
+test harness_exposure_only_from_cold ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.49s
+
+     Running tests/harness_revitalize_pass10_forks.rs (rust/target/debug/deps/harness_revitalize_pass10_forks-9d3e3944d298706a)
+
+running 4 tests
+test harness_v16_noise_fork_prefix_identity ... ok
+test harness_v16_noise_fork_replicate0_is_identity ... ok
+test harness_v18_noise_fork_replicate0_and_prefix_identity ... ok
+test harness_v16_newborns_carry_their_first_parents_key ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.07s
+
+     Running tests/harness_revitalize_pass10_frozen.rs (rust/target/debug/deps/harness_revitalize_pass10_frozen-c121090cdecf96c1)
+
+running 2 tests
+test harness_game_v15_rules_are_the_pass9_literal ... ok
+test harness_v15_fingerprints_unchanged ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.64s
+
+     Running tests/harness_revitalize_pass10_variety.rs (rust/target/debug/deps/harness_revitalize_pass10_variety-eb4740e8d10962f7)
+
+running 5 tests
+test harness_variety_ranges ... ok
+test harness_variety_independent_of_replicate ... ok
+test harness_variety_deterministic ... ok
+test harness_variety_worldgen_accepts_every_drawn_world ... ok
+test harness_variety_neutral_equals_v16_neutral ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.71s
+
+     Running tests/harness_revitalize_pass11_exposure.rs (rust/target/debug/deps/harness_revitalize_pass11_exposure-6092c7a5beac7fa3)
+
+running 5 tests
+test harness_rain_soaks_only_in_v17 ... ok
+test harness_v16_exposure_unchanged ... ok
+test harness_exposure_v2_formula ... ok
+test harness_exposure_adult_can_die ... ok
+test harness_hardiness_keyed_and_ranged ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.96s
+
+     Running tests/harness_revitalize_pass11_fission.rs (rust/target/debug/deps/harness_revitalize_pass11_fission-d590cd361f7d4bb9)
+
+running 11 tests
+test harness_fission_group_rules ... ok
+test harness_fission_founds_daughter ... ok
+test harness_fission_group_resampled_by_replicate ... ok
+test harness_remnant_merges ... ok
+test harness_shared_bushes_count_once ... ok
+test harness_fission_only_when_crowded ... ok
+test harness_fission_timeout_and_cancel ... ok
+test harness_v17_regions_placed ... ok
+test harness_fission_founds_daughter_in_a_whole_world ... ok
+test harness_fission_order_independent ... ok
+test harness_fission_inert_before_v17 ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.70s
+
+     Running tests/harness_revitalize_pass11_frozen.rs (rust/target/debug/deps/harness_revitalize_pass11_frozen-e5a53fc768dee0f0)
+
+running 3 tests
+test harness_game_v16_neutral_rules_are_the_pass10_literal ... ok
+test harness_world_variety_draws_are_the_pass10_literals ... ok
+test harness_v16_fingerprints_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.53s
+
+     Running tests/harness_revitalize_pass12_fission.rs (rust/target/debug/deps/harness_revitalize_pass12_fission-3134491e9291c92a)
+
+running 6 tests
+test harness_hazard_rises_with_shortfall ... ok
+test harness_hazard_formula ... ok
+test harness_hazard_inert_in_v17 ... ok
+test harness_allowed_seasons ... ok
+test harness_hazard_keyed_with_replicate ... ok
+test harness_hazard_order_independent ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 34.25s
+
+     Running tests/harness_revitalize_pass12_frozen.rs (rust/target/debug/deps/harness_revitalize_pass12_frozen-3a51823af57c2d87)
+
+running 4 tests
+test harness_ranges_are_the_pass11_literal ... ok
+test harness_game_v17_seed0_rules_are_the_pass11_literal ... ok
+test harness_v17_nofission_fingerprints_unchanged ... ok
+test harness_v17_fingerprints_unchanged ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.11s
+
+     Running tests/harness_revitalize_pass12_world.rs (rust/target/debug/deps/harness_revitalize_pass12_world-417141ac59fb450b)
+
+running 7 tests
+test harness_local_gather_stays_in_the_catchment ... ok
+test harness_rain_wet_burn_only_in_v18 ... ok
+test harness_local_food_availability_only_in_v18 ... ok
+test harness_region_fill_never_touches_terrain_or_water ... ok
+test harness_area_fall_floor ... ok
+test harness_region_fill_delivers_in_v18_only ... ok
+test harness_region_water_rule ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/harness_revitalize_pass13_fission.rs (rust/target/debug/deps/harness_revitalize_pass13_fission-084061bfd3d3888d)
+
+running 7 tests
+test harness_threshold_table ... ok
+test harness_v18_hazard_unchanged ... ok
+test harness_pressure_accumulates_and_splits ... ok
+test harness_pressure_moves_with_food ... ok
+test harness_pressure_inert_before_v19 ... ok
+test harness_threshold_is_world_draw ... ok
+test harness_pressure_order_independent ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 45.10s
+
+     Running tests/harness_revitalize_pass13_frozen.rs (rust/target/debug/deps/harness_revitalize_pass13_frozen-a0703a0313edc6e9)
+
+running 4 tests
+test harness_v18_hazard_is_the_pass12_literal ... ok
+test harness_game_v18_seed0_rules_are_the_pass12_literal ... ok
+test harness_v18_nofission_fingerprints_unchanged ... ok
+test harness_v18_fingerprints_unchanged ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.21s
+
+     Running tests/harness_revitalize_pass13_world.rs (rust/target/debug/deps/harness_revitalize_pass13_world-fb9588622aa12993)
+
+running 2 tests
+test harness_area_floor_not_lost_to_the_cap ... ok
+test harness_v19_noise_fork_replicate0_and_prefix_identity ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.38s
+
+     Running tests/harness_revitalize_pass16_frozen.rs (rust/target/debug/deps/harness_revitalize_pass16_frozen-80bf55bcb60cf54c)
+
+running 3 tests
+test harness_game_v19_rules_pinned_field_by_field ... ok
+test harness_v19_nofission_fingerprints_unchanged ... ok
+test harness_v19_fingerprints_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.36s
+
+     Running tests/harness_revitalize_pass16_temperament.rs (rust/target/debug/deps/harness_revitalize_pass16_temperament-1bd7ec2dbc760ee4)
+
+running 3 tests
+test harness_v20_diverges_and_adults_wander_by_ns ... ok
+test harness_v20_inert_equals_v19_at_40320_ticks ... ok
+test harness_v20_every_resident_has_temperament_and_rd_rate ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.82s
+
+     Running tests/harness_revitalize_pass17_family.rs (rust/target/debug/deps/harness_revitalize_pass17_family-d4cc91185a6212c6)
+
+running 6 tests
+test family_system_registration_follows_maturation_before_beds_once ... ok
+test pairing_excludes_close_kin_children_elders_and_below_threshold ... ok
+test household_partition_prefers_mother_and_preserves_widow_children_once ... ok
+test family_none_is_inert_and_dead_partner_is_cleared_only_at_pair_minute ... ok
+test pairing_uses_clock_offset_familiarity_ties_and_female_order ... ok
+test founders_receive_keyed_sex_and_empty_kin_only_with_family_enabled ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass17_family_beds.rs (rust/target/debug/deps/harness_revitalize_pass17_family_beds-5fe28548fb6f9ce8)
+
+running 2 tests
+test oversized_household_spans_shelters_and_zero_capacity_assigns_nobody ... ok
+test household_packing_leaves_unused_slots_without_changing_capacity_or_fallback ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass17_family_births.rs (rust/target/debug/deps/harness_revitalize_pass17_family_births-f1da44ebbf42317c)
+
+running 3 tests
+test family_does_not_relax_birth_timing_food_or_capacity_gates ... ok
+test dead_partner_cannot_parent_before_evening_cleanup_and_fallback_is_exact ... ok
+test births_choose_oldest_mother_use_her_lineage_and_rotate_fairly ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass17_family_fission.rs (rust/target/debug/deps/harness_revitalize_pass17_family_fission-f565713da4c48490)
+
+running 3 tests
+test seed_skips_household_above_group_max_and_keeps_later_households_whole ... ok
+test household_seed_can_exceed_target_k_while_original_stock_share_is_preserved ... ok
+test group_min_top_up_splits_only_after_whole_households_cannot_fit ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass17_frozen.rs (rust/target/debug/deps/harness_revitalize_pass17_frozen-53c86a37edc4238d)
+
+running 3 tests
+test harness_game_v20_rules_pinned_field_by_field ... ok
+test harness_v20_inert_fingerprints_unchanged ... ok
+test harness_v20_fingerprints_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.10s
+
+     Running tests/harness_revitalize_pass17_routine.rs (rust/target/debug/deps/harness_revitalize_pass17_routine-d025fee28adc54c4)
+
+running 7 tests
+test play_moves_without_leaving_the_place_neighborhood ... ok
+test full_haul_blocks_routine_entry_until_deposit ... ok
+test natural_completion_rests_but_timeout_is_not_completed ... ok
+test need_interrupts_activity_and_selects_need_in_the_same_tick ... ok
+test routine_arrival_starts_duration_and_preserves_walking_target ... ok
+test place_occupancy_never_exceeds_two_and_stale_holders_are_removed_first ... ok
+test social_peers_interrupt_together ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass17_routine_edges.rs (rust/target/debug/deps/harness_revitalize_pass17_routine_edges-7cde69d3c65659b7)
+
+running 5 tests
+test builders_are_recruited_from_activities_and_respond_in_the_same_tick ... ok
+test missing_stockpile_redraws_once_into_a_kind_with_a_place ... ok
+test membership_change_aborts_and_day_end_completes_only_arrived_activities ... ok
+test no_place_rest_prevents_per_tick_retries ... ok
+test unavailable_foraging_does_not_interrupt_until_claims_allow_a_real_tile ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass17_routine_invitations.rs (rust/target/debug/deps/harness_revitalize_pass17_routine_invitations-dfd8debf2d60ff8e)
+
+running 4 tests
+test same_tick_start_and_invitation_keep_both_observations ... ok
+test invitation_replays_earlier_peers_real_combat_response_without_interrupting_uninvited_peers ... ok
+test bias_selected_nonlonely_activity_peer_exits_in_both_id_orders ... ok
+test mutual_activity_peers_start_once_and_complete_three_ticks_later ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass18_frozen.rs (rust/target/debug/deps/harness_revitalize_pass18_frozen-20805fc9924b12c4)
+
+running 11 tests
+test harness_game_v22_rules_pinned_field_by_field ... ok
+test harness_v21_seed1_pinned ... ok
+test harness_v21_seed4_pinned ... ok
+test harness_v21_seed3_pinned ... ok
+test harness_v21_seed2_pinned ... ok
+test harness_v22_seed0_pinned ... ok
+test harness_v21_seed0_pinned ... ok
+test harness_v22_seed1_pinned ... ok
+test harness_v22_seed4_pinned ... ok
+test harness_v22_seed2_pinned ... ok
+test harness_v22_seed3_pinned ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 35.74s
+
+     Running tests/harness_revitalize_pass19_chronicle.rs (rust/target/debug/deps/harness_revitalize_pass19_chronicle-bbed252c6855575b)
+
+running 3 tests
+test harness_chronicle_rebuilds_rosters_in_the_legacy_scene ... ok
+test harness_chronicle_rebuilds_rosters_without_fission_and_stays_bounded ... ok
+test harness_chronicle_rebuilds_rosters_through_a_fission_game_v23 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.07s
+
+     Running tests/harness_revitalize_pass19_chronicle_events.rs (rust/target/debug/deps/harness_revitalize_pass19_chronicle_events-ad4406a858cd5eed)
+
+running 3 tests
+test harness_chronicle_records_a_settlement_system_dissolution ... ok
+test harness_chronicle_records_remnant_merges_and_empty_dissolutions ... ok
+test harness_chronicle_records_a_cancelled_fission_and_skips_the_dead ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_revitalize_pass19_frozen.rs (rust/target/debug/deps/harness_revitalize_pass19_frozen-ba1c9cad0a7996f9)
+
+running 6 tests
+test harness_game_v23_rules_pinned_field_by_field ... ok
+test harness_v23_seed1_pinned ... ok
+test harness_v23_seed4_pinned ... ok
+test harness_v23_seed3_pinned ... ok
+test harness_v23_seed2_pinned ... ok
+test harness_v23_seed0_pinned ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.61s
+
+     Running tests/harness_revitalize_pass3_food.rs (rust/target/debug/deps/harness_revitalize_pass3_food-51f6a8aba7b72719)
+
+running 6 tests
+test harness_food_relief_reaches_tether ... ok
+test harness_food_no_free_meals ... ok
+test harness_food_supply_and_need_formula ... ok
+test harness_food_birth_allowed_when_sustainable ... ok
+test harness_food_birth_blocked_without_reserve ... ok
+test harness_food_birth_blocked_at_supply ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/harness_revitalize_pass3_rhythm.rs (rust/target/debug/deps/harness_revitalize_pass3_rhythm-b8c956e68123e035)
+
+running 8 tests
+test harness_rhythm_minute_window_wraps_midnight ... ok
+test harness_rhythm_bed_seek_ignores_intermediate_shelters ... ok
+test harness_rhythm_reassigned_bed_replaces_existing_sleep_seek ... ok
+test harness_rhythm_wake_for_critical_thirst ... ok
+test harness_rhythm_villagers_sleep_in_beds_at_night ... ok
+test harness_rhythm_evening_near_hearth ... ok
+test harness_rhythm_children_grow_up ... ok
+test harness_rhythm_sleep_seek_does_not_dehydrate_seed33 ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+
+     Running tests/harness_revitalize_pass3_village.rs (rust/target/debug/deps/harness_revitalize_pass3_village-c0836584a208140b)
+
+running 6 tests
+test harness_village_owned_capacity_counts_each_shelter_once ... ok
+test harness_village_completed_site_is_owned ... ok
+test harness_village_dissolution_releases_only_its_owned_buildings ... ok
+test harness_village_plans_with_headroom ... ok
+test harness_village_v8_unchanged ... ok
+test harness_village_one_settlement_per_hearth ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+
+     Running tests/harness_revitalize_pass4_aging.rs (rust/target/debug/deps/harness_revitalize_pass4_aging-2d5b35491d7420ca)
+
+running 5 tests
+test harness_aging_lifespans_bounded_and_deterministic ... ok
+test harness_aging_v9_unchanged ... ok
+test harness_aging_founders ... ok
+test harness_aging_elders_stay_home ... ok
+test harness_aging_old_age_death_and_replacement ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.30s
+
+     Running tests/harness_revitalize_pass4_forage.rs (rust/target/debug/deps/harness_revitalize_pass4_forage-eab0f7fe4c6f2782)
+
+running 8 tests
+test harness_forage_gatherer_whose_tile_vanished_idles_instead_of_freezing ... ok
+test harness_forage_claims_cap ... ok
+test harness_forage_retargets_when_bush_empties ... ok
+test harness_haul_home_deposits ... ok
+test harness_haul_home_after_the_forage_window ... ok
+test harness_forage_stops_at_target ... ok
+test harness_forage_v9_unchanged ... ok
+test harness_forage_seed8_no_longer_stagnates ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/harness_revitalize_pass4_seasons.rs (rust/target/debug/deps/harness_revitalize_pass4_seasons-0f05071953fe9827)
+
+running 4 tests
+test harness_season_regen_schedule ... ok
+test harness_season_target_includes_winter ... ok
+test harness_season_v9_unchanged ... ok
+test harness_season_survives_first_winter ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.30s
+
+     Running tests/harness_revitalize_pass5_firewood.rs (rust/target/debug/deps/harness_revitalize_pass5_firewood-5ed0a43bb2380db4)
+
+running 10 tests
+test harness_fire_burns_and_goes_out ... ok
+test harness_fire_cold_raises_hunger ... ok
+test harness_firewood_claims_cap ... ok
+test harness_firewood_retargets_empty_spot ... ok
+test harness_firewood_trip_and_deposit ... ok
+test harness_firewood_ffi_rows ... ok
+test harness_wood_regen_schedule ... ok
+test harness_deadwood_placement ... ok
+test harness_firewood_stops_at_target ... ok
+test harness_firewood_v10_unchanged ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/harness_revitalize_pass5_meals.rs (rust/target/debug/deps/harness_revitalize_pass5_meals-d6824be62e5337e1)
+
+running 6 tests
+test harness_meal_away_eats_at_bush ... ok
+test harness_meal_empty_store_falls_back ... ok
+test harness_meal_waits_when_every_bush_is_empty ... ok
+test harness_meal_hungry_at_camp_waits_for_store ... ok
+test harness_meal_breakfast_from_store ... ok
+test harness_meal_v10_unchanged ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/harness_revitalize_pass5_preempt.rs (rust/target/debug/deps/harness_revitalize_pass5_preempt-d68276e11bcfdd08)
+
+running 3 tests
+test harness_preempted_gatherer_is_not_sent_out_again ... ok
+test harness_gather_preempted_by_thirst ... ok
+test harness_preempt_v10_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/harness_revitalize_pass6_elders.rs (rust/target/debug/deps/harness_revitalize_pass6_elders-01ddb3f8147ba07c)
+
+running 3 tests
+test harness_elder_tether_v11_unchanged ... ok
+test harness_elder_tether_returns_after_the_evening ... ok
+test harness_elder_evening_tether_v12 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass6_frozen.rs (rust/target/debug/deps/harness_revitalize_pass6_frozen-77629e848902ba82)
+
+running 2 tests
+test harness_game_v11_rules_are_the_pass5_literal ... ok
+test harness_v11_fingerprints_unchanged ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/harness_revitalize_pass6_urgent.rs (rust/target/debug/deps/harness_revitalize_pass6_urgent-e845fbf08abae605)
+
+running 5 tests
+test harness_urgent_is_per_settlement ... ok
+test harness_urgent_ends_when_wood_is_in_hand ... ok
+test harness_urgent_window_opens_at_dawn ... ok
+test harness_urgent_two_per_spot ... ok
+test harness_urgent_v11_unchanged ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/harness_revitalize_pass6_winter.rs (rust/target/debug/deps/harness_revitalize_pass6_winter-50c5df6bb3a1e4c0)
+
+running 10 tests
+test harness_autumn_only_prep ... ok
+test harness_winter_cap_buries_deadwood ... ok
+test harness_spring_restores_deadwood ... ok
+test harness_firewood_v11_unchanged ... ok
+test harness_first_winter_night_is_autumn ... ok
+test harness_winter_regrowth_branches_without_one_field ... ok
+test harness_last_winter_night_is_winter ... ok
+test harness_winter_spread_regrowth ... ok
+test harness_wood_target_by_season ... ok
+test harness_wood_target_formula_table ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass7_frozen.rs (rust/target/debug/deps/harness_revitalize_pass7_frozen-7cfb6e5a91ba55f8)
+
+running 2 tests
+test harness_game_v12_rules_are_the_pass6_literal ... ok
+test harness_v12_fingerprints_unchanged ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/harness_revitalize_pass7_interventions.rs (rust/target/debug/deps/harness_revitalize_pass7_interventions-85a39c9a85e6b635)
+
+running 8 tests
+test harness_gift_and_spoil_food ... ok
+test harness_gift_and_rot_wood ... ok
+test harness_rain_blocks_the_fire ... ok
+test harness_windfall_respects_caps ... ok
+test harness_cold_snap_counts_nights ... ok
+test harness_interventions_are_deterministic ... ok
+test harness_intervention_null_identity ... ok
+test harness_intervention_prefix_identity ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+
+     Running tests/harness_revitalize_pass7_winter.rs (rust/target/debug/deps/harness_revitalize_pass7_winter-5b8ce5c8859a3a07)
+
+running 8 tests
+test harness_autumn_prep_ignores_severity ... ok
+test harness_winter_fall_by_severity ... ok
+test harness_last_night_keeps_its_winter_severity ... ok
+test harness_winter_burn_by_severity ... ok
+test harness_winter_severity_table ... ok
+test harness_winter_severity_is_a_pure_draw ... ok
+test harness_firewood_v12_unchanged ... ok
+test harness_claims_bounded_by_amount ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_pass8_frozen.rs (rust/target/debug/deps/harness_revitalize_pass8_frozen-0d8e3713244b27bf)
+
+running 2 tests
+test harness_game_v13_rules_are_the_pass7_literal ... ok
+test harness_v13_fingerprints_unchanged ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/harness_revitalize_pass8_winter.rs (rust/target/debug/deps/harness_revitalize_pass8_winter-7619fe9442219b0b)
+
+running 9 tests
+test harness_night_and_fall_draw_table ... ok
+test harness_firewood_v13_unchanged ... ok
+test harness_fall_spread_is_a_pure_draw ... ok
+test harness_night_burn_is_a_pure_draw ... ok
+test harness_last_night_keeps_its_evening_draw ... ok
+test harness_night_rate_floor_is_one ... ok
+test harness_villagers_do_not_see_tonights_draw ... ok
+test harness_windfall_lands_on_snow ... ok
+test harness_snow_burial_once_is_inert_without_windfall ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.79s
+
+     Running tests/harness_revitalize_pass9_frozen.rs (rust/target/debug/deps/harness_revitalize_pass9_frozen-b4d95a40b3512974)
+
+running 2 tests
+test harness_game_v14_rules_are_the_pass8_literal ... ok
+test harness_v14_fingerprints_unchanged ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.55s
+
+     Running tests/harness_revitalize_pass9_rng.rs (rust/target/debug/deps/harness_revitalize_pass9_rng-cf1dc6c57d469e2f)
+
+running 10 tests
+test harness_lineage_keys_stable_under_birth_shift ... ok
+test harness_lineage_keys_do_not_collide ... ok
+test harness_lineage_founder_keys_follow_seed_and_spawn_index ... ok
+test harness_keyed_draw_is_pure ... ok
+test harness_keyed_step_balanced ... ok
+test harness_v15_movement_independent_of_history ... ok
+test harness_v14_draws_unchanged ... ok
+test harness_noise_fork_prefix_identity ... ok
+test harness_noise_fork_replicate0_is_identity ... ok
+test harness_v15_newborns_carry_their_first_parents_key ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.13s
+
+     Running tests/harness_revitalize_screen_contract.rs (rust/target/debug/deps/harness_revitalize_screen_contract-00ad256b37ff9c2e)
+
+running 3 tests
+test tests::harness_territory_terrain_renderer_uses_ffi ... ok
+test tests::harness_building_renderer_reads_snapshot_only ... ok
+test tests::harness_economy_hud_reads_sim_time_and_tallies ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_survival_fix.rs (rust/target/debug/deps/harness_revitalize_survival_fix-d09af53e2e502c7c)
+
+running 11 tests
+test harness_critical_preemption_food_seek_yields_to_available_critical_water ... ok
+test harness_critical_preemption_never_restarts_the_same_actionable_need ... ok
+test harness_critical_preemption_obeys_boundaries_availability_and_legacy ... ok
+test harness_critical_preemption_protects_an_already_critical_water_trip ... ok
+test harness_need_fallthrough_drinks_when_no_food ... ok
+test harness_need_fallthrough_excludes_unavailable_memory_bias_candidates ... ok
+test harness_social_chase_aborts_when_partner_dies ... ok
+test harness_social_chase_yields_to_thirst ... ok
+test harness_economy_clock_initial_values ... ok
+test harness_social_chase_gives_up_after_limit ... ok
+test harness_economy_clock_offset_is_display_only ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/harness_revitalize_tallies.rs (rust/target/debug/deps/harness_revitalize_tallies-55ef45004b81d219)
+
+running 2 tests
+test tests::harness_economy_combat_death_uses_cumulative_tally ... ok
+test tests::harness_economy_tallies_count_births_and_deaths ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_revitalize_worldgen.rs (rust/target/debug/deps/harness_revitalize_worldgen-c0f2e69a2a98d0ff)
+
+running 3 tests
+test harness_building_snapshot_matches_registry ... ok
+test harness_territory_worldgen_deterministic ... ok
+test harness_territory_worldgen_invariants ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/harness_s16_alpha0_resource_substrate.rs (rust/target/debug/deps/harness_s16_alpha0_resource_substrate-0e75d232a4360022)
+
+running 16 tests
+test harness_resource_bootstrap_tiles_are_sentinel ... ok
+test harness_resource_bootstrap_populates_food_tiles ... ok
+test harness_resource_agent_spawn_intact ... ok
+test harness_resource_bootstrap_populates_sleep_tiles ... ok
+test harness_resource_bootstrap_populates_water_tiles ... ok
+test harness_resource_empty_snapshot_path ... ok
+test harness_resource_decorative_layer_preserved_static ... ok
+test harness_resource_ffi_marshalling_literal_vectors ... ok
+test harness_resource_bridge_identity_contract_static ... ok
+test harness_resource_snapshot_sorted_and_deterministic ... ok
+test harness_resource_sources_in_bounds_and_near_lattice ... ok
+test harness_resource_substrate_deterministic ... ok
+test harness_resource_source_need_decrement_unconditional ... ok
+test harness_resource_finite_tile_decrements_and_removes ... ok
+test harness_resource_source_never_depletes_handseeded ... ok
+test harness_resource_bootstrap_tile_non_depleting_behavior ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_s16_alpha_seektarget.rs (rust/target/debug/deps/harness_s16_alpha_seektarget-a5052ba84caaa562)
+
+running 15 tests
+test harness_alpha0_substrate_preserved ... ok
+test harness_nearest_resource_tile_unit_direct ... ok
+test harness_cleared_when_no_longer_seeking_resource ... ok
+test harness_nearest_food_tile_min_distance_verified ... ok
+test harness_idle_below_thresholds_no_target_and_fsm_intact ... ok
+test harness_multi_agent_single_tick_distinct_kinds ... ok
+test harness_nearest_sleep_tile_routing_with_confounder ... ok
+test harness_cross_engine_identical_targets_nonempty ... ok
+test harness_nearest_water_tile_routing_with_confounder ... ok
+test harness_no_target_for_construction_or_agent_seek ... ok
+test harness_seeking_with_empty_map_null_path ... ok
+test harness_seektarget_assigned_on_hunger_seek ... ok
+test harness_seektarget_serde_roundtrip ... ok
+test harness_threshold_boundary_exact_50 ... ok
+test harness_tie_break_xy_min_deterministic_repeated ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_s16_beta_movement.rs (rust/target/debug/deps/harness_s16_beta_movement-8477b9dd8124902f)
+
+running 16 tests
+test harness_movement_diagonal_two_axis_step_one_tick ... ok
+test harness_movement_diagonal_negative_two_axis_step_one_tick ... ok
+test harness_movement_diagonal_staggered_axis_arrival ... ok
+test harness_movement_colocated_target_signum_zero_no_move ... ok
+test harness_movement_consuming_state_freezes ... ok
+test harness_movement_directed_movement_deterministic_and_nonfrozen ... ok
+test harness_movement_directed_path_reaches_then_holds_target ... ok
+test harness_movement_directed_step_does_not_consume_rng ... ok
+test harness_movement_directed_step_toward_food_target_one_tick ... ok
+test harness_movement_idle_brownian_preserved_bounded ... ok
+test harness_movement_seeking_without_target_freezes ... ok
+test harness_movement_suppresses_movement_truth_table_unchanged ... ok
+test harness_movement_water_and_sleep_directed_steps ... ok
+test harness_movement_agent_reaches_source_tile_during_loop ... ok
+test harness_movement_end_to_end_gathering_loop_satisfies_hunger ... ok
+test harness_movement_infinite_source_not_depleted_by_loop ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_s16_delta_need_stagger.rs (rust/target/debug/deps/harness_s16_delta_need_stagger-500afbe041e86127)
+
+running 7 tests
+test harness_s16_delta_all_idle_at_bootstrap_a13_preserved ... ok
+test harness_s16_delta_initial_need_values_within_bound ... ok
+test harness_s16_delta_stagger_determinism ... ok
+test harness_s16_delta_stagger_spread_exists ... ok
+test harness_s16_delta_accelerated_growth_rates ... ok
+test harness_s16_delta_gathering_loop_still_completes ... ok
+test harness_s16_delta_breach_desynchronization_headline ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/harness_s16_epsilon_state_viz.rs (rust/target/debug/deps/harness_s16_epsilon_state_viz-e0cc269d3505c32a)
+
+running 9 tests
+test harness_s16_epsilon_a3_absent_seek_target_sentinel ... ok
+test harness_s16_epsilon_a1_seek_kind_resource_mapping ... ok
+test harness_s16_epsilon_a5_non_resource_seek_kind_zero ... ok
+test harness_s16_epsilon_a2_target_coords_echo_seek_tile ... ok
+test harness_s16_epsilon_a6_existing_fields_intact ... ok
+test harness_s16_epsilon_a4_state_tag_table_unchanged ... ok
+test harness_s16_epsilon_a9_renderer_and_scene_static_structure ... ok
+test harness_s16_epsilon_a8_gathering_loop_preserved ... ok
+test harness_s16_epsilon_a7_live_snapshot_well_formed ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/harness_s16_gamma_visual.rs (rust/target/debug/deps/harness_s16_gamma_visual-1c03790ee6df12bf)
+
+running 11 tests
+test harness_s16_gamma_a1_clamp_sim_speed_pure_correctness ... ok
+test harness_s16_gamma_a5_z_order_above_decorative ... ok
+test harness_s16_gamma_a4_world_renderer_marker_is_polygon2d ... ok
+test harness_s16_gamma_a3_accumulator_integrity_preserved ... ok
+test harness_s16_gamma_a6_decorative_invariant_preserved ... ok
+test harness_s16_gamma_a7_backend_truth_positions_preserved ... ok
+test harness_s16_gamma_a10_resource_source_substrate_seeding_intact ... ok
+test harness_s16_gamma_a8_camera_controller_speed_keys_bound ... ok
+test harness_s16_gamma_a9_camera_controller_invariants_preserved ... ok
+test harness_s16_gamma_a11_gathering_loop_fsm_not_regressed ... ok
+test harness_s16_gamma_a2_world_node_sim_speed_symbols_present ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_s16_zeta_social_freeze_fix.rs (rust/target/debug/deps/harness_s16_zeta_social_freeze_fix-280711c0cfe682ec)
+
+running 14 tests
+test harness_s16_zeta_a13_partner_despawn_clearing ... ok
+test harness_s16_zeta_a12_self_seek_guard ... ok
+test harness_s16_zeta_a1_social_pair_targets_partner_tile ... ok
+test harness_s16_zeta_a11_gathering_loop_and_substrate_preserved ... ok
+test harness_s16_zeta_a2_directed_step_toward_partner ... ok
+test harness_s16_zeta_a3_partner_seektarget_reresolves ... ok
+test harness_s16_zeta_a5_untagged_manual_seek_no_target ... ok
+test harness_s16_zeta_a14_lonely_settlement_migrant_paths ... ok
+test harness_s16_zeta_a6_cleared_on_exit ... ok
+test harness_s16_zeta_a7_resource_set_once_unchanged ... ok
+test harness_s16_zeta_a4_settlement_migrant_paths_not_frozen ... ok
+test harness_s16_zeta_a9_settlement_births_still_fire ... ok
+test harness_s16_zeta_a10_determinism_preserved ... ok
+test harness_s16_zeta_a8_long_run_social_freeze_eliminated ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+
+     Running tests/harness_settlement_food_stock.rs (rust/target/debug/deps/harness_settlement_food_stock-566cd0b93f021925)
+
+running 6 tests
+test harness_food_stock_a2_food_stock_is_zero_when_no_food_stocked ... ok
+test harness_food_stock_a1_food_stock_equals_injected_food_count ... ok
+test harness_food_stock_a3_food_stock_counts_food_only_not_other_kinds ... ok
+test harness_food_stock_a4_rows_sorted_and_food_stock_parity ... ok
+test harness_food_stock_a5_additive_change_preserves_existing_row_fields ... ok
+test harness_food_stock_a6_zero_member_settlement_with_food_still_skipped ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_settlement_marker_fixed.rs (rust/target/debug/deps/harness_settlement_marker_fixed-92b7199fbea73daf)
+
+running 7 tests
+test harness_marker_fixed_a1_formation_tile_written_not_sentinel ... ok
+test harness_marker_fixed_a5_formation_anchor_in_bounds ... ok
+test harness_marker_fixed_a2_snapshot_formation_xy_equals_component_field ... ok
+test harness_marker_fixed_a6_formation_anchor_pinned_to_static_building_cluster ... ok
+test harness_marker_fixed_a7_formation_xy_deterministic_across_runs ... ok
+test harness_marker_fixed_a4_centroid_moves_contrast_proof ... ok
+test harness_marker_fixed_a3_marker_position_is_fixed_while_members_move ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/harness_settlement_migration_unfreeze.rs (rust/target/debug/deps/harness_settlement_migration_unfreeze-2a9f12ac2a0a854e)
+
+running 10 tests
+test harness_mig_unfreeze_a1_settlement_forms ... ok
+test harness_mig_unfreeze_a2_outsider_paths_not_frozen ... ok
+test harness_mig_unfreeze_a3_settlement_intent_emitted ... ok
+test harness_mig_unfreeze_a4_member_no_migration ... ok
+test harness_mig_unfreeze_a5c_specific_migrant_moves ... ok
+test harness_mig_unfreeze_a6_gathering_loop_preserved ... ok
+test harness_mig_unfreeze_a7_social_path_preserved ... ok
+test harness_mig_unfreeze_a5a_long_run_no_targetless_seek ... ok
+test harness_mig_unfreeze_a5b_no_motile_freeze ... ok
+test harness_mig_unfreeze_a8_determinism_preserved ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/harness_settlements_zero_regression.rs (rust/target/debug/deps/harness_settlements_zero_regression-32e20918052885c5)
+
+running 6 tests
+test harness_settlements_zero_a5_anti_circular_no_buildings_no_rows ... ok
+test harness_settlements_zero_a1_production_scene_forms_settlements ... ok
+test harness_settlements_zero_a3_every_snapshot_row_wellformed ... ok
+test harness_settlements_zero_a2_snapshot_count_matches_live_settlements ... ok
+test harness_settlements_zero_a4_member_count_equals_resolvable_members ... ok
+test harness_settlements_zero_a6_snapshot_determinism ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/harness_show_agent_needs_bars.rs (rust/target/debug/deps/harness_show_agent_needs_bars-34339abfda6601d8)
+
+running 6 tests
+test harness_needs_a6_scene_wiring_additive ... ok
+test harness_needs_a5_renderer_and_bridge_contract ... ok
+test harness_needs_a3_danger_ratio_and_at_risk_reachable ... ok
+test harness_needs_a4_existing_fields_and_split_preserved ... ok
+test harness_needs_a2_source_fields_not_swapped_with_floors ... ok
+test harness_needs_a1_arrays_mirror_components_length_and_order ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/harness_show_death_visual.rs (rust/target/debug/deps/harness_show_death_visual-5942c60fb3651860)
+
+running 15 tests
+test harness_death_a10_current_tick_scalar_is_live ... ok
+test harness_death_a12_empty_then_single_fixture_collector ... ok
+test harness_death_a15_cross_language_retain_const_sync ... ok
+test harness_death_a14_same_tick_two_deaths_plus_two_ordered ... ok
+test harness_death_a13_dehydration_death_reason_u8_one ... ok
+test harness_death_a11_mass_same_tick_deaths ... ok
+test harness_death_a1_production_death_pushes_exact_entry ... ok
+test harness_death_a2_collector_split_mirror_buffer ... ok
+test harness_death_a3_prune_past_retain_window ... ok
+test harness_death_a4_reason_u8_mapping_locked ... ok
+test harness_death_a5_renderer_structural_wiring ... ok
+test harness_death_a6_scene_wiring_additive ... ok
+test harness_death_a8_agent_died_chronicle_additive ... ok
+test harness_death_a9_combat_death_reason_u8_two ... ok
+test harness_death_a7_ffi_func_presence_and_forwarding ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_show_resource_depletion.rs (rust/target/debug/deps/harness_show_resource_depletion-0c261d602ef11a91)
+
+running 10 tests
+test harness_resource_depletion_a1_amounts_maxes_present_and_aligned ... ok
+test harness_resource_depletion_a2_amount_and_max_correct_for_every_kind ... ok
+test harness_resource_depletion_a3_ratio_reflects_depletion ... ok
+test harness_resource_depletion_a4_unregistered_source_defaults_max_to_amount ... ok
+test harness_resource_depletion_a5_xs_ys_kinds_split_contract_preserved ... ok
+test harness_resource_depletion_a6_zero_amount_row_exercises_floor ... ok
+test harness_resource_depletion_a8_multi_kind_index_lockstep_correspondence ... ok
+test harness_resource_depletion_a7_over_capacity_and_explicit_zero_cap_bounded ... ok
+test harness_resource_depletion_a9_production_scene_registers_finite_capacities ... ok
+test harness_resource_depletion_a10_live_depletion_surfaces ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+
+     Running tests/harness_starvation_death.rs (rust/target/debug/deps/harness_starvation_death-86889ed09a396c61)
+
+running 19 tests
+test harness_starvation_a10_combat_death_roster_cleanup ... ok
+test harness_starvation_a12_multiple_same_tick_deaths ... ok
+test harness_starvation_a11_bandless_death ... ok
+test harness_starvation_a13_well_fed_never_dies ... ok
+test harness_starvation_a14_recovery_heals ... ok
+test harness_starvation_a19_heal_gate_strict_boundary_at_ceiling ... ok
+test harness_starvation_a16_gathering_loop_preserved ... ok
+test harness_starvation_a1_hp_decays_under_hunger ... ok
+test harness_starvation_a4_thirst_death_faster_dehydration ... ok
+test harness_starvation_a15_universal_body_health ... ok
+test harness_starvation_a2_gray_zone_neutral ... ok
+test harness_starvation_a3_hunger_death_tick_and_reason ... ok
+test harness_starvation_a5_both_saturated_additive ... ok
+test harness_starvation_a6_death_reason_precedence ... ok
+test harness_starvation_a7_event_one_to_one ... ok
+test harness_starvation_a8_hp_clamped_at_zero ... ok
+test harness_starvation_a9_settlement_roster_cleanup ... ok
+test harness_starvation_a17_population_stability ... ok
+test harness_starvation_a18_determinism ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.85s
+
+     Running tests/harness_stockpile_consume.rs (rust/target/debug/deps/harness_stockpile_consume-14bdc9876a5e9161)
+
+running 8 tests
+test harness_stockpile_consume_a1_controlled_relief_bounded ... ok
+test harness_stockpile_consume_a3_gating_noop ... ok
+test harness_stockpile_consume_a4_empty_reserve_no_phantom_relief ... ok
+test harness_stockpile_consume_a2_no_double_dip ... ok
+test harness_stockpile_consume_a5_at_threshold_fires ... ok
+test harness_stockpile_famine_relief ... ok
+test harness_stockpile_consume_a8_determinism ... ok
+test harness_stockpile_consume_a7_plenty_non_interference ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+     Running tests/harness_stockpile_feed_2_5c.rs (rust/target/debug/deps/harness_stockpile_feed_2_5c-10f9de9b6c66f2f8)
+
+running 5 tests
+test harness_2_5c_a7_both_new_locale_keys_resolve_in_en_and_ko ... ok
+test harness_2_5c_a10_preexisting_hud_feed_keys_not_dropped ... ok
+test harness_2_5c_a9_registry_compiled_consistency_holds_across_plus_two_keys ... ok
+test harness_2_5c_a8_both_new_templates_have_exactly_two_percent_d_in_each_locale ... ok
+test harness_2_5c_a11_food_stocks_snapshot_parallel_to_ids ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/harness_t7_10_a_warmth_wiring.rs (rust/target/debug/deps/harness_t7_10_a_warmth_wiring-a1eef3809577fc03)
+
+running 9 tests
+test harness_t7_10_a_boundary_at_max_radius ... ok
+test harness_t7_10_a_dirty_regions_drained ... ok
+test harness_t7_10_a_no_event_no_warmth ... ok
+test harness_t7_10_a_gradient_monotone ... ok
+test harness_t7_10_a_max_radius_cutoff ... ok
+test harness_t7_10_a_other_channels_remain_zero ... ok
+test harness_t7_10_a_persistence_across_ticks ... ok
+test harness_t7_10_a_radial_decay_one_step ... ok
+test harness_t7_10_a_source_center_lit ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b1_light_viz_toggle.rs (rust/target/debug/deps/harness_t7_10_b1_light_viz_toggle-841636610ee47dfa)
+
+running 6 tests
+test harness_t7_10_b1_gdscript_toggle_handler_present ... ok
+test harness_t7_10_b1_light_channel_non_trivial_concurrent ... ok
+test harness_t7_10_b1_light_source_tile_is_maximum ... ok
+test harness_t7_10_b1_warmth_channel_non_trivial_concurrent ... ok
+test harness_t7_10_b1_light_zero_beyond_radius ... ok
+test harness_t7_10_b1_light_disc_extends_beyond_warmth ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b1_space_toggle.rs (rust/target/debug/deps/harness_t7_10_b1_space_toggle-ca52c1813c592bd0)
+
+running 10 tests
+test harness_t7_10_b1_channel_switched_print_present ... ok
+test harness_t7_10_b1_cycle_includes_off_entry_and_wrap ... ok
+test harness_t7_10_b1_initial_channel_is_off ... ok
+test harness_t7_10_b1_input_event_guards_present ... ok
+test harness_t7_10_b1_process_gates_overlay_on_channel ... ok
+test harness_t7_10_b1_space_keycode_binding_present ... ok
+test harness_t7_10_b1_ready_hides_overlay_sprite ... ok
+test harness_t7_10_b1_substrate_calls_survive_off_gate ... ok
+test harness_t7_10_b1_three_state_cycle_assignment_present ... ok
+test harness_t7_10_b1_unhandled_input_handler_present ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b_light_shadowcast_wiring.rs (rust/target/debug/deps/harness_t7_10_b_light_shadowcast_wiring-054df8709b6c6e4d)
+
+running 10 tests
+test harness_t7_10_b_dirty_regions_drained ... ok
+test harness_t7_10_b_boundary_at_max_radius ... ok
+test harness_t7_10_b_falloff_diagonal_euclidean_discriminator ... ok
+test harness_t7_10_b_falloff_one_step ... ok
+test harness_t7_10_b_gradient_monotone ... ok
+test harness_t7_10_b_max_radius_cutoff ... ok
+test harness_t7_10_b_no_event_no_light ... ok
+test harness_t7_10_b_other_channels_behavior ... ok
+test harness_t7_10_b_persistence_across_ticks ... ok
+test harness_t7_10_b_source_center_lit ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_c_noise_linear_wiring.rs (rust/target/debug/deps/harness_t7_10_c_noise_linear_wiring-4c8124d1a82207da)
+
+running 10 tests
+test harness_t7_10_c_no_event_no_noise ... ok
+test harness_t7_10_c_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_c_linear_one_step_alpha_discriminator ... ok
+test harness_t7_10_c_gradient_monotone ... ok
+test harness_t7_10_c_dirty_regions_drained ... ok
+test harness_t7_10_c_natural_radius_boundary ... ok
+test harness_t7_10_c_other_channels_remain_zero ... ok
+test harness_t7_10_c_persistence_ten_ticks ... ok
+test harness_t7_10_c_source_center_lit ... ok
+test harness_t7_10_c_warmth_and_light_regression_guard ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_d_danger_linear_wiring.rs (rust/target/debug/deps/harness_t7_10_d_danger_linear_wiring-ca9e9095ff00c2ba)
+
+running 10 tests
+test harness_t7_10_d_no_event_no_danger ... ok
+test harness_t7_10_d_dirty_regions_drained ... ok
+test harness_t7_10_d_linear_one_step_alpha_discriminator ... ok
+test harness_t7_10_d_gradient_monotone ... ok
+test harness_t7_10_d_other_channels_remain_zero ... ok
+test harness_t7_10_d_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_d_persistence_ten_ticks ... ok
+test harness_t7_10_d_sight_radius_cap_boundary ... ok
+test harness_t7_10_d_source_center_lit ... ok
+test harness_t7_10_d_warmth_light_noise_regression_guard ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_e_spiritual_bfs_wiring.rs (rust/target/debug/deps/harness_t7_10_e_spiritual_bfs_wiring-146bdf4eb1328cd0)
+
+running 14 tests
+test harness_t7_10_e_dirty_regions_drained ... ok
+test harness_t7_10_e_exp_decay_one_step_discriminator ... ok
+test harness_t7_10_e_max_radius_cutoff ... ok
+test harness_t7_10_e_gradient_monotone ... ok
+test harness_t7_10_e_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_e_boundary_at_max_radius ... ok
+test harness_t7_10_e_no_event_no_spiritual ... ok
+test harness_t7_10_e_other_channels_remain_zero ... ok
+test harness_t7_10_e_persistence_ten_ticks ... ok
+test harness_t7_10_e_prior_channels_regression_guard ... ok
+test harness_t7_10_e_source_center_lit ... ok
+test harness_t7_10_e_spiritual_warmth_ratio_at_d10 ... ok
+test harness_t7_10_e_spiritual_decay_constant_matches_spec ... ok
+test harness_t7_10_e_stale_constant_scan_regression_guard ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_f_beauty_bfs_wiring.rs (rust/target/debug/deps/harness_t7_10_f_beauty_bfs_wiring-fae231207c215980)
+
+running 11 tests
+test harness_t7_10_f_boundary_at_max_radius ... ok
+test harness_t7_10_f_dirty_regions_drained ... ok
+test harness_t7_10_f_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_f_exp_decay_one_step_discriminator ... ok
+test harness_t7_10_f_gradient_monotone ... ok
+test harness_t7_10_f_max_radius_cutoff ... ok
+test harness_t7_10_f_no_event_no_beauty ... ok
+test harness_t7_10_f_persistence_ten_ticks ... ok
+test harness_t7_10_f_prior_channels_regression_guard ... ok
+test harness_t7_10_f_source_center_lit ... ok
+test harness_t7_10_f_unstamped_channels_remain_zero ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_9_a_scaffold.rs (rust/target/debug/deps/harness_t7_9_a_scaffold-99717e0f9a938b0c)
+
+running 7 tests
+test harness_scaffold_gdextension_source_identity ... ok
+test harness_scaffold_main_tscn_source_identity ... ok
+test harness_scaffold_world_renderer_gd_source_identity ... ok
+test harness_scaffold_world_node_source_process_identity ... ok
+test harness_scaffold_tick_count_zero_on_fresh_engine ... ok
+test harness_scaffold_resources_current_tick_propagated_by_tick ... ok
+test harness_scaffold_process_equivalent_drives_current_tick_to_n ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_9_b_render_mechanism.rs (rust/target/debug/deps/harness_t7_9_b_render_mechanism-e6421a16838d37b2)
+
+running 4 tests
+test harness_t7_9_b_world_node_pacing_consts_present ... ok
+test harness_t7_9_b_world_renderer_render_path_present ... ok
+test harness_t7_9_b_world_node_accumulator_loop_present ... ok
+test harness_t7_9_b_bridge_identity_contract_preserved ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_bridge
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_engine
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_systems
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_test
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

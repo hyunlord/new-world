@@ -62,7 +62,7 @@ const SATURATION: f32 = 100.0;
 /// Danger ratio at/above which the renderer draws a bar — mirrors
 /// `need_bar_renderer.gd::DANGER_THRESHOLD`. The at-risk need band is
 /// `max(h,t,s) >= 50.0` ⟺ `danger >= 0.5`.
-const DANGER_THRESHOLD: f32 = 0.5;
+const DANGER_THRESHOLD: f32 = 0.75;
 /// Number of agents the fixture spawns (plan: agent_count 20).
 const AGENTS: u32 = 20;
 
@@ -412,11 +412,12 @@ fn harness_needs_a5_renderer_and_bridge_contract() {
     for key in ["hungers", "thirsts", "sleeps"] {
         assert!(r.contains(key), "A5(a): renderer must read the `{key}` snapshot array");
     }
-    assert!(r.contains("xs") && r.contains("ys"), "A5(a): renderer reads positions xs/ys");
+    assert!(r.contains("get_agent_sprite") && r.contains("sprite.to_global(Vector2(0.0, sprite.offset.y))"), "A5(a): renderer follows the rendered agent by identity at its native head anchor");
     assert!(r.contains("DANGER_THRESHOLD"), "A5(a): renderer declares DANGER_THRESHOLD");
     assert!(r.contains("Z_NEED_BAR") && r.contains("7"), "A5(a): renderer declares Z_NEED_BAR = 7");
-    assert!(r.contains("draw_rect"), "A5(a): renderer draws via draw_rect (track + fill)");
-    assert!(r.contains(".lerp("), "A5(a): renderer lerps colour yellow→red");
+    assert!(r.contains("draw_texture_rect_region"), "A5(a): renderer draws native warning atlas regions");
+    assert!(r.contains("U1_12"));
+    assert!(r.contains("U1_11") && r.contains("U1_13"));
     let has_max_ratio =
         (r.contains("max") && r.contains("/ SATURATION")) || r.contains("/ 100");
     assert!(has_max_ratio, "A5(a): renderer computes a max-of-three danger ratio");
@@ -427,7 +428,7 @@ fn harness_needs_a5_renderer_and_bridge_contract() {
         .expect("A5(b): need_bar_renderer.gd must declare a numeric DANGER_THRESHOLD");
     assert!(
         (gate - DANGER_THRESHOLD).abs() < f32::EPSILON,
-        "A5(b): DANGER_THRESHOLD must equal {DANGER_THRESHOLD}; got {gate}"
+        "A5(b): visual warning threshold must equal 0.75; got {gate}"
     );
 
     // (c) Bridge key+field mapping — the FFI source must insert under the EXACT
@@ -478,7 +479,11 @@ fn harness_needs_a6_scene_wiring_additive() {
         .count();
 
     // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
-    assert_eq!(ext_count_after, 16, "all sixteen renderer/UI script resources remain");
+    assert_eq!(ext_count_after, 22, "twenty-one prior resources plus ChroniclePanel");
+    assert!(scene.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
+    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
+    assert!(scene.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
+    assert!(scene.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
     assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
 
     // (c) Additive preservation — new wiring present, prior wiring intact.

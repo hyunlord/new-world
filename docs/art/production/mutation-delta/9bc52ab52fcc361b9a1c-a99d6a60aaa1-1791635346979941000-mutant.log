@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/harness_fix_inspector_overlap.rs (target/debug/deps/harness_fix_inspector_overlap-80e58a588b607810)
+
+running 1 test
+test harness_inspector_anchors_and_width_untouched_regression ... 
+thread 'harness_inspector_anchors_and_width_untouched_regression' (50954228) panicked at crates/sim-test/tests/harness_fix_inspector_overlap.rs:264:5:
+assertion `left == right` failed: A4: PANEL_WIDTH must remain exactly 360.0, got 361
+  left: 361.0
+ right: 360.0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_inspector_anchors_and_width_untouched_regression
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_fix_inspector_overlap`

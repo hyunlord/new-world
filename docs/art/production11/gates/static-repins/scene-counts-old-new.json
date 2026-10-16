@@ -1,0 +1,49 @@
+{
+  "scene_sha256": "63886d70e6c7466248b043b1a6a63362d66da32a0137a5a0cef4bad10ee82afc",
+  "chronicle_resource": [
+    "[ext_resource type=\"Script\" path=\"res://scripts/ui/panels/chronicle_panel.gd\" id=\"22_chronicle\"]"
+  ],
+  "method": "offline exact source predicates; no cargo/Godot run",
+  "records": [
+    {
+      "file": "rust/crates/sim-test/tests/harness_p14_epsilon_activity_trails.rs",
+      "old_assertion": "assert_eq!(n, 22, \"Art Pass 9: twenty-one external resources plus the main scene; got {n}\");",
+      "new_assertion": "assert_eq!(n, 23, \"Art Pass 11: twenty-two external resources plus the main scene; got {n}\");",
+      "actual": 23,
+      "old_expected": 22,
+      "new_expected": 23,
+      "old_predicate": false,
+      "new_predicate": true
+    },
+    {
+      "file": "rust/crates/sim-test/tests/harness_p14_zeta_zoom_adaptive.rs",
+      "old_assertion": "assert_eq!(n, 22, \"Art Pass 9: twenty-one external resources plus the main scene; got {n}\");",
+      "new_assertion": "assert_eq!(n, 23, \"Art Pass 11: twenty-two external resources plus the main scene; got {n}\");",
+      "actual": 23,
+      "old_expected": 22,
+      "new_expected": 23,
+      "old_predicate": false,
+      "new_predicate": true
+    },
+    {
+      "file": "rust/crates/sim-test/tests/harness_show_agent_needs_bars.rs",
+      "old_assertion": "assert_eq!(ext_count_after, 21, \"twenty prior resources plus SimReads\");",
+      "new_assertion": "assert_eq!(ext_count_after, 22, \"twenty-one prior resources plus ChroniclePanel\");",
+      "actual": 22,
+      "old_expected": 21,
+      "new_expected": 22,
+      "old_predicate": false,
+      "new_predicate": true
+    },
+    {
+      "file": "rust/crates/sim-test/tests/harness_show_death_visual.rs",
+      "old_assertion": "assert_eq!(ext_count_after, 21, \"twenty prior resources plus SimReads\");",
+      "new_assertion": "assert_eq!(ext_count_after, 22, \"twenty-one prior resources plus ChroniclePanel\");",
+      "actual": 22,
+      "old_expected": 21,
+      "new_expected": 22,
+      "old_predicate": false,
+      "new_predicate": true
+    }
+  ]
+}

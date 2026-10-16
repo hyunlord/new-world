@@ -1,0 +1,11 @@
+diff --git a/.gitignore b/.gitignore
+index 69f7fe94..16351de9 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -90,3 +90,6 @@ rust/.harness/
+ 
+ # env
+ .env
++
++# graft's local graph cache — regenerable, not committed (run `graft build`).
++/graft/

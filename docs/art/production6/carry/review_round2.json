@@ -1,0 +1,86 @@
+{
+  "review_round": 2,
+  "method": "Independent direct visual inspection of exactly eight candidate_round2 boards at native, 2x, and 4x scales. No pipeline code, manifests, goal documents, or stored verdict files read. Verdicts concern the requested attachment/object/action categories, not overall sprite art quality.",
+  "verdicts": [
+    {
+      "group": "adult_a_carry_N",
+      "board": "boards/candidate_round2_adult_a_carry_N.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "A small container projects directly from the hip; there is no visible food-to-mouth action.",
+        "2x": "The tan load stays contiguous with the low arm and has contrasting pale contents.",
+        "4x": "The shallow basket-like outline and contents read as a low carried food container. The broad flat torso patch is visually crude, but does not suggest eating."
+      }
+    },
+    {
+      "group": "adult_a_carry_E",
+      "board": "boards/candidate_round2_adult_a_carry_E.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "The figure holds a small projecting load low in front; the face is clear of a separate food item.",
+        "2x": "The container connects at waist/hip height through an orange hand or forearm shape.",
+        "4x": "A dark-edged shallow container with red and pale contents is attached to the low hand. The torso is conspicuously flat and rectangular, but the gesture now reads as carrying."
+      }
+    },
+    {
+      "group": "adult_a_carry_S",
+      "board": "boards/candidate_round2_adult_a_carry_S.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "The load is clearly at the side, below the face, and the figure no longer reads as eating.",
+        "2x": "A red-and-tan filled container sits against the right hip with a continuous connection.",
+        "4x": "The hand/container junction is contiguous and the contents remain inside the dark basket-like outline. The oversized flat orange chest patch is an art-quality weakness outside the four action verdict categories."
+      }
+    },
+    {
+      "group": "adult_a_carry_wood_N",
+      "board": "boards/candidate_round2_adult_a_carry_wood_N.png",
+      "verdict": "wrong_object",
+      "visible_reasons_by_scale": {
+        "1x": "Dark blocks flank the hip, but they do not resolve as a recognizable bundle of wood.",
+        "2x": "The right-hand load looks like a short outlined container with an amber patch, not several bundled lengths of wood.",
+        "4x": "The black rectangular outline and enclosed brown marks read more like a box or basket than bundled logs. Attachment is substantially clearer, but the carried object identity fails."
+      }
+    },
+    {
+      "group": "adult_b_carry_N",
+      "board": "boards/candidate_round2_adult_b_carry_N.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "The small side container is held low; there is no clear separate food item touching the mouth.",
+        "2x": "The tan filled container stays joined to the hip-side arm. The red shoulder accent remains, but no longer forms a distinct eating gesture.",
+        "4x": "The low basket-like load has light contents and a continuous attachment. The large flat orange upper-arm patch is crude, while the hand-to-mouth reading is no longer dominant."
+      }
+    },
+    {
+      "group": "adult_b_carry_E",
+      "board": "boards/candidate_round2_adult_b_carry_E.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "The only obvious carried object is low and ahead of the hip.",
+        "2x": "The red-and-tan shallow container remains joined to the arm; the face area is separate from it.",
+        "4x": "The low hand joins the container rim/body without a background gap. The blocky orange torso is visually weak, but the action reads as carrying food rather than eating."
+      }
+    },
+    {
+      "group": "adult_b_carry_S",
+      "board": "boards/candidate_round2_adult_b_carry_S.png",
+      "verdict": "ok",
+      "visible_reasons_by_scale": {
+        "1x": "The small side load sits at the hip, with no competing eating gesture.",
+        "2x": "The filled container touches the low side of the figure in every row.",
+        "4x": "Red and tan contents are contained in a dark shallow basket-like outline connected at hip level. The broad orange rectangular torso lacks natural arm detail, but the load is not floating or raised toward the mouth."
+      }
+    },
+    {
+      "group": "adult_b_carry_wood_N",
+      "board": "boards/candidate_round2_adult_b_carry_wood_N.png",
+      "verdict": "floating",
+      "visible_reasons_by_scale": {
+        "1x": "The first row still has a small load visibly detached on the right; the other rows look more contiguous.",
+        "2x": "A background gap remains between the right-hand object and the body in row 1, while a hand is raised near the head.",
+        "4x": "Row 1 shows the right load separated by background from the hip, with no hand touching it; later rows improve attachment. Across the board the short dark outlined objects also remain weak as recognizable bundled wood."
+      }
+    }
+  ]
+}

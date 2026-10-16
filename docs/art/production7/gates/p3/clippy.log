@@ -1,0 +1,19 @@
+    Checking serde_core v1.0.229
+    Checking libc v0.2.190
+    Checking zerocopy v0.8.62
+    Checking once_cell v1.21.4
+    Checking thiserror v1.0.69
+    Checking getrandom v0.3.4
+    Checking bitflags v2.13.2
+    Checking serde v1.0.229
+    Checking serde_json v1.0.151
+    Checking ahash v0.8.12
+    Checking ron v0.8.1
+    Checking hashbrown v0.14.5
+    Checking hecs v0.10.5
+    Checking sim-core v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-core)
+    Checking sim-engine v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-engine)
+    Checking sim-systems v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-systems)
+    Checking sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+    Checking sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.91s

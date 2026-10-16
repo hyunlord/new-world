@@ -1,0 +1,89 @@
+{
+  "observer_id": "blind_observer_b",
+  "frames": {
+    "O017": {
+      "hud_text": "추위 0; 낮 · 겨울 7일째 밤; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. Pale blue-white contours surround many tightly overlapping people, including A11, A17, A26 and A29. A11 and A17 sit cross-legged. Small pale rectangular pixels occur above the central group. Crowding prevents reliable assignment of every overlapping contour. No broad cloud visible.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O018": {
+      "hud_text": "추위 0; 낮 · 봄 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A7, A3, A11 and A17 appear seated. A2 stands separately at right; A25 below B21 and A31 farther south have pale gray contours. Several other people overlap near B7. Small pale blocks float above the people near A7. No distinct smoke cloud visible.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O019": {
+      "hud_text": "추위 0; 낮 · 봄 4일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A1 and A18 stand north of shelters. A3, A9 and A11 appear seated with bent legs. A31, A14 and A28 stand to the right, with black outlines rather than a conspicuous blue contour. A25 is partially covered by a tree. No distinct particles or clouds are identifiable.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O020": {
+      "hud_text": "추위 0; 낮 · 여름 5일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A29 and A42 stand left of the river. A36 stands at the top of a dense crowd; A46 and A44 are smaller figures. A33 and A41 stand south; A37 has bent legs. People have dark outlines; no clear pale halo or cloud seen. Shelters are partly obscured by the crowd.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O021": {
+      "hud_text": "추위 0; 낮 · 가을 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a partly visible gray ring at upper right without a visible flame. B21 is a brown shelter; B28 a red-filled basket. B7, B75 and B14 are mostly under the HUD at the top. A26 is beside a stump at lower left; A36 beside a stump near center. A31, A33, A34 and A42 are obscured by translucent-looking tree foliage. A27, A14, A12 and A46 are visible near the settlement. No distinct airborne cloud or particle pattern identified.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O022": {
+      "hud_text": "추위 29; 밤 · 겨울 6일째; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. No A-labeled person is visible in the original still. Small pale specks are visible near roof edges; no substantial cloud.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible."
+    },
+    "O023": {
+      "hud_text": "추위 29; 밤 · 겨울 7일째; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A38 is partly visible between B7 and B75, with gray-white waist detail and a dark outline. Four elongated brown objects lie to the right of B14, without A/B labels. No large cloud visible.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible. A person beside B7 and in front of B75 shifts pose/position between samples."
+    },
+    "O024": {
+      "hud_text": "추위 29; 밤 · 겨울 7일째 밤; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A37 stands near the river at the bottom; A29 is only partly visible below the bottom foliage. Neither has an obvious large marker. No broad smoke cloud visible.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible."
+    },
+    "O025": {
+      "hud_text": "추위 28; 밤 · 겨울 7일째 밤; 보통 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A large blue X overlays the front of B21. A50 stands immediately left of B21. A47 stands in front of B75, A42 to its right. A32 and A46 are clipped by the HUD. No clear flame or cloud.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible. The blue X on B21 remains present in every sample. Adjacent figures change poses slightly."
+    },
+    "O026": {
+      "hud_text": "추위 0; 낮 · 봄 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. The blue X is no longer visible on B21. Pale outlines surround much of the north crowd and the southern group around A38 and A35. A45 stands in front of B21. A52 is a small figure left of B0. A40 and A41 stand lower right. Pale short rectangular marks float above the north crowd. Many A labels overlap, so exact individual contour ownership is uncertain.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O027": {
+      "hud_text": "추위 0; 낮 · 가을 1일째",
+      "severity_visible": false,
+      "observations": "A32 stands center with both arms spread; A34 stands at right with arms close to the torso. A52 and A37 are mostly hidden by the lower-left UI panel. The visible people have black outlines, without a clear pale halo. No labeled buildings or fire appear in this view. No distinct cloud or airborne particles identified.",
+      "sequence_observations": "No sequence image provided."
+    },
+    "O028": {
+      "hud_text": "추위 29; 밤 · 겨울 7일째; 혹독한 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A small tan head-like form protrudes above B14 and beside B75, without an A label. A few pale blue squares are visible nearby and near B0. No clear cloud or orange flame.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible."
+    },
+    "O029": {
+      "hud_text": "추위 28; 밤 · 겨울 7일째 밤; 혹독한 겨울",
+      "severity_visible": true,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. B7, B14, B21 and B75 have thin pale blue accents along roof edges, and small pale squares at or near entrances. The whole scene is dark blue-green. A conspicuous irregular gray-white clustered shape covers the entrance/front of B75. Its precise meaning is unclear: it looks like stacked stones or a pale cloud-like object. No A-labeled people are visible. No obvious orange flame.",
+      "sequence_observations": "B7, B14, B21 and B75 stay in the same places. Small pale squares at their entrances appear and disappear across samples. B14 and B75 intermittently show a small tan head-like shape above the roof/right roof edge. No orange fire, rising plume or collapse is visible. The gray clustered shape in front of B75 remains in place throughout the sequence, without an obvious rising or dissipating motion."
+    },
+    "O030": {
+      "hud_text": "추위 0; 낮 · 봄 1일째",
+      "severity_visible": false,
+      "observations": "B0 is a gray stone ring with a dark center; no orange flame or smoke plume is visible. B7, B14, B21 and B75 are brown shelters. B28 is a basket with red contents. A pale gray-green clustered shape remains at the front of B75. Pale contours outline many people, including A34, A36, A38, A45, A49 and the southern A58/A59 area. Small pale rectangles are visible over the north group. A61 is a small figure below the main cluster. A44 appears seated to the right of B75; another seated figure is near A48. Overlapping A labels make some identity assignments uncertain. No distinct smoke plume or orange flame.",
+      "sequence_observations": "No sequence image provided."
+    }
+  }
+}

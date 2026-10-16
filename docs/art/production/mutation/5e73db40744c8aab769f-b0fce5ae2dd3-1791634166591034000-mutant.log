@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running tests/harness_p14_zeta_zoom_adaptive.rs (target/debug/deps/harness_p14_zeta_zoom_adaptive-10fa441bfd295484)
+
+running 1 test
+test harness_zoom_a23_phase14d_hud_status_panel_intact ... 
+thread 'harness_zoom_a23_phase14d_hud_status_panel_intact' (49584052) panicked at crates/sim-test/tests/harness_p14_zeta_zoom_adaptive.rs:750:5:
+a23: hud_status_panel.gd must keep all 3 invariant literals; missing=["get_resource_snapshot"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_zoom_a23_phase14d_hud_status_panel_intact
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_p14_zeta_zoom_adaptive`

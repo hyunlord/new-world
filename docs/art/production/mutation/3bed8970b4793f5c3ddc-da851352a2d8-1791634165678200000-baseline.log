@@ -1,0 +1,10 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.34s
+     Running tests/harness_p14_zeta_zoom_adaptive.rs (target/debug/deps/harness_p14_zeta_zoom_adaptive-10fa441bfd295484)
+
+running 1 test
+test harness_zoom_a23_phase14d_hud_status_panel_intact ... [P14-ζ a23] hud_status_panel.gd Phase 14-δ invariants intact ✓
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.00s
+

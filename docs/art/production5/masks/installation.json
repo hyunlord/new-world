@@ -1,0 +1,733 @@
+{
+  "frames": [
+    {
+      "target": "P2V_b_E_eat_01",
+      "review_candidate_id": "P2V_b_E_eat_01:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/P2V_b_E_eat_01/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/P2V_b_E_eat_01_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "6591d979b67a18ffa7d47c48f61f1e13525d23c65a189fbc662415f88a62d45a",
+      "prior_status": "procedural",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "E",
+        "eat"
+      ]
+    },
+    {
+      "target": "P2V_b_E_eat_02",
+      "review_candidate_id": "P2V_b_E_eat_02:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/P2V_b_E_eat_02/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/P2V_b_E_eat_02_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "fd83448fe232fcc15c1107f8a965b6ce20934b0acb18f98115e8c2f03826b8d4",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "E",
+        "eat"
+      ]
+    },
+    {
+      "target": "P2V_b_S_drink_02",
+      "review_candidate_id": "P2V_b_S_drink_02:mask5:r2",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/P2V_b_S_drink_02/sprite.png",
+      "mask_path": "docs/art/production5/masks/round2/candidates/P2V_b_S_drink_02_mask5_r2/sprite_hair_mask.png",
+      "audited_rgba_sha256": "3773b3f67d49daae0d97e382488145e780e54ec291e4882835a7f596b7642d8a",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "drink"
+      ]
+    },
+    {
+      "target": "V_b1_01",
+      "review_candidate_id": "V_b1_01:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b1_01/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b1_01_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "4a5fb20bf7fd5444d3dbf344301f8f8055e674f12f3a5141873f17ce945f4a26",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "idle"
+      ]
+    },
+    {
+      "target": "V_b1_06",
+      "review_candidate_id": "V_b1_06:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b1_06/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b1_06_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "a483db722039f85d44baf12615d910e7e85d338b927f53587520caf57b377d8d",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "walk"
+      ]
+    },
+    {
+      "target": "V_b1_07",
+      "review_candidate_id": "V_b1_07:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b1_07/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b1_07_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "ee3f4c5a3887ea9e8779c00af5ad8be05ac9bdec24a0c69bc64b11dc206cb392",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "walk"
+      ]
+    },
+    {
+      "target": "V_b1_08",
+      "review_candidate_id": "V_b1_08:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b1_08/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b1_08_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "57002eeeb4be19f80b11762d27225ef276977e8ed41456bd0b3cdb392fec6591",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "walk"
+      ]
+    },
+    {
+      "target": "V_b2_05",
+      "review_candidate_id": "V_b2_05:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_05/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_05_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "7515c0b8b4cd7708a6faac69e49057010d59ec5e1d568c8e1d64e36e64a8f163",
+      "prior_status": "fallback",
+      "current_status": "derived",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ]
+    },
+    {
+      "target": "V_b2_06",
+      "review_candidate_id": "V_b2_06:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_06/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_06_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "9012bb7eb9d25391fe8dd09778ee67752a5304b89d5244b64dfa75a59192d7c8",
+      "prior_status": "fallback",
+      "current_status": "accepted",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ]
+    },
+    {
+      "target": "V_b2_07",
+      "review_candidate_id": "V_b2_07:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_07/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_07_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "9012bb7eb9d25391fe8dd09778ee67752a5304b89d5244b64dfa75a59192d7c8",
+      "prior_status": "fallback",
+      "current_status": "accepted",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ]
+    },
+    {
+      "target": "V_b2_08",
+      "review_candidate_id": "V_b2_08:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_08/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_08_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "9012bb7eb9d25391fe8dd09778ee67752a5304b89d5244b64dfa75a59192d7c8",
+      "prior_status": "fallback",
+      "current_status": "accepted",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ]
+    },
+    {
+      "target": "V_b2_11",
+      "review_candidate_id": "V_b2_11:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_11/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_11_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "64d3cf1fed8e6761fdfde441b2b8ff1e0545b8ab68c984dc7b7fe0e3e56d6732",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "gather"
+      ]
+    },
+    {
+      "target": "V_b2_12",
+      "review_candidate_id": "V_b2_12:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_12/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_12_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "189a829f5379662e364758a5e44346631b6b385e1b419067e2b7fb91451a8c9c",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "gather"
+      ]
+    },
+    {
+      "target": "V_b2_15",
+      "review_candidate_id": "V_b2_15:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_15/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_15_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "11e232755f26352e3c3b403d4c9be43f989154247356042fb26bc65ed32579f0",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "build"
+      ]
+    },
+    {
+      "target": "V_b2_16",
+      "review_candidate_id": "V_b2_16:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b2_16/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b2_16_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "a860df11c90ec46e95f72b0f7b6e1c540fd2f19277dc8b4c1fe1ecefaf881e67",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "build"
+      ]
+    },
+    {
+      "target": "V_b3_03",
+      "review_candidate_id": "V_b3_03:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_03/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_03_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "80940aae1f1fb3f5dfb3a38dbb23713473ff2018f5077d7267b93ffa0d5cf4f2",
+      "prior_status": "accepted",
+      "current_status": "procedural",
+      "group": [
+        "adult_b",
+        "E",
+        "drink"
+      ]
+    },
+    {
+      "target": "V_b3_05",
+      "review_candidate_id": "V_b3_05:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_05/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_05_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "9fa3829eb2f1846713c6640e056d78a8f4f265346cf4f68c8557e00926256398",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "eat"
+      ]
+    },
+    {
+      "target": "V_b3_06",
+      "review_candidate_id": "V_b3_06:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_06/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_06_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "ad7f6c90d2a9a4ce2d0fec0b0d8a65a55225c5795a37e784127e68da1fd931d1",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "eat"
+      ]
+    },
+    {
+      "target": "V_b3_07",
+      "review_candidate_id": "V_b3_07:mask5:r2",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_07/sprite.png",
+      "mask_path": "docs/art/production5/masks/round2/candidates/V_b3_07_mask5_r2/sprite_hair_mask.png",
+      "audited_rgba_sha256": "fcbe95fc2826a7217c270e58ee1b20d26c1fe84d63968e0ec63ba6941c59b1ac",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "sit"
+      ]
+    },
+    {
+      "target": "V_b3_09",
+      "review_candidate_id": "V_b3_09:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_09/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_09_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "afa9a470adc351bc2b1db3a9d662fd48634073f00d2e326c45246a48cd149034",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "talk"
+      ]
+    },
+    {
+      "target": "V_b3_10",
+      "review_candidate_id": "V_b3_10:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_10/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_10_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "9d00290b68811f985edc210dc3eb76de078bb097ffb54ca8147866a3c8544ced",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "talk"
+      ]
+    },
+    {
+      "target": "V_b3_12",
+      "review_candidate_id": "V_b3_12:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_12/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_12_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "60ac2fe6a6e054d727a276ba242721621e6f3539a2307a2cb97f3d6e2ca25cf1",
+      "prior_status": "accepted",
+      "current_status": "procedural",
+      "group": [
+        "adult_b",
+        "E",
+        "talk"
+      ]
+    },
+    {
+      "target": "V_b3_14",
+      "review_candidate_id": "V_b3_14:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_14/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_14_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "6e28465dc64ad7eae8ef6124192e1c295773f2e61df23e2b682822207a685c43",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "crouch"
+      ]
+    },
+    {
+      "target": "V_b3_15",
+      "review_candidate_id": "V_b3_15:mask5",
+      "ledger": "docs/art/production5/masks/final_candidates.json",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "sprite_path": "docs/art/production5/masks/inputs/V_b3_15/sprite.png",
+      "mask_path": "docs/art/production5/masks/candidates/V_b3_15_mask5/sprite_hair_mask.png",
+      "audited_rgba_sha256": "cfe9555fe8b7e45d81734cc5b89af5fd9731802a4927418dfe99a864ed27258a",
+      "prior_status": "accepted",
+      "current_status": "fallback",
+      "group": [
+        "adult_b",
+        "S",
+        "crouch"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": "adult_b_E_carry_7acb418f9e",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "physical_sets": [
+        "P2_fill_02@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b2_05",
+        "V_b2_06",
+        "V_b2_07",
+        "V_b2_08"
+      ],
+      "frame_rgba_sha256": {
+        "V_b2_05": "d70c3d250bf68046a692fe0edf5cfb0f01d15513016a1b6d57785ca44d92c422",
+        "V_b2_06": "d8cb116a3592269a3aae2868633c190f90f97fc17e63ef0ba0dd73c9af6ea0d6",
+        "V_b2_07": "d70c3d250bf68046a692fe0edf5cfb0f01d15513016a1b6d57785ca44d92c422",
+        "V_b2_08": "1e4658ae49b565ce8aefba9022883ad5c0bcea31f3f14ae80dbc4e4bc72b1954"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_carry_7acb418f9e.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_carry_7acb418f9e.gif",
+      "board_sha256": "3f92d4dbf016d6e587c8ba29d9635d32cc9eaa105273ac9c68d8cc5ab5e4917e",
+      "gif_sha256": "7dd1fa51fd56a2028e6c2af53b1ee0bd86237d98f721d1be8344934f2ba9591a"
+    },
+    {
+      "id": "adult_b_E_drink_4faf0422e7",
+      "group": [
+        "adult_b",
+        "E",
+        "drink"
+      ],
+      "physical_sets": [
+        "V_b3@3"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b3_03",
+        "V_b3_04"
+      ],
+      "frame_rgba_sha256": {
+        "V_b3_03": "60631fba031cf474adb5bca85942b847c79fadaec942606e4d4295834206c607",
+        "V_b3_04": "c9fa8ed1bed6fd7cd8a679ed38f1197f367f5e15be5dc610dc70c717902e929e"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_drink_4faf0422e7.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_drink_4faf0422e7.gif",
+      "board_sha256": "f7f83e176d55e78f1bdaf6f640a2841567c70d34c11361e883b04d863ffa4e80",
+      "gif_sha256": "e9e3468571f40f72e6d7be95d8c80d5fbeafec89c6c5807384487aff61b98ff5"
+    },
+    {
+      "id": "adult_b_E_eat_e9ac7e626d",
+      "group": [
+        "adult_b",
+        "E",
+        "eat"
+      ],
+      "physical_sets": [
+        "P2_fill_05@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "P2V_b_E_eat_01",
+        "P2V_b_E_eat_02"
+      ],
+      "frame_rgba_sha256": {
+        "P2V_b_E_eat_01": "6591d979b67a18ffa7d47c48f61f1e13525d23c65a189fbc662415f88a62d45a",
+        "P2V_b_E_eat_02": "fd83448fe232fcc15c1107f8a965b6ce20934b0acb18f98115e8c2f03826b8d4"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_eat_e9ac7e626d.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_eat_e9ac7e626d.gif",
+      "board_sha256": "2f83ac13a0bd3a1aa6e7469ae56e4d5aa37ea51c6ff5b35fa9c5045fd71bc205",
+      "gif_sha256": "1b02934730da6d2306800ca588894175b100376e04892f57a215ef0beb017a9b"
+    },
+    {
+      "id": "adult_b_E_talk_a19bc640a0",
+      "group": [
+        "adult_b",
+        "E",
+        "talk"
+      ],
+      "physical_sets": [
+        "V_b3@2"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b3_11",
+        "V_b3_12"
+      ],
+      "frame_rgba_sha256": {
+        "V_b3_11": "3f2aa1ba5616f51bb9f24eaa2ea2f4d617dcb0512bb7f668d23683a18b3d676b",
+        "V_b3_12": "153ffa8173e76d33be4faa65603a592f2c30f2853f6475db57fac43e0ac3cb04"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_talk_a19bc640a0.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_talk_a19bc640a0.gif",
+      "board_sha256": "91a694b94cd0f491879c6863f0ca14c7cf59602008c3ae195fa7f3c28be04c75",
+      "gif_sha256": "032febcd038e89af669c736e8ca9bcabd99ab255466c2013c71e327953a0627b"
+    },
+    {
+      "id": "adult_b_S_build_3b9b0e0672",
+      "group": [
+        "adult_b",
+        "S",
+        "build"
+      ],
+      "physical_sets": [
+        "V_b2@2"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b2_15",
+        "V_b2_16"
+      ],
+      "frame_rgba_sha256": {
+        "V_b2_15": "11e232755f26352e3c3b403d4c9be43f989154247356042fb26bc65ed32579f0",
+        "V_b2_16": "a860df11c90ec46e95f72b0f7b6e1c540fd2f19277dc8b4c1fe1ecefaf881e67"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_build_3b9b0e0672.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_build_3b9b0e0672.gif",
+      "board_sha256": "b8d7c51ba30f577f7edd0e9f89e31b78942c254df5f5434fdd67b0c9a5c6d4fb",
+      "gif_sha256": "8cd0c6379ff30dd47e59f045b2ee9a3d104ead413e143ae7b39dff974f3e4159"
+    },
+    {
+      "id": "adult_b_S_crouch_1f2f3e7d39",
+      "group": [
+        "adult_b",
+        "S",
+        "crouch"
+      ],
+      "physical_sets": [
+        "V_b3@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b3_14",
+        "V_b3_15"
+      ],
+      "frame_rgba_sha256": {
+        "V_b3_14": "6e28465dc64ad7eae8ef6124192e1c295773f2e61df23e2b682822207a685c43",
+        "V_b3_15": "cfe9555fe8b7e45d81734cc5b89af5fd9731802a4927418dfe99a864ed27258a"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_crouch_1f2f3e7d39.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_crouch_1f2f3e7d39.gif",
+      "board_sha256": "1ad0c32cd8cd1007376796cd7d05193e2dbfa30eb25e649ec21a74658670073f",
+      "gif_sha256": "d9d504d9ecdc51475f3dcec3711402804a5b6916e9a2a0a956793c56e1946623"
+    },
+    {
+      "id": "adult_b_S_drink_522334dc88",
+      "group": [
+        "adult_b",
+        "S",
+        "drink"
+      ],
+      "physical_sets": [
+        "P2_fill_05@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "P2V_b_S_drink_01",
+        "P2V_b_S_drink_02"
+      ],
+      "frame_rgba_sha256": {
+        "P2V_b_S_drink_01": "4c548aa080a002230d28ab20716aeb783cfd9dcb10d9e7cb62e0eeaa8feb3ccb",
+        "P2V_b_S_drink_02": "3773b3f67d49daae0d97e382488145e780e54ec291e4882835a7f596b7642d8a"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_drink_522334dc88.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_drink_522334dc88.gif",
+      "board_sha256": "92bd6ea77225387632651208a8ee170d4648ffa8e3f878c41ad238584561420b",
+      "gif_sha256": "803ecfb00e3e2c4720bed2e896660c4345272cd7a8b88be7f976cdf89d2285a8"
+    },
+    {
+      "id": "adult_b_S_eat_ddcf130df3",
+      "group": [
+        "adult_b",
+        "S",
+        "eat"
+      ],
+      "physical_sets": [
+        "V_b3@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b3_05",
+        "V_b3_06"
+      ],
+      "frame_rgba_sha256": {
+        "V_b3_05": "9fa3829eb2f1846713c6640e056d78a8f4f265346cf4f68c8557e00926256398",
+        "V_b3_06": "ad7f6c90d2a9a4ce2d0fec0b0d8a65a55225c5795a37e784127e68da1fd931d1"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_eat_ddcf130df3.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_eat_ddcf130df3.gif",
+      "board_sha256": "3d59beb41dda2d78cd9a2bd0dd67d83991467bf0ad5a5921820bdb9b535694a4",
+      "gif_sha256": "2a066f3f97c36b7e8df452075dbabe7d7c19fa9d0ff7a28328d4e8e545b1553c"
+    },
+    {
+      "id": "adult_b_S_gather_aac3997f40",
+      "group": [
+        "adult_b",
+        "S",
+        "gather"
+      ],
+      "physical_sets": [
+        "V_b2@3"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b2_11",
+        "V_b2_12"
+      ],
+      "frame_rgba_sha256": {
+        "V_b2_11": "64d3cf1fed8e6761fdfde441b2b8ff1e0545b8ab68c984dc7b7fe0e3e56d6732",
+        "V_b2_12": "189a829f5379662e364758a5e44346631b6b385e1b419067e2b7fb91451a8c9c"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_gather_aac3997f40.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_gather_aac3997f40.gif",
+      "board_sha256": "20b95787dfb1a0fa25c1a4aeb5c035478706fba7182164ff70f98f92d51c8e4b",
+      "gif_sha256": "8918a03397fac0881dccf7cbceaef1574fc9a74ca18a00967dd0c17371ccb49e"
+    },
+    {
+      "id": "adult_b_S_idle_4180085fa1",
+      "group": [
+        "adult_b",
+        "S",
+        "idle"
+      ],
+      "physical_sets": [
+        "V_b1@2"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b1_01",
+        "V_b1_02"
+      ],
+      "frame_rgba_sha256": {
+        "V_b1_01": "4a5fb20bf7fd5444d3dbf344301f8f8055e674f12f3a5141873f17ce945f4a26",
+        "V_b1_02": "b721aa9bf1e1b136ce59e0e7fbeb2102a72004d43352d73275604f3371b93760"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_idle_4180085fa1.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_idle_4180085fa1.gif",
+      "board_sha256": "6bd3d81898b05d7f7571c7cc6c593636ee5f65a4fc4ed3ac8c5b915c6242e7d7",
+      "gif_sha256": "5a8cf03d3f05e246736c46de8c19689bd15f14b89f4c378a10c14b3146e1724b"
+    },
+    {
+      "id": "adult_b_S_sit_16445a25fb",
+      "group": [
+        "adult_b",
+        "S",
+        "sit"
+      ],
+      "physical_sets": [
+        "V_b3@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b3_07"
+      ],
+      "frame_rgba_sha256": {
+        "V_b3_07": "fcbe95fc2826a7217c270e58ee1b20d26c1fe84d63968e0ec63ba6941c59b1ac"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_sit_16445a25fb.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_sit_16445a25fb.gif",
+      "board_sha256": "67549c679835a94ca6073c21c20495dc2a57aa735c0fb386e0394d481dd21056",
+      "gif_sha256": "389e87fca76458b1d10cd7805b412da0e5b6f01c40aed1e833a92b89e44e46ec"
+    },
+    {
+      "id": "adult_b_S_talk_9d888d0403",
+      "group": [
+        "adult_b",
+        "S",
+        "talk"
+      ],
+      "physical_sets": [
+        "V_b3@1"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b3_09",
+        "V_b3_10"
+      ],
+      "frame_rgba_sha256": {
+        "V_b3_09": "afa9a470adc351bc2b1db3a9d662fd48634073f00d2e326c45246a48cd149034",
+        "V_b3_10": "9d00290b68811f985edc210dc3eb76de078bb097ffb54ca8147866a3c8544ced"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_talk_9d888d0403.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_talk_9d888d0403.gif",
+      "board_sha256": "b7f27ec183a01ccad2a077a907387250acc9fcdcb688be6f29c0fea2b29cf801",
+      "gif_sha256": "d7af60275947d6f2fd99330353362006a1328d253f6e2409f65c0c51502c8aa2"
+    },
+    {
+      "id": "adult_b_S_walk_56dbaf63ec",
+      "group": [
+        "adult_b",
+        "S",
+        "walk"
+      ],
+      "physical_sets": [
+        "V_b1@2"
+      ],
+      "single_physical_set": true,
+      "frames": [
+        "V_b1_05",
+        "V_b1_06",
+        "V_b1_07",
+        "V_b1_08"
+      ],
+      "frame_rgba_sha256": {
+        "V_b1_05": "474a78c167e254dbfcc9c619f0602d62cf939dd473c7eee166cb792dcc2e1fcc",
+        "V_b1_06": "a483db722039f85d44baf12615d910e7e85d338b927f53587520caf57b377d8d",
+        "V_b1_07": "ee3f4c5a3887ea9e8779c00af5ad8be05ac9bdec24a0c69bc64b11dc206cb392",
+        "V_b1_08": "57002eeeb4be19f80b11762d27225ef276977e8ed41456bd0b3cdb392fec6591"
+      },
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_walk_56dbaf63ec.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_walk_56dbaf63ec.gif",
+      "board_sha256": "36112011a66205c12b7efd714e0ed507b9bf6f44aedd40b5b64f1289c2198ac9",
+      "gif_sha256": "e3454d471a1582eebb590355f49f9c3ebc92066689065a7e55d171042f2f2043"
+    }
+  ],
+  "manifest_sha256": "ac7120f9d269d402f679d4a6852c417c740996a387b45043c0d92dcba5f57e96"
+}

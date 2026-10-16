@@ -1,0 +1,130 @@
+{
+  "images": [
+    {
+      "sprite_id": "P2_fill_02_15",
+      "candidate_id": "P2_fill_02_15@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P2_fill_02_15_1_p3_mask5_r2.png",
+      "sha256": "280194e3768917d1b34030fb97716f8b33685d8642c3efeb01f099bc60d931bc",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P2_fill_02_15_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "P2_fill_04_02",
+      "candidate_id": "P2_fill_04_02@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P2_fill_04_02_1_p3_mask5_r2.png",
+      "sha256": "4fc976645bb68fe24762019dd2b7b520c4fdca1000da35733e2b6040eaa530fe",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P2_fill_04_02_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "P2_fill_05_01",
+      "candidate_id": "P2_fill_05_01@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P2_fill_05_01_1_p3_mask5_r2.png",
+      "sha256": "dd11559282ee24eb7b0dca103e020535f53f258ee8638ee7246b64a564fb0348",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P2_fill_05_01_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "P2_fill_05_02",
+      "candidate_id": "P2_fill_05_02@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P2_fill_05_02_1_p3_mask5_r2.png",
+      "sha256": "5bb709216b8e12b34ad958e25515b9d374051e9072876917e76326f5456077e6",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P2_fill_05_02_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "P2_fill_05_03",
+      "candidate_id": "P2_fill_05_03@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P2_fill_05_03_1_p3_mask5_r2.png",
+      "sha256": "26c9e49a3716716ff43c3128095f1711d97aa8acbd557dd919a5ee97fbb679bf",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P2_fill_05_03_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "P2_fill_05_08",
+      "candidate_id": "P2_fill_05_08@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P2_fill_05_08_1_p3_mask5_r2.png",
+      "sha256": "47755d5f1ad22d4e034bce5bd3a3736ad88b3a31ad4a104b38645f8fee24e96c",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P2_fill_05_08_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "P3_fill_02_11",
+      "candidate_id": "P3_fill_02_11@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/P3_fill_02_11_1_p3_mask5_r2.png",
+      "sha256": "ff08a417f87f0e186f32dd10bb60013d21c4d1b8271839248bfdd6bc56811363",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/P3_fill_02_11_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_a2_10",
+      "candidate_id": "V_a2_10@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_a2_10_3_p3_mask5_r2.png",
+      "sha256": "d349b380e571aa12a352d8d00be59f70e4eda286a4d123446447f8ec379f43ff",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_a2_10_3_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b1_09",
+      "candidate_id": "V_b1_09@1:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b1_09_1_p3_mask5_r2.png",
+      "sha256": "553f4172782c73a4682a613523bfaa0066d6543c8ffd544c80d46f9245bdb3a7",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b1_09_1_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b1_12",
+      "candidate_id": "V_b1_12@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b1_12_3_p3_mask5_r2.png",
+      "sha256": "6d5e75d476e89d7e4fdd70ebfb3a596a2764295ea7f4250b06b70dccf91690ca",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b1_12_3_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_03",
+      "candidate_id": "V_b2_03@2:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_03_2_p3_mask5_r2.png",
+      "sha256": "bc3063a816c60c877c795107d77d5b74a2ceb4274cefc89ebdd70d61114748cf",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_03_2_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_04",
+      "candidate_id": "V_b2_04@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_04_3_p3_mask5_r2.png",
+      "sha256": "154762d1c821146bcfc049206578481946f2d3cc7bfb61c069438e917bd3c5d7",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_04_3_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05@2:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_05_2_p3_mask5_r2.png",
+      "sha256": "511f28fe79d95d5a62d83ad3d4b43a1fd4e31cb4fcff971e14a8cfec23ce1f74",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_05_2_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_05_3_p3_mask5_r2.png",
+      "sha256": "4926f9f2d16f1f33f662d55caaf5d5b3de62151d47d6f4a54e0cf272748d5873",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_05_3_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06@2:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_06_2_p3_mask5_r2.png",
+      "sha256": "0d18659d44790cdfc1de094453da167e4f57b8db5387eb6675b61d9974d5b5ba",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_06_2_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_06_3_p3_mask5_r2.png",
+      "sha256": "9f4311ff359f03eddc5a4757012e457b778dfb627b1f55cecfac6a9d32f22461",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_06_3_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_07",
+      "candidate_id": "V_b2_07@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_07_3_p3_mask5_r2.png",
+      "sha256": "c000d318358a05772bcc4c41f2c2639194275882fea18f7efaff160c96ad88ef",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_07_3_p3_mask5.png"
+    },
+    {
+      "sprite_id": "V_b2_09",
+      "candidate_id": "V_b2_09@3:p3:mask5:r2",
+      "path": "docs/art/production5/masks/round2/boards/V_b2_09_3_p3_mask5_r2.png",
+      "sha256": "fbbe4b6ba5fa30707edcdf68e73a45c6434a0a9a0d68299787654e792e69597a",
+      "round1_raw_context": "docs/art/production5/masks/round1/boards/V_b2_09_3_p3_mask5.png"
+    }
+  ]
+}

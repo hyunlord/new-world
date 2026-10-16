@@ -1,0 +1,7 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+canopy benchmark 200 agents/400 trees mean_us=554.866666666667
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+test_canopy_fade: PASS including actual scene-order entry and exit

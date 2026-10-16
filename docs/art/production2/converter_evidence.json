@@ -1,0 +1,176 @@
+{
+  "V_a1_01@1": {
+    "source": "/Users/rexxa/work/art-production-raw/V_a1/attempt_1.png",
+    "sha256": "ab741110f695bfc9f87c9300f6d70a5ce46e025d9317732b0a16e719c0850073",
+    "raw_size": [
+      1254,
+      1254
+    ],
+    "metrics": {
+      "native_before": [
+        22,
+        36
+      ],
+      "native_after": [
+        17,
+        28
+      ],
+      "period_xy": [
+        5.86,
+        5.86
+      ],
+      "new_period_xy": [
+        7.534285714285715,
+        7.534285714285715
+      ],
+      "phase_xy": [
+        0.7000000000000001,
+        3.0
+      ],
+      "phase_origin_xy": [
+        -5.16,
+        -2.8600000000000003
+      ],
+      "sampling_phase_xy": [
+        2.3742857142857146,
+        4.674285714285714
+      ],
+      "outlined_canvas": [
+        19,
+        30
+      ],
+      "factor": 0.7777777777777778,
+      "mean_delta_e": 9.59009378257593,
+      "common_opaque": 338,
+      "keyed_out": 0,
+      "palette_match_percent": 100.0,
+      "binary_alpha": true,
+      "berry_texels": 1,
+      "fire_texels": 99,
+      "spill_removed": 0,
+      "fringe_repaired": 0,
+      "post_spill_projected_texels": 0,
+      "warnings": [
+        "colour_drift"
+      ]
+    }
+  },
+  "N3_01@1": {
+    "source": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+    "sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+    "raw_size": [
+      1254,
+      1254
+    ],
+    "metrics": {
+      "native_before": [
+        21,
+        17
+      ],
+      "native_after": [
+        13,
+        10
+      ],
+      "period_xy": [
+        7.46,
+        7.46
+      ],
+      "new_period_xy": [
+        13.055000000000001,
+        13.055000000000001
+      ],
+      "phase_xy": [
+        0.4,
+        6.2
+      ],
+      "phase_origin_xy": [
+        -7.06,
+        -1.2599999999999998
+      ],
+      "sampling_phase_xy": [
+        5.995000000000002,
+        11.795000000000002
+      ],
+      "outlined_canvas": [
+        15,
+        12
+      ],
+      "factor": 0.5714285714285714,
+      "mean_delta_e": 7.246552496778172,
+      "common_opaque": 87,
+      "keyed_out": 0,
+      "palette_match_percent": 100.0,
+      "binary_alpha": true,
+      "berry_texels": 0,
+      "fire_texels": 0,
+      "spill_removed": 0,
+      "fringe_repaired": 0,
+      "post_spill_projected_texels": 0,
+      "warnings": [
+        "colour_drift"
+      ]
+    }
+  },
+  "literal_fixture": {
+    "seed": 91,
+    "palette_colors": 8,
+    "native_original": [
+      19,
+      33
+    ],
+    "scale": 5.9,
+    "phase": 1.7,
+    "required_agreement": 0.8,
+    "measured_agreement": 0.84375,
+    "initial_wrong_origin_agreement": 0.6696428571428571,
+    "known_period_wrong_origin_agreement": 0.6049107142857143,
+    "metrics": {
+      "native_before": [
+        19,
+        33
+      ],
+      "native_after": [
+        16,
+        28
+      ],
+      "period_xy": [
+        5.92,
+        5.92
+      ],
+      "new_period_xy": [
+        6.977142857142857,
+        6.977142857142857
+      ],
+      "phase_xy": [
+        5.5,
+        5.4
+      ],
+      "phase_origin_xy": [
+        -0.41999999999999993,
+        -0.5199999999999996
+      ],
+      "sampling_phase_xy": [
+        6.557142857142857,
+        6.457142857142857
+      ],
+      "outlined_canvas": [
+        18,
+        30
+      ],
+      "factor": 0.8484848484848485,
+      "mean_delta_e": 7.37300133875185,
+      "common_opaque": 448,
+      "keyed_out": 0,
+      "palette_match_percent": 100.0,
+      "binary_alpha": true,
+      "berry_texels": 66,
+      "fire_texels": 0,
+      "spill_removed": 0,
+      "fringe_repaired": 0,
+      "post_spill_projected_texels": 0,
+      "warnings": [
+        "colour_drift"
+      ]
+    }
+  }
+}

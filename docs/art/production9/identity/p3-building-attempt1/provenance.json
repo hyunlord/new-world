@@ -1,0 +1,14 @@
+{
+  "parent_commit": "9f4a7eab541363f6e06869d63a0061f37e6b378e",
+  "candidate": "working tree row2 sleeper count cache",
+  "source_sha256": {
+    "scripts/ui/agent_renderer.gd": "f733d2d355a7cdd5dee623e0b0bfde7d4a9aa574c88f407ea716bdbf634215fc",
+    "scripts/ui/building_renderer.gd": "614e4ea023ff227911686a8ba5d6f12158321007ae2239aabc77941045be1eae",
+    "scripts/test/art/test_building_derived_cache_p9.gd": "d87359384cec18c2e59fb8c09037377a1cf1822594d90057ed34e6b33d06e86f"
+  },
+  "external_B": "/Users/rexxa/work/art-production9-evidence/identity/p3-building-attempt1/B",
+  "capture_exit": 0,
+  "comparison_exit": 0,
+  "all_six_differing_pixels": 0,
+  "all_six_max_channel_difference": 0
+}
