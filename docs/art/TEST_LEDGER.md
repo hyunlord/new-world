@@ -590,3 +590,9 @@ Each row is one changed assertion. Hearth arguments are hoisted once per refresh
 | `harness_art_p9_sim_reads.rs` / protected getter domains (Part 2) | Existing 12 memoized getter domains and mutator protections | Add `get_activity_snapshot` to `PROTECTED`; add direct and literal dynamic activity calls to scanner rejection cases; same getter added to SimReads and equivalence GETTERS | Same all-script no-bypass rule, expanded to the new activity domain. Existing path exemptions and scanner logic unchanged. Equivalence mutation warmup now iterates 13 domains without a fixed-count comment. Rust scanner4/4, Godot reader0 failures and equivalence497 assertions PASS; full final gate pending. |
 
 | `harness_p14_gamma_click_inspector.rs` / target-domain mapping (Part 5) | Exactly 8 labels; keys5/6/7 pinned | Exactly9 labels; existing keys5/6/7 retained, key8 explicitly activity place | Existing FFI TargetKind::Activity=8 requires the ninth label. Final attempt1 cargo failure preserved; all81 other rows passed. No production change or threshold relaxation; full attempt2 pending. |
+
+## Art Pass 11
+
+| Test / pin | Before | After | Meaning and evidence |
+|---|---|---|---|
+| `harness_art_p9_sim_reads.rs` / safe diagnostic dispatch paths | Original/P9/P10 exact framing paths | Add exact P11 framing copy | Same literal-method allowlist and every `_draw_counter` caller validation; no protected getter exemption. P0 gate and targeted rerun recorded under production11/gates. |
