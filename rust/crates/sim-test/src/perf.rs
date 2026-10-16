@@ -277,6 +277,13 @@ pub struct RunOutput {
     pub tick_us: Vec<u32>,
 }
 
+/// Pass 19: each settlement's member count, largest first.
+fn settlement_sizes(engine: &SimEngine) -> Vec<usize> {
+    let mut sizes: Vec<usize> = engine.resources.settlements.values().map(|s| s.member_agents.len()).collect();
+    sizes.sort_unstable_by(|a, b| b.cmp(a));
+    sizes
+}
+
 /// Run `spec` on `engine` (built by [`build_engine`]) for `spec.ticks` ticks.
 pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
     let started = Instant::now();
@@ -406,6 +413,12 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         "fingerprint": crate::probe::fingerprint(&engine),
         "alive_end": alive(&engine),
         "settlements_end": engine.resources.settlements.len(),
+        // Pass 19 (scale check): each settlement's members at the end
+        // (largest first) and the chronicle's size (measurement only).
+        "settlement_sizes_end": settlement_sizes(&engine),
+        "chronicle_entries_end": engine.resources.chronicle.len(),
+        "chronicle_people_end": engine.resources.chronicle.person_count(),
+        "chronicle_approx_bytes_end": engine.resources.chronicle.approx_bytes(),
         "buildings_end": sim_bridge::ffi::world_node::collect_building_snapshot(&engine.resources).len(),
         "mean_alive_0600": mean_of(|s| s.0),
         "mean_settlements_0600": mean_of(|s| s.1),
@@ -885,6 +898,12 @@ mod tests {
         assert_eq!(j["founders"], 40);
         assert_eq!(j["tick_summary"]["ticks"], 1500 - WARMUP_TICKS);
         assert_eq!(j["warmup"]["ticks"], WARMUP_TICKS);
+        // Pass 19: settlement sizes sum to the members; the chronicle recorded the founders.
+        let sizes = j["settlement_sizes_end"].as_array().expect("sizes");
+        assert_eq!(sizes.len() as u64, j["settlements_end"].as_u64().expect("count"));
+        assert!(j["chronicle_people_end"].as_u64().expect("people") >= 40);
+        assert!(j["chronicle_entries_end"].as_u64().expect("entries") >= 40, "founding members");
+        assert!(j["chronicle_approx_bytes_end"].as_u64().expect("bytes") > 0);
         // Per-day ticks cover every tick, and the per-day system sums equal the whole-run sums.
         let days = j["per_day"].as_array().expect("days");
         assert_eq!(days.iter().map(|d| d["ticks"].as_u64().unwrap_or(0)).sum::<u64>(), 1500);
