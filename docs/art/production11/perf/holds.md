@@ -1,0 +1,103 @@
+- 2026-10-16T10:08:33Z pid=87009 WAIT_START owner=codex-art-pass11 purpose=baseline-W0-attempt1 hold_limit=3600
+- 2026-10-16T10:08:34Z pid=87009 CHECK load=19.75 processes= waited=0s
+- 2026-10-16T10:08:34Z pid=87009 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:13:34Z pid=87009 CHECK load=18.60 processes= waited=301s
+- 2026-10-16T10:13:34Z pid=87009 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:18:34Z pid=87009 CHECK load=16.59 processes= waited=601s
+- 2026-10-16T10:18:34Z pid=87009 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:23:34Z pid=87009 CHECK load=6.48 processes=46240 46239 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=901s
+- 2026-10-16T10:23:34Z pid=87009 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:28:34Z pid=87009 CHECK load=3.88 processes=69974 69973 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1201s
+- 2026-10-16T10:28:34Z pid=87009 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:33:34Z pid=87009 CHECK load=4.73 processes=69974 69973 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1501s
+- 2026-10-16T10:33:34Z pid=87009 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:38:34Z pid=87009 CHECK load=3.59 processes= waited=1801s
+- 2026-10-16T10:38:34Z pid=87009 HOLD_START owner=codex-art-pass11 purpose=baseline-W0-attempt1 start=1792147114 load_before=3.59 contended=false waited=1801s
+- 2026-10-16T10:40:23Z pid=87009 HOLD_END owner=codex-art-pass11 purpose=baseline-W0-attempt1 start=1792147114 end=1792147223 elapsed=109 load_before=3.59 load_after=2.55 contended=false exit=0
+<!-- art-p11-last-release 1792147223 -->
+- 2026-10-16T10:40:23Z pid=22034 WAIT_START owner=codex-art-pass11 purpose=baseline-W500-attempt1 hold_limit=3600
+- 2026-10-16T10:40:23Z pid=22034 WAIT_COOLDOWN remaining=600s
+- 2026-10-16T10:50:23Z pid=22034 CHECK load=8.58 processes=47556 47555 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=600s
+- 2026-10-16T10:50:23Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T10:55:23Z pid=22034 CHECK load=6.22 processes= waited=900s
+- 2026-10-16T10:55:23Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:00:23Z pid=22034 CHECK load=15.36 processes= 2774  2771 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1200s
+- 2026-10-16T11:00:23Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:05:24Z pid=22034 CHECK load=3.36 processes=27342 27317 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1501s
+- 2026-10-16T11:05:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:10:24Z pid=22034 CHECK load=4.01 processes=27342 27317 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1801s
+- 2026-10-16T11:10:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:15:24Z pid=22034 CHECK load=22.37 processes=49249 49248 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=2101s
+- 2026-10-16T11:15:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:20:24Z pid=22034 CHECK load=17.76 processes=78803 78802 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=2401s
+- 2026-10-16T11:20:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:25:24Z pid=22034 CHECK load=3.68 processes= 3671  3670 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=2701s
+- 2026-10-16T11:25:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:30:24Z pid=22034 CHECK load=6.17 processes= 3671  3670 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=3001s
+- 2026-10-16T11:30:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:35:24Z pid=22034 CHECK load=5.50 processes= waited=3301s
+- 2026-10-16T11:35:24Z pid=22034 WAIT_BUSY next_poll=300s
+- 2026-10-16T11:40:25Z pid=22034 CHECK load=2.89 processes= waited=3601s
+- 2026-10-16T11:40:25Z pid=22034 HOLD_START owner=codex-art-pass11 purpose=baseline-W500-attempt1 start=1792150825 load_before=2.89 contended=false waited=3602s
+- 2026-10-16T11:48:44Z pid=22034 HOLD_END owner=codex-art-pass11 purpose=baseline-W500-attempt1 start=1792150825 end=1792151324 elapsed=499 load_before=2.89 load_after=3.01 contended=false exit=0
+<!-- art-p11-last-release 1792151324 -->
+- 2026-10-16T11:48:44Z pid=98667 WAIT_START owner=codex-art-pass11 purpose=baseline-W1-attempt1 hold_limit=3600
+- 2026-10-16T11:48:44Z pid=98667 WAIT_COOLDOWN remaining=600s
+- 2026-10-16T11:58:44Z pid=98667 CHECK load=2.82 processes=31339 31338 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=600s
+- 2026-10-16T11:58:44Z pid=98667 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:03:44Z pid=98667 CHECK load=3.49 processes=31339 31338 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=900s
+- 2026-10-16T12:03:44Z pid=98667 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:08:44Z pid=98667 CHECK load=2.31 processes=62334 62333 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1200s
+- 2026-10-16T12:08:44Z pid=98667 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:13:44Z pid=98667 CHECK load=3.79 processes=67844 67843 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1500s
+- 2026-10-16T12:13:44Z pid=98667 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:18:45Z pid=98667 CHECK load=3.41 processes=94682 94680 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1800s
+- 2026-10-16T12:18:45Z pid=98667 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:23:45Z pid=98667 CHECK load=3.77 processes= waited=2101s
+- 2026-10-16T12:23:45Z pid=98667 HOLD_START owner=codex-art-pass11 purpose=baseline-W1-attempt1 start=1792153425 load_before=3.77 contended=false waited=2101s
+- 2026-10-16T12:28:04Z pid=98667 HOLD_END owner=codex-art-pass11 purpose=baseline-W1-attempt1 start=1792153425 end=1792153684 elapsed=259 load_before=3.77 load_after=3.70 contended=false exit=0
+<!-- art-p11-last-release 1792153684 -->
+- 2026-10-16T12:28:04Z pid=38754 WAIT_START owner=codex-art-pass11 purpose=baseline-W200-attempt1 hold_limit=3600
+- 2026-10-16T12:28:04Z pid=38754 WAIT_COOLDOWN remaining=600s
+- 2026-10-16T12:38:05Z pid=38754 CHECK load=20.47 processes=77087 77086 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;77093 77087 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;74702 74701 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=601s
+- 2026-10-16T12:38:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:43:05Z pid=38754 CHECK load=11.65 processes=97232 97229 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=901s
+- 2026-10-16T12:43:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:48:05Z pid=38754 CHECK load=7.51 processes= waited=1201s
+- 2026-10-16T12:48:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:53:05Z pid=38754 CHECK load=6.82 processes=48113 48112 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1501s
+- 2026-10-16T12:53:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T12:58:05Z pid=38754 CHECK load=13.78 processes=74671 74669 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1801s
+- 2026-10-16T12:58:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:03:05Z pid=38754 CHECK load=6.54 processes=74671 74669 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=2101s
+- 2026-10-16T13:03:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:08:05Z pid=38754 CHECK load=3.93 processes=74671 74669 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=2401s
+- 2026-10-16T13:08:05Z pid=38754 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:13:06Z pid=38754 CHECK load=2.66 processes= waited=2702s
+- 2026-10-16T13:13:06Z pid=38754 HOLD_START owner=codex-art-pass11 purpose=baseline-W200-attempt1 start=1792156386 load_before=2.66 contended=false waited=2702s
+- 2026-10-16T13:14:42Z pid=38754 HOLD_END owner=codex-art-pass11 purpose=baseline-W200-attempt1 start=1792156386 end=1792156482 elapsed=96 load_before=2.66 load_after=2.89 contended=false exit=0
+<!-- art-p11-last-release 1792156482 -->
+- 2026-10-16T13:14:53Z pid=40976 WAIT_START owner=codex-art-pass11 purpose=agent-sections-W500 hold_limit=3600
+- 2026-10-16T13:14:54Z pid=40976 WAIT_COOLDOWN remaining=589s
+- 2026-10-16T13:24:43Z pid=40976 CHECK load=5.42 processes=64354 64330 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=590s
+- 2026-10-16T13:24:43Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:29:43Z pid=40976 CHECK load=3.63 processes=64354 64330 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=890s
+- 2026-10-16T13:29:43Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:34:43Z pid=40976 CHECK load=5.23 processes=16622 16621 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1190s
+- 2026-10-16T13:34:43Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:39:43Z pid=40976 CHECK load=16.03 processes= waited=1490s
+- 2026-10-16T13:39:43Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:44:43Z pid=40976 CHECK load=4.70 processes= waited=1790s
+- 2026-10-16T13:44:43Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:49:43Z pid=40976 CHECK load=6.41 processes= waited=2090s
+- 2026-10-16T13:49:43Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:54:44Z pid=40976 CHECK load=7.38 processes= waited=2390s
+- 2026-10-16T13:54:44Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T13:59:44Z pid=40976 CHECK load=7.46 processes= waited=2691s
+- 2026-10-16T13:59:44Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:04:44Z pid=40976 CHECK load=5.31 processes= waited=2991s
+- 2026-10-16T14:04:44Z pid=40976 WAIT_BUSY next_poll=300s
+- 2026-10-16T14:09:44Z pid=40976 CHECK load=3.24 processes= waited=3291s
+- 2026-10-16T14:09:44Z pid=40976 HOLD_START owner=codex-art-pass11 purpose=agent-sections-W500 start=1792159784 load_before=3.24 contended=false waited=3291s
+- 2026-10-16T14:09:58Z pid=40976 HOLD_END owner=codex-art-pass11 purpose=agent-sections-W500 start=1792159784 end=1792159798 elapsed=14 load_before=3.24 load_after=3.78 contended=false exit=0
+<!-- art-p11-last-release 1792159798 -->

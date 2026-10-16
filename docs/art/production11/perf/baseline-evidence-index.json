@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "archive": "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-raw-evidence.zip",
+  "archive_sha256": "5b49e5f122338b0060519c28dd7e70083a377c33b31d264eceb14008978e6872",
+  "archive_bytes": 4932813,
+  "within_40mb": true,
+  "full_aggregate": "/Users/rexxa/work/art-production11-evidence/perf/baseline-aggregate.json",
+  "full_aggregate_sha256": "08ddcaf3fc6d32cc1e99020fea1ac6d449443076d33879a3a4bbd0182e1adedc",
+  "original_aggregate": "/Users/rexxa/work/new-world-art-prod/docs/art/production11/perf/baseline.json",
+  "section_summary": "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/summary.json",
+  "section_report": "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-sections.md",
+  "baseline_report": "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-complete.md",
+  "inputs": [
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W0-attempt1.json",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W0-attempt1.log",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W0-attempt1.exit",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W500-attempt1.json",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W500-attempt1.log",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W500-attempt1.exit",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W1-attempt1.json",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W1-attempt1.log",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W1-attempt1.exit",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W200-attempt1.json",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W200-attempt1.log",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-W200-attempt1.exit",
+    "/Users/rexxa/work/art-production11-evidence/perf/baseline-aggregate.json",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production11/perf/baseline.md",
+    "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-holds.snapshot.md",
+    "/Users/rexxa/work/art-production11-evidence/baseline-matrix.log",
+    "/Users/rexxa/work/art-production11-evidence/measure-release-build-baseline.log",
+    "/Users/rexxa/work/art-production11-evidence/measure-import-baseline.log",
+    "/Users/rexxa/work/art-production11-evidence/estimate-w1.log",
+    "/Users/rexxa/work/art-production11-evidence/remote-p0-gate.txt",
+    "/Users/rexxa/work/art-production11-evidence/remote-p0-tooling.txt",
+    "/Users/rexxa/work/new-world-art-prod/scripts/test/art/perf_frames_p11.gd",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_perf_matrix_p11.sh",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/with_quiet_lock_p11.sh",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/launch.json",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/frames.json",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/summary.json",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/session.log",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/session.exit",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/agent_renderer_profile_p11.gd",
+    "/Users/rexxa/work/art-production11-evidence/p0-sections-W500-attempt1/agent_renderer_profile_p11.manifest.json",
+    "/Users/rexxa/work/art-production11-evidence/p0-report-prep/agent_renderer-baseline.gd",
+    "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-sections-holds.snapshot.md",
+    "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-sections.md",
+    "/Users/rexxa/work/art-production11-evidence/p0-report-prep/baseline-complete.md",
+    "/Users/rexxa/work/new-world-art-prod/scripts/test/art/agent_section_clock_p11.gd",
+    "/Users/rexxa/work/new-world-art-prod/scripts/test/art/profile_agent_sections_p11.gd",
+    "/Users/rexxa/work/new-world-art-prod/scripts/test/art/section_profile_loader_p11.gd",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/generate_agent_sections_p11.py",
+    "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_agent_sections_p11.py"
+  ],
+  "all_raw_preserved": true,
+  "roundtrip_verified": true,
+  "section_ranked_medians_usec": [
+    [
+      "total_usec",
+      {
+        "median": 24923.0,
+        "p90": 25502,
+        "p99": 26172,
+        "max": 26240
+      }
+    ],
+    [
+      "declump_usec",
+      {
+        "median": 6676.5,
+        "p90": 6837,
+        "p99": 6967,
+        "max": 6997
+      }
+    ],
+    [
+      "pose_usec",
+      {
+        "median": 2550.0,
+        "p90": 2596,
+        "p99": 2631,
+        "max": 2713
+      }
+    ],
+    [
+      "post_loop_usec",
+      {
+        "median": 2112.0,
+        "p90": 2198,
+        "p99": 2273,
+        "max": 2346
+      }
+    ],
+    [
+      "frame_choice_usec",
+      {
+        "median": 1985.0,
+        "p90": 2041,
+        "p99": 2081,
+        "max": 2128
+      }
+    ],
+    [
+      "walker_offsets_usec",
+      {
+        "median": 1894.5,
+        "p90": 1969,
+        "p99": 2042,
+        "max": 2094
+      }
+    ],
+    [
+      "children_usec",
+      {
+        "median": 1312.0,
+        "p90": 1341,
+        "p99": 1366,
+        "max": 1387
+      }
+    ],
+    [
+      "meta_usec",
+      {
+        "median": 1264.0,
+        "p90": 1296,
+        "p99": 1332,
+        "max": 1402
+      }
+    ],
+    [
+      "look_usec",
+      {
+        "median": 1229.0,
+        "p90": 1261,
+        "p99": 1288,
+        "max": 1312
+      }
+    ],
+    [
+      "variant_usec",
+      {
+        "median": 1002.0,
+        "p90": 1027,
+        "p99": 1048,
+        "max": 1051
+      }
+    ],
+    [
+      "easing_usec",
+      {
+        "median": 912.0,
+        "p90": 1005,
+        "p99": 1120,
+        "max": 1203
+      }
+    ],
+    [
+      "footprints_usec",
+      {
+        "median": 683.5,
+        "p90": 745,
+        "p99": 827,
+        "max": 904
+      }
+    ],
+    [
+      "seats_usec",
+      {
+        "median": 657.5,
+        "p90": 729,
+        "p99": 827,
+        "max": 929
+      }
+    ],
+    [
+      "tile_contexts_usec",
+      {
+        "median": 647.0,
+        "p90": 667,
+        "p99": 678,
+        "max": 691
+      }
+    ],
+    [
+      "agent_setup_usec",
+      {
+        "median": 590.0,
+        "p90": 621,
+        "p99": 654,
+        "max": 681
+      }
+    ],
+    [
+      "draw_rows_usec",
+      {
+        "median": 546.0,
+        "p90": 561,
+        "p99": 575,
+        "max": 577
+      }
+    ],
+    [
+      "walker_apply_usec",
+      {
+        "median": 257.0,
+        "p90": 298,
+        "p99": 391,
+        "max": 505
+      }
+    ],
+    [
+      "chill_ingest_usec",
+      {
+        "median": 201.0,
+        "p90": 208,
+        "p99": 216,
+        "max": 217
+      }
+    ],
+    [
+      "retire_usec",
+      {
+        "median": 110.0,
+        "p90": 133,
+        "p99": 142,
+        "max": 149
+      }
+    ],
+    [
+      "activity_context_usec",
+      {
+        "median": 83.0,
+        "p90": 90,
+        "p99": 96,
+        "max": 100
+      }
+    ],
+    [
+      "other_usec",
+      {
+        "median": 69.0,
+        "p90": 77,
+        "p99": 87,
+        "max": 90
+      }
+    ],
+    [
+      "reads_usec",
+      {
+        "median": 50.0,
+        "p90": 55,
+        "p99": 60,
+        "max": 66
+      }
+    ],
+    [
+      "checksum_talk_usec",
+      {
+        "median": 31.0,
+        "p90": 35,
+        "p99": 37,
+        "max": 39
+      }
+    ],
+    [
+      "blocked_usec",
+      {
+        "median": 20.0,
+        "p90": 22,
+        "p99": 24,
+        "max": 25
+      }
+    ],
+    [
+      "selection_usec",
+      {
+        "median": 6.0,
+        "p90": 7,
+        "p99": 8,
+        "max": 8
+      }
+    ],
+    [
+      "causal_usec",
+      {
+        "median": 2.0,
+        "p90": 2,
+        "p99": 3,
+        "max": 3
+      }
+    ]
+  ]
+}

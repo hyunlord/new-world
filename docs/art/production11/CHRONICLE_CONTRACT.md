@@ -1,6 +1,6 @@
 # Art Pass 11 delivered chronicle contract
 
-Inspected after merge `ecf512d886d87ba7f9ca5fa7db92a48300dc1c68`: `docs/revitalize/CHRONICLE.md`, `rust/crates/sim-bridge/src/ffi/chronicle.rs`, and registered methods in `world_node.rs:552–588`. This is source verification; runtime evidence is recorded separately. All five planned getters are delivered. Simulation-owned code is unchanged.
+Inspected at post-merge provenance commit `ecf512d886d87ba7f9ca5fa7db92a48300dc1c68`; the merge itself is `5cdf233409f11afdfde1134565730e21e8807a39`: `docs/revitalize/CHRONICLE.md`, `rust/crates/sim-bridge/src/ffi/chronicle.rs`, and registered methods in `world_node.rs:552–588`. This is source verification; runtime evidence is recorded separately. All five planned getters are delivered. Simulation-owned code is unchanged.
 
 | Getter | Present | Arguments | Return |
 |---|---|---|---|

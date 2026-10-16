@@ -5,7 +5,7 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 
 | Part | Outcome | Start UTC | End UTC | Status |
 |---|---|---|---|---|
-| 0 | Merge, delivered contract, tools, gate, release baseline | 07:50 | | IN_PROGRESS |
+| 0 | Merge, delivered contract, tools, gate, release baseline | 07:50 | 14:09:58 | COMPLETE; optional Art10 after dropped |
 | 1 | Names, cached reads, life and records, chronicle, tests and captures | 10:17 (approx.) | 10:47 (approx.) | COMPLETE; H8 FAIL (44/45 correct) |
 | 2 | Seven icons, village summary, blind test | 10:35 | 12:36 | COMPLETE_WITH_LIMITATIONS; H7 NOT_VERIFIED, C12/14 shortage, D round2 PASS |
 | 3 | Timed optimization with identity and pan proof | 12:37 | | IN_PROGRESS; identity reference f0d04f8e5bb698385b4751f0e0ea9f401ebef5ac |
@@ -27,3 +27,5 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 - 2026-10-16T13:24Z: Python unittest discovery completed392 tests in19.078s, exit0. This is a focused pre-freeze tool gate, not the full final gate.
 
 - 2026-10-16T13:35:52Z: Reference capture sequence completed: six A/Aprime exact complete draw-event sequences and RGBA zero differences; running-A W0/W200600 frames and W500 frozen/2x240 frames pass structure/provenance validation. Reference evidence only; candidate H5 remains NOT_MEASURED.
+
+- 2026-10-16T14:09:58Z: P0 W500 section capture valid300frames,14s quiet hold load3.24→3.78, uncontended, exit0. Largest section declump6676.5us, total24923us. Full baseline aggregate preserved byte-identical externally and in verified40-file ZIP; removed only redundant generated72.8MB working-tree JSON.

@@ -44,3 +44,7 @@ First A/P1 rejected on unexpected render steps; leader stopped its owned process
 ## Preserve final measurement time (2026-10-16T12:50Z)
 
 Observed quiet waiting/load threatens the four after-world holds. Target an earlier Part4 freeze around15:00–15:15UTC if the first candidate can be fully checked; absolute16:50deadline stays unchanged. No reduction to matrix/identity bars. Further P3 candidates and then optional Art10 after-verdicts remain the prescribed first drops when necessary. This is a scheduling target, not a claim that Part3 or any H verdict is complete.
+
+## Protect mandatory final matrix (2026-10-16T14:00Z)
+
+P0 section timer wait now approaches45minutes, with repeated Mac loads above4. Four final worlds may each require60minutes of waiting. Target Part4 around15:25UTC; absolute16:50 remains unchanged. Follow GOAL drop order: stop Part3 after the first accepted candidate, and drop optional Art10 historical after sessions now. Preserve external debug-adapter preparation as unexecuted and report Art10 H1/H3/H6 separately as NOT_MEASURED/NOT_VERIFIED. Never substitute P11 release values or historical alternating29.04ms. All required P11 matrix worlds remain required; no measurement threshold or population rule changes.
