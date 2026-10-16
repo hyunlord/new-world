@@ -13,3 +13,5 @@
 - Life capture attempt1 retained as rejected: day60 PNGs exist, but next-day advance assertion assumed delta return; delivered advance_ticks returns final absolute tick (observed requested1440 returned86520 actual86520). Corrected harness comparison to expected_tick; no simulation/UI changes. Real life capture uses main debug bridge explicitly; section5.6 does not prescribe release, and release timing worktree remains untouched.
 
 - Activity screenshots use explicitly recorded main debug bridge; populous seed was selected by the actual release worldsim_probe game_v24 cohort. Section6.5 release-selected requirement is kept; screenshot timing is not performance evidence. Immutable measure worktree remains on P0 tooling for the release matrix.
+
+- Activity attempt2 rejected before blind crops: original sidecar omitted nature/prop/descendant Sprite2D blockers. Five completed frames retained, final day60 Z1 process group stopped by leader; complete effective-z/y-group/behind-body-front ordering added with fail-closed unsupported hierarchy checks. Attempt3 is final base-capture retry. No crop geometry, pose, eligibility threshold or scoring bar changed.

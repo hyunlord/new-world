@@ -1,5 +1,6 @@
 extends SceneTree
 ## Future Part 2 evidence only; requires explicit renderer metadata contract v1.
+const SpriteOrder = preload("res://scripts/test/art/capture_sprite_order_p11.gd")
 const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 const FixedDelta = preload("res://scripts/test/art/test_fixed_delta_p9.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
@@ -14,6 +15,8 @@ var _main: Node
 var _world: Node
 var _out: String
 var _build_identity: Dictionary = {}
+var _draw_rows: Array[Dictionary] = []
+var _draw_ranks: Dictionary = {}
 
 func _init() -> void:
 	call_deferred("_run")
@@ -104,6 +107,12 @@ func _run() -> void:
 	var clock: Dictionary = ReadRoute.read(_world, "get_time_snapshot")
 	var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
 	var activities: Dictionary = ReadRoute.read(_world, "get_activity_snapshot")
+	var ordering := SpriteOrder.new()
+	_draw_rows = ordering.collect(_main.get_node("WorldObjects") as Node2D)
+	for error: String in ordering.errors:
+		_errors.append(error)
+	for row: Dictionary in _draw_rows:
+		_draw_ranks[row["node_path"]] = row["draw_rank"]
 	var rows: Array[Dictionary] = _holders(agents, activities)
 	var image: Image = root.get_texture().get_image()
 	if not _valid_delta or _samples == 0 or Engine.get_process_frames() != 130 or int(clock["tick"]) != tick or image.get_size() != Vector2i(1920, 1080):
@@ -123,7 +132,7 @@ func _run() -> void:
 		"fixed_delta_valid": _valid_delta, "delta_tolerance": 0.000000001, "minimum_delta": _minimum_delta, "maximum_delta": _maximum_delta,
 		"world_info": info, "clock": clock, "settlements": settlements, "population": agents["ids"].size(),
 		"camera": [camera.position.x, camera.position.y], "viewport": [1920, 1080],
-		"draw_rects": _draw_rects(), "village_labels": _main.get_node("SettlementLabels").call("capture_metadata"), "center_kind": center_kind, "raw_building_snapshot": ReadRoute.read(_world, "get_building_snapshot"),
+		"draw_order_schema": 2, "draw_order_complete": ordering.errors.is_empty(), "draw_rects": _draw_rows, "village_labels": _main.get_node("SettlementLabels").call("capture_metadata"), "center_kind": center_kind, "raw_building_snapshot": ReadRoute.read(_world, "get_building_snapshot"),
 		"raw_society_snapshot": ReadRoute.read(_world, "get_society_snapshot"), "raw_agent_snapshot": agents, "raw_activity_snapshot": activities, "activity_holders": rows, "holder_count": activities["ids"].size(),
 		"pose_oracle_checked": false, "debug_build": OS.is_debug_build()}), "\t") + "\n")
 	file.close()
@@ -164,7 +173,10 @@ func _holders(agents: Dictionary, activities: Dictionary) -> Array[Dictionary]:
 			metadata[str(key)] = sprite.get_meta(key)
 		row["metadata"] = metadata
 		var rect: Rect2 = sprite.get_global_transform_with_canvas() * sprite.get_rect()
-		row["draw_order"] = [sprite.z_index, sprite.global_position.y, sprite.get_index()]
+		row["draw_rank"] = int(_draw_ranks.get(str(sprite.get_path()), -1))
+		row["node_path"] = str(sprite.get_path())
+		if sprite.is_visible_in_tree() and int(row["draw_rank"]) < 0:
+			_errors.append("visible holder missing draw rank: %d" % entity)
 		row["viewport_rect"] = [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 		row["visible"] = sprite.visible
 		row["visible_in_tree"] = sprite.is_visible_in_tree()
@@ -214,17 +226,3 @@ func _json_ready(value: Variant) -> Variant:
 			result.append(_json_ready(item))
 		return result
 	return value
-
-func _draw_rects() -> Array[Dictionary]:
-	var rows: Array[Dictionary] = []
-	for node: Node in _main.get_node("WorldObjects").get_children():
-		if not node is Sprite2D:
-			continue
-		var sprite: Sprite2D = node as Sprite2D
-		if not sprite.is_visible_in_tree() or str(sprite.get_meta("art_kind", "")) not in ["agent", "building"]:
-			continue
-		var rect: Rect2 = sprite.get_global_transform_with_canvas() * sprite.get_rect()
-		rows.append({"entity_bits": int(sprite.get_meta("entity_bits", -1)), "kind": str(sprite.get_meta("art_kind", "")),
-			"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
-			"draw_order": [sprite.z_index, sprite.global_position.y, sprite.get_index()]})
-	return rows

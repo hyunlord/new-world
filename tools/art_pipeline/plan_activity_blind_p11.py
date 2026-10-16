@@ -70,6 +70,8 @@ def main(args: list[str]) -> int:
         with Image.open(path.with_name('capture.png')) as image:
             if list(image.size) != data['viewport']:
                 raise EvidenceError('image dimensions differ from sidecar')
+        if data.get('draw_order_schema') != 2 or data.get('draw_order_complete') is not True:
+            raise EvidenceError('complete all-world-sprite draw ordering schema2 required')
         if data['zoom'] != 4 or not check_capture(data, atlas)['pose_check_complete']:
             raise EvidenceError('only pose-verified Z4 captures are eligible')
         instants.append([case.day, case.hour])
@@ -82,7 +84,7 @@ def main(args: list[str]) -> int:
             reason = ''
             rect = row['viewport_rect']
             blockers = [item['rect'] for item in data['draw_rects']
-                        if tuple(item['draw_order']) > tuple(row['draw_order'])]
+                        if item['draw_rank'] > row['draw_rank']]
             covered = covered_fraction(rect, blockers)
             x, y, w, h = rect
             # Exact Art Pass 10 v2 crop geometry and nearest-neighbor display scale.
