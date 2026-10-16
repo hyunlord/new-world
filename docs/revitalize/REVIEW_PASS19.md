@@ -242,3 +242,207 @@ Once finding 1 has a harness test, H6 completes, and the minor documentation and
 7. **NOTE — `retain` not captured → recorded** (DECISIONS.md and the report's limitations): a no-op today because every death goes through `despawn_agent`, which empties the rosters first; the roster-replay harness would catch a future divergence. Not changed, to keep the final build's identity binaries.
 8. **NOTE — bridge details → recorded** in the report's limitations (−1 for an unknown `born_tick`, `alive` is an O(N) scan, fallback parents can both be female — read `Born` cause 1).
 9. **NOTE — smaller points:** the C5 estimate is now called a lower bound (report); SCALE.md's MB are MiB (2^20 bytes; noted); the H5 slope runs ran v24 before v20 inside the slope stage (Pass 18's stage order: new then old), recorded; the shared-Mac record now lists every paused group (all 24 pauses, 1,800 s); the `args.rs` scene error message omits `game_v24` (left, to keep the final build's binaries; noted as a limitation); the branch state was in progress at review time.
+
+## Round 2 (verbatim; fresh general-purpose subagent, 15:01–15:10 KST, the last round)
+
+
+Scope: brief `docs/revitalize/PASS19_GOAL.md` (read in full), diff `20a1d078..a6371e74`, the docs under `docs/revitalize` (DECISIONS / METRICS Pass 19, CHRONICLE, SCALE, ROUTINE, FAMILY, PERF_BUDGET, REVIEW_PASS19 round 1 + dispositions, probe/p19-*, perf/p19-*, verification/p19_gate/first_0935cb1a), raw data in `/Users/rexxa/work/p19-data` (read only), and the uncommitted draft `REPORT_PASS19.md`. Nothing in the repository was modified; no state-changing git command was run. `/Users/rexxa/work/.mac_quiet.lock` was absent before every run. My scratch outputs are in `/private/tmp/claude-501/p19-review/r2/`.
+
+**Result: 0 BLOCKER, 0 MAJOR, 5 MINOR, 6 NOTE.**
+
+### What I re-ran / verified
+
+- **New test.** `cargo test --release -p sim-test --test harness_revitalize_pass19_chronicle_events`: 3/3 pass, and cargo didn't need to rebuild, so the binary matches HEAD. The release binary run 16× and the debug binary run once also pass 3/3. `rust/` working tree is clean.
+- **H6.** I re-ran `compare_identity_pass17.py` for base (`probe/p19-0_base`) against final (`probe/p19-4_final`):
+  - i1_v19, i3_v16, i4_v20, i5_v21, i6_v22 and i7_v23 all give `PASS: 0 differences` (timing keys only excluded).
+  - `i2_sha256.txt` is identical (20 hashes).
+  - `p19-data/final/*.log` contain 6× `DETERMINISM PASS`, and every summary has `determinism_checked: true`.
+  - The `bin_p3/worldsim_probe` and `worldsim_perf` sha256 match `binaries.sha256`.
+  - `git diff c2309a70 949d5b8c -- rust` is empty; `git diff 949d5b8c a6371e74 -- rust` contains only the new test file; `b0c31465..949d5b8c` touches only `sim-test/src/perf.rs`.
+  - So "every later commit changes only tests and documents" holds.
+- **Gate 1** (`first_0935cb1a`): 15/15 exit 0, debug and release 2,288 / 0 / 0 each, `stopped_s 0.0` everywhere, allowed paths "outside section 2: none", head 0935cb1a, 13:18:51–15:00:07. The gate logs do not contain the new test, which is consistent with DECISIONS ("copied into the tree only after the gate finished").
+- **Quiet-lock record.**
+  - Across all six `p19-data/**/RUNLOG.txt` there are 24 unique CONT lines totalling 1,800.3 s. Every STOP is "own quiet hold (PAUSE)", with 0 foreign-lock stops.
+  - The last pauses are 250.1 / 260.1 / 260.1 s (Part-1 I6, base I6, run B).
+  - `quiet_hold.log`: one hold, 12:39:39–12:40:55, 76.1 s, load 3.84, `busy=[]`, contended=0. Busy evidence at 12:04 / 12:15 / 12:21 is cargo and at 12:10 / 12:26 / 12:31 is Godot.
+  - The C6 / H5 / scale command timestamps (03:39:39Z–03:40:48Z) are inside the hold.
+  - All of this matches DECISIONS and the report.
+- **Evaluators.** I re-ran `evaluate_perf_p19.py` (h5 and c6) and `evaluate_scale_p19.py` on the raw `p19-data/perf/*`. All three `.md` outputs are byte-identical to the committed ones, and `h5.json` is too.
+- **Trace windows (round-1 finding 4).** Recomputed from the raw `_agents.jsonl`:
+  - v24: 1,379,596 idle samples, mean distance 5.603, 156,358 bed-nights, mean bed minute 1,326.16, median 1,304.
+  - v23: 1,337,358 / 5.623 / 156,014 / 1,325.49 / 1,304.
+  - These equal eval.md, ROUTINE.md and the report.
+- **Environment.** `sysctl`: Apple M4 Max, 14 CPUs, hw.memsize 38,654,705,664. rustc 1.93.1.
+- **Report numbers checked against sources:**
+  - C1–C6 against chronicle.md and c6.md, including C1's 7,446 = 3,330 + 4,116 and C2's 94 + 330 + 19 = 443.
+  - H1–H5 against eval.md and h5.md.
+  - The 18:00-window table, the per-repeat p99.9 (+5.7 … +32.2 apart from r3's 1.566 ms) and the day-end bins.
+  - The scale table, slopes and decision scopes against SCALE.md and scale.md.
+  - S1–S4, including S3: 60 × 0.856 ms = 5.1 %.
+  - C5 arithmetic: 20,151 / 211,073 = 0.0955; × 2.8 M = 267,314.
+  - The pin count: 151 `assert_eq!` in `assert_v23_fields` (156 in the file, counting the per-seed checker).
+
+  Every number I checked matches its source, apart from the nits in finding 9.
+
+### Round-1 dispositions
+
+| # | disposition | verdict |
+|---|---|---|
+| 1 MAJOR | new 3-test harness | Done; adequate apart from findings 1–3 below. |
+| 2 | H6 cited | Done: ROUTINE.md cites H6 and DECISIONS has the H6 line. |
+| 3 | public items as a deviation | Listed in REVIEW_PASS19 and the report. DECISIONS has only a parenthetical "(deviation recorded)" without the item list (finding 8). |
+| 4 | trace windows | Done and reproduced exactly; no committed script (finding 9). |
+| 5 | RUNLOG | Done; Part 4's end is "(report commit)", which is expected. |
+| 6 | PERF_BUDGET wording | Done. |
+| 7 | `retain` note | Recorded in the report and briefly in DECISIONS (L1144). |
+| 8 | bridge notes | In the report's limitations. |
+| 9 | smaller points | Partly. The "lower bound" is in the report but not in CHRONICLE.md. The H5 slope-order note is said to be "recorded" but I find it only in REVIEW_PASS19 itself (finding 8). |
+
+### Findings
+
+#### 1. MINOR — the remnant-merge order assertion is only probabilistic
+
+The test does not reliably detect a missing sort.
+
+**Evidence**
+- `harness_chronicle_records_remnant_merges_and_empty_dissolutions` asserts `LeftSettlement` for 101 and then 102.
+- The comment and disposition 1 say the members are "spawned in descending id order: the entries must still be ascending". But `Settlement::member_agents` is a std `HashSet` with `RandomState` (`components/settlement.rs:106`), so insertion order does not decide iteration order.
+- A 2-element `HashSet{102, 101}` iterates ascending in 421/1000 and 445/1000 constructions (my rustc check, `r2/hs.rs`).
+- So if `leaving.sort_unstable()` (fission.rs ≈L479) were removed, this test would still pass about 43 % of the time.
+- The cancel test's AgentId order is guaranteed by `group.members: BTreeSet` (fission.rs:122), so it is not affected.
+
+**Fix**
+- Repeat the remnant scenario in a loop over many fresh engines (e.g. 32; each `Settlement` gets a fresh RandomState), asserting ascending order every time. Missing a broken sort then has probability below 1e-9.
+- Correct the comment and disposition text.
+
+#### 2. NOTE — the cancel test's "skip the dead" goes through `roster.get`, not `is_alive`
+
+**Evidence**
+- In `cancel`, a member gets `DepartureCancelled` only if `roster.get(member)` hits *and* `chronicle_log::is_alive(...)` is true.
+- `roster()` lists every entity with `Agent + Position` (fission.rs:153), so it includes dead-but-present agents.
+- The test kills its member with `despawn_agent`, so the member is absent from the roster and the `is_alive` branch is never reached. Deleting the `is_alive` check would not fail the test.
+- Today every death despawns at once, so a dead-but-present member is practically unreachable. This is a coverage nit, not a bug.
+
+**Fix (optional):** also cover a member whose `BodyHealth` is dead but who is still present.
+
+#### 3. MINOR — the new paths are proven only synthetically, and the report's limitations do not say so
+
+**Evidence**
+- The three tests drive `FissionSystem` or `SettlementSystem` alone, on `game_v17` (no family rule, so every departure is `Ranked`).
+- They do not check the roster replay round 1 suggested, e.g. the re-admission after a remnant merge (`Joined` cause 0 after `LeftSettlement` cause 0).
+- No evaluation world contains a cancel, a remnant merge or a dissolution (C1 `fission_cancelled 0/0`, `left_settlement 5`, no dissolved entry).
+- The report's limitations mention only TopUp ("단위 테스트에서만"). "정직한 판단" says the chronicle "32세계×120일에서 기존 추적과 한 건도 어긋나지 않았고" without saying that these event kinds never occurred there.
+
+**Fix:** one limitation line: cancel / remnant-merge / dissolution entries are verified only by synthetic harness tests (FissionSystem alone, `game_v17`) and never occurred in the 32 evaluation worlds.
+
+#### 4. NOTE — gate 1 does not cover the final head; H6's pins row
+
+**Evidence**
+- Gate 1 ran on 0935cb1a. a6371e74 adds `rust/crates/sim-test/tests/harness_revitalize_pass19_chronicle_events.rs`, so gate 1 neither covers nor counts it: 2,288 tests, and the gate logs have no match for `chronicle_events`.
+- Brief 2 lets `codex/revitalize-2026-10` fast-forward only to a WIP commit whose gate is green. A full gate on the final head is therefore required, presumably GATE_TBD; it should report about 2,291 tests.
+- The report's H6 row cites only I1–I7, I2 and determinism. H6 also requires "all pins identical on the final build".
+- Also, `../new-world-p19-base` still exists. Brief 9.3 requires removing it; the report says "이 패스 끝에 제거".
+
+**Fix**
+- Run the final gate on the report-commit head.
+- Cite gate 1's 2,288 / 0 / 0 (pins on the final production code) and the final gate in the H6 row.
+- Remove the base worktree before the report's claim is finalised.
+
+#### 5. MINOR — "18:00 꼬리 자체는 해결됐다" is stronger than the evidence
+
+**Evidence** (h5.md):
+- The 18:00 tick is still 0.614 ms against v20's 0.505 (+22 %).
+- The 17:00–19:00 window's largest tick is 0.667 against 0.510 (+31 %).
+- v24 r3 has a p99.9 of 1.566 ms (+141 %), which is not explained.
+- p99.9 of a 1-day run (1,440 ticks) is about the second-largest tick, so the bar is passed on a median of five noisy samples.
+- Pass 18's own record (DECISIONS ≈L1063) had to be corrected for the same kind of over-reading.
+
+The supported claim is that the spike shrank substantially (0.87 → 0.61 ms) and that the p99.9 bar is met on the median of five, with four of five repeats inside it. The registered H1 and the H5 mean both failed.
+
+**Fix:** reword it, e.g. "18:00 틱 비용은 크게 줄었고(0.87 → 0.61 ms, v20 0.505) p99.9 막대는 5회 중앙값으로 통과(r3 +141 % 하나 제외 넷이 막대 안)했지만, 18:00 틱은 아직 v20보다 22 % 높다".
+
+#### 6. MINOR — the H1-edge diagnosis is presented as confirmed, but its evidence was not kept
+
+**Evidence**
+- The report says "임시 진단으로 확인한 결과 둘 다 식량 채집 여행이 한꺼번에 가능해져 … (16:01에 214명, 18:01에 53명 …)".
+- The only source is DECISIONS L1134: a "temporary uncommitted test, deleted", with no saved output in `p19-data`. The RUNLOG has two 7–17 s "p19 diag tmp" runs at 12:45.
+- ROUTINE.md says instead "the trigger at those minutes was not traced further". The two documents disagree.
+- `Seeking{GatherFood}` becoming available at 18:01 also sits oddly with brief 7.4's "forage … trips run until 18:00"; the docs do not explain which predicate opens it.
+- The 214 is `game_v24`'s count; the report omits that v23 has 219.
+
+**Fix**
+- Soften the wording to "임시(미보존) 진단에서 관찰", or keep the diagnostic output in `p19-data` and cite it.
+- Align ROUTINE.md with DECISIONS.
+
+#### 7. MINOR — "몇 명까지 부드럽게 돌아가는가" is answered from evidence narrower than the wording
+
+**Evidence**
+- SCALE and the report measure simulation CPU only, over 2 days, in one camp:
+  - no bridge snapshot or marshalling cost, and no rendering;
+  - no long-run state growth (relationships, memory, chronicle, births and fission do not happen in 2 days).
+- "2,000명 단일 캠프도 2×에서 한 코어의 12 % … 여유가 크다" and "메모리는 문제가 아니다(16.5 MB)" read as statements about the live game.
+- The limitations list only the single-camp caveat.
+
+**Fix:** add "시뮬레이션만, 2일, 브리지 스냅샷·렌더 비용과 장기 상태 증가는 측정 안 함" to that answer and to the limitations.
+
+#### 8. NOTE — two dispositions say "recorded" where the record is thin
+
+**Evidence**
+- Disposition 9's H5 slope-stage order (v24 before v20, Pass 18's new-then-old) appears only in REVIEW_PASS19.md. PERF_BUDGET's procedure line says "old rules then new, interleaved" and does not mention that the slope stage is reversed.
+- Disposition 3: DECISIONS has only "(deviation recorded)" in L1144, without naming `WorldRules::V24_ROUTINE`, `sim_test::probe::chronicle_out::{split, document, write, twins_match}` or `run_with_chronicle`. The report says "DECISIONS에 기록".
+
+**Fix:** add one explicit DECISIONS line for each.
+
+#### 9. NOTE — small number, unit and reproducibility nits in the report and docs
+
+- **macOS version.** `sw_vers` gives 27.0.1; the report says "macOS 27.0".
+- **Memory size.** "메모리 38.65 GB" is 36 GiB (38,654,705,664 bytes); say 36 GiB or keep the decimal deliberately.
+- **Units.** The scale table's "MB" are MiB (SCALE.md says so; the report does not), while C5's "34.2 MB / 18.9 MB" are decimal MB. Mark one or the other.
+- **Slope bound.** "그 밖 모두 ≤ 1.18": AgentMovementSystem is 1.181.
+- **Mixed builds in one percentage.** SCALE finding 1's "778 µs of 1,980 … 39 % of the whole tick" divides the subprofile build's scope by the plain build's tick. Against the subprofile build's own tick (2.051 ms) it is 38 %. The "rebuilt from scratch every tick … most inputs change slowly" attribution is not measured.
+- **C5 wording.** CHRONICLE.md does not call C5's memory estimate a lower bound (the report does).
+- **Trace windows.** The numbers were computed by hand with no committed script. I reproduced them exactly from the raw data, so this is only a reproducibility nit.
+
+#### 10. NOTE — write-path details beyond round 1 (harmless today)
+
+- **Leader record before the push.** `FissionStarted` (with `other = leader`), `FissionCancelled` and `DaughterFounded` are appended with `chronicle.push`, not `chronicle_log::record`. For `FissionStarted` the leader's record is therefore not ensured *before* the push, as brief 6.1 asks. It is ensured by the `Departed` entries that follow, and founders and newborns always have records already.
+- **Cost per death.** `despawn_agent` calls `alive_entity(world, partner)` (an O(N) world scan) for every death with a recorded partner, and `ensure` scans as well whenever a record is missing. This is fine at these sizes, but it is an O(N)-per-death cost the SCALE findings do not mention.
+
+#### 11. NOTE — report placeholders and pending items
+
+FILES_TBD, REVIEW_TBD, RUNLOG_TBD and GATE_TBD are expected. The RUNLOG table's Part 4 end, round 2 of the review, the final gate, the ff of `codex/revitalize-2026-10`, the PR #510 update and the base-worktree removal are still pending.
+
+The report must also carry, as brief 0.1 / 11 require:
+- the commit hashes per Part;
+- both `git ls-remote` heads;
+- the time per Part.
+
+### Verdict
+
+Round 1's dispositions were carried out:
+- The MAJOR now has a real test that forces a cancel with a dead member, a remnant merge and both dissolution paths, and it would fail if any of those entries were missing, misordered within the cancel, carried the wrong cause or settlement, or were written for the dead (via the roster).
+- Its one weak point is the remnant-merge ordering check, which is only about 57 % sensitive because the roster is a `RandomState` `HashSet` (finding 1). This is cheap to harden.
+- H6 reproduces exactly: I1–I7 0 differences, I2 equal, determinism ×6, binaries matching. Gate 1 is green with no stops. The quiet-lock record checks out to the second.
+- Every C, H and S number and every scale number in the Korean draft matches its source, and the H5, C6, scale and trace-window evaluations re-run byte-identically.
+
+What remains is wording and completeness, not correctness:
+- soften "18:00 꼬리 해결" and the H1-edge "확인" claim;
+- state that the cancel, merge and dissolution paths were only exercised synthetically;
+- caveat the scale answer as simulation-only, 2-day and single-camp;
+- run the final gate on the report head (the gate 1 record predates the new test), then fast-forward the branch and remove the base worktree.
+
+With those, Pass 19 is ready to close.
+
+## Round 2 dispositions
+
+1. **MINOR — remnant-order check only probabilistic → fixed (test only).** The remnant scenario now runs on 32 fresh engines (each roster a new randomly seeded `HashSet`), so a missing sort would pass with probability about 2^-32; comment corrected.
+2. **NOTE — `is_alive` branch in `cancel` not reached → accepted.** Every death despawns immediately today, so a dead-but-present member is unreachable; left as is.
+3. **MINOR — synthetic-only coverage not stated → fixed** in the report's limitations (cancel, remnant merge and dissolution never occurred in the 32 evaluation worlds; verified only by the `game_v17` harness tests).
+4. **NOTE — final gate, pins in H6, base worktree → done in Part 4:** the final gate runs on the report commit (covering the new tests), the H6 row cites the pins (gate 1 and the final gate), and `../new-world-p19-base` is removed.
+5. **MINOR — "18:00 꼬리 자체는 해결됐다" too strong → reworded** (the 18:00 tick is still +22 % over v20's, the window maximum +31 %, p99.9 passes on the median of five with r3 unexplained).
+6. **MINOR — the edge diagnosis presented as confirmed → reworded** in the report and aligned in ROUTINE.md: observed in a temporary, unsaved diagnostic (v24 214, v23 219 at 16:01; v24 53 at 18:01), the opening predicate not traced.
+7. **MINOR — scale answer broader than the evidence → caveated** in the report's answer and limitations and in SCALE.md (simulation only, 2 days, single camp; no bridge/render cost, no long-run growth).
+8. **NOTE — thin records → added** to DECISIONS.md (public-item deviations listed by name; H5's slope-stage order).
+9. **NOTE — nits → fixed:** macOS 27.0.1; memory 36 GiB; MiB vs decimal MB marked; "≤ 1.19 (movement 1.181)"; SCALE's percentage now uses the subprofile build's own tick (38 %) and no longer claims slowly changing inputs; CHRONICLE.md calls the memory estimate a lower bound. The trace-window numbers stay hand-computed (reproduced exactly by the reviewer).
+10. **NOTE — write-path details → accepted:** `FissionStarted`/`FissionCancelled`/`DaughterFounded` are pushed without `ensure` because their only named person (the leader) is ensured by the `Departed` entries in the same step and always has a record already; the O(N) partner scan per death is recorded here.
+11. **NOTE — placeholders → filled** in the report.

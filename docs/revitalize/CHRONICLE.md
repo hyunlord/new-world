@@ -73,4 +73,4 @@ No GDScript uses them in this pass (the next art pass builds the UI).
 
 ## Size
 
-Measured on 32 worlds × 120 days (`game_v23`, Part 1) in `docs/revitalize/probe/p19-1_chronicle/` (C5), and at 500 / 1,000 / 2,000 people in `SCALE.md`.
+`Chronicle::approx_bytes` counts lengths, not allocated capacity or B-tree node overhead, so its memory figures are lower bounds. Measured on 32 worlds × 120 days (`game_v23`, Part 1) in `docs/revitalize/probe/p19-1_chronicle/` (C5), and at 500 / 1,000 / 2,000 people in `SCALE.md`.

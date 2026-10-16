@@ -130,15 +130,15 @@ fn harness_chronicle_records_a_cancelled_fission_and_skips_the_dead() {
     assert_eq!((record.died_tick, record.death_reason), (Some(check + 10), Some(DeathReason::Starvation.as_u8())));
 }
 
-#[test]
-fn harness_chronicle_records_remnant_merges_and_empty_dissolutions() {
-    let seed = 3;
+/// One remnant-merge scenario (Pass 11's): a two-member remnant (settlement 2)
+/// and an empty settlement (3) beside the 30-member village; returns the engine
+/// after the merge.
+fn remnant_scenario(seed: u64) -> SimEngine {
     let (mut engine, _) = world(seed, 10, &village(30));
     let mut remnant = Settlement::new_with_id(2, 0);
     remnant.formation_tile = (50, 50);
     let mut empty = Settlement::new_with_id(3, 0);
     empty.formation_tile = (10, 50);
-    // Spawned in descending id order: the entries must still be ascending.
     for id in [102u64, 101] {
         engine.world.spawn((Position::new(50, 50), Agent { id }, AgentState::Idle, Lineage { key: id, births: 0 }));
         remnant.add_member_agent(id);
@@ -153,26 +153,39 @@ fn harness_chronicle_records_remnant_merges_and_empty_dissolutions() {
     assert_eq!((dissolved[0].settlement, dissolved[0].cause), (Some(3), 0));
     run(&mut engine, &mut system, start + 61, start + 1440 + 61);
     assert_eq!(engine.resources.tallies.remnant_merges, 1);
-    let tail: Vec<(ChronicleKind, Option<AgentId>, Option<u32>, u8)> = engine
-        .resources
-        .chronicle
-        .entries()
-        .iter()
-        .skip(1)
-        .map(|e| (e.kind, e.subject, e.settlement, e.cause))
-        .collect();
-    assert_eq!(
-        tail,
-        vec![
-            (ChronicleKind::LeftSettlement, Some(101), Some(2), 0),
-            (ChronicleKind::LeftSettlement, Some(102), Some(2), 0),
-            (ChronicleKind::SettlementDissolved, None, Some(2), 1),
-        ]
-    );
-    let merge_tick = engine.resources.dissolutions.iter().find(|(sid, _)| *sid == 2).expect("merged").1;
-    assert!(engine.resources.chronicle.entries()[1..].iter().all(|e| e.tick == merge_tick));
-    // The merged members got records from their live components on first mention.
-    assert!(engine.resources.chronicle.person(101).is_some() && engine.resources.chronicle.person(102).is_some());
+    engine
+}
+
+#[test]
+fn harness_chronicle_records_remnant_merges_and_empty_dissolutions() {
+    // `Settlement::member_agents` is a std `HashSet` with a random hasher per
+    // set, so a two-member roster iterates in either order about half the
+    // time: 32 fresh engines make a missing sort fail with probability
+    // ~1 - 2^-32 (review round 2, finding 1).
+    for repeat in 0..32 {
+        let engine = remnant_scenario(3);
+        let tail: Vec<(ChronicleKind, Option<AgentId>, Option<u32>, u8)> = engine
+            .resources
+            .chronicle
+            .entries()
+            .iter()
+            .skip(1)
+            .map(|e| (e.kind, e.subject, e.settlement, e.cause))
+            .collect();
+        assert_eq!(
+            tail,
+            vec![
+                (ChronicleKind::LeftSettlement, Some(101), Some(2), 0),
+                (ChronicleKind::LeftSettlement, Some(102), Some(2), 0),
+                (ChronicleKind::SettlementDissolved, None, Some(2), 1),
+            ],
+            "repeat {repeat}"
+        );
+        let merge_tick = engine.resources.dissolutions.iter().find(|(sid, _)| *sid == 2).expect("merged").1;
+        assert!(engine.resources.chronicle.entries()[1..].iter().all(|e| e.tick == merge_tick));
+        // The merged members got records from their live components on first mention.
+        assert!(engine.resources.chronicle.person(101).is_some() && engine.resources.chronicle.person(102).is_some());
+    }
 }
 
 #[test]

@@ -61,10 +61,10 @@ Verified in code: the bridge runs a fixed 30 ticks per second at 1× (`FIXED_DT 
 
 ## Findings, ranked by cost (what a fix pass should target first)
 
-1. **The decision system's pre-loop maps (778 µs of 1,980 at 2,000 people, 39 % of the whole tick).** They are rebuilt from scratch every tick for every person; most inputs change slowly. The same incremental-cache treatment Pass 18 gave the routine (`PlacesCache`, input-version memos) is the obvious first target.
+1. **The decision system's pre-loop maps (778 µs per tick at 2,000 people: 52 % of the decision system and 38 % of the subprofile build's own 2.051 ms tick).** They are rebuilt every tick; whether their inputs change slowly enough to cache was not measured. The same incremental-cache treatment Pass 18 gave the routine (`PlacesCache`, input-version memos) is the obvious first target.
 2. **The agent loop (515 µs) and its slope (1.235 for the whole system).** Superlinear, most likely because per-person choices scan settlement-wide structures (here one 2,000-member roster; not attributed further in this pass); in real villages of ≤ 50 the scans are bounded, so first measure a multi-village world before optimising this.
 3. **`SettlementSystem` (14 %, linear).** Membership sync and exclusivity walk every roster each tick; linear and cheap per person, but it is the second-largest system. The Pass 19 chronicle diff adds nothing on quiet ticks (early return).
 4. **`MemorySystem` (6 %, slope 1.16).**
 5. **Clock-edge ticks** (21:00 bedtime spread, 20:00 pairing, 06:01 wake-up) at ≈ 2.3× the mean; harmless at these sizes.
 
-Nothing at 2,000 threatens the live game's speeds; the next scale question is a **multi-village** stress world (the single camp is an upper bound for scans, but a lower bound for per-settlement fixed costs).
+These are simulation-only, 2-day, single-camp numbers (no bridge snapshot, marshalling or rendering cost, no long-run growth of relationships, memory or the chronicle). Within that, nothing at 2,000 threatens the live game's speeds; the next scale question is a **multi-village** stress world (the single camp is an upper bound for scans, but a lower bound for per-settlement fixed costs).
