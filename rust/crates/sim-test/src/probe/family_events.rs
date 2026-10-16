@@ -1,6 +1,6 @@
 use super::family_trace::{FamilyTracer, Person};
 use serde_json::{json, Value};
-use sim_core::components::FamilyEvent;
+use sim_core::components::{Agent, AgentId, Elder, FamilyEvent};
 use sim_engine::{FissionRecord, SimEngine};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -78,10 +78,33 @@ pub(super) fn observe(trace: &mut FamilyTracer, engine: &SimEngine, event: Famil
             {
                 trace.misses += 1;
             }
-            let row = json!({"event":"departed","fission_id":fission_id,"parent":parent,"leader":leader,"depart_tick":tick,
+            let mut row = json!({"event":"departed","fission_id":fission_id,"parent":parent,"leader":leader,"depart_tick":tick,
                 "members":members,"households":households,"couples":couples,"couples_total":couples_total,
                 "couples_split":couples_split,"households_split":households_split,"households_total":households.len(),
                 "households_departed_whole":households.iter().filter(|group| !group.is_empty() && group.iter().all(|id| selected.contains(id))).count()});
+            // Pass 18: elders who left and adult–elder couples (exactly one
+            // partner an elder) split, from the members, the couples and the
+            // `Elder` component as observed after the departure tick.
+            let elders: BTreeSet<AgentId> = engine
+                .world
+                .query::<(&Agent, &Elder)>()
+                .iter()
+                .map(|(_, (agent, _))| agent.id)
+                .collect();
+            let adult_elder: Vec<[AgentId; 2]> = couples
+                .iter()
+                .filter(|pair| elders.contains(&pair[0]) != elders.contains(&pair[1]))
+                .map(|pair| if elders.contains(&pair[0]) { [pair[1], pair[0]] } else { *pair })
+                .collect();
+            let split_pairs: Vec<Value> = adult_elder
+                .iter()
+                .filter(|[adult, elder]| selected.contains(adult) != selected.contains(elder))
+                .map(|[adult, elder]| json!({"adult": adult, "elder": elder, "adult_departed": selected.contains(adult)}))
+                .collect();
+            row["elders_departed"] = json!(members.iter().filter(|id| elders.contains(id)).count());
+            row["adult_elder_couples"] = json!(adult_elder.len());
+            row["adult_elder_couples_split"] = json!(split_pairs.len());
+            row["adult_elder_split_pairs"] = json!(split_pairs);
             if trace.departures.insert(fission_id, row.clone()).is_some() {
                 trace.misses += 1;
             }

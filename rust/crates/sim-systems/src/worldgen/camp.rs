@@ -188,6 +188,11 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                 let _ = engine.world.insert_one(entity, life);
             }
         }
+        // Pass 19 chronicle: every founder's person record (every scene).
+        let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);
+        if let Ok(id) = id {
+            crate::runtime::chronicle_log::ensure_entity(&engine.world, &mut engine.resources, id, entity);
+        }
     }
     berries(cfg, &mut engine.resources, c);
 }

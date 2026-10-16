@@ -1,0 +1,25 @@
+head a0d656d044eaeac2585c20d823be2ab9ac4c5aae
+started 2026-10-16 03:52:23 KST
+prepare_bridge exit 0
+prepare_import exit 0
+test_debug exit 0
+test_debug passed 2262 failed 0 ignored 0
+test_release exit 0
+test_release passed 2262 failed 0 ignored 0
+clippy exit 0
+clippy_all_targets exit 0
+forbidden_math exit 0
+bridge_build exit 0
+godot_import exit 0
+strict_check exit 0
+smoke exit 0
+smoke_errors none
+python_unittest exit 0
+python_unittest ran 246 skipped 0 result OK
+python_worldmodel exit 0
+python_worldmodel ran 49 skipped 24 result OK (skipped=24)
+perf_quick exit 0
+quick mean_ms 0.3070333333333334 p999_ms 0.695 max_ms 0.884
+perf_quick is untimed validation; use the quiet-lock stage measurements for R5/F8
+allowed_paths exit 0
+finished 2026-10-16 05:05:32 KST status 0

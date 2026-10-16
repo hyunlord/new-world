@@ -58,14 +58,14 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Founding,
-    Hunger, Inventory, Memory, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId,
+    Hunger, Inventory, Lineage, Memory, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId,
     SettlementMigrant, Sleep, Social, TargetKind, Temperament, Thirst, INVENTORY_CAPACITY,
     SALIENCE_FLOOR,
 };
 use sim_core::rules::{FirewoodRule, ForageRule, NightRestRule, TemperamentRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
-use super::routine::{idle_equivalent, is_activity, RoutineTick};
+use super::routine::{idle_equivalent, is_activity, PlacesCache, RoutineTick};
 use crate::runtime::memory::MAX_RECENCY_TICKS;
 use crate::runtime::settlement::firewood::{urgent_with, wood_in_hand, wood_target};
 use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
@@ -101,15 +101,46 @@ fn choose_bush(
     let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     food_tiles
         .iter()
-        .filter(|(tile, amount)| {
-            **amount >= 1
-                && Some(**tile) != exclude
-                && chebyshev(**tile, home) <= rule.forage_radius
-                && claims.get(*tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
-        })
+        .filter(|(tile, amount)| bush_eligible(rule, home, claims, exclude, **tile, **amount))
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
 }
+
+/// The candidate filter of [`choose_bush`]; it does not depend on the person.
+fn bush_eligible(
+    rule: &ForageRule,
+    home: (u32, u32),
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+    tile: (u32, u32),
+    amount: u8,
+) -> bool {
+    amount >= 1
+        && Some(tile) != exclude
+        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.forage_radius
+        && claims.get(&tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+}
+
+/// Pass 18: whether [`choose_bush`] (without `exclude`) returns `Some` for
+/// this `home` and `claims`, whoever asks.
+fn bush_exists(
+    rule: &ForageRule,
+    home: (u32, u32),
+    food_tiles: &HashMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+) -> bool {
+    food_tiles
+        .iter()
+        .any(|(tile, amount)| bush_eligible(rule, home, claims, None, *tile, *amount))
+}
+
+/// Pass 18: a per-tick trip-existence answer with the versions of the two
+/// maps (claims, tiles) it was computed from.
+type TripMemo<K> = BTreeMap<K, (u64, u64, bool)>;
+
+/// Pass 18: per-tick `gather_tile_exists` answers by (tile, catchment) with
+/// the food-tiles version they were computed from.
+type GatherMemo = BTreeMap<((u32, u32), Option<((u32, u32), u32)>), (u64, bool)>;
 
 /// Per-settlement firewood inputs computed once per decision tick (Pass 5).
 #[derive(Debug, Clone)]
@@ -149,19 +180,42 @@ fn choose_spot(
     let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     wood_tiles
         .iter()
-        .filter(|(tile, amount)| {
-            **amount >= 1
-                && Some(**tile) != exclude
-                && chebyshev(**tile, home) <= rule.wood_radius
-                && claims.get(*tile).copied().unwrap_or(0)
-                    < if rule.claims_bounded_by_amount {
-                        rule.max_gatherers_per_spot.min(u32::from(**amount))
-                    } else {
-                        rule.max_gatherers_per_spot
-                    }
-        })
+        .filter(|(tile, amount)| spot_eligible(rule, home, claims, exclude, **tile, **amount))
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// The candidate filter of [`choose_spot`]; it does not depend on the person.
+fn spot_eligible(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+    tile: (u32, u32),
+    amount: u8,
+) -> bool {
+    amount >= 1
+        && Some(tile) != exclude
+        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.wood_radius
+        && claims.get(&tile).copied().unwrap_or(0)
+            < if rule.claims_bounded_by_amount {
+                rule.max_gatherers_per_spot.min(u32::from(amount))
+            } else {
+                rule.max_gatherers_per_spot
+            }
+}
+
+/// Pass 18: whether [`choose_spot`] (without `exclude`) returns `Some` for
+/// this `home` and `claims`, whoever asks.
+fn spot_exists(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    wood_tiles: &BTreeMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+) -> bool {
+    wood_tiles
+        .iter()
+        .any(|(tile, amount)| spot_eligible(rule, home, claims, None, *tile, *amount))
 }
 
 /// Resource presence used to select actionable survival needs.
@@ -592,16 +646,37 @@ pub fn nearest_gather_tile(
         .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
 }
 
-/// Phase 5-β decision system. Stateless — all per-agent state lives
-/// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
-/// sparse `food_tiles` / `water_tiles` maps on [`SimResources`].
+/// Pass 18: whether [`nearest_gather_tile`] returns `Some` (the same filters,
+/// without choosing the nearest).
+fn gather_tile_exists(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    radius: u32,
+    local: Option<((u32, u32), u32)>,
+) -> bool {
+    tiles.iter().any(|((tx, ty), v)| {
+        *v > 0
+            && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
+            && local.is_none_or(|(home, catchment)| {
+                tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+            })
+    })
+}
+
+/// Phase 5-β decision system. All per-agent state lives in the
+/// [`AgentState`], [`Hunger`], [`Thirst`] components and the sparse
+/// `food_tiles` / `water_tiles` maps on [`SimResources`]. Pass 18: the only
+/// field is a cache of the routine's candidate places, recomputed whenever
+/// one of its inputs differs, so results never depend on it.
 #[derive(Debug, Default)]
-pub struct AgentDecisionSystem;
+pub struct AgentDecisionSystem {
+    places: PlacesCache,
+}
 
 impl AgentDecisionSystem {
     /// Construct a fresh instance.
     pub fn new() -> Self {
-        Self
+        Self::default()
     }
 }
 
@@ -629,7 +704,9 @@ impl RuntimeSystem for AgentDecisionSystem {
             .rules
             .agent
             .routine
-            .map(|rule| RoutineTick::new(world, resources, rule));
+            .map(|rule| RoutineTick::new(world, resources, rule, std::mem::take(&mut self.places)));
+        #[cfg(feature = "subprofile")]
+        let pre_timer = crate::subprofile::Timer::start();
         let availability = NeedAvailability::from_resources(resources);
         // Pass 12 (`local_food_availability`, `game_v18`, the J6 fix): a
         // member's food availability is whether a food tile with food lies in
@@ -1055,6 +1132,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         // leaves settlement migrants frozen (P10-γ owns their pathing; p10
         // birth tests lock that). Robust to fluctuating settlement membership
         // and independent of loneliness magnitude.
+        #[cfg(feature = "subprofile")]
+        pre_timer.stop("decision_pre_loop");
         let mut social_seek_entities: HashSet<hecs::Entity> = HashSet::new();
         // V7 Phase 10-γ — settlement-migration FSM wiring.
         // `settlement_migrant_tag`: entities that ENTERED Seeking{Agent} via the
@@ -1070,8 +1149,32 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut settlement_migrant_tag: HashSet<hecs::Entity> = HashSet::new();
         let mut migrant_clear: Vec<hecs::Entity> = Vec::new();
         let mut preempt_clear_seek: Vec<hecs::Entity> = Vec::new();
+        // Pass 18: the routine's settlement lookup is the `member_of` map above
+        // whenever the firewood or forage rule built it (the same construction:
+        // settlement id order, first wins), else built here as Pass 17 did.
+        let routine_members_own = (routine.is_some()
+            && firewood_rule.is_none()
+            && forage_rule.is_none())
+        .then(|| super::routine::members_of(resources));
+        let routine_members = routine_members_own.as_ref().unwrap_or(&member_of);
+        // Pass 18: the exit test's "does a bush / deadwood spot exist" answers
+        // depend on the home tile (and urgency) plus the claims and tiles
+        // maps; each answer is kept with the versions of the maps it read,
+        // and every write to those maps below bumps the version.
+        let mut claims_version = 0_u64;
+        let mut food_version = 0_u64;
+        let mut wood_claims_version = 0_u64;
+        let mut wood_version = 0_u64;
+        let mut bush_memo: TripMemo<(u32, u32)> = BTreeMap::new();
+        let mut spot_memo: TripMemo<((u32, u32), bool)> = BTreeMap::new();
+        // The gather predicate also depends on the person's tile and catchment.
+        let mut gather_memo: GatherMemo = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
         loop {
+            #[cfg(feature = "subprofile")]
+            let round_timer = crate::subprofile::Timer::start();
+            #[cfg(feature = "subprofile")]
+            let replay_round = routine_replay.is_some();
             let mut query = world.query::<(
                 &Position,
                 &Agent,
@@ -1084,6 +1187,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&mut Inventory>,
                 Option<&SettlementMigrant>,
                 Option<&Temperament>,
+                Option<&Lineage>,
             )>();
             // Pass 9: under keyed draws the agents are processed in AgentId order
             // (first-come claims, tile decrements and event ids no longer follow
@@ -1109,6 +1213,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     mut inventory_opt,
                     migrant_marker,
                     temperament,
+                    lineage,
                 ),
             ) in rows
             {
@@ -1169,7 +1274,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     preempt_clear_seek.push(entity);
                 }
                 if is_activity(*state) {
-                    if let Some(routine) = routine.as_mut() {
+                    if let Some(routine) = routine.as_mut() { scope!("decision_exit_test", {
                         let need = actionable_need_with_fatigue_threshold(
                             hunger_opt.as_deref(),
                             thirst_opt.as_deref(),
@@ -1178,67 +1283,94 @@ impl RuntimeSystem for AgentDecisionSystem {
                             fatigue_threshold,
                         )
                         .is_some();
-                        let forage = forage_rule
-                            .filter(|_| forage_window && worker && !no_trips)
-                            .and_then(|rule| {
-                                let sid = member_of.get(&agent.id)?;
-                                let plan = forage_plans.get(sid)?;
-                                let inv = inventory_opt.as_ref()?;
-                                let room = inv.total() < INVENTORY_CAPACITY;
-                                let light =
-                                    inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold);
-                                if !(room && light && (plan.in_hand as f64) < plan.target) {
-                                    return None;
-                                }
-                                choose_bush(
-                                    &rule,
-                                    plan.home,
-                                    (pos.x, pos.y),
-                                    &resources.food_tiles,
-                                    &claims,
-                                    None,
-                                )
-                            })
-                            .is_some();
-                        let firewood = firewood_rule
-                            .filter(|_| worker && !no_trips)
-                            .and_then(|rule| {
-                                let sid = member_of.get(&agent.id)?;
-                                let plan = wood_plans.get(sid)?;
-                                if !(if plan.urgent {
-                                    urgent_window
-                                } else {
-                                    wood_window
-                                }) {
-                                    return None;
-                                }
-                                let inv = inventory_opt.as_ref()?;
-                                let room = inv.total() < INVENTORY_CAPACITY;
-                                let light =
-                                    inv.get(ResourceKind::Wood) < wood_haul(rule.haul_threshold);
-                                if !(room && light && (plan.in_hand as f64) < plan.target) {
-                                    return None;
-                                }
-                                let rule = urgent_rule(rule, plan.urgent);
-                                choose_spot(
-                                    &rule,
-                                    plan.home,
-                                    (pos.x, pos.y),
-                                    &resources.wood_tiles,
-                                    &wood_claims,
-                                    None,
-                                )
-                            })
-                            .is_some();
-                        let gather = {
+                        // Pass 18: the row's settlement, looked up once for the
+                        // three trip predicates (`member_of` is fixed during the loop).
+                        let member = member_of.get(&agent.id);
+                        // Pass 18: the trip predicates only ask whether a choice
+                        // exists (`choose_bush` / `choose_spot` /
+                        // `nearest_gather_tile` filter candidates independently of
+                        // the person's position or rank), and run only after the
+                        // cheap predicates are false. All are pure, so the verdict
+                        // is the eager OR of Pass 17.
+                        let mut forage = || scope!("exit_forage", {
+                            forage_rule
+                                .filter(|_| forage_window && worker && !no_trips)
+                                .and_then(|rule| {
+                                    let sid = member?;
+                                    let plan = forage_plans.get(sid)?;
+                                    let inv = inventory_opt.as_ref()?;
+                                    let room = inv.total() < INVENTORY_CAPACITY;
+                                    let light = inv.get(ResourceKind::Food)
+                                        < food_haul(rule.haul_threshold);
+                                    if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                        return None;
+                                    }
+                                    let versions = (claims_version, food_version);
+                                    let exists = match bush_memo.get(&plan.home) {
+                                        Some(&(c, f, exists)) if (c, f) == versions => exists,
+                                        _ => {
+                                            let exists = bush_exists(
+                                                &rule,
+                                                plan.home,
+                                                &resources.food_tiles,
+                                                &claims,
+                                            );
+                                            bush_memo.insert(plan.home, (versions.0, versions.1, exists));
+                                            exists
+                                        }
+                                    };
+                                    exists.then_some(())
+                                })
+                                .is_some()
+                        });
+                        let mut firewood = || scope!("exit_firewood", {
+                            firewood_rule
+                                .filter(|_| worker && !no_trips)
+                                .and_then(|rule| {
+                                    let sid = member?;
+                                    let plan = wood_plans.get(sid)?;
+                                    if !(if plan.urgent {
+                                        urgent_window
+                                    } else {
+                                        wood_window
+                                    }) {
+                                        return None;
+                                    }
+                                    let inv = inventory_opt.as_ref()?;
+                                    let room = inv.total() < INVENTORY_CAPACITY;
+                                    let light = inv.get(ResourceKind::Wood)
+                                        < wood_haul(rule.haul_threshold);
+                                    if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                        return None;
+                                    }
+                                    let rule = urgent_rule(rule, plan.urgent);
+                                    let key = (plan.home, plan.urgent);
+                                    let versions = (wood_claims_version, wood_version);
+                                    let exists = match spot_memo.get(&key) {
+                                        Some(&(c, w, exists)) if (c, w) == versions => exists,
+                                        _ => {
+                                            let exists = spot_exists(
+                                                &rule,
+                                                plan.home,
+                                                &resources.wood_tiles,
+                                                &wood_claims,
+                                            );
+                                            spot_memo.insert(key, (versions.0, versions.1, exists));
+                                            exists
+                                        }
+                                    };
+                                    exists.then_some(())
+                                })
+                                .is_some()
+                        });
+                        let mut gather = || scope!("exit_gather", {
                             let has_room = inventory_opt
                                 .as_ref()
                                 .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
                             let bounded = forage_rule.is_none_or(|rule| {
                                 inventory_opt.as_ref().is_some_and(|inv| {
                                     inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold)
-                                }) && member_of
-                                    .get(&agent.id)
+                                }) && member
                                     .and_then(|sid| forage_plans.get(sid))
                                     .is_none_or(|plan| {
                                         let cap = resources
@@ -1253,14 +1385,24 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 && has_room
                                 && bounded
                                 && !no_trips
-                                && nearest_gather_tile(
-                                    pos,
-                                    &resources.food_tiles,
-                                    GATHER_SCAN_RADIUS,
-                                    local_home.get(&agent.id).map(|home| (*home, catchment)),
-                                )
-                                .is_some()
-                        };
+                                && {
+                                    let local = local_home.get(&agent.id).map(|home| (*home, catchment));
+                                    let key = ((pos.x, pos.y), local);
+                                    match gather_memo.get(&key) {
+                                        Some(&(version, exists)) if version == food_version => exists,
+                                        _ => {
+                                            let exists = gather_tile_exists(
+                                                pos,
+                                                &resources.food_tiles,
+                                                GATHER_SCAN_RADIUS,
+                                                local,
+                                            );
+                                            gather_memo.insert(key, (food_version, exists));
+                                            exists
+                                        }
+                                    }
+                                }
+                        });
                         let social = social_ready
                             && social_eligible_by_pos
                                 .get(&(pos.x, pos.y))
@@ -1279,18 +1421,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 })
                         });
                         if need
-                            || forage
-                            || firewood
-                            || gather
                             || assigned_builders.contains_key(&agent.id)
                             || social
                             || meal
+                            || forage()
+                            || firewood()
+                            || gather()
                         {
                             routine.interrupt(agent.id, entity);
                             *state = AgentState::Idle;
                             preempt_clear_seek.push(entity);
                         }
-                    }
+                    }) }
                 }
                 match *state {
                     AgentState::Idle if founding.contains_key(&agent.id) => {
@@ -1494,7 +1636,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     };
                                     resources.combat_pairs.insert(canonical);
                                     if let Some(routine) = routine.as_mut() {
-                                        routine.invite(enemy_id);
+                                        routine.invite(enemy_id, world);
                                     }
                                 }
                                 continue;
@@ -1781,7 +1923,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 } = *state
                                 {
                                     if let Some(routine) = routine.as_mut() {
-                                        routine.invite(peer);
+                                        routine.invite(peer, world);
                                     }
                                 }
                             }
@@ -1811,6 +1953,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             })
                         {
                             *claims.entry(bush).or_default() += 1;
+                            claims_version += 1;
                             forage_targets.insert(entity, bush);
                             resources.tallies.forage_trips += 1;
                             *state = AgentState::Seeking {
@@ -1853,6 +1996,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             })
                         {
                             *wood_claims.entry(spot).or_default() += 1;
+                            wood_claims_version += 1;
                             wood_targets.insert(entity, spot);
                             resources.tallies.wood_trips += 1;
                             // Display-only (Pass 6): trips started in urgent mode.
@@ -1912,16 +2056,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                         } else if !no_trips
                             && routine
                                 .as_ref()
-                                .is_some_and(|routine| routine.can_enter(agent.id))
+                                .is_some_and(|routine| {
+                                    routine.can_enter(
+                                        agent.id,
+                                        lineage.map(|lineage| lineage.key),
+                                        routine_members.get(&agent.id).copied(),
+                                        temperament,
+                                    )
+                                })
                         {
                             if routine.as_mut().is_some_and(|routine| {
-                                routine.start(
+                                scope!("routine_start", { routine.start(
                                     agent.id,
                                     entity,
+                                    lineage.map(|lineage| lineage.key),
+                                    routine_members.get(&agent.id).copied(),
                                     !adult,
                                     elders.contains(&agent.id),
                                     temperament,
-                                )
+                                    resources,
+                                ) })
                             }) {
                                 *state = AgentState::Seeking {
                                     target: TargetKind::Activity,
@@ -2043,10 +2197,19 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 *state = AgentState::Idle;
                                 continue;
                             };
-                            if let Some(completed) =
-                                routine.deadline(agent.id, (pos.x, pos.y) != activity.place)
-                            {
-                                routine.end(agent.id, entity, completed, true);
+                            if let Some(completed) = routine.deadline(
+                                agent.id,
+                                routine_members.get(&agent.id).copied(),
+                                (pos.x, pos.y) != activity.place,
+                                lineage.map(|lineage| lineage.key),
+                                temperament,
+                            ) {
+                                routine.end(
+                                    agent.id,
+                                    entity,
+                                    completed,
+                                    Some(lineage.map(|lineage| lineage.key)),
+                                );
                                 *state = AgentState::Idle;
                                 continue;
                             }
@@ -2395,8 +2558,19 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     *state = AgentState::Idle;
                                     continue;
                                 }
-                                if let Some(completed) = routine.deadline(agent.id, false) {
-                                    routine.end(agent.id, entity, completed, true);
+                                if let Some(completed) = routine.deadline(
+                                    agent.id,
+                                    routine_members.get(&agent.id).copied(),
+                                    false,
+                                    lineage.map(|lineage| lineage.key),
+                                    temperament,
+                                ) {
+                                    routine.end(
+                                        agent.id,
+                                        entity,
+                                        completed,
+                                        Some(lineage.map(|lineage| lineage.key)),
+                                    );
                                     *state = AgentState::Idle;
                                 }
                             }
@@ -2414,6 +2588,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     continue;
                                 }
                                 if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                    food_version += 1;
                                     if *counter != RESOURCE_SOURCE_INFINITE {
                                         resources.tallies.food_harvested += u64::from(*counter > 0);
                                         *counter = counter.saturating_sub(1);
@@ -2446,6 +2621,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 );
                                 if want > 0 {
                                     if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                        food_version += 1;
                                         if *counter == RESOURCE_SOURCE_INFINITE {
                                             // Infinite source: take freely, no decrement.
                                             if let Some(inv) = inventory_opt.as_mut() {
@@ -2491,6 +2667,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         .min(load.saturating_sub(carried))
                                         .min(room);
                                     if take > 0 {
+                                        wood_version += 1;
                                         let overflow = inv.add(ResourceKind::Wood, take);
                                         let actually = take - overflow;
                                         let left = amount.saturating_sub(actually as u8);
@@ -2584,10 +2761,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
             drop(query); // release the &mut World borrow before the SeekTarget pass
+            #[cfg(feature = "subprofile")]
+            round_timer.stop(if replay_round {
+                "decision_round_replay"
+                } else {
+                "decision_round_main"
+            });
             let Some(routine) = routine.as_mut() else {
                 break;
             };
-            let replay = routine.replay(world);
+            let replay = scope!("routine_replay_collect", { routine.replay(world) });
             if replay.is_empty() {
                 break;
             }
@@ -2600,6 +2783,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         // `seek_opt.is_none()` and re-resolves a fresh resource goal (the new
         // state is Seeking{Food/Water/Sleep}). Done here, not in the post-pass,
         // precisely so the resource set-once attach fires this same tick.
+        #[cfg(feature = "subprofile")]
+        let post_timer = crate::subprofile::Timer::start();
         for e in &preempt_clear_seek {
             let _ = world.remove_one::<SeekTarget>(*e);
         }
@@ -2936,8 +3121,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         for e in &migrant_clear {
             let _ = world.remove_one::<SettlementMigrant>(*e);
         }
+        #[cfg(feature = "subprofile")]
+        post_timer.stop("decision_post_pass");
         if let Some(routine) = routine {
-            routine.finish(world);
+            self.places = routine.finish(world);
         }
     }
 }

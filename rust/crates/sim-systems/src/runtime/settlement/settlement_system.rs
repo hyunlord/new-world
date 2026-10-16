@@ -260,6 +260,7 @@ impl SettlementSystem {
         resources: &mut SimResources,
         agent_positions: &HashMap<AgentId, (u32, u32)>,
         buildings: &[BuildingPos],
+        admitted: &mut Vec<(AgentId, SettlementId)>,
     ) {
         let live_building_ids: HashSet<BuildingId> =
             buildings.iter().map(|(id, _)| *id).collect();
@@ -298,7 +299,10 @@ impl SettlementSystem {
                 if settlement.member_agents.len() >= cap {
                     break;
                 }
-                settlement.member_agents.insert(aid);
+                // Pass 19: actual admissions are noted for the chronicle diff.
+                if settlement.member_agents.insert(aid) {
+                    admitted.push((aid, *id));
+                }
             }
 
             // Prune stale member_buildings; admit nearby live ones.
@@ -336,6 +340,7 @@ impl SettlementSystem {
         &self,
         resources: &mut SimResources,
         agent_positions: &HashMap<AgentId, (u32, u32)>,
+        removed: &mut Vec<(AgentId, SettlementId)>,
     ) {
         // Build agent → rosters map in sorted (settlement, member) order.
         let mut settlement_ids: Vec<SettlementId> =
@@ -377,7 +382,10 @@ impl SettlementSystem {
                 for sid in rosters {
                     if sid != keep {
                         if let Some(settlement) = resources.settlements.get_mut(&sid) {
-                            settlement.remove_member_agent(aid);
+                            // Pass 19: removals are noted for the chronicle diff.
+                            if settlement.remove_member_agent(aid) {
+                                removed.push((aid, sid));
+                            }
                             // Pass 11 measurement (display only, every version).
                             resources.tallies.exclusivity_moves += 1;
                         }
@@ -402,6 +410,7 @@ impl SettlementSystem {
         buildings: &[BuildingPos],
         width: u32,
         tick: u64,
+        admitted: &mut Vec<(AgentId, SettlementId)>,
     ) {
         // Pass 11: only anchors of settlements that still exist block a
         // candidate (`FissionSystem` dissolves settlements outside this
@@ -491,6 +500,8 @@ impl SettlementSystem {
             }
             settlement.population_stats.current = settlement.member_agents.len() as u32;
             founding_members.sort();
+            // Pass 19: the founders are admissions for the chronicle diff.
+            admitted.extend(founding_members.iter().map(|aid| (*aid, new_id)));
 
             let formed_id = resources.issue_event_id();
             let tile_idx = candidate.1 * width + candidate.0;
@@ -702,6 +713,120 @@ impl SettlementSystem {
             // practice with `routed_this_tick`).
             if !settlement.community_history.contains(&event_id) {
                 settlement.append_history(event_id);
+            }
+        }
+    }
+
+    /// Pass 19 chronicle (write-only): formations and roster changes of this
+    /// tick, by diff. `admitted` holds every (agent, settlement) pair the
+    /// proximity sync or the formation scan actually added and `removed`
+    /// every pair exclusivity actually removed, so a pair in both is
+    /// unchanged (the non-fission re-admit/drop cycle) and the net joins and
+    /// leaves equal the before/after roster difference. Members carrying
+    /// `Founding` are skipped (their move is `Settled`). Entries are appended
+    /// per new settlement in id order, then per agent in id order.
+    fn chronicle_membership(
+        &self,
+        world: &World,
+        resources: &mut SimResources,
+        admitted: &[(AgentId, SettlementId)],
+        removed: &[(AgentId, SettlementId)],
+        tick: u64,
+    ) {
+        use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+        use std::collections::{BTreeMap, BTreeSet};
+        if self.newly_formed_this_tick.is_empty() && admitted.is_empty() && removed.is_empty() {
+            return;
+        }
+        let added: BTreeSet<(AgentId, SettlementId)> = admitted.iter().copied().collect();
+        let gone: BTreeSet<(AgentId, SettlementId)> = removed.iter().copied().collect();
+        let mut joins: BTreeMap<AgentId, BTreeSet<SettlementId>> = BTreeMap::new();
+        let mut leaves: BTreeMap<AgentId, BTreeSet<SettlementId>> = BTreeMap::new();
+        for &(aid, sid) in added.difference(&gone) {
+            joins.entry(aid).or_default().insert(sid);
+        }
+        for &(aid, sid) in gone.difference(&added) {
+            leaves.entry(aid).or_default().insert(sid);
+        }
+        if self.newly_formed_this_tick.is_empty() && joins.is_empty() && leaves.is_empty() {
+            return;
+        }
+        let founding: BTreeSet<AgentId> = world
+            .query::<(&Agent, &sim_core::components::Founding)>()
+            .iter()
+            .map(|(_, (agent, _))| agent.id)
+            .collect();
+        let mut handled: BTreeSet<AgentId> = BTreeSet::new();
+        let mut formed: Vec<SettlementId> = self.newly_formed_this_tick.iter().map(|(sid, _)| *sid).collect();
+        formed.sort_unstable();
+        for sid in formed {
+            let Some(settlement) = resources.settlements.get(&sid) else { continue };
+            let mut members: Vec<AgentId> = settlement.member_agents.iter().copied().collect();
+            members.sort_unstable();
+            let daughter = members.iter().any(|id| founding.contains(id));
+            resources.chronicle.push(
+                ChronicleEntry::new(tick, ChronicleKind::SettlementFormed)
+                    .settlement(Some(sid))
+                    .value(members.len() as i64),
+            );
+            for id in members {
+                if founding.contains(&id) {
+                    continue;
+                }
+                handled.insert(id);
+                for old in leaves.get(&id).into_iter().flatten() {
+                    crate::runtime::chronicle_log::record(
+                        world,
+                        resources,
+                        ChronicleEntry::new(tick, ChronicleKind::LeftSettlement)
+                            .subject(id)
+                            .settlement(Some(*old))
+                            .cause(2),
+                    );
+                }
+                let entry = if daughter {
+                    ChronicleEntry::new(tick, ChronicleKind::Joined).cause(3)
+                } else if resources.chronicle.has_founding_member(id) {
+                    ChronicleEntry::new(tick, ChronicleKind::Joined).cause(1)
+                } else {
+                    ChronicleEntry::new(tick, ChronicleKind::FoundingMember)
+                };
+                crate::runtime::chronicle_log::record(world, resources, entry.subject(id).settlement(Some(sid)));
+            }
+        }
+        let changed: BTreeSet<AgentId> = joins.keys().chain(leaves.keys()).copied().collect();
+        for id in changed {
+            if handled.contains(&id) || founding.contains(&id) {
+                continue;
+            }
+            let now: BTreeSet<SettlementId> = resources
+                .settlements
+                .iter()
+                .filter(|(_, s)| s.member_agents.contains(&id))
+                .map(|(sid, _)| *sid)
+                .collect();
+            let joined = joins.get(&id).cloned().unwrap_or_default();
+            let left = leaves.get(&id).cloned().unwrap_or_default();
+            let had_roster = now.difference(&joined).next().is_some() || !left.is_empty();
+            for old in &left {
+                crate::runtime::chronicle_log::record(
+                    world,
+                    resources,
+                    ChronicleEntry::new(tick, ChronicleKind::LeftSettlement)
+                        .subject(id)
+                        .settlement(Some(*old))
+                        .cause(2),
+                );
+            }
+            for new in &joined {
+                crate::runtime::chronicle_log::record(
+                    world,
+                    resources,
+                    ChronicleEntry::new(tick, ChronicleKind::Joined)
+                        .subject(id)
+                        .settlement(Some(*new))
+                        .cause(u8::from(had_roster)),
+                );
             }
         }
     }
@@ -960,6 +1085,19 @@ impl SettlementSystem {
                 };
                 let _ = world.insert_one(entity, life);
             }
+            // Pass 19 chronicle (write-only): the newborn's record from its
+            // components, the parents' records, and the birth.
+            crate::runtime::chronicle_log::ensure_entity(world, resources, new_agent_id, entity);
+            crate::runtime::chronicle_log::record(
+                world,
+                resources,
+                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Born)
+                    .subject(new_agent_id)
+                    .other(parent_ids.first().copied())
+                    .third(parent_ids.get(1).copied())
+                    .settlement(Some(sid))
+                    .cause(u8::from(family_parents.is_none())),
+            );
 
             let parent = self.formation_event_ids.get(&sid).copied();
             let event_id = resources.issue_event_id();
@@ -1060,6 +1198,11 @@ impl SettlementSystem {
             resources.settlements.remove(&sid);
             // Pass 11 measurement (display only).
             resources.dissolutions.push((sid, tick));
+            // Pass 19 chronicle (write-only).
+            resources.chronicle.push(
+                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::SettlementDissolved)
+                    .settlement(Some(sid)),
+            );
             resources.building_owner.retain(|_, owner| *owner != sid);
             // FULL local-state clear so the same area can re-form.
             // Without clearing `formation_tiles` the area would be
@@ -1103,14 +1246,19 @@ impl RuntimeSystem for SettlementSystem {
         self.snapshot_pre_clearing_population(resources);
         let (buildings, new_buildings) = self.snapshot_buildings(resources);
         let agent_positions = Self::snapshot_agents(world);
-        self.sync_membership(resources, &agent_positions, &buildings);
-        self.run_formation_scan(resources, &agent_positions, &buildings, width, tick);
+        // Pass 19: roster admissions and removals of this tick, for the
+        // chronicle's membership diff (recorded after exclusivity).
+        let mut admitted: Vec<(AgentId, SettlementId)> = Vec::new();
+        let mut removed: Vec<(AgentId, SettlementId)> = Vec::new();
+        self.sync_membership(resources, &agent_positions, &buildings, &mut admitted);
+        self.run_formation_scan(resources, &agent_positions, &buildings, width, tick, &mut admitted);
         // Belonging-model reform: enforce one-settlement-per-agent AFTER both the
         // proximity sync and the formation scan, so a founder added by formation
         // that was already a member elsewhere is moved (not duplicated). Also
         // recomputes population_stats.current, so ingest/births/dissolution below
         // read post-exclusivity live-member counts.
-        self.resolve_exclusivity(resources, &agent_positions);
+        self.resolve_exclusivity(resources, &agent_positions, &mut removed);
+        self.chronicle_membership(world, resources, &admitted, &removed, tick);
         // Note: ingest_community_history is called BEFORE run_births so
         // the BuildingPlaced/CombatCompleted/SettlementReason events from
         // upstream systems land before birth events for the same tick.
@@ -1149,7 +1297,7 @@ mod tests {
             let positions = HashMap::from([(0, (7, 7)), (1, (10, 10)), (2, (13, 13)), (3, (10, 9))]);
             let buildings = vec![(0, (10, 10)), (1, (9, 9)), (2, (11, 9))];
             let mut system = SettlementSystem::new();
-            system.run_formation_scan(&mut resources, &positions, &buildings, 64, 0);
+            system.run_formation_scan(&mut resources, &positions, &buildings, 64, 0, &mut Vec::new());
             let first = resources.settlements.get(&1).expect("formation threshold met");
             assert_eq!(first.formation_tile, if generated { (10, 10) } else { (7, 7) });
             if generated { assert_eq!(first.member_agents.len(), 4); }

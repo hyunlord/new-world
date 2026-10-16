@@ -115,6 +115,8 @@ pub fn stress_rules(label: &str, seed: u64) -> WorldRules {
         "stress_v20" => WorldRules::game_v20(seed),
         "stress_v21" => WorldRules::game_v21(seed),
         "stress_v22" => WorldRules::game_v22(seed),
+        "stress_v23" => WorldRules::game_v23(seed),
+        "stress_v24" => WorldRules::game_v24(seed),
         "stress_v20_inert" => WorldRules::game_v20_inert(seed),
         _ => WorldRules::game_v19(seed),
     }
@@ -127,6 +129,8 @@ pub fn stress_label(rules: &str) -> &'static str {
         "game_v20" => "stress_v20",
         "game_v21" => "stress_v21",
         "game_v22" => "stress_v22",
+        "game_v23" => "stress_v23",
+        "game_v24" => "stress_v24",
         "game_v20_inert" => "stress_v20_inert",
         _ => "stress_v19",
     }
@@ -273,6 +277,13 @@ pub struct RunOutput {
     pub tick_us: Vec<u32>,
 }
 
+/// Pass 19: each settlement's member count, largest first.
+fn settlement_sizes(engine: &SimEngine) -> Vec<usize> {
+    let mut sizes: Vec<usize> = engine.resources.settlements.values().map(|s| s.member_agents.len()).collect();
+    sizes.sort_unstable_by(|a, b| b.cmp(a));
+    sizes
+}
+
 /// Run `spec` on `engine` (built by [`build_engine`]) for `spec.ticks` ticks.
 pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
     let started = Instant::now();
@@ -287,10 +298,14 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
     let mut days: BTreeMap<u64, DayBucket> = BTreeMap::new();
     let mut slowest = SlowestTicks::default();
     let mut gifts: Vec<Value> = Vec::new();
+    #[cfg(feature = "subprofile")]
+    let mut subprofile = crate::subprofile_report::SubprofileLog::new();
     for _ in 0..spec.ticks {
         let tick = engine.current_tick();
         engine.tick_profiled(&mut profile);
         let us = *profile.tick_us.last().unwrap_or(&0);
+        #[cfg(feature = "subprofile")]
+        subprofile.record(tick, us);
         if tick + 1 == WARMUP_TICKS {
             warm_systems = profile.systems.clone();
             warm_prune_ns = profile.prune_ns;
@@ -398,12 +413,24 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         "fingerprint": crate::probe::fingerprint(&engine),
         "alive_end": alive(&engine),
         "settlements_end": engine.resources.settlements.len(),
+        // Pass 19 (scale check): each settlement's members at the end
+        // (largest first) and the chronicle's size (measurement only).
+        "settlement_sizes_end": settlement_sizes(&engine),
+        "chronicle_entries_end": engine.resources.chronicle.len(),
+        "chronicle_people_end": engine.resources.chronicle.person_count(),
+        "chronicle_approx_bytes_end": engine.resources.chronicle.approx_bytes(),
         "buildings_end": sim_bridge::ffi::world_node::collect_building_snapshot(&engine.resources).len(),
         "mean_alive_0600": mean_of(|s| s.0),
         "mean_settlements_0600": mean_of(|s| s.1),
         "gifts": gifts,
         "snapshot_timings": snapshots,
     });
+    #[cfg(feature = "subprofile")]
+    let json = {
+        let mut json = json;
+        json["subprofile"] = subprofile.summary(offset, tpd);
+        json
+    };
     RunOutput { json, tick_us: profile.tick_us }
 }
 
@@ -663,7 +690,7 @@ pub struct PerfArgs {
 }
 
 /// The usage line.
-pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22] --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
+pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23] --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
 
 impl PerfArgs {
     /// Parse `args` (without the program name).
@@ -689,8 +716,8 @@ impl PerfArgs {
             match args[i].as_str() {
                 "--scene" => parsed.scene = value.clone(),
                 "--rules" => {
-                    if !matches!(value.as_str(), "game_v19" | "game_v20" | "game_v20_inert" | "game_v21" | "game_v22") {
-                        return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22, not {value}"));
+                    if !matches!(value.as_str(), "game_v19" | "game_v20" | "game_v20_inert" | "game_v21" | "game_v22" | "game_v23" | "game_v24") {
+                        return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24, not {value}"));
                     }
                     rules = Some(value.clone());
                 }
@@ -871,6 +898,12 @@ mod tests {
         assert_eq!(j["founders"], 40);
         assert_eq!(j["tick_summary"]["ticks"], 1500 - WARMUP_TICKS);
         assert_eq!(j["warmup"]["ticks"], WARMUP_TICKS);
+        // Pass 19: settlement sizes sum to the members; the chronicle recorded the founders.
+        let sizes = j["settlement_sizes_end"].as_array().expect("sizes");
+        assert_eq!(sizes.len() as u64, j["settlements_end"].as_u64().expect("count"));
+        assert!(j["chronicle_people_end"].as_u64().expect("people") >= 40);
+        assert!(j["chronicle_entries_end"].as_u64().expect("entries") >= 40, "founding members");
+        assert!(j["chronicle_approx_bytes_end"].as_u64().expect("bytes") > 0);
         // Per-day ticks cover every tick, and the per-day system sums equal the whole-run sums.
         let days = j["per_day"].as_array().expect("days");
         assert_eq!(days.iter().map(|d| d["ticks"].as_u64().unwrap_or(0)).sum::<u64>(), 1500);
@@ -944,17 +977,22 @@ mod tests {
     fn rules_flag_picks_the_stress_rules_and_label() {
         // Pass 16 8.5: --rules (default game_v19, today's behaviour; --scene stays ignored by stress).
         let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
-        for (flag, label) in [("", "stress_v19"), ("--rules game_v19", "stress_v19"), ("--rules game_v20", "stress_v20"), ("--rules game_v20_inert", "stress_v20_inert"), ("--rules game_v21", "stress_v21"), ("--rules game_v22", "stress_v22")] {
+        for (flag, label) in [("", "stress_v19"), ("--rules game_v19", "stress_v19"), ("--rules game_v20", "stress_v20"), ("--rules game_v20_inert", "stress_v20_inert"), ("--rules game_v21", "stress_v21"), ("--rules game_v22", "stress_v22"), ("--rules game_v23", "stress_v23"), ("--rules game_v24", "stress_v24")] {
             let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x"))).expect("stress");
             assert_eq!(stress_label(&p.scene), label, "{flag}");
         }
         let ignored = PerfArgs::parse(&a("stress --scene game_v16 --seeds 1..2 --out x")).expect("stress");
         assert_eq!(stress_label(&ignored.scene), "stress_v19");
         assert!(PerfArgs::parse(&a("stress --rules game_v18 --out x")).is_err());
+        // Pass 19 7.6: game_v24 maps to stress_v24 and WorldRules::game_v24
+        // (an unknown label would silently fall back to game_v19).
+        assert!(PerfArgs::parse(&a("stress --rules game_v25 --out x")).is_err());
+        assert_eq!(stress_rules(stress_label("game_v24"), 4), WorldRules::game_v24(4));
+        assert_ne!(stress_rules(stress_label("game_v24"), 4), WorldRules::game_v23(4));
         assert!(PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err());
         let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
         assert_eq!(stress_label(&q.scene), "stress_v19");
-        for (label, rules) in [("stress_v19", WorldRules::game_v19(9)), ("stress_v20", WorldRules::game_v20(9)), ("stress_v20_inert", WorldRules::game_v20_inert(9)), ("stress_v21", WorldRules::game_v21(9)), ("stress_v22", WorldRules::game_v22(9))] {
+        for (label, rules) in [("stress_v19", WorldRules::game_v19(9)), ("stress_v20", WorldRules::game_v20(9)), ("stress_v20_inert", WorldRules::game_v20_inert(9)), ("stress_v21", WorldRules::game_v21(9)), ("stress_v22", WorldRules::game_v22(9)), ("stress_v23", WorldRules::game_v23(9)), ("stress_v24", WorldRules::game_v24(9))] {
             let spec = RunSpec { mode: "stress".into(), scene: label.into(), seed: 9, agents: Some(30), side: 64, feed: Feed::Fed, ticks: 1 };
             assert_eq!(build_engine(&spec).expect("engine").resources.rules, rules);
             assert!(spec.stem(30).starts_with(&format!("stress_{label}_s9_n30")));

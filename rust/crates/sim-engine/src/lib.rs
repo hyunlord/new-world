@@ -489,6 +489,12 @@ pub struct SimResources {
     /// `FissionRule::hazard`), in check order; measurement only, never read
     /// by systems. Empty without a hazard.
     pub fission_checks: Vec<FissionCheck>,
+
+    /// Pass 19: the chronicle — an append-only record of every life and
+    /// village and a person table that outlives death. Write-only for the
+    /// simulation (no system decides anything from it); read by probes and
+    /// the bridge. Recorded in every scene.
+    pub chronicle: sim_core::chronicle::Chronicle,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -680,6 +686,7 @@ impl SimResources {
             fission_log: Vec::new(),
             dissolutions: Vec::new(),
             fission_checks: Vec::new(),
+            chronicle: sim_core::chronicle::Chronicle::new(),
         }
     }
 

@@ -32,7 +32,29 @@
 
 use sim_engine::SimEngine;
 
+/// Pass 18: time `$body` under `$name` when the `subprofile` feature is on.
+/// Without the feature the macro is the bare block.
+#[cfg(feature = "subprofile")]
+macro_rules! scope {
+    ($name:literal, $body:block) => {{
+        let timer = $crate::subprofile::Timer::start();
+        let value = $body;
+        timer.stop($name);
+        value
+    }};
+}
+
+/// Pass 18: without the `subprofile` feature `scope!` is the bare block.
+#[cfg(not(feature = "subprofile"))]
+macro_rules! scope {
+    ($name:literal, $body:block) => {
+        $body
+    };
+}
+
 pub mod runtime;
+#[cfg(feature = "subprofile")]
+pub mod subprofile;
 pub mod worldgen;
 
 /// Register the Phase 2 influence stack on `engine` in priority order.

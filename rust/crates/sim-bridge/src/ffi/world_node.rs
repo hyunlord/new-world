@@ -50,6 +50,10 @@ use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::chronicle::{
+    collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
+    collect_settlement_chronicle, person_to_dict, rows_to_dict,
+};
 use super::family::{agent_family_to_dict, collect_agent_family};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
@@ -185,12 +189,13 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
 }
 
-/// Revitalize Pass 17 — the live game's world of `seed`: `game_v22`, with
-/// temperament, routines and families. Pure (no Godot) so the harness can
-/// check it; `WorldSimNode::init` and `reset_world` call it, while
+/// Revitalize Pass 19 — the live game's world of `seed`: `game_v24`, with
+/// temperament, routines (each person ending their day at their own time)
+/// and families (elder partners follow on a split). Pure (no Godot) so the
+/// harness can check it; `WorldSimNode::init` and `reset_world` call it, while
 /// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::game_v22(seed), WorldRules::game_v22(seed))
+    build_world_with(&WorldGenConfig::game_v24(seed), WorldRules::game_v24(seed))
 }
 
 /// Revitalize Pass 16 — the temperament of the agent whose
@@ -220,7 +225,7 @@ fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperame
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            // Revitalize Pass 17: the live game runs `game_v22` (families).
+            // Revitalize Pass 19: the live game runs `game_v24` (staggered day ends).
             engine: build_game_engine(DEFAULT_GAME_SEED),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -539,6 +544,44 @@ impl WorldSimNode {
             &self.engine.world,
             u64::from_ne_bytes(entity_bits.to_ne_bytes()),
         ))
+    }
+
+    /// Pass 19 chronicle: the AgentId (as i64) of the agent with snapshot
+    /// entity bits `entity_bits`, or -1.
+    #[func]
+    fn get_agent_id(&self, entity_bits: i64) -> i64 {
+        collect_agent_id(&self.engine.world, entity_bits)
+            .map_or(-1, |id| i64::from_ne_bytes(id.to_ne_bytes()))
+    }
+
+    /// Pass 19 chronicle: the person table's record of `agent_id` (works for
+    /// the dead) as `{found, alive, female (-1/0/1), born_tick, died_tick,
+    /// death_reason, mother, father, ns, ha, rd, p}`; unknown values are -1.
+    #[func]
+    fn get_person(&self, agent_id: i64) -> VarDictionary {
+        person_to_dict(collect_person(&self.engine.world, &self.engine.resources.chronicle, agent_id))
+    }
+
+    /// Pass 19 chronicle: every entry naming `agent_id`, in chronicle order, as
+    /// `{found, tick, kind, subject, other, third, settlement, settlement2,
+    /// cause, value}` packed columns (ids -1 when absent).
+    #[func]
+    fn get_person_chronicle(&self, agent_id: i64) -> VarDictionary {
+        rows_to_dict(collect_person_chronicle(&self.engine.resources.chronicle, agent_id), false)
+    }
+
+    /// Pass 19 chronicle: every entry naming `settlement_id` (same shape as
+    /// `get_person_chronicle`).
+    #[func]
+    fn get_settlement_chronicle(&self, settlement_id: i64) -> VarDictionary {
+        rows_to_dict(collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id), false)
+    }
+
+    /// Pass 19 chronicle feed: entries from index `start`, at most `max`
+    /// (clamped to 1..=512), same shape plus `next` and `total`.
+    #[func]
+    fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
+        rows_to_dict(collect_chronicle_since(&self.engine.resources.chronicle, start, max), true)
     }
 
     /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
@@ -3197,10 +3240,10 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
-    fn live_game_is_game_v22() {
-        // Pass 17 7.5: init and reset_world build game_v22; the stress world stays v19.
+    fn live_game_is_game_v24() {
+        // Pass 19 7.1: init and reset_world build game_v24; the stress world stays v19.
         let engine = super::build_game_engine(20_261_010);
-        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v22(20_261_010));
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v24(20_261_010));
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
     }

@@ -121,6 +121,14 @@ impl RuntimeSystem for AgingSystem {
                 despawn_agent(world, resources, entity, id, position, DeathReason::OldAge, tick);
             } else if age >= rule.elder_age_ticks as i64 && !elder {
                 let _ = world.insert_one(entity, Elder);
+                // Pass 19 chronicle (write-only).
+                crate::runtime::chronicle_log::ensure_entity(world, resources, id, entity);
+                crate::runtime::chronicle_log::record(
+                    world,
+                    resources,
+                    sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::BecameElder)
+                        .subject(id),
+                );
             }
         }
     }

@@ -1,0 +1,6 @@
+cargo tree -i hecs (base):
+hecs v0.10.5
+cargo tree -i hecs (main clone):
+hecs v0.10.5
+775fbb33a4576fe84c076ce9a023187be58d0944d953e820695574adfe132214  Cargo.lock
+775fbb33a4576fe84c076ce9a023187be58d0944d953e820695574adfe132214  new-world-p18-base/rust/Cargo.lock

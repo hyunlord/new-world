@@ -1,0 +1,14 @@
+Pass 19 base identity (20a1d078, ../new-world-p19-base release build) vs Pass 18 final (probe/p18-4_final, build 57c47981):
+i1_v19: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i3_v16: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i4_v20: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i5_v21: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i6_v22: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i2: 20 array hashes equal
+i7_v23 (new): determinism 1 PASS line(s)
+i1_v19 log: DETERMINISM PASS
+i3_v16 log: DETERMINISM PASS
+i4_v20 log: DETERMINISM PASS
+i5_v21 log: DETERMINISM PASS
+i6_v22 log: DETERMINISM PASS
+i7_v23 log: DETERMINISM PASS

@@ -78,7 +78,10 @@ impl RuntimeSystem for PairingSystem {
         let mut settlements: Vec<_> = resources.settlements.iter().collect();
         settlements.sort_by_key(|(id, _)| **id);
         let mut events = Vec::new();
-        for (_, settlement) in settlements {
+        // Pass 19 chronicle: (settlement, woman, man, familiarity), pushed
+        // after the loop (`resources` stays borrowed through it).
+        let mut paired: Vec<(sim_core::components::SettlementId, AgentId, AgentId, f64)> = Vec::new();
+        for (sid, settlement) in settlements {
             let females: Vec<_> = people
                 .iter()
                 .filter(|(id, (_, kin, sex, adult))| {
@@ -109,9 +112,8 @@ impl RuntimeSystem for PairingSystem {
                                 && !close_kin(mother, mother_kin, *id, kin)
                         })
                     })
-                    .min_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)))
-                    .map(|row| row.0);
-                if let Some(father) = father {
+                    .min_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+                if let Some(&(father, familiarity)) = father {
                     for (id, partner) in [(mother, father), (father, mother)] {
                         if let Some((entity, kin, _, _)) = people.get_mut(&id) {
                             kin.partner = Some(partner);
@@ -119,6 +121,7 @@ impl RuntimeSystem for PairingSystem {
                         }
                     }
                     events.push(FamilyEvent::Paired { mother, father });
+                    paired.push((*sid, mother, father, familiarity));
                 }
             }
         }
@@ -129,6 +132,17 @@ impl RuntimeSystem for PairingSystem {
         }
         for event in events {
             record_family_event(world, tick, event);
+        }
+        for (sid, woman, man, familiarity) in paired {
+            crate::runtime::chronicle_log::record(
+                world,
+                resources,
+                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Paired)
+                    .subject(woman)
+                    .other(Some(man))
+                    .settlement(Some(sid))
+                    .value((familiarity * 1000.0).round() as i64),
+            );
         }
     }
 }

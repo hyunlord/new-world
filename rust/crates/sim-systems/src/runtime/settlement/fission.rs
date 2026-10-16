@@ -90,6 +90,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use hecs::World;
 use sim_core::causal::event::{CausalEvent, DissolutionCause};
+use sim_core::chronicle::{ChronicleEntry, ChronicleKind, DepartCause};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position, ResourceKind, SeekTarget,
     SettlementId, Temperament, SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_PROXIMITY_RADIUS,
@@ -248,6 +249,27 @@ impl FissionSystem {
                 let _ = world.remove_one::<Founding>(*entity);
             }
         }
+        // Pass 19 chronicle (write-only): the cancellation, then each living
+        // member in AgentId order.
+        resources.chronicle.push(
+            ChronicleEntry::new(tick, ChronicleKind::FissionCancelled)
+                .settlement(Some(group.parent))
+                .value(i64::from(id)),
+        );
+        for member in &group.members {
+            if let Some((entity, ..)) = roster.get(member) {
+                if crate::runtime::chronicle_log::is_alive(world, *entity) {
+                    crate::runtime::chronicle_log::record(
+                        world,
+                        resources,
+                        ChronicleEntry::new(tick, ChronicleKind::DepartureCancelled)
+                            .subject(*member)
+                            .settlement(Some(group.parent))
+                            .value(i64::from(id)),
+                    );
+                }
+            }
+        }
         if let Some(parent) = resources.settlements.get_mut(&group.parent) {
             parent.store(ResourceKind::Food, group.food);
             parent.store(ResourceKind::Wood, group.wood);
@@ -265,6 +287,27 @@ impl FissionSystem {
     /// store, link the parent.
     fn found(&mut self, world: &mut World, resources: &mut SimResources, roster: &Roster, id: u32, daughter: SettlementId, tick: u64) {
         let Some(group) = self.groups.remove(&id) else { return };
+        // Pass 19 chronicle (write-only): the daughter, then each living
+        // member in AgentId order (the loop below skips the dead too).
+        resources.chronicle.push(
+            ChronicleEntry::new(tick, ChronicleKind::DaughterFounded)
+                .settlement(Some(daughter))
+                .settlement2(Some(group.parent))
+                .value(i64::from(id)),
+        );
+        for member in &group.members {
+            if roster.contains_key(member) {
+                crate::runtime::chronicle_log::record(
+                    world,
+                    resources,
+                    ChronicleEntry::new(tick, ChronicleKind::Settled)
+                        .subject(*member)
+                        .settlement(Some(daughter))
+                        .settlement2(Some(group.parent))
+                        .value(i64::from(id)),
+                );
+            }
+        }
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         let mut moved_by_scan = 0u64;
@@ -411,7 +454,7 @@ impl FissionSystem {
     }
 
     /// Hourly: remnants merge away, empty settlements dissolve.
-    fn remnants(&mut self, resources: &mut SimResources, rule: &FissionRule, tick: u64) {
+    fn remnants(&mut self, world: &World, resources: &mut SimResources, rule: &FissionRule, tick: u64) {
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         for sid in ids {
@@ -419,10 +462,21 @@ impl FissionSystem {
             if members == 0 {
                 self.remnant_since.remove(&sid);
                 Self::dissolve(resources, sid, 0, tick);
+                // Pass 19 chronicle (write-only).
+                resources.chronicle.push(
+                    ChronicleEntry::new(tick, ChronicleKind::SettlementDissolved).settlement(Some(sid)),
+                );
             } else if members <= rule.remnant_members {
                 let since = *self.remnant_since.entry(sid).or_insert(tick);
                 if tick >= since + resources.ticks_per_day {
                     self.remnant_since.remove(&sid);
+                    // Pass 19 chronicle: the members before the clear, in id order.
+                    let mut leaving: Vec<AgentId> = resources
+                        .settlements
+                        .get(&sid)
+                        .map(|s| s.member_agents.iter().copied().collect())
+                        .unwrap_or_default();
+                    leaving.sort_unstable();
                     if let Some(settlement) = resources.settlements.get_mut(&sid) {
                         settlement.member_agents.clear();
                         settlement.population_stats.current = 0;
@@ -430,6 +484,20 @@ impl FissionSystem {
                     resources.tallies.remnant_merges += 1;
                     // Review round 1, L4: the event carries the members before the merge.
                     Self::dissolve(resources, sid, members, tick);
+                    for member in leaving {
+                        crate::runtime::chronicle_log::record(
+                            world,
+                            resources,
+                            ChronicleEntry::new(tick, ChronicleKind::LeftSettlement)
+                                .subject(member)
+                                .settlement(Some(sid)),
+                        );
+                    }
+                    resources.chronicle.push(
+                        ChronicleEntry::new(tick, ChronicleKind::SettlementDissolved)
+                            .settlement(Some(sid))
+                            .cause(1),
+                    );
                 }
             } else {
                 self.remnant_since.remove(&sid);
@@ -598,13 +666,25 @@ impl FissionSystem {
                     crate::runtime::agent::households::couples(world, &members),
                 )
             });
-            let group = if let Some((households, _)) = &family {
-                let Some(group) = crate::runtime::agent::households::select_departure(
-                    &ranked, households, rule, k,
+            // Pass 18 (`game_v23`): elder partners leave with their partner.
+            let follows = resources
+                .rules
+                .society
+                .family
+                .is_some_and(|family| family.elder_partner_follows);
+            // Pass 19: the family path also returns why each member was chosen
+            // (same set as `select_departure`); the no-family path is `Ranked`.
+            let (group, causes) = if let Some((households, couples)) = &family {
+                let Some(explained) = crate::runtime::agent::households::select_departure_explained(
+                    &ranked,
+                    households,
+                    rule,
+                    k,
+                    follows.then_some(couples.as_slice()),
                 ) else {
                     continue;
                 };
-                group
+                (explained.keys().copied().collect::<BTreeSet<AgentId>>(), Some(explained))
             } else {
             let mut group: BTreeSet<AgentId> = adults.iter().take(rule.min_adults as usize).copied().collect();
             for (_, id, _) in &ranked {
@@ -613,7 +693,7 @@ impl FissionSystem {
                 }
                 group.insert(*id);
             }
-            group
+            (group, None)
             };
             let Some(leader) = group.iter().copied().find(|id| roster.get(id).is_some_and(|row| row.2)) else {
                 continue; // no adult in the group (only with `min_adults` 0)
@@ -687,6 +767,30 @@ impl FissionSystem {
                 pressure_at_split,
                 threshold_at_split,
             });
+            // Pass 19 chronicle (write-only): the split, then each departing
+            // member in AgentId order with the reason they were chosen.
+            resources.chronicle.push(
+                ChronicleEntry::new(tick, ChronicleKind::FissionStarted)
+                    .settlement(Some(sid))
+                    .other(Some(leader))
+                    .value(i64::from(fission_id)),
+            );
+            for member in &group {
+                let cause = causes
+                    .as_ref()
+                    .and_then(|causes| causes.get(member).copied())
+                    .unwrap_or(DepartCause::Ranked);
+                crate::runtime::chronicle_log::record(
+                    world,
+                    resources,
+                    ChronicleEntry::new(tick, ChronicleKind::Departed)
+                        .subject(*member)
+                        .other(Some(leader))
+                        .settlement(Some(sid))
+                        .cause(cause.as_u8())
+                        .value(i64::from(fission_id)),
+                );
+            }
             // Pass 13: the parent's pressure resets and θ is redrawn (k now
             // counts this record).
             if let Some(law) = rule.pressure {
@@ -742,7 +846,7 @@ impl RuntimeSystem for FissionSystem {
             self.advance(world, resources, &rule, &roster, tick);
         }
         if hourly {
-            self.remnants(resources, &rule, tick);
+            self.remnants(world, resources, &rule, tick);
             if clock == CHECK_MINUTE * tpd / 1440 {
                 self.check(world, resources, &rule, &roster, tick);
             }

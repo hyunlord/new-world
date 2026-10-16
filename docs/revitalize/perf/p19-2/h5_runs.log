@@ -1,0 +1,62 @@
+2026-10-16T03:39:43Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p19-data/perf/h5/r1/game_v20 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3187 ms p99.9 0.587 ms max 0.816 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:44Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v24 --out /Users/rexxa/work/p19-data/perf/h5/r1/game_v24 
+stress_stress_v24_s15100_n500_side64_fed: mean 0.3698 ms p99.9 0.758 ms max 0.902 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:45Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/h5/r1/game_v23 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3690 ms p99.9 0.892 ms max 0.900 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:46Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p19-data/perf/h5/r2/game_v20 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3166 ms p99.9 0.721 ms max 0.921 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:46Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v24 --out /Users/rexxa/work/p19-data/perf/h5/r2/game_v24 
+stress_stress_v24_s15100_n500_side64_fed: mean 0.3692 ms p99.9 0.762 ms max 0.848 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:47Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/h5/r2/game_v23 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3696 ms p99.9 0.855 ms max 0.873 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:48Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p19-data/perf/h5/r3/game_v20 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3153 ms p99.9 0.649 ms max 0.804 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:48Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v24 --out /Users/rexxa/work/p19-data/perf/h5/r3/game_v24 
+stress_stress_v24_s15100_n500_side64_fed: mean 0.3906 ms p99.9 1.566 ms max 2.284 ms alive 500 wall 0.6 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:49Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/h5/r3/game_v23 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3782 ms p99.9 0.837 ms max 0.875 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:49Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p19-data/perf/h5/r4/game_v20 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3262 ms p99.9 0.672 ms max 0.805 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:50Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v24 --out /Users/rexxa/work/p19-data/perf/h5/r4/game_v24 
+stress_stress_v24_s15100_n500_side64_fed: mean 0.3724 ms p99.9 0.797 ms max 0.876 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:51Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/h5/r4/game_v23 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3727 ms p99.9 0.838 ms max 0.848 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:51Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p19-data/perf/h5/r5/game_v20 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3157 ms p99.9 0.580 ms max 0.794 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:52Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v24 --out /Users/rexxa/work/p19-data/perf/h5/r5/game_v24 
+stress_stress_v24_s15100_n500_side64_fed: mean 0.3723 ms p99.9 0.767 ms max 0.958 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:53Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/h5/r5/game_v23 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3680 ms p99.9 0.869 ms max 0.875 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:53Z base /Users/rexxa/work/p19-data/bin_base/worldsim_perf quick --out /Users/rexxa/work/p19-data/perf/h5/quick_base 
+quick_stress_v19_s15100_n500_side64_fed: mean 0.3083 ms p99.9 0.610 ms max 0.765 ms alive 500 wall 0.4 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:54Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf quick --out /Users/rexxa/work/p19-data/perf/h5/quick_final 
+quick_stress_v19_s15100_n500_side64_fed: mean 0.3037 ms p99.9 0.618 ms max 0.779 ms alive 500 wall 0.4 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:54Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 100\,500\,1000 --side 64 --days 2 --feed fed --rules game_v24 --out /Users/rexxa/work/p19-data/perf/h5/slope_game_v24 
+stress_stress_v24_s15100_n100_side64_fed: mean 0.0938 ms p99.9 0.204 ms max 0.267 ms alive 100 wall 0.3 s
+stress_stress_v24_s15100_n500_side64_fed: mean 0.3905 ms p99.9 0.893 ms max 0.974 ms alive 500 wall 1.1 s
+stress_stress_v24_s15100_n1000_side64_fed: mean 0.8690 ms p99.9 1.906 ms max 2.150 ms alive 1000 wall 2.5 s
+worldsim_perf: 3 run(s) written
+2026-10-16T03:39:58Z final /Users/rexxa/work/p19-data/bin_p2/worldsim_perf stress --seeds 15100..15101 --agents 100\,500\,1000 --side 64 --days 2 --feed fed --rules game_v20 --out /Users/rexxa/work/p19-data/perf/h5/slope_game_v20 
+stress_stress_v20_s15100_n100_side64_fed: mean 0.0692 ms p99.9 0.174 ms max 0.253 ms alive 100 wall 0.2 s
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3247 ms p99.9 0.680 ms max 0.855 ms alive 500 wall 0.9 s
+stress_stress_v20_s15100_n1000_side64_fed: mean 0.7463 ms p99.9 1.361 ms max 1.719 ms alive 1000 wall 2.2 s
+worldsim_perf: 3 run(s) written
+status 0

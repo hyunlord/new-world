@@ -1,10 +1,12 @@
 mod lifecycle;
 mod places;
 
+pub(in crate::runtime::decision) use places::PlacesCache;
+
 use hecs::{Entity, World};
-use places::{Occupancy, Places, KINDS};
+use places::{Cursor, Occupancy, Tile, KINDS};
 use sim_core::components::{
-    Activity, ActivityKind, ActivityRest, Agent, AgentId, AgentState, Lineage, RoutineObservation,
+    Activity, ActivityKind, ActivityRest, Agent, AgentId, AgentState, RoutineObservation,
     RoutineOutcome, SettlementId, TargetKind, Temperament,
 };
 use sim_core::rng::{keyed_below, STREAM_ROUTINE};
@@ -27,6 +29,7 @@ pub(super) const fn idle_equivalent(state: AgentState, enabled: bool) -> bool {
     matches!(state, AgentState::Idle) || (enabled && is_activity(state))
 }
 
+#[derive(Clone, Copy)]
 enum Change {
     Activity(Option<Activity>),
     Rest(Option<ActivityRest>),
@@ -40,20 +43,49 @@ pub(super) struct RoutineTick {
     replicate: u32,
     minute: Option<u64>,
     active: BTreeMap<AgentId, Activity>,
-    entities: BTreeMap<AgentId, Entity>,
-    keys: BTreeMap<AgentId, u64>,
-    members: BTreeMap<AgentId, SettlementId>,
+    /// Pass 18: every agent's entity, built on the first invitation of a
+    /// tick (agents are neither spawned nor despawned during the decision
+    /// system). Lineage keys and settlement membership come from the caller.
+    entities: Option<BTreeMap<AgentId, Entity>>,
     rests: BTreeMap<AgentId, u64>,
     interrupted: BTreeSet<AgentId>,
     invitations: BTreeSet<AgentId>,
-    places: Places,
+    /// Pass 18: the cross-tick place cache, checked against its inputs on the
+    /// first `place()` of a tick (`checked`); none at night.
+    places: PlacesCache,
+    checked: bool,
+    /// Pass 18: this tick's scan positions by (settlement, kind index); a
+    /// place depends only on the candidates and `occupancy` (see [`Cursor`]).
+    cursors: BTreeMap<(SettlementId, usize), Cursor>,
     occupancy: Occupancy,
     pending: Vec<(AgentId, Entity, Change)>,
 }
 
+/// Each settlement member's settlement (settlement id order; the first
+/// settlement listing a person wins). The decision system's `member_of` is
+/// this same map whenever the firewood or forage rule built it.
+pub(super) fn members_of(resources: &SimResources) -> BTreeMap<AgentId, SettlementId> {
+    let mut members = BTreeMap::new();
+    let mut settlements: Vec<_> = resources.settlements.iter().collect();
+    settlements.sort_by_key(|(id, _)| **id);
+    for (&sid, settlement) in settlements {
+        for &id in &settlement.member_agents {
+            members.entry(id).or_insert(sid);
+        }
+    }
+    members
+}
+
 impl RoutineTick {
-    pub(super) fn new(world: &mut World, resources: &SimResources, rule: RoutineRule) -> Self {
+    pub(super) fn new(
+        world: &mut World,
+        resources: &SimResources,
+        rule: RoutineRule,
+        places: PlacesCache,
+    ) -> Self {
         let tick = resources.current_tick;
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let mut pending = Vec::new();
         let mut interrupted = BTreeSet::new();
         for (entity, (agent, activity, state)) in world
@@ -83,24 +115,33 @@ impl RoutineTick {
             }
         }
         lifecycle::apply(world, pending);
+        #[cfg(feature = "subprofile")]
+        {
+            timer.stop("routine_new_cleanup");
+            crate::subprofile::flush_moves("routine_new_moves");
+        }
+        #[cfg(feature = "subprofile")]
+        let timer = crate::subprofile::Timer::start();
         let mut active_rows: Vec<_> = world
             .query::<(&Agent, &Activity)>()
             .iter()
             .map(|(_, (agent, activity))| (agent.id, *activity))
             .collect();
         active_rows.sort_by_key(|row| row.0);
-        let mut occupancy = BTreeMap::new();
-        for (_, activity) in &active_rows {
-            *occupancy.entry(activity.place).or_default() += 1;
-        }
-        let mut members = BTreeMap::new();
-        let mut settlements: Vec<_> = resources.settlements.iter().collect();
-        settlements.sort_by_key(|(id, _)| **id);
-        for (&sid, settlement) in settlements {
-            for &id in &settlement.member_agents {
-                members.entry(id).or_insert(sid);
+        // Pass 18: the same per-tile counts, built from sorted places in one
+        // pass instead of one map insertion per activity.
+        let mut held: Vec<Tile> = active_rows.iter().map(|(_, activity)| activity.place).collect();
+        held.sort_unstable();
+        let mut counts: Vec<(Tile, u32)> = Vec::new();
+        for place in held {
+            match counts.last_mut() {
+                Some((last, count)) if *last == place => *count += 1,
+                _ => counts.push((place, 1)),
             }
         }
+        let occupancy: Occupancy = counts.into_iter().collect();
+        #[cfg(feature = "subprofile")]
+        timer.stop("routine_new_maps");
         Self {
             rule,
             tick,
@@ -110,21 +151,13 @@ impl RoutineTick {
                 tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day
             }),
             active: active_rows.into_iter().collect(),
-            entities: world
-                .query::<&Agent>()
-                .iter()
-                .map(|(entity, agent)| (agent.id, entity))
-                .collect(),
-            keys: world
-                .query::<(&Agent, &Lineage)>()
-                .iter()
-                .map(|(_, (agent, lineage))| (agent.id, lineage.key))
-                .collect(),
-            members,
+            entities: None,
             rests,
             interrupted,
             invitations: BTreeSet::new(),
-            places: places::collect(resources),
+            places,
+            checked: false,
+            cursors: BTreeMap::new(),
             occupancy,
             pending: Vec::new(),
         }
@@ -134,30 +167,46 @@ impl RoutineTick {
         self.active.get(&id).copied()
     }
 
-    pub(super) fn can_enter(&self, id: AgentId) -> bool {
-        self.members.contains_key(&id)
+    /// `key` is the person's lineage key, `member` its settlement (see
+    /// [`members_of`]). Pass 19: the window ends at the person's own
+    /// `RoutineRule::end_minute(key, temperament)` (`day_end_minute` without
+    /// an end stagger).
+    pub(super) fn can_enter(
+        &self,
+        id: AgentId,
+        key: Option<u64>,
+        member: Option<SettlementId>,
+        temperament: Option<&Temperament>,
+    ) -> bool {
+        member.is_some()
             && !self.rests.contains_key(&id)
-            && self.keys.get(&id).is_some_and(|key| {
+            && key.is_some_and(|key| {
                 self.minute.is_some_and(|minute| {
-                    minute >= u64::from(self.rule.start_minute(*key))
-                        && minute < u64::from(self.rule.day_end_minute)
+                    minute >= u64::from(self.rule.start_minute(key))
+                        && minute < u64::from(self.rule.end_minute(key, temperament))
                 })
             })
     }
 
+    #[allow(clippy::too_many_arguments, reason = "the caller's row fields, passed instead of per-tick maps")]
     pub(super) fn start(
         &mut self,
         id: AgentId,
         entity: Entity,
+        key: Option<u64>,
+        member: Option<SettlementId>,
         child: bool,
         elder: bool,
         temperament: Option<&Temperament>,
+        resources: &SimResources,
     ) -> bool {
         if self.interrupted.contains(&id) {
+            #[cfg(feature = "subprofile")]
+            crate::subprofile::count("start_interrupted", 1);
             self.rest(id, entity, 1);
             return false;
         }
-        let Some((&key, &sid)) = self.keys.get(&id).zip(self.members.get(&id)) else {
+        let Some((key, sid)) = key.zip(member) else {
             return false;
         };
         let neutral = Temperament::from_axes([500; 4]);
@@ -167,19 +216,28 @@ impl RoutineTick {
         let selected = self.draw(&weights, key, 0);
         let mut redrawn = false;
         let choice = selected
-            .and_then(|kind| self.place(sid, kind, key).map(|place| (kind, place)))
+            .and_then(|kind| self.place(sid, kind, resources).map(|place| (kind, place)))
             .or_else(|| {
                 redrawn = true;
                 let available = std::array::from_fn(|index| {
-                    if self.place(sid, KINDS[index], key).is_some() {
+                    if self.place(sid, KINDS[index], resources).is_some() {
                         weights[index]
                     } else {
                         0
                     }
                 });
                 self.draw(&available, key, 1)
-                    .and_then(|kind| self.place(sid, kind, key).map(|place| (kind, place)))
+                    .and_then(|kind| self.place(sid, kind, resources).map(|place| (kind, place)))
             });
+        #[cfg(feature = "subprofile")]
+        crate::subprofile::count(
+            match (&choice, redrawn) {
+                (None, _) => "start_noplace",
+                (Some(_), true) => "start_redrawn",
+                (Some(_), false) => "start_first_draw",
+            },
+            1,
+        );
         let Some((kind, place)) = choice else {
             self.rest(id, entity, 30);
             self.observe(id, entity, selected, RoutineOutcome::NoPlace { redrawn });
@@ -224,14 +282,29 @@ impl RoutineTick {
         None
     }
 
-    fn place(&self, sid: SettlementId, kind: ActivityKind, key: u64) -> Option<(u32, u32)> {
-        places::choose(
-            &self.places.get(&sid)?[kind.index()],
-            &self.occupancy,
-            self.seed,
-            key,
-            self.tick,
-            self.replicate,
-        )
+    /// The free place of `kind` for settlement `sid`: Pass 17's choice
+    /// over its candidates, resumed from this tick's [`Cursor`].
+    fn place(&mut self, sid: SettlementId, kind: ActivityKind, resources: &SimResources) -> Option<Tile> {
+        #[cfg(feature = "subprofile")]
+        crate::subprofile::count("place_calls", 1);
+        if !self.checked {
+            self.places.refresh(resources);
+            self.checked = true;
+        }
+        let lists = self.places.places().get(&sid)?;
+        self.cursors
+            .entry((sid, kind.index()))
+            .or_default()
+            .choose(&lists[kind.index()], &self.occupancy)
+    }
+
+    /// `tile`'s occupancy fell: every cursor whose list holds it rescans from it.
+    fn rewind(&mut self, tile: Tile) {
+        let places = self.places.places();
+        for ((sid, index), cursor) in &mut self.cursors {
+            if let Some(lists) = places.get(sid) {
+                cursor.rewind(&lists[*index], tile);
+            }
+        }
     }
 }

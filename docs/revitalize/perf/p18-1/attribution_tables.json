@@ -1,0 +1,2121 @@
+{
+  "timing": {
+    "game_v20": {
+      "mean_ms": 0.32606304347826087,
+      "p999_ms": 0.61,
+      "max_ms": 0.809,
+      "decision_us_per_call": 203.96441666666666,
+      "decision_max_us": 688.833,
+      "repeats_mean_ms": [
+        0.32841811594202897,
+        0.32606304347826087,
+        0.32287608695652176
+      ],
+      "repeats_p999_ms": [
+        0.603,
+        0.61,
+        0.614
+      ],
+      "contended": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "slowest_ticks_plain": [
+        [
+          {
+            "tick": 1321,
+            "clock": "06:01",
+            "ms": 0.809
+          },
+          {
+            "tick": 1395,
+            "clock": "07:15",
+            "ms": 0.603
+          },
+          {
+            "tick": 361,
+            "clock": "14:01",
+            "ms": 0.584
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 0.584
+          },
+          {
+            "tick": 1330,
+            "clock": "06:10",
+            "ms": 0.582
+          },
+          {
+            "tick": 60,
+            "clock": "09:00",
+            "ms": 0.554
+          }
+        ],
+        [
+          {
+            "tick": 1321,
+            "clock": "06:01",
+            "ms": 0.797
+          },
+          {
+            "tick": 200,
+            "clock": "11:20",
+            "ms": 0.61
+          },
+          {
+            "tick": 456,
+            "clock": "15:36",
+            "ms": 0.564
+          },
+          {
+            "tick": 60,
+            "clock": "09:00",
+            "ms": 0.557
+          },
+          {
+            "tick": 481,
+            "clock": "16:01",
+            "ms": 0.551
+          },
+          {
+            "tick": 1330,
+            "clock": "06:10",
+            "ms": 0.541
+          }
+        ],
+        [
+          {
+            "tick": 1321,
+            "clock": "06:01",
+            "ms": 0.821
+          },
+          {
+            "tick": 130,
+            "clock": "10:10",
+            "ms": 0.614
+          },
+          {
+            "tick": 770,
+            "clock": "20:50",
+            "ms": 0.602
+          },
+          {
+            "tick": 155,
+            "clock": "10:35",
+            "ms": 0.575
+          },
+          {
+            "tick": 60,
+            "clock": "09:00",
+            "ms": 0.557
+          },
+          {
+            "tick": 160,
+            "clock": "10:40",
+            "ms": 0.55
+          }
+        ]
+      ]
+    },
+    "game_v21": {
+      "mean_ms": 0.43783115942028983,
+      "p999_ms": 2.555,
+      "max_ms": 3.076,
+      "decision_us_per_call": 313.2589739130435,
+      "decision_max_us": 2920.458,
+      "repeats_mean_ms": [
+        0.43783115942028983,
+        0.43755797101449273,
+        0.4515557971014493
+      ],
+      "repeats_p999_ms": [
+        2.473,
+        2.555,
+        2.625
+      ],
+      "contended": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "slowest_ticks_plain": [
+        [
+          {
+            "tick": 170,
+            "clock": "10:50",
+            "ms": 3.069
+          },
+          {
+            "tick": 282,
+            "clock": "12:42",
+            "ms": 2.473
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 1.961
+          },
+          {
+            "tick": 506,
+            "clock": "16:26",
+            "ms": 1.86
+          },
+          {
+            "tick": 498,
+            "clock": "16:18",
+            "ms": 1.733
+          },
+          {
+            "tick": 130,
+            "clock": "10:10",
+            "ms": 1.715
+          }
+        ],
+        [
+          {
+            "tick": 170,
+            "clock": "10:50",
+            "ms": 3.081
+          },
+          {
+            "tick": 282,
+            "clock": "12:42",
+            "ms": 2.555
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 1.942
+          },
+          {
+            "tick": 506,
+            "clock": "16:26",
+            "ms": 1.912
+          },
+          {
+            "tick": 498,
+            "clock": "16:18",
+            "ms": 1.762
+          },
+          {
+            "tick": 130,
+            "clock": "10:10",
+            "ms": 1.726
+          }
+        ],
+        [
+          {
+            "tick": 170,
+            "clock": "10:50",
+            "ms": 3.076
+          },
+          {
+            "tick": 282,
+            "clock": "12:42",
+            "ms": 2.625
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 2.006
+          },
+          {
+            "tick": 506,
+            "clock": "16:26",
+            "ms": 1.993
+          },
+          {
+            "tick": 498,
+            "clock": "16:18",
+            "ms": 1.717
+          },
+          {
+            "tick": 130,
+            "clock": "10:10",
+            "ms": 1.716
+          }
+        ]
+      ]
+    },
+    "game_v22": {
+      "mean_ms": 0.44634347826086956,
+      "p999_ms": 2.565,
+      "max_ms": 3.078,
+      "decision_us_per_call": 318.6777695652174,
+      "decision_max_us": 2908.042,
+      "repeats_mean_ms": [
+        0.44634347826086956,
+        0.4445050724637681,
+        0.45842898550724637
+      ],
+      "repeats_p999_ms": [
+        2.565,
+        2.554,
+        3.016
+      ],
+      "contended": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "slowest_ticks_plain": [
+        [
+          {
+            "tick": 170,
+            "clock": "10:50",
+            "ms": 3.078
+          },
+          {
+            "tick": 282,
+            "clock": "12:42",
+            "ms": 2.565
+          },
+          {
+            "tick": 506,
+            "clock": "16:26",
+            "ms": 1.911
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 1.86
+          },
+          {
+            "tick": 498,
+            "clock": "16:18",
+            "ms": 1.839
+          },
+          {
+            "tick": 130,
+            "clock": "10:10",
+            "ms": 1.755
+          }
+        ],
+        [
+          {
+            "tick": 170,
+            "clock": "10:50",
+            "ms": 3.092
+          },
+          {
+            "tick": 282,
+            "clock": "12:42",
+            "ms": 2.554
+          },
+          {
+            "tick": 506,
+            "clock": "16:26",
+            "ms": 1.972
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 1.966
+          },
+          {
+            "tick": 498,
+            "clock": "16:18",
+            "ms": 1.789
+          },
+          {
+            "tick": 130,
+            "clock": "10:10",
+            "ms": 1.71
+          }
+        ],
+        [
+          {
+            "tick": 170,
+            "clock": "10:50",
+            "ms": 3.072
+          },
+          {
+            "tick": 374,
+            "clock": "14:14",
+            "ms": 3.016
+          },
+          {
+            "tick": 282,
+            "clock": "12:42",
+            "ms": 2.548
+          },
+          {
+            "tick": 370,
+            "clock": "14:10",
+            "ms": 1.977
+          },
+          {
+            "tick": 506,
+            "clock": "16:26",
+            "ms": 1.835
+          },
+          {
+            "tick": 498,
+            "clock": "16:18",
+            "ms": 1.818
+          }
+        ]
+      ]
+    }
+  },
+  "overhead": {
+    "game_v20": {
+      "sub_mean_ms": 0.3238811594202899,
+      "ratio": 0.9933083981714216,
+      "decision_ratio": 0.9989925850059915
+    },
+    "game_v21": {
+      "sub_mean_ms": 0.4614746376811594,
+      "ratio": 1.0540013604609018,
+      "decision_ratio": 1.0699504348608317
+    },
+    "game_v22": {
+      "sub_mean_ms": 0.45894202898550723,
+      "ratio": 1.0282261337697296,
+      "decision_ratio": 1.036795586724623
+    }
+  },
+  "scopes": {
+    "game_v20": {
+      "decision_post_pass": {
+        "us_per_tick": 22.75533623188406,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 429.333
+      },
+      "decision_pre_loop": {
+        "us_per_tick": 118.90634637681158,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 225.709
+      },
+      "decision_round_main": {
+        "us_per_tick": 57.147444927536235,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 250.25
+      }
+    },
+    "game_v21": {
+      "decision_exit_test": {
+        "us_per_tick": 19.846535507246376,
+        "calls_per_tick": 123.48840579710145,
+        "max_us_per_tick": 200.166
+      },
+      "decision_post_pass": {
+        "us_per_tick": 27.929226086956522,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 423.791
+      },
+      "decision_pre_loop": {
+        "us_per_tick": 139.10714057971012,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 276.584
+      },
+      "decision_round_main": {
+        "us_per_tick": 101.10357173913043,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 2420.333
+      },
+      "routine_finish": {
+        "us_per_tick": 1.5066123188405798,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 198.583
+      },
+      "routine_finish_moves": {
+        "us_per_tick": 0.0,
+        "calls_per_tick": 3.63768115942029,
+        "max_us_per_tick": 0.0
+      },
+      "routine_new_cleanup": {
+        "us_per_tick": 2.1515601449275366,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 25.083
+      },
+      "routine_new_maps": {
+        "us_per_tick": 32.961343478260865,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 96.334
+      },
+      "routine_new_moves": {
+        "us_per_tick": 0.0,
+        "calls_per_tick": 0.5818840579710145,
+        "max_us_per_tick": 0.0
+      },
+      "routine_places_collect": {
+        "us_per_tick": 8.673559420289855,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 25.25
+      },
+      "routine_replay_collect": {
+        "us_per_tick": 0.022678260869565217,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 0.25
+      },
+      "routine_start": {
+        "us_per_tick": 22.28069492753623,
+        "calls_per_tick": 1.5028985507246377,
+        "max_us_per_tick": 2238.584
+      }
+    },
+    "game_v22": {
+      "decision_exit_test": {
+        "us_per_tick": 18.8824,
+        "calls_per_tick": 123.48840579710145,
+        "max_us_per_tick": 196.671
+      },
+      "decision_post_pass": {
+        "us_per_tick": 28.779757971014494,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 489.333
+      },
+      "decision_pre_loop": {
+        "us_per_tick": 136.13539855072463,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 263.459
+      },
+      "decision_round_main": {
+        "us_per_tick": 99.05685434782609,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 2506.083
+      },
+      "routine_finish": {
+        "us_per_tick": 1.6360463768115943,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 255.959
+      },
+      "routine_finish_moves": {
+        "us_per_tick": 0.0,
+        "calls_per_tick": 3.63768115942029,
+        "max_us_per_tick": 0.0
+      },
+      "routine_new_cleanup": {
+        "us_per_tick": 2.186532608695652,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 23.875
+      },
+      "routine_new_maps": {
+        "us_per_tick": 31.92617536231884,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 80.834
+      },
+      "routine_new_moves": {
+        "us_per_tick": 0.0,
+        "calls_per_tick": 0.5818840579710145,
+        "max_us_per_tick": 0.0
+      },
+      "routine_places_collect": {
+        "us_per_tick": 8.551186956521738,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 18.167
+      },
+      "routine_replay_collect": {
+        "us_per_tick": 0.021581159420289854,
+        "calls_per_tick": 1.0,
+        "max_us_per_tick": 0.166
+      },
+      "routine_start": {
+        "us_per_tick": 22.28761231884058,
+        "calls_per_tick": 1.5028985507246377,
+        "max_us_per_tick": 2314.212
+      }
+    }
+  },
+  "slowest": {
+    "game_v20": [
+      [
+        {
+          "tick": 1321,
+          "clock": "06:01",
+          "ms": 0.794,
+          "scopes": {
+            "decision_post_pass": [
+              423.2,
+              1
+            ],
+            "decision_pre_loop": [
+              144.9,
+              1
+            ],
+            "decision_round_main": [
+              106.2,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 481,
+          "clock": "16:01",
+          "ms": 0.718,
+          "scopes": {
+            "decision_post_pass": [
+              208.2,
+              1
+            ],
+            "decision_pre_loop": [
+              142.0,
+              1
+            ],
+            "decision_round_main": [
+              258.0,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 361,
+          "clock": "14:01",
+          "ms": 0.705,
+          "scopes": {
+            "decision_post_pass": [
+              206.8,
+              1
+            ],
+            "decision_pre_loop": [
+              135.5,
+              1
+            ],
+            "decision_round_main": [
+              252.7,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 601,
+          "clock": "18:01",
+          "ms": 0.691,
+          "scopes": {
+            "decision_post_pass": [
+              212.4,
+              1
+            ],
+            "decision_pre_loop": [
+              145.0,
+              1
+            ],
+            "decision_round_main": [
+              205.9,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 241,
+          "clock": "12:01",
+          "ms": 0.637,
+          "scopes": {
+            "decision_post_pass": [
+              156.5,
+              1
+            ],
+            "decision_pre_loop": [
+              143.0,
+              1
+            ],
+            "decision_round_main": [
+              217.3,
+              1
+            ]
+          }
+        }
+      ],
+      [
+        {
+          "tick": 1033,
+          "clock": "01:13",
+          "ms": 1.977,
+          "scopes": {
+            "decision_pre_loop": [
+              162.9,
+              1
+            ],
+            "decision_round_main": [
+              31.3,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 1029,
+          "clock": "01:09",
+          "ms": 1.589,
+          "scopes": {
+            "decision_pre_loop": [
+              103.3,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 1045,
+          "clock": "01:25",
+          "ms": 0.857,
+          "scopes": {
+            "decision_post_pass": [
+              41.2,
+              1
+            ],
+            "decision_pre_loop": [
+              296.6,
+              1
+            ],
+            "decision_round_main": [
+              78.5,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 1321,
+          "clock": "06:01",
+          "ms": 0.81,
+          "scopes": {
+            "decision_post_pass": [
+              434.0,
+              1
+            ],
+            "decision_pre_loop": [
+              139.0,
+              1
+            ],
+            "decision_round_main": [
+              112.6,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 1055,
+          "clock": "01:35",
+          "ms": 0.8,
+          "scopes": {
+            "decision_post_pass": [
+              40.0,
+              1
+            ],
+            "decision_pre_loop": [
+              260.4,
+              1
+            ],
+            "decision_round_main": [
+              75.4,
+              1
+            ]
+          }
+        }
+      ],
+      [
+        {
+          "tick": 1321,
+          "clock": "06:01",
+          "ms": 0.792,
+          "scopes": {
+            "decision_post_pass": [
+              429.3,
+              1
+            ],
+            "decision_pre_loop": [
+              131.2,
+              1
+            ],
+            "decision_round_main": [
+              108.5,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 481,
+          "clock": "16:01",
+          "ms": 0.694,
+          "scopes": {
+            "decision_post_pass": [
+              195.1,
+              1
+            ],
+            "decision_pre_loop": [
+              135.9,
+              1
+            ],
+            "decision_round_main": [
+              247.0,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 361,
+          "clock": "14:01",
+          "ms": 0.663,
+          "scopes": {
+            "decision_post_pass": [
+              188.2,
+              1
+            ],
+            "decision_pre_loop": [
+              136.7,
+              1
+            ],
+            "decision_round_main": [
+              228.6,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 601,
+          "clock": "18:01",
+          "ms": 0.658,
+          "scopes": {
+            "decision_post_pass": [
+              210.7,
+              1
+            ],
+            "decision_pre_loop": [
+              137.2,
+              1
+            ],
+            "decision_round_main": [
+              192.6,
+              1
+            ]
+          }
+        },
+        {
+          "tick": 241,
+          "clock": "12:01",
+          "ms": 0.634,
+          "scopes": {
+            "decision_post_pass": [
+              151.6,
+              1
+            ],
+            "decision_pre_loop": [
+              142.2,
+              1
+            ],
+            "decision_round_main": [
+              224.7,
+              1
+            ]
+          }
+        }
+      ]
+    ],
+    "game_v21": [
+      [
+        {
+          "tick": 170,
+          "clock": "10:50",
+          "ms": 3.154,
+          "scopes": {
+            "decision_exit_test": [
+              56.8,
+              197
+            ],
+            "decision_post_pass": [
+              88.2,
+              1
+            ],
+            "decision_pre_loop": [
+              160.1,
+              1
+            ],
+            "decision_round_main": [
+              2571.8,
+              1
+            ],
+            "routine_finish": [
+              71.8,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              157
+            ],
+            "routine_new_maps": [
+              37.5,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              2368.3,
+              148
+            ]
+          }
+        },
+        {
+          "tick": 282,
+          "clock": "12:42",
+          "ms": 2.559,
+          "scopes": {
+            "decision_exit_test": [
+              38.4,
+              249
+            ],
+            "decision_post_pass": [
+              69.2,
+              1
+            ],
+            "decision_pre_loop": [
+              185.2,
+              1
+            ],
+            "decision_round_main": [
+              2045.6,
+              1
+            ],
+            "routine_finish": [
+              54.2,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              122
+            ],
+            "routine_new_maps": [
+              51.0,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1898.7,
+              120
+            ]
+          }
+        },
+        {
+          "tick": 506,
+          "clock": "16:26",
+          "ms": 2.018,
+          "scopes": {
+            "decision_exit_test": [
+              48.4,
+              288
+            ],
+            "decision_post_pass": [
+              66.3,
+              1
+            ],
+            "decision_pre_loop": [
+              152.7,
+              1
+            ],
+            "decision_round_main": [
+              1520.3,
+              1
+            ],
+            "routine_finish": [
+              39.2,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              82
+            ],
+            "routine_new_maps": [
+              41.2,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1350.4,
+              80
+            ]
+          }
+        },
+        {
+          "tick": 370,
+          "clock": "14:10",
+          "ms": 1.921,
+          "scopes": {
+            "decision_exit_test": [
+              39.8,
+              198
+            ],
+            "decision_post_pass": [
+              65.1,
+              1
+            ],
+            "decision_pre_loop": [
+              165.0,
+              1
+            ],
+            "decision_round_main": [
+              1390.8,
+              1
+            ],
+            "routine_finish": [
+              41.9,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              94
+            ],
+            "routine_new_maps": [
+              38.2,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              2
+            ],
+            "routine_start": [
+              1239.3,
+              90
+            ]
+          }
+        },
+        {
+          "tick": 498,
+          "clock": "16:18",
+          "ms": 1.804,
+          "scopes": {
+            "decision_exit_test": [
+              38.9,
+              233
+            ],
+            "decision_post_pass": [
+              77.7,
+              1
+            ],
+            "decision_pre_loop": [
+              161.2,
+              1
+            ],
+            "decision_round_main": [
+              1337.4,
+              1
+            ],
+            "routine_finish": [
+              35.1,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              77
+            ],
+            "routine_new_maps": [
+              36.8,
+              1
+            ],
+            "routine_start": [
+              1185.8,
+              77
+            ]
+          }
+        }
+      ],
+      [
+        {
+          "tick": 170,
+          "clock": "10:50",
+          "ms": 2.843,
+          "scopes": {
+            "decision_exit_test": [
+              49.3,
+              197
+            ],
+            "decision_post_pass": [
+              71.6,
+              1
+            ],
+            "decision_pre_loop": [
+              136.6,
+              1
+            ],
+            "decision_round_main": [
+              2343.4,
+              1
+            ],
+            "routine_finish": [
+              65.4,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              157
+            ],
+            "routine_new_maps": [
+              33.5,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              2171.6,
+              148
+            ]
+          }
+        },
+        {
+          "tick": 282,
+          "clock": "12:42",
+          "ms": 2.645,
+          "scopes": {
+            "decision_exit_test": [
+              39.2,
+              249
+            ],
+            "decision_post_pass": [
+              74.6,
+              1
+            ],
+            "decision_pre_loop": [
+              166.1,
+              1
+            ],
+            "decision_round_main": [
+              2122.8,
+              1
+            ],
+            "routine_finish": [
+              54.4,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              122
+            ],
+            "routine_new_maps": [
+              43.0,
+              1
+            ],
+            "routine_start": [
+              1961.5,
+              120
+            ]
+          }
+        },
+        {
+          "tick": 370,
+          "clock": "14:10",
+          "ms": 2.004,
+          "scopes": {
+            "decision_exit_test": [
+              43.2,
+              198
+            ],
+            "decision_post_pass": [
+              71.3,
+              1
+            ],
+            "decision_pre_loop": [
+              151.9,
+              1
+            ],
+            "decision_round_main": [
+              1453.3,
+              1
+            ],
+            "routine_finish": [
+              43.0,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              94
+            ],
+            "routine_new_maps": [
+              36.2,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              2
+            ],
+            "routine_start": [
+              1287.5,
+              90
+            ]
+          }
+        },
+        {
+          "tick": 506,
+          "clock": "16:26",
+          "ms": 1.899,
+          "scopes": {
+            "decision_exit_test": [
+              44.5,
+              288
+            ],
+            "decision_post_pass": [
+              61.5,
+              1
+            ],
+            "decision_pre_loop": [
+              158.3,
+              1
+            ],
+            "decision_round_main": [
+              1442.1,
+              1
+            ],
+            "routine_finish": [
+              37.9,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              82
+            ],
+            "routine_new_maps": [
+              42.2,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1287.2,
+              80
+            ]
+          }
+        },
+        {
+          "tick": 498,
+          "clock": "16:18",
+          "ms": 1.745,
+          "scopes": {
+            "decision_exit_test": [
+              35.9,
+              233
+            ],
+            "decision_post_pass": [
+              77.0,
+              1
+            ],
+            "decision_pre_loop": [
+              149.5,
+              1
+            ],
+            "decision_round_main": [
+              1293.1,
+              1
+            ],
+            "routine_finish": [
+              38.0,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              77
+            ],
+            "routine_new_maps": [
+              37.2,
+              1
+            ],
+            "routine_start": [
+              1148.3,
+              77
+            ]
+          }
+        }
+      ],
+      [
+        {
+          "tick": 170,
+          "clock": "10:50",
+          "ms": 2.957,
+          "scopes": {
+            "decision_exit_test": [
+              53.2,
+              197
+            ],
+            "decision_post_pass": [
+              77.4,
+              1
+            ],
+            "decision_pre_loop": [
+              156.0,
+              1
+            ],
+            "decision_round_main": [
+              2420.3,
+              1
+            ],
+            "routine_finish": [
+              59.5,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              157
+            ],
+            "routine_new_maps": [
+              38.8,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              2238.6,
+              148
+            ]
+          }
+        },
+        {
+          "tick": 282,
+          "clock": "12:42",
+          "ms": 2.684,
+          "scopes": {
+            "decision_exit_test": [
+              41.1,
+              249
+            ],
+            "decision_post_pass": [
+              76.2,
+              1
+            ],
+            "decision_pre_loop": [
+              164.2,
+              1
+            ],
+            "decision_round_main": [
+              2169.7,
+              1
+            ],
+            "routine_finish": [
+              57.0,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              122
+            ],
+            "routine_new_maps": [
+              45.7,
+              1
+            ],
+            "routine_start": [
+              2012.6,
+              120
+            ]
+          }
+        },
+        {
+          "tick": 370,
+          "clock": "14:10",
+          "ms": 2.056,
+          "scopes": {
+            "decision_exit_test": [
+              43.8,
+              198
+            ],
+            "decision_post_pass": [
+              69.0,
+              1
+            ],
+            "decision_pre_loop": [
+              163.2,
+              1
+            ],
+            "decision_round_main": [
+              1507.5,
+              1
+            ],
+            "routine_finish": [
+              41.8,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              94
+            ],
+            "routine_new_maps": [
+              38.5,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              2
+            ],
+            "routine_start": [
+              1328.3,
+              90
+            ]
+          }
+        },
+        {
+          "tick": 506,
+          "clock": "16:26",
+          "ms": 1.89,
+          "scopes": {
+            "decision_exit_test": [
+              45.2,
+              288
+            ],
+            "decision_post_pass": [
+              60.1,
+              1
+            ],
+            "decision_pre_loop": [
+              162.8,
+              1
+            ],
+            "decision_round_main": [
+              1436.1,
+              1
+            ],
+            "routine_finish": [
+              36.1,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              82
+            ],
+            "routine_new_maps": [
+              42.8,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1275.4,
+              80
+            ]
+          }
+        },
+        {
+          "tick": 130,
+          "clock": "10:10",
+          "ms": 1.867,
+          "scopes": {
+            "decision_exit_test": [
+              38.7,
+              118
+            ],
+            "decision_post_pass": [
+              110.5,
+              1
+            ],
+            "decision_pre_loop": [
+              236.5,
+              1
+            ],
+            "decision_round_main": [
+              1168.3,
+              1
+            ],
+            "routine_finish": [
+              67.8,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              121
+            ],
+            "routine_new_maps": [
+              53.6,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              978.5,
+              117
+            ]
+          }
+        }
+      ]
+    ],
+    "game_v22": [
+      [
+        {
+          "tick": 170,
+          "clock": "10:50",
+          "ms": 3.098,
+          "scopes": {
+            "decision_exit_test": [
+              59.3,
+              197
+            ],
+            "decision_post_pass": [
+              99.2,
+              1
+            ],
+            "decision_pre_loop": [
+              158.5,
+              1
+            ],
+            "decision_round_main": [
+              2521.0,
+              1
+            ],
+            "routine_finish": [
+              74.1,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              157
+            ],
+            "routine_new_maps": [
+              31.9,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              2309.7,
+              148
+            ]
+          }
+        },
+        {
+          "tick": 282,
+          "clock": "12:42",
+          "ms": 2.635,
+          "scopes": {
+            "decision_exit_test": [
+              39.4,
+              249
+            ],
+            "decision_post_pass": [
+              79.6,
+              1
+            ],
+            "decision_pre_loop": [
+              161.2,
+              1
+            ],
+            "decision_round_main": [
+              2122.0,
+              1
+            ],
+            "routine_finish": [
+              68.1,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              122
+            ],
+            "routine_new_maps": [
+              43.8,
+              1
+            ],
+            "routine_start": [
+              1968.8,
+              120
+            ]
+          }
+        },
+        {
+          "tick": 370,
+          "clock": "14:10",
+          "ms": 2.02,
+          "scopes": {
+            "decision_exit_test": [
+              40.5,
+              198
+            ],
+            "decision_post_pass": [
+              75.0,
+              1
+            ],
+            "decision_pre_loop": [
+              163.9,
+              1
+            ],
+            "decision_round_main": [
+              1471.3,
+              1
+            ],
+            "routine_finish": [
+              44.7,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              94
+            ],
+            "routine_new_maps": [
+              37.7,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              2
+            ],
+            "routine_start": [
+              1314.3,
+              90
+            ]
+          }
+        },
+        {
+          "tick": 506,
+          "clock": "16:26",
+          "ms": 1.923,
+          "scopes": {
+            "decision_exit_test": [
+              43.5,
+              288
+            ],
+            "decision_post_pass": [
+              68.6,
+              1
+            ],
+            "decision_pre_loop": [
+              154.3,
+              1
+            ],
+            "decision_round_main": [
+              1464.0,
+              1
+            ],
+            "routine_finish": [
+              38.5,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              82
+            ],
+            "routine_new_maps": [
+              40.7,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1311.4,
+              80
+            ]
+          }
+        },
+        {
+          "tick": 498,
+          "clock": "16:18",
+          "ms": 1.812,
+          "scopes": {
+            "decision_exit_test": [
+              37.9,
+              233
+            ],
+            "decision_post_pass": [
+              83.0,
+              1
+            ],
+            "decision_pre_loop": [
+              160.7,
+              1
+            ],
+            "decision_round_main": [
+              1341.2,
+              1
+            ],
+            "routine_finish": [
+              42.4,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              77
+            ],
+            "routine_new_maps": [
+              37.6,
+              1
+            ],
+            "routine_start": [
+              1192.8,
+              77
+            ]
+          }
+        }
+      ],
+      [
+        {
+          "tick": 170,
+          "clock": "10:50",
+          "ms": 3.098,
+          "scopes": {
+            "decision_exit_test": [
+              52.7,
+              197
+            ],
+            "decision_post_pass": [
+              92.8,
+              1
+            ],
+            "decision_pre_loop": [
+              171.6,
+              1
+            ],
+            "decision_round_main": [
+              2501.9,
+              1
+            ],
+            "routine_finish": [
+              84.9,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              157
+            ],
+            "routine_new_maps": [
+              40.5,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              2314.2,
+              148
+            ]
+          }
+        },
+        {
+          "tick": 282,
+          "clock": "12:42",
+          "ms": 2.629,
+          "scopes": {
+            "decision_exit_test": [
+              37.5,
+              249
+            ],
+            "decision_post_pass": [
+              80.6,
+              1
+            ],
+            "decision_pre_loop": [
+              169.8,
+              1
+            ],
+            "decision_round_main": [
+              2093.6,
+              1
+            ],
+            "routine_finish": [
+              69.9,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              122
+            ],
+            "routine_new_maps": [
+              43.5,
+              1
+            ],
+            "routine_start": [
+              1944.0,
+              120
+            ]
+          }
+        },
+        {
+          "tick": 370,
+          "clock": "14:10",
+          "ms": 1.976,
+          "scopes": {
+            "decision_exit_test": [
+              37.8,
+              198
+            ],
+            "decision_post_pass": [
+              74.0,
+              1
+            ],
+            "decision_pre_loop": [
+              156.8,
+              1
+            ],
+            "decision_round_main": [
+              1434.2,
+              1
+            ],
+            "routine_finish": [
+              51.0,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              94
+            ],
+            "routine_new_maps": [
+              35.5,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              2
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1285.2,
+              90
+            ]
+          }
+        },
+        {
+          "tick": 506,
+          "clock": "16:26",
+          "ms": 1.915,
+          "scopes": {
+            "decision_exit_test": [
+              42.2,
+              288
+            ],
+            "decision_post_pass": [
+              62.8,
+              1
+            ],
+            "decision_pre_loop": [
+              157.7,
+              1
+            ],
+            "decision_round_main": [
+              1460.4,
+              1
+            ],
+            "routine_finish": [
+              41.7,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              82
+            ],
+            "routine_new_maps": [
+              40.7,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1309.5,
+              80
+            ]
+          }
+        },
+        {
+          "tick": 498,
+          "clock": "16:18",
+          "ms": 1.813,
+          "scopes": {
+            "decision_exit_test": [
+              35.8,
+              233
+            ],
+            "decision_post_pass": [
+              85.7,
+              1
+            ],
+            "decision_pre_loop": [
+              157.6,
+              1
+            ],
+            "decision_round_main": [
+              1340.2,
+              1
+            ],
+            "routine_finish": [
+              38.0,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              77
+            ],
+            "routine_new_maps": [
+              37.0,
+              1
+            ],
+            "routine_start": [
+              1192.6,
+              77
+            ]
+          }
+        }
+      ],
+      [
+        {
+          "tick": 170,
+          "clock": "10:50",
+          "ms": 3.053,
+          "scopes": {
+            "decision_exit_test": [
+              53.8,
+              197
+            ],
+            "decision_post_pass": [
+              86.9,
+              1
+            ],
+            "decision_pre_loop": [
+              159.8,
+              1
+            ],
+            "decision_round_main": [
+              2506.1,
+              1
+            ],
+            "routine_finish": [
+              67.2,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              157
+            ],
+            "routine_new_maps": [
+              35.2,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              2315.1,
+              148
+            ]
+          }
+        },
+        {
+          "tick": 282,
+          "clock": "12:42",
+          "ms": 2.563,
+          "scopes": {
+            "decision_exit_test": [
+              37.2,
+              249
+            ],
+            "decision_post_pass": [
+              77.9,
+              1
+            ],
+            "decision_pre_loop": [
+              183.1,
+              1
+            ],
+            "decision_round_main": [
+              2050.8,
+              1
+            ],
+            "routine_finish": [
+              57.7,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              122
+            ],
+            "routine_new_maps": [
+              44.6,
+              1
+            ],
+            "routine_start": [
+              1903.8,
+              120
+            ]
+          }
+        },
+        {
+          "tick": 370,
+          "clock": "14:10",
+          "ms": 1.971,
+          "scopes": {
+            "decision_exit_test": [
+              37.9,
+              198
+            ],
+            "decision_post_pass": [
+              73.1,
+              1
+            ],
+            "decision_pre_loop": [
+              161.2,
+              1
+            ],
+            "decision_round_main": [
+              1430.3,
+              1
+            ],
+            "routine_finish": [
+              44.6,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              94
+            ],
+            "routine_new_maps": [
+              34.6,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              2
+            ],
+            "routine_replay_collect": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1278.4,
+              90
+            ]
+          }
+        },
+        {
+          "tick": 506,
+          "clock": "16:26",
+          "ms": 1.88,
+          "scopes": {
+            "decision_exit_test": [
+              42.7,
+              288
+            ],
+            "decision_post_pass": [
+              64.3,
+              1
+            ],
+            "decision_pre_loop": [
+              155.2,
+              1
+            ],
+            "decision_round_main": [
+              1427.5,
+              1
+            ],
+            "routine_finish": [
+              39.0,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              82
+            ],
+            "routine_new_maps": [
+              40.4,
+              1
+            ],
+            "routine_new_moves": [
+              0.0,
+              1
+            ],
+            "routine_start": [
+              1278.5,
+              80
+            ]
+          }
+        },
+        {
+          "tick": 498,
+          "clock": "16:18",
+          "ms": 1.852,
+          "scopes": {
+            "decision_exit_test": [
+              39.0,
+              233
+            ],
+            "decision_post_pass": [
+              86.0,
+              1
+            ],
+            "decision_pre_loop": [
+              161.0,
+              1
+            ],
+            "decision_round_main": [
+              1371.8,
+              1
+            ],
+            "routine_finish": [
+              39.7,
+              1
+            ],
+            "routine_finish_moves": [
+              0.0,
+              77
+            ],
+            "routine_new_maps": [
+              39.5,
+              1
+            ],
+            "routine_start": [
+              1216.7,
+              77
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  "fingerprints": {
+    "game_v20": [
+      "0fa49639a76b0281"
+    ],
+    "game_v21": [
+      "14458e1fa711de0c"
+    ],
+    "game_v22": [
+      "14458e1fa711de0c"
+    ]
+  }
+}

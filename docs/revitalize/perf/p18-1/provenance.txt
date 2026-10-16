@@ -1,0 +1,5 @@
+sha 5b09dee777fa709060a1d8cb1b7f586cfebb001e
+6533ae56f2c0928d0aa0ac45fdf6808b7216b2aea3fba64bf4aa08a21de8b00b  /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_perf
+a4d8fcd59ecff3da43fb8f8740676bd27506de0325993108cbe252526ccc6fbf  /Users/rexxa/work/p18-data/bin_p1/sub/worldsim_perf
+contended 0
+quiet owner=pass18-sim (Claude Code, new-world-pass4) pid=81284 purpose=p18 parts 1-2: attribution and R5/F8 started=2026-10-15T16:42:44Z 

@@ -71,6 +71,12 @@ pub fn run(args: &ProbeArgs) -> Result<(), String> {
 /// [`run`] with this pass's options (Pass 16: `--agent-trace` writes the
 /// per-person files next to the usual outputs, which stay unchanged).
 pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> {
+    run_with_chronicle(args, options, None)
+}
+
+/// [`run_with`] that also writes each seed's chronicle to `chronicle_out`
+/// (Pass 19 `--chronicle-out`; the other outputs are unchanged).
+pub fn run_with_chronicle(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std::path::Path>) -> Result<(), String> {
     fs::create_dir_all(&args.out).map_err(|e| e.to_string())?;
     let results = std::thread::scope(|scope| {
         let mut handles = Vec::new();
@@ -78,7 +84,7 @@ pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> 
             handles.push(scope.spawn(move || {
                 let mut runs = Vec::new();
                 for seed in args.seeds.clone().skip(worker).step_by(args.workers) {
-                    runs.push(run_seed(args, options, seed)?);
+                    runs.push(run_seed(args, options, chronicle_out, seed)?);
                 }
                 Ok::<_, String>(runs)
             }));
@@ -169,13 +175,15 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v20" => crate::scenes::game_v20_scene(seed),
         "game_v21" => crate::scenes::game_v21_scene(seed),
         "game_v22" => crate::scenes::game_v22_scene(seed),
+        "game_v23" => crate::scenes::game_v23_scene(seed),
+        "game_v24" => crate::scenes::game_v24_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
     }
 }
 
-fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunResult, String> {
+fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std::path::Path>, seed: u64) -> Result<RunResult, String> {
     let started = Instant::now();
     let make_scene = || scene_engine(&args.scene, seed);
     let mut engine = make_scene();
@@ -205,6 +213,8 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
     let mut deaths = DeathTracker::install(&mut engine);
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
+    // Pass 19: chronicle entries already compared with the twin's.
+    let mut chronicle_seen = 0usize;
     let ticks_per_day = engine.resources.ticks_per_day;
     if ticks_per_day == 0 {
         return Err("probe requires positive ticks_per_day".into());
@@ -410,7 +420,8 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
                     || (engine.resources.rules.agent.routine.is_some()
                         && !super::pass17::twins_match(&engine, twin))
                     || (engine.resources.rules.society.family.is_some()
-                        && !super::family_trace::twins_match(&engine, twin)))
+                        && !super::family_trace::twins_match(&engine, twin))
+                    || !super::chronicle_out::twins_match(&engine, twin, &mut chronicle_seen))
             {
                 return Err(format!(
                     "{} tick trace mismatch seed={seed} tick={}",
@@ -424,6 +435,14 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
     death_output.flush().map_err(|e| e.to_string())?;
     if let Some(tracer) = &tracer {
         write_trace(args, seed, &engine, tracer, &git_sha)?;
+    }
+    if let Some(twin) = &twin {
+        if engine.resources.chronicle != twin.resources.chronicle {
+            return Err(format!("{} chronicle mismatch seed={seed}", args.scene));
+        }
+    }
+    if let Some(dir) = chronicle_out {
+        super::chronicle_out::write(dir, &engine, &args.scene, seed, &git_sha)?;
     }
     let agent_days = agent_ticks as f64 / ticks_per_day as f64;
     eprintln!(
@@ -479,7 +498,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24")
         || super::ablation::is_ablation(scene)
 }
 
@@ -492,7 +511,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "abl_no_regions", "abl18_no_regions"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "game_v23", "game_v24", "abl_no_regions", "abl18_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

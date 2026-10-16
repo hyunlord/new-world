@@ -16,6 +16,11 @@ sim-bridge = { path = "../sim-bridge" }
 
 serde_json = "1"
 
+[features]
+# Pass 18: forwards sim-systems' `subprofile` timing scopes into
+# `worldsim_perf`'s JSON. Never on by default and never a required feature.
+subprofile = ["sim-systems/subprofile"]
+
 [dev-dependencies]
 criterion = { workspace = true }
 
