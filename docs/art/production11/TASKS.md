@@ -22,3 +22,8 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 - P0 tool commits fe794805 and e68b851b pushed; ls-remote WIP=e68b851b26869671446b9542b72b077f2c01a1ef, publication remains cdf69c0e85a5876c821a8bf22b18089bf740c581.
 - Measure worktree release bridge built, copied to debug load path; both SHA256=7752d9ce994da64b08887c961fdf006153fae526dcad06526e03aed84e65df7c. Initial import startup reported missing imported fonts; post-import confirmation clean. Four P11 collectors parse successfully.
 - Timing correction: initial Part1 start was hand-entered10:22 ahead of the observed clock; corrected to approximate10:17. Verified code commit01fa24dd timestamp10:20:15Z; first capture launched10:20:28Z.
+- 2026-10-16T13:14:42Z: All four required baseline worlds completed on b94bfef7, release/debug SHA equal. W200 hold96s, load2.66→2.89, unflagged200→200 in all six running blocks. P0 section timers remain queued; do not move measure checkout until they finish.
+- 2026-10-16T13:10:41Z: First complete six-framing reference A finished, all six launches exit0 and clock metadata valid. P5 preliminary independent repeat has equal complete render event sequence and zero RGBA differences. Full A′ and running/pan reference are still in progress; no H5 pass claimed.
+- 2026-10-16T13:24Z: Python unittest discovery completed392 tests in19.078s, exit0. This is a focused pre-freeze tool gate, not the full final gate.
+
+- 2026-10-16T13:35:52Z: Reference capture sequence completed: six A/Aprime exact complete draw-event sequences and RGBA zero differences; running-A W0/W200600 frames and W500 frozen/2x240 frames pass structure/provenance validation. Reference evidence only; candidate H5 remains NOT_MEASURED.

@@ -58,3 +58,7 @@ Completed for this diagnosis: code/source tracing, offline attribution of all th
 
 ## P5 acceptance guard (2026-10-16T13:06Z)
 The P11 pixel comparator now explicitly rejects any nonzero P5 A/A′ control or A/B difference. Other framings retain the unchanged Art Pass 10 two-dimensional control bound. Alpha-only image regressions reproduced two false-accept cases in the inherited generic comparator before the fix. The P11 and P9 comparator tests pass (14 tests, 5 subtests); this is comparator verification, not an actual identity verdict.
+
+## Current reference evidence (2026-10-16T13:35:52Z)
+
+The corrected actual-event clock now reproduces all six A/A′ framings exactly, including P5: zero full-RGBA differences, complete event sequences equal. See [reference verification](identity-reference/reference-validation.md) and its SHA-bound raw archive. This supersedes only the current harness-reproducibility pending status above; historical CPU-to-render causality remains NOT_VERIFIED, and no candidate identity or tick-cache optimization is accepted. Running reference covers 600/600/240/240 frames with unchanged source/build provenance. Six-framing supplemental provenance was recorded during A rather than per launch; this limitation remains explicit.
