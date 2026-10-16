@@ -107,7 +107,7 @@ func _run() -> void:
 		return
 	var draw_evidence: Dictionary = _draw_clock.evidence()
 	if not bool(draw_evidence["valid"]):
-		_fail("unexpected render steps; capture invalid")
+		_fail("unexpected render steps; capture invalid: " + JSON.stringify(draw_evidence))
 		return
 	var manifest: Dictionary = {"census": _identity_census(), "draw_clock": draw_evidence, "framing": framing, "seed": spec[0], "tick": time["tick"], "state_change_frame": state_frame, "capture_frame": Engine.get_process_frames(), "settle_frames": 120, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001, "camera": [_camera.position.x, _camera.position.y], "zoom": spec[2], "debug_build": OS.is_debug_build(), "sim_reads": _reads != null}
 	var file := FileAccess.open(output.path_join(framing + ".json"), FileAccess.WRITE)
@@ -127,12 +127,19 @@ func _settled() -> void:
 	frame_settled.emit()
 
 func _fail(message: String) -> void:
+	var output: String = OS.get_environment("P11_IDENTITY_OUT")
+	var framing: String = OS.get_environment("P11_IDENTITY_ID")
+	if not output.is_empty() and DirAccess.make_dir_recursive_absolute(output) == OK:
+		var rejected := FileAccess.open(output.path_join(framing + ".rejected-clock.json"), FileAccess.WRITE)
+		if rejected != null:
+			rejected.store_string(JSON.stringify({"valid": false, "reason": message, "capture_frame": Engine.get_process_frames(), "draw_clock": _draw_clock.evidence()}, "\t") + "\n")
+			rejected.close()
 	push_error("identity-p10: " + message)
 	quit(1)
 
 
 func _process(delta: float) -> bool:
-	_draw_clock.schedule(Engine.get_process_frames())
+	_draw_clock.schedule(Engine.get_process_frames(), delta)
 	if true:
 		_identity_delta_samples += 1
 		if not FixedDelta.accepts_delta(delta):

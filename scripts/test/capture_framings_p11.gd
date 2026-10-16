@@ -295,13 +295,13 @@ func _run() -> void:
 			if image.save_png(ProjectSettings.globalize_path(_out.path_join("P3.png"))) != OK:
 				_fail("cannot save P3")
 				return
-			var identity_file := FileAccess.open(_out.path_join("P3.json"), FileAccess.WRITE)
-			if identity_file == null:
-				_fail("cannot save P3 metadata")
-				return
 			var draw_evidence: Dictionary = _draw_clock.evidence()
 			if not bool(draw_evidence["valid"]):
 				_fail("unexpected render steps; capture invalid")
+				return
+			var identity_file := FileAccess.open(_out.path_join("P3.json"), FileAccess.WRITE)
+			if identity_file == null:
+				_fail("cannot save P3 metadata")
 				return
 			identity_file.store_string(JSON.stringify({"census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
 		if not _write_entities(stem, target, image.get_size()):
@@ -413,6 +413,11 @@ func _open_inspector(inspector: Node) -> bool:
 
 func _fail(message: String) -> void:
 	_failed = true
+	if OS.get_environment("CAPTURE_IDENTITY_P11") == "1" and not _out.is_empty() and DirAccess.make_dir_recursive_absolute(_out) == OK:
+		var rejected := FileAccess.open(_out.path_join("P3.rejected-clock.json"), FileAccess.WRITE)
+		if rejected != null:
+			rejected.store_string(JSON.stringify({"valid": false, "reason": message, "capture_frame": Engine.get_process_frames(), "draw_clock": _draw_clock.evidence()}, "\t") + "\n")
+			rejected.close()
 	push_error("capture: " + message)
 	quit(1)
 
@@ -1070,7 +1075,7 @@ func _capture_fixture_mode() -> bool:
 
 func _process(delta: float) -> bool:
 	if OS.get_environment("CAPTURE_IDENTITY_P11") == "1":
-		_draw_clock.schedule(Engine.get_process_frames())
+		_draw_clock.schedule(Engine.get_process_frames(), delta)
 		_identity_delta_samples += 1
 		if not FixedDelta.accepts_delta(delta):
 			_identity_delta_valid = false

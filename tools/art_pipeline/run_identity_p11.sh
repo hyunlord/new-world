@@ -65,5 +65,6 @@ for framing in P1 P2 P3 P4 P5 P6; do
   fi
   if [[ $rc -ne 0 ]]; then failed=1; fi
   printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$framing" "$started" "$(date -u +%FT%TZ)" "$rc" "$artifacts" "$log_errors" >> "$output/launches.tsv"
+  if [[ $failed -ne 0 ]]; then break; fi
 done
 exit "$failed"
