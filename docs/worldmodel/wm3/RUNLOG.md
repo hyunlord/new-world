@@ -18,7 +18,7 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 11:59:02 | | `_setup/queue.sh aa763da8` (detached, `_logs/queue`): `wm3_full_s0` started (`--max-seconds 14400`; load average 6.3) |
 | 4.1 | 11:59:02 | 12:23:59 | `wm3_full_s0` attempt 1 (`aa763da8`): steps 0–250 (step 0 evaluation `val_t2` 0.0608, `val_eff` 0.6149, 18.6 s; ≈ 2.2 s/step); stalled in its step-250 evaluation (main thread 100 % user CPU, GPU 2 %); killed at 12:23:59, moved to `_aborted/wm3_full_s0_hang_1223` (DECISIONS K4.1). DGX load average 22–50 from other users' jobs |
 | 4.1 | 12:24:22 | | queue restarted from `cc18dc3b` (evaluation phase prints, stack dump after 600 s): `wm3_full_s0` attempt 2 |
-| 4.1 | 12:24:25 | 13:41:25 | `wm3_full_s0` attempt 2 (`cc18dc3b`): step-250 loss −2.2168 = attempt 1's (deterministic), evaluation 7.8 + ≈ 11 s; stop `patience` at step 2,000, kept step 500 (`val_eff` 0.5246, `val_t2` 0.0632; init 0.6149 / 0.0608); steps 1,000–2,000 had lower `val_eff` (down to 0.5027) but `val_t2` 0.0646–0.0789 > 1.05 × 0.0608 (not eligible); 4,609 s (≈ 2.2 s/step incl. evaluations); rounding True. DGX load average 10–50 |
+| 4.1 | 12:24:25 | 13:41:25 | `wm3_full_s0` attempt 2 (`cc18dc3b`): step-250 loss −2.2168 = attempt 1's (deterministic), evaluation 7.8 + ≈ 11 s; stop `patience` at step 2,000, kept step 500 (`val_eff` 0.5246, `val_t2` 0.0632; init 0.6149 / 0.0608); steps 1,000, 1,750 and 2,000 had lower `val_eff` (down to 0.5027) and every step from 1,000 on had `val_t2` 0.0646–0.0789 > 1.05 × 0.0608 (not eligible); 4,609 s (≈ 2.2 s/step incl. evaluations); rounding True. DGX load average 10–50 |
 | 4.2 | 13:41:25 | | its finals from `aa763da8` (background) |
 | 4.1 | 13:41:25 | | `wm3_ctrl_s0` started |
 | 4.2 | 13:41:25 | 14:03:33 | `wm3_full_s0` finals from `aa763da8`: `_effects` 13:51:20 (593 s), `_split` 13:51:42, `_fact` 14:02:32, lag curve 14:03:16, `_calib` 14:03:33, all exit 0 (beside `wm3_ctrl_s0`, whose steps 0–500 ran at ≈ 2.5–3.4 s/step meanwhile) |
@@ -31,7 +31,7 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 16:40:27 | | `wm3_full_s1` started (step 0: `val_t2` 0.0603 = init 0.0603, `val_eff` 0.5489) |
 | pause | 16:55:10 | ≈ 18:52 | **Mac clamshell sleep** (`pmset` log: "Entering Sleep state due to 'Clamshell Sleep'" at 16:55:10; the session's next call 18:52:54): ≈ 1 h 57 min in which this session made no calls; the DGX jobs ran on (queue, finals). No connection-loss handling was needed (the DGX answered at once on wake). The training deadline is not moved (no run starts after `wm3_full_s2`) |
 | 4.2 | 16:40:27 | 17:01:49 | `wm3_os_s0` finals from `aa763da8`: `_effects` 16:50:07, `_split` 16:50:32, `_fact` 17:01:04, lag curve 17:01:49, exit 0 |
-| 4.1 | 16:40:27 | 18:46:28 | `wm3_full_s1`: stop `patience` at step 3,250, kept step 1,750 (`val_eff` 0.4945, `val_t2` 0.0622; init 0.5489 / 0.0603); steps 500–1,000 not eligible (`val_t2` 0.0635–0.0697); 7,522 s (≈ 2.0 s/step incl. evaluations) |
+| 4.1 | 16:40:27 | 18:46:28 | `wm3_full_s1`: stop `patience` at step 3,250, kept step 1,750 (`val_eff` 0.4945, `val_t2` 0.0622; init 0.5489 / 0.0603); steps 500–1,000 not eligible (`val_t2` 0.0635–0.0697); 7,522 s (≈ 2.2 s/step incl. evaluations) |
 | 4.2 | 18:46:28 | | its finals from `aa763da8` |
 | 4.1 | 18:46:28 | | `wm3_full_s2` started (the last run) |
 | 4.2 | 18:46:28 | 19:06:55 | `wm3_full_s1` finals from `aa763da8`: `_effects` 18:55:51, `_split` 18:56:10, `_fact` 19:06:00, lag curve 19:06:39, `_calib` 19:06:55, exit 0 |

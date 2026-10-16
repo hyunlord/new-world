@@ -21,9 +21,11 @@ from the files in `runs/`). Training ran from `cc18dc3b` (`aa763da8` plus diagno
   **NONE** (expected day MAE 46.0 vs `ridge_day` 29.2); P(split within 30 days) 0.76–0.99 predicted vs 0.41 observed (validation).
 - **Q3 (ablation): the 7-day gain is the objective's, not more training's** (post hoc on the 7-day cells:
   `wm3_full_s0` vs `wm3_ctrl_s0` −0.091 [−0.108, −0.073]; cast windows alone `wm3_os_s0` vs `wm3_ctrl_s0` −0.005
-  [−0.043, +0.043]); on V5's pre-registered 30-day cells the three configurations are within 0.01 of each other
+  [−0.043, +0.043]); on V5's pre-registered 30-day cells the three configurations are within 0.011 of each other
   (`full` vs `ctrl` +0.006 [+0.000, +0.012] NONE; `os` vs `ctrl` TIE; `full` vs `os` TIE).
-- **Factual guard (V6): no cost.** Every WM-3 run is at least as good as its init on raw T2 168 h (−0.002 to −0.007).
+- **Factual guard (V6): no cost at the pre-registered 168 h.** Every WM-3 run is at least as good as its init on raw
+  T2 168 h (−0.002 to −0.007); at 24 h (reported, not judged) the `full` and `os` runs are 1–3 % worse than their inits
+  (+0.0014 to +0.0036, CIs above 0; the selection allowed `val_t2` 24 h up to 5 % worse), `ctrl` 2 % better.
 
 ## 2. The audit (Part 1): a training problem, not a bug
 
@@ -50,8 +52,9 @@ AUDIT.md has the tables):
 
 **Decision (`K1.decision`): A1 and A3 clean.** The action reaches the model at the right row with the right value, the
 recorded jump is at c → c + 1 and the harness reproduces the model's step. WM-2's models answer the action with a small part of
-the recorded jump (3–8 % of the gift's recorded jump, 1–3 % of the `rot_wood` wood jump, 10–19 % (`sp240L`) and 23–37 % (`sp120L`) of the spoils'): a cast is 1/336 of the teacher-forced loss in ≈ 10 % of the training windows and WM-2's selection
-barely rewards an effect. No erratum to WM-2.
+the recorded jump (3–8 % of the gift's recorded jump, s1 with the wrong sign; 1–3 % of the `rot_wood` wood jump, 10–19 % (`sp240L`) and 23–37 % (`sp120L`) of the spoils'). A hypothesis for why (section 12): a cast is 1/336 of the teacher-forced loss in ≈ 10 % of the
+training windows and WM-2's selection barely rewards an effect — but raising the share of cast windows alone (`wm3_os`)
+does not change the response, so this is at most part of the explanation. No erratum to WM-2.
 
 ## 3. The idea tested: paired branches with shared noise
 
@@ -91,7 +94,8 @@ All five runs trained (none dropped); AdamW lr 1e-4, k = 168, `eval_every` 250 (
 
 `wm3_full_s0`'s first attempt stalled in an evaluation (environment, DECISIONS K4.1) and was rerun from scratch; the
 rerun's step-250 loss equals the first attempt's (deterministic). The eligibility bound mattered: `wm3_full_s0`'s steps
-1,000–2,000 had lower `val_eff` (down to 0.503) but `val_t2` 6–30 % above the init's, so step 500 was kept. No seed kept
+1,000, 1,750 and 2,000 had lower `val_eff` (down to 0.503), but every step from 1,000 on had `val_t2` 6–30 % above the
+init's, so step 500 was kept. No seed kept
 the init, so every `wm3_full` seed has a trained hazard head. Trajectories: `runs/judge3/judge.md`.
 
 ## 5. Verdicts (pre-registered, test families)
@@ -114,7 +118,9 @@ the init, so every `wm3_full` seed has a trained hazard head. Trajectories: `run
 V5's `full` vs `ctrl` interval has its lower end at +0.0004 (> 0, hence NONE). V3's right-direction share: `sp240L` 1.00
 for all three seeds, `gf240E` 0.04 / 0.04 / 0.53 (the true `gf240E` shift is +4.4 days on average; the models predict
 near-zero shifts, −4.4 … +0.6 days per arm and seed, see section 8). V6: no `wm3_full` seed is worse by more than 0.005, so the effect work did not
-cost factual accuracy; the extra training improved it slightly in four of five runs.
+cost factual accuracy at 168 h; the extra training improved it slightly in four of five runs. At 24 h (judge.json
+`V6.<run>.t2_24`, reported only) `wm3_full_s0` / `_s1` / `_s2` / `wm3_os_s0` are worse than their inits by +0.0034 /
++0.0015 / +0.0014 / +0.0036 (all CIs above 0, 1–3 %) and `wm3_ctrl_s0` better by −0.0019.
 
 ## 6. Effects in detail
 
@@ -165,7 +171,7 @@ Drift of the factual (no-action) rollouts after the test cast rows, T2 nMAE of t
 std; METRICS.md section 6): WM-2 M1b-act s0 / s1 / s2 0.127 / 0.345 / 0.624, 0.134 / 0.339 / 0.630, 0.125 / 0.409 /
 0.741; `wm3_full_s0` 0.106 / 0.329 / 0.618, `_s1` 0.117 / 0.336 / 0.638, `_s2` 0.094 / 0.282 / 0.544; `wm3_ctrl_s0`
 0.107 / 0.328 / 0.597; `wm3_os_s0` 0.123 / 0.287 / 0.561 — the fine-tuning did not make the long factual rollouts
-drift more (consistent with V6).
+drift more (except `wm3_full_s1` at 45 d, +0.008; consistent with V6).
 
 ## 7. The one-step and lag curve, before and after
 
@@ -209,20 +215,22 @@ shape (a small first-hour response that fades within a day).
 
 The hazard head now predicts splits — too many and too early. A fission happens in ≈ 3 × 10⁻⁴ of the rows; the heads
 of the kept checkpoints put ≈ 2–6 × 10⁻³ per hour on the factual rollouts (1 − (1 − h)^720 = 0.76–0.99). The miscalibration falls with the kept step
-(500 → 2,000: 0.99 → 0.76 predicted vs 0.41 observed), so the most likely reason is that a freshly initialized head at
+across the three seeds (500 → 2,000: 0.99 → 0.76 predicted vs 0.41 observed; step and seed are confounded, n = 3), so a
+likely reason is that a freshly initialized head at
 lr 1e-4 had not reached the base rate by the step the effect criterion kept: the selection never looked at the
-hazard. The head is off-rate on real states too, not only on drifted rollouts: a reviewer's validation check (40 factual
-episodes, teacher-forced) gave a mean hazard of 7.3 / 3.5 / 2.5 × 10⁻³ per row (s0 / s1 / s2) against an observed
+hazard. The head is off-rate on real states too, not only on drifted rollouts: a reviewer's validation check (REVIEW.md, not a
+committed run file; 40 factual episodes, teacher-forced) gave a mean hazard of 7.3 / 3.5 / 2.5 × 10⁻³ per row (s0 / s1 / s2) against an observed
 3.6 × 10⁻⁴. The ranking is weakly informative — the observed rate is higher in the top quantile bin than in the bottom
-one (0.13–0.29 in the lowest, 0.65–0.68 in the highest; not monotone in between for s2) — but the level is wrong, so E is 34–49 days early on average and V4 is lost by
+one (0.13–0.29 in the lowest, 0.65–0.68 in the highest; not monotone in between for s0 and s2) — but the level is wrong, so E is 34–49 days early on average and V4 is lost by
 ≈ 17 days. The expected-day split shift is near 0: per-arm means −0.02 … −1.27 days on the two W4 arms (−4.35 … +0.61 over all
 four arms and seeds), right in direction for
-`sp240L` (true −20 days) and wrong for `gf240E` (true +4.4): it ties `an5_arm` (V3) only because `an5_arm` is barely
-better than predicting no shift (`zero` 12.21 days, cell average).
+`sp240L` (true −20 days) and wrong for `gf240E` (true +4.4): it ties `an5_arm` (V3), WM-2's validation choice, which on
+the test families is slightly worse than predicting no shift (post hoc: per-world 11.41 vs `zero` 11.08 days; cell
+average 12.49 vs 12.21); `wm3_full`'s 11.02 is no better than `zero`.
 
 ## 9. The ablation
 
-On the pre-registered 30-day cells (V5) the three `_s0` configurations are within 0.01: neither the objective nor the
+On the pre-registered 30-day cells (V5) the three `_s0` configurations are within 0.011: neither the objective nor the
 cast windows changed the 30-day error. On the 7-day cells (post hoc, same bootstrap):
 
 | comparison (7 d cells) | Δ [95 % CI] |
@@ -232,8 +240,8 @@ cast windows changed the 30-day error. On the 7-day cells (post hoc, same bootst
 | `wm3_full_s0` vs `wm3_os_s0` (pair + hazard loss beyond cast windows) | −0.085 [−0.136, −0.049] |
 | `wm3_ctrl_s0` vs `wm2_m1bact_v19_s0` (more training under the effect-aware selection) | −0.027 [−0.033, −0.021] |
 
-So the 7-day gain comes from what `full` adds to `os`: the pair loss, the hazard term (too weak to move the trunk
-much) and 16 partner windows per step that also enter WM-2's teacher-forced and rollout terms (48 against 32
+So the 7-day gain comes from what `full` adds to `os`: the pair loss, the hazard term (presumably too weak to move
+the trunk much; not measured) and 16 partner windows per step that also enter WM-2's teacher-forced and rollout terms (48 against 32
 sequences, so `full` vs `os` is not compute-matched either); these are not separated here, the pair loss being the
 only one aimed at the effect: putting the casts into the batch is not enough when the loss on them is the same per-feature loss as
 everywhere else, and more training under the effect-aware selection buys only a quarter of it. All four are single-seed.
@@ -271,19 +279,20 @@ state), where those methods belong.
 a learned world model that predicts the factual future better than the calendar baselines (WM-2 W1) ignores the effect of rare interventions — not because of a data or evaluation bug (Part 1); raising the share of cast
 windows alone does not change that (`os` ≈ `ctrl`), so "a vanishing share of the loss" is at most part of the
 explanation (a hypothesis) — and a paired-difference objective on those branches teaches it the first week of the
-effect (the 7-day effect error falls by 16 % against the same checkpoints, −0.096 [−0.122, −0.067]; the gain is the
-paired configuration's — pair loss, hazard term and partner windows, not separated — not more training's or the cast
-windows' alone) without costing factual accuracy (V6). It still does not beat case-based
-baselines at 7 days (V2 TIE) or "no effect" at 30 days (V1 NONE), where the true effect reverses sign through the
-agents' behaviour.
+effect (post hoc — the pre-registered 7-day rule V2 is a TIE: the 7-day effect error falls by 16 % against the same
+checkpoints, −0.096 [−0.122, −0.067]; the gain is the paired configuration's — pair loss, hazard term and partner
+windows, not separated, and `full` vs `os` is not compute-matched (48 vs 32 sequences) — not more training's or the cast
+windows' alone) without costing factual accuracy at 168 h (V6; 1–3 % worse at 24 h). It still does not beat case-based
+baselines at 7 days (V2 TIE) or "no effect" at 30 days (V1 NONE), where the true effect reverses sign (presumably
+through the agents' behaviour; not inspected).
 
 Backed by: AUDIT.md (A1, A3: 0 mismatches; A2: the one-step response); V2 TIE and V1 NONE; V6; the post-hoc 7-day
-comparisons of section 9 (labelled as post hoc; one seed for the ablations, three for `full` vs WM-2).
+comparisons of sections 6 and 9 (labelled as post hoc; one seed for the ablations, three for `full` vs WM-2).
 
 Not supported:
 - "The model predicts intervention effects better than simple baselines" — V1 NONE, V2 TIE.
 - "The hazard head predicts splits" — V4 NONE, calibration 0.76–0.99 vs 0.41; V3's tie is with a baseline that
-  barely beats predicting no shift.
+  is slightly worse than predicting no shift on the test families.
 - "Paired training fixes the one-step response" — the 1-hour response is still 8–32 % of the true jump; the gain is in
   the rollout over the first day.
 - Any 30-day claim: no configuration learned the reversal.

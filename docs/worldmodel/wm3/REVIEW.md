@@ -43,3 +43,31 @@ the only path outside `tools/worldmodel/wm3/**` and `docs/worldmodel/wm3/**` is 
 | 7 | NOTE | §8's miscalibration explanation is supported: teacher-forced mean hazard on 40 val factual episodes 7.25 / 3.49 / 2.50 × 10⁻³ vs observed 3.63 × 10⁻⁴; "rises across the bins" is not monotone for s2 | **fixed**: number added, wording softened |
 | 8 | NOTE | wording: Q2's calibration is a validation number; "0–15 %" slightly exceeded (16 %); "the 4 arms' full horizon" (V3 uses 2); REVIEW.md not yet written; training commit `cc18dc3b` only in K4.1 | **fixed** (all five) |
 | 9 | NOTE | `RUNLOG.md` had an uncommitted change | **fixed** (committed before the gate) |
+
+## Round 2 (HEAD `b007fc65`, 2026-10-16 21:46–21:54; a fresh subagent, the last round)
+
+**No BLOCKING finding.** Re-derived: every V number and verdict (V3 independently: per-world `an5_arm` 11.412, `wm3_full`
+11.089 / 11.134 / 10.834); the cell averages, food-mean and lag tables; the runs table and step-0 checks; split timing
+and calibration; the drift values; every post-hoc number; the scope of `git diff --name-only 3cde2e91..HEAD`; REPORT.md
+has all 14 headings of GOAL.md section 13 in Korean. Round-1 fixes #2, #3, #5, #8, #9 verified as applied and truthful.
+
+| # | sev. | finding | action |
+|---|---|---|---|
+| 1 | MAJOR | round-1 fix #1 not carried into REPORT.md 정직한 판단 (loss share stated as the cause); WM3.md §2 still gives it as the explanation | **fixed**: both now state it as a hypothesis that `wm3_os` does not support |
+| 2 | MINOR | "an5_arm is barely better than predicting no shift" is false on the test families (per-world 11.41 vs `zero` 11.08; cell average 12.49 vs 12.21) | **fixed** (§8, §12): `an5_arm` is slightly worse than no shift on test; `wm3_full` 11.02 is no better than `zero` (post hoc) |
+| 3 | MINOR | round-1 fix #6 not carried into REPORT.md 제한사항 | **fixed** |
+| 4 | MINOR | the paper-claim sentences of REPORT.md still credit the pair loss alone; the `full` vs `os` compute mismatch not in §12 / REPORT | **fixed** (both) |
+| 5 | MINOR | factual T2 24 h is 1–3 % worse than the init for the `full` and `os` runs (judge.json `V6.<run>.t2_24`, CIs above 0), so "no cost" is broader than the evidence | **fixed**: reported in §1, §5, §12 and REPORT.md; "no cost" qualified to the pre-registered 168 h |
+| 6 | MINOR | post-hoc numbers not labelled where used (REPORT 정직한 판단; WM3.md §12 headline); "Backed by" cites §9 for a §6 number | **fixed** |
+| 7 | MINOR | the cause of the 30-day reversal stated as fact in §12 and REPORT.md | **fixed** (hedged as a hypothesis everywhere) |
+| 8 | MINOR | calibration bins non-monotone for s0 too | **fixed** |
+| 9 | NOTE | drift: `wm3_full_s1` at 45 d drifts +0.008 more than its init | **fixed** (exception stated) |
+| 10 | NOTE | "within 0.01" exceeded (0.0107) | **fixed** ("within 0.011") |
+| 11 | NOTE | "steps 1,000–2,000 had lower `val_eff`" imprecise (1,250 and 1,500 did not) | **fixed** (WM3.md §4, RUNLOG) |
+| 12 | NOTE | the gift percentage hides s1's wrong sign | **fixed** (WM3.md §2, REPORT.md) |
+| 13 | NOTE | REPORT.md 측정 결과 lacked the per-arm × outcome × horizon table, the event-based shift and the drift | **fixed**: pointer to `runs/judge3/judge.md`, event-based shift line, drift line, 24 h line |
+| 14 | NOTE | RUNLOG `wm3_full_s1` s/step (2.0 → 2.2); Part 7 rows missing | **fixed** (Part 7 rows added with the gate) |
+| 15 | NOTE | "falls with the kept step" confounded with seed (n = 3); "too weak to move the trunk" not measured | **fixed** (both hedged) |
+| 16 | NOTE | the teacher-forced hazard numbers come from the round-1 reviewer's scratch, not a committed run file | **fixed** (marked as such) |
+
+No third round (GOAL.md 0.3.3: two rounds maximum).
