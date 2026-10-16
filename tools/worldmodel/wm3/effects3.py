@@ -40,6 +40,7 @@ from wm2 import v2
 
 VAL_EFF_HORIZON = 720
 VAL_EFF_LAGS = ("7d", "30d")
+VAL_EFF_BATCH = 512
 
 
 @dataclass
@@ -169,20 +170,21 @@ def expected_day(h: np.ndarray, ref_row: int, last_row: int = v2.LAST_ROW) -> di
 
 # ------------------------------------------------------------------ predictions ------------------------------------
 def predictions(pred, families: list[FamilyData], cases: list, horizon: int | None = None, test_std=None,
-                hazard: bool = False, chunk: int = 128) -> tuple[dict, dict]:
+                hazard: bool = False, chunk: int = 128, pooled: int = 0) -> tuple[dict, dict]:
     """A model's predicted effects (and, for the full horizon, shifts) for every case, and the factual-rollout drift
-    (`wm2.effects.model_predictions` on pre-loaded families; drift needs `test_std`)."""
+    (`wm2.effects.model_predictions` on pre-loaded families; drift needs `test_std`). `pooled` > 0 rolls the jobs of
+    every family together in batches of that many (the fine-tuning `val_eff`; the same rollouts batched differently);
+    0 = one `rollout_jobs` call per family and replicate, as `model_predictions`."""
     by_fam: dict[int, list] = {}
     for x in cases:
         by_fam.setdefault(x.seed, []).append(x)
-    preds, drift = {}, {k: [] for k in ef.DRIFT_LAGS}
+    groups = []                       # (ep, truth, cases, jobs, keys) per family and replicate
     for fam in families:
         mine = by_fam.get(fam.seed, [])
         for r, ep in sorted(fam.factual.items()):
             cs = [x for x in mine if x.rep == r]
             if not cs:
                 continue
-            truth = fam.truth[r]
             hz_of = lambda row: v2.LAST_ROW - row if horizon is None else min(horizon, v2.LAST_ROW - row)
             zeros = np.zeros_like(ep.bench.actions)
             jobs, keys = [], []
@@ -195,47 +197,58 @@ def predictions(pred, families: list[FamilyData], cases: list, horizon: int | No
                 act[x.cast_row, b.KINDS.index(kind)] = float(amount)
                 jobs.append(rx.Job(ep, x.cast_row, act, hz_of(x.cast_row)))
                 keys.append(("arm", x.key))
-            if hazard:
-                ro_list, h_list = rollout_jobs_h(pred, jobs, chunk)
-                hzd = dict(zip(keys, h_list))
+            groups.append((ep, fam.truth[r], cs, jobs, keys))
+    roll = (lambda jobs, ch: rollout_jobs_h(pred, jobs, ch)) if hazard else (lambda jobs, ch: (rx.rollout_jobs(pred, jobs, ch), None))
+    results = []
+    if pooled:
+        flat = [j for grp in groups for j in grp[3]]
+        ros_all, hs_all = roll(flat, pooled)
+        i = 0
+        for grp in groups:
+            n = len(grp[3])
+            results.append((ros_all[i: i + n], None if hs_all is None else hs_all[i: i + n]))
+            i += n
+    else:
+        results = [roll(grp[3], chunk) for grp in groups]
+    preds, drift = {}, {k: [] for k in ef.DRIFT_LAGS}
+    for (ep, truth, cs, jobs, keys), (ro_list, h_list) in zip(groups, results):
+        ros = dict(zip(keys, ro_list))
+        hzd = dict(zip(keys, h_list)) if h_list is not None else None
+        if test_std is not None:
+            for row in sorted({x.cast_row for x in cs}):
+                ro = ros[("factual", row)]
+                for name, lag in ef.DRIFT_LAGS.items():
+                    if row + lag <= v2.LAST_ROW and lag <= ro.v.shape[1]:
+                        drift[name].append(np.abs(ro.v[0, lag - 1] - ep.bench.v[row + lag])
+                                           / np.where(test_std > 0, test_std, np.nan))
+        for x in cs:
+            fa, ar = ros[("factual", x.cast_row)], ros[("arm", x.key)]
+            eff = {}
+            for o in v2.OUTCOMES:
+                eff[o] = {}
+                for lag_name in x.truth[o]:
+                    i = v2.LAGS[lag_name] - 1
+                    if i >= ar.v.shape[1]:
+                        continue
+                    get = {"food_stock": lambda ro: ro.v[0, i, ef.V_FOOD], "alive": lambda ro: ro.v[0, i, ef.V_ALIVE],
+                           "deaths": lambda ro: ro.deaths[0, i],
+                           "settlements_alive": lambda ro: ro.settlements_alive[0, i]}[o]
+                    eff[o][lag_name] = float(get(ar) - get(fa))
+            if horizon is None:
+                f_true = truth["fissions_total"][: x.cast_row + 1]
+                days = {}
+                for name, ro in (("arm", ar), ("factual", fa)):
+                    days[name] = v2.restricted_split_day(np.concatenate([f_true, ro.fissions_total[0]]), x.cast_row)
+                p = {"effects": eff, "shift": float(days["arm"][0] - days["factual"][0]),
+                     "censored": [days["arm"][1], days["factual"][1]]}
+                if hzd is not None:
+                    ea = expected_day(hzd[("arm", x.key)], x.cast_row)
+                    efa = expected_day(hzd[("factual", x.cast_row)], x.cast_row)
+                    p |= {"shift_expected": ea["E"] - efa["E"], "E_arm": ea["E"], "E_factual": efa["E"],
+                          "S_K_arm": ea["S_K"], "S_K_factual": efa["S_K"]}
             else:
-                ro_list, hzd = rx.rollout_jobs(pred, jobs, chunk), None
-            ros = dict(zip(keys, ro_list))
-            if test_std is not None:
-                for row in sorted({x.cast_row for x in cs}):
-                    ro = ros[("factual", row)]
-                    for name, lag in ef.DRIFT_LAGS.items():
-                        if row + lag <= v2.LAST_ROW and lag <= ro.v.shape[1]:
-                            drift[name].append(np.abs(ro.v[0, lag - 1] - ep.bench.v[row + lag])
-                                               / np.where(test_std > 0, test_std, np.nan))
-            for x in cs:
-                fa, ar = ros[("factual", x.cast_row)], ros[("arm", x.key)]
-                eff = {}
-                for o in v2.OUTCOMES:
-                    eff[o] = {}
-                    for lag_name in x.truth[o]:
-                        i = v2.LAGS[lag_name] - 1
-                        if i >= ar.v.shape[1]:
-                            continue
-                        get = {"food_stock": lambda ro: ro.v[0, i, ef.V_FOOD], "alive": lambda ro: ro.v[0, i, ef.V_ALIVE],
-                               "deaths": lambda ro: ro.deaths[0, i],
-                               "settlements_alive": lambda ro: ro.settlements_alive[0, i]}[o]
-                        eff[o][lag_name] = float(get(ar) - get(fa))
-                if horizon is None:
-                    f_true = truth["fissions_total"][: x.cast_row + 1]
-                    days = {}
-                    for name, ro in (("arm", ar), ("factual", fa)):
-                        days[name] = v2.restricted_split_day(np.concatenate([f_true, ro.fissions_total[0]]), x.cast_row)
-                    p = {"effects": eff, "shift": float(days["arm"][0] - days["factual"][0]),
-                         "censored": [days["arm"][1], days["factual"][1]]}
-                    if hazard:
-                        ea = expected_day(hzd[("arm", x.key)], x.cast_row)
-                        efa = expected_day(hzd[("factual", x.cast_row)], x.cast_row)
-                        p |= {"shift_expected": ea["E"] - efa["E"], "E_arm": ea["E"], "E_factual": efa["E"],
-                              "S_K_arm": ea["S_K"], "S_K_factual": efa["S_K"]}
-                else:
-                    p = {"effects": eff, "shift": float("nan"), "censored": None}
-                preds[x.key] = p
+                p = {"effects": eff, "shift": float("nan"), "censored": None}
+            preds[x.key] = p
     drift_out = {k: {"mean": float(np.nanmean(np.vstack(v))) if v else None,
                      "per_var": np.nanmean(np.vstack(v), axis=0).tolist() if v else None,
                      "n": len(v)} for k, v in drift.items()}
@@ -244,9 +257,9 @@ def predictions(pred, families: list[FamilyData], cases: list, horizon: int | No
 
 def val_eff(pred, families: list[FamilyData], cases: list, stds: dict) -> tuple[float, dict]:
     """The fine-tuning selection score: the 24-cell mean scaled effect MAE on the given (val, replicate 0) cases from
-    720-row rollouts (`round_counts` as set on the predictor)."""
+    720-row rollouts of every family batched together (`round_counts` as set on the predictor)."""
     cells = val_eff_cells(stds)
-    preds, _ = predictions(pred, families, cases, horizon=VAL_EFF_HORIZON)
+    preds, _ = predictions(pred, families, cases, horizon=VAL_EFF_HORIZON, pooled=VAL_EFF_BATCH)
     errs = ef.cell_errors(cases, preds, stds)
     worlds = sorted({x.seed for x in cases})
     per = {"|".join(cell): ef.cell_stat(errs, [cell], worlds) for cell in cells}

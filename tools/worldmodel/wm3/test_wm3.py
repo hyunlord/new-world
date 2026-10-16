@@ -490,6 +490,14 @@ class PredictionsEqualTests(unittest.TestCase):
         for key in want:
             self.assertEqual(want[key], got[key], key)
         self.assertEqual(wdrift, gdrift)
+        # The pooled 720-row path (val_eff) agrees with the per-family one within float noise.
+        a, _ = e3.predictions(pred, fams, cases, 720)
+        bb, _ = e3.predictions(pred, fams, cases, 720, pooled=512)
+        for key in a:
+            for o in v2.OUTCOMES:
+                for lag, v in a[key]["effects"][o].items():
+                    self.assertAlmostEqual(v, bb[key]["effects"][o][lag], places=3)
+                    self.assertAlmostEqual(v, got[key]["effects"][o][lag], places=3)
 
 
 if __name__ == "__main__":

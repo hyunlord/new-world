@@ -1,7 +1,8 @@
 #!/bin/bash
 # WM-3 Part 4 cost check (GOAL.md 9.2): 100 fine-tuning steps of wm3_full and of wm3_ctrl from wm2_m1bact_v19_s0, one
 # evaluation at step 0 and one at step 100 (val_t2 + val_eff), alone on the GPU; peak per-process GPU memory sampled
-# every 10 s. Train and val only. usage: cost.sh SHA
+# every 10 s. Train and val only. COST_STEPS (default 100) and COST_ONLY=full (only wm3_full) for a re-check.
+# usage: cost.sh SHA
 set -u
 SHA=$1
 W=/home/hyunlord/work/wm1-runs
@@ -9,10 +10,12 @@ O=$W/wm3/_cost${COST_TAG:-}
 D=$(bash $W/wm3/_setup/code.sh $SHA) || exit 9
 source /home/hyunlord/work/wm1-venv/bin/activate
 cd $D
-COMMON="--init $W/wm2/wm2_m1bact_v19_s0 --seed 0 --lr 1e-4 --max-steps 100 --eval-every 100 --patience 6 --max-seconds 3600 \
+COMMON="--init $W/wm2/wm2_m1bact_v19_s0 --seed 0 --lr 1e-4 --max-steps ${COST_STEPS:-100} --eval-every ${COST_STEPS:-100} --patience 6 --max-seconds 3600 \
   --base $W/wm2/effects_base/effects_base.json"
-for spec in "full --config full --n-plain 16 --n-cast 16 --partners 1 --pair 1.0 --hazard 10.0" \
-            "ctrl --config ctrl --n-plain 32 --n-cast 0 --partners 0 --pair 0 --hazard 0"; do
+SPECS=("full --config full --n-plain 16 --n-cast 16 --partners 1 --pair 1.0 --hazard 10.0"
+       "ctrl --config ctrl --n-plain 32 --n-cast 0 --partners 0 --pair 0 --hazard 0")
+[ "${COST_ONLY:-}" = "full" ] && SPECS=("${SPECS[0]}")
+for spec in "${SPECS[@]}"; do
   set -- $spec; NAME=$1; shift
   OUT=$O/$NAME; rm -rf $OUT; mkdir -p $OUT
   date +%s > $OUT/start
