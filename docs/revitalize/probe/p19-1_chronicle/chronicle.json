@@ -1,0 +1,3626 @@
+{
+ "c1": {
+  "born": {
+   "expected": 4359,
+   "found": 4359,
+   "mismatches": 0
+  },
+  "daughter_founded": {
+   "expected": 33,
+   "found": 33,
+   "mismatches": 0
+  },
+  "deaths": {
+   "expected": 2891,
+   "found": 2891,
+   "mismatches": 0
+  },
+  "departed_members": {
+   "expected": 443,
+   "found": 443,
+   "mismatches": 0
+  },
+  "fission_cancelled": {
+   "expected": 0,
+   "found": 0,
+   "mismatches": 0
+  },
+  "fission_started": {
+   "expected": 33,
+   "found": 33,
+   "mismatches": 0
+  },
+  "paired": {
+   "expected": 2164,
+   "found": 2164,
+   "mismatches": 0
+  },
+  "stage_ticks": {
+   "expected": 7446,
+   "found": 7446,
+   "mismatches": 0
+  }
+ },
+ "c1_mismatches": 0,
+ "c2_mismatches": 0,
+ "c3_mismatches": 0,
+ "c4": {
+  "differing": [],
+  "files": 32
+ },
+ "c5": {
+  "approx_bytes": 2577608,
+  "entries": 20151,
+  "entry_size_bytes": 88,
+  "json_bytes": 1421034,
+  "per_person_day": {
+   "approx_bytes": 12.211904902923076,
+   "entries": 0.09546916974916392,
+   "json_bytes": 6.732417059467688
+  },
+  "person_days": 211073.3763888889,
+  "projection": {
+   "approx_bytes": 34193333.72818461,
+   "days_per_year": 28,
+   "entries": 267313.67529765895,
+   "json_bytes": 18850767.76650953,
+   "people": 10000,
+   "person_days": 2800000,
+   "years": 10
+  }
+ },
+ "depart_causes": {
+  "elder_partner": 19,
+  "household": 330,
+  "seed": 94
+ },
+ "kinds": {
+  "became_elder": 3330,
+  "born": 4359,
+  "came_of_age": 4116,
+  "daughter_founded": 33,
+  "departed": 443,
+  "died": 2891,
+  "fission_started": 33,
+  "founding_member": 793,
+  "joined": 5,
+  "left_settlement": 5,
+  "paired": 2164,
+  "settled": 443,
+  "settlement_formed": 65,
+  "widowed": 1471
+ },
+ "per_seed": [
+  {
+   "approx_bytes": 85588,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 141,
+     "found": 141,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 71,
+     "found": 71,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 23,
+     "found": 23,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 98,
+     "found": 98,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 100,
+      "came_of_age": 136
+     },
+     "examples": [],
+     "expected": 236,
+     "found": 236,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 2,
+     "household": 14,
+     "seed": 7
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 2,
+       "household": 6,
+       "seed": 4
+      },
+      "elders_departed": 2,
+      "fission_id": 1,
+      "members": 12
+     },
+     {
+      "causes": {
+       "household": 8,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 2,
+      "members": 11
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 98,
+    "examples": [],
+    "mismatches": 0,
+    "records": 168
+   },
+   "entries": 672,
+   "entry_size_bytes": 88,
+   "json_bytes": 46857,
+   "kinds": {
+    "became_elder": 100,
+    "born": 141,
+    "came_of_age": 136,
+    "daughter_founded": 2,
+    "departed": 23,
+    "died": 98,
+    "fission_started": 2,
+    "founding_member": 27,
+    "paired": 71,
+    "settled": 23,
+    "settlement_formed": 3,
+    "widowed": 46
+   },
+   "people": 168,
+   "seed": 19200,
+   "ticks": 172800,
+   "traced_people": 168
+  },
+  {
+   "approx_bytes": 101268,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 174,
+     "found": 174,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 87,
+     "found": 87,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 116,
+     "found": 116,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 131,
+      "came_of_age": 168
+     },
+     "examples": [],
+     "expected": 299,
+     "found": 299,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 10,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 10,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 116,
+    "examples": [],
+    "mismatches": 0,
+    "records": 199
+   },
+   "entries": 796,
+   "entry_size_bytes": 88,
+   "json_bytes": 55565,
+   "kinds": {
+    "became_elder": 131,
+    "born": 174,
+    "came_of_age": 168,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 116,
+    "fission_started": 1,
+    "founding_member": 25,
+    "paired": 87,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 63
+   },
+   "people": 199,
+   "seed": 19201,
+   "ticks": 172800,
+   "traced_people": 199
+  },
+  {
+   "approx_bytes": 99844,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 173,
+     "found": 173,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 84,
+     "found": 84,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 118,
+     "found": 118,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 122,
+      "came_of_age": 166
+     },
+     "examples": [],
+     "expected": 288,
+     "found": 288,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 2,
+     "household": 10,
+     "seed": 2
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 2,
+       "household": 10,
+       "seed": 2
+      },
+      "elders_departed": 2,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 118,
+    "examples": [],
+    "mismatches": 0,
+    "records": 200
+   },
+   "entries": 780,
+   "entry_size_bytes": 88,
+   "json_bytes": 55199,
+   "kinds": {
+    "became_elder": 122,
+    "born": 173,
+    "came_of_age": 166,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 118,
+    "fission_started": 1,
+    "founding_member": 27,
+    "paired": 84,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 58
+   },
+   "people": 200,
+   "seed": 19202,
+   "ticks": 172800,
+   "traced_people": 200
+  },
+  {
+   "approx_bytes": 109764,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 195,
+     "found": 195,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 90,
+     "found": 90,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 26,
+     "found": 26,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 111,
+     "found": 111,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 144,
+      "came_of_age": 185
+     },
+     "examples": [],
+     "expected": 329,
+     "found": 329,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 4,
+     "household": 17,
+     "seed": 5
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 3,
+       "household": 7,
+       "seed": 3
+      },
+      "elders_departed": 3,
+      "fission_id": 1,
+      "members": 13
+     },
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 10,
+       "seed": 2
+      },
+      "elders_departed": 1,
+      "fission_id": 2,
+      "members": 13
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 111,
+    "examples": [],
+    "mismatches": 0,
+    "records": 215
+   },
+   "entries": 863,
+   "entry_size_bytes": 88,
+   "json_bytes": 60006,
+   "kinds": {
+    "became_elder": 144,
+    "born": 195,
+    "came_of_age": 185,
+    "daughter_founded": 2,
+    "departed": 26,
+    "died": 111,
+    "fission_started": 2,
+    "founding_member": 20,
+    "paired": 90,
+    "settled": 26,
+    "settlement_formed": 3,
+    "widowed": 59
+   },
+   "people": 215,
+   "seed": 19203,
+   "ticks": 172800,
+   "traced_people": 215
+  },
+  {
+   "approx_bytes": 54408,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 85,
+     "found": 85,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 42,
+     "found": 42,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 12,
+     "found": 12,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 64,
+     "found": 64,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 68,
+      "came_of_age": 75
+     },
+     "examples": [],
+     "expected": 143,
+     "found": 143,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 9,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 9,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 12
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 64,
+    "examples": [],
+    "mismatches": 0,
+    "records": 112
+   },
+   "entries": 421,
+   "entry_size_bytes": 88,
+   "json_bytes": 30186,
+   "kinds": {
+    "became_elder": 68,
+    "born": 85,
+    "came_of_age": 75,
+    "daughter_founded": 1,
+    "departed": 12,
+    "died": 64,
+    "fission_started": 1,
+    "founding_member": 27,
+    "paired": 42,
+    "settled": 12,
+    "settlement_formed": 2,
+    "widowed": 32
+   },
+   "people": 112,
+   "seed": 19204,
+   "ticks": 172800,
+   "traced_people": 112
+  },
+  {
+   "approx_bytes": 35668,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 50,
+     "found": 50,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 30,
+     "found": 30,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 52,
+     "found": 52,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 48,
+      "came_of_age": 46
+     },
+     "examples": [],
+     "expected": 94,
+     "found": 94,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 52,
+    "examples": [],
+    "mismatches": 0,
+    "records": 75
+   },
+   "entries": 275,
+   "entry_size_bytes": 88,
+   "json_bytes": 20220,
+   "kinds": {
+    "became_elder": 48,
+    "born": 50,
+    "came_of_age": 46,
+    "died": 52,
+    "founding_member": 25,
+    "paired": 30,
+    "settlement_formed": 1,
+    "widowed": 23
+   },
+   "people": 75,
+   "seed": 19205,
+   "ticks": 172800,
+   "traced_people": 75
+  },
+  {
+   "approx_bytes": 114380,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 202,
+     "found": 202,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 96,
+     "found": 96,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 27,
+     "found": 27,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 113,
+     "found": 113,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 144,
+      "came_of_age": 195
+     },
+     "examples": [],
+     "expected": 339,
+     "found": 339,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 20,
+     "seed": 6
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 9,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 1,
+      "members": 13
+     },
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 113,
+    "examples": [],
+    "mismatches": 0,
+    "records": 224
+   },
+   "entries": 899,
+   "entry_size_bytes": 88,
+   "json_bytes": 62542,
+   "kinds": {
+    "became_elder": 144,
+    "born": 202,
+    "came_of_age": 195,
+    "daughter_founded": 2,
+    "departed": 27,
+    "died": 113,
+    "fission_started": 2,
+    "founding_member": 22,
+    "joined": 1,
+    "left_settlement": 1,
+    "paired": 96,
+    "settled": 27,
+    "settlement_formed": 3,
+    "widowed": 64
+   },
+   "people": 224,
+   "seed": 19206,
+   "ticks": 172800,
+   "traced_people": 224
+  },
+  {
+   "approx_bytes": 56836,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 89,
+     "found": 89,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 42,
+     "found": 42,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 69,
+     "found": 69,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 78,
+      "came_of_age": 80
+     },
+     "examples": [],
+     "expected": 158,
+     "found": 158,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 12,
+     "seed": 2
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 12,
+       "seed": 2
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 69,
+    "examples": [],
+    "mismatches": 0,
+    "records": 114
+   },
+   "entries": 444,
+   "entry_size_bytes": 88,
+   "json_bytes": 31278,
+   "kinds": {
+    "became_elder": 78,
+    "born": 89,
+    "came_of_age": 80,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 69,
+    "fission_started": 1,
+    "founding_member": 25,
+    "paired": 42,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 29
+   },
+   "people": 114,
+   "seed": 19207,
+   "ticks": 172800,
+   "traced_people": 114
+  },
+  {
+   "approx_bytes": 88600,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 145,
+     "found": 145,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 81,
+     "found": 81,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 92,
+     "found": 92,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 128,
+      "came_of_age": 136
+     },
+     "examples": [],
+     "expected": 264,
+     "found": 264,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 11,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 92,
+    "examples": [],
+    "mismatches": 0,
+    "records": 174
+   },
+   "entries": 697,
+   "entry_size_bytes": 88,
+   "json_bytes": 48504,
+   "kinds": {
+    "became_elder": 128,
+    "born": 145,
+    "came_of_age": 136,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 92,
+    "fission_started": 1,
+    "founding_member": 29,
+    "paired": 81,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 54
+   },
+   "people": 174,
+   "seed": 19208,
+   "ticks": 172800,
+   "traced_people": 174
+  },
+  {
+   "approx_bytes": 96512,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 163,
+     "found": 163,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 82,
+     "found": 82,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 116,
+     "found": 116,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 120,
+      "came_of_age": 159
+     },
+     "examples": [],
+     "expected": 279,
+     "found": 279,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 2,
+     "household": 9,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 2,
+       "household": 9,
+       "seed": 3
+      },
+      "elders_departed": 2,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 116,
+    "examples": [],
+    "mismatches": 0,
+    "records": 192
+   },
+   "entries": 756,
+   "entry_size_bytes": 88,
+   "json_bytes": 53274,
+   "kinds": {
+    "became_elder": 120,
+    "born": 163,
+    "came_of_age": 159,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 116,
+    "fission_started": 1,
+    "founding_member": 29,
+    "paired": 82,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 55
+   },
+   "people": 192,
+   "seed": 19209,
+   "ticks": 172800,
+   "traced_people": 192
+  },
+  {
+   "approx_bytes": 85940,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 141,
+     "found": 141,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 78,
+     "found": 78,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 90,
+     "found": 90,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 126,
+      "came_of_age": 132
+     },
+     "examples": [],
+     "expected": 258,
+     "found": 258,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 10,
+     "seed": 4
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 10,
+       "seed": 4
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 90,
+    "examples": [],
+    "mismatches": 0,
+    "records": 169
+   },
+   "entries": 676,
+   "entry_size_bytes": 88,
+   "json_bytes": 47035,
+   "kinds": {
+    "became_elder": 126,
+    "born": 141,
+    "came_of_age": 132,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 90,
+    "fission_started": 1,
+    "founding_member": 28,
+    "paired": 78,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 49
+   },
+   "people": 169,
+   "seed": 19210,
+   "ticks": 172800,
+   "traced_people": 169
+  },
+  {
+   "approx_bytes": 113692,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 198,
+     "found": 198,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 97,
+     "found": 97,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 28,
+     "found": 28,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 110,
+     "found": 110,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 150,
+      "came_of_age": 193
+     },
+     "examples": [],
+     "expected": 343,
+     "found": 343,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 23,
+     "seed": 4
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 12,
+       "seed": 2
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     },
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 11,
+       "seed": 2
+      },
+      "elders_departed": 1,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 110,
+    "examples": [],
+    "mismatches": 0,
+    "records": 222
+   },
+   "entries": 895,
+   "entry_size_bytes": 88,
+   "json_bytes": 62157,
+   "kinds": {
+    "became_elder": 150,
+    "born": 198,
+    "came_of_age": 193,
+    "daughter_founded": 2,
+    "departed": 28,
+    "died": 110,
+    "fission_started": 2,
+    "founding_member": 24,
+    "paired": 97,
+    "settled": 28,
+    "settlement_formed": 3,
+    "widowed": 60
+   },
+   "people": 222,
+   "seed": 19211,
+   "ticks": 172800,
+   "traced_people": 222
+  },
+  {
+   "approx_bytes": 106068,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 186,
+     "found": 186,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 91,
+     "found": 91,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 122,
+     "found": 122,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 137,
+      "came_of_age": 178
+     },
+     "examples": [],
+     "expected": 315,
+     "found": 315,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 11,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 122,
+    "examples": [],
+    "mismatches": 0,
+    "records": 209
+   },
+   "entries": 833,
+   "entry_size_bytes": 88,
+   "json_bytes": 58267,
+   "kinds": {
+    "became_elder": 137,
+    "born": 186,
+    "came_of_age": 178,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 122,
+    "fission_started": 1,
+    "founding_member": 23,
+    "paired": 91,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 64
+   },
+   "people": 209,
+   "seed": 19212,
+   "ticks": 172800,
+   "traced_people": 209
+  },
+  {
+   "approx_bytes": 98172,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 167,
+     "found": 167,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 79,
+     "found": 79,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 115,
+     "found": 115,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 129,
+      "came_of_age": 160
+     },
+     "examples": [],
+     "expected": 289,
+     "found": 289,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 10,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 10,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 115,
+    "examples": [],
+    "mismatches": 0,
+    "records": 194
+   },
+   "entries": 771,
+   "entry_size_bytes": 88,
+   "json_bytes": 54020,
+   "kinds": {
+    "became_elder": 129,
+    "born": 167,
+    "came_of_age": 160,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 115,
+    "fission_started": 1,
+    "founding_member": 27,
+    "joined": 4,
+    "left_settlement": 4,
+    "paired": 79,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 54
+   },
+   "people": 194,
+   "seed": 19213,
+   "ticks": 172800,
+   "traced_people": 194
+  },
+  {
+   "approx_bytes": 44984,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 64,
+     "found": 64,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 40,
+     "found": 40,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 62,
+     "found": 62,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 62,
+      "came_of_age": 62
+     },
+     "examples": [],
+     "expected": 124,
+     "found": 124,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 62,
+    "examples": [],
+    "mismatches": 0,
+    "records": 93
+   },
+   "entries": 349,
+   "entry_size_bytes": 88,
+   "json_bytes": 25219,
+   "kinds": {
+    "became_elder": 62,
+    "born": 64,
+    "came_of_age": 62,
+    "died": 62,
+    "founding_member": 29,
+    "paired": 40,
+    "settlement_formed": 1,
+    "widowed": 29
+   },
+   "people": 93,
+   "seed": 19214,
+   "ticks": 172800,
+   "traced_people": 93
+  },
+  {
+   "approx_bytes": 91228,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 154,
+     "found": 154,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 77,
+     "found": 77,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 104,
+     "found": 104,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 121,
+      "came_of_age": 152
+     },
+     "examples": [],
+     "expected": 273,
+     "found": 273,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 10,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 10,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 104,
+    "examples": [],
+    "mismatches": 0,
+    "records": 179
+   },
+   "entries": 718,
+   "entry_size_bytes": 88,
+   "json_bytes": 49956,
+   "kinds": {
+    "became_elder": 121,
+    "born": 154,
+    "came_of_age": 152,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 104,
+    "fission_started": 1,
+    "founding_member": 25,
+    "paired": 77,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 53
+   },
+   "people": 179,
+   "seed": 19215,
+   "ticks": 172800,
+   "traced_people": 179
+  },
+  {
+   "approx_bytes": 98628,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 169,
+     "found": 169,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 76,
+     "found": 76,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 28,
+     "found": 28,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 111,
+     "found": 111,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 117,
+      "came_of_age": 148
+     },
+     "examples": [],
+     "expected": 265,
+     "found": 265,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 22,
+     "seed": 6
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 10,
+       "seed": 4
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     },
+     {
+      "causes": {
+       "household": 12,
+       "seed": 2
+      },
+      "elders_departed": 0,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 111,
+    "examples": [],
+    "mismatches": 0,
+    "records": 199
+   },
+   "entries": 767,
+   "entry_size_bytes": 88,
+   "json_bytes": 54427,
+   "kinds": {
+    "became_elder": 117,
+    "born": 169,
+    "came_of_age": 148,
+    "daughter_founded": 2,
+    "departed": 28,
+    "died": 111,
+    "fission_started": 2,
+    "founding_member": 30,
+    "paired": 76,
+    "settled": 28,
+    "settlement_formed": 3,
+    "widowed": 53
+   },
+   "people": 199,
+   "seed": 19216,
+   "ticks": 172800,
+   "traced_people": 199
+  },
+  {
+   "approx_bytes": 39000,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 54,
+     "found": 54,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 30,
+     "found": 30,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 57,
+     "found": 57,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 55,
+      "came_of_age": 52
+     },
+     "examples": [],
+     "expected": 107,
+     "found": 107,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 57,
+    "examples": [],
+    "mismatches": 0,
+    "records": 83
+   },
+   "entries": 300,
+   "entry_size_bytes": 88,
+   "json_bytes": 22179,
+   "kinds": {
+    "became_elder": 55,
+    "born": 54,
+    "came_of_age": 52,
+    "died": 57,
+    "founding_member": 29,
+    "paired": 30,
+    "settlement_formed": 1,
+    "widowed": 22
+   },
+   "people": 83,
+   "seed": 19217,
+   "ticks": 172800,
+   "traced_people": 83
+  },
+  {
+   "approx_bytes": 106784,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 193,
+     "found": 193,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 85,
+     "found": 85,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 28,
+     "found": 28,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 113,
+     "found": 113,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 128,
+      "came_of_age": 175
+     },
+     "examples": [],
+     "expected": 303,
+     "found": 303,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 23,
+     "seed": 5
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     },
+     {
+      "causes": {
+       "household": 12,
+       "seed": 2
+      },
+      "elders_departed": 0,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 113,
+    "examples": [],
+    "mismatches": 0,
+    "records": 211
+   },
+   "entries": 836,
+   "entry_size_bytes": 88,
+   "json_bytes": 58473,
+   "kinds": {
+    "became_elder": 128,
+    "born": 193,
+    "came_of_age": 175,
+    "daughter_founded": 2,
+    "departed": 28,
+    "died": 113,
+    "fission_started": 2,
+    "founding_member": 18,
+    "paired": 85,
+    "settled": 28,
+    "settlement_formed": 3,
+    "widowed": 61
+   },
+   "people": 211,
+   "seed": 19218,
+   "ticks": 172800,
+   "traced_people": 211
+  },
+  {
+   "approx_bytes": 97756,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 168,
+     "found": 168,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 79,
+     "found": 79,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 26,
+     "found": 26,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 101,
+     "found": 101,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 126,
+      "came_of_age": 159
+     },
+     "examples": [],
+     "expected": 285,
+     "found": 285,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 19,
+     "seed": 6
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 8,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 1,
+      "members": 12
+     },
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 101,
+    "examples": [],
+    "mismatches": 0,
+    "records": 191
+   },
+   "entries": 769,
+   "entry_size_bytes": 88,
+   "json_bytes": 53345,
+   "kinds": {
+    "became_elder": 126,
+    "born": 168,
+    "came_of_age": 159,
+    "daughter_founded": 2,
+    "departed": 26,
+    "died": 101,
+    "fission_started": 2,
+    "founding_member": 23,
+    "paired": 79,
+    "settled": 26,
+    "settlement_formed": 3,
+    "widowed": 54
+   },
+   "people": 191,
+   "seed": 19219,
+   "ticks": 172800,
+   "traced_people": 191
+  },
+  {
+   "approx_bytes": 41532,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 57,
+     "found": 57,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 37,
+     "found": 37,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 58,
+     "found": 58,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 57,
+      "came_of_age": 55
+     },
+     "examples": [],
+     "expected": 112,
+     "found": 112,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 58,
+    "examples": [],
+    "mismatches": 0,
+    "records": 86
+   },
+   "entries": 322,
+   "entry_size_bytes": 88,
+   "json_bytes": 23353,
+   "kinds": {
+    "became_elder": 57,
+    "born": 57,
+    "came_of_age": 55,
+    "died": 58,
+    "founding_member": 29,
+    "paired": 37,
+    "settlement_formed": 1,
+    "widowed": 28
+   },
+   "people": 86,
+   "seed": 19220,
+   "ticks": 172800,
+   "traced_people": 86
+  },
+  {
+   "approx_bytes": 47912,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 79,
+     "found": 79,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 40,
+     "found": 40,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 62,
+     "found": 62,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 71,
+      "came_of_age": 72
+     },
+     "examples": [],
+     "expected": 143,
+     "found": 143,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 62,
+    "examples": [],
+    "mismatches": 0,
+    "records": 97
+   },
+   "entries": 374,
+   "entry_size_bytes": 88,
+   "json_bytes": 26534,
+   "kinds": {
+    "became_elder": 71,
+    "born": 79,
+    "came_of_age": 72,
+    "died": 62,
+    "founding_member": 18,
+    "paired": 40,
+    "settlement_formed": 1,
+    "widowed": 31
+   },
+   "people": 97,
+   "seed": 19221,
+   "ticks": 172800,
+   "traced_people": 97
+  },
+  {
+   "approx_bytes": 63856,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 105,
+     "found": 105,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 51,
+     "found": 51,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 13,
+     "found": 13,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 77,
+     "found": 77,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 70,
+      "came_of_age": 88
+     },
+     "examples": [],
+     "expected": 158,
+     "found": 158,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 10,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 10,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 13
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 77,
+    "examples": [],
+    "mismatches": 0,
+    "records": 135
+   },
+   "entries": 489,
+   "entry_size_bytes": 88,
+   "json_bytes": 35672,
+   "kinds": {
+    "became_elder": 70,
+    "born": 105,
+    "came_of_age": 88,
+    "daughter_founded": 1,
+    "departed": 13,
+    "died": 77,
+    "fission_started": 1,
+    "founding_member": 30,
+    "paired": 51,
+    "settled": 13,
+    "settlement_formed": 2,
+    "widowed": 38
+   },
+   "people": 135,
+   "seed": 19222,
+   "ticks": 172800,
+   "traced_people": 135
+  },
+  {
+   "approx_bytes": 63080,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 108,
+     "found": 108,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 52,
+     "found": 52,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 10,
+     "found": 10,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 65,
+     "found": 65,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 93,
+      "came_of_age": 95
+     },
+     "examples": [],
+     "expected": 188,
+     "found": 188,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 7,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 7,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 10
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 65,
+    "examples": [],
+    "mismatches": 0,
+    "records": 128
+   },
+   "entries": 491,
+   "entry_size_bytes": 88,
+   "json_bytes": 34825,
+   "kinds": {
+    "became_elder": 93,
+    "born": 108,
+    "came_of_age": 95,
+    "daughter_founded": 1,
+    "departed": 10,
+    "died": 65,
+    "fission_started": 1,
+    "founding_member": 20,
+    "paired": 52,
+    "settled": 10,
+    "settlement_formed": 2,
+    "widowed": 34
+   },
+   "people": 128,
+   "seed": 19223,
+   "ticks": 172800,
+   "traced_people": 128
+  },
+  {
+   "approx_bytes": 46216,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 68,
+     "found": 68,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 43,
+     "found": 43,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 64,
+     "found": 64,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 63,
+      "came_of_age": 64
+     },
+     "examples": [],
+     "expected": 127,
+     "found": 127,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 64,
+    "examples": [],
+    "mismatches": 0,
+    "records": 95
+   },
+   "entries": 359,
+   "entry_size_bytes": 88,
+   "json_bytes": 25802,
+   "kinds": {
+    "became_elder": 63,
+    "born": 68,
+    "came_of_age": 64,
+    "died": 64,
+    "founding_member": 27,
+    "paired": 43,
+    "settlement_formed": 1,
+    "widowed": 29
+   },
+   "people": 95,
+   "seed": 19224,
+   "ticks": 172800,
+   "traced_people": 95
+  },
+  {
+   "approx_bytes": 112088,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 201,
+     "found": 201,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 94,
+     "found": 94,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 26,
+     "found": 26,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 114,
+     "found": 114,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 130,
+      "came_of_age": 193
+     },
+     "examples": [],
+     "expected": 323,
+     "found": 323,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 18,
+     "seed": 7
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 10,
+       "seed": 4
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     },
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 8,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 2,
+      "members": 12
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 114,
+    "examples": [],
+    "mismatches": 0,
+    "records": 223
+   },
+   "entries": 876,
+   "entry_size_bytes": 88,
+   "json_bytes": 61689,
+   "kinds": {
+    "became_elder": 130,
+    "born": 201,
+    "came_of_age": 193,
+    "daughter_founded": 2,
+    "departed": 26,
+    "died": 114,
+    "fission_started": 2,
+    "founding_member": 22,
+    "paired": 94,
+    "settled": 26,
+    "settlement_formed": 3,
+    "widowed": 63
+   },
+   "people": 223,
+   "seed": 19225,
+   "ticks": 172800,
+   "traced_people": 223
+  },
+  {
+   "approx_bytes": 71840,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 120,
+     "found": 120,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 65,
+     "found": 65,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 14,
+     "found": 14,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 78,
+     "found": 78,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 1,
+     "found": 1,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 79,
+      "came_of_age": 111
+     },
+     "examples": [],
+     "expected": 190,
+     "found": 190,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 10,
+     "seed": 3
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 10,
+       "seed": 3
+      },
+      "elders_departed": 1,
+      "fission_id": 1,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 78,
+    "examples": [],
+    "mismatches": 0,
+    "records": 149
+   },
+   "entries": 554,
+   "entry_size_bytes": 88,
+   "json_bytes": 39941,
+   "kinds": {
+    "became_elder": 79,
+    "born": 120,
+    "came_of_age": 111,
+    "daughter_founded": 1,
+    "departed": 14,
+    "died": 78,
+    "fission_started": 1,
+    "founding_member": 29,
+    "paired": 65,
+    "settled": 14,
+    "settlement_formed": 2,
+    "widowed": 40
+   },
+   "people": 149,
+   "seed": 19226,
+   "ticks": 172800,
+   "traced_people": 149
+  },
+  {
+   "approx_bytes": 40392,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 58,
+     "found": 58,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 36,
+     "found": 36,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 55,
+     "found": 55,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 56,
+      "came_of_age": 57
+     },
+     "examples": [],
+     "expected": 113,
+     "found": 113,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 55,
+    "examples": [],
+    "mismatches": 0,
+    "records": 83
+   },
+   "entries": 314,
+   "entry_size_bytes": 88,
+   "json_bytes": 22635,
+   "kinds": {
+    "became_elder": 56,
+    "born": 58,
+    "came_of_age": 57,
+    "died": 55,
+    "founding_member": 25,
+    "paired": 36,
+    "settlement_formed": 1,
+    "widowed": 26
+   },
+   "people": 83,
+   "seed": 19227,
+   "ticks": 172800,
+   "traced_people": 83
+  },
+  {
+   "approx_bytes": 61772,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 103,
+     "found": 103,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 54,
+     "found": 54,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 75,
+     "found": 75,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 96,
+      "came_of_age": 99
+     },
+     "examples": [],
+     "expected": 195,
+     "found": 195,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 75,
+    "examples": [],
+    "mismatches": 0,
+    "records": 123
+   },
+   "entries": 485,
+   "entry_size_bytes": 88,
+   "json_bytes": 34012,
+   "kinds": {
+    "became_elder": 96,
+    "born": 103,
+    "came_of_age": 99,
+    "died": 75,
+    "founding_member": 20,
+    "paired": 54,
+    "settlement_formed": 1,
+    "widowed": 37
+   },
+   "people": 123,
+   "seed": 19228,
+   "ticks": 172800,
+   "traced_people": 123
+  },
+  {
+   "approx_bytes": 43556,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 67,
+     "found": 67,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 37,
+     "found": 37,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 59,
+     "found": 59,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 61,
+      "came_of_age": 63
+     },
+     "examples": [],
+     "expected": 124,
+     "found": 124,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {},
+    "examples": [],
+    "fissions": [],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 59,
+    "examples": [],
+    "mismatches": 0,
+    "records": 89
+   },
+   "entries": 339,
+   "entry_size_bytes": 88,
+   "json_bytes": 24289,
+   "kinds": {
+    "became_elder": 61,
+    "born": 67,
+    "came_of_age": 63,
+    "died": 59,
+    "founding_member": 22,
+    "paired": 37,
+    "settlement_formed": 1,
+    "widowed": 29
+   },
+   "people": 89,
+   "seed": 19229,
+   "ticks": 172800,
+   "traced_people": 89
+  },
+  {
+   "approx_bytes": 132276,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 242,
+     "found": 242,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 108,
+     "found": 108,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 28,
+     "found": 28,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 127,
+     "found": 127,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 181,
+      "came_of_age": 229
+     },
+     "examples": [],
+     "expected": 410,
+     "found": 410,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "household": 22,
+     "seed": 6
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     },
+     {
+      "causes": {
+       "household": 11,
+       "seed": 3
+      },
+      "elders_departed": 0,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 127,
+    "examples": [],
+    "mismatches": 0,
+    "records": 261
+   },
+   "entries": 1038,
+   "entry_size_bytes": 88,
+   "json_bytes": 72624,
+   "kinds": {
+    "became_elder": 181,
+    "born": 242,
+    "came_of_age": 229,
+    "daughter_founded": 2,
+    "departed": 28,
+    "died": 127,
+    "fission_started": 2,
+    "founding_member": 19,
+    "paired": 108,
+    "settled": 28,
+    "settlement_formed": 3,
+    "widowed": 69
+   },
+   "people": 261,
+   "seed": 19230,
+   "ticks": 172800,
+   "traced_people": 261
+  },
+  {
+   "approx_bytes": 127968,
+   "c1": [
+    {
+     "examples": [],
+     "expected": 240,
+     "found": 240,
+     "mismatches": 0,
+     "rule": "born"
+    },
+    {
+     "examples": [],
+     "expected": 110,
+     "found": 110,
+     "mismatches": 0,
+     "rule": "paired"
+    },
+    {
+     "examples": [],
+     "expected": 28,
+     "found": 28,
+     "mismatches": 0,
+     "rule": "departed_members"
+    },
+    {
+     "examples": [],
+     "expected": 123,
+     "found": 123,
+     "mismatches": 0,
+     "rule": "deaths"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "fission_started"
+    },
+    {
+     "examples": [],
+     "expected": 2,
+     "found": 2,
+     "mismatches": 0,
+     "rule": "daughter_founded"
+    },
+    {
+     "examples": [],
+     "expected": 0,
+     "found": 0,
+     "mismatches": 0,
+     "rule": "fission_cancelled"
+    },
+    {
+     "counts": {
+      "became_elder": 139,
+      "came_of_age": 233
+     },
+     "examples": [],
+     "expected": 372,
+     "found": 372,
+     "mismatches": 0,
+     "rule": "stage_ticks"
+    }
+   ],
+   "c2": {
+    "causes": {
+     "elder_partner": 1,
+     "household": 23,
+     "seed": 4
+    },
+    "examples": [],
+    "fissions": [
+     {
+      "causes": {
+       "household": 12,
+       "seed": 2
+      },
+      "elders_departed": 0,
+      "fission_id": 1,
+      "members": 14
+     },
+     {
+      "causes": {
+       "elder_partner": 1,
+       "household": 11,
+       "seed": 2
+      },
+      "elders_departed": 1,
+      "fission_id": 2,
+      "members": 14
+     }
+    ],
+    "mismatches": 0
+   },
+   "c3": {
+    "dead_records": 123,
+    "examples": [],
+    "mismatches": 0,
+    "records": 260
+   },
+   "entries": 993,
+   "entry_size_bytes": 88,
+   "json_bytes": 70949,
+   "kinds": {
+    "became_elder": 139,
+    "born": 240,
+    "came_of_age": 233,
+    "daughter_founded": 2,
+    "departed": 28,
+    "died": 123,
+    "fission_started": 2,
+    "founding_member": 20,
+    "paired": 110,
+    "settled": 28,
+    "settlement_formed": 3,
+    "widowed": 65
+   },
+   "people": 260,
+   "seed": 19231,
+   "ticks": 172800,
+   "traced_people": 260
+  }
+ ],
+ "scene": "game_v23",
+ "seeds": [
+  19200,
+  19232
+ ],
+ "verdict": {
+  "C1": "PASS",
+  "C2": "PASS",
+  "C3": "PASS",
+  "C4": "PASS"
+ }
+}

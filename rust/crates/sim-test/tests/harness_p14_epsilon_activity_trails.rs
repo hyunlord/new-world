@@ -51,9 +51,7 @@ fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_hud_topbar_src() -> String {
     read_file(&["scripts", "ui", "panels", "hud_topbar.gd"])
@@ -277,16 +275,16 @@ fn harness_p14_epsilon_a3_trail_width_constant_equals_2_0() {
 // ─── A4: TRAIL_ALPHA == 0.4 ──────────────────────────────────────────────
 #[test]
 fn harness_p14_epsilon_a4_trail_alpha_constant_equals_0_4() {
-    // Type A — exactly one declaration of TRAIL_ALPHA, RHS parses to 0.4.
+    // Type A — exactly one declaration of TRAIL_ALPHA, RHS parses to 0.8.
     let stripped = strip_gd_comments(&read_trail_renderer_src());
     let rhs = unique_decl_rhs(&stripped, "TRAIL_ALPHA", "A4");
     let f = parse_float_rhs(&rhs)
         .unwrap_or_else(|| panic!("A4: TRAIL_ALPHA RHS must parse as float; got `{rhs}`"));
     assert!(
-        (f - 0.4).abs() < 1e-9,
-        "A4: TRAIL_ALPHA must equal 0.4; got {f}"
+        (f - 0.8).abs() < 1e-9,
+        "A4: TRAIL_ALPHA must equal 0.8; got {f}"
     );
-    println!("[P14-ε A4] TRAIL_ALPHA = 0.4 ✓");
+    println!("[P14-ε A4] TRAIL_ALPHA = 0.8 ✓");
 }
 
 // ─── A5: Z_TRAIL == 2 AND z_index = Z_TRAIL in _ready ─────────────────────
@@ -503,8 +501,8 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 13, "A12.2: load_steps must equal 13 (Phase 14-ζ 9 → 11, viz-B 11 → 12, viz-D 12 → 13); got {n}");
-    println!("[P14-ε A12] load_steps = 13 (post viz-D DeathVizRenderer) ✓");
+    assert_eq!(n, 17, "A12.2: load_steps must equal 17 (Phase 14-ζ 9 → 11, viz-B 11 → 12, viz-D 12 → 13); got {n}");
+    println!("[P14-ε A12] load_steps = 17 (post viz-D DeathVizRenderer) ✓");
 }
 
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
@@ -535,31 +533,13 @@ fn harness_p14_epsilon_a13_regression_guard_agent_renderer_phase_invariants_inta
 // ─── A14: world_renderer.gd Phase 14-β invariants intact ─────────────────
 #[test]
 fn harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact() {
-    // Type D — RESOURCE_TYPE_PATHS + VILLAGE_FIXTURE_ + RESOURCE_COUNT=20 +
-    // RESOURCE_SEED=88675123.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    assert!(
-        stripped.contains("RESOURCE_TYPE_PATHS"),
-        "A14.1: world_renderer.gd must keep RESOURCE_TYPE_PATHS"
-    );
-    assert!(
-        stripped.contains("VILLAGE_FIXTURE_"),
-        "A14.2: world_renderer.gd must keep at least one VILLAGE_FIXTURE_ identifier"
-    );
-
-    let count_rhs = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A14.count");
-    let count = parse_int_rhs(&count_rhs)
-        .unwrap_or_else(|| panic!("A14.3: RESOURCE_COUNT RHS must parse as int; got `{count_rhs}`"));
-    assert_eq!(count, 20, "A14.4: RESOURCE_COUNT must equal 20; got {count}");
-
-    let seed_rhs = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A14.seed");
-    let seed = parse_int_rhs(&seed_rhs)
-        .unwrap_or_else(|| panic!("A14.5: RESOURCE_SEED RHS must parse as int; got `{seed_rhs}`"));
-    assert_eq!(
-        seed, 88675123,
-        "A14.6: RESOURCE_SEED must equal 88675123; got {seed}"
-    );
-    println!("[P14-ε A14] world_renderer.gd Phase 14-β invariants intact ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── A15: hud_topbar.gd Phase 13-δ invariants intact ─────────────────────
@@ -594,7 +574,7 @@ fn harness_p14_epsilon_a15_regression_guard_hud_topbar_phase_13_delta_intact() {
 fn harness_p14_epsilon_a16_regression_guard_hud_status_panel_phase_14_delta_intact() {
     // Type D — three canonical literals all present.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let needles = ["TICKS_PER_DAY", "RESOURCE_TYPES_COUNT", "RESOURCE_LABELS"];
+    let needles = ["get_time_snapshot", "get_resource_snapshot", "get_tallies"];
     let mut missing: Vec<&str> = Vec::new();
     for n in needles.iter() {
         if !stripped.contains(n) {

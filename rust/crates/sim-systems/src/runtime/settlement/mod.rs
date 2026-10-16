@@ -23,3 +23,21 @@ pub mod stockpile_deposit;
 pub use settlement_system::{SettlementSystem, BIRTH_COOLDOWN_TICKS};
 pub use stockpile_consume::StockpileConsumeSystem;
 pub use stockpile_deposit::StockpileDepositSystem;
+
+/// Settlement housing planner.
+pub mod shelter_planning;
+pub use shelter_planning::ShelterPlanningSystem;
+
+/// Shared completed-shelter capacity accounting.
+pub mod housing;
+pub use housing::{housing_capacity, shelter_count};
+/// Shared renewable supply and actual hunger requirements.
+pub mod food_economy;
+/// Pass 5 firewood target and wood in hand.
+pub mod firewood;
+/// Pass 5 hearth fire and cold nights.
+pub mod fire;
+pub use fire::FireSystem;
+/// Pass 11 village fission (`game_v17`).
+pub mod fission;
+pub use fission::FissionSystem;

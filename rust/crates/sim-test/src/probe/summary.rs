@@ -1,0 +1,406 @@
+//! Across-seed summaries at exact simulation-day checkpoints.
+use super::{args::ProbeArgs, deaths::Census, metrics::percentile, runner::RunResult};
+use serde_json::{json, Value};
+use std::{collections::BTreeMap, fs};
+
+fn distribution(values: &[f64]) -> Value {
+    json!({"median": percentile(values, 0.5), "p10": percentile(values, 0.1), "p90": percentile(values, 0.9), "min": percentile(values, 0.0), "max": percentile(values, 1.0)})
+}
+
+/// Persist exact-day distributions and measured run timings.
+pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> {
+    let mut days = BTreeMap::new();
+    let mut markdown = format!("# {} probe summary\n\nSeeds: {}..{}; samples every {} ticks.\n\nQuantiles use linear interpolation. Day checkpoints are exact even when the sampling interval does not divide a day. Idle breach share is cumulative sampled breaches / sampled agents (including tick 0). Performance uses primary-engine tick wall time minus measured read-only census observer time / exact pre-tick agent count sum; run wall time includes census, I/O and optional twin validation. Agent-days integrate every pre-tick living count; social rate counts completed interaction pairs per agent-day. Idle actionable uses the threshold-aware decision helper, the current simulation-phase night fatigue threshold, and rule-aware NeedAvailability (hunger, thirst and fatigue). V8 retains its fixed fatigue threshold. Idle unavailable independently means a survival need is breached but none of its matching resource tiles has positive supply. Legacy rules force helper availability true, so these two counts can overlap under legacy rules. Old idle_with_breach remains hunger/thirst only.\n\n| Day | Metric | Median | p10 | p90 | Min | Max |\n|---|---|---:|---:|---:|---:|---:|\n", args.scene, args.seeds.start, args.seeds.end, args.sample_every);
+    for day in 1..=args.days {
+        let mut metrics: BTreeMap<String, Vec<f64>> = BTreeMap::new();
+        for run in runs {
+            if let Some(row) = run.checkpoints.get(&day).and_then(Value::as_object) {
+                for (key, value) in row {
+                    if ["schema_version", "seed", "tick", "day"].contains(&key.as_str()) {
+                        continue;
+                    }
+                    if let Some(number) = value.as_f64() {
+                        metrics.entry(key.clone()).or_default().push(number);
+                    }
+                }
+            }
+        }
+        let mut stats = BTreeMap::new();
+        for (name, values) in metrics {
+            let stat = distribution(&values);
+            markdown.push_str(&format!(
+                "| {day} | {name} | {:.6} | {:.6} | {:.6} | {:.6} | {:.6} |\n",
+                stat["median"].as_f64().unwrap_or(0.0),
+                stat["p10"].as_f64().unwrap_or(0.0),
+                stat["p90"].as_f64().unwrap_or(0.0),
+                stat["min"].as_f64().unwrap_or(0.0),
+                stat["max"].as_f64().unwrap_or(0.0)
+            ));
+            stats.insert(name, stat);
+        }
+        if !stats.is_empty() {
+            days.insert(day.to_string(), stats);
+        }
+    }
+    markdown.push_str("\n| Seed | Wall seconds | ms / agent-tick |\n|---|---:|---:|\n");
+    let timing: Vec<_> = runs.iter().map(|r| {
+        markdown.push_str(&format!("| {} | {:.6} | {:.9} |\n", r.seed, r.wall_seconds, r.ms_per_agent_tick));
+        json!({"seed": r.seed, "wall_seconds": r.wall_seconds, "ms_per_agent_tick": r.ms_per_agent_tick,
+            "agent_days":r.agent_days,"social_completed_per_agent_day":r.social_per_agent_day,
+            "max_alive":r.max_alive,"housing_capacity_at_max_alive":r.housing_at_max_alive,
+            "final_housing_capacity":r.final_housing_capacity,"max_same_tick_housing_overflow":r.max_housing_overflow,
+            "death_census":r.census.to_json(),"max_owned_housing_overflow":r.max_owned_housing_overflow,
+            "maturation":r.maturation,"rhythm":rhythm(r),
+            // Pass 10 (schema 10): per-seed facts; never read them from the
+            // `rules` block, which comes from the first seed only.
+            "deaths_exposure":r.checkpoints.values().last().map_or(json!(0), |row| row["deaths_exposure"].clone()),
+            "seed_info":r.seed_info,
+            "exposure_death_ticks":r.exposure_death_ticks,
+            "seed_winters":super::pass10::seed_winters(&r.clock_rows, &r.exposure_death_ticks, args.days, r.clock.0, r.clock.1),
+            "dawn_health":super::pass10::dawn_health(&r.clock_rows),
+            "alive_daily":r.checkpoints.values().map(|row| row["alive"].clone()).collect::<Vec<_>>(),
+            "settlements_daily":r.checkpoints.values().map(|row| row["settlements"].clone()).collect::<Vec<_>>(),
+            // Pass 11 (schema 11): fission, settlements alive and exposure by
+            // stage and settlement-hour, per seed.
+            "settlements_alive_daily":r.checkpoints.values().map(|row| row["settlements_alive"].clone()).collect::<Vec<_>>(),
+            "pass11":r.pass11,
+            // Pass 12 (schema 12): hazard checks, settlement-winters, fill counts.
+            "pass12":r.pass12,
+            // Pass 13 (schema 13): pressure checks, half-threshold days, splits.
+            "pass13":r.pass13})
+    }).collect();
+    let mut census = Census::default();
+    for run in runs {
+        census.merge(&run.census);
+    }
+    markdown.push_str("\n## Death census\n\nEvery tick is observed, independently of raw sample frequency. Death rows use completed-tick numbering (first engine tick = 1). Needs/state are captured after decay, immediately before the lethal phase; partner liveness is measured at that phase boundary. A partner killed in the same lethal batch may therefore still be marked alive. Initially breached agents start their history at their first observation. No-breach history and missing water/home distances are null. Dominant-state ties use lexical order; state ticks include the breach observation. Inferred causes are checked against cumulative tallies every tick; a mismatch aborts the probe.\n\n| Cause | State at death | Partner | Count |\n|---|---|---|---:|\n");
+    for (key, count) in &census.cause_states {
+        markdown.push_str(&format!("| {key} | {count} |\n"));
+    }
+    markdown.push_str("\n| First state after thirst breach | Count |\n|---|---:|\n");
+    for (key, count) in &census.first_states {
+        markdown.push_str(&format!("| {key} | {count} |\n"));
+    }
+    markdown.push_str("\n| Water distance (Chebyshev tiles) | Count |\n|---|---:|\n");
+    for bucket in ["0-1", "2-5", "6-15", "16+", "no water"] {
+        markdown.push_str(&format!(
+            "| {bucket} | {} |\n",
+            census.water_buckets.get(bucket).copied().unwrap_or(0)
+        ));
+    }
+    markdown.push_str(&format!("\nNever sought water after breach: {} / {} deaths with a recorded thirst breach ({:.6}). Total deaths: {}.\n", census.never_sought, census.breached,
+        census.to_json()["never_sought_water_share"].as_f64().unwrap_or(0.0), census.total));
+    markdown.push_str("\n## Per-run social and housing evidence\n\nCapacity = completed shelters × configured residents per shelter; legacy is unavailable. Max alive includes tick zero and every completed tick. Same-tick overflow is separately reported so initially underhoused worlds remain visible.\n\n| Seed | Agent-days | Social pairs / agent-day | Max alive | Capacity at max | Final capacity | Max same-tick overflow |\n|---|---:|---:|---:|---:|---:|---:|\n");
+    for run in runs {
+        markdown.push_str(&format!(
+            "| {} | {:.6} | {:.6} | {} | {} | {} | {} |\n",
+            run.seed,
+            run.agent_days,
+            run.social_per_agent_day,
+            run.max_alive,
+            run.housing_at_max_alive
+                .map_or_else(|| "n/a".into(), |n| n.to_string()),
+            run.final_housing_capacity
+                .map_or_else(|| "n/a".into(), |n| n.to_string()),
+            run.max_housing_overflow
+        ));
+    }
+    markdown.push_str("\n## Food economy\n\nSupply counts each renewable source once across the union of settlement forage catchments. Production birth gates still use each settlement's own catchment, so overlapping v8 settlements may each plan against that same source. Worlds without sustain use reporting utilization 0.85 and radius 16. Need sums actual live-agent hunger rates in AgentId order. Harvested/day is the difference between successive elapsed-day counters.\n\n| Day | Supply/day median | Need/day median | Stock median | Harvested/day median |\n|---|---:|---:|---:|---:|\n");
+    for day in 1..=args.days {
+        let values = |key: &str| {
+            runs.iter()
+                .filter_map(|run| run.checkpoints.get(&day).and_then(|row| row[key].as_f64()))
+                .collect::<Vec<_>>()
+        };
+        let harvested: Vec<_> = runs
+            .iter()
+            .filter_map(|run| {
+                run.checkpoints.get(&day).map(|row| {
+                    row["food_harvested_total"].as_f64().unwrap_or(0.0)
+                        - run
+                            .checkpoints
+                            .get(&(day - 1))
+                            .and_then(|previous| previous["food_harvested_total"].as_f64())
+                            .unwrap_or(0.0)
+                })
+            })
+            .collect();
+        markdown.push_str(&format!(
+            "| {day} | {:.6} | {:.6} | {:.6} | {:.6} |\n",
+            percentile(&values("food_supply_per_day"), 0.5),
+            percentile(&values("food_need_per_day"), 0.5),
+            percentile(&values("stockpile_food"), 0.5),
+            percentile(&harvested, 0.5)
+        ));
+    }
+    markdown.push_str("\n## Housing (owned)\n\nOwned capacity is zero until ownership exists. U5 overflow counts every completed tick with at least one settlement; the older global shelter-capacity overflow remains separate and unchanged.\n\n| Seed | Maximum owned overflow |\n|---|---:|\n");
+    for run in runs {
+        markdown.push_str(&format!(
+            "| {} | {} |\n",
+            run.seed, run.max_owned_housing_overflow
+        ));
+    }
+    markdown.push_str("\n## Rhythm\n\nRatios are calculated at display-clock snapshots on days 2..N, then median per seed and across seeds. Empty denominators yield zero; observation counts distinguish missing clock samples. Clock/day extra rows never change periodic T6 sampling. Coincident sample kinds emit separate raw rows. Child observations run every tick; deaths are separated from observed maturation and maturation must be observed at completed ticks due+1 through due+60 (systems run at internal tick completed-1); a living child still marked Child at completed due+60 fails.\n\n| Seed | Night share | Evening share | Noon idle share | Children observed | Maturations |\n|---|---:|---:|---:|---:|---:|\n");
+    for run in runs {
+        let r = rhythm(run);
+        markdown.push_str(&format!(
+            "| {} | {} | {} | {} | {} | {} |\n",
+            run.seed,
+            r["night_in_shelter_share"],
+            r["evening_near_hearth_share"],
+            r["noon_idle_share"],
+            run.maturation["children_observed"],
+            run.maturation["maturations_observed"]
+        ));
+    }
+    let rhythm_distributions: BTreeMap<_, _> = [
+        "night_in_shelter_share",
+        "evening_near_hearth_share",
+        "noon_idle_share",
+    ]
+    .into_iter()
+    .map(|key| {
+        (
+            key,
+            distribution(
+                &runs
+                    .iter()
+                    .map(|run| rhythm(run)[key].as_f64().unwrap_or(0.0))
+                    .collect::<Vec<_>>(),
+            ),
+        )
+    })
+    .collect();
+    markdown.push_str(&pass4_sections(args, runs));
+    markdown.push_str(&pass5_sections(args, runs));
+    let rules = super::pass8::rules_block(&super::runner::scene_engine(&args.scene, args.seeds.start).resources);
+    let report = json!({"schema_version":13,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
+    fs::write(
+        args.out.join("summary.json"),
+        serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    fs::write(args.out.join("summary.md"), markdown).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+/// Per-day difference of a cumulative counter between successive elapsed-day checkpoints.
+fn daily(run: &RunResult, day: u64, key: &str) -> Option<f64> {
+    let now = run.checkpoints.get(&day)?[key].as_f64()?;
+    let before = run
+        .checkpoints
+        .get(&(day - 1))
+        .and_then(|row| row[key].as_f64())
+        .unwrap_or(0.0);
+    Some(now - before)
+}
+
+/// Pass 4 Seasons, Demography and Foraging sections.
+fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
+    const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
+    let mut out = String::from("\n## Seasons\n\nEach elapsed day (checkpoint d−1 to d) is attributed to the season of its opening checkpoint; with the 480-tick clock offset that is the display day whose 08:00 starts the window, which holds 16 of its 24 hours. Day 1 opens at tick 0 (spring). Without seasons every day is spring. Supply is the current-season nominal union-catchment supply; harvest, regrowth lost at the cap and forage trips are per-day counter differences; stock is the checkpoint stockpile. Values are medians over every seed-day in the season.\n\n| Season | Seed-days | Supply/day | Harvest/day | Need/day | Stock | Regrowth lost at cap/day | Forage trips/day |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
+    for (index, name) in SEASONS.iter().enumerate() {
+        let mut columns: [Vec<f64>; 6] = Default::default();
+        for run in runs {
+            for day in 1..=args.days {
+                let Some(row) = run.checkpoints.get(&day) else { continue };
+                let opening = if day > 1 {
+                    run.checkpoints.get(&(day - 1)).and_then(|r| r["season"].as_u64())
+                } else {
+                    Some(0)
+                };
+                if opening != Some(index as u64) {
+                    continue;
+                }
+                let opening_row = if day > 1 { run.checkpoints.get(&(day - 1)).unwrap_or(row) } else { row };
+                for (column, value) in columns.iter_mut().zip([
+                    opening_row["food_supply_season_per_day"].as_f64(),
+                    daily(run, day, "food_harvested_total"),
+                    row["food_need_per_day"].as_f64(),
+                    row["stockpile_food"].as_f64(),
+                    daily(run, day, "regen_lost_at_cap_total"),
+                    daily(run, day, "forage_trips_total"),
+                ]) {
+                    column.push(value.unwrap_or(0.0));
+                }
+            }
+        }
+        if columns[0].is_empty() {
+            continue;
+        }
+        out.push_str(&format!("| {name} | {} |", columns[0].len()));
+        for column in &columns {
+            out.push_str(&format!(" {:.3} |", percentile(column, 0.5)));
+        }
+        out.push('\n');
+    }
+    out.push_str("\n## Demography\n\nMedians across seeds at each elapsed-day checkpoint. Births and deaths are cumulative; adults include elders; mean age covers residents with `Life` (zero without aging).\n\n| Day | Alive | Births | Starvation | Dehydration | Combat | Old age | Exposure | Children | Adults | Elders | Mean age (days) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    let median_at = |day: u64, key: &str| {
+        percentile(
+            &runs
+                .iter()
+                .filter_map(|run| run.checkpoints.get(&day).and_then(|row| row[key].as_f64()))
+                .collect::<Vec<_>>(),
+            0.5,
+        )
+    };
+    for day in 1..=args.days {
+        out.push_str(&format!("| {day} |"));
+        for key in ["alive", "births", "deaths_starvation", "deaths_dehydration", "deaths_combat",
+            "deaths_old_age", "deaths_exposure", "children", "adults", "elders", "mean_age_days"] {
+            out.push_str(&format!(" {:.3} |", median_at(day, key)));
+        }
+        out.push('\n');
+    }
+    out.push_str("\n## Foraging\n\nMedians across seeds. Trips, haul deposits and regrowth lost are per-day counter differences; target, stock in hand (stockpile plus food carried by members) and home distance are checkpoint values.\n\n| Day | Forage trips/day | Haul deposits/day | Stock target | Stock in hand | Stockpile | Regrowth lost/day | Home distance |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
+    for day in 1..=args.days {
+        let per_day = |key: &str| {
+            percentile(&runs.iter().filter_map(|run| daily(run, day, key)).collect::<Vec<_>>(), 0.5)
+        };
+        out.push_str(&format!(
+            "| {day} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            per_day("forage_trips_total"),
+            per_day("haul_deposits_total"),
+            median_at(day, "stock_target"),
+            median_at(day, "stock_in_hand"),
+            median_at(day, "stockpile_food"),
+            per_day("regen_lost_at_cap_total"),
+            median_at(day, "home_distance_mean"),
+        ));
+    }
+    out
+}
+
+/// Season (0..4) of elapsed day `day`, taken at its opening checkpoint (spring
+/// for day 1), exactly as the Seasons section attributes days.
+fn opening_season(run: &RunResult, day: u64) -> Option<u64> {
+    if day > 1 {
+        run.checkpoints.get(&(day - 1)).and_then(|row| row["season"].as_u64())
+    } else {
+        Some(0)
+    }
+}
+
+/// Pass 5 Meals, Fire and wood, and Work by hour sections.
+fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
+    const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
+    let mut out = String::from("\n## Meals\n\nStore meals are units served from a settlement store (any scene); ground meals are resolved `Consuming { Food }` meals at a food tile. Per-day counter differences attributed to the season of the opening checkpoint, as in Seasons; the share is store / (store + ground) per seed-day (days with no meal skipped). Medians over seed-days; days 1–2 are excluded from the share column.\n\n| Season | Seed-days | Store meals/day | Ground meals/day | Store share (day ≥ 3) |\n|---|---:|---:|---:|---:|\n");
+    let mut fire = String::from("\n## Fire and wood\n\nWood stock and target are checkpoint values (08:00); burn/day is wood gathered minus the change in wood in hand (stockpile plus carried by members), since wood only leaves hands by burning; lit share is the share of 02:00 clock samples (days ≥ 3) with every settlement's fire lit; cold member-hours/day is the per-day difference of the hourly cold tally. Medians over seed-days.\n\n| Season | Seed-days | Wood stock | Wood target | Burn/day | Lit at 02:00 | Cold member-hours/day | Wood trips/day | Wood gathered/day |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    for (index, name) in SEASONS.iter().enumerate() {
+        let mut meals: [Vec<f64>; 3] = Default::default();
+        let mut wood: [Vec<f64>; 6] = Default::default();
+        let mut lit = Vec::new();
+        for run in runs {
+            for day in 1..=args.days {
+                if opening_season(run, day) != Some(index as u64) {
+                    continue;
+                }
+                let Some(row) = run.checkpoints.get(&day) else { continue };
+                let store = daily(run, day, "meals_from_store_total").unwrap_or(0.0);
+                let ground = daily(run, day, "ground_meals_total").unwrap_or(0.0);
+                meals[0].push(store);
+                meals[1].push(ground);
+                if day >= 3 && store + ground > 0.0 {
+                    meals[2].push(store / (store + ground));
+                }
+                let gathered = daily(run, day, "wood_gathered_total").unwrap_or(0.0);
+                for (column, value) in wood.iter_mut().zip([
+                    row["wood_stock"].as_f64().unwrap_or(0.0),
+                    row["wood_target"].as_f64().unwrap_or(0.0),
+                    gathered - daily(run, day, "wood_in_hand").unwrap_or(0.0),
+                    daily(run, day, "cold_member_hours_total").unwrap_or(0.0),
+                    daily(run, day, "wood_trips_total").unwrap_or(0.0),
+                    gathered,
+                ]) {
+                    column.push(value);
+                }
+            }
+            for ((day, minute), row) in &run.clock_rows {
+                if *minute == 120 && *day >= 3 && row["season"].as_u64() == Some(index as u64) {
+                    lit.push(row["fire_lit"].as_f64().unwrap_or(0.0));
+                }
+            }
+        }
+        if meals[0].is_empty() {
+            continue;
+        }
+        out.push_str(&format!("| {name} | {} | {:.3} | {:.3} | {:.3} |\n", meals[0].len(),
+            percentile(&meals[0], 0.5), percentile(&meals[1], 0.5), percentile(&meals[2], 0.5)));
+        let lit_share = if lit.is_empty() { 0.0 } else { lit.iter().sum::<f64>() / lit.len() as f64 };
+        fire.push_str(&format!("| {name} | {} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            wood[0].len(), percentile(&wood[0], 0.5), percentile(&wood[1], 0.5), percentile(&wood[2], 0.5),
+            lit_share, percentile(&wood[3], 0.5), percentile(&wood[4], 0.5), percentile(&wood[5], 0.5)));
+    }
+    out.push_str(&fire);
+    out.push_str("\n## Work by hour\n\nAt each requested clock sample on days ≥ 2: adult work share (non-child, non-elder members gathering food or wood, building, or hauling home) and idle share (residents Idle and not hauling / all residents). Each seed's median over its days first, then quantiles across seeds. Spring–autumn excludes winter samples.\n\n| Clock | Adult work median | Adult work min | Idle median | Idle max | Adult work median (spring–autumn) | Idle median (spring–autumn) |\n|---|---:|---:|---:|---:|---:|---:|\n");
+    for minute in &args.clock_samples {
+        let seed_medians = |key: &str, work_seasons: bool| {
+            runs.iter()
+                .filter_map(|run| {
+                    let values: Vec<f64> = run.clock_rows.iter()
+                        .filter(|((day, m), row)| *m == *minute && *day >= 2
+                            && (!work_seasons || row["season"].as_u64() != Some(3)))
+                        .map(|(_, row)| row[key].as_f64().unwrap_or(0.0))
+                        .collect();
+                    (!values.is_empty()).then(|| percentile(&values, 0.5))
+                })
+                .collect::<Vec<_>>()
+        };
+        let work = seed_medians("adult_work_share", false);
+        let idle = seed_medians("idle_share", false);
+        out.push_str(&format!("| {:02}:{:02} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            minute / 60, minute % 60, percentile(&work, 0.5), percentile(&work, 0.0),
+            percentile(&idle, 0.5), percentile(&idle, 1.0),
+            percentile(&seed_medians("adult_work_share", true), 0.5),
+            percentile(&seed_medians("idle_share", true), 0.5)));
+    }
+    out
+}
+
+fn rhythm(run: &RunResult) -> Value {
+    let mut report = serde_json::Map::new();
+    for (minute, key, numerator, denominator) in [
+        (
+            120,
+            "night_in_shelter_share",
+            "sleeping_in_shelter",
+            "alive",
+        ),
+        (
+            1170,
+            "evening_near_hearth_share",
+            "idle_adults_near_hearth",
+            "idle_adults",
+        ),
+        (720, "noon_idle_share", "state_idle", "alive"),
+    ] {
+        let values: Vec<_> = run
+            .clock_rows
+            .iter()
+            .filter(|((day, time), _)| *day >= 2 && *time == minute)
+            .map(|(_, row)| {
+                let d = row[denominator].as_f64().unwrap_or(0.0);
+                if d == 0.0 {
+                    0.0
+                } else {
+                    row[numerator].as_f64().unwrap_or(0.0) / d
+                }
+            })
+            .collect();
+        report.insert(key.into(), json!(percentile(&values, 0.5)));
+        report.insert(format!("{key}_observations"), json!(values.len()));
+    }
+    Value::Object(report)
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn distribution_covers_extrema_and_interpolated_quantiles() {
+        let result = super::distribution(&[0.0, 10.0]);
+        assert_eq!(
+            result,
+            serde_json::json!({"min":0.0,"max":10.0,"median":5.0,"p10":1.0,"p90":9.0})
+        );
+    }
+}

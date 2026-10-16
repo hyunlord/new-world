@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "head": "21d2b478a81d55ac138f0a60b830e06719ec0af3",
+  "steps": [
+    {
+      "name": "prepare_bridge",
+      "exit_code": 0
+    },
+    {
+      "name": "prepare_import",
+      "exit_code": 0
+    },
+    {
+      "name": "test_debug",
+      "exit_code": 0
+    },
+    {
+      "name": "test_release",
+      "exit_code": 0
+    },
+    {
+      "name": "clippy",
+      "exit_code": 0
+    },
+    {
+      "name": "clippy_all_targets",
+      "exit_code": 0
+    },
+    {
+      "name": "forbidden_math",
+      "exit_code": 0
+    },
+    {
+      "name": "bridge_build",
+      "exit_code": 0
+    },
+    {
+      "name": "godot_import",
+      "exit_code": 0
+    },
+    {
+      "name": "strict_check",
+      "exit_code": 0
+    },
+    {
+      "name": "smoke",
+      "exit_code": 0
+    },
+    {
+      "name": "python_unittest",
+      "exit_code": 0
+    },
+    {
+      "name": "python_worldmodel",
+      "exit_code": 0
+    },
+    {
+      "name": "perf_quick",
+      "exit_code": 0
+    },
+    {
+      "name": "allowed_paths",
+      "exit_code": 0
+    }
+  ],
+  "tests": {
+    "test_debug": {
+      "passed": 2241,
+      "failed": 0,
+      "ignored": 0
+    },
+    "test_release": {
+      "passed": 2241,
+      "failed": 0,
+      "ignored": 0
+    },
+    "python_unittest": {
+      "ran": 246,
+      "skipped": 0,
+      "executed": 246,
+      "result": "OK"
+    },
+    "python_worldmodel": {
+      "ran": 49,
+      "skipped": 24,
+      "executed": 25,
+      "result": "OK"
+    }
+  },
+  "smoke_errors": "none",
+  "log_interval": {
+    "started_utc": "2026-10-15T11:33:38Z",
+    "finished_utc": "2026-10-15T12:38:01Z",
+    "elapsed_seconds": 3863.0,
+    "precision": "whole seconds from gate.txt"
+  },
+  "quick": {
+    "mean_ms": 0.3805746376811594,
+    "p999_ms": 14.573,
+    "max_ms": 23.369,
+    "is_timing_evidence": false,
+    "notice": "perf_quick은 비계측 유효성 확인이며 R5/F8 성능 판정 근거가 아니다."
+  },
+  "wrapper_interval": {
+    "started_utc": "2026-10-15T11:33:37.996124Z",
+    "finished_utc": "2026-10-15T12:38:03.459129Z",
+    "started_epoch": 1792064017.9961238,
+    "finished_epoch": 1792067883.459129,
+    "elapsed_seconds": 3865.4630053043365
+  },
+  "invocation_interval": {
+    "started_utc": "2026-10-15T11:33:38.913896Z",
+    "finished_utc": "2026-10-15T12:38:02.001723Z",
+    "started_epoch": 1792064018.9138958,
+    "finished_epoch": 1792067882.0017228,
+    "elapsed_seconds": 3863.0878269672394
+  },
+  "verified_artifact_count": 18,
+  "gate_script": {
+    "path": "/Users/rexxa/work/new-world-pass4/tools/revitalize/gate_pass17.sh",
+    "bytes": 4453,
+    "sha256": "81f30f2e0b70c53ea745628886c1379273810493f200d573321530ae30ba5b65"
+  },
+  "provenance": {
+    "receipt_path": "/Users/rexxa/work/p17-data/p17-gate-21d2b478a81d55ac138f0a60b830e06719ec0af3.receipt.json",
+    "receipt_sha256": "15006bc94791f886cb199ac1c6cfe5b047fe188ce7021602c582e52668e042cb",
+    "manifest_path": "/Users/rexxa/work/p17-data/p17-gate-21d2b478a81d55ac138f0a60b830e06719ec0af3.receipt.json.sha256",
+    "manifest_sha256": "117e9e28cda2a27ee83cc1294ac2cf6c0e6c4300b061ee40c85733d2a09a9dce",
+    "gate_path": "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/gate.txt",
+    "gate_sha256": "360202ea5fdf2d20d4185a22b2c093585266e40b153d9b606b49acb66d4c4f43",
+    "repo": "/Users/rexxa/work/new-world-pass4",
+    "output_directory": "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate",
+    "artifact_sha256": {
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/allowed_paths.log": "e59e117be827d4f359d1271baeb598308909c981dc5fae0ee9ada2f24053a687",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/bridge_build.log": "3b33fccd3d3c73e20d5a2f369da2f643172bcd808e349615fb60cf79d4d3fa6b",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/clippy.log": "af1dc9dcf8567f79e9c1d7d9ecde72df4160f38014308a736e52826fde1f4fd5",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/clippy_all_targets.log": "082c0561a0180bd05586118b2063326c7c191902dd071c2a39c32daa24238e94",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/forbidden_math.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/gate.txt": "360202ea5fdf2d20d4185a22b2c093585266e40b153d9b606b49acb66d4c4f43",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/godot_import.log": "3c0c6d66cf3ecbd4d7bd60fc7966869ebe0136a8a20ad210c0a9741d082efec5",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/launcher.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/perf_quick.log": "0684f11f4e4df93ec9161d5fefc327e22e6bffb656be5e7fe66bd4d11bbd9e0a",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/prepare_bridge.log": "beb589eba41d4247f99893c29bdc4392312cdb99dc1a8d05586d49f27bc78ff6",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/prepare_import.log": "3c0c6d66cf3ecbd4d7bd60fc7966869ebe0136a8a20ad210c0a9741d082efec5",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/python_unittest.log": "0406013c6c0855ef6d56e5d8abec4908c104a0c4a9bcb56aea0ba4a4c11710c3",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/python_worldmodel.log": "e06fac993d91ec186ce715ef650d1480182616bc9ec6ebc8f7d794681ad5b312",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/smoke.log": "fde9de0345b4e737bb4f33967b0d1606d1356a62b14bac733bf83a124a909c17",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/smoke_errors.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/strict_check.log": "e284733b4066b25864b2ccea5084e3e622740a15d0df7822a5ae13211851cb5b",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/test_debug.log": "c3334fb89924efb6abf199bc3621719db328373a60c04f896cd57ac17e32bc9e",
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/verification/p17_gate/test_release.log": "85936ffdfeb4a931cfd29917156e97972a21e5230ddf6de6fdb2ff476fe21b7b"
+    }
+  },
+  "formatter": {
+    "path": "/Users/rexxa/work/p17-data/summarize_pass17_gate.py",
+    "sha256": "da035c56e5b052fe6d9a5d26ec95d3f14b53ae4303bd18d66d4413b88d0e1874"
+  }
+}

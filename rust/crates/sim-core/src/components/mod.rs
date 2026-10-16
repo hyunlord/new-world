@@ -39,10 +39,19 @@
 //! §2.1 / §2.β / §2.γ, `.harness/plans/phase6.md` §2.1, and
 //! `.harness/plans/phase7.md §3` for the full sub-stage decomposition.
 
+pub mod activity;
 pub mod agent;
 pub mod agent_state;
 pub mod body_health;
+pub mod building_kind;
 pub mod construction;
+pub mod child;
+pub mod cold;
+pub mod exposure_clock;
+pub mod family;
+pub mod family_events;
+pub mod founding;
+pub mod hardiness;
 pub mod hunger;
 pub mod inventory;
 pub mod memory;
@@ -50,17 +59,32 @@ pub mod position;
 pub mod relationship;
 pub mod resource_kind;
 pub mod seek_target;
+pub mod life;
+pub mod lineage;
 pub mod settlement;
 pub mod settlement_migrant;
 pub mod sleep;
 pub mod social;
+pub mod temperament;
 pub mod thirst;
 
+pub use activity::{Activity, ActivityKind, ActivityRest, RoutineObservation, RoutineObservationBatch, RoutineOutcome};
 pub use agent::{Agent, AgentId};
 pub use agent_state::{AgentState, TargetKind};
 pub use body_health::{BodyHealth, DEFAULT_MAX_HP};
+pub use building_kind::{BuildingKind, SHELTER_BLUEPRINT_ID, shelter_blueprint};
 pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};
 pub use hunger::Hunger;
+pub use child::Child;
+pub use cold::Cold;
+pub use exposure_clock::ExposureClock;
+pub use family::{close_kin, Kin, Sex};
+pub use family_events::{FamilyEvent, FamilyObservations};
+pub use founding::Founding;
+pub use hardiness::Hardiness;
+pub use temperament::Temperament;
+pub use life::{Elder, Life};
+pub use lineage::Lineage;
 pub use inventory::{Inventory, INVENTORY_CAPACITY};
 pub use memory::{Memory, MemoryArm, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
 pub use position::Position;

@@ -22,19 +22,15 @@
 //!   A6  zero-amount sleep row exercises the .max(1) floor → ratio 0.0 .... Type A
 //!   A7  over-capacity (50/45) + explicit zero-cap (50/0) → amount <= max . Type A
 //!   A8  multi-kind index lockstep: amounts[i]/maxes[i] match (xs,ys,kinds) Type A
-//!   A9  production scene registers finite capacities (max != 255, >= 1) .. Type A
+//!   A9  legacy V7 fixture registers finite capacities (max != 255, >= 1) .. Type A
 //!   A10 live depletion surfaces (amount < max OR source count decreased) . Type A
 //!
-//! Note on A9/A10: the plan's metric names `make_stage1_engine(42, 20)`, but
-//! the production stage-1 scene that actually seeds FINITE, depletable source
-//! capacities is the dylib's own construction path,
-//! [`init_production_engine`] (register systems → bootstrap 64-agent lattice +
-//! INFINITE seeds → `seed_finite_resource_scarcity` overwrite to finite). A bare
-//! `make_stage1_engine` helper seeds NO resource sources, so it cannot exhibit
-//! the finite-capacity / depletion the plan's anti-circularity guards require.
-//! `init_production_engine()` is the faithful realisation of "the production
-//! stage-1 engine"; the LOCKED thresholds (>= 1 finite capacity; >= 1 depleted
-//! row OR a reduced source count) are unchanged.
+//! Note on A9/A10: the historical plan names `make_stage1_engine(42, 20)`,
+//! but these tests intentionally retain the legacy V7 finite-resource fixture:
+//! `init_production_engine` registers systems, bootstraps the 64-agent lattice,
+//! and applies `seed_finite_resource_scarcity`. It is no longer the dylib entry;
+//! the live node uses `worldgen::build_world`. The locked thresholds (>= 1
+//! finite capacity; >= 1 depleted row OR reduced source count) are unchanged.
 //!
 //! Run: `cargo test -p sim-test --test harness_show_resource_depletion -- --nocapture`
 
@@ -369,11 +365,11 @@ fn harness_resource_depletion_a8_multi_kind_index_lockstep_correspondence() {
     println!("[viz-A A8] all 6 indices: amounts[i]/maxes[i] match (xs[i],ys[i],kinds[i]) by coordinate ✓");
 }
 
-// ─── A9: production scene registers finite capacities ───────────────────────
-// Type A — anti-circularity guard. A1–A8 hand-set the registry, so a production
-// build that never populates *_source_max would pass them all yet show every
-// in-game marker permanently full. Run the REAL production engine and prove the
-// live snapshot carries >= 1 row with a registered finite capacity.
+// ─── A9: legacy fixture registers finite capacities ───────────────────────
+// Type A — anti-circularity guard. A1–A8 hand-set the registry; this test
+// instead builds the unchanged legacy V7 fixture and proves its snapshot
+// carries >= 1 row with a registered finite capacity. Generated-world
+// coverage belongs to the Revitalize worldgen and survival harnesses.
 #[test]
 fn harness_resource_depletion_a9_production_scene_registers_finite_capacities() {
     let mut engine = init_production_engine();
@@ -391,7 +387,7 @@ fn harness_resource_depletion_a9_production_scene_registers_finite_capacities() 
     // Type A — existential: at least one finite, depletable source in the scene.
     assert!(
         finite >= 1,
-        "A9: production snapshot must carry >= 1 row with a registered finite \
+        "A9: legacy V7 snapshot must carry >= 1 row with a registered finite \
          capacity (max != {} sentinel and max >= 1); rows={}, finite={}",
         RESOURCE_SOURCE_INFINITE,
         rows.len(),
@@ -401,7 +397,7 @@ fn harness_resource_depletion_a9_production_scene_registers_finite_capacities() 
 }
 
 // ─── A10: live depletion surfaces in the snapshot ───────────────────────────
-// Type A — second anti-circularity guard: real gameplay consumption flows into
+// Type A — second anti-circularity guard: legacy fixture consumption flows into
 // the visualisation data. Disjunctive (partial-depletion row OR a reduced source
 // count) because a source consumed to exactly 0 is removed from the *_tiles map
 // (absent, not a zero row). Existential — defers rates/counts to the balance
@@ -414,7 +410,7 @@ fn harness_resource_depletion_a10_live_depletion_surfaces() {
         engine.tick();
     }
     let count_2000 = collect_resource_snapshot(&engine.resources).len();
-    // Continue to 4380 ticks (≈ 1 year) of real consumption.
+    // Continue to 4380 ticks of legacy fixture consumption.
     for _ in 2000..4380 {
         engine.tick();
     }
@@ -425,7 +421,7 @@ fn harness_resource_depletion_a10_live_depletion_surfaces() {
     // Type A — at least one of the two depletion signals must be observable.
     assert!(
         partial || reaped,
-        "A10: after 4380 ticks depletion must surface — either a partially \
+        "A10: after 4380 legacy fixture ticks depletion must surface — either a partially \
          depleted row (amount < max) OR fewer present source rows than at tick \
          2000 (count_2000={count_2000}, count_4380={}, partial={partial}, reaped={reaped})",
         rows.len()

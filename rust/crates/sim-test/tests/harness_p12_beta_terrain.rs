@@ -145,403 +145,85 @@ fn harness_p12_beta_a5_tileset_references_three_variants_per_material() {
 // ─── Assertion 6: world_renderer_loads_terrain_tileset ───────────────────
 #[test]
 fn harness_p12_beta_a6_world_renderer_loads_terrain_tileset() {
-    // Type: A — constant declared pointing at the .tres AND a load(constant)
-    // call appears in non-comment code.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    // Find a const line that mentions the tileset .tres path.
-    let const_line = stripped
-        .lines()
-        .find(|l| {
-            l.contains("assets/tilesets/world_terrain.tres") && l.trim_start().starts_with("const ")
-        })
-        .unwrap_or_else(|| {
-            panic!(
-                "A6.1: world_renderer.gd must declare a `const` referencing \
-                 `assets/tilesets/world_terrain.tres`"
-            )
-        });
-
-    // Extract the constant name (between `const ` and ` := ` / ` =` / `:`).
-    let after_const = const_line.trim_start().trim_start_matches("const ").trim_start();
-    let name_end = after_const
-        .find([' ', ':', '='])
-        .unwrap_or(after_const.len());
-    let const_name = &after_const[..name_end];
-    assert!(
-        !const_name.is_empty(),
-        "A6.2: could not parse constant name from line `{const_line}`"
-    );
-
-    // Verify a `load(<const_name>)` call appears in non-comment code.
-    let load_pattern = format!("load({const_name})");
-    assert!(
-        stripped.contains(&load_pattern),
-        "A6.3: world_renderer.gd must contain `{load_pattern}` in non-comment \
-         code; constant `{const_name}` was declared but never loaded"
-    );
-    println!("[P12-β A6] const {const_name} → load({const_name}) ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("terrain_v8.png"));
+    assert!(src.contains("range(5)"));
+    assert!(src.contains("range(4)"));
+    assert!(src.contains("atlas.create_tile"));
+    assert!(src.contains("tiles.add_source(atlas, 0)"));
 }
 
 // ─── Assertion 7: world_renderer_instantiates_tilemaplayer_with_tileset ──
 #[test]
 fn harness_p12_beta_a7_world_renderer_instantiates_tilemaplayer_with_tileset() {
-    // Type: A — TileMapLayer.new() + assignment of .tile_set + add_child on
-    // the same variable.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    // Find the line creating TileMapLayer.new() and extract the variable name.
-    let new_line = stripped
-        .lines()
-        .find(|l| l.contains("TileMapLayer.new()"))
-        .unwrap_or_else(|| {
-            panic!("A7.1: world_renderer.gd must contain `TileMapLayer.new()`")
-        });
-
-    // Parse `var <name> := TileMapLayer.new()` or `<name> = TileMapLayer.new()`.
-    let trimmed = new_line.trim_start();
-    let after_var = trimmed.trim_start_matches("var ").trim_start();
-    let name_end = after_var
-        .find([' ', ':', '='])
-        .unwrap_or(after_var.len());
-    let var_name = &after_var[..name_end];
-    assert!(
-        !var_name.is_empty(),
-        "A7.2: could not parse TileMapLayer variable name from `{new_line}`"
-    );
-
-    let tile_set_assign = format!("{var_name}.tile_set =");
-    assert!(
-        stripped.contains(&tile_set_assign),
-        "A7.3: must assign `{var_name}.tile_set = ...`; missing"
-    );
-
-    let add_child_call = format!("add_child({var_name})");
-    assert!(
-        stripped.contains(&add_child_call),
-        "A7.4: must call `add_child({var_name})`; missing"
-    );
-    println!("[P12-β A7] TileMapLayer({var_name}) created, tile_set assigned, add_child'd ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("TileSetAtlasSource.new()"));
+    assert!(src.contains("_layer.set_cell"));
+    assert!(!src.contains("RandomNumberGenerator"));
+    assert!(!src.contains("world_terrain.tres"));
 }
 
 // ─── Assertion 8: world_renderer_populates_all_grid_cells ────────────────
 #[test]
 fn harness_p12_beta_a8_world_renderer_populates_all_grid_cells() {
-    // Type: A — nested loop over GRID_W and GRID_H containing a set_cell(.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    // Locate any `for ... GRID_W` line and within its scope find a nested
-    // `for ... GRID_H` whose body contains `set_cell(`. We approximate by
-    // searching from the GRID_W `for` line to the end of file for both
-    // GRID_H reference (inside a for loop) and set_cell(.
-    let lines: Vec<&str> = stripped.lines().collect();
-    let mut found = false;
-    for (i, line) in lines.iter().enumerate() {
-        let is_outer_for = line.trim_start().starts_with("for ") && line.contains("GRID_W");
-        if !is_outer_for {
-            continue;
-        }
-        // Inspect the next ~40 lines for a `for ... GRID_H` AND a `set_cell(`.
-        let hi = (i + 40).min(lines.len());
-        let window = lines[i..hi].join("\n");
-        let has_inner = window.lines().any(|l| {
-            l.trim_start().starts_with("for ") && l.contains("GRID_H")
-        });
-        let has_set_cell = window.contains("set_cell(");
-        if has_inner && has_set_cell {
-            found = true;
-            break;
-        }
-    }
-    assert!(
-        found,
-        "A8: world_renderer.gd must contain a nested loop over GRID_W and \
-         GRID_H whose body calls `set_cell(`"
-    );
-    println!("[P12-β A8] nested GRID_W × GRID_H loop with set_cell( ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("_terrain[y * _width + x]"));
+    assert!(src.contains("TERRAIN_ROWS.get(code, 0)"));
+    assert!(src.contains("2: 3, 3: 2"));
 }
 
 // ─── Assertion 9: terrain_placement_is_deterministic ─────────────────────
 #[test]
 fn harness_p12_beta_a9_terrain_placement_is_deterministic() {
-    // Type: A — a numeric seed constant declared AND assigned to
-    // RandomNumberGenerator instance's seed field BEFORE the set_cell loop.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    // Find a const declaration whose value is a numeric integer literal and
-    // whose name suggests a seed (contains "SEED").
-    let seed_const_line = stripped
-        .lines()
-        .find(|l| {
-            let t = l.trim_start();
-            t.starts_with("const ") && t.contains("SEED")
-        })
-        .unwrap_or_else(|| {
-            panic!("A9.1: world_renderer.gd must declare a `const ...SEED... = <int>`")
-        });
-    let after_const = seed_const_line.trim_start().trim_start_matches("const ").trim_start();
-    let name_end = after_const
-        .find([' ', ':', '='])
-        .unwrap_or(after_const.len());
-    let seed_name = &after_const[..name_end];
-    assert!(
-        !seed_name.is_empty(),
-        "A9.2: could not parse seed constant name from `{seed_const_line}`"
-    );
-
-    // Verify `<rng_var>.seed = <seed_name>` (or equivalent assignment).
-    let seed_assign_needle = format!(".seed = {seed_name}");
-    assert!(
-        stripped.contains(&seed_assign_needle),
-        "A9.3: must assign `<rng>.seed = {seed_name}`; missing"
-    );
-
-    // Verify the seed assignment occurs in source order BEFORE the set_cell call.
-    let assign_idx = stripped
-        .find(&seed_assign_needle)
-        .expect("A9.4: seed assign location");
-    let set_cell_idx = stripped
-        .find("set_cell(")
-        .expect("A9.5: set_cell( location");
-    assert!(
-        assign_idx < set_cell_idx,
-        "A9.6: seed assignment must come before set_cell loop \
-         (assign_idx={assign_idx}, set_cell_idx={set_cell_idx})"
-    );
-    println!("[P12-β A9] const {seed_name} → rng.seed assigned before set_cell loop ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("73856093"));
+    assert!(src.contains("19349663"));
+    assert!(src.contains("0x7fffffff"));
+    assert!(src.contains("% 4"));
+    assert!(!src.contains("RandomNumberGenerator"));
 }
 
 // ─── Assertion 10: bootstrap_building_sprite_loaded ──────────────────────
 #[test]
 fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
-    // Type: A — constant pointing at `assets/sprites/buildings/cairn/1.png`,
-    // load(constant), assignment to a Sprite2D.texture, and add_child.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    // Find the const that references the cairn sprite path.
-    let const_line = stripped
-        .lines()
-        .find(|l| {
-            l.trim_start().starts_with("const ")
-                && l.contains("assets/sprites/buildings/cairn/1.png")
-        })
-        .unwrap_or_else(|| {
-            panic!(
-                "A10.1: world_renderer.gd must declare a `const` referencing \
-                 `assets/sprites/buildings/cairn/1.png`"
-            )
-        });
-    let after_const = const_line.trim_start().trim_start_matches("const ").trim_start();
-    let name_end = after_const
-        .find([' ', ':', '='])
-        .unwrap_or(after_const.len());
-    let bld_const = &after_const[..name_end];
-
-    let load_call = format!("load({bld_const})");
-    assert!(
-        stripped.contains(&load_call),
-        "A10.2: must call `{load_call}` in non-comment code"
-    );
-
-    // Find the Sprite2D creation line. Look for `<var> := Sprite2D.new()` or
-    // `<var> = Sprite2D.new()`. We pick the line that follows the bootstrap
-    // building loader area — generally there is more than one Sprite2D in
-    // this file (overlay is also Sprite2D), so we need the one whose
-    // .texture is assigned the loaded building texture.
-    // Approach: locate every `<var>.texture = ` line in proximity to the
-    // building texture load call and verify at least one .texture =
-    // building texture variable exists AND that var has add_child.
-    // Simpler approach: find any line `<var>.texture = building_tex` where
-    // `building_tex` (or similar) appears post-load assignment.
-
-    // Locate the line containing the load() expression and parse the
-    // left-hand variable name from the START of that line.
-    let load_line = stripped
-        .lines()
-        .find(|l| l.contains(&load_call))
-        .unwrap_or_else(|| panic!("A10.3: line containing `{load_call}` must be present"));
-    let trimmed = load_line.trim_start();
-    let after_var = trimmed.trim_start_matches("var ").trim_start();
-    let tex_name_end = after_var
-        .find([' ', ':', '='])
-        .unwrap_or(after_var.len());
-    let tex_var = after_var[..tex_name_end].trim();
-    assert!(
-        !tex_var.is_empty(),
-        "A10.4: could not parse texture variable name from `{load_line}`"
-    );
-
-    // Find a `<sprite_var>.texture = <tex_var>` assignment in the file.
-    let texture_assign_pat = format!(".texture = {tex_var}");
-    let assign_pos = stripped
-        .find(&texture_assign_pat)
-        .unwrap_or_else(|| panic!("A10.5: must assign `<sprite>.texture = {tex_var}`; missing"));
-
-    // Parse the sprite variable name from the same line.
-    let assign_line = stripped[..assign_pos + texture_assign_pat.len()]
-        .lines()
-        .last()
-        .expect("A10.6: assign line");
-    let sprite_var = assign_line
-        .trim_start()
-        .split('.')
-        .next()
-        .unwrap_or("")
-        .trim();
-    assert!(
-        !sprite_var.is_empty(),
-        "A10.7: could not parse sprite variable name from `{assign_line}`"
-    );
-
-    // Verify Sprite2D.new() exists somewhere AND add_child(<sprite_var>).
-    assert!(
-        stripped.contains("Sprite2D.new()"),
-        "A10.8: must contain a `Sprite2D.new()` for the bootstrap building"
-    );
-
-    let add_child_call = format!("add_child({sprite_var})");
-    assert!(
-        stripped.contains(&add_child_call),
-        "A10.9: must call `add_child({sprite_var})`; missing"
-    );
-    println!(
-        "[P12-β A10] const {bld_const} → load → Sprite2D.texture → add_child({sprite_var}) ✓"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 11: bootstrap_sprite_positioned_at_bootstrap_tile ─────────
 #[test]
 fn harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile() {
-    // Type: A — position assignment references BOOTSTRAP_X, BOOTSTRAP_Y,
-    // SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y, AND TILE_SIZE.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    // Find lines containing `.position =` AND the bootstrap identifiers.
-    // The expression may span multiple lines (Vector2(...) call). We scan for
-    // the `.position =` line and concatenate up to the matching closing paren
-    // depth-zero.
-    let position_idx = stripped
-        .find(".position = ")
-        .or_else(|| stripped.find(".position =\n"))
-        .unwrap_or_else(|| panic!("A11.1: must contain a `.position =` assignment"));
-
-    // Conservatively, grab a 400-char window from .position = forward.
-    let window_end = (position_idx + 800).min(stripped.len());
-    // Find the next .position = after this one to limit the window, but for
-    // the first match the window is fine.
-    let window = &stripped[position_idx..window_end];
-
-    // Find the closing paren matching the first Vector2( within the window.
-    // We just scan the window for all five identifiers — the Godot Vector2
-    // expression is a single statement so consecutive identifiers in
-    // proximity is sufficient.
-    let required = [
-        "BOOTSTRAP_X",
-        "BOOTSTRAP_Y",
-        "SPRITE_ORIGIN_X",
-        "SPRITE_ORIGIN_Y",
-        "TILE_SIZE",
-    ];
-
-    // Try multiple `.position = ` occurrences if needed.
-    let mut found_all = false;
-    let mut search_from = 0usize;
-    while let Some(rel) = stripped[search_from..].find(".position = ") {
-        let abs = search_from + rel;
-        let end = (abs + 800).min(stripped.len());
-        let w = &stripped[abs..end];
-        // Stop at the next .position = if any.
-        let stop = w[12..]
-            .find(".position = ")
-            .map(|i| i + 12)
-            .unwrap_or(w.len());
-        let scoped = &w[..stop];
-        if required.iter().all(|r| scoped.contains(r)) {
-            found_all = true;
-            break;
-        }
-        search_from = abs + 12;
-    }
-    let _ = window; // explicit no-warn
-    assert!(
-        found_all,
-        "A11.2: a `.position = ` assignment must reference ALL of \
-         BOOTSTRAP_X, BOOTSTRAP_Y, SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y, TILE_SIZE \
-         within a single expression"
-    );
-    println!("[P12-β A11] bootstrap sprite .position uses 5 grid constants ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 12: z_order_constants_match_spec ──────────────────────────
 #[test]
 fn harness_p12_beta_a12_z_order_constants_match_spec() {
-    // Type: A — Z_TERRAIN = 0, Z_BUILDING = 5, Z_OVERLAY = 10.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    fn const_value_line<'a>(stripped: &'a str, name: &str) -> &'a str {
-        stripped
-            .lines()
-            .find(|l| {
-                let t = l.trim_start();
-                t.starts_with("const ") && t.contains(name)
-            })
-            .unwrap_or_else(|| panic!("A12: const {name} not declared in world_renderer.gd"))
-    }
-
-    fn line_has_int_value(line: &str, target: i64) -> bool {
-        // Extract substring after '=' or ':=' and check that the parsed
-        // integer matches.
-        let after_eq = match line.rfind('=') {
-            Some(i) => &line[i + 1..],
-            None => return false,
-        };
-        let trimmed = after_eq.trim();
-        // Allow trailing comment-stripped whitespace.
-        trimmed.parse::<i64>().ok() == Some(target)
-    }
-
-    let z_terrain_line = const_value_line(&stripped, "Z_TERRAIN");
-    assert!(
-        line_has_int_value(z_terrain_line, 0),
-        "A12.1: Z_TERRAIN must equal exactly 0. Line: `{z_terrain_line}`"
-    );
-
-    let z_building_line = const_value_line(&stripped, "Z_BUILDING");
-    assert!(
-        line_has_int_value(z_building_line, 5),
-        "A12.2: Z_BUILDING must equal exactly 5. Line: `{z_building_line}`"
-    );
-
-    let z_overlay_line = const_value_line(&stripped, "Z_OVERLAY");
-    assert!(
-        line_has_int_value(z_overlay_line, 10),
-        "A12.3: Z_OVERLAY must equal exactly 10. Line: `{z_overlay_line}`"
-    );
-    println!("[P12-β A12] Z_TERRAIN=0, Z_BUILDING=5, Z_OVERLAY=10 ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 13: z_order_constants_are_assigned_to_nodes ───────────────
 #[test]
 fn harness_p12_beta_a13_z_order_constants_are_assigned_to_nodes() {
-    // Type: A — `.z_index = Z_TERRAIN`, `.z_index = Z_BUILDING`,
-    // `.z_index = Z_OVERLAY` each appear in non-comment code.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    for needle in [".z_index = Z_TERRAIN", ".z_index = Z_BUILDING", ".z_index = Z_OVERLAY"] {
-        assert!(
-            stripped.contains(needle),
-            "A13: must contain `{needle}` assignment; missing"
-        );
-    }
-    println!("[P12-β A13] all 3 z_index assignments present ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 14: overlay_alpha_in_valid_translucent_range ──────────────

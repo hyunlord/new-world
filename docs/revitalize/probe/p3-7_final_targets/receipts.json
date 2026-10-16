@@ -1,0 +1,14 @@
+{
+  "legacy_verified": true,
+  "v8_verified": true,
+  "probe_10_exit_code": 0,
+  "probe_60_exit_code": 0,
+  "children_implemented": true,
+  "expected_revision": "6db6db6a315841b0e40d52e7c66811f0009a13e2",
+  "evidence": {
+    "legacy": "/home/hyunlord/work/new-world-revitalize/.harness/evidence/revitalize-pass3/logs/p7-final-legacy-pin.log",
+    "v8": "/home/hyunlord/work/new-world-revitalize/docs/revitalize/probe/p3-7_final_v8/comparison.json",
+    "probe_10": "/home/hyunlord/work/new-world-revitalize/.harness/evidence/revitalize-pass3/logs/p7-final-10day.log",
+    "probe_60": "/home/hyunlord/work/new-world-revitalize/.harness/evidence/revitalize-pass3/logs/p7-final-60day.log"
+  }
+}

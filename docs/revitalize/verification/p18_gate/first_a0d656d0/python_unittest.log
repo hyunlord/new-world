@@ -1,0 +1,128 @@
+...............................................................................................................................................INVALID EVIDENCE: severity weights must be three thousandths summing to 1000
+........INVALID EVIDENCE: --compare-to covers seeds {'round10': {'end_exclusive': 64, 'start': 0}, 'round120': {'start': 32, 'end_exclusive': 64}}, this run {'round10': {'start': 0, 'end_exclusive': 64}, 'round120': {'start': 0, 'end_exclusive': 32}}
+INVALID EVIDENCE: severity weights must be three thousandths summing to 1000
+........INVALID EVIDENCE: --compare-to covers seeds {'round10': {'start': 64, 'end_exclusive': 128}, 'round120': {'end_exclusive': 32, 'start': 0}}, this run {'round10': {'start': 0, 'end_exclusive': 64}, 'round120': {'start': 0, 'end_exclusive': 32}}
+......................................................
+nonlinear static map (+10 p1^2 after day 10): UBS(alive) = 0.970, R2_static = 0.062
+FAIL
+H1: PASS 
+H2: PASS 
+H3: FAIL share_with_death, median_deaths, max_share_of_members, increasing_with_severity
+H4: PASS 
+H5: FAIL X3_b_spread_within_severity, X3_c_no_dark_night, X3_d_two_or_more, X3_e_first_night_spread
+PASS
+W1: PASS 
+W2: PASS 
+W3: PASS 
+W4: PASS 
+W5: PASS 
+W6: PASS 
+W7: PASS 
+W8: PASS 
+W9: PASS 
+W10: PASS 
+W11: PASS 
+PASS
+X1: PASS 
+X2: PASS 
+X3: PASS 
+X4: PASS 
+X5: PASS 
+X6: PASS 
+X7: PASS 
+X8: PASS 
+X9: PASS 
+X10: PASS 
+X11: PASS 
+X12: PASS 
+PASS
+Y1: PASS 
+Y2: PASS 
+Y3: PASS 
+Y4: PASS 
+Y5: PASS 
+Y6: PASS 
+Y7: PASS 
+Y8: PASS 
+Y9: PASS 
+Y10: PASS 
+Y11: PASS 
+Y12: PASS 
+Y13: PASS 
+FAIL
+Z1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro
+Z2: PASS 
+Z3: FAIL no_dark_night, two_or_more, first_night_spread
+Z4: PASS 
+Z5: PASS 
+Z6: FAIL receipt
+Z7: FAIL receipt
+Z8: FAIL day10, day120, recorder
+Y9: PASS 
+FAIL
+X1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro, v13_repro
+X2: PASS 
+X3: FAIL a_r2, b_spread_within_severity, c_no_dark_night, d_two_or_more, e_first_night_spread
+X4: PASS 
+X5: PASS 
+X6: FAIL receipt
+X7: FAIL receipt
+X8: FAIL day10, day120
+Y9: PASS 
+FAIL
+X1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro, v13_repro
+X2: PASS 
+X3: FAIL a_r2, b_spread_within_severity, c_no_dark_night, d_two_or_more, e_first_night_spread, f_severity_shares
+X4: PASS 
+X5: PASS 
+X6: FAIL receipt
+X7: FAIL receipt
+X8: FAIL day10, day120
+Y9: PASS 
+FAIL
+X1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro, v13_repro
+X2: PASS 
+X3: FAIL a_r2, b_spread_within_severity, c_no_dark_night, d_two_or_more, e_first_night_spread
+X4: PASS 
+X5: PASS 
+X6: FAIL receipt
+X7: FAIL receipt
+X8: FAIL day10, day120
+Y9: PASS 
+FAIL
+X1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro, v13_repro
+X2: PASS 
+X3: FAIL a_r2, b_spread_within_severity, c_no_dark_night, d_two_or_more, e_first_night_spread
+X4: PASS 
+X5: PASS 
+X6: FAIL receipt
+X7: FAIL receipt
+X8: FAIL day10, day120
+Y9: PASS 
+FAIL
+X1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro, v13_repro
+X2: PASS 
+X3: FAIL a_r2, b_spread_within_severity, c_no_dark_night, d_two_or_more, e_first_night_spread
+X4: PASS 
+X5: PASS 
+X6: FAIL receipt
+X7: FAIL receipt
+X8: FAIL day10, day120
+Y9: PASS 
+PASS: /private/var/folders/0w/j63n8j5s46j4dl79hrwn0m2w0000gn/T/tmp2b4l0c4o/report/perf.json
+
+sigma_b 1, sigma_w 2: W 3.970 B 0.991 PS 0.800 (expected 0.8)
+
+identical worlds + noise: W 1.043 B 0.000 PS 1.000
+a W 3 R 2 PS mean {'alive': '0.943', 'food_stock': '0.943', 'wood_stock': '—', 'settlements_alive': '—', 'deadwood_total': '0.429', 'food_on_bushes_total': '—', 'adults_working': '—'} 0s
+b W 3 R 2 PS mean {'alive': '0.943', 'food_stock': '0.943', 'wood_stock': '—', 'settlements_alive': '—', 'deadwood_total': '0.429', 'food_on_bushes_total': '—', 'adults_working': '—'} 0s
+replicate 0 vs unforked, seed 11: identical=True differ=[] compared=2
+..............................INVALID EVIDENCE: winter trace needs seasons
+...
+----------------------------------------------------------------------
+Ran 246 tests in 60.131s
+
+OK
+done 0s -> /var/folders/0w/j63n8j5s46j4dl79hrwn0m2w0000gn/T/tmpn78bh_co/out
+flagged 0: 
+wrote /var/folders/0w/j63n8j5s46j4dl79hrwn0m2w0000gn/T/tmp1_2tdwpl/t.md

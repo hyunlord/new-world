@@ -1,0 +1,2 @@
+PROBE seed=42 shelter_plan_skips=0
+DETERMINISM PASS

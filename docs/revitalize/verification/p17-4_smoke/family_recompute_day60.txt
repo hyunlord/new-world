@@ -1,0 +1,157 @@
+PASS — /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42
+seed=42 git_sha=47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21 elapsed=86400 checks=597844
+lifetime people=76 female=31 male=45 pair events=23
+F2_raw: 25/25 ratio=1.0
+F4_raw: 566/567 ratio=0.9982363315696648
+F5_raw: 1/13 ratio=0.07692307692307693
+F1_raw_day60: {"denominator": 25, "numerator": 13, "ratio": 0.52}
+Births by elapsed simulation day: day total couple fallback
+  1 1 0 1
+  2 2 0 2
+  3 2 0 2
+  4 2 0 2
+  5 2 2 0
+  6 2 2 0
+  7 2 2 0
+  8 2 2 0
+  9 2 2 0
+  10 2 2 0
+  11 2 2 0
+  12 2 2 0
+  13 2 2 0
+  14 2 2 0
+  15 2 2 0
+  16 2 2 0
+  17 0 0 0
+  18 0 0 0
+  19 1 1 0
+  20 1 1 0
+  21 0 0 0
+  22 0 0 0
+  23 1 1 0
+  24 0 0 0
+  25 0 0 0
+  26 2 2 0
+  27 2 2 0
+  28 1 1 0
+  29 0 0 0
+  30 1 1 0
+  31 0 0 0
+  32 1 1 0
+  33 0 0 0
+  34 1 1 0
+  35 1 1 0
+  36 0 0 0
+  37 2 2 0
+  38 0 0 0
+  39 1 1 0
+  40 1 1 0
+  41 0 0 0
+  42 0 0 0
+  43 0 0 0
+  44 0 0 0
+  45 1 1 0
+  46 1 1 0
+  47 0 0 0
+  48 0 0 0
+  49 0 0 0
+  50 1 1 0
+  51 0 0 0
+  52 0 0 0
+  53 0 0 0
+  54 1 1 0
+  55 0 0 0
+  56 2 2 0
+  57 0 0 0
+  58 0 0 0
+  59 1 1 0
+  60 3 3 0
+20:00 nights: tick simday same/both-bedded living-couples one-bed neither-bed bedless unused
+  720 1 0/0 0 0 0 0 4
+  2160 2 0/0 0 0 0 0 2
+  3600 3 0/0 0 0 0 0 8
+  5040 4 1/1 1 0 0 0 6
+  6480 5 1/1 1 0 0 0 4
+  7920 6 2/2 2 0 0 0 2
+  9360 7 4/4 4 0 0 0 8
+  10800 8 5/5 5 0 0 0 6
+  12240 9 5/5 5 0 0 0 4
+  13680 10 7/7 7 0 0 0 2
+  15120 11 7/7 7 0 0 0 8
+  16560 12 7/7 7 0 0 0 6
+  18000 13 7/7 7 0 0 0 4
+  19440 14 7/7 7 0 0 2 4
+  20880 15 7/7 7 0 0 0 8
+  22320 16 7/7 7 0 0 0 6
+  23760 17 9/9 9 0 0 0 6
+  25200 18 10/10 10 0 0 0 6
+  26640 19 10/10 10 0 0 0 6
+  28080 20 10/10 10 0 0 0 6
+  29520 21 10/10 10 0 0 0 6
+  30960 22 10/10 10 0 0 0 6
+  32400 23 9/9 9 0 0 0 6
+  33840 24 9/9 9 0 0 0 6
+  35280 25 9/9 9 0 0 0 6
+  36720 26 10/10 10 0 0 0 8
+  38160 27 10/10 10 0 0 0 7
+  39600 28 12/12 12 0 0 0 6
+  41040 29 13/13 13 0 0 0 6
+  42480 30 14/14 14 0 0 0 6
+  43920 31 13/13 13 0 0 0 6
+  45360 32 12/12 12 0 0 0 6
+  46800 33 12/12 12 0 0 0 6
+  48240 34 12/12 12 0 0 0 6
+  49680 35 11/11 11 0 0 0 6
+  51120 36 11/11 11 0 0 0 6
+  52560 37 10/10 10 0 0 0 7
+  54000 38 10/10 10 0 0 0 6
+  55440 39 10/10 10 0 0 0 6
+  56880 40 10/10 10 0 0 0 6
+  58320 41 10/10 10 0 0 0 6
+  59760 42 11/11 11 0 0 0 6
+  61200 43 11/11 11 0 0 0 6
+  62640 44 11/11 11 0 0 0 6
+  64080 45 12/12 12 0 0 0 6
+  65520 46 12/12 12 0 0 0 6
+  66960 47 12/12 12 0 0 0 6
+  68400 48 12/12 12 0 0 0 6
+  69840 49 12/12 12 0 0 0 6
+  71280 50 13/13 13 0 0 0 6
+  72720 51 12/12 12 0 0 0 6
+  74160 52 13/13 13 0 0 0 6
+  75600 53 13/13 13 0 0 0 6
+  77040 54 13/13 13 0 0 0 6
+  78480 55 13/13 13 0 0 0 6
+  79920 56 12/12 12 0 0 0 6
+  81360 57 13/13 13 0 0 0 6
+  82800 58 13/13 13 0 0 0 6
+  84240 59 13/13 13 0 0 0 6
+  85680 60 12/13 13 0 0 0 29
+Departures: id tick status split-couples/all-parent-couples split-households/all-households
+  1 84840 completed 1/13 1/34
+Concrete family evidence (4/4 categories):
+  mother=29 father=30 missing=[]
+  pair source=/Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_events.jsonl:39 {"display_day": 17, "event": "paired", "father": 30, "minute": 1200, "mother": 29, "simulation_day": 17, "tick": 23760}
+  birth source=/Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_events.jsonl:42 {"child": 50, "display_day": 19, "event": "born", "fallback": false, "father": 30, "female": true, "lineage_key": 9085364571191634359, "minute": 1381, "mother": 29, "simulation_day": 19, "temperament": {"ha": 281, "ns": 393, "p": 733, "rd": 902}, "tick": 26821}
+  night source=/Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_hours.jsonl:469 {"bedless": 0, "display_day": 20, "housing_capacity": 56, "minute": 1200, "people": [{"bed": [29, 26], "household_key": 29, "id": 29, "life_stage": "adult", "pairing_tick": 23760, "partner": 30, "settlement": 1}, {"bed": [29, 26], "household_key": 29, "id": 30, "life_stage": "adult", "pairing_tick": 23760, "partner": 29, "settlement": 1}, {"bed": [29, 26], "household_key": 29, "id": 50, "life_stage": "child", "pairing_tick": null, "partner": null, "settlement": 1}], "simulation_day": 20, "tick": 28080, "unused_slots": 6}
+  fission source=/Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_fissions.jsonl:1 {"cancelled_tick": null, "couples": [[27, 57], [29, 30], [31, 34], [32, 33], [35, 36], [38, 39], [43, 44], [49, 50], [52, 53], [54, 63], [55, 56], [60, 61], [64, 65]], "couples_split": 1, "couples_total": 13, "daughter": 2, "depart_tick": 84840, "event": "departed", "fission_id": 1, "founded_tick": 85009, "households": [[19], [22], [23], [24], [26], [27, 57], [28], [29, 30], [31, 34], [32, 33], [35, 36], [37], [38, 39, 71], [40], [41], [42], [43, 44], [45], [46], [47], [48], [49, 50], [51], [52, 53], [54, 63, 72], [55, 56, 70], [58], [59], [60, 61], [62], [64, 65], [66], [67], [69]], "households_departed_whole": 8, "households_split": 1, "households_total": 34, "leader": 44, "members": [44, 46, 47, 49, 50, 54, 55, 56, 58, 63, 66, 69, 70, 72], "parent": 1, "status": "completed"}
+    selected_pair_members=[]
+Input SHA256:
+  ed0f308b43353157ae1128f1c6a10de003bcd6607176c28c5cf9427266682e7d  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_events.jsonl
+  6993fbb24d29df5ca97d7625fae1f8ee5aa840e4d7dd888ee26a5b869cfe09d9  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_fissions.jsonl
+  baa20052bc8e652c10c86fd54e73da7717c2840200762e1fb028ccc52da494f3  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_hours.jsonl
+  ff4e8ceb9eeb38667236afab4236438a24d6be9babd9a47bb359f448d9578983  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_meta.json
+  8ae66eee625254100dfad97b9f35c69cc7ce84906b895b851990c057fd3440bc  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_family_people.jsonl
+  442b963d83d2350f2480cbda2cea7ea64aacceee69f6f541707c10a036f15c29  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_fissions.jsonl
+  4ab7bc043760725f890567b106592b757285f2a18011308bb3a4ee751de8b835  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_people.jsonl
+  ad806c429e2b5ea11ffeae95e6926182221b0b7559db889bdeccada49c1f7710  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/game_v22_s42_trace_meta.json
+  2884cafcf61bbdd9d541c2f8906c697fa3d804c135ab23319f913358c32422a7  /Users/rexxa/work/p17-data/part4-smoke-r1/game_v22_day60/summary.json
+
+Evidence limits:
+- No death/unpair events: partnership continuity and parent liveness between samples are not independently observable. Pair events, sampled reciprocity, pairing ticks, and final living reciprocity are checked.
+- No per-shelter capacity inventory: housing_capacity is an input aggregate. Bedded people, bedless people, unused slots and couple-night denominators are recomputed.
+- Night bed rows show assigned beds, not actual sleep state or nearest-tile sleeping. No claim about realized sleep follows from this checker.
+- Departure household/couple arrays are raw snapshots; their counts and membership splits are recomputed. Unsampled departures cannot independently prove the full living settlement census or individual ranking decisions.
+- This checker does not implement F3 resemblance, confidence intervals, health gates, cohort seed policy, or final acceptance verdicts.
+
+PASS raw consistency, 1 worlds; acceptance gates not evaluated.

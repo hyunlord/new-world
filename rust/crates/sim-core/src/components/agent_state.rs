@@ -58,6 +58,15 @@ pub enum TargetKind {
     ///
     /// [`Inventory`]: crate::components::Inventory
     GatherFood,
+    /// Revitalize Pass 5 — pick up deadwood into [`Inventory`] (carry, NOT
+    /// eat). `Consuming { GatherWood }` takes wood from a deadwood spot in
+    /// `SimResources::wood_tiles` up to the firewood haul load and reduces no
+    /// need. Selected only by the Firewood arm under `SocietyRules::firewood`.
+    ///
+    /// [`Inventory`]: crate::components::Inventory
+    GatherWood,
+    /// A reserved, economy-neutral routine place in an opted-in world.
+    Activity,
 }
 
 /// Per-agent FSM state. Lives alongside [`Hunger`]/[`Thirst`] and is
@@ -168,6 +177,9 @@ mod tests {
         // (the decision system owns the single-tick pickup exit to Idle).
         assert!(AgentState::Seeking { target: TargetKind::GatherFood }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::GatherFood }.suppresses_movement());
+        // Pass 5 — GatherWood mirrors GatherFood.
+        assert!(AgentState::Seeking { target: TargetKind::GatherWood }.suppresses_movement());
+        assert!(!AgentState::Consuming { target: TargetKind::GatherWood }.suppresses_movement());
     }
 
     #[test]
@@ -186,6 +198,8 @@ mod tests {
             AgentState::Consuming { target: TargetKind::Agent(7) },
             AgentState::Seeking { target: TargetKind::GatherFood },
             AgentState::Consuming { target: TargetKind::GatherFood },
+            AgentState::Seeking { target: TargetKind::GatherWood },
+            AgentState::Consuming { target: TargetKind::GatherWood },
         ];
         for state in cases {
             let encoded = ron::to_string(&state).unwrap();
@@ -203,6 +217,7 @@ mod tests {
             TargetKind::ConstructionSite,
             TargetKind::Agent(7),
             TargetKind::GatherFood,
+            TargetKind::GatherWood,
         ] {
             let encoded = ron::to_string(&kind).unwrap();
             let decoded: TargetKind = ron::from_str(&encoded).unwrap();

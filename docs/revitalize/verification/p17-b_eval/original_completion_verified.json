@@ -1,0 +1,2804 @@
+{
+  "status": "PASS",
+  "verified_at": "2026-10-15T11:21:12.753685+00:00",
+  "scope": "Terminal original registered analysis, raw hashes, cohort and trace provenance; not a metric acceptance pass.",
+  "producer": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+  "preregistration_commit": "43f22e81f120a755de33712b02a62469c67ab840",
+  "preregistration_to_first_launch_seconds": 16.67589807510376,
+  "raw_files_verified": 690,
+  "hash_mismatches": 0,
+  "cohorts": [
+    {
+      "scene": "game_v22",
+      "worlds": 32,
+      "days": 120,
+      "deterministic_twins": 32,
+      "summary_sha256": "c1c1db08a80dce87651b8a69aaa7bfebbc9065f8b82d803f46d173352e815419"
+    },
+    {
+      "scene": "game_v21",
+      "worlds": 32,
+      "days": 120,
+      "deterministic_twins": 32,
+      "summary_sha256": "652e737a0eaa0c91a1f5ecf33fe3ed4a6752e11e7743076672e5018ecd627611"
+    }
+  ],
+  "trace_misses": 0,
+  "family_misses": 0,
+  "rules": {
+    "F1": "FAIL",
+    "F2": "PASS",
+    "F3": "PASS",
+    "F4": "PASS",
+    "F5": "PASS",
+    "F6": "PASS",
+    "F7": "PASS",
+    "F8": "PASS"
+  },
+  "verdict": "FAIL",
+  "eval_json_sha256": "80ab9b5c24c4da35df65547fba0e4e17bf68f42a949f1ca12ab396ba45f7a43c",
+  "eval_md_sha256": "d05df2517f5cfa7f74b8ad047ba2b1210ff9a132af9675e453e0ffa493aebe4e",
+  "raw_manifest_sha256": "b25cfc36342abbd9b68c80e9143323324dd1eaac25cfccb45ddda6722d8829ed",
+  "raw_inputs": [
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/RUNLOG.txt",
+      "sha256": "a397691fa4a6fb3112f49f8c473e10f662f9b4fff10ace5d8ba2fc72308ba0a5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/binaries.sha256",
+      "sha256": "213933e053dcc06e4c8a2f000a20edfd11d9a295e288eba4be3e38b39c15879c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/binary_checks.txt",
+      "sha256": "1ff964f399a954110b0eba5104099536881b9b0cd61cc783a626efe2e30a0e29"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/binary_directory.txt",
+      "sha256": "b13a3b971b4e92028af1a61a087a70ce3ec1457986a1458d7142fd8b3f07cdea"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/commands.txt",
+      "sha256": "391b2a39cd215884c4c11512602f459e93b78f6b552f27367cfdc1779e2ab1fb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/evaluate.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/evaluate.log",
+      "sha256": "e06455ca19a9d3ed1aface34bc8fe2c95d68211b946eb7f5b1d76bd0ac2d131f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000.jsonl",
+      "sha256": "d6c2f690975c63ec00c6473fd32fef27eb8c374ffbfa1d2759b5778a8fa53fa8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_agents.jsonl",
+      "sha256": "a20b0976cd6039da2fa53879aa0f9342262a3c54e7e299ac972b97c0d880e9fe"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_deaths.jsonl",
+      "sha256": "c6d77b3f87c0a21ce16e4b35fcf437f6029ec6b48830448d37211a685b617361"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_fissions.jsonl",
+      "sha256": "c6b58fa5bc857a9b47d7ab8f293be5358606a17a5f5efa7fde510fa38f66b6a9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_hours.jsonl",
+      "sha256": "2cf0572efd3db68ba25d618907b4b5c6f206e908df644a39dafd8081ed3172e7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_people.jsonl",
+      "sha256": "5621d3ecd802697122f08fb3abebf8387643c22f7c934e7a0917cebee73fb89d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_routine.jsonl",
+      "sha256": "4f4f08d00e15bcd8fd9ddbfeda6cad66bf2fdfac62fc6351e6343fda6d0cffdb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18000_trace_meta.json",
+      "sha256": "0510cbdff4f5e92a0a448ff91f8f4bab3d8cff2618875b3986c07bacaad3ed53"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001.jsonl",
+      "sha256": "3413538cd48e6ee06308b93e16287477d4cbedead6db907fe1934591abbbc953"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_agents.jsonl",
+      "sha256": "9810a53f7593e36e8516d975d7c815bd82f57b6b42c294fa39cb1d60ad8c1a7f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_deaths.jsonl",
+      "sha256": "bdd29ca88c2a5b5ac33d63575d3af2f9f9c4f05c8d96b6bf7beaebf5523192f7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_hours.jsonl",
+      "sha256": "bbccb1db3a98a73fa52e6c4589fef36609f081c9bc63258209edcbe03a562889"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_people.jsonl",
+      "sha256": "7863729774ee1db94e91ec682e04862541af0cdd55dc14e6c6a602fe7cca86d8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_routine.jsonl",
+      "sha256": "99219cd5ca2d068d012cb545964001de120e6adafc113303ab5b5eb62cc8a74c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18001_trace_meta.json",
+      "sha256": "36bff45eb3c1bdedf702f01e2f6b03aa292dcee34a5dc0f77548f75da1b2469a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002.jsonl",
+      "sha256": "f6eabda760bdc9f5d1723dfa85cb552791487909b4ba265e410ad665222342d0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_agents.jsonl",
+      "sha256": "ab68ffd8dc31bd48470943c1dd9cd3fde089d2a149080caa3eb50d89680f4d2e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_deaths.jsonl",
+      "sha256": "f1c5fdd3bfb787e35bece0317c9ddf29908f3a9cbe58353ab05e70af80f0783d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_hours.jsonl",
+      "sha256": "789c110c071b5d991093d48934eddd72f11d0664458474208cf28929916a5675"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_people.jsonl",
+      "sha256": "dcfcfde5df27d2a42c323e0af53f9ad67aa7db97e0bf2de613795b80709d61fc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_routine.jsonl",
+      "sha256": "3eefbbac86f2741759d770dbec9f1ed8d0a38f5aa03c5f7585a3a496147af2ee"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18002_trace_meta.json",
+      "sha256": "7912d52e0a8a4c1077907809f347390e05163272de60d8eee6dad069b3c716cd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003.jsonl",
+      "sha256": "d30a3a7f5abb34ed850da14ec810e61ae298690ee097bc3da8156c5373687465"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_agents.jsonl",
+      "sha256": "84b72f198522b20834970cd35b24b485e57a3b35bbb06cbccdea6f56c5ab5dd2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_deaths.jsonl",
+      "sha256": "872387bf3af6a82d52234fd04819cf515aa2aaab043aeb7c8e63fb2190f595f9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_hours.jsonl",
+      "sha256": "e18ecceefeae68fe11701d85b74c1a287b28a729c7f19043208574c14aded17a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_people.jsonl",
+      "sha256": "e450d2f1159d9784a6bc66912487855680d8e6a53fa549a75f2c6607cfd60750"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_routine.jsonl",
+      "sha256": "4f9f678f02885ce25520e60b4c5b2c2e321319b6cafe0810069c77c02b4d1401"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18003_trace_meta.json",
+      "sha256": "9f3c6c7b68e11936b8f00f95f6e89425c82b1c45eef5a14cf1d513fc9eeefd2e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004.jsonl",
+      "sha256": "00a220e334ae28244619dae2e052ff3d0e49886d0334f9acc3377f3660e24df5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_agents.jsonl",
+      "sha256": "a4b9d64db54b3dec97522ee39f0363e6c2664f591c1b29060285d6cf8e126dd3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_deaths.jsonl",
+      "sha256": "314c8385afcc712c98f1c8fe8f2961ed3e2c7f79375e147b545fa36fafdb951a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_fissions.jsonl",
+      "sha256": "53837d9a30f2cca5daac566462b4f50b3e85886d459544e4baba0227a1c6ac7a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_hours.jsonl",
+      "sha256": "1f9c87cb96dfc4956e16aa0b84c6684233f898f0b557844c318ba872ec60b9ed"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_people.jsonl",
+      "sha256": "f728eb6e26ad51bf39ed5d7aa5ce1e33db7cd881d79f12f1a61181ea860f5d7d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_routine.jsonl",
+      "sha256": "a137085177cc2e5bf901771ca6790427cca7e83f3211f3e654aa559c854dff9b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18004_trace_meta.json",
+      "sha256": "da0bff536fe07e1d8f932906395175ce2e664434731d20f24257e9ddaf449972"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005.jsonl",
+      "sha256": "b814e80e2a6cc701920720ad7c8061c94967f352423ea8ea91e6b1cd4729bbfd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_agents.jsonl",
+      "sha256": "aa5e65f7848741a381e23f4c1b004a61b079105ba4fc642558c297dc4ba2078b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_deaths.jsonl",
+      "sha256": "e011dc9532909b9bb8ed269211a3364b4883cf5ddefa23fd9c48b88485c6e8ed"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_hours.jsonl",
+      "sha256": "793666e37ff1779efd9a367039ffcef24cdbc9553a90048783d9f04820bf77f7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_people.jsonl",
+      "sha256": "a5ae96948e06f32a7412e518c339742b71075e34a4c238b7f20cf07dd65569ce"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_routine.jsonl",
+      "sha256": "ef211422cf0e654d9c56a3a059eff09985c767eeb42825608e02bcc7c422359e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18005_trace_meta.json",
+      "sha256": "52c5efaab6ec032d71dd40934421e9cac377443675dbdb3d905bed3314aa803c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006.jsonl",
+      "sha256": "20292168ba6154591c0ce5942b2d36ffb6646de168eb99c273b3c9fbc64e52fd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_agents.jsonl",
+      "sha256": "75a3604995938f88b7dbcdd4091da9078857a4bf7c2362e0b567c03a561a9faa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_deaths.jsonl",
+      "sha256": "022742464d0db59cdda0e5a9ed518ba4f10dbae37ee94dd513fb4c6730cddf85"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_hours.jsonl",
+      "sha256": "4103d2fba140fe1994c6636275bcfe871f533a03329fc9ae3405ff8c9bce165e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_people.jsonl",
+      "sha256": "57304dc1eca4358925a8c22e213d08fdda122fdd1248c399f55a6a3a2d79737b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_routine.jsonl",
+      "sha256": "c22ccce86a5cd0fd9d1a93bfaf765ba9dbb10f1edf083144bfb95140bb40f703"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18006_trace_meta.json",
+      "sha256": "62d3ae47218b3643a7e81b976c37dc9142c1d0dc8341d65090ce2c315ee5bb7a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007.jsonl",
+      "sha256": "ce3946115cead9eca48843b4a6284c0de1f30475d348b78f0ee805b3dbb5b33c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_agents.jsonl",
+      "sha256": "75c1d260d1065e86892cca8783762b34c6c724b277023abe67cf6227e49eac26"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_deaths.jsonl",
+      "sha256": "ef70a8c1d15b1708302336ebac77513a30e385f114874ba1d0fe819746f29460"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_fissions.jsonl",
+      "sha256": "40ac362f17f77ec9a9021323b9dcff1cf37de7ea0979b3ffde8e3a475e3730e0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_hours.jsonl",
+      "sha256": "e8adedf7296f7f6cd826c7d176489681b2f4f40d477613c4c4f5f17166c346ef"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_people.jsonl",
+      "sha256": "1130bbabf915b210ce06ad57c1f974155ead2eed0dafb92972d80a6c54012780"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_routine.jsonl",
+      "sha256": "88f81e288b20fc89e6a0b6e2a2937465443bf192a37b92f5cb4c1b9b29d4e153"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18007_trace_meta.json",
+      "sha256": "b8b09d6560c4aa8ad28e59164cf45b6891019173f71c572ad75a5ba754230bcd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008.jsonl",
+      "sha256": "d449220285f23d43800cdbb6f7b3d4f4e5eb4074928153135425441d02dc1d33"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_agents.jsonl",
+      "sha256": "bd6f87505576a17853e222c4da584b149279cebf352f43bcb3e53697f56e4733"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_deaths.jsonl",
+      "sha256": "1ad5895ab2d4709b9fb860ff6f3d70d5da11e9f7f1687b7a0ebc908437d28892"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_fissions.jsonl",
+      "sha256": "313120b6da9a84c30a951efb4d96e6337845bee18a66c0ebeced8927c9601413"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_hours.jsonl",
+      "sha256": "6b34dd9cb50a4397d79b8e0685abc210caae918bdd9cc6ae6fb15fa2d529df9c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_people.jsonl",
+      "sha256": "79b3b0da43be0db32d065c85a3a8a4dbd9bc8670e7c7647e7f34a4bbc0337ac4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_routine.jsonl",
+      "sha256": "bcb66fe6582df47ff5f9d05b503359864e4c5e2314d7e544f0f329a8b17db65b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18008_trace_meta.json",
+      "sha256": "b132f4298c7ed0947aa34390701a451808839d606c65368a15ca27f6721afa7f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009.jsonl",
+      "sha256": "8fcf84c386c163a4a21043cea22251185ef735479effe2077432ca53e96b0407"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_agents.jsonl",
+      "sha256": "3f0f2fe869b5a906c72c1e14ab3dd230db4592467f8b9bd3d7c610b633d6e0d4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_deaths.jsonl",
+      "sha256": "d6dd10572d52361fdb35270312e9f1b2c3ffa29a5d6b75823b54f9084b8052d3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_fissions.jsonl",
+      "sha256": "6336314e91621f924d507fa323d6f50fcb51e42f2f1c977b5e135ec1ee50b1dd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_hours.jsonl",
+      "sha256": "f65bc79cca640add4ff48a02137f61b5de7ca2829d6fae4faa291a8f7e59afad"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_people.jsonl",
+      "sha256": "1a0977de15003dfc091aecbee5bd438ed72208dc2512bc696a7476b1af73213f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_routine.jsonl",
+      "sha256": "f92cc8d0f13effe6f1b834484fba900175b059d9f1f5d8a60d6415302da72710"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18009_trace_meta.json",
+      "sha256": "cc033cce4d290e2f42642dda83ae5a6691d186f946dd5319c6a03812cfaf82d9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010.jsonl",
+      "sha256": "904210b6b1f6ce66dd7e3fbcbd25f68b9b2f83fec8839ce631aff1cf975ac183"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_agents.jsonl",
+      "sha256": "dd78a00b37ba4f9fc7230642bd27b5ac64ca3746e704cc368ad1870855f24ffa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_deaths.jsonl",
+      "sha256": "b15e4dcba8eb04668c273aae036af8a2e407c1b2e48301053e50073fc75df123"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_hours.jsonl",
+      "sha256": "b67069edf53947fdf32ad66cb4e6d8bfb7dd1e113dc0f6ff252d13a98edb372a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_people.jsonl",
+      "sha256": "6a817d3fe698863b7e93f89b8e585e86fc17205510436ddc897b422416610a60"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_routine.jsonl",
+      "sha256": "8ea68754900f981ef61e0b1459f702942f3bf76b24ef36a03a52f3dfd44846c8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18010_trace_meta.json",
+      "sha256": "7e850069bf077fe617f679b0c93e53d588dd7f52cd664cda8375b032b3fe3619"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011.jsonl",
+      "sha256": "1e9c8038d00163c1598b12c77150c715c4c603ae7c18e100b1dc52104cd74e71"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_agents.jsonl",
+      "sha256": "739d60bf36dece8b366384815ace1202d8f669e5a84bb525e80a522b235cbe48"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_deaths.jsonl",
+      "sha256": "12dc5d7cb9d6feda3825f2f543a7644e493dac7e1fdfdb6e0ab40ec053051a32"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_hours.jsonl",
+      "sha256": "f16f887f712d9d4899a69daa8d3985c81697feba02226bddcbfbc08e0e9bcde8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_people.jsonl",
+      "sha256": "1fe528a97dfa56397f48c04d817745d7911003f55e46834a0327025298131cab"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_routine.jsonl",
+      "sha256": "7cb0dd5e5473a1a5511517b12ed1cd58393081af925981050c4213e6c583ba20"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18011_trace_meta.json",
+      "sha256": "25b8ed7814760c9d721333b298862ec6361d5069e53cd000bfa33e5bfab303f2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012.jsonl",
+      "sha256": "7a5a8e4a6ac725d81218b7b279db4a93f927ae2bd179e31f92bd7f9caa7f5d1f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_agents.jsonl",
+      "sha256": "058fee9b07e9ab4c74859169a12aa2d88f87ea7d22365d7a00aedca885b4a5bc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_deaths.jsonl",
+      "sha256": "3b49d1675aa80ec7442c1e0972bfe1afe2b106dfa3087d0761cb3879b43c0e85"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_fissions.jsonl",
+      "sha256": "4a9f6ad2c419b9489a9c7e184713b704a71cf086d4fdd8bbad1d0fdc30e44ed4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_hours.jsonl",
+      "sha256": "8304a56d3886c7994d80bdc415c179f121ea1036152757ddc27b6bae9e5ee8a0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_people.jsonl",
+      "sha256": "629f8bb047c6f5fe8fdb0a7931f20bd0272b0623848f1a8cae228e2912a6fe94"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_routine.jsonl",
+      "sha256": "c66b4d53e360898a22b805c73848b6ade023421c1dcf0bc78640e99ba570bb6c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18012_trace_meta.json",
+      "sha256": "71dc0ffef66ac26a38820e3a10538fe67e5cb9381ad6c71e12d25655852bf0ff"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013.jsonl",
+      "sha256": "fcf942f4ad75592683e534e1850f314893270837458fe64c11b9a68dfe16cd25"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_agents.jsonl",
+      "sha256": "07ce76b0747d0d17afb6a5357ef97ae154e848b943cac68587966bac155078ef"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_deaths.jsonl",
+      "sha256": "865598893c789f55a078af95256bceb97f70774670244eb006dadc2ced1e1d8a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_hours.jsonl",
+      "sha256": "3b2b681cb2e1133fa971c52afd40dbfcd1a3126f4d4238b917b31e53c192aa08"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_people.jsonl",
+      "sha256": "e44fb9a51050f2befbf89f30b07352ae6cd02f1d9f051096cd99ae7c88048d59"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_routine.jsonl",
+      "sha256": "e06610a4560ffc8cf9824c1f24d41eb7943eace093cb1e89f51ec97519a78fb6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18013_trace_meta.json",
+      "sha256": "36a80b3777de6300d4f96539dacdf83f2e9f53fd7094285172752a2f6c1fef24"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014.jsonl",
+      "sha256": "083f25110e5dadb6a7e903694b54b2b045a6678d91c73c5a2cd92d5cfe270d29"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_agents.jsonl",
+      "sha256": "78408c3bb3e4bb7a6748b90b8aaa36f0dd1e49ceae333d8aead891522a21d136"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_deaths.jsonl",
+      "sha256": "f088aff4d502076c9337dfff4409626d052306415dc24bef948b5399212d26a3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_fissions.jsonl",
+      "sha256": "db9c76272514932040606ff4123b16b61f6a53b45d2d2df07f990964718974bf"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_hours.jsonl",
+      "sha256": "45d640025ee006ddae032d48af2a20d86afff4701544812e85a142634bc66221"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_people.jsonl",
+      "sha256": "6d165fb6f9e1993598bd45c3c48b8dd280281390dfae4ae5df024f2a329f6d19"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_routine.jsonl",
+      "sha256": "d14a5ddde13bd01ddb98d3b53990ba3c6e3924a515a0a8067ecfb0d5f9104949"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18014_trace_meta.json",
+      "sha256": "bdecda5f1d50f12401326a635bebc72c80d7e4e1cefc63f2c06f4a3dee8f103a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015.jsonl",
+      "sha256": "45aad03f3a81b933172eaa7ac40cc9feb5cf3192ab08888c43992f7d65df87c6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_agents.jsonl",
+      "sha256": "1058769f6806bc9452b124af082e6d923080c6f490fba46e1c049f22dfab0316"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_deaths.jsonl",
+      "sha256": "c3cccd3a2648617865178663e8d3688dabff98b72feddc522c37a918663ec77b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_hours.jsonl",
+      "sha256": "a86b20d00c19adb0383514a8214ce1fb02dfa3cabe1d9d017219156478ba2b97"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_people.jsonl",
+      "sha256": "435e6744b6d55102634179ef71795ec7ac03b01cfde43122e4220171d4909bda"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_routine.jsonl",
+      "sha256": "f56958d5d1812283d4a5309af0ea71fbd2b3bddd274083f76f07d9c7fca90803"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18015_trace_meta.json",
+      "sha256": "d75450a4c56e931504abb47d298572dd4d89550ad4870237dc1121c636c281f1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016.jsonl",
+      "sha256": "baaf0245bb2379aa7456f12e40dff83d3d0a95485c7849d96701097c7d44d428"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_agents.jsonl",
+      "sha256": "41794b3b3ae47a11fe2ffcad995a95232d8b21ced9a810f911aad894c660adb0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_deaths.jsonl",
+      "sha256": "44bd26e09e4b3628134d972dc7a315d1538f1e8446a650e8594b03438ca1a3b8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_fissions.jsonl",
+      "sha256": "1993cad3160b08fb0d6f5c29caad64d11c24e00e75c366fd270f5d2ccd2f93da"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_hours.jsonl",
+      "sha256": "8f6ce433a99f00d9a4b7a6ab7427df20b45dba5a544c3965c6be56d61b93cda4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_people.jsonl",
+      "sha256": "edc0ccdeb1f80d22f84094439da0e8e99e064492183137e4545c930ffacd872b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_routine.jsonl",
+      "sha256": "1afad052ee5f2f8feb42b7c75c0833f651db032517b8dde2569a94a08f8a758b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18016_trace_meta.json",
+      "sha256": "ec96c4df0bfa8658c780a8a33bed8d887b8be41944a2290c8e514e0c52f8cce4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017.jsonl",
+      "sha256": "842302e7c112f32620d7edc4622ac0ee85d44d871b3a90a279c61526601d5f9b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_agents.jsonl",
+      "sha256": "bf2cd170b9c652d994ec0290f0b7c50391ba839d37f97ee5b0a31d3c7c2d2215"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_deaths.jsonl",
+      "sha256": "aa0eef54151ad64f095f81da82fc423c6ccb87ae78d4bbe628c467706eca6b21"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_fissions.jsonl",
+      "sha256": "e4da39bd933e923f440a76e311639b3f948b0b0026e8ee746dbfaf276fa4838b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_hours.jsonl",
+      "sha256": "4c914b3832894bb8bcfbe6c038955c899d6aee9611a2325f54d6385954e81bd2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_people.jsonl",
+      "sha256": "84ef3c3258bad539e5c54f9d4f781cddf3b3c698030bd174ffef86ea9c875d6a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_routine.jsonl",
+      "sha256": "cd2d8843a17b2a516e5198ff2ee1de894905547340d132948decea3db83fd5dd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18017_trace_meta.json",
+      "sha256": "cfbe8ccc09b0b1b89b04342f4b02c075738f8d69a4148cfa285e0a5e61c82f0d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018.jsonl",
+      "sha256": "55c7f43e42ca1f31a00390f324770ef501317c51f4611713b5afd6f3105594cb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_agents.jsonl",
+      "sha256": "72a59b44d3d0282f236dd12ae5dc1d0aa551e0c611c80f15a4bef5bf767a4d36"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_deaths.jsonl",
+      "sha256": "49dc5d3f49abb00e8a7a05af0c4be600d60a8c8d47522e1fb24ecaae504119a3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_fissions.jsonl",
+      "sha256": "040843d87a3bb47bccb7589c8b49dfd7ffc8c49e911626d0329b7ea977701c45"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_hours.jsonl",
+      "sha256": "d24e06df0341850e0832aa775faaea58c16354cf12159f4459597a6487d87233"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_people.jsonl",
+      "sha256": "995ab95d3bbc778507bb1617be469d151df5f5524efdaacfc9ac15ece5b535c9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_routine.jsonl",
+      "sha256": "67f984b5feb24d6e83ebb55e07265867ae6e9edd2a599ca9672f7b9b1ea3b355"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18018_trace_meta.json",
+      "sha256": "8edb3b588b89aeda97c92bc27239fdd3989ec1d3565b1a2a7eab73e12f57cf4f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019.jsonl",
+      "sha256": "0175269a96dda2a94eb15dc6bf96785eeac6b942cfa9ab5b78294367e7644313"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_agents.jsonl",
+      "sha256": "4585d35f9100d175b5002d1580fdda0155ece81358694be8130bb59cc01d287c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_deaths.jsonl",
+      "sha256": "57e5aa06bc6746c33c9c0fc607629490505d8105aedfeb796e312ee0c5476b5c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_fissions.jsonl",
+      "sha256": "6a9e01b0d2f7b87596e0fbc980364077ed2991d143408f44166d4aeffaef00aa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_hours.jsonl",
+      "sha256": "4c3b5e2c96137542ba3c866ac7e86b1bdb001d129fc88d903e2cd08073d0738f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_people.jsonl",
+      "sha256": "f89d903310bb938c850c177c9ab1ee857c28093aeeb21d2e4b1bc03824dabf40"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_routine.jsonl",
+      "sha256": "8bb63c25d334f682340e1f2e92097149ed4eb32658330d9b4f30f4e30befcb1e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18019_trace_meta.json",
+      "sha256": "1662bb5303d675fcaa09bcd823d0e472e9ab9b59e2157b0c1f2cb09c7cf7bfae"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020.jsonl",
+      "sha256": "6adb9a262a8133ee59e6e6b6682d857cb929d82807cfba8a5193be6828f4bf5f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_agents.jsonl",
+      "sha256": "eba147597275958911761a64c68d1ab8da81cb9d2e3888e1793fb12e0a769938"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_deaths.jsonl",
+      "sha256": "bd92f8dd4b8e9613a8fc7ee97c8192bbbd5e779a349e17461cf87b1b82925292"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_hours.jsonl",
+      "sha256": "170ad29114475af5fab0ba414accdec3223851a4cc783b19cedde9a6afb36f58"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_people.jsonl",
+      "sha256": "61dbbf0541eb4538f9547325a8f957b3f39202d886dc0b3170fef181e7214dd3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_routine.jsonl",
+      "sha256": "f9ea87de6d0a69e6237ffe4e176ced5c60f7cd4ee2387a1d4b744ca3bef98fff"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18020_trace_meta.json",
+      "sha256": "8663c1180f30bb6e3347f73e9a668530d2e72da9fdae1f6186305f9feface9c8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021.jsonl",
+      "sha256": "0c43bf29043affab0646330d39fbeeb3abc3755f45d3631f80d61406e9e34980"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_agents.jsonl",
+      "sha256": "341f9debcb6e85941eb56f5febe86af052287d6dfb41732136528643e65df25a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_deaths.jsonl",
+      "sha256": "9ec24183e96f3d0b4eb0adb216296a0ee4ad4068fdf7b969f7eae15676a54e07"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_fissions.jsonl",
+      "sha256": "1a4cf80ca61a45ae234b9f879fab6d49f27d171de1ba5b933eba623e9ef810f7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_hours.jsonl",
+      "sha256": "7be9c9ea1bf0a1667c1631a0d6dc8aad51cfb0dca8133d07965a698543f4f714"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_people.jsonl",
+      "sha256": "faf9238f8b106ff1ee5f7968a6d5c8954a44a249c0bba30f561ee0895e89b7b2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_routine.jsonl",
+      "sha256": "008e3066da658571ad76fd1b2f7b0b831524580479b4eba71ef5ee2e9e25ac00"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18021_trace_meta.json",
+      "sha256": "2ca94b8eb3a8b8bf6800911b7e0e49e63b2dc1061e878d4208f2c41a0b2a41ec"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022.jsonl",
+      "sha256": "cc50e770894baa348c1c14f59ddeb432cb191dee2bd641a365b5404e33e73c8a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_agents.jsonl",
+      "sha256": "953993ae7477cf0afb152fa74fad06642b4f1e8136c907cf422b24d6e5ca0ae4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_deaths.jsonl",
+      "sha256": "4a78a0be82c4c02aedd0aaf2946877c2379e82e443210312181ad4cb07494c99"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_fissions.jsonl",
+      "sha256": "72a60a1ff1641be591d88f7dc8f1d015d68bb2816805ef97ab2c8bb6baf7978f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_hours.jsonl",
+      "sha256": "c91532ee34a1a8cf91c5bc70cdc97c51f4584530ab5411e89c408779a896ad28"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_people.jsonl",
+      "sha256": "b68263e7a8df1f0da3d2b8354ede3600810a265d38d7b8da4021fd5408030f62"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_routine.jsonl",
+      "sha256": "61436781869a24f0bf36fad416eb4ea6a0f73b6bf7dc7514053e2630a99ff92a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18022_trace_meta.json",
+      "sha256": "3e34745731b255078e9f21b926d86af1ec57123a889e5ded8ca6d7f09240505c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023.jsonl",
+      "sha256": "34724dec4c321b0a65e2d69cf734e4d1b20ae4309766a959ba3eaff923bd0141"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_agents.jsonl",
+      "sha256": "11d263c7c5e53fe95b750c66d5ca1748c849dfb5dd0e503ac36fd70720dc525f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_deaths.jsonl",
+      "sha256": "f32b9d8c88858ffd4a52a2096c699c10fa6eaa26048a7bdb356e198f799ffc22"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_fissions.jsonl",
+      "sha256": "bb77391f49d63ed769c456bf9f00bad4841b75d7bc93ef72275edbb69ff6edad"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_hours.jsonl",
+      "sha256": "ea408015f7b467511cf39624db7efd5ca083e9dd280fdef86383a40e458e0aca"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_people.jsonl",
+      "sha256": "5d1fef73833ba1dfea9097facc9dfbc7229882ba8e8d8b8638d90b46e13a9933"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_routine.jsonl",
+      "sha256": "9f172da815ad85c6e9756c51d154fab8bc11f455204b42958415c87ddd6fbc40"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18023_trace_meta.json",
+      "sha256": "af24926ff032839990848b018040adf76853d7d3dc3bbff0192d856694dfa72f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024.jsonl",
+      "sha256": "aa02d7f3ede391ce64ca878966c13e630f715356aea2d2864b55be3be9412d67"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_agents.jsonl",
+      "sha256": "410f43a8ceb217d07dba6cc2b475b983821a7fbe438d7344b52d1393f2a95f59"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_deaths.jsonl",
+      "sha256": "227cb24fe1e07647041688f02de5215315d1d6b7d324ff27003fff982598bf21"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_fissions.jsonl",
+      "sha256": "ba7e466a3220c90dad302dfd4e7a09f1ae5854edce6383a137761c909a35892b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_hours.jsonl",
+      "sha256": "83f98a71f139f63462b5aa1602314dd8b11ab24ebc8ae24cddee6b3148344cbd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_people.jsonl",
+      "sha256": "7a499b31574a1fd52b55ee505bb4d1b480e91c63b424a9035005949ce30a73af"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_routine.jsonl",
+      "sha256": "8ba39ca9991bb2a32c8ed6b177a44f005b930c837ffec0224ef62191f37ca872"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18024_trace_meta.json",
+      "sha256": "33f309fd969fadf5d13b26a2cd3aff76b95b9950d2995fcd1689303b0e76ec3a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025.jsonl",
+      "sha256": "62431b435521f699346bf4ac99983a71315f06c4d222576cc71dccc302ec1ecd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_agents.jsonl",
+      "sha256": "7479dc993ef0afa1cb3fd09bbaeb98e75219fb8a0645f01b469fb784f387af62"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_deaths.jsonl",
+      "sha256": "fb25f8f2be96bdabf5845ac6095a4af1a5bd7819f77400e2a6a3a3f1c2432c80"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_hours.jsonl",
+      "sha256": "9856ccdf4b687b6c34b563e3a84f2727d8a7c0420ebec2d24313b0a4bc767278"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_people.jsonl",
+      "sha256": "32de3bdd5b3e4719b4c8207417b6f2982e820be9a87fe702e47ea904d894d4bc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_routine.jsonl",
+      "sha256": "98f4ff269e99ae8d4457234bae1015c156d4240b47ef95c8aac2ed876fb05ffc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18025_trace_meta.json",
+      "sha256": "87d07f657508e185c480efe82363b25a16246f5b749662c0a76daf2ec2ffb16b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026.jsonl",
+      "sha256": "8f668ed1d142f344d26781ddf8b189fe581f8e7d542f2b353d38e1fe445a2794"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_agents.jsonl",
+      "sha256": "24391e566d748f8653ac42f037067e242be24e0f02ce11e1478d0a309f66080c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_deaths.jsonl",
+      "sha256": "c7d1750fc528393fcaff6d113f224bc2cb3f27f15d148c86c0a51707e74aac4d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_fissions.jsonl",
+      "sha256": "4caaa6e2dd4324d27cf177035c3174c792bdee756a54152b0e52ff71d0bb3b97"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_hours.jsonl",
+      "sha256": "fe4237a6e7dec40b364f7e2c15a4ca991602ab5ea5793d81d9c1c4ec3f15588b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_people.jsonl",
+      "sha256": "02a13382cfee90e5cbef4b359afad6f8dd31bcc0dbadaa2ce85ef216248261cc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_routine.jsonl",
+      "sha256": "9068e9eb26fbfd48ead8f5f6244f1b20be39e0d797bee416aae6a587191e7bd5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18026_trace_meta.json",
+      "sha256": "13d3ec9682917e29e51cc02ef7036878abeb1628a24a0e5a5eaec684e1bea519"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027.jsonl",
+      "sha256": "8d3d37090b493a729201b29c54d8c588d8bfdaa695ce2e8de45f66cf21e9fb6a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_agents.jsonl",
+      "sha256": "5564351a75bd5525569f2c257a3faae3c7b7c899115ff91a917ae510f1a268d4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_deaths.jsonl",
+      "sha256": "31e70bf84064ae611736492ad9a7998a960b99ef5248f32af8a07ad09c6ef495"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_fissions.jsonl",
+      "sha256": "3b08c3698193a22357f249664b13c600fae45927301de701ea0c650c07e12808"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_hours.jsonl",
+      "sha256": "befeedcd7fc5a72fdb290a3ddfb6b08d0211167277dc52c894da7b1167a3a062"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_people.jsonl",
+      "sha256": "bfc83df6bc4ffe4dc1c588029bf8404bddf1362d63bf20114e79d105cc6d3450"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_routine.jsonl",
+      "sha256": "7d29750fe0f7a2d1d7e87a117db6ece824e0dbbe5a6594d5978479ecbff3e32d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18027_trace_meta.json",
+      "sha256": "0998f4881a0e080c54ca888473b75f5995eaa67531b45c790dcd0a3c9013a6d0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028.jsonl",
+      "sha256": "14b231a6295eb3be4d4bac6e05e0b1102ae24daa3b170d7ef757e6b9b1a23187"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_agents.jsonl",
+      "sha256": "95df7d47b1771204505c6ff081fb4834e733919021872554641fb28dbe4915e3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_deaths.jsonl",
+      "sha256": "f4eec99e3f98cec4e433c89b839a3979b8e4f0876792c07e633f8585158a8644"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_hours.jsonl",
+      "sha256": "157b980e7bd0f5a210db3a050341e23e45d08b46423a7fb2ed3942d1cc21f082"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_people.jsonl",
+      "sha256": "df83c2bd28634adf2a7a02612401a36425e38b8b22e7d1aa5272af359d78be6b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_routine.jsonl",
+      "sha256": "48c9568643bf92091ebdcedebe9744f05bd475a95c28b4fbad36714dfc7a2bf6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18028_trace_meta.json",
+      "sha256": "ebf1e34d752f90cb8c1d601f44f8513762df2f2e3247ab5af8a587abd2817593"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029.jsonl",
+      "sha256": "e5c9a2ec14b16e96355961f2949eab0a89d25b7e0df21542532fff62c19edcb7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_agents.jsonl",
+      "sha256": "988149029e3b57adc78871fdf83b5c18c52b6d3e15e650ef1a0c6c9c13a7298f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_deaths.jsonl",
+      "sha256": "38caa10b2e47358a190458d6f0a26b9ae512498a4950f476a7af19d83cfe7cc1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_fissions.jsonl",
+      "sha256": "dc55837c9365c4c42c18318ab0e45d971cb32e5a08774054d922897e2f90b861"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_hours.jsonl",
+      "sha256": "c976b5cc241275125bd691b3992ade219c5e8d1aa49bf74434a15702052a7d23"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_people.jsonl",
+      "sha256": "a3b3c5257a22d4ae37e442fe3b2314d90bd5ab9bce33c6478b3ebaf0dd6ef055"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_routine.jsonl",
+      "sha256": "24efc4a4a928e6a98eba5fa91f6cbc4795f5b6ad07e31635b2ff1a620fb88cd5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18029_trace_meta.json",
+      "sha256": "b6c5e09cc0e48dc29040f39e252c1e5b7e664ccd8b5b81459fa23a92ef9eb38e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030.jsonl",
+      "sha256": "588f1ba114908251db8e06894a72915ed6933e55232977afc88abb87e7854e5f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_agents.jsonl",
+      "sha256": "c820cb1e096e0a44c10c7b836b4e65b83ac495cabdbeaf9fcdc386675b8e5c17"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_deaths.jsonl",
+      "sha256": "e1a0965b35db925630ab51341385c473b47a677f2629cb73892b7b25a52bc7b9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_hours.jsonl",
+      "sha256": "1911681087f8c77b568cefd69c0fdcf527ef7799aefcc577c41fac5951ddafb0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_people.jsonl",
+      "sha256": "ad34bc9f7e74923774ef552e3b525d248ecc3ce6038bbf0acc38fbcee5d5c297"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_routine.jsonl",
+      "sha256": "5b988ffcfb1e14bb413548f0c4d1304b36a4f35bf887018bbf4f2019911c8445"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18030_trace_meta.json",
+      "sha256": "5ca5966ef1169e4622a2b7aad474dd2bb92bb14947e0d822f1de06de35969542"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031.jsonl",
+      "sha256": "1b3bc0e584eb573756a67419fbb61fb8d27a1fbdf5c1582ec779db80f5fa6a0b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_agents.jsonl",
+      "sha256": "5b07b84560eff4577fcafcfd9488181c8ffa2f9b1ecbc90184b91987619c3154"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_deaths.jsonl",
+      "sha256": "47cf2e9b2f8f2ea6de105d2079bfa3c2007703eb486a5a7d105956f209a3a965"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_hours.jsonl",
+      "sha256": "b4264f501790f7cbc649a7df31b5ed5282e5eee6481772da8d5fd1e0c1f1e343"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_people.jsonl",
+      "sha256": "ea59217fe2b24157bad9ea813e44bdaa2b8dab22a16b5e3ebda00e85127dec7c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_routine.jsonl",
+      "sha256": "ceed069952c3c60390d8d261b3316584e0c29e4d872f476a3719a11096ea7939"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/game_v21_s18031_trace_meta.json",
+      "sha256": "f48bb4e7a09bdc360e2e585c8d6f17b3717e24c4671907231fb6a90e178ea202"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/summary.json",
+      "sha256": "652e737a0eaa0c91a1f5ecf33fe3ed4a6752e11e7743076672e5018ecd627611"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21/summary.md",
+      "sha256": "f266f328e969cb2e6bc351e09dcf6679f5cedfd82498d8b861d443c87300d74a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v21.log",
+      "sha256": "842506fa04a5b297e89018fbcc5da5249a6c2d8521d787721e80cb7f2def0490"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000.jsonl",
+      "sha256": "312de3f7d5e003df4635be97ee45c3d7aa67049b920257655db2809270cd13f3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_agents.jsonl",
+      "sha256": "b38ad8085d8f6ab3cc30e710b88a195304a0ca6ffa7cf8b347a847a1ad3ae4fc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_deaths.jsonl",
+      "sha256": "6df14004fd9eb816b3db490b572f9b80796d5b699d5a1705ebe0abb368675a68"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_family_events.jsonl",
+      "sha256": "b25b60913686321f17046c836b41fb31e590fddbd679acc2ed31ded49c79ac22"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_family_fissions.jsonl",
+      "sha256": "c6270e62fe14065fdeb4225a84c8a58d8f30f93bde97366706a5e022363f82db"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_family_hours.jsonl",
+      "sha256": "7e81f359ba5379bfe65a9a9f198ba18f1cb997b7834ceb6bc4db090bd90ad392"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_family_meta.json",
+      "sha256": "d3d3ec3e2cbebfa99e5766e09c1f0ce2b5e980f38c5ce0878e1a15e3e25b6879"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_family_people.jsonl",
+      "sha256": "a6acb2834489fb99b17c0c1214e95f0ece192eabefc2d57eddb098985f77c7d8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_fissions.jsonl",
+      "sha256": "32b825ecc396943941d1e3b90a508d008ec25452b0292ecaeb332ed2290a202b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_hours.jsonl",
+      "sha256": "2e773030282a3a733b8f92fb226ac46153f1c1764dd0203040c47c94a6c25006"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_people.jsonl",
+      "sha256": "2754c04a7f2c540a31bf2dea9d842cbd28918fd67e9e9be3140460551f922c1e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_routine.jsonl",
+      "sha256": "dd29e366d5cad3f2ea7d65d8cf4fc10cd565f6502e43677a21922371f150fbcf"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18000_trace_meta.json",
+      "sha256": "16db21d1ddc3b099e1942554b5a4715780e9814fea8081b316756d2231cb33e6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001.jsonl",
+      "sha256": "b80c063accd9be02ce19a274e813037f0a078af2b50a334f3cafd387c31b8b4c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_agents.jsonl",
+      "sha256": "23c3522a9fc8604cb27f922a557ddf244c4d82418c71147736e3d69c4e75b8ae"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_deaths.jsonl",
+      "sha256": "6f23d401ee24c72a84276fa4d8fb383563756630a19901a735eb5c435b0797b2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_family_events.jsonl",
+      "sha256": "5fff2eada65c6e06b2f89feb9f959bd09dd5b07308b9a26151927a1f16cc6b93"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_family_hours.jsonl",
+      "sha256": "c61288679709a1478d88e09299eb38dcb108a543f3161fb94c25e338f9c2bc4d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_family_meta.json",
+      "sha256": "bee89f22842246272a8605bcb52a0ceca33f1c38df3b8065056efadd6371f0e3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_family_people.jsonl",
+      "sha256": "6935efbb03b4dc731333689e8da494c6c1ccde2dbf5ec676a2817a34ce4bec88"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_hours.jsonl",
+      "sha256": "a1f35f9182c9f267e028eaa7f0aa4546b34c100fa79716b3def5bc1f4fa2969e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_people.jsonl",
+      "sha256": "224f1e1df4c4eb9479984febda3093e2cf770d3c2f263344f84a5d93562dbc13"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_routine.jsonl",
+      "sha256": "85842c051237a681f73e087d92e8c47eaa8bb23435bb06ea908d28b852df0a2a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18001_trace_meta.json",
+      "sha256": "7bc33ef103962c2c31ed323ee4327ffad5d3e40f2a91646ea8014bcaecb48642"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002.jsonl",
+      "sha256": "3cfe7c262fd01db5edbd390565084f5871a4b5ea7760126dc0017f6112d4f692"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_agents.jsonl",
+      "sha256": "5f4719c9db7a243f18c2d667cf57648f155521dadfa29666e5ccc9f897a88651"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_deaths.jsonl",
+      "sha256": "9acc891d9bfebd24ff40a5e7ad8ad4ed18b8d84dc7a5cc8a38d6deed21f6f8fe"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_family_events.jsonl",
+      "sha256": "75ac8f905237a7ca0639cbd41be88e3db63cee92c6ad029c988713116e60c0e2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_family_hours.jsonl",
+      "sha256": "b36be4ae30bd21bc436e9372f619fc2934b5a5650333f072d52de49f5b253fe6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_family_meta.json",
+      "sha256": "0a4be91ce338c88afcf6be4efea7e82e9ce3e416b807d929068e4dde97ce1565"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_family_people.jsonl",
+      "sha256": "44b16a41612a0cf1fae55863254c4e2149ddf669d8fce9f2ed46ef9cda1fb976"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_hours.jsonl",
+      "sha256": "bffafe3717948b81e64fb40890e0bc7e9b4d6b58d4fda1ee9375c0e44094c4f3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_people.jsonl",
+      "sha256": "bbcf307f2415a9b090c02f414e52370e15230a44f1096479fff931df1fea0e12"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_routine.jsonl",
+      "sha256": "a433f3b7709e54333a3964bba54031b8ea6c3450f7e484fa54d009c5e7618c75"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18002_trace_meta.json",
+      "sha256": "15fe8f71a0d664fcd8d549e488276e945c79a13c1cc73d41eafc2a584bb8ce5a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003.jsonl",
+      "sha256": "0845475ed2648210f537ce2a21129da8c4d24666c4dc65fd311602440c4b51d1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_agents.jsonl",
+      "sha256": "18a5d3dcc731103a402367184dce5b26bc3d056d367e739bb8d87782c971aa6a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_deaths.jsonl",
+      "sha256": "9db687799f6c3f9cd24f2db9405b434de1aaea95f38a32354c7d19d95a49eb9b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_family_events.jsonl",
+      "sha256": "74599e2103f7b8213acdbdf0b57ce83201a24bb4f4d14b21ab5348e5ddf228fd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_family_hours.jsonl",
+      "sha256": "75fea45fc08ccd6e5fac99b73889386cf7c79c73d364b98cb09b0a1f2b8c945b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_family_meta.json",
+      "sha256": "069ca7e0286b6ff53e605cf73c3b79cd13cdb7e311c971ba7924d39d8d6547fc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_family_people.jsonl",
+      "sha256": "0d935bb889432eeed1e14f4419566fb9fd1d6256145685a165f57377de1addd9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_hours.jsonl",
+      "sha256": "7793f7d4118e7adccc9417573f183cac16405bbe619a19f8b4981700b0bede30"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_people.jsonl",
+      "sha256": "53b3af84eca2038a268adf8c14b040c2d93e6e98105f42204863ed802864dd76"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_routine.jsonl",
+      "sha256": "f57c1a82fa975dff2d3dfe34a162bbadbd1455782c78e29f3315f97e46bee8fc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18003_trace_meta.json",
+      "sha256": "6dbb3818e2017b36ae427e4db4c2e06d4010f3ccdcf32bc37e03b0deac80a3e6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004.jsonl",
+      "sha256": "0742400d23d8105288d78d8cf3c067926cf955cc9eb49665047a33810d499488"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_agents.jsonl",
+      "sha256": "7d303cc39d62bee9cf5e731b441440e944c222b8969782182ddf176aca11d63c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_deaths.jsonl",
+      "sha256": "92c5a947b25e3144bab176d53f40c8fdb12b8c4e75f9453f704db590d0fa6294"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_family_events.jsonl",
+      "sha256": "e9fe19f6faea1a5e68e1e8df7b4f6ce427ba7f202bd960c2fc7c71a966962775"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_family_fissions.jsonl",
+      "sha256": "30d8c5972e0a3b0f5ca8180ed139415a8d75638e34cb2936d9fed4148b2b7f96"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_family_hours.jsonl",
+      "sha256": "0555b8253709350c9801257edae26636e912aaadded84d0dc1f964974f3a8ec2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_family_meta.json",
+      "sha256": "de61a7e5137f502274ffb7f6275a2cb261c053d4d8aaaf7637bd13a4d7e33c93"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_family_people.jsonl",
+      "sha256": "83e015a32163cadccdb4476036fb72155731db8d683a15159b9ec9309536e29d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_fissions.jsonl",
+      "sha256": "83adeab3d31fae95402c2324bfdabbc0adb870db73899b2dfd67a273a556a9b4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_hours.jsonl",
+      "sha256": "8cef4552d0cc871798af908a7718312b14fe1545d2c0a41908fff5a230cd86fe"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_people.jsonl",
+      "sha256": "c6f9b71fce72d44f695dff1a05eb8ca1331a6b8c81899e1ce2f3412144dc4442"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_routine.jsonl",
+      "sha256": "c54771bcf5011f7e023c661d0acd83ceb49703245a480d20c0b2b26835b3cc66"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18004_trace_meta.json",
+      "sha256": "62d7d7e37985668ad8da084472c659e8fa8de771febe89fcf241dd41d347ad70"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005.jsonl",
+      "sha256": "4d38e5d227e01679ed603d5b5f6f13c494ab4cae376b3303799ad50bb000a985"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_agents.jsonl",
+      "sha256": "bb47c7322e36a9b8c73dc8289a46db764cd2940fb83f0a1ac055f66b954a19f6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_deaths.jsonl",
+      "sha256": "a44e097e0f42fabb4511ffce680f94fb2677b14f9470ef960970bd8cf4f0f4cb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_family_events.jsonl",
+      "sha256": "385a5c32f7b8efd8bcb8715385594c57a791e3fa59e31febfca4d1767d626153"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_family_hours.jsonl",
+      "sha256": "c0de2886a132553ff5779b5ee55e6c6e828eac245c8cd92f489814b169a4a54c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_family_meta.json",
+      "sha256": "f7aafde8872998355b2c93ba4c98f7029a45f6afc8a9934c392aa16a731eb010"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_family_people.jsonl",
+      "sha256": "af657c00388cb626038c3ee4d21a3402dedd1079d5bc99a0010d5f08fadef4f3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_hours.jsonl",
+      "sha256": "197cd9cff4bde3e28ec526bf4c77d82fa17b5aee0604d93bf848b596f9bc3047"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_people.jsonl",
+      "sha256": "8bd5d8f96d624e1fe0ad514a310b57bd186fa43df805520fb1e2224ee605b1a5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_routine.jsonl",
+      "sha256": "ae6bf0ce3c0781aec6d32302492262b8239e209a1b18c21c0d0a387cdf0f6b5c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18005_trace_meta.json",
+      "sha256": "e99d3b3ea9e75977e59e512456a815ac58eae5f3571f09fd3d162232ace85ca2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006.jsonl",
+      "sha256": "6df3d61562242adcb3d9201cf34c628a7c1a062f0798fc625c85d1fd5072c2d9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_agents.jsonl",
+      "sha256": "1633c1f49ce295c43ab2ed81eebfd35251d756c51ff499a701d510c492e76ed7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_deaths.jsonl",
+      "sha256": "7708d8389facfddccfa56b5bd5274dc6e2051ceea06b64b4c045111f0c3ba3b0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_family_events.jsonl",
+      "sha256": "96d2fc0188bf55a8a767294cd5b70433cf73069bdde2678a26c5846b70116b94"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_family_hours.jsonl",
+      "sha256": "7fac98af5409eca16055b6d874771713e6cb1d24c8ae80ad2d0c8b5fa6237ec0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_family_meta.json",
+      "sha256": "ed922b7172c3f8bca5a5296f9777ec8c0d08e0f5b6aa09561f64ec1b8ea8342d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_family_people.jsonl",
+      "sha256": "b56a9c499bd6847778989436157efda34d3a2fe29e9d7e45339242a686fa19d0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_hours.jsonl",
+      "sha256": "87bbf65be2bafc844be3643e74099f7a01088382f69822712feb67495f71971d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_people.jsonl",
+      "sha256": "d2448df348fee9d246c5fe4d565f2aee731e4abcecc82aa600823deed79208cc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_routine.jsonl",
+      "sha256": "f4d4554df9235ae94ae40b4cafa2bb1580e533d2e68dee6936adc9669a6639cb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18006_trace_meta.json",
+      "sha256": "ee7b428f5a4f35b4476292e6b50be4ed69914596516b1b4978293953a9427eb5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007.jsonl",
+      "sha256": "88f736c92f15d8a57c89998ba3da4223ffb64524f01ea41307796a4b02e18e89"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_agents.jsonl",
+      "sha256": "88eb84be93c398902b75d684c3fca54da13c4430d7fadcf3257b86cde4dd761e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_deaths.jsonl",
+      "sha256": "a78f66f130fd932c0816d75667ccff72bd672b0f507bace533148d2a06c4cad4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_family_events.jsonl",
+      "sha256": "494fd3e48f35fd1871c86beff06928f3d595cb13a08dcb00a6941dfc8b15a943"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_family_fissions.jsonl",
+      "sha256": "845e468be3040278f1b2e36d310704d09aa190fc39419fcfc1b27c0782fb4e5b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_family_hours.jsonl",
+      "sha256": "6d830a68ce1d0b5f7a79f05061a543ffdac4f4f34d08619f0a123c00cc852291"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_family_meta.json",
+      "sha256": "c1202380be9660687392ab9e16ee9f4bb077f67bc7766778e73fd0fcd1348942"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_family_people.jsonl",
+      "sha256": "a350331bc5d61e45ff9090813183471f04bcc4f0b7f1dc5cc5a4298e56c98349"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_fissions.jsonl",
+      "sha256": "0b6d192963d03c0e9be8b7dc85b355e376f109ba4be5afd468da12c133e8c25c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_hours.jsonl",
+      "sha256": "b18265e38beaec2a3a773191a462861593d71adc10c9e8f8dd1ad3baed6a2421"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_people.jsonl",
+      "sha256": "cb07ca96cbbe37b60454a2cd5408e2f5b24859dec0efe552cd01a6a548b0e5fa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_routine.jsonl",
+      "sha256": "ef692893a6739b5fb7411e9ed1a690582ed153334c17f7b7c8d67a39caf8167a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18007_trace_meta.json",
+      "sha256": "7932296973c642431a3b3e7afcf36117d44da5c8c1db582ae13cceb13a087c98"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008.jsonl",
+      "sha256": "9e5fddee3d6a508cee1badef588fbedb09cbc46bb7f748bfce7f5d439dc9ab99"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_agents.jsonl",
+      "sha256": "7d0652d540712143522c683c1fef40cf08b1417f1ae388977d23758e1a5e3857"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_deaths.jsonl",
+      "sha256": "8c21dcf8c9815a788fc5661019df544ac9e0ab70ac12b4356990f8889cc827d1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_family_events.jsonl",
+      "sha256": "c4ac8a7c768bbd6dd5e3c0c1558e843858f342db591cb1e2e4b5a8d699897540"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_family_fissions.jsonl",
+      "sha256": "6a1f298f712bcea17f73c6b1e1dfba7f061feef0ea0adcf5e695419dce7cc4f0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_family_hours.jsonl",
+      "sha256": "53d3b3477972719b4f8df92447b1869f017e112f642f96f31f412a0c1a8a6148"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_family_meta.json",
+      "sha256": "1af19b5fdf4010770c1f8b42c2c10b8dbe80f1ea3759a8a97844ce0447347554"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_family_people.jsonl",
+      "sha256": "c497dda368afa7853ecc6672e16ce6d810628dabfc375b1ae894143b2ad64b7f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_fissions.jsonl",
+      "sha256": "bb7f51d5d4046591bb5278e6c18f7d22208e73553389ddabd889c152ca833c42"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_hours.jsonl",
+      "sha256": "5243afd0b9c896d44456f139bcc1d6547a757691e8245bfeabcbec9df90e6d86"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_people.jsonl",
+      "sha256": "1e977b053800951cdd396c51991ee3ed222559bf2f50154a2427a7b224be745c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_routine.jsonl",
+      "sha256": "7d34766f89013015e9344de03ab86efdcd09168bedbb31d3fd583f1bcac38969"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18008_trace_meta.json",
+      "sha256": "cc25cca1271f5e41aa86fd05a591178792825dcc4d956c97db9706903dfde396"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009.jsonl",
+      "sha256": "e9c166548ebf357019ba4e2b16a0d6a93f881050c1b7a0ee4fd1a895d41a0fe4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_agents.jsonl",
+      "sha256": "bb898a4ea8d9cc3e9caf21127d06e947f049a7b39b8bf7c2521771f974e97964"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_deaths.jsonl",
+      "sha256": "cb520bffee513f7ebc3bd5973c61b3e719360dd0460d4a9f14c5092d5caea27f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_family_events.jsonl",
+      "sha256": "c1ec80dbbb8fce96b7f9436f10ff04a9da7605594607a70e54937de25601a7fd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_family_fissions.jsonl",
+      "sha256": "1cfc30021345bcd47e4a16d0326d4e1e9b349647b0b84e6ecb47c88444ac9109"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_family_hours.jsonl",
+      "sha256": "cad2cb17499c4290b93650a952b7de777b96715caf35ed4f7d35f78a1348ea79"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_family_meta.json",
+      "sha256": "7350b53b0e6641f8cad9cc07ec35e9729f1b3e5f8b0a0509dbd2d0cafec52f07"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_family_people.jsonl",
+      "sha256": "18a4aab45351fe6ad578190a86096dbe819a4a98aaec4182081c047a4939fa17"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_fissions.jsonl",
+      "sha256": "ec28603c720f8bc010288e530aea53c5b3b803e33bce998d5df1b9d6558c0f80"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_hours.jsonl",
+      "sha256": "cfb49308256f117370e8eb29bae3a4ff1f1fe0840cb4faf945df728ec6a5030d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_people.jsonl",
+      "sha256": "6d160170c62093c7655fb5864e3c80c2782ad4de7c6336b60ec87a0e890e6216"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_routine.jsonl",
+      "sha256": "b901ea2b1b053a4dfb9275a02040acd656e2c402ab6aa04a3976b951525bfc24"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18009_trace_meta.json",
+      "sha256": "2e047ed4a14ad9c0c116e16a102e793fc1c23ee2c06c0feaa1324c073ef48101"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010.jsonl",
+      "sha256": "1ca3e82b643c5fe8bfdbbd964751eaca08859d32d63b33d090c0396469efbdc9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_agents.jsonl",
+      "sha256": "7c8903e26c67b2deb35147b6794b785becc983e824a9441095ea3228090893b0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_deaths.jsonl",
+      "sha256": "c675954238191909b71885e5b2ecec41916d5734766413b934df6defa529491a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_family_events.jsonl",
+      "sha256": "78cc2dda087c5683e7de975852b9b8aa98a4d475a1b12877866d20a6bcda2e65"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_family_hours.jsonl",
+      "sha256": "e683561ae74aa22675d9914229ef03c6a34805bb8677446ba68a33f52bad15b6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_family_meta.json",
+      "sha256": "32cd1d39b58290c0a9e157c187d9dee0c2869dca770d0336949f0ae5b273d830"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_family_people.jsonl",
+      "sha256": "1c96705854db06b886471ecd8fd3a092a6a6a4405ecdea3829c1669d777a279a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_hours.jsonl",
+      "sha256": "eae5cf2ea4cf401d18eb58f7d1befb14d3a3de058d0fed903e2d1bf23312cd7f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_people.jsonl",
+      "sha256": "1bc1d0129e9398691e9682c5410134e320aa173a572b070a31d17583ffab6514"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_routine.jsonl",
+      "sha256": "748113449cebbc49efd2e783b97e1bfc07850ab0e1196a788a7d7113083661c7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18010_trace_meta.json",
+      "sha256": "acab7c16fbd5a5131e822046efcb9ca9d6bcccfe751fd008fa4c8441ac4a90a0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011.jsonl",
+      "sha256": "7782c19cd9142c8ba39da0f30544ddd6166799059f398d8c6fb75754f7f53b5e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_agents.jsonl",
+      "sha256": "2c7563b24eff0ca4606e2a923777f207dcaf97a4be10fe1657d9ac385a1d0140"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_deaths.jsonl",
+      "sha256": "7937709112eb097a6d1aa866b9192db134536274309fd91fb818f9bf2afe5ce8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_family_events.jsonl",
+      "sha256": "b8d104e77bdaa41afb6e135db8f7ec9bfd8236078548507630c6c57f415186e5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_family_hours.jsonl",
+      "sha256": "8f8ca5b8efe5121d32f0a7658b382859047303d51ae56243ed6adca4be8363bf"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_family_meta.json",
+      "sha256": "2f2e5c24d6f96dac2b9737faf3e48ddbcc6a3ceeae9bf3f476111de38cfd20bb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_family_people.jsonl",
+      "sha256": "c0480e19567eacd334940041850528e2e3f9f7948a6e15eecfaf2ac7c3af2bab"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_hours.jsonl",
+      "sha256": "166a08c0ca965130693b5060c2b3e48621b4166a0f1eacca055b7ff8a9bf38a5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_people.jsonl",
+      "sha256": "ff8877dc61153c36a929caaa7148ba223b442a1ea3e6d4c94e7121af6fd033cb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_routine.jsonl",
+      "sha256": "d8a43b145e5513863db60623aada28d851eda1d706067af1e338c49353a8f1d4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18011_trace_meta.json",
+      "sha256": "200f260e73fc984f82d40e2122e56f7379ceac7f0003bf8b9db41a8ab51c7335"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012.jsonl",
+      "sha256": "d66d803da8e2a1b6459caf45c8bc3d61b413930a3614fda0026246df4ad1fb43"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_agents.jsonl",
+      "sha256": "860883849db4dc9e858065238683b19ba27f73f4206c4459700a3d3997c2c0a0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_deaths.jsonl",
+      "sha256": "7ca565369cf0308b8d7bea89418c70dfbfd98d78f4c4be8ab4ffdaeada228892"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_family_events.jsonl",
+      "sha256": "41b7574163889b5c751a644b7903c05fc246e326f9e285b570f0516faf2699f4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_family_fissions.jsonl",
+      "sha256": "3a0290bfd9d7d29e5b44b36f3e5e2f35624f333e387a74ad5f4ae2742d802bab"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_family_hours.jsonl",
+      "sha256": "17e247f883f62decdddfc14040d9991e9fae24ab6155491650d7a0d1bef1fedf"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_family_meta.json",
+      "sha256": "1773e20e5f27c801d7967f096016ace254be7278a6541ebfe5274db4c3412e52"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_family_people.jsonl",
+      "sha256": "4c53807e26da341c571f8e6d2bd8be481a1085f76a6bab2ba3a49bcd8a475022"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_fissions.jsonl",
+      "sha256": "e8770eae353aead700a3dedf7a19931d3415304b33b7fc16c2ee2b344271ed84"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_hours.jsonl",
+      "sha256": "1ab2e72937d65b300a2c98ccefea564b3d07dfe0a02e8a2bf538c023b8de6a24"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_people.jsonl",
+      "sha256": "f4c40f7a07ad3255ee2adf5e18698cc8f7f1c792a37dc11c37a58fc8bb742532"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_routine.jsonl",
+      "sha256": "093a8c71a7374dbcf81a28635bc907c9120223c30c45a3bcb8645d4ff7e2aa96"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18012_trace_meta.json",
+      "sha256": "34fa06c3a664b29313e586a3e01786c96c2b13b40606097bd35b46c8c64816f0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013.jsonl",
+      "sha256": "ca1db281fcf80beab88b9e0c1cf1c699bf52f4c6b108bb6076b8922af025d42f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_agents.jsonl",
+      "sha256": "35c45c80b6badf3e479baca4185954270b7d7c826fdfb7303a74af664e998e7f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_deaths.jsonl",
+      "sha256": "009e3088287c0a5d012b7985c4a1415c319acfa3f41502554ae58202146ec846"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_family_events.jsonl",
+      "sha256": "a93181ceb6af1da60dfbd84fff997f30767facb9b030e4a90c8d233657cb05e7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_family_hours.jsonl",
+      "sha256": "36656cd78f506d6728f2288d8a0161a17848744a7685ea2de2fc1efa870dfdd9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_family_meta.json",
+      "sha256": "b0b719e82ab90f281659c6721d4295d5b1bfdbd2740bc51eab601a5315992ae7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_family_people.jsonl",
+      "sha256": "c6928b322661445f186dee695b209c471ddce86bcab6da9fc17137a657e4f4f3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_hours.jsonl",
+      "sha256": "b65a3d67d73ea5d5ccb8ba95a5bf464b6a5ba610d8bad3e23e593592848bcf5c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_people.jsonl",
+      "sha256": "8dafaabad35cd9af774ebac66cf444bb1f626604297304c16917ce98016f99b8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_routine.jsonl",
+      "sha256": "447dfc2711e254001f857790e10e27cc83b78e13f5dd8c161cb6837afc540b99"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18013_trace_meta.json",
+      "sha256": "24c91cf877906019e0a882f5aa8d80c4aec488b4347c2655f8101c732597ed0b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014.jsonl",
+      "sha256": "936d0eb1788a830b4ea1bd417c2589f10ae221b0add1e8d2de5373bd8f00231d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_agents.jsonl",
+      "sha256": "47404941ad3a47c8ac0144c43a859605b1f5a91ae60d084bd1d8d04a1464bffa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_deaths.jsonl",
+      "sha256": "a19c02760433fcf79a0b2ca29cdc7c72e55eff59bf677f9c631eb5d9339b5033"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_family_events.jsonl",
+      "sha256": "0b081f6809343f9c100e528ba114326a698bf22013d4ca7247d51dd40ba23ffb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_family_fissions.jsonl",
+      "sha256": "db8aa4c46a96451e29211a46fa477d18d6aec25d3d56e1c0ed2bf371b747afdd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_family_hours.jsonl",
+      "sha256": "63bd8b1864d89db9583fa73a2d5fb67d32b50301602ea6a79b04a758aa71fcaa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_family_meta.json",
+      "sha256": "cdb96cd9cdd624783dbd2614c3c8d1faacd50734fab7f271ee421f8695f3aaa7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_family_people.jsonl",
+      "sha256": "f5d671b2c11c377cdb6d88fea49dc021a064071aec2cec6c7509ef8198e90b8b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_fissions.jsonl",
+      "sha256": "29d97884658dc11352c6f8ed012d1854d1a403b7461e870c8f1117bb68910063"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_hours.jsonl",
+      "sha256": "8852937a402840d598c048dde5569a14897bf5de34a267b4543c65e308b5c42e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_people.jsonl",
+      "sha256": "6113b2600a5754595952741b6faf681c55b9a92219a989bc8fc935255d3a2e6e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_routine.jsonl",
+      "sha256": "d212a3d2720bf481ab209757bcfb79b44cc98cb862dde2a4db77f97163121e08"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18014_trace_meta.json",
+      "sha256": "317c41a646a713d78c6df7df4ad4c364b63e146ef2b71c95f76f7e7ced7b50a7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015.jsonl",
+      "sha256": "d125fa07cdb4e05056f0b4dcf614e4e19a10a61fe6d430b6dd817ec391c25e79"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_agents.jsonl",
+      "sha256": "4c73d012b80cc0f85cb01373cd3f97a0dd1a80bb6b07423ca8ccf4330864a1e5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_deaths.jsonl",
+      "sha256": "8cb1ce5777f1ffbc30df01f0f57385a42f39fe815c4bb5e2570d016357840486"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_family_events.jsonl",
+      "sha256": "7f398c5f67451f2675616eb8c58e07bef0aedf9484fdb2ce5cd4e27bf4c5b8ba"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_family_hours.jsonl",
+      "sha256": "e89e6140c27ce7ee9c9688890443d5a6421237ec2e63f8fb20b3f855fec494c6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_family_meta.json",
+      "sha256": "666f68bcae820c1db9a7e5b1ab8bb437c930fc5f8166c17fdb1aa97489cdddb5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_family_people.jsonl",
+      "sha256": "29d1ba3098bbc13399ff0b9b6506b39d6f31b4ffee2fdb057511b7e0dd888084"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_hours.jsonl",
+      "sha256": "abb0cb0403ecdad4bfe76b6ce858c6d5c2596e612bbf4464a5e919371710a54c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_people.jsonl",
+      "sha256": "68634634b173fcba9e45dd1d8ad8303b3bf0031fed1445427d5268c7a0fa0ef5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_routine.jsonl",
+      "sha256": "731536cb4fa622aff85f63e1b56b132a44c5ac045d451d1ae44cb196f5f180ad"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18015_trace_meta.json",
+      "sha256": "595d516886d7f107ca238063977aab6452f370955e6fa00e0e32055fc7f67eb1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016.jsonl",
+      "sha256": "f6c4fa1bb92fd20e0c3d64b9e8ae049e0802a763851ec4d94ba6aacc8a5d649f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_agents.jsonl",
+      "sha256": "307a88427bc4b901e07ff9be347811425db832f6d34e2b9b30a62cb4312b5e70"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_deaths.jsonl",
+      "sha256": "34260c061912174794a51adb910fd0e2584c24831bcb7b961c2ac52905751fdc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_family_events.jsonl",
+      "sha256": "c0f4ea34ea882a55b7763f9b5853f1684c0a1d2dad1371af49091cc7164e69ce"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_family_fissions.jsonl",
+      "sha256": "64ba7a0672293251dc0537f8be6a8e6dc476dc6cafb6a1c9c059b67f66b0e05d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_family_hours.jsonl",
+      "sha256": "217be060e702872c54c91a1c3f1da995ef89abcc9d9f401a99c0ba0c3fb63113"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_family_meta.json",
+      "sha256": "d149c5f36e3fa51f33ca06ecaee8f18faa628981d7c8cd5f2304cc6e1e5ee356"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_family_people.jsonl",
+      "sha256": "304aae9fe573b27d1b8f8487f5df87d2af463b2eeae9aeb9310c8da2e84ad96b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_fissions.jsonl",
+      "sha256": "d094ab63b23136f95b67ea69322ef31ef780670ff28a78edfe71a8b4d8845be8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_hours.jsonl",
+      "sha256": "3394c7524b259c2a5d3c22df9bd5a7fca031bf916cd68b043769590342b7ab31"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_people.jsonl",
+      "sha256": "30a1a69f3992a49542a4892b9722a658510f9e5e6729c8c9a84da73da18e9c6e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_routine.jsonl",
+      "sha256": "cd5747f3a88a05dd7027a4ccb7886a5ab7180a774b19a49359a784f321de809e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18016_trace_meta.json",
+      "sha256": "9d2055c040958f22c5cdd5d143affdbdd59f10e8d59ca5a286e75c334d3ad118"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017.jsonl",
+      "sha256": "12891acb7945a8816a25d2245ab6ceeedfea58e6897fee3734e836ad693d92f8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_agents.jsonl",
+      "sha256": "fdb7069ace5b923902606784b53e995ceb7a49879f762f45a71a660fa88deb49"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_deaths.jsonl",
+      "sha256": "99257c2050166f93e562d8e5335ec2ef30363e78ef5c66169279aeeb2d3168e1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_family_events.jsonl",
+      "sha256": "a3aec52b83f078034bac54386015d885da9e1216b551c5522698f9568f5acd39"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_family_fissions.jsonl",
+      "sha256": "fae598fb65b42b691b725c6f3cd360bf24e6069c78906d715de4e38511721d4f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_family_hours.jsonl",
+      "sha256": "7ef82610851c088987387cefd0df1e2ea319f5de20217c165fb8f717339550f6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_family_meta.json",
+      "sha256": "ecc7e0b03304f00f0fe4e76142ca616c00d303a12ce90fe16b03e214a3320b68"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_family_people.jsonl",
+      "sha256": "f2e97d0e31ead928395976d59256ca6b5d4c716703c88fdff0230baa4feb525a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_fissions.jsonl",
+      "sha256": "f751100d7b3d5be311a867369827ce2279e46f7475f66974f2ab062bb642a85c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_hours.jsonl",
+      "sha256": "12964749a56357f160516fd58a464c2271ad5c7c0f141aa90a9ed80580e03965"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_people.jsonl",
+      "sha256": "9225b3df4585af5fc7bac0112c6be1ed095a690d2c31e9e91974676a9f7d9b93"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_routine.jsonl",
+      "sha256": "1fd6d5ec646428a511b7e9da34fab3ec9690d2d9d466fa6af76d6e78e32c9f49"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18017_trace_meta.json",
+      "sha256": "264605da1ab4af83d1b6ed7c2e005a798719fa7eff04960ae421cb735d8a561e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018.jsonl",
+      "sha256": "c8671ed4c21563a651d1e77b38377382ae5b2e292040994232fdb60da26f9efe"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_agents.jsonl",
+      "sha256": "db2a9ca43ead2d5ee6c957a5aaca248b10ba6c2e481f7354f85e8bd1c2e26530"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_deaths.jsonl",
+      "sha256": "be1d20fb5030a3504398cc1ee23120a52a8bf2f591eb71fe08df0c323430ee09"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_family_events.jsonl",
+      "sha256": "7b153f457ba3ff1a14eb065afe3c8b60f0f5efafa6fda07c03bb363c3c9cb777"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_family_fissions.jsonl",
+      "sha256": "aaaa87597556123ac87bb42b13283b8f159a1fcac18227081d99818b72517099"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_family_hours.jsonl",
+      "sha256": "39491067dae20ea74bf1dc38fd2100c0cf2af7b036b7fb8d92eb7622a4e5f435"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_family_meta.json",
+      "sha256": "c06ce5e5b36215f37a47e141771797d04a225f90fe82d1e9ada751d6862f34ac"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_family_people.jsonl",
+      "sha256": "4637e6808275f3f7293d89886fd8b40d7db0b22712d68346d6e7e63e68bcc377"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_fissions.jsonl",
+      "sha256": "2ae65a225f14492ced9e38af97b14e36ad653fb1c0fe3a79a6ac103e83dc052e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_hours.jsonl",
+      "sha256": "fc1fa0f035d427ed062cc4e6936023140960a6f2b2d26cdc3bd12ea82ac8e038"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_people.jsonl",
+      "sha256": "89db1deaf4d9943d407b65ae3a36d374103b0af47d52e251bdbcc02b348a7cf0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_routine.jsonl",
+      "sha256": "65998103cce95be6dc440024700653dc370d6b3c54408a3899287a4394ecc6c1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18018_trace_meta.json",
+      "sha256": "2a5f000723094258a051ca24a55e8fc91554f1f62c9ec8d2d6e85b826114d463"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019.jsonl",
+      "sha256": "0c92ff2356598387a4893379f7392aa99c67f9b276b3d10d7a5cea7108e035d0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_agents.jsonl",
+      "sha256": "3cb53c882112494fc2070d7a0ca5ab1c43822f547a7abfd162442a77d3c62d47"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_deaths.jsonl",
+      "sha256": "fbe32e5647cb3b2fd7ee82abdc2ecaa58d9df6557b63d7dd015e08201cd2c902"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_family_events.jsonl",
+      "sha256": "8b0ee528064a28ae73208a0619ccc792a77f70cb8b7a2683e25aa088c5ba9b18"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_family_fissions.jsonl",
+      "sha256": "8184165aef276d17d6c4857c201d52a1725552afff57d92875430427749ad418"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_family_hours.jsonl",
+      "sha256": "03ac5542f4a11796595bf9171ad1cca1c1af479baf1021c85d4964d07f678832"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_family_meta.json",
+      "sha256": "f485787c6daae7d42d1c6e383268126fb68e5b08e98aa21b3890fdca425b567d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_family_people.jsonl",
+      "sha256": "230de1d72cfc94aa82953dc8aa41bb1a543415bb0ae74075e33ca2ed7f8e9372"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_fissions.jsonl",
+      "sha256": "271f64a15a118bac2dda66a06485a284e9cb7701c6c888e5dd435db5e3097819"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_hours.jsonl",
+      "sha256": "3bbc1092f529655a3589c09a398a9c2f0860396a91e1a62ca8f7ee703ca77e3b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_people.jsonl",
+      "sha256": "ad3e33231691835630e6f031f905c9e2ae44a4cc41a17286f8aa6567fc0fe776"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_routine.jsonl",
+      "sha256": "2dbe000215b13f9f9bd024e793b9842fb92ccf43b21b64d216af8a1a1e0344ba"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18019_trace_meta.json",
+      "sha256": "01e3486531a72e3cad814f18e652ac30caafe27200229cacac1519bd29c15a41"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020.jsonl",
+      "sha256": "cab2317b1a291bd7b5449e21793fe51958495fdeb8a6414070e73c51313ee51a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_agents.jsonl",
+      "sha256": "ecb4c0c5e3afd1df68404baf3fec281580eebf8a4763303babfa9a852da7e2de"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_deaths.jsonl",
+      "sha256": "9569bb24ea09877e113021c3714d4f09dc10e9aab9a4673912e09378a7196115"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_family_events.jsonl",
+      "sha256": "da3ea9732590440c02aa7d2b01fadbe34fc71f789f94a51fc138d96c14786bb6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_family_hours.jsonl",
+      "sha256": "aa44aeb5bede3e9dea10b58432b61d6b6e2360b9d9f6a40c814bae6724198eac"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_family_meta.json",
+      "sha256": "60ef27980ccc77d1ffdafe0b59b4b06d18b27d4389fd05c1fe9b83bc9c4fe529"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_family_people.jsonl",
+      "sha256": "6bb64a34c4157977fc8f04a13e10f7b5986d08c93076ea972a13e7aa047f0cad"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_hours.jsonl",
+      "sha256": "f7f43a2fc398fb4ab614f35fe587d65107277bdf9dd031c04a1f261a9b8ea66f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_people.jsonl",
+      "sha256": "f7bf703a02ea3bb7a6795d6677214c41aa37b46242f222c719db1bfcaf9bb6f7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_routine.jsonl",
+      "sha256": "c443c51c220fb157b9e183963638a29d1601b465ed4a58942be3a7376233b18b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18020_trace_meta.json",
+      "sha256": "ff97826b8810461f79e5aa773f1a0dce577264948a02c3c68d3b4a95b34c49b1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021.jsonl",
+      "sha256": "5d225df7575c606456c20030bef52357144c1ced2a4bfb25f79e23c2c735208a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_agents.jsonl",
+      "sha256": "69f7c7cdc5a0b24f74c000ea83d142735bd088f6495b0bfa0436c6bf92e4844a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_deaths.jsonl",
+      "sha256": "bb8095e767e3ff5f7e0aefd8eee6c32832e6daeb52fafb2e6e1e2cf95c650bc6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_family_events.jsonl",
+      "sha256": "ee0b64f3beb0caef21ca92feb4443436dab6610d6b4a71925e2973d342fb074c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_family_fissions.jsonl",
+      "sha256": "6bbb4cacef0a92834d093fc1930eb1090b101b344d41376bcfe80d2484f462c1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_family_hours.jsonl",
+      "sha256": "23edf1b59ea7c0877440a303ed59ef26955d826aca52105e0851f5cb10600508"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_family_meta.json",
+      "sha256": "1aac49d8c81e9cf6bfec4252900595fa21ea1f50124f12dec80421536880771b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_family_people.jsonl",
+      "sha256": "8c15136b20ac1bc36c8684656cbbfb63be3285b439bba3a67aef72ef3a611ba5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_fissions.jsonl",
+      "sha256": "fa1fe5dcae25e80aa1bcc41d3250231cf9c3e0920fa42f0e23c1375da8d456a8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_hours.jsonl",
+      "sha256": "de3a3ee030550d0ccbfb8f599f34fa1fc89b63b54cf3a818980693b28e00c4e0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_people.jsonl",
+      "sha256": "7c4d34c79c15dfb8fe8fc7e189adb98866be0d554da1cd4149e83fd64fff9747"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_routine.jsonl",
+      "sha256": "f3e78140c531b9e8de43d71555ed50efcfe963a84b80a53f33cbd026254fc27d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18021_trace_meta.json",
+      "sha256": "2763148e1988e20528f9972d8a5cf6ef50aaa74e890e82dc85f878107ea0ca82"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022.jsonl",
+      "sha256": "a6401fa4001a203dbfb3ecdfbca3ae09ba69719a78ce438780681e27592232dd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_agents.jsonl",
+      "sha256": "0a7a56094e2c68a2d7c12caa3dda27cf2ac88c0009e645fee7c9a601833d7a20"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_deaths.jsonl",
+      "sha256": "0130e33e9c639a06fe53006350ebc3cb2525ca744032fe1cdaf2622375643172"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_family_events.jsonl",
+      "sha256": "cd655c13dbebc514003424fdb43bee800236218d9bd06da4fe19a2c490b8b4f8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_family_fissions.jsonl",
+      "sha256": "c6224d1d83fa054787702db2f86d33c087c0814138a443e36aff98fe8cb6c7f1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_family_hours.jsonl",
+      "sha256": "b336e7709abe7acf66e2fcf33f823bb23b49bc22c829536494b377a6469f94b2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_family_meta.json",
+      "sha256": "281abc044c22edbb891ded083a7134104dabf05d189db3b66ccc204292880e8d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_family_people.jsonl",
+      "sha256": "2f3cddeeacab59ba65707a48c920c1831462260bf344774005a39efe4de11f4b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_fissions.jsonl",
+      "sha256": "3ff54ff0c96ec862af7c0d5d8e8522b0bca14cc65e8e8e88124995b416d5d7b6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_hours.jsonl",
+      "sha256": "f8c6d1e76972197da4be0b3aa98ffb28adc309a218161d8aa24e0ff97c99fed5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_people.jsonl",
+      "sha256": "3ac6c33caf820cd310bf195ec47f357e52ea5c6a2efad14119e0e04ab54b4492"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_routine.jsonl",
+      "sha256": "af3822732692584f538ff932a7d544eecc20e78c53764d8cb08ea1e3314f3c46"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18022_trace_meta.json",
+      "sha256": "18d81448ba8e5bf440f8bb0968d5f259458a8b6b5a1c21f3245ba84956d8e1bb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023.jsonl",
+      "sha256": "b81c136c51fa2f309a01188f0dad16a3bed51cce56c55715114f2a30fbc22c61"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_agents.jsonl",
+      "sha256": "3c2c6b05b7d4636cb87f19b198164aad8a0831a16303a7bb92a284c010ecd138"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_deaths.jsonl",
+      "sha256": "515781ad121a892eacd71d4aa2aff8a7327463a87ef51dc4304a235503cc655a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_family_events.jsonl",
+      "sha256": "e709a92e81c5d03b80b26dc3672f3652b622ed36087277e26659ee51e3db1374"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_family_fissions.jsonl",
+      "sha256": "19ae981cdd55c7d6e2fe6d4646ff2b6333797466ce0f9b280e3ec792625956fa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_family_hours.jsonl",
+      "sha256": "42d306531e3618fbcf444fe093f5b048c219a494c549af1a0300f6299e7f0c14"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_family_meta.json",
+      "sha256": "e4022aa25f391215a1e1575f10e508e9b7dc92b5c881d94e8e3399b711faf3b6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_family_people.jsonl",
+      "sha256": "eeae0d04f3f4902651f1389a7f209dd1fcd9100a8b213d66e231aee0df04d3a3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_fissions.jsonl",
+      "sha256": "d8e5d21b97d6d2078a0c58419666cc52ad14e14fcce59ee360373ea92f7e5cf3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_hours.jsonl",
+      "sha256": "832015ebf1babc7d628280459007a146f675b5e25ce87f704fc6af3ec9c29533"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_people.jsonl",
+      "sha256": "9e72a915e5e4ad3d06b035b6aa1e883b32296540f48687e0b5d88c749d5460aa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_routine.jsonl",
+      "sha256": "e3614bab26d8a99cab449310fee4fe888f8edb98a0c25188d2ec11b82739d3a5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18023_trace_meta.json",
+      "sha256": "b540cd76aba7297b533f4dbf4e2dfbcdda914acc5e36e7cf061aa8bbb153bcb6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024.jsonl",
+      "sha256": "ca3791abb6c072ac88dbc17f2a81a4257380f0a19db2fa1d4741a20e6aaf71ed"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_agents.jsonl",
+      "sha256": "33e93c662f24d98d09421575ee2ada521fb44bd2f7b10ee9db2bc7556dfb5926"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_deaths.jsonl",
+      "sha256": "adfbaff775a3ed232c11bb23bcd9ebe9c6fc6c68a65a59f717ba8fe37c212f9c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_family_events.jsonl",
+      "sha256": "acc2505a3d9f315407f0e1f84537c37bd0384fd3c038b646e9eac0b5da0c52c5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_family_fissions.jsonl",
+      "sha256": "f03ea2403de402abc3ba2effc5e7a18515a30b9184656026959a1aa753de7a11"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_family_hours.jsonl",
+      "sha256": "a27a22ca0d7608775517377b08a1365352bd9e3416950b36e13e93e5c8807ec2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_family_meta.json",
+      "sha256": "a92d08f978e698b5409a27e17d4fc1ebadd1cd99901f7be6342eb0c14cc9fd33"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_family_people.jsonl",
+      "sha256": "a9dd21617a7627aa4df47d16dd442d1947c902dc06aa27d379a448f0cbe6d5ae"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_fissions.jsonl",
+      "sha256": "0397ce8c1cd5d6370712aff7ed538b8e3144285f0f0172da7d3f202809f75361"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_hours.jsonl",
+      "sha256": "b8e6e6d900da0260d4402ea633c5f311868083dfe99c4d308c5f8ca61f944d17"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_people.jsonl",
+      "sha256": "131113de06d759206a56a6789ca6a6b9c055c45743f58b429019702d8ebb467a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_routine.jsonl",
+      "sha256": "fc855cd3e5c2709b341b5c0ac8179340e3880707d7f9a38a36509e01f2a08e6d"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18024_trace_meta.json",
+      "sha256": "7956d802d4d70195d2f932628157cb385ab47272869eeecf7d6c2f9d52b67038"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025.jsonl",
+      "sha256": "ffe838ab803d6d569a615cac38ae5c851b5c54119fd4290aba043fd63b65a363"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_agents.jsonl",
+      "sha256": "b67515a1e2e33778a2bc1799662369454e07d760696a08865056ba69fec43c79"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_deaths.jsonl",
+      "sha256": "dbc5c2a1460adbf87f289e5ae0da04a284621c2546b24c5a7715df564912ac51"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_family_events.jsonl",
+      "sha256": "37f19406da7a06edffa05193bd7f30f631cede486f5948b826129c8c2653e7fc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_family_hours.jsonl",
+      "sha256": "2534ee84465efbd85de282e1e80b7a08c163b325f987a3dcc5b270bf3379588c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_family_meta.json",
+      "sha256": "de7efafc7966e8d8b1056b8303b4d3fbad99eb18f26501551ec9909b244ed0a4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_family_people.jsonl",
+      "sha256": "45eb3649505d9b79c169fc46465531c8ab7aa6a0994d1282c3629900a44cab59"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_hours.jsonl",
+      "sha256": "9da24b75330d2af164216244d7503e09615b4af90671d71564cdfbbfa7508bbf"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_people.jsonl",
+      "sha256": "cea08f3625adf752dd6f2e0ca11d2882e552cd1d69f30bb42e3cae8e2db0d826"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_routine.jsonl",
+      "sha256": "7f341450148543bcd1351c57c1fbfb81f4d0223b7ccb6c09047445036f64e147"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18025_trace_meta.json",
+      "sha256": "cec9430f77894985780002b4283b165dfae19a0508d015294b4a3f3f6ac8c7ac"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026.jsonl",
+      "sha256": "fab38d071deea241c5e7e0d9af01ac9140ab118f6d8c6fa0508b360bd03bb4f8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_agents.jsonl",
+      "sha256": "b5031641182bf11d924f212130d47a9542ec83b638bc51e4b24f4b951c2da486"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_deaths.jsonl",
+      "sha256": "4b8a28185479ee03c1fb4676cd9259cf9330108cb72adf181aeaf16405c5eafc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_family_events.jsonl",
+      "sha256": "d3df502e36bc1680428398d8385739ec4eb7240aaec350c7d5500238d7542291"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_family_fissions.jsonl",
+      "sha256": "04c3fbb33466eb49ce4a633989848fd7893535f955bc3d999a1b876fc73ac2ce"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_family_hours.jsonl",
+      "sha256": "c4b706adbfb4e8308116688dd04047570310905266f7bea6a0a514d74d0e47ad"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_family_meta.json",
+      "sha256": "9c59085503258704a5d85152ea31851adec43b54ea7723eb9e751e9f9c284208"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_family_people.jsonl",
+      "sha256": "c11ee6a2b9f0b4dbba5ccbe8f0ea2cc3ec565560d5ebadd7618a0bc3830f565f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_fissions.jsonl",
+      "sha256": "15713e990e087b2815a4247f286e12c92d172286e2176a2f040aacee4e8d29da"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_hours.jsonl",
+      "sha256": "cb2052cc8c51ebcea01ff777f0ecdb951d4f89833d3ed8545128657afab141cd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_people.jsonl",
+      "sha256": "2dcd936a00c2f1229f1e8a44fff91e899c4dcf9abfc4210a4c18cc9fb00e604e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_routine.jsonl",
+      "sha256": "1f37dfbcc51fdc22326c2e1e682919d78d84f95af30bd53a01add5f84b150107"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18026_trace_meta.json",
+      "sha256": "eb9e25c477c42c1647f12a4981055259da9a4b5c398364f75be3361d51cd11a7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027.jsonl",
+      "sha256": "d2dd3d6bfa5e100193ec849d7b68735db5da35afd084a56ae9f7433160510e1c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_agents.jsonl",
+      "sha256": "80d3cc8f5b41961caf3e9a0e6739be4520b649ae9fb885c8b3ce9ed6ad81e676"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_deaths.jsonl",
+      "sha256": "54a92f424dec85295aabaa405d544ce79e748f9b83690e60356219f28c4f6db3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_family_events.jsonl",
+      "sha256": "c2fbbcbf9cf09be1a05243e53304a3344ef1ddaee945ba670b905eeb9e5d7368"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_family_fissions.jsonl",
+      "sha256": "081d3fe8b39bbcf03fd0847e5abab9715f78b7eb62b2aa4381bc4b1124976bf0"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_family_hours.jsonl",
+      "sha256": "2dddd6cde24c98fd39c4014902aaa9edbe4dbedf3b20ad52591997622ec477f6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_family_meta.json",
+      "sha256": "94f79596f097a324d69afcd5d5c81b81ea54a12a194ec0d36a67756e6afedf3e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_family_people.jsonl",
+      "sha256": "7d143e9383d615be6ef44a9c70f5f6cd28ffffec4ced31ced024363a30c87f3e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_fissions.jsonl",
+      "sha256": "4d3423c81ff3942b95da4e5c02c9308827f382ddb4fb61d252d724ba97f1a91b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_hours.jsonl",
+      "sha256": "a7eeec0d46a3bf586c1b966d407f220491145b880b4242856793d0c51d8d9db7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_people.jsonl",
+      "sha256": "52aa4b371fc156f9244ecf42bd34d683da101bec57022bcf814fcc48f2c06f35"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_routine.jsonl",
+      "sha256": "1c823d29d35a410d3d3519f1ca23788c5c3f32544c9d62149bcf9612e034ab26"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18027_trace_meta.json",
+      "sha256": "2444d8b90e732eb14d02fbf6444e535a9e3410f307b8378be09a04b43c198fb9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028.jsonl",
+      "sha256": "47051e82694e2b263b4dbe3e74ab97529ed615aab2043a8fffe43c10f31317ee"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_agents.jsonl",
+      "sha256": "68e65d0b17e83e36bbdcfaf724c754663bff0cea6f71b0b7df233e024293df07"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_deaths.jsonl",
+      "sha256": "51ae4f40d501e8e730228b35659d24efd421215ec4ff51cdc27c8b12a9a06939"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_family_events.jsonl",
+      "sha256": "fc07758bb1f78623e9406b01bdb2c448121863c229406c46d95c33772bc94d7a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_family_hours.jsonl",
+      "sha256": "ab0fe0718648bb0090b4e52295a0a2c254083f399c10f8d60341d3e9b7519880"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_family_meta.json",
+      "sha256": "36291b852661b5865c11ea75e4620bf129770c70ead9ff0057d9dc8e081154f1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_family_people.jsonl",
+      "sha256": "ade1d7777f4ec89c718fb58be4e630d9d512d67f61145bc5cbdb68ebd67791be"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_hours.jsonl",
+      "sha256": "6fe99018581b33460ac7c04502a2fabc305b8e13e8bb65c128d369749d81024a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_people.jsonl",
+      "sha256": "03a55e456dc66a7a67aeed20473de7b7cdc950d45e68f32c80f6ebe9e7216116"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_routine.jsonl",
+      "sha256": "55066cb50046aa3f0adc18afba030038bd7a3425360c087db59baa95a164f751"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18028_trace_meta.json",
+      "sha256": "7437f705c414ad469f33282353078e10c8120301e1df5e8fdf9bcf74349d0fa6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029.jsonl",
+      "sha256": "f369f5deb0b05f6c32556e2dbb5d64adc9761c1c849f8cac6d7cd59880dbad53"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_agents.jsonl",
+      "sha256": "1627e86bdb8a3fc52415d38ffb086a3ac5a4814aee76242465d6ba6e17125835"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_deaths.jsonl",
+      "sha256": "fa0336ddfce653996bd18073037e36a14dd194fa5314f2b241a253e4398454d7"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_family_events.jsonl",
+      "sha256": "55ce41b4e214bebea2923c2bdfe43ce6e154488b1e0919a00894bded5f088d81"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_family_fissions.jsonl",
+      "sha256": "b0214b1fb82043b80f4ee09091a05e77d5fbb27dab19cb5675379a83774451c9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_family_hours.jsonl",
+      "sha256": "42dcc9ac8a00e3a63073d1f95be1a3b1683697bdc432decb628cfecc52b36def"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_family_meta.json",
+      "sha256": "8963632f90ebcceab9f5f165ba50fcd9ca857106ebcb7e34cf70234b9771a27c"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_family_people.jsonl",
+      "sha256": "fcd01e8ed8443870a13af608cfc20cace8954a85287f6b6aad99e47a4ede29a1"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_fissions.jsonl",
+      "sha256": "79956b0b9865af5e516f1d0e93d861535af96024e4cd7d932652f8a1c6c21fb3"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_hours.jsonl",
+      "sha256": "ecea5ace8000fc58d931caeea28e30496d30cc7760cd600990000924a98b2fdb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_people.jsonl",
+      "sha256": "9423dcaa8e3ec5f081fd7a6a7386ae7f83a20e516a89c7234b2da66a9edb0e49"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_routine.jsonl",
+      "sha256": "ac9286f39118d2c7f43142fc358a8b249179e4d4eeff0353c18f1cde635976e2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18029_trace_meta.json",
+      "sha256": "c0208cca7f27f2bad9ef397902d984d866003b3a0bb0c54b49272c373595c675"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030.jsonl",
+      "sha256": "305951cfcfc9303dc49c9c9ede203e351619300ffd550fb160284bd3ec301a99"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_agents.jsonl",
+      "sha256": "1bcfa8f75fcdcc65a07c4eb45cdc44d90ed13d07d5c63ccd8fe4a4997d49fdff"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_deaths.jsonl",
+      "sha256": "263a74364e0e21831762226bcf3cbc5b12d4ef1d3e2c40c6cc9554e0edb7c0f6"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_family_events.jsonl",
+      "sha256": "9129465d36e92765f7771c1c2394b6922dad489f0c3e2353bbaf0038a0e56a1b"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_family_hours.jsonl",
+      "sha256": "3934d7d12b0caf2c036ae6a057b7c7d8e1d05a2b3d60aeedd6d16472943a8cfd"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_family_meta.json",
+      "sha256": "18ba2166025710b0717e662eff2736ec79a1d753de7cf7681b1d0b60cda45d87"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_family_people.jsonl",
+      "sha256": "3897f19f62aaf7184df2efb664551d1c239ae4370d2579913d7fee438544ef1e"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_hours.jsonl",
+      "sha256": "7125727f6578358484b125ba6e107e18839b9f924dc671bff9bc0b72437ea2e9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_people.jsonl",
+      "sha256": "0f89186a108e64c99a41f6e01802e30911b4ee88ec6411c8e41bb29f8f532ac5"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_routine.jsonl",
+      "sha256": "fdc1720536c5ffcf1c98184b4e0828bd5332028fde6420091dde3a1f4b674b00"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18030_trace_meta.json",
+      "sha256": "d2532bb52ab068bce0104d3a3eaff492aa1d1b0e30bf248b9890c59c14ece901"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031.jsonl",
+      "sha256": "db92350781ba33dec33e2c2ec65e899a61ed356f0999886ba1a7bac285d91ad2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_agents.jsonl",
+      "sha256": "cf9407bc83ebd8232a41bd2e4d552bdc03a3239c6d46ff6e8aaff3cbe0be00c2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_deaths.jsonl",
+      "sha256": "18c7461352cad269b48d42bfb48abc42f2f73db01302b1e1bb470b1872736be2"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_family_events.jsonl",
+      "sha256": "86422a95d3f0d2d670332e45facfddeae058caa689e9f46cc5e1ed6b0395a83f"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_family_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_family_hours.jsonl",
+      "sha256": "98bf40413c0d9ded068e2d4e561d5ca42042ef691456edcf94cd4d9789bf2112"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_family_meta.json",
+      "sha256": "f80f32a0a7b7af08aef4c1bcf9704278422f9acee8b81fc6652c2fed65148ab9"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_family_people.jsonl",
+      "sha256": "3ca8c3406a6d8d2f89ec210b3c7ae8532f4465b3502089ad93e14cb32bcacf9a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_fissions.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_hours.jsonl",
+      "sha256": "b2a65ba64dc0a2540369490eca560c49d23ddcf888d5ae63e3026deb8f9f3d39"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_people.jsonl",
+      "sha256": "a583f8eb38abbd20688284d3fe641293cbef4fcf97a991a34f1f85e4848464e8"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_routine.jsonl",
+      "sha256": "0b1a1da178323cbf885a8ebb9b29a0c88fb634bd761b387d862f36235f2ef2fb"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/game_v22_s18031_trace_meta.json",
+      "sha256": "d2902ef23e425fdb028afbaba1cbaa815e5181fce7a2153be9368d02ca2a5041"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/summary.json",
+      "sha256": "c1c1db08a80dce87651b8a69aaa7bfebbc9065f8b82d803f46d173352e815419"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22/summary.md",
+      "sha256": "8bc8acea292c4a0543fce5904f9f5fab9062ba4b130921ac0e0e62f000bf4ebc"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/game_v22.log",
+      "sha256": "842506fa04a5b297e89018fbcc5da5249a6c2d8521d787721e80cb7f2def0490"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/launch_receipt.json",
+      "sha256": "25aaaf8cc0ed72808aa99ca86ea0010857996a703d01444072c767105454b8b4"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/preregistration.json",
+      "sha256": "9ea04e4602f69ae1fbe41192c1ef55fdf8f7082cc9c39c50bf190406a423fb7a"
+    },
+    {
+      "path": "/Users/rexxa/work/p17-data/b-evaluation/source_commit.txt",
+      "sha256": "61e740891458edbfd6fe0b973905ece143136bee02134eee967a370c21f9fec4"
+    }
+  ]
+}

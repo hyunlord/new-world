@@ -1,0 +1,6 @@
+Receipt recorded at 2026-10-15T07:53:56.458201+00:00
+All three wait_mac_p17.sh calls returned exit 0 immediately; the guard emitted no wait log. These are explicit completion receipts, not reconstructed start timestamps.
+guard: routine observer failing regression -> exit 0; red cargo test -> exit 101, 4 assertion failures / 2 passes
+guard: routine observer focused tests -> exit 0; green cargo test -> exit 0, 68 passes
+guard: routine observer focused clippy -> exit 0; clippy -> exit 0, -D warnings
+All cargo pools used CARGO_BUILD_JOBS=6; test pools used --test-threads=6.

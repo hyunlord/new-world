@@ -101,6 +101,10 @@ const STATE_SCALE_BOOST: Array = [1.0, 1.15, 1.15, 1.15]
 
 # V7 Phase 11-α — position interpolation (Gaffer accumulator) + state_tag tint.
 const SIM_TICK_DURATION: float = 1.0 / 30.0  # nominal 30 TPS
+const AGENT_Z: int = 8
+const SHADOW_Z: int = 7
+const SHADOW_SIZE: Vector2 = Vector2(12.0, 6.0)
+const SHADOW_FEET_OFFSET: float = 7.0
 # 4-entry tint palette matching the 4 locked state_tag values (0-3):
 #   0=Idle, 1=Seeking, 2=Consuming(Agent)=socializing, 3=Consuming(other)
 # D1 fix (Phase 11-α visible delta): pre-fix Idle was Color(1,1,1,1) (pure
@@ -118,6 +122,7 @@ const STATE_TINTS: Array = [
 	Color(0.30, 0.95, 0.35, 1.0),  # 3: Consuming(other)/Eating/Building/Sleeping — saturated green
 ]
 var _lerp_accumulator: float = 0.0
+var _move_duration: float = SIM_TICK_DURATION
 var _snapshot_checksum: int = -1
 var _prev_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
 var _curr_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
@@ -125,6 +130,8 @@ var _curr_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
 var world_sim: WorldSimNode
 var multi_mesh_inst: MultiMeshInstance2D
 var multi_mesh: MultiMesh
+var _shadow_mesh: MultiMesh
+var _shadow_instance: MultiMeshInstance2D
 
 # V7 Phase 8-δ (code-attempt 3) — domain note: this dictionary is keyed
 # by `AgentId` (the `Agent.id` field surfaced as `agent_ids` in the
@@ -154,6 +161,7 @@ var _seen_combat_event_ids: Dictionary = {}  # dedupe set
 
 func _ready() -> void:
 	print("AgentRenderer ready (V7 Phase 4-γ — MultiMeshInstance2D)")
+	z_index = AGENT_Z
 	world_sim = get_node("../WorldSim") as WorldSimNode
 	if world_sim == null:
 		push_error("WorldSim node not found at ../WorldSim")
@@ -211,11 +219,25 @@ func _ready() -> void:
 	multi_mesh_inst.texture = agent_tex
 	multi_mesh_inst.material = mat
 	add_child(multi_mesh_inst)
+	var shadow_quad: QuadMesh = QuadMesh.new()
+	shadow_quad.size = SHADOW_SIZE
+	_shadow_mesh = MultiMesh.new()
+	_shadow_mesh.transform_format = MultiMesh.TRANSFORM_2D
+	_shadow_mesh.mesh = shadow_quad
+	_shadow_mesh.instance_count = 0
+	_shadow_instance = MultiMeshInstance2D.new()
+	_shadow_instance.multimesh = _shadow_mesh
+	_shadow_instance.texture = load("res://assets/sprites/fx/shadow_ellipse.png") as Texture2D
+	_shadow_instance.z_index = SHADOW_Z - AGENT_Z
+	add_child(_shadow_instance)
+	world_sim.connect("world_reset", _on_world_reset)
 
 func _process(delta: float) -> void:
 	if world_sim == null or multi_mesh == null:
 		return
-	# V7 Phase 11-α — advance Gaffer accumulator every frame.
+	var world_info: Dictionary = world_sim.get_world_info()
+	_move_duration = float(maxi(1, int(world_info.get("move_interval_ticks", 1)))) * SIM_TICK_DURATION
+	# A movement opportunity spans move_interval_ticks / 30.0 seconds.
 	_lerp_accumulator += delta
 	# V7 Phase 8-δ — decrement / clear expired recall-cue timers BEFORE
 	# building this frame's transforms so an entry that just dropped to 0
@@ -245,7 +267,11 @@ func _process(delta: float) -> void:
 	var new_checksum: int = _snapshot_checksum_from(agent_ids, xs, ys, n)
 	if new_checksum != _snapshot_checksum:
 		_snapshot_checksum = new_checksum
-		_prev_positions = _curr_positions.duplicate()
+		var previous_blend: float = clampf(_lerp_accumulator / _move_duration, 0.0, 1.0)
+		for moving_id: int in _curr_positions:
+			var previous_target: Vector2 = _curr_positions[moving_id]
+			var previous_origin: Vector2 = _prev_positions.get(moving_id, previous_target)
+			_prev_positions[moving_id] = previous_origin.lerp(previous_target, previous_blend)
 		_curr_positions.clear()
 		for i in n:
 			var tile_x: int = xs[i]
@@ -253,10 +279,14 @@ func _process(delta: float) -> void:
 			var cpx: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE) + float(TILE_SIZE) / 2.0
 			var cpy: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE) + float(TILE_SIZE) / 2.0
 			_curr_positions[int(agent_ids[i])] = Vector2(cpx, cpy)
+		for old_id: int in _prev_positions.keys():
+			if not _curr_positions.has(old_id):
+				_prev_positions.erase(old_id)
 		_lerp_accumulator = 0.0
-	var lerp_t: float = clampf(_lerp_accumulator / SIM_TICK_DURATION, 0.0, 1.0)
+	var lerp_t: float = clampf(_lerp_accumulator / _move_duration, 0.0, 1.0)
 	if multi_mesh.instance_count != n:
 		multi_mesh.instance_count = n
+		_shadow_mesh.instance_count = n
 	for i in n:
 		var agent_id: int = int(agent_ids[i])
 		var curr_pos: Vector2 = _curr_positions.get(agent_id, Vector2.ZERO)
@@ -285,6 +315,7 @@ func _process(delta: float) -> void:
 		var scale_mul: float = SPRITE_SCALE * boost
 		var xform := Transform2D(0.0, Vector2(scale_mul, scale_mul), 0.0, Vector2(px, py))
 		multi_mesh.set_instance_transform_2d(i, xform)
+		_shadow_mesh.set_instance_transform_2d(i, Transform2D(0.0, Vector2(px, py + SHADOW_FEET_OFFSET)))
 		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i], int(agent_ids[i])))
 		# V7 Phase 11-α — apply state_tag color tint via instance color.
 		var tag: int = clampi(int(states[i]) if i < states.size() else 0, 0, 3)
@@ -508,3 +539,17 @@ func _palette_for_id(eid: int, agent_id: int) -> Color:
 # per-agent Sprite2D.
 func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
+
+
+func _on_world_reset() -> void:
+	_prev_positions.clear()
+	_curr_positions.clear()
+	_snapshot_checksum = -1
+	_lerp_accumulator = 0.0
+	_recalling_agents.clear()
+	_combating_agents.clear()
+	_seen_recall_event_ids.clear()
+	_seen_combat_event_ids.clear()
+	multi_mesh.instance_count = 0
+	_shadow_mesh.instance_count = 0
+	_process(0.0)

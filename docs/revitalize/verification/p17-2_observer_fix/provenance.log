@@ -1,0 +1,27 @@
+Routine observer regression provenance
+Parent baseline HEAD at final handoff: 6ad99666deab7acde6cf34d66de20867df639eaa
+Initial red: CARGO_BUILD_JOBS=6 cargo test -p sim-test --lib probe::pass17::death_tests -- --test-threads=6
+Initial red compiled successfully, then 4 counter assertions failed and 2 controls passed (red.log).
+At initial red, production files were unchanged except pass17.rs appending cfg(test)/path pass17_death_tests.rs/mod death_tests.
+The six new fixtures used the production AgingSystem at 146 after a fixture emitter at 125.
+Initial Harness::run executed engine.tick(); trace.after_tick(&engine); with no observer, capture, or recovery adapter.
+Original unformatted test-file bytes were not separately archived before subsequent formatting and test extensions.
+The final fixture adds observer installation/draining/recovery; the two controls remain and one guard test was added.
+Final green: CARGO_BUILD_JOBS=6 cargo test -p sim-test --lib probe:: -- --test-threads=6: 68 passed, zero failures.
+Final clippy: CARGO_BUILD_JOBS=6 cargo clippy -p sim-test --lib -- -D warnings: exit 0.
+wait_mac_p17.sh ran before each test/clippy pool; RUNLOG.txt records the guards.
+No builds/probes outside targeted test/clippy were run by this agent.
+No existing public struct fields, Tallies, recorder, or production simulation systems changed.
+New probe observer is installed only with --agent-trace AND rules.agent.routine Some.
+Observer is read-only at priority136, keeps current system tick/stage/state/events, and its measured time is subtracted from probe tick_seconds.
+Missing-holder recovery excludes the death-tick consuming minute; survivors retain their existing post-tick path.
+Recovered raw rows carry observation_boundary=pre_lethal; captured state is preserved.
+
+Final owned source SHA256:
+6a4801238db9daefd7f2a26001ecf9405c4f77bfcede14b71020d893979b8b97  rust/crates/sim-test/src/probe/agent_trace.rs
+f329281ca033d41582344cdc006ef2473f3776ba9d0d888c56531f6c23a46819  rust/crates/sim-test/src/probe/mod.rs
+357f6e1004516a30187ab2c418c2ad9c720939a2a419770e427aff6721c4450a  rust/crates/sim-test/src/probe/pass17.rs
+9c824ef4bfe1025d47cc2f7b99fd534686eacdd633fbfe253d82c44dc18609c8  rust/crates/sim-test/src/probe/pass17_activity.rs
+765d911c55198cf06ce01aac8ad5c448f3e091624e4fa1fc3398191bdf629e11  rust/crates/sim-test/src/probe/pass17_death_tests.rs
+8eeb28c7c51777dbd9bd38cdeec2017dd4c31d223e77fc8dff1ebbb35282091a  rust/crates/sim-test/src/probe/routine_observer.rs
+9fd235f30d5fbd553453990ac7272bb62c443e644ea3f42b7d8ae15f417722d5  rust/crates/sim-test/src/probe/runner.rs

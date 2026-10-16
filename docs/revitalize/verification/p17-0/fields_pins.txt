@@ -1,0 +1,23 @@
+   Compiling sim-core v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-test)
+    Finished `release` profile [optimized] target(s) in 10.78s
+     Running tests/harness_revitalize_pass16_frozen.rs (rust/target/release/deps/harness_revitalize_pass16_frozen-1fffdfe5c9642a54)
+
+running 3 tests
+test harness_game_v19_rules_pinned_field_by_field ... ok
+test harness_v19_nofission_fingerprints_unchanged ... ok
+test harness_v19_fingerprints_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.18s
+
+     Running tests/harness_revitalize_pass17_frozen.rs (rust/target/release/deps/harness_revitalize_pass17_frozen-8fa9661c2e922f8b)
+
+running 3 tests
+test harness_game_v20_rules_pinned_field_by_field ... ok
+test harness_v20_inert_fingerprints_unchanged ... ok
+test harness_v20_fingerprints_unchanged ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.53s

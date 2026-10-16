@@ -41,8 +41,20 @@
 //! zero new deps, and keeps the migration to a proper `rand_chacha`-backed
 //! source one type-swap away if a later phase needs it.
 
+use sim_core::components::Lineage;
+use sim_core::rng::{
+    keyed_step, keyed_unit_f64, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_MOVE_PAUSE,
+    STREAM_ROUTINE_PLAY,
+};
+use std::collections::BTreeMap;
+
+use crate::runtime::decision::agent_decision::clock_in_window;
 use hecs::World;
-use sim_core::components::{AgentState, Position, SeekTarget};
+use sim_core::components::{
+    Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory,
+    Position, ResourceKind, SeekTarget, TargetKind, Temperament, SETTLEMENT_PROXIMITY_RADIUS,
+};
+use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
@@ -93,6 +105,38 @@ impl MovementRng {
     }
 }
 
+/// Whether an Idle settlement member carrying `carried` food walks straight
+/// home under the forage rule: a full load (`>= haul_threshold`), or any food
+/// outside the forage window, while farther than the deposit radius.
+pub fn haul_due(rule: &ForageRule, carried: u32, in_forage_window: bool, home_distance: u32) -> bool {
+    home_distance > SETTLEMENT_PROXIMITY_RADIUS
+        && (carried >= rule.haul_threshold || (carried >= 1 && !in_forage_window))
+}
+
+/// Pass 5 haul home generalised to wood: a member carrying a full food load,
+/// a full wood load, or any food or wood outside both the forage and firewood
+/// windows, while farther than the deposit radius. Without the firewood rule
+/// this is exactly [`haul_due`] (false without the forage rule).
+pub fn hauls_home(
+    forage: Option<&ForageRule>,
+    firewood: Option<&FirewoodRule>,
+    carried_food: u32,
+    carried_wood: u32,
+    in_forage_window: bool,
+    in_wood_window: bool,
+    home_distance: u32,
+) -> bool {
+    match firewood {
+        None => forage.is_some_and(|rule| haul_due(rule, carried_food, in_forage_window, home_distance)),
+        Some(wood) => {
+            home_distance > SETTLEMENT_PROXIMITY_RADIUS
+                && (forage.is_some_and(|rule| carried_food >= rule.haul_threshold)
+                    || carried_wood >= wood.haul_threshold
+                    || ((carried_food >= 1 || carried_wood >= 1) && !in_forage_window && !in_wood_window))
+        }
+    }
+}
+
 /// Phase 4-β movement system.
 ///
 /// On every tick, queries `(&mut Position, &mut MovementRng)` and mutates each
@@ -128,6 +172,43 @@ impl RuntimeSystem for AgentMovementSystem {
     }
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        let rules = resources.rules.agent;
+        if !resources.current_tick.is_multiple_of(rules.move_interval_ticks.max(1)) {
+            return;
+        }
+        let child_rule = resources.rules.society.life_stage;
+        let evening_radius = rules.evening_gather
+            .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
+            .map(|rule| rule.tether_radius);
+        // Same gate as the decision system: foraging needs a store target too.
+        let forage = rules.forage.filter(|_| resources.rules.society.stock_target.is_some());
+        let forage_window = forage
+            .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
+        // Pass 5: wood loads are hauled home too under the firewood rule.
+        let firewood = resources.rules.society.firewood;
+        let wood_window = firewood.is_some_and(|rule| {
+            clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
+        });
+        let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        // Pass 4: elders keep to the camp at all hours. Pass 6: inside the
+        // evening-gather window they follow the evening tether when it is tighter.
+        let elder_radius = resources.rules.society.aging.map(|rule| {
+            match (rule.elder_evening_tether, evening_radius) {
+                (true, Some(evening)) => rule.elder_tether_radius.min(evening),
+                _ => rule.elder_tether_radius,
+            }
+        });
+        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
+            || forage.is_some() || elder_radius.is_some() || firewood.is_some()
+        {
+            let mut settlements: Vec<_> = resources.settlements.iter().collect();
+            settlements.sort_by_key(|(id, _)| **id);
+            for (_, settlement) in settlements {
+                for id in &settlement.member_agents {
+                    home.entry(*id).or_insert(settlement.formation_tile);
+                }
+            }
+        }
         let w = resources.tile_grid.width;
         let h = resources.tile_grid.height;
         if w == 0 || h == 0 {
@@ -135,15 +216,42 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng, state, seek)) in world
+        let mut haul_steps: Vec<AgentId> = Vec::new();
+        let mut not_hauling: Vec<AgentId> = Vec::new();
+        // Pass 9: under keyed draws an idle step is a pure function of (seed,
+        // lineage key, tick, replicate); the sequential stream is not advanced.
+        let keyed = rules.keyed_draws;
+        let seed = resources.world_seed;
+        let tick = resources.current_tick;
+        let replicate = resources.noise_replicate_for(tick);
+        let playing = rules.routine.map(|_| {
+            world
+                .query::<(&Agent, &Activity, &Child, &Lineage)>()
+                .iter()
+                .filter(|(_, (_, activity, _, _))| activity.kind == ActivityKind::Play)
+                .map(|(_, (agent, activity, _, lineage))| (agent.id, (activity.place, lineage.key)))
+                .collect::<BTreeMap<_, _>>()
+        });
+        // Pass 16 (`game_v20`): a resident's temperament leans its idle tether
+        // (NS) and, for workers, its haul loads (P). None before v20.
+        let temperament_rule = rules.temperament;
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding, temperament)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
                 Option<&AgentState>,
                 Option<&SeekTarget>,
+                Option<&Agent>,
+                Option<&Child>,
+                Option<&Inventory>,
+                Option<&Elder>,
+                Option<&Lineage>,
+                Option<&Founding>,
+                Option<&Temperament>,
             )>()
             .iter()
         {
+            let lean = temperament_rule.zip(temperament);
             // V7 Section 16-β: three movement branches keyed directly on the
             // FSM state (NOT via `suppresses_movement()` — that predicate
             // stays locked in `agent_state.rs` for the 5 external truth-table
@@ -170,6 +278,44 @@ impl RuntimeSystem for AgentMovementSystem {
             //   3. `Idle` (or no `AgentState`) → BROWNIAN `{-1,0,+1}^2` step,
             //      consuming the per-agent RNG stream (unchanged).
             if let Some(s) = state {
+                if matches!(
+                    s,
+                    AgentState::Consuming {
+                        target: TargetKind::Activity
+                    }
+                ) {
+                    if let Some((place, key)) =
+                        agent.and_then(|agent| playing.as_ref()?.get(&agent.id))
+                    {
+                        let dx = i64::from(keyed_step(
+                            seed,
+                            STREAM_ROUTINE_PLAY,
+                            *key,
+                            tick,
+                            0,
+                            replicate,
+                        ));
+                        let dy = i64::from(keyed_step(
+                            seed,
+                            STREAM_ROUTINE_PLAY,
+                            *key,
+                            tick,
+                            1,
+                            replicate,
+                        ));
+                        let nx = (i64::from(pos.x) + dx).clamp(
+                            i64::from(place.0.saturating_sub(1)),
+                            i64::from(place.0.saturating_add(1)).min(max_x),
+                        );
+                        let ny = (i64::from(pos.y) + dy).clamp(
+                            i64::from(place.1.saturating_sub(1)),
+                            i64::from(place.1.saturating_add(1)).min(max_y),
+                        );
+                        pos.x = nx as u32;
+                        pos.y = ny as u32;
+                    }
+                    continue;
+                }
                 if matches!(s, AgentState::Consuming { .. }) {
                     continue;
                 }
@@ -186,14 +332,103 @@ impl RuntimeSystem for AgentMovementSystem {
                     continue;
                 }
             }
-            // Idle / no AgentState: Brownian motion (unchanged).
-            let dx = rng.next_step() as i64;
-            let dy = rng.next_step() as i64;
-            let nx = (pos.x as i64 + dx).clamp(0, max_x);
-            let ny = (pos.y as i64 + dy).clamp(0, max_y);
+            // Pass 4 haul home: a loaded idle member walks straight to its
+            // formation tile instead of a Brownian step (no RNG draw).
+            // Pass 11: a founder on its way never hauls home (no `Founding`
+            // marker exists outside `game_v17`).
+            if let (true, Some(agent), None, None) = (forage.is_some() || firewood.is_some(), agent, child, founding) {
+                if let Some(&anchor) = home.get(&agent.id) {
+                    let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
+                    let wood = if firewood.is_some() {
+                        inventory.map_or(0, |inv| inv.get(ResourceKind::Wood))
+                    } else {
+                        0
+                    };
+                    let distance = pos.x.abs_diff(anchor.0).max(pos.y.abs_diff(anchor.1));
+                    // Pass 16 P → this worker's own haul loads (elders never haul).
+                    let (forage_p, firewood_p) = match lean.filter(|_| elder.is_none()) {
+                        Some((rule, t)) => (
+                            forage.map(|mut f| {
+                                f.haul_threshold = rule.food_haul(f.haul_threshold, t);
+                                f
+                            }),
+                            firewood.map(|mut w| {
+                                w.haul_threshold = rule.wood_haul(w.haul_threshold, t);
+                                w
+                            }),
+                        ),
+                        None => (forage, firewood),
+                    };
+                    if hauls_home(forage_p.as_ref(), firewood_p.as_ref(), carried, wood, forage_window, wood_window, distance) {
+                        pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x) as u32;
+                        pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y) as u32;
+                        haul_steps.push(agent.id);
+                        continue;
+                    }
+                    // Display-only: a member that stopped hauling before reaching
+                    // the deposit radius has not arrived by hauling.
+                    if distance > SETTLEMENT_PROXIMITY_RADIUS {
+                        not_hauling.push(agent.id);
+                    }
+                }
+            }
+            // Idle / no AgentState: Brownian motion. v8–v14 (and any mover
+            // without a lineage key) draw from the agent's sequential stream;
+            // v15 draws each number from its key (section 7.1).
+            let (dx, dy) = match lineage.filter(|_| keyed) {
+                Some(lineage) => {
+                    let key = lineage.key;
+                    if rules.idle_pause_chance > 0.0
+                        && keyed_unit_f64(seed, STREAM_MOVE_PAUSE, key, tick, 0, replicate) < rules.idle_pause_chance
+                    {
+                        continue;
+                    }
+                    (
+                        keyed_step(seed, STREAM_MOVE_DX, key, tick, 0, replicate) as i64,
+                        keyed_step(seed, STREAM_MOVE_DY, key, tick, 0, replicate) as i64,
+                    )
+                }
+                None => {
+                    if rules.idle_pause_chance > 0.0 {
+                        let value = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
+                        if value < rules.idle_pause_chance {
+                            continue;
+                        }
+                    }
+                    (rng.next_step() as i64, rng.next_step() as i64)
+                }
+            };
+            let mut nx = (pos.x as i64 + dx).clamp(0, max_x);
+            let mut ny = (pos.y as i64 + dy).clamp(0, max_y);
+            if let (Some(radius), Some(anchor)) = (
+                if child.is_some() {
+                    child_rule.map(|rule| rule.tether_radius).or(rules.idle_tether_radius)
+                } else if elder.is_some() && elder_radius.is_some() {
+                    // Pass 4: elders keep to the camp (Pass 6: evening tether inside its window).
+                    elder_radius
+                } else {
+                    // Pass 16 NS → an adult's own fallback tether (the evening
+                    // gather radius, children and elders are unchanged).
+                    evening_radius.or(match (rules.idle_tether_radius, lean) {
+                        (Some(base), Some((rule, t))) => Some(rule.tether(base, t)),
+                        (base, _) => base,
+                    })
+                },
+                // Pass 11: no tether pulls a founder on its way back home.
+                agent.filter(|_| founding.is_none()).and_then(|a| home.get(&a.id)),
+            ) {
+                if (nx as u32).abs_diff(anchor.0).max((ny as u32).abs_diff(anchor.1)) > radius {
+                    nx = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x);
+                    ny = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y);
+                }
+            }
             pos.x = nx as u32;
             pos.y = ny as u32;
         }
+        for id in not_hauling {
+            resources.haulers.remove(&id);
+        }
+        resources.haulers.extend(haul_steps);
     }
 }
 
@@ -208,11 +443,57 @@ mod tests {
     }
 
     #[test]
+    fn hauls_home_generalises_haul_due_to_wood() {
+        use sim_core::rules::WorldRules;
+        let forage = WorldRules::game_v11().agent.forage.expect("forage");
+        let wood = WorldRules::game_v11().society.firewood.expect("firewood");
+        let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
+        // Without the firewood rule: exactly haul_due, wood ignored.
+        for (food, window) in [(0, true), (1, true), (4, true), (1, false), (0, false)] {
+            assert_eq!(hauls_home(Some(&forage), None, food, 9, window, false, far),
+                haul_due(&forage, food, window, far));
+        }
+        assert!(!hauls_home(None, None, 9, 9, false, false, far));
+        let h = |food, carried_wood, fw, ww| hauls_home(Some(&forage), Some(&wood), food, carried_wood, fw, ww, far);
+        // Full loads go home inside the windows.
+        assert!(h(4, 0, true, true) && h(0, 2, true, true));
+        // Partial loads wait while either window is open...
+        assert!(!h(1, 0, true, true) && !h(0, 1, true, false) && !h(0, 1, false, true) && !h(3, 1, true, true));
+        // ...and go home once both are closed.
+        assert!(h(1, 0, false, false) && h(0, 1, false, false));
+        assert!(!h(0, 0, false, false));
+        // Never inside the deposit radius.
+        assert!(!hauls_home(Some(&forage), Some(&wood), 4, 2, false, false, SETTLEMENT_PROXIMITY_RADIUS));
+    }
+
+    #[test]
+    fn haul_due_needs_a_load_or_the_end_of_the_window_and_distance() {
+        let rule = ForageRule {
+            start_minute: 360, end_minute: 1080, forage_radius: 16,
+            haul_threshold: 4, max_foragers_per_bush: 1,
+        };
+        let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
+        assert!(haul_due(&rule, 4, true, far));
+        assert!(!haul_due(&rule, 3, true, far));
+        assert!(haul_due(&rule, 1, false, far));
+        assert!(!haul_due(&rule, 0, false, far));
+        assert!(!haul_due(&rule, 9, true, SETTLEMENT_PROXIMITY_RADIUS));
+    }
+
+    #[test]
     fn metadata() {
         let s = AgentMovementSystem::new();
         assert_eq!(s.name(), "AgentMovementSystem");
         assert_eq!(s.priority(), 120);
         assert_eq!(s.tick_interval(), 1);
+    }
+
+    #[test]
+    fn keyed_mix_is_one_movement_rng_output() {
+        // Pass 9: `sim_core::rng::mix` is the splitmix64 step this stream uses.
+        for x in [0u64, 1, 42, u64::MAX, 0x9E37_79B9_7F4A_7C15] {
+            assert_eq!(sim_core::rng::mix(x), MovementRng::new(x).next_u64());
+        }
     }
 
     #[test]

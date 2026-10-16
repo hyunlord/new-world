@@ -1,0 +1,19 @@
+{
+  "producer_commit": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+  "verified_at_utc": "2026-10-15T10:08:13.900452+00:00",
+  "runner_terminal_exit": 1,
+  "raw_hashes_verified": 353,
+  "rules": {
+    "F1": "PASS",
+    "F2": "PASS",
+    "F3": "PASS",
+    "F4": "PASS",
+    "F5": "FAIL",
+    "F6": "PASS",
+    "F7": "PENDING",
+    "F8": "PENDING"
+  },
+  "eval_sha256": "b58681d3eff1954b920f7a779e4299461e43702865a6b8a84f84a3b1f45ddb51",
+  "both_scenes": "16 worlds x 60 days, deterministic twins PASS",
+  "parameter_decision": "F1 PASS; freeze300; no second tuning round; F5 measured FAIL preserved"
+}

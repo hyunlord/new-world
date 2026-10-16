@@ -1,0 +1,14 @@
+2026-10-16T03:40:02Z r1/n500_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 500 --side 64 
+2026-10-16T03:40:03Z r1/n1000_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 1000 --side 64 
+2026-10-16T03:40:06Z r1/n2000_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 64 
+2026-10-16T03:40:12Z r1/n2000_side128 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 128 
+2026-10-16T03:40:17Z r2/n500_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 500 --side 64 
+2026-10-16T03:40:19Z r2/n1000_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 1000 --side 64 
+2026-10-16T03:40:21Z r2/n2000_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 64 
+2026-10-16T03:40:27Z r2/n2000_side128 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 128 
+2026-10-16T03:40:33Z r3/n500_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 500 --side 64 
+2026-10-16T03:40:34Z r3/n1000_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 1000 --side 64 
+2026-10-16T03:40:37Z r3/n2000_side64 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 64 
+2026-10-16T03:40:43Z r3/n2000_side128 /Users/rexxa/work/p19-data/bin_p3/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 128 
+2026-10-16T03:40:48Z subprofile/n2000_side64 /Users/rexxa/work/p19-data/bin_p3sub/worldsim_perf stress --seeds 15100..15101 --days 2 --feed fed --rules game_v24 --agents 2000 --side 64 
+status 0

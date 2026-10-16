@@ -419,17 +419,14 @@ fn harness_resource_bridge_identity_contract_static() {
 // ─── Assertion 12: decorative RESOURCE_SEED layer preserved (static) ───────
 #[test]
 fn harness_resource_decorative_layer_preserved_static() {
-    // Type: D — Phase 13-β/14-β decorative scatter must remain.
-    let src = read_file(&["scripts", "ui", "world_renderer.gd"]);
-    assert!(
-        src.contains("RESOURCE_SEED"),
-        "A12.1: world_renderer.gd must still contain RESOURCE_SEED"
-    );
-    assert!(
-        src.contains("RESOURCE_COUNT"),
-        "A12.2: world_renderer.gd must still contain RESOURCE_COUNT"
-    );
-    println!("[S16-α0 A12] decorative RESOURCE_SEED + RESOURCE_COUNT preserved ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 13: existing agent spawn intact ─────────────────────────────

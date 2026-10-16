@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "scope": "report assembly only, not a new independent review",
+  "canonical_head": "21d2b478a81d55ac138f0a60b830e06719ec0af3",
+  "report_snapshot_sha256": "1cc4868aae7226a26cf0f100d11202d99d2920749b1acce945a825451b0ae0d9",
+  "section_10_heading_count": 13,
+  "measurement_table_rows_preserved": 218,
+  "unresolved_insertion_markers": 0,
+  "future_completion_reference": "/Users/rexxa/work/p17-data/final_publication_pass17.complete.json",
+  "note": "Numeric table rows match compact candidate; only F3 formula and JSON-field-path terminology clarified. Final R blob hash is bound in the later external publication receipt."
+}

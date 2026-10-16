@@ -1,0 +1,28 @@
+2026-10-16 12:00:20 KST request: pass19 C6+H5+scale
+2026-10-16 12:00:20 KST PAUSE own watched groups: ['44456', '82242', '86956']; settle 90s
+2026-10-16 12:01:50 KST WAIT quiet: pass19 C6+H5+scale; load=24.31; busy=[]; waited=90.1s
+--- request cancelled 12:02 (settle design fix); re-queued
+2026-10-16 12:02:19 KST request: pass19 C6+H5+scale
+2026-10-16 12:02:19 KST PAUSE own watched groups: ['44456', '82242', '86956']; settle up to 600s
+2026-10-16 12:04:51 KST settled: load=6.92; busy=['cargo:66333', 'rustc:66361', 'rustc:66362', 'rustc:66363', 'rustc:66364', 'rustc:66366', 'rustc:66650']; after 152s
+2026-10-16 12:04:51 KST WAIT quiet: pass19 C6+H5+scale; load=6.92; busy=['cargo:66333', 'rustc:66361', 'rustc:66362', 'rustc:66363', 'rustc:66364', 'rustc:66366', 'rustc:66650']; waited=151.8s
+2026-10-16 12:09:51 KST PAUSE own watched groups: ['44456', '82242', '86956']; settle up to 600s
+2026-10-16 12:10:06 KST settled: load=88.12; busy=['Godot:4023']; after 15s
+2026-10-16 12:10:06 KST WAIT quiet: pass19 C6+H5+scale; load=88.12; busy=['Godot:4023']; waited=466.9s
+2026-10-16 12:15:06 KST PAUSE own watched groups: ['23779', '82242', '86956']; settle up to 600s
+2026-10-16 12:15:52 KST settled: load=17.52; busy=['cargo:26923', 'rustc:27583', 'rustc:27584', 'rustc:27585', 'rustc:27586']; after 45s
+2026-10-16 12:15:52 KST WAIT quiet: pass19 C6+H5+scale; load=17.52; busy=['cargo:26923', 'rustc:27583', 'rustc:27584', 'rustc:27585', 'rustc:27586']; waited=812.3s
+2026-10-16 12:20:52 KST PAUSE own watched groups: ['28014', '37966', '86956']; settle up to 600s
+2026-10-16 12:21:07 KST settled: load=37.52; busy=['cargo:29583']; after 15s
+2026-10-16 12:21:07 KST WAIT quiet: pass19 C6+H5+scale; load=37.52; busy=['cargo:29583']; waited=1127.5s
+2026-10-16 12:26:07 KST PAUSE own watched groups: ['28014', '37966', '56453']; settle up to 600s
+2026-10-16 12:26:22 KST settled: load=115.56; busy=['Godot:64347']; after 15s
+2026-10-16 12:26:22 KST WAIT quiet: pass19 C6+H5+scale; load=115.56; busy=['Godot:64347']; waited=1442.7s
+2026-10-16 12:31:22 KST PAUSE own watched groups: ['28014', '37966', '56453']; settle up to 600s
+2026-10-16 12:31:37 KST settled: load=53.81; busy=['Godot:75090']; after 15s
+2026-10-16 12:31:37 KST WAIT quiet: pass19 C6+H5+scale; load=53.81; busy=['Godot:75090']; waited=1757.9s
+2026-10-16 12:36:37 KST PAUSE own watched groups: ['37966', '56453', '91549']; settle up to 600s
+2026-10-16 12:39:39 KST settled: load=3.84; busy=[]; after 181s
+2026-10-16 12:39:39 KST HOLD start: pass19 C6+H5+scale; load=3.84; contended=0; waited=2239.3s
+2026-10-16 12:40:55 KST PAUSE released
+2026-10-16 12:40:55 KST HOLD end: pass19 C6+H5+scale; exit=0; held=76.1s

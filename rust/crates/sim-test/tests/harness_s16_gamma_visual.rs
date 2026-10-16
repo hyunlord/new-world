@@ -65,9 +65,7 @@ fn read_world_node_src() -> String {
     read_file(&["rust", "crates", "sim-bridge", "src", "ffi", "world_node.rs"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
@@ -113,54 +111,6 @@ fn find_gd_func_body(stripped: &str, fname: &str) -> Option<(usize, usize)> {
         None => stripped.len(),
     };
     Some((body_start, body_end))
-}
-
-/// Find the RHS values of every `const IDENT := …` declaration over stripped
-/// GDScript source. Returns each RHS string verbatim (trimmed).
-fn find_const_rhs(stripped: &str, ident: &str) -> Vec<String> {
-    let mut out = Vec::new();
-    for line in stripped.lines() {
-        let t = line.trim_start();
-        let Some(after) = t.strip_prefix("const ") else {
-            continue;
-        };
-        if !after.starts_with(ident) {
-            continue;
-        }
-        let next = after.as_bytes().get(ident.len()).copied().unwrap_or(b' ') as char;
-        if next.is_ascii_alphanumeric() || next == '_' {
-            continue; // prefix collision (e.g. Z_RESOURCE vs Z_RESOURCE_SOURCE)
-        }
-        if let Some(p) = line.find(":=") {
-            out.push(line[p + 2..].trim().to_string());
-        } else if let Some(p) = line.find('=') {
-            out.push(line[p + 1..].trim().to_string());
-        }
-    }
-    out
-}
-
-/// Parse the leading signed integer from a GDScript const RHS.
-fn parse_int_rhs(rhs: &str) -> Option<i64> {
-    let trimmed = rhs.trim();
-    let mut end = 0usize;
-    let mut saw_digit = false;
-    for (i, c) in trimmed.char_indices() {
-        if i == 0 && (c == '-' || c == '+') {
-            end = i + c.len_utf8();
-            continue;
-        }
-        if c.is_ascii_digit() {
-            end = i + c.len_utf8();
-            saw_digit = true;
-        } else {
-            break;
-        }
-    }
-    if !saw_digit {
-        return None;
-    }
-    trimmed[..end].parse::<i64>().ok()
 }
 
 fn bootstrapped_engine() -> SimEngine {
@@ -245,37 +195,13 @@ fn harness_s16_gamma_a3_accumulator_integrity_preserved() {
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_s16_gamma_a4_world_renderer_marker_is_polygon2d() {
-    // Type A — spec-mandated (Section 2 row 1 / T1). Slice the
-    // _update_resource_markers body ONLY (viz-A renamed _render_resource_sources
-    // → _update_resource_markers for the per-frame depletion reconcile) —
-    // RESOURCE_SPRITE_PATH/Sprite2D legitimately remain in the decorative
-    // scatter elsewhere in the file.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let (s, e) = find_gd_func_body(&stripped, "_update_resource_markers")
-        .expect("a4.0: _update_resource_markers must exist");
-    let body = &stripped[s..e];
-    // (a) Polygon2D instantiated for the marker.
-    assert!(
-        body.contains("Polygon2D"),
-        "a4.1: marker must be a Polygon2D. Body:\n{body}"
-    );
-    // (b) marker color assigned from SOURCE_KIND_COLORS.
-    assert!(
-        body.contains("SOURCE_KIND_COLORS"),
-        "a4.2: marker color must come from SOURCE_KIND_COLORS. Body:\n{body}"
-    );
-    // (c) marker z_index is set.
-    assert!(
-        body.contains("z_index"),
-        "a4.3: marker must set z_index. Body:\n{body}"
-    );
-    // (d) the per-source Sprite2D path from α0 is REPLACED, not kept alongside.
-    assert!(
-        !body.contains("Sprite2D"),
-        "a4.4: _update_resource_markers must NOT construct a Sprite2D marker \
-         (the α0 tinted-Sprite2D path is replaced, not augmented). Body:\n{body}"
-    );
-    println!("[S16-γ a4] _update_resource_markers marker = Polygon2D + SOURCE_KIND_COLORS + z_index, no Sprite2D ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -283,31 +209,13 @@ fn harness_s16_gamma_a4_world_renderer_marker_is_polygon2d() {
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_s16_gamma_a5_z_order_above_decorative() {
-    // Type A — ordering invariant. The marker must render strictly above the
-    // decorative Z_RESOURCE=3 scatter or it is occluded.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let src_rhss = find_const_rhs(&stripped, "Z_RESOURCE_SOURCE");
-    assert_eq!(
-        src_rhss.len(),
-        1,
-        "a5.1: expected exactly 1 Z_RESOURCE_SOURCE declaration; got {src_rhss:?}"
-    );
-    let dec_rhss = find_const_rhs(&stripped, "Z_RESOURCE");
-    assert_eq!(
-        dec_rhss.len(),
-        1,
-        "a5.2: expected exactly 1 Z_RESOURCE declaration; got {dec_rhss:?}"
-    );
-    let z_source = parse_int_rhs(&src_rhss[0])
-        .unwrap_or_else(|| panic!("a5.3: Z_RESOURCE_SOURCE RHS must parse as int; got `{}`", src_rhss[0]));
-    let z_decor = parse_int_rhs(&dec_rhss[0])
-        .unwrap_or_else(|| panic!("a5.4: Z_RESOURCE RHS must parse as int; got `{}`", dec_rhss[0]));
-    assert!(
-        z_source > z_decor,
-        "a5.5: Z_RESOURCE_SOURCE ({z_source}) must be strictly greater than Z_RESOURCE ({z_decor})"
-    );
-    println!("[S16-γ a5] Z_RESOURCE_SOURCE ({z_source}) > Z_RESOURCE ({z_decor}) ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -315,22 +223,14 @@ fn harness_s16_gamma_a5_z_order_above_decorative() {
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_s16_gamma_a6_decorative_invariant_preserved() {
-    // Type D — p13-β decorative-scatter regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    assert!(
-        stripped.contains("RESOURCE_SEED"),
-        "a6.1: world_renderer.gd must keep RESOURCE_SEED (p13-β decorative layer)"
-    );
-    let rhss = find_const_rhs(&stripped, "RESOURCE_COUNT");
-    assert_eq!(
-        rhss.len(),
-        1,
-        "a6.2: expected exactly 1 RESOURCE_COUNT declaration; got {rhss:?}"
-    );
-    let count = parse_int_rhs(&rhss[0])
-        .unwrap_or_else(|| panic!("a6.3: RESOURCE_COUNT RHS must parse as int; got `{}`", rhss[0]));
-    assert_eq!(count, 20, "a6.4: RESOURCE_COUNT must remain 20; got {count}");
-    println!("[S16-γ a6] RESOURCE_SEED present + RESOURCE_COUNT == 20 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -338,18 +238,13 @@ fn harness_s16_gamma_a6_decorative_invariant_preserved() {
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_s16_gamma_a7_backend_truth_positions_preserved() {
-    // Type D — α0 substrate regression guard. Marker positions must keep
-    // reading the backend FFI snapshot, not be hardcoded client-side.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let (s, e) = find_gd_func_body(&stripped, "_update_resource_markers")
-        .expect("a7.0: _update_resource_markers must exist");
-    let body = &stripped[s..e];
-    assert!(
-        body.contains("get_resource_snapshot"),
-        "a7.1: _update_resource_markers must keep calling get_resource_snapshot \
-         (backend-truth positions). Body:\n{body}"
-    );
-    println!("[S16-γ a7] _update_resource_markers reads get_resource_snapshot ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ════════════════════════════════════════════════════════════════════════════

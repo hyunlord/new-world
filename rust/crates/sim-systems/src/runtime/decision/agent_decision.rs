@@ -52,18 +52,274 @@
 //! ever been recorded on the agent's tile the decision becomes a chain
 //! root (`parent: None`).
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Inventory, Memory,
-    MemoryArm, Position, ResourceKind, SeekTarget, SettlementMigrant, Sleep, Social, TargetKind,
-    Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
+    Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Founding,
+    Hunger, Inventory, Lineage, Memory, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId,
+    SettlementMigrant, Sleep, Social, TargetKind, Temperament, Thirst, INVENTORY_CAPACITY,
+    SALIENCE_FLOOR,
 };
+use sim_core::rules::{FirewoodRule, ForageRule, NightRestRule, TemperamentRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
+use super::routine::{idle_equivalent, is_activity, PlacesCache, RoutineTick};
 use crate::runtime::memory::MAX_RECENCY_TICKS;
+use crate::runtime::settlement::firewood::{urgent_with, wood_in_hand, wood_target};
+use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
+
+/// A gatherer whose bush emptied: agent id, entity, position and the empty tile.
+type Retarget = (AgentId, hecs::Entity, (u32, u32), (u32, u32));
+/// A wood gatherer to re-target (Pass 5): agent id, entity, position and its
+/// emptied spot (`None` when it had no target).
+type WoodRetarget = (AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>);
+
+/// Per-settlement forage inputs computed once per decision tick (Pass 4).
+#[derive(Debug, Clone)]
+struct ForagePlan {
+    /// Settlement formation tile; bushes are measured from here.
+    home: (u32, u32),
+    /// Store target in food units.
+    target: f64,
+    /// Stockpile plus food carried by members.
+    in_hand: u64,
+}
+
+/// Deterministic forage bush choice: among tiles holding food within
+/// `forage_radius` of `home` whose claim count is below the cap, minimise
+/// `(claims, chebyshev(agent, bush), y, x)`. `None` when no bush qualifies.
+fn choose_bush(
+    rule: &ForageRule,
+    home: (u32, u32),
+    agent: (u32, u32),
+    food_tiles: &HashMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+) -> Option<(u32, u32)> {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    food_tiles
+        .iter()
+        .filter(|(tile, amount)| bush_eligible(rule, home, claims, exclude, **tile, **amount))
+        .map(|(tile, _)| *tile)
+        .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// The candidate filter of [`choose_bush`]; it does not depend on the person.
+fn bush_eligible(
+    rule: &ForageRule,
+    home: (u32, u32),
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+    tile: (u32, u32),
+    amount: u8,
+) -> bool {
+    amount >= 1
+        && Some(tile) != exclude
+        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.forage_radius
+        && claims.get(&tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+}
+
+/// Pass 18: whether [`choose_bush`] (without `exclude`) returns `Some` for
+/// this `home` and `claims`, whoever asks.
+fn bush_exists(
+    rule: &ForageRule,
+    home: (u32, u32),
+    food_tiles: &HashMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+) -> bool {
+    food_tiles
+        .iter()
+        .any(|(tile, amount)| bush_eligible(rule, home, claims, None, *tile, *amount))
+}
+
+/// Pass 18: a per-tick trip-existence answer with the versions of the two
+/// maps (claims, tiles) it was computed from.
+type TripMemo<K> = BTreeMap<K, (u64, u64, bool)>;
+
+/// Pass 18: per-tick `gather_tile_exists` answers by (tile, catchment) with
+/// the food-tiles version they were computed from.
+type GatherMemo = BTreeMap<((u32, u32), Option<((u32, u32), u32)>), (u64, bool)>;
+
+/// Per-settlement firewood inputs computed once per decision tick (Pass 5).
+#[derive(Debug, Clone)]
+struct WoodPlan {
+    /// Settlement formation tile; deadwood is measured from here.
+    home: (u32, u32),
+    /// Wood target in units.
+    target: f64,
+    /// Stockpile plus wood carried by members.
+    in_hand: u64,
+    /// Urgent mode (Pass 6): tonight's burn is not in hand.
+    urgent: bool,
+}
+
+/// The firewood rule a member acts under (Pass 6): in urgent mode the
+/// per-spot claim cap doubles; otherwise the rule unchanged.
+fn urgent_rule(rule: FirewoodRule, urgent: bool) -> FirewoodRule {
+    if urgent {
+        FirewoodRule { max_gatherers_per_spot: rule.max_gatherers_per_spot.saturating_mul(2), ..rule }
+    } else {
+        rule
+    }
+}
+
+/// Deterministic deadwood choice (Pass 5): among spots holding wood within
+/// `wood_radius` of `home` whose claim count is below the cap, minimise
+/// `(claims, chebyshev(agent, spot), y, x)`. `None` when no spot qualifies.
+/// Pass 7: under `claims_bounded_by_amount` the cap is `min(cap, amount)`.
+fn choose_spot(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    agent: (u32, u32),
+    wood_tiles: &BTreeMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+) -> Option<(u32, u32)> {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    wood_tiles
+        .iter()
+        .filter(|(tile, amount)| spot_eligible(rule, home, claims, exclude, **tile, **amount))
+        .map(|(tile, _)| *tile)
+        .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// The candidate filter of [`choose_spot`]; it does not depend on the person.
+fn spot_eligible(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+    tile: (u32, u32),
+    amount: u8,
+) -> bool {
+    amount >= 1
+        && Some(tile) != exclude
+        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.wood_radius
+        && claims.get(&tile).copied().unwrap_or(0)
+            < if rule.claims_bounded_by_amount {
+                rule.max_gatherers_per_spot.min(u32::from(amount))
+            } else {
+                rule.max_gatherers_per_spot
+            }
+}
+
+/// Pass 18: whether [`choose_spot`] (without `exclude`) returns `Some` for
+/// this `home` and `claims`, whoever asks.
+fn spot_exists(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    wood_tiles: &BTreeMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+) -> bool {
+    wood_tiles
+        .iter()
+        .any(|(tile, amount)| spot_eligible(rule, home, claims, None, *tile, *amount))
+}
+
+/// Resource presence used to select actionable survival needs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NeedAvailability {
+    /// Whether a breached hunger need may seek food.
+    pub food: bool,
+    /// Whether a breached thirst need may seek water.
+    pub water: bool,
+    /// Whether a breached fatigue need may seek sleep.
+    pub sleep: bool,
+}
+
+impl NeedAvailability {
+    /// Snapshot availability once per tick; legacy ignores source absence.
+    pub fn from_resources(resources: &SimResources) -> Self {
+        if resources.rules.agent.need_fallthrough {
+            Self {
+                food: resources.food_tiles.values().any(|amount| *amount > 0),
+                water: resources.water_tiles.values().any(|amount| *amount > 0),
+                sleep: resources.sleep_tiles.values().any(|amount| *amount > 0),
+            }
+        } else {
+            Self { food: true, water: true, sleep: true }
+        }
+    }
+}
+
+/// Highest-priority breached available survival need: hunger, thirst, fatigue.
+pub fn actionable_need(
+    hunger: Option<&Hunger>,
+    thirst: Option<&Thirst>,
+    sleep: Option<&Sleep>,
+    availability: NeedAvailability,
+) -> Option<(TargetKind, DecisionReason)> {
+    actionable_need_with_fatigue_threshold(hunger, thirst, sleep, availability, FATIGUE_THRESHOLD)
+}
+
+/// Highest-priority actionable need using the caller's active fatigue threshold.
+pub fn actionable_need_with_fatigue_threshold(
+    hunger: Option<&Hunger>,
+    thirst: Option<&Thirst>,
+    sleep: Option<&Sleep>,
+    availability: NeedAvailability,
+    fatigue_threshold: f64,
+) -> Option<(TargetKind, DecisionReason)> {
+    if availability.food && hunger.is_some_and(|need| need.value > HUNGER_THRESHOLD) {
+        Some((TargetKind::Food, DecisionReason::HungerThresholdBreach))
+    } else if availability.water && thirst.is_some_and(|need| need.value > THIRST_THRESHOLD) {
+        Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach))
+    } else if availability.sleep && sleep.is_some_and(|need| need.fatigue > fatigue_threshold) {
+        Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
+    } else {
+        None
+    }
+}
+
+/// Whether an integer minute lies in a half-open, possibly midnight-wrapping window.
+pub const fn minute_in_window(minute: u64, start: u32, end: u32) -> bool {
+    if start < end {
+        minute >= start as u64 && minute < end as u64
+    } else if start > end {
+        minute >= start as u64 || minute < end as u64
+    } else {
+        false
+    }
+}
+
+/// Whether the simulation clock currently lies within a specified minute window.
+pub fn clock_in_window(resources: &SimResources, start: u32, end: u32) -> bool {
+    resources.ticks_per_day != 0 && minute_in_window(
+        resources.current_tick.saturating_add(resources.rules.clock_offset_ticks)
+            % resources.ticks_per_day,
+        start,
+        end,
+    )
+}
+
+/// Pass 16 (`game_v20`, HA → bedtime): the night-rest rule in force for one
+/// person at day tick `day_tick` (`(tick + clock_offset_ticks) %
+/// ticks_per_day`; None when the day has no ticks): `rule` while the clock
+/// lies in the person's own window — their bedtime `lean.bedtime(start, t)` to
+/// the unchanged end — else None. Without a lean or a temperament the window
+/// is the rule's own, i.e. the global filtered rule.
+pub fn person_night_rest(
+    rule: Option<NightRestRule>,
+    lean: Option<TemperamentRule>,
+    temperament: Option<&Temperament>,
+    day_tick: Option<u64>,
+) -> Option<NightRestRule> {
+    let rule = rule?;
+    let start = match (lean, temperament) {
+        (Some(lean), Some(t)) => lean.bedtime(rule.start_minute, t),
+        _ => rule.start_minute,
+    };
+    day_tick.is_some_and(|minute| minute_in_window(minute, start, rule.end_minute)).then_some(rule)
+}
+
+/// Active fatigue threshold shared by simulation decisions and probe accounting.
+pub fn fatigue_threshold_at(resources: &SimResources) -> f64 {
+    resources.rules.agent.night_rest
+        .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
+        .map_or(FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold)
+}
 
 /// Cascade arm identifier — the natural drives + non-natural arms whose
 /// eligibility is computed independently. Memory is a bias SOURCE, not an arm.
@@ -214,6 +470,10 @@ pub fn arm_priority_index(arm: CascadeArm) -> u8 {
 pub const BIAS_FLIP_THRESHOLD: f64 = 1.0;
 
 
+/// Critical need level used by Pass 5 rules when a world sets no
+/// `AgentRules::critical_preemption` (every Pass 5 world sets 75.0).
+pub const CRITICAL_NEED: f64 = 75.0;
+
 /// Hunger value strictly above which an Idle agent transitions to
 /// `Seeking { Food }`. Phase 5-β scope: a flat constant. Per-agent
 /// thresholds (temperament-driven) land in δ.
@@ -310,6 +570,22 @@ pub fn nearest_resource_tile(
         .copied()
 }
 
+/// Pass 12 (`local_food_availability`): the Manhattan-nearest food tile with
+/// food within Chebyshev `radius` of `home` (tie-break `(dist, x, y)`), the
+/// meal target of a settlement member; `None` when the catchment is bare.
+pub fn nearest_local_food(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    home: (u32, u32),
+    radius: u32,
+) -> Option<(u32, u32)> {
+    tiles
+        .iter()
+        .filter(|(t, amount)| **amount > 0 && t.0.abs_diff(home.0).max(t.1.abs_diff(home.1)) <= radius)
+        .map(|(t, _)| *t)
+        .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
+}
+
 /// Nearest *eligible* food tile for the `CascadeArm::Gather` arm: the
 /// Manhattan-nearest tile (deterministic `(dist, x, y)` tie-break) among ONLY
 /// those food tiles holding count `> 0` AND within `radius` Chebyshev of `pos`.
@@ -347,16 +623,60 @@ pub fn nearest_food_tile_in_radius(
         })
 }
 
-/// Phase 5-β decision system. Stateless — all per-agent state lives
-/// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
-/// sparse `food_tiles` / `water_tiles` maps on [`SimResources`].
+/// Pass 12 (`local_food_availability`): [`nearest_food_tile_in_radius`] for
+/// the Gather arm, restricted for a settlement member (`local` = its formation
+/// tile and catchment radius) to tiles inside its catchment; `None` = as v17.
+pub fn nearest_gather_tile(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    radius: u32,
+    local: Option<((u32, u32), u32)>,
+) -> Option<(u32, u32)> {
+    let Some((home, catchment)) = local else {
+        return nearest_food_tile_in_radius(pos, tiles, radius);
+    };
+    tiles
+        .iter()
+        .filter(|((tx, ty), v)| {
+            **v > 0
+                && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
+                && tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+        })
+        .map(|(k, _)| *k)
+        .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
+}
+
+/// Pass 18: whether [`nearest_gather_tile`] returns `Some` (the same filters,
+/// without choosing the nearest).
+fn gather_tile_exists(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    radius: u32,
+    local: Option<((u32, u32), u32)>,
+) -> bool {
+    tiles.iter().any(|((tx, ty), v)| {
+        *v > 0
+            && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
+            && local.is_none_or(|(home, catchment)| {
+                tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+            })
+    })
+}
+
+/// Phase 5-β decision system. All per-agent state lives in the
+/// [`AgentState`], [`Hunger`], [`Thirst`] components and the sparse
+/// `food_tiles` / `water_tiles` maps on [`SimResources`]. Pass 18: the only
+/// field is a cache of the routine's candidate places, recomputed whenever
+/// one of its inputs differs, so results never depend on it.
 #[derive(Debug, Default)]
-pub struct AgentDecisionSystem;
+pub struct AgentDecisionSystem {
+    places: PlacesCache,
+}
 
 impl AgentDecisionSystem {
     /// Construct a fresh instance.
     pub fn new() -> Self {
-        Self
+        Self::default()
     }
 }
 
@@ -379,6 +699,98 @@ impl RuntimeSystem for AgentDecisionSystem {
             return;
         }
         let tick = resources.current_tick;
+        let routine_enabled = resources.rules.agent.routine.is_some();
+        let mut routine = resources
+            .rules
+            .agent
+            .routine
+            .map(|rule| RoutineTick::new(world, resources, rule, std::mem::take(&mut self.places)));
+        #[cfg(feature = "subprofile")]
+        let pre_timer = crate::subprofile::Timer::start();
+        let availability = NeedAvailability::from_resources(resources);
+        // Pass 12 (`local_food_availability`, `game_v18`, the J6 fix): a
+        // member's food availability is whether a food tile with food lies in
+        // its settlement's catchment (settlements in id order, first wins),
+        // and its meal target (post-pass) is the nearest such tile.
+        // Empty without the rule, so every earlier world is untouched.
+        let catchment = crate::runtime::settlement::food_economy::catchment_radius(resources);
+        let mut local_home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        let local_food: BTreeMap<AgentId, bool> = if resources.rules.agent.local_food_availability {
+            let radius = catchment;
+            // Review round 1, M1: a founder still walking to its site stays on
+            // its parent's roster but is not tied to the parent's catchment
+            // (v17's world-wide rule applies to it until its daughter forms).
+            let walking: BTreeSet<AgentId> = world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect();
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            let mut out = BTreeMap::new();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else {
+                    continue;
+                };
+                let home = settlement.formation_tile;
+                let food = resources.food_tiles.iter().any(|(tile, amount)| {
+                    *amount > 0 && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= radius
+                });
+                for id in settlement
+                    .member_agents
+                    .iter()
+                    .filter(|id| !walking.contains(id))
+                {
+                    out.entry(*id).or_insert(food);
+                    local_home.entry(*id).or_insert(home);
+                }
+            }
+            out
+        } else {
+            BTreeMap::new()
+        };
+        let fatigue_threshold = fatigue_threshold_at(resources);
+        let night_rest = resources.rules.agent.night_rest.filter(|rule|
+            clock_in_window(resources, rule.start_minute, rule.end_minute));
+        // Pass 16 (`game_v20`): a resident's temperament gives it its own
+        // night window (HA → bedtime) and, for workers, its own haul loads
+        // (P). Without the rule or the component every person keeps the
+        // global `night_rest` / `fatigue_threshold` above (the old path).
+        let temperament_rule = resources.rules.agent.temperament;
+        let day_tick = (resources.ticks_per_day != 0).then(|| {
+            resources.current_tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day
+        });
+        let night_rule = resources.rules.agent.night_rest;
+        let rest_for = move |temperament: Option<&Temperament>| -> (Option<NightRestRule>, f64) {
+            match temperament_rule.zip(temperament) {
+                None => (night_rest, fatigue_threshold),
+                Some((lean, t)) => {
+                    let rest = person_night_rest(night_rule, Some(lean), Some(t), day_tick);
+                    (rest, rest.map_or(FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold))
+                }
+            }
+        };
+        let haul_for = move |worker: bool, temperament: Option<&Temperament>| -> (Option<TemperamentRule>, Option<Temperament>) {
+            match temperament_rule.zip(temperament.copied()).filter(|_| worker) {
+                Some((lean, t)) => (Some(lean), Some(t)),
+                None => (None, None),
+            }
+        };
+        let children: BTreeSet<AgentId> = world.query::<(&Agent, &Child)>()
+            .iter().map(|(_, (agent, _))| agent.id).collect();
+        // Pass 4 — elders stay at the camp: no building, foraging, gathering or combat.
+        let elders: BTreeSet<AgentId> = world.query::<(&Agent, &Elder)>()
+            .iter().map(|(_, (agent, _))| agent.id).collect();
+        // Pass 11 — founders on their way to a fission site (`game_v17` only;
+        // no `Founding` marker exists in any earlier world).
+        let founding: BTreeMap<AgentId, Founding> = if resources.rules.society.fission.is_some() {
+            world.query::<(&Agent, &Founding)>().iter().map(|(_, (agent, f))| (agent.id, *f)).collect()
+        } else {
+            BTreeMap::new()
+        };
+        let social_rule = resources.rules.agent.social_seek;
+        let forage_rule = resources.rules.agent.forage
+            .filter(|_| resources.rules.society.stock_target.is_some());
+        let firewood_rule = resources.rules.society.firewood;
+        if social_rule.is_some() {
+            resources.social_retry_after.retain(|_, after| tick < *after);
+        }
 
         // V7 Phase 6-β / P6β-7 — co-location map snapshot. Pre-built
         // here (BEFORE the agent query) so the agent loop can look up
@@ -407,6 +819,170 @@ impl RuntimeSystem for AgentDecisionSystem {
             sites
         };
 
+        let planning = resources.rules.society.shelter_planning;
+        let mut assigned_builders: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        let mut builder_targets: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        if let Some(rule) = planning {
+            let mut agents: Vec<_> = world.query::<(
+                &Agent, &Position, &AgentState, Option<&SeekTarget>,
+                Option<&Hunger>, Option<&Thirst>, Option<&Sleep>, Option<&Social>, Option<&Inventory>,
+                Option<&Temperament>,
+            )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social, inv, temperament))| {
+                // Pass 16: this person's own night threshold and haul loads.
+                let (_, fatigue_threshold) = rest_for(temperament);
+                let (lean, lean_t) = haul_for(!children.contains(&a.id) && !elders.contains(&a.id), temperament);
+                // Pass 4: a member carrying a full haul load delivers it before building.
+                let loaded = forage_rule.is_some_and(|rule| {
+                    let load = match (lean, &lean_t) { (Some(lean), Some(t)) => lean.food_haul(rule.haul_threshold, t), _ => rule.haul_threshold };
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= load)
+                }) || firewood_rule.is_some_and(|rule| {
+                    let load = match (lean, &lean_t) { (Some(lean), Some(t)) => lean.wood_haul(rule.haul_threshold, t), _ => rule.haul_threshold };
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Wood) >= load)
+                });
+                (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
+                 !children.contains(&a.id) && !elders.contains(&a.id) && !founding.contains_key(&a.id)
+                    && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
+                    && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
+                    && sleep.is_none_or(|v| v.fatigue <= fatigue_threshold)
+                    && social.is_none_or(|v| v.loneliness <= SOCIAL_THRESHOLD))
+            }).collect();
+            agents.sort_by_key(|(id, ..)| *id);
+            for (id, pos, state, target, _) in &agents {
+                if matches!(state, AgentState::Seeking { target: TargetKind::ConstructionSite }
+                    | AgentState::Consuming { target: TargetKind::ConstructionSite }) {
+                    let tile = target.unwrap_or(*pos);
+                    if construction_sites.contains_key(&tile) {
+                        builder_targets.insert(*id, tile);
+                    }
+                }
+            }
+            for (tile, sid) in &resources.site_owner {
+                if !construction_sites.contains_key(tile) { continue; }
+                let Some(settlement) = resources.settlements.get(sid) else { continue; };
+                let active = builder_targets.values().filter(|target| *target == tile).count() as u32;
+                let slots = rule.max_builders_per_site.saturating_sub(active) as usize;
+                let mut candidates: Vec<_> = agents
+                    .iter()
+                    .filter(|(id, _, state, _, eligible)| {
+                        *eligible
+                            && idle_equivalent(*state, routine_enabled)
+                            && settlement.member_agents.contains(id)
+                            && !assigned_builders.contains_key(id)
+                    })
+                    .map(|(id, pos, ..)| (pos.0.abs_diff(tile.0).max(pos.1.abs_diff(tile.1)), *id))
+                    .collect();
+                candidates.sort();
+                for (_, id) in candidates.into_iter().take(slots) {
+                    assigned_builders.insert(id, *tile);
+                }
+            }
+        }
+
+        // Pass 4 — purposeful foraging inputs, computed once before the agent
+        // loop: each settlement's store target and stock in hand (sorted
+        // settlement id), each member's settlement, and the current claims on
+        // bushes (agents already heading to a bush). Empty without the rules.
+        let forage_window = forage_rule
+            .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
+        let mut forage_plans: BTreeMap<SettlementId, ForagePlan> = BTreeMap::new();
+        let mut member_of: BTreeMap<AgentId, SettlementId> = BTreeMap::new();
+        let mut claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        // Pass 5 — firewood inputs: each settlement's wood target and wood in
+        // hand, and the current claims on deadwood spots. Empty without the rule.
+        let wood_window = firewood_rule.is_some_and(|rule| {
+            clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
+        });
+        // Pass 6 — the firewood window of an urgent settlement's members.
+        let urgent_window = firewood_rule.is_some_and(|rule| {
+            rule.urgent_start_minute
+                .is_some_and(|start| clock_in_window(resources, start, rule.gather_end_minute))
+        });
+        let mut wood_plans: BTreeMap<SettlementId, WoodPlan> = BTreeMap::new();
+        let mut wood_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        if firewood_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            let target = wood_target(resources).unwrap_or(0.0);
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else {
+                    continue;
+                };
+                for id in &settlement.member_agents {
+                    member_of.entry(*id).or_insert(sid);
+                }
+                let in_hand = wood_in_hand(world, resources, sid);
+                wood_plans.insert(sid, WoodPlan {
+                    home: settlement.formation_tile,
+                    target,
+                    in_hand,
+                    urgent: urgent_with(resources, in_hand),
+                });
+            }
+            for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
+                if matches!(state, AgentState::Seeking { target: TargetKind::GatherWood }) {
+                    *wood_claims.entry(seek.tile).or_default() += 1;
+                }
+            }
+            // Pass 7: a gatherer who has arrived holds its spot until the pickup.
+            if firewood_rule.is_some_and(|rule| rule.claims_bounded_by_amount) {
+                for (_, (state, pos)) in world.query::<(&AgentState, &Position)>().iter() {
+                    if matches!(state, AgentState::Consuming { target: TargetKind::GatherWood }) {
+                        *wood_claims.entry((pos.x, pos.y)).or_default() += 1;
+                    }
+                }
+            }
+        }
+        let mut wood_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
+        if forage_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else {
+                    continue;
+                };
+                for id in &settlement.member_agents {
+                    member_of.entry(*id).or_insert(sid);
+                }
+                forage_plans.insert(sid, ForagePlan {
+                    home: settlement.formation_tile,
+                    target: stock_target(world, resources, sid).unwrap_or(0.0),
+                    in_hand: stock_in_hand(world, resources, sid),
+                });
+            }
+            for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
+                if matches!(state, AgentState::Seeking { target: TargetKind::GatherFood }) {
+                    *claims.entry(seek.tile).or_default() += 1;
+                }
+            }
+        }
+        let mut forage_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
+
+        // Pass 5 — meals at the hearth: each member's formation tile and
+        // whether its settlement's store holds food, computed once before the
+        // agent loop (sorted settlement id; first settlement wins). Empty
+        // without the meal rule.
+        let meal_rule = resources.rules.society.meals;
+        let mut meal_camp: BTreeMap<AgentId, ((u32, u32), bool)> = BTreeMap::new();
+        if meal_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else {
+                    continue;
+                };
+                let stocked = settlement
+                    .stockpile
+                    .get(&ResourceKind::Food)
+                    .copied()
+                    .unwrap_or(0)
+                    >= 1;
+                for id in &settlement.member_agents {
+                    meal_camp.entry(*id).or_insert((settlement.formation_tile, stocked));
+                }
+            }
+        }
+        let critical_limit = resources.rules.agent.critical_preemption.unwrap_or(CRITICAL_NEED);
+
         // V7 Phase 7-β / P7β-6 — social-eligible snapshot. An Idle agent is
         // social-eligible iff its loneliness breaches `SOCIAL_THRESHOLD`
         // AND it has no higher-priority drive breached (Needs +
@@ -425,15 +1001,21 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&Thirst>,
                 Option<&Sleep>,
                 Option<&Social>,
+                Option<&Temperament>,
             )>();
-            for (_, (a, pos, state, h, t, s, social_opt)) in q.iter() {
-                if !matches!(*state, AgentState::Idle) {
+            for (_, (a, pos, state, h, t, s, social_opt, temperament)) in q.iter() {
+                // Pass 16: this person's own night threshold.
+                let (_, fatigue_threshold) = rest_for(temperament);
+                if children.contains(&a.id)
+                    || !idle_equivalent(*state, routine_enabled)
+                    || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
+                {
                     continue;
                 }
                 let lone_breach = social_opt.is_some_and(|x| x.loneliness > SOCIAL_THRESHOLD);
                 let hunger_breach = h.is_some_and(|x| x.value > HUNGER_THRESHOLD);
                 let thirst_breach = t.is_some_and(|x| x.value > THIRST_THRESHOLD);
-                let fatigue_breach = s.is_some_and(|x| x.fatigue > FATIGUE_THRESHOLD);
+                let fatigue_breach = s.is_some_and(|x| x.fatigue > fatigue_threshold);
                 let construction_breach = construction_sites.contains_key(&(pos.x, pos.y));
                 if lone_breach
                     && !hunger_breach
@@ -480,12 +1062,18 @@ impl RuntimeSystem for AgentDecisionSystem {
         // cascade.
         let social_partner_breached_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
-            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>)>();
-            for (_, (a, pos, state, social_opt)) in q.iter() {
-                if !matches!(*state, AgentState::Idle) {
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>, Option<&Sleep>, Option<&Temperament>)>();
+            for (_, (a, pos, state, social_opt, sleep, temperament)) in q.iter() {
+                // Pass 16: the peer's own night window.
+                let (night_rest, fatigue_threshold) = rest_for(temperament);
+                if children.contains(&a.id)
+                    || !idle_equivalent(*state, routine_enabled)
+                    || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
+                {
                     continue;
                 }
-                if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD)
+                    && (night_rest.is_none() || sleep.is_none_or(|s| s.fatigue <= fatigue_threshold)) {
                     map.entry((pos.x, pos.y)).or_default().push(a.id);
                 }
             }
@@ -499,9 +1087,16 @@ impl RuntimeSystem for AgentDecisionSystem {
         // `loneliness > SOCIAL_THRESHOLD`.
         let all_idle_peers_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
-            let mut q = world.query::<(&Agent, &Position, &AgentState)>();
-            for (_, (a, pos, state)) in q.iter() {
-                if matches!(*state, AgentState::Idle) {
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Sleep>, Option<&Temperament>)>();
+            for (_, (a, pos, state, sleep, temperament)) in q.iter() {
+                // Pass 16: the peer's own night window.
+                let (night_rest, fatigue_threshold) = rest_for(temperament);
+                if !children.contains(&a.id)
+                    && idle_equivalent(*state, routine_enabled)
+                    && (night_rest.is_none()
+                        || sleep.is_none_or(|s| s.fatigue <= fatigue_threshold))
+                    && (social_rule.is_none() || !resources.social_retry_after.contains_key(&a.id))
+                {
                     map.entry((pos.x, pos.y)).or_default().push(a.id);
                 }
             }
@@ -537,6 +1132,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         // leaves settlement migrants frozen (P10-γ owns their pathing; p10
         // birth tests lock that). Robust to fluctuating settlement membership
         // and independent of loneliness magnitude.
+        #[cfg(feature = "subprofile")]
+        pre_timer.stop("decision_pre_loop");
         let mut social_seek_entities: HashSet<hecs::Entity> = HashSet::new();
         // V7 Phase 10-γ — settlement-migration FSM wiring.
         // `settlement_migrant_tag`: entities that ENTERED Seeking{Agent} via the
@@ -552,140 +1149,692 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut settlement_migrant_tag: HashSet<hecs::Entity> = HashSet::new();
         let mut migrant_clear: Vec<hecs::Entity> = Vec::new();
         let mut preempt_clear_seek: Vec<hecs::Entity> = Vec::new();
-        let mut query = world.query::<(
-            &Position,
-            &Agent,
-            &mut AgentState,
-            Option<&mut Hunger>,
-            Option<&mut Thirst>,
-            Option<&mut Sleep>,
-            Option<&Social>,
-            Option<&Memory>,
-            Option<&mut Inventory>,
-            Option<&SettlementMigrant>,
-        )>();
-        for (
-            entity,
-            (
-                pos,
-                agent,
-                state,
-                hunger_opt,
-                thirst_opt,
-                sleep_opt,
-                social_opt,
-                memory_opt,
-                mut inventory_opt,
-                migrant_marker,
-            ),
-        ) in query.iter()
-        {
-            let tile_idx = pos.y * width + pos.x;
-            match *state {
-                AgentState::Idle => {
-                    // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
-                    // Hunger > Thirst > Fatigue > Construction > Social.
-                    // Social is the lowest-priority drive — Needs and
-                    // Construction always win.
-                    let breached = if hunger_opt
-                        .as_ref()
-                        .is_some_and(|h| h.value > HUNGER_THRESHOLD)
-                    {
-                        Some((TargetKind::Food, DecisionReason::HungerThresholdBreach))
-                    } else if thirst_opt
-                        .as_ref()
-                        .is_some_and(|t| t.value > THIRST_THRESHOLD)
-                    {
-                        Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach))
-                    } else if sleep_opt
-                        .as_ref()
-                        .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD)
-                    {
-                        Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
-                    } else if construction_sites.contains_key(&(pos.x, pos.y)) {
-                        // V7 Phase 6-β / P6β-6: 4th cascade step. Fires
-                        // ONLY when no Need has breached AND a
-                        // co-located active ConstructionSite exists.
-                        Some((
-                            TargetKind::ConstructionSite,
-                            DecisionReason::ConstructionReason,
-                        ))
-                    } else if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
-                        // V7 Phase 7-β / P7β-6 — 5th cascade step. Pick the
-                        // lowest-AgentId co-located social-eligible peer
-                        // (deterministic tie-break). Eligibility (computed
-                        // up-top in `social_eligible_by_pos`) excludes any
-                        // peer whose cascade routes elsewhere.
-                        social_eligible_by_pos
-                            .get(&(pos.x, pos.y))
-                            .and_then(|peers| {
-                                peers
-                                    .iter()
-                                    .filter(|id| **id != agent.id)
-                                    .min()
-                                    .copied()
+        // Pass 18: the routine's settlement lookup is the `member_of` map above
+        // whenever the firewood or forage rule built it (the same construction:
+        // settlement id order, first wins), else built here as Pass 17 did.
+        let routine_members_own = (routine.is_some()
+            && firewood_rule.is_none()
+            && forage_rule.is_none())
+        .then(|| super::routine::members_of(resources));
+        let routine_members = routine_members_own.as_ref().unwrap_or(&member_of);
+        // Pass 18: the exit test's "does a bush / deadwood spot exist" answers
+        // depend on the home tile (and urgency) plus the claims and tiles
+        // maps; each answer is kept with the versions of the maps it read,
+        // and every write to those maps below bumps the version.
+        let mut claims_version = 0_u64;
+        let mut food_version = 0_u64;
+        let mut wood_claims_version = 0_u64;
+        let mut wood_version = 0_u64;
+        let mut bush_memo: TripMemo<(u32, u32)> = BTreeMap::new();
+        let mut spot_memo: TripMemo<((u32, u32), bool)> = BTreeMap::new();
+        // The gather predicate also depends on the person's tile and catchment.
+        let mut gather_memo: GatherMemo = BTreeMap::new();
+        let mut routine_replay: Option<Vec<AgentId>> = None;
+        loop {
+            #[cfg(feature = "subprofile")]
+            let round_timer = crate::subprofile::Timer::start();
+            #[cfg(feature = "subprofile")]
+            let replay_round = routine_replay.is_some();
+            let mut query = world.query::<(
+                &Position,
+                &Agent,
+                &mut AgentState,
+                Option<&mut Hunger>,
+                Option<&mut Thirst>,
+                Option<&mut Sleep>,
+                Option<&Social>,
+                Option<&Memory>,
+                Option<&mut Inventory>,
+                Option<&SettlementMigrant>,
+                Option<&Temperament>,
+                Option<&Lineage>,
+            )>();
+            // Pass 9: under keyed draws the agents are processed in AgentId order
+            // (first-come claims, tile decrements and event ids no longer follow
+            // hecs order); v8–v14 keep hecs order.
+            let mut rows: Vec<_> = query.iter().collect();
+            if let Some(ids) = &routine_replay {
+                rows.retain(|(_, row)| ids.binary_search(&row.1.id).is_ok());
+            }
+            if resources.rules.agent.keyed_draws || routine_enabled {
+                rows.sort_by_key(|(_, row)| row.1.id);
+            }
+            for (
+                entity,
+                (
+                    pos,
+                    agent,
+                    state,
+                    hunger_opt,
+                    thirst_opt,
+                    sleep_opt,
+                    social_opt,
+                    memory_opt,
+                    mut inventory_opt,
+                    migrant_marker,
+                    temperament,
+                    lineage,
+                ),
+            ) in rows
+            {
+                // Pass 16 (`game_v20`): this person's own night window (HA) — every
+                // clock-filtered night-rest read below — and, for a worker, its own
+                // haul loads (P). Without the rule or the component: the globals.
+                let (night_rest, fatigue_threshold) = rest_for(temperament);
+                let tile_idx = pos.y * width + pos.x;
+                // Pass 12: this member's food availability (see `local_food`).
+                let availability =
+                    local_food
+                        .get(&agent.id)
+                        .map_or(availability, |food| NeedAvailability {
+                            food: *food && availability.food,
+                            ..availability
+                        });
+                let adult = !children.contains(&agent.id);
+                let worker = adult && !elders.contains(&agent.id);
+                let (haul_lean, haul_t) = haul_for(worker, temperament);
+                let food_haul = |base: u32| match (haul_lean, &haul_t) {
+                    (Some(lean), Some(t)) => lean.food_haul(base, t),
+                    _ => base,
+                };
+                let wood_haul = |base: u32| match (haul_lean, &haul_t) {
+                    (Some(lean), Some(t)) => lean.wood_haul(base, t),
+                    _ => base,
+                };
+                let social_ready = adult
+                    && (social_rule.is_none()
+                        || !resources.social_retry_after.contains_key(&agent.id));
+                // Pass 5 — under the firewood rule a member carrying a full food
+                // or wood load hauls it home before any work arm fires again.
+                let loaded = firewood_rule.is_some_and(|rule| {
+                    inventory_opt.as_ref().is_some_and(|inv| {
+                        inv.get(ResourceKind::Wood) >= wood_haul(rule.haul_threshold)
+                            || forage_rule.is_some_and(|forage| {
+                                inv.get(ResourceKind::Food) >= food_haul(forage.haul_threshold)
                             })
-                            .map(|other_id| {
-                                (
-                                    TargetKind::Agent(other_id),
-                                    DecisionReason::SocialReason,
-                                )
-                            })
-                    } else {
-                        // 7th cascade arm: combat. Fires when no higher-
-                        // priority drive is active AND the agent's
-                        // memory_weight_delta for the Combat arm is
-                        // strictly below -BIAS_FLIP_THRESHOLD.
-                        // Requires a co-located idle peer (lowest-AgentId).
-                        // Phase 9-β / P9β-2 / P9β-5.
-                        if let Some(memory) = memory_opt {
-                            let combat_delta = memory_weight_delta(
-                                memory,
-                                CascadeArm::Combat,
-                                tick,
-                            );
-                            if combat_delta < -BIAS_FLIP_THRESHOLD {
-                                all_idle_peers_by_pos
-                                    .get(&(pos.x, pos.y))
-                                    .and_then(|peers| {
-                                        peers
-                                            .iter()
-                                            .filter(|id| **id != agent.id)
-                                            .min()
-                                            .copied()
+                    })
+                });
+                // Pass 5 — under gathering preemption a member whose hunger or
+                // thirst is already critical starts no gathering trip (Forage,
+                // Firewood or Gather), so a preempted gatherer cannot be sent out
+                // again on the next tick while its need finds no source.
+                let critical_now = resources.rules.agent.preempt_gathering
+                    && (hunger_opt
+                        .as_ref()
+                        .is_some_and(|h| f64::from(h.value) >= critical_limit)
+                        || thirst_opt
+                            .as_ref()
+                            .is_some_and(|t| t.value >= critical_limit));
+                let no_trips = loaded || critical_now;
+                if routine
+                    .as_mut()
+                    .is_some_and(|routine| routine.take_invitation(agent.id))
+                {
+                    *state = AgentState::Idle;
+                    preempt_clear_seek.push(entity);
+                }
+                if is_activity(*state) {
+                    if let Some(routine) = routine.as_mut() { scope!("decision_exit_test", {
+                        let need = actionable_need_with_fatigue_threshold(
+                            hunger_opt.as_deref(),
+                            thirst_opt.as_deref(),
+                            sleep_opt.as_deref(),
+                            availability,
+                            fatigue_threshold,
+                        )
+                        .is_some();
+                        // Pass 18: the row's settlement, looked up once for the
+                        // three trip predicates (`member_of` is fixed during the loop).
+                        let member = member_of.get(&agent.id);
+                        // Pass 18: the trip predicates only ask whether a choice
+                        // exists (`choose_bush` / `choose_spot` /
+                        // `nearest_gather_tile` filter candidates independently of
+                        // the person's position or rank), and run only after the
+                        // cheap predicates are false. All are pure, so the verdict
+                        // is the eager OR of Pass 17.
+                        let mut forage = || scope!("exit_forage", {
+                            forage_rule
+                                .filter(|_| forage_window && worker && !no_trips)
+                                .and_then(|rule| {
+                                    let sid = member?;
+                                    let plan = forage_plans.get(sid)?;
+                                    let inv = inventory_opt.as_ref()?;
+                                    let room = inv.total() < INVENTORY_CAPACITY;
+                                    let light = inv.get(ResourceKind::Food)
+                                        < food_haul(rule.haul_threshold);
+                                    if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                        return None;
+                                    }
+                                    let versions = (claims_version, food_version);
+                                    let exists = match bush_memo.get(&plan.home) {
+                                        Some(&(c, f, exists)) if (c, f) == versions => exists,
+                                        _ => {
+                                            let exists = bush_exists(
+                                                &rule,
+                                                plan.home,
+                                                &resources.food_tiles,
+                                                &claims,
+                                            );
+                                            bush_memo.insert(plan.home, (versions.0, versions.1, exists));
+                                            exists
+                                        }
+                                    };
+                                    exists.then_some(())
+                                })
+                                .is_some()
+                        });
+                        let mut firewood = || scope!("exit_firewood", {
+                            firewood_rule
+                                .filter(|_| worker && !no_trips)
+                                .and_then(|rule| {
+                                    let sid = member?;
+                                    let plan = wood_plans.get(sid)?;
+                                    if !(if plan.urgent {
+                                        urgent_window
+                                    } else {
+                                        wood_window
+                                    }) {
+                                        return None;
+                                    }
+                                    let inv = inventory_opt.as_ref()?;
+                                    let room = inv.total() < INVENTORY_CAPACITY;
+                                    let light = inv.get(ResourceKind::Wood)
+                                        < wood_haul(rule.haul_threshold);
+                                    if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                        return None;
+                                    }
+                                    let rule = urgent_rule(rule, plan.urgent);
+                                    let key = (plan.home, plan.urgent);
+                                    let versions = (wood_claims_version, wood_version);
+                                    let exists = match spot_memo.get(&key) {
+                                        Some(&(c, w, exists)) if (c, w) == versions => exists,
+                                        _ => {
+                                            let exists = spot_exists(
+                                                &rule,
+                                                plan.home,
+                                                &resources.wood_tiles,
+                                                &wood_claims,
+                                            );
+                                            spot_memo.insert(key, (versions.0, versions.1, exists));
+                                            exists
+                                        }
+                                    };
+                                    exists.then_some(())
+                                })
+                                .is_some()
+                        });
+                        let mut gather = || scope!("exit_gather", {
+                            let has_room = inventory_opt
+                                .as_ref()
+                                .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
+                            let bounded = forage_rule.is_none_or(|rule| {
+                                inventory_opt.as_ref().is_some_and(|inv| {
+                                    inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold)
+                                }) && member
+                                    .and_then(|sid| forage_plans.get(sid))
+                                    .is_none_or(|plan| {
+                                        let cap = resources
+                                            .rules
+                                            .society
+                                            .stock_target
+                                            .map_or(0.0, |r| r.hoard_cap_factor);
+                                        (plan.in_hand as f64) < cap * plan.target
                                     })
-                                    .map(|enemy_id| {
-                                        (
-                                            TargetKind::Agent(enemy_id),
-                                            DecisionReason::CombatReason,
-                                        )
-                                    })
+                            });
+                            worker
+                                && has_room
+                                && bounded
+                                && !no_trips
+                                && {
+                                    let local = local_home.get(&agent.id).map(|home| (*home, catchment));
+                                    let key = ((pos.x, pos.y), local);
+                                    match gather_memo.get(&key) {
+                                        Some(&(version, exists)) if version == food_version => exists,
+                                        _ => {
+                                            let exists = gather_tile_exists(
+                                                pos,
+                                                &resources.food_tiles,
+                                                GATHER_SCAN_RADIUS,
+                                                local,
+                                            );
+                                            gather_memo.insert(key, (food_version, exists));
+                                            exists
+                                        }
+                                    }
+                                }
+                        });
+                        let social = social_ready
+                            && social_eligible_by_pos
+                                .get(&(pos.x, pos.y))
+                                .is_some_and(|peers| {
+                                    peers.contains(&agent.id)
+                                        && peers.iter().any(|id| *id != agent.id)
+                                });
+                        let meal = meal_rule.is_some_and(|rule| {
+                            hunger_opt
+                                .as_ref()
+                                .is_some_and(|h| h.value > HUNGER_THRESHOLD)
+                                && meal_camp.get(&agent.id).is_some_and(|(home, stocked)| {
+                                    *stocked
+                                        && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1))
+                                            <= rule.camp_radius
+                                })
+                        });
+                        if need
+                            || assigned_builders.contains_key(&agent.id)
+                            || social
+                            || meal
+                            || forage()
+                            || firewood()
+                            || gather()
+                        {
+                            routine.interrupt(agent.id, entity);
+                            *state = AgentState::Idle;
+                            preempt_clear_seek.push(entity);
+                        }
+                    }) }
+                }
+                match *state {
+                    AgentState::Idle if founding.contains_key(&agent.id) => {
+                        // Pass 11 — a founder: an actionable need pre-empts the walk
+                        // (the marker stays); otherwise it walks to the site,
+                        // before any work, forage, firewood, meal, social, building
+                        // or combat arm. Every founder, the leader included, holds
+                        // Seeking{Agent(leader)}; the post-pass targets the site.
+                        let need = actionable_need_with_fatigue_threshold(
+                            hunger_opt.as_deref(),
+                            thirst_opt.as_deref(),
+                            sleep_opt.as_deref(),
+                            availability,
+                            fatigue_threshold,
+                        );
+                        *state = match (need, founding.get(&agent.id)) {
+                            (Some((target, _)), _) => AgentState::Seeking { target },
+                            (None, Some(f)) => AgentState::Seeking {
+                                target: TargetKind::Agent(f.leader),
+                            },
+                            (None, None) => AgentState::Idle,
+                        };
+                    }
+                    AgentState::Idle => {
+                        // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
+                        // Hunger > Thirst > Fatigue > Construction > Social.
+                        // Social is the lowest-priority drive — Needs and
+                        // Construction always win.
+                        let mut need = actionable_need_with_fatigue_threshold(
+                            hunger_opt.as_deref(),
+                            thirst_opt.as_deref(),
+                            sleep_opt.as_deref(),
+                            availability,
+                            fatigue_threshold,
+                        );
+                        // Pass 5 — a hungry member at camp whose store holds food
+                        // waits for its meal (StockpileConsumeSystem serves it
+                        // within five ticks) instead of walking to a bush; only a
+                        // critical water need may send it away meanwhile.
+                        // The wait keys on hunger itself (section 7.2), not on the
+                        // availability-filtered need: with every bush empty a hungry
+                        // member at a stocked camp still waits for its meal.
+                        let waiting_for_meal = meal_rule.is_some_and(|rule| {
+                            hunger_opt
+                                .as_ref()
+                                .is_some_and(|h| h.value > HUNGER_THRESHOLD)
+                                && meal_camp.get(&agent.id).is_some_and(|(home, stocked)| {
+                                    *stocked
+                                        && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1))
+                                            <= rule.camp_radius
+                                })
+                        });
+                        if waiting_for_meal {
+                            let critical_water = availability.water
+                                && thirst_opt
+                                    .as_ref()
+                                    .is_some_and(|t| t.value > critical_limit);
+                            if !critical_water {
+                                continue;
+                            }
+                            need = Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach));
+                        }
+                        let breached = if let Some(need) = need {
+                            Some(need)
+                        } else if worker
+                            && if planning.is_some() {
+                                assigned_builders.contains_key(&agent.id)
+                            } else {
+                                construction_sites.contains_key(&(pos.x, pos.y))
+                            }
+                        {
+                            // V7 Phase 6-β / P6β-6: 4th cascade step. Fires
+                            // ONLY when no Need has breached AND a
+                            // co-located active ConstructionSite exists.
+                            Some((
+                                TargetKind::ConstructionSite,
+                                DecisionReason::ConstructionReason,
+                            ))
+                        } else if social_ready
+                            && social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD)
+                        {
+                            // V7 Phase 7-β / P7β-6 — 5th cascade step. Pick the
+                            // lowest-AgentId co-located social-eligible peer
+                            // (deterministic tie-break). Eligibility (computed
+                            // up-top in `social_eligible_by_pos`) excludes any
+                            // peer whose cascade routes elsewhere.
+                            social_eligible_by_pos
+                                .get(&(pos.x, pos.y))
+                                .and_then(|peers| {
+                                    peers.iter().filter(|id| **id != agent.id).min().copied()
+                                })
+                                .map(|other_id| {
+                                    (TargetKind::Agent(other_id), DecisionReason::SocialReason)
+                                })
+                        } else {
+                            // 7th cascade arm: combat. Fires when no higher-
+                            // priority drive is active AND the agent's
+                            // memory_weight_delta for the Combat arm is
+                            // strictly below -BIAS_FLIP_THRESHOLD.
+                            // Requires a co-located idle peer (lowest-AgentId).
+                            // Phase 9-β / P9β-2 / P9β-5.
+                            if let Some(memory) = memory_opt.filter(|_| worker) {
+                                let combat_delta =
+                                    memory_weight_delta(memory, CascadeArm::Combat, tick);
+                                if combat_delta < -BIAS_FLIP_THRESHOLD {
+                                    all_idle_peers_by_pos
+                                        .get(&(pos.x, pos.y))
+                                        .and_then(|peers| {
+                                            peers
+                                                .iter()
+                                                .filter(|id| **id != agent.id)
+                                                .min()
+                                                .copied()
+                                        })
+                                        .map(|enemy_id| {
+                                            (
+                                                TargetKind::Agent(enemy_id),
+                                                DecisionReason::CombatReason,
+                                            )
+                                        })
+                                } else {
+                                    None
+                                }
                             } else {
                                 None
                             }
-                        } else {
-                            None
-                        }
-                    };
+                        };
 
-                    if let Some((natural_target, natural_reason)) = breached {
-                        // Phase 9-β / P9β-1 — combat arm early-exit handler.
-                        // Combat bypasses the memory-bias flip machinery
-                        // (it IS a memory-driven trigger) and transitions
-                        // directly to Consuming{Agent}, emitting its own
-                        // MemoryRecalled + AgentDecision{CombatReason}
-                        // + (smaller-id only) CombatStarted causal chain.
-                        if natural_reason == DecisionReason::CombatReason {
-                            if let TargetKind::Agent(enemy_id) = natural_target {
+                        if let Some((natural_target, natural_reason)) = breached {
+                            // Phase 9-β / P9β-1 — combat arm early-exit handler.
+                            // Combat bypasses the memory-bias flip machinery
+                            // (it IS a memory-driven trigger) and transitions
+                            // directly to Consuming{Agent}, emitting its own
+                            // MemoryRecalled + AgentDecision{CombatReason}
+                            // + (smaller-id only) CombatStarted causal chain.
+                            if natural_reason == DecisionReason::CombatReason {
+                                if let TargetKind::Agent(enemy_id) = natural_target {
+                                    let Some(memory) = memory_opt else {
+                                        continue; // defensive — combat arm required memory
+                                    };
+                                    let Some(recalled_event) =
+                                        top_contributor_entry(memory, CascadeArm::Combat, tick)
+                                    else {
+                                        continue; // no Combat-arm memory entry above the salience floor
+                                    };
+                                    let recall_parent = resources
+                                        .causal_log
+                                        .lookup(recalled_event)
+                                        .and_then(|e| e.parent());
+                                    let recall_id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
+                                        CausalEvent::MemoryRecalled {
+                                            id: recall_id,
+                                            parent: recall_parent,
+                                            agent: agent.id,
+                                            recalled_event,
+                                            triggered_by: MemoryRecallTrigger::CombatContext {
+                                                agent_id: enemy_id,
+                                            },
+                                            tick,
+                                        },
+                                    );
+                                    let decision_id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
+                                        CausalEvent::AgentDecision {
+                                            id: decision_id,
+                                            parent: Some(recall_id),
+                                            agent: agent.id,
+                                            position: (pos.x, pos.y),
+                                            reason: DecisionReason::CombatReason,
+                                            tick,
+                                        },
+                                    );
+                                    // Emit CombatStarted once per pair — only
+                                    // from the smaller AgentId.
+                                    if agent.id < enemy_id {
+                                        let started_id = resources.issue_event_id();
+                                        resources.causal_log.push(
+                                            tile_idx,
+                                            CausalEvent::CombatStarted {
+                                                id: started_id,
+                                                parent: Some(decision_id),
+                                                attacker: agent.id,
+                                                defender: enemy_id,
+                                                position: (pos.x, pos.y),
+                                                tick,
+                                            },
+                                        );
+                                    }
+                                    // Direct Idle → Consuming{Agent} transition
+                                    // (no Seeking step). Insert canonical pair.
+                                    *state = AgentState::Consuming {
+                                        target: TargetKind::Agent(enemy_id),
+                                    };
+                                    let canonical = if agent.id < enemy_id {
+                                        (agent.id, enemy_id)
+                                    } else {
+                                        (enemy_id, agent.id)
+                                    };
+                                    resources.combat_pairs.insert(canonical);
+                                    if let Some(routine) = routine.as_mut() {
+                                        routine.invite(enemy_id, world);
+                                    }
+                                }
+                                continue;
+                            }
+                            // V7 Phase 8-β cascade-bias check (P8β-MOD-2). Only
+                            // performed when the agent has a Memory component
+                            // AND at least one non-natural-winner arm is also
+                            // eligible (otherwise there is no candidate to
+                            // flip to).
+                            let natural_arm = match natural_reason {
+                                DecisionReason::HungerThresholdBreach => CascadeArm::Hunger,
+                                DecisionReason::ThirstThresholdBreach => CascadeArm::Thirst,
+                                DecisionReason::FatigueThresholdBreach => CascadeArm::Fatigue,
+                                DecisionReason::ConstructionReason => CascadeArm::Construction,
+                                DecisionReason::SocialReason => CascadeArm::Social,
+                                DecisionReason::MemoryReason => CascadeArm::Construction,
+                                // Unreachable in practice — CombatReason hits
+                                // `continue` above. Added for exhaustiveness.
+                                DecisionReason::CombatReason => CascadeArm::Combat,
+                                // Unreachable in practice — SettlementReason fires
+                                // from the standalone 8th-cascade fallback (see
+                                // post-`if let Some((natural_target ...))` branch)
+                                // which never enters the bias path. Added for
+                                // exhaustiveness.
+                                DecisionReason::SettlementReason => CascadeArm::Settlement,
+                            };
+
+                            // Build the (arm, target) eligibility set for the
+                            // bias path. Eligibility uses RELAXED Social rules
+                            // (peer's own breach state ignored) so the bias
+                            // can shift to Social over Construction.
+                            let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
+                            // A member waiting for its meal never flips back to a bush.
+                            if !waiting_for_meal
+                                && actionable_need_with_fatigue_threshold(
+                                    hunger_opt.as_deref(),
+                                    None,
+                                    None,
+                                    availability,
+                                    fatigue_threshold,
+                                )
+                                .is_some()
+                            {
+                                eligible.push((CascadeArm::Hunger, TargetKind::Food));
+                            }
+                            if actionable_need_with_fatigue_threshold(
+                                None,
+                                thirst_opt.as_deref(),
+                                None,
+                                availability,
+                                fatigue_threshold,
+                            )
+                            .is_some()
+                            {
+                                eligible.push((CascadeArm::Thirst, TargetKind::Water));
+                            }
+                            if actionable_need_with_fatigue_threshold(
+                                None,
+                                None,
+                                sleep_opt.as_deref(),
+                                availability,
+                                fatigue_threshold,
+                            )
+                            .is_some()
+                            {
+                                eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
+                            }
+                            if worker
+                                && if planning.is_some() {
+                                    assigned_builders.contains_key(&agent.id)
+                                } else {
+                                    construction_sites.contains_key(&(pos.x, pos.y))
+                                }
+                            {
+                                eligible
+                                    .push((CascadeArm::Construction, TargetKind::ConstructionSite));
+                            }
+                            if social_ready
+                                && social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD)
+                            {
+                                if let Some(peer_id) = social_partner_breached_by_pos
+                                    .get(&(pos.x, pos.y))
+                                    .and_then(|peers| {
+                                        peers.iter().filter(|id| **id != agent.id).min().copied()
+                                    })
+                                {
+                                    eligible.push((CascadeArm::Social, TargetKind::Agent(peer_id)));
+                                }
+                            }
+                            // Bias-only Construction eligibility: add Construction
+                            // arm even when no active ECS ConstructionSite exists
+                            // at the agent's tile, if the agent has Memory entries
+                            // whose event_id matches the Construction arm. Mirrors
+                            // the social_partner_breached_by_pos extension for the
+                            // Social arm (plan §A17: Social natural winner →
+                            // Construction flip via memory bias).
+                            if worker
+                                && planning.is_none()
+                                && !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
+                                && memory_opt.is_some_and(|m| {
+                                    m.entries.iter().any(|e| {
+                                        e.salience > SALIENCE_FLOOR
+                                            && e.arm == MemoryArm::Construction
+                                    })
+                                })
+                            {
+                                eligible
+                                    .push((CascadeArm::Construction, TargetKind::ConstructionSite));
+                            }
+                            // Bias-only Social eligibility (plan §A16 arm-symmetry
+                            // fix): add Social arm when Memory has Social-arm
+                            // entries with salience > SALIENCE_FLOOR even when the
+                            // focal agent's loneliness does not breach
+                            // SOCIAL_THRESHOLD. Symmetric to bias-only Construction.
+                            if social_ready
+                                && !eligible.iter().any(|(a, _)| *a == CascadeArm::Social)
+                                && memory_opt.is_some_and(|m| {
+                                    m.entries.iter().any(|e| {
+                                        e.salience > SALIENCE_FLOOR && e.arm == MemoryArm::Social
+                                    })
+                                })
+                            {
+                                if let Some(peer_id) = all_idle_peers_by_pos
+                                    .get(&(pos.x, pos.y))
+                                    .and_then(|peers| {
+                                        peers.iter().filter(|id| **id != agent.id).min().copied()
+                                    })
+                                {
+                                    eligible.push((CascadeArm::Social, TargetKind::Agent(peer_id)));
+                                }
+                            }
+
+                            // V7 Phase 8-β threshold-based flip decision
+                            // (P8β-MOD-2 step 5 refinement). A non-natural arm
+                            // flips the cascade ONLY when its adjusted score
+                            // (memory_weight_delta) strictly exceeds the
+                            // natural arm's adjusted score
+                            // (BIAS_FLIP_THRESHOLD + natural arm's own delta).
+                            // BIAS_FLIP_THRESHOLD (= 1.0) is the natural arm's
+                            // intrinsic binary eligibility; the natural arm's
+                            // memory delta raises the bar further, so an
+                            // overwhelmingly strong natural winner is preserved
+                            // (plan §A19/P8β-MOD-2).
+                            //
+                            // Among eligible non-natural arms whose deltas pass
+                            // the natural margin, the highest delta wins; ties
+                            // resolved by the natural cascade priority order.
+                            let mut flip_target_arm: Option<(CascadeArm, TargetKind, f64)> = None;
+                            if let Some(memory) = memory_opt.filter(|_| eligible.len() >= 2) {
+                                let natural_delta = memory_weight_delta(memory, natural_arm, tick);
+                                let natural_margin = BIAS_FLIP_THRESHOLD + natural_delta;
+                                for (arm, tk) in &eligible {
+                                    if *arm == natural_arm {
+                                        continue;
+                                    }
+                                    let delta = memory_weight_delta(memory, *arm, tick);
+                                    if delta <= natural_margin {
+                                        continue;
+                                    }
+                                    match flip_target_arm {
+                                        None => flip_target_arm = Some((*arm, *tk, delta)),
+                                        Some((b_arm, _, b_delta)) => {
+                                            if delta > b_delta
+                                                || (delta == b_delta
+                                                    && arm_priority_index(*arm)
+                                                        < arm_priority_index(b_arm))
+                                            {
+                                                flip_target_arm = Some((*arm, *tk, delta));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if let Some((bias_arm, bias_target, _)) = flip_target_arm {
+                                // Cascade FLIP path — emit MemoryRecalled, then
+                                // AgentDecision{MemoryReason} linked to it.
+                                //
+                                // `flip_target_arm` is only ever Some when the
+                                // bias-scoring branch above ran, which required
+                                // `memory_opt` to be Some. Use a safe match
+                                // rather than `.unwrap()` (project rule: no
+                                // unwrap() in production code).
                                 let Some(memory) = memory_opt else {
-                                    continue; // defensive — combat arm required memory
+                                    // Unreachable in practice — defensive skip.
+                                    continue;
                                 };
-                                let Some(recalled_event) = top_contributor_entry(
-                                    memory,
-                                    CascadeArm::Combat,
-                                    tick,
-                                ) else {
-                                    continue; // no Combat-arm memory entry above the salience floor
+                                // Issue-5 fix: require a real load-bearing
+                                // recalled_event. If no top contributor is
+                                // resolvable (e.g. all matching entries were
+                                // evicted between scoring and emission), skip
+                                // the flip entirely — DO NOT emit a
+                                // `MemoryRecalled` carrying a fabricated
+                                // `recalled_event = 0`.
+                                let Some(recalled_event) =
+                                    top_contributor_entry(memory, bias_arm, tick)
+                                else {
+                                    continue;
                                 };
                                 let recall_parent = resources
                                     .causal_log
@@ -699,9 +1848,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         parent: recall_parent,
                                         agent: agent.id,
                                         recalled_event,
-                                        triggered_by: MemoryRecallTrigger::CombatContext {
-                                            agent_id: enemy_id,
-                                        },
+                                        triggered_by: MemoryRecallTrigger::CascadeBias,
                                         tick,
                                     },
                                 );
@@ -713,248 +1860,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         parent: Some(recall_id),
                                         agent: agent.id,
                                         position: (pos.x, pos.y),
-                                        reason: DecisionReason::CombatReason,
+                                        reason: DecisionReason::MemoryReason,
                                         tick,
                                     },
                                 );
-                                // Emit CombatStarted once per pair — only
-                                // from the smaller AgentId.
-                                if agent.id < enemy_id {
-                                    let started_id = resources.issue_event_id();
-                                    resources.causal_log.push(
-                                        tile_idx,
-                                        CausalEvent::CombatStarted {
-                                            id: started_id,
-                                            parent: Some(decision_id),
-                                            attacker: agent.id,
-                                            defender: enemy_id,
-                                            position: (pos.x, pos.y),
-                                            tick,
-                                        },
-                                    );
-                                }
-                                // Direct Idle → Consuming{Agent} transition
-                                // (no Seeking step). Insert canonical pair.
-                                *state = AgentState::Consuming {
-                                    target: TargetKind::Agent(enemy_id),
+                                *state = AgentState::Seeking {
+                                    target: bias_target,
                                 };
-                                let canonical = if agent.id < enemy_id {
-                                    (agent.id, enemy_id)
-                                } else {
-                                    (enemy_id, agent.id)
-                                };
-                                resources.combat_pairs.insert(canonical);
-                            }
-                            continue;
-                        }
-                        // V7 Phase 8-β cascade-bias check (P8β-MOD-2). Only
-                        // performed when the agent has a Memory component
-                        // AND at least one non-natural-winner arm is also
-                        // eligible (otherwise there is no candidate to
-                        // flip to).
-                        let natural_arm = match natural_reason {
-                            DecisionReason::HungerThresholdBreach => CascadeArm::Hunger,
-                            DecisionReason::ThirstThresholdBreach => CascadeArm::Thirst,
-                            DecisionReason::FatigueThresholdBreach => CascadeArm::Fatigue,
-                            DecisionReason::ConstructionReason => CascadeArm::Construction,
-                            DecisionReason::SocialReason => CascadeArm::Social,
-                            DecisionReason::MemoryReason => CascadeArm::Construction,
-                            // Unreachable in practice — CombatReason hits
-                            // `continue` above. Added for exhaustiveness.
-                            DecisionReason::CombatReason => CascadeArm::Combat,
-                            // Unreachable in practice — SettlementReason fires
-                            // from the standalone 8th-cascade fallback (see
-                            // post-`if let Some((natural_target ...))` branch)
-                            // which never enters the bias path. Added for
-                            // exhaustiveness.
-                            DecisionReason::SettlementReason => CascadeArm::Settlement,
-                        };
-
-                        // Build the (arm, target) eligibility set for the
-                        // bias path. Eligibility uses RELAXED Social rules
-                        // (peer's own breach state ignored) so the bias
-                        // can shift to Social over Construction.
-                        let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
-                        if hunger_opt.as_ref().is_some_and(|h| h.value > HUNGER_THRESHOLD) {
-                            eligible.push((CascadeArm::Hunger, TargetKind::Food));
-                        }
-                        if thirst_opt.as_ref().is_some_and(|t| t.value > THIRST_THRESHOLD) {
-                            eligible.push((CascadeArm::Thirst, TargetKind::Water));
-                        }
-                        if sleep_opt.as_ref().is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD) {
-                            eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
-                        }
-                        if construction_sites.contains_key(&(pos.x, pos.y)) {
-                            eligible.push((
-                                CascadeArm::Construction,
-                                TargetKind::ConstructionSite,
-                            ));
-                        }
-                        if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
-                            if let Some(peer_id) = social_partner_breached_by_pos
-                                .get(&(pos.x, pos.y))
-                                .and_then(|peers| {
-                                    peers.iter().filter(|id| **id != agent.id).min().copied()
-                                })
-                            {
-                                eligible.push((CascadeArm::Social, TargetKind::Agent(peer_id)));
-                            }
-                        }
-                        // Bias-only Construction eligibility: add Construction
-                        // arm even when no active ECS ConstructionSite exists
-                        // at the agent's tile, if the agent has Memory entries
-                        // whose event_id matches the Construction arm. Mirrors
-                        // the social_partner_breached_by_pos extension for the
-                        // Social arm (plan §A17: Social natural winner →
-                        // Construction flip via memory bias).
-                        if !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
-                            && memory_opt.is_some_and(|m| {
-                                m.entries.iter().any(|e| {
-                                    e.salience > SALIENCE_FLOOR
-                                        && e.arm == MemoryArm::Construction
-                                })
-                            })
-                        {
-                            eligible.push((
-                                CascadeArm::Construction,
-                                TargetKind::ConstructionSite,
-                            ));
-                        }
-                        // Bias-only Social eligibility (plan §A16 arm-symmetry
-                        // fix): add Social arm when Memory has Social-arm
-                        // entries with salience > SALIENCE_FLOOR even when the
-                        // focal agent's loneliness does not breach
-                        // SOCIAL_THRESHOLD. Symmetric to bias-only Construction.
-                        if !eligible.iter().any(|(a, _)| *a == CascadeArm::Social)
-                            && memory_opt.is_some_and(|m| {
-                                m.entries.iter().any(|e| {
-                                    e.salience > SALIENCE_FLOOR && e.arm == MemoryArm::Social
-                                })
-                            })
-                        {
-                            if let Some(peer_id) = all_idle_peers_by_pos
-                                .get(&(pos.x, pos.y))
-                                .and_then(|peers| {
-                                    peers.iter().filter(|id| **id != agent.id).min().copied()
-                                })
-                            {
-                                eligible.push((CascadeArm::Social, TargetKind::Agent(peer_id)));
-                            }
-                        }
-
-                        // V7 Phase 8-β threshold-based flip decision
-                        // (P8β-MOD-2 step 5 refinement). A non-natural arm
-                        // flips the cascade ONLY when its adjusted score
-                        // (memory_weight_delta) strictly exceeds the
-                        // natural arm's adjusted score
-                        // (BIAS_FLIP_THRESHOLD + natural arm's own delta).
-                        // BIAS_FLIP_THRESHOLD (= 1.0) is the natural arm's
-                        // intrinsic binary eligibility; the natural arm's
-                        // memory delta raises the bar further, so an
-                        // overwhelmingly strong natural winner is preserved
-                        // (plan §A19/P8β-MOD-2).
-                        //
-                        // Among eligible non-natural arms whose deltas pass
-                        // the natural margin, the highest delta wins; ties
-                        // resolved by the natural cascade priority order.
-                        let mut flip_target_arm: Option<(CascadeArm, TargetKind, f64)> =
-                            None;
-                        if let Some(memory) = memory_opt.filter(|_| eligible.len() >= 2) {
-                            let natural_delta = memory_weight_delta(
-                                memory,
-                                natural_arm,
-                                tick,
-                            );
-                            let natural_margin = BIAS_FLIP_THRESHOLD + natural_delta;
-                            for (arm, tk) in &eligible {
-                                if *arm == natural_arm {
-                                    continue;
-                                }
-                                let delta = memory_weight_delta(
-                                    memory,
-                                    *arm,
-                                    tick,
-                                );
-                                if delta <= natural_margin {
-                                    continue;
-                                }
-                                match flip_target_arm {
-                                    None => flip_target_arm = Some((*arm, *tk, delta)),
-                                    Some((b_arm, _, b_delta)) => {
-                                        if delta > b_delta
-                                            || (delta == b_delta
-                                                && arm_priority_index(*arm)
-                                                    < arm_priority_index(b_arm))
-                                        {
-                                            flip_target_arm = Some((*arm, *tk, delta));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if let Some((bias_arm, bias_target, _)) = flip_target_arm {
-                            // Cascade FLIP path — emit MemoryRecalled, then
-                            // AgentDecision{MemoryReason} linked to it.
-                            //
-                            // `flip_target_arm` is only ever Some when the
-                            // bias-scoring branch above ran, which required
-                            // `memory_opt` to be Some. Use a safe match
-                            // rather than `.unwrap()` (project rule: no
-                            // unwrap() in production code).
-                            let Some(memory) = memory_opt else {
-                                // Unreachable in practice — defensive skip.
-                                continue;
-                            };
-                            // Issue-5 fix: require a real load-bearing
-                            // recalled_event. If no top contributor is
-                            // resolvable (e.g. all matching entries were
-                            // evicted between scoring and emission), skip
-                            // the flip entirely — DO NOT emit a
-                            // `MemoryRecalled` carrying a fabricated
-                            // `recalled_event = 0`.
-                            let Some(recalled_event) = top_contributor_entry(
-                                memory,
-                                bias_arm,
-                                tick,
-                            ) else {
-                                continue;
-                            };
-                            let recall_parent = resources
-                                .causal_log
-                                .lookup(recalled_event)
-                                .and_then(|e| e.parent());
-                            let recall_id = resources.issue_event_id();
-                            resources.causal_log.push(
-                                tile_idx,
-                                CausalEvent::MemoryRecalled {
-                                    id: recall_id,
-                                    parent: recall_parent,
-                                    agent: agent.id,
-                                    recalled_event,
-                                    triggered_by: MemoryRecallTrigger::CascadeBias,
-                                    tick,
-                                },
-                            );
-                            let decision_id = resources.issue_event_id();
-                            resources.causal_log.push(
-                                tile_idx,
-                                CausalEvent::AgentDecision {
-                                    id: decision_id,
-                                    parent: Some(recall_id),
-                                    agent: agent.id,
-                                    position: (pos.x, pos.y),
-                                    reason: DecisionReason::MemoryReason,
-                                    tick,
-                                },
-                            );
-                            *state = AgentState::Seeking { target: bias_target };
-                        } else {
-                            // Natural-cascade path — original behaviour.
-                            let parent = resources
-                                .causal_log
-                                .get(tile_idx)
-                                .and_then(|log| {
+                            } else {
+                                // Natural-cascade path — original behaviour.
+                                let parent = resources.causal_log.get(tile_idx).and_then(|log| {
                                     log.as_slice().iter().rev().find_map(|ev| match ev {
                                         CausalEvent::InfluenceChanged { id, .. } => Some(*id),
                                         CausalEvent::AgentDecision {
@@ -972,479 +1887,904 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         _ => None,
                                     })
                                 });
-                            let id = resources.issue_event_id();
-                            resources.causal_log.push(
-                                tile_idx,
-                                CausalEvent::AgentDecision {
-                                    id,
-                                    parent,
-                                    agent: agent.id,
-                                    position: (pos.x, pos.y),
-                                    reason: natural_reason,
-                                    tick,
-                                },
-                            );
-                            *state = AgentState::Seeking {
-                                target: natural_target,
-                            };
-                        }
-                        // V7 Section 16-ζ — tag a SOCIAL Seeking{Agent}
-                        // transition. This `if let Some(breached)` arm is the
-                        // needs/construction/social/combat path; the `else`
-                        // below is settlement migration, deliberately left
-                        // untagged so its migrant stays frozen (P10-γ scope).
-                        // Only Agent targets are tagged; Food/Water/Sleep/
-                        // ConstructionSite states do not match the pattern.
-                        if let AgentState::Seeking { target: TargetKind::Agent(_) } = *state {
-                            social_seek_entities.insert(entity);
-                        }
-                    } else if let Some(_gather_tile) = {
-                        // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
-                        // when no higher-priority arm triggered, the agent has
-                        // inventory room, AND a ground food tile lies within
-                        // GATHER_SCAN_RADIUS (Chebyshev). The nearest ELIGIBLE
-                        // (in-radius, count > 0) tile is chosen by the
-                        // deterministic (dist, x, y) tie-break — `nearest_food_
-                        // tile_in_radius` filters to the radius set FIRST so a
-                        // closer out-of-radius tile cannot mask a reachable one.
-                        let has_room = inventory_opt
-                            .as_ref()
-                            .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
-                        if has_room {
-                            nearest_food_tile_in_radius(
-                                pos,
-                                &resources.food_tiles,
-                                GATHER_SCAN_RADIUS,
-                            )
-                        } else {
-                            None
-                        }
-                    } {
-                        // Pure positional/opportunistic arm: no memory bias and
-                        // no causal event (mirrors the deliberately-untagged
-                        // Settlement proxy). The post-decision pass attaches a
-                        // SeekTarget at the chosen tile (treated as a resource
-                        // seek), so the agent walks toward the food tile.
-                        *state = AgentState::Seeking {
-                            target: TargetKind::GatherFood,
-                        };
-                    } else {
-                        // V7 Phase 10-β / P10β-8 — 8th cascade arm:
-                        // settlement migration pull. Fires when no
-                        // higher-priority drive (Hunger/Thirst/Fatigue/
-                        // Construction/Social/Combat) triggered AND the
-                        // agent is NOT a member of any settlement AND at
-                        // least one settlement has open capacity
-                        // (`current < SETTLEMENT_MAX_POP`).
-                        //
-                        // Target: first known member of the lowest-id
-                        // capacity-bearing settlement, used as a
-                        // `TargetKind::Agent(_)` proxy (no Position target
-                        // exists). The migration pull biases Brownian
-                        // motion via the Seeking-suppression rule but
-                        // requires the agent to physically reach the
-                        // partner tile before any join effect — which is a
-                        // Phase 10-γ concern, not 10-β scope.
-                        let is_member = resources
-                            .settlements
-                            .values()
-                            .any(|s| s.member_agents.contains(&agent.id));
-                        if !is_member {
-                            // V7 Phase 10-γ — nearest-member target selection.
-                            // Among all LIVE members of capacity-bearing,
-                            // non-empty settlements, pick the Manhattan-nearest
-                            // member to the migrant's current tile, tie-broken by
-                            // the member tile's (x, y) lexicographic order
-                            // (mirrors `nearest_resource_tile`) with the member
-                            // AgentId as a final deterministic disambiguator for
-                            // the same-tile case. Independent of settlement-id /
-                            // member-id iteration order — a nearer settlement
-                            // always wins (the prior lowest-id pick could route a
-                            // migrant clear across the map past a closer one).
-                            // Stale roster ids (no live position) are skipped, so
-                            // an empty / all-dead candidate set yields None and
-                            // the agent stays Idle (no garbage target, no panic).
-                            let target_agent_opt: Option<AgentId> = resources
-                                .settlements
-                                .values()
-                                .filter(|s| {
-                                    s.population_stats.current
-                                        < sim_core::components::SETTLEMENT_MAX_POP
-                                        && !s.member_agents.is_empty()
-                                })
-                                .flat_map(|s| s.member_agents.iter().copied())
-                                .filter_map(|mid| {
-                                    agent_positions.get(&mid).map(|tile| (mid, *tile))
-                                })
-                                .min_by_key(|(mid, (mx, my))| {
-                                    let dx = (*mx as i64 - pos.x as i64).abs();
-                                    let dy = (*my as i64 - pos.y as i64).abs();
-                                    (dx + dy, *mx, *my, *mid)
-                                })
-                                .map(|(mid, _)| mid);
-                            // Record the migration INTENT (SettlementReason event
-                            // — preserves p10-β A16 + community-history routing),
-                            // THEN restore the FSM transition Stage 1 removed: the
-                            // non-member enters Seeking{Agent(member)} and is
-                            // tagged so the post-decision pass attaches a
-                            // SeekTarget at the member's current tile (re-resolved
-                            // every tick, reusing the ζ pass). The unchanged β
-                            // movement.rs walks it toward the member; the existing
-                            // proximity-join refresh auto-admits it. A persistent
-                            // SettlementMigrant marker (inserted after the
-                            // post-pass) lets the Seeking{Agent} arm exit on join
-                            // / abort. Stage-1's targetless freeze is gone — the
-                            // migrant always carries a SeekTarget while seeking.
-                            if let Some(target_agent) = target_agent_opt {
                                 let id = resources.issue_event_id();
                                 resources.causal_log.push(
                                     tile_idx,
                                     CausalEvent::AgentDecision {
                                         id,
-                                        parent: None,
+                                        parent,
                                         agent: agent.id,
                                         position: (pos.x, pos.y),
-                                        reason: DecisionReason::SettlementReason,
+                                        reason: natural_reason,
                                         tick,
                                     },
                                 );
                                 *state = AgentState::Seeking {
-                                    target: TargetKind::Agent(target_agent),
+                                    target: natural_target,
                                 };
-                                settlement_migrant_tag.insert(entity);
                             }
-                        }
-                    }
-                }
-                AgentState::Seeking { target } => {
-                    // V7 Phase 10-γ — settlement-migrant exit/preemption gate.
-                    // Runs BEFORE the mutual-handshake logic. The Seeking{Agent}
-                    // arm has NO automatic exit (a settlement member does not seek
-                    // the migrant back), so without this gate a migrant would be
-                    // stuck in Seeking forever even after the proximity join makes
-                    // it a member. Gated on the persistent SettlementMigrant marker
-                    // so ζ social seekers (no marker) are untouched.
-                    if let TargetKind::Agent(pid) = target {
-                        if migrant_marker.is_some() {
+                            // V7 Section 16-ζ — tag a SOCIAL Seeking{Agent}
+                            // transition. This `if let Some(breached)` arm is the
+                            // needs/construction/social/combat path; the `else`
+                            // below is settlement migration, deliberately left
+                            // untagged so its migrant stays frozen (P10-γ scope).
+                            // Only Agent targets are tagged; Food/Water/Sleep/
+                            // ConstructionSite states do not match the pattern.
+                            if let AgentState::Seeking {
+                                target: TargetKind::Agent(_),
+                            } = *state
+                            {
+                                social_seek_entities.insert(entity);
+                                if social_rule.is_some() {
+                                    resources.social_chase_since.insert(agent.id, tick);
+                                }
+                                if let AgentState::Seeking {
+                                    target: TargetKind::Agent(peer),
+                                } = *state
+                                {
+                                    if let Some(routine) = routine.as_mut() {
+                                        routine.invite(peer, world);
+                                    }
+                                }
+                            }
+                        } else if let Some(bush) = forage_rule
+                            .filter(|_| forage_window && worker && !no_trips)
+                            .and_then(|rule| {
+                                // Pass 4 — Forage arm (after Combat, before Gather): a
+                                // member with room and less than a haul load walks to a
+                                // bush on purpose while the store is below its target.
+                                let sid = member_of.get(&agent.id)?;
+                                let plan = forage_plans.get(sid)?;
+                                let inv = inventory_opt.as_ref()?;
+                                let room = inv.total() < INVENTORY_CAPACITY;
+                                let light =
+                                    inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold);
+                                if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                    return None;
+                                }
+                                choose_bush(
+                                    &rule,
+                                    plan.home,
+                                    (pos.x, pos.y),
+                                    &resources.food_tiles,
+                                    &claims,
+                                    None,
+                                )
+                            })
+                        {
+                            *claims.entry(bush).or_default() += 1;
+                            claims_version += 1;
+                            forage_targets.insert(entity, bush);
+                            resources.tallies.forage_trips += 1;
+                            *state = AgentState::Seeking {
+                                target: TargetKind::GatherFood,
+                            };
+                        } else if let Some((spot, urgent)) = firewood_rule
+                            .filter(|_| worker && !no_trips)
+                            .and_then(|rule| {
+                                // Pass 5 — Firewood arm (after Forage, before Gather): a
+                                // member with room and less than a wood load walks to a
+                                // deadwood spot while the wood in hand is below target.
+                                // Pass 6 — members of an urgent settlement use the urgent
+                                // window and twice the per-spot claim cap.
+                                let sid = member_of.get(&agent.id)?;
+                                let plan = wood_plans.get(sid)?;
+                                if !(if plan.urgent {
+                                    urgent_window
+                                } else {
+                                    wood_window
+                                }) {
+                                    return None;
+                                }
+                                let inv = inventory_opt.as_ref()?;
+                                let room = inv.total() < INVENTORY_CAPACITY;
+                                let light =
+                                    inv.get(ResourceKind::Wood) < wood_haul(rule.haul_threshold);
+                                if !(room && light && (plan.in_hand as f64) < plan.target) {
+                                    return None;
+                                }
+                                let rule = urgent_rule(rule, plan.urgent);
+                                choose_spot(
+                                    &rule,
+                                    plan.home,
+                                    (pos.x, pos.y),
+                                    &resources.wood_tiles,
+                                    &wood_claims,
+                                    None,
+                                )
+                                .map(|spot| (spot, plan.urgent))
+                            })
+                        {
+                            *wood_claims.entry(spot).or_default() += 1;
+                            wood_claims_version += 1;
+                            wood_targets.insert(entity, spot);
+                            resources.tallies.wood_trips += 1;
+                            // Display-only (Pass 6): trips started in urgent mode.
+                            resources.tallies.urgent_wood_trips += u64::from(urgent);
+                            *state = AgentState::Seeking {
+                                target: TargetKind::GatherWood,
+                            };
+                        } else if let Some(_gather_tile) = {
+                            // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
+                            // when no higher-priority arm triggered, the agent has
+                            // inventory room, AND a ground food tile lies within
+                            // GATHER_SCAN_RADIUS (Chebyshev). The nearest ELIGIBLE
+                            // (in-radius, count > 0) tile is chosen by the
+                            // deterministic (dist, x, y) tie-break — `nearest_food_
+                            // tile_in_radius` filters to the radius set FIRST so a
+                            // closer out-of-radius tile cannot mask a reachable one.
+                            let has_room = inventory_opt
+                                .as_ref()
+                                .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
+                            // Pass 4 — under the forage rule opportunistic gathering
+                            // also stops at a haul load and, for members, once the
+                            // stock in hand reaches the hoard cap.
+                            let bounded = forage_rule.is_none_or(|rule| {
+                                inventory_opt.as_ref().is_some_and(|inv| {
+                                    inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold)
+                                }) && member_of
+                                    .get(&agent.id)
+                                    .and_then(|sid| forage_plans.get(sid))
+                                    .is_none_or(|plan| {
+                                        let cap = resources
+                                            .rules
+                                            .society
+                                            .stock_target
+                                            .map_or(0.0, |r| r.hoard_cap_factor);
+                                        (plan.in_hand as f64) < cap * plan.target
+                                    })
+                            });
+                            if worker && has_room && bounded && !no_trips {
+                                nearest_gather_tile(
+                                    pos,
+                                    &resources.food_tiles,
+                                    GATHER_SCAN_RADIUS,
+                                    local_home.get(&agent.id).map(|home| (*home, catchment)),
+                                )
+                            } else {
+                                None
+                            }
+                        } {
+                            // Pure positional/opportunistic arm: no memory bias and
+                            // no causal event (mirrors the deliberately-untagged
+                            // Settlement proxy). The post-decision pass attaches a
+                            // SeekTarget at the chosen tile (treated as a resource
+                            // seek), so the agent walks toward the food tile.
+                            *state = AgentState::Seeking {
+                                target: TargetKind::GatherFood,
+                            };
+                        } else if !no_trips
+                            && routine
+                                .as_ref()
+                                .is_some_and(|routine| {
+                                    routine.can_enter(
+                                        agent.id,
+                                        lineage.map(|lineage| lineage.key),
+                                        routine_members.get(&agent.id).copied(),
+                                        temperament,
+                                    )
+                                })
+                        {
+                            if routine.as_mut().is_some_and(|routine| {
+                                scope!("routine_start", { routine.start(
+                                    agent.id,
+                                    entity,
+                                    lineage.map(|lineage| lineage.key),
+                                    routine_members.get(&agent.id).copied(),
+                                    !adult,
+                                    elders.contains(&agent.id),
+                                    temperament,
+                                    resources,
+                                ) })
+                            }) {
+                                *state = AgentState::Seeking {
+                                    target: TargetKind::Activity,
+                                };
+                            }
+                        } else {
+                            // V7 Phase 10-β / P10β-8 — 8th cascade arm:
+                            // settlement migration pull. Fires when no
+                            // higher-priority drive (Hunger/Thirst/Fatigue/
+                            // Construction/Social/Combat) triggered AND the
+                            // agent is NOT a member of any settlement AND at
+                            // least one settlement has open capacity
+                            // (`current < SETTLEMENT_MAX_POP`).
+                            //
+                            // Target: first known member of the lowest-id
+                            // capacity-bearing settlement, used as a
+                            // `TargetKind::Agent(_)` proxy (no Position target
+                            // exists). The migration pull biases Brownian
+                            // motion via the Seeking-suppression rule but
+                            // requires the agent to physically reach the
+                            // partner tile before any join effect — which is a
+                            // Phase 10-γ concern, not 10-β scope.
                             let is_member = resources
                                 .settlements
                                 .values()
                                 .any(|s| s.member_agents.contains(&agent.id));
-                            // `target_alive`: the specific target member is still a
-                            // member of SOME settlement (settlement not dissolved /
-                            // member not removed from the roster) AND its entity is
-                            // still live in the world. The live-entity conjunct is
-                            // load-bearing: a despawned member can leave a stale
-                            // `member_agents` entry, and without the `live_agent_ids`
-                            // check the migrant would keep Seeking a target whose
-                            // tile the post-pass can no longer resolve → frozen.
-                            let target_alive = agent_positions.contains_key(&pid)
-                                && resources
+                            if !is_member {
+                                // V7 Phase 10-γ — nearest-member target selection.
+                                // Among all LIVE members of capacity-bearing,
+                                // non-empty settlements, pick the Manhattan-nearest
+                                // member to the migrant's current tile, tie-broken by
+                                // the member tile's (x, y) lexicographic order
+                                // (mirrors `nearest_resource_tile`) with the member
+                                // AgentId as a final deterministic disambiguator for
+                                // the same-tile case. Independent of settlement-id /
+                                // member-id iteration order — a nearer settlement
+                                // always wins (the prior lowest-id pick could route a
+                                // migrant clear across the map past a closer one).
+                                // Stale roster ids (no live position) are skipped, so
+                                // an empty / all-dead candidate set yields None and
+                                // the agent stays Idle (no garbage target, no panic).
+                                let target_agent_opt: Option<AgentId> = resources
                                     .settlements
                                     .values()
-                                    .any(|s| s.member_agents.contains(&pid));
-                            // Higher-priority needs preempt the lowest-priority
-                            // migration arm mid-path (Hunger > Thirst > Fatigue).
-                            let hunger_breach = hunger_opt
-                                .as_ref()
-                                .is_some_and(|h| h.value > HUNGER_THRESHOLD);
-                            let thirst_breach = thirst_opt
-                                .as_ref()
-                                .is_some_and(|t| t.value > THIRST_THRESHOLD);
-                            let fatigue_breach = sleep_opt
-                                .as_ref()
-                                .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD);
-
-                            if is_member || !target_alive {
-                                // Joined, or the target vanished → abort to Idle.
-                                // The post-pass clears the (now stale) SeekTarget;
-                                // the marker is removed in the deferred lifecycle
-                                // loop. No chase, no freeze.
-                                *state = AgentState::Idle;
-                                migrant_clear.push(entity);
-                                continue;
-                            } else if hunger_breach || thirst_breach || fatigue_breach {
-                                // Preempt: drop the migration, switch to the
-                                // higher-priority resource seek. Clear the marker
-                                // AND force-remove the stale Agent-target SeekTarget
-                                // (before the post-pass) so the resource branch
-                                // re-resolves a fresh goal next.
-                                let resource = if hunger_breach {
-                                    TargetKind::Food
-                                } else if thirst_breach {
-                                    TargetKind::Water
-                                } else {
-                                    TargetKind::Sleep
-                                };
-                                *state = AgentState::Seeking { target: resource };
-                                migrant_clear.push(entity);
-                                preempt_clear_seek.push(entity);
-                                continue;
-                            }
-                            // else: still migrating → fall through to the handshake
-                            // logic (a no-op for a non-reciprocated member target,
-                            // so the migrant stays Seeking and keeps walking via the
-                            // post-pass SeekTarget).
-                        }
-                    }
-                    let key = (pos.x, pos.y);
-                    let has_resource = match target {
-                        TargetKind::Food => resources
-                            .food_tiles
-                            .get(&key)
-                            .copied()
-                            .is_some_and(|v| v > 0),
-                        // Direction-2 slice 2-2 — Gather reaches its tile on the
-                        // same "food present at current tile" edge as eating.
-                        TargetKind::GatherFood => resources
-                            .food_tiles
-                            .get(&key)
-                            .copied()
-                            .is_some_and(|v| v > 0),
-                        TargetKind::Water => resources
-                            .water_tiles
-                            .get(&key)
-                            .copied()
-                            .is_some_and(|v| v > 0),
-                        TargetKind::Sleep => resources
-                            .sleep_tiles
-                            .get(&key)
-                            .copied()
-                            .is_some_and(|v| v > 0),
-                        // V7 Phase 6-β / P6β-8: ConstructionSite has a
-                        // resource at this tile iff an active site exists
-                        // co-located with the agent. Snapshot taken at
-                        // the top of `tick` via `construction_sites`.
-                        TargetKind::ConstructionSite => {
-                            construction_sites.contains_key(&key)
-                        }
-                        // V7 Phase 7-β / P7β-7 — mutual handshake check.
-                        // Uses the start-of-tick `seeking_partners_by_pos`
-                        // snapshot so both agents in a mutual pair pass
-                        // the check this tick (live state mutation would
-                        // break the second-processed agent's check).
-                        TargetKind::Agent(partner_id) => seeking_partners_by_pos
-                            .get(&(pos.x, pos.y))
-                            .map(|peers| {
-                                peers.iter().any(|(peer_id, peer_target)| {
-                                    *peer_id == partner_id && *peer_target == agent.id
-                                })
-                            })
-                            .unwrap_or(false),
-                    };
-                    if has_resource {
-                        // V7 Phase 6-β / P6β-8: emit ConstructionStarted on
-                        // the Seeking{ConstructionSite} → Consuming{ConstructionSite}
-                        // transition. Parent = most recent same-tile
-                        // AgentDecision for THIS agent with reason
-                        // ConstructionReason (the originating decision —
-                        // not a HungerThresholdBreach decision, not a
-                        // different agent's decision).
-                        if matches!(target, TargetKind::ConstructionSite) {
-                            if let Some((_site_entity, blueprint)) =
-                                construction_sites.get(&key).copied()
-                            {
-                                let parent = resources.causal_log.get(tile_idx).and_then(|log| {
-                                    log.as_slice().iter().rev().find_map(|ev| match ev {
+                                    .filter(|s| {
+                                        s.population_stats.current
+                                            < sim_core::components::SETTLEMENT_MAX_POP
+                                            && !s.member_agents.is_empty()
+                                    })
+                                    .flat_map(|s| s.member_agents.iter().copied())
+                                    .filter_map(|mid| {
+                                        agent_positions.get(&mid).map(|tile| (mid, *tile))
+                                    })
+                                    .min_by_key(|(mid, (mx, my))| {
+                                        let dx = (*mx as i64 - pos.x as i64).abs();
+                                        let dy = (*my as i64 - pos.y as i64).abs();
+                                        (dx + dy, *mx, *my, *mid)
+                                    })
+                                    .map(|(mid, _)| mid);
+                                // Record the migration INTENT (SettlementReason event
+                                // — preserves p10-β A16 + community-history routing),
+                                // THEN restore the FSM transition Stage 1 removed: the
+                                // non-member enters Seeking{Agent(member)} and is
+                                // tagged so the post-decision pass attaches a
+                                // SeekTarget at the member's current tile (re-resolved
+                                // every tick, reusing the ζ pass). The unchanged β
+                                // movement.rs walks it toward the member; the existing
+                                // proximity-join refresh auto-admits it. A persistent
+                                // SettlementMigrant marker (inserted after the
+                                // post-pass) lets the Seeking{Agent} arm exit on join
+                                // / abort. Stage-1's targetless freeze is gone — the
+                                // migrant always carries a SeekTarget while seeking.
+                                if let Some(target_agent) = target_agent_opt {
+                                    let id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
                                         CausalEvent::AgentDecision {
                                             id,
-                                            agent: a,
-                                            reason: DecisionReason::ConstructionReason,
-                                            ..
-                                        } if *a == agent.id => Some(*id),
-                                        _ => None,
-                                    })
-                                });
-                                let id = resources.issue_event_id();
-                                resources.causal_log.push(
-                                    tile_idx,
-                                    CausalEvent::ConstructionStarted {
-                                        id,
-                                        parent,
-                                        blueprint,
-                                        position: (pos.x, pos.y),
-                                        tick,
-                                    },
-                                );
+                                            parent: None,
+                                            agent: agent.id,
+                                            position: (pos.x, pos.y),
+                                            reason: DecisionReason::SettlementReason,
+                                            tick,
+                                        },
+                                    );
+                                    *state = AgentState::Seeking {
+                                        target: TargetKind::Agent(target_agent),
+                                    };
+                                    settlement_migrant_tag.insert(entity);
+                                }
                             }
                         }
-                        // V7 Phase 7-β / P7β-7/P7β-8 — emit
-                        // SocialInteractionStarted exactly once per mutual
-                        // handshake: only the smaller-AgentId agent emits.
-                        // The partner observes the handshake silently
-                        // (transitions to Consuming via its own
-                        // snapshot-check path).
-                        if let TargetKind::Agent(partner_id) = target {
-                            if agent.id < partner_id {
-                                let parent: Option<EventId> = resources
-                                    .causal_log
-                                    .get(tile_idx)
-                                    .and_then(|log| {
-                                        log.as_slice().iter().rev().find_map(|ev| match ev {
-                                            CausalEvent::AgentDecision {
-                                                id,
-                                                agent: a,
-                                                reason: DecisionReason::SocialReason,
-                                                ..
-                                            } if *a == agent.id => Some(*id),
-                                            _ => None,
-                                        })
-                                    });
-                                let id = resources.issue_event_id();
-                                resources.causal_log.push(
-                                    tile_idx,
-                                    CausalEvent::SocialInteractionStarted {
-                                        id,
-                                        parent,
-                                        agents: (agent.id, partner_id),
-                                        position: (pos.x, pos.y),
-                                        tick,
-                                    },
-                                );
-                            }
-                        }
-                        *state = AgentState::Consuming { target };
                     }
-                }
-                AgentState::Consuming { target } => {
-                    let key = (pos.x, pos.y);
-                    // Section-3.10 conditional mutation rule (plan attempt 3):
-                    //   - tile map mutation is conditional on Some
-                    //   - need decrement is UNCONDITIONAL
-                    //   - state → Idle is UNCONDITIONAL
-                    //
-                    // Rationale: when an agent enters Consuming but the
-                    // tile is absent (e.g. another agent consumed it the
-                    // prior tick, or the tile was never populated), the
-                    // agent still completes its consume action — Hunger /
-                    // Thirst drop, state returns to Idle. This is the
-                    // locked behavior under Assertions 16 and 17.
-                    // The agent must NOT synthesise a phantom 0-counter
-                    // entry; `entry().or_insert(0)` is forbidden.
-                    match target {
-                        TargetKind::Food => {
-                            // V7 Section 16-α0 — source guard: a tile at the
-                            // RESOURCE_SOURCE_INFINITE sentinel never depletes.
-                            // Finite tiles keep decrement-and-remove (Assertions
-                            // 16/17). Need-decrement + Idle stay UNCONDITIONAL.
-                            if let Some(counter) = resources.food_tiles.get_mut(&key) {
-                                if *counter != RESOURCE_SOURCE_INFINITE {
-                                    *counter = counter.saturating_sub(1);
-                                    if *counter == 0 {
-                                        resources.food_tiles.remove(&key);
+                    AgentState::Seeking {
+                        target: TargetKind::Agent(_),
+                    } if founding.contains_key(&agent.id) => {
+                        // Pass 11 — a walking founder: no social gate, no chase
+                        // timeout, no handshake (the leader's self-target is allowed
+                        // only here). An actionable need pre-empts the walk and the
+                        // stale site target is dropped; the marker stays.
+                        if let Some((need, _)) = actionable_need_with_fatigue_threshold(
+                            hunger_opt.as_deref(),
+                            thirst_opt.as_deref(),
+                            sleep_opt.as_deref(),
+                            availability,
+                            fatigue_threshold,
+                        ) {
+                            *state = AgentState::Seeking { target: need };
+                            preempt_clear_seek.push(entity);
+                        }
+                    }
+                    AgentState::Seeking { target } => {
+                        if matches!(target, TargetKind::Activity) {
+                            let Some(routine) = routine.as_mut() else {
+                                *state = AgentState::Idle;
+                                continue;
+                            };
+                            let Some(activity) = routine.activity(agent.id) else {
+                                *state = AgentState::Idle;
+                                continue;
+                            };
+                            if let Some(completed) = routine.deadline(
+                                agent.id,
+                                routine_members.get(&agent.id).copied(),
+                                (pos.x, pos.y) != activity.place,
+                                lineage.map(|lineage| lineage.key),
+                                temperament,
+                            ) {
+                                routine.end(
+                                    agent.id,
+                                    entity,
+                                    completed,
+                                    Some(lineage.map(|lineage| lineage.key)),
+                                );
+                                *state = AgentState::Idle;
+                                continue;
+                            }
+                        }
+                        // Pass 5 — critical hunger or thirst interrupts a gathering
+                        // trip: the gatherer becomes Idle (the post-pass drops its
+                        // SeekTarget) and the next decision tick serves the need.
+                        if resources.rules.agent.preempt_gathering
+                            && matches!(target, TargetKind::GatherFood | TargetKind::GatherWood)
+                            && (hunger_opt
+                                .as_ref()
+                                .is_some_and(|h| f64::from(h.value) >= critical_limit)
+                                || thirst_opt
+                                    .as_ref()
+                                    .is_some_and(|t| t.value >= critical_limit))
+                        {
+                            *state = AgentState::Idle;
+                            resources.tallies.gather_preempted += 1;
+                            continue;
+                        }
+                        if matches!(target, TargetKind::Food | TargetKind::Water) {
+                            if let Some(limit) = resources.rules.agent.critical_preemption {
+                                if let Some((need, _)) = actionable_need_with_fatigue_threshold(
+                                    hunger_opt.as_deref(),
+                                    thirst_opt.as_deref(),
+                                    sleep_opt.as_deref(),
+                                    availability,
+                                    fatigue_threshold,
+                                ) {
+                                    let value = match need {
+                                        TargetKind::Food => {
+                                            hunger_opt.as_ref().map(|h| f64::from(h.value))
+                                        }
+                                        TargetKind::Water => thirst_opt.as_ref().map(|t| t.value),
+                                        TargetKind::Sleep => sleep_opt.as_ref().map(|s| s.fatigue),
+                                        _ => None,
+                                    };
+                                    let current_value = match target {
+                                        TargetKind::Food => hunger_opt
+                                            .as_ref()
+                                            .filter(|_| availability.food)
+                                            .map(|h| f64::from(h.value)),
+                                        TargetKind::Water => thirst_opt
+                                            .as_ref()
+                                            .filter(|_| availability.water)
+                                            .map(|t| t.value),
+                                        TargetKind::Sleep
+                                        | TargetKind::ConstructionSite
+                                        | TargetKind::Agent(_)
+                                        | TargetKind::GatherFood
+                                        | TargetKind::GatherWood
+                                        | TargetKind::Activity => None,
+                                    };
+                                    // Keep an already-critical trip: competing hunger must not
+                                    // repeatedly interrupt water seeking until the agent dehydrates.
+                                    // Restarting the same need would prevent arrival forever.
+                                    // Idle's post-pass drops SeekTarget; carried goods remain owned.
+                                    if need != target
+                                        && value.is_some_and(|value| value > limit)
+                                        && !current_value.is_some_and(|value| value > limit)
+                                    {
+                                        *state = AgentState::Idle;
+                                        continue;
                                     }
                                 }
                             }
-                            if let Some(h) = hunger_opt {
-                                h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
-                            }
-                            *state = AgentState::Idle;
                         }
-                        // Direction-2 slice 2-2 — Gather PICKUP (carry, NOT eat):
-                        // transfer ground Food into the agent's Inventory. Mirrors
-                        // the Food source-guard EXACTLY — an infinite (255) tile is
-                        // never decremented/removed; a finite tile decrements by the
-                        // amount actually added. Hunger is left UNCHANGED, and the
-                        // transition to Idle is UNCONDITIONAL (freeze-critical): a
-                        // gone tile / full inventory still resolves to Idle with no
-                        // re-seek loop.
-                        TargetKind::GatherFood => {
-                            let want = INVENTORY_CAPACITY.saturating_sub(
-                                inventory_opt.as_ref().map(|inv| inv.total()).unwrap_or(0),
-                            );
-                            if want > 0 {
-                                if let Some(counter) = resources.food_tiles.get_mut(&key) {
-                                    if *counter == RESOURCE_SOURCE_INFINITE {
-                                        // Infinite source: take freely, no decrement.
-                                        if let Some(inv) = inventory_opt.as_mut() {
-                                            inv.add(ResourceKind::Food, want);
-                                        }
+                        // V7 Phase 10-γ — settlement-migrant exit/preemption gate.
+                        // Runs BEFORE the mutual-handshake logic. The Seeking{Agent}
+                        // arm has NO automatic exit (a settlement member does not seek
+                        // the migrant back), so without this gate a migrant would be
+                        // stuck in Seeking forever even after the proximity join makes
+                        // it a member. Gated on the persistent SettlementMigrant marker
+                        // so ζ social seekers (no marker) are untouched.
+                        if let TargetKind::Agent(pid) = target {
+                            if let Some(rule) = social_rule.filter(|_| migrant_marker.is_none()) {
+                                let since =
+                                    *resources.social_chase_since.entry(agent.id).or_insert(tick);
+                                if !agent_positions.contains_key(&pid) {
+                                    *state = AgentState::Idle;
+                                    resources.social_chase_since.remove(&agent.id);
+                                    resources.social_retry_after.insert(
+                                        agent.id,
+                                        tick.saturating_add(rule.retry_cooldown_ticks),
+                                    );
+                                    continue;
+                                }
+                                if actionable_need_with_fatigue_threshold(
+                                    hunger_opt.as_deref(),
+                                    thirst_opt.as_deref(),
+                                    sleep_opt.as_deref(),
+                                    availability,
+                                    fatigue_threshold,
+                                )
+                                .is_some()
+                                {
+                                    *state = AgentState::Idle;
+                                    resources.social_chase_since.remove(&agent.id);
+                                    continue;
+                                }
+                                if tick.saturating_sub(since) >= rule.max_chase_ticks {
+                                    *state = AgentState::Idle;
+                                    resources.social_chase_since.remove(&agent.id);
+                                    resources.social_retry_after.insert(
+                                        agent.id,
+                                        tick.saturating_add(rule.retry_cooldown_ticks),
+                                    );
+                                    continue;
+                                }
+                            }
+                            if migrant_marker.is_some() {
+                                let is_member = resources
+                                    .settlements
+                                    .values()
+                                    .any(|s| s.member_agents.contains(&agent.id));
+                                // `target_alive`: the specific target member is still a
+                                // member of SOME settlement (settlement not dissolved /
+                                // member not removed from the roster) AND its entity is
+                                // still live in the world. The live-entity conjunct is
+                                // load-bearing: a despawned member can leave a stale
+                                // `member_agents` entry, and without the `live_agent_ids`
+                                // check the migrant would keep Seeking a target whose
+                                // tile the post-pass can no longer resolve → frozen.
+                                let target_alive = agent_positions.contains_key(&pid)
+                                    && resources
+                                        .settlements
+                                        .values()
+                                        .any(|s| s.member_agents.contains(&pid));
+                                // Higher-priority needs preempt the lowest-priority
+                                // migration arm mid-path (Hunger > Thirst > Fatigue).
+                                let hunger_breach = hunger_opt
+                                    .as_ref()
+                                    .is_some_and(|h| h.value > HUNGER_THRESHOLD);
+                                let thirst_breach = thirst_opt
+                                    .as_ref()
+                                    .is_some_and(|t| t.value > THIRST_THRESHOLD);
+                                let fatigue_breach = sleep_opt
+                                    .as_ref()
+                                    .is_some_and(|s| s.fatigue > fatigue_threshold);
+
+                                if is_member || !target_alive {
+                                    // Joined, or the target vanished → abort to Idle.
+                                    // The post-pass clears the (now stale) SeekTarget;
+                                    // the marker is removed in the deferred lifecycle
+                                    // loop. No chase, no freeze.
+                                    *state = AgentState::Idle;
+                                    migrant_clear.push(entity);
+                                    continue;
+                                } else if hunger_breach || thirst_breach || fatigue_breach {
+                                    // Preempt: drop the migration, switch to the
+                                    // higher-priority resource seek. Clear the marker
+                                    // AND force-remove the stale Agent-target SeekTarget
+                                    // (before the post-pass) so the resource branch
+                                    // re-resolves a fresh goal next.
+                                    let resource = if hunger_breach {
+                                        TargetKind::Food
+                                    } else if thirst_breach {
+                                        TargetKind::Water
                                     } else {
-                                        let take = (*counter as u32).min(want);
-                                        if take > 0 {
+                                        TargetKind::Sleep
+                                    };
+                                    *state = AgentState::Seeking { target: resource };
+                                    migrant_clear.push(entity);
+                                    preempt_clear_seek.push(entity);
+                                    continue;
+                                }
+                                // else: still migrating → fall through to the handshake
+                                // logic (a no-op for a non-reciprocated member target,
+                                // so the migrant stays Seeking and keeps walking via the
+                                // post-pass SeekTarget).
+                            }
+                        }
+                        let key = (pos.x, pos.y);
+                        if planning.is_some() && matches!(target, TargetKind::ConstructionSite) {
+                            match builder_targets.get(&agent.id) {
+                                Some(tile) if *tile != key => continue,
+                                Some(_) => {}
+                                None => {
+                                    *state = AgentState::Idle;
+                                    continue;
+                                }
+                            }
+                        }
+                        let has_resource = match target {
+                            TargetKind::Activity => routine
+                                .as_ref()
+                                .and_then(|routine| routine.activity(agent.id))
+                                .is_some_and(|activity| activity.place == key),
+                            TargetKind::Food => resources
+                                .food_tiles
+                                .get(&key)
+                                .copied()
+                                .is_some_and(|v| v > 0),
+                            // Direction-2 slice 2-2 — Gather reaches its tile on the
+                            // same "food present at current tile" edge as eating.
+                            TargetKind::GatherFood => resources
+                                .food_tiles
+                                .get(&key)
+                                .copied()
+                                .is_some_and(|v| v > 0),
+                            // Pass 5 — a firewood gatherer reaches its deadwood spot.
+                            TargetKind::GatherWood => resources
+                                .wood_tiles
+                                .get(&key)
+                                .copied()
+                                .is_some_and(|v| v > 0),
+                            TargetKind::Water => resources
+                                .water_tiles
+                                .get(&key)
+                                .copied()
+                                .is_some_and(|v| v > 0),
+                            TargetKind::Sleep => {
+                                resources
+                                    .sleep_tiles
+                                    .get(&key)
+                                    .copied()
+                                    .is_some_and(|v| v > 0)
+                                    && (resources.rules.agent.night_rest.is_none()
+                                        || resources
+                                            .bed_of
+                                            .get(&agent.id)
+                                            .is_none_or(|bed| *bed == key))
+                            }
+                            // V7 Phase 6-β / P6β-8: ConstructionSite has a
+                            // resource at this tile iff an active site exists
+                            // co-located with the agent. Snapshot taken at
+                            // the top of `tick` via `construction_sites`.
+                            TargetKind::ConstructionSite => construction_sites.contains_key(&key),
+                            // V7 Phase 7-β / P7β-7 — mutual handshake check.
+                            // Uses the start-of-tick `seeking_partners_by_pos`
+                            // snapshot so both agents in a mutual pair pass
+                            // the check this tick (live state mutation would
+                            // break the second-processed agent's check).
+                            TargetKind::Agent(partner_id) => seeking_partners_by_pos
+                                .get(&(pos.x, pos.y))
+                                .map(|peers| {
+                                    peers.iter().any(|(peer_id, peer_target)| {
+                                        *peer_id == partner_id && *peer_target == agent.id
+                                    })
+                                })
+                                .unwrap_or(false),
+                        };
+                        if has_resource {
+                            if matches!(target, TargetKind::Activity) {
+                                if let Some(routine) = routine.as_mut() {
+                                    routine.arrive(agent.id, entity, temperament);
+                                }
+                            }
+                            // V7 Phase 6-β / P6β-8: emit ConstructionStarted on
+                            // the Seeking{ConstructionSite} → Consuming{ConstructionSite}
+                            // transition. Parent = most recent same-tile
+                            // AgentDecision for THIS agent with reason
+                            // ConstructionReason (the originating decision —
+                            // not a HungerThresholdBreach decision, not a
+                            // different agent's decision).
+                            if matches!(target, TargetKind::ConstructionSite) {
+                                if let Some((_site_entity, blueprint)) =
+                                    construction_sites.get(&key).copied()
+                                {
+                                    let parent =
+                                        resources.causal_log.get(tile_idx).and_then(|log| {
+                                            log.as_slice().iter().rev().find_map(|ev| match ev {
+                                                CausalEvent::AgentDecision {
+                                                    id,
+                                                    agent: a,
+                                                    reason: DecisionReason::ConstructionReason,
+                                                    ..
+                                                } if *a == agent.id => Some(*id),
+                                                _ => None,
+                                            })
+                                        });
+                                    let id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
+                                        CausalEvent::ConstructionStarted {
+                                            id,
+                                            parent,
+                                            blueprint,
+                                            position: (pos.x, pos.y),
+                                            tick,
+                                        },
+                                    );
+                                }
+                            }
+                            // V7 Phase 7-β / P7β-7/P7β-8 — emit
+                            // SocialInteractionStarted exactly once per mutual
+                            // handshake: only the smaller-AgentId agent emits.
+                            // The partner observes the handshake silently
+                            // (transitions to Consuming via its own
+                            // snapshot-check path).
+                            if let TargetKind::Agent(partner_id) = target {
+                                if agent.id < partner_id {
+                                    let parent: Option<EventId> =
+                                        resources.causal_log.get(tile_idx).and_then(|log| {
+                                            log.as_slice().iter().rev().find_map(|ev| match ev {
+                                                CausalEvent::AgentDecision {
+                                                    id,
+                                                    agent: a,
+                                                    reason: DecisionReason::SocialReason,
+                                                    ..
+                                                } if *a == agent.id => Some(*id),
+                                                _ => None,
+                                            })
+                                        });
+                                    let id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
+                                        CausalEvent::SocialInteractionStarted {
+                                            id,
+                                            parent,
+                                            agents: (agent.id, partner_id),
+                                            position: (pos.x, pos.y),
+                                            tick,
+                                        },
+                                    );
+                                }
+                            }
+                            if social_rule.is_some() && matches!(target, TargetKind::Agent(_)) {
+                                resources.social_chase_since.remove(&agent.id);
+                            }
+                            *state = AgentState::Consuming { target };
+                        }
+                    }
+                    AgentState::Consuming { target } => {
+                        let key = (pos.x, pos.y);
+                        // Section-3.10 conditional mutation rule (plan attempt 3):
+                        //   - tile map mutation is conditional on Some
+                        //   - need decrement is UNCONDITIONAL
+                        //   - state → Idle is UNCONDITIONAL
+                        //
+                        // Rationale: when an agent enters Consuming but the
+                        // tile is absent (e.g. another agent consumed it the
+                        // prior tick, or the tile was never populated), the
+                        // agent still completes its consume action — Hunger /
+                        // Thirst drop, state returns to Idle. This is the
+                        // locked behavior under Assertions 16 and 17.
+                        // The agent must NOT synthesise a phantom 0-counter
+                        // entry; `entry().or_insert(0)` is forbidden.
+                        match target {
+                            TargetKind::Activity => {
+                                let Some(routine) = routine.as_mut() else {
+                                    *state = AgentState::Idle;
+                                    continue;
+                                };
+                                if routine.activity(agent.id).is_none() {
+                                    *state = AgentState::Idle;
+                                    continue;
+                                }
+                                if let Some(completed) = routine.deadline(
+                                    agent.id,
+                                    routine_members.get(&agent.id).copied(),
+                                    false,
+                                    lineage.map(|lineage| lineage.key),
+                                    temperament,
+                                ) {
+                                    routine.end(
+                                        agent.id,
+                                        entity,
+                                        completed,
+                                        Some(lineage.map(|lineage| lineage.key)),
+                                    );
+                                    *state = AgentState::Idle;
+                                }
+                            }
+                            TargetKind::Food => {
+                                // V7 Section 16-α0 — source guard: a tile at the
+                                // RESOURCE_SOURCE_INFINITE sentinel never depletes.
+                                // Finite tiles keep decrement-and-remove (Assertions
+                                // 16/17). Legacy rules retain unconditional relief; strict rules require food.
+                                let food_present = resources
+                                    .food_tiles
+                                    .get(&key)
+                                    .is_some_and(|counter| *counter > 0);
+                                if resources.rules.agent.strict_consume && !food_present {
+                                    *state = AgentState::Idle;
+                                    continue;
+                                }
+                                if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                    food_version += 1;
+                                    if *counter != RESOURCE_SOURCE_INFINITE {
+                                        resources.tallies.food_harvested += u64::from(*counter > 0);
+                                        *counter = counter.saturating_sub(1);
+                                        if *counter == 0 {
+                                            resources.food_tiles.remove(&key);
+                                        }
+                                    }
+                                }
+                                if let Some(h) = hunger_opt {
+                                    h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
+                                    resources.tallies.meals_eaten += 1;
+                                    resources.tallies.meals_without_food +=
+                                        u64::from(!food_present);
+                                    // Pass 5, display-only: a resolved ground meal.
+                                    resources.tallies.ground_meals += 1;
+                                }
+                                *state = AgentState::Idle;
+                            }
+                            // Direction-2 slice 2-2 — Gather PICKUP (carry, NOT eat):
+                            // transfer ground Food into the agent's Inventory. Mirrors
+                            // the Food source-guard EXACTLY — an infinite (255) tile is
+                            // never decremented/removed; a finite tile decrements by the
+                            // amount actually added. Hunger is left UNCHANGED, and the
+                            // transition to Idle is UNCONDITIONAL (freeze-critical): a
+                            // gone tile / full inventory still resolves to Idle with no
+                            // re-seek loop.
+                            TargetKind::GatherFood => {
+                                let want = INVENTORY_CAPACITY.saturating_sub(
+                                    inventory_opt.as_ref().map(|inv| inv.total()).unwrap_or(0),
+                                );
+                                if want > 0 {
+                                    if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                        food_version += 1;
+                                        if *counter == RESOURCE_SOURCE_INFINITE {
+                                            // Infinite source: take freely, no decrement.
                                             if let Some(inv) = inventory_opt.as_mut() {
-                                                let overflow = inv.add(ResourceKind::Food, take);
-                                                let actually = take - overflow; // overflow == 0 (want <= room)
-                                                *counter = counter.saturating_sub(actually as u8);
-                                                if *counter == 0 {
-                                                    resources.food_tiles.remove(&key);
+                                                inv.add(ResourceKind::Food, want);
+                                            }
+                                        } else {
+                                            let take = (*counter as u32).min(want);
+                                            if take > 0 {
+                                                if let Some(inv) = inventory_opt.as_mut() {
+                                                    let overflow =
+                                                        inv.add(ResourceKind::Food, take);
+                                                    let actually = take - overflow; // overflow == 0 (want <= room)
+                                                    *counter =
+                                                        counter.saturating_sub(actually as u8);
+                                                    resources.tallies.food_harvested +=
+                                                        u64::from(actually);
+                                                    if *counter == 0 {
+                                                        resources.food_tiles.remove(&key);
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                *state = AgentState::Idle;
                             }
-                            *state = AgentState::Idle;
-                        }
-                        TargetKind::Water => {
-                            // V7 Section 16-α0 — source guard (mirror of Food).
-                            if let Some(counter) = resources.water_tiles.get_mut(&key) {
-                                if *counter != RESOURCE_SOURCE_INFINITE {
-                                    *counter = counter.saturating_sub(1);
-                                    if *counter == 0 {
-                                        resources.water_tiles.remove(&key);
+                            // Pass 5 — firewood PICKUP (carry, NOT eat): take
+                            // min(spot amount, haul load - carried wood, room) and
+                            // remove an emptied spot (regrowth recreates it). The
+                            // transition to Idle is unconditional (freeze-critical).
+                            TargetKind::GatherWood => {
+                                let load = resources
+                                    .rules
+                                    .society
+                                    .firewood
+                                    .map_or(0, |rule| wood_haul(rule.haul_threshold));
+                                if let Some(inv) = inventory_opt.as_mut() {
+                                    let carried = inv.get(ResourceKind::Wood);
+                                    let room = INVENTORY_CAPACITY.saturating_sub(inv.total());
+                                    let amount =
+                                        resources.wood_tiles.get(&key).copied().unwrap_or(0);
+                                    let take = u32::from(amount)
+                                        .min(load.saturating_sub(carried))
+                                        .min(room);
+                                    if take > 0 {
+                                        wood_version += 1;
+                                        let overflow = inv.add(ResourceKind::Wood, take);
+                                        let actually = take - overflow;
+                                        let left = amount.saturating_sub(actually as u8);
+                                        if left == 0 {
+                                            resources.wood_tiles.remove(&key);
+                                        } else {
+                                            resources.wood_tiles.insert(key, left);
+                                        }
+                                        resources.tallies.wood_gathered += u64::from(actually);
                                     }
                                 }
+                                *state = AgentState::Idle;
                             }
-                            if let Some(t) = thirst_opt {
-                                t.value = (t.value - THIRST_CONSUME_AMOUNT).max(0.0);
-                            }
-                            *state = AgentState::Idle;
-                        }
-                        TargetKind::Sleep => {
-                            // V7 Section 16-α0 — source guard (mirror of Food).
-                            if let Some(counter) = resources.sleep_tiles.get_mut(&key) {
-                                if *counter != RESOURCE_SOURCE_INFINITE {
-                                    *counter = counter.saturating_sub(1);
-                                    if *counter == 0 {
-                                        resources.sleep_tiles.remove(&key);
+                            TargetKind::Water => {
+                                // V7 Section 16-α0 — source guard (mirror of Food).
+                                if let Some(counter) = resources.water_tiles.get_mut(&key) {
+                                    if *counter != RESOURCE_SOURCE_INFINITE {
+                                        *counter = counter.saturating_sub(1);
+                                        if *counter == 0 {
+                                            resources.water_tiles.remove(&key);
+                                        }
                                     }
                                 }
+                                if let Some(t) = thirst_opt {
+                                    t.value = (t.value - THIRST_CONSUME_AMOUNT).max(0.0);
+                                }
+                                *state = AgentState::Idle;
                             }
-                            if let Some(s) = sleep_opt {
-                                s.fatigue = (s.fatigue - FATIGUE_CONSUME_AMOUNT).max(0.0);
+                            TargetKind::Sleep => {
+                                if let Some(rule) = night_rest {
+                                    let urgent_hunger = availability.food
+                                        && hunger_opt.as_ref().is_some_and(|need| {
+                                            f64::from(need.value) > rule.wake_preempt
+                                        });
+                                    let urgent_thirst = availability.water
+                                        && thirst_opt
+                                            .as_ref()
+                                            .is_some_and(|need| need.value > rule.wake_preempt);
+                                    if urgent_hunger || urgent_thirst {
+                                        *state = AgentState::Idle;
+                                    } else if let Some(sleep) = sleep_opt {
+                                        sleep.fatigue =
+                                            (sleep.fatigue - rule.recovery_per_tick).max(0.0);
+                                    }
+                                    continue;
+                                }
+                                // V7 Section 16-α0 — source guard (mirror of Food).
+                                if let Some(counter) = resources.sleep_tiles.get_mut(&key) {
+                                    if *counter != RESOURCE_SOURCE_INFINITE {
+                                        *counter = counter.saturating_sub(1);
+                                        if *counter == 0 {
+                                            resources.sleep_tiles.remove(&key);
+                                        }
+                                    }
+                                }
+                                if let Some(s) = sleep_opt {
+                                    s.fatigue = (s.fatigue - FATIGUE_CONSUME_AMOUNT).max(0.0);
+                                }
+                                *state = AgentState::Idle;
                             }
-                            *state = AgentState::Idle;
-                        }
-                        // V7 Phase 6-α: ConstructionSite consume is β scope.
-                        // The ConstructionSystem (β) is the sole owner of
-                        // construction progress and completion behavior;
-                        // α MUST NOT advance progress, mutate needs/resources,
-                        // or transition the FSM state here. The match arm
-                        // exists only to satisfy exhaustiveness — kept
-                        // strictly inert and state-preserving so Phase 6-β
-                        // remains the only place these semantics land.
-                        TargetKind::ConstructionSite => {
-                            // Intentional no-op: preserve state, do not touch
-                            // tile maps, do not mutate needs, do not advance
-                            // any construction progress. β scope.
-                        }
-                        // V7 Phase 7-α / P7α-12: Agent(_) consume is β scope.
-                        // The SocialInteractionSystem (β, priority 134) is
-                        // the sole owner of social-interaction progress,
-                        // mutual-handshake validation, and FSM exit; α MUST
-                        // NOT advance familiarity, mutate Social /
-                        // RelationshipState, or transition the FSM state
-                        // here. Named arm (not a wildcard) so a future 6th
-                        // variant fails to compile here. Mirrors the Phase
-                        // 6-α ConstructionSite inert pattern at lines
-                        // ~362-366 above.
-                        TargetKind::Agent(_) => {
-                            // Intentional no-op: preserve state, do not touch
-                            // relationships, do not bump familiarity, do not
-                            // advance interaction_progress. β scope.
+                            // V7 Phase 6-α: ConstructionSite consume is β scope.
+                            // The ConstructionSystem (β) is the sole owner of
+                            // construction progress and completion behavior;
+                            // α MUST NOT advance progress, mutate needs/resources,
+                            // or transition the FSM state here. The match arm
+                            // exists only to satisfy exhaustiveness — kept
+                            // strictly inert and state-preserving so Phase 6-β
+                            // remains the only place these semantics land.
+                            TargetKind::ConstructionSite => {
+                                // Intentional no-op: preserve state, do not touch
+                                // tile maps, do not mutate needs, do not advance
+                                // any construction progress. β scope.
+                            }
+                            // V7 Phase 7-α / P7α-12: Agent(_) consume is β scope.
+                            // The SocialInteractionSystem (β, priority 134) is
+                            // the sole owner of social-interaction progress,
+                            // mutual-handshake validation, and FSM exit; α MUST
+                            // NOT advance familiarity, mutate Social /
+                            // RelationshipState, or transition the FSM state
+                            // here. Named arm (not a wildcard) so a future 6th
+                            // variant fails to compile here. Mirrors the Phase
+                            // 6-α ConstructionSite inert pattern at lines
+                            // ~362-366 above.
+                            TargetKind::Agent(_) => {
+                                // Intentional no-op: preserve state, do not touch
+                                // relationships, do not bump familiarity, do not
+                                // advance interaction_progress. β scope.
+                            }
                         }
                     }
                 }
             }
+            drop(query); // release the &mut World borrow before the SeekTarget pass
+            #[cfg(feature = "subprofile")]
+            round_timer.stop(if replay_round {
+                "decision_round_replay"
+                } else {
+                "decision_round_main"
+            });
+            let Some(routine) = routine.as_mut() else {
+                break;
+            };
+            let replay = scope!("routine_replay_collect", { routine.replay(world) });
+            if replay.is_empty() {
+                break;
+            }
+            preempt_clear_seek.extend(replay.iter().map(|(_, entity)| *entity));
+            routine_replay = Some(replay.into_iter().map(|(id, _)| id).collect());
         }
-        drop(query); // release the &mut World borrow before the SeekTarget pass
 
         // V7 Phase 10-γ — preempted migrants: remove the stale Agent-target
         // SeekTarget BEFORE the post-pass so the resource branch sees
         // `seek_opt.is_none()` and re-resolves a fresh resource goal (the new
         // state is Seeking{Food/Water/Sleep}). Done here, not in the post-pass,
         // precisely so the resource set-once attach fires this same tick.
+        #[cfg(feature = "subprofile")]
+        let post_timer = crate::subprofile::Timer::start();
         for e in &preempt_clear_seek {
             let _ = world.remove_one::<SeekTarget>(*e);
         }
@@ -1467,43 +2807,162 @@ impl RuntimeSystem for AgentDecisionSystem {
 
         let mut seek_set: Vec<(hecs::Entity, (u32, u32))> = Vec::new();
         let mut seek_clear: Vec<hecs::Entity> = Vec::new();
-        for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
-            .query::<(
-                &Agent,
-                &Position,
-                &AgentState,
-                Option<&SeekTarget>,
-                Option<&SettlementMigrant>,
-            )>()
-            .iter()
-        {
+        // Pass 4 — gather targets held after this pass, and gatherers whose
+        // bush emptied before they arrived (re-targeted below).
+        let mut gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        let mut retarget: Vec<Retarget> = Vec::new();
+        let mut to_idle: Vec<hecs::Entity> = Vec::new();
+        // Pass 5 — deadwood targets held after this pass, and wood gatherers
+        // whose spot emptied (or who lost their target), re-targeted below.
+        let mut wood_gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        let mut wood_retarget: Vec<WoodRetarget> = Vec::new();
+        let mut post_query = world.query::<(
+            &Agent,
+            &Position,
+            &AgentState,
+            Option<&SeekTarget>,
+            Option<&SettlementMigrant>,
+            Option<&Founding>,
+        )>();
+        let mut post_rows: Vec<_> = post_query.iter().collect();
+        // Pass 9: the SeekTarget post-pass also runs in AgentId order under keyed draws.
+        if resources.rules.agent.keyed_draws || routine_enabled {
+            post_rows.sort_by_key(|(_, row)| row.0.id);
+        }
+        for (e, (agent, pos, state, seek_opt, migrant_marker, founding_marker)) in post_rows {
             match state {
-                // Resource seeks: set ONCE, keep stable (α behavior unchanged —
-                // resource tiles are fixed, so never re-target while seeking).
+                AgentState::Seeking {
+                    target: TargetKind::Activity,
+                } => {
+                    if let Some(activity) = routine
+                        .as_ref()
+                        .and_then(|routine| routine.activity(agent.id))
+                    {
+                        if seek_opt.map(|seek| seek.tile) != Some(activity.place) {
+                            seek_set.push((e, activity.place));
+                        }
+                    } else {
+                        to_idle.push(e);
+                    }
+                }
+                // Pass 11 — a walking founder (the leader included) heads to
+                // its group's site.
+                AgentState::Seeking { target: TargetKind::Agent(_) } if founding_marker.is_some() => {
+                    if let Some(f) = founding_marker {
+                        if seek_opt.map(|s| s.tile) != Some(f.site) {
+                            seek_set.push((e, f.site));
+                        }
+                    }
+                }
+                // Pass 4 — under the forage rule a gatherer heads to the bush the
+                // Forage arm chose, keeps a bush that still holds food, and is
+                // re-targeted (never frozen) when its bush emptied.
+                AgentState::Seeking { target: TargetKind::GatherFood } if forage_rule.is_some() => {
+                    let held = if let Some(bush) = forage_targets.get(&e) {
+                        seek_set.push((e, *bush));
+                        Some(*bush)
+                    } else if let Some(seek) = seek_opt {
+                        if resources.food_tiles.get(&seek.tile).is_some_and(|amount| *amount > 0) {
+                            Some(seek.tile)
+                        } else {
+                            retarget.push((agent.id, e, (pos.x, pos.y), seek.tile));
+                            None
+                        }
+                    } else {
+                        let chosen = nearest_gather_tile(pos, &resources.food_tiles, GATHER_SCAN_RADIUS, local_home.get(&agent.id).map(|home| (*home, catchment)));
+                        match chosen {
+                            Some(tile) => seek_set.push((e, tile)),
+                            // The tile its Gather arm picked was emptied later in
+                            // this tick: idle instead of freezing without a target.
+                            None => to_idle.push(e),
+                        }
+                        chosen
+                    };
+                    if let Some(tile) = held {
+                        *gather_claims.entry(tile).or_default() += 1;
+                    }
+                }
+                // Pass 5 — a wood gatherer heads to the spot the Firewood arm
+                // chose, keeps a spot that still holds wood, and is re-targeted
+                // (never frozen) when its spot emptied.
+                AgentState::Seeking { target: TargetKind::GatherWood } => {
+                    let held = if let Some(spot) = wood_targets.get(&e) {
+                        seek_set.push((e, *spot));
+                        Some(*spot)
+                    } else {
+                        match seek_opt.map(|seek| seek.tile) {
+                            Some(tile)
+                                if resources
+                                    .wood_tiles
+                                    .get(&tile)
+                                    .is_some_and(|amount| *amount > 0) =>
+                            {
+                                Some(tile)
+                            }
+                            old => {
+                                // Display-only (Pass 7): a gatherer whose spot is empty.
+                                resources.tallies.wood_retargets += u64::from(old.is_some());
+                                wood_retarget.push((agent.id, e, (pos.x, pos.y), old));
+                                None
+                            }
+                        }
+                    };
+                    if let Some(tile) = held {
+                        *wood_gather_claims.entry(tile).or_default() += 1;
+                    }
+                }
+                // Pass 7 — an arrived gatherer keeps its claim (on its tile)
+                // until the pickup; its stale target is dropped as before.
+                AgentState::Consuming { target: TargetKind::GatherWood }
+                    if firewood_rule.is_some_and(|rule| rule.claims_bounded_by_amount) =>
+                {
+                    *wood_gather_claims.entry((pos.x, pos.y)).or_default() += 1;
+                    if seek_opt.is_some() {
+                        seek_clear.push(e);
+                    }
+                }
+                // Resource targets stay stable; assigned beds follow bed reassignment.
                 AgentState::Seeking { target: TargetKind::Food }
                 | AgentState::Seeking { target: TargetKind::Water }
                 | AgentState::Seeking { target: TargetKind::Sleep }
                 | AgentState::Seeking { target: TargetKind::GatherFood } => {
-                    if seek_opt.is_none() {
+                    let bed_changed = resources.rules.agent.night_rest.is_some()
+                        && matches!(state, AgentState::Seeking { target: TargetKind::Sleep })
+                        && resources.bed_of.get(&agent.id).is_some_and(|bed|
+                            seek_opt.is_some_and(|seek| seek.tile != *bed));
+                    if seek_opt.is_none() || bed_changed {
                         let chosen = match state {
-                            AgentState::Seeking { target: TargetKind::Water } => {
-                                nearest_resource_tile(pos, &resources.water_tiles)
-                            }
-                            AgentState::Seeking { target: TargetKind::Sleep } => {
-                                nearest_resource_tile(pos, &resources.sleep_tiles)
-                            }
+                            AgentState::Seeking {
+                                target: TargetKind::Water,
+                            } => nearest_resource_tile(pos, &resources.water_tiles),
+                            AgentState::Seeking {
+                                target: TargetKind::Sleep,
+                            } => resources
+                                .bed_of
+                                .get(&agent.id)
+                                .copied()
+                                .filter(|_| resources.rules.agent.night_rest.is_some())
+                                .or_else(|| nearest_resource_tile(pos, &resources.sleep_tiles)),
                             // GatherFood (carry) must target the SAME radius-
                             // filtered eligible tile the Gather arm selected — NOT
                             // the global unfiltered nearest, which could be an
                             // out-of-radius tile (the radius-confounder bug). Reuse
                             // the exact selector the arm used so the chosen tile is
                             // identical.
-                            AgentState::Seeking { target: TargetKind::GatherFood } => {
-                                nearest_food_tile_in_radius(
-                                    pos,
-                                    &resources.food_tiles,
-                                    GATHER_SCAN_RADIUS,
-                                )
+                            AgentState::Seeking {
+                                target: TargetKind::GatherFood,
+                            } => nearest_gather_tile(
+                                pos,
+                                &resources.food_tiles,
+                                GATHER_SCAN_RADIUS,
+                                local_home.get(&agent.id).map(|home| (*home, catchment)),
+                            ),
+                            // Pass 12 (`local_food_availability`): a member eats
+                            // at the nearest food tile with food in its catchment.
+                            _ if local_home.contains_key(&agent.id) => {
+                                local_home.get(&agent.id).and_then(|home| {
+                                    nearest_local_food(pos, &resources.food_tiles, *home, catchment)
+                                })
                             }
                             // Food (eat) uses the unfiltered nearest (eat path
                             // unchanged from V7 Section 16-α).
@@ -1557,6 +3016,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                         }
                     }
                 }
+                AgentState::Seeking { target: TargetKind::ConstructionSite }
+                    if planning.is_some() => {
+                    if let Some(tile) = assigned_builders.get(&agent.id).or_else(|| builder_targets.get(&agent.id)) {
+                        if seek_opt.map(|s| s.tile) != Some(*tile) { seek_set.push((e, *tile)); }
+                    } else if seek_opt.is_some() { seek_clear.push(e); }
+                }
                 // ConstructionSite seek (co-located) / Idle / Consuming → no
                 // goal; drop any stale SeekTarget.
                 _ => {
@@ -1566,10 +3031,62 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
         }
+        drop(post_query); // release the World borrow before the deferred inserts
+        // Pass 4 — re-target emptied bushes in AgentId order by the forage
+        // choice rule (claims recomputed, the empty tile excluded); a gatherer
+        // with no qualifying bush becomes Idle and drops its target.
+        if let Some(rule) = forage_rule {
+            retarget.sort_by_key(|row| row.0);
+            for (id, e, pos, old) in retarget {
+                let home = member_of
+                    .get(&id)
+                    .and_then(|sid| forage_plans.get(sid))
+                    .map(|plan| plan.home);
+                match home.and_then(|home| {
+                    choose_bush(
+                        &rule,
+                        home,
+                        pos,
+                        &resources.food_tiles,
+                        &gather_claims,
+                        Some(old),
+                    )
+                }) {
+                    Some(bush) => {
+                        *gather_claims.entry(bush).or_default() += 1;
+                        seek_set.push((e, bush));
+                    }
+                    None => to_idle.push(e),
+                }
+            }
+        }
+        // Pass 5 — re-target emptied deadwood spots in AgentId order by the
+        // firewood choice rule (claims recomputed, the empty spot excluded); a
+        // gatherer with no qualifying spot becomes Idle and drops its target.
+        wood_retarget.sort_by_key(|row| row.0);
+        for (id, e, pos, old) in wood_retarget {
+            let plan = member_of.get(&id).and_then(|sid| wood_plans.get(sid));
+            let choice = firewood_rule.zip(plan).and_then(|(rule, plan)| {
+                // Pass 6 — an urgent settlement's gatherers keep the doubled cap.
+                let rule = urgent_rule(rule, plan.urgent);
+                choose_spot(&rule, plan.home, pos, &resources.wood_tiles, &wood_gather_claims, old)
+            });
+            match choice {
+                Some(spot) => {
+                    *wood_gather_claims.entry(spot).or_default() += 1;
+                    seek_set.push((e, spot));
+                }
+                None => to_idle.push(e),
+            }
+        }
         for (e, tile) in seek_set {
             let _ = world.insert_one(e, SeekTarget { tile });
         }
         for e in seek_clear {
+            let _ = world.remove_one::<SeekTarget>(e);
+        }
+        for e in to_idle {
+            let _ = world.insert_one(e, AgentState::Idle);
             let _ = world.remove_one::<SeekTarget>(e);
         }
 
@@ -1604,6 +3121,11 @@ impl RuntimeSystem for AgentDecisionSystem {
         for e in &migrant_clear {
             let _ = world.remove_one::<SettlementMigrant>(*e);
         }
+        #[cfg(feature = "subprofile")]
+        post_timer.stop("decision_post_pass");
+        if let Some(routine) = routine {
+            self.places = routine.finish(world);
+        }
     }
 }
 
@@ -1615,6 +3137,77 @@ mod tests {
 
     fn fresh_engine() -> SimEngine {
         SimEngine::new(32, 32, MaterialRegistry::new())
+    }
+
+    #[test]
+    fn food_tallies_distinguish_finite_empty_and_infinite_sources() {
+        for (source, harvested, leaked) in [
+            (Some(2), 1, 0),
+            (Some(0), 0, 1),
+            (None, 0, 1),
+            (Some(RESOURCE_SOURCE_INFINITE), 0, 0),
+        ] {
+            // Given a hungry agent committing a ground meal.
+            let mut engine = fresh_engine();
+            let entity = engine.spawn_agent(2, 2);
+            engine.world.insert(entity, (
+                AgentState::Consuming { target: TargetKind::Food },
+                Hunger::new(60.0, 0.0),
+            )).unwrap();
+            if let Some(amount) = source {
+                engine.resources.food_tiles.insert((2, 2), amount);
+            }
+            // When the unchanged consume action resolves.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+            // Then counters distinguish actual harvest from legacy free meals.
+            assert_eq!(engine.resources.tallies.food_harvested, harvested);
+            assert_eq!(engine.resources.tallies.meals_eaten, 1);
+            assert_eq!(engine.resources.tallies.meals_without_food, leaked);
+            assert_eq!(engine.world.get::<&Hunger>(entity).unwrap().value, 30.0);
+        }
+    }
+
+    #[test]
+    fn gather_tallies_count_only_finite_units_removed() {
+        for source in [0, 2, RESOURCE_SOURCE_INFINITE] {
+            // Given a gatherer with room and a finite or infinite source.
+            let mut engine = fresh_engine();
+            let entity = engine.spawn_agent(2, 2);
+            engine.world.insert(entity, (
+                AgentState::Consuming { target: TargetKind::GatherFood },
+                Inventory::default(),
+            )).unwrap();
+            engine.resources.food_tiles.insert((2, 2), source);
+            // When gathering resolves.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+            // Then only real finite decrements are harvested, never meals.
+            let expected = if source == RESOURCE_SOURCE_INFINITE { 0 } else { u64::from(source) };
+            assert_eq!(engine.resources.tallies.food_harvested, expected);
+            assert_eq!(engine.resources.tallies.meals_eaten, 0);
+            assert_eq!(engine.resources.tallies.meals_without_food, 0);
+        }
+    }
+
+    #[test]
+    fn choose_bush_prefers_unclaimed_then_near_then_row_major() {
+        let rule = ForageRule {
+            start_minute: 360, end_minute: 1080, forage_radius: 16,
+            haul_threshold: 4, max_foragers_per_bush: 2,
+        };
+        let mut tiles = HashMap::new();
+        for tile in [(12, 10), (10, 12), (8, 10), (40, 40)] {
+            tiles.insert(tile, 3u8);
+        }
+        tiles.insert((11, 11), 0);
+        let mut claims = BTreeMap::new();
+        // (8,10) and (12,10) tie on distance 2 from (10,10); y then x picks (8,10).
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((8, 10)));
+        claims.insert((8, 10), 1);
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((12, 10)));
+        claims.insert((12, 10), 2);
+        claims.insert((10, 12), 2);
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((8, 10)));
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, Some((8, 10))), None);
     }
 
     #[test]
@@ -1784,5 +3377,97 @@ mod tests {
             }
             _ => unreachable!(),
         }
+    }
+
+    /// Pass 16: an engine at clock minute `minute` under v19's night rest and
+    /// v20's temperament rule, with one adult at (5, 5) of harm avoidance `ha`
+    /// (None: no `Temperament` component) in `state` with `fatigue`.
+    fn sleeper(minute: u64, ha: Option<u16>, state: AgentState, fatigue: f64) -> (SimEngine, hecs::Entity) {
+        let mut e = fresh_engine();
+        let v20 = sim_core::rules::WorldRules::game_v20(0);
+        e.resources.rules.agent.night_rest = v20.agent.night_rest;
+        e.resources.rules.agent.temperament = v20.agent.temperament;
+        e.resources.rules.clock_offset_ticks = minute;
+        let entity = e.spawn_agent(5, 5);
+        e.world.insert(entity, (state, Sleep::new(fatigue, 0.0))).unwrap();
+        if let Some(ha) = ha {
+            e.world.insert_one(entity, Temperament { ns: 500, ha, rd: 500, p: 500 }).unwrap();
+        }
+        e.resources.sleep_tiles.insert((5, 5), RESOURCE_SOURCE_INFINITE);
+        (e, entity)
+    }
+
+    #[test]
+    fn person_night_rest_is_the_own_window() {
+        let rule = sim_core::rules::WorldRules::game_v20(0).agent.night_rest;
+        let lean = sim_core::rules::WorldRules::game_v20(0).agent.temperament;
+        let cautious = Temperament { ns: 500, ha: 1000, rd: 500, p: 500 };
+        let bold = Temperament { ns: 500, ha: 0, rd: 500, p: 500 };
+        // 20:30 — only the cautious (bedtime 20:00) are in their night.
+        assert!(person_night_rest(rule, lean, Some(&cautious), Some(1230)).is_some());
+        assert!(person_night_rest(rule, lean, Some(&bold), Some(1230)).is_none());
+        assert!(person_night_rest(rule, lean, None, Some(1230)).is_none());
+        // 21:30 — the bold (bedtime 22:00) are still up; the mean person is not.
+        assert!(person_night_rest(rule, lean, Some(&bold), Some(1290)).is_none());
+        assert!(person_night_rest(rule, lean, None, Some(1290)).is_some());
+        // 22:00 to 06:00 everyone; the end is unchanged.
+        for minute in [1320, 0, 359] {
+            assert!(person_night_rest(rule, lean, Some(&bold), Some(minute)).is_some());
+            assert!(person_night_rest(rule, lean, Some(&cautious), Some(minute)).is_some());
+        }
+        assert!(person_night_rest(rule, lean, Some(&cautious), Some(360)).is_none());
+        // No day ticks, no rule: never.
+        assert!(person_night_rest(rule, lean, Some(&cautious), None).is_none());
+        assert!(person_night_rest(None, lean, Some(&cautious), Some(0)).is_none());
+    }
+
+    #[test]
+    fn cautious_sleeper_stays_asleep_from_twenty_hundred() {
+        // HA 1000: bedtime 20:00. Asleep at 20:00, it keeps sleeping (sustained
+        // recovery 0.12 a tick) through 21:00 — no one-shot rest, no nap cycle.
+        let (mut e, entity) = sleeper(1200, Some(1000), AgentState::Consuming { target: TargetKind::Sleep }, 40.0);
+        let mut sys = AgentDecisionSystem::new();
+        for step in 0..70u64 {
+            sys.tick(&mut e.world, &mut e.resources);
+            e.resources.current_tick += 1;
+            let state = *e.world.get::<&AgentState>(entity).unwrap();
+            assert_eq!(state, AgentState::Consuming { target: TargetKind::Sleep }, "tick {step}");
+        }
+        let fatigue = e.world.get::<&Sleep>(entity).unwrap().fatigue;
+        assert!((fatigue - (40.0 - 70.0 * 0.12)).abs() < 1e-9, "{fatigue}");
+    }
+
+    #[test]
+    fn before_bedtime_sleep_is_the_legacy_one_shot() {
+        // At 20:30 a bold person (bedtime 22:00) and a person without the
+        // component (21:00) are outside their nights: the legacy rest.
+        for ha in [Some(0), None] {
+            let (mut e, entity) = sleeper(1230, ha, AgentState::Consuming { target: TargetKind::Sleep }, 40.0);
+            AgentDecisionSystem::new().tick(&mut e.world, &mut e.resources);
+            assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle, "{ha:?}");
+            assert_eq!(e.world.get::<&Sleep>(entity).unwrap().fatigue, 40.0 - FATIGUE_CONSUME_AMOUNT, "{ha:?}");
+        }
+    }
+
+    #[test]
+    fn idle_cautious_person_seeks_bed_at_its_own_bedtime() {
+        // Fatigue 5 at 20:30: below the day threshold, above the night one (0).
+        for (ha, seeks) in [(Some(1000), true), (Some(0), false), (None, false), (Some(500), false)] {
+            let (mut e, entity) = sleeper(1230, ha, AgentState::Idle, 5.0);
+            AgentDecisionSystem::new().tick(&mut e.world, &mut e.resources);
+            let state = *e.world.get::<&AgentState>(entity).unwrap();
+            assert_eq!(state == (AgentState::Seeking { target: TargetKind::Sleep }), seeks, "{ha:?} {state:?}");
+        }
+    }
+
+    #[test]
+    fn inert_temperament_keeps_the_global_window() {
+        // effects false: a cautious person keeps the 21:00 window.
+        let (mut e, entity) = sleeper(1230, Some(1000), AgentState::Idle, 5.0);
+        if let Some(rule) = e.resources.rules.agent.temperament.as_mut() {
+            rule.effects = false;
+        }
+        AgentDecisionSystem::new().tick(&mut e.world, &mut e.resources);
+        assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
     }
 }

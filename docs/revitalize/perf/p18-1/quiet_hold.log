@@ -1,0 +1,7 @@
+2026-10-16 01:22:44 KST request: p18 parts 1-2: attribution and R5/F8
+2026-10-16 01:22:44 KST WAIT quiet: p18 parts 1-2: attribution and R5/F8; load=6.56; busy=['worldsim_.*:76032']; waited=0.1s
+2026-10-16 01:27:44 KST WAIT quiet: p18 parts 1-2: attribution and R5/F8; load=8.06; busy=['worldsim_.*:76032']; waited=300.2s
+2026-10-16 01:32:44 KST WAIT quiet: p18 parts 1-2: attribution and R5/F8; load=9.19; busy=['worldsim_.*:76032']; waited=600.3s
+2026-10-16 01:37:44 KST WAIT quiet: p18 parts 1-2: attribution and R5/F8; load=6.61; busy=['worldsim_.*:76032']; waited=900.5s
+2026-10-16 01:42:44 KST HOLD start: p18 parts 1-2: attribution and R5/F8; load=2.89; contended=0; waited=1200.6s
+2026-10-16 01:43:36 KST HOLD end: p18 parts 1-2: attribution and R5/F8; exit=0; held=51.9s

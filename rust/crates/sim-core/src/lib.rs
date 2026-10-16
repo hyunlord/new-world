@@ -20,10 +20,15 @@ pub const V7_VERSION: &str = "0.7.0-init";
 pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 
 pub mod causal;
+pub mod chronicle;
 pub mod components;
 pub mod influence;
 pub mod material;
+pub mod fission_threshold;
+pub mod rng;
+pub mod rules;
 pub mod tile;
+pub mod variety;
 
 pub use components::{Agent, Position};
 pub use tile::TileGrid;

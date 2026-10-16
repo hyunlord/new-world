@@ -22,12 +22,8 @@ const ZOOM_MIN: Vector2 = Vector2(0.5, 0.5)
 # ample zoom-in headroom. (B-1 later raised ZOOM_DEFAULT 3.0 → 5.0; from the
 # 5.0 default the ×1.25 wheel still reaches the 8.0 ceiling.) ZOOM_MIN unchanged.
 const ZOOM_MAX: Vector2 = Vector2(8.0, 8.0)
-# V7 B-1 — default zoom raised 3.0× → 5.0× so agents (16×24 frame ×
-# SPRITE_SCALE 0.25) render at 20×30 px instead of 12×18 px at the default
-# view (SPRITE_SCALE is a Phase 4-γ invariant locked in 14 harnesses, so we
-# scale the view, not the sprite). ZOOM_MIN (0.5) / ZOOM_MAX (8.0) unchanged,
-# so the trackpad/wheel still reach the overview and the 8.0× close-up.
-const ZOOM_DEFAULT: Vector2 = Vector2(5.0, 5.0)
+# Revitalize: the initial village view balances readable pawns and their camp.
+const ZOOM_DEFAULT: Vector2 = Vector2(4.0, 4.0)
 const ZOOM_FACTOR: float = 1.25
 const TWEEN_DURATION: float = 0.15
 
@@ -47,6 +43,9 @@ var _target_zoom: Vector2 = ZOOM_DEFAULT
 # whose process() drives the tick; gating its process_mode freezes the sim.
 var _world_sim: Node = null
 var _paused: bool = false
+var _auto_track: bool = false
+var _initial_center_pending: bool = true
+var _manual_framing: bool = false
 
 
 func _ready() -> void:
@@ -57,6 +56,9 @@ func _ready() -> void:
 	_target_zoom = ZOOM_DEFAULT
 	# V7 H Phase A — resolve the WorldSim node once for pause + tracking.
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	if _world_sim != null:
+		_world_sim.connect("world_reset", _on_world_reset)
+		_on_world_reset()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -81,6 +83,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		# V7 H Phase A — KEY_P toggles pause. KEY_SPACE is intentionally NOT
 		# used here (it belongs to the world_renderer overlay-channel cycle).
 		_toggle_pause()
+		get_viewport().set_input_as_handled()
+	elif event is InputEventKey and event.pressed and not event.echo \
+			and event.keycode == KEY_T:
+		set_auto_track(not _auto_track)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey and event.pressed and not event.echo \
 			and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
@@ -120,7 +126,18 @@ func _toggle_pause() -> void:
 		)
 
 
+func set_auto_track(enabled: bool) -> void:
+	_auto_track = enabled
+	_manual_framing = not enabled
+	# Explicit framing (capture tools or player input) owns the camera now.
+	_initial_center_pending = false
+
+
 func _process(delta: float) -> void:
+	if _initial_center_pending:
+		_center_on_first_settlement()
+	if not _auto_track:
+		return
 	# V7 H Phase A — gently track the agent swarm centroid so Brownian-
 	# dispersing agents (AgentMovementSystem) stay on-screen. Reads the same
 	# snapshot the renderers consume; converts the mean tile to world pixels
@@ -147,8 +164,42 @@ func _process(delta: float) -> void:
 		sum_y += ys_arr[i]
 	var mean_tx: float = float(sum_x) / float(n)
 	var mean_ty: float = float(sum_y) / float(n)
-	var target := Vector2(
+	var target: Vector2 = Vector2(
 		float(SPRITE_ORIGIN_X) + mean_tx * float(TILE_SIZE) + float(TILE_SIZE) / 2.0,
 		float(SPRITE_ORIGIN_Y) + mean_ty * float(TILE_SIZE) + float(TILE_SIZE) / 2.0,
 	)
 	position = position.lerp(target, clampf(delta * CAMERA_TRACK_SPEED, 0.0, 1.0))
+
+
+func _tile_center(tile_x: float, tile_y: float) -> Vector2:
+	return Vector2(
+		float(SPRITE_ORIGIN_X) + tile_x * float(TILE_SIZE) + float(TILE_SIZE) / 2.0,
+		float(SPRITE_ORIGIN_Y) + tile_y * float(TILE_SIZE) + float(TILE_SIZE) / 2.0,
+	)
+
+
+func _center_on_first_settlement() -> void:
+	if _world_sim == null:
+		return
+	var snapshot: Dictionary = _world_sim.call("get_settlement_snapshot")
+	var ids: PackedInt32Array = snapshot.get("settlement_ids", PackedInt32Array())
+	var counts: PackedInt32Array = snapshot.get("member_counts", PackedInt32Array())
+	var xs: PackedInt32Array = snapshot.get("formation_xs", PackedInt32Array())
+	var ys: PackedInt32Array = snapshot.get("formation_ys", PackedInt32Array())
+	if ids.is_empty() or counts.size() != ids.size() or xs.size() != ids.size() or ys.size() != ids.size():
+		return
+	var best: int = 0
+	for index: int in range(1, ids.size()):
+		if counts[index] > counts[best] or (counts[index] == counts[best] and ids[index] < ids[best]):
+			best = index
+	position = _tile_center(float(xs[best]), float(ys[best]))
+	_initial_center_pending = false
+
+
+func _on_world_reset() -> void:
+	if _manual_framing or _world_sim == null:
+		return
+	_initial_center_pending = true
+	var world_info: Dictionary = _world_sim.call("get_world_info")
+	position = _tile_center(float(world_info.get("width", 64)) / 2.0, float(world_info.get("height", 64)) / 2.0)
+	_center_on_first_settlement()

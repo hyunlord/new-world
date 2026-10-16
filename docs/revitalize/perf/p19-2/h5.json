@@ -1,0 +1,696 @@
+{
+ "checks": {
+  "decision_slope": {
+   "limit": 1.7,
+   "op": "<",
+   "passed": true,
+   "value": 0.9930912076319932
+  },
+  "mean_absolute_ms": {
+   "limit": 4.0,
+   "op": "<=",
+   "passed": true,
+   "value": 0.37228115942028983
+  },
+  "mean_relative": {
+   "limit": 0.15,
+   "op": "<=",
+   "passed": false,
+   "value": 0.17600954087950973
+  },
+  "p999_relative": {
+   "limit": 0.35,
+   "op": "<=",
+   "passed": true,
+   "value": 0.18181818181818182
+  }
+ },
+ "medians": {
+  "game_v20": {
+   "mean_ms": 0.31656304347826086,
+   "p999_ms": 0.649
+  },
+  "game_v23": {
+   "mean_ms": 0.3695862318840579,
+   "p999_ms": 0.855
+  },
+  "game_v24": {
+   "mean_ms": 0.37228115942028983,
+   "p999_ms": 0.767
+  }
+ },
+ "per_repeat": [
+  {
+   "mean_relative": 0.1600977606002049,
+   "p999_relative": 0.29131175468483816,
+   "repeat": "r1"
+  },
+  {
+   "mean_relative": 0.16628553508356284,
+   "p999_relative": 0.056865464632454926,
+   "repeat": "r2"
+  },
+  {
+   "mean_relative": 0.23859432232327912,
+   "p999_relative": 1.4129429892141756,
+   "repeat": "r3"
+  },
+  {
+   "mean_relative": 0.14174853481562452,
+   "p999_relative": 0.18601190476190477,
+   "repeat": "r4"
+  },
+  {
+   "mean_relative": 0.17911348681568123,
+   "p999_relative": 0.32241379310344825,
+   "repeat": "r5"
+  }
+ ],
+ "provenance": {
+  "builds": {
+   "base": {
+    "commit": "20a1d078",
+    "dir": "/Users/rexxa/work/p19-data/bin_base",
+    "worldsim_perf_sha256": "5b598b83e095bc09ca1b5a0071c637a62af1c253a14b50a11119fe4e31915d7d"
+   },
+   "final": {
+    "commit": "3322601f",
+    "dir": "/Users/rexxa/work/p19-data/bin_p2",
+    "worldsim_perf_sha256": "824c614ee6a88f01ec14a485d8c7e108bfeb430b2c56dcc984651d0ff4ed4271"
+   }
+  },
+  "contended": false,
+  "quiet": {
+   "owner": "pass19-sim (Claude Code, new-world-pass4)",
+   "pid": "55410",
+   "purpose": "pass19 C6+H5+scale",
+   "started": "2026-10-16T03:39:39Z"
+  },
+  "stage": "h5"
+ },
+ "quick": {
+  "base": {
+   "alive": 500.0,
+   "contended": false,
+   "decision_us": 189.4782195652174,
+   "file": "/Users/rexxa/work/p19-data/perf/h5/quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+   "fingerprint": "54ac4928a770f238",
+   "git_sha": "20a1d078",
+   "max_ms": 0.765,
+   "mean_ms": 0.30829710144927536,
+   "p999_ms": 0.61
+  },
+  "final": {
+   "alive": 500.0,
+   "contended": false,
+   "decision_us": 184.57600507246377,
+   "file": "/Users/rexxa/work/p19-data/perf/h5/quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+   "fingerprint": "54ac4928a770f238",
+   "git_sha": "3322601f",
+   "max_ms": 0.779,
+   "mean_ms": 0.3036514492753623,
+   "p999_ms": 0.618
+  }
+ },
+ "repeats": {
+  "game_v20": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 196.79193333333333,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r1/game_v20/stress_stress_v20_s15100_n500_side64_fed.json",
+    "fingerprint": "0fa49639a76b0281",
+    "git_sha": "3322601f",
+    "max_ms": 0.816,
+    "mean_ms": 0.318731884057971,
+    "p999_ms": 0.587
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 195.22211304347826,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r2/game_v20/stress_stress_v20_s15100_n500_side64_fed.json",
+    "fingerprint": "0fa49639a76b0281",
+    "git_sha": "3322601f",
+    "max_ms": 0.921,
+    "mean_ms": 0.31656304347826086,
+    "p999_ms": 0.721
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 194.30468333333332,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r3/game_v20/stress_stress_v20_s15100_n500_side64_fed.json",
+    "fingerprint": "0fa49639a76b0281",
+    "git_sha": "3322601f",
+    "max_ms": 0.804,
+    "mean_ms": 0.3153463768115942,
+    "p999_ms": 0.649
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 203.62284855072465,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r4/game_v20/stress_stress_v20_s15100_n500_side64_fed.json",
+    "fingerprint": "0fa49639a76b0281",
+    "git_sha": "3322601f",
+    "max_ms": 0.805,
+    "mean_ms": 0.3261695652173913,
+    "p999_ms": 0.672
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 195.1494956521739,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r5/game_v20/stress_stress_v20_s15100_n500_side64_fed.json",
+    "fingerprint": "0fa49639a76b0281",
+    "git_sha": "3322601f",
+    "max_ms": 0.794,
+    "mean_ms": 0.3157297101449275,
+    "p999_ms": 0.58
+   }
+  ],
+  "game_v23": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 240.45432971014492,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r1/game_v23/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "3322601f",
+    "max_ms": 0.9,
+    "mean_ms": 0.368954347826087,
+    "p999_ms": 0.892
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 241.78978840579708,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r2/game_v23/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "3322601f",
+    "max_ms": 0.873,
+    "mean_ms": 0.3695862318840579,
+    "p999_ms": 0.855
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 249.5451833333333,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r3/game_v23/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "3322601f",
+    "max_ms": 0.875,
+    "mean_ms": 0.37823913043478263,
+    "p999_ms": 0.837
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 244.0028275362319,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r4/game_v23/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "3322601f",
+    "max_ms": 0.848,
+    "mean_ms": 0.3726514492753623,
+    "p999_ms": 0.838
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 239.85508840579712,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r5/game_v23/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "3322601f",
+    "max_ms": 0.875,
+    "mean_ms": 0.36796086956521734,
+    "p999_ms": 0.869
+   }
+  ],
+  "game_v24": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 241.26902173913044,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r1/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3322601f",
+    "max_ms": 0.902,
+    "mean_ms": 0.3697601449275363,
+    "p999_ms": 0.758
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 241.71704347826088,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r2/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3322601f",
+    "max_ms": 0.848,
+    "mean_ms": 0.36920289855072463,
+    "p999_ms": 0.762
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 255.94176521739132,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r3/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3322601f",
+    "max_ms": 2.284,
+    "mean_ms": 0.39058623188405794,
+    "p999_ms": 1.566
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 244.0700579710145,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r4/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3322601f",
+    "max_ms": 0.876,
+    "mean_ms": 0.3724036231884058,
+    "p999_ms": 0.797
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 243.78697608695654,
+    "file": "/Users/rexxa/work/p19-data/perf/h5/r5/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3322601f",
+    "max_ms": 0.958,
+    "mean_ms": 0.37228115942028983,
+    "p999_ms": 0.767
+   }
+  ]
+ },
+ "slopes": {
+  "game_v20": {
+   "b": 1.0789627063060523,
+   "points": [
+    {
+     "alive": 100.0,
+     "contended": false,
+     "decision_us": 39.63216489361702,
+     "file": "/Users/rexxa/work/p19-data/perf/h5/slope_game_v20/stress_stress_v20_s15100_n100_side64_fed.json",
+     "fingerprint": "e44f8265b2219b8e",
+     "git_sha": "3322601f",
+     "max_ms": 0.253,
+     "mean_ms": 0.0692177304964539,
+     "p999_ms": 0.174
+    },
+    {
+     "alive": 500.0,
+     "contended": false,
+     "decision_us": 198.97669964539006,
+     "file": "/Users/rexxa/work/p19-data/perf/h5/slope_game_v20/stress_stress_v20_s15100_n500_side64_fed.json",
+     "fingerprint": "10746baa35b729ed",
+     "git_sha": "3322601f",
+     "max_ms": 0.855,
+     "mean_ms": 0.32469432624113476,
+     "p999_ms": 0.68
+    },
+    {
+     "alive": 1000.0,
+     "contended": false,
+     "decision_us": 493.56709964539004,
+     "file": "/Users/rexxa/work/p19-data/perf/h5/slope_game_v20/stress_stress_v20_s15100_n1000_side64_fed.json",
+     "fingerprint": "603177818e8fb210",
+     "git_sha": "3322601f",
+     "max_ms": 1.719,
+     "mean_ms": 0.7463489361702127,
+     "p999_ms": 1.361
+    }
+   ]
+  },
+  "game_v24": {
+   "b": 0.9930912076319932,
+   "points": [
+    {
+     "alive": 100.0,
+     "contended": false,
+     "decision_us": 58.791491489361704,
+     "file": "/Users/rexxa/work/p19-data/perf/h5/slope_game_v24/stress_stress_v24_s15100_n100_side64_fed.json",
+     "fingerprint": "b14fc0ea3b0757c4",
+     "git_sha": "3322601f",
+     "max_ms": 0.267,
+     "mean_ms": 0.09377056737588653,
+     "p999_ms": 0.204
+    },
+    {
+     "alive": 500.0,
+     "contended": false,
+     "decision_us": 256.2497833333333,
+     "file": "/Users/rexxa/work/p19-data/perf/h5/slope_game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+     "fingerprint": "a294f11de060a908",
+     "git_sha": "3322601f",
+     "max_ms": 0.974,
+     "mean_ms": 0.39046702127659577,
+     "p999_ms": 0.893
+    },
+    {
+     "alive": 1000.0,
+     "contended": false,
+     "decision_us": 601.401685815603,
+     "file": "/Users/rexxa/work/p19-data/perf/h5/slope_game_v24/stress_stress_v24_s15100_n1000_side64_fed.json",
+     "fingerprint": "e96d103e25eff40d",
+     "git_sha": "3322601f",
+     "max_ms": 2.15,
+     "mean_ms": 0.8689666666666667,
+     "p999_ms": 1.906
+    }
+   ]
+  }
+ },
+ "v23_vs_v20_mean_relative": 0.1674964576509016,
+ "v23_vs_v20_p999_relative": 0.31741140215716485,
+ "v24_vs_v23_mean_relative": 0.007291742234265236,
+ "v24_vs_v23_p999_relative": -0.10292397660818714,
+ "verdict": "FAIL",
+ "window_1700_1900": {
+  "game_v20": [
+   {
+    "max_ms": 0.526,
+    "mean_ms": 0.3329834710743802,
+    "tick_1800_ms": 0.486,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:20",
+     "18:01",
+     "18:00",
+     "18:26",
+     "18:10"
+    ],
+    "top5_ms": [
+     0.526,
+     0.491,
+     0.486,
+     0.449,
+     0.448
+    ]
+   },
+   {
+    "max_ms": 0.51,
+    "mean_ms": 0.33575206611570246,
+    "tick_1800_ms": 0.493,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:01",
+     "18:00",
+     "18:15",
+     "17:00",
+     "18:50"
+    ],
+    "top5_ms": [
+     0.51,
+     0.493,
+     0.48,
+     0.47,
+     0.458
+    ]
+   },
+   {
+    "max_ms": 0.508,
+    "mean_ms": 0.3340165289256198,
+    "tick_1800_ms": 0.508,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "18:01",
+     "17:50",
+     "17:00",
+     "18:10"
+    ],
+    "top5_ms": [
+     0.508,
+     0.495,
+     0.489,
+     0.487,
+     0.463
+    ]
+   },
+   {
+    "max_ms": 0.522,
+    "mean_ms": 0.3477190082644628,
+    "tick_1800_ms": 0.516,
+    "ticks": 121,
+    "top5_minutes": [
+     "17:00",
+     "18:00",
+     "18:24",
+     "18:01",
+     "17:23"
+    ],
+    "top5_ms": [
+     0.522,
+     0.516,
+     0.497,
+     0.496,
+     0.495
+    ]
+   },
+   {
+    "max_ms": 0.505,
+    "mean_ms": 0.3313305785123967,
+    "tick_1800_ms": 0.505,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "18:01",
+     "18:10",
+     "17:00",
+     "18:50"
+    ],
+    "top5_ms": [
+     0.505,
+     0.485,
+     0.459,
+     0.451,
+     0.428
+    ]
+   }
+  ],
+  "game_v23": [
+   {
+    "max_ms": 0.9,
+    "mean_ms": 0.42804132231404957,
+    "tick_1800_ms": 0.9,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "17:06",
+     "17:00",
+     "18:01",
+     "17:30"
+    ],
+    "top5_ms": [
+     0.9,
+     0.597,
+     0.556,
+     0.54,
+     0.537
+    ]
+   },
+   {
+    "max_ms": 0.873,
+    "mean_ms": 0.42818181818181816,
+    "tick_1800_ms": 0.873,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "17:06",
+     "17:30",
+     "18:01",
+     "17:00"
+    ],
+    "top5_ms": [
+     0.873,
+     0.624,
+     0.567,
+     0.561,
+     0.554
+    ]
+   },
+   {
+    "max_ms": 0.875,
+    "mean_ms": 0.44842975206611574,
+    "tick_1800_ms": 0.875,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "17:06",
+     "17:07",
+     "18:24",
+     "18:23"
+    ],
+    "top5_ms": [
+     0.875,
+     0.634,
+     0.607,
+     0.593,
+     0.586
+    ]
+   },
+   {
+    "max_ms": 0.838,
+    "mean_ms": 0.43268595041322316,
+    "tick_1800_ms": 0.838,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "17:00",
+     "17:06",
+     "17:20",
+     "17:30"
+    ],
+    "top5_ms": [
+     0.838,
+     0.649,
+     0.614,
+     0.536,
+     0.518
+    ]
+   },
+   {
+    "max_ms": 0.869,
+    "mean_ms": 0.42691735537190084,
+    "tick_1800_ms": 0.869,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:00",
+     "17:06",
+     "18:01",
+     "17:00",
+     "17:30"
+    ],
+    "top5_ms": [
+     0.869,
+     0.605,
+     0.535,
+     0.526,
+     0.526
+    ]
+   }
+  ],
+  "game_v24": [
+   {
+    "max_ms": 0.667,
+    "mean_ms": 0.4296280991735537,
+    "tick_1800_ms": 0.614,
+    "ticks": 121,
+    "top5_minutes": [
+     "17:06",
+     "18:01",
+     "18:00",
+     "17:30",
+     "17:20"
+    ],
+    "top5_ms": [
+     0.667,
+     0.63,
+     0.614,
+     0.572,
+     0.563
+    ]
+   },
+   {
+    "max_ms": 0.655,
+    "mean_ms": 0.4407355371900826,
+    "tick_1800_ms": 0.589,
+    "ticks": 121,
+    "top5_minutes": [
+     "17:06",
+     "18:18",
+     "18:01",
+     "18:00",
+     "17:54"
+    ],
+    "top5_ms": [
+     0.655,
+     0.624,
+     0.612,
+     0.589,
+     0.559
+    ]
+   },
+   {
+    "max_ms": 1.045,
+    "mean_ms": 0.46921487603305784,
+    "tick_1800_ms": 0.605,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:57",
+     "17:25",
+     "17:28",
+     "18:55",
+     "17:30"
+    ],
+    "top5_ms": [
+     1.045,
+     0.956,
+     0.85,
+     0.72,
+     0.668
+    ]
+   },
+   {
+    "max_ms": 0.674,
+    "mean_ms": 0.4360165289256198,
+    "tick_1800_ms": 0.647,
+    "ticks": 121,
+    "top5_minutes": [
+     "17:06",
+     "18:01",
+     "18:00",
+     "17:54",
+     "17:55"
+    ],
+    "top5_ms": [
+     0.674,
+     0.659,
+     0.647,
+     0.612,
+     0.586
+    ]
+   },
+   {
+    "max_ms": 0.63,
+    "mean_ms": 0.43802479338842976,
+    "tick_1800_ms": 0.615,
+    "ticks": 121,
+    "top5_minutes": [
+     "18:01",
+     "18:40",
+     "17:06",
+     "18:00",
+     "17:38"
+    ],
+    "top5_ms": [
+     0.63,
+     0.625,
+     0.619,
+     0.615,
+     0.58
+    ]
+   }
+  ]
+ },
+ "window_medians": {
+  "game_v20": {
+   "max_ms": 0.51,
+   "mean_ms": 0.3340165289256198,
+   "tick_1800_ms": 0.505
+  },
+  "game_v23": {
+   "max_ms": 0.873,
+   "mean_ms": 0.42818181818181816,
+   "tick_1800_ms": 0.873
+  },
+  "game_v24": {
+   "max_ms": 0.667,
+   "mean_ms": 0.43802479338842976,
+   "tick_1800_ms": 0.614
+  }
+ }
+}

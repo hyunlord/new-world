@@ -6,6 +6,8 @@ reloadable = true
 [libraries]
 linux.debug.x86_64 = "res://rust/target/debug/libsim_bridge.so"
 linux.release.x86_64 = "res://rust/target/release/libsim_bridge.so"
+linux.debug.arm64 = "res://rust/target/debug/libsim_bridge.so"
+linux.release.arm64 = "res://rust/target/release/libsim_bridge.so"
 macos.debug = "res://rust/target/debug/libsim_bridge.dylib"
 macos.release = "res://rust/target/release/libsim_bridge.dylib"
 windows.debug.x86_64 = "res://rust/target/debug/sim_bridge.dll"

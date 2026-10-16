@@ -222,17 +222,17 @@ fn harness_p12_alpha_a5_zoom_default_constant() {
     let line = &rhs[..line_end];
 
     let accepted = [
-        "Vector2(5.0, 5.0)",
-        "Vector2(5.0,5.0)",
-        "Vector2(5.0 , 5.0)",
+        "Vector2(4.0, 4.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4.0 , 4.0)",
     ];
     let matched = accepted.iter().any(|c| line.contains(c));
     assert!(
         matched,
-        "A5: ZOOM_DEFAULT must be declared with `Vector2(5.0, 5.0)` \
-         (whitespace tolerant; raised from 3.0× by B-1). Line: `{line}`"
+        "A5: ZOOM_DEFAULT must be declared with `Vector2(4.0, 4.0)` \
+         (whitespace tolerant; set to 4.0× by Revitalize Part 4). Line: `{line}`"
     );
-    println!("[P12-α A5] ZOOM_DEFAULT = Vector2(5.0, 5.0) ✓ (B-1 supersession)");
+    println!("[P12-α A5] ZOOM_DEFAULT = Vector2(4.0, 4.0) ✓ (B-1 supersession)");
 }
 
 // ─── Assertion 6: zoom_factor_geometric_step ──────────────────────────────

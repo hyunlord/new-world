@@ -1,0 +1,41 @@
+{
+  "pass": 15,
+  "runs": [
+    {
+      "agents_requested": 500,
+      "contended": false,
+      "feed": "fed",
+      "file": "stress_stress_v20_s15100_n500_side64_fed.json",
+      "max_ms": 0.834,
+      "mean_alive_0600": 500.0,
+      "mean_ms": 0.35226231884057974,
+      "mode": "stress",
+      "p999_ms": 0.567,
+      "scene": "stress_v20",
+      "seed": 15100,
+      "side": 64,
+      "status": "ok",
+      "stem": "stress_stress_v20_s15100_n500_side64_fed",
+      "ticks": 1440,
+      "wall_seconds": 0.5112575
+    },
+    {
+      "agents_requested": 500,
+      "contended": false,
+      "feed": "fed",
+      "file": "stress_stress_v21_s15100_n500_side64_fed.json",
+      "max_ms": 3.028,
+      "mean_alive_0600": 500.0,
+      "mean_ms": 0.46749855072463764,
+      "mode": "stress",
+      "p999_ms": 2.53,
+      "scene": "stress_v21",
+      "seed": 15100,
+      "side": 64,
+      "status": "ok",
+      "stem": "stress_stress_v21_s15100_n500_side64_fed",
+      "ticks": 1440,
+      "wall_seconds": 0.681489125
+    }
+  ]
+}

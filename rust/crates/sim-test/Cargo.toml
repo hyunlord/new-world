@@ -14,10 +14,28 @@ sim-engine = { path = "../sim-engine" }
 sim-systems = { path = "../sim-systems" }
 sim-bridge = { path = "../sim-bridge" }
 
+serde_json = "1"
+
+[features]
+# Pass 18: forwards sim-systems' `subprofile` timing scopes into
+# `worldsim_perf`'s JSON. Never on by default and never a required feature.
+subprofile = ["sim-systems/subprofile"]
+
 [dev-dependencies]
 criterion = { workspace = true }
-serde_json = "1.0"
 
 [[bench]]
 name = "phase2_benchmarks"
 harness = false
+
+[[bin]]
+name = "worldsim_probe"
+path = "src/bin/worldsim_probe.rs"
+
+[[bin]]
+name = "worldsim_wm"
+path = "src/bin/worldsim_wm.rs"
+
+[[bin]]
+name = "worldsim_perf"
+path = "src/bin/worldsim_perf.rs"

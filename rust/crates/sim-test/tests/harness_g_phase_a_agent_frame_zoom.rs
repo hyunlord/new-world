@@ -398,8 +398,8 @@ fn harness_g_a10_zoom_min_and_default_preserved() {
     );
     assert_eq!(
         no_ws(&def_rhs),
-        "Vector2(5.0,5.0)",
-        "a10.4: ZOOM_DEFAULT must equal Vector2(5.0,5.0) (raised from 3.0 in B-1); got `{def_rhs}`"
+        "Vector2(4.0,4.0)",
+        "a10.4: ZOOM_DEFAULT must equal Vector2(4.0,4.0) (set to 4.0 by Revitalize Part 4); got `{def_rhs}`"
     );
     println!("[G a10] ZOOM_MIN(0.5) + ZOOM_DEFAULT(5.0) preserved ✓");
 }
@@ -467,7 +467,11 @@ fn harness_g_a12_zoom_lod_controller_thresholds_intact() {
 fn harness_g_a13_existing_p12_alpha_a4_updated_to_eight() {
     // Type D — p12-α A4 accepted-literal list must now track 8.0, not 4.0.
     let src = read_test_file("harness_p12_alpha_camera_zoom.rs");
-    let compact = no_ws(&src);
+    // Default zoom is four; this guard belongs only to the maximum-zoom contract.
+    let max_test = src.split_once("fn harness_p12_alpha_a4_zoom_max_constant()")
+        .expect("maximum zoom test exists").1.split_once("\n}")
+        .expect("maximum zoom test closes").0;
+    let compact = no_ws(max_test);
     assert!(
         compact.contains("Vector2(8.0,8.0)"),
         "a13.1: harness_p12_alpha_camera_zoom.rs must accept Vector2(8.0,8.0) (raised in G Phase A)"
@@ -485,7 +489,11 @@ fn harness_g_a13_existing_p12_alpha_a4_updated_to_eight() {
 fn harness_g_a14_existing_p13_alpha_a3_updated_to_eight() {
     // Type D — p13-α A3 expected ZOOM_MAX literal must now equal 8.0.
     let src = read_test_file("harness_p13_alpha_camera_and_buildings.rs");
-    let compact = no_ws(&src);
+    // Default zoom is four; this guard belongs only to the maximum-zoom contract.
+    let max_test = src.split_once("fn harness_p13_alpha_a3_camera_controller_zoom_max_unchanged()")
+        .expect("maximum zoom test exists").1.split_once("\n}")
+        .expect("maximum zoom test closes").0;
+    let compact = no_ws(max_test);
     assert!(
         compact.contains("Vector2(8.0,8.0)"),
         "a14.1: harness_p13_alpha_camera_and_buildings.rs must expect Vector2(8.0,8.0)"
@@ -502,7 +510,7 @@ fn harness_g_a14_existing_p13_alpha_a3_updated_to_eight() {
 fn harness_g_a15_existing_p14_zeta_regression_literal_updated() {
     // Type D — p14-ζ camera-controller regression literal list must track 8.0
     // while still locking the unchanged min(0.5); the default was raised
-    // 3.0 → 5.0 in B-1, so p14-ζ now carries Vector2(5.0,5.0).
+    // 3.0 → 5.0 in B-1, so p14-ζ now carries Vector2(4.0,4.0).
     let src = read_test_file("harness_p14_zeta_zoom_adaptive.rs");
     let compact = no_ws(&src);
     assert!(
@@ -514,13 +522,13 @@ fn harness_g_a15_existing_p14_zeta_regression_literal_updated() {
         "a15.2: harness_p14_zeta_zoom_adaptive.rs must retain Vector2(0.5,0.5)"
     );
     assert!(
-        compact.contains("Vector2(5.0,5.0)"),
-        "a15.3: harness_p14_zeta_zoom_adaptive.rs must carry Vector2(5.0,5.0) \
-         (ZOOM_DEFAULT raised from 3.0 in B-1)"
+        compact.contains("Vector2(4.0,4.0)"),
+        "a15.3: harness_p14_zeta_zoom_adaptive.rs must carry Vector2(4.0,4.0) \
+         (ZOOM_DEFAULT set to 4.0 by Revitalize Part 4)"
     );
     assert!(
-        !compact.contains("Vector2(4.0,4.0)"),
-        "a15.4: harness_p14_zeta_zoom_adaptive.rs must NOT still require Vector2(4.0,4.0)"
+        !compact.contains("Vector2(5.0,5.0)"),
+        "a15.4: harness_p14_zeta_zoom_adaptive.rs must NOT still require Vector2(5.0,5.0)"
     );
     println!("[G a15] p14-ζ regression literal tracks 8.0 (+0.5/5.0 retained) ✓");
 }

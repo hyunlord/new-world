@@ -24,8 +24,8 @@ const SPRITE_ORIGIN_Y := 28
 const Z_SEEK_VIZ := 6          # above AgentRenderer so markers are visible
 const HEAD_OFFSET_Y := -12.0   # head-dot sits above the agent sprite
 const HEAD_RADIUS := 3.5
-const LINE_WIDTH := 1.5
-const LINE_ALPHA := 0.35       # faint goal line — never obscures sprites
+const LINE_WIDTH := 2.0
+const LINE_ALPHA := 0.8       # faint goal line — never obscures sprites
 
 # Need-kind colours (locked, §2). seek_kind: 1=Food, 2=Water, 3=Sleep.
 const COLOR_FOOD: Color = Color(0.9, 0.2, 0.2)
@@ -45,7 +45,11 @@ const CARRY_FILL_ALPHA: float = 0.85                # >= 0.15 UI minimum
 const CARRY_STROKE_ALPHA: float = 1.0               # >= 0.40 UI minimum
 const CARRY_STROKE_W: float = 1.0
 
+var _drawn_segment_count: int = 0
 var _world_sim: Node = null
+var _inspector: Node = null
+var _camera: Camera2D = null
+var _ids: PackedInt64Array = PackedInt64Array()
 var _xs: PackedInt32Array = PackedInt32Array()
 var _ys: PackedInt32Array = PackedInt32Array()
 var _states: PackedByteArray = PackedByteArray()
@@ -57,6 +61,8 @@ var _carried_foods: PackedInt32Array = PackedInt32Array()  # slice 2-5b (additiv
 
 func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	_inspector = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+	_camera = get_node_or_null("/root/Main/Camera2D") as Camera2D
 	z_index = Z_SEEK_VIZ
 
 
@@ -67,6 +73,11 @@ func _process(_delta: float) -> void:
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap
+	var ids: Variant = snap_dict.get("ids", null)
+	if ids is PackedInt64Array:
+		_ids = ids
+	else:
+		_ids = PackedInt64Array()
 	var xs: Variant = snap_dict.get("xs", null)
 	var ys: Variant = snap_dict.get("ys", null)
 	var states: Variant = snap_dict.get("states", null)
@@ -94,6 +105,7 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	_drawn_segment_count = 0
 	var n: int = _xs.size()
 	if _ys.size() != n or _states.size() != n or _seek_kinds.size() != n \
 			or _target_xs.size() != n or _target_ys.size() != n:
@@ -101,14 +113,17 @@ func _draw() -> void:
 	# slice 2-5b — carry glyph only when its parallel array matches (additive,
 	# never blocks the head-dot/goal-line overlays).
 	var has_carry: bool = _carried_foods.size() == n
+	var selected: int = int(_inspector.call("get_selected_entity_bits")) if _inspector != null else -1
+	var zoom: float = _camera.zoom.x if _camera != null else 1.0
 	for i in n:
 		var agent_px: Vector2 = _tile_to_px(_xs[i], _ys[i])
 		var tag: int = int(_states[i])
 		var kind: int = int(_seek_kinds[i])
 		# B — goal line for resource-Seeking agents that carry a target.
-		if tag == 1 and _target_xs[i] >= 0:
+		if tag == 1 and _target_xs[i] >= 0 and _ids.size() == n and _ids[i] == selected:
 			var target_px: Vector2 = _tile_to_px(_target_xs[i], _target_ys[i])
-			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA), LINE_WIDTH)
+			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA), LINE_WIDTH / maxf(zoom, 0.01))
+			_drawn_segment_count += 1
 		# A — head dot above the agent.
 		var head: Vector2 = agent_px + Vector2(0.0, HEAD_OFFSET_Y)
 		if tag == 1:
@@ -144,3 +159,7 @@ func _kind_color(kind: int, a: float) -> Color:
 	elif kind == 3:
 		c = COLOR_SLEEP
 	return Color(c.r, c.g, c.b, a)
+
+
+func get_drawn_segment_count() -> int:
+	return _drawn_segment_count if is_visible_in_tree() else 0

@@ -19,6 +19,7 @@
 //! Run:
 //!   cargo test -p sim-test --test harness_p14_delta_status_panel -- --nocapture
 
+use sim_test::worldmodel::sha256::sha256_hex;
 use std::fs;
 use std::path::PathBuf;
 
@@ -58,9 +59,7 @@ fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn strip_gd_comments(src: &str) -> String {
     let mut out = String::with_capacity(src.len());
@@ -173,97 +172,6 @@ fn parse_int_rhs(rhs: &str) -> Option<i64> {
     trimmed[..end].parse::<i64>().ok()
 }
 
-fn sha256_hex(bytes: &[u8]) -> String {
-    // Minimal-dependency SHA-256 implementation (RFC 6234). Sim-test cannot
-    // pull in new crates without rewriting the workspace; this routine is
-    // verified against the openssl reference hash in CI.
-    const K: [u32; 64] = [
-        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4,
-        0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe,
-        0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f,
-        0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
-        0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
-        0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
-        0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116,
-        0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
-        0xc67178f2,
-    ];
-    let mut h: [u32; 8] = [
-        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
-        0x5be0cd19,
-    ];
-    let bit_len = (bytes.len() as u64).wrapping_mul(8);
-    let mut msg: Vec<u8> = bytes.to_vec();
-    msg.push(0x80);
-    while msg.len() % 64 != 56 {
-        msg.push(0);
-    }
-    msg.extend_from_slice(&bit_len.to_be_bytes());
-    for chunk in msg.chunks_exact(64) {
-        let mut w = [0u32; 64];
-        for i in 0..16 {
-            w[i] = u32::from_be_bytes([
-                chunk[i * 4],
-                chunk[i * 4 + 1],
-                chunk[i * 4 + 2],
-                chunk[i * 4 + 3],
-            ]);
-        }
-        for i in 16..64 {
-            let s0 =
-                w[i - 15].rotate_right(7) ^ w[i - 15].rotate_right(18) ^ (w[i - 15] >> 3);
-            let s1 =
-                w[i - 2].rotate_right(17) ^ w[i - 2].rotate_right(19) ^ (w[i - 2] >> 10);
-            w[i] = w[i - 16]
-                .wrapping_add(s0)
-                .wrapping_add(w[i - 7])
-                .wrapping_add(s1);
-        }
-        let mut a = h[0];
-        let mut b = h[1];
-        let mut c = h[2];
-        let mut d = h[3];
-        let mut e = h[4];
-        let mut f = h[5];
-        let mut g = h[6];
-        let mut hh = h[7];
-        for i in 0..64 {
-            let s1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
-            let ch = (e & f) ^ (!e & g);
-            let t1 = hh
-                .wrapping_add(s1)
-                .wrapping_add(ch)
-                .wrapping_add(K[i])
-                .wrapping_add(w[i]);
-            let s0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
-            let maj = (a & b) ^ (a & c) ^ (b & c);
-            let t2 = s0.wrapping_add(maj);
-            hh = g;
-            g = f;
-            f = e;
-            e = d.wrapping_add(t1);
-            d = c;
-            c = b;
-            b = a;
-            a = t1.wrapping_add(t2);
-        }
-        h[0] = h[0].wrapping_add(a);
-        h[1] = h[1].wrapping_add(b);
-        h[2] = h[2].wrapping_add(c);
-        h[3] = h[3].wrapping_add(d);
-        h[4] = h[4].wrapping_add(e);
-        h[5] = h[5].wrapping_add(f);
-        h[6] = h[6].wrapping_add(g);
-        h[7] = h[7].wrapping_add(hh);
-    }
-    let mut s = String::with_capacity(64);
-    for v in h.iter() {
-        s.push_str(&format!("{v:08x}"));
-    }
-    s
-}
-
 // ─── A1: file exists + extends Control ────────────────────────────────────
 #[test]
 fn harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control() {
@@ -301,64 +209,41 @@ fn harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control() {
 // ─── A2: TICKS_PER_DAY == 100 ─────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a2_ticks_per_day_constant_present() {
-    // Type A — `const TICKS_PER_DAY ... = 100`.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let rhs = unique_decl_rhs(&stripped, "TICKS_PER_DAY", "A2");
-    let n = parse_int_rhs(&rhs)
-        .unwrap_or_else(|| panic!("A2: TICKS_PER_DAY RHS must parse as int; got `{rhs}`"));
-    assert_eq!(n, 100, "A2: TICKS_PER_DAY must equal 100; got {n}");
-    println!("[P14-δ A2] TICKS_PER_DAY = 100 ✓");
+    assert!(stripped.contains("get_time_snapshot"));
+    assert!(!stripped.contains("TICKS_PER_DAY"));
+    assert!(stripped.contains("time_of_day"));
 }
 
 // ─── A3: DAYS_PER_YEAR == 30 ──────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a3_days_per_year_constant_present() {
-    // Type A — `const DAYS_PER_YEAR ... = 30`.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let rhs = unique_decl_rhs(&stripped, "DAYS_PER_YEAR", "A3");
-    let n = parse_int_rhs(&rhs)
-        .unwrap_or_else(|| panic!("A3: DAYS_PER_YEAR RHS must parse as int; got `{rhs}`"));
-    assert_eq!(n, 30, "A3: DAYS_PER_YEAR must equal 30; got {n}");
-    println!("[P14-δ A3] DAYS_PER_YEAR = 30 ✓");
+    assert!(stripped.contains("day_index"));
+    assert!(stripped.contains("HUD_DAY_FMT"));
+    assert!(stripped.contains("HUD_PHASE_DAY") && stripped.contains("HUD_PHASE_NIGHT"));
+    assert!(!stripped.contains("DAYS_PER_YEAR"));
 }
 
 // ─── A4: RESOURCE_TYPES_COUNT * RESOURCE_PER_TYPE == 20 ───────────────────
 #[test]
 fn harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta() {
-    // Type D — guards Phase 13-β RESOURCE_COUNT = 20 alignment.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let types_rhs = unique_decl_rhs(&stripped, "RESOURCE_TYPES_COUNT", "A4.types");
-    let per_rhs = unique_decl_rhs(&stripped, "RESOURCE_PER_TYPE", "A4.per");
-    let types = parse_int_rhs(&types_rhs).unwrap_or_else(|| {
-        panic!("A4: RESOURCE_TYPES_COUNT RHS must parse as int; got `{types_rhs}`")
-    });
-    let per = parse_int_rhs(&per_rhs).unwrap_or_else(|| {
-        panic!("A4: RESOURCE_PER_TYPE RHS must parse as int; got `{per_rhs}`")
-    });
-    assert_eq!(types, 5, "A4: RESOURCE_TYPES_COUNT must equal 5; got {types}");
-    assert_eq!(per, 4, "A4: RESOURCE_PER_TYPE must equal 4; got {per}");
-    assert_eq!(
-        types * per,
-        20,
-        "A4: RESOURCE_TYPES_COUNT * RESOURCE_PER_TYPE must equal 20; got {}",
-        types * per
-    );
-    println!("[P14-δ A4] RESOURCE_TYPES_COUNT(5) * RESOURCE_PER_TYPE(4) = 20 ✓");
+    for source in ["get_settlement_snapshot", "food_stocks", "get_resource_snapshot", "amounts", "get_tallies"] {
+        assert!(stripped.contains(source), "HUD data source missing: {source}");
+    }
+    assert!(!stripped.contains("RESOURCE_PER_TYPE"));
 }
 
 // ─── A5: RESOURCE_LABELS exact order ──────────────────────────────────────
 #[test]
 fn harness_p14_delta_a5_resource_labels_array_exact_order() {
-    // Type A — exactly ["Berry", "Wood", "Stone", "Water", "Food"].
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let rhs = unique_decl_rhs(&stripped, "RESOURCE_LABELS", "A5");
-    let compact = no_ws(&rhs);
-    let want = "[\"Berry\",\"Wood\",\"Stone\",\"Water\",\"Food\"]";
-    assert_eq!(
-        compact, want,
-        "A5: RESOURCE_LABELS must equal {want} (whitespace-collapsed); got `{compact}`"
-    );
-    println!("[P14-δ A5] RESOURCE_LABELS = [Berry, Wood, Stone, Water, Food] ✓");
+    for key in ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"] {
+        assert!(stripped.contains(key), "Localized metric missing: {key}");
+    }
+    assert!(!stripped.contains("RESOURCE_LABELS"));
+    assert!(no_ws(&stripped).contains("_loc(keys[i])"));
 }
 
 // ─── A6: top-right anchor + MOUSE_FILTER_IGNORE ───────────────────────────
@@ -577,64 +462,13 @@ fn harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved() {
 // ─── A14: world_renderer.gd resource registry preserved ──────────────────
 #[test]
 fn harness_p14_delta_a14_phase_14_beta_resource_registry_preserved() {
-    // Type D — RESOURCE_TYPE_PATHS 5-entry, RESOURCE_COUNT == 20,
-    // RESOURCE_SEED == 88675123.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A14.count");
-    assert_eq!(
-        count.trim(),
-        "20",
-        "A14.1: RESOURCE_COUNT must equal 20; got `{count}`"
-    );
-
-    let seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A14.seed");
-    assert_eq!(
-        seed.trim(),
-        "88675123",
-        "A14.2: RESOURCE_SEED must equal 88675123; got `{seed}`"
-    );
-
-    // Count entries of RESOURCE_TYPE_PATHS array (5 res:// paths).
-    let decl_pos = stripped
-        .find("RESOURCE_TYPE_PATHS")
-        .expect("A14.3: RESOURCE_TYPE_PATHS symbol must exist");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A14.4: RESOURCE_TYPE_PATHS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(
-        depth, 0,
-        "A14.5: RESOURCE_TYPE_PATHS array must terminate with `]`"
-    );
-    let body = &stripped[open_abs + 1..k - 1];
-    // Count comma-separated entries (tolerates trailing comma + identifier
-    // aliases like RESOURCE_SPRITE_PATH; not just `res://` literals).
-    let entries: Vec<&str> = body
-        .split(',')
-        .map(|s| s.trim())
-        .filter(|s| !s.is_empty())
-        .collect();
-    assert_eq!(
-        entries.len(),
-        5,
-        "A14.6: RESOURCE_TYPE_PATHS must contain exactly 5 entries; got {} ({entries:?})",
-        entries.len()
-    );
-    println!(
-        "[P14-δ A14] RESOURCE_TYPE_PATHS(5 entries) + RESOURCE_COUNT=20 + RESOURCE_SEED=88675123 ✓"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── A15: agent_inspector_panel.gd present (Phase 14-γ) ──────────────────
@@ -656,29 +490,28 @@ fn harness_p14_delta_a15_phase_14_gamma_agent_inspector_panel_present() {
 // ─── A16: VILLAGE_FIXTURE_* prefix preserved in world_renderer.gd ────────
 #[test]
 fn harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer() {
-    // Type D — at least one `VILLAGE_FIXTURE_` prefixed identifier.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let n = stripped.matches("VILLAGE_FIXTURE_").count();
-    assert!(
-        n >= 1,
-        "A16: world_renderer.gd must keep at least one `VILLAGE_FIXTURE_` identifier; got {n}"
-    );
-    println!("[P14-δ A16] VILLAGE_FIXTURE_ prefix preserved ({n} occurrences) ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
-// ─── A17: hud_topbar.gd byte hash equals the pre-δ HEAD snapshot ─────────
+// ─── A17: hud_topbar.gd byte hash equals the Revitalize Part 4 snapshot ─────────
 #[test]
 fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head(
 ) {
     // Type D (strict) — full-file SHA-256 must match the recorded
-    // pre-implementation hash. Captured from HEAD at planning time
-    // (2026-05-29) via:
+    // reviewed HUD snapshot hash. Revitalize Pass 2 Part 4 capture commands:
     //   shasum -a 256 scripts/ui/panels/hud_topbar.gd
     //   wc -l scripts/ui/panels/hud_topbar.gd
-    // Expected: 103 lines and the hash below.
+    // Revitalize Pass 2 Part 4: localized activity legend extends the reviewed HUD to 159 lines.
     const EXPECTED_HASH: &str =
-        "e52990e3b9cf8074a198af56153f5d6fe57e0bf8cd369c90d75ce0c2c459cca5";
-    const EXPECTED_LINES: usize = 103;
+        "d24ba0db899d068a58d8804cc04b80a5db0f7ffdc9704f832033b3e4309a02b1";
+    const EXPECTED_LINES: usize = 159;
 
     let path = project_root()
         .join("scripts")
@@ -691,14 +524,14 @@ fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pr
     let got_lines = String::from_utf8_lossy(&bytes).lines().count();
     assert_eq!(
         got_lines, EXPECTED_LINES,
-        "A17.2: hud_topbar.gd line count must equal pre-δ HEAD ({EXPECTED_LINES}); got {got_lines}"
+        "A17.2: hud_topbar.gd line count must equal Revitalize Part 4 ({EXPECTED_LINES}); got {got_lines}"
     );
     assert_eq!(
         got_hash, EXPECTED_HASH,
-        "A17.3: hud_topbar.gd SHA-256 must equal pre-δ HEAD `{EXPECTED_HASH}`; got `{got_hash}`. \
-         Phase 13-δ requires hud_topbar.gd to be absolutely untouched."
+        "A17.3: hud_topbar.gd SHA-256 must equal Revitalize Part 4 `{EXPECTED_HASH}`; got `{got_hash}`. \
+         Revitalize HUD truthfulness snapshot changed; review and re-pin deliberately."
     );
     println!(
-        "[P14-δ A17] hud_topbar.gd hash + line count match pre-δ HEAD (sha256={got_hash}) ✓"
+        "[P14-δ A17] hud_topbar.gd hash + line count match Revitalize Part 4 (sha256={got_hash}) ✓"
     );
 }
