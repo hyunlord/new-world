@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://v7init"]
+[gd_scene load_steps=23 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
@@ -24,6 +24,8 @@
 [ext_resource type="Script" path="res://scripts/rendering/art/god_hand_effects.gd" id="20_god_effects"]
 
 [ext_resource type="Script" path="res://scripts/ui/sim_reads.gd" id="21_sim_reads"]
+
+[ext_resource type="Script" path="res://scripts/ui/panels/chronicle_panel.gd" id="22_chronicle"]
 
 [node name="Main" type="Node2D"]
 
@@ -92,6 +94,9 @@ script = ExtResource("4_camera")
 
 [node name="CausalPanel" type="Control" parent="UI"]
 script = ExtResource("2_causal")
+
+[node name="ChroniclePanel" type="Control" parent="UI"]
+script = ExtResource("22_chronicle")
 
 [node name="HudTopbar" type="Control" parent="UI"]
 script = ExtResource("5_hud")

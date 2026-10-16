@@ -221,6 +221,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func toggle_visible() -> void:
 	visible = not visible
+	var chronicle: Control = get_node_or_null("../ChroniclePanel") as Control
+	if visible and chronicle != null:
+		chronicle.hide()
 
 func is_panel_visible() -> bool:
 	return visible

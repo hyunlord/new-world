@@ -17,6 +17,22 @@ extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Library = preload("res://scripts/ui/art_sprite_library.gd")
 const PANEL_WIDTH := 360.0
+const Names = preload("res://scripts/ui/person_names.gd")
+const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
+const ReadCache = preload("res://scripts/ui/person_read_cache.gd")
+var _person_cache := ReadCache.new()
+var _selected_person: int = -1
+var _record_mode: bool = false
+var _live_nodes: Array[Control] = []
+var _record_summary: Label
+var _life_heading: Label
+var _life_text: RichTextLabel
+var _life_more: Button
+var _life_expanded: bool = false
+var _formatted_tick: int = -9223372036854775807
+var _formatted_person: int = -1
+var _formatted_language: String = ""
+
 
 # Top edge sits below hud_status_panel.gd (top-right, 320×180 from
 # y=HUD_MARGIN(12) to y=HUD_MARGIN+PANEL_HEIGHT=192) so the two
@@ -87,7 +103,7 @@ func _ready() -> void:
 	_locale = get_node_or_null("/root/Locale")
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
-		_world_sim.connect("world_reset", close)
+		_world_sim.connect("world_reset", _world_reset)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	position = Vector2(1548, INSPECTOR_TOP_OFFSET)
@@ -120,7 +136,25 @@ func _ready() -> void:
 	_carried_label = _make_label("")
 	_cold_label = _make_label("")
 	_cold_label.hide()
+	for node: Node in _vbox.get_children():
+		if node is Control and node != _label_id:
+			_live_nodes.append(node as Control)
+	_record_summary = _make_label("")
+	_record_summary.hide()
 	_make_personal_sections()
+	_life_heading = _make_label("")
+	_life_heading.theme_type_variation = &"Heading"
+	_life_text = RichTextLabel.new()
+	_life_text.bbcode_enabled = true
+	_life_text.fit_content = true
+	_life_text.scroll_active = false
+	_life_text.custom_minimum_size.x = 332
+	_life_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_life_text.meta_clicked.connect(_follow_link)
+	_vbox.add_child(_life_text)
+	_life_more = Button.new()
+	_life_more.pressed.connect(_expand_life)
+	_vbox.add_child(_life_more)
 
 
 func _make_label(text: String) -> Label:
@@ -174,11 +208,18 @@ func display_agent(detail: Dictionary) -> void:
 	var hunger: float = float(detail.get("hunger", 0.0))
 	var thirst: float = float(detail.get("thirst", 0.0))
 	var sleep_val: float = float(detail.get("sleep", 0.0))
+	_person_cache.sync(_world_sim)
 	var previous_selection: int = _selected_entity_bits
+	if _selected_person != agent_id:
+		_formatted_person = -1
+		_life_expanded = false
+	_selected_person = agent_id
+	_record_mode = false
+	_set_live_visible(true)
 	_selected_entity_bits = _resolve_entity_bits(agent_id)
 	if previous_selection != _selected_entity_bits:
 		_scroll.scroll_vertical = 0
-	_label_id.text = _loc("INSPECTOR_AGENT_FMT") % agent_id
+	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.display_name(agent_id, Chronicle.language(_locale)), agent_id]
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
 	_village_label.text = SettlementSelection.name_for(home, _locale) if home >= 0 else ""
@@ -213,6 +254,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func close() -> void:
+	_selected_person = -1
+	_record_mode = false
 	_selected_entity_bits = -1
 	visible = false
 
@@ -226,25 +269,18 @@ func _loc(key: String) -> String:
 
 
 func _resolve_entity_bits(agent_id: int) -> int:
-	if _world_sim == null:
-		return -1
-	var snapshot: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
-	if not (snapshot is Dictionary):
-		return -1
-	var data: Dictionary = snapshot
-	var ids: Variant = data.get("ids", null)
-	var agents: Variant = data.get("agent_ids", null)
-	if ids is PackedInt64Array and agents is PackedInt64Array:
-		var entity_ids: PackedInt64Array = ids
-		var agent_ids: PackedInt64Array = agents
-		for i: int in mini(entity_ids.size(), agent_ids.size()):
-			if agent_ids[i] == agent_id:
-				return entity_ids[i]
-	return -1
+	_person_cache.sync(_world_sim)
+	return int(_person_cache.entities.get(agent_id, -1))
 
 
 func _process(_delta: float) -> void:
-	if not visible or _selected_entity_bits < 0 or _world_sim == null:
+	if not visible or _world_sim == null:
+		return
+	if _record_mode:
+		_person_cache.sync(_world_sim)
+		_refresh_record()
+		return
+	if _selected_entity_bits < 0:
 		return
 	var detail: Variant = _world_sim.call("get_agent_detail", _selected_entity_bits)
 	if detail is Dictionary:
@@ -252,7 +288,7 @@ func _process(_delta: float) -> void:
 		if bool(data.get("found", false)):
 			display_agent(data)
 		else:
-			close()
+			show_person(_selected_person)
 
 
 func _update_portrait(agent_id: int) -> void:
@@ -388,8 +424,9 @@ func _refresh_personal_sections() -> void:
 	_family_box.hide()
 	if not visible or _selected_entity_bits < 0 or _world_sim == null:
 		return
+	_refresh_life()
 	if _world_sim.has_method("get_agent_temperament"):
-		var temperament: Dictionary = _world_sim.call("get_agent_temperament", _selected_entity_bits)
+		var temperament: Dictionary = _person_cache.read("get_agent_temperament", _selected_person, true)
 		if bool(temperament.get("found", false)):
 			_temperament_heading.text = _loc("UI_INSPECTOR_TEMPERAMENT")
 			for index: int in TEMPERAMENT_FIELDS.size():
@@ -398,12 +435,18 @@ func _refresh_personal_sections() -> void:
 			_temperament_box.show()
 	if not _world_sim.has_method("get_agent_family"):
 		return
-	var family: Dictionary = _world_sim.call("get_agent_family", _selected_entity_bits)
+	var family: Dictionary = _person_cache.read("get_agent_family", _selected_person, true)
 	if not bool(family.get("found", false)):
 		return
 	_family_heading.text = _loc("UI_FAMILY")
+	_family_sex.show()
+	_family_children.show()
 	_family_sex.text = _loc("UI_FEMALE" if bool(family.get("female", false)) else "UI_MALE")
-	var links: Array[int] = [int(family.get("partner", -1)), int(family.get("mother", -1)), int(family.get("father", -1))]
+	var partner_id: int = int(family.get("partner", -1))
+	if partner_id < 0:
+		# The simulation clears a deceased partner from live Kin at pairing time.
+		partner_id = Chronicle.partner(Chronicle.rows(_person_cache.read("get_person_chronicle", _selected_person)), _selected_person)
+	var links: Array[int] = [partner_id, int(family.get("mother", -1)), int(family.get("father", -1))]
 	for index: int in links.size():
 		_set_family_button(index, links[index], FAMILY_LABELS[index])
 	var children: PackedInt64Array = family.get("children", PackedInt64Array())
@@ -423,24 +466,135 @@ func _refresh_personal_sections() -> void:
 func _set_family_button(index: int, agent_id: int, label_key: String) -> void:
 	var button: Button = _family_buttons[index]
 	var living: bool = agent_id >= 0 and _resolve_entity_bits(agent_id) >= 0
-	button.set_meta("family_agent_id", agent_id if living else -1)
-	button.disabled = not living
-	var value: String = (_loc("INSPECTOR_AGENT_FMT") % agent_id) if living else _loc("PANEL_FAMILY_NONE")
+	var person: Dictionary = _person_cache.read("get_person", agent_id) if agent_id >= 0 else {}
+	var known: bool = living or bool(person.get("found", false))
+	button.set_meta("family_agent_id", agent_id if known else -1)
+	button.disabled = not known
+	var value: String = Names.display_name(agent_id, Chronicle.language(_locale)) if known else _loc("PANEL_FAMILY_NONE")
+	if known and not living:
+		value += " · " + _loc("UI_DECEASED")
 	button.text = (_loc(label_key) + ": " + value) if not label_key.is_empty() else value
 
 
 func _select_family_member(button: Button) -> void:
-	if not visible or _world_sim == null:
+	if visible:
+		show_person(int(button.get_meta("family_agent_id", -1)))
+
+
+func show_person(agent_id: int) -> void:
+	if agent_id < 0 or _world_sim == null:
 		return
-	var target: int = _resolve_entity_bits(int(button.get_meta("family_agent_id", -1)))
-	if target < 0:
-		_refresh_personal_sections()
+	var bits: int = _resolve_entity_bits(agent_id)
+	if bits >= 0:
+		var detail: Dictionary = _world_sim.call("get_agent_detail", bits)
+		if bool(detail.get("found", false)):
+			display_agent(detail)
+			return
+	var person: Dictionary = _person_cache.read("get_person", agent_id)
+	if not bool(person.get("found", false)):
+		if visible and not _record_mode:
+			_refresh_personal_sections()
 		return
-	var detail: Dictionary = _world_sim.call("get_agent_detail", target)
-	if bool(detail.get("found", false)):
-		display_agent(detail)
-	else:
-		_refresh_personal_sections()
+	if _selected_person != agent_id:
+		_formatted_person = -1
+		_scroll.scroll_vertical = 0
+		_life_expanded = false
+	_selected_person = agent_id
+	_selected_entity_bits = -1
+	_record_mode = true
+	visible = true
+	_refresh_record()
+
+
+func _set_live_visible(value: bool) -> void:
+	for node: Control in _live_nodes:
+		node.visible = value
+	_record_summary.visible = not value
+
+
+func _world_info() -> Dictionary:
+	if _world_sim != null and _world_sim.has_method("get_world_info"):
+		return SimReads.read(_world_sim, "get_world_info")
+	return {"ticks_per_day": 1, "clock_offset_ticks": 0}
+
+
+func _refresh_record() -> void:
+	_set_live_visible(false)
+	var person: Dictionary = _person_cache.read("get_person", _selected_person)
+	var entries: Array[Dictionary] = Chronicle.rows(_person_cache.read("get_person_chronicle", _selected_person))
+	var info: Dictionary = _world_info()
+	_label_id.text = (_loc("INSPECTOR_PERSON_FMT") % [Names.display_name(_selected_person, Chronicle.language(_locale)), _selected_person]) + " · " + _loc("UI_DECEASED")
+	var born: int = int(person.get("born_tick", -1))
+	var died: int = int(person.get("died_tick", -1))
+	_record_summary.text = (_loc("INSPECTOR_RECORD_FOUNDER_LIFE_FMT") % Chronicle.day(died, info)) if born < 0 else (_loc("INSPECTOR_RECORD_LIFE_FMT") % [Chronicle.day(born, info), Chronicle.day(died, info)])
+	_record_summary.text += "\n" + _loc("UI_CAUSE_OF_DEATH") + ": " + Chronicle.death(int(person.get("death_reason", -1)), _locale)
+	_temperament_box.visible = int(person.get("ns", -1)) >= 0
+	_temperament_heading.text = _loc("UI_INSPECTOR_TEMPERAMENT")
+	for index: int in TEMPERAMENT_FIELDS.size():
+		_temperament_labels[index].text = _loc(TEMPERAMENT_LABELS[index])
+		_temperament_bars[index].value = int(person.get(TEMPERAMENT_FIELDS[index], 0))
+	_family_heading.text = _loc("UI_FAMILY")
+	_family_sex.visible = int(person.get("female", -1)) >= 0
+	_family_sex.text = _loc("UI_FEMALE" if int(person.get("female", -1)) == 1 else "UI_MALE")
+	var links: Array[int] = [Chronicle.partner(entries, _selected_person), int(person.get("mother", -1)), int(person.get("father", -1))]
+	for index: int in 3:
+		_family_buttons[index].show()
+		_set_family_button(index, links[index], FAMILY_LABELS[index])
+	_family_children.hide()
+	for index: int in range(3, 8):
+		_family_buttons[index].hide()
+	_family_box.show()
+	_refresh_life()
+
+
+func _refresh_life() -> void:
+	var language: String = Chronicle.language(_locale)
+	if _formatted_tick == _person_cache.tick and _formatted_person == _selected_person and _formatted_language == language:
+		return
+	_formatted_tick = _person_cache.tick
+	_formatted_person = _selected_person
+	_formatted_language = language
+	var info: Dictionary = _world_info()
+	var lines: Array[String] = []
+	for row: Dictionary in Chronicle.rows(_person_cache.read("get_person_chronicle", _selected_person)):
+		var text: String = Chronicle.line(row, _selected_person, _locale, info)
+		if not text.is_empty():
+			lines.append(text)
+	_life_heading.text = _loc("UI_LIFE_EVENTS")
+	_life_heading.visible = not lines.is_empty()
+	_life_text.visible = not lines.is_empty()
+	_life_more.visible = lines.size() > 12 and not _life_expanded
+	_life_more.text = _loc("UI_CHRONICLE_MORE_FMT") % maxi(0, lines.size() - 12)
+	var first: int = maxi(0, lines.size() - 12) if not _life_expanded else 0
+	_life_text.text = "\n\n".join(lines.slice(first))
+
+
+func _expand_life() -> void:
+	_life_expanded = true
+	_formatted_person = -1
+	_refresh_life()
+
+
+func _follow_link(meta: Variant) -> void:
+	var parts: PackedStringArray = str(meta).split(":")
+	if parts.size() != 2:
+		return
+	if parts[0] == "person":
+		show_person(int(parts[1]))
+	elif parts[0] == "village":
+		var id: int = int(parts[1])
+		var tile: Vector2i = SettlementSelection.formation_for(id)
+		var camera: Camera2D = get_node_or_null("/root/Main/Camera2D") as Camera2D
+		if camera != null and tile.x >= 0 and not SettlementSelection.is_abandoned(id):
+			camera.call("set_auto_track", false)
+			camera.position = Vector2(448, 28) + Vector2(tile) * 16.0 + Vector2(8, 8)
+			SettlementSelection.select(id)
+
+
+func _world_reset() -> void:
+	close()
+	_person_cache.reset()
+	_formatted_person = -1
 
 
 func _selected_activity() -> Dictionary:

@@ -4,6 +4,9 @@ var _failures: int = 0
 var _checks: int = 0
 
 class FakeWorld extends Node:
+	var tick: int = 0
+	func get_time_snapshot() -> Dictionary:
+		return {"tick": tick}
 	var agent_ids := PackedInt64Array([11, 22, 33, 44, 55, 66, 77, 88, 99, 110])
 	var entity_ids := PackedInt64Array([101, 202, 303, 404, 505, 606, 707, 808, 909, 1010])
 	var temperament: Dictionary = {"found": true, "ns": 125, "ha": 500, "rd": 875, "p": 1000}
@@ -55,6 +58,7 @@ func _run() -> void:
 	var original_language: String = str(locale.get("_current_lang"))
 	for language: String in ["en", "ko"]:
 		locale.call("set_language", language)
+		world.tick += 1
 		panel.call("display_agent", world.get_agent_detail(101))
 		_check(world.get_agent_detail(101).size() == 9, "detail fixture retains nine-key bridge schema")
 		_check(world.last_temperament_bits == 101 and world.last_family_bits == 101, "component calls use entity bits, never agent IDs")
@@ -73,19 +77,25 @@ func _run() -> void:
 		for index: int in 8:
 			_check(not (buttons[index] as Button).disabled and (buttons[index] as Button).visible, "all populated family links clickable")
 		_check(int((buttons[7] as Button).get_meta("family_agent_id")) == 99, "first five sorted children only")
+		world.tick += 1
 		(buttons[0] as Button).pressed.emit()
 		_check(int(panel.call("get_selected_entity_bits")) == 202 and world.last_detail_bits == 202, "partner button selects mapped entity")
+		world.tick += 1
 		panel.call("display_agent", world.get_agent_detail(101))
 		(buttons[3] as Button).pressed.emit()
 		_check(int(panel.call("get_selected_entity_bits")) == 505, "child click selects mapped entity")
+		world.tick += 1
 		panel.call("display_agent", world.get_agent_detail(101))
 		world.family["female"] = false
+		world.tick += 1
 		panel.call("display_agent", world.get_agent_detail(101))
 		_check((panel.get("_family_sex") as Label).text == locale.call("ltr", "UI_MALE"), "localized male field")
 		world.family["female"] = true
+	world.tick += 1
 	panel.call("display_agent", world.get_agent_detail(101))
 	world.temperament["found"] = false
 	world.family["found"] = false
+	world.tick += 1
 	panel.call("display_agent", world.get_agent_detail(101))
 	_check(not (panel.get("_temperament_box") as Control).visible, "missing temperament hides stale bars")
 	_check(not (panel.get("_family_box") as Control).visible, "missing family hides stale buttons")
@@ -93,17 +103,21 @@ func _run() -> void:
 	world.family["found"] = true
 	world.family["partner"] = 999
 	world.family["mother"] = -1
+	world.tick += 1
 	panel.call("display_agent", world.get_agent_detail(101))
 	var buttons: Array = panel.get("_family_buttons")
 	for index: int in 2:
 		_check((buttons[index] as Button).disabled and (buttons[index] as Button).text.ends_with(str(locale.call("ltr", "PANEL_FAMILY_NONE"))), "dead and absent links show None")
 	world.family["partner"] = 22
+	world.tick += 1
 	panel.call("display_agent", world.get_agent_detail(101))
 	world.agent_ids.remove_at(1)
 	world.entity_ids.remove_at(1)
+	world.tick += 1
 	(buttons[0] as Button).pressed.emit()
 	_check(int(panel.call("get_selected_entity_bits")) == 101 and (buttons[0] as Button).disabled, "death between paint and click is safely re-resolved")
 	world.family["children"] = PackedInt64Array([55, 999])
+	world.tick += 1
 	panel.call("display_agent", world.get_agent_detail(101))
 	_check((panel.get("_family_children") as Label).text == str(locale.call("ltr", "UI_FAMILY_CHILDREN_FMT")) % 1, "dead children excluded from count")
 	_check((buttons[3] as Button).visible and not (buttons[4] as Button).visible, "previous child buttons hidden after shrink")
@@ -113,6 +127,7 @@ func _run() -> void:
 	panel.call("_refresh_personal_sections")
 	_check(world.family_calls + world.temperament_calls == calls, "closed panel does not call component getters")
 	world.family["children"] = PackedInt64Array([55, 66, 77, 88, 99, 110])
+	world.tick += 1
 	panel.call("display_agent", world.get_agent_detail(101))
 	await process_frame
 	await process_frame

@@ -117,6 +117,11 @@ static func observe(society: Dictionary, settlements: Dictionary = {}) -> void:
 	if selected_id >= 0 and not _alive.has(selected_id):
 		clear()
 
+static func register(id: int) -> void:
+	if id >= 0 and not _numbers.has(id):
+		_numbers[id] = _numbers.size() + 1
+		_history[id] = {"parent_id": -1, "member_count": 0}
+
 static func number_for(id: int) -> int:
 	return int(_numbers.get(id, 0))
 
