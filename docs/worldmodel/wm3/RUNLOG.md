@@ -37,3 +37,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.2 | 18:46:28 | 19:06:55 | `wm3_full_s1` finals from `aa763da8`: `_effects` 18:55:51, `_split` 18:56:10, `_fact` 19:06:00, lag curve 19:06:39, `_calib` 19:06:55, exit 0 |
 | 4.1 | 18:46:28 | 21:13:29 | `wm3_full_s2`: stop `patience` at step 3,500, kept step 2,000 (`val_eff` 0.4869, `val_t2` 0.0599; init 0.5458 / 0.0589); 8,788 s (≈ 2.2–2.9 s/step; DGX load average 8–63 from other users' jobs). Queue done: all five runs of METRICS.md section 2 trained, none dropped |
 | 4.2 | 21:13:29 | | `wm3_full_s2` finals from `aa763da8` |
+| 4.2 | 21:13:29 | 21:24:51 | `wm3_full_s2` finals from `aa763da8`: `_effects` 21:19:21, `_split` 21:19:30, `_fact` 21:24:19, lag curve 21:24:42, `_calib` 21:24:51, exit 0 (DGX otherwise idle) |
+| 5 | 21:25 | 21:35 | runs fetched (`22cedd4e`); `judge3.py` on the committed files (`de4bfba7`): V1 NONE, V2 TIE, V3 TIE, V4 NONE, V5 NONE / TIE / TIE, V6 no seed worse; `posthoc.py` (DECISIONS K5.1) |
+| 6 | 21:35 | 21:55 | WM3.md; WM2.md pointer line |

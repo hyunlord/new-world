@@ -1,4 +1,5 @@
 # WM-2: dataset v2 on `game_v19`, the noise floor, and whether a learned world model predicts what the god's hand will do
+Followed by docs/worldmodel/wm3/WM3.md (audit of the one-step response; paired fine-tuning).
 
 Run of `docs/worldmodel/wm2/GOAL.md` on `codex/worldmodel-2026-10-wip` (base `ce40bf3c`, WM-1.3 final), after merging the
 simulation's green head after Pass 14 (`f5373ab2` → merge `26b9af1f`: `game_v19`, recorder schema 6, the Pass 14 tools).

@@ -1,0 +1,261 @@
+{
+ "ablation_7d": {
+  "ctrl_vs_wm2_s0": {
+   "baseline": 0.6495417587886122,
+   "baseline_member": "wm2_m1bact_v19_s0",
+   "ci_diff": {
+    "B": 2000,
+    "hi": -0.021366108985075856,
+    "lo": -0.032669851622401436,
+    "n_worlds": 80,
+    "point": -0.027207237828225206,
+    "seed": 0
+   },
+   "keep_threshold": 0.5196334070308898,
+   "model": 0.622334520960387,
+   "model_run": "wm3_ctrl_s0",
+   "ratio": 0.9581131813927308,
+   "seeds": [
+    0.622334520960387
+   ],
+   "verdict": "WEAK"
+  },
+  "full_s0_vs_wm2_s0": {
+   "baseline": 0.6495417587886122,
+   "baseline_member": "wm2_m1bact_v19_s0",
+   "ci_diff": {
+    "B": 2000,
+    "hi": -0.09821310811242688,
+    "lo": -0.13590138934268867,
+    "n_worlds": 80,
+    "point": -0.1179732464321338,
+    "seed": 0
+   },
+   "keep_threshold": 0.5196334070308898,
+   "model": 0.5315685123564784,
+   "model_run": "wm3_full_s0",
+   "ratio": 0.8183746543838035,
+   "seeds": [
+    0.5315685123564784
+   ],
+   "verdict": "WEAK"
+  },
+  "full_vs_ctrl": {
+   "baseline": 0.622334520960387,
+   "baseline_member": "wm3_ctrl_s0",
+   "ci_diff": {
+    "B": 2000,
+    "hi": -0.07326015096988109,
+    "lo": -0.10754578993349712,
+    "n_worlds": 80,
+    "point": -0.0907660086039086,
+    "seed": 0
+   },
+   "keep_threshold": 0.4978676167683096,
+   "model": 0.5315685123564784,
+   "model_run": "wm3_full_s0",
+   "ratio": 0.8541523801960424,
+   "seeds": [
+    0.5315685123564784
+   ],
+   "verdict": "WEAK"
+  },
+  "full_vs_os": {
+   "baseline": 0.6170490463673978,
+   "baseline_member": "wm3_os_s0",
+   "ci_diff": {
+    "B": 2000,
+    "hi": -0.048846336105923885,
+    "lo": -0.1358873180103697,
+    "n_worlds": 80,
+    "point": -0.08548053401091937,
+    "seed": 0
+   },
+   "keep_threshold": 0.4936392370939182,
+   "model": 0.5315685123564784,
+   "model_run": "wm3_full_s0",
+   "ratio": 0.8614688175694493,
+   "seeds": [
+    0.5315685123564784
+   ],
+   "verdict": "WEAK"
+  },
+  "os_vs_ctrl": {
+   "baseline": 0.622334520960387,
+   "baseline_member": "wm3_ctrl_s0",
+   "ci_diff": {
+    "B": 2000,
+    "hi": 0.0427625401441157,
+    "lo": -0.042581121258702725,
+    "n_worlds": 80,
+    "point": -0.0052854745929892255,
+    "seed": 0
+   },
+   "keep_threshold": 0.4978676167683096,
+   "model": 0.6170490463673978,
+   "model_run": "wm3_os_s0",
+   "ratio": 0.99150702007526,
+   "seeds": [
+    0.6170490463673978
+   ],
+   "verdict": "TIE"
+  }
+ },
+ "full_vs_wm2": {
+  "30d": {
+   "baseline": 0.5010705016040559,
+   "baseline_member": "wm2_m1bact_v19 (seed mean)",
+   "ci_diff": {
+    "B": 2000,
+    "hi": 0.014190222862034975,
+    "lo": 0.005715673363748513,
+    "n_worlds": 80,
+    "point": 0.009760612931641877,
+    "seed": 0
+   },
+   "keep_threshold": 0.40085640128324473,
+   "model": 0.5108311145356977,
+   "ratio": 1.0194795201481541,
+   "runs": [
+    "wm3_full_s0",
+    "wm3_full_s1",
+    "wm3_full_s2"
+   ],
+   "seeds": [
+    0.5169489856248667,
+    0.5038592781151158,
+    0.511685079867111
+   ],
+   "verdict": "NONE"
+  },
+  "7d": {
+   "baseline": 0.5917694491108425,
+   "baseline_member": "wm2_m1bact_v19 (seed mean)",
+   "ci_diff": {
+    "B": 2000,
+    "hi": -0.06717193132278626,
+    "lo": -0.12218814808257954,
+    "n_worlds": 80,
+    "point": -0.09607343110185046,
+    "seed": 0
+   },
+   "keep_threshold": 0.473415559288674,
+   "model": 0.49569601800899205,
+   "ratio": 0.8376505727928255,
+   "runs": [
+    "wm3_full_s0",
+    "wm3_full_s1",
+    "wm3_full_s2"
+   ],
+   "seeds": [
+    0.5315685123564784,
+    0.4715527839854648,
+    0.483966757685033
+   ],
+   "verdict": "WEAK"
+  }
+ },
+ "note": "post hoc, not pre-registered (METRICS.md has no such rule); same bootstrap as the V rules",
+ "v2_by_outcome": {
+  "alive": {
+   "baseline": 0.5948500973411354,
+   "cells": [
+    "sp240L|alive|7d",
+    "gf240E|alive|7d",
+    "rw120E|alive|7d"
+   ],
+   "ci_diff": {
+    "B": 2000,
+    "hi": -0.051203557461129715,
+    "lo": -0.1750210965367962,
+    "n_worlds": 80,
+    "point": -0.11289990518463144,
+    "seed": 0
+   },
+   "keep_threshold": 0.4758800778729083,
+   "model": 0.4819501921565039,
+   "ratio": 0.8102044436249197,
+   "seeds": [
+    0.4815718287745973,
+    0.4823285555384104,
+    0.4819501921565039
+   ],
+   "verdict": "WEAK"
+  },
+  "deaths": {
+   "baseline": 0.35972545726099875,
+   "cells": [
+    "sp240L|deaths|7d",
+    "gf240E|deaths|7d",
+    "rw120E|deaths|7d"
+   ],
+   "ci_diff": {
+    "B": 2000,
+    "hi": 0.2932295686163356,
+    "lo": -0.08177877035631002,
+    "n_worlds": 80,
+    "point": 0.07777212275087553,
+    "seed": 0
+   },
+   "keep_threshold": 0.287780365808799,
+   "model": 0.4374975800118743,
+   "ratio": 1.2161985513703801,
+   "seeds": [
+    0.44109515216664547,
+    0.420839555109154,
+    0.4505580327598233
+   ],
+   "verdict": "TIE"
+  },
+  "food_stock": {
+   "baseline": 0.7089561260313975,
+   "cells": [
+    "sp240L|food_stock|7d",
+    "gf240E|food_stock|7d",
+    "rw120E|food_stock|7d"
+   ],
+   "ci_diff": {
+    "B": 2000,
+    "hi": 0.16457261624365976,
+    "lo": 0.06010335827007709,
+    "n_worlds": 80,
+    "point": 0.1131572094920118,
+    "seed": 0
+   },
+   "keep_threshold": 0.567164900825118,
+   "model": 0.8221133355234093,
+   "ratio": 1.1596110187035755,
+   "seeds": [
+    0.9627196275010254,
+    0.7405418251149832,
+    0.763078553954219
+   ],
+   "verdict": "NONE"
+  },
+  "settlements_alive": {
+   "baseline": 0.2767362805653785,
+   "cells": [
+    "sp240L|settlements_alive|7d",
+    "gf240E|settlements_alive|7d",
+    "rw120E|settlements_alive|7d"
+   ],
+   "ci_diff": {
+    "B": 2000,
+    "hi": 0.016836935462031653,
+    "lo": -0.08196234582595482,
+    "n_worlds": 80,
+    "point": -0.035513316221197494,
+    "seed": 0
+   },
+   "keep_threshold": 0.22138902445230282,
+   "model": 0.24122296434418103,
+   "ratio": 0.8716709057856709,
+   "seeds": [
+    0.2408874409836453,
+    0.24250120017931184,
+    0.24028025186958588
+   ],
+   "verdict": "TIE"
+  }
+ }
+}
