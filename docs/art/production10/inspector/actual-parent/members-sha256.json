@@ -1,0 +1,17 @@
+{
+  "capture-tools/README.md": "4d79bfcb017b03099a318b340b1bf40baf9bc1c84bc60b68e7dd1423d885d483",
+  "capture-tools/capture_parent_locales_p10.gd": "2fb1bf7db2eee2fa6c5b0ec977ff47a387958edd0bad5873d6c4990048f6f48a",
+  "capture-tools/run_parent.py": "48c58b297b88a6e3d765b1adc4665f29a0bbdebbe1057e0babdbce950f9e080a",
+  "git-status.txt": "4a32ba35265a2a9c720e2e98edf6cb66ce3bf9753bf2686ce8670a006a740bd5",
+  "launch.json": "6775c5616f556ea234f303e2feb9a065dc2b836d1ff7811beff6431f5e481028",
+  "parent-en-family.png": "d2caf987cc4323d669b90e9562c71bb135f79075062ec2ac471fe66316a04160",
+  "parent-en-temperament.png": "f49b5941623b9568bdb50414172616326e2e4db5920d579331fe66dcbfc0612b",
+  "parent-en-top.png": "58fdbddbb7e2156a02e5077c450f8c5dcca2261d0c79c279124331c25748cf16",
+  "parent-ko-family.png": "c6a360b87f6616a05be8b541e886261c933d7aa35169a00273b3198d511ad1a8",
+  "parent-ko-temperament.png": "03942ee8c35a1c1912859d0e7c446ee660404fe5b2f9bb5654257162153f46c2",
+  "parent-ko-top.png": "c3400da842a154def6a594aa19090b96fade0cecd66b3db6b788cea6637e1b44",
+  "parent.json": "b895f6bc974d594e62c135a2bfdd84aee4be7ab8ae87477ae31ed2b136acfe55",
+  "session.log": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
+  "source-before.json": "755863bad482b25e14f40406b321115690bfd264da70389985cabe0c6bcbbde9",
+  "working-tree.patch": "558a4deab525ae44ec34b4fddf2553dfd0d5cce27913b20d51dcc6e41bfa9953"
+}
