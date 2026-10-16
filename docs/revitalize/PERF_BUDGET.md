@@ -170,3 +170,21 @@ Reference values (500 agents, 64 × 64, fed, seed 15100, one day; medians of thr
 `quick` (v19 stress): base 0.304 ms, final 0.305 ms, same fingerprint. G6 (v23 vs v22 in stage c: mean −1.1 %, p99.9 −1.6 %) and F8 (v22 vs v21: −0.2 %, +2.4 %) are far from their bars. **For later passes:** compare a routine/family change against `game_v23` on the same build in the same hold, and read p99.9 with this pass's noise in mind (one hiccup in three repeats moves the median).
 
 To see where a tick's time goes, build `worldsim_perf` with `--features subprofile` in a separate target directory (`CARGO_TARGET_DIR=target/subprofile cargo build --release -p sim-test --features subprofile`); its JSON gains a `subprofile` block (per-scope totals, the slowest ticks' scope breakdown, per-tick arrays). The feature costs ~1 % on v20 and ~4–6 % on v21/v22 and is never used for identity runs or the gate.
+
+## Pass 19 — the 18:00 edge removed (`game_v24`), the chronicle's cost, and a scale check (new references)
+
+**Five-repeat procedure (H5, declared before measuring).** Pass 18's stress procedure (`stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed`, quiet lock, old rules then new, interleaved) with **five** interleaved repeats per rule and medians of five, so one machine hiccup cannot decide the tail; `game_v23` runs in the same repeats as a third column for the 18:00-window comparison; slopes `--agents 100,500,1000 --days 2`; `quick` on the base and final builds. Runner `tools/revitalize/perf_p19.sh h5`, evaluator `evaluate_perf_p19.py`; one uncontended hold 12:39:39–12:40:55 KST (load 3.84) for C6, H5 and the scale runs. [h5](perf/p19-2/h5.md).
+
+| rules (Part 2 build `3322601f`) | mean tick (r1–r5) | median | p99.9 (r1–r5) | median | 17:00–19:00 mean / max | 18:00 tick |
+|---|---|---:|---|---:|---|---:|
+| `game_v20` | 0.319 0.317 0.315 0.326 0.316 | 0.3166 ms | 0.587 0.721 0.649 0.672 0.580 | 0.649 ms | 0.334 / 0.510 ms | 0.505 ms |
+| `game_v23` | 0.369 0.370 0.378 0.373 0.368 | 0.3696 ms | 0.892 0.855 0.837 0.838 0.869 | 0.855 ms | 0.428 / 0.873 ms | 0.873 ms |
+| `game_v24` | 0.370 0.369 0.391 0.372 0.372 | 0.3723 ms | 0.758 0.762 1.566 0.797 0.767 | 0.767 ms | 0.438 / 0.667 ms | 0.614 ms |
+
+**H5 (v24 vs v20): FAIL on the mean** — mean +17.6 % (bar 15 %), p99.9 +18.2 % (bar 35 %, PASS; every repeat except r3's 1.566 ms outlier reads +5.7–+32 %), absolute 0.372 ms ≤ 4.0, decision slope 0.993 < 1.7 (v20 1.079). v24 vs v23: mean +0.7 %, p99.9 −10.3 %; v23 vs v20 in the same hold: +16.8 %, +31.7 %. **Reading:** the 18:00 edge is gone from the tail (the 18:00 tick 0.87 → 0.61 ms, the window's largest tick 0.87 → 0.67 ms, p99.9 back inside the bar in four of five repeats); the remaining mean regression (+17 %) is the routine's own per-tick work (not attributed further in this pass), unchanged by `game_v24` (+0.7 % vs v23), so it needs a structural change, not a different end time. `quick`: base 0.308 ms, final 0.304 ms, same fingerprint.
+
+**C6 (chronicle writes).** `stress --rules game_v23 --agents 500`, three interleaved repeats, base `20a1d078` vs Part 1 `0ca95174`: mean +2.40 % (per repeat +2.40 / −0.25 / +3.04 %), p99.9 +1.16 %, identical fingerprints ([c6](perf/p19-1/c6.md)). Inside the ±3 % expectation; the chronicle's write path costs about 9 µs per tick at 500 people (0.3752 vs 0.3664 ms).
+
+**Scale (Part 3, findings only).** `game_v24` single-camp stress worlds, two days, three repeats: mean tick 0.394 / 0.856 / 1.981 ms at 500 / 1,000 / 2,000 (2,000 on 128²: 1.955 ms), whole-tick slope 1.17, decision system 72 % of the 2,000 tick (slope 1.24), half of it the pre-loop maps. Peak memory footprint 8.4 / 11.4 / 16.5 MB. At 2× (the UI's fastest, 60 ticks/s) 2,000 people cost 12 % of one core. See [SCALE.md](SCALE.md).
+
+**For later passes:** compare against `game_v24` on the same build in the same hold, with five repeats; the mean target is the routine's per-tick work and the decision system's pre-loop maps.

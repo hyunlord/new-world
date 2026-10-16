@@ -14,6 +14,10 @@ The held-out overall verdict is **FAIL**: F1 is 527/1064 = 0.495301, below 0.50.
 
 The probe's family trace adds per departure `elders_departed`, `adult_elder_couples`, `adult_elder_couples_split` and the split pairs (`adult`, `elder`, `adult_departed`), computed from the members, the couples and the `Elder` component when the departure is observed; nothing is added to `FamilyEvent::Departed` or `FissionRecord`.
 
+## The chronicle's family entries (Pass 19)
+
+Every scene now keeps a write-only life record ([CHRONICLE.md](CHRONICLE.md)) that outlives death. Its family entries: `Born` (child, mother, father, village; cause 0 when the parents are a mutual couple, 1 for Pass 17's fallback parents), `Paired` (woman, man, village, familiarity ‰), `Widowed` (the living recorded partner at a death), `Died` (with the recorded partner), `CameOfAge`, `BecameElder`, and for splits `Departed` with a `DepartCause` — `Seed`, `Household` (a partner or child taken with the seed's or the fill's household), `ElderPartner` (the `game_v23` elder partner who follows), `TopUp` (the only path that takes an adult alone), `Ranked` (no family rule) — then `Settled` or `DepartureCancelled`. `households::select_departure_explained` labels each member at its first insertion; `select_departure` is its key set (same signature and result; property test against a frozen copy of Pass 18's function). The person table keeps sex, birth tick, parents, temperament, death tick and reason for everyone who ever lived, so the bridge's `get_person` can show a dead grandmother. On 32 `game_v23` worlds × 120 days every `FamilyEvent::Born` / `Paired` / `Departed` member and every observed death has exactly one matching entry, the `ElderPartner` count of each fission equals the trace's `elders_departed`, and every born person's record carries the parents of their birth event ([C-rules](probe/p19-1_chronicle/chronicle.md)).
+
 ## Identity and kinship
 
 Family-enabled founders and newborns receive `Sex` and `Kin` beside their existing Hardiness/Temperament insertion point. The prior insertion order is unchanged when family is absent. Sex uses exactly:
