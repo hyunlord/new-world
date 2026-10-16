@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-10-16T03:40:35.527322+00:00",
-  "head": "77030499ca5ef325040e416e36bec1032656ab38",
+  "generated_utc": "2026-10-16T03:42:41.057999+00:00",
+  "head": "f7d604f450927ddd788bd65ce45bb654db251021",
   "scope": "first-parent commits after 21d9ddd0; merge changed files relative first parent",
   "remote_ls_remote": "77030499ca5ef325040e416e36bec1032656ab38\trefs/heads/codex/art-production-2026-10\n77030499ca5ef325040e416e36bec1032656ab38\trefs/heads/codex/art-production-2026-10-wip\n",
   "commits": [
@@ -9600,6 +9600,51 @@
           "status": "A",
           "paths": [
             "docs/art/production10/review/round2.md"
+          ]
+        }
+      ]
+    },
+    {
+      "sha": "f7d604f450927ddd788bd65ce45bb654db251021",
+      "part": "p5",
+      "subject": "art-p10(p5): report measured improvements without claiming missing acceptance",
+      "committed_at": "2026-10-16T12:41:02+09:00",
+      "first_parent": "77030499ca5ef325040e416e36bec1032656ab38",
+      "changed_files": [
+        {
+          "status": "A",
+          "paths": [
+            "docs/art/production10/COMMIT_FILES.md"
+          ]
+        },
+        {
+          "status": "A",
+          "paths": [
+            "docs/art/production10/REPORT.md"
+          ]
+        },
+        {
+          "status": "M",
+          "paths": [
+            "docs/art/production10/TASKS.md"
+          ]
+        },
+        {
+          "status": "A",
+          "paths": [
+            "docs/art/production10/commit-inventory.json"
+          ]
+        },
+        {
+          "status": "A",
+          "paths": [
+            "docs/art/production10/publication/pr511-snapshot.json"
+          ]
+        },
+        {
+          "status": "A",
+          "paths": [
+            "docs/art/production10/publication/verified-snapshot.json"
           ]
         }
       ]

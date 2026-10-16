@@ -1,6 +1,6 @@
 # Art Pass10 commit path inventory
 
-Complete through 77030499ca5ef325040e416e36bec1032656ab38; final report-packaging commit is listed in the delivery message.
+Complete through f7d604f450927ddd788bd65ce45bb654db251021; final report-packaging commit is listed in the delivery message.
 
 ## p0 fd598fadf35b1fd7f9ce1b74d6e3837e4be319ee
 
@@ -1841,3 +1841,16 @@ Committed: 2026-10-16T12:38:22+09:00; first parent: 02f8721d04494dedc176a1ef34f1
 | A | `docs/art/production10/gates/run_final_gate_attempt2.py` |
 | A | `docs/art/production10/review/round1.md` |
 | A | `docs/art/production10/review/round2.md` |
+
+## p5 f7d604f450927ddd788bd65ce45bb654db251021
+
+art-p10(p5): report measured improvements without claiming missing acceptance
+
+| Status | Path |
+|---|---|
+| A | `docs/art/production10/COMMIT_FILES.md` |
+| A | `docs/art/production10/REPORT.md` |
+| M | `docs/art/production10/TASKS.md` |
+| A | `docs/art/production10/commit-inventory.json` |
+| A | `docs/art/production10/publication/pr511-snapshot.json` |
+| A | `docs/art/production10/publication/verified-snapshot.json` |
