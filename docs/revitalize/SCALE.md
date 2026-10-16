@@ -20,7 +20,7 @@ Brief: `PASS19_GOAL.md` section 8 (roadmap step 3). Nothing here was fixed; this
 
 Whole-tick slope over 500 → 2,000 (log-log): **1.165**. Map size barely matters at 2,000 (128² vs 64²: mean −1 %, footprint +0.7 MB).
 
-Memory: macOS `time -l` "maximum resident set size" is flat at 26.5 MB for every size (file-backed pages of the binary and libraries dominate it), so it says nothing about growth; the **peak memory footprint** (dirty memory) grows 8.4 → 11.4 → 16.5 MB, about 5 KB per person including all components, maps and the chronicle.
+Memory: macOS `time -l` "maximum resident set size" is flat at 26.5 MB for every size (file-backed pages of the binary and libraries dominate it), so it says nothing about growth; the **peak memory footprint** (dirty memory) grows 8.4 → 11.4 → 16.5 MB (MB here = MiB, 2^20 bytes), about 5 KB per person including all components, maps and the chronicle.
 
 ### Per system (ms per measured tick)
 

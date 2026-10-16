@@ -36,3 +36,7 @@ Clock minute of each world-day's largest tick (all ends), most common:
 - game_v23: {'18:00': 71553}
 
 H5 (performance) and H6 (identity) are judged outside this script.
+
+## Trace windows (brief 7.4, computed from the same runs' `_agents.jsonl` after evaluation; review round 1, finding 4)
+
+The probe's unchanged trace windows (brief 7.4): the daytime idle-tether window (Idle adults, 06:00–18:00, every 10th tick) has 1,379,596 samples in `game_v24` vs 1,337,358 in `game_v23` (+3.2 %: early enders are Idle before 18:00) at the same mean Chebyshev distance from home (5.60 vs 5.62 tiles); the night window (first bed tick from 18:00) is unchanged — mean bed minute 1,326.2 vs 1,325.5 (22:06 vs 22:05), median 1,304 in both, over 156,358 vs 156,014 adult-nights.
