@@ -61,7 +61,7 @@
 | P3 | `5fa4b3178c894f0ea0131c42f66d1ba4d1908dad` | `docs/art/production10/` 18; `localization/compiled/en.json` 1; `localization/compiled/ko.json` 1; `localization/fluent/en/` 1; `localization/fluent/ko/` 1; `localization/key_registry.json` 1; `scripts/test/art/` 1; `scripts/ui/panels/` 1 |
 | P3 | `b8b452d95939c3b1f44320bbb7c7a944cca4324e` | `docs/art/production10/TASKS.md` 1; `docs/art/production10/inspector/` 18 |
 | P4 | `208eb522f736e710708585901a021c1761fc50b4` | `docs/art/production10/DECISIONS.md` 1; `docs/art/production10/TASKS.md` 1; `docs/art/production10/perf/` 17 |
-| P5 | `02f8721d04494dedc176a1ef34f1601338d89374` | 정적 테스트1개, TEST_LEDGER·TASKS 및 실패 게이트 증거92개 |
+| P5 | `02f8721d04494dedc176a1ef34f1601338d89374` | 정적 테스트1개, TEST_LEDGER·TASKS 2개, 실패 게이트 증거91개 |
 | P5 | `77030499ca5ef325040e416e36bec1032656ab38` | `docs/art/production10/` 게이트·리뷰·정리 증거 102개 |
 | P5 | `f7d604f450927ddd788bd65ce45bb654db251021` | REPORT·커밋별 파일/JSON 목록·TASKS·게시 스냅샷, 문서6개 |
 
