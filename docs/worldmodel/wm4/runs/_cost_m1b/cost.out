@@ -1,0 +1,2 @@
+step 100 k 12 loss -0.2142 val 0.1143 best 0.1143@100 14s
+done: best 0.1143 at 100, stop max_steps, round True, 669s

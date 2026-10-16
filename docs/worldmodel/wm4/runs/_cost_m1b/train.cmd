@@ -1,0 +1,1 @@
+bash tools/worldmodel/wm4/launch/cost4.sh /home/hyunlord/work/wm1-runs/wm4/_cost_m1b python3 tools/worldmodel/wm4/m1_obs.py train --out /home/hyunlord/work/wm1-runs/wm4/_cost_m1b --seed 0 --max-steps 100 --eval-every 100 --max-seconds 1500
