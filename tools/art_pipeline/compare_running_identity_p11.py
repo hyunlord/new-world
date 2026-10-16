@@ -13,11 +13,13 @@ import sys
 from pathlib import Path
 from typing import Final, TypedDict
 
-WORLDS: Final = (("W0", 40560, 20261010), ("W200", 1440, 15100))
+WORLDS: Final = (("W0", 40560, 20261010), ("W200", 1440, 15100), ("W500_FROZEN", 1440, 15100), ("W500_2X", 1440, 15100))
 SCHEDULE_FIELDS: Final = (
     "world", "seed", "start_tick", "end_tick", "frames", "fixed_fps",
     "advance_every_frames", "mutation_route", "advance_calls", "process_frames",
     "ticks", "render_start_frame", "warmup_frames", "camera", "zoom", "debug_build",
+    "populations", "scope", "pan", "camera_start", "hearth", "pan_step_world_px",
+    "speed", "simulation_schedule", "collector_sha256",
 )
 
 
@@ -44,6 +46,12 @@ class Report(TypedDict):
 def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> WorldResult:
     """Require full frame/tick schedules, nonempty agent rows and byte equality."""
     label, start_tick, seed = spec
+    pan = label.startswith("W500")
+    frozen = label == "W500_FROZEN"
+    frames = 240 if pan else 600
+    advance_every = 0 if frozen else (1 if pan else 2)
+    advances = 0 if frozen else (240 if pan else 300)
+    ticks = [start_tick + (0 if frozen else i // advance_every + 1) for i in range(frames)]
     errors: list[str] = []
     captures = []
     dumps = []
@@ -62,36 +70,41 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
             continue
         expected = {
             "world": label, "seed": seed, "start_tick": start_tick,
-            "end_tick": start_tick + 300, "frames": 600, "fixed_fps": 60,
-            "advance_every_frames": 2, "mutation_route": "SimReads", "advance_calls": 300,
+            "end_tick": start_tick + advances, "frames": frames, "fixed_fps": 60,
+            "advance_every_frames": advance_every, "mutation_route": "SimReads", "advance_calls": advances,
+            "scope": "viewport_plus_64px", "pan": pan, "pan_step_world_px": 10 if pan else 0,
+            "speed": 0 if frozen else (2 if pan else 1),
             "render_start_frame": 120, "warmup_frames": 120,
-            "process_frames": list(range(241, 841)),
-            "ticks": [start_tick + i // 2 + 1 for i in range(600)],
+            "process_frames": list(range(241, 241 + frames)),
+            "ticks": ticks,
         }
         for key, value in expected.items():
             if metadata.get(key) != value:
                 errors.append(f"{metadata_path}: invalid {key}")
-        for key in ("build_commit", "build_sha256", "world_info"):
+        for key in ("build_commit", "build_sha256", "world_info", "collector_sha256"):
             if not metadata.get(key):
                 errors.append(f"{metadata_path}: missing build/world provenance {key}")
-        if metadata.get("validated_delta_samples", 0) < 600:
-            errors.append(f"{metadata_path}: fewer than 600 validated deltas")
+        if metadata.get("validated_delta_samples", 0) < frames:
+            errors.append(f"{metadata_path}: fewer validated deltas than required frames")
         if metadata.get("dump_sha256") != hashlib.sha256(dump).hexdigest():
             errors.append(f"{metadata_path}: dump checksum differs")
-        if len(rows) != 600:
-            errors.append(f"{dump_path}: expected 600 rows, got {len(rows)}")
+        if len(rows) != frames:
+            errors.append(f"{dump_path}: expected {frames} rows, got {len(rows)}")
+        if any(not isinstance(row, dict) for row in rows):
+            errors.append(f"{dump_path}: rows must be objects")
+            continue
         for index, row in enumerate(rows):
             if not isinstance(row, dict):
                 errors.append(f"{dump_path}: frame {index + 1} is not an object")
                 break
             expected_row = {"frame": index + 1, "process_frame": 241 + index,
-                            "tick": start_tick + index // 2 + 1}
+                            "tick": ticks[index] if index < frames else -1}
             if any(row.get(key) != value for key, value in expected_row.items()):
                 errors.append(f"{dump_path}: invalid schedule at frame {index + 1}")
                 break
             agents = row.get("agents")
-            if not isinstance(agents, list) or not agents:
-                errors.append(f"{dump_path}: frame {index + 1} has no agents")
+            if not isinstance(agents, list):
+                errors.append(f"{dump_path}: frame {index + 1} has malformed agents")
                 break
             ids: list[int] = []
             for agent in agents:
@@ -108,6 +121,35 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
             if ids != sorted(set(ids)):
                 errors.append(f"{dump_path}: agent IDs must be unique and sorted")
                 break
+        if not any(row.get("agents") for row in rows):
+            errors.append(f"{dump_path}: no agent entered viewport/margin in the full session")
+        populations = metadata.get("populations", [])
+        if len(populations) != frames or any(not isinstance(n, int) or n <= 0 for n in populations):
+            errors.append(f"{metadata_path}: invalid population series")
+        camera_start = metadata.get("camera_start", [])
+        hearth = metadata.get("hearth", [])
+        if len(camera_start) != 2 or len(hearth) != 2:
+            errors.append(f"{metadata_path}: missing camera start/hearth")
+        else:
+            if camera_start != [hearth[0] - (1200 if pan else 0), hearth[1]]:
+                errors.append(f"{metadata_path}: invalid initial hearth-relative camera")
+            for index, row in enumerate(rows):
+                camera = [camera_start[0] + (10 * index if pan else 0), camera_start[1]]
+                if row.get("camera") != camera:
+                    errors.append(f"{dump_path}: invalid pan schedule at frame {index + 1}")
+                    break
+                if index >= len(populations) or row.get("population") != populations[index]:
+                    errors.append(f"{dump_path}: invalid population provenance at frame {index + 1}")
+                    break
+            if rows and metadata.get("camera") != rows[-1].get("camera"):
+                errors.append(f"{metadata_path}: final camera differs from dump")
+        if len(metadata.get("render_counts", [])) != frames:
+            errors.append(f"{metadata_path}: missing per-frame render count series")
+        for key in ("render_counts_start", "render_counts_end"):
+            counts = metadata.get(key, {})
+            if not isinstance(counts, dict) or any(not isinstance(counts.get(field), int)
+                    or counts[field] < 0 for field in ("pre_draw", "post_draw", "engine_frames_drawn")):
+                errors.append(f"{metadata_path}: missing render-clock evidence {key}")
         captures.append(metadata)
         dumps.append(dump)
     if len(captures) == 2:
@@ -121,8 +163,8 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
     else:
         errors.append(f"{label}: both complete captures required")
     return {
-        "world": label, "start_tick": start_tick, "frames": 600, "fixed_fps": 60,
-        "advance_every_frames": 2, "mutation_route": "SimReads",
+        "world": label, "start_tick": start_tick, "frames": frames, "fixed_fps": 60,
+        "advance_every_frames": advance_every, "mutation_route": "SimReads",
         "base_dump": str((base / f"{label}.jsonl").resolve()),
         "candidate_dump": str((current / f"{label}.jsonl").resolve()),
         "valid": not errors, "status": "PASS" if not errors else "FAIL", "errors": errors,
@@ -130,7 +172,7 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
 
 
 def compare(base: Path, current: Path) -> Report:
-    """Compare both required worlds; a missing world is a failure."""
+    """Compare both running worlds and both pan scenarios; missing evidence fails."""
     worlds = [compare_world(base, current, spec) for spec in WORLDS]
     valid = all(world["valid"] for world in worlds)
     return {"valid": valid, "status": "PASS" if valid else "FAIL", "worlds": worlds}

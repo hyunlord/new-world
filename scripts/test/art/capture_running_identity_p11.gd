@@ -4,18 +4,22 @@ extends SceneTree
 const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 const FixedDelta = preload("res://scripts/test/art/test_fixed_delta_p9.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
-const CASES: Dictionary = {"W0": [20261010, 40560, 0], "W200": [15100, 1440, 200]}
+const CASES: Dictionary = {"W0": [20261010, 40560, 0], "W200": [15100, 1440, 200], "W500_FROZEN": [15100, 1440, 500], "W500_2X": [15100, 1440, 500]}
 const START_FRAME: int = 120
 const WARMUP_FRAMES: int = 120
-const CAPTURE_FRAMES: int = 600
+const MARGIN_PX: float = 64.0
 signal frame_settled
 var _main: Node
 var _world: Node
 var _reads: Node
 var _renderer: Node
 var _samples: int = 0
+var _pre_draws: int = 0
+var _post_draws: int = 0
 
 func _init() -> void:
+	RenderingServer.frame_pre_draw.connect(_on_pre_draw)
+	RenderingServer.frame_post_draw.connect(_on_post_draw)
 	call_deferred("_run")
 
 func _run() -> void:
@@ -24,7 +28,11 @@ func _run() -> void:
 	var commit: String = OS.get_environment("P11_BUILD_COMMIT")
 	var library_hash: String = OS.get_environment("P11_BUILD_SHA256")
 	if not CASES.has(label) or output.is_empty() or commit.is_empty() or library_hash.is_empty():
-		_fail("requires P11_RUNNING_WORLD=W0|W200, P11_RUNNING_OUT, P11_BUILD_COMMIT and P11_BUILD_SHA256")
+		_fail("requires P11_RUNNING_WORLD=W0|W200|W500_FROZEN|W500_2X, P11_RUNNING_OUT, P11_BUILD_COMMIT and P11_BUILD_SHA256")
+		return
+	var actual_library_hash: String = FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib")
+	if actual_library_hash != library_hash:
+		_fail("loaded debug-path bridge SHA does not match supplied provenance")
 		return
 	if DirAccess.make_dir_recursive_absolute(output) != OK:
 		_fail("cannot create output directory")
@@ -43,6 +51,10 @@ func _run() -> void:
 		_fail("SimReads must own the captured world; direct mutation fallback is forbidden")
 		return
 	var spec: Array = CASES[label]
+	var pan: bool = label.begins_with("W500")
+	var frozen: bool = label == "W500_FROZEN"
+	var capture_frames: int = 240 if pan else 600
+	var advance_every: int = 0 if frozen else (1 if pan else 2)
 	var reset_ok: bool
 	if int(spec[2]) > 0:
 		reset_ok = bool(ReadRoute.mutate(_world, "reset_world_stress", [int(spec[0]), int(spec[2])]))
@@ -65,12 +77,16 @@ func _run() -> void:
 		if ids[index] < ids[first]:
 			first = index
 	camera.position = Vector2(448, 28) + Vector2(settlements["formation_xs"][first], settlements["formation_ys"][first]) * 16.0 + Vector2(8, 8)
+	var hearth: Vector2 = camera.position
+	if pan:
+		camera.position = hearth - Vector2(1200.0, 0.0)
+	var camera_start: Vector2 = camera.position
 	camera.zoom = Vector2(4, 4)
 	camera.reset_smoothing()
 	camera.force_update_scroll()
 	Selection.set_layers_enabled(self, true)
 	_renderer = _main.get_node("AgentRenderer")
-	# Keep all render clocks stopped through startup, then start both builds together.
+	# Keep scene process clocks stopped through startup; compositor clocks remain observed separately.
 	if Engine.get_process_frames() > START_FRAME:
 		_fail("startup passed scheduled render start frame")
 		return
@@ -83,24 +99,43 @@ func _run() -> void:
 		return
 	var process_frames: Array[int] = []
 	var ticks: Array[int] = []
-	for index: int in CAPTURE_FRAMES:
-		if index % 2 == 0:
-			ReadRoute.mutate(_world, "advance_ticks", [1])
+	var populations: Array[int] = []
+	var advance_calls: int = 0
+	var render_start: Dictionary = _render_counts()
+	var render_counts: Array[Dictionary] = []
+	for index: int in capture_frames:
+		if advance_every > 0 and index % advance_every == 0:
+			if int(ReadRoute.mutate(_world, "advance_ticks", [1])) != int(spec[1]) + advance_calls + 1:
+				_fail("advance failed")
+				return
+			advance_calls += 1
+		if pan:
+			camera.position = camera_start + Vector2(10.0 * float(index), 0.0)
+			camera.force_update_scroll()
 		await _until_frame(START_FRAME + WARMUP_FRAMES + index + 1)
 		var time: Dictionary = _reads.call("time_snapshot")
-		var expected_tick: int = int(spec[1]) + int(index / 2) + 1
+		var expected_tick: int = int(spec[1]) + advance_calls
 		if int(time["tick"]) != expected_tick:
 			_fail("tick schedule mismatch at frame %d" % index)
 			return
 		process_frames.append(Engine.get_process_frames())
 		ticks.append(int(time["tick"]))
-		file.store_line(JSON.stringify({"frame": index + 1, "process_frame": Engine.get_process_frames(), "tick": time["tick"], "agents": _agents()}, "", true, true))
+		var agents: Dictionary = _reads.call("agent_snapshot")
+		var agent_ids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
+		populations.append(agent_ids.size())
+		render_counts.append(_render_counts())
+		file.store_line(JSON.stringify({"frame": index + 1, "process_frame": Engine.get_process_frames(), "tick": time["tick"], "population": populations.back(), "camera": [camera.position.x, camera.position.y], "agents": _agents()}, "", true, true))
 	file.close()
 	var manifest: Dictionary = {
 		"world": label, "seed": spec[0], "start_tick": spec[1], "end_tick": ticks.back(),
-		"frames": CAPTURE_FRAMES, "fixed_fps": 60, "advance_every_frames": 2,
-		"mutation_route": "SimReads", "advance_calls": 300, "process_frames": process_frames,
-		"ticks": ticks, "render_start_frame": START_FRAME, "warmup_frames": WARMUP_FRAMES,
+		"frames": capture_frames, "fixed_fps": 60, "advance_every_frames": advance_every,
+		"mutation_route": "SimReads", "advance_calls": advance_calls, "process_frames": process_frames,
+		"ticks": ticks, "populations": populations, "scope": "viewport_plus_64px",
+		"pan": pan, "camera_start": [camera_start.x, camera_start.y], "hearth": [hearth.x, hearth.y],
+		"pan_step_world_px": 10 if pan else 0, "speed": 0 if frozen else (2 if pan else 1),
+		"simulation_schedule": "manual SimReads advance; 30 TPS at fixed 60 FPS",
+		"render_counts": render_counts, "render_counts_start": render_start, "render_counts_end": _render_counts(),
+		"collector_sha256": FileAccess.get_sha256("res://scripts/test/art/capture_running_identity_p11.gd"), "render_start_frame": START_FRAME, "warmup_frames": WARMUP_FRAMES,
 		"validated_delta_samples": _samples, "debug_build": OS.is_debug_build(),
 		"build_commit": commit, "build_sha256": library_hash,
 		"world_info": _reads.call("world_info"), "camera": [camera.position.x, camera.position.y],
@@ -114,6 +149,15 @@ func _run() -> void:
 	metadata.close()
 	quit(0)
 
+func _on_pre_draw() -> void:
+	_pre_draws += 1
+
+func _on_post_draw() -> void:
+	_post_draws += 1
+
+func _render_counts() -> Dictionary:
+	return {"pre_draw": _pre_draws, "post_draw": _post_draws, "engine_frames_drawn": Engine.get_frames_drawn()}
+
 func _agents() -> Array:
 	var sprites: Dictionary = _renderer.get("_sprites")
 	var ids: Array = sprites.keys()
@@ -121,6 +165,9 @@ func _agents() -> Array:
 	var result: Array = []
 	for id: int in ids:
 		var sprite: Sprite2D = sprites[id]
+		var screen_rect: Rect2 = sprite.get_global_transform_with_canvas() * sprite.get_rect()
+		if not root.get_visible_rect().grow(MARGIN_PX).intersects(screen_rect, true):
+			continue
 		var region: Rect2 = sprite.region_rect
 		var texture_path: String = ""
 		if sprite.texture is AtlasTexture:
@@ -167,5 +214,5 @@ func _process(delta: float) -> bool:
 	return false
 
 func _fail(message: String) -> void:
-	push_error("running-identity-p10: " + message)
+	push_error("running-identity-p11: " + message)
 	quit(1)

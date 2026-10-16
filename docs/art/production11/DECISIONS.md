@@ -30,3 +30,9 @@
 ## Part 3 framing reuse (2026-10-16T12:35Z)
 
 Preserve P4 seed20261013/tick126994/Z1 with measured W1 population66 and two living villages. Historical three villages was an observation, not a bar: production9/GOAL.md:113 fixes framing; production10/GOAL.md:67 requires several villages; production10/baseline/README.md:9 accepts two for the inherited multi-village purpose and :24 reports historical three. External preparation min3 assumption is withdrawn before capture. P1/P6 and P5 exact current baseline evidence is reused; only P2 night and P3 exact census require new probes. Performance worlds and ticks stay unchanged.
+
+## Fresh base import recovery (2026-10-16T12:37Z)
+
+Base bridge built successfully in27.63s. First headless import exited245 after missing fresh font imports and a root propagate_notification caller-thread error. Preserve import.log as failed evidence. Hypotheses: startup theme references not-yet-imported fonts; parallel import thread interaction; corrupt source/resource. Second bounded import on the same source tests transient import-state hypothesis without changing production files. No identity capture until successful import and parse checks.
+
+Base import attempt2 exited0 and completed all resources, while retaining startup missing-font errors from its initial state. Subsequent import-confirm exited0 with no ERROR/SCRIPT ERROR/Parse Error, as did main import. Strict harness check: five files clean, six FFI calls matched. Both actual debug bridge hashes retained in p3-runtime/debug-bridges.sha256. No production resource changes were needed.

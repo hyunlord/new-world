@@ -2,6 +2,10 @@
 # SIZE_OK: historical capture runner copied intact; changes are opt-in identity timing.
 extends SceneTree
 
+const DrawClock = preload("res://scripts/test/art/identity_draw_clock_p11.gd")
+var _draw_clock: DrawClock = DrawClock.new()
+signal identity_draw_settled
+
 const FixedDelta = preload("res://scripts/test/art/test_fixed_delta_p9.gd")
 var _identity_delta_samples: int = 0
 var _identity_delta_valid: bool = true
@@ -60,6 +64,8 @@ var _event_trace: RefCounted = EventTrace.new()
 
 
 func _init() -> void:
+	if OS.get_environment("CAPTURE_IDENTITY_P11") == "1":
+		_draw_clock.begin()
 	if _capture_fixture_mode():
 		call_deferred("_run")
 		return
@@ -283,8 +289,8 @@ func _run() -> void:
 			_fail("cannot save " + filename)
 			return
 		if OS.get_environment("CAPTURE_IDENTITY_P11") == "1":
-			if framing != "FV" or target != 46189 or image.get_size() != Vector2i(1920, 1080):
-				_fail("P3 requires FV at tick 46189 and 1920x1080")
+			if framing != "FV" or target != int(OS.get_environment("P11_P3_TARGET_TICK")) or image.get_size() != Vector2i(1920, 1080):
+				_fail("P3 requires FV at declared derived tick and 1920x1080")
 				return
 			if image.save_png(ProjectSettings.globalize_path(_out.path_join("P3.png"))) != OK:
 				_fail("cannot save P3")
@@ -293,7 +299,11 @@ func _run() -> void:
 			if identity_file == null:
 				_fail("cannot save P3 metadata")
 				return
-			identity_file.store_string(JSON.stringify({"framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
+			var draw_evidence: Dictionary = _draw_clock.evidence()
+			if not bool(draw_evidence["valid"]):
+				_fail("unexpected render steps; capture invalid")
+				return
+			identity_file.store_string(JSON.stringify({"census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
 		if not _write_entities(stem, target, image.get_size()):
 			return
 		print("capture saved: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
@@ -759,8 +769,16 @@ func _render_frame() -> void:
 	# Explicitly draw the real viewport instead of waiting indefinitely for that signal.
 	DisplayServer.window_move_to_foreground()
 	await process_frame
-	RenderingServer.force_draw(false)
+	if OS.get_environment("CAPTURE_IDENTITY_P11") == "1":
+		call_deferred("_finish_identity_draw")
+		await identity_draw_settled
+	else:
+		RenderingServer.force_draw(false)
 
+
+func _finish_identity_draw() -> void:
+	_draw_clock.draw_frame(Engine.get_process_frames())
+	identity_draw_settled.emit()
 
 func _scenario() -> String:
 	if _plan == "art_god":
@@ -1052,8 +1070,18 @@ func _capture_fixture_mode() -> bool:
 
 func _process(delta: float) -> bool:
 	if OS.get_environment("CAPTURE_IDENTITY_P11") == "1":
+		_draw_clock.schedule(Engine.get_process_frames())
 		_identity_delta_samples += 1
 		if not FixedDelta.accepts_delta(delta):
 			_identity_delta_valid = false
 			_fail("identity requires actual process delta 1/60 on every frame; observed %.15f" % delta)
 	return false
+
+
+func _identity_census() -> Dictionary:
+	var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
+	var agent_ids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
+	return {"world_info": ReadRoute.read(_world, "get_world_info"),
+		"population": agent_ids.size(), "settlements": ReadRoute.read(_world, "get_settlement_snapshot"),
+		"clock": ReadRoute.read(_world, "get_time_snapshot"),
+		"loaded_bridge_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib")}

@@ -26,7 +26,9 @@ done
 # Atomic refusal preserves every earlier run, including failed captures.
 mkdir "$output"
 mkdir "$output/logs"
-printf '%s\n' '[["RESET",20261013],[33,"09:49","FV","all"]]' > "$output/p3-plan.json"
+: "${P11_P3_PLAN:?requires derived P3 plan path}"
+: "${P11_P3_TARGET_TICK:?requires derived P3 tick}"
+cp "$P11_P3_PLAN" "$output/p3-plan.json"
 printf 'framing\tstarted_utc\tfinished_utc\texit_code\tartifacts\tlog_errors\n' > "$output/launches.tsv"
 printf 'checkout=%s\nlabel=%s\nfixed_fps=60\nresolution=1920x1080\nlimit_seconds=%s\nquiet_lock=%s\n' "$checkout" "$label" "$limit" "$quiet" > "$output/runner.txt"
 cd "$checkout"
@@ -34,9 +36,9 @@ failed=0
 for framing in P1 P2 P3 P4 P5 P6; do
   while [[ -d "$quiet" ]]; do
     printf '%s %s waiting for quiet lock %s\n' "$(date -u +%FT%TZ)" "$framing" "$quiet" >> "$output/logs/quiet-waits.log"
-    sleep 300
+    sleep 30
   done
-  args=("$godot" --path "$checkout" --fixed-fps 60 --resolution 1920x1080)
+  args=("$godot" --path "$checkout" --disable-render-loop --fixed-fps 60 --resolution 1920x1080)
   if [[ "$framing" == P3 ]]; then
     args+=(--script res://scripts/test/capture_framings_p11.gd -- --plan art_society --out "$output")
   else
@@ -47,9 +49,9 @@ for framing in P1 P2 P3 P4 P5 P6; do
   # Recheck after the potentially long window-lock wait; never acquire a quiet hold.
   # with_window_lock invokes run_bounded, including this recheck in the time limit.
   env P11_IDENTITY_ID="$framing" P11_IDENTITY_OUT="$output" \
-    CAPTURE_IDENTITY_P11=1 CAPTURE_PLAN_JSON="$output/p3-plan.json" CAPTURE_SOCIETY_PERF_ONLY=0 \
+    P11_P3_TARGET_TICK="$P11_P3_TARGET_TICK" CAPTURE_IDENTITY_P11=1 CAPTURE_PLAN_JSON="$output/p3-plan.json" CAPTURE_SOCIETY_PERF_ONLY=0 \
     bash tools/art_pipeline/with_window_lock.sh "$limit" \
-    bash -c 'while [[ -d "$1" ]]; do printf "waiting for quiet lock %s\n" "$1"; sleep 300; done; shift; exec "$@"' \
+    bash -c 'while [[ -d "$1" ]]; do printf "waiting for quiet lock %s\n" "$1"; sleep 30; done; shift; exec "$@"' \
     identity-launch "$quiet" "${args[@]}" > "$output/logs/$framing.log" 2>&1 || rc=$?
   log_errors=none
   if grep -Eq 'SCRIPT ERROR|ERROR:' "$output/logs/$framing.log"; then
