@@ -132,3 +132,111 @@
 <!-- art-p11-last-release 1792164111 -->
 - 2026-10-16T15:25:48Z pid=27548 WAIT_START owner=codex-art-pass11 purpose=after-W0-attempt1 hold_limit=3600
 - 2026-10-16T15:25:48Z pid=27548 WAIT_COOLDOWN remaining=363s
+- 2026-10-16T15:31:52Z pid=27548 CHECK load=29.10 processes= waited=363s
+- 2026-10-16T15:31:52Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:36:53Z pid=27548 CHECK load=8.66 processes= waited=665s
+- 2026-10-16T15:36:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:41:53Z pid=27548 CHECK load=12.29 processes= waited=965s
+- 2026-10-16T15:41:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:46:53Z pid=27548 CHECK load=9.93 processes= waited=1265s
+- 2026-10-16T15:46:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:51:53Z pid=27548 CHECK load=10.60 processes= waited=1565s
+- 2026-10-16T15:51:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T15:56:53Z pid=27548 CHECK load=29.96 processes= waited=1865s
+- 2026-10-16T15:56:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:01:53Z pid=27548 CHECK load=17.93 processes= waited=2165s
+- 2026-10-16T16:01:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:06:53Z pid=27548 CHECK load=11.95 processes= waited=2465s
+- 2026-10-16T16:06:53Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:11:54Z pid=27548 CHECK load=25.75 processes= waited=2766s
+- 2026-10-16T16:11:54Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:16:55Z pid=27548 CHECK load=8.83 processes= waited=3067s
+- 2026-10-16T16:16:55Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:21:56Z pid=27548 CHECK load=7.06 processes= waited=3368s
+- 2026-10-16T16:21:56Z pid=27548 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:26:56Z pid=27548 CHECK load=9.89 processes= waited=3668s
+- 2026-10-16T16:26:56Z pid=27548 HOLD_START owner=codex-art-pass11 purpose=after-W0-attempt1 start=1792168016 load_before=9.89 contended=true waited=3668s
+- 2026-10-16T16:29:34Z pid=27548 HOLD_END owner=codex-art-pass11 purpose=after-W0-attempt1 start=1792168016 end=1792168174 elapsed=158 load_before=9.89 load_after=16.67 contended=true exit=0
+<!-- art-p11-last-release 1792168174 -->
+- 2026-10-16T16:29:34Z pid=95870 WAIT_START owner=codex-art-pass11 purpose=after-W500-attempt1 hold_limit=3600
+- 2026-10-16T16:29:34Z pid=95870 WAIT_COOLDOWN remaining=600s
+- 2026-10-16T16:39:34Z pid=95870 CHECK load=6.09 processes= waited=600s
+- 2026-10-16T16:39:34Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:44:34Z pid=95870 CHECK load=8.56 processes= waited=900s
+- 2026-10-16T16:44:34Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:49:34Z pid=95870 CHECK load=15.14 processes= waited=1200s
+- 2026-10-16T16:49:34Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:54:35Z pid=95870 CHECK load=12.15 processes= waited=1500s
+- 2026-10-16T16:54:35Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T16:59:35Z pid=95870 CHECK load=9.76 processes= waited=1801s
+- 2026-10-16T16:59:35Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:04:35Z pid=95870 CHECK load=8.28 processes= waited=2101s
+- 2026-10-16T17:04:35Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:09:35Z pid=95870 CHECK load=28.83 processes= waited=2401s
+- 2026-10-16T17:09:35Z pid=95870 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:10:46Z pid=55643 WAIT_START owner=codex-art-pass11 purpose=after-W500-attempt2 hold_limit=3600
+- 2026-10-16T17:10:46Z pid=55643 CHECK load=32.75 processes= waited=0s
+- 2026-10-16T17:10:46Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:15:47Z pid=55643 CHECK load=73.48 processes= waited=300s
+- 2026-10-16T17:15:47Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:20:47Z pid=55643 CHECK load=41.70 processes= waited=601s
+- 2026-10-16T17:20:47Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:25:47Z pid=55643 CHECK load=22.23 processes= waited=901s
+- 2026-10-16T17:25:47Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:30:47Z pid=55643 CHECK load=15.43 processes= waited=1201s
+- 2026-10-16T17:30:47Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:35:47Z pid=55643 CHECK load=28.41 processes= waited=1501s
+- 2026-10-16T17:35:47Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:40:47Z pid=55643 CHECK load=5.63 processes= waited=1801s
+- 2026-10-16T17:40:47Z pid=55643 WAIT_BUSY next_poll=300s
+- 2026-10-16T17:45:48Z pid=55643 CHECK load=3.62 processes= waited=2101s
+- 2026-10-16T17:45:48Z pid=55643 HOLD_START owner=codex-art-pass11 purpose=after-W500-attempt2 start=1792172748 load_before=3.62 contended=false waited=2102s
+- 2026-10-16T17:54:19Z pid=55643 HOLD_END owner=codex-art-pass11 purpose=after-W500-attempt2 start=1792172748 end=1792173259 elapsed=511 load_before=3.62 load_after=5.51 contended=false exit=0
+<!-- art-p11-last-release 1792173259 -->
+- 2026-10-16T17:54:19Z pid=18212 WAIT_START owner=codex-art-pass11 purpose=after-W200-attempt1 hold_limit=3600
+- 2026-10-16T17:54:19Z pid=18212 WAIT_COOLDOWN remaining=600s
+- 2026-10-16T18:04:19Z pid=18212 CHECK load=3.91 processes= waited=600s
+- 2026-10-16T18:04:19Z pid=18212 HOLD_START owner=codex-art-pass11 purpose=after-W200-attempt1 start=1792173859 load_before=3.91 contended=false waited=600s
+- 2026-10-16T18:05:56Z pid=18212 HOLD_END owner=codex-art-pass11 purpose=after-W200-attempt1 start=1792173859 end=1792173956 elapsed=97 load_before=3.91 load_after=5.48 contended=false exit=0
+<!-- art-p11-last-release 1792173956 -->
+- 2026-10-16T18:05:56Z pid=53545 WAIT_START owner=codex-art-pass11 purpose=after-W1-attempt1 hold_limit=3600
+- 2026-10-16T18:05:56Z pid=53545 WAIT_COOLDOWN remaining=600s
+- 2026-10-16T18:15:56Z pid=53545 CHECK load=4.82 processes= waited=600s
+- 2026-10-16T18:15:56Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:20:57Z pid=53545 CHECK load=4.85 processes= waited=900s
+- 2026-10-16T18:20:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:25:57Z pid=53545 CHECK load=4.48 processes= waited=1201s
+- 2026-10-16T18:25:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:30:57Z pid=53545 CHECK load=5.82 processes= waited=1501s
+- 2026-10-16T18:30:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:35:57Z pid=53545 CHECK load=5.65 processes= waited=1801s
+- 2026-10-16T18:35:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:40:57Z pid=53545 CHECK load=6.90 processes= waited=2101s
+- 2026-10-16T18:40:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:45:57Z pid=53545 CHECK load=20.81 processes= waited=2401s
+- 2026-10-16T18:45:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:50:57Z pid=53545 CHECK load=5.70 processes= waited=2701s
+- 2026-10-16T18:50:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T18:55:57Z pid=53545 CHECK load=6.97 processes= waited=3001s
+- 2026-10-16T18:55:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:00:57Z pid=53545 CHECK load=12.97 processes= waited=3301s
+- 2026-10-16T19:00:57Z pid=53545 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:05:58Z pid=53545 CHECK load=7.33 processes= waited=3601s
+- 2026-10-16T19:05:58Z pid=53545 HOLD_START owner=codex-art-pass11 purpose=after-W1-attempt1 start=1792177558 load_before=7.33 contended=true waited=3602s
+- 2026-10-16T19:10:44Z pid=53545 HOLD_END owner=codex-art-pass11 purpose=after-W1-attempt1 start=1792177558 end=1792177844 elapsed=286 load_before=7.33 load_after=5.71 contended=true exit=0
+<!-- art-p11-last-release 1792177844 -->
+- 2026-10-16T19:10:45Z pid=3770 WAIT_START owner=codex-art-pass11 purpose=agent-sections-W500 hold_limit=3600
+- 2026-10-16T19:10:45Z pid=3770 WAIT_COOLDOWN remaining=599s
+- 2026-10-16T19:20:44Z pid=3770 CHECK load=4.89 processes= waited=599s
+- 2026-10-16T19:20:44Z pid=3770 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:25:44Z pid=3770 CHECK load=4.62 processes= waited=899s
+- 2026-10-16T19:25:44Z pid=3770 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:30:44Z pid=3770 CHECK load=4.55 processes= waited=1199s
+- 2026-10-16T19:30:44Z pid=3770 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:35:44Z pid=3770 CHECK load=5.24 processes= waited=1499s
+- 2026-10-16T19:35:44Z pid=3770 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:40:45Z pid=3770 CHECK load=4.73 processes= waited=1800s
+- 2026-10-16T19:40:45Z pid=3770 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:45:45Z pid=3770 CHECK load=5.84 processes= waited=2100s
+- 2026-10-16T19:45:45Z pid=3770 WAIT_BUSY next_poll=300s
+- 2026-10-16T19:50:00Z pid=3770 TASK_DEADLINE purpose=agent-sections-W500 deadline=1792180200

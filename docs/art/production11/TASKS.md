@@ -9,8 +9,8 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 | 1 | Names, cached reads, life and records, chronicle, tests and captures | 10:17 (approx.) | 10:47 (approx.) | COMPLETE; H8 FAIL (44/45 correct) |
 | 2 | Seven icons, village summary, blind test | 10:35 | 12:36 | COMPLETE_WITH_LIMITATIONS; H7 NOT_VERIFIED, C12/14 shortage, D round2 PASS |
 | 3 | Timed optimization with identity and pan proof | 12:37 | 15:25:03 | COMPLETE; candidate REJECTED; no optimization adopted |
-| 4 | Frozen release matrix and H1–H8 | 15:25:03 | | IN_PROGRESS; frozen5ee5e1ee |
-| 5 | Independent review, final gate, report, publication, cleanup | | | PENDING |
+| 4 | Frozen release matrix and H1–H8 | 15:25:03 | 19:50:00 | COMPLETE_WITH_LIMITATIONS; four worlds valid; after sections NOT_MEASURED |
+| 5 | Independent review, final gate, report, publication, cleanup | 19:50:00 | | IN_PROGRESS |
 
 ## Initial provenance
 - Art base and both remote art branches: cdf69c0e85a5876c821a8bf22b18089bf740c581.
@@ -41,3 +41,5 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 - Freeze exact receipt15:25:03Z; preceding15:24:41 was the decision clock. Product sources equal Part2f0d after excluding five static-source Rust test repins, whose exact diff is retained. Part4 runtime remains5ee5e1ee although evidence/docs commits advance WIP.
 
 - 2026-10-16T17:11Z: Turn interruption terminated W500 attempt1 while waiting (no hold or measurement); preserved empty log and explicit interrupted receipt, no invented exit status. Confirmed old runner absent and removed only its empty runner mutex. Resumed matrix from valid W0; next W500 attempt2, original deadline unchanged.
+
+- 2026-10-16T19:50Z: Original12h admission cutoff reached. Four after worlds accepted; W500 interrupted waitattempt1 retained, attempt2valid. After sectionattemptneveracquiredhold,exit124/driver1/noframes:NOT_MEASURED. No further performance attempts. Fullgate started19:50:19Z at519d3916; frozenmeasurementHEAD5ee5e1ee unchanged.
