@@ -451,6 +451,20 @@ class V2BaselineTests(unittest.TestCase):
         self.assertEqual({k: round(v, 3) for k, v in sel["val"].items()}, {"an5_arm": 0.489, "arm_mean": 0.499, "zero": 0.647})
 
 
+class JudgeTests(unittest.TestCase):
+    def test_v3_per_world_score_and_the_untrained_head_cap(self) -> None:
+        from wm3 import judge3 as j3
+        rows = {("sp240L", "shift"): [(1, 0, 4.0, 0, 0), (1, 1, 2.0, 0, 0), (2, 0, 10.0, 0, 0)],
+                ("gf240E", "shift"): [(1, 0, 6.0, 0, 0), (3, 1, 1.0, 0, 0)]}
+        self.assertEqual(j3.shift_per_world(rows, [1, 2, 3]), {"1": 4.0, "2": 10.0, "3": 1.0})
+        base = {str(w): 10.0 + (w % 3) for w in range(40)}
+        good = {str(w): 1.0 + 0.01 * (w % 5) for w in range(40)}
+        self.assertEqual(j3.capped(["a", "b"], ["a", "b"], [good, good], base)["verdict"], "KEEP")
+        cap = j3.capped(["a", "b"], ["a", "b", "c"], [good, good], base)
+        self.assertEqual((cap["verdict"], cap["capped"]), ("WEAK", "a seed's hazard head is untrained"))
+        self.assertEqual(j3.capped([], ["a"], [], base)["verdict"], "NONE")
+
+
 def val_family_dirs():
     from pathlib import Path
     from wm2 import effects as ef
