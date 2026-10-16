@@ -9,7 +9,7 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 | 2 | Activity getter/poses/icons/labels, exhaustive mapping tests, six live captures and sidecars, blind review | COMPLETE_WITH_VISUAL_LIMITS | 2026-10-16T01:10:40Z | 2026-10-16T02:37:18Z |
 | 3 | Temperament/family inspector, fake-world tests and parent capture; optional rings dropped | COMPLETE | 2026-10-16T02:38:10Z | 2026-10-16T02:42:40Z |
 | 4 | Final performance matrix, H1-H8 and before/after section costs | TIMEBOX_ENDED_UNMEASURED | 2026-10-16T02:42:40Z | 2026-10-16T03:03:01Z |
-| 5 | Independent review, full gate, publish both heads and PR511, Korean report, base cleanup | IN_PROGRESS | 2026-10-16T03:03:20Z | |
+| 5 | Independent review, full gate, publish both heads and PR511, Korean report, base cleanup | COMPLETE_TIMEBOXED_PARTIAL | 2026-10-16T03:03:20Z | 2026-10-16T03:39:05Z publication snapshot; report packaging follows |
 
 ## Execution events
 - 2026-10-15T15:03Z: Saved supplied brief unchanged before repository edits. Original local HEAD and both remote heads verified as 21d9ddd089a77bfc3daa9b9765888eb76a890a85.
@@ -86,3 +86,5 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 
 - 2026-10-16T03:36:43Z: Root observed final attempt2 terminal0 and82/82 PASS at02f8721d04494dedc176a1ef34f1601338d89374; source stable. Independent round2 verifies all83 artifact hashes and same verdict. Performance remains NOT_VERIFIED.
 - 2026-10-16T03:37:12Z: Archived/verified9 baseline files, removed only owned art-p10-base after fresh process/status checks. Own caffeinate58923 terminated; terminal143. Publication/report next; no production source changed after gate.
+
+- 2026-10-16T03:39:05Z: Both remote heads77030499 verified by ls-remote; PR511 Pass10 section verified exact body. Part5 evidence/review/cleanup/publication complete; final report packaging is documentation-only. Overall TIMEBOXED_PARTIAL; no unmeasured performance work remains active.
