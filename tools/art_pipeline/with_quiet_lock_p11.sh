@@ -8,6 +8,11 @@ fi
 purpose=$1
 limit=$2
 shift 2
+deadline=${P11_DEADLINE_EPOCH:-0}
+if [[ ! $deadline =~ ^[0-9]+$ ]]; then
+  echo 'P11_DEADLINE_EPOCH must be a nonnegative epoch integer' >&2
+  exit 2
+fi
 repo=$(cd "$(dirname "$0")/../.." && pwd)
 lock=/Users/rexxa/work/.mac_quiet.lock
 perf="$repo/docs/art/production11/perf"
@@ -25,6 +30,22 @@ load_now() {
   printf '%s\n' "$value"
 }
 log() { printf -- '- %s pid=%s %s\n' "$(iso)" "$$" "$*" >> "$holds"; }
+check_deadline() {
+  if (( deadline > 0 && $(epoch) >= deadline )); then
+    log "TASK_DEADLINE purpose=$purpose deadline=$deadline"
+    exit 124
+  fi
+}
+wait_bounded() {
+  local seconds=$1 left
+  check_deadline
+  if (( deadline > 0 )); then
+    left=$((deadline-$(epoch)))
+    (( left < seconds )) && seconds=$left
+  fi
+  (( seconds > 0 )) && sleep "$seconds"
+  check_deadline
+}
 other_processes() {
   # Exact process-name matching, including every worldsim_* executable.
   local name ids
@@ -75,6 +96,7 @@ trap 'exit 143' TERM HUP
 wait_start=$(epoch)
 log "WAIT_START owner=$owner purpose=$purpose hold_limit=$limit"
 while :; do
+  check_deadline
   now=$(epoch)
   if [[ -d $lock ]]; then
     modified=$(stat -f '%m' "$lock")
@@ -91,14 +113,14 @@ while :; do
       continue
     fi
     log "WAIT_OTHER_LOCK age=$((now-modified)) info=$(tr '\n' ';' < "$lock/info.txt" 2>/dev/null || true) next_poll=300s"
-    sleep 300
+    wait_bounded 300
     continue
   fi
   last=$(awk '/^<!-- art-p11-last-release [0-9]+ -->$/ {last=$3} END {print last+0}' "$holds")
   if (( now-last < 600 )); then
     remaining=$((600-now+last))
     log "WAIT_COOLDOWN remaining=${remaining}s"
-    sleep "$remaining"
+    wait_bounded "$remaining"
     continue
   fi
   load_before=$(load_now)
@@ -107,17 +129,22 @@ while :; do
   if [[ -n $processes ]] || ! awk -v load="$load_before" 'BEGIN {exit !(load+0 < 4)}'; then
     if (( now-wait_start < 3600 )); then
       log 'WAIT_BUSY next_poll=300s'
-      sleep 300
+      wait_bounded 300
       continue
     fi
     contended=true
   else
     contended=false
   fi
+  check_deadline
   if mkdir "$lock" 2>/dev/null; then
     owned=1
     started=$(epoch)
     printf 'owner=%s\npid=%s\npurpose=%s\nstarted=%s\n' "$owner" "$$" "$purpose" "$(iso)" > "$lock/info.txt"
+    check_deadline
+    if (( deadline > 0 && deadline-started < limit )); then
+      limit=$((deadline-started))
+    fi
     break
   fi
   log 'ACQUIRE_RACE retry'
