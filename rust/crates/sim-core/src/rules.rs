@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 mod routine;
-pub use routine::{FamilyRule, RoutineRule};
+pub use routine::{EndStagger, FamilyRule, RoutineRule};
 
 /// Rules selected once when a world is constructed.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -891,6 +891,7 @@ impl WorldRules {
         rest_minutes_max: 60,
         adult_weights: [180, 180, 140, 200, 120],
         elder_weights: [500, 500],
+        end_stagger: None,
     };
 
     /// Pass 17 Stage A: all v20 rules with daily routine enabled.
@@ -926,6 +927,24 @@ impl WorldRules {
     pub const fn game_v23(seed: u64) -> Self {
         let mut rules = Self::game_v22(seed);
         rules.society.family = Some(Self::V23_FAMILY);
+        rules
+    }
+
+    /// Pass 19: the v21 routine with each person's own day end (17:00–18:59,
+    /// later for the persistent) instead of everyone at 18:00.
+    pub const V24_ROUTINE: RoutineRule = RoutineRule {
+        end_stagger: Some(EndStagger {
+            base_minute: 1065,
+            key_span: 30,
+            p_span_minutes: 45,
+        }),
+        ..Self::V21_ROUTINE
+    };
+
+    /// Pass 19: all v23 rules with the routine changed to `V24_ROUTINE`.
+    pub const fn game_v24(seed: u64) -> Self {
+        let mut rules = Self::game_v23(seed);
+        rules.agent.routine = Some(Self::V24_ROUTINE);
         rules
     }
 

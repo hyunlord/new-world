@@ -2061,6 +2061,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         agent.id,
                                         lineage.map(|lineage| lineage.key),
                                         routine_members.get(&agent.id).copied(),
+                                        temperament,
                                     )
                                 })
                         {
@@ -2200,6 +2201,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 agent.id,
                                 routine_members.get(&agent.id).copied(),
                                 (pos.x, pos.y) != activity.place,
+                                lineage.map(|lineage| lineage.key),
+                                temperament,
                             ) {
                                 routine.end(
                                     agent.id,
@@ -2559,6 +2562,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     agent.id,
                                     routine_members.get(&agent.id).copied(),
                                     false,
+                                    lineage.map(|lineage| lineage.key),
+                                    temperament,
                                 ) {
                                     routine.end(
                                         agent.id,

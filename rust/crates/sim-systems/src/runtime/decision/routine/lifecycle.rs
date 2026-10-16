@@ -180,20 +180,25 @@ impl RoutineTick {
     }
 
     /// `member` is the person's settlement (see [`super::members_of`]).
+    /// Pass 19: the day ends at the person's own `RoutineRule::end_minute`
+    /// (`key` = the lineage key, the id standing in without one, as for the
+    /// rest draw; `day_end_minute` for everyone without an end stagger).
     pub(in crate::runtime::decision) fn deadline(
         &self,
         id: AgentId,
         member: Option<SettlementId>,
         walking: bool,
+        key: Option<u64>,
+        temperament: Option<&Temperament>,
     ) -> Option<bool> {
         let activity = self.active.get(&id)?;
         if member != Some(activity.settlement) {
             return Some(false);
         }
         if activity.until_tick.is_some_and(|until| self.tick >= until)
-            || self
-                .minute
-                .is_some_and(|minute| minute >= u64::from(self.rule.day_end_minute))
+            || self.minute.is_some_and(|minute| {
+                minute >= u64::from(self.rule.end_minute(key.unwrap_or(id), temperament))
+            })
         {
             return Some(activity.arrived_tick.is_some());
         }

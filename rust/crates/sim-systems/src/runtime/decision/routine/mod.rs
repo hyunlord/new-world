@@ -168,19 +168,22 @@ impl RoutineTick {
     }
 
     /// `key` is the person's lineage key, `member` its settlement (see
-    /// [`members_of`]).
+    /// [`members_of`]). Pass 19: the window ends at the person's own
+    /// `RoutineRule::end_minute(key, temperament)` (`day_end_minute` without
+    /// an end stagger).
     pub(super) fn can_enter(
         &self,
         id: AgentId,
         key: Option<u64>,
         member: Option<SettlementId>,
+        temperament: Option<&Temperament>,
     ) -> bool {
         member.is_some()
             && !self.rests.contains_key(&id)
             && key.is_some_and(|key| {
                 self.minute.is_some_and(|minute| {
                     minute >= u64::from(self.rule.start_minute(key))
-                        && minute < u64::from(self.rule.day_end_minute)
+                        && minute < u64::from(self.rule.end_minute(key, temperament))
                 })
             })
     }

@@ -176,6 +176,7 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v21" => crate::scenes::game_v21_scene(seed),
         "game_v22" => crate::scenes::game_v22_scene(seed),
         "game_v23" => crate::scenes::game_v23_scene(seed),
+        "game_v24" => crate::scenes::game_v24_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
@@ -497,7 +498,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24")
         || super::ablation::is_ablation(scene)
 }
 
@@ -510,7 +511,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "game_v23", "abl_no_regions", "abl18_no_regions"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "game_v23", "game_v24", "abl_no_regions", "abl18_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

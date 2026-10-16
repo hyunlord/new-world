@@ -66,7 +66,7 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23")
+        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24")
             && !super::ablation::is_ablation(&parsed.scene)
         {
             return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission, game_v17, game_v18_nofission, game_v18, game_v19_nofission, game_v19, game_v20_inert, game_v20, game_v21, game_v22, game_v23 or an abl_/fwd_/abl18_ bisection scene".into());
@@ -156,7 +156,9 @@ mod tests {
         assert!(parse(&["--scene", "game_v21"]).is_ok());
         assert!(parse(&["--scene", "game_v22"]).is_ok());
         assert!(parse(&["--scene", "game_v23"]).is_ok());
-        assert!(parse(&["--scene", "game_v24"]).is_err());
+        // Pass 19: game_v24 is accepted (it was rejected through Pass 18).
+        assert!(parse(&["--scene", "game_v24"]).is_ok());
+        assert!(parse(&["--scene", "game_v25"]).is_err());
         assert!(parse(&["--days", "151"]).is_err());
     }
     #[test]

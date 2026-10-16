@@ -249,6 +249,18 @@ pub fn game_v23_scene(seed: u64) -> SimEngine {
     engine
 }
 
+/// Pass 19 fixture: `game_v23` with each person ending their day's activity
+/// at their own time (17:00–18:59, later for the persistent).
+pub fn game_v24_scene(seed: u64) -> SimEngine {
+    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v24(seed),
+        sim_core::rules::WorldRules::game_v24(seed),
+    );
+    engine.resources.world_variety = Some(variety);
+    engine
+}
+
 /// Pass 16 placebo: world `seed` under `game_v20_inert` (temperament drawn
 /// and stored, no lean acts — the same world as `game_v19`).
 pub fn game_v20_inert_scene(seed: u64) -> SimEngine {

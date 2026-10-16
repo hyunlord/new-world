@@ -27,6 +27,22 @@ pub struct RoutineRule {
     pub adult_weights: [u16; 5],
     /// HearthCircle and SitByFire base weights for elders.
     pub elder_weights: [u16; 2],
+    /// Pass 19 (`game_v24`): each person's own end of the day's activities
+    /// (see [`Self::end_minute`]); `None` keeps `day_end_minute` for everyone.
+    #[serde(default)]
+    pub end_stagger: Option<EndStagger>,
+}
+
+/// Pass 19 (`game_v24`): a person's day ends at `base_minute + (key / 60) %
+/// key_span + p_span_minutes × (P − 500) / 500` instead of one shared minute.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EndStagger {
+    /// Display-clock end for persistence 500 and key term 0.
+    pub base_minute: u32,
+    /// Lineage-key spread in minutes (`(key / 60) % key_span`).
+    pub key_span: u32,
+    /// Shift at persistence 0 or 1,000.
+    pub p_span_minutes: u32,
 }
 
 impl RoutineRule {
@@ -78,6 +94,23 @@ impl RoutineRule {
     /// Display-clock start staggered by the resident's lineage key modulo 60.
     pub const fn start_minute(&self, lineage_key: u64) -> u32 {
         self.day_start_minute + (lineage_key % 60) as u32
+    }
+
+    /// Exclusive display-clock end of this person's activities (Pass 19): the
+    /// shared `day_end_minute` without an [`EndStagger`]; with one,
+    /// `base_minute + (key / 60) % key_span + p_span_minutes × (P − 500) / 500`
+    /// in `i64`, truncating toward zero (an absent temperament counts as
+    /// P 500). `key / 60` keeps the end independent of the start's `key % 60`.
+    pub fn end_minute(&self, lineage_key: u64, temperament: Option<&Temperament>) -> u32 {
+        let Some(stagger) = self.end_stagger else {
+            return self.day_end_minute;
+        };
+        let p = temperament.map_or(500, |t| i64::from(t.p));
+        let key_term = (lineage_key / 60) % u64::from(stagger.key_span.max(1));
+        let end = i64::from(stagger.base_minute)
+            + key_term as i64
+            + i64::from(stagger.p_span_minutes) * (p - 500) / 500;
+        end.clamp(0, i64::from(u32::MAX)) as u32
     }
 
     /// Inclusive rest-window draw, using the routine stream's reserved slot 2.
@@ -204,6 +237,44 @@ mod tests {
             wider.duration_minutes(&Temperament::from_axes([1000; 4])),
             180
         );
+    }
+
+    #[test]
+    fn end_minute_is_the_shared_end_without_a_stagger_and_spans_17_to_19_with_one() {
+        let shared = WorldRules::V21_ROUTINE;
+        assert_eq!(shared.end_stagger, None);
+        for key in [0, 59, 60, 1_799, u64::MAX] {
+            for p in [0, 500, 1000] {
+                let t = Temperament::from_axes([p; 4]);
+                assert_eq!(shared.end_minute(key, Some(&t)), 1080);
+            }
+            assert_eq!(shared.end_minute(key, None), 1080);
+        }
+        let staggered = WorldRules::V24_ROUTINE;
+        assert_eq!(
+            staggered.end_stagger,
+            Some(EndStagger { base_minute: 1065, key_span: 30, p_span_minutes: 45 })
+        );
+        let t = |p: u16| Temperament::from_axes([p; 4]);
+        // Extremes: 17:00 at P 0 and key term 0, 18:59 at P 1,000 and key term 29.
+        assert_eq!(staggered.end_minute(0, Some(&t(0))), 1020);
+        assert_eq!(staggered.end_minute(29 * 60, Some(&t(1000))), 1139);
+        // The key term uses key / 60 (independent of the start's key % 60).
+        assert_eq!(staggered.end_minute(59, Some(&t(500))), 1065);
+        assert_eq!(staggered.end_minute(60, Some(&t(500))), 1066);
+        assert_eq!(staggered.end_minute(30 * 60, Some(&t(500))), 1065);
+        // Truncation toward zero on both sides of P 500; absent = P 500.
+        assert_eq!(staggered.end_minute(0, Some(&t(511))), 1065);
+        assert_eq!(staggered.end_minute(0, Some(&t(512))), 1066);
+        assert_eq!(staggered.end_minute(0, Some(&t(489))), 1065);
+        assert_eq!(staggered.end_minute(0, Some(&t(488))), 1064);
+        assert_eq!(staggered.end_minute(0, None), 1065);
+        for key in (0..3_000).step_by(37) {
+            for p in (0..=1000).step_by(50) {
+                let end = staggered.end_minute(key, Some(&t(p)));
+                assert!((1020..=1139).contains(&end), "key {key} p {p}: {end}");
+            }
+        }
     }
 
     #[test]

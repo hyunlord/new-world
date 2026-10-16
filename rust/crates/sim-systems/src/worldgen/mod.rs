@@ -138,6 +138,11 @@ impl WorldGenConfig {
         Self::game_v22(seed)
     }
 
+    /// Pass 19 staggered-day-end world: unchanged `game_v23` generation inputs.
+    pub const fn game_v24(seed: u64) -> Self {
+        Self::game_v23(seed)
+    }
+
     /// Revitalize Pass 15 stress world: [`Self::game_v19`]`(seed)` with
     /// `agents` founders on a `side × side` map (run it under
     /// `WorldRules::game_v19(seed)`). Benchmark-only; not a game scene; never
