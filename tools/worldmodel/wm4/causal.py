@@ -23,7 +23,8 @@ one-hot + amount). At token t the representation BR_t sees a_{<t}, y_{<=t}, v_{<
 
 Checkpoint selection on validation **factual** loss only: CRN encoder = one-step teacher-forced MSE; CRN decoder and CT =
 `val_roll`, the mean squared error (in train std units) of 30-token factual rollouts with the observed treatments from
-tokens 6, 10, …, 58 (06:00 of days 8, 12, …, 60) of every validation episode (both 06:00 and 18:00 phases on v2).
+tokens 6, 18, 30, 42, 54 (days 8, 20, 32, 44, 56) of every validation episode (both 06:00 and 18:00 phases on v2).
+Evaluations are at most every max_seconds / 15 seconds of training (and at the end), so they cost a bounded share.
 
 usage (DGX):
   python3 tools/worldmodel/wm4/causal.py train --method crn|ct --dataset obs_v19|v2_v19 --seed S --out RUN
@@ -66,7 +67,7 @@ if torch is not None:
 
 HORIZON = 30
 TAU = HORIZON - 1
-VAL_STARTS = tuple(range(6, 59, 4))
+VAL_STARTS = (6, 18, 30, 42, 54)        # 06:00 of days 8, 20, 32, 44, 56
 N_OUT = 37
 N_COV = 30
 
@@ -100,6 +101,19 @@ GRID = {
             {"enc_br": 64, "enc_fc": 128, "dec_br": 64, "dec_fc": 32, "enc_dropout": 0.1}],
     "ct": [{}, {"lr": 1e-3}, {"lr": 1e-3, "br": 64, "fc": 128}, {"lr": 1e-4, "br": 64, "fc": 128}],
 }
+
+
+class Gate:
+    """Evaluate at most every `gap` seconds (and always when `force`)."""
+
+    def __init__(self, gap: float):
+        self.gap, self.last = gap, -float("inf")
+
+    def __call__(self, due: bool, force: bool = False) -> bool:
+        if force or (due and time.time() - self.last >= self.gap):
+            self.last = time.time()
+            return True
+        return False
 
 
 def alpha_at(p: float, alpha_max: float) -> float:
@@ -329,7 +343,7 @@ def _rollout(m: dict, jobs: list[Job], device) -> list[np.ndarray]:
 
 
 def val_jobs(seqs: list[tk.Seq]) -> list[Job]:
-    """`val_roll`'s jobs: 30-token factual rollouts with the observed treatments from tokens 6, 10, …, 58."""
+    """`val_roll`'s jobs: 30-token factual rollouts with the observed treatments from the `VAL_STARTS` tokens."""
     return [Job(s, k, s.a[k: k + HORIZON]) for s in seqs for k in VAL_STARTS if k + HORIZON < len(s.rows)]
 
 
@@ -390,6 +404,7 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
     enc_deadline = t0 + max_seconds * hp["enc_time_share"]
     n_ep = epochs_for(hp["enc_epochs"], len(tr.raws), PAPER_TRAIN, hp["enc_batch"], hp.get("paper_steps", True))
     every = max(1, n_ep // 100)
+    gate = Gate(max_seconds / 15)
     steps = 0
     for ep in range(n_ep):
         enc.head.alpha = alpha_at(ep / n_ep, hp["alpha"])
@@ -406,7 +421,7 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
             losses.append((mse.item(), cls.item()))
             steps += 1
         last = ep == n_ep - 1 or time.time() > enc_deadline
-        if ep % every == 0 or last:
+        if gate(ep % every == 0, force=last or ep == 0):
             enc.eval()
             with torch.no_grad():
                 _, opred, _ = enc(vb)
@@ -435,6 +450,7 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
     n_ep = epochs_for(hp["dec_epochs"], len(tr.raws) * (starts + 1), PAPER_TRAIN * PAPER_WINDOWS, hp["dec_batch"],
                       hp.get("paper_steps", True))
     every = max(1, n_ep // 50)
+    gate = Gate(max_seconds / 15)
     steps = 0
     for ep in range(n_ep):
         dec.head.alpha = alpha_at(ep / n_ep, hp["alpha"])
@@ -462,7 +478,7 @@ def train_crn(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, s
             opt.zero_grad(); loss.backward(); opt.step()
             losses.append((mse.item(), cls.item()))
             steps += 1
-        if ep % every == 0 or ep == n_ep - 1 or time.time() - t0 > max_seconds:
+        if gate(ep % every == 0, force=ep == n_ep - 1 or time.time() - t0 > max_seconds or ep == 0):
             te = time.time()
             vloss = roll_loss(model, vjobs, device)
             log({"stage": "decoder", "epoch": ep, "epochs": n_ep, "steps": steps, "eval_s": time.time() - te,
@@ -496,6 +512,7 @@ def train_ct(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, se
     best, best_ep, best_state, stop = float("inf"), -1, None, "epochs"
     n_ep = epochs_for(hp["epochs"], len(tr.raws), PAPER_TRAIN, hp["batch"], hp.get("paper_steps", True))
     every = max(1, n_ep // 50)
+    gate = Gate(max_seconds / 15)
     steps = 0
     for ep in range(n_ep):
         alpha = alpha_at(ep / n_ep, hp["alpha"])
@@ -521,7 +538,7 @@ def train_ct(hp: dict, tr: Data, val: list[tk.Seq], mode: str, norm: tk.Norm, se
             opt0.zero_grad(); opt1.zero_grad(); loss1.backward(); opt1.step(); ema_t.update()
             losses.append((mse.item(), conf.item(), loss1.item()))
             steps += 1
-        if ep % every == 0 or ep == n_ep - 1 or time.time() - t0 > max_seconds:
+        if gate(ep % every == 0, force=ep == n_ep - 1 or time.time() - t0 > max_seconds or ep == 0):
             ema_t.swap(); ema_o.swap()
             te = time.time()
             vloss = roll_loss(model, vjobs, device)
