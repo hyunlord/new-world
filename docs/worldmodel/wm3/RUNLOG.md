@@ -21,3 +21,7 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 12:24:25 | 13:41:25 | `wm3_full_s0` attempt 2 (`cc18dc3b`): step-250 loss −2.2168 = attempt 1's (deterministic), evaluation 7.8 + ≈ 11 s; stop `patience` at step 2,000, kept step 500 (`val_eff` 0.5246, `val_t2` 0.0632; init 0.6149 / 0.0608); steps 1,000–2,000 had lower `val_eff` (down to 0.5027) but `val_t2` 0.0646–0.0789 > 1.05 × 0.0608 (not eligible); 4,609 s (≈ 2.2 s/step incl. evaluations); rounding True. DGX load average 10–50 |
 | 4.2 | 13:41:25 | | its finals from `aa763da8` (background) |
 | 4.1 | 13:41:25 | | `wm3_ctrl_s0` started |
+| 4.2 | 13:41:25 | 14:03:33 | `wm3_full_s0` finals from `aa763da8`: `_effects` 13:51:20 (593 s), `_split` 13:51:42, `_fact` 14:02:32, lag curve 14:03:16, `_calib` 14:03:33, all exit 0 (beside `wm3_ctrl_s0`, whose steps 0–500 ran at ≈ 2.5–3.4 s/step meanwhile) |
+| 4.1 | 13:41:25 | 15:39:26 | `wm3_ctrl_s0`: stop `max_steps` (4,000), kept step 3,750 (`val_eff` 0.5811, `val_t2` 0.0614) → not converged (kept step in the last 10 %); 7,076 s (step 4,000 at 6,984 s; ≈ 1.5 s/step once the finals had ended); load average 1–24 |
+| 4.2 | 15:39:26 | | its finals from `aa763da8` |
+| 4.1 | 15:39:26 | | `wm3_os_s0` started |
