@@ -320,8 +320,9 @@ def main(argv=None) -> int:
     else:
         out = build_manifest(Path(a.root), Path(a.policy))
     out["seconds"] = time.time() - t0
-    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(a.out).write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
+    target = Path(a.out) / "summary.json" if a.cmd == "fam-schedules" else Path(a.out)   # --out is the schedule dir
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
     print(json.dumps({k: v for k, v in out.items() if k not in ("rows", "worlds", "episodes")})[:3000])
     return 0 if out.get("all_ok", True) else 1
 
