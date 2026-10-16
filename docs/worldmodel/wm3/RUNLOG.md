@@ -18,3 +18,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 11:59:02 | | `_setup/queue.sh aa763da8` (detached, `_logs/queue`): `wm3_full_s0` started (`--max-seconds 14400`; load average 6.3) |
 | 4.1 | 11:59:02 | 12:23:59 | `wm3_full_s0` attempt 1 (`aa763da8`): steps 0–250 (step 0 evaluation `val_t2` 0.0608, `val_eff` 0.6149, 18.6 s; ≈ 2.2 s/step); stalled in its step-250 evaluation (main thread 100 % user CPU, GPU 2 %); killed at 12:23:59, moved to `_aborted/wm3_full_s0_hang_1223` (DECISIONS K4.1). DGX load average 22–50 from other users' jobs |
 | 4.1 | 12:24:22 | | queue restarted from `cc18dc3b` (evaluation phase prints, stack dump after 600 s): `wm3_full_s0` attempt 2 |
+| 4.1 | 12:24:25 | 13:41:25 | `wm3_full_s0` attempt 2 (`cc18dc3b`): step-250 loss −2.2168 = attempt 1's (deterministic), evaluation 7.8 + ≈ 11 s; stop `patience` at step 2,000, kept step 500 (`val_eff` 0.5246, `val_t2` 0.0632; init 0.6149 / 0.0608); steps 1,000–2,000 had lower `val_eff` (down to 0.5027) but `val_t2` 0.0646–0.0789 > 1.05 × 0.0608 (not eligible); 4,609 s (≈ 2.2 s/step incl. evaluations); rounding True. DGX load average 10–50 |
+| 4.2 | 13:41:25 | | its finals from `aa763da8` (background) |
+| 4.1 | 13:41:25 | | `wm3_ctrl_s0` started |
