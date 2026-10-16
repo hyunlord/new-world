@@ -194,3 +194,12 @@
 - 2026-10-16T00:48:33Z pid=19706 HOLD_START owner=codex-art-pass10 purpose=pair-tick-only-cache-W500 start=1792111713 load_before=22.71 contended=true waited=7020s
 - 2026-10-16T00:58:57Z pid=19706 HOLD_END owner=codex-art-pass10 purpose=pair-tick-only-cache-W500 start=1792111713 end=1792112337 elapsed=624 load_before=22.71 load_after=10.26 contended=true exit=0
 <!-- art-p10-last-release 1792112337 -->
+- 2026-10-16T02:43:14Z pid=20279 WAIT_START owner=codex-art-pass10 purpose=after-W0-attempt1 hold_limit=3600
+- 2026-10-16T02:43:14Z pid=20279 CHECK load=34.89 processes=  235   229 /Users/rexxa/work/new-world-p19-base/rust/target/release/worldsim_probe;12988 12982 /Users/rexxa/work/p19-data/bin_p1/worldsim_probe waited=0s
+- 2026-10-16T02:43:14Z pid=20279 WAIT_BUSY next_poll=300s
+- 2026-10-16T02:48:15Z pid=20279 CHECK load=125.44 processes=54114 47177 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;  235   229 /Users/rexxa/work/new-world-p19-base/rust/target/release/worldsim_probe;12988 12982 /Users/rexxa/work/p19-data/bin_p1/worldsim_probe waited=300s
+- 2026-10-16T02:48:15Z pid=20279 WAIT_BUSY next_poll=300s
+- 2026-10-16T02:53:15Z pid=20279 CHECK load=92.02 processes=82242 82221 /Users/rexxa/work/new-world-p19-base/rust/target/release/worldsim_probe;86957 86956 /Users/rexxa/work/p19-data/bin_p1/worldsim_probe;90220 90207 /Users/rexxa/work/p19-data/bin_p1/worldsim_probe waited=601s
+- 2026-10-16T02:53:15Z pid=20279 WAIT_BUSY next_poll=300s
+- 2026-10-16T02:58:17Z pid=20279 CHECK load=62.52 processes=20018 20005 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;20905 20018 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/rustc;82242 82221 /Users/rexxa/work/new-world-p19-base/rust/target/release/worldsim_probe;86957 86956 /Users/rexxa/work/p19-data/bin_p1/worldsim_probe;90220 90207 /Users/rexxa/work/p19-data/bin_p1/worldsim_probe waited=901s
+- 2026-10-16T02:58:17Z pid=20279 WAIT_BUSY next_poll=300s

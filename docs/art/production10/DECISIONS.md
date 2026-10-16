@@ -26,3 +26,5 @@
 - Reduced allocation accepted after measured1.06642x improvement with exact frozen/running identity. Keep native metadata/child-node calls because attempted helper caches regressed; retain frame/variant/pose/selection optimizations only.
 
 - Tick candidate rejected by three-strike identity rule despite positive contended timing. Preserve failed water-phase evidence; do not mask pixels, alter baseline or lower thresholds. Part1 H5 pins accepted allocation commit ebadc0b967c55c1a6ed8ece72f4ba2c2c224d5ea. Part2 rebases directly on that state; tick-only optimization and optional spatial result cache remain unaccepted. Household rings/W1000 dropped under remaining original time budget.
+
+- 2026-10-16T03:03Z: EndPart4at original12hcutoff with zero finalmeasurement launches. Do not bypass60minutequietwait or lower load threshold; do not substitute acceptedcandidatepair for finalmatrix. Preserve missingaftermetrics asNOT_VERIFIED. Part5requiredgate/review/publication continues aftercutoff.
