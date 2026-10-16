@@ -106,3 +106,25 @@ Per (outcome, lag): max(the v2 partner arm's train std, the v2 train std pooled 
 | sp240|food_stock|7d | 77.338 | 77.338 |
 | sp240|settlements_alive|30d | 0.447 | 0.447 |
 | sp240|settlements_alive|7d | 0.463 | 0.463 |
+
+## True effects on the test families (added after METRICS.md part b, `956c8a05`)
+
+| arm | outcome | 7 d mean (std) [≠ 0] | 30 d mean (std) [≠ 0] |
+|---|---|---|---|
+| gf240 | food_stock | 18.64 (43.46) [99 %] | -16.93 (50.93) [94 %] |
+| gf240 | alive | -0.84 (2.48) [12 %] | -2.19 (8.05) [8 %] |
+| gf240 | deaths | 0.00 (0.00) [0 %] | 0.03 (0.16) [2 %] |
+| gf240 | settlements_alive | -0.04 (0.19) [4 %] | -0.06 (0.24) [6 %] |
+| gf240 | split shift (days, restricted) | 3.73 (9.12) [39 %] | |
+| sp240 | food_stock | -81.42 (63.59) [100 %] | 32.39 (84.17) [98 %] |
+| sp240 | alive | 1.31 (4.21) [24 %] | 4.36 (10.32) [20 %] |
+| sp240 | deaths | 0.00 (0.00) [0 %] | 0.07 (0.38) [5 %] |
+| sp240 | settlements_alive | 0.07 (0.26) [8 %] | 0.14 (0.34) [14 %] |
+| sp240 | split shift (days, restricted) | -9.01 (19.32) [50 %] | |
+| rw120 | food_stock | -4.09 (17.54) [94 %] | 2.52 (28.46) [89 %] |
+| rw120 | alive | -0.06 (0.73) [4 %] | 0.80 (4.85) [5 %] |
+| rw120 | deaths | 0.20 (0.89) [6 %] | 0.23 (0.82) [9 %] |
+| rw120 | settlements_alive | 0.00 (0.00) [0 %] | 0.01 (0.11) [1 %] |
+| rw120 | split shift (days, restricted) | -1.19 (4.77) [21 %] | |
+
+Reference day of the test cases: mean 29.3, std 13.6.
