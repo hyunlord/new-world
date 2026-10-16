@@ -1,0 +1,43 @@
+{
+ "argv": [
+  "tools/worldmodel/wm3/audit.py",
+  "--run",
+  "/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s0",
+  "/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s1",
+  "/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s2",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm3/audit"
+ ],
+ "cases": {
+  "train": 2980,
+  "val": 612
+ },
+ "code_commit": "62b89d4ce189660bc64f8a75cfd0d2aad805049f",
+ "members": 4552,
+ "summary": {
+  "wm2_m1bact_v19_s0": {
+   "cases": 306,
+   "violations": 0,
+   "worst_ratio_to_tolerance": 0.006068836558948863
+  },
+  "wm2_m1bact_v19_s1": {
+   "cases": 306,
+   "violations": 0,
+   "worst_ratio_to_tolerance": 0.005201859907670454
+  },
+  "wm2_m1bact_v19_s2": {
+   "cases": 306,
+   "violations": 0,
+   "worst_ratio_to_tolerance": 0.006068836558948863
+  }
+ },
+ "vars": [
+  "s.food_stock",
+  "s.wood_stock",
+  "g.cold_members",
+  "g.alive",
+  "g.deadwood_total",
+  "g.food_on_bushes_total",
+  "g.adults_working"
+ ]
+}
