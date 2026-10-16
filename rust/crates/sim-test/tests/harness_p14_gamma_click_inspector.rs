@@ -826,11 +826,14 @@ fn harness_p14_gamma_a19_inspector_panel_hidden_until_display_agent() {
     let da_idx = stripped
         .find("func display_agent")
         .expect("A19: `func display_agent` must exist");
-    let da_window = &stripped[da_idx..(da_idx + 2000).min(stripped.len())];
-    let da_compact = no_ws(da_window);
+    let da_body = stripped[da_idx..]
+        .split("\nfunc ")
+        .next()
+        .expect("A19: display_agent function body must exist");
+    let da_compact = no_ws(da_body);
     assert!(
         da_compact.contains("visible=true"),
-        "A19: `display_agent` must set `visible = true`. Window:\n{da_window}"
+        "A19: `display_agent` must set `visible = true`. Body:\n{da_body}"
     );
     println!("[P14-γ A19] hidden at _ready(); shown by display_agent ✓");
 }

@@ -1,0 +1,11 @@
+{
+  "source": "scripts/ui/panels/agent_inspector_panel.gd",
+  "source_sha256": "cc827626a675078ba5119c06c3fd87572e654a501cd779bfa2107b00c92fd8c5",
+  "old_window_bytes": 2000,
+  "visibility_assignment_offset": 2161,
+  "old_predicate": false,
+  "new_function_predicate": true,
+  "next_function_excluded": true,
+  "ready_hidden_predicate": true,
+  "method": "offline exact predicate reproduction; no cargo/Godot run"
+}

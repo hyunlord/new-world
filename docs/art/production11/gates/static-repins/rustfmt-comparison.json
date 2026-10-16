@@ -1,0 +1,27 @@
+[
+  {
+    "file": "rust/crates/sim-test/tests/harness_p14_gamma_click_inspector.rs",
+    "before_exit": 1,
+    "after_exit": 1
+  },
+  {
+    "file": "rust/crates/sim-test/tests/harness_p14_epsilon_activity_trails.rs",
+    "before_exit": 1,
+    "after_exit": 1
+  },
+  {
+    "file": "rust/crates/sim-test/tests/harness_p14_zeta_zoom_adaptive.rs",
+    "before_exit": 1,
+    "after_exit": 1
+  },
+  {
+    "file": "rust/crates/sim-test/tests/harness_show_agent_needs_bars.rs",
+    "before_exit": 1,
+    "after_exit": 1
+  },
+  {
+    "file": "rust/crates/sim-test/tests/harness_show_death_visual.rs",
+    "before_exit": 1,
+    "after_exit": 1
+  }
+]
