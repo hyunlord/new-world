@@ -46,6 +46,7 @@ func update(hearths: Array[Vector2i], blocked: Dictionary, agents: Array[Diction
 		for agent_id: int in ids:
 			var row: Dictionary = rows[agent_id]
 			input_rows.append([agent_id, bool(row.get("visible", false)), _walking(row),
+				bool(row.get("activity_place_known", false)),
 				not (float(row.get("stationary_seconds", 0.0)) < 0.3),
 				bool(row.get("meal", false)), str(row.get("pose", "")), row["tile"], row["ipos"]])
 		if _input_cache_valid and input_rows == _input_cache_rows:
@@ -115,7 +116,7 @@ func _free(point: Vector2) -> bool:
 	return true
 
 static func _eligible(row: Dictionary, hearth: Vector2i) -> bool:
-	if not bool(row.get("visible", false)) or _walking(row):
+	if bool(row.get("activity_place_known", false)) or not bool(row.get("visible", false)) or _walking(row):
 		return false
 	if float(row.get("stationary_seconds", 0.0)) < 0.3:
 		return false
@@ -134,7 +135,7 @@ static func spread_offsets(agents: Array[Dictionary], seated: Dictionary) -> Dic
 	var groups: Dictionary = {}
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
-		if _walking(row) or seated.has(agent_id):
+		if (_walking(row) and not bool(row.get("activity_place_known", false))) or seated.has(agent_id):
 			continue
 		var tile: Vector2i = row["tile"]
 		if not groups.has(tile):
@@ -176,7 +177,7 @@ static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dicti
 		var target: Vector2 = targets[agent_id]
 		var local_rect: Rect2 = rects[agent_id]
 		var offset := Vector2.ZERO
-		if not _walking(row):
+		if not bool(row.get("activity_place_known", false)) and not _walking(row):
 			if _covered(Rect2(target + local_rect.position, local_rect.size), fronts, spatial) >= 0.30:
 				var nearest: Vector2 = target
 				var distance: float = INF
@@ -249,7 +250,7 @@ static func walker_offsets(rows: Array[Dictionary], positions: Dictionary, rects
 	var result: Dictionary = {}
 	var inverse: Transform2D = canvas.affine_inverse()
 	for row: Dictionary in ordered:
-		if not _walking(row):
+		if bool(row.get("activity_place_known", false)) or not _walking(row):
 			continue
 		var agent_id: int = int(row["id"])
 		var position: Vector2 = positions[agent_id]

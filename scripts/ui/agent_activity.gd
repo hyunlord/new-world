@@ -2,6 +2,8 @@ class_name AgentActivity
 extends RefCounted
 
 const Cold = preload("res://scripts/ui/cold_effects.gd")
+const DAILY_NAMES: Array[String] = ["tend_fire", "craft", "repair", "hearth_circle", "explore", "play", "sit_by_fire"]
+static var _explore_icon: ImageTexture
 
 static func snapshot_target(snapshot: Dictionary, index: int) -> int:
 	var targets: Variant = snapshot.get("target_kinds")
@@ -11,7 +13,9 @@ static func snapshot_wood(snapshot: Dictionary, index: int) -> int:
 	var woods: Variant = snapshot.get("carried_woods")
 	return int(woods[index]) if woods is PackedInt32Array and index >= 0 and index < woods.size() else 0
 
-static func resolve(state: int, target_kind: int, has_targets: bool, moving: bool, carried: float, tile: Dictionary, _hour: float, carried_wood: int = 0) -> String:
+static func resolve(state: int, target_kind: int, has_targets: bool, moving: bool, carried: float, tile: Dictionary, _hour: float, carried_wood: int = 0, activity_kind: int = -1, arrived: bool = false) -> String:
+	if state == 4:
+		return daily_name(activity_kind, arrived)
 	if state == 2:
 		return "talk"
 	if state == 3:
@@ -24,6 +28,7 @@ static func resolve(state: int, target_kind: int, has_targets: bool, moving: boo
 				5: return "talk"
 				6: return "gather"
 				7: return "gather_wood"
+				8: return daily_name(activity_kind, arrived)
 		if not has_targets and bool(tile.get("wood", false)):
 			return "gather_wood"
 		if bool(tile.get("shelter", false)):
@@ -54,7 +59,9 @@ static func facing(delta: Vector2, previous: String) -> String:
 static func idle_elapsed(activity: String, movement: Vector2, previous: float, delta: float) -> float:
 	return previous + maxf(delta, 0.0) if activity == "idle" and movement.length_squared() < 0.000001 else 0.0
 
-static func render_facing(activity: String, movement: Vector2, partner_delta: Vector2, previous: String, idle_seconds: float) -> String:
+static func render_facing(activity: String, movement: Vector2, partner_delta: Vector2, previous: String, idle_seconds: float, facing_override: String = "") -> String:
+	if not facing_override.is_empty():
+		return facing_override
 	if movement.length_squared() >= 0.000001:
 		return facing(movement, previous)
 	if activity == "talk":
@@ -173,13 +180,90 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 	return {}
 
 static func show_activity_icon(choice: Dictionary, zoom: float) -> bool:
-	return zoom >= 2.0 and str(choice.get("fallback_kind", "")) in ["idle_icon", "wood_icon"] and not str(choice.get("activity_icon", "")).is_empty()
+	return zoom >= 2.0 and str(choice.get("fallback_kind", "")) in ["idle_icon", "wood_icon", "activity_icon"] and not str(choice.get("activity_icon", "")).is_empty()
 
 static func apply_activity_icon(sprite: Sprite2D, icon: Sprite2D, choice: Dictionary, zoom: float) -> bool:
 	icon.visible = false
 	if not sprite.visible or not show_activity_icon(choice, zoom):
 		return false
-	icon.visible = ArtSpriteLibrary.apply(icon, str(choice["activity_icon"]))
+	if str(choice["activity_icon"]) == "p10_explore":
+		icon.texture = explore_icon()
+		icon.region_enabled = false
+		icon.centered = false
+		icon.offset = Vector2(-4, -8)
+		icon.scale = Vector2.ONE
+		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		icon.visible = true
+	else:
+		icon.visible = ArtSpriteLibrary.apply(icon, str(choice["activity_icon"]))
 	icon.position = Vector2(0, sprite.offset.y - 2.0)
 	icon.set_meta("art_kind", "activity_icon")
 	return icon.visible
+
+
+static func daily_name(kind: int, arrived: bool) -> String:
+	if kind < 0 or kind >= DAILY_NAMES.size():
+		return "idle"
+	return DAILY_NAMES[kind] if arrived else "walk"
+
+static func activity_rows(snapshot: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
+	for i: int in ids.size():
+		result[int(ids[i])] = {"kind": int(snapshot["kinds"][i]), "place": Vector2i(snapshot["place_x"][i], snapshot["place_y"][i]), "until_tick": int(snapshot["until_tick"][i])}
+	return result
+
+## Exact pose/view candidates, without the generic choose_frame fallback hiding misses.
+static func daily_chain(body: String, kind: int, direction: String, seconds: float, arrived: bool) -> Array[Dictionary]:
+	var candidates: Array[Dictionary] = []
+	var facing_direction: String = direction if direction in ["E", "W", "N", "S"] else "S"
+	var sit_direction: String = "S" if facing_direction == "N" and body != "adult_b" else facing_direction
+	if not arrived:
+		if kind == 5 and body == "child" and facing_direction in ["E", "W"]:
+			candidates.append({"pose": "run", "facing": facing_direction})
+		candidates.append({"pose": "walk", "facing": facing_direction})
+	else:
+		match kind:
+			0:
+				if body != "child":
+					candidates.append({"pose": "crouch", "facing": "S"})
+				candidates.append({"pose": "sit", "facing": sit_direction})
+			1, 3, 6:
+				candidates.append({"pose": "sit", "facing": sit_direction})
+			2:
+				candidates.append({"pose": "build", "facing": "S" if body == "child" and facing_direction == "N" else facing_direction})
+			4:
+				candidates.append({"pose": "idle", "facing": facing_direction})
+			5:
+				if body == "child":
+					if posmod(floori(seconds / 0.5), 2) == 1 and facing_direction in ["E", "W"]:
+						candidates.append({"pose": "run", "facing": facing_direction})
+					candidates.append({"pose": "hop", "facing": "S"})
+	candidates.append({"pose": "idle", "facing": facing_direction})
+	candidates.append({"pose": "idle", "facing": "S"})
+	return candidates
+
+static func daily_pose(groups: Dictionary, body: String, kind: int, direction: String, seconds: float, arrived: bool) -> Dictionary:
+	for candidate: Dictionary in daily_chain(body, kind, direction, seconds, arrived):
+		var view: String = "E" if str(candidate["facing"]) == "W" else str(candidate["facing"])
+		if not (groups.get(body + "/" + str(candidate["pose"]) + "/" + view, []) as Array).is_empty():
+			return candidate
+	return {"pose": "idle", "facing": "S"}
+
+static func with_daily_icon(choice: Dictionary, kind: int) -> Dictionary:
+	if choice.is_empty() or kind not in [1, 4]:
+		return choice
+	var result: Dictionary = choice.duplicate()
+	result["fallback_kind"] = "activity_icon"
+	result["activity_icon"] = "U1_04" if kind == 1 else "p10_explore"
+	return result
+
+static func explore_icon() -> ImageTexture:
+	if _explore_icon == null:
+		var image: Image = Image.create(9, 9, false, Image.FORMAT_RGBA8)
+		image.fill(Color.TRANSPARENT)
+		# A small north-east direction arrow, kept separate from the agent atlas.
+		for point: Vector2i in [Vector2i(2, 6), Vector2i(3, 5), Vector2i(4, 4), Vector2i(5, 3), Vector2i(6, 2), Vector2i(3, 2), Vector2i(4, 2), Vector2i(5, 2), Vector2i(6, 3), Vector2i(6, 4), Vector2i(6, 5)]:
+			image.set_pixelv(point, Color8(245, 221, 150))
+		_explore_icon = ImageTexture.create_from_image(image)
+	return _explore_icon

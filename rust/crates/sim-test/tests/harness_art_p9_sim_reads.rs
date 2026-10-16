@@ -6,7 +6,7 @@ const PROTECTED: &[&str] = &[
     "get_building_snapshot", "get_resource_snapshot", "get_time_snapshot", "get_tallies",
     "get_recent_deaths", "get_society_snapshot", "get_intervention_state", "get_world_info",
     "get_terrain_snapshot", "apply_intervention", "advance_ticks", "reset_world",
-    "reset_world_stress", "on_building_placed",
+    "reset_world_stress", "on_building_placed", "get_activity_snapshot",
 ];
 
 #[derive(Debug)]
@@ -126,6 +126,7 @@ fn every_game_test_capture_and_transitive_support_script_routes_world_reads() {
 #[test]
 fn scanner_detects_calls_comments_fakes_and_dynamic_helpers() {
     for source in ["world.get_agent_snapshot()", "world . reset_world ( 1 )",
+        "world.get_activity_snapshot()", "world.call(\"get_activity_snapshot\")",
         "world.call(\"get_tallies\")", "world.callv('advance_ticks', [1])",
         "func _snapshot(method):\n return world.call(method)",
         "world.call(\"get_\" + name)",

@@ -32,6 +32,7 @@ const GETTERS: Array[String] = [
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
 	"get_intervention_state", "get_world_info", "get_terrain_snapshot",
+	"get_activity_snapshot",
 ]
 var _failures: int = 0
 var _assertions: int = 0
@@ -166,7 +167,7 @@ func _test_mutation_returns(reader_script: Script) -> void:
 	for operation: Array in operations:
 		var method: String = operation[0]
 		var arguments: Array = operation[1]
-		# Warm all twelve domains immediately before each mutation, without yielding.
+		# Warm all registered domains immediately before each mutation, without yielding.
 		for getter: String in GETTERS:
 			read(world, getter)
 		var expected: Variant = old_mutate(reference, method, arguments)

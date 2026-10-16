@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5221,
+    "active_key_count": 5229,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5226,
+    "key_count": 5234,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1338,6 +1338,7 @@
     "INSPECTOR_STATE_FMT": "상태: %s",
     "INSPECTOR_STATE_SEEKING": "이동 중",
     "INSPECTOR_STATE_WORKING": "작업 중",
+    "INSPECTOR_TARGET_ACTIVITY_PLACE_FMT": "장소 (%d, %d)",
     "INSPECTOR_TARGET_AGENT": "다른 주민",
     "INSPECTOR_TARGET_BUILD": "건설",
     "INSPECTOR_TARGET_FMT": "목표: %s",
@@ -4127,6 +4128,13 @@
     "UI_ACTIVE": "활성",
     "UI_ACTIVE_DYADS": "활성 Dyad",
     "UI_ACTIVE_MODIFIERS": "활성 기술 보정",
+    "UI_ACTIVITY_CRAFT": "무언가 만드는 중",
+    "UI_ACTIVITY_EXPLORE": "멀리 둘러보는 중",
+    "UI_ACTIVITY_HEARTH_CIRCLE": "화덕가에 둘러앉음",
+    "UI_ACTIVITY_PLAY": "노는 중",
+    "UI_ACTIVITY_REPAIR": "쉼터를 손보는 중",
+    "UI_ACTIVITY_SIT_BY_FIRE": "불가에서 쉬는 중",
+    "UI_ACTIVITY_TEND_FIRE": "불을 지키는 중",
     "UI_ADULTS": "성인",
     "UI_AFFINITY": "호감",
     "UI_AGE": "나이",

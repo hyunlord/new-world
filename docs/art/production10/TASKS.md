@@ -5,8 +5,8 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 | Part | Deliverable and verification | Status | Start UTC | End UTC |
 |---|---|---|---|---|
 | 0 | Preserve brief, merge P17, full gate, live getter census, rederived framings, base build, baseline matrix and A/Aprime | COMPLETE | 2026-10-15T15:03:00Z | 2026-10-15T18:34:24Z |
-| 1 | Section timers; measured pixel-identical optimizations; six framing identity plus 600-frame running equality | COMPLETE_WITH_REJECTED_CANDIDATES | 2026-10-15T18:36:52Z | 2026-10-16T01:11:00Z |
-| 2 | Activity getter/poses/icons/labels, exhaustive mapping tests, six live captures and sidecars, blind review | NOT_STARTED | | |
+| 1 | Section timers; measured pixel-identical optimizations; six framing identity plus 600-frame running equality | COMPLETE_WITH_REJECTED_CANDIDATES | 2026-10-15T18:36:52Z | 2026-10-16T01:10:14Z |
+| 2 | Activity getter/poses/icons/labels, exhaustive mapping tests, six live captures and sidecars, blind review | IN_PROGRESS | 2026-10-16T01:10:40Z | |
 | 3 | Temperament/family inspector, household rings, fake-world tests and parent capture | NOT_STARTED | | |
 | 4 | Final performance matrix, H1-H8 and before/after section costs | NOT_STARTED | | |
 | 5 | Independent review, full gate, publish both heads and PR511, Korean report, base cleanup | NOT_STARTED | | |

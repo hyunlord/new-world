@@ -31,7 +31,7 @@ const NEED_SATURATION := 100.0
 # Index-aligned with the Phase 4-γ A5 `state_tag` mapping locked in
 # `collect_agent_snapshot` and propagated to `collect_agent_detail`:
 #   0 = Idle, 1 = Seeking, 2 = Consuming(Agent), 3 = Consuming(other)
-const STATE_LABELS: Array = ["UI_ACTION_IDLE", "INSPECTOR_STATE_SEEKING", "UI_AGENT_STATE_SOCIALIZING", "INSPECTOR_STATE_WORKING"]
+const STATE_LABELS: Array = ["UI_ACTION_IDLE", "INSPECTOR_STATE_SEEKING", "UI_AGENT_STATE_SOCIALIZING", "INSPECTOR_STATE_WORKING", "UI_UNKNOWN"]
 
 # Index-aligned with the Phase 14-γ `target_kind` encoding in
 # `collect_agent_detail`:
@@ -45,7 +45,10 @@ const TARGET_LABELS: Array = [
 	"INSPECTOR_TARGET_AGENT",
 	"INSPECTOR_TARGET_FOOD",
 	"INSPECTOR_TARGET_WOOD",
+	"INSPECTOR_TARGET_ACTIVITY_PLACE_FMT",
 ]
+
+const ACTIVITY_LABELS: Array[String] = ["UI_ACTIVITY_TEND_FIRE", "UI_ACTIVITY_CRAFT", "UI_ACTIVITY_REPAIR", "UI_ACTIVITY_HEARTH_CIRCLE", "UI_ACTIVITY_EXPLORE", "UI_ACTIVITY_PLAY", "UI_ACTIVITY_SIT_BY_FIRE"]
 
 var _locale: Node = null
 var _world_sim: Node = null
@@ -148,8 +151,8 @@ func display_agent(detail: Dictionary) -> void:
 	var agent_id: int = int(detail.get("agent_id", 0))
 	var x: int = int(detail.get("x", 0))
 	var y: int = int(detail.get("y", 0))
-	var state_tag: int = clampi(int(detail.get("state_tag", 0)), 0, STATE_LABELS.size() - 1)
-	var target_kind: int = clampi(int(detail.get("target_kind", 0)), 0, TARGET_LABELS.size() - 1)
+	var state_tag: int = int(detail.get("state_tag", 0))
+	var target_kind: int = int(detail.get("target_kind", 0))
 	var hunger: float = float(detail.get("hunger", 0.0))
 	var thirst: float = float(detail.get("thirst", 0.0))
 	var sleep_val: float = float(detail.get("sleep", 0.0))
@@ -159,8 +162,9 @@ func display_agent(detail: Dictionary) -> void:
 	_village_label.visible = home >= 0
 	_village_label.text = SettlementSelection.name_for(home, _locale) if home >= 0 else ""
 	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
-	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _loc(STATE_LABELS[state_tag])
-	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _loc(TARGET_LABELS[target_kind])
+	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
+	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
+	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _target_text(target_kind, activity)
 	_hunger_bar.value = hunger
 	_thirst_bar.value = thirst
 	_sleep_bar.value = sleep_val
@@ -303,3 +307,30 @@ func _is_cold(agent_id: int) -> bool:
 			if ids[index] == agent_id:
 				return colds[index] == 1
 	return false
+
+
+func _selected_activity() -> Dictionary:
+	if _selected_entity_bits < 0 or _world_sim == null or not _world_sim.has_method("get_activity_snapshot"):
+		return {}
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_activity_snapshot")
+	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
+	var kinds: PackedByteArray = snapshot.get("kinds", PackedByteArray())
+	var xs: PackedInt32Array = snapshot.get("place_x", PackedInt32Array())
+	var ys: PackedInt32Array = snapshot.get("place_y", PackedInt32Array())
+	for index: int in mini(ids.size(), mini(kinds.size(), mini(xs.size(), ys.size()))):
+		if ids[index] == _selected_entity_bits:
+			return {"kind": int(kinds[index]), "x": xs[index], "y": ys[index]}
+	return {}
+
+
+func _state_text(state_tag: int, activity: Dictionary) -> String:
+	if state_tag == 4:
+		var kind: int = int(activity.get("kind", -1))
+		return _loc(ACTIVITY_LABELS[kind]) if kind >= 0 and kind < ACTIVITY_LABELS.size() else _loc("UI_UNKNOWN")
+	return _loc(STATE_LABELS[state_tag]) if state_tag >= 0 and state_tag < STATE_LABELS.size() else _loc("UI_UNKNOWN")
+
+
+func _target_text(target_kind: int, activity: Dictionary) -> String:
+	if target_kind == 8:
+		return (_loc("INSPECTOR_TARGET_ACTIVITY_PLACE_FMT") % [activity["x"], activity["y"]]) if not activity.is_empty() else _loc("UI_UNKNOWN")
+	return _loc(TARGET_LABELS[target_kind]) if target_kind >= 0 and target_kind < TARGET_LABELS.size() else _loc("UI_UNKNOWN")

@@ -5261,3 +5261,13 @@ VILLAGE_RESTLESS_CALM = Calm
 VILLAGE_RESTLESS_UNEASY = Uneasy
 VILLAGE_RESTLESS_READY = Ready to split
 VILLAGE_RESTLESS_TITLE = Restlessness
+
+# Art Pass 10
+UI_ACTIVITY_TEND_FIRE = Tending the fire
+UI_ACTIVITY_CRAFT = Making things
+UI_ACTIVITY_REPAIR = Mending a shelter
+UI_ACTIVITY_HEARTH_CIRCLE = Sitting at the hearth
+UI_ACTIVITY_EXPLORE = Looking around afar
+UI_ACTIVITY_PLAY = Playing
+UI_ACTIVITY_SIT_BY_FIRE = Resting by the fire
+INSPECTOR_TARGET_ACTIVITY_PLACE_FMT = Place (%d, %d)

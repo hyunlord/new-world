@@ -6,6 +6,7 @@ const GETTERS: Array[String] = [
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
 	"get_intervention_state", "get_world_info", "get_terrain_snapshot",
+	"get_activity_snapshot",
 ]
 const MUTATORS: Array[String] = [
 	"apply_intervention", "advance_ticks", "reset_world", "reset_world_stress",

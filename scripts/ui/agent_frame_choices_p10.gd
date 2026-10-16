@@ -4,11 +4,15 @@ const Activity = preload("res://scripts/ui/agent_activity.gd")
 var _groups: Dictionary = {}
 var _choices: Dictionary = {}
 var _wood_icon: String = ""
+var _daily_choices: Dictionary = {}
+const DAILY_BODY_KEYS: Dictionary = {"adult_a": 0, "adult_b": 1, "child": 2}
+const DAILY_VIEW_KEYS: Dictionary = {"E": 0, "W": 1, "N": 2, "S": 3}
 
 func configure(groups: Dictionary, entries: Dictionary) -> void:
 	_groups = groups
 	_wood_icon = Activity.wood_icon(entries)
 	_choices.clear()
+	_daily_choices.clear()
 
 func choose(body: String, activity: String, facing: String, seconds: float, phase: float) -> Dictionary:
 	if not _choices.has(body):
@@ -76,3 +80,18 @@ func _prepare(groups: Dictionary, body: String, activity: String, facing: String
 			prepared.append(chosen)
 		return prepared
 	return []
+
+## Results are borrowed and read-only by caller discipline; configure invalidates them.
+func daily_pose(body: String, kind: int, facing: String, seconds: float, arrived: bool) -> Dictionary:
+	var phase: int = posmod(floori(seconds * 2.0), 2) if kind == 5 and arrived else 0
+	var key: int = int(DAILY_BODY_KEYS[body]) * 112 + kind * 16 + int(DAILY_VIEW_KEYS[facing]) * 4 + int(arrived) * 2 + phase
+	if not _daily_choices.has(key):
+		_daily_choices[key] = Activity.daily_pose(_groups, body, kind, facing, float(phase) * 0.5, arrived)
+	return _daily_choices[key]
+
+## choose() owns a fresh shallow dictionary; decorate it without a second copy.
+func with_daily_icon(choice: Dictionary, kind: int) -> Dictionary:
+	if not choice.is_empty() and kind in [1, 4]:
+		choice["fallback_kind"] = "activity_icon"
+		choice["activity_icon"] = "U1_04" if kind == 1 else "p10_explore"
+	return choice

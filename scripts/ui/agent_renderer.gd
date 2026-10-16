@@ -62,6 +62,8 @@ var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
+var _activity_oracle_enabled: bool = not OS.get_environment("P10_ACTIVITY_OUT").is_empty()
+
 const SelectionIndex = preload("res://scripts/ui/agent_selection_index_p10.gd")
 var _selection_index = SelectionIndex.new()
 var _selection_lookup_enabled: bool = true
@@ -121,6 +123,9 @@ func _process(delta: float) -> void:
 		return
 	if _selection_lookup_enabled:
 		_selection_index.begin_frame()
+	var activity_snapshot: Dictionary = SimReads.read(world_sim, "get_activity_snapshot")
+	var daily_rows: Dictionary = Activity.activity_rows(activity_snapshot)
+	_prepare_frame_choices()
 	_prepare_talk_cache(xs, ys)
 	var new_checksum: int = _snapshot_checksum_from(agent_ids, xs, ys, n)
 	if new_checksum != _snapshot_checksum:
@@ -180,20 +185,44 @@ func _process(delta: float) -> void:
 			moments = _pose_output
 		else:
 			moments = _pose_moments.update(agent_id, i, snap, Vector2i(xs[i], ys[i]), not moving, bool(tile.get("wood", false)), context["hearths"], delta)
-		var activity: String = Activity.resolve(state, target, has_targets, movement.length_squared() > 0.000001, carried, tile, hour, wood)
+		var daily: Dictionary = daily_rows.get(int(ids[i]), {})
+		var daily_kind: int = int(daily.get("kind", -1))
+		var arrived: bool = not daily.is_empty() and int(daily.get("until_tick", -1)) >= 0
+		var daily_active: bool = not daily.is_empty() and (state == 4 or target == 8)
+		var overrides: Array[String] = []
+		var activity: String = Activity.resolve(state, target, has_targets, moving, carried, tile, hour, wood, daily_kind, arrived)
 		if bool(moments["pickup"]):
 			activity = "gather_wood"
+			overrides.append("pickup")
 		_idle_seconds[agent_id] = Activity.idle_elapsed(activity, movement, float(_idle_seconds.get(agent_id, 0.0)), delta)
 		var partner_delta: Vector2 = _cached_talk_delta(i, xs, ys) if activity == "talk" else Vector2.ZERO
-		var facing: String = Activity.render_facing(activity, movement, partner_delta, str(sprite.get_meta("facing", "S")), float(_idle_seconds[agent_id]))
+		var previous_facing: String = str(sprite.get_meta("facing", "S"))
+		var override_facing: String = ""
+		if daily_active and arrived and not bool(moments["pickup"]):
+			override_facing = _daily_facing(daily_kind, daily, agent_id, context, previous_facing)
+		var facing: String = Activity.render_facing(activity, movement, partner_delta, previous_facing, float(_idle_seconds[agent_id]), override_facing)
 		var pose: String = Activity.camp_pose(activity, life_stage, agent_id, int(time.get("day_index", 0)), hour, bool(tile.get("near_camp", false)))
+		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
+		if daily_active and not bool(moments["pickup"]):
+			var presentation: Dictionary = _frame_choices.daily_pose(body, daily_kind, facing, _animation_time, arrived) if _allocation_candidate else Activity.daily_pose(_frame_groups, body, daily_kind, facing, _animation_time, arrived)
+			pose = str(presentation["pose"])
+			facing = str(presentation["facing"])
+			if not arrived:
+				activity = pose
 		if bool(moments["meal"]):
 			pose = "eat"
+			overrides.append("meal")
 		var cold: bool = Cold.snapshot_cold(snap, i)
 		var base_pose: String = pose
 		pose = Cold.pose(pose, cold or _morning_chill.alpha(agent_id, tick) > 0.0, moving)
-		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
+		if pose != base_pose:
+			if cold:
+				overrides.append("cold")
+			if _morning_chill.alpha(agent_id, tick) > 0.0:
+				overrides.append("morning_chill")
 		var choice: Dictionary = frame_choice(body, pose, facing, float(look["phase"]))
+		if daily_active and not bool(moments["pickup"]) and not bool(moments["meal"]):
+			choice = _frame_choices.with_daily_icon(choice, daily_kind) if _allocation_candidate else Activity.with_daily_icon(choice, daily_kind)
 		var sprite_id: String = str(choice.get("sprite_id", ""))
 		if sprite_id.is_empty():
 			sprite.texture = null
@@ -205,6 +234,18 @@ func _process(delta: float) -> void:
 		var sheltered_sleep: bool = Activity.hidden(activity, has_targets, tile)
 		sprite.set_meta("sheltered_sleep", sheltered_sleep)
 		sprite.visible = _capture_visible and not sheltered_sleep and not sprite_id.is_empty()
+		sprite.set_meta("p10_activity_schema", 1)
+		sprite.set_meta("activity_kind", daily_kind)
+		sprite.set_meta("activity_place_known", arrived)
+		sprite.set_meta("activity_overrides", overrides)
+		sprite.set_meta("activity_frame_view", str(choice.get("view", "")))
+		sprite.set_meta("activity_frame_activity", str(choice.get("activity", "")))
+		if _activity_oracle_enabled:
+			sprite.set_meta("activity_oracle_inputs", {"schema": 1,
+				"animation_seconds": _animation_time, "previous_facing": previous_facing,
+				"movement": [movement.x, movement.y], "pickup": bool(moments["pickup"]), "meal": bool(moments["meal"]),
+				"morning_chill_alpha": _morning_chill.alpha(agent_id, tick), "capture_visible": _capture_visible,
+				"parent_visible_in_tree": (sprite.get_parent() as CanvasItem).is_visible_in_tree()})
 		sprite.set_meta("entity_bits", int(ids[i]))
 		if _selection_lookup_enabled:
 			_selection_index.observe(int(ids[i]), agent_id)
@@ -223,7 +264,7 @@ func _process(delta: float) -> void:
 		CarryLoad.apply(sprite, activity)
 		CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
 		_update_activity_icon(agent_id, sprite, choice)
-		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"]), "walking_direction": _walking_directions.get(agent_id, Vector2.ZERO)})
+		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"]), "walking_direction": _walking_directions.get(agent_id, Vector2.ZERO), "activity_place_known": arrived})
 	_apply_drawn_positions(draw_agents, context, delta)
 	for row: Dictionary in draw_agents:
 		var agent_id: int = int(row["id"])
@@ -471,13 +512,16 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 		h = (h * 1000003) ^ (aid * 73856093) ^ (int(xs[i]) * 19349663) ^ (int(ys[i]) * 83492791) ^ (i * 2654435761)
 	return h
 
-func frame_choice(body: String, activity: String, facing: String, phase: float) -> Dictionary:
+func _prepare_frame_choices() -> void:
 	if _frame_groups.is_empty():
 		_frame_groups = Activity.build_frame_groups(SpriteLibrary.entries())
+	if _allocation_candidate and not _frame_choices_ready:
+		_frame_choices.configure(_frame_groups, SpriteLibrary.entries())
+		_frame_choices_ready = true
+
+func frame_choice(body: String, activity: String, facing: String, phase: float) -> Dictionary:
+	_prepare_frame_choices()
 	if _allocation_candidate:
-		if not _frame_choices_ready:
-			_frame_choices.configure(_frame_groups, SpriteLibrary.entries())
-			_frame_choices_ready = true
 		return _frame_choices.choose(body, activity, facing, _animation_time, phase)
 	return Activity.choose_frame(_frame_groups, body, activity, facing, _animation_time, phase)
 
@@ -502,7 +546,7 @@ func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary) 
 	Activity.apply_activity_icon(sprite, icon, choice, zoom)
 
 func _activity_context() -> Dictionary:
-	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "wood": {}, "water": {}, "seat_blocked": {}}
+	var context: Dictionary = {"shelters": {}, "hearths": [], "stockpiles": [], "sites": {}, "food": {}, "wood": {}, "water": {}, "seat_blocked": {}}
 	var buildings: Dictionary = SimReads.read(world_sim, "get_building_snapshot")
 	var xs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
@@ -514,6 +558,8 @@ func _activity_context() -> Dictionary:
 			context["hearths"].append(tile)
 		elif kinds[i] == 1:
 			context["shelters"][tile] = true
+		elif kinds[i] == 2:
+			context["stockpiles"].append(tile)
 	for source: String in ["sites", "food"]:
 		var snap: Dictionary = SimReads.read(world_sim, "get_construction_snapshot") if source == "sites" else SimReads.read(world_sim, "get_resource_snapshot")
 		var sx: PackedInt32Array = snap.get("xs", PackedInt32Array())
@@ -773,3 +819,27 @@ static func _apply_settlement_outline(sprite: Sprite2D, agent_id: int) -> void:
 	material.set_shader_parameter("atlas_rect", Vector4(rect.position.x / size.x, rect.position.y / size.y, rect.end.x / size.x, rect.end.y / size.y))
 	material.set_shader_parameter("outline_color", SettlementSelection.color_for(home))
 	outline.show()
+
+func _daily_facing(kind: int, daily: Dictionary, agent_id: int, context: Dictionary, previous: String) -> String:
+	var place: Vector2i = daily.get("place", Vector2i.ZERO)
+	if kind == 5:
+		return "W" if previous == "W" else "E"
+	var points: Array = context["hearths"]
+	if kind == 1:
+		points = context["stockpiles"]
+	elif kind == 2:
+		points = context["shelters"].keys()
+	else:
+		var home: int = SettlementSelection.home_for_agent(agent_id)
+		var home_tile: Vector2i = SettlementSelection.formation_for(home)
+		if home >= 0 and points.has(home_tile):
+			points = [home_tile]
+	var nearest: Vector2i = place
+	var best: float = INF
+	for point: Vector2i in points:
+		var distance: float = Vector2(place).distance_squared_to(Vector2(point))
+		if distance < best or (is_equal_approx(distance, best) and (point.y < nearest.y or (point.y == nearest.y and point.x < nearest.x))):
+			nearest = point
+			best = distance
+	var toward: Vector2 = Vector2(nearest - place)
+	return Activity.facing(-toward if kind == 4 else toward, previous)

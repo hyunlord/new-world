@@ -3,7 +3,7 @@ extends SceneTree
 const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 const FixedDelta = preload("res://scripts/test/art/test_fixed_delta_p9.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
-const REQUIRED_META: Array[String] = ["p10_activity_schema", "activity_frame_view", "activity_frame_activity", "activity_kind", "activity_place_known", "activity", "pose", "body", "facing", "sprite_id", "cold_pose", "cold_base_pose", "activity_overrides", "entity_bits", "art_id"]
+const REQUIRED_META: Array[String] = ["activity_oracle_inputs", "p10_activity_schema", "activity_frame_view", "activity_frame_activity", "activity_kind", "activity_place_known", "activity", "pose", "body", "facing", "sprite_id", "cold_pose", "cold_base_pose", "activity_overrides", "entity_bits", "art_id"]
 signal frame_settled
 var _samples: int = 0
 var _valid_delta: bool = true
@@ -87,14 +87,15 @@ func _run() -> void:
 	if file == null:
 		_fail("cannot write sidecar")
 		return
-	file.store_string(JSON.stringify({"schema_version": 1, "complete": _errors.is_empty(), "errors": _errors,
+	file.store_string(JSON.stringify(_json_ready({"schema_version": 1, "complete": _errors.is_empty(), "errors": _errors,
 		"seed": seed, "display_day": day, "hour": hour, "zoom": zoom, "tick": tick,
 		"state_change_frame": 10, "capture_frame": 130, "fixed_fps": 60, "delta_samples": _samples,
 		"fixed_delta_valid": _valid_delta, "delta_tolerance": 0.000000001, "minimum_delta": _minimum_delta, "maximum_delta": _maximum_delta,
 		"world_info": info, "clock": clock, "settlements": settlements, "population": agents["ids"].size(),
 		"camera": [camera.position.x, camera.position.y], "viewport": [1920, 1080],
-		"raw_agent_snapshot": agents, "raw_activity_snapshot": activities, "activity_holders": rows, "holder_count": activities["ids"].size(),
-		"pose_oracle_checked": false, "debug_build": OS.is_debug_build()}, "\t") + "\n")
+		"raw_building_snapshot": ReadRoute.read(_world, "get_building_snapshot"),
+		"raw_society_snapshot": ReadRoute.read(_world, "get_society_snapshot"), "raw_agent_snapshot": agents, "raw_activity_snapshot": activities, "activity_holders": rows, "holder_count": activities["ids"].size(),
+		"pose_oracle_checked": false, "debug_build": OS.is_debug_build()}), "\t") + "\n")
 	file.close()
 	quit(0 if _errors.is_empty() else 1)
 
@@ -164,3 +165,21 @@ func _process(delta: float) -> bool:
 func _fail(message: String) -> void:
 	push_error("activity-capture-p10: " + message)
 	quit(1)
+
+
+# Godot serializes PackedByteArray as a string. Copy the evidence tree so
+# normalized JSON arrays never mutate cached bridge snapshots or raw census.
+func _json_ready(value: Variant) -> Variant:
+	if value is PackedByteArray:
+		return Array(value)
+	if value is Dictionary:
+		var result: Dictionary = {}
+		for key: Variant in value:
+			result[key] = _json_ready(value[key])
+		return result
+	if value is Array:
+		var result: Array = []
+		for item: Variant in value:
+			result.append(_json_ready(item))
+		return result
+	return value
