@@ -24,8 +24,10 @@ usage (DGX): python3 tools/worldmodel/wm3/finetune.py --init RUN --out DIR --con
 from __future__ import annotations
 
 import argparse
+import faulthandler
 import hashlib
 import json
+import signal
 import sys
 import time
 from pathlib import Path
@@ -73,12 +75,19 @@ def val_cases(base: dict) -> list:
     return [ef.case_from(j) for j in base["cases"]["val"] if j["rep"] == 0 and j["arm"] in v2.W3_ARMS]
 
 
-def evaluate(pred, val: dict, stds_t2: dict, fams: list, cases: list, stds: dict, vb: int) -> dict:
+EVAL_STACK_DUMP = 600     # seconds: an evaluation slower than this dumps every thread's stack to stderr (train.out)
+
+
+def evaluate(pred, val: dict, stds_t2: dict, fams: list, cases: list, stds: dict, vb: int, step: int = 0) -> dict:
     pred.round_counts = False
     t = time.time()
+    print(f"eval {step} start", flush=True)
+    faulthandler.dump_traceback_later(EVAL_STACK_DUMP, repeat=True)
     t2, per = g.val_score(pred, val, stds_t2, None, vb)
     t_t2 = time.time() - t
+    print(f"eval {step} val_t2 {t2:.4f} {t_t2:.1f}s", flush=True)
     eff, cells = e3.val_eff(pred, fams, cases, stds)
+    faulthandler.cancel_dump_traceback_later()
     return {"val_t2": t2, "val_t2_per": per, "val_eff": eff, "val_eff_cells": cells, "t2_s": t_t2,
             "eff_s": time.time() - t - t_t2}
 
@@ -105,6 +114,7 @@ def main(argv=None) -> int:
     ap.add_argument("--log-every", type=int, default=50)
     a = ap.parse_args(argv)
     t0 = time.time()                      # the clock starts before data loading (as WM-2)
+    faulthandler.register(signal.SIGUSR1, all_threads=True)   # `kill -USR1 PID` prints every thread's stack
     if torch is None:
         raise SystemExit("torch is required")
     if a.pair and not a.partners:
@@ -167,7 +177,7 @@ def main(argv=None) -> int:
               "data_root": str(a.root), "threads": torch.get_num_threads(), "argv": sys.argv}
     c.write_json(out / "config.json", config)
     log = (out / "train_log.jsonl").open("w")
-    ev0 = evaluate(pred, val, stds_t2, fams, vcases, stds, vb)
+    ev0 = evaluate(pred, val, stds_t2, fams, vcases, stds, vb, 0)
     t2_ref = ev0["val_t2"]
     log.write(json.dumps({"step": 0, "eval": True, **ev0, "eligible": True, "best": ev0["val_eff"],
                           "t": time.time() - t0}) + "\n")
@@ -196,7 +206,7 @@ def main(argv=None) -> int:
             log.write(json.dumps({"step": step, "k": K, "loss": loss.item(), **parts, "t": time.time() - t0}) + "\n")
             log.flush()
         if step % a.eval_every == 0:
-            ev = evaluate(pred, val, stds_t2, fams, vcases, stds, vb)
+            ev = evaluate(pred, val, stds_t2, fams, vcases, stds, vb, step)
             eligible = ev["val_t2"] <= ELIGIBLE * t2_ref
             if eligible and ev["val_eff"] < best - 1e-6:
                 best, best_step, bad = ev["val_eff"], step, 0
