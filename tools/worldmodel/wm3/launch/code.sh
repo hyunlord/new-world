@@ -4,6 +4,9 @@
 set -u
 SHA=$1
 D=/home/hyunlord/work/wm1-runs/wm3/_code/${SHA:0:8}
+mkdir -p /home/hyunlord/work/wm1-runs/wm3/_code
+exec 9>/home/hyunlord/work/wm1-runs/wm3/_code/.lock
+flock 9            # concurrent jobs never see a half-created worktree
 if [ ! -d "$D" ]; then
   git -C /home/hyunlord/work/new-world-wm1 fetch -q origin && \
   git -C /home/hyunlord/work/new-world-wm1 worktree add -f --detach "$D" "$SHA" >/dev/null 2>&1
