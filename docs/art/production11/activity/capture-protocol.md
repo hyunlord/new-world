@@ -17,3 +17,9 @@ The preserved P10 crop is square, ceil(max(body width,body height)+16) screen pi
 A fresh reviewer receives only numbered crops and seven activity names. Freeze all14 answers before preparing village questions. Then choose six eligible Z1 village/capture pairs, no top-two count tie, maximum two pairs per (seed,village ID), and freeze those answers before revealing either key. No keys, icon sheet, GOAL sections3–7 or filenames encoding true kinds are supplied to the reviewer. A shortage is reported, never filled with duplicate questions or another seed.
 
 Bars remain10/14 with no kind0/2, and5/6 village summaries. All actual holder poses must have zero mismatches. No images have been generated with ImageGen in this pass.
+
+## Terminal shortage and fixed supplemental village evidence
+
+The normal activity planner still refuses to create crops unless all14 eligible holders exist. A separately authorized `--partial-diagnostic` mode requires a terminal shortage record matching every source JSON/PNG SHA, exact capture order/counts, and the unchanged14/10/no-zero-kind bar. It produces only eligible unique holders, labels the protocol incomplete and acceptance NOT_VERIFIED, and cannot count artifact-generation exit0 as H7 pass. It is used only after the leader resolves useful authorized capture work; no exclusions are relaxed or padded.
+
+The three mandatory Z1 frames yield only3 eligible village/capture pairs. As recorded in DECISIONS, `run_village_extras_p11.py` adds all four same-world11/14 instants in a fixed hour-first order after c answers freeze. It records every case before launch, keeps the standard overview camera, checks source/answer hashes, and preserves failures. The village helper still requires six eligible pairs, at most two per(seed,village), no top-two tie, and a5/6 score. Neither key is revealed until d answers freeze.

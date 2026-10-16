@@ -7,6 +7,7 @@
 """Freeze P11 exclusions and selection before extracting original-size blind crops."""
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import math
@@ -43,9 +44,35 @@ def covered_fraction(rect: list[float], blockers: list[list[float]]) -> float:
     return area / (width * height)
 
 
+def terminal_shortage(path: Path, paths: list[Path], counts: list[int]) -> dict[str, object]:
+    """Require the leader's frozen terminal decision to match this exact selection."""
+    data = json.loads(path.read_text())
+    expected = [str(value) for value in paths]
+    if (data.get('schema') != 1 or data.get('terminal_shortage') is not True
+            or data.get('authorized_by') != 'leader'
+            or data.get('remaining_capture_work') is not False
+            or not isinstance(data.get('reason'), str) or not data['reason'].strip()
+            or data.get('capture_order') != expected or data.get('counts') != counts
+            or data.get('required_count') != 14 or not any(value < 2 for value in counts)):
+        raise EvidenceError('terminal shortage record must authorize this exact incomplete selection')
+    hashes = data.get('source_hashes', {})
+    for source in paths:
+        for item in (source, source.with_name('capture.png')):
+            if hashes.get(str(item)) != hashlib.sha256(item.read_bytes()).hexdigest():
+                raise EvidenceError('terminal shortage record source hash mismatch')
+    return {'path': str(path.resolve()), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+            'reason': data['reason']}
+
+
 def main(args: list[str]) -> int:
-    checkout, output = Path(args[0]), Path(args[1])
-    paths = [Path(value).resolve() for value in args[2:]]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--partial-diagnostic', type=Path, metavar='TERMINAL_SHORTAGE_JSON')
+    parser.add_argument('checkout', type=Path)
+    parser.add_argument('output', type=Path)
+    parser.add_argument('captures', nargs='+', type=Path)
+    options = parser.parse_args(args)
+    checkout, output = options.checkout, options.output
+    paths = [value.resolve() for value in options.captures]
     if len(paths) < 3 or len(set(paths)) != len(paths):
         raise EvidenceError('requires three distinct base captures, without duplicate paths')
     output.mkdir(parents=True, exist_ok=False)
@@ -115,12 +142,21 @@ def main(args: list[str]) -> int:
               'missing_kinds': [kind for kind, count in enumerate(counts) if count < 2]}
     # This immutable log is on disk before ANY crop is made, including failed selection.
     (output / 'exclusions-before-crops.json').write_text(json.dumps(frozen, indent=2) + '\n')
-    if frozen['missing_kinds']:
+    diagnostic = options.partial_diagnostic is not None
+    if frozen['missing_kinds'] and not diagnostic:
         return 1
+    terminal = terminal_shortage(options.partial_diagnostic, paths, counts) if diagnostic else None
+    status = {'mode': 'partial_diagnostic' if diagnostic else 'full_protocol',
+              'actual_count': len(selected), 'required_count': 14,
+              'full_protocol_complete': not frozen['missing_kinds'],
+              'acceptance': 'NOT_VERIFIED' if diagnostic else 'AWAITING_BLIND_ANSWERS',
+              'required_bar': 'at least 10/14 AND no activity scores 0/2',
+              'terminal_shortage': terminal}
+    (output / 'protocol-status.json').write_text(json.dumps(status, indent=2) + '\n')
     selected.sort(key=lambda row: hashlib.sha256(f"{row['source']}:{row['entity_bits']}".encode()).hexdigest())
     for index, row in enumerate(selected):
         row['blind_id'] = f'crop_{index + 1:02d}'
-    (output / 'key.json').write_text(json.dumps({'crops': selected, 'frozen_ns': frozen['frozen_ns']}, indent=2) + '\n')
+    (output / 'key.json').write_text(json.dumps({'crops': selected, 'frozen_ns': frozen['frozen_ns'], 'protocol_status': status}, indent=2) + '\n')
     blind = output / 'blind'
     blind.mkdir()
     (blind / 'names.json').write_text(json.dumps({'choices': NAMES, 'instructions': 'Identify each numbered crop. Freeze answers before the village task; do not open any key.'}, indent=2) + '\n')
