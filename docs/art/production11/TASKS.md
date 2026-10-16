@@ -7,7 +7,7 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 |---|---|---|---|---|
 | 0 | Merge, delivered contract, tools, gate, release baseline | 07:50 | | IN_PROGRESS |
 | 1 | Names, cached reads, life and records, chronicle, tests and captures | 10:17 (approx.) | 10:47 (approx.) | COMPLETE; H8 FAIL (44/45 correct) |
-| 2 | Seven icons, village summary, blind test | 10:35 | | IN_PROGRESS |
+| 2 | Seven icons, village summary, blind test | 10:35 | 12:36 | COMPLETE_WITH_LIMITATIONS; H7 NOT_VERIFIED, C12/14 shortage, D round2 PASS |
 | 3 | Timed optimization with identity and pan proof | | | PENDING |
 | 4 | Frozen release matrix and H1–H8 | | | PENDING |
 | 5 | Independent review, final gate, report, publication, cleanup | | | PENDING |
