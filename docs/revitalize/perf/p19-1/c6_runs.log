@@ -1,0 +1,19 @@
+2026-10-16T03:39:39Z base /Users/rexxa/work/p19-data/bin_base/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/c6/r1/base 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3664 ms p99.9 0.863 ms max 0.866 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:40Z final /Users/rexxa/work/p19-data/bin_p1/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/c6/r1/part1 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3752 ms p99.9 0.882 ms max 0.890 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:41Z base /Users/rexxa/work/p19-data/bin_base/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/c6/r2/base 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3721 ms p99.9 0.864 ms max 0.875 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:41Z final /Users/rexxa/work/p19-data/bin_p1/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/c6/r2/part1 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3712 ms p99.9 0.874 ms max 0.891 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:42Z base /Users/rexxa/work/p19-data/bin_base/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/c6/r3/base 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3642 ms p99.9 0.866 ms max 0.892 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-16T03:39:43Z final /Users/rexxa/work/p19-data/bin_p1/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v23 --out /Users/rexxa/work/p19-data/perf/c6/r3/part1 
+stress_stress_v23_s15100_n500_side64_fed: mean 0.3753 ms p99.9 0.861 ms max 0.908 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+status 0

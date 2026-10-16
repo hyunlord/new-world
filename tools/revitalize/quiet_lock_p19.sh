@@ -3,8 +3,8 @@
 # Timed measurements only. The supervisor owns a dedicated child process group;
 # timeout, signal and normal exit all stop that group before releasing the lock.
 # Pass 19: before checking quiet, it writes p19-data/watched/PAUSE so this run's
-# own untimed jobs (run_watched_p19.sh groups) stop, waits for the load to
-# settle, and ignores those stopped groups in the busy check; PAUSE is removed
+# own untimed jobs (run_watched_p19.sh groups) stop, waits (polling every
+# 15 s, at most 10 min) for the 1-minute load to settle, and ignores those stopped groups in the busy check; PAUSE is removed
 # on exit.
 set -euo pipefail
 (( $# >= 3 )) || { echo 'usage: quiet_lock_p19.sh <runlog> <purpose> <command...>' >&2; exit 2; }
@@ -29,7 +29,8 @@ HOLD_SECONDS: Final = 3600
 CLEANUP_SECONDS: Final = 3
 WATCH_DIR: Final = Path('/Users/rexxa/work/p19-data/watched')
 PAUSE: Final = WATCH_DIR / 'PAUSE'
-SETTLE_SECONDS: Final = 90
+SETTLE_POLL_SECONDS: Final = 15
+SETTLE_MAX_SECONDS: Final = 600
 script_dir = Path(sys.argv[1])
 log_path = Path(sys.argv[2])
 purpose = sys.argv[3]
@@ -95,20 +96,27 @@ try:
         # Pause this run's own untimed jobs, let the 1-minute load settle,
         # then judge the other run's activity.
         PAUSE.write_text(f'{os.getpid()}\n')
-        log(f'PAUSE own watched groups: {sorted(p.name for p in WATCH_DIR.iterdir() if p.name.isdigit())}; settle {SETTLE_SECONDS}s')
-        time.sleep(SETTLE_SECONDS)
-        load_output = subprocess.check_output(['sysctl', '-n', 'vm.loadavg'], text=True)
-        load1 = float(load_output.split()[1])
-        busy: list[str] = []
-        for name in ('cargo', 'rustc', 'clippy-driver', 'worldsim_.*', 'Godot'):
-            result = subprocess.run(['pgrep', '-x', name], capture_output=True, text=True, check=False)
-            if result.returncode not in (0, 1):
-                sys.exit(f'pgrep failed for {name}: {result.stderr}')
-            for pid in result.stdout.split():
-                pgid = subprocess.run(['ps', '-o', 'pgid=', '-p', pid], capture_output=True, text=True, check=False).stdout.strip()
-                if pgid and (WATCH_DIR / pgid).exists():
-                    continue  # this run's own job, stopped by its watcher
-                busy.append(f'{name}:{pid}')
+        log(f'PAUSE own watched groups: {sorted(p.name for p in WATCH_DIR.iterdir() if p.name.isdigit())}; settle up to {SETTLE_MAX_SECONDS}s')
+        settle_started = time.monotonic()
+        while True:
+            time.sleep(SETTLE_POLL_SECONDS)
+            load_output = subprocess.check_output(['sysctl', '-n', 'vm.loadavg'], text=True)
+            load1 = float(load_output.split()[1])
+            busy: list[str] = []
+            for name in ('cargo', 'rustc', 'clippy-driver', 'worldsim_.*', 'Godot'):
+                result = subprocess.run(['pgrep', '-x', name], capture_output=True, text=True, check=False)
+                if result.returncode not in (0, 1):
+                    sys.exit(f'pgrep failed for {name}: {result.stderr}')
+                for pid in result.stdout.split():
+                    pgid = subprocess.run(['ps', '-o', 'pgid=', '-p', pid], capture_output=True, text=True, check=False).stdout.strip()
+                    if pgid and (WATCH_DIR / pgid).exists():
+                        continue  # this run's own job, stopped by its watcher
+                    busy.append(f'{name}:{pid}')
+            # My own paused jobs no longer add load; wait for the 1-minute
+            # average to decay (or for foreign work to show as `busy`).
+            if busy or load1 < 4 or time.monotonic() - settle_started >= SETTLE_MAX_SECONDS:
+                break
+        log(f'settled: load={load1}; busy={busy}; after {time.monotonic() - settle_started:.0f}s')
         waited = time.monotonic() - quiet_started
         if load1 >= 4 or busy:
             if waited < QUIET_WAIT_SECONDS:

@@ -1,0 +1,115 @@
+{
+ "expected": "within +/-3 %",
+ "mean_relative": 0.02404265460018225,
+ "medians": {
+  "base": {
+   "mean_ms": 0.3664079710144928,
+   "p999_ms": 0.864
+  },
+  "part1": {
+   "mean_ms": 0.37521739130434784,
+   "p999_ms": 0.874
+  }
+ },
+ "p999_relative": 0.011574074074074073,
+ "per_repeat_mean_relative": [
+  0.02404265460018225,
+  -0.0025433350405743723,
+  0.030411320874852734
+ ],
+ "provenance": {
+  "builds": {
+   "base": {
+    "commit": "20a1d078",
+    "dir": "/Users/rexxa/work/p19-data/bin_base",
+    "worldsim_perf_sha256": "5b598b83e095bc09ca1b5a0071c637a62af1c253a14b50a11119fe4e31915d7d"
+   },
+   "final": {
+    "commit": "0ca95174",
+    "dir": "/Users/rexxa/work/p19-data/bin_p1",
+    "worldsim_perf_sha256": "6242549f02c689b81ccc5eeeb406021e7d7f5e5cec1fccf543668a6d0dbacf63"
+   }
+  },
+  "contended": false,
+  "quiet": {
+   "owner": "pass19-sim (Claude Code, new-world-pass4)",
+   "pid": "55410",
+   "purpose": "pass19 C6+H5+scale",
+   "started": "2026-10-16T03:39:39Z"
+  },
+  "stage": "c6"
+ },
+ "repeats": {
+  "base": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 240.2294507246377,
+    "file": "/Users/rexxa/work/p19-data/perf/c6/r1/base/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "20a1d078",
+    "max_ms": 0.866,
+    "mean_ms": 0.3664079710144928,
+    "p999_ms": 0.863
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 243.50347608695654,
+    "file": "/Users/rexxa/work/p19-data/perf/c6/r2/base/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "20a1d078",
+    "max_ms": 0.875,
+    "mean_ms": 0.3721007246376811,
+    "p999_ms": 0.864
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 237.2346079710145,
+    "file": "/Users/rexxa/work/p19-data/perf/c6/r3/base/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "20a1d078",
+    "max_ms": 0.892,
+    "mean_ms": 0.3641855072463768,
+    "p999_ms": 0.866
+   }
+  ],
+  "part1": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 246.7996304347826,
+    "file": "/Users/rexxa/work/p19-data/perf/c6/r1/part1/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "0ca95174",
+    "max_ms": 0.89,
+    "mean_ms": 0.37521739130434784,
+    "p999_ms": 0.882
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 243.00432463768115,
+    "file": "/Users/rexxa/work/p19-data/perf/c6/r2/part1/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "0ca95174",
+    "max_ms": 0.891,
+    "mean_ms": 0.37115434782608697,
+    "p999_ms": 0.874
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 245.7758260869565,
+    "file": "/Users/rexxa/work/p19-data/perf/c6/r3/part1/stress_stress_v23_s15100_n500_side64_fed.json",
+    "fingerprint": "14458e1fa711de0c",
+    "git_sha": "0ca95174",
+    "max_ms": 0.908,
+    "mean_ms": 0.37526086956521737,
+    "p999_ms": 0.861
+   }
+  ]
+ },
+ "same_fingerprint": true
+}
