@@ -34,3 +34,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 16:40:27 | 18:46:28 | `wm3_full_s1`: stop `patience` at step 3,250, kept step 1,750 (`val_eff` 0.4945, `val_t2` 0.0622; init 0.5489 / 0.0603); steps 500–1,000 not eligible (`val_t2` 0.0635–0.0697); 7,522 s (≈ 2.0 s/step incl. evaluations) |
 | 4.2 | 18:46:28 | | its finals from `aa763da8` |
 | 4.1 | 18:46:28 | | `wm3_full_s2` started (the last run) |
+| 4.2 | 18:46:28 | 19:06:55 | `wm3_full_s1` finals from `aa763da8`: `_effects` 18:55:51, `_split` 18:56:10, `_fact` 19:06:00, lag curve 19:06:39, `_calib` 19:06:55, exit 0 |
+| 4.1 | 18:46:28 | 21:13:29 | `wm3_full_s2`: stop `patience` at step 3,500, kept step 2,000 (`val_eff` 0.4869, `val_t2` 0.0599; init 0.5458 / 0.0589); 8,788 s (≈ 2.2–2.9 s/step; DGX load average 8–63 from other users' jobs). Queue done: all five runs of METRICS.md section 2 trained, none dropped |
+| 4.2 | 21:13:29 | | `wm3_full_s2` finals from `aa763da8` |
