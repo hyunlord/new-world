@@ -73,6 +73,18 @@ var _frame_choices_ready: bool = false
 var _allocation_candidate: bool = true
 var _pose_output: Dictionary = {}
 
+var _declump_input_candidate: bool = true
+
+func set_perf_candidate_p11(change_id: String, enabled: bool) -> bool:
+	if change_id != "declump-input-cache":
+		return false
+	_declump_input_candidate = enabled
+	_camp_seats.set_declump_cache_enabled(enabled)
+	return true
+
+func get_perf_candidate_p11() -> Dictionary:
+	return {"change_id": "declump-input-cache", "candidate_enabled": _declump_input_candidate}
+
 func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
 	if change_id != "allocation-cache":
 		return false
@@ -394,6 +406,7 @@ func _on_world_reset() -> void:
 	_walking_tiles.clear()
 	_stationary_seconds.clear()
 	_camp_seats = CampSeatsScript.new()
+	_camp_seats.set_declump_cache_enabled(_declump_input_candidate)
 	_opaque_rects.clear()
 	_idle_seconds.clear()
 	_pose_moments.clear()
@@ -668,7 +681,7 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 			load_rect.position += load_layer.position
 			footprint = footprint.merge(load_rect)
 		rects[agent_id] = footprint
-	var declump: Dictionary = CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
+	var declump: Dictionary = _camp_seats.declump_cached(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var target: Vector2 = Vector2(targets[agent_id]) + Vector2(declump.get(agent_id, Vector2.ZERO))

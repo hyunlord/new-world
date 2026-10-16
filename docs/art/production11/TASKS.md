@@ -29,3 +29,5 @@ Part 4 freeze deadline: 2026-10-16T16:50:00Z. Overall cutoff: 2026-10-16T19:50:0
 - 2026-10-16T13:35:52Z: Reference capture sequence completed: six A/Aprime exact complete draw-event sequences and RGBA zero differences; running-A W0/W200600 frames and W500 frozen/2x240 frames pass structure/provenance validation. Reference evidence only; candidate H5 remains NOT_MEASURED.
 
 - 2026-10-16T14:09:58Z: P0 W500 section capture valid300frames,14s quiet hold load3.24→3.78, uncontended, exit0. Largest section declump6676.5us, total24923us. Full baseline aggregate preserved byte-identical externally and in verified40-file ZIP; removed only redundant generated72.8MB working-tree JSON.
+
+- 2026-10-16T14:14:52Z: Largest-timer declump-input-cache candidate implemented after written complete-input plan. Initial intentional RED retained; first green test fixture lacked a shadow for reset and was rejected despite exit0, then only fixture cleanup corrected. Strict3files/6FFI and six regression scripts now pass with no SCRIPT ERROR. Static section generator preserves ordinary statements. Independent source/scope review found no defect. Candidate speed/identity remain pending.

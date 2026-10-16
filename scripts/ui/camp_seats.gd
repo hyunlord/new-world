@@ -11,6 +11,61 @@ var _input_cache_valid: bool = false
 var _input_cache_rows: Array = []
 var _input_cache_result: Dictionary = {}
 
+var _declump_cache_enabled: bool = true
+var _declump_cache_valid: bool = false
+var _declump_cache_key: Dictionary = {}
+var _declump_cache_result: Dictionary = {}
+var declump_cache_hits: int = 0
+var declump_cache_misses: int = 0
+var declump_cache_disabled_calls: int = 0
+
+func set_declump_cache_enabled(enabled: bool) -> void:
+	if _declump_cache_enabled != enabled:
+		_declump_cache_enabled = enabled
+		_clear_declump_cache()
+
+func declump_cache_enabled() -> bool:
+	return _declump_cache_enabled
+
+func _clear_declump_cache() -> void:
+	_declump_cache_valid = false
+	_declump_cache_key.clear()
+	_declump_cache_result.clear()
+	declump_cache_hits = 0
+	declump_cache_misses = 0
+	declump_cache_disabled_calls = 0
+
+## Memoize only the pure declump inputs; drawing and easing still run every frame.
+func declump_cached(rows: Array[Dictionary], seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary, use_spatial_hash: bool = true) -> Dictionary:
+	if not _declump_cache_enabled:
+		declump_cache_disabled_calls += 1
+		return declump(rows, seated, targets, terrain, blocked, rects, use_spatial_hash)
+	for target: Vector2 in targets.values():
+		if not target.is_finite():
+			_clear_declump_cache()
+			return declump(rows, seated, targets, terrain, blocked, rects, use_spatial_hash)
+	for rect: Rect2 in rects.values():
+		if not rect.position.is_finite() or not rect.size.is_finite():
+			_clear_declump_cache()
+			return declump(rows, seated, targets, terrain, blocked, rects, use_spatial_hash)
+	var projected_rows: Array = []
+	for row: Dictionary in rows:
+		projected_rows.append([int(row["id"]), bool(row.get("visible", false)),
+			_walking(row), bool(row.get("activity_place_known", false))])
+	var cells: PackedByteArray = terrain.get("terrain", PackedByteArray())
+	var key: Dictionary = {"rows": projected_rows, "targets": targets, "rects": rects,
+		"width": int(terrain.get("width", 0)), "height": int(terrain.get("height", 0)),
+		"cells": cells, "blocked": blocked, "spatial": use_spatial_hash}
+	if _declump_cache_valid and key == _declump_cache_key:
+		declump_cache_hits += 1
+		return _declump_cache_result.duplicate()
+	declump_cache_misses += 1
+	_declump_cache_key = key.duplicate(true)
+	_declump_cache_key["cells"] = cells.duplicate()
+	_declump_cache_result = declump(rows, seated, targets, terrain, blocked, rects, use_spatial_hash)
+	_declump_cache_valid = true
+	return _declump_cache_result.duplicate()
+
 func set_input_cache_enabled(enabled: bool) -> void:
 	if _input_cache_enabled != enabled:
 		_input_cache_enabled = enabled
@@ -25,6 +80,7 @@ func _invalidate_input_cache() -> void:
 	_input_cache_result.clear()
 
 func clear() -> void:
+	_clear_declump_cache()
 	_invalidate_input_cache()
 	_hearths.clear()
 	_blocked.clear()
