@@ -24,3 +24,5 @@
 - Rejected metadata and child-reference wrapper caches: measured allocation bundle slows W500 by19.5%; isolated100k-call diagnostics show higher GDScript call/validation overhead than native set_meta/get_node_or_null. Restore native paths and measure remaining allocation improvements; do not report rejected subitems as optimized.
 
 - Reduced allocation accepted after measured1.06642x improvement with exact frozen/running identity. Keep native metadata/child-node calls because attempted helper caches regressed; retain frame/variant/pose/selection optimizations only.
+
+- Tick candidate rejected by three-strike identity rule despite positive contended timing. Preserve failed water-phase evidence; do not mask pixels, alter baseline or lower thresholds. Part1 H5 pins accepted allocation commit ebadc0b967c55c1a6ed8ece72f4ba2c2c224d5ea. Part2 rebases directly on that state; tick-only optimization and optional spatial result cache remain unaccepted. Household rings/W1000 dropped under remaining original time budget.

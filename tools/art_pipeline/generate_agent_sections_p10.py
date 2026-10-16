@@ -93,12 +93,37 @@ def inject(body: str, markers: tuple[tuple[str, str], ...]) -> str:
     return result.rstrip('\n') + '\n' + ending + '\n'
 
 
+
+def process_markers(source: str) -> tuple[tuple[str, str], ...]:
+    """Use reviewed anchors for tick-cache and daily-activity renderer shapes."""
+    if '\tvar cache_tick: bool =' not in source:
+        return PROCESS
+    markers = list(PROCESS)
+    markers.remove(('\tvar time:', 'reads'))
+    markers.remove(('\tvar tick:', 'other'))
+    talk = markers.index(('\t_prepare_talk_cache(', 'checksum_talk'))
+    markers[talk:talk] = [('\tvar time:', 'reads'), ('\tvar tick:', 'other')]
+    markers[markers.index(('\tvar context:', 'activity_context'))] = ('\tif not cache_tick or _tick_context.is_empty():', 'activity_context')
+    markers[markers.index(('\tingest_chill_snapshot(', 'chill_ingest'))] = ('\tif not cache_tick or not _tick_chill_ingested:', 'chill_ingest')
+    markers[markers.index(('\t\tvar look:', 'look'))] = ('\t\tvar life_stage:', 'look')
+    if '\tvar activity_snapshot: Dictionary =' in source:
+        tick = markers.index(('\tvar tick:', 'other')) + 1
+        markers[tick:tick] = [
+            ('\tvar activity_snapshot:', 'reads'),
+            ('\tif not cache_tick or not _tick_activities_ready:', 'pose'),
+            ('\t_prepare_frame_choices()', 'frame_choice'),
+        ]
+        body = markers.index(('\t\tvar body:', 'look')) + 1
+        markers[body:body] = [('\t\tif daily_active and not bool(moments["pickup"]):', 'pose')]
+    return tuple(markers)
+
+
 def generate(source: str) -> str:
     """Instrument two known functions and append the diagnostic readout API."""
     if 'P10_PROFILE' in source or '_p10_sections' in source:
         raise MarkerError('Input is already instrumented or conflicts with diagnostic names')
     result = source
-    for name, markers in (('_process', PROCESS), ('_apply_drawn_positions', DRAW)):
+    for name, markers in (('_process', process_markers(source)), ('_apply_drawn_positions', DRAW)):
         prefix = f'func {name}('
         lines = result.splitlines(keepends=True)
         start = unique_line(lines, prefix)

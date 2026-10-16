@@ -8,7 +8,7 @@
 from pathlib import Path
 import unittest
 
-from generate_agent_sections_p10 import DRAW, NAMES, PROCESS, MarkerError, generate
+from generate_agent_sections_p10 import DRAW, NAMES, MarkerError, generate, process_markers
 
 
 class AgentSectionGeneratorTests(unittest.TestCase):
@@ -34,7 +34,7 @@ class AgentSectionGeneratorTests(unittest.TestCase):
                 self.assertIn(f'_p10_sections.mark({index})', self.generated)
 
     def test_every_missing_marker_is_rejected(self) -> None:
-        for marker, _ in (*PROCESS, *DRAW):
+        for marker, _ in (*process_markers(self.source), *DRAW):
             with self.subTest(marker=marker):
                 lines = self.source.splitlines(keepends=True)
                 index = next(i for i, line in enumerate(lines) if line.startswith(marker))
