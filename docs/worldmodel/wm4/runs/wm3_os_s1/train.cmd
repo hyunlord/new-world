@@ -1,0 +1,1 @@
+python3 tools/worldmodel/wm3/finetune.py --out /home/hyunlord/work/wm1-runs/wm4/wm3_os_s1 --lr 1e-4 --max-steps 4000 --eval-every 250 --patience 6 --max-seconds 14400 --base /home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json --init /home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s1 --config os --seed 1 --n-plain 16 --n-cast 16 --partners 0 --pair 0 --hazard 0
