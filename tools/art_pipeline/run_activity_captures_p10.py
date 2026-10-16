@@ -148,7 +148,7 @@ def validate_capture(payload: Json, case: Capture) -> None:
     for key, value in expected.items():
         if data.get(key) != value or type(data.get(key)) is not type(value):
             raise InvalidInput("capture field mismatch: " + key)
-    if integer(data.get("delta_samples"), 120) > 130:
+    if integer(data.get("delta_samples"), 120) > integer(data.get("capture_frame")) + 1:
         raise InvalidInput("too many fixed-delta samples for capture frame")
     low, high = vector([data.get("minimum_delta"), data.get("maximum_delta")], 2)
     if low > high or abs(low - 1 / 60) > 1e-9 or abs(high - 1 / 60) > 1e-9:

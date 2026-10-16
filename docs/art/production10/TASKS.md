@@ -6,7 +6,7 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 |---|---|---|---|---|
 | 0 | Preserve brief, merge P17, full gate, live getter census, rederived framings, base build, baseline matrix and A/Aprime | COMPLETE | 2026-10-15T15:03:00Z | 2026-10-15T18:34:24Z |
 | 1 | Section timers; measured pixel-identical optimizations; six framing identity plus 600-frame running equality | COMPLETE_WITH_REJECTED_CANDIDATES | 2026-10-15T18:36:52Z | 2026-10-16T01:10:14Z |
-| 2 | Activity getter/poses/icons/labels, exhaustive mapping tests, six live captures and sidecars, blind review | IN_PROGRESS | 2026-10-16T01:10:40Z | |
+| 2 | Activity getter/poses/icons/labels, exhaustive mapping tests, six live captures and sidecars, blind review | COMPLETE_WITH_VISUAL_LIMITS | 2026-10-16T01:10:40Z | 2026-10-16T02:37:18Z |
 | 3 | Temperament/family inspector, household rings, fake-world tests and parent capture | NOT_STARTED | | |
 | 4 | Final performance matrix, H1-H8 and before/after section costs | NOT_STARTED | | |
 | 5 | Independent review, full gate, publish both heads and PR511, Korean report, base cleanup | NOT_STARTED | | |
@@ -72,3 +72,5 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 - 2026-10-15T22:20Z: Allocation attempt2 all6pixels+bothrunning PASS but W500 pair34.8350→41.6375ms FAIL improvement; rejected. Helper-call diagnostic identifies scalar metadata/child lookup wrappers much slower than native calls; removed those two approaches, preserving frame/variant/pose/selection for reduced retry. Prior evidence retained.
 - 2026-10-15T22:50Z: Reduced allocation attempt3 accepted: four focused fixtures/renderer parse, six exact pixels and both600-frame running PASS; W50030.9650→29.0365ms (1.06642x), valid/source-stable. Earlier rejected wrappers remain removed.
 - 2026-10-16T01:11Z: Tick candidate rejected after threeP5 failures (water phase only); all failed evidence retained. Restore accepted allocation renderer for H5. Observed quiet log wall-clock gap23:03:53→00:48:33, cause NOT_VERIFIED; cutoff unchanged. Skip optional spatial result-cache experiment, household rings and W1000 to prioritize mandatory core.
+
+- 2026-10-16T02:37:18Z: Part2 six actual captures terminal0/source-build stable;150 holder observations zero pose mismatches. Preserved frame-zero validator failure and JSON time-rounding oracle failure; exact fixed120-add reconstruction+17oracle tests pass. Blind answers frozen before key:6/14 (42.8571%), no pass bar; shelter occlusion limits readability.

@@ -85,6 +85,14 @@ class ActivityCaptureTests(unittest.TestCase):
         validate_capture(payload, Capture(20261010, 30, 10, 4))
         self.assertIs(payload["pose_oracle_checked"], False)
 
+    def test_process_frame_zero_is_included_in_delta_samples(self) -> None:
+        payload = self.fixture()
+        payload["delta_samples"] = 131
+        validate_capture(payload, Capture(20261010, 30, 10, 4))
+        payload["delta_samples"] = 132
+        with self.assertRaises(InvalidInput):
+            validate_capture(payload, Capture(20261010, 30, 10, 4))
+
     def test_calendar_for_all_six_cases_and_honest_offscreen_holder(self) -> None:
         for case in cases(20261011):
             with self.subTest(case=case):

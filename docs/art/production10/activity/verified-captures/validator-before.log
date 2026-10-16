@@ -1,0 +1,20 @@
+...Capture six live activity frames after Part 2 integration; never stress worlds.
+Usage: run_activity_captures_p10.py CHECKOUT NEWDIR POPULOUS_SEED SELECTION_EVIDENCE
+Capture six live activity frames after Part 2 integration; never stress worlds.
+Usage: run_activity_captures_p10.py CHECKOUT NEWDIR POPULOUS_SEED SELECTION_EVIDENCE
+.E......
+======================================================================
+ERROR: test_process_frame_zero_is_included_in_delta_samples (test_activity_captures_p10.ActivityCaptureTests.test_process_frame_zero_is_included_in_delta_samples)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/test_activity_captures_p10.py", line 91, in test_process_frame_zero_is_included_in_delta_samples
+    validate_capture(payload, Capture(20261010, 30, 10, 4))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_activity_captures_p10.py", line 152, in validate_capture
+    raise InvalidInput("too many fixed-delta samples for capture frame")
+run_activity_captures_p10.InvalidInput: too many fixed-delta samples for capture frame
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.002s
+
+FAILED (errors=1)
