@@ -3,6 +3,7 @@ extends RefCounted
 
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const DAILY_NAMES: Array[String] = ["tend_fire", "craft", "repair", "hearth_circle", "explore", "play", "sit_by_fire"]
+const DailyIcons = preload("res://scripts/ui/activity_icons_p11.gd")
 static var _explore_icon: ImageTexture
 
 static func snapshot_target(snapshot: Dictionary, index: int) -> int:
@@ -186,14 +187,19 @@ static func apply_activity_icon(sprite: Sprite2D, icon: Sprite2D, choice: Dictio
 	icon.visible = false
 	if not sprite.visible or not show_activity_icon(choice, zoom):
 		return false
-	if str(choice["activity_icon"]) == "p10_explore":
-		icon.texture = explore_icon()
+	if str(choice["activity_icon"]).begins_with("p11_activity_"):
+		icon.texture = DailyIcons.texture(int(str(choice["activity_icon"]).trim_prefix("p11_activity_")))
 		icon.region_enabled = false
 		icon.centered = false
-		icon.offset = Vector2(-4, -8)
+		icon.offset = Vector2(-8, -16)
 		icon.scale = Vector2.ONE
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		icon.visible = true
+		icon.set_meta("sprite_id", str(choice["activity_icon"]))
+		icon.set_meta("frame_id", str(choice["activity_icon"]))
+		icon.set_meta("frame_size", Vector2i(16, 16))
+		icon.set_meta("anchor", Vector2(8, 16))
+		icon.set_meta("drawable", icon.texture != null)
+		icon.visible = icon.texture != null
 	else:
 		icon.visible = ArtSpriteLibrary.apply(icon, str(choice["activity_icon"]))
 	icon.position = Vector2(0, sprite.offset.y - 2.0)
@@ -251,11 +257,11 @@ static func daily_pose(groups: Dictionary, body: String, kind: int, direction: S
 	return {"pose": "idle", "facing": "S"}
 
 static func with_daily_icon(choice: Dictionary, kind: int) -> Dictionary:
-	if choice.is_empty() or kind not in [1, 4]:
+	if choice.is_empty() or kind < 0 or kind > 6:
 		return choice
 	var result: Dictionary = choice.duplicate()
 	result["fallback_kind"] = "activity_icon"
-	result["activity_icon"] = "U1_04" if kind == 1 else "p10_explore"
+	result["activity_icon"] = DailyIcons.icon_id(kind)
 	return result
 
 static func explore_icon() -> ImageTexture:

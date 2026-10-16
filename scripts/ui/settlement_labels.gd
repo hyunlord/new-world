@@ -1,5 +1,6 @@
 extends Node2D
 ## Names and selection use persistent AgentId/SettlementId joins, never spatial membership.
+const ActivitySummary = preload("res://scripts/ui/village_activity_summary_p11.gd")
 const Meter = preload("res://scripts/ui/restless_meter.gd")
 const Marker = preload("res://scripts/ui/offscreen_marker.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
@@ -15,6 +16,9 @@ var _world: Node
 var _locale: Node
 var _labels: Dictionary = {}
 var _meters: Dictionary = {}
+var _summaries: Dictionary = {}
+var _activity_counts: Dictionary = {}
+var _activity_tick: int = -1
 var _drawn: Array[Dictionary] = []
 var _abandoned_material: ShaderMaterial
 var _last_tick: int = -1
@@ -38,6 +42,11 @@ func configure(world: Node) -> void:
 func _reset() -> void:
 	Selection.reset()
 	_last_tick = -1
+	_activity_tick = -1
+	_activity_counts.clear()
+	for summary: Node2D in _summaries.values():
+		summary.queue_free()
+	_summaries.clear()
 	for label: Label in _labels.values():
 		label.queue_free()
 	_labels.clear()
@@ -54,6 +63,9 @@ func refresh_snapshot() -> void:
 	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	Selection.observe(society, settlements)
 	_last_tick = int(society.get("current_tick", -1))
+	if _activity_tick != _last_tick and _world.has_method("get_activity_snapshot") and _world.has_method("get_agent_snapshot"):
+		_activity_counts = ActivitySummary.collect(SimReads.read(_world, "get_activity_snapshot"), SimReads.read(_world, "get_agent_snapshot"))
+		_activity_tick = _last_tick
 	var overview: Node = get_node_or_null("../SettlementOverviewRenderer")
 	if overview != null and overview.has_method("set_presentation"):
 		var colors: Dictionary = {}
@@ -108,9 +120,19 @@ func _update_labels() -> void:
 		label.size = Vector2.ZERO
 		label.position = ORIGIN + Vector2(tile) * 16.0 + Vector2(8.0, -38.0) - Vector2(label.size.x * 0.5, label.size.y + 3.0) / zoom
 		var screen: Vector2 = label.get_global_transform_with_canvas() * Vector2.ZERO
-		var bounds := Rect2(screen - LABEL_PADDING, label.size + LABEL_PADDING * 2.0)
+		var summary: Node2D = _summaries.get(id) as Node2D
+		if summary == null:
+			summary = ActivitySummary.new()
+			add_child(summary)
+			_summaries[id] = summary
+		summary.call("display", _activity_counts.get(id, []), zoom, abandoned)
+		summary.scale = Vector2.ONE / zoom
+		var summary_width: float = float(summary.get("width")) if summary.visible else 0.0
+		var content_size := Vector2(maxf(label.size.x, summary_width), label.size.y + (ActivitySummary.HEIGHT + 3.0 if summary.visible else 0.0))
+		var bounds := Rect2(screen - LABEL_PADDING, content_size + LABEL_PADDING * 2.0)
 		bounds = _clear_sprite_bounds(bounds)
 		label.position = get_global_transform_with_canvas().affine_inverse() * (bounds.position + LABEL_PADDING)
+		summary.position = label.position + Vector2(0.0, label.size.y + 3.0) / zoom
 		var meter: Control = _meters.get(id) as Control
 		if meter == null:
 			meter = Meter.new()
@@ -126,6 +148,9 @@ func _update_labels() -> void:
 		if not seen.has(id):
 			(_labels[id] as Label).queue_free()
 			_labels.erase(id)
+			if _summaries.has(id):
+				(_summaries[id] as Node2D).queue_free()
+				_summaries.erase(id)
 			if _meters.has(id):
 				(_meters[id] as Control).queue_free()
 				_meters.erase(id)
@@ -179,7 +204,12 @@ func _draw() -> void:
 	for id: int in _labels:
 		var label: Label = _labels[id]
 		var color: Color = Color(0.55, 0.55, 0.55) if Selection.is_abandoned(id) else Selection.color_for(id)
-		var plate := Rect2(label.position - LABEL_PADDING / zoom, (label.size + LABEL_PADDING * 2.0) / zoom)
+		var content_size: Vector2 = label.size
+		var summary: Node2D = _summaries.get(id) as Node2D
+		if summary != null and summary.visible:
+			content_size.x = maxf(content_size.x, float(summary.get("width")))
+			content_size.y += ActivitySummary.HEIGHT + 3.0
+		var plate := Rect2(label.position - LABEL_PADDING / zoom, (content_size + LABEL_PADDING * 2.0) / zoom)
 		draw_rect(plate, LABEL_BACKPLATE)
 		var from := Vector2(plate.position.x, plate.end.y)
 		draw_line(from, from + Vector2(plate.size.x, 0.0), color, (2.0 if Selection.selected_id == id else 1.0) / zoom)
@@ -264,6 +294,12 @@ func capture_metadata() -> Dictionary:
 		row["id"] = id
 		meters.append(row)
 	result["meters"] = meters
+	var summaries: Array[Dictionary] = []
+	for id: int in _summaries:
+		var row: Dictionary = _summaries[id].call("capture_metadata")
+		row["id"] = id
+		summaries.append(row)
+	result["activity_summaries"] = summaries
 	var overview: Node = get_node_or_null("../SettlementOverviewRenderer")
 	if overview != null and overview.has_method("capture_metadata"):
 		result.merge(overview.call("capture_metadata"))

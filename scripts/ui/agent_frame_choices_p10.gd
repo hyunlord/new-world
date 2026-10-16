@@ -91,7 +91,7 @@ func daily_pose(body: String, kind: int, facing: String, seconds: float, arrived
 
 ## choose() owns a fresh shallow dictionary; decorate it without a second copy.
 func with_daily_icon(choice: Dictionary, kind: int) -> Dictionary:
-	if not choice.is_empty() and kind in [1, 4]:
+	if not choice.is_empty() and kind >= 0 and kind <= 6:
 		choice["fallback_kind"] = "activity_icon"
-		choice["activity_icon"] = "U1_04" if kind == 1 else "p10_explore"
+		choice["activity_icon"] = Activity.DailyIcons.icon_id(kind)
 	return choice
