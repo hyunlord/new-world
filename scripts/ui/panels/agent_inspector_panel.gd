@@ -11,8 +11,8 @@ extends Control
 #   agent_id, x, y, state_tag, hunger, thirst, sleep, target_kind
 #   + a `found` sentinel for stale-click safety = 9 dict keys total.
 #
-# Relationship / memory / combat history surfacing deferred to
-# Section 16+ when the supporting systems land.
+# Temperament and family use separate selected-agent getters.
+# The nine-key detail schema remains unchanged.
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Library = preload("res://scripts/ui/art_sprite_library.gd")
@@ -68,6 +68,19 @@ var _sleep_bar: ProgressBar
 var _portrait: Sprite2D
 var _cold_label: Label
 var _carried_label: Label
+const TEMPERAMENT_FIELDS: Array[String] = ["ns", "ha", "rd", "p"]
+const TEMPERAMENT_LABELS: Array[String] = ["UI_TEMPERAMENT_NS", "UI_TEMPERAMENT_HA", "UI_TEMPERAMENT_RD", "UI_TEMPERAMENT_P"]
+const FAMILY_LABELS: Array[String] = ["PANEL_FAMILY_SPOUSE", "UI_MOTHER", "UI_FATHER"]
+var _scroll: ScrollContainer
+var _temperament_box: VBoxContainer
+var _temperament_heading: Label
+var _temperament_labels: Array[Label] = []
+var _temperament_bars: Array[ProgressBar] = []
+var _family_box: VBoxContainer
+var _family_heading: Label
+var _family_sex: Label
+var _family_children: Label
+var _family_buttons: Array[Button] = []
 
 
 func _ready() -> void:
@@ -82,7 +95,11 @@ func _ready() -> void:
 	var panel: PanelContainer = ArtUI.panel(self, Rect2(Vector2.ZERO, size))
 	_vbox = VBoxContainer.new()
 	_vbox.add_theme_constant_override("separation", 8)
-	panel.add_child(_vbox)
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(_scroll)
+	_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_scroll.add_child(_vbox)
 	_label_id = _make_label("")
 	_label_id.theme_type_variation = &"Heading"
 	var portrait_box: Control = Control.new()
@@ -103,6 +120,7 @@ func _ready() -> void:
 	_carried_label = _make_label("")
 	_cold_label = _make_label("")
 	_cold_label.hide()
+	_make_personal_sections()
 
 
 func _make_label(text: String) -> Label:
@@ -156,7 +174,10 @@ func display_agent(detail: Dictionary) -> void:
 	var hunger: float = float(detail.get("hunger", 0.0))
 	var thirst: float = float(detail.get("thirst", 0.0))
 	var sleep_val: float = float(detail.get("sleep", 0.0))
+	var previous_selection: int = _selected_entity_bits
 	_selected_entity_bits = _resolve_entity_bits(agent_id)
+	if previous_selection != _selected_entity_bits:
+		_scroll.scroll_vertical = 0
 	_label_id.text = _loc("INSPECTOR_AGENT_FMT") % agent_id
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
@@ -180,6 +201,7 @@ func display_agent(detail: Dictionary) -> void:
 	_cold_label.text = _loc("INSPECTOR_COLD")
 	_cold_label.visible = _is_cold(agent_id)
 	visible = true
+	_refresh_personal_sections()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -307,6 +329,118 @@ func _is_cold(agent_id: int) -> bool:
 			if ids[index] == agent_id:
 				return colds[index] == 1
 	return false
+
+
+func _make_personal_sections() -> void:
+	_temperament_box = VBoxContainer.new()
+	_temperament_box.add_theme_constant_override("separation", 6)
+	_vbox.add_child(_temperament_box)
+	_temperament_heading = Label.new()
+	_temperament_heading.theme_type_variation = &"Heading"
+	_temperament_box.add_child(_temperament_heading)
+	for key: String in TEMPERAMENT_LABELS:
+		_make_temperament_bar(key)
+	_temperament_box.hide()
+	_family_box = VBoxContainer.new()
+	_family_box.add_theme_constant_override("separation", 6)
+	_vbox.add_child(_family_box)
+	_family_heading = Label.new()
+	_family_heading.theme_type_variation = &"Heading"
+	_family_box.add_child(_family_heading)
+	_family_sex = Label.new()
+	_family_box.add_child(_family_sex)
+	for index: int in 8:
+		if index == 3:
+			_family_children = Label.new()
+			_family_box.add_child(_family_children)
+		var button := Button.new()
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.pressed.connect(_select_family_member.bind(button))
+		_family_buttons.append(button)
+		_family_box.add_child(button)
+	_family_box.hide()
+
+
+func _make_temperament_bar(key: String) -> void:
+	var label := Label.new()
+	label.text = _loc(key)
+	_temperament_labels.append(label)
+	_temperament_box.add_child(label)
+	var bar := ProgressBar.new()
+	bar.min_value = 0.0
+	bar.max_value = 1000.0
+	bar.show_percentage = false
+	bar.custom_minimum_size.y = 12
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color("#D7BD77")
+	bar.add_theme_stylebox_override("fill", fill)
+	var background := StyleBoxFlat.new()
+	background.bg_color = Color8(41, 38, 33)
+	bar.add_theme_stylebox_override("background", background)
+	_temperament_bars.append(bar)
+	_temperament_box.add_child(bar)
+
+
+func _refresh_personal_sections() -> void:
+	_temperament_box.hide()
+	_family_box.hide()
+	if not visible or _selected_entity_bits < 0 or _world_sim == null:
+		return
+	if _world_sim.has_method("get_agent_temperament"):
+		var temperament: Dictionary = _world_sim.call("get_agent_temperament", _selected_entity_bits)
+		if bool(temperament.get("found", false)):
+			_temperament_heading.text = _loc("UI_INSPECTOR_TEMPERAMENT")
+			for index: int in TEMPERAMENT_FIELDS.size():
+				_temperament_labels[index].text = _loc(TEMPERAMENT_LABELS[index])
+				_temperament_bars[index].value = int(temperament.get(TEMPERAMENT_FIELDS[index], 0))
+			_temperament_box.show()
+	if not _world_sim.has_method("get_agent_family"):
+		return
+	var family: Dictionary = _world_sim.call("get_agent_family", _selected_entity_bits)
+	if not bool(family.get("found", false)):
+		return
+	_family_heading.text = _loc("UI_FAMILY")
+	_family_sex.text = _loc("UI_FEMALE" if bool(family.get("female", false)) else "UI_MALE")
+	var links: Array[int] = [int(family.get("partner", -1)), int(family.get("mother", -1)), int(family.get("father", -1))]
+	for index: int in links.size():
+		_set_family_button(index, links[index], FAMILY_LABELS[index])
+	var children: PackedInt64Array = family.get("children", PackedInt64Array())
+	var living: Array[int] = []
+	for child_id: int in children:
+		if _resolve_entity_bits(child_id) >= 0:
+			living.append(child_id)
+	living.sort()
+	_family_children.text = _loc("UI_FAMILY_CHILDREN_FMT") % living.size()
+	for index: int in 5:
+		var button: Button = _family_buttons[index + 3]
+		button.visible = index < living.size()
+		_set_family_button(index + 3, living[index] if index < living.size() else -1, "")
+	_family_box.show()
+
+
+func _set_family_button(index: int, agent_id: int, label_key: String) -> void:
+	var button: Button = _family_buttons[index]
+	var living: bool = agent_id >= 0 and _resolve_entity_bits(agent_id) >= 0
+	button.set_meta("family_agent_id", agent_id if living else -1)
+	button.disabled = not living
+	var value: String = (_loc("INSPECTOR_AGENT_FMT") % agent_id) if living else _loc("PANEL_FAMILY_NONE")
+	button.text = (_loc(label_key) + ": " + value) if not label_key.is_empty() else value
+
+
+func _select_family_member(button: Button) -> void:
+	if not visible or _world_sim == null:
+		return
+	var target: int = _resolve_entity_bits(int(button.get_meta("family_agent_id", -1)))
+	if target < 0:
+		_refresh_personal_sections()
+		return
+	var detail: Dictionary = _world_sim.call("get_agent_detail", target)
+	if bool(detail.get("found", false)):
+		display_agent(detail)
+	else:
+		_refresh_personal_sections()
 
 
 func _selected_activity() -> Dictionary:

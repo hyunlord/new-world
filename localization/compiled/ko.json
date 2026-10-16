@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5229,
+    "active_key_count": 5235,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5234,
+    "key_count": 5240,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4426,6 +4426,7 @@
     "UI_FAITH_STRENGTH_WEAK": "약한",
     "UI_FAMILIARITY": "친밀",
     "UI_FAMILY": "가족",
+    "UI_FAMILY_CHILDREN_FMT": "자녀: %d명",
     "UI_FAMILY_TREE": "가계도",
     "UI_FATHER": "부",
     "UI_FEMALE": "여",
@@ -4529,6 +4530,7 @@
     "UI_INFO": "정보",
     "UI_INNOVATION": "혁신력",
     "UI_INPUT": "입력",
+    "UI_INSPECTOR_TEMPERAMENT": "기질",
     "UI_INTELLIGENCE": "인지/지능",
     "UI_INTEL_DESC_BRIGHT": "전반적으로 영리하다.",
     "UI_INTEL_DESC_GIFTED": "{intel} 지능이 뛰어나다",
@@ -5129,6 +5131,10 @@
     "UI_TECH_SUMMARY": "기술 요약",
     "UI_TECH_UNDISCOVERED": "미발견",
     "UI_TEENS": "청소년",
+    "UI_TEMPERAMENT_HA": "신중함",
+    "UI_TEMPERAMENT_NS": "호기심",
+    "UI_TEMPERAMENT_P": "끈기",
+    "UI_TEMPERAMENT_RD": "정",
     "UI_THREAT_HIGH": "높음",
     "UI_THREAT_LOW": "낮음",
     "UI_THREAT_MEDIUM": "보통",
