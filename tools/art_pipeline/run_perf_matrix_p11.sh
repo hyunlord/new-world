@@ -40,7 +40,7 @@ verify_checkout() {
   if [[ $P11_BUILD_PROFILE == release ]]; then
     [[ $(shasum -a 256 "$release_library" | awk '{print $1}') == "$P11_MEASURE_DYLIB_SHA256" ]] || return 1
   fi
-  [[ 
+  [[
      $(git -C "$checkout" rev-parse HEAD) == "$P11_MEASURE_HEAD" &&
      $(shasum -a 256 "$library" | awk '{print $1}') == "$P11_MEASURE_DYLIB_SHA256" &&
      $(shasum -a 256 "$checkout/scripts/test/art/$collector" | awk '{print $1}') == "$P11_MEASURE_SCRIPT_SHA256" ]] || {
@@ -139,6 +139,7 @@ for world in ${P11_WORLDS:-W0 W500 W1 W200 W1000}; do
     if [[ $world == W1 && ${P11_SPLIT_W1:-0} == 1 ]]; then
       fragments=()
       for block in frozen running_2x_0 running_2x_1 running_2x_2 running_4x_0 running_4x_1 running_4x_2; do
+        if [[ -n ${P11_DEADLINE_EPOCH:-} ]] && (( $(date +%s) >= P11_DEADLINE_EPOCH )); then code=124; break; fi
         fragment="${output%.json}-$block.json"
         fragments+=("$fragment")
         if [[ $block == frozen ]]; then export P11_FROZEN_ONLY=1 P11_RUNNING_BLOCK="";
