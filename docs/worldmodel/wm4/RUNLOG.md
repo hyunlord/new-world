@@ -28,3 +28,10 @@ Times are KST (Mac clock). The 40-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4 (9.3) | 05:27:19 | | `wm3_os_s2` ended (`patience`, kept step 2,000, `val_eff` 0.5146, 7,759 s; ≈ 2–3.7 s/step, load average 12–56). The four ablation seeds are trained |
 | 4 (cost) | 05:27:19 | 05:39:19 | `_cost_m1b` (M1b-obs, 100 steps, eval at 100): steps 1–100 in 14 s (rollout horizon k ≤ 12 at step 100), peak GPU 4,775 MiB, the end-of-run val evaluation and rounding choice ≈ 10 min; step-100 val T2 24 h 0.1143 |
 | 4.1 | 05:39:19 | | `m1b_obs_s0` started (`--max-seconds 16200`, 8,000 steps) |
+| 4.1 | 05:39:19 | 08:17:20 | `m1b_obs_s0`: stop `patience` at step 6,450, kept step 4,650 (val T2 24 h 0.0571), 9,449 s (≈ 1.5 s/step at k = 168, load average 5–46) |
+| 4 (cost) | 08:17:20 | 08:23 | `_cost_crn` (300 s, beside the `m1b_obs_s0` finals): encoder ≈ 69 ms/step, decoder ≈ 29 ms/step (validation ≈ 0.05 s), peak GPU 477 MiB |
+| 4.2 | 08:17 | 08:26:53 | `finals_watch`: `m1b_obs_s0` obs test effects (08:20:47) and factual T2 on obs test (08:26:53) |
+| 4.1 | 08:23 | 09:43:21 | `crn_obs_s0` = the CRN grid (4 × ≤ 1,200 s, seed 0): val_roll 0.592 / 0.425 / 0.523 / **0.413** → configuration 3 (encoder BR 64, FC 128, dropout 0.1; decoder BR 64, FC 32) |
+| 4.2 | 09:43:21 | 09:43:59 | `crn_obs_s0` obs test effects |
+| 4 (cost) | 09:43:21 | 09:49 | `_cost_ct` (300 s, GPU otherwise idle, load average 0.8): ≈ 0.83 s/step (batch 128 doubled by the masked-covariate copy, 120 tokens), validation 5.3 s, peak GPU 14,343 MiB. Within 1,200 s a CT run reaches ≈ 1,400 optimizer steps, ≈ 12 % of the authors' 11,850 (DECISIONS L4.4) |
+| 4.1 | 09:49 | | `ct_obs_s0` = the CT grid started |
