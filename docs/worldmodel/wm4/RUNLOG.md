@@ -42,5 +42,5 @@ Times are KST (Mac clock). The 40-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 14:18:23 | 15:00:24 | `crn_obs_s1` (1,200 s, val_roll 0.389), `ct_obs_s1` (1,206 s, 0.277); their obs test effects (finals_watch) |
 | 4.1 | 15:00:24 | 17:28:25 | `crn_v2_s0` (2,350 s, all epochs, val_roll 1.561), `ct_v2_s0` (2,419 s, time, 1.484), `crn_v2_s1` (1,517 s, all epochs, 1.542), `ct_v2_s1` (2,416 s, time, 1.490); v2 test effects after each (last 17:29:16). No run was dropped |
 | 4 | 17:30:25 | | `_setup/queue.stop`; queue done (exit 0). DGX GPU training time used: ≈ 18 h of the 40-hour window |
-| 5 | 17:31 | 17:45 | every run fetched; `judge4.py` (judge.md / judge.json) |
-| 6 | 17:45 | 18:00 | WM4.md; WM3.md pointer line; DECISIONS L5.1, L6.1 |
+| 5 | 17:30 | 17:31 | every run fetched; `judge4.py` (judge.md / judge.json) |
+| 6 | 17:31 | 17:32 | WM4.md (drafted from 08:30 on, completed); WM3.md pointer line; DECISIONS L5.1, L6.1 |
