@@ -108,7 +108,7 @@ Cost checks (`runs/_cost_crn`, `runs/_cost_ct`; 300-s trainings on `obs_v19`, tr
 | CT | ≈ 0.83 (batch 128 doubled by the masked-covariate copy) | 5.3 s | 14,343 MiB | GPU otherwise idle |
 
 Within the pre-registered 1,200 s a CRN grid member reached 9,366–14,148 encoder and 32,340–53,830 decoder steps of
-the authors' 15,700 / 53,800; a CT member ≈ 1,440 of 11,850 (12 %; DECISIONS L4.4). The grid (seed 0, `obs_v19`, val
+the authors' 15,700 / 53,800; a CT member ran ≈ 1,440 of 11,850 steps (12 %; DECISIONS L4.4) and the kept CT-obs checkpoint has 477 (4 %, D14). The grid (seed 0, `obs_v19`, val
 factual loss `val_roll` only; the chosen member is the `_obs_s0` run):
 
 | method | config | overrides of the defaults | `val_roll` | seconds | training reached | chosen |
