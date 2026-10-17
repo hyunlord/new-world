@@ -35,3 +35,7 @@ Times are KST (Mac clock). The 40-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.2 | 09:43:21 | 09:43:59 | `crn_obs_s0` obs test effects |
 | 4 (cost) | 09:43:21 | 09:49 | `_cost_ct` (300 s, GPU otherwise idle, load average 0.8): ≈ 0.83 s/step (batch 128 doubled by the masked-covariate copy, 120 tokens), validation 5.3 s, peak GPU 14,343 MiB. Within 1,200 s a CT run reaches ≈ 1,400 optimizer steps, ≈ 12 % of the authors' 11,850 (DECISIONS L4.4) |
 | 4.1 | 09:49 | | `ct_obs_s0` = the CT grid started |
+| 4.1 | 09:49:21 | 11:10:22 | `ct_obs_s0` = the CT grid (4 × ≈ 1,206 s, ≈ 1,440 steps each): val_roll 1.181 / 0.310 / **0.273** / 0.285 → configuration 2 (lr 1e-3, BR 64, FC 128); its obs test effects followed (finals_watch) |
+| 7 (review 1) | 11:28 | 11:44 | review round 1 (fresh subagent, read-only, HEAD `e59227e4`, interim verdicts): no BLOCKING, 2 MAJOR, 4 MINOR, 7 NOTE; the reply was cut by an API error near its end (the items received are in REVIEW.md); fixes `135f20a0`, `…` (documentation only) |
+| 4.1 | 11:10:22 | 14:18:23 | `m1b_obs_s1`: stop `max_steps` (8,000), kept step 7,800 (val T2 24 h 0.0573) → not converged by WM-3's definition (kept step in the last 10 %); 11,261 s (≈ 0.9–1.6 s/step, load average 1–35) |
+| 4.1 | 14:18:23 | | `crn_obs_s1` started (chosen configuration 3, seed 1, 1,200 s) |
