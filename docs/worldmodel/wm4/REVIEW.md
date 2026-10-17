@@ -2,7 +2,7 @@
 
 Fresh `general-purpose` subagents, read-only (repository and DGX), GOAL.md 12.1's checklist. Two rounds at most.
 
-## Round 1 (2026-10-17 ≈ 11:50–12:10 KST, HEAD `e59227e4`; the s1 / v2 runs were still training, so verdicts were interim)
+## Round 1 (2026-10-17 ≈ 11:28–11:44 KST, HEAD `e59227e4`; the s1 / v2 runs were still training, so verdicts were interim)
 
 **BLOCKING: none.** Data, policy, baselines, timing and the vendored code checked out.
 
