@@ -80,7 +80,7 @@ Reference day of the val cases: mean 29.6, std 14.3 (cast days 8 … 60, never-c
 
 Per (outcome, lag): max(the v2 partner arm's train std, the v2 train std pooled over every arm's train cases), from WM-2's `effects_base.json`. The floor binds where the v2 arm's own effect is nearly constant (e.g. `gf240E` `alive` 7 d: 0.086 → 4.046).
 
-| cell | scale (floored) | v2 arm's std (unfloored) |
+| cell | scale (floored) | v2 arm's std (unfloored)¹ |
 |---|---|---|
 | gf240|alive|30d | 11.222 | 9.074 |
 | gf240|alive|7d | 4.046 | 0.086 |
@@ -106,6 +106,10 @@ Per (outcome, lag): max(the v2 partner arm's train std, the v2 train std pooled 
 | sp240|food_stock|7d | 77.338 | 77.338 |
 | sp240|settlements_alive|30d | 0.447 | 0.447 |
 | sp240|settlements_alive|7d | 0.463 | 0.463 |
+
+¹ WM-2's `effects_base.json` `stds`: where the v2 arm's own train std is 0 (`gf240E` `settlements_alive` 7 d, `rw120E` `settlements_alive` 7 d, `sp240L` `deaths` 7 d) it holds WM-2's pooled fallback.
+
+**Never-cast worlds by role vs the policy's expectation** (review round 1, from each world's factual states): train 80 vs 66.9 ± 7.5, val 4 vs 13.4 ± 3.3 (z ≈ −2.8), test 17 vs 13.4; every draw replays exactly from `default_rng([seed, day])`, so the low val count is chance (95 % of val worlds cast).
 
 ## True effects on the test families (added after METRICS.md part b, `956c8a05`)
 

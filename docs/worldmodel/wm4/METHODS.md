@@ -61,7 +61,7 @@ prediction contract. No extra package was installed (the WM-2/3 venv is untouche
   ≈ 55 windows per sequence at batch 1,024; 150 epochs for CT at batch 128). WM-4 has 400 (obs) or ≈ 3,800 (v2) train
   sequences, so the number of epochs is scaled to give the authors' number of optimizer steps (CRN encoder 15,700, CRN
   decoder 53,800, CT 11,850), each run capped by its time budget (METRICS.md part b); α's schedule runs over those
-  epochs.
+  nominal epochs, so a run stopped by its budget never reaches α_max (D14).
 - **D8 Checkpoint selection.** The authors keep the last epoch. WM-4 keeps the epoch with the lowest validation
   factual loss (GOAL.md 7.4): CRN encoder — one-step teacher-forced MSE; CRN decoder and CT — `val_roll`, the MSE (train
   std units) of 30-token factual rollouts with the observed treatments from tokens 6, 18, 30, 42, 54 (days 8, 20, 32,
@@ -84,6 +84,15 @@ prediction contract. No extra package was installed (the WM-2/3 venv is untouche
 - **D12 Training data.** obs: the 400 observed train episodes (one per world, 06:00 tokens). v2: every member of the
   400 train families (factual and arms, both replicates), as WM-2's M1b-act. Validation: the 80 observed val episodes
   (obs); the 80 `v19_fact` val episodes (v2).
+- **D14 Training actually reached (review round 1, M1).** Because the budgets stop the runs long before the nominal
+  epochs, the kept checkpoints are early in α's ramp. CT-obs (config 2): kept epoch 158 of 3,950 nominal = **477
+  optimizer steps, 4 % of the authors' 11,850**, α = 0.0020 (20 % of α_max 0.01; 1,437 steps and α 0.0054 at the time
+  stop). CRN-obs (config 3): kept encoder 1,878 steps (α 0.53), kept decoder 8,435 steps (α 0.65). So these runs test
+  the methods' architectures and training recipe under a 20-minute budget, with weak balancing for CT; they are not a
+  test of domain confusion or gradient reversal as such.
+- **D15 CRN's two stages share the budget.** The encoder gets the first half of a run's budget (`enc_time_share` 0.5),
+  the decoder the rest; every grid encoder stopped on time. `CRNEncoder.out_dropout` is assigned and never used (no
+  effect: the authors' output dropout is inside `VariationalLSTM` / the head).
 - **D13 Prediction contract** (shared with the baselines, GOAL.md 7.4): for a case (world, arm, c) the predicted effect
   = the rollout with the arm at the cast token (none after) − the rollout with none, both from the same observed history
   (`none_r` of the family) at the cast row's phase. No rounding of counts. The restricted split-day shift is not

@@ -126,3 +126,9 @@ and WM-3 `wm3_full_s*` evaluated on the obs test as references); mean predicted 
 variant of O1 / O2 and its own val selection; M1b-obs factual T2 24 h / 168 h on the obs test (`m1_obs.py final`);
 CRN / CT factual 30-token rollout loss on the test factual episodes; per run the stop reason, best step / epoch, time,
 the grid results. All produced by `wm4/judge4.py` from the files copied to `docs/worldmodel/wm4/runs/`.
+
+### Report-only amendment (review round 1, after the runs)
+
+b.2 "the v2 partner arm's train std" means the mapped v2 arm (`gf240` ↔ `gf240E`, `sp240` ↔ `sp240L`, `rw120` ↔
+`rw120E`), as GOAL.md 4.1; where that arm's own std is 0, `effects_base.json` holds WM-2's pooled fallback
+(`DATASET_OBS.md`). Nothing in the rules changes.
