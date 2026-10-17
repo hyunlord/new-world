@@ -91,4 +91,26 @@ prediction contract. No extra package was installed (the WM-2/3 venv is untouche
 
 ## Cost checks and the grid
 
-Filled from the DGX runs (Part 4).
+Cost checks (`runs/_cost_crn`, `runs/_cost_ct`; 300-s trainings on `obs_v19`, train and val data only):
+
+| method | s / optimizer step | validation (`val_roll`) | peak GPU | note |
+|---|---|---|---|---|
+| CRN | encoder ≈ 0.069, decoder ≈ 0.029 | ≈ 0.05 s | 477 MiB | beside the `m1b_obs_s0` evaluations |
+| CT | ≈ 0.83 (batch 128 doubled by the masked-covariate copy) | 5.3 s | 14,343 MiB | GPU otherwise idle |
+
+Within the pre-registered 1,200 s a CRN grid member reached 9,366–14,148 encoder and 32,340–53,830 decoder steps of
+the authors' 15,700 / 53,800; a CT member ≈ 1,440 of 11,850 (12 %; DECISIONS L4.4). The grid (seed 0, `obs_v19`, val
+factual loss `val_roll` only; the chosen member is the `_obs_s0` run):
+
+| method | config | overrides of the defaults | `val_roll` | seconds | training reached | chosen |
+|---|---|---|---|---|---|---|
+| CRN | 0 | `{}` | 0.5919 | 1200 | encoder 9366 steps (best epoch 520 of 1561), decoder 32340 steps (best epoch 120 of 924, time) | |
+| CRN | 1 | `{"dec_br": 64, "dec_fc": 32, "enc_br": 64, "enc_fc": 128}` | 0.4249 | 1200 | encoder 11046 steps (best epoch 520 of 1841), decoder 45605 steps (best epoch 1302 of 1303, time) | |
+| CRN | 2 | `{"dec_lr": 0.0001, "enc_lr": 0.0001}` | 0.5232 | 1200 | encoder 13398 steps (best epoch 2232 of 2233), decoder 53095 steps (best epoch 420 of 1517, time) | |
+| CRN | 3 | `{"dec_br": 64, "dec_fc": 32, "enc_br": 64, "enc_dropout": 0.1, "enc_fc": 128}` | 0.4132 | 1180 | encoder 14148 steps (best epoch 312 of 2358), decoder 53830 steps (best epoch 240 of 1538, epochs) | **yes** |
+| CT | 0 | `{}` | 1.1813 | 1207 | 1440 steps (best epoch 237 of 480, time) | |
+| CT | 1 | `{"lr": 0.001}` | 0.3098 | 1207 | 1443 steps (best epoch 316 of 481, time) | |
+| CT | 2 | `{"br": 64, "fc": 128, "lr": 0.001}` | 0.2727 | 1206 | 1437 steps (best epoch 158 of 479, time) | **yes** |
+| CT | 3 | `{"br": 64, "fc": 128, "lr": 0.0001}` | 0.2855 | 1207 | 1440 steps (best epoch 479 of 480, time) | |
+
+Both methods prefer a wider balanced representation (BR 64) than the authors' tumour defaults (BR 24 / 16): the outcome here is 37-dimensional, not 1.
