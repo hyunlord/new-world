@@ -39,3 +39,8 @@ Times are KST (Mac clock). The 40-hour training deadline (GOAL.md 0.3.5) is 2026
 | 7 (review 1) | 11:28 | 11:44 | review round 1 (fresh subagent, read-only, HEAD `e59227e4`, interim verdicts): no BLOCKING, 2 MAJOR, 4 MINOR, 7 NOTE; the reply was cut by an API error near its end (the items received are in REVIEW.md); fixes `135f20a0`, `…` (documentation only) |
 | 4.1 | 11:10:22 | 14:18:23 | `m1b_obs_s1`: stop `max_steps` (8,000), kept step 7,800 (val T2 24 h 0.0573) → not converged by WM-3's definition (kept step in the last 10 %); 11,261 s (≈ 0.9–1.6 s/step, load average 1–35) |
 | 4.1 | 14:18:23 | | `crn_obs_s1` started (chosen configuration 3, seed 1, 1,200 s) |
+| 4.1 | 14:18:23 | 15:00:24 | `crn_obs_s1` (1,200 s, val_roll 0.389), `ct_obs_s1` (1,206 s, 0.277); their obs test effects (finals_watch) |
+| 4.1 | 15:00:24 | 17:28:25 | `crn_v2_s0` (2,350 s, all epochs, val_roll 1.561), `ct_v2_s0` (2,419 s, time, 1.484), `crn_v2_s1` (1,517 s, all epochs, 1.542), `ct_v2_s1` (2,416 s, time, 1.490); v2 test effects after each (last 17:29:16). No run was dropped |
+| 4 | 17:30:25 | | `_setup/queue.stop`; queue done (exit 0). DGX GPU training time used: ≈ 18 h of the 40-hour window |
+| 5 | 17:31 | 17:45 | every run fetched; `judge4.py` (judge.md / judge.json) |
+| 6 | 17:45 | 18:00 | WM4.md; WM3.md pointer line; DECISIONS L5.1, L6.1 |
