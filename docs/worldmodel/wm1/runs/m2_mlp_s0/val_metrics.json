@@ -1,0 +1,51 @@
+{
+ "seconds": 385.8352372646332,
+ "steps": 3696,
+ "stop": "epochs",
+ "val": {
+  "n": 461671,
+  "needs_nmae": {
+   "fatigue": 0.03796384358502614,
+   "hunger": 0.17961944868064916,
+   "thirst": 0.20788956334310707
+  },
+  "needs_nmae_mean": 0.14182428520292745,
+  "position_chebyshev": 2.211932306772572,
+  "position_exact": 0.31857318306759574,
+  "state_tag_accuracy": 0.8943879949141271,
+  "target_kind_accuracy": 0.8726257443070932
+ },
+ "val_aggregate": {
+  "model_nmae": 0.4110156717577193,
+  "n": 11428,
+  "persistence_nmae": 0.6450780349386747,
+  "true_agents_proxy_nmae": 0.17102005984072952
+ },
+ "val_day_earlier": {
+  "n": 461671,
+  "needs_nmae": {
+   "fatigue": 0.17736091393168296,
+   "hunger": 1.2195907550090708,
+   "thirst": 0.711236639372819
+  },
+  "needs_nmae_mean": 0.7027294361045242,
+  "position_chebyshev": 4.899148961056683,
+  "position_exact": 0.29841813759148833,
+  "state_tag_accuracy": 0.7474088690864273,
+  "target_kind_accuracy": 0.7186697886590234
+ },
+ "val_persistence": {
+  "n": 461671,
+  "needs_nmae": {
+   "fatigue": 0.2559860173114858,
+   "hunger": 0.44462588988882407,
+   "thirst": 0.6109611232553668
+  },
+  "needs_nmae_mean": 0.43719101015189227,
+  "position_chebyshev": 2.6099300150973312,
+  "position_exact": 0.3046931689449846,
+  "state_tag_accuracy": 0.7284559783915385,
+  "target_kind_accuracy": 0.6981335193243674
+ },
+ "val_score": 1.2223169135768102
+}

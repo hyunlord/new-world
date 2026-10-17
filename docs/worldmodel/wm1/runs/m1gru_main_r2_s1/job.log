@@ -1,0 +1,14 @@
+step 200 k 17 loss -0.1417 val 0.1962 best 0.1962@200 96s
+step 400 k 34 loss -0.2859 val 0.1643 best 0.1643@400 230s
+step 600 k 51 loss -0.3674 val 0.1668 best 0.1643@400 401s
+step 800 k 67 loss -0.5394 val 0.1604 best 0.1604@800 620s
+step 1000 k 84 loss -0.5378 val 0.1549 best 0.1549@1000 868s
+step 1200 k 101 loss -0.5053 val 0.1567 best 0.1549@1000 1152s
+step 1400 k 117 loss -0.5611 val 0.1499 best 0.1499@1400 1474s
+step 1600 k 134 loss -0.4917 val 0.1445 best 0.1445@1600 1826s
+step 1800 k 151 loss -0.5643 val 0.1522 best 0.1445@1600 2215s
+step 2000 k 168 loss -0.5966 val 0.1559 best 0.1445@1600 2639s
+step 2200 k 168 loss -0.6239 val 0.1453 best 0.1445@1600 3082s
+step 2400 k 168 loss -0.6180 val 0.1501 best 0.1445@1600 3391s
+step 2600 k 168 loss -0.6773 val 0.1470 best 0.1445@1600 3652s
+done: best 0.1445 at 1600, stop patience, round True, 4096s

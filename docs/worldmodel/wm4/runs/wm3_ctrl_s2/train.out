@@ -1,0 +1,41 @@
+data: train 3780 episodes, 2980 cases; val 386 episodes, 233 val_eff cases, 80 families; 22s
+eval 0 start
+eval 0 val_t2 0.0589 8.4s
+step 0 val_t2 0.0589 (init 0.0589) val_eff 0.5458 eval 8.4+11.6s 42s
+eval 250 start
+eval 250 val_t2 0.0592 8.0s
+step 250 loss -2.8233 val_t2 0.0592 val_eff 0.5418 eligible best 0.5418@250 455s
+eval 500 start
+eval 500 val_t2 0.0578 7.8s
+step 500 loss -2.9573 val_t2 0.0578 val_eff 0.5438 eligible best 0.5418@250 866s
+eval 750 start
+eval 750 val_t2 0.0585 7.5s
+step 750 loss -2.9616 val_t2 0.0585 val_eff 0.5424 eligible best 0.5418@250 1278s
+eval 1000 start
+eval 1000 val_t2 0.0585 7.3s
+step 1000 loss -2.9471 val_t2 0.0585 val_eff 0.5460 eligible best 0.5418@250 1674s
+eval 1250 start
+eval 1250 val_t2 0.0583 7.3s
+step 1250 loss -3.0106 val_t2 0.0583 val_eff 0.5397 eligible best 0.5397@1250 2066s
+eval 1500 start
+eval 1500 val_t2 0.0576 7.2s
+step 1500 loss -3.0642 val_t2 0.0576 val_eff 0.5337 eligible best 0.5337@1500 2456s
+eval 1750 start
+eval 1750 val_t2 0.0569 7.2s
+step 1750 loss -3.0405 val_t2 0.0569 val_eff 0.5350 eligible best 0.5337@1500 2845s
+eval 2000 start
+eval 2000 val_t2 0.0604 7.1s
+step 2000 loss -2.7668 val_t2 0.0604 val_eff 0.5468 eligible best 0.5337@1500 3231s
+eval 2250 start
+eval 2250 val_t2 0.0599 7.8s
+step 2250 loss -2.8253 val_t2 0.0599 val_eff 0.5382 eligible best 0.5337@1500 3635s
+eval 2500 start
+eval 2500 val_t2 0.0600 7.7s
+step 2500 loss -2.9359 val_t2 0.0600 val_eff 0.5420 eligible best 0.5337@1500 4046s
+eval 2750 start
+eval 2750 val_t2 0.0599 7.0s
+step 2750 loss -2.9606 val_t2 0.0599 val_eff 0.5877 eligible best 0.5337@1500 4433s
+eval 3000 start
+eval 3000 val_t2 0.0590 7.8s
+step 3000 loss -2.8853 val_t2 0.0590 val_eff 0.5621 eligible best 0.5337@1500 4829s
+done: best val_eff 0.5337 at 1500 (step 1500), stop patience, round True, 4930s

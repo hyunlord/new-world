@@ -1,0 +1,47 @@
+{
+ "chosen": 2,
+ "chosen_overrides": {
+  "br": 64,
+  "fc": 128,
+  "lr": 0.001
+ },
+ "code_commit": "956c8a05a7293a75ce97e9916c69083a890371fd",
+ "method": "ct",
+ "results": [
+  {
+   "config": 0,
+   "overrides": {},
+   "seconds": 1207.0946159362793,
+   "val_roll": 1.181269352792971
+  },
+  {
+   "config": 1,
+   "overrides": {
+    "lr": 0.001
+   },
+   "seconds": 1207.4509506225586,
+   "val_roll": 0.3098246955158079
+  },
+  {
+   "config": 2,
+   "overrides": {
+    "br": 64,
+    "fc": 128,
+    "lr": 0.001
+   },
+   "seconds": 1205.5389692783356,
+   "val_roll": 0.2727081026964337
+  },
+  {
+   "config": 3,
+   "overrides": {
+    "br": 64,
+    "fc": 128,
+    "lr": 0.0001
+   },
+   "seconds": 1207.1834485530853,
+   "val_roll": 0.2854906738167354
+  }
+ ],
+ "seconds": 4828.749472856522
+}

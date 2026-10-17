@@ -1,0 +1,1 @@
+python3 tools/worldmodel/wm4/causal.py train --method crn --dataset obs_v19 --seed 1 --config @/home/hyunlord/work/wm1-runs/wm4/crn_obs_s0/grid.json --out /home/hyunlord/work/wm1-runs/wm4/crn_obs_s1 --max-seconds 1200

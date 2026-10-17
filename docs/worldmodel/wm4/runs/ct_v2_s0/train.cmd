@@ -1,0 +1,1 @@
+python3 tools/worldmodel/wm4/causal.py train --method ct --dataset v2_v19 --seed 0 --config @/home/hyunlord/work/wm1-runs/wm4/ct_obs_s0/grid.json --out /home/hyunlord/work/wm1-runs/wm4/ct_v2_s0 --max-seconds 2400

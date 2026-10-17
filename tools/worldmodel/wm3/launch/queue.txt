@@ -1,0 +1,6 @@
+# RUN INIT CONFIG SEED N_PLAIN N_CAST PARTNERS PAIR HAZARD  (GOAL.md 9.1; drop order wm3_full_s2 -> wm3_os_s0 -> wm3_full_s1)
+wm3_full_s0 wm2_m1bact_v19_s0 full 0 16 16 1 1.0 10.0
+wm3_ctrl_s0 wm2_m1bact_v19_s0 ctrl 0 32 0 0 0 0
+wm3_os_s0 wm2_m1bact_v19_s0 os 0 16 16 0 0 0
+wm3_full_s1 wm2_m1bact_v19_s1 full 1 16 16 1 1.0 10.0
+wm3_full_s2 wm2_m1bact_v19_s2 full 2 16 16 1 1.0 10.0

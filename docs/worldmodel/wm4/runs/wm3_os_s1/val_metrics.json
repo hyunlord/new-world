@@ -1,0 +1,67 @@
+{
+ "best_step": 0,
+ "best_val_eff": 0.5488766830553208,
+ "eligible_threshold": 0.0633227985038878,
+ "init_val_eff": 0.5488766830553208,
+ "init_val_t2": 0.06030742714655981,
+ "last_step": 1500,
+ "not_converged": false,
+ "round_counts": true,
+ "rounding_val": {
+  "False": {
+   "t2_168": 0.11625404754018125,
+   "t2_24": 0.06030742714655981
+  },
+  "True": {
+   "t2_168": 0.11580679765290919,
+   "t2_24": 0.060197567392260246
+  }
+ },
+ "seconds": 5058.072582244873,
+ "selected": "init",
+ "stop": "patience",
+ "trajectory": [
+  {
+   "eligible": true,
+   "step": 0,
+   "val_eff": 0.5488766830553208,
+   "val_t2": 0.06030742714655981
+  },
+  {
+   "eligible": true,
+   "step": 250,
+   "val_eff": 0.5837986557015116,
+   "val_t2": 0.06061872700749951
+  },
+  {
+   "eligible": true,
+   "step": 500,
+   "val_eff": 0.5786421940499448,
+   "val_t2": 0.06167105786959251
+  },
+  {
+   "eligible": true,
+   "step": 750,
+   "val_eff": 0.6136293706605912,
+   "val_t2": 0.06324805385909549
+  },
+  {
+   "eligible": true,
+   "step": 1000,
+   "val_eff": 0.5957191592582262,
+   "val_t2": 0.06272586731159513
+  },
+  {
+   "eligible": false,
+   "step": 1250,
+   "val_eff": 0.60707686157178,
+   "val_t2": 0.06471286906007423
+  },
+  {
+   "eligible": true,
+   "step": 1500,
+   "val_eff": 0.6110199000340547,
+   "val_t2": 0.0632680027837456
+  }
+ ]
+}

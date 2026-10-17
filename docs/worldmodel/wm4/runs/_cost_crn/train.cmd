@@ -1,0 +1,1 @@
+bash tools/worldmodel/wm4/launch/cost4.sh /home/hyunlord/work/wm1-runs/wm4/_cost_crn python3 tools/worldmodel/wm4/causal.py train --method crn --dataset obs_v19 --seed 0 --out /home/hyunlord/work/wm1-runs/wm4/_cost_crn --max-seconds 300

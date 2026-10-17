@@ -1,0 +1,18 @@
+{
+ "decoder": {
+  "best_epoch": 240,
+  "best_val_roll": 0.413165744378812,
+  "epochs": 1538,
+  "epochs_run": 1538,
+  "stop": "epochs"
+ },
+ "encoder": {
+  "best_epoch": 312,
+  "best_val_one_step": 0.23566985130310059,
+  "epochs": 2617,
+  "epochs_run": 2358,
+  "stop": "time"
+ },
+ "seconds": 1179.888198375702,
+ "val_roll": 0.413165744378812
+}

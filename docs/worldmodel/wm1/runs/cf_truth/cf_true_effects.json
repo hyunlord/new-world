@@ -1,0 +1,1982 @@
+{
+ "C_test": {
+  "gift_wood": {
+   "2008": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2009": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2010": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -336.0,
+    "food_store": 15.0,
+    "deaths": 0.0
+   },
+   "2011": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -377.0,
+    "food_store": 18.0,
+    "deaths": 0.0
+   },
+   "2012": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -336.0,
+    "food_store": 14.0,
+    "deaths": 0.0
+   },
+   "2013": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2014": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -335.0,
+    "food_store": 15.0,
+    "deaths": 0.0
+   },
+   "2015": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -378.0,
+    "food_store": 17.0,
+    "deaths": 0.0
+   },
+   "2016": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2017": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2018": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -252.0,
+    "food_store": 9.0,
+    "deaths": 0.0
+   },
+   "2019": {
+    "dark_nights": -2.0,
+    "cold_member_hours": -378.0,
+    "food_store": 15.0,
+    "deaths": 0.0
+   },
+   "2020": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -378.0,
+    "food_store": 19.0,
+    "deaths": 0.0
+   },
+   "2021": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2022": {
+    "dark_nights": -2.0,
+    "cold_member_hours": -540.0,
+    "food_store": 30.0,
+    "deaths": 0.0
+   },
+   "2023": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -336.0,
+    "food_store": 15.0,
+    "deaths": 0.0
+   },
+   "2024": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -294.0,
+    "food_store": 11.0,
+    "deaths": 0.0
+   },
+   "2025": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2026": {
+    "dark_nights": -2.0,
+    "cold_member_hours": -412.0,
+    "food_store": 20.0,
+    "deaths": 0.0
+   },
+   "2027": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2028": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -293.0,
+    "food_store": 12.0,
+    "deaths": 0.0
+   },
+   "2029": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -378.0,
+    "food_store": 14.0,
+    "deaths": 0.0
+   },
+   "2030": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -336.0,
+    "food_store": 13.0,
+    "deaths": 0.0
+   },
+   "2031": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   }
+  },
+  "rot_wood": {
+   "2008": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 2.0,
+    "deaths": 0.0
+   },
+   "2009": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2010": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 461.0,
+    "food_store": -13.0,
+    "deaths": 0.0
+   },
+   "2011": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 462.0,
+    "food_store": -21.0,
+    "deaths": 0.0
+   },
+   "2012": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 498.0,
+    "food_store": -24.0,
+    "deaths": 0.0
+   },
+   "2013": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -1.0,
+    "deaths": 0.0
+   },
+   "2014": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 420.0,
+    "food_store": -11.0,
+    "deaths": 0.0
+   },
+   "2015": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 462.0,
+    "food_store": -21.0,
+    "deaths": 0.0
+   },
+   "2016": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2017": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 2.0,
+    "deaths": 0.0
+   },
+   "2018": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 420.0,
+    "food_store": -25.0,
+    "deaths": 0.0
+   },
+   "2019": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 462.0,
+    "food_store": -29.0,
+    "deaths": 0.0
+   },
+   "2020": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 462.0,
+    "food_store": -22.0,
+    "deaths": 0.0
+   },
+   "2021": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2022": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 499.0,
+    "food_store": -18.0,
+    "deaths": 0.0
+   },
+   "2023": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 420.0,
+    "food_store": -19.0,
+    "deaths": 0.0
+   },
+   "2024": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 411.0,
+    "food_store": -18.0,
+    "deaths": 0.0
+   },
+   "2025": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -1.0,
+    "deaths": 0.0
+   },
+   "2026": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 420.0,
+    "food_store": -17.0,
+    "deaths": 0.0
+   },
+   "2027": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2028": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 420.0,
+    "food_store": -22.0,
+    "deaths": 0.0
+   },
+   "2029": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 462.0,
+    "food_store": -18.0,
+    "deaths": 0.0
+   },
+   "2030": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 377.0,
+    "food_store": -20.0,
+    "deaths": 0.0
+   },
+   "2031": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -2.0,
+    "deaths": 0.0
+   }
+  },
+  "rain": {
+   "2008": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -19.0,
+    "deaths": 0.0
+   },
+   "2009": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -18.0,
+    "deaths": 0.0
+   },
+   "2010": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 1.0,
+    "deaths": 0.0
+   },
+   "2011": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -41.0,
+    "food_store": 7.0,
+    "deaths": 0.0
+   },
+   "2012": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -1.0,
+    "food_store": 1.0,
+    "deaths": 0.0
+   },
+   "2013": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -18.0,
+    "deaths": 0.0
+   },
+   "2014": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 1.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2015": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -42.0,
+    "food_store": 1.0,
+    "deaths": 0.0
+   },
+   "2016": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -19.0,
+    "deaths": 0.0
+   },
+   "2017": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -21.0,
+    "deaths": 0.0
+   },
+   "2018": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 82.0,
+    "food_store": -7.0,
+    "deaths": 0.0
+   },
+   "2019": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -42.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2020": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -42.0,
+    "food_store": 6.0,
+    "deaths": 0.0
+   },
+   "2021": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -19.0,
+    "deaths": 0.0
+   },
+   "2022": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -78.0,
+    "food_store": 5.0,
+    "deaths": 0.0
+   },
+   "2023": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -5.0,
+    "deaths": 0.0
+   },
+   "2024": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 35.0,
+    "food_store": -4.0,
+    "deaths": 0.0
+   },
+   "2025": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -16.0,
+    "deaths": 0.0
+   },
+   "2026": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -36.0,
+    "food_store": 3.0,
+    "deaths": 0.0
+   },
+   "2027": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -14.0,
+    "deaths": 0.0
+   },
+   "2028": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 43.0,
+    "food_store": -3.0,
+    "deaths": 0.0
+   },
+   "2029": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -42.0,
+    "food_store": 3.0,
+    "deaths": 0.0
+   },
+   "2030": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2031": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -18.0,
+    "deaths": 0.0
+   }
+  },
+  "cold_snap": {
+   "2008": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2009": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2010": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 293.0,
+    "food_store": -11.0,
+    "deaths": 0.0
+   },
+   "2011": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 168.0,
+    "food_store": -5.0,
+    "deaths": 0.0
+   },
+   "2012": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 288.0,
+    "food_store": -15.0,
+    "deaths": 0.0
+   },
+   "2013": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2014": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 252.0,
+    "food_store": -10.0,
+    "deaths": 0.0
+   },
+   "2015": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 168.0,
+    "food_store": -6.0,
+    "deaths": 0.0
+   },
+   "2016": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2017": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2018": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 252.0,
+    "food_store": -19.0,
+    "deaths": 0.0
+   },
+   "2019": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 126.0,
+    "food_store": -8.0,
+    "deaths": 0.0
+   },
+   "2020": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 210.0,
+    "food_store": -12.0,
+    "deaths": 0.0
+   },
+   "2021": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2022": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 205.0,
+    "food_store": -5.0,
+    "deaths": 0.0
+   },
+   "2023": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 42.0,
+    "food_store": -1.0,
+    "deaths": 0.0
+   },
+   "2024": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 247.0,
+    "food_store": -12.0,
+    "deaths": 0.0
+   },
+   "2025": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2026": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 84.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2027": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2028": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 210.0,
+    "food_store": -17.0,
+    "deaths": 0.0
+   },
+   "2029": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 168.0,
+    "food_store": -7.0,
+    "deaths": 0.0
+   },
+   "2030": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 42.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2031": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   }
+  }
+ },
+ "C_test_severity": {
+  "2008": 0,
+  "2009": 0,
+  "2010": 1,
+  "2011": 2,
+  "2012": 1,
+  "2013": 0,
+  "2014": 1,
+  "2015": 2,
+  "2016": 0,
+  "2017": 0,
+  "2018": 1,
+  "2019": 2,
+  "2020": 2,
+  "2021": 0,
+  "2022": 1,
+  "2023": 2,
+  "2024": 1,
+  "2025": 0,
+  "2026": 2,
+  "2027": 0,
+  "2028": 1,
+  "2029": 2,
+  "2030": 2,
+  "2031": 0
+ },
+ "C_test_applied": {
+  "2008/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2008/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2008/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2008/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2009/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2009/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2009/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2009/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2010/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2010/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2010/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2010/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2011/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2011/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2011/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2011/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2012/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2012/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2012/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2012/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2013/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2013/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2013/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2013/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2014/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2014/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2014/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2014/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2015/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2015/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2015/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2015/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2016/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2016/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2016/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2016/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2017/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2017/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2017/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2017/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2018/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2018/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2018/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2018/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2019/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2019/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2019/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2019/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2020/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2020/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2020/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2020/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2021/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2021/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2021/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2021/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2022/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2022/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2022/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2022/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2023/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2023/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2023/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2023/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2024/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2024/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2024/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2024/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2025/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2025/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2025/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2025/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2026/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2026/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2026/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2026/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2027/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2027/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2027/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2027/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2028/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2028/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2028/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2028/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2029/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2029/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2029/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2029/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2030/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2030/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2030/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2030/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2031/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2031/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2031/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2031/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ]
+ },
+ "C_val": {
+  "gift_wood": {
+   "2000": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -377.0,
+    "food_store": 16.0,
+    "deaths": 0.0
+   },
+   "2001": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -1.0,
+    "deaths": 0.0
+   },
+   "2002": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -420.0,
+    "food_store": 22.0,
+    "deaths": 0.0
+   },
+   "2003": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -336.0,
+    "food_store": 8.0,
+    "deaths": 0.0
+   },
+   "2004": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -462.0,
+    "food_store": 24.0,
+    "deaths": 0.0
+   },
+   "2005": {
+    "dark_nights": -1.0,
+    "cold_member_hours": -378.0,
+    "food_store": 10.0,
+    "deaths": 0.0
+   },
+   "2006": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -7.0,
+    "deaths": 0.0
+   },
+   "2007": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -1.0,
+    "deaths": 0.0
+   }
+  },
+  "rot_wood": {
+   "2000": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 462.0,
+    "food_store": -22.0,
+    "deaths": 0.0
+   },
+   "2001": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 160.0,
+    "food_store": -10.0,
+    "deaths": 0.0
+   },
+   "2002": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 588.0,
+    "food_store": -27.0,
+    "deaths": 0.0
+   },
+   "2003": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 504.0,
+    "food_store": -41.0,
+    "deaths": 0.0
+   },
+   "2004": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 546.0,
+    "food_store": -24.0,
+    "deaths": 0.0
+   },
+   "2005": {
+    "dark_nights": 2.0,
+    "cold_member_hours": 462.0,
+    "food_store": -26.0,
+    "deaths": 0.0
+   },
+   "2006": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 15.0,
+    "deaths": 0.0
+   },
+   "2007": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 3.0,
+    "deaths": 0.0
+   }
+  },
+  "rain": {
+   "2000": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -42.0,
+    "food_store": 1.0,
+    "deaths": 0.0
+   },
+   "2001": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -16.0,
+    "deaths": 0.0
+   },
+   "2002": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -84.0,
+    "food_store": 4.0,
+    "deaths": 0.0
+   },
+   "2003": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -3.0,
+    "deaths": 0.0
+   },
+   "2004": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -84.0,
+    "food_store": 4.0,
+    "deaths": 0.0
+   },
+   "2005": {
+    "dark_nights": 0.0,
+    "cold_member_hours": -42.0,
+    "food_store": 3.0,
+    "deaths": 0.0
+   },
+   "2006": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -9.0,
+    "deaths": 0.0
+   },
+   "2007": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -22.0,
+    "deaths": 0.0
+   }
+  },
+  "cold_snap": {
+   "2000": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 168.0,
+    "food_store": -8.0,
+    "deaths": 0.0
+   },
+   "2001": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   },
+   "2002": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 252.0,
+    "food_store": -14.0,
+    "deaths": 0.0
+   },
+   "2003": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 336.0,
+    "food_store": -21.0,
+    "deaths": 0.0
+   },
+   "2004": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 210.0,
+    "food_store": -9.0,
+    "deaths": 0.0
+   },
+   "2005": {
+    "dark_nights": 1.0,
+    "cold_member_hours": 168.0,
+    "food_store": -8.0,
+    "deaths": 0.0
+   },
+   "2006": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": -1.0,
+    "deaths": 0.0
+   },
+   "2007": {
+    "dark_nights": 0.0,
+    "cold_member_hours": 0.0,
+    "food_store": 0.0,
+    "deaths": 0.0
+   }
+  }
+ },
+ "C_val_severity": {
+  "2000": 2,
+  "2001": 0,
+  "2002": 1,
+  "2003": 1,
+  "2004": 1,
+  "2005": 2,
+  "2006": 0,
+  "2007": 0
+ },
+ "C_val_applied": {
+  "2000/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2000/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2000/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2000/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2001/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2001/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2001/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2001/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2002/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2002/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2002/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2002/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2003/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2003/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2003/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2003/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2004/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2004/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2004/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2004/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2005/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2005/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2005/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2005/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2006/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2006/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2006/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2006/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ],
+  "2007/gift_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "gift_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2007/rot_wood": [
+   {
+    "amount": 60,
+    "applied": 60,
+    "kind": "rot_wood",
+    "settlement": 1,
+    "tick": 29400
+   }
+  ],
+  "2007/rain": [
+   {
+    "amount": 13,
+    "applied": 13,
+    "kind": "rain",
+    "settlement": 1,
+    "tick": 33720
+   }
+  ],
+  "2007/cold_snap": [
+   {
+    "amount": 2,
+    "applied": 2,
+    "kind": "cold_snap",
+    "settlement": null,
+    "tick": 35160
+   }
+  ]
+ }
+}

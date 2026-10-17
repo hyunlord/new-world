@@ -1,0 +1,1762 @@
+{
+ "argv": [
+  "tools/worldmodel/wm3/audit.py",
+  "--run",
+  "/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s0",
+  "/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s1",
+  "/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s2",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm3/audit"
+ ],
+ "cases": {
+  "train": 2980,
+  "val": 612
+ },
+ "code_commit": "62b89d4ce189660bc64f8a75cfd0d2aad805049f",
+ "members": 4552,
+ "summary": {
+  "wm2_m1bact_v19_s0": {
+   "gf240E|train": {
+    "fire": {
+     "arm": 0.999823326097816,
+     "partner": 0.9997154354307625
+    },
+    "n": 800,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.5111316532016604,
+      "n_true_nonzero": 656,
+      "pred_abs_mean": 4.304181147414259,
+      "pred_mean": -4.275775858439274,
+      "right_sign": 0.9740853658536586,
+      "true_abs_mean": 10.5725,
+      "true_mean": -10.485
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.0067713340569836465,
+      "pred_mean": 0.0067713340569836465,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.346801784068357,
+      "pred_mean": -0.346801784068357,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 4.105368296729989,
+      "pred_mean": 4.032414897373009,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.1573126608348509,
+      "n_true_nonzero": 629,
+      "pred_abs_mean": 10.696458489602337,
+      "pred_mean": 10.696458489602337,
+      "right_sign": 0.9984101748807631,
+      "true_abs_mean": 10.63875,
+      "true_mean": 10.62875
+     },
+     "s.food_stock": {
+      "corr": -0.2991780028630864,
+      "n_true_nonzero": 800,
+      "pred_abs_mean": 5.971554098360687,
+      "pred_mean": 5.94284191284249,
+      "right_sign": 0.98,
+      "true_abs_mean": 238.14625,
+      "true_mean": 238.14625
+     },
+     "s.wood_stock": {
+      "corr": -0.08059274033365141,
+      "n_true_nonzero": 12,
+      "pred_abs_mean": 0.31428300536441417,
+      "pred_mean": 0.047828730860727656,
+      "right_sign": 0.08333333333333333,
+      "true_abs_mean": 0.015,
+      "true_mean": 0.015
+     }
+    }
+   },
+   "gf240E|val": {
+    "fire": {
+     "arm": 0.9998299296797676,
+     "partner": 0.9997217328247803
+    },
+    "n": 160,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.4881621421073143,
+      "n_true_nonzero": 138,
+      "pred_abs_mean": 4.676567278896346,
+      "pred_mean": -4.659947605098579,
+      "right_sign": 0.9927536231884058,
+      "true_abs_mean": 11.5875,
+      "true_mean": -11.55
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.006939563754011313,
+      "pred_mean": 0.006939563754011313,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.345618075994465,
+      "pred_mean": -0.345618075994465,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 4.624405535829198,
+      "pred_mean": 4.512104874032715,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.24522136345734058,
+      "n_true_nonzero": 130,
+      "pred_abs_mean": 10.904200447525099,
+      "pred_mean": 10.904200447525099,
+      "right_sign": 0.9846153846153847,
+      "true_abs_mean": 11.59375,
+      "true_mean": 11.54375
+     },
+     "s.food_stock": {
+      "corr": -0.24698865251230384,
+      "n_true_nonzero": 160,
+      "pred_abs_mean": 6.280085551986746,
+      "pred_mean": 6.2648575565793765,
+      "right_sign": 0.99375,
+      "true_abs_mean": 237.6875,
+      "true_mean": 237.6875
+     },
+     "s.wood_stock": {
+      "corr": -0.03280552680902753,
+      "n_true_nonzero": 1,
+      "pred_abs_mean": 0.2963190687509636,
+      "pred_mean": -0.06030106996019333,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.00625,
+      "true_mean": 0.00625
+     }
+    }
+   },
+   "rw120E|train": {
+    "fire": {
+     "arm": 0.9998886033960076,
+     "partner": 0.9997154354307625
+    },
+    "n": 800,
+    "vars": {
+     "g.adults_working": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 1.0836454512554152,
+      "pred_mean": 0.4512079652289894,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.0011738922152840579,
+      "pred_mean": 0.00021846231874303682,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.09898092704777428,
+      "pred_mean": -0.09898092704777428,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 4.608249296606007,
+      "pred_mean": -4.607874390395774,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 1.252082167748149,
+      "pred_mean": 0.8449679782195234,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.food_stock": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 19.578687198600896,
+      "pred_mean": -19.578687198600896,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.wood_stock": {
+      "corr": null,
+      "n_true_nonzero": 800,
+      "pred_abs_mean": 3.0712116053734086,
+      "pred_mean": -3.0712116053734086,
+      "right_sign": 1.0,
+      "true_abs_mean": 120.0,
+      "true_mean": -120.0
+     }
+    }
+   },
+   "rw120E|val": {
+    "fire": {
+     "arm": 0.9998917703441721,
+     "partner": 0.9997217328247803
+    },
+    "n": 160,
+    "vars": {
+     "g.adults_working": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.9244218508230686,
+      "pred_mean": 0.23367609719782195,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.00113778863783028,
+      "pred_mean": 0.00031327427001750466,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.09675008716922877,
+      "pred_mean": -0.09675008716922877,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 4.336068696535376,
+      "pred_mean": -4.336068696535376,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 1.1639529998930116,
+      "pred_mean": 0.8950521561268865,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.food_stock": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 19.712475153841744,
+      "pred_mean": -19.712475153841744,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.wood_stock": {
+      "corr": null,
+      "n_true_nonzero": 160,
+      "pred_abs_mean": 3.1712834028853667,
+      "pred_mean": -3.1712834028853667,
+      "right_sign": 1.0,
+      "true_abs_mean": 120.0,
+      "true_mean": -120.0
+     }
+    }
+   },
+   "sp120L|train": {
+    "fire": {
+     "arm": 0.7468635074126242,
+     "partner": 0.6742220044612212
+    },
+    "n": 690,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.12470775252588584,
+      "n_true_nonzero": 202,
+      "pred_abs_mean": 2.484815364561225,
+      "pred_mean": 2.3944981346520473,
+      "right_sign": 0.7920792079207921,
+      "true_abs_mean": 1.434782608695652,
+      "true_mean": 1.2492753623188406
+     },
+     "g.alive": {
+      "corr": 0.015620307326635944,
+      "n_true_nonzero": 7,
+      "pred_abs_mean": 0.0013740247049520103,
+      "pred_mean": 0.0008014841823511685,
+      "right_sign": 0.2857142857142857,
+      "true_abs_mean": 0.010144927536231883,
+      "true_mean": -0.010144927536231883
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.42640038695641763,
+      "pred_mean": -0.42320442673809516,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 6.725018619113968,
+      "pred_mean": 6.699798751105698,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.05294743946271583,
+      "n_true_nonzero": 71,
+      "pred_abs_mean": 3.12771312809695,
+      "pred_mean": -3.0472401892149095,
+      "right_sign": 0.7746478873239436,
+      "true_abs_mean": 0.4652173913043478,
+      "true_mean": -0.28840579710144926
+     },
+     "s.food_stock": {
+      "corr": 0.1317217832349375,
+      "n_true_nonzero": 690,
+      "pred_abs_mean": 27.152177814867574,
+      "pred_mean": -27.152177814867574,
+      "right_sign": 1.0,
+      "true_abs_mean": 119.68985507246377,
+      "true_mean": -119.68985507246377
+     },
+     "s.wood_stock": {
+      "corr": 0.06042619920663611,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 1.4053659812460437,
+      "pred_mean": -1.3927817315190332,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.03768115942028986,
+      "true_mean": -0.03768115942028986
+     }
+    }
+   },
+   "sp120L|val": {
+    "fire": {
+     "arm": 0.7883547308740158,
+     "partner": 0.7359217250054149
+    },
+    "n": 146,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.12450602127486525,
+      "n_true_nonzero": 38,
+      "pred_abs_mean": 2.3274835053833693,
+      "pred_mean": 2.2096275722405134,
+      "right_sign": 0.8157894736842105,
+      "true_abs_mean": 1.6232876712328768,
+      "true_mean": 1.5410958904109588
+     },
+     "g.alive": {
+      "corr": -0.09356028337165608,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.0009750988408215906,
+      "pred_mean": 0.0006440866070902165,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.0136986301369863,
+      "true_mean": -0.0136986301369863
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.4418965743229601,
+      "pred_mean": -0.4406978155425511,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 6.833357957384186,
+      "pred_mean": 6.827056256619143,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.03884400043716751,
+      "n_true_nonzero": 12,
+      "pred_abs_mean": 3.3459401384765233,
+      "pred_mean": -3.3150290560191027,
+      "right_sign": 0.6666666666666666,
+      "true_abs_mean": 0.3493150684931507,
+      "true_mean": -0.10273972602739725
+     },
+     "s.food_stock": {
+      "corr": 0.1372720488115163,
+      "n_true_nonzero": 146,
+      "pred_abs_mean": 28.049864435111793,
+      "pred_mean": -28.049864435111793,
+      "right_sign": 1.0,
+      "true_abs_mean": 121.04109589041096,
+      "true_mean": -121.04109589041096
+     },
+     "s.wood_stock": {
+      "corr": 0.06642390294558881,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 1.516578895537442,
+      "pred_mean": -1.5150730348748809,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.0410958904109589,
+      "true_mean": -0.0410958904109589
+     }
+    }
+   },
+   "sp240L|train": {
+    "fire": {
+     "arm": 0.7796773793709876,
+     "partner": 0.6742220044612212
+    },
+    "n": 690,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.0869760452735485,
+      "n_true_nonzero": 271,
+      "pred_abs_mean": 1.8009903874763573,
+      "pred_mean": -1.3961298453945856,
+      "right_sign": 0.44649446494464945,
+      "true_abs_mean": 1.6057971014492753,
+      "true_mean": 1.0724637681159421
+     },
+     "g.alive": {
+      "corr": -0.050443697499997796,
+      "n_true_nonzero": 48,
+      "pred_abs_mean": 0.0014828747904040657,
+      "pred_mean": 0.00024766633291588985,
+      "right_sign": 0.2708333333333333,
+      "true_abs_mean": 0.06956521739130435,
+      "true_mean": -0.06956521739130435
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.4855308859984865,
+      "pred_mean": -0.31600971369767505,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 2.3579443357346617,
+      "pred_mean": 0.8839010816204603,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.00303240060344858,
+      "n_true_nonzero": 113,
+      "pred_abs_mean": 1.2325704851770158,
+      "pred_mean": -0.250970420328621,
+      "right_sign": 0.5575221238938053,
+      "true_abs_mean": 0.5826086956521739,
+      "true_mean": -0.3652173913043478
+     },
+     "s.food_stock": {
+      "corr": 0.22877389931658001,
+      "n_true_nonzero": 690,
+      "pred_abs_mean": 22.563432391543028,
+      "pred_mean": -22.563432391543028,
+      "right_sign": 1.0,
+      "true_abs_mean": 219.18695652173912,
+      "true_mean": -219.18695652173912
+     },
+     "s.wood_stock": {
+      "corr": 0.09215503955198809,
+      "n_true_nonzero": 11,
+      "pred_abs_mean": 0.6795670095991283,
+      "pred_mean": -0.4940169441011146,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.1463768115942029,
+      "true_mean": -0.1463768115942029
+     }
+    }
+   },
+   "sp240L|val": {
+    "fire": {
+     "arm": 0.8043669319265601,
+     "partner": 0.7359217250054149
+    },
+    "n": 146,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.11199759360122043,
+      "n_true_nonzero": 51,
+      "pred_abs_mean": 2.1087009044268847,
+      "pred_mean": -1.8185366048607399,
+      "right_sign": 0.21568627450980393,
+      "true_abs_mean": 1.7945205479452055,
+      "true_mean": 1.3424657534246576
+     },
+     "g.alive": {
+      "corr": 0.14428464526469426,
+      "n_true_nonzero": 14,
+      "pred_abs_mean": 0.00114364823265467,
+      "pred_mean": 0.0001944815777767835,
+      "right_sign": 0.6428571428571429,
+      "true_abs_mean": 0.0958904109589041,
+      "true_mean": -0.0958904109589041
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5093226211421146,
+      "pred_mean": -0.3672991571683083,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 2.411101282062594,
+      "pred_mean": 0.9520055192474313,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.15502299151082044,
+      "n_true_nonzero": 16,
+      "pred_abs_mean": 1.2697498841470727,
+      "pred_mean": -0.49987891235785376,
+      "right_sign": 0.6875,
+      "true_abs_mean": 0.3972602739726027,
+      "true_mean": -0.0684931506849315
+     },
+     "s.food_stock": {
+      "corr": -0.06420859370687514,
+      "n_true_nonzero": 146,
+      "pred_abs_mean": 22.920381086602678,
+      "pred_mean": -22.920381086602678,
+      "right_sign": 1.0,
+      "true_abs_mean": 225.32191780821918,
+      "true_mean": -225.32191780821918
+     },
+     "s.wood_stock": {
+      "corr": 0.07948539415486029,
+      "n_true_nonzero": 6,
+      "pred_abs_mean": 0.7128888276138887,
+      "pred_mean": -0.5837117917551079,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.3424657534246575,
+      "true_mean": -0.3424657534246575
+     }
+    }
+   }
+  },
+  "wm2_m1bact_v19_s1": {
+   "gf240E|train": {
+    "fire": {
+     "arm": 0.9948248171578584,
+     "partner": 0.9998205461542357
+    },
+    "n": 800,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.24713622916433023,
+      "n_true_nonzero": 656,
+      "pred_abs_mean": 7.178218772508513,
+      "pred_mean": 7.178218772508513,
+      "right_sign": 0.022865853658536585,
+      "true_abs_mean": 10.5725,
+      "true_mean": -10.485
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.0073528845615383745,
+      "pred_mean": 0.0073528845615383745,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.7168861702092824,
+      "pred_mean": -0.7168861702092824,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 35.62484865580603,
+      "pred_mean": 35.62484865580603,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.17743785826073427,
+      "n_true_nonzero": 629,
+      "pred_abs_mean": 12.952546699354073,
+      "pred_mean": 12.94199216944352,
+      "right_sign": 0.9968203497615262,
+      "true_abs_mean": 10.63875,
+      "true_mean": 10.62875
+     },
+     "s.food_stock": {
+      "corr": -0.36088962321633483,
+      "n_true_nonzero": 800,
+      "pred_abs_mean": 12.212617720523536,
+      "pred_mean": -12.212617720523536,
+      "right_sign": 0.0,
+      "true_abs_mean": 238.14625,
+      "true_mean": 238.14625
+     },
+     "s.wood_stock": {
+      "corr": -0.023168947037677013,
+      "n_true_nonzero": 12,
+      "pred_abs_mean": 2.3574137679475853,
+      "pred_mean": 2.3574137679475853,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.015,
+      "true_mean": 0.015
+     }
+    }
+   },
+   "gf240E|val": {
+    "fire": {
+     "arm": 0.9949029904558652,
+     "partner": 0.9998277046652169
+    },
+    "n": 160,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.27848130500176016,
+      "n_true_nonzero": 138,
+      "pred_abs_mean": 7.177585853086066,
+      "pred_mean": 7.177585853086066,
+      "right_sign": 0.007246376811594203,
+      "true_abs_mean": 11.5875,
+      "true_mean": -11.55
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.007513652043527446,
+      "pred_mean": 0.007513652043527446,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.7151783943818304,
+      "pred_mean": -0.7151783943818304,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 35.66631754255393,
+      "pred_mean": 35.66631754255393,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.3203778457709753,
+      "n_true_nonzero": 130,
+      "pred_abs_mean": 13.177616984765908,
+      "pred_mean": 13.177616984765908,
+      "right_sign": 0.9846153846153847,
+      "true_abs_mean": 11.59375,
+      "true_mean": 11.54375
+     },
+     "s.food_stock": {
+      "corr": -0.2728798216071209,
+      "n_true_nonzero": 160,
+      "pred_abs_mean": 12.021720848539513,
+      "pred_mean": -12.021720848539513,
+      "right_sign": 0.0,
+      "true_abs_mean": 237.6875,
+      "true_mean": 237.6875
+     },
+     "s.wood_stock": {
+      "corr": 0.013760499771745493,
+      "n_true_nonzero": 1,
+      "pred_abs_mean": 2.285435513098141,
+      "pred_mean": 2.285435513098141,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.00625,
+      "true_mean": 0.00625
+     }
+    }
+   },
+   "rw120E|train": {
+    "fire": {
+     "arm": 0.9985227861067802,
+     "partner": 0.9998205461542357
+    },
+    "n": 800,
+    "vars": {
+     "g.adults_working": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 9.811141695798744,
+      "pred_mean": 9.811141695798744,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.0030712612580272337,
+      "pred_mean": 0.002952246011881018,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5307878558595029,
+      "pred_mean": -0.5307878558595029,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 2.9758472004112195,
+      "pred_mean": 2.50716528649945,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 6.134711497690494,
+      "pred_mean": -6.134711497690494,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.food_stock": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 66.86896186819494,
+      "pred_mean": -66.86896186819494,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.wood_stock": {
+      "corr": null,
+      "n_true_nonzero": 800,
+      "pred_abs_mean": 0.9979072173310493,
+      "pred_mean": -0.934297829546146,
+      "right_sign": 0.925,
+      "true_abs_mean": 120.0,
+      "true_mean": -120.0
+     }
+    }
+   },
+   "rw120E|val": {
+    "fire": {
+     "arm": 0.998505152365692,
+     "partner": 0.9998277046652169
+    },
+    "n": 160,
+    "vars": {
+     "g.adults_working": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 9.61682654807117,
+      "pred_mean": 9.61682654807117,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.003108309651196441,
+      "pred_mean": 0.0029466591157655715,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5261968723016139,
+      "pred_mean": -0.5261968723016139,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 3.376405619582479,
+      "pred_mean": 2.606417894752448,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 6.165545518265492,
+      "pred_mean": -6.165545518265492,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.food_stock": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 66.74144861630334,
+      "pred_mean": -66.74144861630334,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.wood_stock": {
+      "corr": null,
+      "n_true_nonzero": 160,
+      "pred_abs_mean": 1.122290627718462,
+      "pred_mean": -1.081090721345118,
+      "right_sign": 0.9375,
+      "true_abs_mean": 120.0,
+      "true_mean": -120.0
+     }
+    }
+   },
+   "sp120L|train": {
+    "fire": {
+     "arm": 0.6769058893093182,
+     "partner": 0.6770239254864903
+    },
+    "n": 690,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.09180441809133062,
+      "n_true_nonzero": 202,
+      "pred_abs_mean": 11.023761311231558,
+      "pred_mean": 11.023761311231558,
+      "right_sign": 0.7871287128712872,
+      "true_abs_mean": 1.434782608695652,
+      "true_mean": 1.2492753623188406
+     },
+     "g.alive": {
+      "corr": 0.034027789825700594,
+      "n_true_nonzero": 7,
+      "pred_abs_mean": 0.0035319251904571726,
+      "pred_mean": 0.0030758002545334846,
+      "right_sign": 0.2857142857142857,
+      "true_abs_mean": 0.010144927536231883,
+      "true_mean": -0.010144927536231883
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.31660171398575476,
+      "pred_mean": -0.26932318324122617,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 18.21774788538541,
+      "pred_mean": 18.21774788538541,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.08981831688677903,
+      "n_true_nonzero": 71,
+      "pred_abs_mean": 1.4058053057029376,
+      "pred_mean": -0.8369094144148191,
+      "right_sign": 0.676056338028169,
+      "true_abs_mean": 0.4652173913043478,
+      "true_mean": -0.28840579710144926
+     },
+     "s.food_stock": {
+      "corr": 0.09126711835528105,
+      "n_true_nonzero": 690,
+      "pred_abs_mean": 42.01056770811773,
+      "pred_mean": -42.01056770811773,
+      "right_sign": 1.0,
+      "true_abs_mean": 119.68985507246377,
+      "true_mean": -119.68985507246377
+     },
+     "s.wood_stock": {
+      "corr": 0.02901839326153263,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.6368269644420066,
+      "pred_mean": -0.42830849886022776,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.03768115942028986,
+      "true_mean": -0.03768115942028986
+     }
+    }
+   },
+   "sp120L|val": {
+    "fire": {
+     "arm": 0.7354686082960268,
+     "partner": 0.7393059435375365
+    },
+    "n": 146,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.012457583047427027,
+      "n_true_nonzero": 38,
+      "pred_abs_mean": 11.020995883387778,
+      "pred_mean": 11.020995883387778,
+      "right_sign": 0.8947368421052632,
+      "true_abs_mean": 1.6232876712328768,
+      "true_mean": 1.5410958904109588
+     },
+     "g.alive": {
+      "corr": 0.14262538166750435,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.003657378828410633,
+      "pred_mean": 0.003347327432613131,
+      "right_sign": 0.5,
+      "true_abs_mean": 0.0136986301369863,
+      "true_mean": -0.0136986301369863
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.3291454128398755,
+      "pred_mean": -0.29649010994053265,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 18.53744277549709,
+      "pred_mean": 18.53744277549709,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.16441137868957736,
+      "n_true_nonzero": 12,
+      "pred_abs_mean": 1.3562151003536913,
+      "pred_mean": -0.8168608433019924,
+      "right_sign": 0.5,
+      "true_abs_mean": 0.3493150684931507,
+      "true_mean": -0.10273972602739725
+     },
+     "s.food_stock": {
+      "corr": 0.0951883107220657,
+      "n_true_nonzero": 146,
+      "pred_abs_mean": 43.2557193362697,
+      "pred_mean": -43.2557193362697,
+      "right_sign": 1.0,
+      "true_abs_mean": 121.04109589041096,
+      "true_mean": -121.04109589041096
+     },
+     "s.wood_stock": {
+      "corr": 0.08790157711236303,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.6595197987341296,
+      "pred_mean": -0.5028433150757132,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.0410958904109589,
+      "true_mean": -0.0410958904109589
+     }
+    }
+   },
+   "sp240L|train": {
+    "fire": {
+     "arm": 0.6513410767095885,
+     "partner": 0.6770239254864903
+    },
+    "n": 690,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.04867299481694596,
+      "n_true_nonzero": 271,
+      "pred_abs_mean": 10.080119398409982,
+      "pred_mean": 10.080119398409982,
+      "right_sign": 0.6273062730627307,
+      "true_abs_mean": 1.6057971014492753,
+      "true_mean": 1.0724637681159421
+     },
+     "g.alive": {
+      "corr": 0.3480573264599887,
+      "n_true_nonzero": 48,
+      "pred_abs_mean": 0.001935596786305968,
+      "pred_mean": -0.0012896569065214572,
+      "right_sign": 0.8541666666666666,
+      "true_abs_mean": 0.06956521739130435,
+      "true_mean": -0.06956521739130435
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5585566289778995,
+      "pred_mean": -0.22408397223203164,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 17.274225059501106,
+      "pred_mean": 17.274225059501106,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.029496783156698465,
+      "n_true_nonzero": 113,
+      "pred_abs_mean": 1.7513174473818933,
+      "pred_mean": 0.8827688924519886,
+      "right_sign": 0.4778761061946903,
+      "true_abs_mean": 0.5826086956521739,
+      "true_mean": -0.3652173913043478
+     },
+     "s.food_stock": {
+      "corr": 0.20204824047270403,
+      "n_true_nonzero": 690,
+      "pred_abs_mean": 42.71454885544498,
+      "pred_mean": -42.71454885544498,
+      "right_sign": 1.0,
+      "true_abs_mean": 219.18695652173912,
+      "true_mean": -219.18695652173912
+     },
+     "s.wood_stock": {
+      "corr": 0.060852172767922465,
+      "n_true_nonzero": 11,
+      "pred_abs_mean": 0.7108730584217259,
+      "pred_mean": 0.7107506780193323,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.1463768115942029,
+      "true_mean": -0.1463768115942029
+     }
+    }
+   },
+   "sp240L|val": {
+    "fire": {
+     "arm": 0.7021646798669617,
+     "partner": 0.7393059435375365
+    },
+    "n": 146,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.006401760201361535,
+      "n_true_nonzero": 51,
+      "pred_abs_mean": 9.829640853615595,
+      "pred_mean": 9.829640853615595,
+      "right_sign": 0.7058823529411765,
+      "true_abs_mean": 1.7945205479452055,
+      "true_mean": 1.3424657534246576
+     },
+     "g.alive": {
+      "corr": 0.541289937900882,
+      "n_true_nonzero": 14,
+      "pred_abs_mean": 0.0015675993175492922,
+      "pred_mean": -0.0009056870801883148,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.0958904109589041,
+      "true_mean": -0.0958904109589041
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5571860659612882,
+      "pred_mean": -0.298846463309241,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 17.772594967038682,
+      "pred_mean": 17.772594967038682,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.0045774550074358265,
+      "n_true_nonzero": 16,
+      "pred_abs_mean": 1.551064870797906,
+      "pred_mean": 0.8320596794422607,
+      "right_sign": 0.625,
+      "true_abs_mean": 0.3972602739726027,
+      "true_mean": -0.0684931506849315
+     },
+     "s.food_stock": {
+      "corr": 0.032024318994365544,
+      "n_true_nonzero": 146,
+      "pred_abs_mean": 43.55064039382064,
+      "pred_mean": -43.55064039382064,
+      "right_sign": 1.0,
+      "true_abs_mean": 225.32191780821918,
+      "true_mean": -225.32191780821918
+     },
+     "s.wood_stock": {
+      "corr": 0.009003318166026258,
+      "n_true_nonzero": 6,
+      "pred_abs_mean": 0.6495946268000713,
+      "pred_mean": 0.6495946268000713,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.3424657534246575,
+      "true_mean": -0.3424657534246575
+     }
+    }
+   }
+  },
+  "wm2_m1bact_v19_s2": {
+   "gf240E|train": {
+    "fire": {
+     "arm": 0.998867123649428,
+     "partner": 0.999823185270071
+    },
+    "n": 800,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.20485384643866722,
+      "n_true_nonzero": 656,
+      "pred_abs_mean": 1.0792121841855413,
+      "pred_mean": -0.734796925712333,
+      "right_sign": 0.7439024390243902,
+      "true_abs_mean": 10.5725,
+      "true_mean": -10.485
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.003929055505417872,
+      "pred_mean": 0.00388000184855166,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.66339919539671,
+      "pred_mean": -0.66339919539671,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 11.577849897009333,
+      "pred_mean": 11.577849897009333,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.26110160843990154,
+      "n_true_nonzero": 629,
+      "pred_abs_mean": 17.183743696225616,
+      "pred_mean": 17.028585791729522,
+      "right_sign": 0.9777424483306836,
+      "true_abs_mean": 10.63875,
+      "true_mean": 10.62875
+     },
+     "s.food_stock": {
+      "corr": -0.18414108005371052,
+      "n_true_nonzero": 800,
+      "pred_abs_mean": 17.474701005039584,
+      "pred_mean": 17.474701005039584,
+      "right_sign": 1.0,
+      "true_abs_mean": 238.14625,
+      "true_mean": 238.14625
+     },
+     "s.wood_stock": {
+      "corr": -0.0650936732084963,
+      "n_true_nonzero": 12,
+      "pred_abs_mean": 1.2418584171368998,
+      "pred_mean": -1.2141330529786716,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.015,
+      "true_mean": 0.015
+     }
+    }
+   },
+   "gf240E|val": {
+    "fire": {
+     "arm": 0.9989025302810527,
+     "partner": 0.9998137860549816
+    },
+    "n": 160,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.005226201880353667,
+      "n_true_nonzero": 138,
+      "pred_abs_mean": 0.9205013799457408,
+      "pred_mean": -0.4455063291265172,
+      "right_sign": 0.6956521739130435,
+      "true_abs_mean": 11.5875,
+      "true_mean": -11.55
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.004105224908901387,
+      "pred_mean": 0.004028358837712402,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.6584100784756481,
+      "pred_mean": -0.6584100784756481,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 11.467312775774086,
+      "pred_mean": 11.467312775774086,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.35823566841635635,
+      "n_true_nonzero": 130,
+      "pred_abs_mean": 18.361195278972787,
+      "pred_mean": 18.333669216693288,
+      "right_sign": 0.9846153846153847,
+      "true_abs_mean": 11.59375,
+      "true_mean": 11.54375
+     },
+     "s.food_stock": {
+      "corr": -0.05992768409815434,
+      "n_true_nonzero": 160,
+      "pred_abs_mean": 18.071737581875006,
+      "pred_mean": 18.071737581875006,
+      "right_sign": 1.0,
+      "true_abs_mean": 237.6875,
+      "true_mean": 237.6875
+     },
+     "s.wood_stock": {
+      "corr": -0.048924928962920396,
+      "n_true_nonzero": 1,
+      "pred_abs_mean": 1.2662874851177146,
+      "pred_mean": -1.2325585088076239,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.00625,
+      "true_mean": 0.00625
+     }
+    }
+   },
+   "rw120E|train": {
+    "fire": {
+     "arm": 0.999799298037964,
+     "partner": 0.999823185270071
+    },
+    "n": 800,
+    "vars": {
+     "g.adults_working": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 6.305566756757344,
+      "pred_mean": 6.305566756757344,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.0014045903608109064,
+      "pred_mean": 0.0006933535911868987,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5445216833627683,
+      "pred_mean": -0.5445216833627683,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 3.8145269075003454,
+      "pred_mean": -3.8145269075003454,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 17.18690867098652,
+      "pred_mean": -17.18690867098652,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.food_stock": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 54.647242164657115,
+      "pred_mean": -54.647242164657115,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.wood_stock": {
+      "corr": null,
+      "n_true_nonzero": 800,
+      "pred_abs_mean": 3.944736895398569,
+      "pred_mean": -3.944736895398569,
+      "right_sign": 1.0,
+      "true_abs_mean": 120.0,
+      "true_mean": -120.0
+     }
+    }
+   },
+   "rw120E|val": {
+    "fire": {
+     "arm": 0.9998019664236409,
+     "partner": 0.9998137860549816
+    },
+    "n": 160,
+    "vars": {
+     "g.adults_working": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 6.250025107348602,
+      "pred_mean": 6.250025107348602,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.alive": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.0010648454667820102,
+      "pred_mean": 0.0005081419212851046,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5426426442783713,
+      "pred_mean": -0.5426426442783713,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 3.907842323798461,
+      "pred_mean": -3.907842323798461,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 16.839720731406977,
+      "pred_mean": -16.839720731406977,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.food_stock": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 54.429376431195315,
+      "pred_mean": -54.429376431195315,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "s.wood_stock": {
+      "corr": null,
+      "n_true_nonzero": 160,
+      "pred_abs_mean": 3.9585715424955277,
+      "pred_mean": -3.9585715424955277,
+      "right_sign": 1.0,
+      "true_abs_mean": 120.0,
+      "true_mean": -120.0
+     }
+    }
+   },
+   "sp120L|train": {
+    "fire": {
+     "arm": 0.6907238245347933,
+     "partner": 0.6732541483460757
+    },
+    "n": 690,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.06702329522081821,
+      "n_true_nonzero": 202,
+      "pred_abs_mean": 5.503249769994659,
+      "pred_mean": 5.503249769994659,
+      "right_sign": 0.7871287128712872,
+      "true_abs_mean": 1.434782608695652,
+      "true_mean": 1.2492753623188406
+     },
+     "g.alive": {
+      "corr": 0.11388460433348191,
+      "n_true_nonzero": 7,
+      "pred_abs_mean": 0.005355992784121765,
+      "pred_mean": 0.005341563682482003,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.010144927536231883,
+      "true_mean": -0.010144927536231883
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.3826601651692985,
+      "pred_mean": -0.3249996592130182,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 13.08243794497323,
+      "pred_mean": 13.082346576796688,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.0630301602626433,
+      "n_true_nonzero": 71,
+      "pred_abs_mean": 9.649772915712372,
+      "pred_mean": -9.649772915712372,
+      "right_sign": 0.7887323943661971,
+      "true_abs_mean": 0.4652173913043478,
+      "true_mean": -0.28840579710144926
+     },
+     "s.food_stock": {
+      "corr": 0.1082118636558089,
+      "n_true_nonzero": 690,
+      "pred_abs_mean": 42.911592649890984,
+      "pred_mean": -42.911592649890984,
+      "right_sign": 1.0,
+      "true_abs_mean": 119.68985507246377,
+      "true_mean": -119.68985507246377
+     },
+     "s.wood_stock": {
+      "corr": 0.04370274914138883,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.7124421245920116,
+      "pred_mean": 0.14260791970354272,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.03768115942028986,
+      "true_mean": -0.03768115942028986
+     }
+    }
+   },
+   "sp120L|val": {
+    "fire": {
+     "arm": 0.7394588838741997,
+     "partner": 0.733402905286949
+    },
+    "n": 146,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.010278759932728676,
+      "n_true_nonzero": 38,
+      "pred_abs_mean": 5.383851600437652,
+      "pred_mean": 5.383851600437652,
+      "right_sign": 0.8947368421052632,
+      "true_abs_mean": 1.6232876712328768,
+      "true_mean": 1.5410958904109588
+     },
+     "g.alive": {
+      "corr": 0.16555989493203335,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.0054880172532604035,
+      "pred_mean": 0.0054855143731210474,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.0136986301369863,
+      "true_mean": -0.0136986301369863
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.40616981543068104,
+      "pred_mean": -0.35765577976961366,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 13.688579281391242,
+      "pred_mean": 13.688118568757716,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.06135561710130577,
+      "n_true_nonzero": 12,
+      "pred_abs_mean": 10.057727463552402,
+      "pred_mean": -10.057727463552402,
+      "right_sign": 0.6666666666666666,
+      "true_abs_mean": 0.3493150684931507,
+      "true_mean": -0.10273972602739725
+     },
+     "s.food_stock": {
+      "corr": 0.12981581290312652,
+      "n_true_nonzero": 146,
+      "pred_abs_mean": 44.403231041635145,
+      "pred_mean": -44.403231041635145,
+      "right_sign": 1.0,
+      "true_abs_mean": 121.04109589041096,
+      "true_mean": -121.04109589041096
+     },
+     "s.wood_stock": {
+      "corr": 0.05607587914252004,
+      "n_true_nonzero": 2,
+      "pred_abs_mean": 0.7309543903677137,
+      "pred_mean": 0.06482776073050663,
+      "right_sign": 1.0,
+      "true_abs_mean": 0.0410958904109589,
+      "true_mean": -0.0410958904109589
+     }
+    }
+   },
+   "sp240L|train": {
+    "fire": {
+     "arm": 0.6809939977290697,
+     "partner": 0.6732541483460757
+    },
+    "n": 690,
+    "vars": {
+     "g.adults_working": {
+      "corr": -0.10627584229873907,
+      "n_true_nonzero": 271,
+      "pred_abs_mean": 3.2990146771082833,
+      "pred_mean": 3.2128944553689087,
+      "right_sign": 0.6199261992619927,
+      "true_abs_mean": 1.6057971014492753,
+      "true_mean": 1.0724637681159421
+     },
+     "g.alive": {
+      "corr": 0.4514804418419638,
+      "n_true_nonzero": 48,
+      "pred_abs_mean": 0.011517384869012255,
+      "pred_mean": 0.011516693034978922,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.06956521739130435,
+      "true_mean": -0.06956521739130435
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.6047835558140979,
+      "pred_mean": -0.1306668002777042,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 7.749841305594586,
+      "pred_mean": 6.735718482242221,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": 0.019827395843488395,
+      "n_true_nonzero": 113,
+      "pred_abs_mean": 5.950248474651055,
+      "pred_mean": -5.852323748252802,
+      "right_sign": 0.8141592920353983,
+      "true_abs_mean": 0.5826086956521739,
+      "true_mean": -0.3652173913043478
+     },
+     "s.food_stock": {
+      "corr": 0.25399385503776356,
+      "n_true_nonzero": 690,
+      "pred_abs_mean": 40.471524803523515,
+      "pred_mean": -40.471524803523515,
+      "right_sign": 1.0,
+      "true_abs_mean": 219.18695652173912,
+      "true_mean": -219.18695652173912
+     },
+     "s.wood_stock": {
+      "corr": 0.09909696400909314,
+      "n_true_nonzero": 11,
+      "pred_abs_mean": 1.6795335662449427,
+      "pred_mean": 1.6795335662449427,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.1463768115942029,
+      "true_mean": -0.1463768115942029
+     }
+    }
+   },
+   "sp240L|val": {
+    "fire": {
+     "arm": 0.7156848471699582,
+     "partner": 0.733402905286949
+    },
+    "n": 146,
+    "vars": {
+     "g.adults_working": {
+      "corr": 0.05908684687091245,
+      "n_true_nonzero": 51,
+      "pred_abs_mean": 2.9245415456636894,
+      "pred_mean": 2.7392820516121676,
+      "right_sign": 0.7058823529411765,
+      "true_abs_mean": 1.7945205479452055,
+      "true_mean": 1.3424657534246576
+     },
+     "g.alive": {
+      "corr": 0.613563385813738,
+      "n_true_nonzero": 14,
+      "pred_abs_mean": 0.011633431468142826,
+      "pred_mean": 0.011629483528233368,
+      "right_sign": 0.14285714285714285,
+      "true_abs_mean": 0.0958904109589041,
+      "true_mean": -0.0958904109589041
+     },
+     "g.cold_members": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 0.5952406699671264,
+      "pred_mean": -0.216394179977789,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.deadwood_total": {
+      "corr": null,
+      "n_true_nonzero": 0,
+      "pred_abs_mean": 8.213148740313095,
+      "pred_mean": 7.291045157670868,
+      "right_sign": null,
+      "true_abs_mean": 0.0,
+      "true_mean": 0.0
+     },
+     "g.food_on_bushes_total": {
+      "corr": -0.012754250976080284,
+      "n_true_nonzero": 16,
+      "pred_abs_mean": 6.345374770634203,
+      "pred_mean": -6.298194960180103,
+      "right_sign": 0.5625,
+      "true_abs_mean": 0.3972602739726027,
+      "true_mean": -0.0684931506849315
+     },
+     "s.food_stock": {
+      "corr": 0.07321826808052337,
+      "n_true_nonzero": 146,
+      "pred_abs_mean": 41.57045253366123,
+      "pred_mean": -41.57045253366123,
+      "right_sign": 1.0,
+      "true_abs_mean": 225.32191780821918,
+      "true_mean": -225.32191780821918
+     },
+     "s.wood_stock": {
+      "corr": -0.0608121756562054,
+      "n_true_nonzero": 6,
+      "pred_abs_mean": 1.5669638059809647,
+      "pred_mean": 1.5669638059809647,
+      "right_sign": 0.0,
+      "true_abs_mean": 0.3424657534246575,
+      "true_mean": -0.3424657534246575
+     }
+    }
+   }
+  }
+ },
+ "vars": [
+  "s.food_stock",
+  "s.wood_stock",
+  "g.cold_members",
+  "g.alive",
+  "g.deadwood_total",
+  "g.food_on_bushes_total",
+  "g.adults_working"
+ ]
+}

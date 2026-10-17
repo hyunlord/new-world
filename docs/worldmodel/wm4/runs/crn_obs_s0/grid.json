@@ -1,0 +1,53 @@
+{
+ "chosen": 3,
+ "chosen_overrides": {
+  "dec_br": 64,
+  "dec_fc": 32,
+  "enc_br": 64,
+  "enc_dropout": 0.1,
+  "enc_fc": 128
+ },
+ "code_commit": "956c8a05a7293a75ce97e9916c69083a890371fd",
+ "method": "crn",
+ "results": [
+  {
+   "config": 0,
+   "overrides": {},
+   "seconds": 1200.1449882984161,
+   "val_roll": 0.5919218801291739
+  },
+  {
+   "config": 1,
+   "overrides": {
+    "dec_br": 64,
+    "dec_fc": 32,
+    "enc_br": 64,
+    "enc_fc": 128
+   },
+   "seconds": 1200.3623926639557,
+   "val_roll": 0.4248629676241739
+  },
+  {
+   "config": 2,
+   "overrides": {
+    "dec_lr": 0.0001,
+    "enc_lr": 0.0001
+   },
+   "seconds": 1200.4345815181732,
+   "val_roll": 0.5231785990020053
+  },
+  {
+   "config": 3,
+   "overrides": {
+    "dec_br": 64,
+    "dec_fc": 32,
+    "enc_br": 64,
+    "enc_dropout": 0.1,
+    "enc_fc": 128
+   },
+   "seconds": 1179.888198375702,
+   "val_roll": 0.413165744378812
+  }
+ ],
+ "seconds": 4785.35950255394
+}

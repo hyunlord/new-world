@@ -1,0 +1,47 @@
+data: train 3780 episodes, 2980 cases; val 386 episodes, 233 val_eff cases, 80 families; 19s
+eval 0 start
+eval 0 val_t2 0.0589 15.1s
+step 0 val_t2 0.0589 (init 0.0589) val_eff 0.5458 eval 15.1+21.8s 56s
+eval 250 start
+eval 250 val_t2 0.0602 16.0s
+step 250 loss -2.7453 val_t2 0.0602 val_eff 0.5601 eligible best 0.5458@0 1140s
+eval 500 start
+eval 500 val_t2 0.0587 7.6s
+step 500 loss -2.6968 val_t2 0.0587 val_eff 0.5658 eligible best 0.5458@0 1715s
+eval 750 start
+eval 750 val_t2 0.0585 7.5s
+step 750 loss -2.7298 val_t2 0.0585 val_eff 0.5054 eligible best 0.5054@750 2251s
+eval 1000 start
+eval 1000 val_t2 0.0600 7.6s
+step 1000 loss -2.8052 val_t2 0.0600 val_eff 0.5070 eligible best 0.5054@750 2790s
+eval 1250 start
+eval 1250 val_t2 0.0604 10.6s
+step 1250 loss -2.6901 val_t2 0.0604 val_eff 0.5029 eligible best 0.5029@1250 3337s
+eval 1500 start
+eval 1500 val_t2 0.0604 7.8s
+step 1500 loss -2.8842 val_t2 0.0604 val_eff 0.4974 eligible best 0.4974@1500 3943s
+eval 1750 start
+eval 1750 val_t2 0.0618 7.9s
+step 1750 loss -2.6411 val_t2 0.0618 val_eff 0.5053 eligible best 0.4974@1500 4497s
+eval 2000 start
+eval 2000 val_t2 0.0599 7.8s
+step 2000 loss -3.0297 val_t2 0.0599 val_eff 0.4869 eligible best 0.4869@2000 5046s
+eval 2250 start
+eval 2250 val_t2 0.0593 7.7s
+step 2250 loss -2.8905 val_t2 0.0593 val_eff 0.4890 eligible best 0.4869@2000 5596s
+eval 2500 start
+eval 2500 val_t2 0.0602 9.7s
+step 2500 loss -2.7751 val_t2 0.0602 val_eff 0.4900 eligible best 0.4869@2000 6188s
+eval 2750 start
+eval 2750 val_t2 0.0624 10.2s
+step 2750 loss -2.7530 val_t2 0.0624 val_eff 0.4925 not eligible best 0.4869@2000 6911s
+eval 3000 start
+eval 3000 val_t2 0.0628 7.8s
+step 3000 loss -2.8797 val_t2 0.0628 val_eff 0.4987 not eligible best 0.4869@2000 7602s
+eval 3250 start
+eval 3250 val_t2 0.0611 7.8s
+step 3250 loss -2.7600 val_t2 0.0611 val_eff 0.4951 eligible best 0.4869@2000 8152s
+eval 3500 start
+eval 3500 val_t2 0.0600 7.4s
+step 3500 loss -2.9963 val_t2 0.0600 val_eff 0.4940 eligible best 0.4869@2000 8692s
+done: best val_eff 0.4869 at 2000 (step 2000), stop patience, round True, 8788s

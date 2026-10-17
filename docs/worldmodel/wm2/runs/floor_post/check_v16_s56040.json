@@ -1,0 +1,811 @@
+{
+ "all_ok": true,
+ "fam": "/home/hyunlord/work/worldsim-wm-data/v2/v16/floor_s56040/fam",
+ "families": 80,
+ "families_per_arm": {},
+ "members": 320,
+ "ok": 80,
+ "rows": [
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42480
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42481
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42482
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42483
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42484
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42485
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42486
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42487
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42488
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42489
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42490
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42491
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42492
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42493
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42494
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42495
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42496
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42497
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42498
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42499
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42500
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42501
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42502
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42503
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42504
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42505
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42506
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42507
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42508
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42509
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42510
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42511
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42512
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42513
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42514
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42515
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42516
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42517
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42518
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42519
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42520
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42521
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42522
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42523
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42524
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42525
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42526
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42527
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42528
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42529
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42530
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42531
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42532
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42533
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42534
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42535
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42536
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42537
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42538
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42539
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42540
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42541
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42542
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42543
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42544
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42545
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42546
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42547
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42548
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42549
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42550
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42551
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42552
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42553
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42554
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42555
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42556
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42557
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42558
+  },
+  {
+   "arms": [],
+   "diffs": [],
+   "fork_tick": 56040,
+   "members": 4,
+   "ok": true,
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 42559
+  }
+ ],
+ "seconds": 0.2906157970428467
+}

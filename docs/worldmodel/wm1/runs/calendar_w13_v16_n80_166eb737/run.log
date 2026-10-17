@@ -1,0 +1,11 @@
+cal_abs 9s
+cal_year 10s
+ap1_abs 11s
+ap1_year 12s
+apfit_abs 12s
+apfit_year 13s
+an1 23s
+an5 34s
+an5_off 46s
+persistence 46s
+ridge 50s

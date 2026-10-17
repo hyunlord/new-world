@@ -1,0 +1,436 @@
+{
+ "argv": [
+  "tools/worldmodel/wm1/families.py",
+  "--families",
+  "/home/hyunlord/work/worldsim-wm-data/p10/forks_smoke/game_v16_s12000",
+  "/home/hyunlord/work/worldsim-wm-data/p10/forks_smoke/game_v16_s12001",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/families_smoke_096d92d2"
+ ],
+ "code_commit": "096d92d2bbd8bcf7223d9595dafda5dd9aa58ecd",
+ "families": [
+  {
+   "fork_row": 480,
+   "fork_tick": 28800,
+   "home_slot": 0,
+   "path": "/home/hyunlord/work/worldsim-wm-data/p10/forks_smoke/game_v16_s12000",
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 12000,
+   "settlement_ids": [
+    1
+   ],
+   "variants": [
+    "rain",
+    "rot_wood"
+   ]
+  },
+  {
+   "fork_row": 480,
+   "fork_tick": 28800,
+   "home_slot": 0,
+   "path": "/home/hyunlord/work/worldsim-wm-data/p10/forks_smoke/game_v16_s12001",
+   "replicates": 4,
+   "scene": "game_v16",
+   "seed": 12001,
+   "settlement_ids": [
+    1
+   ],
+   "variants": [
+    "rain",
+    "rot_wood"
+   ]
+  }
+ ],
+ "note": "real-data smoke of the evaluator (GOAL_1_2.md 10.3): no model claims",
+ "predictors": {
+  "persistence": {
+   "effects": {
+    "12000": {
+     "rain": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     },
+     "rot_wood": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     }
+    },
+    "12001": {
+     "rain": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     },
+     "rot_wood": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     }
+    }
+   },
+   "scores": {
+    "rain": {
+     "cold_member_hours": {
+      "coverage": 0.0,
+      "mean_effect_mae": 171.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 171.0,
+      "true_spread_mean": 0.0
+     },
+     "dark_nights": {
+      "coverage": 0.0,
+      "mean_effect_mae": 1.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 1.0,
+      "true_spread_mean": 0.0
+     },
+     "deaths": {
+      "coverage": 1.0,
+      "mean_effect_mae": 0.0,
+      "seeds": 2,
+      "sign_accuracy": 1.0,
+      "true_mean_abs": 0.0,
+      "true_spread_mean": 0.0
+     },
+     "food_store": {
+      "coverage": 0.0,
+      "mean_effect_mae": 7.625,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 7.625,
+      "true_spread_mean": 0.8539125638299665
+     }
+    },
+    "rot_wood": {
+     "cold_member_hours": {
+      "coverage": 0.0,
+      "mean_effect_mae": 202.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 202.0,
+      "true_spread_mean": 14.361406616345072
+     },
+     "dark_nights": {
+      "coverage": 0.0,
+      "mean_effect_mae": 1.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 1.0,
+      "true_spread_mean": 0.0
+     },
+     "deaths": {
+      "coverage": 1.0,
+      "mean_effect_mae": 0.0,
+      "seeds": 2,
+      "sign_accuracy": 1.0,
+      "true_mean_abs": 0.0,
+      "true_spread_mean": 0.0
+     },
+     "food_store": {
+      "coverage": 0.0,
+      "mean_effect_mae": 7.875,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 7.875,
+      "true_spread_mean": 1.9820508075688772
+     }
+    }
+   }
+  },
+  "zero_effect": {
+   "effects": {
+    "12000": {
+     "rain": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     },
+     "rot_wood": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     }
+    },
+    "12001": {
+     "rain": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     },
+     "rot_wood": {
+      "cold_member_hours": 0.0,
+      "dark_nights": 0.0,
+      "deaths": 0.0,
+      "food_store": 0.0
+     }
+    }
+   },
+   "scores": {
+    "rain": {
+     "cold_member_hours": {
+      "coverage": 0.0,
+      "mean_effect_mae": 171.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 171.0,
+      "true_spread_mean": 0.0
+     },
+     "dark_nights": {
+      "coverage": 0.0,
+      "mean_effect_mae": 1.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 1.0,
+      "true_spread_mean": 0.0
+     },
+     "deaths": {
+      "coverage": 1.0,
+      "mean_effect_mae": 0.0,
+      "seeds": 2,
+      "sign_accuracy": 1.0,
+      "true_mean_abs": 0.0,
+      "true_spread_mean": 0.0
+     },
+     "food_store": {
+      "coverage": 0.0,
+      "mean_effect_mae": 7.625,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 7.625,
+      "true_spread_mean": 0.8539125638299665
+     }
+    },
+    "rot_wood": {
+     "cold_member_hours": {
+      "coverage": 0.0,
+      "mean_effect_mae": 202.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 202.0,
+      "true_spread_mean": 14.361406616345072
+     },
+     "dark_nights": {
+      "coverage": 0.0,
+      "mean_effect_mae": 1.0,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 1.0,
+      "true_spread_mean": 0.0
+     },
+     "deaths": {
+      "coverage": 1.0,
+      "mean_effect_mae": 0.0,
+      "seeds": 2,
+      "sign_accuracy": 1.0,
+      "true_mean_abs": 0.0,
+      "true_spread_mean": 0.0
+     },
+     "food_store": {
+      "coverage": 0.0,
+      "mean_effect_mae": 7.875,
+      "seeds": 2,
+      "sign_accuracy": 0.0,
+      "true_mean_abs": 7.875,
+      "true_spread_mean": 1.9820508075688772
+     }
+    }
+   }
+  }
+ },
+ "seconds": 0.029632091522216797,
+ "true_effects": {
+  "12000": {
+   "rain": {
+    "mean": {
+     "cold_member_hours": 232.0,
+     "dark_nights": 1.0,
+     "deaths": 0.0,
+     "food_store": -12.0
+    },
+    "per_replicate": {
+     "0": {
+      "cold_member_hours": 232.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -12.0
+     },
+     "1": {
+      "cold_member_hours": 232.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -12.0
+     },
+     "2": {
+      "cold_member_hours": 232.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -12.0
+     },
+     "3": {
+      "cold_member_hours": 232.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -12.0
+     }
+    },
+    "spread": {
+     "cold_member_hours": 0.0,
+     "dark_nights": 0.0,
+     "deaths": 0.0,
+     "food_store": 0.0
+    }
+   },
+   "rot_wood": {
+    "mean": {
+     "cold_member_hours": 195.75,
+     "dark_nights": 1.0,
+     "deaths": 0.0,
+     "food_store": -9.75
+    },
+    "per_replicate": {
+     "0": {
+      "cold_member_hours": 203.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -10.0
+     },
+     "1": {
+      "cold_member_hours": 232.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -10.0
+     },
+     "2": {
+      "cold_member_hours": 174.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -10.0
+     },
+     "3": {
+      "cold_member_hours": 174.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -9.0
+     }
+    },
+    "spread": {
+     "cold_member_hours": 27.765386124933805,
+     "dark_nights": 0.0,
+     "deaths": 0.0,
+     "food_store": 0.5
+    }
+   }
+  },
+  "12001": {
+   "rain": {
+    "mean": {
+     "cold_member_hours": 110.0,
+     "dark_nights": 1.0,
+     "deaths": 0.0,
+     "food_store": -3.25
+    },
+    "per_replicate": {
+     "0": {
+      "cold_member_hours": 110.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -4.0
+     },
+     "1": {
+      "cold_member_hours": 110.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -3.0
+     },
+     "2": {
+      "cold_member_hours": 110.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -1.0
+     },
+     "3": {
+      "cold_member_hours": 110.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -5.0
+     }
+    },
+    "spread": {
+     "cold_member_hours": 0.0,
+     "dark_nights": 0.0,
+     "deaths": 0.0,
+     "food_store": 1.707825127659933
+    }
+   },
+   "rot_wood": {
+    "mean": {
+     "cold_member_hours": 208.25,
+     "dark_nights": 1.0,
+     "deaths": 0.0,
+     "food_store": -6.0
+    },
+    "per_replicate": {
+     "0": {
+      "cold_member_hours": 209.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -5.0
+     },
+     "1": {
+      "cold_member_hours": 209.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -5.0
+     },
+     "2": {
+      "cold_member_hours": 207.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -3.0
+     },
+     "3": {
+      "cold_member_hours": 208.0,
+      "dark_nights": 1.0,
+      "deaths": 0.0,
+      "food_store": -11.0
+     }
+    },
+    "spread": {
+     "cold_member_hours": 0.9574271077563381,
+     "dark_nights": 0.0,
+     "deaths": 0.0,
+     "food_store": 3.4641016151377544
+    }
+   }
+  }
+ },
+ "window": {
+  "cold": [
+   514,
+   671
+  ],
+  "deaths": 670,
+  "food": 670,
+  "nights": [
+   522,
+   546,
+   570,
+   594,
+   618,
+   642,
+   666
+  ]
+ }
+}

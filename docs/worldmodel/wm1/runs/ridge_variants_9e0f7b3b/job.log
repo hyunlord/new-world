@@ -1,0 +1,6 @@
+A_test 10s
+B_test 11s
+OOD_v12 15s
+OOD_long 19s
+24 {'A_test': {'ridge_nosev': 0.138, 'ridge_action_nosev': 0.141, 'ridge_truesev': 0.145, 'ridge_action_truesev': 0.146}, 'B_test': {'ridge_nosev': 0.141, 'ridge_action_nosev': 0.147, 'ridge_truesev': 0.148, 'ridge_action_truesev': 0.149}, 'OOD_v12': {'ridge_nosev': 0.132, 'ridge_action_nosev': 0.135, 'ridge_truesev': 0.209, 'ridge_action_truesev': 0.205}, 'OOD_long': {'ridge_nosev': 0.141, 'ridge_action_nosev': 0.145, 'ridge_truesev': 0.147, 'ridge_action_truesev': 0.148}}
+168 {'A_test': {'ridge_nosev': 0.223, 'ridge_action_nosev': 0.235, 'ridge_truesev': 0.233, 'ridge_action_truesev': 0.24}, 'B_test': {'ridge_nosev': 0.227, 'ridge_action_nosev': 0.242, 'ridge_truesev': 0.233, 'ridge_action_truesev': 0.243}, 'OOD_v12': {'ridge_nosev': 0.22, 'ridge_action_nosev': 0.232, 'ridge_truesev': 0.453, 'ridge_action_truesev': 0.419}, 'OOD_long': {'ridge_nosev': 0.241, 'ridge_action_nosev': 0.254, 'ridge_truesev': 0.245, 'ridge_action_truesev': 0.253}}

@@ -1,0 +1,53 @@
+# WM-2 — run log
+
+Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026-10-16 23:41:40 KST plus recorded pauses.
+
+| Part | Start | End | Notes |
+|---|---|---|---|
+| start | 2026-10-14 21:41:40 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX: Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0, `nproc` 20; `nvidia-smi` 21:41:59: only Xorg (125 MiB) and gnome-shell (21 MiB), 0 % util; RAM 119 GiB, 108 GiB available; swap 15.3 of 16 GiB used (other users' services); disk 3.7 T, 1.5 T free; load average 2.1. No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. Base `ce40bf3c` = both WM branches on origin |
+| 0 | 21:41:40 | 21:43 | `GOAL.md` committed unchanged (`cbecf7a6`); `f5373ab2` merged with `--no-ff` (`26b9af1f`), no conflicts (`git merge-tree` exit 0); its Rust equals `2ba871c0` (`git diff 2ba871c0 26b9af1f -- rust/` empty). Mac discovery after the merge: 147 tests OK, 26 skipped (recorder / data not on the Mac). Pushed (`git ls-remote` = `26b9af1f`) |
+| 0 | 21:43:22 | 21:44:37 | DGX code clone detached at `26b9af1f`. Build clone `_build/src_wm2` (fresh `git clone` of the DGX code clone, detached at `26b9af1f`, `Cargo.lock` copied from Pass 14's build clone `p14-build` at `2ba871c0`, DECISIONS H0.2): `cargo build --release --locked -p sim-test` 75 s, exit 0. sha256 `worldsim_wm` `52b36541…`, `worldsim_probe` `19f47715…` |
+| 0 | 21:45 | 21:47:47 | DGX gate at `26b9af1f` (`wm2/gate_26b9af1f`, `WM_BIN` / `PROBE_BIN` from `_build/src_wm2`, `WM_DATA_ROOT`): 147 tests OK, 0 skipped (133 s) |
+| 0 | 21:46:40 | 21:48:02 | identity: Stage A group F for seeds 12000..12002 (2 worlds, 52 episodes: 12 arms + factual × R = 2) with the new `worldsim_wm` into `v2/_identity/` (82 s, 8 workers); `wm2/identity.py` against `p14/stageA/`: 52 of 52 episodes identical — 468 `.npy` files equal by sha256, `interventions.json` equal, `meta.json` equal except `git_sha` (`26b9af1f…` vs `2ba871c0…`) |
+| 0 end | | 21:53 | Part 0 committed and pushed (`74126f5a`) |
+| 2 | 21:53 | | harness code on the Mac (`a8408a80`, `3f5332b6`, `fe4988c0`); DGX gate on `a8408a80`: 165 tests OK, 1 skipped (the manifest test, manifest not yet written), 147 s |
+| 1 (6.1) | 21:48:25 | 22:41:48 | `_setup/record_v2.sh` (detached, 8 workers, nice 10): `worldsim_probe --scene game_v19 --seeds 40000..40560 --days 120` with Pass 14's timeline flags and `--check-determinism` into `v2/v19/timeline/` (3,203 s, DETERMINISM PASS, 6.1 GB); `timeline_p14.py`: line check 38,776 / 38,776, T_low 489 / 560 (0.873; 34 from the after-first-departure clause), T_high 468, T_eve 560, never depart 214; `schedules_p14.py --arms sp240L,sp120L,gf240E,rw120E`: 2,098 files, 142 (seed, arm) missing (71 worlds × the two `sp…L` arms). DGX load average 24–30 from other users' jobs |
+| 1 (6.2) | 22:41:49 | 01:33:10 | families: `worldsim_wm --scene game_v19 --seeds 40000..40560 --fork-tick 14280 --replicates 2 --schedule-dir v2/v19/schedules --include-factual` into `v2/v19/flat/` 5,316 episodes (= (2,098 + 560) × 2), exit 0, 10,281 s (≈ 1.9 s per episode at 8 workers; load average 12–31 from other users' jobs), 4.9 GB |
+| 1 (6.2) | 01:34 | 01:35 | `families_v2.py link` → `v2/v19/fam/` (560 worlds, 6 or 10 members each); per-replicate prefix check (`prefix/check_v19.json`): 560 / 560 families OK (5,316 members; arms per world: `gf240E` 560, `rw120E` 560, `sp240L` 489, `sp120L` 489); sensitivity spot-checked on seed 40010 (rows <= row(c) + 3 of an arm and rows <= 260 of `none_r1` vs `none_r0` differ, as they must) |
+| 1 (6.3) | 01:33:10 | 01:44:08 | `game_v16` control 42000..42560 (8 workers) into `v2/v16/`: 560 episodes, exit 0, 658 s, 428 MB |
+| 1 (6.5) | 01:45 | 01:46 | `families_v2.py manifest` (main part): 5,876 episodes verified (`verify_episode`), `git_sha` = `26b9af1f…` everywhere, every cast tick a multiple of 60; `v2_manifest.json` committed |
+| 3 (prep) | 01:45 | 01:47 | `baselines.sh val` from `f3ded074` (CPU): `calendar_val_v19` (`v2_v19_fact`) 78 s, `calendar_val_v16` 77 s, exit 0; `cal_best` for `T2any_168`: `an5_off` (v19, val 0.1780), `an5` (v16, 0.2056) |
+| 4 (cost) | 01:47 | 01:57 | cost check 1 (`f3ded074`, per-episode validation): M1b-act 1.459 s/step, validation 15.5 s, 21,085 MiB; M1-long 0.368 s/step, validation 23.5 s (43 % of 150 steps), 2,081 MiB |
+| 2 | 01:58 | 02:12 | batched validation (`11cd53cd`; its cost re-check failed on `__main__` classes, fixed in `a34c8396`, DECISIONS H4.4) |
+| 4 (cost) | 02:05 | 02:13 | cost check 2 (`a34c8396`, `--val-batch 512`): M1b-act 1.554 s/step, validation 7.8 s (3.6 %), 23,437 MiB; M1-long 0.396 s/step, validation 1.6 s (2.7 %); no start subsample (DECISIONS H4.1) |
+| 4.1 | 02:14:09 | | `_setup/queue.sh a34c8396` (detached, one training at a time): `wm2_m1bact_v19_s0` started (`--max-seconds 21600`), then m1long_s0, m1bact_s1, m1long_s1, m1bact_s2, m1b_v16_s0 |
+| 1 (6.4) | 02:14:09 | 03:53:51 | `_setup/record_floor.sh` (detached, 4 workers, nice 10, beside `wm2_m1bact_v19_s0`): `game_v19` floor_s20040 1,087 s, s56040 1,213 s, s99240 1,211 s; `game_v16` 862 / 801 / 793 s; 320 episodes each (80 worlds × R = 4), exit 0, ≈ 1.6 GB in total; two unforked `game_v19` test worlds (40480, 40481) 15 s. The floor recording ended before any W2 evaluation |
+| 3 | 02:14 | 02:15:36 | METRICS.md committed (`b57ef7bb`, 02:15:36) and pushed before any test-role number (no `metrics.json` / `effects.json` / `split.json` / `floor.json` / `calendar.json` on the DGX at that time); `git diff a34c8396 b57ef7bb -- tools` empty; `_setup/prereg_sha` = `b57ef7bb` |
+| 5 | 02:15:51 | 02:18:22 | `baselines.sh test b57ef7bb` (CPU, nice 10): `split_base` 6 s (eligible test worlds 80 / 80, truth censored 0.425; validation picks `ridge_day`), `effects_base` 35 s (cases train 2,980 / val 612 / test 604; validation picks `zero` for W3 (0.510 vs `arm_mean` 0.633, `an5_arm` 0.644) and `an5_arm` for W4 (10.39 days vs 10.43, 12.46)), `calendar_v19` 147 s, `calendar_v16` 151 s; all exit 0 |
+| gate | 02:19 | 02:22 | DGX gate on `b57ef7bb` (manifest present): 167 tests OK, 0 skipped (146 s); `describe_v2.py` (train effects) 02:19–02:20 |
+| 1 (6.4) | 03:54 | 03:55 | `floor_post.sh` (code `b57ef7bb`): per-world symlink directories; prefix check 6 × 80 / 80 families OK; replicate 0 bit-identical (9 `.npy` files) to the unforked recording for 40480 / 40481 (`game_v19`, `v2/v19/_unforked`) and 42480 / 42481 (`game_v16`, the control) at all three starts; `v2_floor_manifest.json`: 1,920 episodes verified (committed `a83c2d40`) |
+| 4.1 | 02:14:09 | 06:37:11 | `wm2_m1bact_v19_s0`: stop `patience` at step 10,350, best step 8,550 (val T2 24 h 0.0608) → converged (best < 0.9 × last), 15,729 s (training ≈ 1.58 s/step at k = 168 including validation; ≈ 500 s end-of-run validation report); rounding True |
+| 4.2 | 06:37:11 | 06:55:48 | its finals from `b57ef7bb` (beside the next training): `_fact` (factual T2 on `v2_v19_fact`) 06:46:27, `_effects`, `_split` 06:55:48, exit 0 |
+| 4.1 | 06:37:11 | | `wm2_m1long_v19_s0` started (`--burn-in full`) |
+| 4.1 | 06:37:11 | 08:03:11 | `wm2_m1long_v19_s0`: stop `max_steps` (12,000), best step 10,950 (val 0.0774) → not converged (best >= 0.9 × last), 5,112 s (≈ 0.41 s/step) |
+| 4.2 | 08:03:11 | 08:07:58 | its finals from `b57ef7bb`: `_fact` 08:04:46, `_effects` 08:07:52, `_split` 08:07:58, exit 0 |
+| 4.1 | 08:03:11 | | `wm2_m1bact_v19_s1` started |
+| 4.1 | 08:03:11 | 13:03:14 | `wm2_m1bact_v19_s1`: stop `patience` at step 11,700, best step 9,900 (val 0.0603) → converged, 17,966 s; one transient validation spike (0.206 at step 6,600) |
+| 4.2 | 13:03:14 | 13:20:48 | its finals from `b57ef7bb`: `_fact` 13:11:35, `_effects` 13:20:30, `_split` 13:20:48, exit 0 |
+| 4.1 | 13:03:14 | | `wm2_m1long_v19_s1` started |
+| 4.1 | 13:03:14 | 14:24:15 | `wm2_m1long_v19_s1`: stop `max_steps` (12,000), best step 11,700 (val 0.0782) → not converged, 4,841 s |
+| 4.2 | 14:24:15 | 14:28:21 | its finals from `b57ef7bb`, exit 0 |
+| 4.1 | 14:24:15 | | `wm2_m1bact_v19_s2` started |
+| 4.1 | 14:24:15 | 19:29:17 | `wm2_m1bact_v19_s2`: stop `max_steps` (12,000), best step 10,950 (val 0.0589) → not converged, 18,288 s |
+| 4.2 | 19:29:17 | 19:52:06 | its finals from `b57ef7bb`: `_fact` 19:41:32, `_effects` 19:51:46, `_split` 19:52:06, exit 0 |
+| 4.1 | 19:29:17 | | `wm2_m1b_v16_s0` (control, action-blind, `v2_v16`) started (`--max-seconds 21600`) |
+| 5 (W2) | 19:29:45 | 19:51:18 | `floor.py --scene game_v19` from `b57ef7bb` with the five `game_v19` runs (`floor_v19`, 1,292 s, exit 0): floor 24 h 0.0084, 168 h 0.0203; headroom (`an5_off` − floor) +0.032 [+0.029, +0.035] and +0.059 [+0.051, +0.067] |
+| 5 (7.7) | 19:53:05 | 19:53:30 | `split_task.py explain` from `b57ef7bb`, after every test split prediction existed (latest `split.json` 19:52:05): θ (home settlement's `fission_threshold` at row 574) read for the 80 test worlds |
+| 4.1 | 19:29:17 | 23:50:20 | `wm2_m1b_v16_s0`: stop `patience` at step 10,200, best step 8,400 (val 0.0769) → converged, 15,637 s. Queue done: all six runs of 9.1 trained, none dropped |
+| 4.2 | 23:50:20 | 23:56:08 | its `final` on `v2_v16` from `b57ef7bb`, exit 0 |
+| 5 (W2) | 23:53:51 | 23:55:46 | `floor.py --scene game_v16` from `b57ef7bb` with the control run (`floor_v16`, exit 0): floor 24 h 0.0170, 168 h 0.0343; headroom (`an5_off` / `an5` − floor) +0.054 [+0.049, +0.060], +0.084 [+0.077, +0.091] |
+| 6 | 20:00 | 23:57 | WM2.md assembled from `runs/judge_wm2/` (final judge after the control run) |
+| 7 (review 1) | 20:00 | 20:14 | review round 1 (fresh subagent): no BLOCKING, 2 MAJOR, 7 MINOR, 5 NOTE; fixes `61f1b253` |
+| 7 (review 2) | 23:58 | 00:12 | review round 2 (fresh subagent): no BLOCKING, 1 MAJOR, 8 MINOR, 6 NOTE (wording / records); fixes `29644ff2` |
+| gate | 00:13 | 00:16 | `29644ff2`: Mac 167 OK / 26 skipped; DGX 167 OK / 0 skipped (`gate_29644ff2`, 136 s); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `ce40bf3c..29644ff2`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6195748424 |
+| 7 | 00:17 | | REPORT.md (Korean, section 13 format); this record is a docs-only commit; the gate is re-run on it and the green branch moved to it |

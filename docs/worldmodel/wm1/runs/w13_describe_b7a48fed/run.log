@@ -1,0 +1,3 @@
+game_v16 {'food_stock': 0.352, 'wood_stock': 0.082, 'fire_lit': 0.051, 'cold_members': 0.615, 'alive': 0.958, 'deadwood_total': 0.253, 'food_on_bushes_total': 0.354, 'adults_working': 0.468} 37s
+game_v17 {'food_stock': 0.598, 'wood_stock': 0.243, 'fire_lit': 0.049, 'cold_members': 0.583, 'alive': 0.832, 'deadwood_total': 0.344, 'food_on_bushes_total': 0.752, 'adults_working': 0.462} 71s
+done 71s -> /home/hyunlord/work/wm1-runs/w13_describe_b7a48fed/describe.json

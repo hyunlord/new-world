@@ -1,0 +1,530 @@
+{
+ "new": "/home/hyunlord/work/worldsim-wm-data/v2/_identity",
+ "ref": "/home/hyunlord/work/worldsim-wm-data/p14/stageA",
+ "episodes": 52,
+ "identical": 52,
+ "all_identical": true,
+ "npy_files_compared": 468,
+ "rows": [
+  {
+   "episode": "game_v19_s12000_gf120L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf120L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf240E_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf240E_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf240H_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf240H_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf240L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf240L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf3x80L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf3x80L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf60L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_gf60L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_none_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_none_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp120L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp120L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp240E_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp240E_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp240H_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp240H_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp240L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp240L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp3x80L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp3x80L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp60L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12000_sp60L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf120L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf120L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf240E_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf240E_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf240H_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf240H_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf240L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf240L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf3x80L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf3x80L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf60L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_gf60L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_none_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_none_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp120L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp120L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp240E_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp240E_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp240H_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp240H_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp240L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp240L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp3x80L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp3x80L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp60L_r0",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  },
+  {
+   "episode": "game_v19_s12001_sp60L_r1",
+   "identical": true,
+   "diffs": [],
+   "npy": 9,
+   "git_sha": [
+    "26b9af1f4b1552359ad812efcd38b10449ca7175",
+    "2ba871c09819c240904510bbf26b0fb2a59a79b0"
+   ]
+  }
+ ]
+}

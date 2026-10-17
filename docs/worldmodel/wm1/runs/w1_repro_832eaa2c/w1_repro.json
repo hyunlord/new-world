@@ -1,0 +1,416 @@
+{
+ "code_commit": "6e9c4d34af38a104a4ce4a270f54a9ea72667567",
+ "manifest_sha256": "003ce64a41f3e31289e5753672c9cbcc4e5cb955a761e17a5f92e7b1861802d5",
+ "max_abs_diff": 3.525888470079508e-10,
+ "pass": true,
+ "rows": [
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 4.314645862812938e-12,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 3.847824836533675e-12,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 1.179908948323316e-11,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 3.5783570551117805e-11,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 3.1550539958402624e-10,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 2.0200952022264573e-10,
+   "n_values": 8,
+   "split": "A_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 2.65987232239695e-12,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 4.517469731624146e-12,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T1"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 1.1109280162457935e-11,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 2.7829016868707868e-11,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 3.525888470079508e-10,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 2.17090345699944e-10,
+   "n_values": 8,
+   "split": "B_test",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T1"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 2.5901503164504902e-12,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 1.7769674620637943e-11,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T1"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 1.3166107093454116e-10,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 3.955086258500273e-11,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 1.348169353931894e-10,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 1.4304973872114601e-10,
+   "n_values": 8,
+   "split": "OOD_v12",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T1"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 4.4354797612555785e-12,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T1"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 3.975722528970493e-12,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T1"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 1.1987355552633971e-11,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 3.775818546714049e-11,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 24 h"
+  },
+  {
+   "baseline": "persistence",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "daily_naive",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge",
+   "max_abs_diff": 3.117739399982611e-10,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "ridge_action",
+   "max_abs_diff": 1.9394441608255875e-10,
+   "n_values": 8,
+   "split": "OOD_long",
+   "task": "T2 168 h"
+  },
+  {
+   "baseline": "rule",
+   "max_abs_diff": 0.0,
+   "n_values": 3,
+   "split": "A_test",
+   "task": "T3"
+  },
+  {
+   "baseline": "logistic",
+   "max_abs_diff": 2.2551405187698492e-17,
+   "n_values": 3,
+   "split": "A_test",
+   "task": "T3"
+  },
+  {
+   "baseline": "zero_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/gift_wood",
+   "task": "T4"
+  },
+  {
+   "baseline": "zero_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/rot_wood",
+   "task": "T4"
+  },
+  {
+   "baseline": "zero_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/rain",
+   "task": "T4"
+  },
+  {
+   "baseline": "zero_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/cold_snap",
+   "task": "T4"
+  },
+  {
+   "baseline": "val_mean_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/gift_wood",
+   "task": "T4"
+  },
+  {
+   "baseline": "val_mean_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/rot_wood",
+   "task": "T4"
+  },
+  {
+   "baseline": "val_mean_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/rain",
+   "task": "T4"
+  },
+  {
+   "baseline": "val_mean_effect",
+   "max_abs_diff": 0.0,
+   "n_values": 8,
+   "split": "C_test/cold_snap",
+   "task": "T4"
+  }
+ ],
+ "seconds": 1226.0368103981018,
+ "tolerance": 0.001
+}
