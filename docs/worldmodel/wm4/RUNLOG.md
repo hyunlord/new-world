@@ -44,3 +44,6 @@ Times are KST (Mac clock). The 40-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4 | 17:30:25 | | `_setup/queue.stop`; queue done (exit 0). DGX GPU training time used: ≈ 18 h of the 40-hour window |
 | 5 | 17:30 | 17:31 | every run fetched; `judge4.py` (judge.md / judge.json) |
 | 6 | 17:31 | 17:32 | WM4.md (drafted from 08:30 on, completed); WM3.md pointer line; DECISIONS L5.1, L6.1 |
+| 7 (review 2) | 17:38 | 17:46 | review round 2 (fresh subagent, read-only, HEAD `96efb337`, every run finished): no BLOCKING, 2 MAJOR, 5 MINOR, 5 NOTE; `judge4.py` re-run reproduced the committed judge exactly; fixes `c3b6025e` (documentation and the judge's runs table; verdicts unchanged) |
+| gate | 17:51:50 | 17:54:15 | `c3b6025e`: Mac 204 OK / 27 skipped; DGX 204 OK / 0 skipped (`wm4/gate_c3b6025e`, 145 s); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `1bfb6ae0..c3b6025e`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6231993032 |
+| 7 | 17:56 | | REPORT.md (Korean, section 13 format); this docs-only commit; the gate re-run on it and the green branch moved to it. No pause in the run (the Mac did not sleep); wall time ≈ 18.8 h of the 40-hour window |
