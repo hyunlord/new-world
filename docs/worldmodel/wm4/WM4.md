@@ -23,21 +23,25 @@ times `RUNLOG.md`; review `REVIEW.md`.
 - **Q2 (counterfactual data): mixed.** WM-3's `wm3_full`, trained on v2's paired branches of other worlds, beats CRN-obs
   and CT-obs at both lags (O3 **KEEP** × 4) but not M1b-obs (7 d **NONE**, +0.015; 30 d **TIE**), and WM-2's unpaired
   M1b-act scores the same as M1b-obs on this split. The KEEPs reflect how poorly CRN and CT do, not a gain from pairs.
-  Paired training does teach the size of a spoil's immediate food loss (−38 / −76 / −83 vs true −81) that no
-  obs-trained model gets.
+  No model trained on any data beats `zero` on the obs test (post hoc: WM-2's and WM-3's references vs `zero` are TIE
+  at 7 d, NONE at 30 d).
 - **Q3 (v2): the field's methods stand last.** B1 (7 d) CRN-v2 1.474 and CT-v2 1.007 vs `an5_arm` 0.485 and
-  `wm3_full` 0.496: **NONE** × 4; B2 (30 d) 1.547 and 1.374 vs `zero` 0.487: **NONE** × 2. Most of the gap is spurious
-  death effects from two rollouts that drift apart (post hoc: the three deaths cells average 1.4–4.2 for CRN / CT vs
-  0.3–0.6 for the others), but without them CRN and CT still trail `an5_arm` at 7 days and `zero` at 30.
+  `wm3_full` 0.496: **NONE** × 4; B2 (30 d) 1.547 and 1.374 vs `zero` 0.487: **NONE** × 2. A large part of the gap is
+  spurious death effects from two rollouts that drift apart (post hoc: the three deaths cells average 1.4–4.2 for CRN / CT vs
+  0.3–0.6 for the others; they are 44 % of CRN-v2's 7-day gap and less than half of `crn_v2_s1`'s), and without them CRN
+  and CT still trail `an5_arm` at 7 days and `zero` at 30.
 - **Q4a (ablation, three seeds): yes at 7 days, no at 30.** A1 `wm3_full` vs `wm3_ctrl` −0.075 [−0.100, −0.047] and vs
   `wm3_os` −0.068 [−0.091, −0.046] at 7 days (**WEAK** × 2: real, not ≥ 20 %); at 30 days **NONE** (+0.010) and **TIE**.
-  The 7-day gain is the pair construction's.
+  The 7-day gain is the pair construction's (pairs plus the hazard loss; `os` lacks both).
 - **Q4b (hazard head, selected for calibration): calibrated, not informative.** Platt recalibration on train-family
   rollouts brings the test Brier from 0.39–0.65 to 0.218–0.221 (climatology 0.224), but H1's split timing is still
   **NONE** against `ridge_day` (36.0 vs 29.2 days; WM-3 V4 46.0) and the split shift **TIE** with `an5_arm` (10.8 vs 11.4).
-- **Caveat that bounds Q1 / Q3:** CRN and CT ran under pre-registered 20 / 40-minute budgets; the kept CT checkpoints
-  have 477–493 optimizer steps (4 % of the authors' 11,850) with the domain-confusion weight at 20 % of its maximum. The
-  results are for these methods at this budget (METHODS D14).
+- **Caveat (per method, METHODS D14):** CRN-v2 ran the authors' full step count and its kept checkpoints have the full
+  reversal weight (0.98–1.0); CRN-obs's kept encoders are early (1,566–1,878 steps, weight 0.46–0.53). CT's kept
+  checkpoints are early (477–493 optimizer steps, 4 % of the authors' 11,850; domain-confusion weight 20 % of its
+  maximum) because its validation factual loss rose after them (CT-obs 0.273 → 0.341, CT-v2 1.484 → 2.00 at the stop):
+  an early checkpoint with α's ramp tied to the nominal epochs, not simply too few steps. So the CT results say little
+  about domain confusion as such.
 
 ## 2. The observational split (Part 1)
 
@@ -83,10 +87,11 @@ vendored unchanged; every deviation in `METHODS.md`): daily tokens (a token ever
 initialized from the encoder's representation, trained on 29-step windows. CT: three-stream transformer with
 counterfactual domain confusion and EMA weights. Selection on validation factual loss only (30-token factual rollouts).
 Grids (4 configurations × 20 min on `obs_v19`): CRN chose BR 64 with dropout 0.1 (`val_roll` 0.413), CT chose lr 1e-3
-with BR 64 (0.273). **Both are undertrained relative to the authors**: the kept CT-obs checkpoint has 477 optimizer
-steps (4 % of the authors' 11,850) with the domain-confusion weight at 20 % of its maximum; CRN's kept encoder / decoder
-have 1,878 / 8,435 steps with the reversal weight at 0.53 / 0.65 (METHODS D14). These runs therefore test the methods'
-architectures and recipes under a 20-minute budget, not domain confusion or gradient reversal as such.
+with BR 64 (0.273). **CT's kept checkpoints are early**: the kept CT-obs checkpoint has 477 optimizer
+steps (4 % of the authors' 11,850) with the domain-confusion weight at 20 % of its maximum, chosen because CT's
+validation factual loss rose afterwards; CRN-obs's kept encoder has 1,566–1,878 steps (reversal weight 0.46–0.53),
+while CRN-v2 ran all of the authors' steps with the full weight (METHODS D14). These runs test the methods'
+architectures and recipes under the pre-registered budgets; they say little about domain confusion as such.
 
 **M1b-obs** (`m1_obs.py`): WM-2's M1b-act recipe from scratch on the 400 observed train episodes, selection on val
 factual T2 24 h. `s0` stopped on patience (kept step 4,650), `s1` at 8,000 steps (kept 7,800: not converged).
@@ -151,7 +156,9 @@ CI = world-level paired bootstrap 95 % (B = 2,000, `default_rng(0)`); the W1 rul
 |---|---|---|---|---|---|---|
 | CRN-obs | 0.497 (0.464, 0.530) | +0.279 [+0.245, +0.316] | NONE | 0.863 (0.686, 1.041) | +0.695 [+0.617, +0.789] | NONE |
 | CT-obs | 0.321 (0.296, 0.346) | +0.103 [+0.079, +0.128] | NONE | 0.373 (0.368, 0.378) | +0.205 [+0.186, +0.225] | NONE |
-| M1b-obs | 0.214 (0.213, 0.215) | −0.004 [−0.008, +0.001] | TIE | 0.175 (0.175, 0.175) | +0.007 [+0.003, +0.011] | NONE |
+| M1b-obs | 0.214 (0.213, 0.215) | −0.004 [−0.008, +0.001] | TIE¹ | 0.175 (0.175, 0.175) | +0.007 [+0.003, +0.011] | NONE |
+
+¹ Seed 0 alone was −0.004 [−0.007, −0.002] (WEAK, the interim value in round 1); with seed 1 averaged in it is a TIE.
 
 The unfloored scales give the same verdicts (7 d: CRN 2.48, CT 2.00, M1b 1.14 vs `zero` 1.12; 30 d: 2.36, 0.81, 0.23 vs
 0.21). **Two failure modes, one shared cause.** M1b-obs ignores the god's hand, as WM-2's models did: its mean
@@ -187,11 +194,13 @@ than `zero`), not that paired branches help: `wm3_full` differs from the obs-tra
 400 episodes), worlds, initialization (WM-2's M1b-act) and the pair loss at once. The cleaner contrast on this split is
 WM-2's own M1b-act (v2 data, no pairs), evaluated beside it: 0.216 / 0.219 / 0.213 at 7 days and 0.183 / 0.169 / 0.172
 at 30 — the same as M1b-obs (0.214 / 0.175) and as `zero`. **On the obs test no model trained on any data beats
-`zero`.** The one place paired training shows is the spoil's 7-day food effect: `wm3_full` predicts −38 / −76 / −83
-against the true −81.4, every other model −3 to −16 or an overshoot; but it pays elsewhere (its rot-wood food effect
-−26 to −47 against −4), so its 12-cell average does not move. Q2's answer: counterfactual (paired) data teaches the
-size of the immediate food effect, which observational training on this split does not; it does not, by itself, beat
-predicting no effect on this split's cells.
+`zero`** (post hoc, review round 2: the WM-2 references vs `zero` TIE [−0.004, +0.001] at 7 d, NONE at 30 d;
+`wm3_full` vs `zero` TIE [−0.004, +0.026] at 7 d, NONE at 30 d). Per cell (post hoc), two of three `wm3_full` seeds get
+the mean 7-day food loss of a spoil (−76 / −83 vs true −81.4; seed 0 −38), but the per-world error on that cell is lower
+for CT-obs (0.674 / 0.672 vs 0.734–0.768, equal sign accuracy 0.90), and `wm3_full` overshoots the rot-wood food effect
+(−26 to −47 vs −4). Q2's answer: on this split, counterfactual (paired) training data from other worlds does not make a
+model better than an obs-trained M1 or than predicting no effect; its advantage over CRN / CT is their failure, not its
+success.
 
 ## 7. Q3 — CRN and CT on dataset v2 (B1, B2)
 
@@ -231,7 +240,8 @@ side `wm3_full` (seeds 0–2), the baseline each configuration's seed-averaged e
 | full vs ctrl | 30 d | 0.511 (0.517, 0.504, 0.512) | 0.501 (0.511, 0.499, 0.494) | +0.010 [+0.006, +0.013] | **NONE** |
 | full vs os | 30 d | 0.511 | 0.509 (0.521, 0.491, 0.514) | +0.002 [−0.005, +0.008] | TIE |
 
-**Answer to Q4a: yes, the 7-day gain is the pair construction's, now with three seeds each.** Against both the
+**Answer to Q4a: yes, the 7-day gain is the pair construction's (with the hazard loss that comes with it: `full`
+differs from `os` in the pair loss, the partners and the hazard loss), now with three seeds each.** Against both the
 more-training control and cast windows without the paired loss, `wm3_full` is better at 7 days with intervals well
 below zero (WEAK, not KEEP: the ratio is 0.87–0.88, not ≤ 0.8). WM-3's post-hoc s0 contrast (−0.091) holds at
 −0.075 with three seeds; cast windows alone (`os`) recover some of it on one seed (`os_s2` 0.508) but not on average.
@@ -252,9 +262,10 @@ keep rule (val Brier below the original):
 | 1 | 1.504 | 1.243 | 0.444 → 0.242 (0.242) | 0.487 → 0.218 (0.224) | 0.856 → 0.305 (0.338) |
 | 2 | 1.505 | 1.636 | 0.357 → 0.237 (0.242) | 0.389 → 0.220 (0.224) | 0.750 → 0.295 (0.338) |
 
-The recalibrated heads are calibrated in the mean and order the worlds the right way (test 5-bin observed rates rise
-from 0.07–0.20 in the lowest bin to 0.52–0.55 in the highest, monotone for s1 and s2), but they barely beat climatology (Brier 0.218–0.221 vs
-0.224): **the head carries little information about whether a split happens within 30 days.** The pre-registered
+The recalibrated heads are calibrated in the mean; a Platt map with a > 0 keeps each head's ranking, so the observed
+rates per test bin are the original heads' (0.07–0.20 in the lowest bin to 0.52–0.55 in the highest, monotone for s1
+and s2). They barely beat climatology on test (Brier 0.218–0.221 vs 0.224; on val seed 0 is above it, 0.247 vs 0.242):
+**the head carries little information about whether a split happens within 30 days.** The pre-registered
 tasks:
 
 | rule | recalibrated heads (seeds) | baseline | Δ [95 % CI] | verdict | WM-3 (original heads) |
@@ -270,10 +281,10 @@ delays a split, not that a gift brings it forward.
 
 ## 10. Design caveats
 
-- **CRN and CT are undertrained relative to the authors** (METHODS D14): within the pre-registered 20 / 40-minute
-  budgets the kept CT checkpoints have 477–493 of the authors' 11,850 optimizer steps (4 %) and a domain-confusion weight at
-  20 % of its maximum; CRN's reversal weight is 0.5–0.7 at its kept checkpoints. Their results are for the methods under this
-  budget; a schedule fitted to the budget would be a post-hoc run.
+- **CT's kept checkpoints are early** (METHODS D14): 477–493 of the authors' 11,850 optimizer steps (4 %) with the
+  domain-confusion weight at 20 % of its maximum, because its validation factual loss rose after them; α's ramp is tied to
+  the nominal epochs. CRN-v2 ran the authors' full step count with the full reversal weight; CRN-obs's kept encoders are
+  early (weight 0.46–0.53). A schedule fitted to the budget would be a post-hoc run.
 - **Daily resolution** (METHODS D1–D3): CRN and CT see one token per day and 37 outcomes; the M1 models see every hour.
   Effects are read at the same rows (c + 168, c + 720), but the methods' factual losses are not comparable, which is
   why O3 makes no pick among the obs-trained models.
@@ -314,7 +325,7 @@ secondary tasks; factual T2 as a guard; the pre-registered W1 rule (KEEP / WEAK 
 
 | method | trained on | obs 7 d | obs 30 d | v2 7 d | v2 30 d |
 |---|---|---|---|---|---|
-| `zero` (no effect) | — | 0.218 | 0.168 | 0.612 | **0.487** |
+| `zero` (no effect) | — | 0.218 | **0.168** | 0.612 | **0.487** |
 | `naive` / `ipw` / `match5` | obs train | 0.599 / 0.391 / 0.945 | 0.323 / 0.382 / 0.968 | — | — |
 | `an5_arm` / `arm_mean` | v2 train | — | — | **0.485** / 0.497 | 0.594 / 0.619 |
 | M1b-obs (2 seeds) | obs | **0.214** | 0.175 | — | — |
@@ -324,10 +335,11 @@ secondary tasks; factual T2 as a guard; the pre-registered W1 rule (KEEP / WEAK 
 | WM-3 `wm3_full`, paired (3 seeds) | v2 | 0.229 | 0.175 | 0.496 | 0.511 |
 | WM-3 ablations `ctrl` / `os` (3 seeds) | v2 | — | — | 0.571 / 0.564 | 0.501 / 0.509 |
 
-**Claims the evidence supports.** (i) A world model trained on the factual stream ignores interventions; training on
-paired branches teaches the first week's effect (−0.075 vs a step-matched control, three seeds) and only that.
-(ii) On confounded observational data, the propensity-weighted contrast removes more than half of the naive estimator's
-excess error, so the split's confounding is real and measurable. (iii) Two established time-varying treatment-effect
+**Claims the evidence supports.** (i) A world model trained on the factual stream ignores interventions; on the
+interventional split, training on paired branches improves the first week's effects (−0.075 vs a step-matched control,
+three seeds) and nothing else; on the observational split it does not beat predicting no effect. (ii) On confounded
+observational data, the propensity-weighted contrast removes more than half of the naive estimator's excess error at
+7 days (not at 30, where the control weights grow), so the split's confounding is real and measurable. (iii) Two established time-varying treatment-effect
 methods (CRN, CT), adapted with every deviation documented and trained under a fixed budget, do not beat "no effect" on
 either split; they over-react in the confounded direction. (iv) No method learns the 30-day sign reversal of the food
 effects or the split timing; a hazard head can be calibrated to the base rate but carries little information.

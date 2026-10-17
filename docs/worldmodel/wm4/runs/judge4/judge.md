@@ -165,17 +165,17 @@ M1b-obs factual T2 (raw, every hour, obs test): `m1b_obs_s0` 24 h 0.1133, 168 h 
 
 | run | stop | best | seconds | val | detail |
 |---|---|---|---|---|---|
-| `_cost_crn` | None | None | 301 | 0.5413 | {"decoder": {"best_epoch": 30, "best_val_roll": 0.5412658584643786, "epochs": 1538, "epochs_run": 127, "stop": "time"}, "encoder": {"best_epoch": 361, "best_val_one_step": 0.23668532073497772, "epochs": 2617, "epochs_run": 362, "stop": "time"}, "val_roll": 0.5412658584643786} |
-| `_cost_ct` | time | None | 308 | 1.3731 | {"best_epoch": 118, "epochs": 3950, "epochs_run": 119, "stop": "time", "val_roll": 1.3731159830098172} |
+| `_cost_crn` | time | epoch 30 (decoder) | 301 | 0.5413 | {"decoder": {"best_epoch": 30, "best_val_roll": 0.5412658584643786, "epochs": 1538, "epochs_run": 127, "stop": "time"}, "encoder": {"best_epoch": 361, "best_val_one_step": 0.23668532073497772, "epochs": 2617, "epochs_run": 362, "stop": "time"}, "val_roll": 0.5412658584643786} |
+| `_cost_ct` | time | epoch 118 | 308 | 1.3731 | {"best_epoch": 118, "epochs": 3950, "epochs_run": 119, "stop": "time", "val_roll": 1.3731159830098172} |
 | `_cost_m1b` | max_steps | 100 | 669 | 0.1143 | selected None, not converged None |
-| `crn_obs_s0` | None | None | 1180 | 0.4132 | {"decoder": {"best_epoch": 240, "best_val_roll": 0.413165744378812, "epochs": 1538, "epochs_run": 1538, "stop": "epochs"}, "encoder": {"best_epoch": 312, "best_val_one_step": 0.23566985130310059, "epochs": 2617, "epochs_run": 2358, "stop": "time"}, "val_roll": 0.413165744378812} |
-| `crn_obs_s1` | None | None | 1200 | 0.3890 | {"decoder": {"best_epoch": 1176, "best_val_roll": 0.38904215594761465, "epochs": 1538, "epochs_run": 1177, "stop": "time"}, "encoder": {"best_epoch": 260, "best_val_one_step": 0.24065594375133514, "epochs": 2617, "epochs_run": 1455, "stop": "time"}, "val_roll": 0.38904215594761465} |
-| `crn_v2_s0` | None | None | 2350 | 1.5609 | {"decoder": {"best_epoch": 99, "best_val_roll": 1.560896605085102, "epochs": 163, "epochs_run": 163, "stop": "epochs"}, "encoder": {"best_epoch": 122, "best_val_one_step": 0.5569235682487488, "epochs": 267, "epochs_run": 267, "stop": "epochs"}, "val_roll": 1.560896605085102} |
-| `crn_v2_s1` | None | None | 1517 | 1.5416 | {"decoder": {"best_epoch": 147, "best_val_roll": 1.5416371238962518, "epochs": 163, "epochs_run": 163, "stop": "epochs"}, "encoder": {"best_epoch": 266, "best_val_one_step": 0.5617067217826843, "epochs": 267, "epochs_run": 267, "stop": "epochs"}, "val_roll": 1.5416371238962518} |
-| `ct_obs_s0` | time | None | 1206 | 0.2727 | {"best_epoch": 158, "epochs": 3950, "epochs_run": 479, "stop": "time", "val_roll": 0.2727081026964337} |
-| `ct_obs_s1` | time | None | 1206 | 0.2772 | {"best_epoch": 158, "epochs": 3950, "epochs_run": 426, "stop": "time", "val_roll": 0.2771939637151982} |
-| `ct_v2_s0` | time | None | 2419 | 1.4841 | {"best_epoch": 16, "epochs": 409, "epochs_run": 92, "stop": "time", "val_roll": 1.4841158158720795} |
-| `ct_v2_s1` | time | None | 2416 | 1.4905 | {"best_epoch": 16, "epochs": 409, "epochs_run": 95, "stop": "time", "val_roll": 1.490460387844446} |
+| `crn_obs_s0` | epochs | epoch 240 (decoder) | 1180 | 0.4132 | {"decoder": {"best_epoch": 240, "best_val_roll": 0.413165744378812, "epochs": 1538, "epochs_run": 1538, "stop": "epochs"}, "encoder": {"best_epoch": 312, "best_val_one_step": 0.23566985130310059, "epochs": 2617, "epochs_run": 2358, "stop": "time"}, "val_roll": 0.413165744378812} |
+| `crn_obs_s1` | time | epoch 1176 (decoder) | 1200 | 0.3890 | {"decoder": {"best_epoch": 1176, "best_val_roll": 0.38904215594761465, "epochs": 1538, "epochs_run": 1177, "stop": "time"}, "encoder": {"best_epoch": 260, "best_val_one_step": 0.24065594375133514, "epochs": 2617, "epochs_run": 1455, "stop": "time"}, "val_roll": 0.38904215594761465} |
+| `crn_v2_s0` | epochs | epoch 99 (decoder) | 2350 | 1.5609 | {"decoder": {"best_epoch": 99, "best_val_roll": 1.560896605085102, "epochs": 163, "epochs_run": 163, "stop": "epochs"}, "encoder": {"best_epoch": 122, "best_val_one_step": 0.5569235682487488, "epochs": 267, "epochs_run": 267, "stop": "epochs"}, "val_roll": 1.560896605085102} |
+| `crn_v2_s1` | epochs | epoch 147 (decoder) | 1517 | 1.5416 | {"decoder": {"best_epoch": 147, "best_val_roll": 1.5416371238962518, "epochs": 163, "epochs_run": 163, "stop": "epochs"}, "encoder": {"best_epoch": 266, "best_val_one_step": 0.5617067217826843, "epochs": 267, "epochs_run": 267, "stop": "epochs"}, "val_roll": 1.5416371238962518} |
+| `ct_obs_s0` | time | epoch 158 | 1206 | 0.2727 | {"best_epoch": 158, "epochs": 3950, "epochs_run": 479, "stop": "time", "val_roll": 0.2727081026964337} |
+| `ct_obs_s1` | time | epoch 158 | 1206 | 0.2772 | {"best_epoch": 158, "epochs": 3950, "epochs_run": 426, "stop": "time", "val_roll": 0.2771939637151982} |
+| `ct_v2_s0` | time | epoch 16 | 2419 | 1.4841 | {"best_epoch": 16, "epochs": 409, "epochs_run": 92, "stop": "time", "val_roll": 1.4841158158720795} |
+| `ct_v2_s1` | time | epoch 16 | 2416 | 1.4905 | {"best_epoch": 16, "epochs": 409, "epochs_run": 95, "stop": "time", "val_roll": 1.490460387844446} |
 | `m1b_obs_s0` | patience | 4650 | 9449 | 0.0571 | selected None, not converged None |
 | `m1b_obs_s1` | max_steps | 7800 | 11261 | 0.0573 | selected None, not converged None |
 | `wm3_ctrl_s1` | patience | 1000 | 4339 | 0.5456 | selected step 1000, not converged False |

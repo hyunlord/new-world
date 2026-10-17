@@ -240,7 +240,10 @@ def runs_block(runs: Path) -> dict:
             continue
         node = {"seconds": val.get("seconds"), "stop": val.get("stop"), "best_step": val.get("best_step"),
                 "last_step": val.get("last_step"), "selected": val.get("selected")}
-        if "method" in cfg:
+        if "method" in cfg:                                   # CRN / CT: stop and best epoch may be per stage
+            stage = val.get("decoder", val)
+            node["stop"] = stage.get("stop")
+            node["best_step"] = f"epoch {stage.get('best_epoch')}" + (" (decoder)" if "decoder" in val else "")
             node |= {"method": cfg["method"], "dataset": cfg["dataset"], "overrides": cfg.get("overrides"),
                      "val_roll": val.get("val_roll"), "result": {k: v for k, v in val.items() if k != "seconds"}}
         else:

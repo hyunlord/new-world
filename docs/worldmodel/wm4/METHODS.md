@@ -87,9 +87,14 @@ prediction contract. No extra package was installed (the WM-2/3 venv is untouche
 - **D14 Training actually reached (review round 1, M1).** Because the budgets stop the runs long before the nominal
   epochs, the kept checkpoints are early in α's ramp. CT-obs (config 2): kept epoch 158 of 3,950 nominal = **477
   optimizer steps, 4 % of the authors' 11,850**, α = 0.0020 (20 % of α_max 0.01; 1,437 steps and α 0.0054 at the time
-  stop). CRN-obs (config 3): kept encoder 1,878 steps (α 0.53), kept decoder 8,435 steps (α 0.65). So these runs test
-  the methods' architectures and training recipe under a 20-minute budget, with weak balancing for CT; they are not a
-  test of domain confusion or gradient reversal as such.
+  stop). CT-obs s1: kept at 477 steps (α 0.0020). CT-v2 s0 / s1: kept at epoch 16 = 493 steps (α 0.0019) of 2,668 /
+  2,755 run. CT's validation factual loss rose after its kept checkpoints (CT-obs s0 0.291, **0.273**, 0.310, 0.337,
+  0.400, 0.343, 0.341 at 240 … 1,437 steps; CT-v2 s0 1.489, **1.484**, 1.541 … 2.004 at the stop), so these are early
+  checkpoints chosen on purpose by the selection rule, with α's ramp tied to the nominal epochs. CRN-obs s0 (config 3):
+  kept encoder 1,878 steps (α 0.53), kept decoder 8,435 steps (α 0.65); CRN-obs s1: encoder 1,566 (α 0.46), decoder
+  41,195 (α 1.0). CRN-v2 s0 / s1 ran **every** nominal epoch (encoder 15,753, decoder 54,116 steps): kept encoder 7,257 /
+  15,753 steps (α 0.98 / 1.0), decoder 33,200 / 49,136 (α 1.0). So CRN-v2 is trained as the authors train it; CT is not a
+  test of domain confusion as such.
 - **D15 CRN's two stages share the budget.** The encoder gets the first half of a run's budget (`enc_time_share` 0.5),
   the decoder the rest; every grid encoder stopped on time. `CRNEncoder.out_dropout` is assigned and never used (no
   effect: the authors' output dropout is inside `VariationalLSTM` / the head).

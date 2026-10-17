@@ -132,3 +132,8 @@ the grid results. All produced by `wm4/judge4.py` from the files copied to `docs
 b.2 "the v2 partner arm's train std" means the mapped v2 arm (`gf240` ↔ `gf240E`, `sp240` ↔ `sp240L`, `rw120` ↔
 `rw120E`), as GOAL.md 4.1; where that arm's own std is 0, `effects_base.json` holds WM-2's pooled fallback
 (`DATASET_OBS.md`). Nothing in the rules changes.
+
+### Report-only amendment (review round 2)
+
+b.1's "Dry runs … preceded this commit": all but the last did; the 3-step M1b-obs dry run on train / val data ended at
+02:16:51, 20 s after this part's commit (DECISIONS L2.5). Nothing in the rules changes.

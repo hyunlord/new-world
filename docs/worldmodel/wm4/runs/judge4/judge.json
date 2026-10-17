@@ -10298,7 +10298,7 @@
  },
  "runs": {
   "_cost_crn": {
-   "best_step": null,
+   "best_step": "epoch 30 (decoder)",
    "dataset": "obs_v19",
    "last_step": null,
    "method": "crn",
@@ -10322,13 +10322,13 @@
    },
    "seconds": 301.3307580947876,
    "selected": null,
-   "stop": null,
+   "stop": "time",
    "train.end": 1792193000,
    "train.start": 1792192640,
    "val_roll": 0.5412658584643786
   },
   "_cost_ct": {
-   "best_step": null,
+   "best_step": "epoch 118",
    "dataset": "obs_v19",
    "last_step": null,
    "method": "ct",
@@ -10363,7 +10363,7 @@
    "train.start": 1792182439
   },
   "crn_obs_s0": {
-   "best_step": null,
+   "best_step": "epoch 240 (decoder)",
    "dataset": "obs_v19",
    "last_step": null,
    "method": "crn",
@@ -10393,13 +10393,13 @@
    },
    "seconds": 1179.888198375702,
    "selected": null,
-   "stop": null,
+   "stop": "epochs",
    "train.end": 1792197801,
    "train.start": 1792193000,
    "val_roll": 0.413165744378812
   },
   "crn_obs_s1": {
-   "best_step": null,
+   "best_step": "epoch 1176 (decoder)",
    "dataset": "obs_v19",
    "last_step": null,
    "method": "crn",
@@ -10429,13 +10429,13 @@
    },
    "seconds": 1200.130738735199,
    "selected": null,
-   "stop": null,
+   "stop": "time",
    "train.end": 1792215563,
    "train.start": 1792214303,
    "val_roll": 0.38904215594761465
   },
   "crn_v2_s0": {
-   "best_step": null,
+   "best_step": "epoch 99 (decoder)",
    "dataset": "v2_v19",
    "last_step": null,
    "method": "crn",
@@ -10465,13 +10465,13 @@
    },
    "seconds": 2349.956928253174,
    "selected": null,
-   "stop": null,
+   "stop": "epochs",
    "train.end": 1792219224,
    "train.start": 1792216824,
    "val_roll": 1.560896605085102
   },
   "crn_v2_s1": {
-   "best_step": null,
+   "best_step": "epoch 147 (decoder)",
    "dataset": "v2_v19",
    "last_step": null,
    "method": "crn",
@@ -10501,13 +10501,13 @@
    },
    "seconds": 1516.5076684951782,
    "selected": null,
-   "stop": null,
+   "stop": "epochs",
    "train.end": 1792223245,
    "train.start": 1792221685,
    "val_roll": 1.5416371238962518
   },
   "ct_obs_s0": {
-   "best_step": null,
+   "best_step": "epoch 158",
    "dataset": "obs_v19",
    "last_step": null,
    "method": "ct",
@@ -10531,7 +10531,7 @@
    "val_roll": 0.2727081026964337
   },
   "ct_obs_s1": {
-   "best_step": null,
+   "best_step": "epoch 158",
    "dataset": "obs_v19",
    "last_step": null,
    "method": "ct",
@@ -10555,7 +10555,7 @@
    "val_roll": 0.2771939637151982
   },
   "ct_v2_s0": {
-   "best_step": null,
+   "best_step": "epoch 16",
    "dataset": "v2_v19",
    "last_step": null,
    "method": "ct",
@@ -10579,7 +10579,7 @@
    "val_roll": 1.4841158158720795
   },
   "ct_v2_s1": {
-   "best_step": null,
+   "best_step": "epoch 16",
    "dataset": "v2_v19",
    "last_step": null,
    "method": "ct",
