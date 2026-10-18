@@ -1,0 +1,117 @@
+{
+  "scored_ns": 1792322304408755000,
+  "answers_sha256": "36268eadba1b38de5c9fcd054891bdb050ba5259b3de49562c9a7bc9a97302ac",
+  "key_sha256": "a795b967239980fd25b0e0f95eef785c5ae0e0fcc5b7e4fc006dbed7b6034893",
+  "village_disposition_sha256": "f497c00fd82d414ca0ea433782c91899e1905faa52c9beb9b192b52ec856c826",
+  "diagnostic_correct": 3,
+  "diagnostic_total": 10,
+  "missing_unscored": 4,
+  "full_protocol_bar": ">=10/14 and no kind0/2",
+  "full_protocol_status": "FAIL_INCOMPLETE_COVERAGE",
+  "kind_results": [
+    {
+      "kind": "TendFire",
+      "correct": 1,
+      "wrong": 1,
+      "missing_unscored": 0
+    },
+    {
+      "kind": "Craft",
+      "correct": 1,
+      "wrong": 1,
+      "missing_unscored": 0
+    },
+    {
+      "kind": "Repair",
+      "correct": 0,
+      "wrong": 1,
+      "missing_unscored": 1
+    },
+    {
+      "kind": "HearthCircle",
+      "correct": 0,
+      "wrong": 2,
+      "missing_unscored": 0
+    },
+    {
+      "kind": "Explore",
+      "correct": 0,
+      "wrong": 0,
+      "missing_unscored": 2
+    },
+    {
+      "kind": "Play",
+      "correct": 1,
+      "wrong": 0,
+      "missing_unscored": 1
+    },
+    {
+      "kind": "SitByFire",
+      "correct": 0,
+      "wrong": 2,
+      "missing_unscored": 0
+    }
+  ],
+  "crop_results": [
+    {
+      "crop": "crop_01.png",
+      "answer": "Craft",
+      "expected": "SitByFire",
+      "correct": false
+    },
+    {
+      "crop": "crop_02.png",
+      "answer": "Play",
+      "expected": "Play",
+      "correct": true
+    },
+    {
+      "crop": "crop_03.png",
+      "answer": "Craft",
+      "expected": "Craft",
+      "correct": true
+    },
+    {
+      "crop": "crop_04.png",
+      "answer": "TendFire",
+      "expected": "TendFire",
+      "correct": true
+    },
+    {
+      "crop": "crop_05.png",
+      "answer": "HearthCircle",
+      "expected": "TendFire",
+      "correct": false
+    },
+    {
+      "crop": "crop_06.png",
+      "answer": "HearthCircle",
+      "expected": "SitByFire",
+      "correct": false
+    },
+    {
+      "crop": "crop_07.png",
+      "answer": "Explore",
+      "expected": "Repair",
+      "correct": false
+    },
+    {
+      "crop": "crop_08.png",
+      "answer": "SitByFire",
+      "expected": "HearthCircle",
+      "correct": false
+    },
+    {
+      "crop": "crop_09.png",
+      "answer": "Repair",
+      "expected": "Craft",
+      "correct": false
+    },
+    {
+      "crop": "crop_10.png",
+      "answer": "Repair",
+      "expected": "HearthCircle",
+      "correct": false
+    }
+  ]
+}

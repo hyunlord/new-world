@@ -11,6 +11,8 @@ const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
 const ArtDeclumpP12 = preload("res://scripts/ui/art_declump_p12.gd")
 const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
+const HoverMarker = preload("res://scripts/ui/offscreen_marker.gd")
+const RING_COLOR := Color("D7BD77")
 const SETTLEMENT_OUTLINE = preload("res://shaders/settlement_outline.gdshader")
 const TILE_SIZE := 16
 const SPRITE_ORIGIN_X := 448
@@ -65,6 +67,9 @@ var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
 var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
 var _declump_fixture_sink_p12: RefCounted
+var _hovered_person_p12: int = -1
+var _hover_owner_p12: int = 0
+var _hover_marker_p12: Dictionary = {}
 var _raised_sprite_p12: Sprite2D
 var _raised_icon_p12: Sprite2D
 var _raised_sprite_z_p12: int = 0
@@ -288,13 +293,14 @@ func _process(delta: float) -> void:
 		Cold.apply(sprite, bool(row.get("cold", false)), bool(row["moving"]), agent_id, _animation_time)
 		_morning_chill.apply(sprite, agent_id, tick, _animation_time)
 		sprite.set_meta("drawn_position", sprite.position)
-		_apply_settlement_outline(sprite, agent_id)
+		_apply_settlement_outline(sprite, agent_id, agent_id == _hovered_person_p12)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
 		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))
 	_retire_missing(live)
 	_update_selection_ring()
+	_update_link_hover_p12()
 	_ingest_causal_events(tick, xs, ys)
 
 func _ensure_agent(agent_id: int) -> Sprite2D:
@@ -396,6 +402,7 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
+	clear_hovered_person_p12(_hover_owner_p12)
 	_frame_choices_ready = false
 	_pose_output.clear()
 	_selection_index.begin_frame()
@@ -698,7 +705,7 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		var sprite: Sprite2D = _sprites[agent_id]
 		sprite.position = drawn.round()
 		sprite.set_meta("drawn_position", sprite.position)
-		_apply_settlement_outline(sprite, agent_id)
+		_apply_settlement_outline(sprite, agent_id, agent_id == _hovered_person_p12)
 		sprite.set_meta("seated", seats.has(agent_id))
 		if seats.has(agent_id):
 			sprite.set_meta("seat", seats[agent_id])
@@ -788,7 +795,7 @@ func _update_selection_ring() -> void:
 		_selection_ring = Line2D.new()
 		_selection_ring.name = "SelectionRing"
 		_selection_ring.width = 1.0
-		_selection_ring.default_color = Color("#D7BD77")
+		_selection_ring.default_color = RING_COLOR
 		_selection_ring.set_meta("art_kind", "selection_ring")
 		_shadow_layer.add_child(_selection_ring)
 	_selection_ring.visible = false
@@ -830,19 +837,20 @@ func is_capture_visible() -> bool:
 	return _capture_visible
 
 
-static func _apply_settlement_outline(sprite: Sprite2D, agent_id: int) -> void:
-	if not SettlementSelection.layers_enabled:
+static func _apply_settlement_outline(sprite: Sprite2D, agent_id: int, hovered: bool = false) -> void:
+	sprite.set_meta("link_hover_outline", hovered)
+	if not SettlementSelection.layers_enabled and not hovered:
 		var existing: Sprite2D = sprite.get_node_or_null("SettlementOutline") as Sprite2D
 		if existing != null:
 			existing.hide()
 		sprite.set_meta("settlement_outline", false)
 		return
 	var home: int = SettlementSelection.home_for_agent(agent_id)
-	var selected: bool = SettlementSelection.selected_id >= 0 and home == SettlementSelection.selected_id
+	var selected: bool = SettlementSelection.layers_enabled and SettlementSelection.selected_id >= 0 and home == SettlementSelection.selected_id
 	sprite.set_meta("home_settlement_id", home)
 	sprite.set_meta("settlement_outline", selected)
 	var outline: Sprite2D = sprite.get_node_or_null("SettlementOutline") as Sprite2D
-	if not selected or sprite.texture == null:
+	if (not selected and not hovered) or sprite.texture == null:
 		if outline != null:
 			outline.hide()
 		return
@@ -866,7 +874,7 @@ static func _apply_settlement_outline(sprite: Sprite2D, agent_id: int) -> void:
 	var size: Vector2 = sprite.texture.get_size()
 	var rect: Rect2 = sprite.region_rect
 	material.set_shader_parameter("atlas_rect", Vector4(rect.position.x / size.x, rect.position.y / size.y, rect.end.x / size.x, rect.end.y / size.y))
-	material.set_shader_parameter("outline_color", SettlementSelection.color_for(home))
+	material.set_shader_parameter("outline_color", RING_COLOR if hovered else SettlementSelection.color_for(home))
 	outline.show()
 
 func _daily_facing(kind: int, daily: Dictionary, agent_id: int, context: Dictionary, previous: String) -> String:
@@ -892,3 +900,30 @@ func _daily_facing(kind: int, daily: Dictionary, agent_id: int, context: Diction
 			best = distance
 	var toward: Vector2 = Vector2(nearest - place)
 	return Activity.facing(-toward if kind == 4 else toward, previous)
+
+
+func set_hovered_person_p12(agent_id: int, owner: int) -> void:
+	var previous: int = _hovered_person_p12
+	_hovered_person_p12 = agent_id if _sprites.has(agent_id) else -1
+	_hover_owner_p12 = owner
+	for id: int in [previous, _hovered_person_p12]:
+		if _sprites.has(id):
+			_apply_settlement_outline(_sprites[id], id, id == _hovered_person_p12)
+	_update_link_hover_p12()
+
+func clear_hovered_person_p12(owner: int) -> void:
+	if owner == _hover_owner_p12:
+		set_hovered_person_p12(-1, 0)
+
+func _update_link_hover_p12() -> void:
+	if _hovered_person_p12 < 0 and _hover_marker_p12.is_empty():
+		return
+	_hover_marker_p12.clear()
+	var sprite: Sprite2D = _sprites.get(_hovered_person_p12) as Sprite2D
+	if is_instance_valid(sprite) and sprite.visible and _capture_visible:
+		_hover_marker_p12 = HoverMarker.geometry(sprite.get_global_transform_with_canvas().origin, get_viewport_rect(), HoverMarker.playable_rect(self))
+	queue_redraw()
+
+func _draw() -> void:
+	if not _hover_marker_p12.is_empty():
+		HoverMarker.draw_marker(self, _hover_marker_p12, RING_COLOR)

@@ -10,3 +10,6 @@
 - Activity and crowd blind tests pending. Live Life/porter/quarrel evidence follows Part3; synthetic layout fixtures do not establish live readability.
 
 Raw evidence root: /Users/rexxa/work/art-production12-evidence/.
+
+- Optional link hover now reuses the settlement-outline shader in ring color and existing offscreen marker geometry. Hover enter/leave, hidden-owner cleanup, missing-person handling, marker placement and selected-village restoration pass; windowed on/offscreen captures inspected. No sprite is invented for a dead/missing person. Source-only hover changes followed the frozen activity captures, whose raw hashes remain unchanged.
+- Activity retest terminal result is3/10 diagnostic with4missing, H8FAIL. Village taskNOT_RUN due2of6eligiblepairs. Three natural crowd geometry proofs pass; their human-readable activity score and live Life histories remain dependent evidence forPart3.

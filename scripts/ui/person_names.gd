@@ -56,6 +56,9 @@ static func prepare_rich_text(label: RichTextLabel) -> void:
 	label.set_meta("p12_clean_copy", true)
 	label.gui_input.connect(_copy_input.bind(label))
 	label.get_menu().id_pressed.connect(_copy_menu)
+	label.meta_hover_started.connect(_hover_person.bind(label))
+	label.meta_hover_ended.connect(_leave_person.bind(label))
+	label.visibility_changed.connect(_hide_hover.bind(label))
 
 static func _copy_input(event: InputEvent, label: RichTextLabel) -> void:
 	if event.is_action_pressed("ui_copy") and not label.get_selected_text().is_empty():
@@ -68,3 +71,20 @@ static func _copy_menu(id: int) -> void:
 
 static func _clean_clipboard() -> void:
 	DisplayServer.clipboard_set(plain(DisplayServer.clipboard_get()))
+
+
+static func _hover_person(meta: Variant, label: RichTextLabel) -> void:
+	if not str(meta).begins_with("person:"):
+		return
+	var renderer: Node = label.get_node_or_null("/root/Main/AgentRenderer")
+	if renderer != null and renderer.has_method("set_hovered_person_p12"):
+		renderer.call("set_hovered_person_p12", int(str(meta).get_slice(":", 1)), label.get_instance_id())
+
+static func _leave_person(_meta: Variant, label: RichTextLabel) -> void:
+	var renderer: Node = label.get_node_or_null("/root/Main/AgentRenderer")
+	if renderer != null and renderer.has_method("clear_hovered_person_p12"):
+		renderer.call("clear_hovered_person_p12", label.get_instance_id())
+
+static func _hide_hover(label: RichTextLabel) -> void:
+	if not label.is_visible_in_tree():
+		_leave_person("", label)
