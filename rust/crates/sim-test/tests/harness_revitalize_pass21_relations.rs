@@ -340,6 +340,8 @@ fn harness_p21_dispute_cap_stops_the_loss_not_the_count() {
     assert_eq!((t.forage_disputes, t.disputes_uncosted, t.quarrels, t.quarrels_capped), (5, 2, 0, 0));
     assert_eq!(engine.resources.settlement_relations.pairs[&(1, 2)].value, 300 - 3 * V26.dispute_loss);
     assert_eq!(engine.resources.settlement_relations.day_counts[&(1, 2)], (3, 0));
+    let day = engine.resources.settlement_relations.dispute_day;
+    assert_eq!(engine.resources.settlement_relations.dispute_days[&(day, 1, 2)], (5, 0), "the log counts every dispute");
     // The next display day the ledger starts again.
     rearm(&mut engine, a, b);
     decide_at(&mut engine, start + 1440);
@@ -355,6 +357,7 @@ fn harness_p21_dispute_cap_stops_the_loss_not_the_count() {
     assert_eq!(engine.resources.tallies.disputes_uncosted, 0);
     assert_eq!(engine.resources.settlement_relations.pairs[&(1, 2)].value, 300 - 5 * V25.dispute_loss);
     assert!(engine.resources.settlement_relations.day_counts.is_empty());
+    assert_eq!(engine.resources.settlement_relations.dispute_days.values().copied().collect::<Vec<_>>(), vec![(5, 0)]);
 }
 
 #[test]
@@ -380,6 +383,7 @@ fn harness_p21_quarrel_cap_skips_the_draw_and_the_pickup_proceeds() {
         300 - 2 * V26.dispute_loss - V26.quarrel_loss
     );
     assert_eq!(of_kind(&engine, ChronicleKind::Quarrel).len(), 1);
+    assert_eq!(engine.resources.settlement_relations.dispute_days.values().copied().collect::<Vec<_>>(), vec![(2, 1)]);
     // v25 at the same ticks: both quarrel.
     let (mut engine, a, b) = dispute_world(V25, 1000, 0);
     rearm(&mut engine, a, b);

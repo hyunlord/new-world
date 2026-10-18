@@ -2852,6 +2852,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                 counts.0 += u32::from(costed);
                                                 counts.1 += u32::from(quarrel);
                                             }
+                                            let logged = relations.dispute_days.entry((relations.dispute_day, pair.0, pair.1)).or_insert((0, 0));
+                                            logged.0 += 1;
+                                            logged.1 += u32::from(quarrel);
                                             let mut after = 0;
                                             let mut estranged = false;
                                             if let Some(relation) = relations.pairs.get_mut(&pair) {
