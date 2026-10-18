@@ -57,3 +57,9 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   relative): GPU kernel nondeterminism of CT's attention rollouts (the same code path reproduces `ct_obs_s0`, `ct_v2_s*`
   bit for bit). D2 compares WM-4's committed (unrounded) numbers with the rounded re-score, and also reports the
   re-score's own unrounded numbers, so the size of this effect is visible.
+
+## Part 3 / 5
+- **L3.1 GOAL.md's quoted v2 numbers.** GOAL.md (objection 3 and 3.1) quotes WM-2's between-replicate spread 0.189
+  "on v2's 7-day cells against `zero` 0.487" and "v2 7 d: `zero` 0.487". In the committed files these are the
+  **30-day** cells (WM-2's W3 cells were 30-day; `wm4/runs/judge4/judge.md`: v2 `zero` 0.612 at 7 d, 0.487 at 30 d;
+  WM-2 spread 0.132 at 7 d, 0.189 at 30 d). WM-5 reports both lags from the committed files and changes no rule.
