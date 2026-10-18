@@ -22,7 +22,7 @@ for label in i1_v19 i3_v16 i4_v20 i5_v21 i6_v22 i7_v23 i8_v24; do
     else
         echo "$label: FAIL: $diffs differences, $only one-sided paths"; status=1
     fi
-    if line=$(python3 - "$REF_RAW/chronicle/$label" "$RAW/chronicle/$label" <<'PY'
+    if line=$(python3 - "$REF_RAW/chronicle/$label" "$RAW/chronicle/$label" 2>&1 <<'PY'
 import json, sys
 from pathlib import Path
 ref, cand = Path(sys.argv[1]), Path(sys.argv[2])
@@ -38,7 +38,7 @@ for name in names:
             sys.exit(f'{name}: {key} differs')
 print(f'{len(names)} files equal (entries, people and every field but git_sha; kinds {len(a["kinds"])} -> {len(b["kinds"])} names)')
 PY
-2>&1); then
+); then
         echo "$label chronicles: PASS: $line"
     else
         echo "$label chronicles: FAIL: $line"; status=1

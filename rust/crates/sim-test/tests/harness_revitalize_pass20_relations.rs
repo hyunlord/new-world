@@ -756,7 +756,8 @@ fn harness_relations_trips_and_quarrels_are_deterministic() {
             positions, quarrel.resources.settlement_relations.clone(), quarrel.resources.chronicle.clone())
     };
     let (first, second) = (run(), run());
-    assert!(first.0.trips.len() == 2 && first.4.pairs[&(1, 2)].value < 300, "the twin exercises trips and a quarrel");
+    assert_eq!(first.0.trips.len(), 2, "the twin exercises two porter trips");
+    assert_eq!(first.4.pairs[&(1, 2)].value, 300 - RULE.dispute_loss - RULE.quarrel_loss, "and a quarrel");
     assert_eq!(first, second);
 }
 

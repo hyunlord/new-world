@@ -80,6 +80,12 @@ def village_facts(run: Mapping[str, Any], entries: Sequence[Sequence[Any]], day_
         "daughter_deaths": sum(deaths_by_village[d] for d in daughters), "alive_daughters_at_day": alive_daughters}
 
 
+def living_ids(entries: Sequence[Sequence[Any]]) -> set[int]:
+    """Settlements formed (12) or founded as daughters (14) and not dissolved (16)."""
+    made = {e[5] for e in entries if e[1] in (KIND["settlement_formed"], KIND["daughter_founded"])}
+    return made - {e[5] for e in entries if e[1] == KIND["settlement_dissolved"]}
+
+
 def mean_difference(pairs: Sequence[tuple[float, float]]) -> float:
     if not pairs:
         raise UndefinedStatistic("no worlds")
@@ -146,8 +152,11 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "causes": dict(Counter(r[CAUSE] for r in trips)),
             "pairs_end": block["pairs_end"],
             # Brief 9 (reported): relations exist exactly for the living pairs
-            # (villages alive at the end), values within -1,000..=1,000.
-            "pairs_invariant": len(block["pairs_end"]) == (alive[-1] * (alive[-1] - 1) // 2 if alive else 0)
+            # (by id: settlements formed or founded and not dissolved, from the
+            # chronicle), values within -1,000..=1,000.
+            "pairs_invariant": {(p[0], p[1]) for p in block["pairs_end"]} == {
+                (a, b) for a in living_ids(ec) for b in living_ids(ec) if a < b}
+                and len(block["pairs_end"]) == len({(p[0], p[1]) for p in block["pairs_end"]})
                 and all(-1000 <= p[2] <= 1000 for p in block["pairs_end"]),
             "daughter_deaths_v25": vc["daughter_deaths"], "daughter_deaths_v24": vb["daughter_deaths"],
             "alive_daughters_v25": vc["alive_daughters_at_day"], "alive_daughters_v24": vb["alive_daughters_at_day"],

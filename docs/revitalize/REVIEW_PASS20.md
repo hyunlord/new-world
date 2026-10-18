@@ -272,3 +272,249 @@ The watcher logs in `p2/RUNLOG.txt` and `p1id/RUNLOG.txt` show both groups stopp
 | N7 "38 / 38" wording | DECISIONS reworded (36 food trips from the 38 pair-days, 2 sent nothing; 2 wood trips). |
 | N8 porter snapshot `amount` after delivery; brief 9 pair invariant | RELATIONS.md's bridge note says to draw the load only while `stage` is 0 (or after a turn-back); `evaluate_pass20.py` now reports the brief-9 check (32 of 32 worlds: relations exactly for the living pairs, values in range) and `eval.md`/`eval.json` were regenerated (no verdict changed). |
 | N1, N3–N6 | Recorded; no change (N1 already recorded; N3/N4 are the brief's rule; N5 is the owner's §10 check; N6 still passes when counted as estranged, 0.469). |
+
+## Round 2 (14:31–14:43 KST, the last round)
+
+
+**Reviewer.** A fresh general-purpose subagent. I had not seen the work before this review.
+
+**Inputs.**
+- The brief: `PASS20_GOAL.md` §§2, 4, 6–9, 11.
+- `REVIEW_PASS20.md`: the round 1 review and its dispositions.
+- The diffs `git diff 5cb16639..HEAD` and `git diff b2c77217..HEAD`. HEAD is `45d793e1`.
+- The committed outputs.
+- The raw data in `/Users/rexxa/work/p20-data/`.
+- The gate run in progress in `p20-data/gate1`.
+- The report draft, `p20-data/report_draft.md`.
+
+**What I changed or created.**
+- No repository file changed and nothing was committed.
+- `.mac_quiet.lock` was absent at every check.
+- I ran one cargo test: `harness_revitalize_pass20_relations`, with `CARGO_TARGET_DIR=p20-data/target_review`, `CARGO_BUILD_JOBS=4` and `--test-threads=4`. Its log is `p20-data/review2_relations_test.log`.
+- I ran no probe. Scratch files went to my scratchpad.
+
+**Summary: no BLOCKER, 2 MAJOR, 3 MINOR, 9 NOTE.**
+- Every committed verdict still reproduces from the raw data, and the regenerated `eval.md` / `eval.json` changed no verdict.
+- **T5 holds**: I1–I8 summaries are identical, I2 is identical, the chronicles are equal in content, and DETERMINISM PASS ×7. The binaries are the ones behind the evaluation and the perf measurement.
+- Two problems are new since round 1:
+  - **(A)** The round-1 "fix" to the identity validator broke its chronicle check. It now passes any chronicle difference with exit 0. The T5 result itself is unaffected; see A.
+  - **(B)** The first gate run (`gate1`) does not test any single commit.
+
+---
+
+### 1. Round-1 dispositions — were they carried out as stated?
+
+**How I checked.**
+- I read `git diff b2c77217..HEAD` for `DECISIONS.md`, `RELATIONS.md`, `evaluate_pass20.py`, `validate_identity_p20.sh` and `harness_revitalize_pass20_relations.rs`, plus the `eval.json` and `eval.md` diffs.
+- I re-ran the evaluator into scratch: `evaluate_pass20.py --candidate p2/A/game_v25 … --baseline p2/A/game_v24 …`. The result is that `eval.md` is **byte-identical** to the committed file and `eval.json` is **equal**.
+- The `eval.json` diff since `b2c77217` contains only `+ "pairs_invariant": …` lines and one `+ "pairs_invariant_worlds": 32` line. No other value changed, so **the verdicts are unchanged**.
+- I ran the Pass 20 harness (debug, review target): **24 passed, 0 failed**. That includes `harness_relations_trips_and_quarrels_are_deterministic`.
+
+| Round-1 item | Carried out? | Evidence |
+|---|---|---|
+| M1 (Gather arm ignores avoid) | Yes: disclosed, kept | DECISIONS L1198, RELATIONS.md "What the player sees" and *Measured*, draft limitation 1. I verified 426 of 511 quarrels came after estrangement (recounted from `p2/A/chronicle_game_v25`). The `gather_exp` numbers 1 / 21 / 7 / 31 and one reconciliation in 19410 come from `gather_exp/c/*.json`. See MINOR m2 for the seed-selection wording. |
+| m1 (I8 cited before it ran; ordering) | Yes | DECISIONS L1194: corrected, and the ordering deviation recorded. |
+| m2 ("bit-identical") | Yes | RELATIONS.md L3 now says "identical … chronicle files identical in content (kind list 17 → 22)". |
+| m3 ("until time heals it") | Yes in RELATIONS.md L54. **No in the report draft**, see m1 below. | — |
+| m4 (public-item list) | Yes | DECISIONS L1175 now lists the `SettlementRelations` fields, `PorterKind` / `PorterStage` methods, `need_milli`, `food_keep`, `burn_night`, `wood_keep` and `in_reach`. Unlisted items I found are covered by brief 6.8 ("pure collectors"): the bridge's `collect_*` and `PorterRow` / `RelationRow`. |
+| m5 (exchange unreachable) | Yes | Draft tuning paragraph and limitation 2. |
+| m6 (Rust twin exercises no relations code) | Yes | New test at `harness_revitalize_pass20_relations.rs:738–761`. It passes (my run). Its guard is weak, see NOTE n1. |
+| N2 (validator hides the reason) | **Done incorrectly**: it introduced a regression | See MAJOR A. |
+| N7 ("38 / 38") | Yes | DECISIONS L1200 reworded. |
+| N8 (porter `amount`; brief 9) | Yes | RELATIONS.md bridge bullet; `evaluate_pass20.py:148–151, 213, 280`. The check counts pairs rather than matching ids, see NOTE n3. |
+
+### 2. T5: final-build identity and binary provenance
+
+**Re-run.**
+```
+bash tools/revitalize/validate_identity_p20.sh docs/revitalize/probe/p20-0_base docs/revitalize/probe/p20-3_final /Users/rexxa/work/p20-data/finalid /Users/rexxa/work/p20-data/base
+```
+- Exit 0.
+- I1, I3–I8: `0 differences`.
+- Every label: `chronicles: PASS: 32 files equal (… kinds 17 -> 22 names)`.
+- `i2: PASS: 20 array hashes equal`.
+- `determinism: 7 of 7`.
+- The output is identical to the committed `p20-3_final/validation.txt`.
+
+The chronicle PASS lines carry the success text. Python prints that text only after every file compares equal, so the result is valid despite MAJOR A.
+
+**Further checks.**
+- The committed summaries equal the raw ones: `cmp finalid/probe/{i1_v19,i8_v24}/summary.json` against `p20-3_final/…` matched.
+- The base matches Pass 19's final record: I1, I3–I7 compared with `compare_summaries.py` against `p19-4_final` gave 0 differences each, and `i2_sha256.txt` is identical.
+- **Pins.** `gate1/test_debug.log` shows `harness_game_v24_rules_pinned_field_by_field` and `harness_v24_seed0..4_pinned` ok, and all 13 earlier `*_frozen` test binaries ran with no failure. The run reported 2,327 passed and 0 failed on the `27d1688d` tree. Its non-test Rust is identical to `3562a9d4` and HEAD: `git diff 3562a9d4..HEAD -- rust/` touches only the test file.
+
+**Binary provenance.**
+
+| Binary | `bin_p2` hash (current, mtime 11:55) | Also matches |
+|---|---|---|
+| `worldsim_probe` | `2fe73ce1…` | `p20-3_final/binaries.sha256`, `p20-2_eval/binary.sha256`, `p2/eval_binary.sha256` |
+| `worldsim_perf` | `052e11ae…` | `binaries.sha256`, `binary.sha256`, `provenance.json` `builds.final.worldsim_perf_sha256` |
+| `worldsim_wm` | `0543a057…` | `binaries.sha256` (not part of eval / perf) |
+
+- `p2/run_eval.sh:6` sets `BIN=/Users/rexxa/work/p20-data/bin_p2`.
+- All 37 `perf/p20-2/commands.jsonl` "final" argv entries use `bin_p2`, with `sha_before == sha_after == 052e11ae…`.
+- **So the same binaries produced T5, the evaluation and T6.** The one thing the run itself does not record is which binary the T5 run used; see NOTE n6.
+
+### 3. Report draft: every number against the committed outputs
+
+**Checked and correct** (source in brackets).
+
+**T1** [eval.json T1]
+- 19 multi-village worlds; 9/19 = 0.474; failed 0/71.
+- Trips 38 (36 food, 2 wood); porters 71; food 634, wood 34; causes 67 / 4 / 0.
+- Per-world porter deliveries 2 / 8 / 4 (wood, 19410) / 10 / 4 / 10 / 2 / 2 / 29.
+
+**T2** [T2]
+- T2a: +1.053 [0.000, 3.105]; 26 vs 6; 19414 24 vs 5; without 19414, 2 vs 1; alive 24 vs 24.
+- T2b: −0.444 [−1.333, 0.000], 9/9 matched.
+- 19414 [chronicle_19414, both rules]:
+  - Daughter 2 estranged at tick 34560 (day 24).
+  - v25 deaths: cause 4 ×19 and cause 0 ×5. v24: daughter cause 4 ×5, camp cause 4 ×4.
+
+**T3** [T3]
+- 0.684 / 0.684 / 0.4375 (14 of 32).
+- Disputes 1,834; quarrels 511 in 13 of 19 worlds; 14 estrangements; 0 reconciliations.
+- 426 / 511 after estrangement (my recount).
+- 19430 (3, 4) at −1000 not estranged; 15/32 = 0.469 if counted.
+
+**T4** [T4]
+- R2: alive +0.6 % [0, 1.9]; deaths +0.53 [0, 1.5]; shelters 1.000; social 1.003; food −1.1 %; wood −0.05 %.
+- Health table: 56.84 / 56.50; 1.91 / 1.38; 6.34; 416 / 421; 108.6 / 108.7; 1.741 / 1.735.
+- F1 0.681 vs 0.675; F5 0 vs 0.
+
+**T6** [t6.json]
+- Stress: 0.3681 → 0.3778 (+2.65 %); p99.9 0.781 → 0.797 (+2.05 %); per-repeat +1.7 … +3.8 %; r4 +43 %, r5 −34 %; slope 0.979 / 0.983.
+- Natural: 0.2156 → 0.2252 (×1.045; repeats ×1.050 / 1.045 / 1.048); p99.9 0.468 → 0.486 (×1.037); 0.003739 → 0.003903.
+- `RelationsSystem` share 0.022–0.032 %; quick 0.3032 / 0.3071.
+
+**T7** [T7, chronicle.md]
+- 0 mismatches, 0 unbalanced, 0 village changes.
+- C1–C4 PASS; C4 32/32 byte-identical.
+
+**Diagnostic** [diag.md / json, raw `diag/probe`]
+- 6/16 worlds; 348 / 342 pair-days. The 6 out-of-reach pair-days are exactly (2, 3) / (3, 2) of 19511, the two daughters, both of parent 1 per its `fission_log`.
+- 1 wood-aid pair-day (19512); 1,444–6,759 ‰.
+- 63 disputes / 11 quarrels in 3 of 6 worlds.
+- 19509 estranged at tick 69120 (decision day index 48, the 49th day); trajectory 300 / −987.
+- T1 out of reach, T3 within reach.
+
+**Tuning** [tuning.md]
+- 2 / 6 worlds deliver (0.33 vs 0.17); food aid on 5 pair-days (4 in 19509); disputes, quarrels and estrangement unchanged.
+
+**Other figures.**
+- Drift: 49 days from −400 and 114 days from −1,000 (I recomputed both with the integer rule).
+- 28-day year: `days_per_season` 7 (`rules.rs:1257`).
+- Reach: 39 tiles.
+- 14 named `Tallies` fields; 2 bridge unit tests.
+- Shared-Mac tools: copies of Pass 19's with only the names, data paths and the owner string changed (diffed).
+
+**Problems in the draft:** m1, m3 and NOTEs n4, n5, n7, n8 below.
+
+### 4. Things round 1 missed
+
+**No finding changes a T verdict.** The identity *claim* stands, but the tool that proves it is currently broken (A). I looked at the following and found them sound:
+- The brief-9 invariant by settlement id, not only count: 32/32 worlds.
+- The trip ledger.
+- The selection of the T6 natural seeds.
+- Nothing outside the allowed paths (`git diff --name-only 5cb16639..HEAD`). The `p19_gate` files come from the WIP commit `bbba1dbd`.
+- No edit to `sim-test/src/worldmodel/**` or to Pass 19 tools.
+- No GDScript chronicle consumer in `scripts/`. A grep for `chronicle` returns nothing, which confirms round 1's N5.
+
+---
+
+### Findings
+
+### MAJOR
+
+**A — `validate_identity_p20.sh` no longer fails on a chronicle difference** (`tools/revitalize/validate_identity_p20.sh:41`, introduced in `0ade8ffd` as the N2 fix).
+- **Cause.** `2>&1` was put on its own line after the heredoc terminator `PY`. Inside `$( … )` that line is a separate, empty command with a redirection. Two things follow:
+  1. Python's stderr is still not captured.
+  2. The substitution's exit status is that of the empty command, which is always 0.
+- **Effect.** Any chronicle difference prints `chronicles: PASS: ` with an empty reason, and the script exits 0.
+- **Demonstration.**
+  - I made a scratch copy of `finalid/chronicle/i1_v19` with one value changed in `chronicle_5.json` (entry 3, field 8 incremented by 1).
+  - HEAD's validator printed `i1_v19 chronicles: PASS: ` and exited 0. The reason, `chronicle_5.json: entries differs`, went to stderr.
+  - The `b2c77217` version prints `chronicles: FAIL`.
+- **T5 is not affected.** Each committed chronicle line in `p20-3_final/validation.txt` (and the `p20-1_identity` one, made with the old script) carries the full success text "32 files equal …". Python prints that text only after every file compared equal; my re-run printed it for all 7 labels.
+- **Fix.** Put the redirection on the command:
+  ```
+  python3 - "$REF_RAW/…" "$RAW/…" 2>&1 <<'PY'
+  ```
+- **Then:**
+  - Re-run the validator.
+  - Re-commit `validation.txt`. It should come out identical.
+  - Record the regression and its fix in REVIEW_PASS20.md.
+- **Report wording.** Until it is fixed, the report must not cite the script's exit status as T5 evidence for the chronicles.
+
+**B — `gate1` does not gate any single commit** (`p20-data/gate1/gate.txt`, `gate_pass20.sh`).
+- **What it records.** `gate.txt` says `head 27d1688d…`, started 13:05:40.
+- **Debug step on the old tree.** `test_debug` built its test binaries at 13:06, before `0ade8ffd` (the test file's mtime is 13:24:39; the commit is at 13:26). It therefore ran 23 Pass 20 tests, without `harness_relations_trips_and_quarrels_are_deterministic`, and reported `passed 2327`.
+- **Release step on the newer tree.** `test_release` compiled the tree checked out at that time and reported `passed 2328`, one more, which is the new test.
+- **Later steps.** `clippy`, `python_unittest`, `python_worldmodel` and `allowed_paths` read the working tree and `HEAD` whenever they start. They include the tools changes of `0ade8ffd` and anything committed while the gate runs.
+- **Consequence.** The record mixes at least two trees under one head label. The brief §2 / §8.3 rule ("fast-forward to a WIP commit whose gate is green") cannot be satisfied by citing `gate1` for `27d1688d`, nor for the final commit.
+- **What I could confirm.** The production Rust is the same in every tree involved, and both test steps are green so far. I also ran the new test myself in debug, and it passes.
+- **Required.** Run `gate_pass20.sh` on the final commit, after the validator fix (A) and with no commits during the run. Fast-forward to that commit. If that cannot be done, the report's 게이트 결과 must state the mixed coverage exactly, and must not name a single green commit.
+
+### MINOR
+
+**m1 — The report draft repeats the m3 overstatement** (`report_draft.md:35`, 기능 설명 bullet 2).
+- **The claim.** "관계가 −300 아래로 떨어지면 … 각자 자기 쪽 덤불만 쓰며, −150 위로 회복되면 화해한다".
+- **What the data shows.**
+  - 426 of 511 quarrels came after estrangement.
+  - There were 0 reconciliations.
+  - From −1,000 the drift alone needs 114 days to reach −150.
+- **The thresholds are inclusive**: estranged at ≤ −300, reconciled at ≥ −150.
+- **Fix.** Use RELATIONS.md L54's wording: the rule as designed, then "평가 세계에서는 떼어 놓지 못했다 …".
+
+**m2 — "The four most quarrelsome estranged worlds" is wrong** (`DECISIONS.md:1198`; `report_draft.md:108` "가장 다툰 4세계").
+- **Post-estrangement quarrels by world** (my recount from `p2/A/chronicle_game_v25`): 19410 94, 19425 74, 19404 73, **19409 61**, 19402 52. By total quarrels, 19409 has 67 against 19402's 56.
+- **The mismatch.** The experiment ran on 19402, 19404, 19410 and 19425, so 19409 is skipped.
+- **Fix.** Name the seeds, or say "four of the five most quarrelsome". The numbers themselves are correct.
+
+**m3 — Test counts in the draft** (`report_draft.md:9–10`).
+- **"Pass 20 하네스 23개" (Part 1).** The Part 1 commit `bfc77f2c` has 22 `#[test]`. `3562a9d4` has 23 (the tuned-aid test was added). HEAD has 24 (the round-1 twin).
+- **"assert_eq! 159개" for the field-by-field rule test.**
+  - The field-by-field function `assert_v24_fields` holds 154.
+  - 159 is the whole file, including the pin `check()` asserts.
+
+### NOTE
+
+- **n1 — The new twin's guard is weak** (`harness_revitalize_pass20_relations.rs:759`).
+  - `first.4.pairs[&(1,2)].value < 300` also holds with a dispute alone (290). The quarrel does happen deterministically: p = 500 and `tick_where(…, true, 500)`, so the value is 190.
+  - `== 300 − dispute_loss − quarrel_loss` or `tallies.quarrels == 1` would make the assertion's message ("exercises … a quarrel") true by construction.
+- **n2 — Final-build identity cited before it existed.** RELATIONS.md L3 ("identical on the Part 1 **and final** builds") and DECISIONS L1194 ("the final identity's I8 on `bin_p2` itself (T5)") were committed in `0ade8ffd` at 13:26:29. T5 ran 13:04–14:30 (I8 14:12–14:30). Both statements are supported since `45d793e1`. This is the m1 pattern again; worth one line in the review record.
+- **n3 — The evaluator's brief-9 check counts pairs.** `evaluate_pass20.py:150` compares `len(pairs_end)` with n(n−1)/2 of `settlements_alive_daily[-1]`. I checked it by id as well: the living ids at the end come from chronicle kinds 12 / 14 minus 16, and the pairs match exactly in 32/32 worlds. The claim stands, but the check is weaker than its label.
+- **n4 — T2b wording.** Draft L69 says "원조받은 마을 9곳은 … 0.44명 덜 죽었다", but the interval is [−1.33, 0.00], it includes 0, and there are only 9 villages. Say it is not distinguishable from 0. The table row is fine.
+- **n5 — 19414 detail.** The draft's "(v24는 노출 5, 캠프 노출 4)" omits that the camp lost 0 in v25. The world's non-old-age total is 24 (v25) vs 9 (v24); stating that avoids implying the camp did worse.
+- **n6 — The T5 run does not log its binary path.** `finalid/RUNLOG.txt` and the probe logs omit the `BIN` path, and `identity.out` is empty. Provenance rests on four things:
+  - the chronicle label `git_sha` = `3562a9d4`;
+  - 22 kind names, which marks a Pass 20 build;
+  - `binaries.sha256` = the current `bin_p2` hashes;
+  - `bin_p2`'s mtime of 11:55, before the run.
+
+  This is consistent, but not recorded by the run itself.
+- **n7 — The natural ratio has two possible definitions.**
+  - Ratio of medians: 1.0447 (used).
+  - Median of per-repeat ratios: 1.0475.
+
+  The registered text supports both, and both pass.
+- **n8 — Delivery counts are porter deliveries.** The draft's "배달 세계: 19400(2) … 19430(29)" counts porter deliveries (sum 71), not trips (38). Label them "짐꾼 배달".
+- **n9 — Placeholders still to fill.**
+  - T5 should read "요약·I2·핀 동일, 연대기는 내용 동일(종류 목록 17→22)" and cite `p20-3_final/validation.txt`.
+  - GATE should follow B.
+  - REVIEW should include A and B and their dispositions.
+
+### Round 2 dispositions
+
+| finding | disposition |
+|---|---|
+| A validator passes any chronicle difference | Fixed: the redirection now sits on the `python3` command (`python3 - … 2>&1 <<'PY'`). Negative test: one changed value in a copy of `chronicle_5.json` now prints `i1_v19 chronicles: FAIL: chronicle_5.json: entries differs` and exits non-zero. Re-running the fixed script on the Part 1 and final identity data reproduces both committed `validation.txt` files byte for byte (exit 0), so T5 and the Part 1 identity stand. |
+| B `gate1` gated no single commit | Agreed. `gate1` (13:05–14:43, green 15/15) is kept as a preliminary record (`verification/p20_gate/first_27d1688d/`): its debug step built the `27d1688d` tests (2,327 passed), its release step the tree after `0ade8ffd` (2,328, the round-1 test included), and later steps read the moving working tree; the production Rust was the same in every tree. The final gate runs on the report commit with no commit or edit in the working tree while it runs, and `codex/revitalize-2026-10` moves only to that commit. |
+| m1 report repeats "keep to their own side … reconcile" | Report's 기능 설명 now states the rule as designed and that in the evaluated worlds it did not separate the villages and no pair reconciled. |
+| m2 "four most quarrelsome" | DECISIONS and the report name the four seeds (four of the five with the most post-estrangement quarrels; 19409 with 61 was not run). |
+| m3 test counts | Report: Part 1 had 22 Pass 20 tests (23 after the tuning test, 24 after round 1); the field-by-field function has 154 `assert_eq!` (159 in the whole file). |
+| n1 weak twin guard | The test now asserts two trips and the exact post-quarrel value (300 − 10 − 100). |
+| n2 final identity cited before it existed | Recorded here: RELATIONS.md L3 and the DECISIONS line were committed at 13:26, before T5 finished (14:30); both are supported since `45d793e1`. |
+| n3 brief-9 check counts pairs | `evaluate_pass20.py` now compares the pair ids with the living settlement ids from the chronicle (formed or founded, not dissolved); 32 of 32 worlds; `eval.md`/`eval.json` regenerate byte-identically. |
+| n4, n5, n8 report wording | T2b called indistinguishable from 0; 19414's world totals (24 vs 9, camp 0 in v25) given; "짐꾼 배달" labels the per-world delivery counts. |
+| n6, n7, n9 | Recorded (T5's binary is identified by its chronicle label, the kind list and `binaries.sha256`; the natural ratio is the ratio of medians, 1.0447, the median of per-repeat ratios 1.0475 also passes; placeholders filled). |
