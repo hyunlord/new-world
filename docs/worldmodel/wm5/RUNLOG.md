@@ -29,3 +29,5 @@ pauses.
 | 1 (6.2.5) | 02:11:30 | | family schedules; families recording (val then test, one call per (world, ref), 4 workers) |
 | 1 (6.2.6) | 02:14 | 02:15 | observed-only manifest (1,640 episodes verified) committed `835a8670` (DECISIONS L1.4); `obs2_v19` loads from it (val 200 episodes); obs2 queue lines appended after `ct_v2_s1` (cost checks, `m1b_obs2_s0`, `crn_obs2_s0`, `ct_obs2_s0`, `crn_obs2_s1`, `ct_obs2_s1`, `m1b_obs2_s1`) |
 | 4.1 | 02:05:46 | 02:54:51 | `crn_v2_s1`: planned 15,700 + 53,800 reached, α 0.9999 α_max, 2,905 s; test effects 02:54:56 / 02:54:59; `ct_v2_s1` started |
+| 1 (6.2.5) | 02:11:30 | 04:01:45 | val families: 400 recorder calls (c1, c2; replicate 0), linked; test families recording |
+| 1 (6.2.6) | 04:02:12 | 04:02:31 | `describe` (`finals5.sh describe`, train worlds + val families only): IPW ESS 396–445 (7 d) and 127–141 (30 d) per act; DATASET_OBS2.md (train / val parts) |
