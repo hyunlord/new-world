@@ -47,3 +47,13 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   empty `pre` equals the world's round-0 factual episode (array sha256), the members are exactly `none`, the three arms
   and `pre` (when not empty), and the fork is at c with the role's replicates. `finalize` replays the policy on every
   observed episode and requires every round's casts and rows to be reproduced.
+
+## Part 4
+- **L4.1 One queue** (WM-4 L4.1): `wm5/_setup/queue.sh` runs every training and cost check one at a time from
+  `queue.txt`; test evaluations are launched by `finals5.sh` only after METRICS.md part b (`6e9e88ed`, `prereg_sha`).
+- **L4.2 The re-scoring reproduces WM-4 (D2).** `causal5.py effects` on WM-4's eight CRN / CT runs (their kept
+  `model.pt`, WM-4's test cases) gives unrounded predictions equal to WM-4's committed `effects.json` to ≤ 9e-16 for seven
+  runs; for `ct_obs_s1` every value differs at the float level (max 0.30 on a food-store effect of ≈ 67, ≈ 1e-4
+  relative): GPU kernel nondeterminism of CT's attention rollouts (the same code path reproduces `ct_obs_s0`, `ct_v2_s*`
+  bit for bit). D2 compares WM-4's committed (unrounded) numbers with the rounded re-score, and also reports the
+  re-score's own unrounded numbers, so the size of this effect is visible.
