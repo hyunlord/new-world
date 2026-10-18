@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method crn --dataset v2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_crn_v2/cost.json --budget 5400 --max-seconds 5400 --out /home/hyunlord/work/wm1-runs/wm5/crn_v2_s0

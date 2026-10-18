@@ -1,0 +1,58 @@
+{
+ "argv": [
+  "tools/worldmodel/wm5/causal5.py",
+  "cost",
+  "--method",
+  "crn",
+  "--dataset",
+  "v2_v19",
+  "--seconds",
+  "300",
+  "--budget",
+  "5400",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm5/_cost_crn_v2"
+ ],
+ "budget": 5400.0,
+ "code_commit": "38bea0c5773edb631646dcd82991ebb4b93ae559",
+ "dataset": "v2_v19",
+ "device": "cuda",
+ "load_seconds": 35.80545711517334,
+ "method": "crn",
+ "peak_gpu_mib": 972.9404296875,
+ "plan": {
+  "allowance": 2.866008996963501,
+  "factor": 1.0,
+  "planned": {
+   "crn_dec": 53800,
+   "crn_enc": 15700
+  },
+  "predicted_seconds": 3693.523648942888,
+  "reduced": false
+ },
+ "seconds": 300.0,
+ "stages": {
+  "crn_dec": {
+   "eval_seconds": 0.1410672664642334,
+   "evals": 2,
+   "s_per_step": 0.04043475555183112,
+   "seconds": 149.8107693195343,
+   "steps": 3705
+  },
+  "crn_enc": {
+   "eval_seconds": 0.05,
+   "evals": 2,
+   "s_per_step": 0.09651387205461213,
+   "seconds": 150.07907104492188,
+   "steps": 1555
+  }
+ },
+ "train_episodes": 3780,
+ "val": {
+  "episodes": 80,
+  "jobs": 800,
+  "sampled": false
+ },
+ "val_episodes": 80,
+ "wall_seconds": 335.9768855571747
+}
