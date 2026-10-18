@@ -3,8 +3,9 @@ extends Node2D
 const Icons = preload("res://scripts/ui/activity_icons_p11.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const FONT = preload("res://assets/fonts/galmuri/Galmuri9.ttf")
-const HEIGHT: float = 18.0
-const FONT_SIZE: int = 12
+const HEIGHT: float = 34.0
+const FONT_SIZE: int = 20
+const ICON_SCALE: float = 2.0
 const COUNT_GAP: float = 3.0
 const ITEM_GAP: float = 8.0
 var rows: Array[Dictionary] = []
@@ -49,7 +50,7 @@ func display(activities: Array, zoom: float, abandoned: bool) -> void:
 	width = 0.0
 	for row: Dictionary in rows:
 		var texture: Texture2D = Icons.texture(int(row["kind"]))
-		width += texture.get_width() + COUNT_GAP + FONT.get_string_size("%d" % int(row["count"]), HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE).x + ITEM_GAP
+		width += texture.get_width() * ICON_SCALE + COUNT_GAP + FONT.get_string_size("%d" % int(row["count"]), HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE).x + ITEM_GAP
 	width = maxf(0.0, width - ITEM_GAP)
 	queue_redraw()
 
@@ -57,10 +58,11 @@ func _draw() -> void:
 	var x: float = 0.0
 	for row: Dictionary in rows:
 		var texture: Texture2D = Icons.texture(int(row["kind"]))
-		draw_texture(texture, Vector2(x, (HEIGHT - texture.get_height()) * 0.5))
-		x += texture.get_width() + COUNT_GAP
+		var size: Vector2 = texture.get_size() * ICON_SCALE
+		draw_texture_rect(texture, Rect2(Vector2(x, (HEIGHT - size.y) * 0.5), size), false)
+		x += size.x + COUNT_GAP
 		var count: String = "%d" % int(row["count"])
-		draw_string(FONT, Vector2(x, 14.0), count, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, Color("EEEAD2"))
+		draw_string(FONT, Vector2(x, (HEIGHT - FONT.get_height(FONT_SIZE)) * 0.5 + FONT.get_ascent(FONT_SIZE)), count, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, Color("EEEAD2"))
 		x += FONT.get_string_size(count, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE).x + ITEM_GAP
 
 func capture_metadata() -> Dictionary:

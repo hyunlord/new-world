@@ -1,5 +1,7 @@
 extends Node
 
+signal language_changed(language: String)
+
 # Locale autoload — compiled JSON loader (en+ko)
 # V7 Phase 3-γ (γ-2-α): first autoload, consumed by causal_panel.gd
 # Primary source: localization/compiled/{lang}.json (output of
@@ -81,6 +83,7 @@ func ltr(key: String) -> String:
 func set_language(lang: String) -> void:
 	_current_lang = lang
 	_load_lang(lang)
+	language_changed.emit(lang)
 
 func key_count() -> int:
 	return _strings.size()

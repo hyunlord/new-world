@@ -88,6 +88,9 @@ const TEMPERAMENT_FIELDS: Array[String] = ["ns", "ha", "rd", "p"]
 const TEMPERAMENT_LABELS: Array[String] = ["UI_TEMPERAMENT_NS", "UI_TEMPERAMENT_HA", "UI_TEMPERAMENT_RD", "UI_TEMPERAMENT_P"]
 const FAMILY_LABELS: Array[String] = ["PANEL_FAMILY_SPOUSE", "UI_MOTHER", "UI_FATHER"]
 var _scroll: ScrollContainer
+var _scroll_layout: VBoxContainer
+var _edge_padding: Control
+var _edge_update_pending: bool = false
 var _temperament_box: VBoxContainer
 var _temperament_heading: Label
 var _temperament_labels: Array[Label] = []
@@ -113,9 +116,19 @@ func _ready() -> void:
 	_vbox.add_theme_constant_override("separation", 8)
 	_scroll = ScrollContainer.new()
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	panel.add_child(_scroll)
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll_layout = VBoxContainer.new()
+	_scroll_layout.add_theme_constant_override("separation", 0)
+	panel.add_child(_scroll_layout)
+	_scroll_layout.add_child(_scroll)
+	_edge_padding = Control.new()
+	_edge_padding.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_scroll_layout.add_child(_edge_padding)
 	_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.add_child(_vbox)
+	_scroll.get_v_scroll_bar().value_changed.connect(_queue_readable_edges.unbind(1))
+	_vbox.resized.connect(_queue_readable_edges)
+	_scroll_layout.resized.connect(_queue_readable_edges)
 	_label_id = _make_label("")
 	_label_id.theme_type_variation = &"Heading"
 	var portrait_box: Control = Control.new()
@@ -145,6 +158,7 @@ func _ready() -> void:
 	_life_heading = _make_label("")
 	_life_heading.theme_type_variation = &"Heading"
 	_life_text = RichTextLabel.new()
+	Names.prepare_rich_text(_life_text)
 	_life_text.bbcode_enabled = true
 	_life_text.fit_content = true
 	_life_text.scroll_active = false
@@ -155,6 +169,70 @@ func _ready() -> void:
 	_life_more = Button.new()
 	_life_more.pressed.connect(_expand_life)
 	_vbox.add_child(_life_more)
+	var bottom_padding := Control.new()
+	bottom_padding.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bottom_padding.custom_minimum_size.y = _life_text.get_theme_font("normal_font").get_height(_life_text.get_theme_font_size("normal_font_size"))
+	_vbox.add_child(bottom_padding)
+	visibility_changed.connect(_queue_readable_edges)
+
+
+func _queue_readable_edges() -> void:
+	if _edge_update_pending or not is_visible_in_tree():
+		return
+	_edge_update_pending = true
+	_align_readable_edges.call_deferred()
+
+
+func _align_readable_edges() -> void:
+	_edge_update_pending = false
+	var bar: VScrollBar = _scroll.get_v_scroll_bar()
+	var at_top: bool = bar.value <= bar.min_value
+	var at_bottom: bool = bar.value >= bar.max_value - bar.page
+	if not at_top and not at_bottom:
+		return
+	var available: float = _scroll_layout.size.y
+	var start: float = 0.0 if at_top else maxf(0.0, _vbox.size.y - available)
+	var end: float = start + available
+	var padding: float = 0.0
+	for band: Vector2 in _text_line_bands(_vbox):
+		if at_top and band.x < end and band.y > end:
+			padding = maxf(padding, end - band.x)
+		elif not at_top and band.x < start and band.y > start:
+			padding = maxf(padding, band.y - start)
+	if is_equal_approx(_edge_padding.custom_minimum_size.y, padding):
+		return
+	_edge_padding.custom_minimum_size.y = ceilf(padding)
+	_restore_scroll_edge.call_deferred(at_top)
+
+
+func _restore_scroll_edge(at_top: bool) -> void:
+	_scroll.scroll_vertical = 0 if at_top else int(_scroll.get_v_scroll_bar().max_value)
+
+
+func _text_line_bands(node: Node) -> Array[Vector2]:
+	var bands: Array[Vector2] = []
+	if node is Control and not (node as Control).is_visible_in_tree():
+		return bands
+	if node is Label:
+		var label: Label = node as Label
+		for index: int in label.text.length():
+			var rect: Rect2 = label.get_character_bounds(index)
+			if rect.has_area():
+				var top: float = label.global_position.y - _vbox.global_position.y + rect.position.y
+				bands.append(Vector2(top, top + rect.size.y))
+	elif node is RichTextLabel:
+		var rich: RichTextLabel = node as RichTextLabel
+		for index: int in rich.get_line_count():
+			if rich.get_line_width(index) > 0:
+				var top: float = rich.global_position.y - _vbox.global_position.y + rich.get_line_offset(index)
+				bands.append(Vector2(top, top + rich.get_line_height(index)))
+	elif node is Button:
+		var button: Button = node as Button
+		var top: float = button.global_position.y - _vbox.global_position.y
+		bands.append(Vector2(top, top + button.size.y))
+	for child: Node in node.get_children():
+		bands.append_array(_text_line_bands(child))
+	return bands
 
 
 func _make_label(text: String) -> Label:
@@ -219,10 +297,10 @@ func display_agent(detail: Dictionary) -> void:
 	_selected_entity_bits = _resolve_entity_bits(agent_id)
 	if previous_selection != _selected_entity_bits:
 		_scroll.scroll_vertical = 0
-	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.display_name(agent_id, Chronicle.language(_locale)), agent_id]
+	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.present(agent_id, Chronicle.language(_locale)), agent_id]
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
-	_village_label.text = SettlementSelection.name_for(home, _locale) if home >= 0 else ""
+	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
 	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
 	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
 	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
@@ -391,7 +469,8 @@ func _make_personal_sections() -> void:
 			_family_box.add_child(_family_children)
 		var button := Button.new()
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		button.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect(_select_family_member.bind(button))
 		_family_buttons.append(button)
@@ -470,7 +549,7 @@ func _set_family_button(index: int, agent_id: int, label_key: String) -> void:
 	var known: bool = living or bool(person.get("found", false))
 	button.set_meta("family_agent_id", agent_id if known else -1)
 	button.disabled = not known
-	var value: String = Names.display_name(agent_id, Chronicle.language(_locale)) if known else _loc("PANEL_FAMILY_NONE")
+	var value: String = Names.present(agent_id, Chronicle.language(_locale)) if known else _loc("PANEL_FAMILY_NONE")
 	if known and not living:
 		value += " · " + _loc("UI_DECEASED")
 	button.text = (_loc(label_key) + ": " + value) if not label_key.is_empty() else value
@@ -523,7 +602,7 @@ func _refresh_record() -> void:
 	var person: Dictionary = _person_cache.read("get_person", _selected_person)
 	var entries: Array[Dictionary] = Chronicle.rows(_person_cache.read("get_person_chronicle", _selected_person))
 	var info: Dictionary = _world_info()
-	_label_id.text = (_loc("INSPECTOR_PERSON_FMT") % [Names.display_name(_selected_person, Chronicle.language(_locale)), _selected_person]) + " · " + _loc("UI_DECEASED")
+	_label_id.text = (_loc("INSPECTOR_PERSON_FMT") % [Names.present(_selected_person, Chronicle.language(_locale)), _selected_person]) + " · " + _loc("UI_DECEASED")
 	var born: int = int(person.get("born_tick", -1))
 	var died: int = int(person.get("died_tick", -1))
 	_record_summary.text = (_loc("INSPECTOR_RECORD_FOUNDER_LIFE_FMT") % Chronicle.day(died, info)) if born < 0 else (_loc("INSPECTOR_RECORD_LIFE_FMT") % [Chronicle.day(born, info), Chronicle.day(died, info)])

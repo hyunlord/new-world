@@ -27,13 +27,13 @@ static func rows(packed: Dictionary) -> Array[Dictionary]:
 static func person(id: int, locale: Node) -> String:
 	if id < 0:
 		return loc(locale, "PANEL_FAMILY_NONE")
-	return "[url=person:%d]%s[/url]" % [id, Names.display_name(id, language(locale))]
+	return "[url=person:%d][b]%s[/b][/url]" % [id, Names.present(id, language(locale))]
 
 static func village(id: int, locale: Node) -> String:
 	if id < 0:
 		return loc(locale, "PANEL_FAMILY_NONE")
 	Selection.register(id)
-	return "[url=village:%d]%s[/url]" % [id, Selection.name_for(id, locale, false)]
+	return "[url=village:%d][b]%s[/b][/url]" % [id, Names.unbroken(Selection.name_for(id, locale, false))]
 
 static func death(cause: int, locale: Node) -> String:
 	return loc(locale, DEATH[cause]) if cause >= 0 and cause < DEATH.size() else loc(locale, "UI_UNKNOWN")

@@ -22,6 +22,8 @@ var world_sim: WorldSimNode
 var sprite: Sprite2D
 var texture: ImageTexture
 var image: Image
+var _last_agent_click_usec_p12: int = -1
+var _last_agent_click_screen_p12 := Vector2.ZERO
 
 func _ready() -> void:
 	print("WorldRenderer ready (T7.9.B render mechanism)")
@@ -39,6 +41,7 @@ func _ready() -> void:
 	world_sim.connect("world_reset", refresh_snapshot)
 
 func refresh_snapshot() -> void:
+	_last_agent_click_usec_p12 = -1
 	_process(0.0)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -73,7 +76,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				channel_name = "Off"
 			print("Channel switched: ", channel_name)
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_handle_tile_click(get_global_mouse_position())
+		_handle_tile_click(get_canvas_transform().affine_inverse() * event.position)
 
 func _process(_delta: float) -> void:
 	if world_sim == null:
@@ -124,12 +127,21 @@ func _try_agent_click(world_pos: Vector2) -> bool:
 		return false
 	var agents: Node = get_node_or_null("../AgentRenderer")
 	if agents != null:
-		var drawn_entity: int = int(agents.call("drawn_entity_at", world_pos))
+		var hits: PackedInt64Array = agents.call("drawn_entities_at", world_pos)
+		var drawn_entity: int = hits[0] if not hits.is_empty() else -1
+		var drawn_panel: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+		var screen: Vector2 = get_viewport().get_canvas_transform() * world_pos
+		var now: int = Time.get_ticks_usec()
+		if not hits.is_empty() and drawn_panel != null and _last_agent_click_usec_p12 >= 0 and now - _last_agent_click_usec_p12 <= 1500000 and screen.distance_squared_to(_last_agent_click_screen_p12) <= 64.0:
+			var current: int = hits.find(int(drawn_panel.call("get_selected_entity_bits")))
+			if current >= 0:
+				drawn_entity = hits[(current + 1) % hits.size()]
 		if drawn_entity >= 0:
 			var drawn_detail: Dictionary = world_sim.get_agent_detail(drawn_entity)
-			var drawn_panel: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 			if bool(drawn_detail.get("found", false)) and drawn_panel != null and drawn_panel.has_method("display_agent"):
 				drawn_panel.call("display_agent", drawn_detail)
+				_last_agent_click_usec_p12 = now
+				_last_agent_click_screen_p12 = screen
 				return true
 	var snap: Dictionary = SimReads.read(world_sim, "get_agent_snapshot")
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
@@ -165,6 +177,8 @@ func _try_agent_click(world_pos: Vector2) -> bool:
 	var panel: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	if panel != null and panel.has_method("display_agent"):
 		panel.call("display_agent", detail)
+		_last_agent_click_usec_p12 = Time.get_ticks_usec()
+		_last_agent_click_screen_p12 = get_viewport().get_canvas_transform() * world_pos
 		return true
 	return false
 

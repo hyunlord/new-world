@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS for font and scroll boundary targets only",
+  "font_result": "font-result.json",
+  "inspector": "/Users/rexxa/work/art-production12-evidence/p2/layout-attempt2",
+  "chronicle": "/Users/rexxa/work/art-production12-evidence/chronicle-layout",
+  "scope_limit": "Synthetic layout fixtures, not live Life/blind/crowd acceptance",
+  "checks": [
+    "complete visible glyph/line bands at both extrema EN and KO",
+    "full content retained with scrolling",
+    "no split names or visible joiner artifacts in reviewed fixtures"
+  ]
+}

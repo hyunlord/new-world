@@ -1,0 +1,186 @@
+{
+	"bridge_sha256": "ed600ac38228c72962d4459a7ea7b9fcbd63a0a0be4bd75e46403690b2b66a27",
+	"dead_parent": 0,
+	"errors": [
+		"07_chronicle_name_link"
+	],
+	"godot": {
+		"build": "official",
+		"hash": "89cea143987d564363e15d207438530651d943ac",
+		"hex": 263680,
+		"major": 4,
+		"minor": 6,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.6-stable (official)",
+		"timestamp": 0
+	},
+	"input_route": "Input.parse_input_event",
+	"seed": 20261010,
+	"steps": [
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/00_fixed_world.png",
+			"sha256": "22c3f1afa3ced4ec9d24dcbcd1ecbdfe36c09e722336df42e2828fba91e4f9aa",
+			"state": {
+				"dead_parent": 0,
+				"seed": 20261010,
+				"subject": 25,
+				"tick": 85080,
+				"world_info": {
+					"clock_offset_ticks": 480,
+					"height": 64,
+					"move_interval_ticks": 8,
+					"seed": 20261010,
+					"ticks_per_day": 1440,
+					"width": 64
+				}
+			},
+			"step": "00_fixed_world"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/02_click_0.png",
+			"sha256": "044dcaa41586df6affceef17f21536289d9471ef9ae2a59d0f1310c11cb365d8",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_0"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/02_click_1.png",
+			"sha256": "5b06fa9d44c72ce6ffaf85a92e1a75a85dcdb616e0c9d574d2f1a9a3dabd7af5",
+			"state": {
+				"actual": 56,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 56,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_1"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/02_click_2.png",
+			"sha256": "6caf93575474ac47386ed85e3b3dcf2844f18a7738dc536fae30167e9dba4e14",
+			"state": {
+				"actual": 55,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 55,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_2"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/02_click_3.png",
+			"sha256": "a6f1ad08a121713f5265596f00dd8d1bbf756c2f66e5a15372561173e0699390",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_3"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/03_dead_parent_link.png",
+			"sha256": "93b3b1928f30bbd6a816451485b2a5b98ad9108dcf9baa12c315f27f6b67817b",
+			"state": {
+				"parent": 0,
+				"record_mode": true
+			},
+			"step": "03_dead_parent_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/04_wheel_end_last_line.png",
+			"sha256": "d9a97941d05bd921f38843f2f95a71d4daf2d3102b524bc6c405325661a70dd6",
+			"state": {
+				"last_line_top": 672.0,
+				"line_height": 28.0,
+				"maximum": 655.0,
+				"scroll": 655.0,
+				"viewport_bottom": 736.0
+			},
+			"step": "04_wheel_end_last_line"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/05_escape_record.png",
+			"sha256": "52b8c4b01ee599d7a3b3dccab9f4ee68c04a35f391ad7d6f7ace821c04cdeaf5",
+			"state": {
+				"record_mode": false,
+				"visible": false
+			},
+			"step": "05_escape_record"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/06_chronicle_open.png",
+			"sha256": "0b08983ff591bdd5e43f4ce8c3d504383033b751ae033270fa91a1dc3eafd52a",
+			"state": {
+
+			},
+			"step": "06_chronicle_open"
+		},
+		{
+			"passed": false,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt2/07_chronicle_name_link.png",
+			"sha256": "5b6a4f22f6c246434365167985a53524beca576d7c95148eaa425d5cfd0701ad",
+			"state": {
+				"reason": "No visible real person link found by pointer hover"
+			},
+			"step": "07_chronicle_name_link"
+		}
+	],
+	"subject": 25,
+	"test_sha256": "9736558f3d129fe9a4d2a7d5f5a0daf26d9a29fae7deef05a91ba7a178bc09a8",
+	"tick": 85080,
+	"valid": false,
+	"windowed": true
+}

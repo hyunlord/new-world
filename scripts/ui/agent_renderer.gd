@@ -65,6 +65,10 @@ var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
 var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
 var _declump_fixture_sink_p12: RefCounted
+var _raised_sprite_p12: Sprite2D
+var _raised_icon_p12: Sprite2D
+var _raised_sprite_z_p12: int = 0
+var _raised_icon_z_p12: int = 0
 var _activity_oracle_enabled: bool = not OS.get_environment("P10_ACTIVITY_OUT").is_empty()
 
 const SelectionIndex = preload("res://scripts/ui/agent_selection_index_p10.gd")
@@ -728,8 +732,11 @@ func get_drawn_position(agent_id: int) -> Vector2:
 	return Vector2(_drawn_positions.get(agent_id, Vector2.ZERO)).round()
 
 func drawn_entity_at(world_position: Vector2) -> int:
-	var selected: int = -1
-	var largest_y: float = -INF
+	var hits: PackedInt64Array = drawn_entities_at(world_position)
+	return hits[0] if not hits.is_empty() else -1
+
+func drawn_entities_at(world_position: Vector2) -> PackedInt64Array:
+	var hits: Array[Dictionary] = []
 	for agent_id: int in _sprites:
 		var sprite: Sprite2D = _sprites[agent_id]
 		if not sprite.visible or sprite.texture == null or not has_drawn_position(agent_id):
@@ -747,10 +754,34 @@ func drawn_entity_at(world_position: Vector2) -> int:
 		if sprite.flip_v:
 			opaque.position.y = frame_rect.size.y - opaque.end.y
 		opaque.position += frame_rect.position
-		if opaque.has_point(sprite.to_local(world_position)) and sprite.position.y >= largest_y:
-			largest_y = sprite.position.y
-			selected = int(sprite.get_meta("entity_bits", -1))
-	return selected
+		if opaque.has_point(sprite.to_local(world_position)):
+			hits.append({"id": agent_id, "entity": int(sprite.get_meta("entity_bits", -1)), "y": sprite.position.y})
+	hits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["y"]) > float(b["y"]) if a["y"] != b["y"] else int(a["id"]) > int(b["id"]))
+	var entities := PackedInt64Array()
+	for hit: Dictionary in hits:
+		if int(hit["entity"]) >= 0:
+			entities.append(int(hit["entity"]))
+	return entities
+
+func _raise_selected_draw_order_p12(selected: Sprite2D) -> void:
+	if _raised_sprite_p12 != selected:
+		if is_instance_valid(_raised_sprite_p12):
+			_raised_sprite_p12.z_index = _raised_sprite_z_p12
+		_raised_sprite_p12 = selected
+		if is_instance_valid(selected):
+			_raised_sprite_z_p12 = selected.z_index
+			selected.z_index = _raised_sprite_z_p12 + 1
+	var icon: Sprite2D
+	if is_instance_valid(selected):
+		icon = _activity_icons.get(int(selected.get_meta("art_id", -1))) as Sprite2D
+	if _raised_icon_p12 != icon:
+		if is_instance_valid(_raised_icon_p12):
+			_raised_icon_p12.z_index = _raised_icon_z_p12
+		_raised_icon_p12 = icon
+		if is_instance_valid(icon):
+			_raised_icon_z_p12 = icon.z_index
+			icon.z_index = _raised_icon_z_p12 + 1
 
 func _update_selection_ring() -> void:
 	if _selection_ring == null:
@@ -761,8 +792,11 @@ func _update_selection_ring() -> void:
 		_selection_ring.set_meta("art_kind", "selection_ring")
 		_shadow_layer.add_child(_selection_ring)
 	_selection_ring.visible = false
+	var camera: Camera2D = get_node_or_null("../Camera2D") as Camera2D
+	_selection_ring.width = 2.0 if camera == null or camera.zoom.x <= 2.0 else 1.5
 	var inspector: Node = get_node_or_null("../UI/AgentInspectorPanel")
 	if inspector == null or not _capture_visible:
+		_raise_selected_draw_order_p12(null)
 		return
 	var selected: int = int(inspector.call("get_selected_entity_bits"))
 	var selected_sprite: Sprite2D
@@ -773,6 +807,7 @@ func _update_selection_ring() -> void:
 			if int(candidate.get_meta("entity_bits", -1)) == selected and candidate.visible:
 				selected_sprite = candidate
 				break
+	_raise_selected_draw_order_p12(selected_sprite)
 	if selected_sprite == null:
 		return
 	var sprite: Sprite2D = selected_sprite

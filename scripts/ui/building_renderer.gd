@@ -50,6 +50,8 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_world_sim = get_node("../WorldSim") as WorldSimNode
 	_locale = get_node_or_null("/root/Locale")
+	if _locale != null:
+		_locale.connect("language_changed", _refresh_stockpile_language)
 	_camera = get_node("../Camera2D") as Camera2D
 	_objects = ART.shared_layer(self, "WorldObjects", 4, true)
 	_shadows = ART.shared_layer(self, "Shadows", 3)
@@ -79,6 +81,10 @@ func refresh_snapshot() -> void:
 	_update_deadwood()
 	_update_stockpiles()
 	_update_camp_props()
+	_update_labels()
+
+func _refresh_stockpile_language(_language: String) -> void:
+	_update_stockpiles()
 	_update_labels()
 
 func _tile_center(x: int, y: int) -> Vector2:

@@ -57,7 +57,7 @@ func _run() -> void:
 					row["value"] = -1
 					check(Text.sentence(row, 11, locale, info) == Text.loc(locale, "CHRON_DIED_NO_AGE_FMT") % Text.loc(locale, Text.DEATH[cause]), "death absent age")
 					row["value"] = 250
-		check(Text.person(22, locale) == "[url=person:22]%s[/url]" % Names.display_name(22, language), "person link")
+		check(Text.person(22, locale) == "[url=person:22][b]%s[/b][/url]" % Names.present(22, language), "person link")
 		check(Selection.number_for(99) > 0 and Text.village(99, locale).contains("url=village:99"), "unseen settlement registered/link")
 		check(not Selection.name_for(99, locale, false).contains("%"), "plain village name")
 	locale.call("set_language", original)

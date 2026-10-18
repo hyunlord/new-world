@@ -1,0 +1,18 @@
+{
+	"actual_life_size": 24,
+	"passed": true,
+	"rows": [
+		{
+			"joiner_differing_pixels": 0,
+			"size": 24,
+			"ti_di_differing_pixels": 24,
+			"weight": "regular"
+		},
+		{
+			"joiner_differing_pixels": 0,
+			"size": 24,
+			"ti_di_differing_pixels": 32,
+			"weight": "bold"
+		}
+	]
+}

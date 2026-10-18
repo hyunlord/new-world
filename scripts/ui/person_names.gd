@@ -38,3 +38,33 @@ static func _join(indices: Array[int], table: Array[String]) -> String:
 	for index: int in indices:
 		result += table[index]
 	return result
+
+static func plain(value: String) -> String:
+	return value.replace("\u2060", "")
+
+static func unbroken(value: String) -> String:
+	return "\u2060".join(plain(value).split(""))
+
+static func present(agent_id: int, lang: String) -> String:
+	return unbroken(display_name(agent_id, lang))
+
+static func prepare_rich_text(label: RichTextLabel) -> void:
+	label.add_theme_font_override("bold_font", preload("res://assets/fonts/galmuri/Galmuri11-Bold.ttf"))
+	label.selection_enabled = true
+	if label.has_meta("p12_clean_copy"):
+		return
+	label.set_meta("p12_clean_copy", true)
+	label.gui_input.connect(_copy_input.bind(label))
+	label.get_menu().id_pressed.connect(_copy_menu)
+
+static func _copy_input(event: InputEvent, label: RichTextLabel) -> void:
+	if event.is_action_pressed("ui_copy") and not label.get_selected_text().is_empty():
+		DisplayServer.clipboard_set(plain(label.get_selected_text()))
+		label.accept_event()
+
+static func _copy_menu(id: int) -> void:
+	if id == RichTextLabel.MENU_COPY:
+		_clean_clipboard.call_deferred()
+
+static func _clean_clipboard() -> void:
+	DisplayServer.clipboard_set(plain(DisplayServer.clipboard_get()))

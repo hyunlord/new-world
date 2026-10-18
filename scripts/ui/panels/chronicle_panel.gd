@@ -1,11 +1,13 @@
 extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
+const Names = preload("res://scripts/ui/person_names.gd")
 const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16]
 var _world: Node
 var _locale: Node
 var _title: Label
 var _body: RichTextLabel
+var _body_padding: StyleBoxEmpty
 var _next: int = 0
 var _total: int = 0
 var _tick: int = -1
@@ -32,6 +34,11 @@ func _ready() -> void:
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body.meta_clicked.connect(_follow_link)
 	box.add_child(_body)
+	Names.prepare_rich_text(_body)
+	_body_padding = StyleBoxEmpty.new()
+	_body_padding.content_margin_top = 4.0
+	_body.add_theme_stylebox_override("normal", _body_padding)
+	_body.resized.connect(_fit_body_lines)
 	_refresh()
 	hide()
 
@@ -63,6 +70,17 @@ func _refresh() -> void:
 	for index: int in range(_entries.size() - 1, -1, -1):
 		lines.append(Chronicle.line(_entries[index], -1, _locale, info, true))
 	_body.text = "\n\n".join(lines)
+	_fit_body_lines.call_deferred()
+
+func _fit_body_lines() -> void:
+	if _body_padding == null:
+		return
+	var line_height: float = ceilf(_body.get_theme_font("normal_font").get_height(_body.get_theme_font_size("normal_font_size")))
+	if _body.get_line_count() > 0:
+		line_height = maxf(line_height, _body.get_line_height(0))
+	var available: float = maxf(0.0, _body.size.y - _body_padding.content_margin_top - line_height)
+	# Keep the scroll viewport on whole text lines at both ends of the feed.
+	_body_padding.content_margin_bottom = line_height + fmod(available, line_height)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_C:

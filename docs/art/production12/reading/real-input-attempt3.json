@@ -1,0 +1,213 @@
+{
+	"bridge_sha256": "ed600ac38228c72962d4459a7ea7b9fcbd63a0a0be4bd75e46403690b2b66a27",
+	"dead_parent": 0,
+	"errors": [],
+	"godot": {
+		"build": "official",
+		"hash": "89cea143987d564363e15d207438530651d943ac",
+		"hex": 263680,
+		"major": 4,
+		"minor": 6,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.6-stable (official)",
+		"timestamp": 0
+	},
+	"input_route": "Input.parse_input_event",
+	"seed": 20261010,
+	"steps": [
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/00_fixed_world.png",
+			"sha256": "c15a93c116f7a8e81278cfa75fc15e1ac09aa86e6f5a595532a4f425793f028a",
+			"state": {
+				"dead_parent": 0,
+				"seed": 20261010,
+				"subject": 25,
+				"tick": 85080,
+				"world_info": {
+					"clock_offset_ticks": 480,
+					"height": 64,
+					"move_interval_ticks": 8,
+					"seed": 20261010,
+					"ticks_per_day": 1440,
+					"width": 64
+				}
+			},
+			"step": "00_fixed_world"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/02_click_0.png",
+			"sha256": "15783c7473fcecf6241e632bf2e548b5758d028b2c445525bfb4d05b3b74c3ef",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_0"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/02_click_1.png",
+			"sha256": "389b5c77950df5bd993e4fabfa85a453b519430836bb0765d93e763d51edf2ca",
+			"state": {
+				"actual": 56,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 56,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_1"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/02_click_2.png",
+			"sha256": "6caf93575474ac47386ed85e3b3dcf2844f18a7738dc536fae30167e9dba4e14",
+			"state": {
+				"actual": 55,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 55,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_2"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/02_click_3.png",
+			"sha256": "a6f1ad08a121713f5265596f00dd8d1bbf756c2f66e5a15372561173e0699390",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(-2810.0, 1298.0)",
+				"world_mouse": "(-6.5, 711.5)"
+			},
+			"step": "02_click_3"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/03_dead_parent_link.png",
+			"sha256": "94f798483496fd2272978cbbe9cce6defa02de22c31d6e233a46c6e404427a4f",
+			"state": {
+				"parent": 0,
+				"record_mode": true
+			},
+			"step": "03_dead_parent_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/04_wheel_end_last_line.png",
+			"sha256": "d9a97941d05bd921f38843f2f95a71d4daf2d3102b524bc6c405325661a70dd6",
+			"state": {
+				"last_line_top": 672.0,
+				"line_height": 28.0,
+				"maximum": 655.0,
+				"scroll": 655.0,
+				"viewport_bottom": 736.0
+			},
+			"step": "04_wheel_end_last_line"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/05_escape_record.png",
+			"sha256": "52b8c4b01ee599d7a3b3dccab9f4ee68c04a35f391ad7d6f7ace821c04cdeaf5",
+			"state": {
+				"record_mode": false,
+				"visible": false
+			},
+			"step": "05_escape_record"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/06_chronicle_open.png",
+			"sha256": "be395040d6399755cdb3eaa96e458fb31e0568821237b9e9d0c141553fb392aa",
+			"state": {
+
+			},
+			"step": "06_chronicle_open"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/07_chronicle_name_link.png",
+			"sha256": "c34d6ec76285f11fa43f2d1d6c62f908777cdc10d881fcab9fe3cecf132b0f8c",
+			"state": {
+				"link": "person:48",
+				"selected": 48
+			},
+			"step": "07_chronicle_name_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/08_chronicle_close.png",
+			"sha256": "c48073a6a6329d770404f4209ff1938f146b69535535399a6e8989e31acf1672",
+			"state": {
+
+			},
+			"step": "08_chronicle_close"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/09_language_korean.png",
+			"sha256": "6b25b9b09ad1ea7008759519c8e3647f71f23a180a35153f20a1c702de0e9953",
+			"state": {
+				"language": "ko"
+			},
+			"step": "09_language_korean"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/art-production12-evidence/p2/real-input-attempt3/10_language_english.png",
+			"sha256": "520aafc2bf1807d5b425e8efcd694ef7ad302c8d2bbe4d9c444e56f3d078d753",
+			"state": {
+				"language": "en",
+				"visible_hangul": []
+			},
+			"step": "10_language_english"
+		}
+	],
+	"subject": 25,
+	"test_sha256": "b9f40eb4953f2ebf064d28339c528dbefb2399176d070f9fbf5bc16b3eae5f69",
+	"tick": 85080,
+	"valid": true,
+	"windowed": true
+}

@@ -1,0 +1,91 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1560.0, 714.0), S: (24.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1584.0, 714.0), S: (24.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1608.0, 714.0), S: (24.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @RichTextLabel@67 [P: (1560.0, 112.0), S: (202.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _run (res://scripts/test/art/test_life_layout_p12.gd:54)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1560.0, 714.0), S: (18.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1578.0, 714.0), S: (14.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1592.0, 714.0), S: (16.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1608.0, 714.0), S: (12.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1620.0, 714.0), S: (8.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1628.0, 714.0), S: (16.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+ERROR: visible line crosses scroll edge: @Label@38 [P: (1644.0, 714.0), S: (14.0, 28.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 604.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p12.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:99)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [3] _check_boundary_lines (res://scripts/test/art/test_life_layout_p12.gd:101)
+       [4] _run (res://scripts/test/art/test_life_layout_p12.gd:48)
+LIFE_LAYOUT_P12 failures=11
