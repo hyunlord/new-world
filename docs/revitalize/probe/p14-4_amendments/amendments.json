@@ -1,0 +1,409 @@
+{
+ "J6": {
+  "held-out (p13-4, seeds 64\u2013127 / 32\u201395)": {
+   "pass13_passed": false,
+   "passed": true,
+   "seeds": {
+    "round10": {
+     "end_exclusive": 128,
+     "start": 64
+    },
+    "round120": {
+     "end_exclusive": 96,
+     "start": 32
+    }
+   },
+   "failing_clauses_pass13": [
+    "Y9_idle_1200",
+    "Y9_work_1500"
+   ],
+   "failing_clauses_amended": [],
+   "clauses": {
+    "X3_b_spread_within_severity": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X3_c_no_dark_night": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X3_d_two_or_more": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X3_e_first_night_spread": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X4_normal_gathered": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X4_retarget_share": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y10_evening_near_hearth_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y10_evening_near_hearth_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y10_night_in_shelter": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_home_distance_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_home_distance_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_10_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_10_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_120_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_120_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_t6a_10": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_t6a_120": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y12_day10": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y12_day120": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y4_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y4_store_share": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y4_winter": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y5_autumn_wood": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y5_autumn_work": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y6_trip_days": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y6_trips": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y9_idle_1200": {
+     "pass13_passed": false,
+     "v19n_median": 0.6288265306122449,
+     "v16_median": 0.6167964404894327,
+     "worse_by": 0.012030090122812198,
+     "passed": true,
+     "margin": 0.0179699098771878,
+     "absolute_bound_reported": {
+      "bound": 0.6,
+      "v19n_meets": false,
+      "v16_meets": false
+     }
+    },
+    "Y9_work_1200": {
+     "pass13_passed": true,
+     "v19n_median": 0.35714285714285715,
+     "v16_median": 0.37037037037037035,
+     "worse_by": 0.013227513227513199,
+     "passed": true,
+     "margin": 0.0167724867724868,
+     "absolute_bound_reported": {
+      "bound": 0.35,
+      "v19n_meets": true,
+      "v16_meets": true
+     }
+    },
+    "Y9_work_1500": {
+     "pass13_passed": false,
+     "v19n_median": 0.2113237639553429,
+     "v16_median": 0.2406896551724138,
+     "worse_by": 0.029365891217070894,
+     "passed": true,
+     "margin": 0.0006341087829291048,
+     "absolute_bound_reported": {
+      "bound": 0.25,
+      "v19n_meets": false,
+      "v16_meets": false
+     }
+    }
+   }
+  },
+  "tuning round 3 (p13-3, seeds 0\u201331)": {
+   "pass13_passed": false,
+   "passed": true,
+   "seeds": {
+    "round10": {
+     "end_exclusive": 64,
+     "start": 0
+    },
+    "round120": {
+     "end_exclusive": 32,
+     "start": 0
+    }
+   },
+   "failing_clauses_pass13": [
+    "Y9_work_1500"
+   ],
+   "failing_clauses_amended": [],
+   "clauses": {
+    "X3_b_spread_within_severity": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X3_c_no_dark_night": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X3_d_two_or_more": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X3_e_first_night_spread": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X4_normal_gathered": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "X4_retarget_share": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y10_evening_near_hearth_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y10_evening_near_hearth_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y10_night_in_shelter": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_home_distance_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_home_distance_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_10_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_10_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_120_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_social_120_median": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_t6a_10": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y11_t6a_120": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y12_day10": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y12_day120": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y4_every_seed": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y4_store_share": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y4_winter": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y5_autumn_wood": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y5_autumn_work": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y6_trip_days": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y6_trips": {
+     "pass13_passed": true,
+     "passed": true
+    },
+    "Y9_idle_1200": {
+     "pass13_passed": true,
+     "v19n_median": 0.6203346203346203,
+     "v16_median": 0.6206675224646983,
+     "worse_by": -0.0003329021300779722,
+     "passed": true,
+     "margin": 0.03033290213007797,
+     "absolute_bound_reported": {
+      "bound": 0.6,
+      "v19n_meets": false,
+      "v16_meets": false
+     }
+    },
+    "Y9_work_1200": {
+     "pass13_passed": true,
+     "v19n_median": 0.3684210526315789,
+     "v16_median": 0.35826210826210825,
+     "worse_by": -0.01015894436947068,
+     "passed": true,
+     "margin": 0.04015894436947068,
+     "absolute_bound_reported": {
+      "bound": 0.35,
+      "v19n_meets": true,
+      "v16_meets": true
+     }
+    },
+    "Y9_work_1500": {
+     "pass13_passed": false,
+     "v19n_median": 0.24803836094158677,
+     "v16_median": 0.2540229885057471,
+     "worse_by": 0.00598462756416035,
+     "passed": true,
+     "margin": 0.02401537243583965,
+     "absolute_bound_reported": {
+      "bound": 0.25,
+      "v19n_meets": false,
+      "v16_meets": true
+     }
+    }
+   }
+  }
+ },
+ "inputs": {
+  "j6": [
+   "held-out (p13-4, seeds 64\u2013127 / 32\u201395)=docs/revitalize/probe/p13-4_heldout_v19n_targets/j_targets.json",
+   "tuning round 3 (p13-3, seeds 0\u201331)=docs/revitalize/probe/p13-3_round3_v19n_targets/j_targets.json"
+  ],
+  "paths": "docs/revitalize/probe/p13-5_pilot/paths.json",
+  "diversity": "docs/revitalize/probe/p13-5_pilot/diversity.json"
+ },
+ "J7": {
+  "a_passed": true,
+  "a_clauses": {
+   "alive": {
+    "eta2": 0.8208968390163075,
+    "passed": true,
+    "r2_abs": 0.1750170360048301
+   },
+   "dyn_alive": {
+    "dyn_eta2": 0.8261008897756119,
+    "passed": true
+   },
+   "dyn_food_stock": {
+    "dyn_eta2": 0.6580088586623914,
+    "passed": true
+   },
+   "food_stock": {
+    "eta2": 0.6243971099995466,
+    "passed": true,
+    "r2_abs": 0.3729459677723137
+   },
+   "wood_stock": {
+    "eta2": 0.31669023413529224,
+    "passed": true,
+    "r2_abs": 0.6811238736814789
+   }
+  },
+  "passed": true,
+  "b_reported": {
+   "PS": {
+    "alive": {
+     "PS_mean": 0.018570313594127957,
+     "ci90": [
+      0.0101471062389025,
+      0.02961087556521328
+     ]
+    },
+    "food_stock": {
+     "PS_mean": 0.02378874190839123,
+     "ci90": [
+      0.013288174300108953,
+      0.03968281654615407
+     ]
+    }
+   },
+   "PS_alive_v19_minus_v18": {
+    "mean": -0.2570096441812432,
+    "ci90": [
+     -0.33131740290629685,
+     -0.19271003399274295
+    ]
+   },
+   "retired_band": {
+    "alive": [
+     0.1,
+     0.5
+    ],
+    "food_stock": [
+     0.1,
+     0.6
+    ]
+   },
+   "band_met": {
+    "alive": false,
+    "food_stock": false
+   },
+   "v19_below_v18": true
+  },
+  "pass13_passed": false
+ }
+}

@@ -1,0 +1,3 @@
+OMO lsp/status: NOT_VERIFIED
+Reason: MCP transport closed before server status or diagnostics could run.
+No language server or dependency was installed. Rust compiler, Clippy and focused tests are separate evidence.

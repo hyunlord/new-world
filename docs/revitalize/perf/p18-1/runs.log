@@ -1,0 +1,55 @@
+2026-10-15T16:42:45Z contended=0 plain game_v20 r1
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3284 ms p99.9 0.603 ms max 0.809 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:46Z contended=0 sub game_v20 r1
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3234 ms p99.9 0.718 ms max 0.794 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:47Z contended=0 plain game_v21 r1
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4378 ms p99.9 2.473 ms max 3.069 ms alive 500 wall 0.6 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:47Z contended=0 sub game_v21 r1
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4661 ms p99.9 2.559 ms max 3.154 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:48Z contended=0 plain game_v22 r1
+stress_stress_v22_s15100_n500_side64_fed: mean 0.4463 ms p99.9 2.565 ms max 3.078 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:49Z contended=0 sub game_v22 r1
+stress_stress_v22_s15100_n500_side64_fed: mean 0.4589 ms p99.9 2.635 ms max 3.098 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:50Z contended=0 plain game_v20 r2
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3261 ms p99.9 0.610 ms max 0.797 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:50Z contended=0 sub game_v20 r2
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3335 ms p99.9 1.589 ms max 1.977 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:51Z contended=0 plain game_v21 r2
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4376 ms p99.9 2.555 ms max 3.081 ms alive 500 wall 0.6 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:51Z contended=0 sub game_v21 r2
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4606 ms p99.9 2.645 ms max 2.843 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:52Z contended=0 plain game_v22 r2
+stress_stress_v22_s15100_n500_side64_fed: mean 0.4445 ms p99.9 2.554 ms max 3.092 ms alive 500 wall 0.6 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:53Z contended=0 sub game_v22 r2
+stress_stress_v22_s15100_n500_side64_fed: mean 0.4555 ms p99.9 2.629 ms max 3.098 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:54Z contended=0 plain game_v20 r3
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3229 ms p99.9 0.614 ms max 0.821 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:54Z contended=0 sub game_v20 r3
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3239 ms p99.9 0.694 ms max 0.792 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:55Z contended=0 plain game_v21 r3
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4516 ms p99.9 2.625 ms max 3.076 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:56Z contended=0 sub game_v21 r3
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4615 ms p99.9 2.684 ms max 2.957 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:56Z contended=0 plain game_v22 r3
+stress_stress_v22_s15100_n500_side64_fed: mean 0.4584 ms p99.9 3.016 ms max 3.072 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T16:42:57Z contended=0 sub game_v22 r3
+stress_stress_v22_s15100_n500_side64_fed: mean 0.4621 ms p99.9 2.563 ms max 3.053 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+status 0

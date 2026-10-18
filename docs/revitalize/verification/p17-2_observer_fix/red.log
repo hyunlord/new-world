@@ -1,0 +1,54 @@
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.17s
+     Running unittests src/lib.rs (target/debug/deps/sim_test-43357264ba954d79)
+
+running 6 tests
+test probe::pass17::death_tests::no_place_and_redraw_survive_same_tick_old_age_despawn ... FAILED
+test probe::pass17::death_tests::start_end_batch_survives_same_tick_old_age_despawn ... FAILED
+test probe::pass17::death_tests::start_and_redraw_survive_same_tick_old_age_despawn ... FAILED
+test probe::pass17::death_tests::death_tick_does_not_add_a_consuming_minute_or_completion ... ok
+test probe::pass17::death_tests::completed_episode_survives_later_same_tick_despawn_with_exact_prior_minutes ... FAILED
+test probe::pass17::death_tests::surviving_holder_is_not_counted_twice ... ok
+
+failures:
+
+---- probe::pass17::death_tests::no_place_and_redraw_survive_same_tick_old_age_despawn stdout ----
+
+thread 'probe::pass17::death_tests::no_place_and_redraw_survive_same_tick_old_age_despawn' (112090844) panicked at crates/sim-test/src/probe/pass17_death_tests.rs:127:5:
+assertion `left == right` failed
+  left: Number(0)
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- probe::pass17::death_tests::start_end_batch_survives_same_tick_old_age_despawn stdout ----
+
+thread 'probe::pass17::death_tests::start_end_batch_survives_same_tick_old_age_despawn' (112090846) panicked at crates/sim-test/src/probe/pass17_death_tests.rs:114:5:
+assertion `left == right` failed
+  left: Number(0)
+ right: 1
+
+---- probe::pass17::death_tests::start_and_redraw_survive_same_tick_old_age_despawn stdout ----
+
+thread 'probe::pass17::death_tests::start_and_redraw_survive_same_tick_old_age_despawn' (112090845) panicked at crates/sim-test/src/probe/pass17_death_tests.rs:102:5:
+assertion `left == right` failed
+  left: Number(0)
+ right: 1
+
+---- probe::pass17::death_tests::completed_episode_survives_later_same_tick_despawn_with_exact_prior_minutes stdout ----
+
+thread 'probe::pass17::death_tests::completed_episode_survives_later_same_tick_despawn_with_exact_prior_minutes' (112090842) panicked at crates/sim-test/src/probe/pass17_death_tests.rs:138:5:
+assertion `left == right` failed
+  left: Number(0)
+ right: 1
+
+
+failures:
+    probe::pass17::death_tests::completed_episode_survives_later_same_tick_despawn_with_exact_prior_minutes
+    probe::pass17::death_tests::no_place_and_redraw_survive_same_tick_old_age_despawn
+    probe::pass17::death_tests::start_and_redraw_survive_same_tick_old_age_despawn
+    probe::pass17::death_tests::start_end_batch_survives_same_tick_old_age_despawn
+
+test result: FAILED. 2 passed; 4 failed; 0 ignored; 0 measured; 87 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p sim-test --lib`

@@ -1,0 +1,38 @@
+2026-10-18T14:09:39Z i1_v19 start
+2026-10-18 23:09:39 KST [watch] start: identity i1_v19; pgid=52187
+2026-10-18 23:19:55 KST [watch] end: identity i1_v19; exit=0; stopped_total=0.0s
+2026-10-18T14:19:55Z i1_v19 end
+2026-10-18T14:19:55Z i3_v16 start
+2026-10-18 23:19:55 KST [watch] start: identity i3_v16; pgid=92694
+2026-10-18 23:26:28 KST [watch] end: identity i3_v16; exit=0; stopped_total=0.0s
+2026-10-18T14:26:29Z i3_v16 end
+2026-10-18T14:26:29Z i4_v20 start
+2026-10-18 23:26:29 KST [watch] start: identity i4_v20; pgid=20572
+2026-10-18 23:37:13 KST [watch] end: identity i4_v20; exit=0; stopped_total=0.0s
+2026-10-18T14:37:14Z i4_v20 end
+2026-10-18T14:37:14Z I2 start
+2026-10-18 23:37:14 KST [watch] start: identity I2 recorder; pgid=71511
+2026-10-18 23:37:30 KST [watch] end: identity I2 recorder; exit=0; stopped_total=0.0s
+2026-10-18T14:37:31Z I2 end
+2026-10-18T14:37:31Z i5_v21 start
+2026-10-18 23:37:31 KST [watch] start: identity i5_v21; pgid=72496
+2026-10-19 00:01:32 KST [watch] end: identity i5_v21; exit=0; stopped_total=0.0s
+2026-10-18T15:01:32Z i5_v21 end
+2026-10-18T15:01:32Z i6_v22 start
+2026-10-19 00:01:32 KST [watch] start: identity i6_v22; pgid=76860
+2026-10-19 00:24:56 KST [watch] end: identity i6_v22; exit=0; stopped_total=0.0s
+2026-10-18T15:24:57Z i6_v22 end
+2026-10-18T15:24:57Z i7_v23 start
+2026-10-19 00:24:57 KST [watch] start: identity i7_v23; pgid=58758
+2026-10-19 00:49:39 KST [watch] end: identity i7_v23; exit=0; stopped_total=0.0s
+2026-10-18T15:49:40Z i7_v23 end
+2026-10-18T15:49:40Z i8_v24 start
+2026-10-19 00:49:40 KST [watch] start: identity i8_v24; pgid=55073
+2026-10-19 00:50:30 KST [watch] STOP pgid=55073 (identity i8_v24): own quiet hold (PAUSE)
+2026-10-19 01:26:01 KST [watch] CONT pgid=55073 (identity i8_v24); stopped 2130.7s
+2026-10-19 01:55:04 KST [watch] end: identity i8_v24; exit=0; stopped_total=2130.7s
+2026-10-18T16:55:04Z i8_v24 end
+2026-10-18T16:55:04Z i9_v25 start
+2026-10-19 01:55:04 KST [watch] start: identity i9_v25; pgid=88226
+2026-10-19 02:24:57 KST [watch] end: identity i9_v25; exit=0; stopped_total=0.0s
+2026-10-18T17:24:57Z i9_v25 end

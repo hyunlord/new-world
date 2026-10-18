@@ -1,0 +1,21 @@
+284c284
+<         sim_core::rules::WorldRules::game_v26(seed),
+---
+>         grid_rules(seed),
+287a288,303
+> }
+> 
+> /// GRID BUILD ONLY (Pass 21 7.2, never committed): `game_v26` with
+> /// `P21_GRID=quarrel_loss,drift_permille,aid_giver,aid_receiver` applied.
+> fn grid_rules(seed: u64) -> sim_core::rules::WorldRules {
+>     let mut rules = sim_core::rules::WorldRules::game_v26(seed);
+>     let spec = std::env::var("P21_GRID").expect("grid build needs P21_GRID");
+>     let v: Vec<i64> = spec.split(',').map(|x| x.trim().parse().expect("number")).collect();
+>     assert_eq!(v.len(), 4, "P21_GRID=quarrel_loss,drift,giver,receiver");
+>     let mut rel = rules.society.relations.expect("v26 relations");
+>     rel.quarrel_loss = v[0] as i32;
+>     rel.relation_drift_permille = v[1] as i32;
+>     rel.aid_giver_days_permille = v[2] as u32;
+>     rel.aid_receiver_days_permille = v[3] as u32;
+>     rules.society.relations = Some(rel);
+>     rules

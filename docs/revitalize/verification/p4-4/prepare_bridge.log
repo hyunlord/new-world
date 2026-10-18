@@ -1,0 +1,5 @@
+   Compiling sim-core v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-bridge)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.41s

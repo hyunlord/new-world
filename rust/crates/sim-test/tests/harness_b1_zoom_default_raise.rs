@@ -204,10 +204,10 @@ fn harness_b1_a1_zoom_default_equals_five() {
     let def_rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "a1.1");
     assert_eq!(
         no_ws(&def_rhs),
-        "Vector2(5.0,5.0)",
-        "a1.2: ZOOM_DEFAULT must equal Vector2(5.0,5.0) (raised to 5.0 in B-1); got `{def_rhs}`"
+        "Vector2(4.0,4.0)",
+        "a1.2: ZOOM_DEFAULT must equal Vector2(4.0,4.0) (set to 4.0 by Revitalize Part 4); got `{def_rhs}`"
     );
-    println!("[B1 a1] ZOOM_DEFAULT = Vector2(5.0, 5.0) ✓");
+    println!("[B1 a1] ZOOM_DEFAULT = Vector2(4.0, 4.0) ✓");
 }
 
 // ─── a2: ZOOM_MIN preserved ───────────────────────────────────────────────────

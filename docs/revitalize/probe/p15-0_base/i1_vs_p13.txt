@@ -1,0 +1,4 @@
+shared simulation values: 155815
+differences: 0
+reference-only paths: 0 []
+candidate-only paths: 0 []

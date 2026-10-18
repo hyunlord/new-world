@@ -1,0 +1,16 @@
+Pass 19 Part 1 identity: release build of 0ca95174 (published as 9d6fb0dd, same tree), bin_p1, vs the base (probe/p19-0_base, 20a1d078):
+i1_v19: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i3_v16: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i4_v20: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i5_v21: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i6_v22: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i7_v23: PASS: 0 differences; only ['ms_per_agent_tick', 'timing', 'wall_seconds'] excluded
+i2: 20 array hashes equal
+i1_v19 log: DETERMINISM PASS
+i3_v16 log: DETERMINISM PASS
+i4_v20 log: DETERMINISM PASS
+i5_v21 log: DETERMINISM PASS
+i6_v22 log: DETERMINISM PASS
+i7_v23 log: DETERMINISM PASS
+Pins (release): Pass 18 v21/v22 11/11 and Pass 19 v23 6/6 on the Part 1 simulation code (p1_early_pins.log 11:35 KST); again with the Part 2 code (p2_pins.log: 11 + 6 + the 3 chronicle harness tests).
+The probe's twin check compared the two engines' chronicles every tick in all six probes (DETERMINISM PASS).

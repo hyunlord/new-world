@@ -1,0 +1,18 @@
+2026-10-15T10:08:31.479818Z runner start producer=47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21 bin=/Users/rexxa/work/p17-data/b-final-bin
+2026-10-15T10:08:31.559527Z identities start
+2026-10-15T10:08:31Z i1_v19 start
+2026-10-15T10:15:27Z i1_v19 end
+2026-10-15T10:15:27Z i3_v16 start
+2026-10-15T10:19:59Z i3_v16 end
+2026-10-15T10:19:59Z i4_v20 start
+2026-10-15T10:27:22Z i4_v20 end
+2026-10-15T10:27:22Z I2 start
+2026-10-15T10:27:36Z I2 end
+2026-10-15T10:27:36Z i5_v21 start
+2026-10-15T10:43:32Z i5_v21 end
+2026-10-15T10:43:32.709598Z identities end exit=0
+2026-10-15T10:43:34.123785Z v19_pins start
+2026-10-15T10:43:37.061181Z v19_pins end exit=0
+2026-10-15T10:43:37.172998Z v20_pins start
+2026-10-15T10:43:47.791533Z v20_pins end exit=0
+2026-10-15T10:43:47.947316Z workloads end exit=0

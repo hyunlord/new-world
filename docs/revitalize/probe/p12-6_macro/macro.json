@@ -1,0 +1,2932 @@
+{
+ "days": [
+  60,
+  90,
+  118
+ ],
+ "factual_r0": {
+  "seeds_split_only_before_the_fork": 2,
+  "seeds_with_a_fission": 18,
+  "seeds_with_a_post_fork_fission": 16
+ },
+ "fork_tick": 28800,
+ "noise": {
+  "mean_abs_delta_alive_118": 18.40625,
+  "mean_abs_delta_day": 34.5,
+  "n_both_split_after_fork": 14,
+  "share_of_seeds_differing": 0.6875,
+  "share_with_post_fork_day_differing": 0.6875
+ },
+ "per_seed": {
+  "12000": {
+   "gift_wood": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 28.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12001": {
+   "gift_wood": [
+    {
+     "alive_118": 36.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 36.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 36.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 36.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12002": {
+   "gift_wood": [
+    {
+     "alive_118": 165.0,
+     "first_fission_day": 36,
+     "post_fork_first_fission_day": 36,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "alive_118": 79.0,
+     "first_fission_day": 98,
+     "post_fork_first_fission_day": 98,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 165.0,
+     "first_fission_day": 36,
+     "post_fork_first_fission_day": 36,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "alive_118": 79.0,
+     "first_fission_day": 98,
+     "post_fork_first_fission_day": 98,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 165.0,
+     "first_fission_day": 36,
+     "post_fork_first_fission_day": 36,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "alive_118": 79.0,
+     "first_fission_day": 98,
+     "post_fork_first_fission_day": 98,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 165.0,
+     "first_fission_day": 36,
+     "post_fork_first_fission_day": 36,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "alive_118": 79.0,
+     "first_fission_day": 98,
+     "post_fork_first_fission_day": 98,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  "12003": {
+   "gift_wood": [
+    {
+     "alive_118": 38.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 69.0,
+     "first_fission_day": 85,
+     "post_fork_first_fission_day": 85,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 38.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 69.0,
+     "first_fission_day": 85,
+     "post_fork_first_fission_day": 85,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 38.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 69.0,
+     "first_fission_day": 85,
+     "post_fork_first_fission_day": 85,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 38.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 69.0,
+     "first_fission_day": 85,
+     "post_fork_first_fission_day": 85,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12004": {
+   "gift_wood": [
+    {
+     "alive_118": 63.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 91.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 63.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 91.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 63.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 92.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 63.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 91.0,
+     "first_fission_day": 14,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    }
+   ]
+  },
+  "12005": {
+   "gift_wood": [
+    {
+     "alive_118": 32.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 67.0,
+     "first_fission_day": 34,
+     "post_fork_first_fission_day": 34,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 32.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 67.0,
+     "first_fission_day": 34,
+     "post_fork_first_fission_day": 34,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 32.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 67.0,
+     "first_fission_day": 34,
+     "post_fork_first_fission_day": 34,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 32.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 67.0,
+     "first_fission_day": 34,
+     "post_fork_first_fission_day": 34,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12006": {
+   "gift_wood": [
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 23.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12007": {
+   "gift_wood": [
+    {
+     "alive_118": 170.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 46,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 129.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 88,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 170.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 46,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 129.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 88,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 170.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 46,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 129.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 88,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 170.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 46,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 129.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 88,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ]
+  },
+  "12008": {
+   "gift_wood": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12009": {
+   "gift_wood": [
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 37.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12010": {
+   "gift_wood": [
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 24.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12011": {
+   "gift_wood": [
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 57,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 57,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 57,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 57,
+     "post_fork_first_fission_day": 57,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 65.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  "12012": {
+   "gift_wood": [
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 71,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 63,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 71,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 63,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 71,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 63,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 71,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 57.0,
+     "first_fission_day": 63,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12013": {
+   "gift_wood": [
+    {
+     "alive_118": 83.0,
+     "first_fission_day": 92,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 124.0,
+     "first_fission_day": 48,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 83.0,
+     "first_fission_day": 92,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 125.0,
+     "first_fission_day": 48,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 83.0,
+     "first_fission_day": 92,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 125.0,
+     "first_fission_day": 48,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 83.0,
+     "first_fission_day": 92,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 124.0,
+     "first_fission_day": 48,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      2,
+      3,
+      4
+     ]
+    }
+   ]
+  },
+  "12014": {
+   "gift_wood": [
+    {
+     "alive_118": 105.0,
+     "first_fission_day": 40,
+     "post_fork_first_fission_day": 40,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 105.0,
+     "first_fission_day": 40,
+     "post_fork_first_fission_day": 40,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 105.0,
+     "first_fission_day": 40,
+     "post_fork_first_fission_day": 40,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 105.0,
+     "first_fission_day": 40,
+     "post_fork_first_fission_day": 40,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 90,
+     "post_fork_first_fission_day": 90,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  "12015": {
+   "gift_wood": [
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 20.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12016": {
+   "gift_wood": [
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 37,
+     "post_fork_first_fission_day": 37,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 67,
+     "post_fork_first_fission_day": 67,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 37,
+     "post_fork_first_fission_day": 37,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 67,
+     "post_fork_first_fission_day": 67,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 37,
+     "post_fork_first_fission_day": 37,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 67,
+     "post_fork_first_fission_day": 67,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 37,
+     "post_fork_first_fission_day": 37,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 67,
+     "post_fork_first_fission_day": 67,
+     "settlements": [
+      1,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12017": {
+   "gift_wood": [
+    {
+     "alive_118": 50.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 50.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 50.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 50.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 84.0,
+     "first_fission_day": 58,
+     "post_fork_first_fission_day": 58,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12018": {
+   "gift_wood": [
+    {
+     "alive_118": 116.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 147.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 45,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 116.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 146.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 45,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 116.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 145.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 45,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 116.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 92,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 146.0,
+     "first_fission_day": 13,
+     "post_fork_first_fission_day": 45,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ]
+  },
+  "12019": {
+   "gift_wood": [
+    {
+     "alive_118": 93.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 117.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 47,
+     "settlements": [
+      3,
+      3,
+      4
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 93.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 117.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 47,
+     "settlements": [
+      3,
+      3,
+      4
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 93.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 117.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 47,
+     "settlements": [
+      3,
+      3,
+      4
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 93.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "alive_118": 117.0,
+     "first_fission_day": 17,
+     "post_fork_first_fission_day": 47,
+     "settlements": [
+      3,
+      3,
+      4
+     ]
+    }
+   ]
+  },
+  "12020": {
+   "gift_wood": [
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 76,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 76,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 76,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 76,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 128.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": 94,
+     "settlements": [
+      2,
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  "12021": {
+   "gift_wood": [
+    {
+     "alive_118": 157.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 119.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 62,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 157.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 119.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 62,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 157.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 119.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 62,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 157.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    },
+    {
+     "alive_118": 119.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 62,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ]
+  },
+  "12022": {
+   "gift_wood": [
+    {
+     "alive_118": 70.0,
+     "first_fission_day": 91,
+     "post_fork_first_fission_day": 91,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 35.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 70.0,
+     "first_fission_day": 91,
+     "post_fork_first_fission_day": 91,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 35.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 70.0,
+     "first_fission_day": 91,
+     "post_fork_first_fission_day": 91,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 35.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 70.0,
+     "first_fission_day": 91,
+     "post_fork_first_fission_day": 91,
+     "settlements": [
+      1,
+      1,
+      2
+     ]
+    },
+    {
+     "alive_118": 35.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12023": {
+   "gift_wood": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 31.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12024": {
+   "gift_wood": [
+    {
+     "alive_118": 33.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 33.0,
+     "first_fission_day": 118,
+     "post_fork_first_fission_day": 118,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 33.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 73.0,
+     "first_fission_day": 30,
+     "post_fork_first_fission_day": 30,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 33.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 73.0,
+     "first_fission_day": 30,
+     "post_fork_first_fission_day": 30,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 33.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 73.0,
+     "first_fission_day": 30,
+     "post_fork_first_fission_day": 30,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12025": {
+   "gift_wood": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 29.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12026": {
+   "gift_wood": [
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 87.0,
+     "first_fission_day": 19,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    }
+   ]
+  },
+  "12027": {
+   "gift_wood": [
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 32,
+     "post_fork_first_fission_day": 32,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 34.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 32,
+     "post_fork_first_fission_day": 32,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 34.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 34.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 34.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 76.0,
+     "first_fission_day": 32,
+     "post_fork_first_fission_day": 32,
+     "settlements": [
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "alive_118": 34.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12028": {
+   "gift_wood": [
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "alive_118": 26.0,
+     "first_fission_day": null,
+     "post_fork_first_fission_day": null,
+     "settlements": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "12029": {
+   "gift_wood": [
+    {
+     "alive_118": 112.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 141.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 43,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 112.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 142.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 43,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 112.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 142.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 43,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 112.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 71,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 142.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 43,
+     "settlements": [
+      3,
+      4,
+      4
+     ]
+    }
+   ]
+  },
+  "12030": {
+   "gift_wood": [
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 29,
+     "post_fork_first_fission_day": 29,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 97.0,
+     "first_fission_day": 74,
+     "post_fork_first_fission_day": 74,
+     "settlements": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 29,
+     "post_fork_first_fission_day": 29,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 74,
+     "post_fork_first_fission_day": 74,
+     "settlements": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 29,
+     "post_fork_first_fission_day": 29,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 74,
+     "post_fork_first_fission_day": 74,
+     "settlements": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 29,
+     "post_fork_first_fission_day": 29,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 98.0,
+     "first_fission_day": 74,
+     "post_fork_first_fission_day": 74,
+     "settlements": [
+      1,
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  "12031": {
+   "gift_wood": [
+    {
+     "alive_118": 118.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 121.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 118.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 121.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 118.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 121.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 117.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 48,
+     "settlements": [
+      3,
+      3,
+      3
+     ]
+    },
+    {
+     "alive_118": 121.0,
+     "first_fission_day": 15,
+     "post_fork_first_fission_day": 63,
+     "settlements": [
+      2,
+      3,
+      3
+     ]
+    }
+   ]
+  }
+ },
+ "post_fork": true,
+ "replicates": 2,
+ "scene": "game_v18",
+ "seeds": [
+  12000,
+  12032
+ ],
+ "variants": {
+  "gift_wood": {
+   "mean_abs_delta_alive_118": 0.6875,
+   "mean_abs_delta_day": 2.4444444444444446,
+   "n_both_split_after_fork": 36,
+   "share_of_pairs_differing": 0.015625,
+   "share_with_post_fork_day_differing": 0.015625
+  },
+  "rot_wood": {
+   "mean_abs_delta_alive_118": 0.703125,
+   "mean_abs_delta_day": 0.0,
+   "n_both_split_after_fork": 35,
+   "share_of_pairs_differing": 0.015625,
+   "share_with_post_fork_day_differing": 0.015625
+  },
+  "spoil_food": {
+   "mean_abs_delta_alive_118": 0.03125,
+   "mean_abs_delta_day": 0.0,
+   "n_both_split_after_fork": 36,
+   "share_of_pairs_differing": 0.0,
+   "share_with_post_fork_day_differing": 0.0
+  }
+ }
+}

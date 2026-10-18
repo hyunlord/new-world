@@ -132,6 +132,22 @@ pub struct Settlement {
     /// [`Settlement::withdraw`] (used by slices 2-3/2-4). Zero counts are never
     /// stored — `withdraw` drops a key the moment it reaches 0.
     pub stockpile: BTreeMap<ResourceKind, u32>,
+
+    /// The settlement this one split from (Pass 11 fission); `None` for every
+    /// settlement formed by the formation scan alone (all earlier worlds).
+    #[serde(default)]
+    pub parent: Option<SettlementId>,
+
+    /// Accumulated fission pressure P in thousandths of a hazard-day (Pass 13,
+    /// `game_v19`); 0 under v8–v18.
+    #[serde(default)]
+    pub fission_pressure: u64,
+
+    /// The hidden fission threshold θ in thousandths (Pass 13, `game_v19`; a
+    /// world draw made when the settlement forms and after each of its
+    /// splits); 0 under v8–v18 (never drawn).
+    #[serde(default)]
+    pub fission_threshold: u64,
 }
 
 impl Settlement {
@@ -146,6 +162,9 @@ impl Settlement {
             community_history: Vec::with_capacity(SETTLEMENT_HISTORY_CAP),
             founded_at,
             stockpile: BTreeMap::new(),
+            parent: None,
+            fission_pressure: 0,
+            fission_threshold: 0,
         }
     }
 

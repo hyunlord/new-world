@@ -1,0 +1,4 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+{"active_joined_rows":0,"failures":[],"first_active_tick":-1,"ok":true,"passed":23,"routine_required":false,"samples":1,"stale_policy":"removed or active again after one tick","stale_rechecks":0,"stale_rows":0,"suite":"pass17_bridge","tick":0}

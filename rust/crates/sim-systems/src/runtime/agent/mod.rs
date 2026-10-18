@@ -8,6 +8,18 @@
 //! Future Phase 4 sub-stages (γ sprite, δ BodyHealth) extend this module
 //! with rendering hooks and a health subsystem respectively.
 
+pub mod aging;
+pub mod beds;
+/// Shared household partition and family-aware departure selection.
+pub mod households;
+pub mod maturation;
 pub mod movement;
+/// Daily partner matching and family event observation.
+pub mod pairing;
 
-pub use movement::{AgentMovementSystem, MovementRng};
+pub use movement::{haul_due, hauls_home, AgentMovementSystem, MovementRng};
+
+pub use aging::AgingSystem;
+pub use beds::BedAssignmentSystem;
+pub use maturation::MaturationSystem;
+pub use pairing::PairingSystem;

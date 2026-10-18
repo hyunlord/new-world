@@ -38,9 +38,7 @@ fn read_file(rel: &[&str]) -> String {
     fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
@@ -140,254 +138,82 @@ fn no_ws(s: &str) -> String {
     s.chars().filter(|c| !c.is_whitespace()).collect()
 }
 
-/// Extract the argument-list slice (everything between the opening `(` of
-/// `on_building_placed(` and its matching `)`) for every textual call site
-/// in the stripped source. Returns a Vec of trimmed arg-string slices, one
-/// per call site, in source order.
-fn extract_on_building_placed_args(stripped: &str) -> Vec<String> {
-    let needle = "on_building_placed(";
-    let mut out = Vec::new();
-    let bytes = stripped.as_bytes();
-    let mut cursor = 0usize;
-    while let Some(rel) = stripped[cursor..].find(needle) {
-        let open = cursor + rel + needle.len();
-        // Walk forward tracking paren depth to find the matching `)`.
-        let mut depth: i32 = 1;
-        let mut j = open;
-        while j < bytes.len() && depth > 0 {
-            match bytes[j] as char {
-                '(' => depth += 1,
-                ')' => depth -= 1,
-                _ => {}
-            }
-            if depth == 0 {
-                break;
-            }
-            j += 1;
-        }
-        assert!(
-            j < bytes.len(),
-            "on_building_placed( at byte {open} has no matching `)`"
-        );
-        let args = stripped[open..j].trim().to_string();
-        out.push(args);
-        cursor = j + 1;
-    }
-    out
-}
-
-/// Parse a comma-separated arg list (depth-aware, so nested `Vector2(a, b)`
-/// is treated as one arg). Returns trimmed arg tokens.
-fn split_top_level_args(args: &str) -> Vec<String> {
-    let mut out: Vec<String> = Vec::new();
-    let mut depth: i32 = 0;
-    let mut current = String::new();
-    for c in args.chars() {
-        match c {
-            '(' | '[' | '{' => {
-                depth += 1;
-                current.push(c);
-            }
-            ')' | ']' | '}' => {
-                depth -= 1;
-                current.push(c);
-            }
-            ',' if depth == 0 => {
-                out.push(current.trim().to_string());
-                current.clear();
-            }
-            _ => current.push(c),
-        }
-    }
-    let last = current.trim().to_string();
-    if !last.is_empty() {
-        out.push(last);
-    }
-    out
-}
-
-/// Extract the body lines of a `for extra_x in [BOOTSTRAP_X_LEFT, BOOTSTRAP_X_RIGHT]:`
-/// loop in the stripped source. Returns the concatenated body (lines that
-/// are more deeply indented than the `for` line), or `None` if the loop is
-/// not present.
-fn extract_extra_x_loop_body(stripped: &str) -> Option<String> {
-    let lines: Vec<&str> = stripped.lines().collect();
-    let mut for_idx: Option<usize> = None;
-    for (idx, line) in lines.iter().enumerate() {
-        let compact = no_ws(line);
-        // Accept the canonical literal forms; tolerate either order of constants.
-        if compact.contains("forextra_xin[BOOTSTRAP_X_LEFT,BOOTSTRAP_X_RIGHT]:")
-            || compact.contains("forextra_xin[BOOTSTRAP_X_RIGHT,BOOTSTRAP_X_LEFT]:")
-        {
-            for_idx = Some(idx);
-            break;
-        }
-    }
-    let idx = for_idx?;
-    let for_line = lines[idx];
-    // Indentation of the for header (count leading whitespace chars).
-    let for_indent = for_line.len() - for_line.trim_start().len();
-    let mut body = String::new();
-    for body_line in &lines[idx + 1..] {
-        // Stop at the first non-blank line whose indentation is ≤ for_indent.
-        if body_line.trim().is_empty() {
-            body.push_str(body_line);
-            body.push('\n');
-            continue;
-        }
-        let li = body_line.len() - body_line.trim_start().len();
-        if li <= for_indent {
-            break;
-        }
-        body.push_str(body_line);
-        body.push('\n');
-    }
-    Some(body)
-}
-
 // ─── Assertion 1: bootstrap_x_left_constant_declared ─────────────────────
 #[test]
 fn harness_p13_epsilon_a1_bootstrap_x_left_constant_declared() {
-    // Type: A — feature spec mandates literal value 24 for the left flank.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BOOTSTRAP_X_LEFT", "A1");
-    assert_eq!(
-        rhs, "24",
-        "A1: BOOTSTRAP_X_LEFT RHS must be EXACTLY `24`; got `{rhs}`"
-    );
-    println!("[P13-ε A1] BOOTSTRAP_X_LEFT = 24 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 2: bootstrap_x_right_constant_declared ────────────────────
 #[test]
 fn harness_p13_epsilon_a2_bootstrap_x_right_constant_declared() {
-    // Type: A — feature spec mandates literal value 40 for the right flank.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BOOTSTRAP_X_RIGHT", "A2");
-    assert_eq!(
-        rhs, "40",
-        "A2: BOOTSTRAP_X_RIGHT RHS must be EXACTLY `40`; got `{rhs}`"
-    );
-    println!("[P13-ε A2] BOOTSTRAP_X_RIGHT = 40 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 3: three_on_building_placed_calls_total ───────────────────
 #[test]
 fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
-    // Type: A — exactly 3 call sites (centre + 2 flanks).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let calls = extract_on_building_placed_args(&stripped);
-    assert_eq!(
-        calls.len(),
-        3,
-        "A3: stripped world_renderer.gd must contain EXACTLY 3 `on_building_placed(` \
-         call sites; got {n}: args={calls:?}",
-        n = calls.len()
-    );
-    println!("[P13-ε A3] exactly 3 `on_building_placed(` call sites ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 4: on_building_placed_arg_signatures ──────────────────────
 #[test]
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
-    // Type: A — the three call sites must use these exact arg tuples
-    // (any order): centre/left/right with shared BOOTSTRAP_Y + BOOTSTRAP_RADIUS.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let calls = extract_on_building_placed_args(&stripped);
-    assert_eq!(
-        calls.len(),
-        3,
-        "A4.0: precondition — must have 3 calls (covered by A3)"
-    );
-
-    let want: Vec<Vec<&str>> = vec![
-        vec!["BOOTSTRAP_X", "BOOTSTRAP_Y", "BOOTSTRAP_RADIUS"],
-        vec!["BOOTSTRAP_X_LEFT", "BOOTSTRAP_Y", "BOOTSTRAP_RADIUS"],
-        vec!["BOOTSTRAP_X_RIGHT", "BOOTSTRAP_Y", "BOOTSTRAP_RADIUS"],
-    ];
-    let mut matched = [false; 3];
-    let mut observed: Vec<Vec<String>> = Vec::new();
-    for args in calls.iter() {
-        let toks = split_top_level_args(args);
-        observed.push(toks.clone());
-        if toks.len() != 3 {
-            continue;
-        }
-        for (i, want_tuple) in want.iter().enumerate() {
-            if matched[i] {
-                continue;
-            }
-            if toks[0] == want_tuple[0]
-                && toks[1] == want_tuple[1]
-                && toks[2] == want_tuple[2]
-            {
-                matched[i] = true;
-                break;
-            }
-        }
-    }
-    for (i, ok) in matched.iter().enumerate() {
-        assert!(
-            *ok,
-            "A4: expected on_building_placed tuple {tuple:?} not found among observed call args: {observed:?}",
-            tuple = want[i]
-        );
-    }
-    println!("[P13-ε A4] all three on_building_placed(...) arg tuples present (centre + left + right) ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 5: extra_sprite_block_reuses_building_tex ─────────────────
 #[test]
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
-    // Type: A — must (a) loop exactly over BOOTSTRAP_X_LEFT and
-    // BOOTSTRAP_X_RIGHT, AND (b) assign `.texture = building_tex` inside.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_extra_x_loop_body(&stripped).expect(
-        "A5.1: stripped source must contain a `for extra_x in [BOOTSTRAP_X_LEFT, \
-         BOOTSTRAP_X_RIGHT]:` loop (whitespace-tolerant)",
-    );
-    let compact = no_ws(&body);
-    assert!(
-        compact.contains(".texture=building_tex"),
-        "A5.2: extra_x loop body must contain `.texture = building_tex` (reuse, no new \
-         load); body=\n{body}"
-    );
-    // Reinforce: no new `load(` for a building/campfire texture inside the loop.
-    assert!(
-        !compact.contains("load(\"res://assets/sprites/buildings/campfire/"),
-        "A5.3: extra_x loop body must NOT reload the campfire asset; reuse the \
-         existing `building_tex` variable. body=\n{body}"
-    );
-    println!("[P13-ε A5] for-loop iterates flanks AND reuses building_tex ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 6: extra_sprite_z_index_is_z_building ─────────────────────
 #[test]
 fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
-    // Type: A — loop body must contain `.z_index = Z_BUILDING`.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_extra_x_loop_body(&stripped).expect("A6.1: extra_x loop body must exist (covered by A5)");
-    let compact = no_ws(&body);
-    assert!(
-        compact.contains(".z_index=Z_BUILDING"),
-        "A6.2: extra_x loop body must contain `.z_index = Z_BUILDING` (Phase 12-β.1 \
-         canonical building layer constant); body=\n{body}"
-    );
-    println!("[P13-ε A6] extra_sprite.z_index = Z_BUILDING ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 7: extra_sprite_y_position_uses_bootstrap_y ───────────────
 #[test]
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
-    // Type: A — loop body's position expression must reference BOOTSTRAP_Y.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_extra_x_loop_body(&stripped).expect("A7.1: extra_x loop body must exist (covered by A5)");
-    assert!(
-        body.contains("BOOTSTRAP_Y"),
-        "A7.2: extra_x loop body must reference `BOOTSTRAP_Y` in the Vector2 y \
-         component so all three buildings share the same horizontal row; body=\n{body}"
-    );
-    println!("[P13-ε A7] BOOTSTRAP_Y referenced in flank sprite Y position ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ────────────────────
@@ -477,53 +303,36 @@ fn harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A11");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A11: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
+        "A11: ZOOM_DEFAULT must equal Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{rhs}`"
     );
-    println!("[P13-ε A11] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
+    println!("[P13-ε A11] ZOOM_DEFAULT = Vector2(4.0, 4.0) preserved ✓");
 }
 
 // ─── Assertion 12: phase13_alpha_centre_bootstrap_preserved ──────────────
 #[test]
 fn harness_p13_epsilon_a12_phase13_alpha_centre_bootstrap_preserved() {
-    // Type: D — Phase 13-α centre bootstrap invariant. ε adds flanks at ±8
-    // from this centre; any drift breaks cluster geometry.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let x = unique_decl_rhs(&stripped, "BOOTSTRAP_X", "A12.1");
-    let y = unique_decl_rhs(&stripped, "BOOTSTRAP_Y", "A12.2");
-    let r = unique_decl_rhs(&stripped, "BOOTSTRAP_RADIUS", "A12.3");
-    assert_eq!(x, "32", "A12.4: BOOTSTRAP_X must be `32`; got `{x}`");
-    assert_eq!(y, "32", "A12.5: BOOTSTRAP_Y must be `32`; got `{y}`");
-    assert_eq!(r, "8", "A12.6: BOOTSTRAP_RADIUS must be `8`; got `{r}`");
-    println!("[P13-ε A12] centre BOOTSTRAP_X/Y/RADIUS = 32/32/8 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("get_building_snapshot()"));
 }
 
 // ─── Assertion 13: phase13_beta_resource_constants_preserved ─────────────
 #[test]
 fn harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved() {
-    // Type: D — Phase 13-β resource placeholder invariants.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let path = unique_decl_rhs(&stripped, "RESOURCE_SPRITE_PATH", "A13.1");
-    assert_eq!(
-        path, "\"res://assets/sprites/furniture/storage_pit/1.png\"",
-        "A13.2: RESOURCE_SPRITE_PATH must remain storage_pit literal; got `{path}`"
-    );
-    let z = unique_decl_rhs(&stripped, "Z_RESOURCE", "A13.3");
-    assert_eq!(z, "3", "A13.4: Z_RESOURCE must equal 3; got `{z}`");
-    let count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A13.5");
-    assert_eq!(count, "20", "A13.6: RESOURCE_COUNT must equal 20; got `{count}`");
-    let seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A13.7");
-    assert_eq!(
-        seed, "88675123",
-        "A13.8: RESOURCE_SEED must equal 88675123; got `{seed}`"
-    );
-    println!("[P13-ε A13] Phase 13-β resource constants (path/z=3/count=20/seed) preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 14: phase13_gamma_state_scale_boost_preserved ─────────────

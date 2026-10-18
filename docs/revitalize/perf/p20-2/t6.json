@@ -1,0 +1,799 @@
+{
+ "checks": {
+  "decision_slope": {
+   "limit": 1.7,
+   "op": "<",
+   "passed": true,
+   "value": 0.9786288651389125
+  },
+  "mean_absolute_ms": {
+   "limit": 4.0,
+   "op": "<=",
+   "passed": true,
+   "value": 0.3778036231884058
+  },
+  "mean_relative": {
+   "limit": 0.15,
+   "op": "<=",
+   "passed": true,
+   "value": 0.026496768134574817
+  },
+  "natural_mean_ratio": {
+   "limit": 1.15,
+   "op": "<=",
+   "passed": true,
+   "value": 1.0447029145018334
+  },
+  "natural_p999_ratio": {
+   "limit": 1.35,
+   "op": "<=",
+   "passed": true,
+   "value": 1.03737319807795
+  },
+  "p999_relative": {
+   "limit": 0.35,
+   "op": "<=",
+   "passed": true,
+   "value": 0.020486555697823303
+  }
+ },
+ "medians": {
+  "game_v24": {
+   "mean_ms": 0.3680514492753623,
+   "p999_ms": 0.781
+  },
+  "game_v25": {
+   "mean_ms": 0.3778036231884058,
+   "p999_ms": 0.797
+  }
+ },
+ "natural": {
+  "checks": {
+   "natural_mean_ratio": {
+    "limit": 1.15,
+    "op": "<=",
+    "passed": true,
+    "value": 1.0447029145018334
+   },
+   "natural_p999_ratio": {
+    "limit": 1.35,
+    "op": "<=",
+    "passed": true,
+    "value": 1.03737319807795
+   }
+  },
+  "fingerprints_stable_across_repeats": {
+   "game_v24": true,
+   "game_v25": true
+  },
+  "medians": {
+   "game_v24": {
+    "mean_ms": 0.21555804822276253,
+    "ms_per_agent_tick": 0.0037392654088848863,
+    "p999_ms": 0.46825
+   },
+   "game_v25": {
+    "mean_ms": 0.22519412122264676,
+    "ms_per_agent_tick": 0.0039030663953636973,
+    "p999_ms": 0.48575
+   }
+  },
+  "per_repeat": [
+   {
+    "mean_ratio": 1.0496934057394733,
+    "p999_ratio": 1.0554945054945055,
+    "repeat": "nat_r1"
+   },
+   {
+    "mean_ratio": 1.0447029145018334,
+    "p999_ratio": 1.0608649225840898,
+    "repeat": "nat_r2"
+   },
+   {
+    "mean_ratio": 1.0475306620668408,
+    "p999_ratio": 1.0114523685580428,
+    "repeat": "nat_r3"
+   }
+  ],
+  "repeats": {
+   "game_v24": [
+    {
+     "mean_ms": 0.2141971011346532,
+     "ms_per_agent_tick": 0.003714373364979164,
+     "p999_ms": 0.455,
+     "repeat": "nat_r1",
+     "worlds": [
+      {
+       "alive_end": 65,
+       "contended": false,
+       "file": "natural_game_v24_s19400_n22_side64_none.json",
+       "fingerprint": "00ebaf4edde426f0",
+       "max_ms": 2.018,
+       "mean_ms": 0.18098792404770173,
+       "ms_per_agent_tick": 0.0035797397092767642,
+       "p999_ms": 0.425,
+       "relations_share": 9.677677614538502e-05,
+       "seed": 19400,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 31263.853999999996
+      },
+      {
+       "alive_end": 60,
+       "contended": false,
+       "file": "natural_game_v24_s19401_n29_side64_none.json",
+       "fingerprint": "9b69e9efeaad7ddd",
+       "max_ms": 1.261,
+       "mean_ms": 0.22483292810003475,
+       "ms_per_agent_tick": 0.004258967248276225,
+       "p999_ms": 0.431,
+       "relations_share": 7.875813257448186e-05,
+       "seed": 19401,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 38837.64
+      },
+      {
+       "alive_end": 76,
+       "contended": false,
+       "file": "natural_game_v24_s19404_n25_side64_none.json",
+       "fingerprint": "fb1b6896a80ad20b",
+       "max_ms": 2.234,
+       "mean_ms": 0.20733952182470763,
+       "ms_per_agent_tick": 0.0036668454135954133,
+       "p999_ms": 0.463,
+       "relations_share": 8.541536201772685e-05,
+       "seed": 19404,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 35815.829
+      },
+      {
+       "alive_end": 88,
+       "contended": false,
+       "file": "natural_game_v24_s19407_n30_side64_none.json",
+       "fingerprint": "71bbcf5551c2a04a",
+       "max_ms": 1.192,
+       "mean_ms": 0.2436280305661688,
+       "ms_per_agent_tick": 0.0033519410887682547,
+       "p999_ms": 0.501,
+       "relations_share": 7.327524897285938e-05,
+       "seed": 19407,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 42084.306
+      }
+     ]
+    },
+    {
+     "mean_ms": 0.21555804822276253,
+     "ms_per_agent_tick": 0.0037392654088848863,
+     "p999_ms": 0.46825,
+     "repeat": "nat_r2",
+     "worlds": [
+      {
+       "alive_end": 65,
+       "contended": false,
+       "file": "natural_game_v24_s19400_n22_side64_none.json",
+       "fingerprint": "00ebaf4edde426f0",
+       "max_ms": 1.25,
+       "mean_ms": 0.18401908648836401,
+       "ms_per_agent_tick": 0.0036396817981974063,
+       "p999_ms": 0.428,
+       "relations_share": 9.707709553488346e-05,
+       "seed": 19400,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 31787.457
+      },
+      {
+       "alive_end": 60,
+       "contended": false,
+       "file": "natural_game_v24_s19401_n29_side64_none.json",
+       "fingerprint": "9b69e9efeaad7ddd",
+       "max_ms": 1.116,
+       "mean_ms": 0.22615291767974993,
+       "ms_per_agent_tick": 0.004283965274488131,
+       "p999_ms": 0.436,
+       "relations_share": 7.862364012583432e-05,
+       "seed": 19401,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 39065.655000000006
+      },
+      {
+       "alive_end": 76,
+       "contended": false,
+       "file": "natural_game_v24_s19404_n25_side64_none.json",
+       "fingerprint": "fb1b6896a80ad20b",
+       "max_ms": 1.195,
+       "mean_ms": 0.2072343637837212,
+       "ms_per_agent_tick": 0.003664993652743653,
+       "p999_ms": 0.485,
+       "relations_share": 8.737125975594385e-05,
+       "seed": 19404,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 35797.664000000004
+      },
+      {
+       "alive_end": 88,
+       "contended": false,
+       "file": "natural_game_v24_s19407_n30_side64_none.json",
+       "fingerprint": "71bbcf5551c2a04a",
+       "max_ms": 1.115,
+       "mean_ms": 0.244825824939215,
+       "ms_per_agent_tick": 0.003368420910110355,
+       "p999_ms": 0.524,
+       "relations_share": 7.31741366699508e-05,
+       "seed": 19407,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 42291.213
+      }
+     ]
+    },
+    {
+     "mean_ms": 0.21566275182354983,
+     "ms_per_agent_tick": 0.003739693818596624,
+     "p999_ms": 0.48025,
+     "repeat": "nat_r3",
+     "worlds": [
+      {
+       "alive_end": 65,
+       "contended": false,
+       "file": "natural_game_v24_s19400_n22_side64_none.json",
+       "fingerprint": "00ebaf4edde426f0",
+       "max_ms": 1.334,
+       "mean_ms": 0.18352637489869167,
+       "ms_per_agent_tick": 0.003629938699897413,
+       "p999_ms": 0.458,
+       "relations_share": 9.694862960614965e-05,
+       "seed": 19400,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 31702.345999999998
+      },
+      {
+       "alive_end": 60,
+       "contended": false,
+       "file": "natural_game_v24_s19401_n29_side64_none.json",
+       "fingerprint": "9b69e9efeaad7ddd",
+       "max_ms": 1.511,
+       "mean_ms": 0.22680758365173093,
+       "ms_per_agent_tick": 0.004296370861624295,
+       "p999_ms": 0.482,
+       "relations_share": 7.920910273229293e-05,
+       "seed": 19401,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 39178.742
+      },
+      {
+       "alive_end": 76,
+       "contended": false,
+       "file": "natural_game_v24_s19404_n25_side64_none.json",
+       "fingerprint": "fb1b6896a80ad20b",
+       "max_ms": 1.034,
+       "mean_ms": 0.2060976207016325,
+       "ms_per_agent_tick": 0.003644882882882883,
+       "p999_ms": 0.464,
+       "relations_share": 8.71885222852658e-05,
+       "seed": 19404,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 35601.303
+      },
+      {
+       "alive_end": 88,
+       "contended": false,
+       "file": "natural_game_v24_s19407_n30_side64_none.json",
+       "fingerprint": "71bbcf5551c2a04a",
+       "max_ms": 2.638,
+       "mean_ms": 0.24621942804214428,
+       "ms_per_agent_tick": 0.0033875828299819045,
+       "p999_ms": 0.517,
+       "relations_share": 7.230645276877069e-05,
+       "seed": 19407,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 42531.944
+      }
+     ]
+    }
+   ],
+   "game_v25": [
+    {
+     "mean_ms": 0.22484128458955652,
+     "ms_per_agent_tick": 0.0038993971299319825,
+     "p999_ms": 0.48025,
+     "repeat": "nat_r1",
+     "worlds": [
+      {
+       "alive_end": 65,
+       "contended": false,
+       "file": "natural_game_v25_s19400_n22_side64_none.json",
+       "fingerprint": "169e04706d825749",
+       "max_ms": 1.99,
+       "mean_ms": 0.1915603450272085,
+       "ms_per_agent_tick": 0.003788848510661684,
+       "p999_ms": 0.463,
+       "relations_share": 0.0003068510994848193,
+       "seed": 19400,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 33090.134
+      },
+      {
+       "alive_end": 60,
+       "contended": false,
+       "file": "natural_game_v25_s19401_n29_side64_none.json",
+       "fingerprint": "9b69e9efeaad7ddd",
+       "max_ms": 1.133,
+       "mean_ms": 0.23244993632048164,
+       "ms_per_agent_tick": 0.004403257188974858,
+       "p999_ms": 0.44,
+       "relations_share": 0.0002358310013183939,
+       "seed": 19401,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 40153.401999999995
+      },
+      {
+       "alive_end": 76,
+       "contended": false,
+       "file": "natural_game_v25_s19404_n25_side64_none.json",
+       "fingerprint": "d262b57a03ddbc9e",
+       "max_ms": 1.466,
+       "mean_ms": 0.22055980664582608,
+       "ms_per_agent_tick": 0.003899499021582498,
+       "p999_ms": 0.49,
+       "relations_share": 0.0003188836777678532,
+       "seed": 19404,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 38099.501
+      },
+      {
+       "alive_end": 88,
+       "contended": false,
+       "file": "natural_game_v25_s19407_n30_side64_none.json",
+       "fingerprint": "b2120be0fc890047",
+       "max_ms": 2.2,
+       "mean_ms": 0.25479505036470995,
+       "ms_per_agent_tick": 0.0035059837985088895,
+       "p999_ms": 0.528,
+       "relations_share": 0.00022008487571380985,
+       "seed": 19407,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 44013.297
+      }
+     ]
+    },
+    {
+     "mean_ms": 0.22519412122264676,
+     "ms_per_agent_tick": 0.0039030663953636973,
+     "p999_ms": 0.49675,
+     "repeat": "nat_r2",
+     "worlds": [
+      {
+       "alive_end": 65,
+       "contended": false,
+       "file": "natural_game_v25_s19400_n22_side64_none.json",
+       "fingerprint": "169e04706d825749",
+       "max_ms": 1.564,
+       "mean_ms": 0.19230979506773185,
+       "ms_per_agent_tick": 0.0038036703350553236,
+       "p999_ms": 0.467,
+       "relations_share": 0.0003038707215988251,
+       "seed": 19400,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 33219.594
+      },
+      {
+       "alive_end": 60,
+       "contended": false,
+       "file": "natural_game_v25_s19401_n29_side64_none.json",
+       "fingerprint": "9b69e9efeaad7ddd",
+       "max_ms": 21.551,
+       "mean_ms": 0.23305500173671415,
+       "ms_per_agent_tick": 0.00441472840675825,
+       "p999_ms": 0.46,
+       "relations_share": 0.0002672210768161625,
+       "seed": 19401,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 40257.921
+      },
+      {
+       "alive_end": 76,
+       "contended": false,
+       "file": "natural_game_v25_s19404_n25_side64_none.json",
+       "fingerprint": "d262b57a03ddbc9e",
+       "max_ms": 1.416,
+       "mean_ms": 0.21739529929373627,
+       "ms_per_agent_tick": 0.0038435581032619376,
+       "p999_ms": 0.515,
+       "relations_share": 0.0003631911803051826,
+       "seed": 19404,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 37552.864
+      },
+      {
+       "alive_end": 88,
+       "contended": false,
+       "file": "natural_game_v25_s19407_n30_side64_none.json",
+       "fingerprint": "b2120be0fc890047",
+       "max_ms": 1.569,
+       "mean_ms": 0.2580163887924048,
+       "ms_per_agent_tick": 0.0035503087363792773,
+       "p999_ms": 0.545,
+       "relations_share": 0.00022560852987489206,
+       "seed": 19407,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 44569.751000000004
+      }
+     ]
+    },
+    {
+     "mean_ms": 0.2259133452008799,
+     "ms_per_agent_tick": 0.003919180043491241,
+     "p999_ms": 0.48575,
+     "repeat": "nat_r3",
+     "worlds": [
+      {
+       "alive_end": 65,
+       "contended": false,
+       "file": "natural_game_v25_s19400_n22_side64_none.json",
+       "fingerprint": "169e04706d825749",
+       "max_ms": 1.27,
+       "mean_ms": 0.194491281695033,
+       "ms_per_agent_tick": 0.0038468326372096432,
+       "p999_ms": 0.483,
+       "relations_share": 0.0002978688446127481,
+       "seed": 19400,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 33596.424
+      },
+      {
+       "alive_end": 60,
+       "contended": false,
+       "file": "natural_game_v25_s19401_n29_side64_none.json",
+       "fingerprint": "9b69e9efeaad7ddd",
+       "max_ms": 2.301,
+       "mean_ms": 0.23467429663077458,
+       "ms_per_agent_tick": 0.0044453863799849115,
+       "p999_ms": 0.45,
+       "relations_share": 0.0002712388916196844,
+       "seed": 19401,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 40537.638
+      },
+      {
+       "alive_end": 76,
+       "contended": false,
+       "file": "natural_game_v25_s19404_n25_side64_none.json",
+       "fingerprint": "d262b57a03ddbc9e",
+       "max_ms": 1.242,
+       "mean_ms": 0.2182495426652773,
+       "ms_per_agent_tick": 0.003858661451169188,
+       "p999_ms": 0.483,
+       "relations_share": 0.0003183543867647543,
+       "seed": 19404,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 37700.426
+      },
+      {
+       "alive_end": 88,
+       "contended": false,
+       "file": "natural_game_v25_s19407_n30_side64_none.json",
+       "fingerprint": "b2120be0fc890047",
+       "max_ms": 1.203,
+       "mean_ms": 0.25623825981243487,
+       "ms_per_agent_tick": 0.003525839705601224,
+       "p999_ms": 0.527,
+       "relations_share": 0.00025007592753764537,
+       "seed": 19407,
+       "settlements_end": 2,
+       "ticks": 172740,
+       "total_ms": 44262.597
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "per_repeat": [
+  {
+   "mean_relative": 0.024797651557064246,
+   "p999_relative": 0.020486555697823303,
+   "repeat": "r1"
+  },
+  {
+   "mean_relative": 0.027724993297904087,
+   "p999_relative": -0.014084507042253521,
+   "repeat": "r2"
+  },
+  {
+   "mean_relative": 0.016585892279015038,
+   "p999_relative": 0.07539682539682539,
+   "repeat": "r3"
+  },
+  {
+   "mean_relative": 0.03814279055436605,
+   "p999_relative": 0.4337194337194337,
+   "repeat": "r4"
+  },
+  {
+   "mean_relative": 0.02595689900846102,
+   "p999_relative": -0.3433734939759036,
+   "repeat": "r5"
+  }
+ ],
+ "provenance": {
+  "builds": {
+   "base": {
+    "commit": "5cb16639",
+    "dir": "/Users/rexxa/work/p20-data/bin_base",
+    "worldsim_perf_sha256": "0068e0e11db8ddf748b027e6e4af75fb2ad22141f5c8448c6078cde2a63807bb"
+   },
+   "final": {
+    "commit": "3562a9d4",
+    "dir": "/Users/rexxa/work/p20-data/bin_p2",
+    "worldsim_perf_sha256": "052e11aeed9c4333b914753169de346475cc62b29f082caf69ab0ca24bb054a1"
+   }
+  },
+  "contended": false,
+  "quiet": {
+   "owner": "pass20-sim (Claude Code, new-world-pass4)",
+   "pid": "46754",
+   "purpose": "T6 game_v25 vs game_v24 (stress x5, quick, slopes, natural x3)",
+   "started": "2026-10-18T03:15:33Z"
+  },
+  "stage": "t6"
+ },
+ "quick": {
+  "base": {
+   "alive": 500.0,
+   "contended": false,
+   "decision_us": 185.53810217391305,
+   "file": "/Users/rexxa/work/p20-data/perf/t6/quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+   "fingerprint": "54ac4928a770f238",
+   "git_sha": "5cb16639",
+   "max_ms": 0.776,
+   "mean_ms": 0.3032231884057971,
+   "p999_ms": 0.568,
+   "relations_us": null
+  },
+  "final": {
+   "alive": 500.0,
+   "contended": false,
+   "decision_us": 185.95784492753623,
+   "file": "/Users/rexxa/work/p20-data/perf/t6/quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+   "fingerprint": "54ac4928a770f238",
+   "git_sha": "3562a9d4",
+   "max_ms": 0.924,
+   "mean_ms": 0.30714202898550724,
+   "p999_ms": 0.564,
+   "relations_us": 0.018231884057971017
+  }
+ },
+ "repeats": {
+  "game_v24": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 239.89936449275365,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r1/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.857,
+    "mean_ms": 0.3680514492753623,
+    "p999_ms": 0.781,
+    "relations_us": 0.017841304347826086
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 239.25931014492753,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r2/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.848,
+    "mean_ms": 0.3676115942028986,
+    "p999_ms": 0.781,
+    "relations_us": 0.020962318840579707
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 241.1199644927536,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r3/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.862,
+    "mean_ms": 0.36931159420289855,
+    "p999_ms": 0.756,
+    "relations_us": 0.017931884057971016
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 238.82749202898552,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r4/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.87,
+    "mean_ms": 0.3668898550724638,
+    "p999_ms": 0.777,
+    "relations_us": 0.018294202898550726
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 239.63976739130433,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r5/game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 1.263,
+    "mean_ms": 0.36869927536231883,
+    "p999_ms": 1.162,
+    "relations_us": 0.018449999999999998
+   }
+  ],
+  "game_v25": [
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 248.23056376811593,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r1/game_v25/stress_stress_v25_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.882,
+    "mean_ms": 0.37717826086956524,
+    "p999_ms": 0.797,
+    "relations_us": 0.03281521739130435
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 248.72162971014492,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r2/game_v25/stress_stress_v25_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.859,
+    "mean_ms": 0.3778036231884058,
+    "p999_ms": 0.77,
+    "relations_us": 0.034760869565217394
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 246.67836811594202,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r3/game_v25/stress_stress_v25_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.852,
+    "mean_ms": 0.37543695652173914,
+    "p999_ms": 0.813,
+    "relations_us": 0.03450869565217391
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 251.63288768115942,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r4/game_v25/stress_stress_v25_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 1.32,
+    "mean_ms": 0.3808840579710145,
+    "p999_ms": 1.114,
+    "relations_us": 0.03426159420289855
+   },
+   {
+    "alive": 500.0,
+    "contended": false,
+    "decision_us": 249.55920579710147,
+    "file": "/Users/rexxa/work/p20-data/perf/t6/r5/game_v25/stress_stress_v25_s15100_n500_side64_fed.json",
+    "fingerprint": "d4d9b81677e1ebcc",
+    "git_sha": "3562a9d4",
+    "max_ms": 0.916,
+    "mean_ms": 0.3782695652173913,
+    "p999_ms": 0.763,
+    "relations_us": 0.031128985507246378
+   }
+  ]
+ },
+ "slopes": {
+  "game_v24": {
+   "b": 0.9832306366390478,
+   "points": [
+    {
+     "alive": 100.0,
+     "contended": false,
+     "decision_us": 57.5742195035461,
+     "file": "/Users/rexxa/work/p20-data/perf/t6/slope_game_v24/stress_stress_v24_s15100_n100_side64_fed.json",
+     "fingerprint": "b14fc0ea3b0757c4",
+     "git_sha": "3562a9d4",
+     "max_ms": 0.246,
+     "mean_ms": 0.09286347517730496,
+     "p999_ms": 0.204,
+     "relations_us": 0.01763368794326241
+    },
+    {
+     "alive": 500.0,
+     "contended": false,
+     "decision_us": 253.48079822695033,
+     "file": "/Users/rexxa/work/p20-data/perf/t6/slope_game_v24/stress_stress_v24_s15100_n500_side64_fed.json",
+     "fingerprint": "a294f11de060a908",
+     "git_sha": "3562a9d4",
+     "max_ms": 0.954,
+     "mean_ms": 0.38868510638297876,
+     "p999_ms": 0.86,
+     "relations_us": 0.01855673758865248
+    },
+    {
+     "alive": 1000.0,
+     "contended": false,
+     "decision_us": 571.180720212766,
+     "file": "/Users/rexxa/work/p20-data/perf/t6/slope_game_v24/stress_stress_v24_s15100_n1000_side64_fed.json",
+     "fingerprint": "e96d103e25eff40d",
+     "git_sha": "3562a9d4",
+     "max_ms": 1.821,
+     "mean_ms": 0.8396900709219858,
+     "p999_ms": 1.762,
+     "relations_us": 0.01818262411347518
+    }
+   ]
+  },
+  "game_v25": {
+   "b": 0.9786288651389125,
+   "points": [
+    {
+     "alive": 100.0,
+     "contended": false,
+     "decision_us": 60.5654255319149,
+     "file": "/Users/rexxa/work/p20-data/perf/t6/slope_game_v25/stress_stress_v25_s15100_n100_side64_fed.json",
+     "fingerprint": "b14fc0ea3b0757c4",
+     "git_sha": "3562a9d4",
+     "max_ms": 0.29,
+     "mean_ms": 0.09578758865248227,
+     "p999_ms": 0.208,
+     "relations_us": 0.038672340425531915
+    },
+    {
+     "alive": 500.0,
+     "contended": false,
+     "decision_us": 267.5790471631206,
+     "file": "/Users/rexxa/work/p20-data/perf/t6/slope_game_v25/stress_stress_v25_s15100_n500_side64_fed.json",
+     "fingerprint": "a294f11de060a908",
+     "git_sha": "3562a9d4",
+     "max_ms": 0.931,
+     "mean_ms": 0.40336063829787233,
+     "p999_ms": 0.86,
+     "relations_us": 0.033365602836879435
+    },
+    {
+     "alive": 1000.0,
+     "contended": false,
+     "decision_us": 592.5468726950354,
+     "file": "/Users/rexxa/work/p20-data/perf/t6/slope_game_v25/stress_stress_v25_s15100_n1000_side64_fed.json",
+     "fingerprint": "e96d103e25eff40d",
+     "git_sha": "3562a9d4",
+     "max_ms": 1.844,
+     "mean_ms": 0.8613017730496454,
+     "p999_ms": 1.792,
+     "relations_us": 0.03559787234042553
+    }
+   ]
+  }
+ },
+ "verdict": "PASS"
+}

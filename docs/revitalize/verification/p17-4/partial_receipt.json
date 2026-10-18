@@ -1,0 +1,56 @@
+{
+  "recorded_at_utc": "2026-10-15T09:40:03.990329+00:00",
+  "source_state": "uncommitted Part4 worktree above StageA verdict 44aebafa; focused integration evidence, not final cohort provenance",
+  "files": [
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_core_complete_tests.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/core_complete_tests.txt",
+      "sha256": "6fdb0652d7ed3932c7364d739aa193b8e0aa077e5aebfbcde73d195d9b72b2b7"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_core_clippy.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/core_clippy.txt",
+      "sha256": "e724e459c81a59b184cae8008cabf4ac1ffdce7f2bc0166aa3e940c24f2a6e39"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_runtime_bridge_clippy_initial.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/runtime_bridge_clippy_initial.txt",
+      "sha256": "3c60c6565a10e6255d4b5545289b654eaec7804f8134e9d7a0bbc7cd3919d179"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_runtime_bridge_clippy_retry.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/runtime_bridge_clippy_retry.txt",
+      "sha256": "6f096111ddb2f76b8afc2d18ab1cd8d300c5ae8a0466e14b82b68ad608a4a3c9"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_runtime_bridge_clippy_final.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/runtime_bridge_clippy_final.txt",
+      "sha256": "8ef56fcdae8cb7ef5963ad0988117aa643f98641e01e3c9776052a385fa79ad7"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_runtime_bridge_unit_tests.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/runtime_bridge_unit_tests.txt",
+      "sha256": "8aa71411fb53a8970d04f06a9479351baa0148d35e4d3fbab8df8c5cd8c353e7"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_bridge_build.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/bridge_build.txt",
+      "sha256": "e62ff76e25edb456930baabcee743ec171cb01297f802e17220b6138f6155e34"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_godot_import.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/godot_import.txt",
+      "sha256": "3c0c6d66cf3ecbd4d7bd60fc7966869ebe0136a8a20ad210c0a9741d082efec5"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/part4_godot_family_smoke.log",
+      "committed_copy": "docs/revitalize/verification/p17-4/godot_family_smoke.txt",
+      "sha256": "dba11607a27633f171e67ba76551912c271279205bb8e30bf9e6eaaa47c6f9fc"
+    },
+    {
+      "source": "/Users/rexxa/work/p17-data/stage_b_parent_id_audit.md",
+      "committed_copy": "docs/revitalize/verification/p17-4/parent_id_audit.md",
+      "sha256": "43df75e4080659073ddbac0cfdd5e0ecbdba770bdc6a481281f4c463cf3d6b3b"
+    }
+  ]
+}

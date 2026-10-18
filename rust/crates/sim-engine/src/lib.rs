@@ -31,14 +31,20 @@ use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
 use sim_core::components::{
-    Agent, AgentId, BuildingId, Position, RelationshipKey, RelationshipState, Settlement,
+    Agent, AgentId, BuildingId, BuildingKind, Position, RelationshipKey, RelationshipState, Settlement,
     SettlementId,
 };
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
-use std::collections::{HashMap, HashSet, VecDeque};
+use sim_core::rules::WorldRules;
+use sim_core::variety::WorldVariety;
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
+
+pub mod intervention;
+pub use intervention::{Intervention, InterventionRecord};
+pub use sim_core::rng::NoiseFork;
 
 /// FFI-originated event: a building was placed at `position` with influence
 /// `radius` (Chebyshev distance, in tiles). Drained by
@@ -53,6 +59,132 @@ pub struct BuildingPlacedEvent {
     pub position: (u32, u32),
     /// Influence radius in tiles (Chebyshev distance, inclusive).
     pub radius: u32,
+}
+
+/// Cumulative population and social counters for display and measurement only.
+/// Never read by simulation logic, so they cannot affect determinism.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Tallies {
+    /// Agents born after world initialization; excludes initial spawns.
+    pub births: u64,
+    /// Agents lost to hunger saturation.
+    pub deaths_starvation: u64,
+    /// Agents lost to thirst saturation.
+    pub deaths_dehydration: u64,
+    /// Agents lost to combat damage.
+    pub deaths_combat: u64,
+    /// Completed social interactions, counted once per pair rather than per agent.
+    pub social_completed: u64,
+    /// Units removed from finite food tiles by eating or gathering.
+    pub food_harvested: u64,
+    /// Hunger relief events from ground meals or stockpile relief.
+    pub meals_eaten: u64,
+    /// Ground hunger relief events that found no food to consume.
+    pub meals_without_food: u64,
+    /// Agents lost to old age under the aging rule (Pass 4).
+    pub deaths_old_age: u64,
+    /// Purposeful forage trips started by the Forage decision arm (Pass 4).
+    pub forage_trips: u64,
+    /// Stockpile deposits made by members who walked home to haul (Pass 4).
+    pub haul_deposits: u64,
+    /// Food regrowth units discarded because a source was at its ceiling.
+    pub regen_lost_at_cap: u64,
+    /// Food units served from a settlement store to a member (Pass 5).
+    pub meals_from_store: u64,
+    /// Ground meals resolved at a food tile (`Consuming { Food }`) (Pass 5).
+    pub ground_meals: u64,
+    /// Firewood trips started by the Firewood decision arm (Pass 5).
+    pub wood_trips: u64,
+    /// Wood units picked up from deadwood spots (Pass 5).
+    pub wood_gathered: u64,
+    /// Gathering trips interrupted by a critical need (Pass 5).
+    pub gather_preempted: u64,
+    /// Members marked `Cold`, summed over every hourly fire update (Pass 5).
+    pub cold_member_hours: u64,
+    /// Firewood trips started while the member's settlement was in urgent mode (Pass 6).
+    pub urgent_wood_trips: u64,
+    /// Winter regrowth units that found no deadwood spot below the cap (Pass 6).
+    pub winter_wood_lost: u64,
+    /// Wood gatherers re-targeted because the spot they were walking to was
+    /// empty (Pass 7); counted in every version.
+    pub wood_retargets: u64,
+    /// Interventions that changed something (`applied > 0`) (Pass 7).
+    pub interventions_applied: u64,
+    /// Agents lost to cold-night wounds under the exposure rule (Pass 10).
+    pub deaths_exposure: u64,
+    /// Daughter settlements founded by fission (Pass 11).
+    pub fissions: u64,
+    /// Fissions whose group departed but founded nothing (Pass 11).
+    pub fissions_cancelled: u64,
+    /// Daily fission checks that found every other condition met but no free
+    /// site (Pass 11).
+    pub fission_blocked_no_site: u64,
+    /// Settlements merged away as remnants (Pass 11).
+    pub remnant_merges: u64,
+    /// Members moved between settlements by the exclusivity pass of
+    /// `SettlementSystem` (Pass 11 measurement; counted in every version).
+    pub exclusivity_moves: u64,
+    /// Wood a raining settlement burned wet (Pass 12, `rain_wet_burn`).
+    pub wet_burn_wood: u64,
+    /// Wood added to settled wild regions by the winter-fall floor (Pass 12,
+    /// `area_fall_floor_permille`): the units the floor added to the
+    /// settled areas' accumulators (before the snow cap).
+    pub area_floor_wood: u64,
+    /// Winter-fall units lost to the snow cap in a settled wild region
+    /// (Pass 12, floor on); included in `winter_wood_lost`.
+    pub winter_wood_lost_settled: u64,
+    /// Floor units placed from the separate settled-area accumulator (Pass
+    /// 13, `FirewoodRule::floor_separate`).
+    pub area_floor_placed: u64,
+    /// Floor units of the separate accumulator that found no spot below its
+    /// `max` (Pass 13, `floor_separate`); included in `winter_wood_lost`.
+    pub area_floor_lost_at_max: u64,
+    /// Pass 20 (`game_v25`): trips started (one per ordered pair and day).
+    pub porter_trips: u64,
+    /// Pass 20: porters who departed (one `PorterDeparted` entry each).
+    pub porters_departed: u64,
+    /// Pass 20: porters who delivered (one `PorterDelivered` entry each).
+    pub porter_deliveries: u64,
+    /// Pass 20: porters who turned back before delivering (a `PorterDelivered`
+    /// entry with cause ≥ 10 each).
+    pub porter_turnbacks: u64,
+    /// Pass 20: porters whose load was lost (the porter died or its village
+    /// dissolved).
+    pub porter_loads_lost: u64,
+    /// Pass 20: units taken from senders' stores.
+    pub porter_units_withdrawn: u64,
+    /// Pass 20: food units stored in receivers' stores.
+    pub porter_food_delivered: u64,
+    /// Pass 20: wood units stored in receivers' stores.
+    pub porter_wood_delivered: u64,
+    /// Pass 20: units carried back into the sender's store.
+    pub porter_units_returned: u64,
+    /// Pass 20: units lost with their porter or village.
+    pub porter_units_lost: u64,
+    /// Pass 20: forage disputes between foragers of two villages.
+    pub forage_disputes: u64,
+    /// Pass 20: disputes that became quarrels (one `Quarrel` entry each).
+    pub quarrels: u64,
+    /// Pass 20: pairs that became estranged (one `VillagesEstranged` each).
+    pub villages_estranged: u64,
+    /// Pass 20: pairs that reconciled (one `VillagesReconciled` each).
+    pub villages_reconciled: u64,
+    /// Pass 21 (`game_v26`): disputes past the pair's daily dispute cap
+    /// (counted in `forage_disputes`, no `dispute_loss`).
+    pub disputes_uncosted: u64,
+    /// Pass 21: disputes that would have drawn for a quarrel but met the
+    /// pair's daily quarrel cap (no draw; the pickup proceeds).
+    pub quarrels_capped: u64,
+    /// Pass 21: quarrels between villages already estranged (counted under
+    /// every relations rule; a subset of `quarrels`).
+    pub quarrels_while_estranged: u64,
+}
+
+/// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct FireState {
+    /// Whether the last hourly update burned a full hour of wood.
+    pub lit: bool,
 }
 
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).
@@ -133,6 +265,57 @@ pub const RESOURCE_SOURCE_INFINITE: u8 = u8::MAX;
 /// system a `&mut SimResources` and trusting priorities to serialise
 /// access.
 pub struct SimResources {
+    /// Construction-time policy; default preserves every legacy behavior.
+    pub rules: WorldRules,
+    /// Generation seed; legacy fixtures use zero.
+    pub world_seed: u64,
+    /// Building categories keyed by origin tile; absent categories mean Hearth.
+    pub building_kinds: BTreeMap<(u32, u32), BuildingKind>,
+    /// Settlement owner of each automatically planned construction site.
+    pub site_owner: BTreeMap<(u32, u32), SettlementId>,
+    /// Completed building ownership; populated only under owned housing rules.
+    pub building_owner: BTreeMap<(u32, u32), SettlementId>,
+    /// Assigned shelter tile per resident; populated only with night rest enabled.
+    pub bed_of: BTreeMap<AgentId, (u32, u32)>,
+    /// Display-only count of planning attempts with no qualifying tile.
+    pub shelter_plan_skips: u64,
+    /// Seasonal food regrowth accumulator in thousandths of a unit; stays zero
+    /// without the season rule.
+    pub food_regen_acc: u32,
+    /// Deadwood amount per tile; empty without deadwood worldgen (Pass 5).
+    pub wood_tiles: BTreeMap<(u32, u32), u8>,
+    /// Deadwood regrowth ceiling per registered spot; empty without deadwood worldgen.
+    pub wood_source_max: BTreeMap<(u32, u32), u8>,
+    /// Wood regrowth accumulator in thousandths of a unit; stays zero without
+    /// the firewood rule.
+    pub wood_regen_acc: u32,
+    /// Winter spread-regrowth accumulator (Pass 6) in thousandths of a unit
+    /// times pulses per day; stays zero without `winter_regen_units_per_day`.
+    pub wood_winter_acc: u64,
+    /// Last deadwood spot that received a winter unit (Pass 6); `None` until
+    /// the first one lands.
+    pub wood_winter_cursor: Option<(u32, u32)>,
+    /// Hearth fire per settlement; empty without the firewood rule.
+    pub fires: BTreeMap<SettlementId, FireState>,
+    /// Rain (Pass 7): a settlement's fire stays out while `current_tick` is
+    /// below its entry. Expired entries stay and block nothing. Empty unless
+    /// an intervention asks for rain.
+    pub fire_blocked_until: BTreeMap<SettlementId, u64>,
+    /// Cold-snap nights still to come or in progress (Pass 7); zero unless an
+    /// intervention asks for one.
+    pub cold_snap_nights: u32,
+    /// Whether the current night is a cold-snap night (Pass 7).
+    pub cold_snap_tonight: bool,
+    /// Every intervention applied, in order (Pass 7); display-only.
+    pub intervention_log: Vec<InterventionRecord>,
+    /// Members whose last movement was a haul step home; display-only, used to
+    /// count `Tallies::haul_deposits`. Empty without the forage rule.
+    pub haulers: BTreeSet<AgentId>,
+    /// Tick each active non-migrant social chase began; empty in legacy worlds.
+    pub social_chase_since: BTreeMap<AgentId, u64>,
+    /// Earliest tick each agent may retry a failed social chase.
+    pub social_retry_after: BTreeMap<AgentId, u64>,
+
     /// Tile grid (T7.1 land — wall / floor / terrain SoA).
     pub tile_grid: TileGrid,
 
@@ -287,6 +470,189 @@ pub struct SimResources {
     /// the death-marker overlay. Never read by simulation logic (determinism-
     /// safe); not serde-serialized.
     pub recent_deaths: Vec<RecentDeath>,
+
+    /// Lifetime population counters; independent of bounded event buffers.
+    pub tallies: Tallies,
+
+    /// Noise fork (Pass 9): from its tick on, keyed draws use its replicate.
+    /// `None` (the default and every unforked run) means replicate 0.
+    pub noise_fork: Option<NoiseFork>,
+
+    /// The hidden world parameters this world was built from (Pass 10);
+    /// `None` outside `game_v16`. Measurement only, never read by systems.
+    pub world_variety: Option<WorldVariety>,
+
+    /// What worldgen placed against what it was asked for (Pass 10).
+    /// Measurement only, never read by systems.
+    pub worldgen_report: WorldGenReport,
+
+    /// Wild regions placed by worldgen (Pass 11, `game_v17`), in region
+    /// order; empty in every earlier world. `FissionSystem` reads the centres
+    /// as founding sites.
+    pub wild_regions: Vec<WildRegion>,
+
+    /// Area of each deadwood spot (Pass 11, `game_v17`): 0 = the camp area,
+    /// r + 1 = wild region r. Empty in every earlier world. Read by the
+    /// regional winter fall (`FirewoodRule::regional_wood`).
+    pub wood_spot_area: BTreeMap<(u32, u32), u8>,
+
+    /// Per-area winter-fall accumulators (Pass 11, regional wood only).
+    pub wood_area_acc: BTreeMap<u8, u64>,
+
+    /// Per-area winter-fall cursors (Pass 11, regional wood only).
+    pub wood_area_cursor: BTreeMap<u8, (u32, u32)>,
+
+    /// Pass 12: measurement-only accumulator of the extra the winter-fall
+    /// floor adds (feeds `Tallies::area_floor_wood`; never read by systems).
+    pub wood_area_floor_acc: u64,
+
+    /// Pass 13 (`FirewoodRule::floor_separate`): per-area accumulators of the
+    /// settled-area floor's extra, placed with ceiling `max`. Empty otherwise.
+    pub wood_area_floor_sep: BTreeMap<u8, u64>,
+
+    /// Hearth tiles that never anchor a new settlement again (Pass 11): the
+    /// hearth of a cancelled founding, a merged remnant or a settlement that
+    /// lost every member. Empty outside `game_v17`.
+    pub retired_hearths: BTreeSet<(u32, u32)>,
+
+    /// Every fission that departed (Pass 11), in departure order; read by
+    /// `FissionSystem` and, for a settlement's split count when it forms
+    /// (Pass 13 threshold key), by `SettlementSystem`.
+    pub fission_log: Vec<FissionRecord>,
+
+    /// Every settlement dissolution as (settlement, tick) (Pass 11);
+    /// measurement only, never read by systems.
+    pub dissolutions: Vec<(SettlementId, u64)>,
+
+    /// Every daily fission check that reached the hazard draw (Pass 12,
+    /// `FissionRule::hazard`), in check order; measurement only, never read
+    /// by systems. Empty without a hazard.
+    pub fission_checks: Vec<FissionCheck>,
+
+    /// Pass 19: the chronicle — an append-only record of every life and
+    /// village and a person table that outlives death. Write-only for the
+    /// simulation (no system decides anything from it); read by probes and
+    /// the bridge. Recorded in every scene.
+    pub chronicle: sim_core::chronicle::Chronicle,
+
+    /// Pass 20 (`game_v25`): every village pair's relation, the porter
+    /// trips in flight and the measurement-only trip and decision logs.
+    /// Empty without `SocietyRules::relations`.
+    pub settlement_relations: sim_core::components::SettlementRelations,
+}
+
+/// One daily fission check that reached the hazard draw (Pass 12);
+/// measurement only. Factors and the hazard in thousandths.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FissionCheck {
+    /// Tick of the check.
+    pub tick: u64,
+    /// The settlement checked.
+    pub settlement: SettlementId,
+    /// Its members.
+    pub members: u32,
+    /// `sustain_capacity`.
+    pub capacity: u32,
+    /// Its stockpile food.
+    pub food: u32,
+    /// Size factor.
+    pub g: i64,
+    /// Crowding factor.
+    pub q: i64,
+    /// Scarcity factor.
+    pub s: i64,
+    /// Hazard.
+    pub h: i64,
+    /// The keyed draw in 0..1000.
+    pub draw: u64,
+    /// `draw < h`.
+    pub split: bool,
+    /// Whether a free site existed.
+    pub site_free: bool,
+    /// Pass 13 (`FissionRule::pressure`): the pressure P after today's
+    /// accumulation (0 without pressure; the draw is then 0 and `split` is
+    /// P ≥ θ and P > 0).
+    pub pressure: u64,
+    /// Pass 13: the settlement's threshold θ (0 without pressure).
+    pub threshold: u64,
+}
+
+/// One departed fission group (Pass 11); measurement only.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FissionRecord {
+    /// `FissionSystem` counter, from 1.
+    pub fission_id: u32,
+    /// The settlement the group left.
+    pub parent: SettlementId,
+    /// The founding site (a wild-region centre).
+    pub site: (u32, u32),
+    /// Tick of departure.
+    pub depart_tick: u64,
+    /// Group members, ascending.
+    pub members: Vec<AgentId>,
+    /// Adults in the group.
+    pub adults: u32,
+    /// The daughter settlement, once founded.
+    pub daughter: Option<SettlementId>,
+    /// Tick the daughter formed.
+    pub founded_tick: Option<u64>,
+    /// Tick the fission was cancelled.
+    pub cancelled_tick: Option<u64>,
+    /// Food and wood the group took from the parent's store.
+    pub food_taken: u32,
+    /// See `food_taken`.
+    pub wood_taken: u32,
+    /// Whether the group settled where its leader stood after the timeout.
+    pub settled_at_leader: bool,
+    /// Pass 13: the parent's pressure P at the split (0 without pressure).
+    pub pressure_at_split: u64,
+    /// Pass 13: the parent's threshold θ at the split (0 without pressure).
+    pub threshold_at_split: u64,
+}
+
+/// One wild region placed by worldgen (Pass 11).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WildRegion {
+    /// Centre tile (a walkable, non-water tile 22–28 from the camp hearth).
+    pub centre: (u32, u32),
+    /// Bushes placed around it.
+    pub bushes: u32,
+    /// Deadwood spots placed around it.
+    pub deadwood: u32,
+    /// Chebyshev distance from the centre to the nearest water tile
+    /// (`u32::MAX` without water); measurement only.
+    pub water_distance: u32,
+}
+
+/// Worldgen counts kept for measurement (Pass 10): never read by systems.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct WorldGenReport {
+    /// Deadwood spots the generator was asked for.
+    pub deadwood_spots_requested: u32,
+    /// Deadwood spots it placed (fewer when the radius band ran out of tiles).
+    pub deadwood_spots_placed: u32,
+    /// Terrain label swaps made by the berry-edge repair.
+    pub berry_repair_swaps: u32,
+    /// Wild regions asked for (Pass 11).
+    pub regions_requested: u32,
+    /// Wild regions placed (fewer when no candidate centre was left).
+    pub regions_placed: u32,
+    /// Region bushes asked for over the placed regions.
+    pub region_bushes_requested: u32,
+    /// Region bushes placed.
+    pub region_bushes_placed: u32,
+    /// Region deadwood spots asked for over the placed regions.
+    pub region_deadwood_requested: u32,
+    /// Region deadwood spots placed.
+    pub region_deadwood_placed: u32,
+    /// Region bushes added by the Pass 12 fill (`region_fill`), by tier 2
+    /// (Forest in the ring), 3 (Plain with a Forest neighbour in the ring),
+    /// 4 (either, ring 7–9) and 5 (any Plain, ring 2–9); included in
+    /// `region_bushes_placed`.
+    pub region_fill_bushes: [u32; 4],
+    /// Region deadwood spots added by the Pass 12 fill (tier 2, ring 7–9);
+    /// included in `region_deadwood_placed`.
+    pub region_fill_deadwood: u32,
 }
 
 impl SimResources {
@@ -300,6 +666,27 @@ impl SimResources {
     pub fn new(width: u32, height: u32, registry: MaterialRegistry) -> Self {
         let blocking_cache = MaterialBlockingCache::build(&registry);
         Self {
+            rules: WorldRules::default(),
+            world_seed: 0,
+            building_kinds: BTreeMap::new(),
+            site_owner: BTreeMap::new(),
+            building_owner: BTreeMap::new(),
+            bed_of: BTreeMap::new(),
+            shelter_plan_skips: 0,
+            food_regen_acc: 0,
+            wood_tiles: BTreeMap::new(),
+            wood_source_max: BTreeMap::new(),
+            wood_regen_acc: 0,
+            wood_winter_acc: 0,
+            wood_winter_cursor: None,
+            fires: BTreeMap::new(),
+            fire_blocked_until: BTreeMap::new(),
+            cold_snap_nights: 0,
+            cold_snap_tonight: false,
+            intervention_log: Vec::new(),
+            haulers: BTreeSet::new(),
+            social_chase_since: BTreeMap::new(),
+            social_retry_after: BTreeMap::new(),
             tile_grid: TileGrid::new(width, height),
             influence_grid: InfluenceGrid::new(width, height),
             material_registry: registry,
@@ -329,7 +716,29 @@ impl SimResources {
             next_settlement_id: 1,
             building_registry: HashMap::new(),
             recent_deaths: Vec::new(),
+            tallies: Tallies::default(),
+            noise_fork: None,
+            world_variety: None,
+            worldgen_report: WorldGenReport::default(),
+            wild_regions: Vec::new(),
+            wood_spot_area: BTreeMap::new(),
+            wood_area_acc: BTreeMap::new(),
+            wood_area_cursor: BTreeMap::new(),
+            wood_area_floor_acc: 0,
+            wood_area_floor_sep: BTreeMap::new(),
+            retired_hearths: BTreeSet::new(),
+            fission_log: Vec::new(),
+            dissolutions: Vec::new(),
+            fission_checks: Vec::new(),
+            chronicle: sim_core::chronicle::Chronicle::new(),
+            settlement_relations: sim_core::components::SettlementRelations::default(),
         }
+    }
+
+    /// The noise replicate keyed draws use at simulation tick `tick` (Pass 9):
+    /// the fork's replicate from its tick on, 0 before it and without a fork.
+    pub fn noise_replicate_for(&self, tick: u64) -> u32 {
+        self.noise_fork.map_or(0, |fork| fork.replicate_at(tick))
     }
 
     /// Allocate the next monotonic [`EventId`] (V7 Phase 3-β / P3β-1).
@@ -432,6 +841,62 @@ impl SimResources {
     }
 }
 
+/// Wall-time bookkeeping of one registered system inside a [`TickProfile`]
+/// (Revitalize Pass 15, measurement only).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SystemProfile {
+    /// The system's [`RuntimeSystem::name`].
+    pub name: String,
+    /// The system's [`RuntimeSystem::priority`].
+    pub priority: u32,
+    /// The system's [`RuntimeSystem::tick_interval`].
+    pub interval: u64,
+    /// Ticks in which the system was due and ran.
+    pub calls: u64,
+    /// Summed wall time of those runs, nanoseconds (saturating).
+    pub total_ns: u64,
+    /// Longest single run, nanoseconds.
+    pub max_ns: u64,
+}
+
+/// Per-system and per-tick wall times gathered by [`SimEngine::tick_profiled`]
+/// (Revitalize Pass 15, measurement only; nothing in the simulation reads it).
+///
+/// `systems` and `last_tick_ns` follow the engine's execution order (the
+/// order [`SimEngine::system_names`] returns). Build one with
+/// [`SimEngine::new_tick_profile`].
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TickProfile {
+    /// One entry per registered system, in execution order.
+    pub systems: Vec<SystemProfile>,
+    /// Profiled ticks so far.
+    pub ticks: u64,
+    /// Wall time of every profiled whole tick, microseconds (rounded to the
+    /// nearest µs, saturating at `u32::MAX`); `tick_us.len() == ticks`.
+    pub tick_us: Vec<u32>,
+    /// Summed wall time of the recent-deaths prune step, nanoseconds.
+    pub prune_ns: u64,
+    /// Each system's wall time in the most recent profiled tick,
+    /// nanoseconds; 0 for a system that was not due in that tick.
+    pub last_tick_ns: Vec<u64>,
+}
+
+impl TickProfile {
+    /// Add one run of the system at `index` that took `ns` nanoseconds.
+    fn record_system(&mut self, index: usize, ns: u64) {
+        let entry = &mut self.systems[index];
+        entry.calls += 1;
+        entry.total_ns = entry.total_ns.saturating_add(ns);
+        entry.max_ns = entry.max_ns.max(ns);
+        self.last_tick_ns[index] = ns;
+    }
+}
+
+/// Elapsed nanoseconds since `start`, saturating at `u64::MAX`.
+fn elapsed_ns(start: std::time::Instant) -> u64 {
+    u64::try_from(start.elapsed().as_nanos()).unwrap_or(u64::MAX)
+}
+
 /// Owns the world, the resources, and the priority-sorted system list.
 pub struct SimEngine {
     /// Entity component storage.
@@ -477,18 +942,71 @@ impl SimEngine {
     /// Run one tick: dispatches every due system, then advances the
     /// tick counter and updates the day/night clock.
     pub fn tick(&mut self) {
+        self.tick_inner(None);
+    }
+
+    /// Run one tick exactly as [`SimEngine::tick`] does and add its wall
+    /// times to `profile` (Revitalize Pass 15, measurement only: the
+    /// simulation never reads the profile, so a profiled run reaches the same
+    /// state as an unprofiled one). If `profile` does not hold one entry per
+    /// registered system it is first replaced by [`SimEngine::new_tick_profile`]
+    /// (its earlier contents are discarded; no panic).
+    pub fn tick_profiled(&mut self, profile: &mut TickProfile) {
+        if profile.systems.len() != self.systems.len() || profile.last_tick_ns.len() != self.systems.len() {
+            *profile = self.new_tick_profile();
+        }
+        self.tick_inner(Some(profile));
+    }
+
+    /// An empty [`TickProfile`] for this engine's registered systems, in
+    /// execution order.
+    pub fn new_tick_profile(&self) -> TickProfile {
+        TickProfile {
+            systems: self
+                .systems
+                .iter()
+                .map(|s| SystemProfile {
+                    name: s.name().to_string(),
+                    priority: s.priority(),
+                    interval: s.tick_interval(),
+                    ..SystemProfile::default()
+                })
+                .collect(),
+            last_tick_ns: vec![0; self.systems.len()],
+            ..TickProfile::default()
+        }
+    }
+
+    /// The body of [`SimEngine::tick`]; `std::time::Instant` is read only
+    /// when `profile` is given, and the simulation statements are the same
+    /// statements in the same order either way.
+    fn tick_inner(&mut self, mut profile: Option<&mut TickProfile>) {
+        let tick_start = profile.as_ref().map(|_| std::time::Instant::now());
         self.resources.current_tick = self.current_tick;
         // V7 viz-D — prune the display-only recent-deaths buffer once entries
         // age past the retain window. `saturating_sub` guards the defensive
         // `entry.tick > current_tick` case (age 0, kept). Order-independent →
         // deterministic.
         let tick = self.current_tick;
+        let prune_start = profile.as_ref().map(|_| std::time::Instant::now());
         self.resources
             .recent_deaths
             .retain(|d| tick.saturating_sub(d.tick as u64) < RECENT_DEATH_RETAIN_TICKS);
-        for system in &mut self.systems {
+        if let (Some(p), Some(start)) = (profile.as_deref_mut(), prune_start) {
+            p.prune_ns = p.prune_ns.saturating_add(elapsed_ns(start));
+        }
+        for (index, system) in self.systems.iter_mut().enumerate() {
             if self.current_tick.is_multiple_of(system.tick_interval()) {
-                system.tick(&mut self.world, &mut self.resources);
+                match profile.as_deref_mut() {
+                    None => system.tick(&mut self.world, &mut self.resources),
+                    Some(p) => {
+                        let start = std::time::Instant::now();
+                        system.tick(&mut self.world, &mut self.resources);
+                        p.record_system(index, elapsed_ns(start));
+                    }
+                }
+            } else if let Some(p) = profile.as_deref_mut() {
+                p.last_tick_ns[index] = 0;
             }
         }
         self.current_tick += 1;
@@ -500,15 +1018,31 @@ impl SimEngine {
         self.resources.time_of_day = if self.resources.ticks_per_day == 0 {
             0.0
         } else {
-            ((self.current_tick % self.resources.ticks_per_day) as f64
+            ((self.current_tick.saturating_add(self.resources.rules.clock_offset_ticks)
+                % self.resources.ticks_per_day) as f64
                 / self.resources.ticks_per_day as f64)
                 * 24.0
         };
+        if let (Some(p), Some(start)) = (profile, tick_start) {
+            let us = elapsed_ns(start).saturating_add(500) / 1000;
+            p.tick_us.push(u32::try_from(us).unwrap_or(u32::MAX));
+            p.ticks += 1;
+        }
     }
 
     /// Number of completed ticks since construction.
     pub fn current_tick(&self) -> u64 {
         self.current_tick
+    }
+
+    /// Fork the noise (Pass 9): from the current tick on (the next `tick()`
+    /// call sees `current_tick` equal to it) every keyed draw uses `replicate`.
+    /// Replicate 0 is the canonical run, so it is a no-op by definition.
+    pub fn apply_noise_fork(&mut self, replicate: u32) {
+        if replicate == 0 {
+            return;
+        }
+        self.resources.noise_fork = Some(NoiseFork { tick: self.current_tick, replicate });
     }
 
     /// Spawn an agent at tile-coordinate `(x, y)` (V7 Phase 4-α / P4α-2-a;
@@ -526,12 +1060,44 @@ impl SimEngine {
     }
 }
 
+/// Fork the noise of `engine` at its current tick (Pass 9 section 7.3); see
+/// [`SimEngine::apply_noise_fork`]. Replicate 0 is a no-op.
+pub fn apply_noise_fork(engine: &mut SimEngine, replicate: u32) {
+    engine.apply_noise_fork(replicate);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use sim_core::influence::InfluenceChannel;
     use std::sync::atomic::{AtomicU32, Ordering};
     use std::sync::Arc;
+
+    #[test]
+    fn noise_fork_starts_at_the_current_tick_and_replicate_zero_is_a_no_op() {
+        let mut engine = SimEngine::new(4, 4, MaterialRegistry::new());
+        assert_eq!(engine.resources.noise_replicate_for(0), 0);
+        apply_noise_fork(&mut engine, 0);
+        assert_eq!(engine.resources.noise_fork, None);
+        engine.tick();
+        engine.tick();
+        apply_noise_fork(&mut engine, 5);
+        assert_eq!(engine.resources.noise_fork, Some(NoiseFork { tick: 2, replicate: 5 }));
+        assert_eq!((engine.resources.noise_replicate_for(1), engine.resources.noise_replicate_for(2)), (0, 5));
+    }
+
+    #[test]
+    fn generated_world_resources_start_legacy_and_empty() {
+        let resources = SimResources::new(64, 64, MaterialRegistry::new());
+        assert_eq!(resources.rules, WorldRules::default());
+        assert_eq!(resources.world_seed, 0);
+        assert!(resources.building_kinds.is_empty());
+        assert!(resources.site_owner.is_empty());
+        assert_eq!(resources.shelter_plan_skips, 0);
+        assert!(resources.fire_blocked_until.is_empty());
+        assert_eq!((resources.cold_snap_nights, resources.cold_snap_tonight), (0, false));
+        assert!(resources.intervention_log.is_empty());
+    }
 
     fn empty_registry() -> MaterialRegistry {
         MaterialRegistry::new()
@@ -628,6 +1194,61 @@ mod tests {
             ticks_run: Arc::new(AtomicU32::new(0)),
         }));
         assert_eq!(engine.system_names(), vec!["low", "mid", "high"]);
+    }
+
+    #[test]
+    fn tick_profile_counts_due_ticks_and_every_whole_tick() {
+        // Pass 15 6.1: two dummy systems (interval 1 and 3) over 7 ticks.
+        let every = Arc::new(AtomicU32::new(0));
+        let third = Arc::new(AtomicU32::new(0));
+        let mut engine = SimEngine::new(32, 32, empty_registry());
+        engine.register_system(Box::new(AtomicMock { name: "third", priority: 20, interval: 3, ticks_run: third.clone() }));
+        engine.register_system(Box::new(AtomicMock { name: "every", priority: 10, interval: 1, ticks_run: every.clone() }));
+        let mut profile = engine.new_tick_profile();
+        let names: Vec<&str> = profile.systems.iter().map(|s| s.name.as_str()).collect();
+        assert_eq!(names, engine.system_names());
+        assert_eq!((profile.systems[0].priority, profile.systems[1].interval), (10, 3));
+        for _ in 0..7 {
+            engine.tick_profiled(&mut profile);
+        }
+        // Ticks 0..7: "third" is due at 0, 3, 6.
+        assert_eq!((profile.systems[0].calls, profile.systems[1].calls), (7, 3));
+        assert_eq!((every.load(Ordering::SeqCst), third.load(Ordering::SeqCst)), (7, 3));
+        assert_eq!(profile.ticks, 7);
+        assert_eq!(profile.tick_us.len() as u64, profile.ticks);
+        assert!(profile.systems.iter().all(|s| s.max_ns <= s.total_ns));
+        assert_eq!(engine.current_tick(), 7);
+        // Tick 7 is not a multiple of 3: "third" was not due in the latest tick.
+        engine.tick_profiled(&mut profile);
+        assert_eq!(profile.last_tick_ns[1], 0);
+        assert_eq!(profile.systems[1].calls, 3);
+        assert_eq!(profile.tick_us.len(), 8);
+    }
+
+    #[test]
+    fn tick_profile_with_the_wrong_system_count_is_rebuilt() {
+        let mut engine = SimEngine::new(32, 32, empty_registry());
+        engine.register_system(Box::new(AtomicMock { name: "a", priority: 1, interval: 1, ticks_run: Arc::new(AtomicU32::new(0)) }));
+        let mut profile = TickProfile { ticks: 99, tick_us: vec![1; 99], ..TickProfile::default() };
+        engine.tick_profiled(&mut profile);
+        assert_eq!(profile.systems.len(), 1);
+        assert_eq!(profile.last_tick_ns.len(), 1);
+        assert_eq!((profile.ticks, profile.tick_us.len(), profile.systems[0].calls), (1, 1, 1));
+    }
+
+    #[test]
+    fn profiled_and_plain_ticks_advance_the_same_clock() {
+        let mut plain = SimEngine::new(32, 32, empty_registry());
+        let mut profiled = SimEngine::new(32, 32, empty_registry());
+        let mut profile = profiled.new_tick_profile();
+        for _ in 0..50 {
+            plain.tick();
+            profiled.tick_profiled(&mut profile);
+        }
+        assert_eq!(plain.current_tick(), profiled.current_tick());
+        assert_eq!(plain.resources.time_of_day.to_bits(), profiled.resources.time_of_day.to_bits());
+        assert_eq!(plain.resources.current_tick, profiled.resources.current_tick);
+        assert_eq!(profile.ticks, 50);
     }
 
     #[test]

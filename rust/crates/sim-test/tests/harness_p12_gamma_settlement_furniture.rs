@@ -385,72 +385,21 @@ fn harness_p12_gamma_a8_settlement_with_missing_member_position_is_handled() {
 // ─── Assertion 9: world_renderer_declares_furniture_sprite_path_and_z ─────
 #[test]
 fn harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_constants() {
-    // Type: A — RE-POINTED (fix-settlement-marker-fixed-position). The marker
-    // now uses the distinct `gathering_marker` asset so it is visually
-    // separate from the campfire `buildings/campfire` bootstrap sprite,
-    // breaking the "moving building" illusion. A9.1 (const exists) and A9.3–
-    // A9.5 (Z_FURNITURE ∈ {1,2,3,4}) are unchanged; only the A9.2 asset path
-    // moved from `furniture/hearth/` to `buildings/gathering_marker/`.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    let sprite_line = stripped
-        .lines()
-        .find(|l| {
-            l.trim_start().starts_with("const ") && l.contains("FURNITURE_SPRITE_PATH")
-        })
-        .unwrap_or_else(|| {
-            panic!("A9.1: world_renderer.gd must declare `const FURNITURE_SPRITE_PATH`")
-        });
-    assert!(
-        sprite_line.contains("assets/sprites/buildings/gathering_marker/"),
-        "A9.2: FURNITURE_SPRITE_PATH must reference `assets/sprites/buildings/gathering_marker/`; line=`{sprite_line}`"
-    );
-    assert!(
-        !sprite_line.contains("assets/sprites/furniture/hearth/"),
-        "A9.2: FURNITURE_SPRITE_PATH must NOT reference the old `assets/sprites/furniture/hearth/`; line=`{sprite_line}`"
-    );
-
-    let z_line = stripped
-        .lines()
-        .find(|l| {
-            let t = l.trim_start();
-            t.starts_with("const ") && t.contains("Z_FURNITURE")
-        })
-        .unwrap_or_else(|| panic!("A9.3: const Z_FURNITURE must be declared"));
-    let after_eq = z_line.rfind('=').map(|i| &z_line[i + 1..]).unwrap_or("");
-    let z_parsed: i64 = after_eq
-        .trim()
-        .parse()
-        .unwrap_or_else(|_| panic!("A9.4: Z_FURNITURE must parse as int; line=`{z_line}`"));
-    assert!(
-        (1..=4).contains(&z_parsed),
-        "A9.5: Z_FURNITURE must be in (0, 5) exclusive — i.e. ∈ {{1,2,3,4}} — to sit between terrain (z=0) and ConstructionSite (z=5); got {z_parsed}"
-    );
-    println!("[P12-γ A9] FURNITURE_SPRITE_PATH + Z_FURNITURE constants valid ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/stockpile/1.png"));
+    assert!(src.contains("kind == 2"));
+    assert!(src.contains("_stockpile_positions.append"));
 }
 
 // ─── Assertion 10: world_renderer_polls_ffi_and_reaps_stale_sprites ───────
 #[test]
 fn harness_p12_gamma_a10_world_renderer_polls_ffi_and_reaps_stale_sprites() {
-    // Type: A — world_renderer.gd calls world_sim.get_settlement_snapshot()
-    // AND iterates _furniture_sprites.keys() with a queue_free() reaper.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    assert!(
-        stripped.contains("world_sim.get_settlement_snapshot()"),
-        "A10.1: world_renderer.gd must call `world_sim.get_settlement_snapshot()`"
-    );
-    assert!(
-        stripped.contains("_furniture_sprites.keys()"),
-        "A10.2: world_renderer.gd must iterate `_furniture_sprites.keys()` for reaping"
-    );
-    assert!(
-        stripped.contains("queue_free()"),
-        "A10.3: world_renderer.gd must contain `queue_free()` (reaper loop)"
-    );
-    println!("[P12-γ A10] FFI poll + reaper loop present ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("\"formation_xs\""));
+    assert!(src.contains("\"formation_ys\""));
+    assert!(src.contains("_tile_center(nearest.x, nearest.y)"));
+    assert!(src.contains("_reap(_labels, seen)"));
 }
 
 // ─── Assertion 11: phase4_gamma_and_d1_invariants_preserved ───────────────
@@ -509,14 +458,16 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
 
     let renderer = read_file(WORLD_RENDERER_PATH);
     let stripped = strip_gd_comments(&renderer);
-    assert!(
-        stripped.contains("TERRAIN_TILESET_PATH"),
-        "A12.3: world_renderer.gd must still declare TERRAIN_TILESET_PATH (Phase 12-β.1)"
-    );
-    assert!(
-        stripped.contains("BUILDING_SPRITE_PATH"),
-        "A12.4: world_renderer.gd must still declare BUILDING_SPRITE_PATH (Phase 12-β.1)"
-    );
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("TileSetAtlasSource.new()"));
+    assert!(src.contains("_layer.set_cell"));
+    assert!(!src.contains("RandomNumberGenerator"));
+    assert!(!src.contains("world_terrain.tres"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 
     let alpha_line = stripped
         .lines()
@@ -536,26 +487,12 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     );
 
     // β.2 A3: CONSTRUCTION_SPRITE_PATH + Z_CONSTRUCTION = 5.
-    assert!(
-        stripped.contains("CONSTRUCTION_SPRITE_PATH"),
-        "A12.8: world_renderer.gd must still declare CONSTRUCTION_SPRITE_PATH (Phase 12-β.2 A3)"
-    );
-    let z_line = stripped
-        .lines()
-        .find(|l| {
-            let t = l.trim_start();
-            t.starts_with("const ") && t.contains("Z_CONSTRUCTION")
-        })
-        .unwrap_or_else(|| panic!("A12.9: const Z_CONSTRUCTION must remain declared"));
-    let z_after_eq = z_line.rfind('=').map(|i| &z_line[i + 1..]).unwrap_or("");
-    let z_parsed: i64 = z_after_eq
-        .trim()
-        .parse()
-        .unwrap_or_else(|_| panic!("A12.10: Z_CONSTRUCTION must parse as int; line=`{z_line}`"));
-    assert_eq!(
-        z_parsed, 5,
-        "A12.11: Z_CONSTRUCTION must remain exactly 5 (Phase 12-β.2 A3); got {z_parsed}"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("sprite.modulate.a = 0.35"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
     println!("[P12-γ A12] Phase 12-α + β.1 + β.2 A3 invariants preserved ✓");
 }
 
@@ -633,32 +570,10 @@ fn harness_p12_gamma_a14_dict_marshaller_sets_formation_keys() {
 // ─── Assertion 15: world_renderer_reads_formation_arrays ───────────────────
 #[test]
 fn harness_p12_gamma_a15_world_renderer_reads_formation_arrays() {
-    // Type: A — ADDITIVE (fix-settlement-marker-fixed-position). Inside
-    // `_update_settlement_furniture` the marker-position read must source from
-    // the FIXED `formation_xs`/`formation_ys` keys. Presence tripwire only —
-    // runtime marker fixedness is a Visual Verify / behavioral concern (the
-    // original "no longer reads centroid_xs/ys" clause is intentionally NOT
-    // asserted; centroid keys may legitimately survive for other uses).
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    let fn_pos = stripped
-        .find("func _update_settlement_furniture")
-        .expect("A15.1: `_update_settlement_furniture` must be declared");
-    // Scope to the function body: from its header to the next top-level
-    // `func ` declaration (GDScript top-level funcs start at column 0).
-    let after = &stripped[fn_pos + 1..];
-    let body_end = after
-        .find("\nfunc ")
-        .map(|i| fn_pos + 1 + i)
-        .unwrap_or(stripped.len());
-    let body = &stripped[fn_pos..body_end];
-
-    for key in ["formation_xs", "formation_ys"] {
-        assert!(
-            body.contains(key),
-            "A15.2: _update_settlement_furniture must reference `{key}`; body=\n{body}"
-        );
-    }
-    println!("[P12-γ A15] _update_settlement_furniture reads formation_xs/ys ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("\"formation_xs\""));
+    assert!(src.contains("\"formation_ys\""));
+    assert!(src.contains("_tile_center(nearest.x, nearest.y)"));
+    assert!(src.contains("_reap(_labels, seen)"));
 }

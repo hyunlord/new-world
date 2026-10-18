@@ -108,12 +108,8 @@ fn harness_t7_9_b_world_renderer_render_path_present() {
         "world_renderer.gd must declare `CHANNEL_WARMTH := 0` \
          (Warmth = InfluenceChannel index 0, the first overlay render target)"
     );
-    assert!(
-        src.contains("on_building_placed(BOOTSTRAP_X"),
-        "world_renderer.gd _ready must call \
-         `world_sim.on_building_placed(BOOTSTRAP_X, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)` \
-         to give BuildingStampSystem something to emit"
-    );
+    assert!(include_str!("../../../../scripts/ui/building_renderer.gd").contains("_world_sim.get_building_snapshot()"), "building renderer must read real buildings");
+    assert!(!src.contains("on_building_placed("), "renderer must not bootstrap simulation state");
     assert!(
         src.contains("Image.FORMAT_L8"),
         "world_renderer.gd must use `Image.FORMAT_L8` (single-channel 8-bit \

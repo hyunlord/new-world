@@ -1,0 +1,10 @@
+2026-10-15 17:20:08 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:09 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:10 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:11 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:12 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:12 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:13 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:14 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:15 KST owned lock permitted: stage a performance; pid=24639
+2026-10-15 17:20:19 KST owned lock permitted: stage a performance; pid=24639

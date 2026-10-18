@@ -21,7 +21,7 @@
 
 use hecs::{Entity, World};
 use sim_core::causal::event::{CausalEvent, DeathReason};
-use sim_core::components::{Agent, AgentId, BodyHealth, Hunger, Position, Thirst};
+use sim_core::components::{Agent, AgentId, BodyHealth, Cold, ExposureClock, Hunger, Position, Thirst};
 use sim_engine::{RecentDeath, RuntimeSystem, SimResources};
 
 /// HP removed per tick while `Hunger.value >= Hunger::SATURATION`.
@@ -62,7 +62,22 @@ pub fn despawn_agent(
     reason: DeathReason,
     tick: u64,
 ) {
+    // Pass 19 chronicle: read the person, their age and recorded partner
+    // before the entity is gone (reads only).
+    let person = crate::runtime::chronicle_log::person_record(world, entity);
+    let partner = world
+        .get::<&sim_core::components::Kin>(entity)
+        .ok()
+        .and_then(|kin| kin.partner);
+    let age = world
+        .get::<&sim_core::components::Life>(entity)
+        .ok()
+        .map_or(-1, |life| life.age_ticks(tick));
     let _ = world.despawn(entity);
+    resources.social_chase_since.remove(&agent_id);
+    resources.social_retry_after.remove(&agent_id);
+    resources.bed_of.remove(&agent_id);
+    resources.haulers.remove(&agent_id);
 
     // Purge the four agent-keyed resource maps (drop any key referencing the
     // dead agent) — mirrors the pre-feature combat cleanup block.
@@ -80,12 +95,24 @@ pub fn despawn_agent(
         .retain(|(a, d), _| *a != agent_id && *d != agent_id);
 
     // Settlement roster + population stats (no-op when the agent is bandless).
-    for settlement in resources.settlements.values_mut() {
+    // Pass 19: the roster the agent left (lowest id if ever several) is
+    // remembered for the chronicle only.
+    let mut last_roster: Option<sim_core::components::SettlementId> = None;
+    for (sid, settlement) in resources.settlements.iter_mut() {
         if settlement.remove_member_agent(agent_id) {
             settlement.population_stats.current = settlement.member_agents.len() as u32;
             settlement.population_stats.total_deaths =
                 settlement.population_stats.total_deaths.saturating_add(1);
+            last_roster = Some(last_roster.map_or(*sid, |known| known.min(*sid)));
         }
+    }
+
+    match reason {
+        DeathReason::Starvation => resources.tallies.deaths_starvation += 1,
+        DeathReason::Dehydration => resources.tallies.deaths_dehydration += 1,
+        DeathReason::Combat => resources.tallies.deaths_combat += 1,
+        DeathReason::OldAge => resources.tallies.deaths_old_age += 1,
+        DeathReason::Exposure => resources.tallies.deaths_exposure += 1,
     }
 
     // Chronicle the death at its tile.
@@ -114,6 +141,33 @@ pub fn despawn_agent(
         reason,
         tick: tick as u32,
     });
+
+    // Pass 19 chronicle (write-only): close the person's record, record the
+    // death and, if the recorded partner is alive, their widowhood.
+    resources
+        .chronicle
+        .close_person(agent_id, tick, reason.as_u8(), || person);
+    crate::runtime::chronicle_log::record(
+        world,
+        resources,
+        sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Died)
+            .subject(agent_id)
+            .other(partner)
+            .settlement(last_roster)
+            .cause(reason.as_u8())
+            .value(age),
+    );
+    if let Some(partner) = partner {
+        if crate::runtime::chronicle_log::alive_entity(world, partner).is_some() {
+            crate::runtime::chronicle_log::record(
+                world,
+                resources,
+                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Widowed)
+                    .subject(partner)
+                    .other(Some(agent_id)),
+            );
+        }
+    }
 }
 
 /// Needs → frailty → death system (priority 139, interval 1).
@@ -142,12 +196,15 @@ impl RuntimeSystem for StarvationSystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let tick = resources.current_tick;
+        // Pass 10: under the exposure rule a resident does not heal while
+        // `Cold` or within `heal_block_hours` after its last cold hour.
+        let heal_block = resources.rules.society.exposure.map(|rule| rule.heal_block_hours);
 
         // Deferred death list — never despawn mid-query.
         let mut deaths: Vec<(Entity, AgentId, (u32, u32), DeathReason)> = Vec::new();
 
-        for (entity, (agent, position, hunger, thirst, health)) in world
-            .query::<(&Agent, &Position, &Hunger, &Thirst, &mut BodyHealth)>()
+        for (entity, (agent, position, hunger, thirst, health, cold, clock)) in world
+            .query::<(&Agent, &Position, &Hunger, &Thirst, &mut BodyHealth, Option<&Cold>, Option<&ExposureClock>)>()
             .iter()
         {
             let hunger_saturated = hunger.value >= Hunger::SATURATION;
@@ -175,6 +232,9 @@ impl RuntimeSystem for StarvationSystem {
             } else if (hunger.value as f64) < SAFE_NEED_CEILING
                 && thirst.value < SAFE_NEED_CEILING
                 && health.hp < health.max_hp
+                && !heal_block.is_some_and(|hours| {
+                    cold.is_some() || clock.is_some_and(|clock| clock.blocks_healing(tick, hours))
+                })
             {
                 // Both needs met and not at full hp → recover slowly.
                 health.heal(STARVATION_HEAL_PER_TICK);
@@ -182,6 +242,11 @@ impl RuntimeSystem for StarvationSystem {
             // Gray zone (need in (SAFE_NEED_CEILING, SATURATION)) → no-op.
         }
 
+        // Pass 9: under keyed draws deaths are booked in AgentId order (event
+        // ids, the per-tile causal ring and despawn order no longer follow hecs order).
+        if resources.rules.agent.keyed_draws {
+            deaths.sort_by_key(|row| row.1);
+        }
         for (entity, agent_id, position, reason) in deaths {
             despawn_agent(world, resources, entity, agent_id, position, reason, tick);
         }
@@ -191,6 +256,18 @@ impl RuntimeSystem for StarvationSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn death_removes_the_assigned_bed() {
+        let mut world = World::new();
+        let entity = world.spawn((Agent { id: 7 },));
+        let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        resources.bed_of.insert(7, (2, 2));
+        resources.bed_of.insert(8, (2, 2));
+        despawn_agent(&mut world, &mut resources, entity, 7, (2, 2), DeathReason::Starvation, 0);
+        assert!(!resources.bed_of.contains_key(&7));
+        assert_eq!(resources.bed_of.get(&8), Some(&(2, 2)));
+    }
 
     #[test]
     fn metadata() {

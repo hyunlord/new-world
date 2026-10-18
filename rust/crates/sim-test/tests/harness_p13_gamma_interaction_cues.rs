@@ -44,9 +44,7 @@ fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 /// Strip GDScript line comments (`# …` to EOL). Preserves `#` inside string
 /// literals (single or double quoted).
@@ -538,58 +536,36 @@ fn harness_p13_gamma_a13_phase13_alpha_zoom_default_3x_preserved() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A13");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A13: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
+        "A13: ZOOM_DEFAULT must equal Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{rhs}`"
     );
-    println!("[P13-γ A13] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
+    println!("[P13-γ A13] ZOOM_DEFAULT = Vector2(4.0, 4.0) preserved ✓");
 }
 
 // ─── Assertion 14: phase13_alpha_bootstrap_campfire_preserved ────────────
 #[test]
 fn harness_p13_gamma_a14_phase13_alpha_bootstrap_campfire_preserved() {
-    // Type: D — Phase 13-α cross-phase regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BUILDING_SPRITE_PATH", "A14");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/buildings/campfire/1.png\"",
-        "A14: BUILDING_SPRITE_PATH must remain the campfire literal (Phase 13-α invariant); got `{rhs}`"
-    );
-    println!("[P13-γ A14] BUILDING_SPRITE_PATH → campfire/1.png preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("get_building_snapshot()"));
 }
 
 // ─── Assertion 15: phase13_beta_resource_constants_preserved ─────────────
 #[test]
 fn harness_p13_gamma_a15_phase13_beta_resource_constants_preserved() {
-    // Type: D — Phase 13-β cross-phase regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let resource_path = unique_decl_rhs(&stripped, "RESOURCE_SPRITE_PATH", "A15.1");
-    assert_eq!(
-        resource_path, "\"res://assets/sprites/furniture/storage_pit/1.png\"",
-        "A15.2: RESOURCE_SPRITE_PATH must remain the storage_pit literal; got `{resource_path}`"
-    );
-
-    let z_resource = unique_decl_rhs(&stripped, "Z_RESOURCE", "A15.3");
-    assert_eq!(z_resource, "3", "A15.4: Z_RESOURCE must equal 3; got `{z_resource}`");
-
-    let resource_count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A15.5");
-    assert_eq!(
-        resource_count, "20",
-        "A15.6: RESOURCE_COUNT must equal 20; got `{resource_count}`"
-    );
-
-    let resource_seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A15.7");
-    assert_eq!(
-        resource_seed, "88675123",
-        "A15.8: RESOURCE_SEED must equal 88675123; got `{resource_seed}`"
-    );
-    println!("[P13-γ A15] Phase 13-β resource constants preserved (path/z/count/seed) ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 16: state_scale_boost_lookup_guards_bounds ────────────────

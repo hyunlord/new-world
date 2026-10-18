@@ -1,0 +1,30 @@
+2026-10-16 13:18:51 KST [watch] start: gate prepare_bridge; pgid=33173
+2026-10-16 13:19:08 KST [watch] end: gate prepare_bridge; exit=0; stopped_total=0.0s
+2026-10-16 13:19:08 KST [watch] start: gate prepare_import; pgid=33971
+2026-10-16 13:19:11 KST [watch] end: gate prepare_import; exit=0; stopped_total=0.0s
+2026-10-16 13:19:11 KST [watch] start: gate test_debug; pgid=34221
+2026-10-16 14:52:33 KST [watch] end: gate test_debug; exit=0; stopped_total=0.0s
+2026-10-16 14:52:33 KST [watch] start: gate test_release; pgid=40888
+2026-10-16 14:57:24 KST [watch] end: gate test_release; exit=0; stopped_total=0.0s
+2026-10-16 14:57:24 KST [watch] start: gate clippy; pgid=57649
+2026-10-16 14:57:32 KST [watch] end: gate clippy; exit=0; stopped_total=0.0s
+2026-10-16 14:57:32 KST [watch] start: gate clippy_all_targets; pgid=58036
+2026-10-16 14:58:39 KST [watch] end: gate clippy_all_targets; exit=0; stopped_total=0.0s
+2026-10-16 14:58:39 KST [watch] start: gate forbidden_math; pgid=61671
+2026-10-16 14:58:39 KST [watch] end: gate forbidden_math; exit=0; stopped_total=0.0s
+2026-10-16 14:58:39 KST [watch] start: gate bridge_build; pgid=61680
+2026-10-16 14:58:41 KST [watch] end: gate bridge_build; exit=0; stopped_total=0.0s
+2026-10-16 14:58:41 KST [watch] start: gate godot_import; pgid=61720
+2026-10-16 14:58:44 KST [watch] end: gate godot_import; exit=0; stopped_total=0.0s
+2026-10-16 14:58:44 KST [watch] start: gate strict_check; pgid=61947
+2026-10-16 14:58:48 KST [watch] end: gate strict_check; exit=0; stopped_total=0.0s
+2026-10-16 14:58:48 KST [watch] start: gate smoke; pgid=62255
+2026-10-16 14:58:54 KST [watch] end: gate smoke; exit=0; stopped_total=0.0s
+2026-10-16 14:58:55 KST [watch] start: gate python_unittest; pgid=62600
+2026-10-16 14:59:54 KST [watch] end: gate python_unittest; exit=0; stopped_total=0.0s
+2026-10-16 14:59:54 KST [watch] start: gate python_worldmodel; pgid=65944
+2026-10-16 14:59:54 KST [watch] end: gate python_worldmodel; exit=0; stopped_total=0.0s
+2026-10-16 14:59:54 KST [watch] start: gate perf_quick; pgid=65962
+2026-10-16 15:00:07 KST [watch] end: gate perf_quick; exit=0; stopped_total=0.0s
+2026-10-16 15:00:07 KST [watch] start: gate allowed_paths; pgid=66744
+2026-10-16 15:00:07 KST [watch] end: gate allowed_paths; exit=0; stopped_total=0.0s

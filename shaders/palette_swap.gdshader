@@ -20,6 +20,8 @@ shader_type canvas_item;
 // integer column indices match the 8/4/8 palette layout.
 
 uniform sampler2D palette_lut : filter_nearest, repeat_disable;
+// Keep the palette and state hue readable against mid-tone grass; canvas daylight still applies.
+uniform float readability_lift : hint_range(0.0, 1.0) = 0.65;
 
 varying flat vec3 v_palette;
 varying vec4 v_tint;
@@ -39,8 +41,14 @@ void vertex() {
 
 void fragment() {
 	vec4 tex = texture(TEXTURE, UV);
-	if (tex.a <= 0.01) {
-		COLOR = tex;
+	if (tex.a == 0.0) {
+		float neighbor_alpha = max(
+			max(texture(TEXTURE, UV + vec2(TEXTURE_PIXEL_SIZE.x, 0.0)).a,
+				texture(TEXTURE, UV - vec2(TEXTURE_PIXEL_SIZE.x, 0.0)).a),
+			max(texture(TEXTURE, UV + vec2(0.0, TEXTURE_PIXEL_SIZE.y)).a,
+				texture(TEXTURE, UV - vec2(0.0, TEXTURE_PIXEL_SIZE.y)).a)
+		);
+		COLOR = neighbor_alpha > 0.5 ? vec4(vec3(20.0 / 255.0), 0.9) : tex;
 	} else {
 		float hair_col = floor(v_palette.r * 7.0 + 0.5);
 		float body_col = floor(v_palette.g * 3.0 + 0.5);
@@ -62,6 +70,7 @@ void fragment() {
 		}
 
 		vec4 palette_color = texture(palette_lut, palette_uv(row_index, column_index));
-		COLOR = vec4(palette_color.rgb * v_tint.rgb, tex.a);
+		vec3 tinted_palette = palette_color.rgb * v_tint.rgb;
+		COLOR = vec4(mix(tinted_palette, vec3(1.0), readability_lift), tex.a);
 	}
 }

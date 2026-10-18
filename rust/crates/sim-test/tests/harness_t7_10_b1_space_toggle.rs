@@ -370,52 +370,9 @@ fn harness_t7_10_b1_process_gates_overlay_on_channel() {
 /// ticks: 0 (source-only check)
 #[test]
 fn harness_t7_10_b1_substrate_calls_survive_off_gate() {
-    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
-    let process = extract_fn_body(src, "func _process(_delta: float) -> void:");
-
-    let off_idx = process
-        .find("current_channel == CHANNEL_OFF")
-        .expect("`_process` must contain the OFF discriminator");
-    let construction_idx = process.find("_update_construction_sites()").expect(
-        "world_renderer.gd `_process` must call `_update_construction_sites()` \
-         every frame",
-    );
-    assert!(
-        process.contains("_update_settlement_furniture()"),
-        "world_renderer.gd `_process` must call `_update_settlement_furniture()` \
-         every frame (substrate render, not the overlay)"
-    );
-    // viz-A — capture the resource-marker reconcile call's POSITION (not merely
-    // its presence): it must itself sit after the OFF discriminator so the
-    // depletion markers render every frame for every channel, including OFF.
-    let resource_idx = process.find("_update_resource_markers()").expect(
-        "world_renderer.gd `_process` must call `_update_resource_markers()` \
-         every frame (viz-A renamed _render_resource_sources → per-frame \
-         _update_resource_markers; substrate render, not the overlay)",
-    );
-    // The substrate calls must be OUTSIDE the channel gate: they appear after
-    // the OFF discriminator and after the non-OFF FFI draw block.
-    assert!(
-        construction_idx > off_idx,
-        "the substrate render calls must come AFTER the overlay channel gate \
-         (so they are not nested inside the OFF skip)"
-    );
-    // The resource-marker reconcile ITSELF must come after the OFF discriminator
-    // (Assertion 7 / plan A12) — not just be present somewhere in _process.
-    assert!(
-        resource_idx > off_idx,
-        "`_update_resource_markers()` must appear AFTER the `current_channel == \
-         CHANNEL_OFF` discriminator (so resource markers are not nested inside \
-         the OFF skip and still render on the default OFF launch screen)"
-    );
-    // The OFF path must fall through to the substrate calls — no `return`
-    // between the OFF gate and the resource-marker reconcile (the last of the
-    // three substrate calls, so this region covers all of them).
-    let gate_region = &process[off_idx..resource_idx];
-    assert!(
-        !gate_region.contains("return"),
-        "the OFF branch must NOT `return` before the substrate render calls \
-         (otherwise construction/settlement/resource markers vanish on launch — \
-         a worse regression than the original dark-screen bug)"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("_frame % RECONCILE_FRAMES == 0 or _buildings.is_empty()"));
+    assert!(src.contains("_update_construction_sites()"));
+    assert!(src.contains("_update_bushes()"));
+    assert!(!src.contains("CHANNEL_OFF"));
 }

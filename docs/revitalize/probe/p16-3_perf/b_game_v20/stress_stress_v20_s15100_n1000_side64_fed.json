@@ -1,0 +1,1263 @@
+{
+  "agents_requested": 1000,
+  "alive_end": 1000,
+  "build_profile": "release",
+  "buildings_end": 14,
+  "clock_offset_ticks": 480,
+  "contended": false,
+  "days": 2.0,
+  "feed": "fed",
+  "fingerprint": "603177818e8fb210",
+  "founders": 1000,
+  "gifts": [
+    {
+      "applied": 3000,
+      "requested": 3000,
+      "settlement": 1,
+      "tick": 1
+    },
+    {
+      "applied": 3000,
+      "requested": 3000,
+      "settlement": 1,
+      "tick": 1320
+    },
+    {
+      "applied": 3000,
+      "requested": 3000,
+      "settlement": 1,
+      "tick": 2760
+    }
+  ],
+  "git_sha": "unknown",
+  "machine": {
+    "cpu": "Apple M4 Max",
+    "memsize": "38654705664",
+    "ncpu": "14",
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+    "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+  },
+  "mean_alive_0600": 1000.0,
+  "mean_settlements_0600": 1.0,
+  "mode": "stress",
+  "pass": 15,
+  "per_day": [
+    {
+      "alive_0600": null,
+      "day": 0,
+      "settlements_0600": null,
+      "systems_ms": [
+        0.021118,
+        1.865229,
+        0.230434,
+        12.991133,
+        510.378622,
+        3.459319,
+        2.092456,
+        2.042722,
+        2.023603,
+        2.509718,
+        2.247198,
+        2.023691,
+        36.346066,
+        9.933543,
+        131.475349,
+        3.301661,
+        0.020209,
+        5.522874,
+        14.030376,
+        0.069063,
+        0.008211,
+        0.847984,
+        0.354001,
+        0.328,
+        0.527462,
+        0.06609
+      ],
+      "tick_ms": 745.302,
+      "ticks": 960
+    },
+    {
+      "alive_0600": 1000,
+      "day": 1,
+      "settlements_0600": 1,
+      "systems_ms": [
+        0.02908,
+        2.584777,
+        0.32779,
+        15.770911,
+        731.150464,
+        5.250202,
+        3.106618,
+        2.980739,
+        3.000002,
+        3.491326,
+        4.462838,
+        3.01512,
+        77.856266,
+        14.952921,
+        193.928998,
+        5.087876,
+        0.031876,
+        8.162003,
+        20.729202,
+        0.094358,
+        0.01258,
+        0.806253,
+        0.531293,
+        0.497543,
+        0.809917,
+        0.089801
+      ],
+      "tick_ms": 1099.608,
+      "ticks": 1440
+    },
+    {
+      "alive_0600": 1000,
+      "day": 2,
+      "settlements_0600": 1,
+      "systems_ms": [
+        0.009285,
+        0.821099,
+        0.099045,
+        3.616947,
+        185.384426,
+        1.609375,
+        1.024283,
+        0.986458,
+        0.988456,
+        1.104529,
+        1.238213,
+        0.988414,
+        25.407786,
+        5.018714,
+        64.378085,
+        1.764998,
+        0.010292,
+        2.807039,
+        7.153826,
+        0.028963,
+        0.003585,
+        0.171163,
+        0.173581,
+        0.153957,
+        0.258593,
+        0.027289
+      ],
+      "tick_ms": 305.505,
+      "ticks": 480
+    }
+  ],
+  "prune_ms": 0.044691,
+  "scene": "stress_v20",
+  "seed": 15100,
+  "settlements_end": 1,
+  "side": 64,
+  "slowest_ticks": [
+    {
+      "clock": "06:01",
+      "display_day": 2,
+      "due_periodic": [],
+      "tick": 2761,
+      "top_systems": [
+        {
+          "ms": 1.4818330000000002,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.139083,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.07125,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.010208,
+          "name": "CombatSystem"
+        },
+        {
+          "ms": 0.009292,
+          "name": "StaleSeekTargetSystem"
+        }
+      ],
+      "total_ms": 1.735
+    },
+    {
+      "clock": "06:01",
+      "display_day": 1,
+      "due_periodic": [],
+      "tick": 1321,
+      "top_systems": [
+        {
+          "ms": 1.44675,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.146375,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.049875,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.014041,
+          "name": "CombatSystem"
+        },
+        {
+          "ms": 0.008542,
+          "name": "StaleSeekTargetSystem"
+        }
+      ],
+      "total_ms": 1.685
+    },
+    {
+      "clock": "10:40",
+      "display_day": 0,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 160,
+      "top_systems": [
+        {
+          "ms": 0.8682089999999999,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.162291,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.149792,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.078958,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.058667000000000004,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.406
+    },
+    {
+      "clock": "06:10",
+      "display_day": 1,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 1330,
+      "top_systems": [
+        {
+          "ms": 0.924125,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.13425,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.076791,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.057792,
+          "name": "StockpileDepositSystem"
+        },
+        {
+          "ms": 0.054584,
+          "name": "MemorySystem"
+        }
+      ],
+      "total_ms": 1.281
+    },
+    {
+      "clock": "16:10",
+      "display_day": 0,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 490,
+      "top_systems": [
+        {
+          "ms": 0.9105829999999999,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.147584,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.078292,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.056709,
+          "name": "StockpileDepositSystem"
+        },
+        {
+          "ms": 0.043417000000000004,
+          "name": "MemorySystem"
+        }
+      ],
+      "total_ms": 1.278
+    },
+    {
+      "clock": "10:00",
+      "display_day": 0,
+      "due_periodic": [
+        "ResourceRegenSystem",
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem",
+        "MaturationSystem",
+        "AgingSystem",
+        "FireSystem",
+        "InfluenceVisualizationSystem"
+      ],
+      "tick": 120,
+      "top_systems": [
+        {
+          "ms": 0.751625,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.13675,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.116167,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.071916,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.056958,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.276
+    },
+    {
+      "clock": "14:01",
+      "display_day": 1,
+      "due_periodic": [],
+      "tick": 1801,
+      "top_systems": [
+        {
+          "ms": 1.043166,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.141625,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.0585,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.008791,
+          "name": "CombatSystem"
+        },
+        {
+          "ms": 0.00325,
+          "name": "SocialInteractionSystem"
+        }
+      ],
+      "total_ms": 1.275
+    },
+    {
+      "clock": "20:00",
+      "display_day": 1,
+      "due_periodic": [
+        "ResourceRegenSystem",
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem",
+        "MaturationSystem",
+        "AgingSystem",
+        "FireSystem",
+        "InfluenceVisualizationSystem"
+      ],
+      "tick": 2160,
+      "top_systems": [
+        {
+          "ms": 0.59725,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.134084,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.116792,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.090084,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.080208,
+          "name": "StockpileConsumeSystem"
+        }
+      ],
+      "total_ms": 1.272
+    },
+    {
+      "clock": "10:06",
+      "display_day": 0,
+      "due_periodic": [
+        "InfluenceVisualizationSystem"
+      ],
+      "tick": 126,
+      "top_systems": [
+        {
+          "ms": 1.0432919999999999,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.147541,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.037125,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.009542,
+          "name": "CombatSystem"
+        },
+        {
+          "ms": 0.00425,
+          "name": "StarvationSystem"
+        }
+      ],
+      "total_ms": 1.268
+    },
+    {
+      "clock": "14:00",
+      "display_day": 1,
+      "due_periodic": [
+        "ResourceRegenSystem",
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem",
+        "MaturationSystem",
+        "AgingSystem",
+        "FireSystem",
+        "InfluenceVisualizationSystem"
+      ],
+      "tick": 1800,
+      "top_systems": [
+        {
+          "ms": 0.680292,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.14058299999999999,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.137583,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.078709,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.065417,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.263
+    },
+    {
+      "clock": "12:00",
+      "display_day": 1,
+      "due_periodic": [
+        "ResourceRegenSystem",
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem",
+        "MaturationSystem",
+        "AgingSystem",
+        "FireSystem",
+        "InfluenceVisualizationSystem"
+      ],
+      "tick": 1680,
+      "top_systems": [
+        {
+          "ms": 0.697625,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.135958,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.132292,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.069542,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.053583,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.26
+    },
+    {
+      "clock": "21:10",
+      "display_day": 1,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 2230,
+      "top_systems": [
+        {
+          "ms": 0.73825,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.202291,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.151667,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.068125,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.057292,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.258
+    },
+    {
+      "clock": "09:20",
+      "display_day": 0,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 80,
+      "top_systems": [
+        {
+          "ms": 0.802042,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.129791,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.117375,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.063958,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.053125,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.237
+    },
+    {
+      "clock": "16:01",
+      "display_day": 1,
+      "due_periodic": [],
+      "tick": 1921,
+      "top_systems": [
+        {
+          "ms": 0.982291,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.14141700000000001,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.067542,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.014583,
+          "name": "CombatSystem"
+        },
+        {
+          "ms": 0.0069169999999999995,
+          "name": "StaleSeekTargetSystem"
+        }
+      ],
+      "total_ms": 1.234
+    },
+    {
+      "clock": "14:40",
+      "display_day": 0,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 400,
+      "top_systems": [
+        {
+          "ms": 0.726875,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.15654099999999999,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.122042,
+          "name": "AgentMovementSystem"
+        },
+        {
+          "ms": 0.074125,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.064541,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.23
+    },
+    {
+      "clock": "09:00",
+      "display_day": 0,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem",
+        "MaturationSystem",
+        "AgingSystem",
+        "FireSystem",
+        "InfluenceVisualizationSystem"
+      ],
+      "tick": 60,
+      "top_systems": [
+        {
+          "ms": 0.820209,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.138291,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.076083,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.061917,
+          "name": "StockpileDepositSystem"
+        },
+        {
+          "ms": 0.031916,
+          "name": "MemorySystem"
+        }
+      ],
+      "total_ms": 1.227
+    },
+    {
+      "clock": "10:10",
+      "display_day": 0,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 130,
+      "top_systems": [
+        {
+          "ms": 0.8736670000000001,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.136417,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.081125,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.056708,
+          "name": "StockpileDepositSystem"
+        },
+        {
+          "ms": 0.038667,
+          "name": "MemorySystem"
+        }
+      ],
+      "total_ms": 1.219
+    },
+    {
+      "clock": "20:50",
+      "display_day": 1,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 2210,
+      "top_systems": [
+        {
+          "ms": 0.728417,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.178625,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.140125,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.06804099999999999,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.0565,
+          "name": "StockpileDepositSystem"
+        }
+      ],
+      "total_ms": 1.214
+    },
+    {
+      "clock": "21:08",
+      "display_day": 1,
+      "due_periodic": [],
+      "tick": 2228,
+      "top_systems": [
+        {
+          "ms": 0.808958,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.209167,
+          "name": "MemorySystem"
+        },
+        {
+          "ms": 0.147959,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.0105,
+          "name": "CombatSystem"
+        },
+        {
+          "ms": 0.007666,
+          "name": "StaleSeekTargetSystem"
+        }
+      ],
+      "total_ms": 1.211
+    },
+    {
+      "clock": "06:10",
+      "display_day": 2,
+      "due_periodic": [
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem"
+      ],
+      "tick": 2770,
+      "top_systems": [
+        {
+          "ms": 0.8557910000000001,
+          "name": "AgentDecisionSystem"
+        },
+        {
+          "ms": 0.127875,
+          "name": "SettlementSystem"
+        },
+        {
+          "ms": 0.077208,
+          "name": "StockpileConsumeSystem"
+        },
+        {
+          "ms": 0.05775,
+          "name": "StockpileDepositSystem"
+        },
+        {
+          "ms": 0.052792,
+          "name": "MemorySystem"
+        }
+      ],
+      "total_ms": 1.206
+    }
+  ],
+  "snapshot_timings": {
+    "context": {
+      "agent_tiles": 116,
+      "agents": 1000,
+      "buildings": 14,
+      "construction_sites": 0,
+      "hearths": 1,
+      "repeats": 100,
+      "settlements": 1
+    },
+    "get_agent_detail": {
+      "median_us": 0.083,
+      "p90_us": 0.125,
+      "rows": null
+    },
+    "get_agent_snapshot": {
+      "median_us": 11.209,
+      "p90_us": 12.291,
+      "rows": 1000
+    },
+    "get_building_snapshot": {
+      "median_us": 0.083,
+      "p90_us": 0.084,
+      "rows": 14
+    },
+    "get_construction_snapshot": {
+      "median_us": 0.083,
+      "p90_us": 0.125,
+      "rows": 0
+    },
+    "get_influence_overlay": {
+      "median_us": 0.042,
+      "p90_us": 0.083,
+      "rows": null
+    },
+    "get_recent_deaths": {
+      "median_us": 0.0,
+      "p90_us": 0.042,
+      "rows": 0
+    },
+    "get_relationship_snapshot": {
+      "median_us": 1.459,
+      "p90_us": 1.709,
+      "rows": 608
+    },
+    "get_resource_snapshot": {
+      "median_us": 2.667,
+      "p90_us": 2.875,
+      "rows": 217
+    },
+    "get_settlement_snapshot": {
+      "median_us": 35.834,
+      "p90_us": 40.25,
+      "rows": 1
+    },
+    "get_tallies": {
+      "median_us": 0.0,
+      "p90_us": 0.042,
+      "rows": null
+    },
+    "get_terrain_snapshot": {
+      "median_us": 0.084,
+      "p90_us": 0.125,
+      "rows": null
+    },
+    "get_tile_causal_history": {
+      "median_us": 0.083,
+      "p90_us": 0.084,
+      "rows": null
+    },
+    "get_tile_causal_history_all_agent_tiles": {
+      "median_us": 8.0,
+      "p90_us": 8.875,
+      "rows": 116
+    },
+    "get_time_snapshot": {
+      "median_us": 0.0,
+      "p90_us": 0.042,
+      "rows": null
+    },
+    "get_world_info": {
+      "median_us": 0.0,
+      "p90_us": 0.042,
+      "rows": null
+    }
+  },
+  "steady_tick_ms_total": 2097.684,
+  "systems": [
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 0.167,
+      "max_us_incl_warmup": 2.583,
+      "mean_us_per_call": 0.01967517730496454,
+      "name": "BuildingStampSystem",
+      "priority": 90,
+      "share_of_tick_time": 0.000026450123088129576,
+      "total_ms": 0.055484,
+      "total_ms_incl_warmup": 0.059483
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 15.125,
+      "max_us_incl_warmup": 84.833,
+      "mean_us_per_call": 1.7978219858156028,
+      "name": "InfluenceUpdateSystem",
+      "priority": 100,
+      "share_of_tick_time": 0.0024168835725495354,
+      "total_ms": 5.069858,
+      "total_ms_incl_warmup": 5.271105
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 2.083,
+      "max_us_incl_warmup": 2.083,
+      "mean_us_per_call": 0.22728120567375887,
+      "name": "AgentInfluenceSampleSystem",
+      "priority": 110,
+      "share_of_tick_time": 0.0003055431609336773,
+      "total_ms": 0.640933,
+      "total_ms_incl_warmup": 0.657269
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 153.25,
+      "max_us_incl_warmup": 153.25,
+      "mean_us_per_call": 11.181098226950354,
+      "name": "AgentMovementSystem",
+      "priority": 120,
+      "share_of_tick_time": 0.01503119487968636,
+      "total_ms": 31.530697,
+      "total_ms_incl_warmup": 32.378991
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 1481.833,
+      "max_us_incl_warmup": 1481.833,
+      "mean_us_per_call": 492.47012907801417,
+      "name": "AgentDecisionSystem",
+      "priority": 125,
+      "share_of_tick_time": 0.6620471739308685,
+      "total_ms": 1388.765764,
+      "total_ms_incl_warmup": 1426.913512
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 42.417,
+      "max_us_incl_warmup": 42.417,
+      "mean_us_per_call": 3.6044382978723406,
+      "name": "StaleSeekTargetSystem",
+      "priority": 126,
+      "share_of_tick_time": 0.004845589707505992,
+      "total_ms": 10.164516,
+      "total_ms_incl_warmup": 10.318896
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 11.875,
+      "max_us_incl_warmup": 11.875,
+      "mean_us_per_call": 2.1592429078014184,
+      "name": "HungerDecaySystem",
+      "priority": 130,
+      "share_of_tick_time": 0.0029027560871894907,
+      "total_ms": 6.089065,
+      "total_ms_incl_warmup": 6.223357
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 16.958,
+      "max_us_incl_warmup": 16.958,
+      "mean_us_per_call": 2.0856978723404254,
+      "name": "ThirstDecaySystem",
+      "priority": 131,
+      "share_of_tick_time": 0.0028038865720480303,
+      "total_ms": 5.881668,
+      "total_ms_incl_warmup": 6.009919
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 8.708,
+      "max_us_incl_warmup": 8.708,
+      "mean_us_per_call": 2.0862351063829787,
+      "name": "SleepDecaySystem",
+      "priority": 132,
+      "share_of_tick_time": 0.0028046087971305496,
+      "total_ms": 5.883183,
+      "total_ms_incl_warmup": 6.012061
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 10.458,
+      "max_us_incl_warmup": 10.458,
+      "mean_us_per_call": 2.4605297872340426,
+      "name": "ConstructionSystem",
+      "priority": 133,
+      "share_of_tick_time": 0.003307788017642314,
+      "total_ms": 6.938694,
+      "total_ms_incl_warmup": 7.105573
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 16.0,
+      "max_us_incl_warmup": 16.0,
+      "mean_us_per_call": 2.7686464539007094,
+      "name": "SocialInteractionSystem",
+      "priority": 134,
+      "share_of_tick_time": 0.0037220015026095447,
+      "total_ms": 7.807583,
+      "total_ms_incl_warmup": 7.948249
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 11.667,
+      "max_us_incl_warmup": 11.667,
+      "mean_us_per_call": 2.091731914893617,
+      "name": "SocialDecaySystem",
+      "priority": 135,
+      "share_of_tick_time": 0.0028119983753511013,
+      "total_ms": 5.898684,
+      "total_ms_incl_warmup": 6.027225
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 218.209,
+      "max_us_incl_warmup": 218.209,
+      "mean_us_per_call": 48.84959858156029,
+      "name": "MemorySystem",
+      "priority": 136,
+      "share_of_tick_time": 0.0656704575140965,
+      "total_ms": 137.755868,
+      "total_ms_incl_warmup": 139.610118
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 22.0,
+      "max_us_incl_warmup": 22.0,
+      "mean_us_per_call": 10.380455673758865,
+      "name": "CombatSystem",
+      "priority": 137,
+      "share_of_tick_time": 0.013954859263835735,
+      "total_ms": 29.272885,
+      "total_ms_incl_warmup": 29.905178
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 282.667,
+      "max_us_incl_warmup": 282.667,
+      "mean_us_per_call": 135.24928014184397,
+      "name": "SettlementSystem",
+      "priority": 138,
+      "share_of_tick_time": 0.1818209844762128,
+      "total_ms": 381.40297,
+      "total_ms_incl_warmup": 389.782432
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 55.625,
+      "max_us_incl_warmup": 55.625,
+      "mean_us_per_call": 3.537587234042553,
+      "name": "StarvationSystem",
+      "priority": 139,
+      "share_of_tick_time": 0.0047557191645643485,
+      "total_ms": 9.975996,
+      "total_ms_incl_warmup": 10.154535
+    },
+    {
+      "calls": 23,
+      "calls_incl_warmup": 24,
+      "interval": 120,
+      "max_us": 4.417,
+      "max_us_incl_warmup": 4.417,
+      "mean_us_per_call": 2.692086956521739,
+      "name": "ResourceRegenSystem",
+      "priority": 140,
+      "share_of_tick_time": 0.00002951731528676388,
+      "total_ms": 0.061918,
+      "total_ms_incl_warmup": 0.062377
+    },
+    {
+      "calls": 282,
+      "calls_incl_warmup": 288,
+      "interval": 10,
+      "max_us": 92.166,
+      "max_us_incl_warmup": 92.166,
+      "mean_us_per_call": 57.238028368794325,
+      "name": "StockpileDepositSystem",
+      "priority": 141,
+      "share_of_tick_time": 0.0076947357180585825,
+      "total_ms": 16.141124,
+      "total_ms_incl_warmup": 16.491916
+    },
+    {
+      "calls": 564,
+      "calls_incl_warmup": 576,
+      "interval": 5,
+      "max_us": 95.375,
+      "max_us_incl_warmup": 95.458,
+      "mean_us_per_call": 72.64389007092198,
+      "name": "StockpileConsumeSystem",
+      "priority": 142,
+      "share_of_tick_time": 0.019531613913249087,
+      "total_ms": 40.971154,
+      "total_ms_incl_warmup": 41.913404
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 5.375,
+      "max_us_incl_warmup": 5.375,
+      "mean_us_per_call": 0.06627127659574468,
+      "name": "ShelterPlanningSystem",
+      "priority": 143,
+      "share_of_tick_time": 0.00008909111191199437,
+      "total_ms": 0.186885,
+      "total_ms_incl_warmup": 0.192384
+    },
+    {
+      "calls": 47,
+      "calls_incl_warmup": 48,
+      "interval": 60,
+      "max_us": 0.708,
+      "max_us_incl_warmup": 0.708,
+      "mean_us_per_call": 0.5088936170212766,
+      "name": "MaturationSystem",
+      "priority": 144,
+      "share_of_tick_time": 0.000011402098695513718,
+      "total_ms": 0.023918,
+      "total_ms_incl_warmup": 0.024376
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 72.875,
+      "max_us_incl_warmup": 72.875,
+      "mean_us_per_call": 0.6215060283687943,
+      "name": "BedAssignmentSystem",
+      "priority": 145,
+      "share_of_tick_time": 0.0008355152635001268,
+      "total_ms": 1.752647,
+      "total_ms_incl_warmup": 1.8254
+    },
+    {
+      "calls": 47,
+      "calls_incl_warmup": 48,
+      "interval": 60,
+      "max_us": 29.959,
+      "max_us_incl_warmup": 29.959,
+      "mean_us_per_call": 22.122340425531913,
+      "name": "AgingSystem",
+      "priority": 146,
+      "share_of_tick_time": 0.0004956656960724303,
+      "total_ms": 1.03975,
+      "total_ms_incl_warmup": 1.058875
+    },
+    {
+      "calls": 47,
+      "calls_incl_warmup": 48,
+      "interval": 60,
+      "max_us": 28.375,
+      "max_us_incl_warmup": 28.375,
+      "mean_us_per_call": 20.425531914893618,
+      "name": "FireSystem",
+      "priority": 147,
+      "share_of_tick_time": 0.0004576475770421093,
+      "total_ms": 0.96,
+      "total_ms_incl_warmup": 0.9795
+    },
+    {
+      "calls": 2820,
+      "calls_incl_warmup": 2880,
+      "interval": 1,
+      "max_us": 42.875,
+      "max_us_incl_warmup": 42.875,
+      "mean_us_per_call": 0.5550436170212767,
+      "name": "FissionSystem",
+      "priority": 148,
+      "share_of_tick_time": 0.0007461672015422723,
+      "total_ms": 1.565223,
+      "total_ms_incl_warmup": 1.595972
+    },
+    {
+      "calls": 470,
+      "calls_incl_warmup": 480,
+      "interval": 6,
+      "max_us": 3.375,
+      "max_us_incl_warmup": 3.375,
+      "mean_us_per_call": 0.38061063829787234,
+      "name": "InfluenceVisualizationSystem",
+      "priority": 1000,
+      "share_of_tick_time": 0.0000852783355357623,
+      "total_ms": 0.178887,
+      "total_ms_incl_warmup": 0.18318
+    }
+  ],
+  "tick_summary": {
+    "max_ms": 1.735,
+    "mean_ms": 0.7438595744680851,
+    "n_over_16_67ms": 0,
+    "n_over_8ms": 0,
+    "p50_ms": 0.739,
+    "p90_ms": 0.951,
+    "p999_ms": 1.406,
+    "p99_ms": 1.186,
+    "ticks": 2820
+  },
+  "ticks": 2880,
+  "ticks_per_day": 1440,
+  "unaccounted_ms": 1.623955,
+  "wall_seconds": 2.150672333,
+  "warmup": {
+    "summary": {
+      "max_ms": 1.207,
+      "mean_ms": 0.87885,
+      "n_over_16_67ms": 0,
+      "n_over_8ms": 0,
+      "p50_ms": 0.875,
+      "p90_ms": 0.998,
+      "p999_ms": 1.207,
+      "p99_ms": 1.207,
+      "ticks": 60
+    },
+    "tick0_ms": 0.755,
+    "ticks": 60
+  }
+}

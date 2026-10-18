@@ -36,6 +36,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 // The relief amount mirrors the ground-tile eat amount; imported (not
 // redefined) from the decision module per the slice-2-4 zero-sim-core rule.
 use crate::runtime::decision::{HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD};
+use crate::runtime::decision::agent_decision::clock_in_window;
 
 /// Famine level at/above which a settlement member draws on the communal
 /// reserve. Set to [`HUNGER_THRESHOLD`] (50.0) so reserve consumption is a
@@ -94,6 +95,24 @@ impl RuntimeSystem for StockpileConsumeSystem {
             .map(|(entity, agent)| (agent.id, entity))
             .collect();
 
+        // Pass 5 meals: serve within `camp_radius`, from `meal_hunger` inside
+        // the breakfast and dinner windows and from the relief threshold
+        // outside them. Without the rule the Pass 4 radius and threshold stay.
+        let meals = resources.rules.society.meals;
+        let radius = meals.map_or(
+            resources.rules.society.relief_radius.unwrap_or(SETTLEMENT_PROXIMITY_RADIUS),
+            |rule| rule.camp_radius,
+        );
+        let threshold = match meals {
+            Some(rule)
+                if clock_in_window(resources, rule.breakfast_start, rule.breakfast_end)
+                    || clock_in_window(resources, rule.dinner_start, rule.dinner_end) =>
+            {
+                rule.meal_hunger
+            }
+            _ => STOCKPILE_RELIEF_HUNGER_THRESHOLD,
+        };
+
         // Iterate settlements in deterministic (sorted) SettlementId order.
         let mut settlement_ids: Vec<SettlementId> =
             resources.settlements.keys().copied().collect();
@@ -123,7 +142,12 @@ impl RuntimeSystem for StockpileConsumeSystem {
                     Ok(p) => (p.x, p.y),
                     Err(_) => continue,
                 };
-                if chebyshev(pos, home) > SETTLEMENT_PROXIMITY_RADIUS {
+                if chebyshev(pos, home) > radius {
+                    continue;
+                }
+                // Pass 11: a founder on its way is not served from its
+                // parent's store (no `Founding` marker outside `game_v17`).
+                if world.get::<&sim_core::components::Founding>(entity).is_ok() {
                     continue;
                 }
 
@@ -140,7 +164,7 @@ impl RuntimeSystem for StockpileConsumeSystem {
 
                 // Famine-threshold gate (inclusive `>=`).
                 let hungry = match world.get::<&Hunger>(entity) {
-                    Ok(h) => h.value >= STOCKPILE_RELIEF_HUNGER_THRESHOLD,
+                    Ok(h) => h.value >= threshold,
                     Err(_) => continue,
                 };
                 if !hungry {
@@ -158,6 +182,9 @@ impl RuntimeSystem for StockpileConsumeSystem {
                 if got > 0 {
                     if let Ok(mut h) = world.get::<&mut Hunger>(entity) {
                         h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
+                        resources.tallies.meals_eaten += 1;
+                        // Pass 5, display-only: one unit served from the store.
+                        resources.tallies.meals_from_store += 1;
                     }
                 }
             }

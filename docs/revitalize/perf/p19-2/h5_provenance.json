@@ -1,0 +1,22 @@
+{
+  "stage": "h5",
+  "quiet": {
+    "owner": "pass19-sim (Claude Code, new-world-pass4)",
+    "pid": "55410",
+    "purpose": "pass19 C6+H5+scale",
+    "started": "2026-10-16T03:39:39Z"
+  },
+  "contended": false,
+  "builds": {
+    "final": {
+      "dir": "/Users/rexxa/work/p19-data/bin_p2",
+      "commit": "3322601f",
+      "worldsim_perf_sha256": "824c614ee6a88f01ec14a485d8c7e108bfeb430b2c56dcc984651d0ff4ed4271"
+    },
+    "base": {
+      "dir": "/Users/rexxa/work/p19-data/bin_base",
+      "commit": "20a1d078",
+      "worldsim_perf_sha256": "5b598b83e095bc09ca1b5a0071c637a62af1c253a14b50a11119fe4e31915d7d"
+    }
+  }
+}

@@ -37,14 +37,28 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, ConstructionSite, Hunger, Inventory, Memory, Position,
+    Agent, AgentId, AgentState, BodyHealth, Child, Cold, ConstructionSite, Elder, Hunger, Inventory, Life,
+    Memory, Position,
     ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
+use sim_core::rules::WorldRules;
 use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources, RESOURCE_SOURCE_INFINITE};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
+use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
+
+use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::chronicle::{
+    collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
+    collect_settlement_chronicle, person_to_dict, rows_to_dict,
+};
+use super::family::{agent_family_to_dict, collect_agent_family};
+use super::relations::{
+    collect_porter_snapshot, collect_settlement_relations, porter_rows_to_dict,
+    relation_rows_to_dict,
+};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
@@ -144,6 +158,8 @@ pub const INITIAL_SLEEP: u8 = 80;
 #[class(base=Node)]
 pub struct WorldSimNode {
     engine: SimEngine,
+    /// Seed retained for repeatable tooling resets.
+    world_seed: u64,
     accumulator: f64,
     /// V7 Section 16-γ — wall-time → accumulator scale (Option A speed
     /// control). Multiplies the per-frame `delta` fed to the Gaffer
@@ -168,11 +184,56 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
     speed.clamp(0.0, 4.0)
 }
 
+/// Revitalize Pass 15 — the stress world of `seed` with `agents` founders on
+/// the game's 64 × 64 map under the `game_v19` rules
+/// (`WorldGenConfig::stress_v19`). Pure (no Godot) so the harness can check
+/// it directly. Benchmark only — lets the art line measure frame times on a
+/// crowded world; never called by the game's UI.
+pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
+    build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
+}
+
+/// Revitalize Pass 21 — the live game's world of `seed`: `game_v26`, with
+/// temperament, routines (each person ending their day at their own time),
+/// families (elder partners follow on a split) and village relations
+/// (porters, forage disputes, estrangement that ends: Pass 21's daily caps,
+/// avoid filter and exchange first). Pure (no Godot) so the harness
+/// can check it; `WorldSimNode::init` and `reset_world` call it, while
+/// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
+pub fn build_game_engine(seed: u64) -> SimEngine {
+    build_world_with(&WorldGenConfig::game_v26(seed), WorldRules::game_v26(seed))
+}
+
+/// Revitalize Pass 16 — the temperament of the agent whose
+/// `hecs::Entity::to_bits()` is `entity_bits`, or `None` when the bits are
+/// not a live entity or it carries no `Temperament` (every scene before
+/// `game_v20`). Bridge Identity Contract: `WorldSimNode::get_agent_temperament`
+/// only forwards here.
+pub fn collect_agent_temperament(world: &hecs::World, entity_bits: u64) -> Option<sim_core::components::Temperament> {
+    let entity = hecs::Entity::from_bits(entity_bits)?;
+    world.get::<&sim_core::components::Temperament>(entity).ok().map(|t| *t)
+}
+
+/// Marshals [`collect_agent_temperament`] into `{found, ns, ha, rd, p}`
+/// (ints; `found: false` and zeros when missing).
+fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperament>) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let t = temperament.unwrap_or(sim_core::components::Temperament { ns: 0, ha: 0, rd: 0, p: 0 });
+    dict.set("found", temperament.is_some());
+    dict.set("ns", i64::from(t.ns));
+    dict.set("ha", i64::from(t.ha));
+    dict.set("rd", i64::from(t.rd));
+    dict.set("p", i64::from(t.p));
+    dict
+}
+
 #[godot_api]
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            engine: init_production_engine(),
+            // Revitalize Pass 21: the live game runs `game_v26` (village relations).
+            engine: build_game_engine(DEFAULT_GAME_SEED),
+            world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
             sim_speed: 1.0,
             base,
@@ -207,6 +268,79 @@ impl INode for WorldSimNode {
 
 #[godot_api]
 impl WorldSimNode {
+    /// Emitted after a complete engine replacement so renderers refresh snapshots.
+    #[signal]
+    fn world_reset();
+
+    /// Rebuild the seeded world, preserving the caller's wall-clock speed setting.
+    #[func]
+    fn reset_world(&mut self, seed: i64) -> bool {
+        self.world_seed = seed as u64;
+        self.engine = build_game_engine(self.world_seed);
+        self.accumulator = 0.0;
+        self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
+        true
+    }
+
+    /// Revitalize Pass 15 — rebuild as the stress world of `seed` with
+    /// `agents` founders (clamped to 1..=5000), as [`Self::reset_world`] does
+    /// otherwise ([`build_stress_engine`]). Benchmark only — lets the art line
+    /// measure frame times on a crowded world; never called by the game's UI.
+    #[func]
+    fn reset_world_stress(&mut self, seed: i64, agents: i64) -> bool {
+        self.world_seed = seed as u64;
+        self.engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
+        self.accumulator = 0.0;
+        self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
+        true
+    }
+
+    /// Read seed, dimensions, and simulation pacing from authoritative resources.
+    #[func]
+    fn get_world_info(&self) -> VarDictionary {
+        world_info_to_dict(collect_world_info(&self.engine.resources))
+    }
+
+    /// Read row-major terrain codes and elevation from the simulation grid.
+    #[func]
+    fn get_terrain_snapshot(&self) -> VarDictionary {
+        terrain_snapshot_to_dict(&collect_terrain_snapshot(&self.engine.resources))
+    }
+
+    /// Read real buildings ordered by their stable simulation building ids.
+    #[func]
+    fn get_building_snapshot(&self) -> VarDictionary {
+        building_rows_to_dict(&collect_building_snapshot(&self.engine.resources))
+    }
+
+    /// Advance a bounded number of deterministic ticks for capture tooling.
+    #[func]
+    fn advance_ticks(&mut self, n: i64) -> i64 {
+        advance_engine_ticks(&mut self.engine, n) as i64
+    }
+
+    /// Read the authoritative simulation clock, independent of render frames.
+    #[func]
+    fn get_time_snapshot(&self) -> VarDictionary {
+        time_snapshot_to_dict(collect_time_snapshot(&self.engine))
+    }
+
+    /// Read cumulative births and deaths, never the rolling event buffer.
+    #[func]
+    fn get_tallies(&self) -> VarDictionary {
+        tallies_to_dict(collect_tallies(&self.engine.resources))
+    }
+
+    /// Revitalize Pass 7 — the god's hand: apply one intervention now, between
+    /// ticks. `kind` is one of `gift_food`, `spoil_food`, `gift_wood`,
+    /// `rot_wood`, `rain`, `cold_snap`, `windfall`; `settlement_id < 0` means
+    /// home (the lowest settlement id now); `amount` is hours for rain, nights
+    /// for a cold snap and units otherwise. Returns `{ok, applied, tick}`.
+    #[func]
+    fn apply_intervention(&mut self, kind: GString, settlement_id: i64, amount: i64) -> VarDictionary {
+        intervention_reply_to_dict(apply_intervention_command(&mut self.engine, &kind.to_string(), settlement_id, amount))
+    }
+
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
@@ -325,7 +459,18 @@ impl WorldSimNode {
     #[func]
     fn get_agent_snapshot(&self) -> VarDictionary {
         let rows = collect_agent_snapshot(&self.engine.world);
-        agent_rows_to_dict(&rows)
+        let mut dict = agent_rows_to_dict(&rows);
+        // Pass 4 — additive whole-day ages in the same row order (-1 without Life).
+        let ages = collect_agent_ages_days(
+            &self.engine.world,
+            self.engine.current_tick(),
+            self.engine.resources.ticks_per_day,
+        );
+        dict.set("ages_days", PackedInt32Array::from(ages.as_slice()));
+        // Pass 6 — additive cold flags in the same row order (1 with the Cold marker).
+        let colds = collect_agent_colds(&self.engine.world);
+        dict.set("colds", PackedByteArray::from(colds.as_slice()));
+        dict
     }
 
     /// V7 Phase 14-γ FFI — single-agent detail dictionary for the click
@@ -348,6 +493,92 @@ impl WorldSimNode {
     fn get_agent_detail(&self, entity_bits: i64) -> VarDictionary {
         let row = collect_agent_detail(&self.engine.world, entity_bits as u64);
         agent_detail_to_dict(row)
+    }
+
+    /// Revitalize Pass 16 FFI — one agent's temperament as
+    /// `{found: bool, ns, ha, rd, p}` (permille ints, 0–1,000; `found: false`
+    /// and zeros when the agent or the component is missing). A separate
+    /// getter: `get_agent_detail` keeps exactly its nine keys. Displaying
+    /// temperament is the art line's job.
+    #[func]
+    fn get_agent_temperament(&self, entity_bits: i64) -> VarDictionary {
+        agent_temperament_to_dict(collect_agent_temperament(&self.engine.world, entity_bits as u64))
+    }
+
+    /// Pass 17 family as exactly `{found, female, mother, father, partner, children}`.
+    /// Input uses snapshot `ids` (entity bits); links use `agent_ids` (AgentId).
+    /// Missing links are -1; children are a sorted PackedInt64Array of living
+    /// offspring at any life stage. Missing family components return found=false,
+    /// female=false, -1 links and empty children; recorded absent parents remain ids.
+    #[func]
+    fn get_agent_family(&self, entity_bits: i64) -> VarDictionary {
+        agent_family_to_dict(collect_agent_family(
+            &self.engine.world,
+            u64::from_ne_bytes(entity_bits.to_ne_bytes()),
+        ))
+    }
+
+    /// Pass 19 chronicle: the AgentId (as i64) of the agent with snapshot
+    /// entity bits `entity_bits`, or -1.
+    #[func]
+    fn get_agent_id(&self, entity_bits: i64) -> i64 {
+        collect_agent_id(&self.engine.world, entity_bits)
+            .map_or(-1, |id| i64::from_ne_bytes(id.to_ne_bytes()))
+    }
+
+    /// Pass 19 chronicle: the person table's record of `agent_id` (works for
+    /// the dead) as `{found, alive, female (-1/0/1), born_tick, died_tick,
+    /// death_reason, mother, father, ns, ha, rd, p}`; unknown values are -1.
+    #[func]
+    fn get_person(&self, agent_id: i64) -> VarDictionary {
+        person_to_dict(collect_person(&self.engine.world, &self.engine.resources.chronicle, agent_id))
+    }
+
+    /// Pass 19 chronicle: every entry naming `agent_id`, in chronicle order, as
+    /// `{found, tick, kind, subject, other, third, settlement, settlement2,
+    /// cause, value}` packed columns (ids -1 when absent).
+    #[func]
+    fn get_person_chronicle(&self, agent_id: i64) -> VarDictionary {
+        rows_to_dict(collect_person_chronicle(&self.engine.resources.chronicle, agent_id), false)
+    }
+
+    /// Pass 19 chronicle: every entry naming `settlement_id` (same shape as
+    /// `get_person_chronicle`).
+    #[func]
+    fn get_settlement_chronicle(&self, settlement_id: i64) -> VarDictionary {
+        rows_to_dict(collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id), false)
+    }
+
+    /// Pass 19 chronicle feed: entries from index `start`, at most `max`
+    /// (clamped to 1..=512), same shape plus `next` and `total`.
+    #[func]
+    fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
+        rows_to_dict(collect_chronicle_since(&self.engine.resources.chronicle, start, max), true)
+    }
+
+    /// Pass 20 village relations: every pair of living villages (lower id
+    /// first, key order) as `{a, b, value, estranged, base}` packed columns.
+    /// Empty without the relations rule.
+    #[func]
+    fn get_settlement_relations(&self) -> VarDictionary {
+        relation_rows_to_dict(&collect_settlement_relations(&self.engine.resources.settlement_relations))
+    }
+
+    /// Pass 20 porters: every porter on a trip by AgentId as `{ids (entity
+    /// bits), from, to, kind (0 food / 1 wood), amount, stage (0 out / 1 back)}`.
+    #[func]
+    fn get_porter_snapshot(&self) -> VarDictionary {
+        porter_rows_to_dict(&collect_porter_snapshot(&self.engine.world))
+    }
+
+    /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
+    /// `ids` are entity bits matching the agent snapshot. `kinds` use 0..6
+    /// (TendFire, Craft, Repair, HearthCircle, Explore, Play, SitByFire).
+    /// `place_x`, `place_y` identify the chosen place; `until_tick` is -1
+    /// until arrival. Existing agent snapshot and detail schemas stay unchanged.
+    #[func]
+    fn get_activity_snapshot(&self) -> VarDictionary {
+        activity_rows_to_dict(&collect_activity_snapshot(&self.engine.world))
     }
 
     /// V7 Phase 12-β.2 (A3) FFI — construction-site snapshot for the
@@ -413,7 +644,9 @@ impl WorldSimNode {
             &self.engine.world,
             &self.engine.resources.settlements,
         );
-        settlement_rows_to_dict(&rows)
+        // Pass 6 — additive floor of each settlement's wood target.
+        let wood_targets = collect_settlement_wood_targets(&rows, &self.engine.resources);
+        settlement_rows_to_dict(&rows, &self.engine.resources.fires, &wood_targets)
     }
 
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
@@ -1235,9 +1468,10 @@ fn event_views_to_variant_array(views: &[CausalEventView]) -> VarArray {
 ///
 /// Tag table (locked, §2-A-1):
 ///   - `0` = `AgentState::Idle`
-///   - `1` = `AgentState::Seeking { .. }` (any `TargetKind`)
+///   - `1` = `AgentState::Seeking { .. }` (non-Activity target)
 ///   - `2` = `AgentState::Consuming { target: TargetKind::Agent(_) }`
-///   - `3` = `AgentState::Consuming { .. }` (any non-`Agent` `TargetKind`)
+///   - `3` = `AgentState::Consuming { .. }` (non-Agent, non-Activity target)
+///   - `4` = Seeking or Consuming with `TargetKind::Activity` (Pass 17)
 // `Eq` intentionally NOT derived: viz-B added `f32` need fields (hunger/
 // thirst/sleep) which are not `Eq`. `PartialEq` (used by the harness
 // `assert_eq!` on `Vec<AgentSnapshotRow>`) is sufficient; no `HashSet`/
@@ -1293,6 +1527,43 @@ pub struct AgentSnapshotRow {
     /// the gather → CARRY → deposit → stockpile chain visible. Read-only of
     /// `Inventory`; does not affect determinism.
     pub carried_food: i32,
+    /// Revitalize Pass 5 — carried `ResourceKind::Wood` count, 0 without an
+    /// `Inventory`. Read-only; drives a future stick-carry glyph.
+    pub carried_wood: i32,
+    /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
+    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood, 8 Activity.
+    pub target_kind: u8,
+    /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
+    /// (Pass 4, live Elder component).
+    pub life_stage: u8,
+}
+
+/// Pass 4 — whole-day age of every snapshot row, in [`collect_agent_snapshot`]
+/// order (the same `Agent` + `Position` archetype iteration); `-1` for a
+/// resident without `Life` (legacy, v8 and v9 worlds never age).
+pub fn collect_agent_ages_days(world: &hecs::World, tick: u64, ticks_per_day: u64) -> Vec<i32> {
+    world
+        .query::<(&Agent, &Position, Option<&Life>)>()
+        .iter()
+        .map(|(_, (_, _, life))| {
+            life.map_or(-1, |life| {
+                (life.age_ticks(tick).max(0) as u64)
+                    .checked_div(ticks_per_day)
+                    .map_or(0, |days| days.min(i32::MAX as u64) as i32)
+            })
+        })
+        .collect()
+}
+
+/// Pass 6 — `1` for every snapshot row whose agent carries the `Cold` marker,
+/// else `0`, in [`collect_agent_snapshot`] order (the same `Agent` +
+/// `Position` archetype iteration). All zero without the firewood rule.
+pub fn collect_agent_colds(world: &hecs::World) -> Vec<u8> {
+    world
+        .query::<(&Agent, &Position, Option<&Cold>)>()
+        .iter()
+        .map(|(_, (_, _, cold))| u8::from(cold.is_some()))
+        .collect()
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1313,7 +1584,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
     for (
         entity,
-        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv),
+        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child, maybe_elder),
     ) in world
         .query::<(
             &Agent,
@@ -1324,11 +1595,15 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Option<&Thirst>,
             Option<&Sleep>,
             Option<&Inventory>,
+            Option<&Child>,
+            Option<&Elder>,
         )>()
         .iter()
     {
         let state_tag: u8 = match maybe_state {
             None | Some(AgentState::Idle) => 0,
+            Some(AgentState::Seeking { target: TargetKind::Activity }
+                | AgentState::Consuming { target: TargetKind::Activity }) => 4,
             Some(AgentState::Seeking { .. }) => 1,
             Some(AgentState::Consuming { target: TargetKind::Agent(_) }) => 2,
             Some(AgentState::Consuming { .. }) => 3,
@@ -1359,6 +1634,27 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
         let carried_food = maybe_inv
             .map(|inv| inv.get(ResourceKind::Food) as i32)
             .unwrap_or(0);
+        let carried_wood = maybe_inv
+            .map(|inv| inv.get(ResourceKind::Wood) as i32)
+            .unwrap_or(0);
+        let target_kind: u8 = match maybe_state.and_then(AgentState::target) {
+            None => 0,
+            Some(TargetKind::Food) => 1,
+            Some(TargetKind::Water) => 2,
+            Some(TargetKind::Sleep) => 3,
+            Some(TargetKind::ConstructionSite) => 4,
+            Some(TargetKind::Agent(_)) => 5,
+            Some(TargetKind::GatherFood) => 6,
+            Some(TargetKind::GatherWood) => 7,
+            Some(TargetKind::Activity) => 8,
+        };
+        let life_stage = if maybe_child.is_some() {
+            1
+        } else if maybe_elder.is_some() {
+            2
+        } else {
+            0
+        };
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -1376,6 +1672,9 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             thirst,
             sleep,
             carried_food,
+            carried_wood,
+            target_kind,
+            life_stage,
         });
     }
     rows
@@ -1481,6 +1780,20 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     for (i, row) in rows.iter().enumerate() {
         carried_foods[i] = row.carried_food;
     }
+    // Revitalize Pass 5 — additive parallel array of carried wood.
+    let mut carried_woods = PackedInt32Array::new();
+    carried_woods.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        carried_woods[i] = row.carried_wood;
+    }
+    let mut target_kinds = PackedByteArray::new();
+    let mut life_stages = PackedByteArray::new();
+    target_kinds.resize(rows.len());
+    life_stages.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        target_kinds[i] = row.target_kind;
+        life_stages[i] = row.life_stage;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
@@ -1494,6 +1807,9 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     dict.set("thirsts", thirsts);
     dict.set("sleeps", sleeps);
     dict.set("carried_foods", carried_foods);
+    dict.set("carried_woods", carried_woods);
+    dict.set("target_kinds", target_kinds);
+    dict.set("life_stages", life_stages);
     dict
 }
 
@@ -1509,16 +1825,16 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
 /// - `agent_id` — `Agent.id` (AgentId domain, matches snapshot.agent_ids[i])
 /// - `x`, `y` — tile coordinates as `i32` (matches the snapshot's
 ///   `xs`/`ys` type contract — Bridge Identity Contract type lock)
-/// - `state_tag` — same locked Phase 4-γ A5 mapping as
+/// - `state_tag` — same mapping as
 ///   [`AgentSnapshotRow`] (0=Idle, 1=Seeking, 2=Consuming(Agent),
-///   3=Consuming(other))
+///   3=Consuming(other), 4=Seeking/Consuming(Activity))
 /// - `hunger` — `Hunger.value` (`f32`; `[0, SATURATION=100]`)
 /// - `thirst` — `Thirst.value` (`f64`; `[0, SATURATION=100]`)
 /// - `sleep` — `Sleep.fatigue` (`f64`; `[0, SATURATION=100]`)
 /// - `target_kind` — `i32` encoding of `Option<TargetKind>`:
 ///   0=None (Idle), 1=Food, 2=Water, 3=Sleep, 4=ConstructionSite,
-///   5=Agent (inner `AgentId` NOT surfaced in the Conservative scope;
-///   relationship surfacing deferred to Section 16+)
+///   5=Agent (inner `AgentId` not surfaced), 6=GatherFood, 7=GatherWood,
+///   8=Activity.
 ///
 /// The `found` field distinguishes "row populated" (entity is a live
 /// agent carrying the full component bundle) from "entity not found / not
@@ -1623,6 +1939,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
     };
     let state_tag: u8 = match state {
         AgentState::Idle => 0,
+        AgentState::Seeking { target: TargetKind::Activity }
+            | AgentState::Consuming { target: TargetKind::Activity } => 4,
         AgentState::Seeking { .. } => 1,
         AgentState::Consuming {
             target: TargetKind::Agent(_),
@@ -1638,6 +1956,9 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(TargetKind::Agent(_)) => 5,
         // Direction-2 slice 2-2 — carry-pickup target (viz lands in slice 2-5).
         Some(TargetKind::GatherFood) => 6,
+        // Revitalize Pass 5 — firewood pickup target.
+        Some(TargetKind::GatherWood) => 7,
+        Some(TargetKind::Activity) => 8,
     };
     AgentDetailRow {
         found: true,
@@ -1805,13 +2126,15 @@ pub struct ResourceSnapshotRow {
     pub x: u32,
     /// Tile-y coordinate of the source tile.
     pub y: u32,
-    /// Resource kind: `0 = Food`, `1 = Water`, `2 = Sleep`.
+    /// Resource kind: `0 = Food`, `1 = Water`, `2 = Sleep`, `3 = Deadwood`
+    /// (Pass 5; registered spots persist at amount 0 between pickup and regrowth).
     pub kind: u8,
     /// Current stored amount on the tile (the `*_tiles` counter), CLAMPED to
     /// [`max`](Self::max). Drives the renderer's depletion/regen visual (marker
     /// scale + alpha = amount/max). A finite source decreases as agents consume
-    /// and recovers via regen; a tile at `0` is removed from the map entirely
-    /// and so drops out of the snapshot (the marker disappears). Clamped to
+    /// and recovers via regen. Legacy scenes omit removed tiles; game rules
+    /// retain registered food sources at zero so depleted bushes remain visible.
+    /// Clamped to
     /// `max` so the displayed ratio never exceeds `1.0` (regen overshoot or a
     /// zero-cap source cannot make the marker read as more than full).
     pub amount: u8,
@@ -1850,6 +2173,21 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
         let amount = amount.min(max);
         rows.push(ResourceSnapshotRow { x, y, kind: 0, amount, max });
     }
+    if resources.rules.society.shelter_planning.is_some() {
+        // The bush persists between harvest and regrowth even when its live
+        // food counter is absent. The ceiling registry owns its existence.
+        for (&(x, y), &capacity) in &resources.food_source_max {
+            if !resources.food_tiles.contains_key(&(x, y)) {
+                rows.push(ResourceSnapshotRow {
+                    x,
+                    y,
+                    kind: 0,
+                    amount: 0,
+                    max: capacity.max(1),
+                });
+            }
+        }
+    }
     for (&(x, y), &amount) in resources.water_tiles.iter() {
         let max = resources.water_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
         let amount = amount.min(max);
@@ -1860,8 +2198,42 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
         let amount = amount.min(max);
         rows.push(ResourceSnapshotRow { x, y, kind: 2, amount, max });
     }
+    // Revitalize Pass 5 — every registered deadwood spot, at amount 0 while
+    // emptied, so the pile stays visible between pickup and regrowth.
+    for (&(x, y), &capacity) in &resources.wood_source_max {
+        let max = capacity.max(1);
+        let amount = resources.wood_tiles.get(&(x, y)).copied().unwrap_or(0).min(max);
+        rows.push(ResourceSnapshotRow { x, y, kind: 3, amount, max });
+    }
     rows.sort_by_key(|r| (r.kind, r.x, r.y));
     rows
+}
+
+#[cfg(test)]
+mod depleted_food_snapshot_tests {
+    use super::*;
+
+    #[test]
+    fn game_snapshot_keeps_depleted_bush_and_sorts_without_duplicates() {
+        let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v8();
+        engine.resources.set_food_source_max(8, 4, 6);
+        engine.resources.set_food_source_max(2, 3, 6);
+        engine.resources.set_food_tile(8, 4, 3);
+        let rows = collect_resource_snapshot(&engine.resources);
+        assert_eq!(rows, vec![
+            ResourceSnapshotRow { x: 2, y: 3, kind: 0, amount: 0, max: 6 },
+            ResourceSnapshotRow { x: 8, y: 4, kind: 0, amount: 3, max: 6 },
+        ]);
+        assert!(!engine.resources.food_tiles.contains_key(&(2, 3)));
+    }
+
+    #[test]
+    fn legacy_snapshot_omits_source_without_live_food() {
+        let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
+        engine.resources.set_food_source_max(2, 3, 6);
+        assert!(collect_resource_snapshot(&engine.resources).is_empty());
+    }
 }
 
 /// Pure-Rust marshalling split — the SINGLE source of the `(xs, ys, kinds)`
@@ -2063,6 +2435,8 @@ pub struct SettlementSnapshotRow {
     /// stocked. Additive Direction-2 slice 2-5a field — surfaces the reserve
     /// the gather→deposit→consume chain (2-2/2-3a/2-4) fills and drains.
     pub food_stock: i32,
+    /// Revitalize Pass 5 — settlement `stockpile` Wood count, 0 when none.
+    pub wood_stock: i32,
 }
 
 /// Pure-Rust collector mirroring [`collect_construction_snapshot`] but
@@ -2121,6 +2495,11 @@ pub fn collect_settlement_snapshot(
                 .get(&ResourceKind::Food)
                 .copied()
                 .unwrap_or(0) as i32,
+            wood_stock: settlement
+                .stockpile
+                .get(&ResourceKind::Wood)
+                .copied()
+                .unwrap_or(0) as i32,
         });
     }
     // HashMap iteration order is not stable run-to-run; sort by the unique
@@ -2143,7 +2522,11 @@ pub fn collect_settlement_snapshot(
 /// - `formation_xs`: `PackedInt32Array` — fixed formation-anchor tile-x.
 /// - `formation_ys`: `PackedInt32Array` — fixed formation-anchor tile-y.
 /// - `food_stocks`: `PackedInt32Array` — `stockpile` Food count (slice 2-5a).
-fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
+fn settlement_rows_to_dict(
+    rows: &[SettlementSnapshotRow],
+    fires: &std::collections::BTreeMap<SettlementId, sim_engine::FireState>,
+    wood_targets: &[i32],
+) -> VarDictionary {
     let n = rows.len();
     let mut ids = PackedInt64Array::new();
     let mut settlement_ids = PackedInt32Array::new();
@@ -2161,6 +2544,15 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     formation_xs.resize(n);
     formation_ys.resize(n);
     food_stocks.resize(n);
+    // Revitalize Pass 5 — wood stock and fire state (1 lit, 0 out or no fire).
+    let mut wood_stocks = PackedInt32Array::new();
+    let mut fire_lit = PackedByteArray::new();
+    wood_stocks.resize(n);
+    fire_lit.resize(n);
+    for (i, row) in rows.iter().enumerate() {
+        wood_stocks[i] = row.wood_stock;
+        fire_lit[i] = u8::from(fires.get(&row.settlement_id).is_some_and(|fire| fire.lit));
+    }
     for (i, row) in rows.iter().enumerate() {
         ids[i] = row.entity_bits as i64;
         settlement_ids[i] = row.settlement_id as i32;
@@ -2180,7 +2572,18 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     dict.set("formation_xs", formation_xs);
     dict.set("formation_ys", formation_ys);
     dict.set("food_stocks", food_stocks);
+    dict.set("wood_stocks", wood_stocks);
+    dict.set("fire_lit", fire_lit);
+    dict.set("wood_targets", PackedInt32Array::from(wood_targets));
     dict
+}
+
+/// Pass 6 — floor of the wood target of every settlement row, in row order;
+/// `0` for every row without the firewood rule.
+pub fn collect_settlement_wood_targets(rows: &[SettlementSnapshotRow], resources: &SimResources) -> Vec<i32> {
+    let target = sim_systems::runtime::settlement::firewood::wood_target(resources)
+        .map_or(0, |target| target.max(0.0).floor().min(f64::from(i32::MAX)) as i32);
+    vec![target; rows.len()]
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -2361,26 +2764,758 @@ pub fn seed_finite_resource_scarcity(engine: &mut SimEngine) {
     }
 }
 
-/// Build the production [`SimEngine`] exactly as the live `WorldSimNode::init`
-/// path does — the SINGLE construction entry point the dylib uses to build the
-/// initial `SimResources` for the real game.
+/// Build the legacy V7 lattice fixture used by harnesses.
 ///
-/// Order:
-/// 1. [`register_default_runtime_systems`] — every default simulation system
-///    (BSS, IUS, AIS, AgentMovement, AgentDecision, Hunger/Thirst/Sleep decay,
-///    Construction, Social, Memory, Combat, Settlement, Starvation,
-///    ResourceRegen, InfluenceVisualization).
-/// 2. [`bootstrap_spawn_agents`] — the 64-agent lattice + INFINITE source seeds.
-/// 3. [`seed_finite_resource_scarcity`] — overwrite sources to finite + register
-///    regen ceilings (`add-resource-scarcity-regen`).
-///
-/// `pub` so the scarcity harness can exercise the shipped construction path
-/// headlessly (A10 production-wiring invariant — proves the dylib seeds finite
-/// sources, not merely that the seed function exists).
+/// The live game uses `worldgen::build_world_with` with v10 rules. This frozen legacy constructor
+/// keeps the original registration, bootstrap and finite-scarcity order so
+/// historical behavioral tests and trajectory fingerprints remain comparable.
 pub fn init_production_engine() -> SimEngine {
     let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
     register_default_runtime_systems(&mut engine);
     bootstrap_spawn_agents(&mut engine);
     seed_finite_resource_scarcity(&mut engine);
     engine
+}
+
+/// Maximum synchronous tooling advance, preventing accidental unbounded work.
+const MAX_TOOLING_ADVANCE_TICKS: i64 = 200_000;
+
+/// Advance the same engine used by the runtime without invoking Godot.
+pub fn advance_engine_ticks(engine: &mut SimEngine, n: i64) -> u64 {
+    for _ in 0..n.clamp(0, MAX_TOOLING_ADVANCE_TICKS) {
+        engine.tick();
+    }
+    engine.current_tick()
+}
+
+/// Native simulation clock snapshot, testable without a Godot runtime.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct TimeSnapshot {
+    /// Number of completed simulation ticks.
+    pub tick: u64,
+    /// Simulation ticks in a day; zero disables the simulation clock.
+    pub ticks_per_day: u64,
+    /// Zero-based day, or zero when the simulation clock is disabled.
+    pub day_index: u64,
+    /// Authoritative simulation hour in the range 0..24.
+    pub time_of_day: f64,
+    /// Pass 4 season of `day_index`: 0 spring, 1 summer, 2 autumn, 3 winter (0 without seasons).
+    pub season: u32,
+    /// One-based day within the season (0 without seasons).
+    pub day_of_season: u32,
+    /// Days per season (0 without seasons).
+    pub days_per_season: u32,
+    /// Pass 7 severity of the winter at the completed tick: 0 mild, 1 normal,
+    /// 2 harsh, -1 outside a winter or without the rule or weights; from 00:00
+    /// to the burn end it reads the evening's winter (night booking).
+    pub winter_severity: i64,
+}
+
+/// Read the completed tick count and clock resources without mutation.
+pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
+    let ticks_per_day = engine.resources.ticks_per_day;
+    let day_index = engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
+        .checked_div(ticks_per_day).unwrap_or(0);
+    let days_per_season = engine.resources.rules.seasons.map_or(0, |rule| rule.days_per_season);
+    let (season, day_of_season) = match u64::from(days_per_season) {
+        0 => (0, 0),
+        per => (((day_index / per) % 4) as u32, (day_index % per) as u32 + 1),
+    };
+    TimeSnapshot {
+        tick: engine.current_tick(),
+        ticks_per_day,
+        day_index,
+        time_of_day: engine.resources.time_of_day,
+        season,
+        day_of_season,
+        days_per_season,
+        winter_severity: sim_systems::runtime::settlement::firewood::winter_severity_at(
+            &engine.resources,
+            engine.current_tick(),
+        ),
+    }
+}
+
+/// Pass 7: build an intervention from the FFI arguments. `None` for an
+/// unknown kind, a negative amount, or a settlement kind with no settlement
+/// (`settlement_id < 0` and no `home`, or an id beyond `u32`). `amount` above
+/// `u32::MAX` saturates. `cold_snap` and `windfall` ignore the settlement.
+pub fn parse_intervention(
+    kind: &str,
+    settlement_id: i64,
+    amount: i64,
+    home: Option<sim_core::components::SettlementId>,
+) -> Option<sim_engine::Intervention> {
+    use sim_systems::runtime::intervention::{intervention_from_kind, kind_needs_settlement};
+    if amount < 0 {
+        return None;
+    }
+    let amount = u32::try_from(amount).unwrap_or(u32::MAX);
+    let settlement = if !kind_needs_settlement(kind) {
+        0
+    } else if settlement_id < 0 {
+        home?
+    } else {
+        sim_core::components::SettlementId::try_from(settlement_id).ok()?
+    };
+    intervention_from_kind(kind, settlement, amount)
+}
+
+/// Pass 7: result of the `apply_intervention` command.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InterventionReply {
+    /// False for an unknown kind, a negative amount or no settlement.
+    pub ok: bool,
+    /// What the intervention changed (0 when nothing changed or not `ok`).
+    pub applied: u64,
+    /// Completed ticks when it was applied.
+    pub tick: u64,
+}
+
+/// Pass 7: parse and apply one intervention now (the `#[func]` body). `ok` is
+/// false when parsing fails or a settlement kind names a settlement that does
+/// not exist.
+pub fn apply_intervention_command(engine: &mut SimEngine, kind: &str, settlement_id: i64, amount: i64) -> InterventionReply {
+    use sim_systems::runtime::intervention::{home_settlement, kind_needs_settlement};
+    let home = home_settlement(&engine.resources);
+    // Review round 1 (L3): an explicit settlement id that does not exist is "no settlement".
+    let parsed = parse_intervention(kind, settlement_id, amount, home).filter(|_| {
+        !kind_needs_settlement(kind)
+            || settlement_id < 0
+            || u32::try_from(settlement_id).is_ok_and(|id| engine.resources.settlements.contains_key(&id))
+    });
+    match parsed {
+        Some(intervention) => {
+            let record = sim_systems::runtime::intervention::apply_intervention(engine, intervention);
+            InterventionReply { ok: true, applied: record.applied, tick: record.tick }
+        }
+        None => InterventionReply { ok: false, applied: 0, tick: engine.current_tick() },
+    }
+}
+
+fn intervention_reply_to_dict(reply: InterventionReply) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("ok", reply.ok);
+    dict.set("applied", reply.applied as i64);
+    dict.set("tick", reply.tick as i64);
+    dict
+}
+
+/// Read the cumulative counters without depending on event retention.
+pub fn collect_tallies(resources: &SimResources) -> sim_engine::Tallies {
+    resources.tallies
+}
+
+fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("tick", snapshot.tick as i64);
+    dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
+    dict.set("day_index", snapshot.day_index as i64);
+    dict.set("time_of_day", snapshot.time_of_day);
+    dict.set("season", snapshot.season as i64);
+    dict.set("day_of_season", snapshot.day_of_season as i64);
+    dict.set("days_per_season", snapshot.days_per_season as i64);
+    dict.set("winter_severity", snapshot.winter_severity);
+    dict
+}
+
+fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("births", tallies.births as i64);
+    dict.set("deaths_starvation", tallies.deaths_starvation as i64);
+    dict.set("deaths_dehydration", tallies.deaths_dehydration as i64);
+    dict.set("deaths_combat", tallies.deaths_combat as i64);
+    dict.set("deaths_old_age", tallies.deaths_old_age as i64);
+    // Revitalize Pass 10: cold-night deaths under the exposure rule.
+    dict.set("deaths_exposure", tallies.deaths_exposure as i64);
+    // Revitalize Pass 11 tallies (display-only).
+    dict.set("fissions", tallies.fissions as i64);
+    dict.set("fissions_cancelled", tallies.fissions_cancelled as i64);
+    dict.set("remnant_merges", tallies.remnant_merges as i64);
+    // Revitalize Pass 12: wood a raining settlement burned wet (display-only).
+    dict.set("wet_burn_wood", tallies.wet_burn_wood as i64);
+    // Revitalize Pass 13: settled-area floor wood placed (display-only).
+    dict.set("area_floor_placed", tallies.area_floor_placed as i64);
+    // Revitalize Pass 5 tallies (display-only).
+    dict.set("meals_from_store", tallies.meals_from_store as i64);
+    dict.set("ground_meals", tallies.ground_meals as i64);
+    dict.set("wood_trips", tallies.wood_trips as i64);
+    dict.set("wood_gathered", tallies.wood_gathered as i64);
+    dict.set("gather_preempted", tallies.gather_preempted as i64);
+    dict.set("cold_member_hours", tallies.cold_member_hours as i64);
+    dict
+}
+
+#[cfg(test)]
+mod revitalize_tooling_tests {
+    use super::{advance_engine_ticks, collect_tallies, collect_time_snapshot};
+    use sim_core::material::MaterialRegistry;
+    use sim_engine::{SimEngine, Tallies};
+
+    #[test]
+    fn live_game_is_game_v26() {
+        // Pass 21 6.1: init and reset_world build game_v26; the stress world stays v19.
+        let engine = super::build_game_engine(20_261_010);
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v26(20_261_010));
+        assert!(super::build_stress_engine(1, 30).resources.rules.society.relations.is_none());
+        assert_eq!(engine.resources.world_seed, 20_261_010);
+        assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
+    }
+
+    #[test]
+    fn collect_agent_temperament_reads_the_component() {
+        // Live v22 retains founder temperament; stale bits and v19 agents give None.
+        let engine = super::build_game_engine(7);
+        let mut seen = 0;
+        for (entity, t) in engine.world.query::<&sim_core::components::Temperament>().iter() {
+            assert_eq!(super::collect_agent_temperament(&engine.world, entity.to_bits().get()), Some(*t));
+            seen += 1;
+        }
+        assert_eq!(seen, engine.world.query::<&sim_core::components::Agent>().iter().count());
+        assert_eq!(super::collect_agent_temperament(&engine.world, 0), None);
+        assert_eq!(super::collect_agent_temperament(&engine.world, u64::MAX), None);
+        let v19 = super::build_stress_engine(7, 3);
+        for (entity, _) in v19.world.query::<&sim_core::components::Agent>().iter() {
+            assert_eq!(super::collect_agent_temperament(&v19.world, entity.to_bits().get()), None);
+        }
+    }
+
+    #[test]
+    fn live_founders_have_family_while_stress_founders_do_not() {
+        // Given the live v22 and stress v19 builders used by init and resets.
+        let live = super::build_game_engine(7);
+        let stress = super::build_stress_engine(7, 3);
+        let mut seen = 0;
+        // When reading every live founder's family through entity bits.
+        for (entity, _) in live.world.query::<&sim_core::components::Agent>().iter() {
+            let row = super::collect_agent_family(&live.world, entity.to_bits().get())
+                .expect("live founder family");
+            let sex = live
+                .world
+                .get::<&sim_core::components::Sex>(entity)
+                .expect("founder sex");
+            // Then sex is preserved and unknown founder links remain empty.
+            assert_eq!(
+                row,
+                crate::ffi::AgentFamilyRow {
+                    female: sex.female,
+                    ..Default::default()
+                }
+            );
+            seen += 1;
+        }
+        assert!(seen > 0);
+        for (entity, _) in stress.world.query::<&sim_core::components::Agent>().iter() {
+            assert_eq!(
+                super::collect_agent_family(&stress.world, entity.to_bits().get()),
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn stress_engine_has_the_requested_founders() {
+        // Pass 15 6.4.
+        let engine = super::build_stress_engine(15100, 500);
+        assert_eq!(engine.world.query::<&sim_core::components::Agent>().iter().count(), 500);
+        assert_eq!((engine.resources.world_seed, engine.current_tick()), (15100, 0));
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v19(15100));
+    }
+
+    #[test]
+    fn time_snapshot_uses_completed_ticks_and_resource_clock() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.ticks_per_day = 12;
+        advance_engine_ticks(&mut engine, 17);
+        let snapshot = collect_time_snapshot(&engine);
+        assert_eq!(snapshot.tick, 17);
+        assert_eq!(snapshot.ticks_per_day, 12);
+        assert_eq!(snapshot.day_index, 1);
+        assert_eq!(snapshot.time_of_day, 10.0);
+    }
+
+    #[test]
+    fn harness_economy_clock_snapshot_rolls_day_at_offset_midnight() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v8();
+        engine.resources.time_of_day = 8.0;
+        assert_eq!(super::collect_world_info(&engine.resources).clock_offset_ticks, 480);
+        let initial = collect_time_snapshot(&engine);
+        assert_eq!((initial.tick, initial.day_index, initial.time_of_day), (0, 0, 8.0));
+        advance_engine_ticks(&mut engine, 959);
+        let before = collect_time_snapshot(&engine);
+        assert_eq!((before.tick, before.day_index), (959, 0));
+        assert!((before.time_of_day - (23.0 + 59.0 / 60.0)).abs() < 1e-12);
+        advance_engine_ticks(&mut engine, 1);
+        let midnight = collect_time_snapshot(&engine);
+        assert_eq!((midnight.tick, midnight.day_index, midnight.time_of_day), (960, 1, 0.0));
+    }
+
+    #[test]
+    fn time_snapshot_reports_seasons_from_the_display_day() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v10();
+        let first = collect_time_snapshot(&engine);
+        assert_eq!((first.season, first.day_of_season, first.days_per_season), (0, 1, 7));
+        // Display day 9 (zero-based) at 00:00 is the third day of summer.
+        advance_engine_ticks(&mut engine, (9 * 1440 - 480) as i64);
+        let summer = collect_time_snapshot(&engine);
+        assert_eq!((summer.day_index, summer.season, summer.day_of_season), (9, 1, 3));
+        engine.resources.rules = sim_core::rules::WorldRules::game_v9();
+        assert_eq!(collect_time_snapshot(&engine).days_per_season, 0);
+    }
+
+    #[test]
+    fn time_snapshot_reports_winter_severity_with_night_booking() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v12();
+        // v12 has no severity weights: -1 everywhere, winter included.
+        advance_engine_ticks(&mut engine, (21 * 1440) as i64);
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+        if let Some(rule) = engine.resources.rules.society.firewood.as_mut() {
+            rule.winter_severity_permille = Some([1000, 0, 0]);
+        }
+        // Display day 21 at 08:00: the first winter day, a mild winter.
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, 0);
+        // Display day 28 at 02:00 belongs to the last winter evening.
+        advance_engine_ticks(&mut engine, (7 * 1440 - 360) as i64);
+        let night = collect_time_snapshot(&engine);
+        assert_eq!((night.day_index, night.season, night.winter_severity), (28, 0, 0));
+        // 07:00 ends the night: spring.
+        advance_engine_ticks(&mut engine, 300);
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+    }
+
+    #[test]
+    fn parse_intervention_resolves_home_and_rejects_bad_input() {
+        use sim_engine::Intervention;
+        assert_eq!(super::parse_intervention("gift_food", -1, 30, Some(4)), Some(Intervention::GiftFood { settlement: 4, amount: 30 }));
+        assert_eq!(super::parse_intervention("rain", 7, 13, Some(4)), Some(Intervention::Rain { settlement: 7, hours: 13 }));
+        assert_eq!(super::parse_intervention("cold_snap", -1, 2, None), Some(Intervention::ColdSnap { nights: 2 }));
+        assert_eq!(super::parse_intervention("windfall", -5, 10, None), Some(Intervention::Windfall { units: 10 }));
+        assert_eq!(super::parse_intervention("flood", -1, 1, Some(4)), None);
+        assert_eq!(super::parse_intervention("gift_wood", -1, -1, Some(4)), None);
+        assert_eq!(super::parse_intervention("rot_wood", -1, 1, None), None);
+        assert_eq!(super::parse_intervention("spoil_food", i64::MAX, 1, Some(4)), None);
+    }
+
+    #[test]
+    fn apply_intervention_command_reports_ok_applied_and_tick() {
+        use super::apply_intervention_command;
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        advance_engine_ticks(&mut engine, 3);
+        let none = apply_intervention_command(&mut engine, "gift_food", -1, 5);
+        assert_eq!((none.ok, none.applied, none.tick), (false, 0, 3));
+        engine.resources.settlements.insert(2, sim_core::components::Settlement::new_with_id(2, 0));
+        let gift = apply_intervention_command(&mut engine, "gift_food", -1, 5);
+        assert_eq!((gift.ok, gift.applied, gift.tick), (true, 5, 3));
+        let missing = apply_intervention_command(&mut engine, "rain", 9, 5);
+        assert_eq!((missing.ok, missing.applied), (false, 0));
+        let snap = apply_intervention_command(&mut engine, "cold_snap", -1, 1);
+        assert_eq!((snap.ok, snap.applied), (true, 1));
+        assert_eq!(engine.resources.tallies.interventions_applied, 2);
+        assert_eq!(engine.resources.intervention_log.len(), 2);
+    }
+
+    #[test]
+    fn time_snapshot_handles_disabled_clock() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.ticks_per_day = 0;
+        advance_engine_ticks(&mut engine, 3);
+        let snapshot = collect_time_snapshot(&engine);
+        assert_eq!(snapshot.tick, 3);
+        assert_eq!(snapshot.day_index, 0);
+        assert_eq!(snapshot.time_of_day, 0.0);
+    }
+
+    #[test]
+    fn tallies_collector_preserves_all_four_counters() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.tallies = Tallies {
+            births: 11,
+            deaths_starvation: 12,
+            deaths_dehydration: 13,
+            deaths_combat: 14,
+            social_completed: 0,
+            food_harvested: 0,
+            meals_eaten: 0,
+            meals_without_food: 0,
+            deaths_old_age: 0,
+            forage_trips: 0,
+            haul_deposits: 0,
+            regen_lost_at_cap: 0,
+            meals_from_store: 0,
+            ground_meals: 0,
+            wood_trips: 0,
+            wood_gathered: 0,
+            gather_preempted: 0,
+            cold_member_hours: 0,
+            urgent_wood_trips: 0,
+            winter_wood_lost: 0,
+            wood_retargets: 0,
+            interventions_applied: 0,
+            deaths_exposure: 0,
+            fissions: 0,
+            fissions_cancelled: 0,
+            fission_blocked_no_site: 0,
+            remnant_merges: 0,
+            exclusivity_moves: 0,
+            wet_burn_wood: 0,
+            area_floor_wood: 0,
+            winter_wood_lost_settled: 0,
+            area_floor_placed: 0,
+            area_floor_lost_at_max: 0,
+            porter_trips: 0,
+            porters_departed: 0,
+            porter_deliveries: 0,
+            porter_turnbacks: 0,
+            porter_loads_lost: 0,
+            porter_units_withdrawn: 0,
+            porter_food_delivered: 0,
+            porter_wood_delivered: 0,
+            porter_units_returned: 0,
+            porter_units_lost: 0,
+            forage_disputes: 0,
+            quarrels: 0,
+            villages_estranged: 0,
+            villages_reconciled: 0,
+            disputes_uncosted: 0,
+            quarrels_capped: 0,
+            quarrels_while_estranged: 0,
+        };
+        let snapshot = collect_tallies(&engine.resources);
+        assert_eq!(snapshot.births, 11);
+        assert_eq!(snapshot.deaths_starvation, 12);
+        assert_eq!(snapshot.deaths_dehydration, 13);
+        assert_eq!(snapshot.deaths_combat, 14);
+        assert_eq!(snapshot.social_completed, 0);
+        assert_eq!(engine.current_tick(), 0);
+    }
+
+    #[test]
+    fn tooling_advance_clamps_negative_and_excessive_requests() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        assert_eq!(advance_engine_ticks(&mut engine, -8), 0);
+        assert_eq!(advance_engine_ticks(&mut engine, 200_001), 200_000);
+    }
+}
+
+/// Seed and pacing metadata consumed by renderers and deterministic tooling.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WorldInfoSnapshot {
+    /// Seed used by world generation.
+    pub seed: u64,
+    /// Map width in tiles.
+    pub width: u32,
+    /// Map height in tiles.
+    pub height: u32,
+    /// Simulation ticks per day.
+    pub ticks_per_day: u64,
+    /// Ticks between agent movement opportunities.
+    pub move_interval_ticks: u64,
+    /// Display clock offset from elapsed ticks.
+    pub clock_offset_ticks: u64,
+}
+
+/// Read immutable world metadata directly from the authoritative resources.
+pub fn collect_world_info(resources: &SimResources) -> WorldInfoSnapshot {
+    WorldInfoSnapshot {
+        seed: resources.world_seed,
+        width: resources.tile_grid.width,
+        height: resources.tile_grid.height,
+        ticks_per_day: resources.ticks_per_day,
+        move_interval_ticks: resources.rules.agent.move_interval_ticks,
+        clock_offset_ticks: resources.rules.clock_offset_ticks,
+    }
+}
+
+fn world_info_to_dict(snapshot: WorldInfoSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("seed", snapshot.seed as i64);
+    dict.set("width", snapshot.width as i64);
+    dict.set("height", snapshot.height as i64);
+    dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
+    dict.set("move_interval_ticks", snapshot.move_interval_ticks as i64);
+    dict.set("clock_offset_ticks", snapshot.clock_offset_ticks as i64);
+    dict
+}
+
+/// Row-major terrain arrays independent of Godot packed-array allocation.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TerrainSnapshot {
+    /// Map width in tiles.
+    pub width: u32,
+    /// Map height in tiles.
+    pub height: u32,
+    /// Declaration-order terrain codes (Plain 0 through Cave 9).
+    pub terrain: Vec<u8>,
+    /// Elevation bytes, aligned with terrain.
+    pub elevation: Vec<u8>,
+}
+
+/// Copy simulation grid data in its canonical row-major order.
+pub fn collect_terrain_snapshot(resources: &SimResources) -> TerrainSnapshot {
+    TerrainSnapshot {
+        width: resources.tile_grid.width,
+        height: resources.tile_grid.height,
+        terrain: resources.tile_grid.terrain_type.iter().map(|terrain| *terrain as u8).collect(),
+        elevation: resources.tile_grid.elevation.clone(),
+    }
+}
+
+fn terrain_snapshot_to_dict(snapshot: &TerrainSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("width", snapshot.width as i64);
+    dict.set("height", snapshot.height as i64);
+    dict.set("terrain", PackedByteArray::from(snapshot.terrain.as_slice()));
+    dict.set("elevation", PackedByteArray::from(snapshot.elevation.as_slice()));
+    dict
+}
+
+/// One real registered building and its simulation-owned kind.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BuildingSnapshotRow {
+    /// Stable BuildingId from the building registry.
+    pub id: u64,
+    /// Building tile x coordinate.
+    pub x: u32,
+    /// Building tile y coordinate.
+    pub y: u32,
+    /// BuildingKind::code, defaulting to Hearth (0) for legacy buildings.
+    pub kind: u8,
+}
+
+/// Join registered buildings with their tile-keyed kinds and sort by id.
+pub fn collect_building_snapshot(resources: &SimResources) -> Vec<BuildingSnapshotRow> {
+    let mut rows: Vec<BuildingSnapshotRow> = resources.building_registry.iter()
+        .map(|(&id, &(x, y))| BuildingSnapshotRow {
+            id,
+            x,
+            y,
+            kind: resources.building_kinds.get(&(x, y))
+                .map_or(0, |kind| kind.code()),
+        })
+        .collect();
+    rows.sort_by_key(|row| row.id);
+    rows
+}
+
+fn building_rows_to_dict(rows: &[BuildingSnapshotRow]) -> VarDictionary {
+    let mut ids = PackedInt64Array::new();
+    let mut xs = PackedInt32Array::new();
+    let mut ys = PackedInt32Array::new();
+    let mut kinds = PackedByteArray::new();
+    ids.resize(rows.len());
+    xs.resize(rows.len());
+    ys.resize(rows.len());
+    kinds.resize(rows.len());
+    for (index, row) in rows.iter().enumerate() {
+        ids[index] = row.id as i64;
+        xs[index] = row.x as i32;
+        ys[index] = row.y as i32;
+        kinds[index] = row.kind;
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("ids", ids);
+    dict.set("xs", xs);
+    dict.set("ys", ys);
+    dict.set("kinds", kinds);
+    dict
+}
+
+#[cfg(test)]
+mod revitalize_world_snapshot_tests {
+    use super::{collect_building_snapshot, collect_terrain_snapshot, collect_world_info, BuildingSnapshotRow};
+    use sim_core::components::BuildingKind;
+    use sim_core::material::{MaterialRegistry, TerrainType};
+    use sim_engine::SimResources;
+
+    #[test]
+    fn world_info_reads_world_seed_dimensions_and_rules() {
+        let mut resources = SimResources::new(3, 7, MaterialRegistry::new());
+        resources.world_seed = 41;
+        resources.ticks_per_day = 120;
+        resources.rules.agent.move_interval_ticks = 6;
+        let snapshot = collect_world_info(&resources);
+        assert_eq!(snapshot.seed, 41);
+        assert_eq!((snapshot.width, snapshot.height), (3, 7));
+        assert_eq!(snapshot.ticks_per_day, 120);
+        assert_eq!(snapshot.move_interval_ticks, 6);
+    }
+
+    #[test]
+    fn terrain_snapshot_preserves_all_codes_and_row_major_elevation() {
+        let mut resources = SimResources::new(5, 2, MaterialRegistry::new());
+        resources.tile_grid.terrain_type = vec![
+            TerrainType::Plain, TerrainType::Forest, TerrainType::Mountain,
+            TerrainType::Hill, TerrainType::River, TerrainType::Coast,
+            TerrainType::Desert, TerrainType::Tundra, TerrainType::Swamp, TerrainType::Cave,
+        ];
+        resources.tile_grid.elevation = vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+        let snapshot = collect_terrain_snapshot(&resources);
+        assert_eq!((snapshot.width, snapshot.height), (5, 2));
+        assert_eq!(snapshot.terrain, (0..10).collect::<Vec<u8>>());
+        assert_eq!(snapshot.elevation, vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+    }
+
+    #[test]
+    fn building_snapshot_sorts_ids_and_defaults_legacy_to_hearth() {
+        let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
+        resources.building_registry.insert(7, (1, 2));
+        resources.building_registry.insert(2, (3, 4));
+        resources.building_registry.insert(5, (5, 6));
+        resources.building_kinds.insert((3, 4), BuildingKind::Shelter);
+        resources.building_kinds.insert((5, 6), BuildingKind::Stockpile);
+        // An unregistered kind must not invent a real building.
+        resources.building_kinds.insert((0, 0), BuildingKind::Hearth);
+        assert_eq!(collect_building_snapshot(&resources), vec![
+            BuildingSnapshotRow { id: 2, x: 3, y: 4, kind: 1 },
+            BuildingSnapshotRow { id: 5, x: 5, y: 6, kind: 2 },
+            BuildingSnapshotRow { id: 7, x: 1, y: 2, kind: 0 },
+        ]);
+    }
+}
+
+
+#[cfg(test)]
+mod pass3_agent_snapshot_tests {
+    use super::*;
+
+    #[test]
+    fn empty_world_has_empty_parallel_snapshot_rows() {
+        let world = hecs::World::new();
+        let rows = collect_agent_snapshot(&world);
+        let (ids, xs, ys, states) = agent_rows_split(&rows);
+        assert!(rows.is_empty());
+        assert_eq!([ids.len(), xs.len(), ys.len(), states.len()], [0; 4]);
+        let target_kinds: Vec<u8> = rows.iter().map(|row| row.target_kind).collect();
+        let life_stages: Vec<u8> = rows.iter().map(|row| row.life_stage).collect();
+        assert!(target_kinds.is_empty());
+        assert!(life_stages.is_empty());
+    }
+
+    #[test]
+    fn missing_state_and_child_default_to_none_and_adult() {
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 7 }, Position::new(2, 3)));
+        let rows = collect_agent_snapshot(&world);
+        assert_eq!(rows.len(), 1);
+        assert_eq!((rows[0].target_kind, rows[0].life_stage), (0, 0));
+    }
+
+    #[test]
+    fn mixed_snapshot_targets_match_detail_and_live_child_markers() {
+        let mut world = hecs::World::new();
+        let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
+            Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
+            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood),
+            Some(TargetKind::Activity)];
+        let mut expected = Vec::new();
+        for (code, target) in targets.into_iter().enumerate() {
+            for consuming in [false, true] {
+                let state = match target {
+                    None => AgentState::Idle,
+                    Some(target) if consuming => AgentState::Consuming { target },
+                    Some(target) => AgentState::Seeking { target },
+                };
+                let entity = world.spawn((Agent { id: expected.len() as u64 },
+                    Position::new(2, 3), state, Hunger::new(10.0, 0.05),
+                    Thirst::new(20.0, 0.08), Sleep::new(30.0, 0.03)));
+                if consuming {
+                    world.insert_one(entity, Child { born_tick: 5 }).expect("child fixture");
+                }
+                let state_code = match (code, consuming) {
+                    (0, _) => 0,
+                    (8, _) => 4,
+                    (5, true) => 2,
+                    (_, false) => 1,
+                    (_, true) => 3,
+                };
+                expected.push((entity, code as u8, u8::from(consuming), state_code));
+            }
+        }
+        let rows = collect_agent_snapshot(&world);
+        let (ids, xs, ys, states) = agent_rows_split(&rows);
+        let target_kinds: Vec<u8> = rows.iter().map(|row| row.target_kind).collect();
+        let life_stages: Vec<u8> = rows.iter().map(|row| row.life_stage).collect();
+        assert_eq!(rows.len(), expected.len());
+        assert_eq!([ids.len(), xs.len(), ys.len(), states.len(), target_kinds.len(),
+            life_stages.len()], [expected.len(); 6]);
+        for (entity, target, stage, state_code) in expected {
+            let index = rows.iter().position(|row| row.entity_bits == entity.to_bits().get())
+                .expect("fixture row present across archetypes");
+            let detail = collect_agent_detail(&world, entity.to_bits().get());
+            assert!(detail.found);
+            assert_eq!((target_kinds[index], life_stages[index]), (target, stage));
+            assert_eq!(i32::from(target_kinds[index]), detail.target_kind);
+            assert_eq!(states[index], state_code);
+            assert_eq!(detail.state_tag, state_code);
+        }
+    }
+
+    #[test]
+    fn elders_report_stage_two_and_ages_follow_snapshot_order() {
+        use sim_core::components::{Elder, Life};
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 1 }, Position::new(2, 3)));
+        world.spawn((Agent { id: 2 }, Position::new(2, 3), Life { born_tick: -2_880, lifespan_ticks: 90_000 }, Elder));
+        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 100 }, Life { born_tick: 100, lifespan_ticks: 90_000 }));
+        let rows = collect_agent_snapshot(&world);
+        let ages = collect_agent_ages_days(&world, 1_540, 1_440);
+        assert_eq!(rows.len(), ages.len());
+        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&ages)
+            .map(|(row, age)| (row.agent_id, (row.life_stage, *age))).collect();
+        assert_eq!(by_id[&1], (0, -1));
+        assert_eq!(by_id[&2], (2, 3));
+        assert_eq!(by_id[&3], (1, 1));
+    }
+
+    #[test]
+    fn colds_follow_snapshot_order() {
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 1 }, Position::new(2, 3)));
+        world.spawn((Agent { id: 2 }, Position::new(2, 3), Cold));
+        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 0 }, Cold));
+        world.spawn((Agent { id: 4 }, Position::new(2, 3), Child { born_tick: 0 }));
+        let rows = collect_agent_snapshot(&world);
+        let colds = collect_agent_colds(&world);
+        assert_eq!(rows.len(), colds.len());
+        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&colds).map(|(row, cold)| (row.agent_id, *cold)).collect();
+        assert_eq!(by_id.into_iter().collect::<Vec<_>>(), vec![(1, 0), (2, 1), (3, 1), (4, 0)]);
+    }
+
+    #[test]
+    fn wood_targets_floor_the_target_per_settlement_row() {
+        let mut resources = SimResources::new(16, 16, MaterialRegistry::new());
+        let mut world = hecs::World::new();
+        for (sid, x) in [(1u32, 2u32), (2, 9)] {
+            let entity = world.spawn((Agent { id: u64::from(sid) }, Position::new(x, 3)));
+            let _ = entity;
+            let mut settlement = Settlement::new_with_id(sid, 0);
+            settlement.formation_tile = (x, 3);
+            settlement.add_member_agent(u64::from(sid));
+            resources.settlements.insert(sid, settlement);
+        }
+        let rows = collect_settlement_snapshot(&world, &resources.settlements);
+        assert_eq!(rows.len(), 2);
+        // No firewood rule: zero for every row.
+        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![0, 0]);
+        // v11 without seasons: 1.5 x 26 = 39; summer of a seasonal world 1.5 x 13 + 7 x 39 = 292.5 -> 292.
+        resources.rules = WorldRules::game_v11();
+        resources.rules.seasons = None;
+        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![39, 39]);
+        resources.rules = WorldRules::game_v11();
+        resources.current_tick = 7 * 1_440;
+        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![292, 292]);
+        assert!(collect_settlement_wood_targets(&[], &resources).is_empty());
+    }
+
+    #[test]
+    fn maturation_removes_child_flag_from_next_snapshot() {
+        let mut world = hecs::World::new();
+        let entity = world.spawn((Agent { id: 1 }, Position::new(2, 3), Child { born_tick: 0 }));
+        assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 1);
+        world.remove_one::<Child>(entity).expect("child fixture exists");
+        assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 0);
+    }
 }

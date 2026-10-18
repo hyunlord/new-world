@@ -949,8 +949,8 @@ fn harness_p14_gamma_a22_world_renderer_tile_fallback_preserved() {
 
 #[test]
 fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
-    // Type D — only one new `world_sim.<name>(` may appear: get_agent_detail.
-    // All other call names must be subset of the existing Phase 14-β set.
+    // Type D — keep the explicit read-only FFI allowlist. Revitalize replaces
+    // renderer boot commands with building snapshots and one reset subscription.
     let src = read_world_renderer_src();
     let stripped = strip_gd_comments(&src);
     // Collect every `world_sim.<ident>(` call name.
@@ -979,7 +979,8 @@ fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
         }
     }
     let allowed: std::collections::BTreeSet<String> = [
-        "on_building_placed",
+        "get_building_snapshot",
+        "connect", // Godot built-in; restricted to the reset subscription below.
         "get_influence_overlay",
         "get_construction_snapshot",
         "get_settlement_snapshot",
@@ -994,10 +995,17 @@ fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
     .iter()
     .map(|s| s.to_string())
     .collect();
+    if found.contains("connect") {
+        assert_eq!(
+            stripped.matches("world_sim.connect(").count(),
+            stripped.matches("world_sim.connect(\"world_reset\", refresh_snapshot)").count(),
+            "A23: only the world_reset snapshot-refresh subscription is allowed"
+        );
+    }
     let extras: Vec<_> = found.difference(&allowed).cloned().collect();
     assert!(
         extras.is_empty(),
-        "A23: world_renderer.gd introduces FFI calls outside the allowed Phase 14-γ set: \
+        "A23: world_renderer.gd introduces FFI calls outside the allowed renderer snapshot set: \
          {extras:?}; all calls = {found:?}"
     );
     assert!(
@@ -1056,69 +1064,39 @@ fn harness_p14_gamma_a26_phase14_alpha_invariants_preserved() {
 
 #[test]
 fn harness_p14_gamma_a27_phase14_beta_invariants_preserved() {
-    // Type D — Phase 14-β constants in world_renderer.gd.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A27.RESOURCE_COUNT");
-    assert_eq!(count.trim(), "20", "A27: RESOURCE_COUNT must be 20; got `{count}`");
-    let seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A27.RESOURCE_SEED");
-    assert_eq!(
-        seed.trim(),
-        "88675123",
-        "A27: RESOURCE_SEED must be 88675123; got `{seed}`"
-    );
-    let z = unique_decl_rhs(&stripped, "Z_RESOURCE", "A27.Z_RESOURCE");
-    assert_eq!(z.trim(), "3", "A27: Z_RESOURCE must be 3; got `{z}`");
-    let zvf = unique_decl_rhs(&stripped, "Z_VILLAGE_FIXTURE", "A27.Z_VILLAGE_FIXTURE");
-    assert_eq!(zvf.trim(), "5", "A27: Z_VILLAGE_FIXTURE must be 5; got `{zvf}`");
-    // Count RESOURCE_TYPE_PATHS entries (5) and VILLAGE_FIXTURE_PATHS entries (4).
-    let has_5_types = stripped.matches("res://assets/sprites/").count() >= 9; // 5 types + 4 fixtures = 9 paths minimum
-    assert!(
-        has_5_types,
-        "A27: world_renderer.gd should reference ≥9 sprite paths (5 resource types + 4 fixtures)"
-    );
-    println!("[P14-γ A27] Phase 14-β constants preserved ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 #[test]
 fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     // Type D — Phase 12-α to 13-ε constants.
-    let wr_stripped = strip_gd_comments(&read_world_renderer_src());
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("sprite.modulate.a = 0.35"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/stockpile/1.png"));
+    assert!(src.contains("kind == 2"));
+    assert!(src.contains("_stockpile_positions.append"));
     let cam_stripped = strip_gd_comments(&read_camera_controller_src());
-
-    let con = unique_decl_rhs(&wr_stripped, "CONSTRUCTION_SPRITE_PATH", "A28.CONSTRUCTION");
-    assert_eq!(
-        con.trim(),
-        "\"res://assets/sprites/buildings/cairn/1.png\"",
-        "A28: CONSTRUCTION_SPRITE_PATH must be buildings/cairn/1.png; got `{con}`"
-    );
-    let furn = unique_decl_rhs(&wr_stripped, "FURNITURE_SPRITE_PATH", "A28.FURNITURE");
-    assert_eq!(
-        furn.trim(),
-        "\"res://assets/sprites/buildings/gathering_marker/1.png\"",
-        "A28: FURNITURE_SPRITE_PATH must be buildings/gathering_marker/1.png \
-         (re-pointed by fix-settlement-marker-fixed-position); got `{furn}`"
-    );
-    let bld = unique_decl_rhs(&wr_stripped, "BUILDING_SPRITE_PATH", "A28.BUILDING");
-    assert_eq!(
-        bld.trim(),
-        "\"res://assets/sprites/buildings/campfire/1.png\"",
-        "A28: BUILDING_SPRITE_PATH must be buildings/campfire/1.png; got `{bld}`"
-    );
-    let bx = unique_decl_rhs(&wr_stripped, "BOOTSTRAP_X", "A28.BX");
-    let by = unique_decl_rhs(&wr_stripped, "BOOTSTRAP_Y", "A28.BY");
-    let bxl = unique_decl_rhs(&wr_stripped, "BOOTSTRAP_X_LEFT", "A28.BXL");
-    let bxr = unique_decl_rhs(&wr_stripped, "BOOTSTRAP_X_RIGHT", "A28.BXR");
-    assert_eq!(bx.trim(), "32");
-    assert_eq!(by.trim(), "32");
-    assert_eq!(bxl.trim(), "24");
-    assert_eq!(bxr.trim(), "40");
 
     // Camera zoom invariants.
     let zd = unique_decl_rhs(&cam_stripped, "ZOOM_DEFAULT", "A28.ZD");
     assert_eq!(
         no_ws(&zd),
-        "Vector2(5.0,5.0)",
-        "A28: ZOOM_DEFAULT must be Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{zd}`"
+        "Vector2(4.0,4.0)",
+        "A28: ZOOM_DEFAULT must be Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{zd}`"
     );
     let zmin = unique_decl_rhs(&cam_stripped, "ZOOM_MIN", "A28.ZMIN");
     assert_eq!(
@@ -1159,4 +1137,23 @@ fn harness_p14_gamma_a30_gdscript_parse_clean() {
     eprintln!(
         "[P14-γ A30] DELEGATED: GDScript parse + FFI binding match enforced by pipeline Step 2.4"
     );
+}
+
+
+#[test]
+fn harness_revitalize_inspector_gather_food_is_not_social_target() {
+    let source = strip_gd_comments(&read_inspector_panel_src());
+    let (_, labels) = source
+        .split_once("const TARGET_LABELS: Array = [")
+        .expect("inspector target localization table exists");
+    let (labels, _) = labels.split_once(']').expect("target table closes");
+    let keys: Vec<&str> = labels
+        .lines()
+        .map(str::trim)
+        .filter(|line| line.starts_with('"'))
+        .map(|line| line.trim_end_matches(',').trim_matches('"'))
+        .collect();
+    assert_eq!(keys.len(), 7, "all FFI target codes including GatherFood map explicitly");
+    assert_eq!(keys[5], "INSPECTOR_TARGET_AGENT");
+    assert_eq!(keys[6], "INSPECTOR_TARGET_FOOD");
 }

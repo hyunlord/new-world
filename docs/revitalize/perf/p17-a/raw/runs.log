@@ -1,0 +1,35 @@
+2026-10-15T08:20:08Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p17-data/a-perf-observerfix/a/r1 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3682 ms p99.9 1.267 ms max 2.607 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:09Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v21 --out /Users/rexxa/work/p17-data/a-perf-observerfix/a/r1 
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4702 ms p99.9 2.646 ms max 3.114 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:10Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p17-data/a-perf-observerfix/a/r2 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3523 ms p99.9 0.567 ms max 0.834 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:11Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v21 --out /Users/rexxa/work/p17-data/a-perf-observerfix/a/r2 
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4675 ms p99.9 2.530 ms max 3.028 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:12Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v20 --out /Users/rexxa/work/p17-data/a-perf-observerfix/a/r3 
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3532 ms p99.9 0.587 ms max 0.849 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:12Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 500 --side 64 --days 1 --feed fed --rules game_v21 --out /Users/rexxa/work/p17-data/a-perf-observerfix/a/r3 
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4699 ms p99.9 2.582 ms max 3.207 ms alive 500 wall 0.7 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:13Z contended=0 /Users/rexxa/work/p17-data/base-bin/worldsim_perf quick --out /Users/rexxa/work/p17-data/a-perf-observerfix/quick_base 
+quick_stress_v19_s15100_n500_side64_fed: mean 0.3047 ms p99.9 0.597 ms max 0.804 ms alive 500 wall 0.4 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:14Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf quick --out /Users/rexxa/work/p17-data/a-perf-observerfix/quick_final 
+quick_stress_v19_s15100_n500_side64_fed: mean 0.3032 ms p99.9 0.609 ms max 0.816 ms alive 500 wall 0.4 s
+worldsim_perf: 1 run(s) written
+2026-10-15T08:20:15Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 100\,500\,1000 --side 64 --days 2 --feed fed --rules game_v21 --out /Users/rexxa/work/p17-data/a-perf-observerfix/b_game_v21 
+stress_stress_v21_s15100_n100_side64_fed: mean 0.1033 ms p99.9 0.258 ms max 0.323 ms alive 100 wall 0.3 s
+stress_stress_v21_s15100_n500_side64_fed: mean 0.4513 ms p99.9 2.737 ms max 3.079 ms alive 500 wall 1.3 s
+stress_stress_v21_s15100_n1000_side64_fed: mean 0.9876 ms p99.9 5.574 ms max 6.175 ms alive 1000 wall 2.9 s
+worldsim_perf: 3 run(s) written
+2026-10-15T08:20:19Z contended=0 /Users/rexxa/work/p17-data/a-observerfix-bin/worldsim_perf stress --seeds 15100..15101 --agents 100\,500\,1000 --side 64 --days 2 --feed fed --rules game_v20 --out /Users/rexxa/work/p17-data/a-perf-observerfix/b_game_v20 
+stress_stress_v20_s15100_n100_side64_fed: mean 0.0722 ms p99.9 0.172 ms max 0.191 ms alive 100 wall 0.2 s
+stress_stress_v20_s15100_n500_side64_fed: mean 0.3371 ms p99.9 0.656 ms max 0.987 ms alive 500 wall 1.0 s
+stress_stress_v20_s15100_n1000_side64_fed: mean 0.7230 ms p99.9 1.369 ms max 1.750 ms alive 1000 wall 2.1 s
+worldsim_perf: 3 run(s) written
+status 0

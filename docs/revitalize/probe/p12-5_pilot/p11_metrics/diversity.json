@@ -1,0 +1,2462 @@
+{
+ "attribution": {},
+ "j7_dyn_vars": [
+  "alive",
+  "food_stock"
+ ],
+ "j7_vars": [
+  "food_stock",
+  "wood_stock",
+  "alive"
+ ],
+ "reference": {},
+ "root": "/Users/rexxa/work/worldsim-wm-data/p12/pilot",
+ "scenes": {
+  "game_v16": {
+   "deaths_mean_by_day120": {
+    "deaths_combat": 0.0,
+    "deaths_dehydration": 0.0,
+    "deaths_exposure": 2.5267857142857144,
+    "deaths_old_age": 66.91964285714286,
+    "deaths_starvation": 0.0
+   },
+   "divergence": {
+    "capped": false,
+    "max_day": 1,
+    "median_day": 1.0,
+    "median_row": 1.0,
+    "min_day": 1,
+    "never": 0,
+    "pairs": 120,
+    "per_var": {
+     "adults_working": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "alive": {
+      "max_day": 9,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "cold_members": {
+      "max_day": 56,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 26,
+      "never": 0,
+      "pairs": 120
+     },
+     "deadwood_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "fire_lit": {
+      "max_day": 57,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 26,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_on_bushes_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "wood_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 2.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     }
+    }
+   },
+   "dyn_eta2": {
+    "adults_working": 0.4737283144124986,
+    "alive": 0.9983146227998868,
+    "cold_members": 0.5934715937106102,
+    "deadwood_total": 0.10694657658515896,
+    "fire_lit": 0.04937239668057371,
+    "food_on_bushes_total": 0.40946800641560366,
+    "food_stock": 0.19489727886937228,
+    "wood_stock": 0.06870611076668316
+   },
+   "episodes": 16,
+   "eta2": {
+    "adults_working": 0.4743654876569822,
+    "alive": 0.9002902866213105,
+    "cold_members": 0.5928536698513134,
+    "deadwood_total": 0.2066050557268593,
+    "fire_lit": 0.04577903778390824,
+    "food_on_bushes_total": 0.34181011621158386,
+    "food_stock": 0.3315120064865133,
+    "wood_stock": 0.0685905843220304
+   },
+   "j7": {
+    "clauses": {
+     "alive": {
+      "eta2": 0.9002902866213105,
+      "passed": true,
+      "r2_abs": -0.10168081170172649
+     },
+     "dyn_alive": {
+      "dyn_eta2": 0.9983146227998868,
+      "passed": true
+     },
+     "dyn_food_stock": {
+      "dyn_eta2": 0.19489727886937228,
+      "passed": false
+     },
+     "food_stock": {
+      "eta2": 0.3315120064865133,
+      "passed": true,
+      "r2_abs": 0.6512670060001466
+     },
+     "wood_stock": {
+      "eta2": 0.0685905843220304,
+      "passed": false,
+      "r2_abs": 0.9290064010593022
+     }
+    },
+    "passed": false
+   },
+   "r2_abs": {
+    "adults_working": 0.4913320268967857,
+    "alive": -0.10168081170172649,
+    "cold_members": 0.37582951915183727,
+    "deadwood_total": 0.7806098816085656,
+    "fire_lit": 0.9520571650261289,
+    "food_on_bushes_total": 0.6305099471232147,
+    "food_stock": 0.6512670060001466,
+    "wood_stock": 0.9290064010593022
+   },
+   "r2_year": {
+    "adults_working": 0.48938387885370505,
+    "alive": -0.1817289440680283,
+    "cold_members": 0.3798413157399225,
+    "deadwood_total": 0.780569770945547,
+    "fire_lit": 0.9523410920545193,
+    "food_on_bushes_total": 0.6275896595401922,
+    "food_stock": 0.622284408016744,
+    "wood_stock": 0.9294535138329345
+   },
+   "rows": 2881,
+   "schema": [
+    5
+   ],
+   "seeds": [
+    24096,
+    24097,
+    24098,
+    24099,
+    24100,
+    24101,
+    24102,
+    24103,
+    24104,
+    24105,
+    24106,
+    24107,
+    24108,
+    24109,
+    24110,
+    24111
+   ],
+   "settlements_alive": {
+    "days": [
+     30,
+     60,
+     90,
+     118
+    ],
+    "distribution": [
+     {
+      "1.0": 16
+     },
+     {
+      "1.0": 16
+     },
+     {
+      "1.0": 16
+     },
+     {
+      "1.0": 16
+     }
+    ],
+    "mean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "per_test_seed": {
+     "24096": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24097": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24098": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24099": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24100": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24101": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24102": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24103": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24104": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24105": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24106": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24107": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24108": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24109": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24110": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24111": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "variance": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "severity": {
+    "distinct_sequences": 16,
+    "episodes_in_groups_of_2plus": 0,
+    "eta2_within_groups": {
+     "adults_working": null,
+     "alive": null,
+     "cold_members": null,
+     "deadwood_total": null,
+     "fire_lit": null,
+     "food_on_bushes_total": null,
+     "food_stock": null,
+     "wood_stock": null
+    },
+    "group_sizes": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "spread": {
+    "118": {
+     "adults_working": 0.0,
+     "alive": 0.9672453294174753,
+     "cold_members": 0.0,
+     "deadwood_total": 0.5095309905231559,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.3897912947348653,
+     "food_stock": 0.4774628920568264,
+     "wood_stock": 0.14835620568369112
+    },
+    "30": {
+     "adults_working": 0.0,
+     "alive": 1.0221494530332715,
+     "cold_members": 0.0,
+     "deadwood_total": 0.43473357204336427,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.5599624843287146,
+     "food_stock": 0.5371992805379452,
+     "wood_stock": 0.1299130675813837
+    },
+    "60": {
+     "adults_working": 0.0,
+     "alive": 0.9837992956940053,
+     "cold_members": 0.0,
+     "deadwood_total": 0.4924423944064846,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.5566188957901562,
+     "food_stock": 0.4617157400176845,
+     "wood_stock": 0.1560790082248671
+    },
+    "90": {
+     "adults_working": 0.0,
+     "alive": 0.9943402232435102,
+     "cold_members": 0.0,
+     "deadwood_total": 0.5061939810649954,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.623975780432007,
+     "food_stock": 0.4908116441110172,
+     "wood_stock": 0.14430589573871924
+    }
+   },
+   "t2": {
+    "168": {
+     "an5": {
+      "adults_working": 0.423604369877051,
+      "alive": 0.23275812887560562,
+      "cold_members": 0.0,
+      "deadwood_total": 0.29097279510286794,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.4400083962762607,
+      "food_stock": 0.28491611880443407,
+      "wood_stock": 0.18785162570933983
+     },
+     "an5_off": {
+      "adults_working": 0.5231722512262803,
+      "alive": 0.08631719156540148,
+      "cold_members": 0.0,
+      "deadwood_total": 0.26441913402182343,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.5110829124103685,
+      "food_stock": 0.21079609980765115,
+      "wood_stock": 0.2206520541114016
+     },
+     "apfit_abs": {
+      "adults_working": 0.43418474197901463,
+      "alive": 0.11839262056654526,
+      "cold_members": 0.0,
+      "deadwood_total": 0.343106281088733,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.497082207225851,
+      "food_stock": 0.2812049190894697,
+      "wood_stock": 0.1857470603439841
+     },
+     "apfit_year": {
+      "adults_working": 0.43428642605932316,
+      "alive": 0.26000622618357444,
+      "cold_members": 0.0,
+      "deadwood_total": 0.34293946980372775,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.5000187408610826,
+      "food_stock": 0.3024261051108195,
+      "wood_stock": 0.18603045102189167
+     },
+     "cal_abs": {
+      "adults_working": 0.44177711395018254,
+      "alive": 0.8288678354051556,
+      "cold_members": 0.0,
+      "deadwood_total": 0.4140594775786225,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.5032601035840782,
+      "food_stock": 0.45794116854418637,
+      "wood_stock": 0.1873096811944251
+     },
+     "persistence": {
+      "adults_working": 0.5891375943642625,
+      "alive": 0.1540502338952863,
+      "cold_members": 0.0,
+      "deadwood_total": 1.0570197036451077,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.7759276370908069,
+      "food_stock": 0.9539126728846055,
+      "wood_stock": 1.1856792431797945
+     }
+    },
+    "24": {
+     "an5": {
+      "adults_working": 0.44125233780932965,
+      "alive": 0.2122141536033994,
+      "cold_members": 0.0031617935104237592,
+      "deadwood_total": 0.22683149106680944,
+      "fire_lit": 0.0031894396652499377,
+      "food_on_bushes_total": 0.39720121178227213,
+      "food_stock": 0.21590021511210583,
+      "wood_stock": 0.1732612229467113
+     },
+     "an5_off": {
+      "adults_working": 0.5024554770309398,
+      "alive": 0.039313111768737745,
+      "cold_members": 0.0031617935104237592,
+      "deadwood_total": 0.15565794326244198,
+      "fire_lit": 0.0031894396652499377,
+      "food_on_bushes_total": 0.4114181242300274,
+      "food_stock": 0.07238597987970108,
+      "wood_stock": 0.19033692479332917
+     },
+     "apfit_abs": {
+      "adults_working": 0.4502173188432335,
+      "alive": 0.03802060820533253,
+      "cold_members": 0.005294357362506451,
+      "deadwood_total": 0.19019084238858952,
+      "fire_lit": 0.004427647612215956,
+      "food_on_bushes_total": 0.39761413035137844,
+      "food_stock": 0.07826827998883419,
+      "wood_stock": 0.2044802328212341
+     },
+     "apfit_year": {
+      "adults_working": 0.45298496012605216,
+      "alive": 0.05439407412966845,
+      "cold_members": 0.005265538932072902,
+      "deadwood_total": 0.19178781747763196,
+      "fire_lit": 0.0044084803065353425,
+      "food_on_bushes_total": 0.3976284182064078,
+      "food_stock": 0.08049114731508204,
+      "wood_stock": 0.20535325133243032
+     },
+     "cal_abs": {
+      "adults_working": 0.4660367336309353,
+      "alive": 0.8129781283167768,
+      "cold_members": 0.005294357362506451,
+      "deadwood_total": 0.37730345881972066,
+      "fire_lit": 0.004427647612215956,
+      "food_on_bushes_total": 0.47021176576693485,
+      "food_stock": 0.44503672899107083,
+      "wood_stock": 0.20165366981423918
+     },
+     "persistence": {
+      "adults_working": 0.5043051839652171,
+      "alive": 0.042757741951902614,
+      "cold_members": 0.0027665693216207894,
+      "deadwood_total": 0.2325343577483263,
+      "fire_lit": 0.002760092018004753,
+      "food_on_bushes_total": 0.5341178978722702,
+      "food_stock": 0.1569805126096299,
+      "wood_stock": 0.28723816457004886
+     }
+    }
+   },
+   "train_seeds": [
+    24000,
+    24001,
+    24002,
+    24003,
+    24004,
+    24005,
+    24006,
+    24007,
+    24008,
+    24009,
+    24010,
+    24011,
+    24012,
+    24013,
+    24014,
+    24015,
+    24016,
+    24017,
+    24018,
+    24019,
+    24020,
+    24021,
+    24022,
+    24023,
+    24024,
+    24025,
+    24026,
+    24027,
+    24028,
+    24029,
+    24030,
+    24031,
+    24032,
+    24033,
+    24034,
+    24035,
+    24036,
+    24037,
+    24038,
+    24039,
+    24040,
+    24041,
+    24042,
+    24043,
+    24044,
+    24045,
+    24046,
+    24047,
+    24048,
+    24049,
+    24050,
+    24051,
+    24052,
+    24053,
+    24054,
+    24055,
+    24056,
+    24057,
+    24058,
+    24059,
+    24060,
+    24061,
+    24062,
+    24063,
+    24064,
+    24065,
+    24066,
+    24067,
+    24068,
+    24069,
+    24070,
+    24071,
+    24072,
+    24073,
+    24074,
+    24075,
+    24076,
+    24077,
+    24078,
+    24079,
+    24080,
+    24081,
+    24082,
+    24083,
+    24084,
+    24085,
+    24086,
+    24087,
+    24088,
+    24089,
+    24090,
+    24091,
+    24092,
+    24093,
+    24094,
+    24095
+   ]
+  },
+  "game_v17": {
+   "deaths_mean_by_day120": {
+    "deaths_combat": 0.0,
+    "deaths_dehydration": 0.1875,
+    "deaths_exposure": 8.339285714285714,
+    "deaths_old_age": 77.24107142857143,
+    "deaths_starvation": 0.1875
+   },
+   "divergence": {
+    "capped": false,
+    "max_day": 1,
+    "median_day": 1.0,
+    "median_row": 1.0,
+    "min_day": 1,
+    "never": 0,
+    "pairs": 120,
+    "per_var": {
+     "adults_working": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "alive": {
+      "max_day": 9,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "cold_members": {
+      "max_day": 56,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 26,
+      "never": 0,
+      "pairs": 120
+     },
+     "deadwood_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "fire_lit": {
+      "max_day": 57,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 26,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_on_bushes_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "wood_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 2.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     }
+    }
+   },
+   "dyn_eta2": {
+    "adults_working": 0.43864063337752635,
+    "alive": 0.7853682106626738,
+    "cold_members": 0.5363833347748461,
+    "deadwood_total": 0.1469863621172592,
+    "fire_lit": 0.04865678735972137,
+    "food_on_bushes_total": 0.4241116001316517,
+    "food_stock": 0.5017365014829097,
+    "wood_stock": 0.1981925120551119
+   },
+   "episodes": 16,
+   "eta2": {
+    "adults_working": 0.43780841252271974,
+    "alive": 0.7351405160072887,
+    "cold_members": 0.5357695686673319,
+    "deadwood_total": 0.3296180593971827,
+    "fire_lit": 0.04511590114267891,
+    "food_on_bushes_total": 0.6400045943283281,
+    "food_stock": 0.47157143261121803,
+    "wood_stock": 0.19017824916933748
+   },
+   "j7": {
+    "clauses": {
+     "alive": {
+      "eta2": 0.7351405160072887,
+      "passed": true,
+      "r2_abs": 0.18399180038605234
+     },
+     "dyn_alive": {
+      "dyn_eta2": 0.7853682106626738,
+      "passed": true
+     },
+     "dyn_food_stock": {
+      "dyn_eta2": 0.5017365014829097,
+      "passed": true
+     },
+     "food_stock": {
+      "eta2": 0.47157143261121803,
+      "passed": true,
+      "r2_abs": 0.47450401126052
+     },
+     "wood_stock": {
+      "eta2": 0.19017824916933748,
+      "passed": false,
+      "r2_abs": 0.785889428968652
+     }
+    },
+    "passed": false
+   },
+   "r2_abs": {
+    "adults_working": 0.528040207866117,
+    "alive": 0.18399180038605234,
+    "cold_members": 0.4284763341627561,
+    "deadwood_total": 0.6685538574070554,
+    "fire_lit": 0.9528863142029108,
+    "food_on_bushes_total": 0.3374432008503435,
+    "food_stock": 0.47450401126052,
+    "wood_stock": 0.785889428968652
+   },
+   "r2_year": {
+    "adults_working": 0.5163857775243582,
+    "alive": -0.06671081911487264,
+    "cold_members": 0.41855440515321807,
+    "deadwood_total": 0.6639641488035672,
+    "fire_lit": 0.9531627256542979,
+    "food_on_bushes_total": 0.31033513433672344,
+    "food_stock": 0.3639464305239912,
+    "wood_stock": 0.698478535682102
+   },
+   "rows": 2881,
+   "schema": [
+    5
+   ],
+   "seeds": [
+    24096,
+    24097,
+    24098,
+    24099,
+    24100,
+    24101,
+    24102,
+    24103,
+    24104,
+    24105,
+    24106,
+    24107,
+    24108,
+    24109,
+    24110,
+    24111
+   ],
+   "settlements_alive": {
+    "days": [
+     30,
+     60,
+     90,
+     118
+    ],
+    "distribution": [
+     {
+      "1.0": 8,
+      "2.0": 8
+     },
+     {
+      "1.0": 4,
+      "2.0": 12
+     },
+     {
+      "1.0": 4,
+      "2.0": 4,
+      "3.0": 8
+     },
+     {
+      "1.0": 4,
+      "2.0": 4,
+      "3.0": 8
+     }
+    ],
+    "mean": [
+     1.5,
+     1.75,
+     2.25,
+     2.25
+    ],
+    "per_test_seed": {
+     "24096": [
+      2,
+      2,
+      3,
+      3
+     ],
+     "24097": [
+      2,
+      2,
+      2,
+      2
+     ],
+     "24098": [
+      1,
+      2,
+      2,
+      2
+     ],
+     "24099": [
+      2,
+      2,
+      3,
+      3
+     ],
+     "24100": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24101": [
+      2,
+      2,
+      3,
+      3
+     ],
+     "24102": [
+      1,
+      2,
+      3,
+      3
+     ],
+     "24103": [
+      2,
+      2,
+      2,
+      2
+     ],
+     "24104": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24105": [
+      2,
+      2,
+      3,
+      3
+     ],
+     "24106": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24107": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24108": [
+      2,
+      2,
+      3,
+      3
+     ],
+     "24109": [
+      2,
+      2,
+      3,
+      3
+     ],
+     "24110": [
+      1,
+      2,
+      3,
+      3
+     ],
+     "24111": [
+      1,
+      2,
+      2,
+      2
+     ]
+    },
+    "variance": [
+     0.25,
+     0.1875,
+     0.6875,
+     0.6875
+    ]
+   },
+   "severity": {
+    "distinct_sequences": 16,
+    "episodes_in_groups_of_2plus": 0,
+    "eta2_within_groups": {
+     "adults_working": null,
+     "alive": null,
+     "cold_members": null,
+     "deadwood_total": null,
+     "fire_lit": null,
+     "food_on_bushes_total": null,
+     "food_stock": null,
+     "wood_stock": null
+    },
+    "group_sizes": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "spread": {
+    "118": {
+     "adults_working": 0.0,
+     "alive": 1.1425631648441628,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6693430555226167,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.6897558012320559,
+     "food_stock": 0.6227474481659573,
+     "wood_stock": 0.15748768029470242
+    },
+    "30": {
+     "adults_working": 0.0,
+     "alive": 0.42210721855163585,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6883449006109152,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.7164092699447483,
+     "food_stock": 0.3080314041554069,
+     "wood_stock": 0.07609899655008043
+    },
+    "60": {
+     "adults_working": 0.0,
+     "alive": 0.8979242860072163,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6727446107236212,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.6644706503627015,
+     "food_stock": 0.45087869164016253,
+     "wood_stock": 0.12607013195765518
+    },
+    "90": {
+     "adults_working": 0.0,
+     "alive": 1.0185712323169147,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6723275671400617,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.6318032426850843,
+     "food_stock": 0.37974697102904864,
+     "wood_stock": 0.11056916468112346
+    }
+   },
+   "t2": {
+    "168": {
+     "an5": {
+      "adults_working": 0.41924630229183474,
+      "alive": 0.24636334810255037,
+      "cold_members": 0.004798829877785082,
+      "deadwood_total": 0.26498318957581996,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.4280877493533239,
+      "food_stock": 0.258492815938693,
+      "wood_stock": 0.19315975552754144
+     },
+     "an5_off": {
+      "adults_working": 0.5067823890080903,
+      "alive": 0.12075335636258576,
+      "cold_members": 0.0065487062271592485,
+      "deadwood_total": 0.2345171192856099,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.4136133711873944,
+      "food_stock": 0.20759382102719762,
+      "wood_stock": 0.21861040210033272
+     },
+     "apfit_abs": {
+      "adults_working": 0.4124423683935952,
+      "alive": 0.13673058328028057,
+      "cold_members": 0.004539802128700089,
+      "deadwood_total": 0.33121062241060983,
+      "fire_lit": 0.000544036842651877,
+      "food_on_bushes_total": 0.43266824583680663,
+      "food_stock": 0.29774679365646595,
+      "wood_stock": 0.2580571084505734
+     },
+     "apfit_year": {
+      "adults_working": 0.4205603025633975,
+      "alive": 0.20601319327732473,
+      "cold_members": 0.004545987489180187,
+      "deadwood_total": 0.33899451154330934,
+      "fire_lit": 0.000435196271198433,
+      "food_on_bushes_total": 0.4383383325309477,
+      "food_stock": 0.31727023495773665,
+      "wood_stock": 0.3084781907854336
+     },
+     "cal_abs": {
+      "adults_working": 0.42274040118251766,
+      "alive": 0.7580431305014331,
+      "cold_members": 0.004539802128700089,
+      "deadwood_total": 0.456784403665762,
+      "fire_lit": 0.0005430402646523498,
+      "food_on_bushes_total": 0.7183018548936738,
+      "food_stock": 0.5921574871762307,
+      "wood_stock": 0.31144536237949433
+     },
+     "persistence": {
+      "adults_working": 0.5924047629421779,
+      "alive": 0.14862141933947978,
+      "cold_members": 0.0005332033197538982,
+      "deadwood_total": 0.9763461069199134,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.5769148044291864,
+      "food_stock": 0.7788847295606804,
+      "wood_stock": 0.9488711867261648
+     }
+    },
+    "24": {
+     "an5": {
+      "adults_working": 0.4272176805446705,
+      "alive": 0.19418926244318205,
+      "cold_members": 0.008722864148615641,
+      "deadwood_total": 0.2066747363492007,
+      "fire_lit": 0.00190127979718283,
+      "food_on_bushes_total": 0.36655420042003817,
+      "food_stock": 0.19351470467625081,
+      "wood_stock": 0.1607550995953752
+     },
+     "an5_off": {
+      "adults_working": 0.4666467496635996,
+      "alive": 0.02827861536219837,
+      "cold_members": 0.007532138446320307,
+      "deadwood_total": 0.08827637754127049,
+      "fire_lit": 0.00190127979718283,
+      "food_on_bushes_total": 0.3163007347948896,
+      "food_stock": 0.06464068155911619,
+      "wood_stock": 0.13967497704211287
+     },
+     "apfit_abs": {
+      "adults_working": 0.40605677052558303,
+      "alive": 0.03113659046271817,
+      "cold_members": 0.009424864645107929,
+      "deadwood_total": 0.10159060222698901,
+      "fire_lit": 0.00255924590737021,
+      "food_on_bushes_total": 0.2999735840381252,
+      "food_stock": 0.07606705722726793,
+      "wood_stock": 0.15487750314177992
+     },
+     "apfit_year": {
+      "adults_working": 0.40993188862296015,
+      "alive": 0.03632673300104727,
+      "cold_members": 0.009397868543455512,
+      "deadwood_total": 0.10211423551845862,
+      "fire_lit": 0.002539259795255444,
+      "food_on_bushes_total": 0.2998796644759077,
+      "food_stock": 0.07935801748302636,
+      "wood_stock": 0.16473039970594067
+     },
+     "cal_abs": {
+      "adults_working": 0.44169871138741446,
+      "alive": 0.7344197216193945,
+      "cold_members": 0.011672020264238414,
+      "deadwood_total": 0.4637140473035453,
+      "fire_lit": 0.002798254540208601,
+      "food_on_bushes_total": 0.6789957720955401,
+      "food_stock": 0.5755754821502973,
+      "wood_stock": 0.31575141892602326
+     },
+     "persistence": {
+      "adults_working": 0.44805946008826697,
+      "alive": 0.03245894799684639,
+      "cold_members": 0.005269303395214993,
+      "deadwood_total": 0.11982313768660675,
+      "fire_lit": 0.0015332901590184114,
+      "food_on_bushes_total": 0.37251134599614155,
+      "food_stock": 0.13369369305352594,
+      "wood_stock": 0.21864463387543853
+     }
+    }
+   },
+   "train_seeds": [
+    24000,
+    24001,
+    24002,
+    24003,
+    24004,
+    24005,
+    24006,
+    24007,
+    24008,
+    24009,
+    24010,
+    24011,
+    24012,
+    24013,
+    24014,
+    24015,
+    24016,
+    24017,
+    24018,
+    24019,
+    24020,
+    24021,
+    24022,
+    24023,
+    24024,
+    24025,
+    24026,
+    24027,
+    24028,
+    24029,
+    24030,
+    24031,
+    24032,
+    24033,
+    24034,
+    24035,
+    24036,
+    24037,
+    24038,
+    24039,
+    24040,
+    24041,
+    24042,
+    24043,
+    24044,
+    24045,
+    24046,
+    24047,
+    24048,
+    24049,
+    24050,
+    24051,
+    24052,
+    24053,
+    24054,
+    24055,
+    24056,
+    24057,
+    24058,
+    24059,
+    24060,
+    24061,
+    24062,
+    24063,
+    24064,
+    24065,
+    24066,
+    24067,
+    24068,
+    24069,
+    24070,
+    24071,
+    24072,
+    24073,
+    24074,
+    24075,
+    24076,
+    24077,
+    24078,
+    24079,
+    24080,
+    24081,
+    24082,
+    24083,
+    24084,
+    24085,
+    24086,
+    24087,
+    24088,
+    24089,
+    24090,
+    24091,
+    24092,
+    24093,
+    24094,
+    24095
+   ]
+  },
+  "game_v18": {
+   "deaths_mean_by_day120": {
+    "deaths_combat": 0.0,
+    "deaths_dehydration": 0.0,
+    "deaths_exposure": 2.4107142857142856,
+    "deaths_old_age": 79.32142857142857,
+    "deaths_starvation": 0.0
+   },
+   "divergence": {
+    "capped": false,
+    "max_day": 1,
+    "median_day": 1.0,
+    "median_row": 1.0,
+    "min_day": 1,
+    "never": 0,
+    "pairs": 120,
+    "per_var": {
+     "adults_working": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "alive": {
+      "max_day": 9,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "cold_members": {
+      "max_day": 56,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 25,
+      "never": 0,
+      "pairs": 120
+     },
+     "deadwood_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "fire_lit": {
+      "max_day": 112,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 25,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_on_bushes_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "wood_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 2.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     }
+    }
+   },
+   "dyn_eta2": {
+    "adults_working": 0.4786997717944683,
+    "alive": 0.7560119841934347,
+    "cold_members": 0.5795873973784776,
+    "deadwood_total": 0.14997832461634278,
+    "fire_lit": 0.0463017947823953,
+    "food_on_bushes_total": 0.5083235742713256,
+    "food_stock": 0.534420052830934,
+    "wood_stock": 0.24044370016612965
+   },
+   "episodes": 16,
+   "eta2": {
+    "adults_working": 0.47975601836827814,
+    "alive": 0.7412896512030827,
+    "cold_members": 0.5790194542310497,
+    "deadwood_total": 0.35107202006463284,
+    "fire_lit": 0.04293137419120431,
+    "food_on_bushes_total": 0.7508771378666478,
+    "food_stock": 0.5321314789787777,
+    "wood_stock": 0.23617032150879463
+   },
+   "j7": {
+    "clauses": {
+     "alive": {
+      "eta2": 0.7412896512030827,
+      "passed": true,
+      "r2_abs": 0.22985937590877936
+     },
+     "dyn_alive": {
+      "dyn_eta2": 0.7560119841934347,
+      "passed": true
+     },
+     "dyn_food_stock": {
+      "dyn_eta2": 0.534420052830934,
+      "passed": true
+     },
+     "food_stock": {
+      "eta2": 0.5321314789787777,
+      "passed": true,
+      "r2_abs": 0.4574223848195723
+     },
+     "wood_stock": {
+      "eta2": 0.23617032150879463,
+      "passed": false,
+      "r2_abs": 0.7494129675495149
+     }
+    },
+    "passed": false
+   },
+   "r2_abs": {
+    "adults_working": 0.48794828680864866,
+    "alive": 0.22985937590877936,
+    "cold_members": 0.39058959646415226,
+    "deadwood_total": 0.6443086448324955,
+    "fire_lit": 0.9551663196095284,
+    "food_on_bushes_total": 0.23156024702104594,
+    "food_stock": 0.4574223848195723,
+    "wood_stock": 0.7494129675495149
+   },
+   "r2_year": {
+    "adults_working": 0.48198233727614315,
+    "alive": 0.00029884501004284747,
+    "cold_members": 0.3824468806225517,
+    "deadwood_total": 0.642425248563097,
+    "fire_lit": 0.9549765837871329,
+    "food_on_bushes_total": 0.19080721490329622,
+    "food_stock": 0.33015456118145914,
+    "wood_stock": 0.675870996209276
+   },
+   "rows": 2881,
+   "schema": [
+    5
+   ],
+   "seeds": [
+    24096,
+    24097,
+    24098,
+    24099,
+    24100,
+    24101,
+    24102,
+    24103,
+    24104,
+    24105,
+    24106,
+    24107,
+    24108,
+    24109,
+    24110,
+    24111
+   ],
+   "settlements_alive": {
+    "days": [
+     30,
+     60,
+     90,
+     118
+    ],
+    "distribution": [
+     {
+      "1.0": 15,
+      "2.0": 1
+     },
+     {
+      "1.0": 12,
+      "2.0": 4
+     },
+     {
+      "1.0": 8,
+      "2.0": 7,
+      "3.0": 1
+     },
+     {
+      "1.0": 3,
+      "2.0": 10,
+      "3.0": 2,
+      "4.0": 1
+     }
+    ],
+    "mean": [
+     1.0625,
+     1.25,
+     1.5625,
+     2.0625
+    ],
+    "per_test_seed": {
+     "24096": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "24097": [
+      1,
+      2,
+      2,
+      2
+     ],
+     "24098": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "24099": [
+      2,
+      2,
+      2,
+      2
+     ],
+     "24100": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24101": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "24102": [
+      1,
+      1,
+      2,
+      3
+     ],
+     "24103": [
+      1,
+      1,
+      2,
+      2
+     ],
+     "24104": [
+      1,
+      1,
+      2,
+      2
+     ],
+     "24105": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "24106": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24107": [
+      1,
+      2,
+      2,
+      2
+     ],
+     "24108": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "24109": [
+      1,
+      1,
+      1,
+      2
+     ],
+     "24110": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24111": [
+      1,
+      1,
+      2,
+      3
+     ]
+    },
+    "variance": [
+     0.05859375,
+     0.1875,
+     0.37109375,
+     0.55859375
+    ]
+   },
+   "severity": {
+    "distinct_sequences": 16,
+    "episodes_in_groups_of_2plus": 0,
+    "eta2_within_groups": {
+     "adults_working": null,
+     "alive": null,
+     "cold_members": null,
+     "deadwood_total": null,
+     "fire_lit": null,
+     "food_on_bushes_total": null,
+     "food_stock": null,
+     "wood_stock": null
+    },
+    "group_sizes": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "spread": {
+    "118": {
+     "adults_working": 0.0,
+     "alive": 1.1311333840898277,
+     "cold_members": 0.0,
+     "deadwood_total": 0.682128385989112,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.6689374756201142,
+     "food_stock": 0.617272377512977,
+     "wood_stock": 0.21900574172667497
+    },
+    "30": {
+     "adults_working": 0.0,
+     "alive": 0.3385541350785283,
+     "cold_members": 0.0,
+     "deadwood_total": 0.7109126992061756,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.711710887520384,
+     "food_stock": 0.3418061105668901,
+     "wood_stock": 0.09174931656234986
+    },
+    "60": {
+     "adults_working": 0.0,
+     "alive": 0.935498886452464,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6885374080563326,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.7150383667467132,
+     "food_stock": 0.5226019804745651,
+     "wood_stock": 0.12788423814139527
+    },
+    "90": {
+     "adults_working": 0.0,
+     "alive": 1.1524627762732276,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6864855506581473,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.6123589321263702,
+     "food_stock": 0.5138852118590289,
+     "wood_stock": 0.18120154407194317
+    }
+   },
+   "t2": {
+    "168": {
+     "an5": {
+      "adults_working": 0.43710676651730085,
+      "alive": 0.25736752054800893,
+      "cold_members": 0.0008706454583504219,
+      "deadwood_total": 0.24242010131241232,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.35707012215881007,
+      "food_stock": 0.25072700702694284,
+      "wood_stock": 0.23525105184511935
+     },
+     "an5_off": {
+      "adults_working": 0.5365063501401894,
+      "alive": 0.13205436028930534,
+      "cold_members": 0.0009436337003678226,
+      "deadwood_total": 0.2156883465506573,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.3590669718471882,
+      "food_stock": 0.21908899610338378,
+      "wood_stock": 0.2650319034442306
+     },
+     "apfit_abs": {
+      "adults_working": 0.43855587133814283,
+      "alive": 0.15952314927083186,
+      "cold_members": 0.0012121261620746922,
+      "deadwood_total": 0.334636563896693,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.3705058779961434,
+      "food_stock": 0.3067133816665985,
+      "wood_stock": 0.29264131608612
+     },
+     "apfit_year": {
+      "adults_working": 0.439741313143084,
+      "alive": 0.20941427433649693,
+      "cold_members": 0.001212126162074689,
+      "deadwood_total": 0.33696297122598967,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.3735406611766461,
+      "food_stock": 0.31495538889853114,
+      "wood_stock": 0.3301888209137324
+     },
+     "cal_abs": {
+      "adults_working": 0.4484252863306873,
+      "alive": 0.7090672805752843,
+      "cold_members": 0.0012121261620746922,
+      "deadwood_total": 0.47662718219735756,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.7424306226820448,
+      "food_stock": 0.5633580942954316,
+      "wood_stock": 0.36619180933983053
+     },
+     "persistence": {
+      "adults_working": 0.5808202156237736,
+      "alive": 0.13894916530063056,
+      "cold_members": 0.0,
+      "deadwood_total": 0.9617303740328159,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.45088694292252457,
+      "food_stock": 0.7330682757449328,
+      "wood_stock": 0.9769265399785179
+     }
+    },
+    "24": {
+     "an5": {
+      "adults_working": 0.4380587645544686,
+      "alive": 0.2021646477249384,
+      "cold_members": 0.0035917575231420003,
+      "deadwood_total": 0.1696543995401419,
+      "fire_lit": 0.0020242410343154498,
+      "food_on_bushes_total": 0.2892678421667449,
+      "food_stock": 0.20367016514274988,
+      "wood_stock": 0.17185776107047768
+     },
+     "an5_off": {
+      "adults_working": 0.5056783532915259,
+      "alive": 0.024357707217190636,
+      "cold_members": 0.0035230627071256232,
+      "deadwood_total": 0.07959699304882534,
+      "fire_lit": 0.0020242410343154498,
+      "food_on_bushes_total": 0.24853455047963355,
+      "food_stock": 0.06670256737028811,
+      "wood_stock": 0.16732148980753897
+     },
+     "apfit_abs": {
+      "adults_working": 0.42945779080546226,
+      "alive": 0.02899477445099916,
+      "cold_members": 0.005929695882488426,
+      "deadwood_total": 0.09213303115816202,
+      "fire_lit": 0.002862563078829927,
+      "food_on_bushes_total": 0.2448091176633577,
+      "food_stock": 0.07160147475081168,
+      "wood_stock": 0.16883995986014763
+     },
+     "apfit_year": {
+      "adults_working": 0.43107153020606914,
+      "alive": 0.03453253959616216,
+      "cold_members": 0.005921100611998612,
+      "deadwood_total": 0.09258229302609375,
+      "fire_lit": 0.00285777084153278,
+      "food_on_bushes_total": 0.24295247379499726,
+      "food_stock": 0.0730709896818864,
+      "wood_stock": 0.16911859331909235
+     },
+     "cal_abs": {
+      "adults_working": 0.4558281108733454,
+      "alive": 0.6856568331820858,
+      "cold_members": 0.00647796204011582,
+      "deadwood_total": 0.4735994134831573,
+      "fire_lit": 0.002862563078829927,
+      "food_on_bushes_total": 0.6953112656080027,
+      "food_stock": 0.5471311481566487,
+      "wood_stock": 0.3398290401190211
+     },
+     "persistence": {
+      "adults_working": 0.49294396746533703,
+      "alive": 0.026029942883695867,
+      "cold_members": 0.0026987249149290986,
+      "deadwood_total": 0.10661970893459216,
+      "fire_lit": 0.0015335159350874615,
+      "food_on_bushes_total": 0.27909167986725464,
+      "food_stock": 0.12896155130735173,
+      "wood_stock": 0.22545718959709526
+     }
+    }
+   },
+   "train_seeds": [
+    24000,
+    24001,
+    24002,
+    24003,
+    24004,
+    24005,
+    24006,
+    24007,
+    24008,
+    24009,
+    24010,
+    24011,
+    24012,
+    24013,
+    24014,
+    24015,
+    24016,
+    24017,
+    24018,
+    24019,
+    24020,
+    24021,
+    24022,
+    24023,
+    24024,
+    24025,
+    24026,
+    24027,
+    24028,
+    24029,
+    24030,
+    24031,
+    24032,
+    24033,
+    24034,
+    24035,
+    24036,
+    24037,
+    24038,
+    24039,
+    24040,
+    24041,
+    24042,
+    24043,
+    24044,
+    24045,
+    24046,
+    24047,
+    24048,
+    24049,
+    24050,
+    24051,
+    24052,
+    24053,
+    24054,
+    24055,
+    24056,
+    24057,
+    24058,
+    24059,
+    24060,
+    24061,
+    24062,
+    24063,
+    24064,
+    24065,
+    24066,
+    24067,
+    24068,
+    24069,
+    24070,
+    24071,
+    24072,
+    24073,
+    24074,
+    24075,
+    24076,
+    24077,
+    24078,
+    24079,
+    24080,
+    24081,
+    24082,
+    24083,
+    24084,
+    24085,
+    24086,
+    24087,
+    24088,
+    24089,
+    24090,
+    24091,
+    24092,
+    24093,
+    24094,
+    24095
+   ]
+  },
+  "game_v18_nofission": {
+   "deaths_mean_by_day120": {
+    "deaths_combat": 0.0,
+    "deaths_dehydration": 0.0,
+    "deaths_exposure": 1.25,
+    "deaths_old_age": 66.84821428571429,
+    "deaths_starvation": 0.0
+   },
+   "divergence": {
+    "capped": false,
+    "max_day": 1,
+    "median_day": 1.0,
+    "median_row": 1.0,
+    "min_day": 1,
+    "never": 0,
+    "pairs": 120,
+    "per_var": {
+     "adults_working": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "alive": {
+      "max_day": 9,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "cold_members": {
+      "max_day": 56,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 25,
+      "never": 0,
+      "pairs": 120
+     },
+     "deadwood_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "fire_lit": {
+      "max_day": 113,
+      "median_day": 26.0,
+      "median_row": 615.0,
+      "min_day": 25,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_on_bushes_total": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "food_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 1.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     },
+     "wood_stock": {
+      "max_day": 1,
+      "median_day": 1.0,
+      "median_row": 2.0,
+      "min_day": 1,
+      "never": 0,
+      "pairs": 120
+     }
+    }
+   },
+   "dyn_eta2": {
+    "adults_working": 0.4755561220198174,
+    "alive": 0.9984567825596747,
+    "cold_members": 0.5667384107489468,
+    "deadwood_total": 0.13183761472502026,
+    "fire_lit": 0.04820060355533571,
+    "food_on_bushes_total": 0.4095659915424428,
+    "food_stock": 0.18471664625188625,
+    "wood_stock": 0.0688537961070583
+   },
+   "episodes": 16,
+   "eta2": {
+    "adults_working": 0.47344011482772674,
+    "alive": 0.8991064945754341,
+    "cold_members": 0.5661354873362643,
+    "deadwood_total": 0.3581637514903617,
+    "fire_lit": 0.04469262792204789,
+    "food_on_bushes_total": 0.8353934742189714,
+    "food_stock": 0.31122999073602864,
+    "wood_stock": 0.06767035220293734
+   },
+   "j7": {
+    "clauses": {
+     "alive": {
+      "eta2": 0.8991064945754341,
+      "passed": true,
+      "r2_abs": -0.10551096838196194
+     },
+     "dyn_alive": {
+      "dyn_eta2": 0.9984567825596747,
+      "passed": true
+     },
+     "dyn_food_stock": {
+      "dyn_eta2": 0.18471664625188625,
+      "passed": false
+     },
+     "food_stock": {
+      "eta2": 0.31122999073602864,
+      "passed": true,
+      "r2_abs": 0.6724083572520574
+     },
+     "wood_stock": {
+      "eta2": 0.06767035220293734,
+      "passed": false,
+      "r2_abs": 0.9297458129722868
+     }
+    },
+    "passed": false
+   },
+   "r2_abs": {
+    "adults_working": 0.4916707267892204,
+    "alive": -0.10551096838196194,
+    "cold_members": 0.39459389238804476,
+    "deadwood_total": 0.6381083164270256,
+    "fire_lit": 0.9530561188527634,
+    "food_on_bushes_total": 0.1552796338988216,
+    "food_stock": 0.6724083572520574,
+    "wood_stock": 0.9297458129722868
+   },
+   "r2_year": {
+    "adults_working": 0.49056865554495266,
+    "alive": -0.18749652948600404,
+    "cold_members": 0.39634837746724816,
+    "deadwood_total": 0.638135380477673,
+    "fire_lit": 0.9531911331604539,
+    "food_on_bushes_total": 0.15435619376727694,
+    "food_stock": 0.6395691958603364,
+    "wood_stock": 0.930421931363695
+   },
+   "rows": 2881,
+   "schema": [
+    5
+   ],
+   "seeds": [
+    24096,
+    24097,
+    24098,
+    24099,
+    24100,
+    24101,
+    24102,
+    24103,
+    24104,
+    24105,
+    24106,
+    24107,
+    24108,
+    24109,
+    24110,
+    24111
+   ],
+   "settlements_alive": {
+    "days": [
+     30,
+     60,
+     90,
+     118
+    ],
+    "distribution": [
+     {
+      "1.0": 16
+     },
+     {
+      "1.0": 16
+     },
+     {
+      "1.0": 16
+     },
+     {
+      "1.0": 16
+     }
+    ],
+    "mean": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "per_test_seed": {
+     "24096": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24097": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24098": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24099": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24100": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24101": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24102": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24103": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24104": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24105": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24106": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24107": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24108": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24109": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24110": [
+      1,
+      1,
+      1,
+      1
+     ],
+     "24111": [
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    "variance": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "severity": {
+    "distinct_sequences": 16,
+    "episodes_in_groups_of_2plus": 0,
+    "eta2_within_groups": {
+     "adults_working": null,
+     "alive": null,
+     "cold_members": null,
+     "deadwood_total": null,
+     "fire_lit": null,
+     "food_on_bushes_total": null,
+     "food_stock": null,
+     "wood_stock": null
+    },
+    "group_sizes": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   "spread": {
+    "118": {
+     "adults_working": 0.0,
+     "alive": 0.9535730149067999,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6874774266139864,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.8029786066032006,
+     "food_stock": 0.4470060533162622,
+     "wood_stock": 0.161081565708373
+    },
+    "30": {
+     "adults_working": 0.0,
+     "alive": 1.012128489926392,
+     "cold_members": 0.0,
+     "deadwood_total": 0.7243916842049067,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.8280390481928328,
+     "food_stock": 0.5136019974969864,
+     "wood_stock": 0.14848727318263025
+    },
+    "60": {
+     "adults_working": 0.0,
+     "alive": 0.9820372429582924,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6824493261160625,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.8263387768290245,
+     "food_stock": 0.41117863555298845,
+     "wood_stock": 0.157427564451008
+    },
+    "90": {
+     "adults_working": 0.0,
+     "alive": 0.9898262797462833,
+     "cold_members": 0.0,
+     "deadwood_total": 0.6840181691544536,
+     "fire_lit": 0.0,
+     "food_on_bushes_total": 0.772418240769774,
+     "food_stock": 0.5167282766933573,
+     "wood_stock": 0.1575870049926466
+    }
+   },
+   "t2": {
+    "168": {
+     "an5": {
+      "adults_working": 0.43628373886711125,
+      "alive": 0.3060261827451591,
+      "cold_members": 0.0,
+      "deadwood_total": 0.24519624279267227,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.32060463885813184,
+      "food_stock": 0.3003665602627166,
+      "wood_stock": 0.19116128844432523
+     },
+     "an5_off": {
+      "adults_working": 0.5366725477817507,
+      "alive": 0.09432431837615227,
+      "cold_members": 0.0,
+      "deadwood_total": 0.1985522941696099,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.2902350328234474,
+      "food_stock": 0.23786886430880264,
+      "wood_stock": 0.2376210608824505
+     },
+     "apfit_abs": {
+      "adults_working": 0.439794692995406,
+      "alive": 0.11083708675788842,
+      "cold_members": 0.0,
+      "deadwood_total": 0.32136261114821935,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.2992114028164718,
+      "food_stock": 0.2826289172273561,
+      "wood_stock": 0.18268702056103334
+     },
+     "apfit_year": {
+      "adults_working": 0.4393477665350123,
+      "alive": 0.25982070654814765,
+      "cold_members": 0.0,
+      "deadwood_total": 0.32130641521616193,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.30139929529496706,
+      "food_stock": 0.2988555737666686,
+      "wood_stock": 0.18278106201664532
+     },
+     "cal_abs": {
+      "adults_working": 0.45027474940873125,
+      "alive": 0.8314776024975493,
+      "cold_members": 0.0,
+      "deadwood_total": 0.4764274620328955,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.7954816468093235,
+      "food_stock": 0.45263362594838535,
+      "wood_stock": 0.18363825178097049
+     },
+     "persistence": {
+      "adults_working": 0.5888254531128214,
+      "alive": 0.147527860335259,
+      "cold_members": 0.0,
+      "deadwood_total": 0.9595617678900966,
+      "fire_lit": 0.0,
+      "food_on_bushes_total": 0.3836093592866719,
+      "food_stock": 0.9680108579937358,
+      "wood_stock": 1.1934920984934854
+     }
+    },
+    "24": {
+     "an5": {
+      "adults_working": 0.4420239382050017,
+      "alive": 0.27338693740083014,
+      "cold_members": 0.004274724078195131,
+      "deadwood_total": 0.1681192519717967,
+      "fire_lit": 0.0023307081068694438,
+      "food_on_bushes_total": 0.28576365927046093,
+      "food_stock": 0.2273456488332332,
+      "wood_stock": 0.18688455798784573
+     },
+     "an5_off": {
+      "adults_working": 0.5079658898670574,
+      "alive": 0.03874822906789304,
+      "cold_members": 0.004274724078195131,
+      "deadwood_total": 0.05951317303560423,
+      "fire_lit": 0.0023307081068694438,
+      "food_on_bushes_total": 0.23166565153549123,
+      "food_stock": 0.0819571075456275,
+      "wood_stock": 0.20792637038383663
+     },
+     "apfit_abs": {
+      "adults_working": 0.44378395536911647,
+      "alive": 0.03511727268788887,
+      "cold_members": 0.004870163247586401,
+      "deadwood_total": 0.07236538601327959,
+      "fire_lit": 0.0031114442106508176,
+      "food_on_bushes_total": 0.2270259959460901,
+      "food_stock": 0.08144495377116497,
+      "wood_stock": 0.19901347511131326
+     },
+     "apfit_year": {
+      "adults_working": 0.44598673752162604,
+      "alive": 0.0518112515103379,
+      "cold_members": 0.004870163247586403,
+      "deadwood_total": 0.07252707041612959,
+      "fire_lit": 0.003103457957543398,
+      "food_on_bushes_total": 0.22653034960893204,
+      "food_stock": 0.08378000675908595,
+      "wood_stock": 0.19891549154143365
+     },
+     "cal_abs": {
+      "adults_working": 0.46193852460559565,
+      "alive": 0.8155357683035247,
+      "cold_members": 0.004870163247586401,
+      "deadwood_total": 0.47608887904517566,
+      "fire_lit": 0.0031114442106508176,
+      "food_on_bushes_total": 0.7587229327924865,
+      "food_stock": 0.4408749762642782,
+      "wood_stock": 0.1941878086125566
+     },
+     "persistence": {
+      "adults_working": 0.5021280343936757,
+      "alive": 0.04064742499351492,
+      "cold_members": 0.002356662585222431,
+      "deadwood_total": 0.08446197123990691,
+      "fire_lit": 0.0015333605966246335,
+      "food_on_bushes_total": 0.269487702145898,
+      "food_stock": 0.1622343206596379,
+      "wood_stock": 0.285051311194177
+     }
+    }
+   },
+   "train_seeds": [
+    24000,
+    24001,
+    24002,
+    24003,
+    24004,
+    24005,
+    24006,
+    24007,
+    24008,
+    24009,
+    24010,
+    24011,
+    24012,
+    24013,
+    24014,
+    24015,
+    24016,
+    24017,
+    24018,
+    24019,
+    24020,
+    24021,
+    24022,
+    24023,
+    24024,
+    24025,
+    24026,
+    24027,
+    24028,
+    24029,
+    24030,
+    24031,
+    24032,
+    24033,
+    24034,
+    24035,
+    24036,
+    24037,
+    24038,
+    24039,
+    24040,
+    24041,
+    24042,
+    24043,
+    24044,
+    24045,
+    24046,
+    24047,
+    24048,
+    24049,
+    24050,
+    24051,
+    24052,
+    24053,
+    24054,
+    24055,
+    24056,
+    24057,
+    24058,
+    24059,
+    24060,
+    24061,
+    24062,
+    24063,
+    24064,
+    24065,
+    24066,
+    24067,
+    24068,
+    24069,
+    24070,
+    24071,
+    24072,
+    24073,
+    24074,
+    24075,
+    24076,
+    24077,
+    24078,
+    24079,
+    24080,
+    24081,
+    24082,
+    24083,
+    24084,
+    24085,
+    24086,
+    24087,
+    24088,
+    24089,
+    24090,
+    24091,
+    24092,
+    24093,
+    24094,
+    24095
+   ]
+  }
+ },
+ "seconds": 9.829788208007812,
+ "test": "24096..24112",
+ "train": "24000..24096",
+ "vars": [
+  "food_stock",
+  "wood_stock",
+  "fire_lit",
+  "cold_members",
+  "alive",
+  "deadwood_total",
+  "food_on_bushes_total",
+  "adults_working"
+ ]
+}
