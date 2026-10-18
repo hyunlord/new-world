@@ -173,5 +173,144 @@ class TestCastsCheck(unittest.TestCase):
         self.assertFalse(obs2.check_casts(bad, casts))
 
 
+# ------------------------------------------------------------------ CRN / CT as the authors train them (7.4) --------
+from wm1 import m1_gru as _g  # noqa: E402
+HAVE_TORCH = _g.torch is not None
+
+
+def tiny_data(n: int = 6, tokens: int = 40, seed: int = 0):
+    """A stand-in for `wm4.causal.Data`: n episodes of tokens × 24 + 1 hourly rows, 37 positive state features (the last
+    five tallies), the calendar, and a gift on some episodes."""
+    from wm4 import causal as c4
+    from wm4 import tokens as tk
+    rng = np.random.default_rng(seed)
+    T = 24 * tokens + 1
+    names = tuple(f"x{i}" for i in range(32)) + tk.DEATHS
+    tally = np.array([nm.startswith("d.") for nm in names])
+    raws = []
+    for i in range(n):
+        st = np.abs(rng.normal(5, 1, (T, 37))).cumsum(0) / 50
+        st[:, tally] = rng.poisson(0.05, (T, int(tally.sum())))
+        act = np.zeros((T, 7))
+        if i % 2:
+            act[24 * 10 + 22, 0] = 240.0
+        raws.append(tk.Raw(1000 + i, f"e{i}", st, rng.normal(0, 1, (T, 30)), act, tally))
+
+    class D:
+        pass
+    dd = D()
+    dd.raws, dd.names, dd.seeds = raws, names, [r.seed for r in raws]
+    dd.seqs = lambda phases, norm: [tk.tokenize(r, p, norm) for r, p in zip(dd.raws, phases)]
+    return dd
+
+
+@unittest.skipUnless(HAVE_TORCH, "torch is not installed")
+class TestCausal5(unittest.TestCase):
+    def setUp(self):
+        from wm4 import causal as c4
+        from wm4 import tokens as tk
+        from wm5 import causal5 as c5
+        self.c4, self.tk, self.c5 = c4, tk, c5
+        _g.torch.manual_seed(0)
+        self.tr, self.va = tiny_data(6, seed=0), tiny_data(3, seed=1)
+        self.norm = tk.Norm.fit(self.tr.raws)
+        self.val = c5.Val(c4.val_seqs(self.va, [tk.PHASE_06], self.norm), 3, [tk.PHASE_06])
+
+    def test_alpha_schedule_reaches_max(self):
+        c5 = self.c5
+        for planned in (12, 11850):
+            self.assertGreaterEqual(c5.alpha_at(planned - 1, planned, 0.01), 0.99 * 0.01)
+        self.assertEqual(c5.alpha_at(0, 100, 1.0), 0.0)
+        self.assertLess(c5.alpha_at(10, 100, 1.0), 0.5)
+
+    def test_eval_points_at_most_fifteen(self):
+        for planned in (12, 11850, 53800):
+            pts = self.c5.eval_points(planned)
+            self.assertLessEqual(len(pts) + 1, 15)
+            self.assertTrue(all(0 < p < planned for p in pts))
+
+    def test_plan_reduced_only_when_cost_exceeds_budget(self):
+        c5 = self.c5
+        cost = {"stages": {"ct": {"s_per_step": 0.83, "eval_seconds": 12.0}}}
+        self.assertEqual(c5.scaled_plan(cost, "ct", 14400)["planned"]["ct"], 11850)
+        cost["stages"]["ct"]["s_per_step"] = 2.0
+        p = c5.scaled_plan(cost, "ct", 14400)
+        self.assertTrue(p["reduced"])
+        self.assertEqual(p["planned"]["ct"], int((14400 - 15 * 12.0) // 2.0))
+
+    def _crn(self):
+        c5 = self.c5
+        hp = dict(self.c4.DEFAULTS["crn"]) | c5.CONFIG["crn"] | {"enc_batch": 2, "dec_batch": 16, "enc_hidden": 16}
+        logs = []
+        res = c5.train_crn(hp, self.tr, self.val, "fixed_06", self.norm, 0, "cpu", {"crn_enc": 12, "crn_dec": 9},
+                           1e6, logs.append, __import__("time").time())
+        return res, logs
+
+    def test_crn_planned_run_reaches_alpha_max_and_keeps_last_and_best(self):
+        (model, last, best, info), logs = self._crn()
+        for st in ("encoder", "decoder"):
+            self.assertEqual(info[st]["steps"], info[st]["planned"])
+            self.assertEqual(info[st]["stop"], "planned")
+            self.assertGreaterEqual(info[st]["alpha_last"], 0.99 * info[st]["alpha_max"])
+            self.assertLessEqual(info[st]["evals"], 15)
+        dec = [r for r in logs if r["stage"] == "decoder"]
+        self.assertEqual(dec[-1]["steps"], 9)
+        self.assertEqual(info["decoder"]["best_val_roll"], min(r["val_roll"] for r in dec))
+        self.assertEqual(info["decoder"]["val_roll_last"], dec[-1]["val_roll"])
+        for k in last["enc"]:                     # both checkpoints share the last encoder
+            self.assertTrue(_g.torch.equal(last["enc"][k], best["enc"][k]))
+        same = all(_g.torch.equal(last["dec"][k], best["dec"][k]) for k in last["dec"])
+        self.assertEqual(same, info["decoder"]["best_step"] == 9)
+
+    def test_ct_planned_run_reaches_alpha_max_and_keeps_last_and_best(self):
+        c5 = self.c5
+        hp = dict(self.c4.DEFAULTS["ct"]) | c5.CONFIG["ct"] | {"batch": 2, "d_model": 16, "heads": 2, "layers": 1,
+                                                                "br": 8, "fc": 8}
+        logs = []
+        model, last, best, info = c5.train_ct(hp, self.tr, self.val, "fixed_06", self.norm, 0, "cpu", {"ct": 10}, 1e6,
+                                              logs.append, __import__("time").time())
+        st = info["ct"]
+        self.assertEqual((st["steps"], st["stop"]), (10, "planned"))
+        self.assertGreaterEqual(st["alpha_last"], 0.99 * st["alpha_max"])
+        self.assertEqual(st["best_val_roll"], min(r["val_roll"] for r in logs))
+        same = all(_g.torch.equal(last[k], best[k]) for k in last)
+        self.assertEqual(same, st["best_step"] == 10)
+        # the primary checkpoint is the EMA state of the last evaluation and the model carries it
+        for k, v in model["net"].state_dict().items():
+            self.assertTrue(_g.torch.equal(v, last[k]))
+
+    def test_time_cap_is_reported(self):
+        c5 = self.c5
+        hp = dict(self.c4.DEFAULTS["ct"]) | c5.CONFIG["ct"] | {"batch": 2, "d_model": 16, "heads": 2, "layers": 1}
+        _, _, _, info = c5.train_ct(hp, self.tr, self.val, "fixed_06", self.norm, 0, "cpu", {"ct": 10 ** 6}, 0.0,
+                                    lambda r: None, __import__("time").time())
+        self.assertEqual(info["ct"]["stop"], "time")
+        self.assertLess(info["ct"]["steps"], 10 ** 6)
+
+
+class TestRounding(unittest.TestCase):
+    def test_readout_rounds_food_alive_deaths_not_settlements(self):
+        from wm4 import tokens as tk
+        from wm5 import causal5 as c5
+        names = ("s.food_stock", "g.alive", "g.settlements_alive") + tuple(f"x{i}" for i in range(29)) + tk.DEATHS
+        H = 30
+        ar, fa = np.zeros((H, 37)), np.zeros((H, 37))
+        ar[:, 0], fa[:, 0] = 100.4, 99.6               # food: rounded 100 − 100 = 0; unrounded 0.8
+        ar[:, 1], fa[:, 1] = 10.3, 10.6                # alive: rounded 10 − 11 = −1; unrounded −0.3
+        ar[:, 2], fa[:, 2] = 1.4, 1.2                  # settlements: never rounded, 0.2
+        ar[:, 32] = 0.02                               # predicted daily starvation deaths
+        truth = {o: {"7d": 0.0, "30d": 0.0} for o in ("food_stock", "alive", "deaths", "settlements_alive")}
+        r = c5.readout(ar, fa, 3.2, names, truth, True)
+        u = c5.readout(ar, fa, 3.2, names, truth, False)
+        self.assertEqual(r["food_stock"]["7d"], 0.0)
+        self.assertAlmostEqual(u["food_stock"]["7d"], 0.8)
+        self.assertEqual(r["alive"]["30d"], -1.0)
+        self.assertAlmostEqual(u["alive"]["30d"], -0.3)
+        self.assertAlmostEqual(r["settlements_alive"]["7d"], 0.2)
+        self.assertAlmostEqual(u["deaths"]["7d"], 7 * 0.02)
+        self.assertEqual(r["deaths"]["7d"], 0.0)          # round(3.2 + 0.14) − round(3.2) = 0
+        self.assertEqual(r["deaths"]["30d"], 1.0)         # round(3.2 + 0.6) − round(3.2) = 4 − 3
+
+
 if __name__ == "__main__":
     unittest.main()
