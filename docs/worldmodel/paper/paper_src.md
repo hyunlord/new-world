@@ -13,7 +13,7 @@ Submitted to [VENUE] (datasets and benchmarks track). Draft generated from `docs
 
 Learned world models are increasingly used as simulators: a model trained on recorded trajectories is rolled forward to
 answer "what happens next?" and, more ambitiously, "what would happen if we acted?" [@ha2018worldmodels; @hafner2020dreamer;
-@hafner2023dreamerv3; @bruce2024genie; @valevski2024gamengen]. The second question is a causal one. A model that
+@hafner2023dreamerv3; @hafner2025dreamerv3nature; @bruce2024genie; @valevski2025gamengen]. The second question is a causal one. A model that
 forecasts the factual future well can still be useless for decisions if it does not respond correctly to interventions,
 and recorded trajectories rarely contain the counterfactual branch against which such responses can be checked.
 
@@ -57,7 +57,7 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
 **World models and learned simulators.** Recurrent and latent-dynamics world models learn to predict an environment's
 next observations from past observations and actions and are used for planning and policy learning
 [@ha2018worldmodels; @hafner2020dreamer; @hafner2023dreamerv3]. Generative interactive environments and neural game
-engines learn action-conditioned video models of games [@bruce2024genie; @valevski2024gamengen], and graph-network
+engines learn action-conditioned video models of games [@bruce2024genie; @valevski2025gamengen], and graph-network
 simulators learn physical dynamics from particle trajectories [@sanchezgonzalez2020gns]. Their evaluation is mostly
 factual (prediction error or downstream return); counterfactual correctness of the response to an action, measured
 against the true branch, is rarely available. Our benchmark provides it for a social simulation and shows that factual
@@ -253,7 +253,31 @@ See `references.bib` (every entry verified; `REFERENCES_CHECK.md`).
 
 ## Appendix A. CRN and CT: deviations from the papers (D1–D24)
 
-{{sec:appendix_deviations}}
+Source: the authors' implementation (`github.com/Valentyn1997/CausalTransformer`, commit `c49a24fa`, MIT licence),
+plain-PyTorch modules vendored unchanged (`VariationalLSTM`, gradient reversal, `BRTreatmentOutcomeHead`,
+`TransformerMultiInputBlock`, relative positional encodings); training loops, data pipeline, rollouts and checkpoint
+bookkeeping are ours (no Lightning, Hydra or MLflow). The full list with reasons is in `docs/worldmodel/wm4/METHODS.md`
+(D1–D15) and `docs/worldmodel/wm5/METHODS.md` (D16–D24).
+
+| id | papers / authors' code | here |
+|---|---|---|
+| D1 | one step = one day (tumour simulator) | one token per day: the hourly episode sampled every 24 rows at a clock phase (06:00 on the observational splits; uniform per sequence in training and the act's phase at test on v2); the act falls in exactly one token |
+| D2 | levels | tallies (deaths by cause, births) as daily sums; cumulative deaths recovered by summing predicted daily deaths |
+| D3 | 1-d outcome | 37 state variables, predicted as normalized daily changes and fed back (clamped ≥ 0; flags ≤ 1); MSE over all 37 |
+| D4 | vitals / static features | the calendar as time-varying covariates (history only; CT masks them after the last observed token, as the authors mask vitals); no static features |
+| D5 | 4 treatment classes | 4 classes (none, gift, spoil, rot) plus the amount; cross-entropy without the deprecated reduction flag |
+| D6 | τ ≤ 5 (CT), ≤ 10 (CRN) | 7- and 30-token horizons; CRN decoder trained on 29-step windows initialized from the encoder representation |
+| D7 / D16 | authors' epochs on 10,000 sequences | the authors' number of optimizer steps (CRN 15,700 + 53,800, CT 11,850), reduced only if a 300-s cost check predicts more than the pre-registered budget; a 1.25 × budget safety cap |
+| D8 / D18 | last epoch | primary: the last step (CT: EMA weights); secondary: the lowest validation factual-rollout loss |
+| D9 | EMA weights swapped inside the forward pass | EMA (β 0.99) updated with the authors' rule but used for evaluation and the kept checkpoint only |
+| D10 | small hidden sizes for the 1-d simulator | CRN encoder hidden 128, CT d_model 128, 2 layers, 4 heads; Adam, no weight decay, no clipping, no schedule |
+| D11 / D22 | — | one pre-registered 4-configuration grid per method on the obs split (validation factual loss only); chosen: CRN BR 64 / FC 128, decoder BR 64 / FC 32, encoder dropout 0.1; CT lr 1e-3, BR 64, FC 128 |
+| D12 / D21 | — | training data: v2 — every train-family member; obs / obs2 — one observed episode per train world |
+| D13 / D20 | — | prediction contract: arm rollout − no-act rollout from the same history (the case's `pre` member); counts (food, alive, cumulative deaths) rounded at readout as for M1, unrounded reported as secondary |
+| D17 | α ramp per epoch over the planned epochs | α = α_max (2 / (1 + e^(−10 p)) − 1) with p = step / planned steps, set before every step |
+| D19 | per-epoch validation | at most 15 validation evaluations per stage |
+| D24 | — | M1 effect rollouts zero the action history as in earlier studies; on obs2 the previous act is ≥ 8 days before c, outside M1's 7-day window |
+
 
 ## Appendix B. Hyper-parameters, budgets and training reached
 
