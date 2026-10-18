@@ -1,0 +1,5401 @@
+{
+ "U1": {
+  "aid_food_pair_days_estranged": 69,
+  "aid_food_pair_days_open": 120,
+  "causes": {
+   "0": 209,
+   "1": 12
+  },
+  "delivered_trips": 113,
+  "deliveries_per_world": {
+   "19400": 1,
+   "19401": 0,
+   "19402": 0,
+   "19403": 0,
+   "19404": 6,
+   "19405": 0,
+   "19406": 0,
+   "19407": 3,
+   "19408": 0,
+   "19409": 3,
+   "19410": 17,
+   "19411": 10,
+   "19412": 0,
+   "19413": 30,
+   "19414": 7,
+   "19415": 0,
+   "19416": 0,
+   "19417": 0,
+   "19418": 0,
+   "19419": 0,
+   "19420": 0,
+   "19421": 2,
+   "19422": 0,
+   "19423": 0,
+   "19424": 0,
+   "19425": 7,
+   "19426": 0,
+   "19427": 0,
+   "19428": 0,
+   "19429": 2,
+   "19430": 25,
+   "19431": 0
+  },
+  "delivering_worlds": 12,
+  "failed": 0,
+  "failed_share": 0.0,
+  "food_moved": 2090,
+  "lost_loads": 0,
+  "multi_village_worlds": 19,
+  "porters": 221,
+  "share_with_delivery": 0.631578947368421,
+  "trips": 113,
+  "v25_delivering_worlds": 9,
+  "verdict": "PASS",
+  "wood_moved": 101
+ },
+ "U2": {
+  "exchange_pair_days": 0,
+  "exchange_pair_days_open": 0,
+  "exchange_porters": 0,
+  "exchange_trips": 0,
+  "verdict": "FAIL"
+ },
+ "U3": {
+  "days_estranged": 254,
+  "disputes": 3199,
+  "disputes_uncosted": 1762,
+  "estranged_at_end": 9,
+  "estranged_share_at_end": 0.28125,
+  "estrangements": 22,
+  "pairs_at_end": 32,
+  "quarrels": 369,
+  "quarrels_capped": 1726,
+  "quarrels_while_estranged": 36,
+  "quarrels_while_estranged_share": 0.0975609756097561,
+  "reconciled_bar_applies": true,
+  "reconciled_share": 0.5909090909090909,
+  "reconciliations": 13,
+  "relation_values_at_end": [
+   333,
+   300,
+   -234,
+   300,
+   -458,
+   -301,
+   300,
+   335,
+   -340,
+   150,
+   -180,
+   -313,
+   300,
+   -145,
+   -217,
+   -232,
+   150,
+   300,
+   204,
+   150,
+   -454,
+   -251,
+   -301,
+   150,
+   -415,
+   378,
+   497,
+   323,
+   368,
+   150,
+   150,
+   23
+  ],
+  "share_with_dispute": 0.6842105263157895,
+  "share_with_quarrel": 0.6842105263157895,
+  "v25": {
+   "disputes": 1834,
+   "estrangements": 14,
+   "quarrels": 511,
+   "reconciliations": 0
+  },
+  "verdict": "FAIL"
+ },
+ "U4_deaths": {
+  "alive_daughters_day118": {
+   "v24": 24,
+   "v25": 24,
+   "v26": 24
+  },
+  "deaths": {
+   "v24": {
+    "metric": {
+     "bar": "mean daughter non-old-age deaths v26 - v24 <= 0 (multi-village worlds)",
+     "baseline": null,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": null,
+     "ci95": [
+      0.0,
+      0.8947368421052632
+     ],
+     "details": null,
+     "error": null,
+     "unit": "deaths/world",
+     "value": 0.3157894736842105,
+     "verdict": "FAIL"
+    },
+    "ok": false,
+    "v24": 6.0,
+    "v26": 12.0
+   },
+   "v25": {
+    "metric": {
+     "bar": "mean daughter non-old-age deaths v26 - v25 <= 0 (multi-village worlds)",
+     "baseline": null,
+     "bootstrap_replicates": 2000,
+     "bootstrap_valid": 2000,
+     "candidate": null,
+     "ci95": [
+      -2.264473684210526,
+      0.10526315789473684
+     ],
+     "details": null,
+     "error": null,
+     "unit": "deaths/world",
+     "value": -0.7368421052631579,
+     "verdict": "PASS"
+    },
+    "ok": true,
+    "v25": 26.0,
+    "v26": 12.0
+   }
+  },
+  "ok": false
+ },
+ "U4_health": {},
+ "U4_verdict": "SKIPPED",
+ "U7": {
+  "in_flight_units_end": 0,
+  "pairs_invariant_worlds": 32,
+  "totals": {
+   "costed_plus_uncosted": [
+    3199,
+    3199
+   ],
+   "delivered": [
+    221,
+    221
+   ],
+   "delivered_units": [
+    2191,
+    2191
+   ],
+   "departed": [
+    221,
+    221
+   ],
+   "disputes_logged": [
+    3199,
+    3199
+   ],
+   "estranged": [
+    22,
+    22
+   ],
+   "lost_units": [
+    0,
+    0
+   ],
+   "pair_estrangements": [
+    22,
+    22
+   ],
+   "pair_reconciliations": [
+    13,
+    13
+   ],
+   "quarrels": [
+    369,
+    369
+   ],
+   "quarrels_logged": [
+    369,
+    369
+   ],
+   "reconciled": [
+    13,
+    13
+   ],
+   "returned_units": [
+    0,
+    0
+   ],
+   "trip_records": [
+    221,
+    221
+   ],
+   "turned_back": [
+    0,
+    0
+   ],
+   "withdrawn": [
+    2191,
+    2191
+   ]
+  },
+  "trips_with_village_change": 0,
+  "unbalanced_trips": 0,
+  "verdict": "PASS",
+  "worlds_with_mismatch": {}
+ },
+ "schema_version": 21,
+ "seeds": [
+  19400,
+  19401,
+  19402,
+  19403,
+  19404,
+  19405,
+  19406,
+  19407,
+  19408,
+  19409,
+  19410,
+  19411,
+  19412,
+  19413,
+  19414,
+  19415,
+  19416,
+  19417,
+  19418,
+  19419,
+  19420,
+  19421,
+  19422,
+  19423,
+  19424,
+  19425,
+  19426,
+  19427,
+  19428,
+  19429,
+  19430,
+  19431
+ ],
+ "worlds": [
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 1,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 2
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 1,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 20,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     333,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 2,
+   "seed": 19400,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     2,
+     2
+    ],
+    "delivered_units": [
+     20,
+     20
+    ],
+    "departed": [
+     2,
+     2
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     2,
+     2
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     20,
+     20
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 2,
+    "porter_food_delivered": 20,
+    "porter_loads_lost": 0,
+    "porter_trips": 1,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 20,
+    "porter_wood_delivered": 0,
+    "porters_departed": 2,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 1,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 1,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 2,
+    "porter_food_delivered": 20,
+    "porter_loads_lost": 0,
+    "porter_trips": 1,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 20,
+    "porter_wood_delivered": 0,
+    "porters_departed": 2,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     300,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19401,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -234,
+     1,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      18,
+      [
+       131040,
+       162720
+      ],
+      [
+       146880
+      ]
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 103,
+     "quarrels_capped": 101,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19402,
+   "t7": {
+    "costed_plus_uncosted": [
+     182,
+     182
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     182,
+     182
+    ],
+    "estranged": [
+     2,
+     2
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     2,
+     2
+    ],
+    "pair_reconciliations": [
+     1,
+     1
+    ],
+    "quarrels": [
+     19,
+     19
+    ],
+    "quarrels_logged": [
+     19,
+     19
+    ],
+    "reconciled": [
+     1,
+     1
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 182,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 19,
+    "villages_estranged": 2,
+    "villages_reconciled": 1
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 178,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 56,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     300,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19403,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 12,
+   "aid_food_pair_days_open": 6,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 12
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 6,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 120,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -458,
+     1,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      33,
+      [
+       125280
+      ],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 150,
+     "quarrels_capped": 147,
+     "quarrels_while_estranged": 13
+    }
+   },
+   "porters": 12,
+   "seed": 19404,
+   "t7": {
+    "costed_plus_uncosted": [
+     266,
+     266
+    ],
+    "delivered": [
+     12,
+     12
+    ],
+    "delivered_units": [
+     120,
+     120
+    ],
+    "departed": [
+     12,
+     12
+    ],
+    "disputes_logged": [
+     266,
+     266
+    ],
+    "estranged": [
+     1,
+     1
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     1,
+     1
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     31,
+     31
+    ],
+    "quarrels_logged": [
+     31,
+     31
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     12,
+     12
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     120,
+     120
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 266,
+    "porter_deliveries": 12,
+    "porter_food_delivered": 120,
+    "porter_loads_lost": 0,
+    "porter_trips": 6,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 120,
+    "porter_wood_delivered": 0,
+    "porters_departed": 12,
+    "quarrels": 31,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "trips": 6,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 4,
+   "v25_tallies": {
+    "forage_disputes": 285,
+    "porter_deliveries": 8,
+    "porter_food_delivered": 80,
+    "porter_loads_lost": 0,
+    "porter_trips": 4,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 80,
+    "porter_wood_delivered": 0,
+    "porters_departed": 8,
+    "quarrels": 78,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19405,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19406,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 1,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 2,
+    "1": 4
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 3,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 20,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -301,
+     1,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      12,
+      [
+       132480,
+       171360
+      ],
+      [
+       148320
+      ]
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 69,
+     "quarrels_capped": 77,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 6,
+   "seed": 19407,
+   "t7": {
+    "costed_plus_uncosted": [
+     198,
+     198
+    ],
+    "delivered": [
+     6,
+     6
+    ],
+    "delivered_units": [
+     53,
+     53
+    ],
+    "departed": [
+     6,
+     6
+    ],
+    "disputes_logged": [
+     198,
+     198
+    ],
+    "estranged": [
+     2,
+     2
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     2,
+     2
+    ],
+    "pair_reconciliations": [
+     1,
+     1
+    ],
+    "quarrels": [
+     26,
+     26
+    ],
+    "quarrels_logged": [
+     26,
+     26
+    ],
+    "reconciled": [
+     1,
+     1
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     6,
+     6
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     53,
+     53
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 198,
+    "porter_deliveries": 6,
+    "porter_food_delivered": 20,
+    "porter_loads_lost": 0,
+    "porter_trips": 3,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 53,
+    "porter_wood_delivered": 33,
+    "porters_departed": 6,
+    "quarrels": 26,
+    "villages_estranged": 2,
+    "villages_reconciled": 1
+   },
+   "trips": 3,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 35,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 7,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 33
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     300,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19408,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 4,
+   "alive_daughters": {
+    "v24": 2,
+    "v25": 2,
+    "v26": 2
+   },
+   "causes": {
+    "0": 5
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 3,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 50,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 3,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     335,
+     0,
+     300
+    ],
+    [
+     1,
+     3,
+     -340,
+     1,
+     300
+    ],
+    [
+     2,
+     3,
+     150,
+     0,
+     150
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ],
+     [
+      1,
+      3,
+      2,
+      [
+       169920
+      ],
+      []
+     ],
+     [
+      2,
+      3,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 49,
+     "quarrels_capped": 52,
+     "quarrels_while_estranged": 1
+    }
+   },
+   "porters": 5,
+   "seed": 19409,
+   "t7": {
+    "costed_plus_uncosted": [
+     113,
+     113
+    ],
+    "delivered": [
+     5,
+     5
+    ],
+    "delivered_units": [
+     50,
+     50
+    ],
+    "departed": [
+     5,
+     5
+    ],
+    "disputes_logged": [
+     113,
+     113
+    ],
+    "estranged": [
+     1,
+     1
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     1,
+     1
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     17,
+     17
+    ],
+    "quarrels_logged": [
+     17,
+     17
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     5,
+     5
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     50,
+     50
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 113,
+    "porter_deliveries": 5,
+    "porter_food_delivered": 50,
+    "porter_loads_lost": 0,
+    "porter_trips": 3,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 50,
+    "porter_wood_delivered": 0,
+    "porters_departed": 5,
+    "quarrels": 17,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "trips": 3,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 185,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 67,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 18,
+   "aid_food_pair_days_open": 15,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 30,
+    "1": 4
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 17,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 300,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -180,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      23,
+      [
+       118080,
+       151200
+      ],
+      [
+       135360,
+       167040
+      ]
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 149,
+     "quarrels_capped": 168,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 34,
+   "seed": 19410,
+   "t7": {
+    "costed_plus_uncosted": [
+     289,
+     289
+    ],
+    "delivered": [
+     34,
+     34
+    ],
+    "delivered_units": [
+     334,
+     334
+    ],
+    "departed": [
+     34,
+     34
+    ],
+    "disputes_logged": [
+     289,
+     289
+    ],
+    "estranged": [
+     2,
+     2
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     2,
+     2
+    ],
+    "pair_reconciliations": [
+     2,
+     2
+    ],
+    "quarrels": [
+     37,
+     37
+    ],
+    "quarrels_logged": [
+     37,
+     37
+    ],
+    "reconciled": [
+     2,
+     2
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     34,
+     34
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     334,
+     334
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 289,
+    "porter_deliveries": 34,
+    "porter_food_delivered": 300,
+    "porter_loads_lost": 0,
+    "porter_trips": 17,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 334,
+    "porter_wood_delivered": 34,
+    "porters_departed": 34,
+    "quarrels": 37,
+    "villages_estranged": 2,
+    "villages_reconciled": 2
+   },
+   "trips": 17,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 2,
+   "v25_tallies": {
+    "forage_disputes": 318,
+    "porter_deliveries": 4,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 2,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 34,
+    "porter_wood_delivered": 34,
+    "porters_departed": 4,
+    "quarrels": 101,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 34
+  },
+  {
+   "aid_food_pair_days_estranged": 4,
+   "aid_food_pair_days_open": 11,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 19
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 10,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 190,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -313,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      11,
+      [
+       133920
+      ],
+      [
+       149760
+      ]
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 24,
+     "quarrels_capped": 32,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 19,
+   "seed": 19411,
+   "t7": {
+    "costed_plus_uncosted": [
+     153,
+     153
+    ],
+    "delivered": [
+     19,
+     19
+    ],
+    "delivered_units": [
+     190,
+     190
+    ],
+    "departed": [
+     19,
+     19
+    ],
+    "disputes_logged": [
+     153,
+     153
+    ],
+    "estranged": [
+     1,
+     1
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     1,
+     1
+    ],
+    "pair_reconciliations": [
+     1,
+     1
+    ],
+    "quarrels": [
+     29,
+     29
+    ],
+    "quarrels_logged": [
+     29,
+     29
+    ],
+    "reconciled": [
+     1,
+     1
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     19,
+     19
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     190,
+     190
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 153,
+    "porter_deliveries": 19,
+    "porter_food_delivered": 190,
+    "porter_loads_lost": 0,
+    "porter_trips": 10,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 190,
+    "porter_wood_delivered": 0,
+    "porters_departed": 19,
+    "quarrels": 29,
+    "villages_estranged": 1,
+    "villages_reconciled": 1
+   },
+   "trips": 10,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 5,
+   "v25_tallies": {
+    "forage_disputes": 47,
+    "porter_deliveries": 10,
+    "porter_food_delivered": 94,
+    "porter_loads_lost": 0,
+    "porter_trips": 5,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 94,
+    "porter_wood_delivered": 0,
+    "porters_departed": 10,
+    "quarrels": 11,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     300,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19412,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 4,
+   "aid_food_pair_days_open": 34,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 57,
+    "1": 2
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 1,
+    "v26": 0
+   },
+   "delivered_trips": 30,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 570,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -145,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      26,
+      [
+       97920,
+       133920
+      ],
+      [
+       115200,
+       154080
+      ]
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 361,
+     "quarrels_capped": 337,
+     "quarrels_while_estranged": 1
+    }
+   },
+   "porters": 59,
+   "seed": 19413,
+   "t7": {
+    "costed_plus_uncosted": [
+     538,
+     538
+    ],
+    "delivered": [
+     59,
+     59
+    ],
+    "delivered_units": [
+     588,
+     588
+    ],
+    "departed": [
+     59,
+     59
+    ],
+    "disputes_logged": [
+     538,
+     538
+    ],
+    "estranged": [
+     2,
+     2
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     2,
+     2
+    ],
+    "pair_reconciliations": [
+     2,
+     2
+    ],
+    "quarrels": [
+     50,
+     50
+    ],
+    "quarrels_logged": [
+     50,
+     50
+    ],
+    "reconciled": [
+     2,
+     2
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     59,
+     59
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     588,
+     588
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 538,
+    "porter_deliveries": 59,
+    "porter_food_delivered": 570,
+    "porter_loads_lost": 0,
+    "porter_trips": 30,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 588,
+    "porter_wood_delivered": 18,
+    "porters_departed": 59,
+    "quarrels": 50,
+    "villages_estranged": 2,
+    "villages_reconciled": 2
+   },
+   "trips": 30,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 2,
+   "v25_tallies": {
+    "forage_disputes": 121,
+    "porter_deliveries": 4,
+    "porter_food_delivered": 35,
+    "porter_loads_lost": 0,
+    "porter_trips": 2,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 35,
+    "porter_wood_delivered": 0,
+    "porters_departed": 4,
+    "quarrels": 33,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 18
+  },
+  {
+   "aid_food_pair_days_estranged": 11,
+   "aid_food_pair_days_open": 8,
+   "alive_daughters": {
+    "v24": 2,
+    "v25": 2,
+    "v26": 2
+   },
+   "causes": {
+    "0": 13
+   },
+   "daughter_deaths": {
+    "v24": 5,
+    "v25": 24,
+    "v26": 10
+   },
+   "delivered_trips": 7,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 130,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 3,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -217,
+     1,
+     300
+    ],
+    [
+     1,
+     3,
+     -232,
+     0,
+     300
+    ],
+    [
+     2,
+     3,
+     150,
+     0,
+     150
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      58,
+      [
+       51840,
+       83520,
+       110880,
+       131040,
+       162720
+      ],
+      [
+       72000,
+       103680,
+       125280,
+       149760
+      ]
+     ],
+     [
+      1,
+      3,
+      0,
+      [],
+      []
+     ],
+     [
+      2,
+      3,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 358,
+     "quarrels_capped": 349,
+     "quarrels_while_estranged": 3
+    }
+   },
+   "porters": 13,
+   "seed": 19414,
+   "t7": {
+    "costed_plus_uncosted": [
+     571,
+     571
+    ],
+    "delivered": [
+     13,
+     13
+    ],
+    "delivered_units": [
+     130,
+     130
+    ],
+    "departed": [
+     13,
+     13
+    ],
+    "disputes_logged": [
+     571,
+     571
+    ],
+    "estranged": [
+     5,
+     5
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     5,
+     5
+    ],
+    "pair_reconciliations": [
+     4,
+     4
+    ],
+    "quarrels": [
+     57,
+     57
+    ],
+    "quarrels_logged": [
+     57,
+     57
+    ],
+    "reconciled": [
+     4,
+     4
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     13,
+     13
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     130,
+     130
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 571,
+    "porter_deliveries": 13,
+    "porter_food_delivered": 130,
+    "porter_loads_lost": 0,
+    "porter_trips": 7,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 130,
+    "porter_wood_delivered": 0,
+    "porters_departed": 13,
+    "quarrels": 57,
+    "villages_estranged": 5,
+    "villages_reconciled": 4
+   },
+   "trips": 7,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 5,
+   "v25_tallies": {
+    "forage_disputes": 69,
+    "porter_deliveries": 10,
+    "porter_food_delivered": 99,
+    "porter_loads_lost": 0,
+    "porter_trips": 5,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 99,
+    "porter_wood_delivered": 0,
+    "porters_departed": 10,
+    "quarrels": 17,
+    "villages_estranged": 2,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19415,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19416,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 2,
+    "v25": 2,
+    "v26": 2
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 3,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     300,
+     0,
+     300
+    ],
+    [
+     1,
+     3,
+     204,
+     0,
+     300
+    ],
+    [
+     2,
+     3,
+     150,
+     0,
+     150
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ],
+     [
+      1,
+      3,
+      0,
+      [],
+      []
+     ],
+     [
+      2,
+      3,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 1,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19417,
+   "t7": {
+    "costed_plus_uncosted": [
+     4,
+     4
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     4,
+     4
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     2,
+     2
+    ],
+    "quarrels_logged": [
+     2,
+     2
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 4,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 2,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 4,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 2,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19418,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19419,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -454,
+     1,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      11,
+      [
+       156960
+      ],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 66,
+     "quarrels_capped": 71,
+     "quarrels_while_estranged": 6
+    }
+   },
+   "porters": 0,
+   "seed": 19420,
+   "t7": {
+    "costed_plus_uncosted": [
+     142,
+     142
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     142,
+     142
+    ],
+    "estranged": [
+     1,
+     1
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     1,
+     1
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     21,
+     21
+    ],
+    "quarrels_logged": [
+     21,
+     21
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 142,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 21,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 115,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 30,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 2,
+   "aid_food_pair_days_open": 3,
+   "alive_daughters": {
+    "v24": 2,
+    "v25": 2,
+    "v26": 2
+   },
+   "causes": {
+    "0": 3
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 2,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 30,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 3,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -251,
+     1,
+     300
+    ],
+    [
+     1,
+     3,
+     -301,
+     1,
+     300
+    ],
+    [
+     2,
+     3,
+     150,
+     0,
+     150
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      15,
+      [
+       131040,
+       167040
+      ],
+      [
+       146880
+      ]
+     ],
+     [
+      1,
+      3,
+      1,
+      [
+       171360
+      ],
+      []
+     ],
+     [
+      2,
+      3,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 216,
+     "quarrels_capped": 200,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 3,
+   "seed": 19421,
+   "t7": {
+    "costed_plus_uncosted": [
+     347,
+     347
+    ],
+    "delivered": [
+     3,
+     3
+    ],
+    "delivered_units": [
+     30,
+     30
+    ],
+    "departed": [
+     3,
+     3
+    ],
+    "disputes_logged": [
+     347,
+     347
+    ],
+    "estranged": [
+     3,
+     3
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     3,
+     3
+    ],
+    "pair_reconciliations": [
+     1,
+     1
+    ],
+    "quarrels": [
+     35,
+     35
+    ],
+    "quarrels_logged": [
+     35,
+     35
+    ],
+    "reconciled": [
+     1,
+     1
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     3,
+     3
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     30,
+     30
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 347,
+    "porter_deliveries": 3,
+    "porter_food_delivered": 30,
+    "porter_loads_lost": 0,
+    "porter_trips": 2,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 30,
+    "porter_wood_delivered": 0,
+    "porters_departed": 3,
+    "quarrels": 35,
+    "villages_estranged": 3,
+    "villages_reconciled": 1
+   },
+   "trips": 2,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 1,
+   "v25_tallies": {
+    "forage_disputes": 94,
+    "porter_deliveries": 2,
+    "porter_food_delivered": 20,
+    "porter_loads_lost": 0,
+    "porter_trips": 1,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 20,
+    "porter_wood_delivered": 0,
+    "porters_departed": 2,
+    "quarrels": 17,
+    "villages_estranged": 2,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19422,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19423,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19424,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 18,
+   "aid_food_pair_days_open": 6,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 12,
+    "1": 2
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 7,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 120,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     -415,
+     1,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      44,
+      [
+       100800,
+       165600
+      ],
+      [
+       156960
+      ]
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 168,
+     "quarrels_capped": 139,
+     "quarrels_while_estranged": 12
+    }
+   },
+   "porters": 14,
+   "seed": 19425,
+   "t7": {
+    "costed_plus_uncosted": [
+     303,
+     303
+    ],
+    "delivered": [
+     14,
+     14
+    ],
+    "delivered_units": [
+     136,
+     136
+    ],
+    "departed": [
+     14,
+     14
+    ],
+    "disputes_logged": [
+     303,
+     303
+    ],
+    "estranged": [
+     2,
+     2
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     2,
+     2
+    ],
+    "pair_reconciliations": [
+     1,
+     1
+    ],
+    "quarrels": [
+     36,
+     36
+    ],
+    "quarrels_logged": [
+     36,
+     36
+    ],
+    "reconciled": [
+     1,
+     1
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     14,
+     14
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     136,
+     136
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 303,
+    "porter_deliveries": 14,
+    "porter_food_delivered": 120,
+    "porter_loads_lost": 0,
+    "porter_trips": 7,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 136,
+    "porter_wood_delivered": 16,
+    "porters_departed": 14,
+    "quarrels": 36,
+    "villages_estranged": 2,
+    "villages_reconciled": 1
+   },
+   "trips": 7,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 282,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 78,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 16
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19426,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19427,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19428,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 2,
+   "alive_daughters": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 1
+   },
+   "causes": {
+    "0": 4
+   },
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 2,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 40,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 2,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     378,
+     0,
+     300
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 4,
+   "seed": 19429,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     4,
+     4
+    ],
+    "delivered_units": [
+     40,
+     40
+    ],
+    "departed": [
+     4,
+     4
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     4,
+     4
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     40,
+     40
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 4,
+    "porter_food_delivered": 40,
+    "porter_loads_lost": 0,
+    "porter_trips": 2,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 40,
+    "porter_wood_delivered": 0,
+    "porters_departed": 4,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 2,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 1,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 2,
+    "porter_food_delivered": 20,
+    "porter_loads_lost": 0,
+    "porter_trips": 1,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 20,
+    "porter_wood_delivered": 0,
+    "porters_departed": 2,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 29,
+   "alive_daughters": {
+    "v24": 3,
+    "v25": 3,
+    "v26": 3
+   },
+   "causes": {
+    "0": 50
+   },
+   "daughter_deaths": {
+    "v24": 1,
+    "v25": 1,
+    "v26": 2
+   },
+   "delivered_trips": 25,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 500,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 4,
+   "multi_village": true,
+   "pairs_end": [
+    [
+     1,
+     2,
+     497,
+     0,
+     300
+    ],
+    [
+     1,
+     3,
+     323,
+     0,
+     300
+    ],
+    [
+     1,
+     4,
+     368,
+     0,
+     300
+    ],
+    [
+     2,
+     3,
+     150,
+     0,
+     150
+    ],
+    [
+     2,
+     4,
+     150,
+     0,
+     150
+    ],
+    [
+     3,
+     4,
+     23,
+     0,
+     150
+    ]
+   ],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [
+     [
+      1,
+      2,
+      0,
+      [],
+      []
+     ],
+     [
+      1,
+      3,
+      0,
+      [],
+      []
+     ],
+     [
+      1,
+      4,
+      0,
+      [],
+      []
+     ],
+     [
+      2,
+      3,
+      0,
+      [],
+      []
+     ],
+     [
+      2,
+      4,
+      0,
+      [],
+      []
+     ],
+     [
+      3,
+      4,
+      0,
+      [],
+      []
+     ]
+    ],
+    "tallies": {
+     "disputes_uncosted": 49,
+     "quarrels_capped": 52,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 50,
+   "seed": 19430,
+   "t7": {
+    "costed_plus_uncosted": [
+     93,
+     93
+    ],
+    "delivered": [
+     50,
+     50
+    ],
+    "delivered_units": [
+     500,
+     500
+    ],
+    "departed": [
+     50,
+     50
+    ],
+    "disputes_logged": [
+     93,
+     93
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     9,
+     9
+    ],
+    "quarrels_logged": [
+     9,
+     9
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     50,
+     50
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     500,
+     500
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 93,
+    "porter_deliveries": 50,
+    "porter_food_delivered": 500,
+    "porter_loads_lost": 0,
+    "porter_trips": 25,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 500,
+    "porter_wood_delivered": 0,
+    "porters_departed": 50,
+    "quarrels": 9,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 25,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 17,
+   "v25_tallies": {
+    "forage_disputes": 101,
+    "porter_deliveries": 29,
+    "porter_food_delivered": 266,
+    "porter_loads_lost": 0,
+    "porter_trips": 17,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 266,
+    "porter_wood_delivered": 0,
+    "porters_departed": 29,
+    "quarrels": 14,
+    "villages_estranged": 1,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  },
+  {
+   "aid_food_pair_days_estranged": 0,
+   "aid_food_pair_days_open": 0,
+   "alive_daughters": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "causes": {},
+   "daughter_deaths": {
+    "v24": 0,
+    "v25": 0,
+    "v26": 0
+   },
+   "delivered_trips": 0,
+   "exchange_pair_days": 0,
+   "exchange_pair_days_open": 0,
+   "exchange_trips": 0,
+   "failed": 0,
+   "food_moved": 0,
+   "in_flight_reported": 0,
+   "in_flight_units": 0,
+   "lost_loads": 0,
+   "max_alive": 1,
+   "multi_village": false,
+   "pairs_end": [],
+   "pairs_invariant": true,
+   "pass21": {
+    "pairs": [],
+    "tallies": {
+     "disputes_uncosted": 0,
+     "quarrels_capped": 0,
+     "quarrels_while_estranged": 0
+    }
+   },
+   "porters": 0,
+   "seed": 19431,
+   "t7": {
+    "costed_plus_uncosted": [
+     0,
+     0
+    ],
+    "delivered": [
+     0,
+     0
+    ],
+    "delivered_units": [
+     0,
+     0
+    ],
+    "departed": [
+     0,
+     0
+    ],
+    "disputes_logged": [
+     0,
+     0
+    ],
+    "estranged": [
+     0,
+     0
+    ],
+    "lost_units": [
+     0,
+     0
+    ],
+    "pair_estrangements": [
+     0,
+     0
+    ],
+    "pair_reconciliations": [
+     0,
+     0
+    ],
+    "quarrels": [
+     0,
+     0
+    ],
+    "quarrels_logged": [
+     0,
+     0
+    ],
+    "reconciled": [
+     0,
+     0
+    ],
+    "returned_units": [
+     0,
+     0
+    ],
+    "trip_records": [
+     0,
+     0
+    ],
+    "turned_back": [
+     0,
+     0
+    ],
+    "withdrawn": [
+     0,
+     0
+    ]
+   },
+   "t7_mismatches": [],
+   "tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "trips": 0,
+   "trips_with_village_change": 0,
+   "unbalanced_trips": 0,
+   "v25_delivered_trips": 0,
+   "v25_tallies": {
+    "forage_disputes": 0,
+    "porter_deliveries": 0,
+    "porter_food_delivered": 0,
+    "porter_loads_lost": 0,
+    "porter_trips": 0,
+    "porter_turnbacks": 0,
+    "porter_units_lost": 0,
+    "porter_units_returned": 0,
+    "porter_units_withdrawn": 0,
+    "porter_wood_delivered": 0,
+    "porters_departed": 0,
+    "quarrels": 0,
+    "villages_estranged": 0,
+    "villages_reconciled": 0
+   },
+   "wood_moved": 0
+  }
+ ]
+}

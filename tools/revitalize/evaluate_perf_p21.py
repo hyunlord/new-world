@@ -148,8 +148,8 @@ def main(argv: list[str]) -> int:
         "", "| seed | v24 alive end / villages | v25 alive end / villages | v26 alive end / villages | v26 RelationsSystem share |", "|---|---|---|---|---|"]
     first = {s: {w["seed"]: w for w in n["repeats"][s][0]["worlds"]} for s in ("game_v24", "game_v25", "game_v26")}
     for seed in sorted(first["game_v26"]):
-        a, c, b = first["game_v24"].get(seed), first["game_v25"].get(seed), first["game_v26"][seed]
-        lines.append(f"| {seed} | {a['alive_end'] if a else '-'} / {a['settlements_end'] if a else '-'} | {c['alive_end'] if c else '-'} / {c['settlements_end'] if c else '-'} | {b['alive_end']} / {b['settlements_end']} | {b['relations_share']:.4%} |")
+        a, v25, b = first["game_v24"].get(seed), first["game_v25"].get(seed), first["game_v26"][seed]
+        lines.append(f"| {seed} | {a['alive_end'] if a else '-'} / {a['settlements_end'] if a else '-'} | {v25['alive_end'] if v25 else '-'} / {v25['settlements_end'] if v25 else '-'} | {b['alive_end']} / {b['settlements_end']} | {b['relations_share']:.4%} |")
     lines += ["", "| check | value | limit | pass |", "|---|---|---|---|"]
     for name, check in c.items():
         lines.append(f"| {name} | {check['value']:.4f} | {check['op']} {check['limit']} | {check['passed']} |")
