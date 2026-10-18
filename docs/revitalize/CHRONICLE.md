@@ -33,8 +33,15 @@ Each `ChronicleEntry` is `{tick, kind, subject, other, third, settlement, settle
 | 14 | DaughterFounded | – | daughter / parent | – | fission id | `FissionSystem::found` |
 | 15 | FissionCancelled | – | parent | – | fission id | `FissionSystem::cancel` |
 | 16 | SettlementDissolved | – | village | 0 empty, 1 remnant merge | – | `run_dissolutions`, `FissionSystem::remnants` |
+| 17 | PorterDeparted | porter | sender / receiver | 0 aid food, 1 aid wood, 2 exchange food, 3 exchange wood | units carried | `RelationsSystem` (08:00, Pass 20, `game_v25`) |
+| 18 | PorterDelivered | porter | receiver / sender | as 17; a porter that turned back: 10 + the departure cause | units delivered (0 when turned back) | `RelationsSystem` (at the receiver's hearth, or at the turn-back) |
+| 19 | Quarrel | forager a (picking up) / forager b (its rival) | a's village / b's village | 0 | the relation after the quarrel | `AgentDecisionSystem` (after its loop) |
+| 20 | VillagesEstranged | – | lower id / higher id | 0 | the relation | `RelationsSystem` (08:00, after the drift) |
+| 21 | VillagesReconciled | – | lower id / higher id | 0 | the relation | `RelationsSystem` (08:00, after the drift) |
 
 Order: entries of one site are appended in `AgentId` order (then `SettlementId`); wherever the code iterates a `HashMap`/`HashSet` it sorts a local copy first. Each entry is indexed under every distinct person and settlement it names.
+
+Kinds 17–21 (Pass 20) are written only under the relations rule (`game_v25`); 0–16 are unchanged. One `PorterDeparted` and at most one `PorterDelivered` per porter (a porter who dies or whose village dissolves on the way has none; its load is booked lost). Forage disputes are counted (`Tallies::forage_disputes`), not chronicled. See [RELATIONS.md](RELATIONS.md).
 
 ### Why each cause
 

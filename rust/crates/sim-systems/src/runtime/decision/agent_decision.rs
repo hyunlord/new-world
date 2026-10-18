@@ -58,10 +58,12 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Founding,
-    Hunger, Inventory, Lineage, Memory, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId,
-    SettlementMigrant, Sleep, Social, TargetKind, Temperament, Thirst, INVENTORY_CAPACITY,
-    SALIENCE_FLOOR,
+    Hunger, Inventory, Lineage, Memory, MemoryArm, PorterStage, PorterTrip, Position, ResourceKind,
+    SeekTarget, SettlementId, SettlementMigrant, SettlementRelations, Sleep, Social, TargetKind,
+    Temperament, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
+use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::rng::{keyed_below, STREAM_RELATIONS};
 use sim_core::rules::{FirewoodRule, ForageRule, NightRestRule, TemperamentRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
@@ -75,6 +77,9 @@ type Retarget = (AgentId, hecs::Entity, (u32, u32), (u32, u32));
 /// A wood gatherer to re-target (Pass 5): agent id, entity, position and its
 /// emptied spot (`None` when it had no target).
 type WoodRetarget = (AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>);
+/// Pass 20: a forager at (or heading to) a bush in the start-of-tick snapshot:
+/// agent id, village, lineage key, NS and HA.
+type ForageRival = (AgentId, SettlementId, u64, u16, u16);
 
 /// Per-settlement forage inputs computed once per decision tick (Pass 4).
 #[derive(Debug, Clone)]
@@ -90,6 +95,8 @@ struct ForagePlan {
 /// Deterministic forage bush choice: among tiles holding food within
 /// `forage_radius` of `home` whose claim count is below the cap, minimise
 /// `(claims, chebyshev(agent, bush), y, x)`. `None` when no bush qualifies.
+/// Pass 20: `avoid` holds the hearths of villages estranged from the
+/// forager's (empty in every other scene); see [`bush_eligible`].
 fn choose_bush(
     rule: &ForageRule,
     home: (u32, u32),
@@ -97,28 +104,35 @@ fn choose_bush(
     food_tiles: &HashMap<(u32, u32), u8>,
     claims: &BTreeMap<(u32, u32), u32>,
     exclude: Option<(u32, u32)>,
+    avoid: &[(u32, u32)],
 ) -> Option<(u32, u32)> {
     let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     food_tiles
         .iter()
-        .filter(|(tile, amount)| bush_eligible(rule, home, claims, exclude, **tile, **amount))
+        .filter(|(tile, amount)| bush_eligible(rule, home, claims, exclude, avoid, **tile, **amount))
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
 }
 
 /// The candidate filter of [`choose_bush`]; it does not depend on the person.
+/// Pass 20: a bush nearer (Chebyshev) to an `avoid` hearth than to `home` is
+/// skipped — a village estranged from another leaves it the bushes on its
+/// side.
 fn bush_eligible(
     rule: &ForageRule,
     home: (u32, u32),
     claims: &BTreeMap<(u32, u32), u32>,
     exclude: Option<(u32, u32)>,
+    avoid: &[(u32, u32)],
     tile: (u32, u32),
     amount: u8,
 ) -> bool {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     amount >= 1
         && Some(tile) != exclude
-        && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= rule.forage_radius
+        && chebyshev(tile, home) <= rule.forage_radius
         && claims.get(&tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+        && avoid.iter().all(|hearth| chebyshev(tile, *hearth) >= chebyshev(tile, home))
 }
 
 /// Pass 18: whether [`choose_bush`] (without `exclude`) returns `Some` for
@@ -128,10 +142,11 @@ fn bush_exists(
     home: (u32, u32),
     food_tiles: &HashMap<(u32, u32), u8>,
     claims: &BTreeMap<(u32, u32), u32>,
+    avoid: &[(u32, u32)],
 ) -> bool {
     food_tiles
         .iter()
-        .any(|(tile, amount)| bush_eligible(rule, home, claims, None, *tile, *amount))
+        .any(|(tile, amount)| bush_eligible(rule, home, claims, None, avoid, *tile, *amount))
 }
 
 /// Pass 18: a per-tick trip-existence answer with the versions of the two
@@ -708,6 +723,25 @@ impl RuntimeSystem for AgentDecisionSystem {
         #[cfg(feature = "subprofile")]
         let pre_timer = crate::subprofile::Timer::start();
         let availability = NeedAvailability::from_resources(resources);
+        // Pass 20 (`game_v25`): every porter on a trip and the hearth it walks
+        // to (`None` when that village is gone; the relations system turns it
+        // round). Empty without the relations rule.
+        let relations_rule = resources.rules.society.relations;
+        let porters: BTreeMap<AgentId, Option<(u32, u32)>> = if relations_rule.is_some() {
+            world
+                .query::<(&Agent, &PorterTrip)>()
+                .iter()
+                .map(|(_, (agent, trip))| {
+                    let to = match trip.stage {
+                        PorterStage::Outbound => trip.to,
+                        PorterStage::Return => trip.from,
+                    };
+                    (agent.id, resources.settlements.get(&to).map(|s| s.formation_tile))
+                })
+                .collect()
+        } else {
+            BTreeMap::new()
+        };
         // Pass 12 (`local_food_availability`, `game_v18`, the J6 fix): a
         // member's food availability is whether a food tile with food lies in
         // its settlement's catchment (settlements in id order, first wins),
@@ -720,7 +754,13 @@ impl RuntimeSystem for AgentDecisionSystem {
             // Review round 1, M1: a founder still walking to its site stays on
             // its parent's roster but is not tied to the parent's catchment
             // (v17's world-wide rule applies to it until its daughter forms).
-            let walking: BTreeSet<AgentId> = world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect();
+            // Pass 20: a porter on its trip is not tied to its catchment either.
+            let walking: BTreeSet<AgentId> = world
+                .query::<(&Agent, &Founding)>()
+                .iter()
+                .map(|(_, (a, _))| a.id)
+                .chain(porters.keys().copied())
+                .collect();
             let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
             ids.sort_unstable();
             let mut out = BTreeMap::new();
@@ -841,6 +881,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
                  !children.contains(&a.id) && !elders.contains(&a.id) && !founding.contains_key(&a.id)
+                    && !porters.contains_key(&a.id)
                     && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
                     && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
                     && sleep.is_none_or(|v| v.fatigue <= fatigue_threshold)
@@ -956,6 +997,59 @@ impl RuntimeSystem for AgentDecisionSystem {
             }
         }
         let mut forage_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
+        // Pass 20 (`game_v25`): the foragers at (Consuming, tile = position) or
+        // heading to (Seeking with a target) each bush, with their village,
+        // lineage key, NS and HA, sorted by AgentId — the rivals of a pickup —
+        // and, per village, the hearths of the villages estranged from it
+        // (the forage choice's avoid list). Empty without the relations rule.
+        let mut forage_spots: BTreeMap<(u32, u32), Vec<ForageRival>> = BTreeMap::new();
+        let mut avoid_of: BTreeMap<SettlementId, Vec<(u32, u32)>> = BTreeMap::new();
+        if relations_rule.is_some() {
+            for (_, (agent, pos, state, seek, temperament, lineage)) in world
+                .query::<(&Agent, &Position, &AgentState, Option<&SeekTarget>, Option<&Temperament>, Option<&Lineage>)>()
+                .iter()
+            {
+                let tile = match state {
+                    AgentState::Consuming { target: TargetKind::GatherFood } => Some((pos.x, pos.y)),
+                    AgentState::Seeking { target: TargetKind::GatherFood } => seek.map(|s| s.tile),
+                    _ => None,
+                };
+                if let (Some(tile), Some(sid)) = (tile, member_of.get(&agent.id)) {
+                    forage_spots.entry(tile).or_default().push((
+                        agent.id,
+                        *sid,
+                        lineage.map_or(agent.id, |l| l.key),
+                        temperament.map_or(500, |t| t.ns),
+                        temperament.map_or(500, |t| t.ha),
+                    ));
+                }
+            }
+            for rows in forage_spots.values_mut() {
+                rows.sort_unstable_by_key(|row| row.0);
+            }
+            for ((a, b), state) in &resources.settlement_relations.pairs {
+                if !state.estranged {
+                    continue;
+                }
+                if let (Some(sa), Some(sb)) = (resources.settlements.get(a), resources.settlements.get(b)) {
+                    avoid_of.entry(*a).or_default().push(sb.formation_tile);
+                    avoid_of.entry(*b).or_default().push(sa.formation_tile);
+                }
+            }
+            // Each pair of foragers is evaluated at most once per display day.
+            let day = resources.ticks_per_day.max(1);
+            let day = tick.saturating_add(resources.rules.clock_offset_ticks) / day;
+            if resources.settlement_relations.dispute_day != day {
+                resources.settlement_relations.dispute_day = day;
+                resources.settlement_relations.disputed.clear();
+            }
+        }
+        let no_avoid: Vec<(u32, u32)> = Vec::new();
+        let avoid_for = |sid: &SettlementId| avoid_of.get(sid).unwrap_or(&no_avoid).as_slice();
+        // Pass 20: foragers whose rival quarrelled at their bush this tick
+        // (their pickup is a no-op), and the quarrels to chronicle.
+        let mut quarrelled: BTreeSet<AgentId> = BTreeSet::new();
+        let mut quarrel_entries: Vec<ChronicleEntry> = Vec::new();
 
         // Pass 5 — meals at the hearth: each member's formation tile and
         // whether its settlement's store holds food, computed once before the
@@ -1314,6 +1408,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                 plan.home,
                                                 &resources.food_tiles,
                                                 &claims,
+                                                avoid_for(sid),
                                             );
                                             bush_memo.insert(plan.home, (versions.0, versions.1, exists));
                                             exists
@@ -1454,6 +1549,25 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 target: TargetKind::Agent(f.leader),
                             },
                             (None, None) => AgentState::Idle,
+                        };
+                    }
+                    AgentState::Idle if porters.contains_key(&agent.id) => {
+                        // Pass 20 — a porter (the founding leader's pattern): an
+                        // actionable need pre-empts the walk (the marker stays);
+                        // otherwise it walks on, before any routine, forage,
+                        // firewood, builder, meal or social arm, targeting itself
+                        // (`Seeking { Agent(own id) }`); the post-pass points it
+                        // at the hearth it is walking to.
+                        let need = actionable_need_with_fatigue_threshold(
+                            hunger_opt.as_deref(),
+                            thirst_opt.as_deref(),
+                            sleep_opt.as_deref(),
+                            availability,
+                            fatigue_threshold,
+                        );
+                        *state = match need {
+                            Some((target, _)) => AgentState::Seeking { target },
+                            None => AgentState::Seeking { target: TargetKind::Agent(agent.id) },
                         };
                     }
                     AgentState::Idle => {
@@ -1949,6 +2063,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     &resources.food_tiles,
                                     &claims,
                                     None,
+                                    avoid_for(sid),
                                 )
                             })
                         {
@@ -2176,6 +2291,23 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // timeout, no handshake (the leader's self-target is allowed
                         // only here). An actionable need pre-empts the walk and the
                         // stale site target is dropped; the marker stays.
+                        if let Some((need, _)) = actionable_need_with_fatigue_threshold(
+                            hunger_opt.as_deref(),
+                            thirst_opt.as_deref(),
+                            sleep_opt.as_deref(),
+                            availability,
+                            fatigue_threshold,
+                        ) {
+                            *state = AgentState::Seeking { target: need };
+                            preempt_clear_seek.push(entity);
+                        }
+                    }
+                    AgentState::Seeking {
+                        target: TargetKind::Agent(_),
+                    } if porters.contains_key(&agent.id) => {
+                        // Pass 20 — a walking porter: no social gate, no chase
+                        // timeout, no handshake. An actionable need pre-empts the
+                        // walk and the stale hearth target is dropped; the marker stays.
                         if let Some((need, _)) = actionable_need_with_fatigue_threshold(
                             hunger_opt.as_deref(),
                             thirst_opt.as_deref(),
@@ -2619,6 +2751,68 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 let want = INVENTORY_CAPACITY.saturating_sub(
                                     inventory_opt.as_ref().map(|inv| inv.total()).unwrap_or(0),
                                 );
+                                // Pass 20 (`game_v25`): a forage dispute. The rival is the
+                                // lowest-AgentId forager of another village at (or heading
+                                // to) this bush in the start-of-tick snapshot; each pair of
+                                // foragers once per day. A dispute costs the villages'
+                                // relation `dispute_loss`; a keyed draw makes it a quarrel
+                                // (another `quarrel_loss`): this pickup does not happen, nor
+                                // the rival's this tick.
+                                if let Some(rule) = relations_rule {
+                                    if quarrelled.contains(&agent.id) {
+                                        *state = AgentState::Idle;
+                                        continue;
+                                    }
+                                    let food_here = resources.food_tiles.get(&key).is_some_and(|count| *count > 0);
+                                    let mine = member_of.get(&agent.id).copied();
+                                    let rival = mine.filter(|_| want > 0 && food_here).and_then(|mine| {
+                                        forage_spots
+                                            .get(&key)
+                                            .and_then(|rows| rows.iter().find(|row| row.1 != mine && row.0 != agent.id))
+                                            .map(|row| (mine, *row))
+                                    });
+                                    if let Some((mine, (rival_id, theirs, rival_key, rival_ns, rival_ha))) = rival {
+                                        let pair = SettlementRelations::key(mine, theirs);
+                                        let foragers = (agent.id.min(rival_id), agent.id.max(rival_id));
+                                        let replicate = resources.noise_replicate_for(tick);
+                                        let relations = &mut resources.settlement_relations;
+                                        if relations.pairs.contains_key(&pair) && relations.disputed.insert(foragers) {
+                                            resources.tallies.forage_disputes += 1;
+                                            let (ns, ha) = temperament.map_or((500, 500), |t| (t.ns, t.ha));
+                                            let p = ((i64::from(ns) + i64::from(rival_ns) - i64::from(ha) - i64::from(rival_ha) + 1000) / 4)
+                                                .clamp(0, 500);
+                                            let subject = if agent.id < rival_id {
+                                                lineage.map_or(agent.id, |l| l.key)
+                                            } else {
+                                                rival_key
+                                            };
+                                            let draw = keyed_below(resources.world_seed, STREAM_RELATIONS, subject, tick, 0, replicate, 1000);
+                                            let quarrel = (draw as i64) < p;
+                                            let mut after = 0;
+                                            if let Some(relation) = relations.pairs.get_mut(&pair) {
+                                                relation.add(-rule.dispute_loss);
+                                                if quarrel {
+                                                    relation.add(-rule.quarrel_loss);
+                                                }
+                                                after = relation.value;
+                                            }
+                                            if quarrel {
+                                                resources.tallies.quarrels += 1;
+                                                quarrelled.insert(rival_id);
+                                                quarrel_entries.push(
+                                                    ChronicleEntry::new(tick, ChronicleKind::Quarrel)
+                                                        .subject(agent.id)
+                                                        .other(Some(rival_id))
+                                                        .settlement(Some(mine))
+                                                        .settlement2(Some(theirs))
+                                                        .value(i64::from(after)),
+                                                );
+                                                *state = AgentState::Idle;
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }
                                 if want > 0 {
                                     if let Some(counter) = resources.food_tiles.get_mut(&key) {
                                         food_version += 1;
@@ -2778,6 +2972,11 @@ impl RuntimeSystem for AgentDecisionSystem {
             routine_replay = Some(replay.into_iter().map(|(id, _)| id).collect());
         }
 
+        // Pass 20: the tick's quarrels, chronicled after the decision loop.
+        for entry in quarrel_entries {
+            crate::runtime::chronicle_log::record(world, resources, entry);
+        }
+
         // V7 Phase 10-γ — preempted migrants: remove the stale Agent-target
         // SeekTarget BEFORE the post-pass so the resource branch sees
         // `seek_opt.is_none()` and re-resolves a fresh resource goal (the new
@@ -2851,6 +3050,15 @@ impl RuntimeSystem for AgentDecisionSystem {
                     if let Some(f) = founding_marker {
                         if seek_opt.map(|s| s.tile) != Some(f.site) {
                             seek_set.push((e, f.site));
+                        }
+                    }
+                }
+                // Pass 20 — a walking porter heads to the hearth of its stage
+                // (kept as it is while that village is gone).
+                AgentState::Seeking { target: TargetKind::Agent(_) } if porters.contains_key(&agent.id) => {
+                    if let Some(Some(tile)) = porters.get(&agent.id) {
+                        if seek_opt.map(|s| s.tile) != Some(*tile) {
+                            seek_set.push((e, *tile));
                         }
                     }
                 }
@@ -3040,9 +3248,8 @@ impl RuntimeSystem for AgentDecisionSystem {
             for (id, e, pos, old) in retarget {
                 let home = member_of
                     .get(&id)
-                    .and_then(|sid| forage_plans.get(sid))
-                    .map(|plan| plan.home);
-                match home.and_then(|home| {
+                    .and_then(|sid| forage_plans.get(sid).map(|plan| (plan.home, avoid_for(sid))));
+                match home.and_then(|(home, avoid)| {
                     choose_bush(
                         &rule,
                         home,
@@ -3050,6 +3257,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         &resources.food_tiles,
                         &gather_claims,
                         Some(old),
+                        avoid,
                     )
                 }) {
                     Some(bush) => {
@@ -3201,13 +3409,43 @@ mod tests {
         tiles.insert((11, 11), 0);
         let mut claims = BTreeMap::new();
         // (8,10) and (12,10) tie on distance 2 from (10,10); y then x picks (8,10).
-        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((8, 10)));
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None, &[]), Some((8, 10)));
         claims.insert((8, 10), 1);
-        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((12, 10)));
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None, &[]), Some((12, 10)));
         claims.insert((12, 10), 2);
         claims.insert((10, 12), 2);
-        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((8, 10)));
-        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, Some((8, 10))), None);
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None, &[]), Some((8, 10)));
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, Some((8, 10)), &[]), None);
+    }
+
+    #[test]
+    fn estranged_hearths_remove_the_bushes_on_their_side_at_every_site() {
+        // Pass 20: the avoid list of the forage arm (`choose_bush`), the exit
+        // predicate (`bush_exists`) and the retarget (`choose_bush` with an
+        // exclusion) all go through `bush_eligible`.
+        let rule = ForageRule {
+            start_minute: 360, end_minute: 1080, forage_radius: 16,
+            haul_threshold: 4, max_foragers_per_bush: 2,
+        };
+        let home = (40, 30);
+        let other = (14, 30);
+        let claims = BTreeMap::new();
+        let mut tiles = HashMap::new();
+        tiles.insert((26, 30), 3u8); // 14 from home, 12 from the other: its side
+        tiles.insert((27, 30), 3u8); // 13 / 13: a tie stays eligible
+        tiles.insert((50, 30), 3u8); // 10 from home, 36 from the other
+        assert!(!bush_eligible(&rule, home, &claims, None, &[other], (26, 30), 3));
+        assert!(bush_eligible(&rule, home, &claims, None, &[], (26, 30), 3));
+        assert!(bush_eligible(&rule, home, &claims, None, &[other], (27, 30), 3));
+        assert!(bush_eligible(&rule, home, &claims, None, &[(90, 90), other], (50, 30), 3));
+        // Nearest to the agent standing at (28, 30): (27, 30), then (26, 30).
+        assert_eq!(choose_bush(&rule, home, (28, 30), &tiles, &claims, None, &[]), Some((27, 30)));
+        assert_eq!(choose_bush(&rule, home, (28, 30), &tiles, &claims, Some((27, 30)), &[]), Some((26, 30)));
+        assert_eq!(choose_bush(&rule, home, (28, 30), &tiles, &claims, Some((27, 30)), &[other]), Some((50, 30)));
+        let mut only_theirs = HashMap::new();
+        only_theirs.insert((26, 30), 3u8);
+        assert!(bush_exists(&rule, home, &only_theirs, &claims, &[]));
+        assert!(!bush_exists(&rule, home, &only_theirs, &claims, &[other]));
     }
 
     #[test]

@@ -85,6 +85,20 @@ mod tests {
             winter_wood_lost_settled: 0,
             area_floor_placed: 0,
             area_floor_lost_at_max: 0,
+            porter_trips: 0,
+            porters_departed: 0,
+            porter_deliveries: 0,
+            porter_turnbacks: 0,
+            porter_loads_lost: 0,
+            porter_units_withdrawn: 0,
+            porter_food_delivered: 0,
+            porter_wood_delivered: 0,
+            porter_units_returned: 0,
+            porter_units_lost: 0,
+            forage_disputes: 0,
+            quarrels: 0,
+            villages_estranged: 0,
+            villages_reconciled: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

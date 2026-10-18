@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 mod routine;
-pub use routine::{EndStagger, FamilyRule, RoutineRule};
+pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 
 /// Rules selected once when a world is constructed.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -201,6 +201,10 @@ pub struct SocietyRules {
     /// a daughter settlement at a wild region. None = v8–v16 and
     /// `game_v17_nofission` (no settlement ever splits).
     pub fission: Option<FissionRule>,
+    /// Pass 20 (`game_v25`): porters, forage disputes and the relations
+    /// between villages. None in every earlier scene.
+    #[serde(default)]
+    pub relations: Option<RelationsRule>,
 }
 /// Conditions for a settlement to produce a child.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -641,6 +645,7 @@ impl Default for WorldRules {
                 firewood: None,
                 exposure: None,
                 fission: None,
+                relations: None,
             },
             clock_offset_ticks: 0,
             seasons: None,
@@ -945,6 +950,44 @@ impl WorldRules {
     pub const fn game_v24(seed: u64) -> Self {
         let mut rules = Self::game_v23(seed);
         rules.agent.routine = Some(Self::V24_ROUTINE);
+        rules
+    }
+
+    /// Pass 20: villages that help and villages that quarrel (porters, kin
+    /// aid and exchange; forage disputes, relations and estrangement). The
+    /// brief's values, with the single tuning round's two kin-aid levers
+    /// (giver 4,000 → 3,000 and receiver 1,500 → 2,000 permille of a day;
+    /// `docs/revitalize/probe/p20-2_diag/tuning.md`), frozen afterwards.
+    pub const V25_RELATIONS: RelationsRule = RelationsRule {
+        decision_minute: 480,
+        latest_arrival_minute: 900,
+        porter_max: 2,
+        aid_giver_days_permille: 3000,
+        aid_keep_days_permille: 3000,
+        aid_receiver_days_permille: 2000,
+        wood_giver_nights: 3,
+        wood_keep_nights: 2,
+        wood_receiver_nights: 1,
+        trade_food_surplus_days_permille: 3000,
+        trade_food_short_days_permille: 2000,
+        trade_wood_surplus_nights: 4,
+        trade_wood_short_nights: 2,
+        relation_kin_parent: 300,
+        relation_kin_sibling: 150,
+        relation_other: 0,
+        relation_drift_permille: 10,
+        delivery_gain: 40,
+        dispute_loss: 10,
+        quarrel_loss: 100,
+        estrange_at: -300,
+        reconcile_at: -150,
+        porter_hunger_max: 30,
+    };
+
+    /// Pass 20: all v24 rules with the relations rule `V25_RELATIONS`.
+    pub const fn game_v25(seed: u64) -> Self {
+        let mut rules = Self::game_v24(seed);
+        rules.society.relations = Some(Self::V25_RELATIONS);
         rules
     }
 
@@ -1306,6 +1349,7 @@ impl WorldRules {
                 firewood: None,
                 exposure: None,
                 fission: None,
+                relations: None,
             },
             clock_offset_ticks: 480,
             seasons: None,
@@ -1651,6 +1695,7 @@ mod tests {
                 firewood: None,
                 exposure: None,
                 fission: None,
+                relations: None,
             }
         );
         assert_eq!(r.clock_offset_ticks, 0);

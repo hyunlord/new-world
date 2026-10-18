@@ -17,6 +17,7 @@
 pub mod activity;
 pub mod chronicle;
 pub mod family;
+pub mod relations;
 pub mod world_node;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};

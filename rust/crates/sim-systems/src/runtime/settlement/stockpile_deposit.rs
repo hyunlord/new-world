@@ -76,6 +76,10 @@ impl RuntimeSystem for StockpileDepositSystem {
             .collect();
 
         let firewood = resources.rules.society.firewood.is_some();
+        // Pass 20 (`game_v25`): a porter on its trip keeps its load (else it
+        // would be redeposited at home within ten ticks); the relations
+        // system stores it at the receiver or back home.
+        let porters = resources.rules.society.relations.is_some();
         // Iterate settlements in deterministic (sorted) SettlementId order.
         let mut settlement_ids: Vec<SettlementId> =
             resources.settlements.keys().copied().collect();
@@ -99,6 +103,9 @@ impl RuntimeSystem for StockpileDepositSystem {
                     Some(e) => *e,
                     None => continue,
                 };
+                if porters && world.get::<&sim_core::components::PorterTrip>(entity).is_ok() {
+                    continue;
+                }
 
                 // Read position (copy out so the borrow drops before the mut borrow).
                 let pos = match world.get::<&Position>(entity) {

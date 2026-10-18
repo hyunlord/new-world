@@ -1,0 +1,9 @@
+Pass 20 Part 0: base identity at 5cb16639 (bin_base, built 09:49-09:51 KST; identity 09:52-11:19 KST), and its comparison with Pass 19's final record (probe/p19-4_final, I1-I7 and I2 only; I8 is new):
+i1_v19 vs p19-4_final: differences: 0
+i3_v16 vs p19-4_final: differences: 0
+i4_v20 vs p19-4_final: differences: 0
+i5_v21 vs p19-4_final: differences: 0
+i6_v22 vs p19-4_final: differences: 0
+i7_v23 vs p19-4_final: differences: 0
+i2 vs p19-4_final: 20 array hashes equal
+determinism: 7 of 7 probes print DETERMINISM PASS

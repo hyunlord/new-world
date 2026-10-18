@@ -45,7 +45,7 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     markdown.push_str("\n| Seed | Wall seconds | ms / agent-tick |\n|---|---:|---:|\n");
     let timing: Vec<_> = runs.iter().map(|r| {
         markdown.push_str(&format!("| {} | {:.6} | {:.9} |\n", r.seed, r.wall_seconds, r.ms_per_agent_tick));
-        json!({"seed": r.seed, "wall_seconds": r.wall_seconds, "ms_per_agent_tick": r.ms_per_agent_tick,
+        let mut seed_row = json!({"seed": r.seed, "wall_seconds": r.wall_seconds, "ms_per_agent_tick": r.ms_per_agent_tick,
             "agent_days":r.agent_days,"social_completed_per_agent_day":r.social_per_agent_day,
             "max_alive":r.max_alive,"housing_capacity_at_max_alive":r.housing_at_max_alive,
             "final_housing_capacity":r.final_housing_capacity,"max_same_tick_housing_overflow":r.max_housing_overflow,
@@ -67,7 +67,12 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
             // Pass 12 (schema 12): hazard checks, settlement-winters, fill counts.
             "pass12":r.pass12,
             // Pass 13 (schema 13): pressure checks, half-threshold days, splits.
-            "pass13":r.pass13})
+            "pass13":r.pass13});
+        // Pass 20: the relations block, only under the relations rule.
+        if let (Some(block), Some(object)) = (&r.pass20, seed_row.as_object_mut()) {
+            object.insert("pass20".into(), block.clone());
+        }
+        seed_row
     }).collect();
     let mut census = Census::default();
     for run in runs {

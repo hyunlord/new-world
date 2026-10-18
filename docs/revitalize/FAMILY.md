@@ -77,6 +77,10 @@ Returned family links join through the existing snapshot's `agent_ids`, not its 
 
 The normal live builder and reset select v23 since Pass 18 (v22 in Pass 17) with the unchanged default seed; stress reset remains v19. The art line can draw partners, parents and children through this separate getter. Routine activities continue to use state 4 and target 8. This pass supplies the simulation and bridge, not new family portraits, relationship UI or activity artwork.
 
+## Kin between villages (Pass 20)
+
+Since `game_v25` the family's split leaves a trace between villages too: a daughter and its parent start at a relation of 300, two daughters of one parent at 150 (the kin base the relation drifts back to), and a village helps its kin by sending porters with food or wood when it is rich and the other is short. Who carries is the most reward-dependent free adult. Quarrels at shared bushes can estrange kin villages. See [RELATIONS.md](RELATIONS.md).
+
 ## Limits
 
 There is no courtship simulation, marriage ceremony, divorce rule, additional remarriage policy, fertility age window or effect of sex beyond pairing/parent selection. Recorded ancestry limits kin exclusion; founders' unknown kinship is not modeled. Fallback parent slots need not describe a biological female/male pair. Adult children form their own household unless independently paired, and no broader extended-family policy is added. Activities remain economy-neutral. Technical verification, cohort verdicts and the separate art renderer's visual acceptance are distinct evidence.
