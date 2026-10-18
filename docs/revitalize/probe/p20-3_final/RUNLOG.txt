@@ -1,0 +1,32 @@
+2026-10-18T04:04:23Z i1_v19 start
+2026-10-18 13:04:23 KST [watch] start: identity i1_v19; pgid=11591
+2026-10-18 13:12:00 KST [watch] end: identity i1_v19; exit=0; stopped_total=0.0s
+2026-10-18T04:12:00Z i1_v19 end
+2026-10-18T04:12:00Z i3_v16 start
+2026-10-18 13:12:00 KST [watch] start: identity i3_v16; pgid=39686
+2026-10-18 13:16:40 KST [watch] end: identity i3_v16; exit=0; stopped_total=0.0s
+2026-10-18T04:16:40Z i3_v16 end
+2026-10-18T04:16:40Z i4_v20 start
+2026-10-18 13:16:40 KST [watch] start: identity i4_v20; pgid=57610
+2026-10-18 13:24:09 KST [watch] end: identity i4_v20; exit=0; stopped_total=0.0s
+2026-10-18T04:24:10Z i4_v20 end
+2026-10-18T04:24:10Z I2 start
+2026-10-18 13:24:10 KST [watch] start: identity I2 recorder; pgid=82785
+2026-10-18 13:24:25 KST [watch] end: identity I2 recorder; exit=0; stopped_total=0.0s
+2026-10-18T04:24:25Z I2 end
+2026-10-18T04:24:25Z i5_v21 start
+2026-10-18 13:24:25 KST [watch] start: identity i5_v21; pgid=83658
+2026-10-18 13:39:48 KST [watch] end: identity i5_v21; exit=0; stopped_total=0.0s
+2026-10-18T04:39:48Z i5_v21 end
+2026-10-18T04:39:48Z i6_v22 start
+2026-10-18 13:39:48 KST [watch] start: identity i6_v22; pgid=33415
+2026-10-18 13:56:11 KST [watch] end: identity i6_v22; exit=0; stopped_total=0.0s
+2026-10-18T04:56:12Z i6_v22 end
+2026-10-18T04:56:12Z i7_v23 start
+2026-10-18 13:56:12 KST [watch] start: identity i7_v23; pgid=84301
+2026-10-18 14:12:20 KST [watch] end: identity i7_v23; exit=0; stopped_total=0.0s
+2026-10-18T05:12:20Z i7_v23 end
+2026-10-18T05:12:20Z i8_v24 start
+2026-10-18 14:12:20 KST [watch] start: identity i8_v24; pgid=36208
+2026-10-18 14:30:21 KST [watch] end: identity i8_v24; exit=0; stopped_total=0.0s
+2026-10-18T05:30:21Z i8_v24 end
