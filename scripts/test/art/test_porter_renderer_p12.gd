@@ -15,10 +15,10 @@ func run() -> void:
 	root.add_child(main)
 	main.set_process(false)
 	var reads: Node = main.get_node("SimReads")
-	reads.reset_world_stress(15100, 200)
+	SimReads.mutate(world, "reset_world_stress", [15100, 200])
 	var renderer: Node = main.get_node("AgentRenderer")
 	renderer.set_process(false)
-	var snap: Dictionary = world.get_agent_snapshot().duplicate(true)
+	var snap: Dictionary = SimReads.read(world, "get_agent_snapshot").duplicate(true)
 	var index: int = 0
 	var bits: int = snap["ids"][index]
 	var agent: int = snap["agent_ids"][index]
@@ -34,8 +34,7 @@ func run() -> void:
 		snap["states"][index] = 4
 		row["stage"][0] = fixture["stage"]
 		row["kind"][0] = 1 if int(fixture["wood"]) > 0 else 0
-		reads.read_raw("get_time_snapshot")
-		reads.set("_tick", int(world.get_time_snapshot()["tick"]))
+		reads.set("_tick", int(SimReads.read(world, "get_time_snapshot")["tick"]))
 		reads.get("_cache")["get_agent_snapshot"] = snap
 		reads.get("_cache")["get_settlement_snapshot"] = settlements
 		reads.get("_cache")["get_activity_snapshot"] = {"ids": PackedInt64Array([bits]), "kinds": PackedByteArray([1]), "place_x": PackedInt32Array([1]), "place_y": PackedInt32Array([1]), "until_tick": PackedInt64Array([999])}

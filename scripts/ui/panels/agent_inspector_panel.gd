@@ -302,7 +302,6 @@ func display_agent(detail: Dictionary) -> void:
 	if previous_selection != _selected_entity_bits:
 		_scroll.scroll_vertical = 0
 	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.present(agent_id, Chronicle.language(_locale)), agent_id]
-	_refresh_porter_status()
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
 	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
@@ -310,6 +309,7 @@ func display_agent(detail: Dictionary) -> void:
 	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
 	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
 	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _target_text(target_kind, activity)
+	_refresh_porter_status()
 	_hunger_bar.value = hunger
 	_thirst_bar.value = thirst
 	_sleep_bar.value = sleep_val
@@ -336,6 +336,8 @@ func _refresh_porter_status() -> void:
 	var row: Dictionary = Porter.rows(SimReads.read(_world_sim, "get_porter_snapshot")).get(_selected_entity_bits, {})
 	if row.is_empty():
 		return
+	var destination: int = int(row["to"] if int(row["stage"]) == 0 else row["from"])
+	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % Names.unbroken(SettlementSelection.name_for(destination, _locale))
 	if int(row["stage"]) == 0:
 		var load_name: String = _loc("CHRON_LOAD_WOOD" if int(row["kind"]) == 1 else "CHRON_LOAD_FOOD")
 		_porter_status.text = _loc("INSPECTOR_PORTER_OUT_FMT") % [load_name, int(row["amount"]), Names.unbroken(SettlementSelection.name_for(int(row["to"]), _locale))]

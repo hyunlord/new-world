@@ -1,0 +1,11 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+P9 FIXED DELTA args=["--script", "res://scripts/test/art/test_fixed_delta_p9.gd"]
+P9 FIXED DELTA user_args=[]
+P9 FIXED DELTA sample=1 delta=0.066666666666667 valid=false
+P9 FIXED DELTA sample=2 delta=0.016666666666667 valid=true
+P9 FIXED DELTA sample=3 delta=0.000007749999895 valid=false
+P9 FIXED DELTA sample=4 delta=0.000389499997254 valid=false
+P9 FIXED DELTA sample=5 delta=0.001901416669517 valid=false
+P9 FIXED DELTA observed_valid=false expected_valid=false

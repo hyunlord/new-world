@@ -47,17 +47,20 @@ func _run() -> void:
 				var load_name: String = str(locale.call("ltr", "CHRON_LOAD_FOOD" if kind == 0 else "CHRON_LOAD_WOOD"))
 				var expected: String = str(locale.call("ltr", "INSPECTOR_PORTER_OUT_FMT")) % [load_name, 12, Selection.name_for(1, locale)]
 				check(status.visible and Names.plain(status.text) == expected, "outbound entity join and authoritative amount " + language)
+				check(Names.plain((panel.get("_label_target") as Label).text) == str(locale.call("ltr", "INSPECTOR_TARGET_FMT")) % Selection.name_for(1, locale), "outbound target is receiver hearth rather than internal self-target")
 				world.stage = 1
 				world.tick += 1
 				panel.call("_process", 0.0)
 				expected = str(locale.call("ltr", "INSPECTOR_PORTER_BACK_FMT")) % Selection.name_for(2, locale)
 				check(status.visible and Names.plain(status.text) == expected, "return sender " + language)
+				check(Names.plain((panel.get("_label_target") as Label).text) == str(locale.call("ltr", "INSPECTOR_TARGET_FMT")) % Selection.name_for(2, locale), "return target is sender hearth")
 			panel.call("show_person", 3)
 			check(not status.visible, "record hides porter status")
 			world.active = false
 			world.tick += 1
 			panel.call("show_person", 1)
 			check(not status.visible and status.text.is_empty(), "nonporter clears stale text")
+			check(Names.plain((panel.get("_label_target") as Label).text) == str(locale.call("ltr", "INSPECTOR_TARGET_FMT")) % str(locale.call("ltr", "INSPECTOR_TARGET_NONE")), "nonporter restores ordinary target")
 			world.active = true
 			panel.call("show_person", 1)
 			panel.call("_world_reset")

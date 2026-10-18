@@ -1,0 +1,1129 @@
+{
+  "scope": "Offline capture evidence audit only; no reader answers accessed.",
+  "capture_root": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1",
+  "registration": {
+    "head": "33b8f7c7e03e658da20074f1eb56969f40fbaffb",
+    "source_digest": "a3024593ba1d7cc5ff40219f55ca780b544849f4003225b5662b87e8aec4a42d",
+    "loaded_bridge_sha256": "ed600ac38228c72962d4459a7ea7b9fcbd63a0a0be4bd75e46403690b2b66a27",
+    "build_profile": "debug",
+    "build_profile_details": "dev-opt-level-2",
+    "script_sha256": "967f0bd30910f09290f6f14c1968ab54571e9b96e51c9b1967163ec9c1b58bef",
+    "runner_sha256": "d2c9ec05674156b4bd9516d325714dfb6aaddd3ff981995aef15e97e4f5d10ab",
+    "cases": [
+      "live",
+      "multi",
+      "estranged",
+      "crowd1",
+      "crowd2",
+      "crowd3"
+    ]
+  },
+  "cases": [
+    {
+      "case": "live",
+      "image_count": 42,
+      "reference": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1/live/reference-data.json",
+      "reference_sha256": "d9ad0bb4c1623e53f57479dfe7f36d93b67f008fd906803ab80e8303772ca62d",
+      "worlds": [
+        {
+          "tick": 85080,
+          "chronicle_records": 185,
+          "raw_chronicle_complete": true,
+          "raw_activity_saved": false
+        }
+      ],
+      "subjects": {
+        "dead_parent": 0,
+        "living_dead_parent": 25
+      },
+      "depart_causes_present": null,
+      "depart_causes_absent": null
+    },
+    {
+      "case": "multi",
+      "image_count": 54,
+      "reference": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1/multi/reference-data.json",
+      "reference_sha256": "a7a2cf5acd7f08348e096adc8d29ede8a821bd667a33b6997202f9b4732c17a7",
+      "worlds": [
+        {
+          "tick": 121080,
+          "chronicle_records": 391,
+          "raw_chronicle_complete": true,
+          "raw_activity_saved": false
+        }
+      ],
+      "subjects": {
+        "depart_cause_1": 47,
+        "depart_cause_2": 45,
+        "outbound_porter": 69,
+        "porter_life": 69
+      },
+      "depart_causes_present": {
+        "1": 47,
+        "2": 45
+      },
+      "depart_causes_absent": [
+        0,
+        3,
+        4
+      ]
+    },
+    {
+      "case": "estranged",
+      "image_count": 38,
+      "reference": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1/estranged/reference-data.json",
+      "reference_sha256": "030a2d26a715b2ab043732db8634cdd640d384f1b7c36fd8e0d02421f355fbc6",
+      "worlds": [
+        {
+          "tick": 34680,
+          "chronicle_records": 196,
+          "raw_chronicle_complete": true,
+          "raw_activity_saved": false
+        }
+      ],
+      "subjects": {
+        "quarreller_life": 23
+      },
+      "depart_causes_present": null,
+      "depart_causes_absent": null
+    },
+    {
+      "case": "crowd1",
+      "image_count": 2,
+      "reference": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1/crowd1/reference-data.json",
+      "reference_sha256": "10ca05c60c4b63706786e3b3ded542df488cf45e1a32b9aac5a6fe7ae70ef60e",
+      "worlds": [
+        {
+          "tick": 41880,
+          "chronicle_records": 93,
+          "raw_chronicle_complete": true,
+          "raw_activity_saved": false
+        }
+      ],
+      "subjects": {},
+      "depart_causes_present": null,
+      "depart_causes_absent": null
+    },
+    {
+      "case": "crowd2",
+      "image_count": 2,
+      "reference": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1/crowd2/reference-data.json",
+      "reference_sha256": "17c0a155074300e29451d82048b43c04595d82b0f243511bbebc2da3ab1a09e4",
+      "worlds": [
+        {
+          "tick": 85080,
+          "chronicle_records": 424,
+          "raw_chronicle_complete": true,
+          "raw_activity_saved": false
+        }
+      ],
+      "subjects": {},
+      "depart_causes_present": null,
+      "depart_causes_absent": null
+    },
+    {
+      "case": "crowd3",
+      "image_count": 2,
+      "reference": "/Users/rexxa/work/art-production12-evidence/p3/live-attempt1/crowd3/reference-data.json",
+      "reference_sha256": "96f0e631405b3c7c4abcddf3c7e1259a00859dc08fdb6f32d0082c964ffa21fd",
+      "worlds": [
+        {
+          "tick": 42180,
+          "chronicle_records": 95,
+          "raw_chronicle_complete": true,
+          "raw_activity_saved": false
+        }
+      ],
+      "subjects": {},
+      "depart_causes_present": null,
+      "depart_causes_absent": null
+    }
+  ],
+  "image_count": 140,
+  "all_source_manifests_identical": true,
+  "source_manifest_entries": 256,
+  "crowds": [
+    {
+      "case": "crowd1",
+      "language": "en",
+      "image": "crowd1_en.png",
+      "agent_id": 1,
+      "entity_bits": 4294967297,
+      "renderer_kind": 3,
+      "icon_visible": true,
+      "fresh_raw_activity_saved": false,
+      "proof": {
+        "selected_entity_bits": 4294967297,
+        "nearby_entity_bits": [
+          8589934605,
+          8589934599,
+          4294967325,
+          4294967324,
+          8589934611,
+          4294967323,
+          4294967311,
+          4294967298,
+          8589934612,
+          4294967308,
+          8589934592,
+          4294967304,
+          4294967300,
+          8589934617,
+          4294967307,
+          4294967306,
+          4294967299,
+          4294967305,
+          4294967313,
+          4294967297,
+          4294967301,
+          4294967312,
+          8589934598,
+          4294967319,
+          4294967320
+        ],
+        "within_10_tiles": 25,
+        "centre_tile": [
+          22,
+          20
+        ],
+        "geometry": {
+          "box": [
+            928,
+            268,
+            1112,
+            452
+          ],
+          "upscale": 1,
+          "resampling": "none",
+          "body_covered_fraction": 0.0,
+          "icon_covered_fraction": 0.0,
+          "excluded": false
+        },
+        "zero_coverage_crowd_proven": true,
+        "activity_reading": "NOT_VERIFIED"
+      },
+      "prior_snapshot_corroboration": {
+        "source": "/Users/rexxa/work/art-production12-evidence/p2/activity-attempt1/crowd1/capture.json",
+        "sha256": "531d9b092aecc3a4e9d6ca1a539bc039a37678ca284527d6649cff373128a594",
+        "same_clock": true,
+        "same_raw_agent_snapshot": true,
+        "same_seed": true,
+        "prior_raw_kind": 3,
+        "matches_current_renderer_kind": true
+      }
+    },
+    {
+      "case": "crowd1",
+      "language": "ko",
+      "image": "crowd1_ko.png",
+      "agent_id": 1,
+      "entity_bits": 4294967297,
+      "renderer_kind": 3,
+      "icon_visible": true,
+      "fresh_raw_activity_saved": false,
+      "proof": {
+        "selected_entity_bits": 4294967297,
+        "nearby_entity_bits": [
+          8589934605,
+          8589934599,
+          4294967325,
+          4294967324,
+          8589934611,
+          4294967323,
+          4294967311,
+          4294967298,
+          8589934612,
+          4294967308,
+          8589934592,
+          4294967304,
+          4294967300,
+          8589934617,
+          4294967307,
+          4294967306,
+          4294967299,
+          4294967305,
+          4294967313,
+          4294967297,
+          4294967301,
+          4294967312,
+          8589934598,
+          4294967319,
+          4294967320
+        ],
+        "within_10_tiles": 25,
+        "centre_tile": [
+          22,
+          20
+        ],
+        "geometry": {
+          "box": [
+            928,
+            268,
+            1112,
+            452
+          ],
+          "upscale": 1,
+          "resampling": "none",
+          "body_covered_fraction": 0.0,
+          "icon_covered_fraction": 0.0,
+          "excluded": false
+        },
+        "zero_coverage_crowd_proven": true,
+        "activity_reading": "NOT_VERIFIED"
+      },
+      "prior_snapshot_corroboration": {
+        "source": "/Users/rexxa/work/art-production12-evidence/p2/activity-attempt1/crowd1/capture.json",
+        "sha256": "531d9b092aecc3a4e9d6ca1a539bc039a37678ca284527d6649cff373128a594",
+        "same_clock": true,
+        "same_raw_agent_snapshot": true,
+        "same_seed": true,
+        "prior_raw_kind": 3,
+        "matches_current_renderer_kind": true
+      }
+    },
+    {
+      "case": "crowd2",
+      "language": "en",
+      "image": "crowd2_en.png",
+      "agent_id": 29,
+      "entity_bits": 4294967326,
+      "renderer_kind": 6,
+      "icon_visible": true,
+      "fresh_raw_activity_saved": false,
+      "proof": {
+        "selected_entity_bits": 4294967326,
+        "nearby_entity_bits": [
+          8589934626,
+          8589934625,
+          8589934624,
+          4294967346,
+          4294967331,
+          8589934603,
+          4294967354,
+          4294967356,
+          4294967363,
+          8589934606,
+          4294967358,
+          8589934610,
+          8589934599,
+          8589934608,
+          4294967364,
+          4294967360,
+          8589934615,
+          8589934614,
+          8589934609,
+          4294967332,
+          4294967325,
+          4294967334,
+          8589934639,
+          4294967339,
+          4294967340,
+          4294967326,
+          8589934623,
+          4294967338,
+          4294967347,
+          8589934605,
+          8589934595,
+          8589934596,
+          8589934593,
+          4294967371,
+          8589934600,
+          8589934631,
+          4294967342
+        ],
+        "within_10_tiles": 37,
+        "centre_tile": [
+          39,
+          35
+        ],
+        "geometry": {
+          "box": [
+            998,
+            256,
+            1198,
+            456
+          ],
+          "upscale": 1,
+          "resampling": "none",
+          "body_covered_fraction": 0.0,
+          "icon_covered_fraction": 0.0,
+          "excluded": false
+        },
+        "zero_coverage_crowd_proven": true,
+        "activity_reading": "NOT_VERIFIED"
+      },
+      "prior_snapshot_corroboration": {
+        "source": "/Users/rexxa/work/art-production12-evidence/p2/activity-attempt1/crowd2/capture.json",
+        "sha256": "748c507597541b9dd73a4e6677d3beec870f9215a633b95a53deac0200120111",
+        "same_clock": true,
+        "same_raw_agent_snapshot": true,
+        "same_seed": true,
+        "prior_raw_kind": 6,
+        "matches_current_renderer_kind": true
+      }
+    },
+    {
+      "case": "crowd2",
+      "language": "ko",
+      "image": "crowd2_ko.png",
+      "agent_id": 29,
+      "entity_bits": 4294967326,
+      "renderer_kind": 6,
+      "icon_visible": true,
+      "fresh_raw_activity_saved": false,
+      "proof": {
+        "selected_entity_bits": 4294967326,
+        "nearby_entity_bits": [
+          8589934626,
+          8589934625,
+          8589934624,
+          4294967346,
+          4294967331,
+          8589934603,
+          4294967354,
+          4294967356,
+          4294967363,
+          8589934606,
+          4294967358,
+          8589934610,
+          8589934599,
+          8589934608,
+          4294967364,
+          4294967360,
+          8589934615,
+          8589934614,
+          8589934609,
+          4294967332,
+          4294967325,
+          4294967334,
+          8589934639,
+          4294967339,
+          4294967340,
+          4294967326,
+          8589934623,
+          4294967338,
+          4294967347,
+          8589934605,
+          8589934595,
+          8589934596,
+          8589934593,
+          4294967371,
+          8589934600,
+          8589934631,
+          4294967342
+        ],
+        "within_10_tiles": 37,
+        "centre_tile": [
+          39,
+          35
+        ],
+        "geometry": {
+          "box": [
+            998,
+            256,
+            1198,
+            456
+          ],
+          "upscale": 1,
+          "resampling": "none",
+          "body_covered_fraction": 0.0,
+          "icon_covered_fraction": 0.0,
+          "excluded": false
+        },
+        "zero_coverage_crowd_proven": true,
+        "activity_reading": "NOT_VERIFIED"
+      },
+      "prior_snapshot_corroboration": {
+        "source": "/Users/rexxa/work/art-production12-evidence/p2/activity-attempt1/crowd2/capture.json",
+        "sha256": "748c507597541b9dd73a4e6677d3beec870f9215a633b95a53deac0200120111",
+        "same_clock": true,
+        "same_raw_agent_snapshot": true,
+        "same_seed": true,
+        "prior_raw_kind": 6,
+        "matches_current_renderer_kind": true
+      }
+    },
+    {
+      "case": "crowd3",
+      "language": "en",
+      "image": "crowd3_en.png",
+      "agent_id": 30,
+      "entity_bits": 8589934612,
+      "renderer_kind": 1,
+      "icon_visible": true,
+      "fresh_raw_activity_saved": false,
+      "proof": {
+        "selected_entity_bits": 8589934612,
+        "nearby_entity_bits": [
+          8589934599,
+          8589934605,
+          4294967304,
+          4294967308,
+          4294967310,
+          8589934617,
+          4294967298,
+          8589934611,
+          4294967305,
+          4294967297,
+          4294967314,
+          4294967301,
+          4294967312,
+          4294967320,
+          4294967319,
+          4294967313,
+          4294967299,
+          4294967318,
+          8589934598,
+          4294967307,
+          4294967325,
+          4294967324,
+          8589934613,
+          8589934592,
+          8589934612
+        ],
+        "within_10_tiles": 25,
+        "centre_tile": [
+          24,
+          21
+        ],
+        "geometry": {
+          "box": [
+            844,
+            372,
+            1048,
+            576
+          ],
+          "upscale": 1,
+          "resampling": "none",
+          "body_covered_fraction": 0.0,
+          "icon_covered_fraction": 0.0,
+          "excluded": false
+        },
+        "zero_coverage_crowd_proven": true,
+        "activity_reading": "NOT_VERIFIED"
+      },
+      "prior_snapshot_corroboration": {
+        "source": "/Users/rexxa/work/art-production12-evidence/p2/activity-attempt1/crowd3/capture.json",
+        "sha256": "c0110df4f304d4408eb1c3eb93fe203157d6745d03e2befddf3c5fa9eed3ef56",
+        "same_clock": true,
+        "same_raw_agent_snapshot": true,
+        "same_seed": true,
+        "prior_raw_kind": 1,
+        "matches_current_renderer_kind": true
+      }
+    },
+    {
+      "case": "crowd3",
+      "language": "ko",
+      "image": "crowd3_ko.png",
+      "agent_id": 30,
+      "entity_bits": 8589934612,
+      "renderer_kind": 1,
+      "icon_visible": true,
+      "fresh_raw_activity_saved": false,
+      "proof": {
+        "selected_entity_bits": 8589934612,
+        "nearby_entity_bits": [
+          8589934599,
+          8589934605,
+          4294967304,
+          4294967308,
+          4294967310,
+          8589934617,
+          4294967298,
+          8589934611,
+          4294967305,
+          4294967297,
+          4294967314,
+          4294967301,
+          4294967312,
+          4294967320,
+          4294967319,
+          4294967313,
+          4294967299,
+          4294967318,
+          8589934598,
+          4294967307,
+          4294967325,
+          4294967324,
+          8589934613,
+          8589934592,
+          8589934612
+        ],
+        "within_10_tiles": 25,
+        "centre_tile": [
+          24,
+          21
+        ],
+        "geometry": {
+          "box": [
+            844,
+            372,
+            1048,
+            576
+          ],
+          "upscale": 1,
+          "resampling": "none",
+          "body_covered_fraction": 0.0,
+          "icon_covered_fraction": 0.0,
+          "excluded": false
+        },
+        "zero_coverage_crowd_proven": true,
+        "activity_reading": "NOT_VERIFIED"
+      },
+      "prior_snapshot_corroboration": {
+        "source": "/Users/rexxa/work/art-production12-evidence/p2/activity-attempt1/crowd3/capture.json",
+        "sha256": "c0110df4f304d4408eb1c3eb93fe203157d6745d03e2befddf3c5fa9eed3ef56",
+        "same_clock": true,
+        "same_raw_agent_snapshot": true,
+        "same_seed": true,
+        "prior_raw_kind": 1,
+        "matches_current_renderer_kind": true
+      }
+    }
+  ],
+  "scroll_groups": [
+    {
+      "case": "live",
+      "section": "living_dead_parent",
+      "language": "en",
+      "subject": 25,
+      "pages": 4,
+      "positions": [
+        0.0,
+        551.0,
+        1102.0,
+        1619.0
+      ],
+      "scroll_max": 2223.0,
+      "scroll_page_each": [
+        599.0,
+        599.0,
+        599.0,
+        604.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "eb4f28622eb15b5465a7c0c4854d8389f5609dedeb8015d4b97a4695a6363742"
+    },
+    {
+      "case": "live",
+      "section": "living_dead_parent",
+      "language": "ko",
+      "subject": 25,
+      "pages": 4,
+      "positions": [
+        0.0,
+        554.0,
+        1108.0,
+        1364.0
+      ],
+      "scroll_max": 1968.0,
+      "scroll_page_each": [
+        602.0,
+        602.0,
+        602.0,
+        604.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "0ff0ceeee372569eaf3e95e02979f70587bdc8ed6ac87ce03e3b76d1b2da5b3f"
+    },
+    {
+      "case": "live",
+      "section": "dead_parent",
+      "language": "en",
+      "subject": 0,
+      "pages": 4,
+      "positions": [
+        0.0,
+        554.0,
+        713.0,
+        719.0
+      ],
+      "scroll_max": 1315.0,
+      "scroll_page_each": [
+        602.0,
+        602.0,
+        596.0,
+        596.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "66e33826f3573965b99e00b43684bae9e5bb04d9b11eb71fdf30da3b892d34a6"
+    },
+    {
+      "case": "live",
+      "section": "dead_parent",
+      "language": "ko",
+      "subject": 0,
+      "pages": 3,
+      "positions": [
+        0.0,
+        531.0,
+        663.0
+      ],
+      "scroll_max": 1259.0,
+      "scroll_page_each": [
+        579.0,
+        579.0,
+        596.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "8a80ae9c7b97766202a74ea92299e6cf433f08b7100b592b49583cb2156cc9a3"
+    },
+    {
+      "case": "live",
+      "section": "chronicle",
+      "language": "en",
+      "subject": null,
+      "pages": 15,
+      "positions": [
+        0.0,
+        344.0,
+        688.0,
+        1032.0,
+        1376.0,
+        1720.0,
+        2064.0,
+        2408.0,
+        2752.0,
+        3096.0,
+        3440.0,
+        3784.0,
+        4128.0,
+        4472.0,
+        4620.0
+      ],
+      "scroll_max": 5012.0,
+      "scroll_page_each": [
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": true,
+      "full_text_sha256": "0825b6651824f5865a96ed4279e42ddce5289cc81cbb39526573d335919cbf6d"
+    },
+    {
+      "case": "live",
+      "section": "chronicle",
+      "language": "ko",
+      "subject": null,
+      "pages": 12,
+      "positions": [
+        0.0,
+        344.0,
+        688.0,
+        1032.0,
+        1376.0,
+        1720.0,
+        2064.0,
+        2408.0,
+        2752.0,
+        3096.0,
+        3440.0,
+        3612.0
+      ],
+      "scroll_max": 4004.0,
+      "scroll_page_each": [
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": true,
+      "full_text_sha256": "ff2797b3faf51258124c64070a252be9c86fcb39ae33d26f52909a6b929ccf9e"
+    },
+    {
+      "case": "multi",
+      "section": "depart_cause_2",
+      "language": "en",
+      "subject": 45,
+      "pages": 5,
+      "positions": [
+        0.0,
+        551.0,
+        1102.0,
+        1484.0,
+        1487.0
+      ],
+      "scroll_max": 2083.0,
+      "scroll_page_each": [
+        599.0,
+        599.0,
+        599.0,
+        596.0,
+        596.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "af84705f6edc285823cda31cdc7c834ccf9c9a56568ec6de561c031ad17bc762"
+    },
+    {
+      "case": "multi",
+      "section": "depart_cause_2",
+      "language": "ko",
+      "subject": 45,
+      "pages": 4,
+      "positions": [
+        0.0,
+        554.0,
+        1108.0,
+        1280.0
+      ],
+      "scroll_max": 1884.0,
+      "scroll_page_each": [
+        602.0,
+        602.0,
+        602.0,
+        604.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "924e0aef7248f994244d39516affb1e7bef34f129bf21bfd2320baff5af81368"
+    },
+    {
+      "case": "multi",
+      "section": "depart_cause_1",
+      "language": "en",
+      "subject": 47,
+      "pages": 5,
+      "positions": [
+        0.0,
+        551.0,
+        1102.0,
+        1484.0,
+        1487.0
+      ],
+      "scroll_max": 2083.0,
+      "scroll_page_each": [
+        599.0,
+        599.0,
+        599.0,
+        596.0,
+        596.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "05d3a785e18113150aecf74a669f94ac28b95d827d6538053dd75729d76e94ee"
+    },
+    {
+      "case": "multi",
+      "section": "depart_cause_1",
+      "language": "ko",
+      "subject": 47,
+      "pages": 5,
+      "positions": [
+        0.0,
+        554.0,
+        1108.0,
+        1310.0,
+        1316.0
+      ],
+      "scroll_max": 1912.0,
+      "scroll_page_each": [
+        602.0,
+        602.0,
+        602.0,
+        596.0,
+        596.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "d1515d57db56438965dd496d93e337c8db9302bcfd6a6a0d418ab9c0794af6cf"
+    },
+    {
+      "case": "multi",
+      "section": "porter_life",
+      "language": "en",
+      "subject": 69,
+      "pages": 3,
+      "positions": [
+        0.0,
+        551.0,
+        913.0
+      ],
+      "scroll_max": 1517.0,
+      "scroll_page_each": [
+        599.0,
+        599.0,
+        604.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "f8ed5c436aecc086b9461405d648ebe96c77b665001775676a73cdd5b2d7b70a"
+    },
+    {
+      "case": "multi",
+      "section": "porter_life",
+      "language": "ko",
+      "subject": 69,
+      "pages": 3,
+      "positions": [
+        0.0,
+        551.0,
+        857.0
+      ],
+      "scroll_max": 1461.0,
+      "scroll_page_each": [
+        599.0,
+        599.0,
+        604.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "a970e14d7ac0736e1e5979ea40121f657294a2e9d13733351229b286a61f1ffe"
+    },
+    {
+      "case": "multi",
+      "section": "chronicle",
+      "language": "en",
+      "subject": null,
+      "pages": 15,
+      "positions": [
+        0.0,
+        344.0,
+        688.0,
+        1032.0,
+        1376.0,
+        1720.0,
+        2064.0,
+        2408.0,
+        2752.0,
+        3096.0,
+        3440.0,
+        3784.0,
+        4128.0,
+        4472.0,
+        4564.0
+      ],
+      "scroll_max": 4956.0,
+      "scroll_page_each": [
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": true,
+      "full_text_sha256": "aece3e8a77b714ba00d9f7a77483639dc95d3a10921ed15181928826458c4fe2"
+    },
+    {
+      "case": "multi",
+      "section": "chronicle",
+      "language": "ko",
+      "subject": null,
+      "pages": 12,
+      "positions": [
+        0.0,
+        344.0,
+        688.0,
+        1032.0,
+        1376.0,
+        1720.0,
+        2064.0,
+        2408.0,
+        2752.0,
+        3096.0,
+        3440.0,
+        3752.0
+      ],
+      "scroll_max": 4144.0,
+      "scroll_page_each": [
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": true,
+      "full_text_sha256": "9c5ad2ce209236a6a951de1415a7b6cc1b58844512ba926f6a3e8fbc41aee5ce"
+    },
+    {
+      "case": "estranged",
+      "section": "quarreller_life",
+      "language": "en",
+      "subject": 23,
+      "pages": 4,
+      "positions": [
+        0.0,
+        554.0,
+        974.0,
+        1000.0
+      ],
+      "scroll_max": 1576.0,
+      "scroll_page_each": [
+        602.0,
+        602.0,
+        576.0,
+        576.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "24a9b1330d27590ece39a4c8634105528542886e2ef100d0e73c178b661ee227"
+    },
+    {
+      "case": "estranged",
+      "section": "quarreller_life",
+      "language": "ko",
+      "subject": 23,
+      "pages": 4,
+      "positions": [
+        0.0,
+        554.0,
+        890.0,
+        916.0
+      ],
+      "scroll_max": 1492.0,
+      "scroll_page_each": [
+        602.0,
+        602.0,
+        576.0,
+        576.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": null,
+      "full_text_sha256": "ae81c2749349bcb1094a87569589a1526924730af7d8416d7c20f183a4ad962e"
+    },
+    {
+      "case": "estranged",
+      "section": "chronicle",
+      "language": "en",
+      "subject": null,
+      "pages": 15,
+      "positions": [
+        0.0,
+        344.0,
+        688.0,
+        1032.0,
+        1376.0,
+        1720.0,
+        2064.0,
+        2408.0,
+        2752.0,
+        3096.0,
+        3440.0,
+        3784.0,
+        4128.0,
+        4472.0,
+        4508.0
+      ],
+      "scroll_max": 4900.0,
+      "scroll_page_each": [
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": true,
+      "full_text_sha256": "35a502d4b3262b3f9da7f4691063bdba2a28d1c03f23271b9582becdbd943ee8"
+    },
+    {
+      "case": "estranged",
+      "section": "chronicle",
+      "language": "ko",
+      "subject": null,
+      "pages": 14,
+      "positions": [
+        0.0,
+        344.0,
+        688.0,
+        1032.0,
+        1376.0,
+        1720.0,
+        2064.0,
+        2408.0,
+        2752.0,
+        3096.0,
+        3440.0,
+        3784.0,
+        4128.0,
+        4200.0
+      ],
+      "scroll_max": 4592.0,
+      "scroll_page_each": [
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0,
+        392.0
+      ],
+      "gapless_to_end": true,
+      "chronicle_cursor_complete": true,
+      "full_text_sha256": "396d8179f4742a3e0bb0522eee4c470ce13c50c610a2e7c9cbc6dc2297c74dc9"
+    }
+  ],
+  "failures": [],
+  "structural_checks_pass": true,
+  "limitations": [
+    "Seven sidecars serialize packed numeric arrays as strings while the aggregate reference uses arrays; equality was checked after numeric-array-only decoding. Original artifacts are unchanged.",
+    "Part 3 references omit raw activity getter. Crowd kind is fresh renderer metadata; matching Part 2 raw activity is separately corroborated, not represented as a fresh getter capture.",
+    "Generic raw persons catalogue does not attach AgentIds to each record; required captured subjects have explicit AgentIds.",
+    "Gapless scroll geometry and recorded full text do not establish glyph readability, semantic accuracy or human-reader acceptance.",
+    "This audit compares captured provenance across launches and images; it does not claim a fresh current-tree or dylib rebuild verification."
+  ],
+  "reader_acceptance": "NOT_AUDITED"
+}

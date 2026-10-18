@@ -109,7 +109,7 @@ func _test_panel(locale: Node) -> void:
 		check(int(entries[0].get("porter_count", 0)) == 2 and int(entries[0]["value"]) == 17, "cross-page count and amount")
 		check(int(entries[1].get("porter_count", 0)) == 1 and int(entries[2].get("porter_count", 0)) == 1, "17 and unknown break adjacency")
 		check(int(entries[7].get("porter_count", 0)) == 2, "failed trips grouped")
-		var info: Dictionary = world.get_world_info()
+		var info: Dictionary = SimReads.read(world, "get_world_info")
 		var delivered: String = Text.line(entries[0], -1, locale, info, true)
 		var expected: String = Text.loc(locale, "CHRON_PORTER_GROUP_FMT") % [2, Text.loc(locale, "CHRON_LOAD_FOOD"), 17, Text.village(1, locale), Text.village(2, locale), Text.loc(locale, "CHRON_PORTER_AID")]
 		check(delivered.ends_with(expected) and not delivered.contains("person:"), "group text order and no person prefix")

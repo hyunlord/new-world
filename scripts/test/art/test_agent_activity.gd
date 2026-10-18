@@ -64,7 +64,7 @@ func _run() -> void:
 	renderer.call("_update_selection_ring")
 	var ring: Line2D = main.get_node("Shadows/SelectionRing") as Line2D
 	_check(ring.visible)
-	_check(ring.width == 1.0)
+	_check(ring.width == 1.5, "P12 selection ring is 1.5 px at default Z4")
 	_check(ring.get_parent().name == "Shadows")
 	var agent_ids: PackedInt64Array = snapshot["agent_ids"]
 	var selected_sprite: Sprite2D = renderer.call("get_agent_sprite", int(agent_ids[0])) as Sprite2D

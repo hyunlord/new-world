@@ -1,0 +1,44 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: outbound target is receiver hearth rather than internal self-target
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:50)
+ERROR: return target is sender hearth
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:56)
+ERROR: outbound target is receiver hearth rather than internal self-target
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:50)
+ERROR: return target is sender hearth
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:56)
+ERROR: outbound target is receiver hearth rather than internal self-target
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:50)
+ERROR: return target is sender hearth
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:56)
+ERROR: outbound target is receiver hearth rather than internal self-target
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:50)
+ERROR: return target is sender hearth
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_inspector_porter_p12.gd:23)
+       [1] _run (res://scripts/test/art/test_inspector_porter_p12.gd:56)
+INSPECTOR_PORTER_P12 checks=26 failures=8

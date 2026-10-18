@@ -1,4 +1,5 @@
 extends SceneTree
+const Baseline = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 const Reader = preload("res://scripts/ui/sim_reads.gd")
 const GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations"]
 var _failures: int = 0
@@ -51,7 +52,7 @@ func _run() -> void:
 	for getter: String in GETTERS:
 		var snapshot: Dictionary = reader.read_raw(getter)
 		first[getter] = snapshot
-		_check(snapshot == world.call(getter), getter + " matches live bridge")
+		_check(snapshot == Baseline.old_read(world, getter), getter + " matches live bridge")
 		_check(snapshot.is_read_only(), getter + " real snapshot frozen")
 		_check(is_same(snapshot, Reader.read(world, getter)), getter + " shared same-frame identity")
 		_check(reader.frame_call_counts().get(getter, 0) == 1, getter + " exactly one FFI call")
@@ -75,11 +76,11 @@ func _run() -> void:
 	for getter: String in GETTERS:
 		var next: Dictionary = reader.read_raw(getter)
 		_check(not is_same(first[getter], next), getter + " next tick refreshes")
-		_check(next == world.call(getter), getter + " next tick value correct")
+		_check(next == Baseline.old_read(world, getter), getter + " next tick value correct")
 		_check(reader.frame_call_counts().get(getter, 0) == 1, getter + " next tick counted once")
 		first[getter] = next
 	# Native tick advancement between frames must refresh even without explicit reader invalidation.
-	world.call("advance_ticks", 1)
+	Baseline.old_mutate(world, "advance_ticks", [1])
 	await process_frame
 	for getter: String in GETTERS:
 		_check(not is_same(first[getter], reader.read_raw(getter)), getter + " observed native next tick refreshes")
@@ -97,7 +98,7 @@ func _run() -> void:
 	for getter: String in GETTERS:
 		var reset: Dictionary = reader.read_raw(getter)
 		_check(not is_same(first[getter], reset), getter + " reset refreshes before deferred signal")
-		_check(reset == world.call(getter), getter + " reset values match bridge immediately")
+		_check(reset == Baseline.old_read(world, getter), getter + " reset values match bridge immediately")
 		first[getter] = reset
 	reader.reset_world_stress(15100, 20)
 	for getter: String in GETTERS:
@@ -109,7 +110,7 @@ func _run() -> void:
 	replacement.set_process(false)
 	parent.add_child(replacement)
 	for getter: String in GETTERS:
-		_check(reader.read_raw(getter) == replacement.call(getter), getter + " world replacement rebinds")
+		_check(reader.read_raw(getter) == Baseline.old_read(replacement, getter), getter + " world replacement rebinds")
 	parent.free()
 	_test_fake_paths()
 	_finish()

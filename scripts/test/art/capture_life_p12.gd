@@ -99,6 +99,11 @@ func _run() -> void:
 		cursor = next
 	_references.append({"world_info": info, "clock": ReadRoute.read(_world, "get_time_snapshot"),
 		"chronicle_pages": pages, "agents": ReadRoute.read(_world, "get_agent_snapshot"),
+		"tallies": ReadRoute.read(_world, "get_tallies"),
+		"settlements": ReadRoute.read(_world, "get_settlement_snapshot"),
+		"buildings": ReadRoute.read(_world, "get_building_snapshot"),
+		"activities": ReadRoute.read(_world, "get_activity_snapshot"),
+		"society": ReadRoute.read(_world, "get_society_snapshot"),
 		"porters": ReadRoute.read(_world, "get_porter_snapshot"), "relations": ReadRoute.read(_world, "get_settlement_relations")})
 	var person_ids: Dictionary = {}
 	for row: Dictionary in _chronicle:
@@ -283,6 +288,13 @@ func _person_capture(label: String, id: int) -> bool:
 		_fail("actual capture subject not found")
 		return false
 	_captured[label] = {"agent_id": id, "person": person, "chronicle": _world.call("get_person_chronicle", id)}
+	if bool(person.get("alive", false)):
+		var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
+		var agent_index: int = agents["agent_ids"].find(id)
+		if agent_index >= 0:
+			var entity: int = int(agents["ids"][agent_index])
+			_captured[label]["entity_bits"] = entity
+			_captured[label]["agent_detail"] = _world.call("get_agent_detail", entity)
 	for lang: String in ["en", "ko"]:
 		root.get_node("Locale").call("set_language", lang)
 		_inspector.call("show_person", id)

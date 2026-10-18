@@ -17,6 +17,8 @@ All worlds reset freshly and verify actual seed, tick, ticks_per_day1440 and off
 
 ## Text and evidence
 
+From attempt 2, each frozen-world reference also stores raw tallies, settlement, building, activity and society snapshots through ReadRoute. Living captured subjects include actual entity bits and get_agent_detail when their AgentId resolves in the live agent snapshot. These additions supply fresh private evidence for HUD and activity claims; attempt 1 artifacts remain unchanged.
+
 For each person and language, open actual inspector, expand Life before capture, and traverse every scroll page with48pixel overlap until the actual scrollbar end. Store complete Life text, actual record mode, porter-status visibility/text, page positions and person/history getters. Chronicle panel uses its real get_chronicle_since cursor and real formatter; the harness invalidates only its per-tick fetch guard to drain any backlog at the frozen tick. Drain count/cursor/total and complete displayed text are recorded. This capture-only pagination does not mutate history or simulation ticks. All panel pages are saved; the full underlying chronicle and referenced person records remain in private raw evidence even though the production feed retains its latest60 notable entries.
 
 Each screenshot records village-layer metadata, including relation lines, and road screenshots record actual porter body metadata, icon rectangle/id/scale/alpha. Hash checks cover every GDScript, scene, shader, compiled locale JSON, font, atlas JSON/PNG, project.godot, GDExtension descriptor and both available bridge paths. Full hashes are rechecked before each image.

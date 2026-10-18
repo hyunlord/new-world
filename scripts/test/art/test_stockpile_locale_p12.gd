@@ -18,15 +18,15 @@ func _run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(main)
 	main.set_process(false)
-	var reads: Node = main.get_node("SimReads")
-	reads.call("reset_world_stress", 15100, 200)
-	reads.call("advance_ticks", 1440)
+	var reads: SimReads = main.get_node("SimReads") as SimReads
+	reads.reset_world_stress(15100, 200)
+	reads.advance_ticks(1440)
 	var buildings: Node = main.get_node("BuildingRenderer")
 	buildings.set_process(false)
 	buildings.call("refresh_snapshot")
 	var labels: Dictionary = buildings.get("_labels")
 	check(not labels.is_empty(), "stress world supplies actual stockpile labels")
-	var tick: int = int((world.call("get_time_snapshot") as Dictionary)["tick"])
+	var tick: int = int(SimReads.read(world, "get_time_snapshot")["tick"])
 	for language: String in ["en", "ko", "en"]:
 		locale.call("set_language", language)
 		# No process frame, snapshot refresh or simulated tick is allowed here.
@@ -34,7 +34,7 @@ func _run() -> void:
 			check(label.text.begins_with(str(locale.call("ltr", "HUD_STOCKPILE_FOOD"))), "frozen food caption follows locale immediately")
 			var wood: Label = label.get_node("Wood") as Label
 			check(wood.text.begins_with(str(locale.call("ltr", "HUD_STOCKPILE_WOOD"))), "frozen wood caption follows locale immediately")
-		check(int((world.call("get_time_snapshot") as Dictionary)["tick"]) == tick, "locale refresh does not advance simulation")
+		check(int(SimReads.read(world, "get_time_snapshot")["tick"]) == tick, "locale refresh does not advance simulation")
 	main.free()
 	print("STOCKPILE_LOCALE_P12 failures=", failures)
 	quit(1 if failures else 0)
