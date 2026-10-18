@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset v2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_v2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_v2_s0

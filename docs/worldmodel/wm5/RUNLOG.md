@@ -20,3 +20,8 @@ pauses.
 | 4 (cost) | 22:19:44 | 22:26:44 | `_cost_ct_v2` (300 s, beside round 1 at 4 workers, load average 33–36): 0.998 s/step, `val_roll` 11.7 s, peak GPU 13,013 MiB → predicted 11,998 s for 11,850 steps < 14,400 s: plan not reduced |
 | 4.1 | 22:26:44 | | `ct_v2_s0` started (≈ 0.95 s/step) |
 | 1 (6.2.3) | | 23:51:29 | round 1: 1,587 worlds recorded (≈ 13–17 episodes / min at 4 workers), `round1_check` all OK (prefix, casts, sha256; 1,580 differ after the act) |
+| 1 (6.2.3) | 23:51:33 | 01:08:53 | round 2: 1,318 worlds with a second act (550 `gf240`, 494 `sp240`, 274 `rw120`), `round2_check` all OK (1,305 differ after the act) |
+| 1 (6.2.3) | 01:08:55 | | round 3: 757 worlds with a third act (319 / 299 / 139) |
+| 4.1 | 00:50 | | `ct_v2_s0` slowed from ≈ 1.0 to 1.65–2.1 s/step: another user's ComfyUI process computing on the shared GPU (22 GiB, 95 % utilization; not ours, untouched); projected end ≈ 14,500 s, inside the 18,000-s safety cap |
+| 4.1 | | 02:05 | `ct_v2_s0` ended: 11,850 / 11,850 steps, α 0.99991 α_max, 13,114 s (GPU shared with another user's job from ≈ 00:50); lowest `val_roll` at step 790; test effects (last, best) by `finals_watch_v2`; `crn_v2_s1` started |
+| 1 (6.2.3) | 01:53:00 | | round 3 verified (757); round 4: 265 worlds with a fourth act (134 / 84 / 47) |
