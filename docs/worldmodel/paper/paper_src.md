@@ -304,7 +304,33 @@ acts before c; arms = `pre` + the act at c; nothing after c; val families one re
 
 ## Appendix D. Datasheet (after Gebru et al. [@gebru2021datasheets])
 
-{{sec:appendix_datasheet}}
+**Motivation.** Created to test whether methods that learn dynamics from trajectories predict the effects of
+interventions in a multi-agent system, against exact counterfactual branches, and how far they are from the attainable
+error. Created by [AUTHORS]; funding [OWNER].
+
+**Composition.** Recorded episodes of a deterministic village simulation (`game_v19`): per episode 2,881 hourly rows of
+39 global and 14 per-settlement columns plus hidden tables (marked) and the list of interventions. Three splits:
+v2 (560 worlds; families of the no-act member and four arms, two replicates each; 5,316 family episodes plus 560
+`game_v16` control episodes and noise-floor families), obs (560 worlds; 2,219 episodes), obs2 (1,640 worlds; round
+episodes of a sequential policy and two families per val / test world). Instances are synthetic worlds; there are no
+people, no personal or sensitive data and no labels beyond what the simulator records. Roles (train / val / test) are
+fixed by seed ranges. Hidden columns must not be model inputs; they are kept for diagnostics.
+
+**Collection process.** Every episode was produced by one frozen recorder binary (source commit recorded in every
+episode's metadata; sha256 of the binary recorded), with byte-identical output across worker counts; every array is
+sha256-hashed in its episode's metadata and in the split's manifest. The observational policies are seeded and
+pre-registered; their propensities are recorded. Counterfactual families are forks of the same world state.
+
+**Preprocessing.** None beyond recording: the harness reads the arrays directly; cases, truths and scales are computed
+by committed code from the arrays.
+
+**Uses.** Intended: evaluating counterfactual / treatment-effect prediction and world models under interventions,
+with the pre-registered harness (cells, scales, world-level bootstrap). Not intended: any claim about real societies,
+real interventions or policy.
+
+**Distribution and maintenance.** [OWNER: release plan]. The recorder, the harness and every manifest are in the
+project repository; the episode arrays live outside version control (several GB per split).
+
 
 ## Appendix E. Compute
 
