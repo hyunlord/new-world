@@ -199,6 +199,26 @@ pub struct RelationsRule {
     pub reconcile_at: i32,
     /// A porter's hunger must be below this when it departs.
     pub porter_hunger_max: u32,
+    /// Pass 21 (`game_v26`): estranged villages keep apart at the Gather
+    /// arm's food-tile selectors too (`nearest_gather_tile`,
+    /// `gather_tile_exists`), not only at the forage bush choice. `false` in
+    /// `game_v25`.
+    #[serde(default)]
+    pub avoid_gather: bool,
+    /// Pass 21: a village pair pays `dispute_loss` for at most this many
+    /// disputes per display day (further disputes are still counted);
+    /// 0 = no cap (`game_v25`).
+    #[serde(default)]
+    pub dispute_cap_per_pair_day: u32,
+    /// Pass 21: a village pair quarrels at most this many times per display
+    /// day; once reached a dispute draws no quarrel and the pickup proceeds.
+    /// 0 = no cap (`game_v25`).
+    #[serde(default)]
+    pub quarrel_cap_per_pair_day: u32,
+    /// Pass 21: the exchange of a village pair is tried before either
+    /// village's kin aid to the other; `false` = aid first (`game_v25`).
+    #[serde(default)]
+    pub exchange_first: bool,
 }
 
 #[cfg(test)]

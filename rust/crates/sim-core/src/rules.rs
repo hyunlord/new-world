@@ -982,12 +982,44 @@ impl WorldRules {
         estrange_at: -300,
         reconcile_at: -150,
         porter_hunger_max: 30,
+        avoid_gather: false,
+        dispute_cap_per_pair_day: 0,
+        quarrel_cap_per_pair_day: 0,
+        exchange_first: false,
     };
 
     /// Pass 20: all v24 rules with the relations rule `V25_RELATIONS`.
     pub const fn game_v25(seed: u64) -> Self {
         let mut rules = Self::game_v24(seed);
         rules.society.relations = Some(Self::V25_RELATIONS);
+        rules
+    }
+
+    /// Pass 21: feuds that end and help that arrives. `V25_RELATIONS` with
+    /// the avoid filter at every food-target selector, per-village-pair daily
+    /// caps on what disputes (3) and quarrels (1) cost, exchange tried before
+    /// aid, the aid keep line below the giver threshold (2,000 ‰ of a day),
+    /// and smaller losses / faster drift. The loss, drift and aid-threshold
+    /// values are the grid configuration G1 of the brief (7.2) until the grid
+    /// selects one; see `docs/revitalize/DECISIONS.md` Pass 21.
+    pub const V26_RELATIONS: RelationsRule = RelationsRule {
+        aid_giver_days_permille: 3000,
+        aid_keep_days_permille: 2000,
+        aid_receiver_days_permille: 2000,
+        relation_drift_permille: 30,
+        dispute_loss: 5,
+        quarrel_loss: 40,
+        avoid_gather: true,
+        dispute_cap_per_pair_day: 3,
+        quarrel_cap_per_pair_day: 1,
+        exchange_first: true,
+        ..Self::V25_RELATIONS
+    };
+
+    /// Pass 21: all v25 rules with the relations rule `V26_RELATIONS`.
+    pub const fn game_v26(seed: u64) -> Self {
+        let mut rules = Self::game_v25(seed);
+        rules.society.relations = Some(Self::V26_RELATIONS);
         rules
     }
 
