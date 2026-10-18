@@ -143,6 +143,11 @@ impl WorldGenConfig {
         Self::game_v23(seed)
     }
 
+    /// Pass 20 relations world: unchanged `game_v24` generation inputs.
+    pub const fn game_v25(seed: u64) -> Self {
+        Self::game_v24(seed)
+    }
+
     /// Revitalize Pass 15 stress world: [`Self::game_v19`]`(seed)` with
     /// `agents` founders on a `side × side` map (run it under
     /// `WorldRules::game_v19(seed)`). Benchmark-only; not a game scene; never

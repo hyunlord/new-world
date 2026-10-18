@@ -146,6 +146,61 @@ impl FamilyRule {
     }
 }
 
+/// Pass 20 (`game_v25`): villages that help and villages that quarrel —
+/// porters (kin aid and exchange), forage disputes and quarrels, the relation
+/// between two villages and its estrangement / reconciliation hysteresis.
+/// Days are in permille of a day, nights in whole nights, relations on
+/// −1,000..=1,000. Clock values are display-clock minutes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RelationsRule {
+    /// Display-clock minute of the daily measures, drift and trip decisions.
+    pub decision_minute: u32,
+    /// A porter not within reach of the receiver by this minute turns back.
+    pub latest_arrival_minute: u32,
+    /// Porters a sender may send per day, over all of its trips.
+    pub porter_max: u32,
+    /// Kin aid (food): the giver holds at least this many food days.
+    pub aid_giver_days_permille: u32,
+    /// Kin aid (food): the giver keeps this many food days.
+    pub aid_keep_days_permille: u32,
+    /// Kin aid (food): the receiver holds fewer food days than this.
+    pub aid_receiver_days_permille: u32,
+    /// Kin aid (wood): the giver holds at least this many wood nights.
+    pub wood_giver_nights: u32,
+    /// Kin aid and exchange (wood): the sender keeps this many wood nights.
+    pub wood_keep_nights: u32,
+    /// Kin aid (wood): the receiver holds fewer wood nights than this.
+    pub wood_receiver_nights: u32,
+    /// Exchange: the food sender holds at least this many food days.
+    pub trade_food_surplus_days_permille: u32,
+    /// Exchange: the wood sender holds fewer food days than this.
+    pub trade_food_short_days_permille: u32,
+    /// Exchange: the wood sender holds at least this many wood nights.
+    pub trade_wood_surplus_nights: u32,
+    /// Exchange: the food sender holds fewer wood nights than this.
+    pub trade_wood_short_nights: u32,
+    /// Base relation of a daughter and its parent.
+    pub relation_kin_parent: i32,
+    /// Base relation of two daughters of one parent.
+    pub relation_kin_sibling: i32,
+    /// Base relation of any other pair.
+    pub relation_other: i32,
+    /// Daily drift toward the base, in permille of the gap.
+    pub relation_drift_permille: i32,
+    /// Relation gained when a trip delivers.
+    pub delivery_gain: i32,
+    /// Relation lost when foragers of the two villages dispute a bush.
+    pub dispute_loss: i32,
+    /// Relation lost when a dispute becomes a quarrel.
+    pub quarrel_loss: i32,
+    /// A pair becomes estranged at or below this relation.
+    pub estrange_at: i32,
+    /// An estranged pair reconciles at or above this relation.
+    pub reconcile_at: i32,
+    /// A porter's hunger must be below this when it departs.
+    pub porter_hunger_max: u32,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

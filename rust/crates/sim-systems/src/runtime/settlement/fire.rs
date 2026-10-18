@@ -51,7 +51,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use hecs::World;
 use sim_core::causal::event::DeathReason;
 use sim_core::components::{
-    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Founding, Hardiness, Hunger, Position,
+    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Founding, Hardiness, Hunger, PorterTrip, Position,
     ResourceKind, SettlementId,
 };
 use sim_core::rules::ExposureRule;
@@ -143,6 +143,12 @@ impl RuntimeSystem for FireSystem {
             // (no `Founding` marker exists outside `game_v17`).
             if resources.rules.society.fission.is_some() {
                 for (_, (agent, _)) in world.query::<(&Agent, &Founding)>().iter() {
+                    cold.remove(&agent.id);
+                }
+            }
+            // Pass 20: nor is a porter on its trip (no `PorterTrip` outside `game_v25`).
+            if resources.rules.society.relations.is_some() {
+                for (_, (agent, _)) in world.query::<(&Agent, &PorterTrip)>().iter() {
                     cold.remove(&agent.id);
                 }
             }

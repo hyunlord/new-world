@@ -51,7 +51,7 @@ use std::collections::BTreeMap;
 use crate::runtime::decision::agent_decision::clock_in_window;
 use hecs::World;
 use sim_core::components::{
-    Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory,
+    Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory, PorterTrip,
     Position, ResourceKind, SeekTarget, TargetKind, Temperament, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::{FirewoodRule, ForageRule};
@@ -235,7 +235,7 @@ impl RuntimeSystem for AgentMovementSystem {
         // Pass 16 (`game_v20`): a resident's temperament leans its idle tether
         // (NS) and, for workers, its haul loads (P). None before v20.
         let temperament_rule = rules.temperament;
-        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding, temperament)) in world
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding, temperament, porter)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -248,9 +248,13 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&Lineage>,
                 Option<&Founding>,
                 Option<&Temperament>,
+                Option<&PorterTrip>,
             )>()
             .iter()
         {
+            // Pass 20: a porter on its trip is treated as a founder on its
+            // way — no haul home, no tether (no `PorterTrip` outside `game_v25`).
+            let walker = founding.is_some() || porter.is_some();
             let lean = temperament_rule.zip(temperament);
             // V7 Section 16-β: three movement branches keyed directly on the
             // FSM state (NOT via `suppresses_movement()` — that predicate
@@ -336,7 +340,7 @@ impl RuntimeSystem for AgentMovementSystem {
             // formation tile instead of a Brownian step (no RNG draw).
             // Pass 11: a founder on its way never hauls home (no `Founding`
             // marker exists outside `game_v17`).
-            if let (true, Some(agent), None, None) = (forage.is_some() || firewood.is_some(), agent, child, founding) {
+            if let (true, Some(agent), None, false) = (forage.is_some() || firewood.is_some(), agent, child, walker) {
                 if let Some(&anchor) = home.get(&agent.id) {
                     let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
                     let wood = if firewood.is_some() {
@@ -415,7 +419,7 @@ impl RuntimeSystem for AgentMovementSystem {
                     })
                 },
                 // Pass 11: no tether pulls a founder on its way back home.
-                agent.filter(|_| founding.is_none()).and_then(|a| home.get(&a.id)),
+                agent.filter(|_| !walker).and_then(|a| home.get(&a.id)),
             ) {
                 if (nx as u32).abs_diff(anchor.0).max((ny as u32).abs_diff(anchor.1)) > radius {
                     nx = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x);

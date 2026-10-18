@@ -308,6 +308,8 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// - 145  BedAssignmentSystem (Revitalize Pass 3)
 /// - 146  AgingSystem (Revitalize Pass 4, interval 60; no-op without the aging rule)
 /// - 147  FireSystem (Revitalize Pass 5, interval 60; no-op without the firewood rule)
+/// - 148  FissionSystem (Revitalize Pass 11; no-op without the fission rule)
+/// - 149  RelationsSystem (Revitalize Pass 20; no-op without the relations rule)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -331,12 +333,15 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_fire_systems(engine);
 }
 
-/// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60)
-/// and the Pass 11 fission system (priority 148, interval 1).
+/// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60),
+/// the Pass 11 fission system (priority 148, interval 1) and the Pass 20
+/// relations system (priority 149, interval 1; no-op without the rule).
 pub fn register_fire_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::settlement::FireSystem::new()));
     // Pass 11: rules-gated village fission (priority 148, after the fire).
     engine.register_system(Box::new(runtime::settlement::FissionSystem::new()));
+    // Pass 20: rules-gated village relations and porters (priority 149).
+    engine.register_system(Box::new(runtime::settlement::RelationsSystem::new()));
 }
 
 /// Register the rules-gated shelter planner.

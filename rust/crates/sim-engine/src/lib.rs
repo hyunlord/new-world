@@ -139,6 +139,36 @@ pub struct Tallies {
     /// Floor units of the separate accumulator that found no spot below its
     /// `max` (Pass 13, `floor_separate`); included in `winter_wood_lost`.
     pub area_floor_lost_at_max: u64,
+    /// Pass 20 (`game_v25`): trips started (one per ordered pair and day).
+    pub porter_trips: u64,
+    /// Pass 20: porters who departed (one `PorterDeparted` entry each).
+    pub porters_departed: u64,
+    /// Pass 20: porters who delivered (one `PorterDelivered` entry each).
+    pub porter_deliveries: u64,
+    /// Pass 20: porters who turned back before delivering (a `PorterDelivered`
+    /// entry with cause ≥ 10 each).
+    pub porter_turnbacks: u64,
+    /// Pass 20: porters whose load was lost (the porter died or its village
+    /// dissolved).
+    pub porter_loads_lost: u64,
+    /// Pass 20: units taken from senders' stores.
+    pub porter_units_withdrawn: u64,
+    /// Pass 20: food units stored in receivers' stores.
+    pub porter_food_delivered: u64,
+    /// Pass 20: wood units stored in receivers' stores.
+    pub porter_wood_delivered: u64,
+    /// Pass 20: units carried back into the sender's store.
+    pub porter_units_returned: u64,
+    /// Pass 20: units lost with their porter or village.
+    pub porter_units_lost: u64,
+    /// Pass 20: forage disputes between foragers of two villages.
+    pub forage_disputes: u64,
+    /// Pass 20: disputes that became quarrels (one `Quarrel` entry each).
+    pub quarrels: u64,
+    /// Pass 20: pairs that became estranged (one `VillagesEstranged` each).
+    pub villages_estranged: u64,
+    /// Pass 20: pairs that reconciled (one `VillagesReconciled` each).
+    pub villages_reconciled: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -495,6 +525,11 @@ pub struct SimResources {
     /// simulation (no system decides anything from it); read by probes and
     /// the bridge. Recorded in every scene.
     pub chronicle: sim_core::chronicle::Chronicle,
+
+    /// Pass 20 (`game_v25`): every village pair's relation, the porter
+    /// trips in flight and the measurement-only trip and decision logs.
+    /// Empty without `SocietyRules::relations`.
+    pub settlement_relations: sim_core::components::SettlementRelations,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -687,6 +722,7 @@ impl SimResources {
             dissolutions: Vec::new(),
             fission_checks: Vec::new(),
             chronicle: sim_core::chronicle::Chronicle::new(),
+            settlement_relations: sim_core::components::SettlementRelations::default(),
         }
     }
 

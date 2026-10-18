@@ -50,6 +50,7 @@ fn pass8_v14_literal() -> WorldRules {
         },
         society: SocietyRules {
             family: None,
+            relations: None,
             birth: BirthRule::Provisioned {
                 cooldown_ticks: 720,
                 food_cost: 10,

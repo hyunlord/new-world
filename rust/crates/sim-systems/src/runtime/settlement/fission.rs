@@ -514,6 +514,17 @@ impl FissionSystem {
         }
         let mut checks: Vec<FissionCheck> = Vec::new();
         let cooldown = u64::from(rule.cooldown_days) * tpd;
+        // Pass 20 (`game_v25`): a porter on its trip never joins a group
+        // (no `PorterTrip` outside `game_v25`; empty otherwise).
+        let porters: BTreeSet<AgentId> = if resources.rules.society.relations.is_some() {
+            world
+                .query::<(&Agent, &sim_core::components::PorterTrip)>()
+                .iter()
+                .map(|(_, (agent, _))| agent.id)
+                .collect()
+        } else {
+            BTreeSet::new()
+        };
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         for sid in ids {
@@ -635,7 +646,7 @@ impl FissionSystem {
                     .member_agents
                     .iter()
                     .filter_map(|id| roster.get(id).map(|row| (*id, row)))
-                    .filter(|(_, row)| !row.3)
+                    .filter(|(id, row)| !row.3 && !porters.contains(id))
                     .map(|(id, row)| {
                         let unit = keyed_unit_f64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate);
                         (lean.departure_key(unit, temperaments.get(&id).unwrap_or(&neutral)), id, row.2)
@@ -648,7 +659,7 @@ impl FissionSystem {
                     .member_agents
                     .iter()
                     .filter_map(|id| roster.get(id).map(|row| (*id, row)))
-                    .filter(|(_, row)| !row.3)
+                    .filter(|(id, row)| !row.3 && !porters.contains(id))
                     .map(|(id, row)| (keyed_u64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate), id, row.2))
                     .collect();
                 ranked.sort_unstable();
@@ -660,7 +671,7 @@ impl FissionSystem {
                 continue;
             }
             let family = resources.rules.society.family.map(|_| {
-                let members = settlement.member_agents.iter().copied().collect();
+                let members = settlement.member_agents.iter().copied().filter(|id| !porters.contains(id)).collect();
                 (
                     crate::runtime::agent::households::households(world, &members),
                     crate::runtime::agent::households::couples(world, &members),

@@ -41,3 +41,6 @@ pub use fire::FireSystem;
 /// Pass 11 village fission (`game_v17`).
 pub mod fission;
 pub use fission::FissionSystem;
+/// Pass 20 village relations, porters and estrangement (`game_v25`).
+pub mod relations;
+pub use relations::RelationsSystem;

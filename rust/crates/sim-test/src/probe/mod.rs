@@ -20,6 +20,7 @@ pub(crate) mod pass10;
 pub(crate) mod pass11;
 pub(crate) mod pass12;
 pub(crate) mod pass13;
+mod pass20;
 mod pass17;
 mod pass17_activity;
 mod routine_observer;

@@ -61,11 +61,29 @@ pub enum ChronicleKind {
     FissionCancelled = 15,
     /// no subject; settlement; cause 0 empty / 1 remnant merge.
     SettlementDissolved = 16,
+    /// Pass 20: subject = the porter; settlement = the sender, settlement2 =
+    /// the receiver; cause 0 aid food / 1 aid wood / 2 exchange food / 3
+    /// exchange wood; value = units carried. One entry per porter.
+    PorterDeparted = 17,
+    /// Pass 20: subject = the porter; settlement = the receiver, settlement2
+    /// = the sender; cause as `PorterDeparted`, value = units delivered; a
+    /// porter that turned back: cause 10 + the departure cause, value 0.
+    PorterDelivered = 18,
+    /// Pass 20: subject = forager a (the one picking up), other = forager b
+    /// (its rival); settlement = a's village, settlement2 = b's; cause 0;
+    /// value = the relation after the quarrel.
+    Quarrel = 19,
+    /// Pass 20: no subject; settlement = the lower id, settlement2 = the
+    /// higher; cause 0; value = the relation.
+    VillagesEstranged = 20,
+    /// Pass 20: no subject; settlement = the lower id, settlement2 = the
+    /// higher; cause 0; value = the relation.
+    VillagesReconciled = 21,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 17] = [
+    pub const ALL: [ChronicleKind; 22] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -83,6 +101,11 @@ impl ChronicleKind {
         Self::DaughterFounded,
         Self::FissionCancelled,
         Self::SettlementDissolved,
+        Self::PorterDeparted,
+        Self::PorterDelivered,
+        Self::Quarrel,
+        Self::VillagesEstranged,
+        Self::VillagesReconciled,
     ];
 
     /// Stable numeric discriminant.
@@ -110,6 +133,11 @@ impl ChronicleKind {
             Self::DaughterFounded => "daughter_founded",
             Self::FissionCancelled => "fission_cancelled",
             Self::SettlementDissolved => "settlement_dissolved",
+            Self::PorterDeparted => "porter_departed",
+            Self::PorterDelivered => "porter_delivered",
+            Self::Quarrel => "quarrel",
+            Self::VillagesEstranged => "villages_estranged",
+            Self::VillagesReconciled => "villages_reconciled",
         }
     }
 }
@@ -431,6 +459,15 @@ mod tests {
             assert_eq!(usize::from(cause.as_u8()), index);
         }
         assert_eq!(ChronicleKind::SettlementDissolved.as_u8(), 16);
+        // Pass 20: kinds 17–21 appended; 0–16 unchanged.
+        assert_eq!(ChronicleKind::PorterDeparted.as_u8(), 17);
+        assert_eq!(ChronicleKind::PorterDelivered.as_u8(), 18);
+        assert_eq!(ChronicleKind::Quarrel.as_u8(), 19);
+        assert_eq!(ChronicleKind::VillagesEstranged.as_u8(), 20);
+        assert_eq!(ChronicleKind::VillagesReconciled.as_u8(), 21);
+        assert_eq!(ChronicleKind::ALL.len(), 22);
+        let names: std::collections::BTreeSet<&str> = ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
+        assert_eq!(names.len(), 22);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

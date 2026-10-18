@@ -61,6 +61,8 @@ pub(super) struct RunResult {
     pub(super) pass12: Value,
     /// Per-seed schema-thirteen block (Pass 13, `pass13::seed_block`).
     pub(super) pass13: Value,
+    /// Per-seed relations block (Pass 20, `pass20::seed_block`; `game_v25` only).
+    pub(super) pass20: Option<Value>,
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -177,6 +179,7 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v22" => crate::scenes::game_v22_scene(seed),
         "game_v23" => crate::scenes::game_v23_scene(seed),
         "game_v24" => crate::scenes::game_v24_scene(seed),
+        "game_v25" => crate::scenes::game_v25_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
@@ -421,7 +424,10 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
                         && !super::pass17::twins_match(&engine, twin))
                     || (engine.resources.rules.society.family.is_some()
                         && !super::family_trace::twins_match(&engine, twin))
-                    || !super::chronicle_out::twins_match(&engine, twin, &mut chronicle_seen))
+                    || !super::chronicle_out::twins_match(&engine, twin, &mut chronicle_seen)
+                    // Pass 20: the relations, trips in flight and their logs.
+                    || (engine.resources.rules.society.relations.is_some()
+                        && engine.resources.settlement_relations != twin.resources.settlement_relations))
             {
                 return Err(format!(
                     "{} tick trace mismatch seed={seed} tick={}",
@@ -450,6 +456,7 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
         engine.resources.shelter_plan_skips
     );
     let pass13 = super::pass13::seed_block(&engine);
+    let pass20 = super::pass20::seed_block(&engine);
     let pass12 = super::pass12::seed_block(&engine, &winter_members, &formed_members, &exposure_deaths, args.days);
     let mut pass11 = super::pass11::seed_block(&engine, &settlement_days, &exposure_deaths, &elders_by_day, args.days);
     if let Some(object) = pass11.as_object_mut() {
@@ -460,6 +467,7 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
         pass11,
         pass12,
         pass13,
+        pass20,
         checkpoints,
         census: deaths.census,
         agent_days,
@@ -498,7 +506,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24" | "game_v25")
         || super::ablation::is_ablation(scene)
 }
 
@@ -511,7 +519,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "game_v23", "game_v24", "abl_no_regions", "abl18_no_regions"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "game_v23", "game_v24", "game_v25", "abl_no_regions", "abl18_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

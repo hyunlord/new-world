@@ -55,6 +55,10 @@ use super::chronicle::{
     collect_settlement_chronicle, person_to_dict, rows_to_dict,
 };
 use super::family::{agent_family_to_dict, collect_agent_family};
+use super::relations::{
+    collect_porter_snapshot, collect_settlement_relations, porter_rows_to_dict,
+    relation_rows_to_dict,
+};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
@@ -189,13 +193,14 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
 }
 
-/// Revitalize Pass 19 — the live game's world of `seed`: `game_v24`, with
-/// temperament, routines (each person ending their day at their own time)
-/// and families (elder partners follow on a split). Pure (no Godot) so the
-/// harness can check it; `WorldSimNode::init` and `reset_world` call it, while
+/// Revitalize Pass 20 — the live game's world of `seed`: `game_v25`, with
+/// temperament, routines (each person ending their day at their own time),
+/// families (elder partners follow on a split) and village relations
+/// (porters, forage disputes, estrangement). Pure (no Godot) so the harness
+/// can check it; `WorldSimNode::init` and `reset_world` call it, while
 /// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::game_v24(seed), WorldRules::game_v24(seed))
+    build_world_with(&WorldGenConfig::game_v25(seed), WorldRules::game_v25(seed))
 }
 
 /// Revitalize Pass 16 — the temperament of the agent whose
@@ -225,7 +230,7 @@ fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperame
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            // Revitalize Pass 19: the live game runs `game_v24` (staggered day ends).
+            // Revitalize Pass 20: the live game runs `game_v25` (village relations).
             engine: build_game_engine(DEFAULT_GAME_SEED),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -548,6 +553,21 @@ impl WorldSimNode {
     #[func]
     fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
         rows_to_dict(collect_chronicle_since(&self.engine.resources.chronicle, start, max), true)
+    }
+
+    /// Pass 20 village relations: every pair of living villages (lower id
+    /// first, key order) as `{a, b, value, estranged, base}` packed columns.
+    /// Empty without the relations rule.
+    #[func]
+    fn get_settlement_relations(&self) -> VarDictionary {
+        relation_rows_to_dict(&collect_settlement_relations(&self.engine.resources.settlement_relations))
+    }
+
+    /// Pass 20 porters: every porter on a trip by AgentId as `{ids (entity
+    /// bits), from, to, kind (0 food / 1 wood), amount, stage (0 out / 1 back)}`.
+    #[func]
+    fn get_porter_snapshot(&self) -> VarDictionary {
+        porter_rows_to_dict(&collect_porter_snapshot(&self.engine.world))
     }
 
     /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
@@ -2932,10 +2952,11 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
-    fn live_game_is_game_v24() {
-        // Pass 19 7.1: init and reset_world build game_v24; the stress world stays v19.
+    fn live_game_is_game_v25() {
+        // Pass 20 6.1: init and reset_world build game_v25; the stress world stays v19.
         let engine = super::build_game_engine(20_261_010);
-        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v24(20_261_010));
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v25(20_261_010));
+        assert!(super::build_stress_engine(1, 30).resources.rules.society.relations.is_none());
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
     }
@@ -3143,6 +3164,20 @@ mod revitalize_tooling_tests {
             winter_wood_lost_settled: 0,
             area_floor_placed: 0,
             area_floor_lost_at_max: 0,
+            porter_trips: 0,
+            porters_departed: 0,
+            porter_deliveries: 0,
+            porter_turnbacks: 0,
+            porter_loads_lost: 0,
+            porter_units_withdrawn: 0,
+            porter_food_delivered: 0,
+            porter_wood_delivered: 0,
+            porter_units_returned: 0,
+            porter_units_lost: 0,
+            forage_disputes: 0,
+            quarrels: 0,
+            villages_estranged: 0,
+            villages_reconciled: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);

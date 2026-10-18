@@ -261,6 +261,19 @@ pub fn game_v24_scene(seed: u64) -> SimEngine {
     engine
 }
 
+/// Pass 20 fixture: `game_v24` with villages that help and villages that
+/// quarrel (porters, kin aid and exchange; forage disputes, relations and
+/// estrangement).
+pub fn game_v25_scene(seed: u64) -> SimEngine {
+    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v25(seed),
+        sim_core::rules::WorldRules::game_v25(seed),
+    );
+    engine.resources.world_variety = Some(variety);
+    engine
+}
+
 /// Pass 16 placebo: world `seed` under `game_v20_inert` (temperament drawn
 /// and stored, no lean acts — the same world as `game_v19`).
 pub fn game_v20_inert_scene(seed: u64) -> SimEngine {

@@ -96,8 +96,14 @@ pub const STREAM_ROUTINE_PLAY: u64 = 0x5254_4E50_4C41_595F;
 /// Family sex identity; lineage subject and fixed tick, slot and replicate zero.
 pub const STREAM_SEX: u64 = 0x5345_585F_4944_454E;
 
+/// Quarrels (Pass 20, `game_v25`): whether a forage dispute between two
+/// villages' foragers becomes a quarrel, subject = the lineage key of the
+/// lower-AgentId forager, tick = the pickup's tick, slot 0, replicate = the
+/// noise replicate in force ("RELATION" in ASCII).
+pub const STREAM_RELATIONS: u64 = 0x5245_4C41_5449_4F4E;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 21] = [
+pub const STREAMS: [u64; 22] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -119,6 +125,7 @@ pub const STREAMS: [u64; 21] = [
     STREAM_ROUTINE_PLACE,
     STREAM_ROUTINE_PLAY,
     STREAM_SEX,
+    STREAM_RELATIONS,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).
