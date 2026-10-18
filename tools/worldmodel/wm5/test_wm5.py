@@ -465,5 +465,46 @@ class TestRidge(unittest.TestCase):
         self.assertEqual(len(priv), 3 + 7 + 6 + 2)
 
 
+# ------------------------------------------------------------------ paper numbers (11.2) ----------------------------
+class TestPaperNumbers(unittest.TestCase):
+    def test_formats(self):
+        from wm5 import figures as fg
+        self.assertEqual(fg.fmt_value(0.4871, "3"), "0.487")
+        self.assertEqual(fg.fmt_value(-0.0123, "3s"), "−0.012")
+        self.assertEqual(fg.fmt_value(0.0123, "3s"), "+0.012")
+        self.assertEqual(fg.fmt_value(1640, "0"), "1,640")
+        self.assertEqual(fg.fmt_value(0.0312, "pct1"), "3.1 %")
+        self.assertEqual(fg.fmt_ci({"point": 0.1, "lo": -0.02, "hi": 0.2}, 2), "+0.10 [−0.02, +0.20]")
+
+    def test_render_and_check_on_a_synthetic_source(self):
+        import json
+        import tempfile
+        from wm5 import figures as fg
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            src = {"a": {"b": 0.25, "ci": {"point": 0.1, "lo": 0.05, "hi": 0.15}}}
+            (td / "s.json").write_text(json.dumps(src))
+            fg._cache[str(td / "s.json")] = src
+            old = dict(fg.SOURCES)
+            fg.SOURCES["j5"] = str(td / "s.json")
+            try:
+                (td / "src.md").write_text("x {{j5:a/b#2}} and {{j5:a/ci#ci2}}.")
+                j = fg.render(td / "src.md", td / "paper.md", td / "n.json")
+                self.assertEqual((td / "paper.md").read_text(), "x 0.25 and +0.10 [+0.05, +0.15].")
+                self.assertEqual(j["count"], 2)
+                self.assertEqual(fg.check(td / "n.json", td / "paper.md"), [])
+                (td / "paper.md").write_text("x 0.26 and +0.10 [+0.05, +0.15].")
+                self.assertTrue(fg.check(td / "n.json", td / "paper.md"))
+            finally:
+                fg.SOURCES.clear(); fg.SOURCES.update(old)
+                fg._cache.pop(str(td / "s.json"), None)
+
+    def test_every_quoted_number_of_the_paper_is_in_its_source(self):
+        from wm5 import figures as fg
+        if not (fg.PAPER / "paper_numbers.json").exists():
+            self.skipTest("paper not rendered yet")
+        self.assertEqual(fg.check(), [])
+
+
 if __name__ == "__main__":
     unittest.main()
