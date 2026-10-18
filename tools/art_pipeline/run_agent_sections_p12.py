@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 import hashlib
-from session_validity_p12 import require_valid
+from session_validity_p12 import require_valid, valid_snapshot
 
 import json
 import math
@@ -168,11 +168,21 @@ def main() -> int:
         errors.append('Sources/build/generated artifacts changed during session')
     if 'ERROR' in (output / 'session.log').read_text():
         errors.append('Session log contains ERROR')
+    contended = False
+    try:
+        validity = json.loads((output / 'frames.json.validity.json').read_text())
+        if not isinstance(validity, dict):
+            raise EvidenceError('Session validity evidence must be an object')
+        contended = not all(isinstance(validity.get(key), dict) and valid_snapshot(validity[key]) for key in ('start', 'end'))
+        require_valid(output / 'frames.json.validity.json')
+    except ValueError as exc:
+        errors.append(str(exc))
+    except OSError as exc:
+        errors.append('Missing session validity evidence: ' + str(exc))
     try:
         payload = json.loads((output / 'frames.json').read_text())
         if not isinstance(payload, dict):
             raise EvidenceError('Capture JSON must be an object')
-        require_valid(output / "frames.json.validity.json")
         validate_capture(payload)
         for key in (*[name + '_usec' for name in NAMES], 'total_usec'):
             values = sorted(row['agent_sections']['total_usec'] if key == 'total_usec' else row['agent_sections']['exclusive_usec'][key] for row in payload['samples'])
@@ -187,7 +197,7 @@ def main() -> int:
                 raise EvidenceError(f'Capture installation differs: {key}')
     except (OSError, json.JSONDecodeError, EvidenceError) as exc:
         errors.append(str(exc))
-    result: Record = {'valid': not errors, 'errors': errors, 'exit_code': code,
+    result: Record = {'status': 'NOT_VERIFIED (contended)' if contended else ('VALID' if not errors else 'NOT_VERIFIED'), 'valid': not errors, 'errors': errors, 'exit_code': code,
                       'diagnostic_only': True, 'section_statistics_usec': section_statistics,
                       'percentile_method': 'nearest-rank', 'founding_groups_status': 'unavailable_separate_callback'}
     (output / 'summary.json').write_text(json.dumps(result, indent=2) + '\n')

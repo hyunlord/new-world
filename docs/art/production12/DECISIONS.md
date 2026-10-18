@@ -5,3 +5,5 @@
 - Start clock conservatively recorded as 09:32Z, preceding initial brief read. No sleep pause claimed without evidence.
 
 - Preflight: external make-meme Python, mds and WindowServer exceeded 50% CPU in perf/preflight-processes.txt. This is diagnostic only, not a measured session or verdict. Foreign processes are untouched.
+- Raw logs retain their terminal blank lines unchanged; git diff --check excludes *.log only when checking source/document whitespace. No raw evidence is rewritten to satisfy whitespace lint.
+- 2026-10-18T10:03Z: Preliminary default-dev census spent many minutes advancing each live world (own Godot pid93589). Retained all.json/all.log and deliberately terminated only that verified process; this is incomplete exploratory evidence. Use CARGO_PROFILE_DEV_OPT_LEVEL=2 for the base identity bridge, with explicit profile/hash records, to keep deterministic capture advancement inside Part0 timebox. This is never release-performance evidence. The measurement worktree remains release-only. Both reference and candidate identity captures must use the same dev optimization level.
