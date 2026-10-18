@@ -63,3 +63,11 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   "on v2's 7-day cells against `zero` 0.487" and "v2 7 d: `zero` 0.487". In the committed files these are the
   **30-day** cells (WM-2's W3 cells were 30-day; `wm4/runs/judge4/judge.md`: v2 `zero` 0.612 at 7 d, 0.487 at 30 d;
   WM-2 spread 0.132 at 7 d, 0.189 at 30 d). WM-5 reports both lags from the committed files and changes no rule.
+- **L1.4 Observed-only manifest first.** The families take ≈ 7 h at 4 workers, while the obs2 trainings need only the
+  observed train / val episodes, which are final after `finalize` (02:11). To keep the GPU busy after the v2 runs, the
+  manifest is committed in two steps: first the observed entries only (`obs2.py manifest --observed-only`: `obs2_train`,
+  `obs2_val`, `obs2_test`, 1,640 episodes, every one sha256-verified), from which the obs2 trainings and their cost
+  checks run; then the full manifest (the same observed entries plus the family members), whose observed entries are
+  checked to be identical to the first. The trainings' `manifest_sha256` is therefore the observed-only file's; no
+  training or selection reads a family member either way (GOAL.md 4.3). The order of GOAL.md 9.1 ("after obs2") is
+  kept for the trainings' data; only their start no longer waits for the families' recording.
