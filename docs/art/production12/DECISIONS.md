@@ -16,3 +16,6 @@
 - Part2 edits were prepared only on local art-p12-ui while measurement checkout stayed at37be1b85. Merge sidebranch into WIP only after this Part1 closure; no UI change entered identity/performance candidate evidence.
 
 - 2026-10-18T11:20:04.857372+00:00: Part2 preserves insufficient activity population after allowed supplements:10native diagnostic crops,4missing. Fresh reader scored3/10; fullbarFAIL. No arbitrary worlds/duplicateholders/reclassification. Village task has2eligiblepairs of6, so terminalNOT_RUN before keydisclosure. Live Life/porter/quarrel reading is deferred only until Part3 supplies their required formatter; naturalcrowd geometry already3PASS. Optional hover implemented and verified instead of dropped.
+
+- 2026-10-18T11:47:23.770552+00:00: Part3 implementation and six-case capture attempt2 complete; remaining fresh-reader comparison is evidence-only on frozen source c46e66bd. Part4 starts now. No subsequent implementation changes.
+- Published Part3 subjects 33b8f7c7 and c46e66bd omitted the required art-p12(p3) prefix. Preserve history; this is a commit-format deviation, not a runtime result. Subsequent subjects restore the prefix.
