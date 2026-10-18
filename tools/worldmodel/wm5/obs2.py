@@ -19,6 +19,7 @@ usage (DGX):
   obs2.py fam-schedules --root ROOT --out JSON              val / test family schedules at c1 and c2
   obs2.py fam-jobs --root ROOT --role R                     one line per (ref, seed, fork tick, replicates)
   obs2.py fam-check --root ROOT --out JSON                  prefix, casts, fork, pre = unforked recording
+  obs2.py unforked-seeds --root ROOT                         3 sampled test worlds with a non-empty `pre` at c2
   obs2.py manifest --root ROOT --out obs2_manifest.json
 """
 from __future__ import annotations
@@ -365,6 +366,13 @@ def fam_check(root: Path, unforked: Path | None = None) -> dict:
             "none_r0_equal_r0_checked": sum("none_r0_equal_r0" in r for r in rows), "rows": rows}
 
 
+def unforked_seeds(root: Path, n: int = 3) -> list[int]:
+    """GOAL.md 6.2.5's third check: n test worlds with a non-empty `pre` at c2, drawn with `default_rng(0)`."""
+    policy = json.loads((Path(root) / "policy" / "policy.json").read_text())
+    ok = [w["seed"] for w in policy["worlds"] if w["role"] == "test" and p2.pre_casts(w["casts"], w["refs"]["c2"])]
+    return sorted(int(x) for x in np.random.default_rng(0).choice(ok, size=n, replace=False))
+
+
 # ------------------------------------------------------------------ manifest ----------------------------------------
 def entry(root: Path, path: Path, split: str, role: str, schedule_id: str, policy_sha: str, **extra) -> dict:
     meta = json.loads((path / "meta.json").read_text())
@@ -438,7 +446,11 @@ def main(argv=None) -> int:
     p = sub.add_parser("fam-check"); p.add_argument("--root", required=True); p.add_argument("--out", required=True)
     p.add_argument("--unforked", default=None)
     p = sub.add_parser("fam-jobs"); p.add_argument("--root", required=True); p.add_argument("--role", required=True)
+    p = sub.add_parser("unforked-seeds"); p.add_argument("--root", required=True)
     a = ap.parse_args(argv)
+    if a.cmd == "unforked-seeds":
+        print(" ".join(str(s) for s in unforked_seeds(Path(a.root))))
+        return 0
     if a.cmd == "fam-jobs":
         print("\n".join(fam_jobs(Path(a.root), a.role)))
         return 0
