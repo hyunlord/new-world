@@ -1,0 +1,21 @@
+{
+  "start": {
+    "epoch": 1792319475.346675,
+    "load_1m": 4.7744140625,
+    "ps": "  PID  %CPU COMM\n19091  99.4 /Users/rexxa/github/make-meme/.venv/bin/python3\n77138  98.3 /Users/rexxa/github/make-meme/.venv/bin/python3\n25084  54.9 /Applications/Google Chrome.app/Contents/MacOS/Google Chrome\n 2125  47.1 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n  399  28.5 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n12688  22.2 ps\n12637  19.4 system_profiler\n80055  19.3 /usr/libexec/sysmond\n  573  17.8 osascript\n12549  17.8 osascript\n 1088   6.1 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n29017   4.7 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n 1046   4.2 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n  368   3.9 /usr/libexec/xprotectd\n",
+    "owned_pids": [
+      12713
+    ]
+  },
+  "end": {
+    "epoch": 1792319475.381232,
+    "load_1m": 4.7744140625,
+    "ps": "  PID  %CPU COMM\n19091  99.4 /Users/rexxa/github/make-meme/.venv/bin/python3\n77138  98.3 /Users/rexxa/github/make-meme/.venv/bin/python3\n25084  54.9 /Applications/Google Chrome.app/Contents/MacOS/Google Chrome\n 2125  47.1 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n  399  28.5 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n12688  22.2 ps\n12637  19.4 system_profiler\n80055  19.3 /usr/libexec/sysmond\n  573  17.8 osascript\n12549  17.8 osascript\n 1088   6.1 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n29017   4.7 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n 1046   4.2 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n  368   3.9 /usr/libexec/xprotectd\n",
+    "owned_pids": [
+      12713
+    ]
+  },
+  "exit_code": 75,
+  "valid": false,
+  "verdict": "NOT_VERIFIED (contended or unsuccessful)"
+}

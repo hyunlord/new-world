@@ -6,7 +6,7 @@ Deadlines: Part 0 12:02Z; Part 1 15:32Z; Part 4 starts by 18:32Z; 12-hour rule 2
 
 | Part | State | Start UTC | End UTC | Evidence |
 |---|---|---|---|---|
-| 0 merge, contract, release baseline and running diagnosis | in progress | 2026-10-18T09:32:00Z | | GOAL byte copy; merge evidence |
+| 0 merge, contract, release baseline and running diagnosis | complete; measurements NOT_VERIFIED(contended) | 2026-10-18T09:32:00Z | 2026-10-18T10:32:55.172844+00:00 | full gate88/88; exact controls; admission-index |
 | 1 structural frame budget candidates | pending | | | |
 | 2 names, life, crowds and input/blind tests | pending | | | |
 | 3 porters, relations and chronicle | pending | | | |
@@ -29,3 +29,5 @@ Deadlines: Part 0 12:02Z; Part 1 15:32Z; Part 4 starts by 18:32Z; 12-hour rule 2
 - Clean full Part0 gate terminal exit 0, 88/88 checks passed (observed process completion). Tools provenance follow-up separately passed 5 unittest methods plus shell syntax/diff checks.
 
 - First reference set on 9934f785: six A/Aprime exact-zero controls and four complete running/pan dumps passed. Tool audit then required corrected collector/summary; preserve this set as v1 and rebuild/reimport both worktrees at corrected tooling commit before v2 reference/measurements.
+
+- 2026-10-18T10:30:40.264797+00:00: corrected tooling a4901cb1 pushed/remote-verified; both worktrees rebuilt/imported. V2 census, six exact A/Aprime controls, and four running/pan references complete. Release measurements resumed with original retry ceiling; no own heavy processes at launch.
