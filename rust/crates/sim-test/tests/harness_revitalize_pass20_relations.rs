@@ -170,9 +170,9 @@ fn harness_relations_rule_values_pinned() {
     assert_eq!(r.decision_minute, 480);
     assert_eq!(r.latest_arrival_minute, 900);
     assert_eq!(r.porter_max, 2);
-    assert_eq!(r.aid_giver_days_permille, 4000);
+    assert_eq!(r.aid_giver_days_permille, 3000, "tuning round (7.3)");
     assert_eq!(r.aid_keep_days_permille, 3000);
-    assert_eq!(r.aid_receiver_days_permille, 1500);
+    assert_eq!(r.aid_receiver_days_permille, 2000, "tuning round (7.3)");
     assert_eq!(r.wood_giver_nights, 3);
     assert_eq!(r.wood_keep_nights, 2);
     assert_eq!(r.wood_receiver_nights, 1);
@@ -292,7 +292,7 @@ fn harness_relations_drift_clamp_and_hysteresis() {
 
 #[test]
 fn harness_relations_kin_aid_sends_food_with_the_most_social_adults() {
-    // Camp food days 100 × 1e6 / 9600 = 10,416 ≥ 4,000; daughter 10 → 1,041 < 1,500.
+    // Camp food days 100 × 1e6 / 9600 = 10,416 ≥ 3,000; daughter 10 → 1,041 < 2,000.
     let (mut engine, entities) = two_villages([(100, 0), (10, 0)], &residents());
     relations_at(&mut engine, decision(1) - 1);
     relations_at(&mut engine, decision(1));
@@ -325,8 +325,8 @@ fn harness_relations_kin_aid_sends_food_with_the_most_social_adults() {
 
 #[test]
 fn harness_relations_keep_line_bounds_the_load() {
-    // Camp 36 food: days 3,750 < 4,000 → no aid; 40: 4,166, surplus 40 − 29 = 11 → 2 porters (10 + 1).
-    for (stock, sent) in [(36, 0), (40, 11)] {
+    // Camp 28 food: days 2,916 < 3,000 → no aid; 40: 4,166, surplus 40 − 29 = 11 → 2 porters (10 + 1).
+    for (stock, sent) in [(28, 0), (40, 11)] {
         let (mut engine, _) = two_villages([(stock, 0), (10, 0)], &residents());
         relations_at(&mut engine, decision(1));
         let rows = porters(&engine);
@@ -359,7 +359,12 @@ fn harness_relations_exchange_is_both_trips_or_none() {
     // Camp: food 3.3 days, wood 1 night; daughter: food 1.6 days (no aid:
     // 3.3 < 4), wood 6 nights (aid wood would need the camp < 1 night).
     let stores = [(32, burn), (16, 6 * burn)];
+    // The brief's kin-aid thresholds (4,000 / 1,500): with the tuned ones
+    // (3,000 / 2,000) the exchange's food condition is the kin-aid food
+    // condition, which is tried first (see the next test).
+    let brief = RelationsRule { aid_giver_days_permille: 4000, aid_receiver_days_permille: 1500, ..RULE };
     let (mut engine, _) = two_villages(stores, &residents());
+    engine.resources.rules.society.relations = Some(brief);
     relations_at(&mut engine, decision(1));
     let rows = porters(&engine);
     let food_leg: Vec<_> = rows.iter().filter(|r| r.1.kind == PorterKind::Food).collect();
@@ -378,12 +383,26 @@ fn harness_relations_exchange_is_both_trips_or_none() {
         row.2 = 500;
     }
     let (mut engine, entities) = two_villages(stores, &tired);
+    engine.resources.rules.society.relations = Some(brief);
     for entity in &entities[4..] {
         engine.world.get::<&mut Hunger>(*entity).expect("hunger").value = 45.0;
     }
     relations_at(&mut engine, decision(1));
     assert!(porters(&engine).is_empty(), "both or none");
     assert_eq!(food(&engine, 1), 32);
+}
+
+#[test]
+fn harness_relations_tuned_aid_takes_the_exchange_food_condition() {
+    // Under `V25_RELATIONS` (tuned) the same stores send kin aid (food) instead.
+    let probe = two_villages([(0, 0), (0, 0)], &residents()).0;
+    let burn = burn_night(&probe.resources);
+    let (mut engine, _) = two_villages([(32, burn), (16, 6 * burn)], &residents());
+    relations_at(&mut engine, decision(1));
+    let rows = porters(&engine);
+    assert_eq!(rows.iter().map(|r| (r.1.from, r.1.kind, r.1.amount)).collect::<Vec<_>>(), vec![(1, PorterKind::Food, 3)]);
+    assert_eq!(of_kind(&engine, ChronicleKind::PorterDeparted)[0].cause, 0, "aid food");
+    assert!(engine.resources.settlement_relations.days[0].exchange && engine.resources.settlement_relations.days[0].aid_food);
 }
 
 #[test]

@@ -954,14 +954,17 @@ impl WorldRules {
     }
 
     /// Pass 20: villages that help and villages that quarrel (porters, kin
-    /// aid and exchange; forage disputes, relations and estrangement).
+    /// aid and exchange; forage disputes, relations and estrangement). The
+    /// brief's values, with the single tuning round's two kin-aid levers
+    /// (giver 4,000 → 3,000 and receiver 1,500 → 2,000 permille of a day;
+    /// `docs/revitalize/probe/p20-2_diag/tuning.md`), frozen afterwards.
     pub const V25_RELATIONS: RelationsRule = RelationsRule {
         decision_minute: 480,
         latest_arrival_minute: 900,
         porter_max: 2,
-        aid_giver_days_permille: 4000,
+        aid_giver_days_permille: 3000,
         aid_keep_days_permille: 3000,
-        aid_receiver_days_permille: 1500,
+        aid_receiver_days_permille: 2000,
         wood_giver_nights: 3,
         wood_keep_nights: 2,
         wood_receiver_nights: 1,
