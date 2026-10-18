@@ -1,0 +1,21 @@
+{
+  "start": {
+    "epoch": 1792324097.888876,
+    "load_1m": 5.7119140625,
+    "ps": "  PID  %CPU COMM\n39003  98.8 /Users/rexxa/github/make-meme/.venv/bin/python3\n24389  45.2 node\n  399  31.4 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n24487  19.1 node\n80055  18.2 /usr/libexec/sysmond\n  573  17.7 osascript\n 8167  17.1 /usr/libexec/trustd\n  574  10.8 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n23864   8.9 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n 1088   7.8 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n  368   6.9 /usr/libexec/xprotectd\n 1046   6.2 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n28400   5.5 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n  604   5.1 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores\n",
+    "owned_pids": [
+      24529
+    ]
+  },
+  "end": {
+    "epoch": 1792324097.926722,
+    "load_1m": 5.7119140625,
+    "ps": "  PID  %CPU COMM\n39003  99.0 /Users/rexxa/github/make-meme/.venv/bin/python3\n  399  31.4 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n24389  28.1 node\n23864  18.3 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n  573  17.7 osascript\n24487  11.8 node\n80055  11.8 /usr/libexec/sysmond\n  574  10.8 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n 8167  10.7 /usr/libexec/trustd\n 1088   7.8 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n15837   7.5 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n24529   7.5 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n  368   6.9 /usr/libexec/xprotectd\n28400   6.4 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n",
+    "owned_pids": [
+      24529
+    ]
+  },
+  "exit_code": 75,
+  "valid": false,
+  "verdict": "NOT_VERIFIED (contended or unsuccessful)"
+}

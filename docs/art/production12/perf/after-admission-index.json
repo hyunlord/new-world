@@ -1,0 +1,266 @@
+{
+  "admissions": [
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W-multi-attempt1.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/00-p4-matrix-after-W-multi-attempt1.json.validity.json",
+      "sha256": "5593c97086b125f6eae49b0aaaf47c79f42c49ab05c3fa508188a517bb669eb3",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.56005859375,
+      "end_load": 5.56005859375,
+      "foreign_high_cpu": [
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W-multi-attempt2.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/01-p4-matrix-after-W-multi-attempt2.json.validity.json",
+      "sha256": "f8610dfb6c23af6fb7ba08fa246615b7a5a5d5192fdeb7badcfaa1e4b278ea05",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.56005859375,
+      "end_load": 5.56005859375,
+      "foreign_high_cpu": [
+        "39003  98.8 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W-multi-attempt3.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/02-p4-matrix-after-W-multi-attempt3.json.validity.json",
+      "sha256": "67830056c09a2b37a83e3b55b79680630ec3f8db99864cfa612f484b7fef96c9",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.56005859375,
+      "end_load": 5.56005859375,
+      "foreign_high_cpu": [
+        "39003  99.9 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W0-attempt1.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/03-p4-matrix-after-W0-attempt1.json.validity.json",
+      "sha256": "f0291658ab2652fbd6eb963423e10f3e47dc8d00fee63534b4ae066db131ee43",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.51318359375,
+      "end_load": 5.51318359375,
+      "foreign_high_cpu": [
+        "39003  98.8 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W0-attempt2.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/04-p4-matrix-after-W0-attempt2.json.validity.json",
+      "sha256": "0b2b842d5ead5fb35ba501da1917936ff8dacc33f6be5bc6236619934b095a42",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.7119140625,
+      "end_load": 5.7119140625,
+      "foreign_high_cpu": [
+        "39003  98.1 /Users/rexxa/github/make-meme/.venv/bin/python3",
+        "23864  66.3 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W0-attempt3.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/05-p4-matrix-after-W0-attempt3.json.validity.json",
+      "sha256": "be467c22fea86c4a3180b016f83cd0e6da2e9418440ed10e9352e4ba45d6cf09",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.7119140625,
+      "end_load": 5.7119140625,
+      "foreign_high_cpu": [
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W1-attempt1.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/06-p4-matrix-after-W1-attempt1.json.validity.json",
+      "sha256": "f59b13ace2b23810efd363ad5d619ba01f9afe6248f7ca507d3ba569c73ae45d",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.65478515625,
+      "end_load": 5.65478515625,
+      "foreign_high_cpu": [
+        "39003  98.5 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W1-attempt2.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/07-p4-matrix-after-W1-attempt2.json.validity.json",
+      "sha256": "97111319af124ed0976bd17d7c5b5025c30b78181f791d2ea33bb297ad0d9dc6",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.65478515625,
+      "end_load": 5.65478515625,
+      "foreign_high_cpu": [
+        "39003  98.8 /Users/rexxa/github/make-meme/.venv/bin/python3",
+        "15837  82.4 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W1-attempt3.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/08-p4-matrix-after-W1-attempt3.json.validity.json",
+      "sha256": "42f8f7607be2df2778dbfdf725632a4d666bee86dfc4a5993813716270c9fffa",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.52197265625,
+      "end_load": 5.52197265625,
+      "foreign_high_cpu": [
+        "39003  99.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W200-attempt1.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/09-p4-matrix-after-W200-attempt1.json.validity.json",
+      "sha256": "9241cb78a7ab3149272313564b88537df7667845b10bbb449358304f9ef9ff61",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.52197265625,
+      "end_load": 5.52197265625,
+      "foreign_high_cpu": [
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W200-attempt2.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/10-p4-matrix-after-W200-attempt2.json.validity.json",
+      "sha256": "5fed0ce07ac025fed526c2c3e9eb000ce97fd0783b8b6d4d1290ed97c8c91c84",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.52197265625,
+      "end_load": 5.52197265625,
+      "foreign_high_cpu": [
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W200-attempt3.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/11-p4-matrix-after-W200-attempt3.json.validity.json",
+      "sha256": "00e7a111b0ccb6300efc8983e3afdc4921e4da87d253c956e3a5a8afdef63ff5",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.52197265625,
+      "end_load": 5.52197265625,
+      "foreign_high_cpu": [
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W500-attempt1.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/12-p4-matrix-after-W500-attempt1.json.validity.json",
+      "sha256": "4c2fa78726f591f347e7a61b1cdf5ebb10e8147b9a59983308ffb140bdcd3c56",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.7119140625,
+      "end_load": 5.7119140625,
+      "foreign_high_cpu": [
+        "39003  98.8 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W500-attempt2.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/13-p4-matrix-after-W500-attempt2.json.validity.json",
+      "sha256": "6edfcf30218d50a8e9d5ef776c75396f8686cbacbad40a152bc0a9dd41325aef",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.7119140625,
+      "end_load": 5.7119140625,
+      "foreign_high_cpu": [
+        "39003  99.2 /Users/rexxa/github/make-meme/.venv/bin/python3",
+        "15837  82.7 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+        "24499  81.7 /Users/rexxa/Library/Caches/pnpm/dlx/cf702ce64f89aef8a426c9450fe74efaa2d82da656740e9ff5b7056662deb32f/1a14de3e970-12b2f/node_modules/.pnpm/@ccusage+ccusage-darwin-arm64@20.0.2/node_modules/@ccusage/ccusage-darwin-arm64/bin/ccusage"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-matrix/after-W500-attempt3.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/14-p4-matrix-after-W500-attempt3.json.validity.json",
+      "sha256": "2775d78ba95da9875a83cc17d5a52e38ba6b5ab81020245bd84e6bcef9aa7e8c",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.65478515625,
+      "end_load": 5.65478515625,
+      "foreign_high_cpu": [
+        "24794 575.3 ffmpeg",
+        "39003  86.1 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-sections-admitted-W200-attempt1/frames.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/15-p4-sections-admitted-W200-attempt1-frames.json.validity.json",
+      "sha256": "43183066b63a138cd9e594fb3971d72f582b740093fc6e8fa742eadca4c00d9d",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.07861328125,
+      "end_load": 5.07861328125,
+      "foreign_high_cpu": [
+        "39003  99.1 /Users/rexxa/github/make-meme/.venv/bin/python3",
+        "29135  63.2 /Users/rexxa/Library/Application Support/.com.apple.metadata.mds/mdworker_shared"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-sections-admitted-W200-attempt2/frames.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/16-p4-sections-admitted-W200-attempt2-frames.json.validity.json",
+      "sha256": "c691821a9f68aaa41f5f9d5ebb9d79b9cb81269ffc766685a9c1782d5e80925f",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 4.9921875,
+      "end_load": 4.9921875,
+      "foreign_high_cpu": [
+        "39003  99.9 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-sections-admitted-W200-attempt3/frames.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/17-p4-sections-admitted-W200-attempt3-frames.json.validity.json",
+      "sha256": "00036e0497d8d040fc84c9786fcde29abdc951cd1c56d534b8266dc79bfcaf03",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 4.9921875,
+      "end_load": 4.9921875,
+      "foreign_high_cpu": [
+        "29583 117.8 clawdbot",
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-sections-admitted-W500-attempt1/frames.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/18-p4-sections-admitted-W500-attempt1-frames.json.validity.json",
+      "sha256": "2e81286f65ebb0caa784047c24e1b7529788ef7f88805cd826fbac2c5a0654ea",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.07861328125,
+      "end_load": 5.07861328125,
+      "foreign_high_cpu": [
+        "39003  99.5 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-sections-admitted-W500-attempt2/frames.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/19-p4-sections-admitted-W500-attempt2-frames.json.validity.json",
+      "sha256": "d3e22e4f09b0f6887713d28feb74df2605c5ab169c58ccd7527dbb6f665dbac5",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.07861328125,
+      "end_load": 5.07861328125,
+      "foreign_high_cpu": [
+        "39003  99.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/art-production12-evidence/p4-sections-admitted-W500-attempt3/frames.json.validity.json",
+      "saved": "docs/art/production12/perf/after-admissions/20-p4-sections-admitted-W500-attempt3-frames.json.validity.json",
+      "sha256": "ed9801cf49c1b9e7fc0a3f677ce13d830d9741129531bd765ee63e5d3c808281",
+      "valid": false,
+      "exit_code": 75,
+      "start_load": 5.07861328125,
+      "end_load": 5.07861328125,
+      "foreign_high_cpu": [
+        "39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3"
+      ]
+    }
+  ],
+  "accepted": 0,
+  "collected_frame_blocks": 0,
+  "verdict": "NOT_VERIFIED (contended)"
+}

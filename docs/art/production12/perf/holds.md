@@ -176,3 +176,108 @@
 - 2026-10-18T11:01:03Z pid=7785 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792321263 load_before=5.11 contended=false waited=30s
 - 2026-10-18T11:01:04Z pid=7785 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792321263 end=1792321264 elapsed=1 load_before=5.11 load_after=4.86 contended=false exit=75
 <!-- art-p12-last-release 1792321264 -->
+- 2026-10-18T11:48:13Z pid=23638 WAIT_START owner=codex-art-pass12 purpose=after-W0-attempt1 hold_limit=3600
+- 2026-10-18T11:48:13Z pid=23638 CHECK load=5.51 processes= waited=0s
+- 2026-10-18T11:48:13Z pid=23638 HOLD_START owner=codex-art-pass12 purpose=after-W0-attempt1 start=1792324093 load_before=5.51 contended=false waited=0s
+- 2026-10-18T11:48:14Z pid=23638 HOLD_END owner=codex-art-pass12 purpose=after-W0-attempt1 start=1792324093 end=1792324094 elapsed=1 load_before=5.51 load_after=5.51 contended=false exit=75
+<!-- art-p12-last-release 1792324094 -->
+- 2026-10-18T11:48:14Z pid=23859 WAIT_START owner=codex-art-pass12 purpose=after-W0-attempt2 hold_limit=3600
+- 2026-10-18T11:48:14Z pid=23859 CHECK load=5.71 processes= waited=0s
+- 2026-10-18T11:48:14Z pid=23859 HOLD_START owner=codex-art-pass12 purpose=after-W0-attempt2 start=1792324094 load_before=5.71 contended=false waited=0s
+- 2026-10-18T11:48:16Z pid=23859 HOLD_END owner=codex-art-pass12 purpose=after-W0-attempt2 start=1792324094 end=1792324096 elapsed=2 load_before=5.71 load_after=5.71 contended=false exit=75
+<!-- art-p12-last-release 1792324096 -->
+- 2026-10-18T11:48:16Z pid=24189 WAIT_START owner=codex-art-pass12 purpose=after-W0-attempt3 hold_limit=3600
+- 2026-10-18T11:48:16Z pid=24189 CHECK load=5.71 processes= waited=0s
+- 2026-10-18T11:48:16Z pid=24189 HOLD_START owner=codex-art-pass12 purpose=after-W0-attempt3 start=1792324096 load_before=5.71 contended=false waited=0s
+- 2026-10-18T11:48:17Z pid=24189 HOLD_END owner=codex-art-pass12 purpose=after-W0-attempt3 start=1792324096 end=1792324097 elapsed=1 load_before=5.71 load_after=5.71 contended=false exit=75
+<!-- art-p12-last-release 1792324097 -->
+- 2026-10-18T11:48:17Z pid=24467 WAIT_START owner=codex-art-pass12 purpose=after-W500-attempt1 hold_limit=3600
+- 2026-10-18T11:48:17Z pid=24467 CHECK load=5.71 processes= waited=0s
+- 2026-10-18T11:48:17Z pid=24467 HOLD_START owner=codex-art-pass12 purpose=after-W500-attempt1 start=1792324097 load_before=5.71 contended=false waited=0s
+- 2026-10-18T11:48:18Z pid=24467 HOLD_END owner=codex-art-pass12 purpose=after-W500-attempt1 start=1792324097 end=1792324098 elapsed=1 load_before=5.71 load_after=5.71 contended=false exit=75
+<!-- art-p12-last-release 1792324098 -->
+- 2026-10-18T11:48:19Z pid=24638 WAIT_START owner=codex-art-pass12 purpose=after-W500-attempt2 hold_limit=3600
+- 2026-10-18T11:48:19Z pid=24638 CHECK load=5.71 processes= waited=0s
+- 2026-10-18T11:48:19Z pid=24638 HOLD_START owner=codex-art-pass12 purpose=after-W500-attempt2 start=1792324099 load_before=5.71 contended=false waited=0s
+- 2026-10-18T11:48:20Z pid=24638 HOLD_END owner=codex-art-pass12 purpose=after-W500-attempt2 start=1792324099 end=1792324100 elapsed=1 load_before=5.71 load_after=5.65 contended=false exit=75
+<!-- art-p12-last-release 1792324100 -->
+- 2026-10-18T11:48:20Z pid=24811 WAIT_START owner=codex-art-pass12 purpose=after-W500-attempt3 hold_limit=3600
+- 2026-10-18T11:48:20Z pid=24811 CHECK load=5.65 processes= waited=0s
+- 2026-10-18T11:48:20Z pid=24811 HOLD_START owner=codex-art-pass12 purpose=after-W500-attempt3 start=1792324100 load_before=5.65 contended=false waited=0s
+- 2026-10-18T11:48:21Z pid=24811 HOLD_END owner=codex-art-pass12 purpose=after-W500-attempt3 start=1792324100 end=1792324101 elapsed=1 load_before=5.65 load_after=5.65 contended=false exit=75
+<!-- art-p12-last-release 1792324101 -->
+- 2026-10-18T11:48:22Z pid=25059 WAIT_START owner=codex-art-pass12 purpose=after-W1-attempt1 hold_limit=3600
+- 2026-10-18T11:48:22Z pid=25059 CHECK load=5.65 processes= waited=0s
+- 2026-10-18T11:48:22Z pid=25059 HOLD_START owner=codex-art-pass12 purpose=after-W1-attempt1 start=1792324102 load_before=5.65 contended=false waited=0s
+- 2026-10-18T11:48:23Z pid=25059 HOLD_END owner=codex-art-pass12 purpose=after-W1-attempt1 start=1792324102 end=1792324103 elapsed=1 load_before=5.65 load_after=5.65 contended=false exit=75
+<!-- art-p12-last-release 1792324103 -->
+- 2026-10-18T11:48:23Z pid=25192 WAIT_START owner=codex-art-pass12 purpose=after-W1-attempt2 hold_limit=3600
+- 2026-10-18T11:48:23Z pid=25192 CHECK load=5.65 processes= waited=0s
+- 2026-10-18T11:48:23Z pid=25192 HOLD_START owner=codex-art-pass12 purpose=after-W1-attempt2 start=1792324103 load_before=5.65 contended=false waited=0s
+- 2026-10-18T11:48:24Z pid=25192 HOLD_END owner=codex-art-pass12 purpose=after-W1-attempt2 start=1792324103 end=1792324104 elapsed=1 load_before=5.65 load_after=5.52 contended=false exit=75
+<!-- art-p12-last-release 1792324104 -->
+- 2026-10-18T11:48:24Z pid=25521 WAIT_START owner=codex-art-pass12 purpose=after-W1-attempt3 hold_limit=3600
+- 2026-10-18T11:48:24Z pid=25521 CHECK load=5.52 processes= waited=0s
+- 2026-10-18T11:48:24Z pid=25521 HOLD_START owner=codex-art-pass12 purpose=after-W1-attempt3 start=1792324104 load_before=5.52 contended=false waited=0s
+- 2026-10-18T11:48:26Z pid=25521 HOLD_END owner=codex-art-pass12 purpose=after-W1-attempt3 start=1792324104 end=1792324106 elapsed=2 load_before=5.52 load_after=5.52 contended=false exit=75
+<!-- art-p12-last-release 1792324106 -->
+- 2026-10-18T11:48:26Z pid=25706 WAIT_START owner=codex-art-pass12 purpose=after-W200-attempt1 hold_limit=3600
+- 2026-10-18T11:48:26Z pid=25706 CHECK load=5.52 processes= waited=0s
+- 2026-10-18T11:48:26Z pid=25706 HOLD_START owner=codex-art-pass12 purpose=after-W200-attempt1 start=1792324106 load_before=5.52 contended=false waited=0s
+- 2026-10-18T11:48:27Z pid=25706 HOLD_END owner=codex-art-pass12 purpose=after-W200-attempt1 start=1792324106 end=1792324107 elapsed=1 load_before=5.52 load_after=5.52 contended=false exit=75
+<!-- art-p12-last-release 1792324107 -->
+- 2026-10-18T11:48:27Z pid=25857 WAIT_START owner=codex-art-pass12 purpose=after-W200-attempt2 hold_limit=3600
+- 2026-10-18T11:48:27Z pid=25857 CHECK load=5.52 processes= waited=0s
+- 2026-10-18T11:48:27Z pid=25857 HOLD_START owner=codex-art-pass12 purpose=after-W200-attempt2 start=1792324107 load_before=5.52 contended=false waited=0s
+- 2026-10-18T11:48:28Z pid=25857 HOLD_END owner=codex-art-pass12 purpose=after-W200-attempt2 start=1792324107 end=1792324108 elapsed=1 load_before=5.52 load_after=5.52 contended=false exit=75
+<!-- art-p12-last-release 1792324108 -->
+- 2026-10-18T11:48:29Z pid=26029 WAIT_START owner=codex-art-pass12 purpose=after-W200-attempt3 hold_limit=3600
+- 2026-10-18T11:48:29Z pid=26029 CHECK load=5.52 processes= waited=0s
+- 2026-10-18T11:48:29Z pid=26029 HOLD_START owner=codex-art-pass12 purpose=after-W200-attempt3 start=1792324109 load_before=5.52 contended=false waited=0s
+- 2026-10-18T11:48:30Z pid=26029 HOLD_END owner=codex-art-pass12 purpose=after-W200-attempt3 start=1792324109 end=1792324110 elapsed=1 load_before=5.52 load_after=5.56 contended=false exit=75
+<!-- art-p12-last-release 1792324110 -->
+- 2026-10-18T11:48:30Z pid=26185 WAIT_START owner=codex-art-pass12 purpose=after-W-multi-attempt1 hold_limit=3600
+- 2026-10-18T11:48:30Z pid=26185 CHECK load=5.56 processes= waited=0s
+- 2026-10-18T11:48:30Z pid=26185 HOLD_START owner=codex-art-pass12 purpose=after-W-multi-attempt1 start=1792324110 load_before=5.56 contended=false waited=0s
+- 2026-10-18T11:48:31Z pid=26185 HOLD_END owner=codex-art-pass12 purpose=after-W-multi-attempt1 start=1792324110 end=1792324111 elapsed=1 load_before=5.56 load_after=5.56 contended=false exit=75
+<!-- art-p12-last-release 1792324111 -->
+- 2026-10-18T11:48:31Z pid=26337 WAIT_START owner=codex-art-pass12 purpose=after-W-multi-attempt2 hold_limit=3600
+- 2026-10-18T11:48:32Z pid=26337 CHECK load=5.56 processes= waited=0s
+- 2026-10-18T11:48:32Z pid=26337 HOLD_START owner=codex-art-pass12 purpose=after-W-multi-attempt2 start=1792324112 load_before=5.56 contended=false waited=1s
+- 2026-10-18T11:48:33Z pid=26337 HOLD_END owner=codex-art-pass12 purpose=after-W-multi-attempt2 start=1792324112 end=1792324113 elapsed=1 load_before=5.56 load_after=5.56 contended=false exit=75
+<!-- art-p12-last-release 1792324113 -->
+- 2026-10-18T11:48:33Z pid=26657 WAIT_START owner=codex-art-pass12 purpose=after-W-multi-attempt3 hold_limit=3600
+- 2026-10-18T11:48:33Z pid=26657 CHECK load=5.56 processes= waited=0s
+- 2026-10-18T11:48:33Z pid=26657 HOLD_START owner=codex-art-pass12 purpose=after-W-multi-attempt3 start=1792324113 load_before=5.56 contended=false waited=0s
+- 2026-10-18T11:48:34Z pid=26657 HOLD_END owner=codex-art-pass12 purpose=after-W-multi-attempt3 start=1792324113 end=1792324114 elapsed=1 load_before=5.56 load_after=5.44 contended=false exit=75
+<!-- art-p12-last-release 1792324114 -->
+- 2026-10-18T11:48:54Z pid=28864 WAIT_START owner=codex-art-pass12 purpose=agent-sections-W500 hold_limit=3600
+- 2026-10-18T11:48:54Z pid=28864 CHECK load=5.08 processes= waited=0s
+- 2026-10-18T11:48:54Z pid=28864 HOLD_START owner=codex-art-pass12 purpose=agent-sections-W500 start=1792324134 load_before=5.08 contended=false waited=0s
+- 2026-10-18T11:48:56Z pid=28864 HOLD_END owner=codex-art-pass12 purpose=agent-sections-W500 start=1792324134 end=1792324136 elapsed=2 load_before=5.08 load_after=5.08 contended=false exit=75
+<!-- art-p12-last-release 1792324136 -->
+- 2026-10-18T11:48:56Z pid=29055 WAIT_START owner=codex-art-pass12 purpose=agent-sections-W500 hold_limit=3600
+- 2026-10-18T11:48:56Z pid=29055 CHECK load=5.08 processes= waited=0s
+- 2026-10-18T11:48:56Z pid=29055 HOLD_START owner=codex-art-pass12 purpose=agent-sections-W500 start=1792324136 load_before=5.08 contended=false waited=0s
+- 2026-10-18T11:48:57Z pid=29055 HOLD_END owner=codex-art-pass12 purpose=agent-sections-W500 start=1792324136 end=1792324137 elapsed=1 load_before=5.08 load_after=5.08 contended=false exit=75
+<!-- art-p12-last-release 1792324137 -->
+- 2026-10-18T11:48:57Z pid=29202 WAIT_START owner=codex-art-pass12 purpose=agent-sections-W500 hold_limit=3600
+- 2026-10-18T11:48:57Z pid=29202 CHECK load=5.08 processes= waited=0s
+- 2026-10-18T11:48:57Z pid=29202 HOLD_START owner=codex-art-pass12 purpose=agent-sections-W500 start=1792324137 load_before=5.08 contended=false waited=0s
+- 2026-10-18T11:48:59Z pid=29202 HOLD_END owner=codex-art-pass12 purpose=agent-sections-W500 start=1792324137 end=1792324138 elapsed=1 load_before=5.08 load_after=5.08 contended=false exit=75
+<!-- art-p12-last-release 1792324138 -->
+- 2026-10-18T11:48:59Z pid=29360 WAIT_START owner=codex-art-pass12 purpose=agent-sections-W200 hold_limit=3600
+- 2026-10-18T11:48:59Z pid=29360 CHECK load=5.08 processes= waited=0s
+- 2026-10-18T11:48:59Z pid=29360 HOLD_START owner=codex-art-pass12 purpose=agent-sections-W200 start=1792324139 load_before=5.08 contended=false waited=0s
+- 2026-10-18T11:49:00Z pid=29360 HOLD_END owner=codex-art-pass12 purpose=agent-sections-W200 start=1792324139 end=1792324140 elapsed=1 load_before=5.08 load_after=4.99 contended=false exit=75
+<!-- art-p12-last-release 1792324140 -->
+- 2026-10-18T11:49:00Z pid=29529 WAIT_START owner=codex-art-pass12 purpose=agent-sections-W200 hold_limit=3600
+- 2026-10-18T11:49:00Z pid=29529 CHECK load=4.99 processes= waited=0s
+- 2026-10-18T11:49:00Z pid=29529 HOLD_START owner=codex-art-pass12 purpose=agent-sections-W200 start=1792324140 load_before=4.99 contended=false waited=0s
+- 2026-10-18T11:49:01Z pid=29529 HOLD_END owner=codex-art-pass12 purpose=agent-sections-W200 start=1792324140 end=1792324141 elapsed=1 load_before=4.99 load_after=4.99 contended=false exit=75
+<!-- art-p12-last-release 1792324141 -->
+- 2026-10-18T11:49:02Z pid=29660 WAIT_START owner=codex-art-pass12 purpose=agent-sections-W200 hold_limit=3600
+- 2026-10-18T11:49:02Z pid=29660 CHECK load=4.99 processes= waited=0s
+- 2026-10-18T11:49:02Z pid=29660 HOLD_START owner=codex-art-pass12 purpose=agent-sections-W200 start=1792324142 load_before=4.99 contended=false waited=0s
+- 2026-10-18T11:49:03Z pid=29660 HOLD_END owner=codex-art-pass12 purpose=agent-sections-W200 start=1792324142 end=1792324143 elapsed=1 load_before=4.99 load_after=4.99 contended=false exit=75
+<!-- art-p12-last-release 1792324143 -->

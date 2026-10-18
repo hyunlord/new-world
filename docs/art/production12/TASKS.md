@@ -10,8 +10,8 @@ Deadlines: Part 0 12:02Z; Part 1 15:32Z; Part 4 starts by 18:32Z; 12-hour rule 2
 | 1 structural frame budget candidates | complete attempt; speed NOT_VERIFIED(contended), default off | 2026-10-18T10:34:37.871766+00:00 | 2026-10-18T11:03:58.842474+00:00 | 4000 exact fixture records; six framings/four running cases PASS; six invalid admissions |
 | 2 names, life, crowds and input/blind tests | complete implementation/attempt; H8 FAIL, live Life reading follows Part3 | 2026-10-18T11:03:58.842474+00:00 | 2026-10-18T11:20:04.857372+00:00 | windowed input13PASS; font/layoutPASS; activity3/10 plus4missing; crowdgeometry3PASS |
 | 3 porters, relations and chronicle | implementation/capture complete; fresh blind reading pending evidence on frozen build | 2026-10-18T11:20:04.857372+00:00 | 2026-10-18T11:47:23.770552+00:00 | attempt2 six cases exit0; 140 native images; corrected target26PASS |
-| 4 frozen after measurements H1–H10 | in progress | 2026-10-18T11:47:23.770552+00:00 | | source c46e66bd; no further code changes |
-| 5 independent review, full gate, publication/report | pending | | | |
+| 4 frozen after measurements H1–H10 | complete attempts; H1–6 NOT_VERIFIED(contended), H8 FAIL | 2026-10-18T11:47:23.770552+00:00 | 2026-10-18T11:50:41.582635+00:00 | frozen pushed c08076dd;21admissions rejected; no further code changes |
+| 5 independent review, full gate, publication/report | in progress | 2026-10-18T11:50:41.582635+00:00 | | round2review andfreshreading; finalgate next |
 
 ## Part 0 checkpoints
 

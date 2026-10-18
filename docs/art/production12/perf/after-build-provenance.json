@@ -1,0 +1,11 @@
+{
+  "head": "c08076dd67ee0a54470f16fc6b993c3172752320",
+  "profile": "release",
+  "actual_build": "cargo build --release -p sim-bridge (Finished optimized, 0.14s; unchanged Rust inputs reused)",
+  "release_sha256": "1e6f76187e9e0d87e87426fe2b0aa510c3c797efd61b9cb14fed383531d2bf91",
+  "loaded_debug_sha256": "1e6f76187e9e0d87e87426fe2b0aa510c3c797efd61b9cb14fed383531d2bf91",
+  "build_log_sha256": "c9ef3b68d69664e1d157e575848e4f6146e26ad39b9aa75897123cb92d2ce4bd",
+  "import_log_sha256": "898c4408109107d4ce88541abdae1d67098aa18634448aa48b2264061ed2f6a0",
+  "import_exit": 0,
+  "source_frozen_at": "c08076dd67ee0a54470f16fc6b993c3172752320"
+}

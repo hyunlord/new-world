@@ -1,0 +1,21 @@
+{
+  "start": {
+    "epoch": 1792324093.52366,
+    "load_1m": 5.51318359375,
+    "ps": "  PID  %CPU COMM\n39003  98.8 /Users/rexxa/github/make-meme/.venv/bin/python3\n  399  28.1 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n  573  17.1 osascript\n15837  16.1 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n80055  13.9 /usr/libexec/sysmond\n  368  13.4 /usr/libexec/xprotectd\n 1088  11.4 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n 6663   8.4 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n  574   7.2 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n 1046   6.8 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n28400   5.7 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n  664   4.0 /Applications/Orca.app/Contents/MacOS/Orca\n  466   3.3 /usr/libexec/syspolicyd\n61159   2.6 claude\n",
+    "owned_pids": [
+      23700
+    ]
+  },
+  "end": {
+    "epoch": 1792324093.5616288,
+    "load_1m": 5.51318359375,
+    "ps": "  PID  %CPU COMM\n39003  99.4 /Users/rexxa/github/make-meme/.venv/bin/python3\n  399  28.1 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n  573  17.1 osascript\n15837  15.5 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n80055  13.9 /usr/libexec/sysmond\n  368  13.4 /usr/libexec/xprotectd\n 1088  11.4 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n  574   7.2 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n23700   7.1 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n 1046   6.8 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n23699   6.3 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n28400   5.7 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n 6663   5.3 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n23707   5.1 ps\n",
+    "owned_pids": [
+      23700
+    ]
+  },
+  "exit_code": 75,
+  "valid": false,
+  "verdict": "NOT_VERIFIED (contended or unsuccessful)"
+}

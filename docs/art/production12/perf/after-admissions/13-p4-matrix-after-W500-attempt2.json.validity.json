@@ -1,0 +1,21 @@
+{
+  "start": {
+    "epoch": 1792324099.29692,
+    "load_1m": 5.7119140625,
+    "ps": "  PID  %CPU COMM\n39003  99.2 /Users/rexxa/github/make-meme/.venv/bin/python3\n15837  82.7 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n24499  81.7 /Users/rexxa/Library/Caches/pnpm/dlx/cf702ce64f89aef8a426c9450fe74efaa2d82da656740e9ff5b7056662deb32f/1a14de3e970-12b2f/node_modules/.pnpm/@ccusage+ccusage-darwin-arm64@20.0.2/node_modules/@ccusage/ccusage-darwin-arm64/bin/ccusage\n  399  30.4 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n  573  17.4 osascript\n80055  15.0 /usr/libexec/sysmond\n24628   9.4 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared\n 1088   7.9 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n 1046   6.7 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n28400   5.3 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n24692   5.1 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n24693   4.5 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n  368   4.3 /usr/libexec/xprotectd\n  574   2.6 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n",
+    "owned_pids": [
+      24693
+    ]
+  },
+  "end": {
+    "epoch": 1792324099.333266,
+    "load_1m": 5.7119140625,
+    "ps": "  PID  %CPU COMM\n39003  99.2 /Users/rexxa/github/make-meme/.venv/bin/python3\n15837  82.7 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n24499  81.7 /Users/rexxa/Library/Caches/pnpm/dlx/cf702ce64f89aef8a426c9450fe74efaa2d82da656740e9ff5b7056662deb32f/1a14de3e970-12b2f/node_modules/.pnpm/@ccusage+ccusage-darwin-arm64@20.0.2/node_modules/@ccusage/ccusage-darwin-arm64/bin/ccusage\n  399  30.4 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n  573  17.4 osascript\n80055  15.0 /usr/libexec/sysmond\n24628   9.4 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mdworker_shared\n 1088   7.9 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n 1046   6.7 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n28400   5.3 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n24692   5.1 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n24693   4.5 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n  368   4.3 /usr/libexec/xprotectd\n  574   2.6 /System/Library/DriverExtensions/com.apple.DriverKit-AppleBCMWLAN.dext/com.apple.DriverKit-AppleBCMWLAN\n",
+    "owned_pids": [
+      24693
+    ]
+  },
+  "exit_code": 75,
+  "valid": false,
+  "verdict": "NOT_VERIFIED (contended or unsuccessful)"
+}

@@ -1,0 +1,21 @@
+{
+  "start": {
+    "epoch": 1792324142.336433,
+    "load_1m": 4.9921875,
+    "ps": "  PID  %CPU COMM\n29583 117.8 clawdbot\n39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3\n29659  31.4 osascript\n  399  30.6 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n80055  25.4 /usr/libexec/sysmond\n  573  17.3 osascript\n28851  10.8 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n 1088   7.9 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n 1046   6.7 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n28400   6.6 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n  368   4.6 /usr/libexec/xprotectd\n  371   4.5 /System/Library/CoreServices/launchservicesd\n29707   4.2 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n 4484   3.4 claude\n",
+    "owned_pids": [
+      29709
+    ]
+  },
+  "end": {
+    "epoch": 1792324142.3736231,
+    "load_1m": 4.9921875,
+    "ps": "  PID  %CPU COMM\n29583 117.8 clawdbot\n39003 100.0 /Users/rexxa/github/make-meme/.venv/bin/python3\n29659  31.4 osascript\n  399  30.6 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n80055  25.4 /usr/libexec/sysmond\n  573  17.3 osascript\n28851  10.8 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n 1088   7.9 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)\n 1046   6.7 /Applications/Orca.app/Contents/Frameworks/Orca Helper.app/Contents/MacOS/Orca Helper\n28400   6.6 /Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/155.0.8059.79/Helpers/Google Chrome Helper (Aperitif Renderer).app/Contents/MacOS/Google Chrome Helper (Aperitif Renderer)\n  368   4.6 /usr/libexec/xprotectd\n  371   4.5 /System/Library/CoreServices/launchservicesd\n29707   4.2 /opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python\n 4484   3.4 claude\n",
+    "owned_pids": [
+      29709
+    ]
+  },
+  "exit_code": 75,
+  "valid": false,
+  "verdict": "NOT_VERIFIED (contended or unsuccessful)"
+}
