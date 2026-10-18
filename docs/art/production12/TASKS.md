@@ -27,3 +27,5 @@ Deadlines: Part 0 12:02Z; Part 1 15:32Z; Part 4 starts by 18:32Z; 12-hour rule 2
 - 2026-10-18T10:08Z: optimized-dev reference and release measure builds/imports verified; release/debug dylib hashes equal only in measure. Complete game_v25 census: all 11 rows, no failures; W-multi reproduces two outbound porters. Six-framing A launched.
 
 - Clean full Part0 gate terminal exit 0, 88/88 checks passed (observed process completion). Tools provenance follow-up separately passed 5 unittest methods plus shell syntax/diff checks.
+
+- First reference set on 9934f785: six A/Aprime exact-zero controls and four complete running/pan dumps passed. Tool audit then required corrected collector/summary; preserve this set as v1 and rebuild/reimport both worktrees at corrected tooling commit before v2 reference/measurements.

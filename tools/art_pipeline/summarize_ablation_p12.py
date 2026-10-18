@@ -136,7 +136,10 @@ def comparison(current: Record, before: Record) -> list[perf.Json]:
 
 
 def markdown(result: Record) -> str:
-    lines = ["# W500 ablation ranking", "", f"Source: `{result['source']}`; actual alive: {result['actual_alive']}; release, frozen tick 1440, Z4.", "", "Cost = median of 300 samples from neighbouring all-on blocks minus median of 150 node-off samples. Negative costs are retained.", "", "| Rank | Node/group | Cost ms | Off median | Neighbour median | Layer only |", "|---:|---|---:|---:|---:|---|"]
+    world = str(result["world"])
+    condition = "running 2×" if world == "W200" else "frozen"
+    tick_description = "fresh start tick 1440 per block" if world == "W200" else "tick 1440"
+    lines = [f"# {world} {condition} ablation ranking", "", f"Source: `{result['source']}`; actual alive: {result['actual_alive']}; release, {condition}, {tick_description}, Z4.", "", "Cost = median of 300 samples from neighbouring all-on blocks minus median of 150 node-off samples. Negative costs are retained.", "", "| Rank | Node/group | Cost ms | Off median | Neighbour median | Layer only |", "|---:|---|---:|---:|---:|---|"]
     for rank, raw in enumerate(perf.sequence(result["ranked"]), 1):
         row = perf.mapping(raw)
         lines.append(f"| {rank} | {row['node']} | {row['cost_ms']} | {perf.mapping(row['off_statistics'])['median']} | {perf.mapping(row['neighbour_statistics'])['median']} | {row['layer_only']} |")

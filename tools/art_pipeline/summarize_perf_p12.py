@@ -260,7 +260,11 @@ def report(sessions: Sequence[Session], missing: set[str]) -> list[str]:
                     lines.append(table_row(session.world, str(block["label"]) + " tick-only", metric, ticks))
             if condition in {"running", "frozen"}:
                 key = f"{condition}_Z{block['zoom']}_{block['speed']}x"
-                pooled.setdefault(key, []).extend(samples)
+                pooled.setdefault(key, [])
+                if condition == "running" and block["population_flagged"] is True:
+                    lines.append(f"\nEXCLUDED from pooled and tick-only results: {block['label']} (population loss); raw rows retained above.\n")
+                else:
+                    pooled[key].extend(samples)
         for key, samples in pooled.items():
             for metric in METRICS:
                 lines.append(table_row(session.world, "POOLED " + key, metric, samples))

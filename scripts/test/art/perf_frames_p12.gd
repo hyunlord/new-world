@@ -1,7 +1,7 @@
 extends SceneTree
 
 const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
-## One launch = one world. The caller owns quiet/window locks and the 10 minute gap.
+## One launch = one world. The caller owns quiet/window locks and validity snapshots.
 ## --world W0|W1|W200|W500|W1000 --phase baseline|after --out <session.json>
 
 const Session = preload("res://scripts/test/art/frame_measure_session_p12.gd")
@@ -119,7 +119,7 @@ func _run() -> void:
 	_result["world_info"] = _runtime.read("get_world_info")
 	if _options["world"] == "W-multi":
 		var info: Dictionary = _result["world_info"]
-		if (int(spec[1]) + int(info["clock_offset_ticks"])) % int(info["ticks_per_day"]) != int(info["ticks_per_day"]) * 10 / 24:
+		if ((int(spec[1]) + int(info["clock_offset_ticks"])) % int(info["ticks_per_day"])) * 24 != int(info["ticks_per_day"]) * 10:
 			_errors.append("W-multi is not at 10:00 under delivered world clock")
 	_result["requested_population"] = spec[2]
 	_result["requested_tick"] = spec[1]
@@ -290,12 +290,12 @@ func _run_ablation() -> void:
 	for node: Node in _main.get_children() + (_main.get_node("UI").get_children() if _main.has_node("UI") else []):
 		if node == _world or node == _camera or node.name in ["SimReads", "UI"]:
 			continue
-		if node.has_method("_process"):
+		if node.has_method("_process") or node.name not in ["WorldObjects", "Shadows", "NightChillLayer"]:
 			var members: Array[String] = []
 			for child: Node in _walk(node):
 				members.append(str(_main.get_path_to(child)))
 			targets.append({"node": node, "layer_only": false, "descendants": members})
-		elif node.name in ["WorldObjects", "Shadows", "NightChillLayer"]:
+		else:
 			targets.append({"node": node, "layer_only": true, "descendants": []})
 	# Keep stable targets, including both LOD-owned renderers; effect sprites expire normally.
 	var saved: Array[Dictionary] = _state(targets)
@@ -355,17 +355,22 @@ func _finish() -> void:
 		_camera.process_mode = _prior_camera_mode as Node.ProcessMode
 		_errors.append("Measurement runtime did not reach restoration")
 	var pooled: Dictionary = {}
+	var excluded: Array[String] = []
 	var render_positive: int = 0
 	for block: Dictionary in _blocks:
 		for sample: Dictionary in block["samples"]:
 			render_positive += int(float(sample["render_cpu_ms"]) > 0.0)
 		if block["condition"] not in ["frozen", "running"]:
 			continue
+		if bool(block["population_flagged"]):
+			excluded.append(str(block["label"]))
+			continue
 		var key: String = "%s_Z%d_%sx" % [block["condition"], block["zoom"], block["speed"]]
 		if not pooled.has(key):
 			pooled[key] = []
 		pooled[key].append_array(block["samples"])
 	var summaries: Dictionary = {}
+	_result["pooled_excluded_blocks"] = excluded
 	for key: String in pooled:
 		summaries[key] = {"all_frames": _statistics(pooled[key]), "tick_carrying": _statistics(_tick_samples(pooled[key]))}
 	if render_positive == 0:

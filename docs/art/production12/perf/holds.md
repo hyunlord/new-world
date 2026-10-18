@@ -1,0 +1,14 @@
+- 2026-10-18T10:15:18Z pid=29022 WAIT_START owner=codex-art-pass12 purpose=baseline-W0-attempt1 hold_limit=3600
+- 2026-10-18T10:15:18Z pid=29022 CHECK load=27.34 processes= waited=0s
+- 2026-10-18T10:15:18Z pid=29022 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:15:49Z pid=29022 CHECK load=27.81 processes= waited=30s
+- 2026-10-18T10:15:49Z pid=29022 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:16:19Z pid=29022 CHECK load=18.21 processes= waited=61s
+- 2026-10-18T10:16:19Z pid=29022 HOLD_START owner=codex-art-pass12 purpose=baseline-W0-attempt1 start=1792318579 load_before=18.21 contended=true waited=61s
+- 2026-10-18T10:16:20Z pid=29022 HOLD_END owner=codex-art-pass12 purpose=baseline-W0-attempt1 start=1792318579 end=1792318580 elapsed=1 load_before=18.21 load_after=18.21 contended=true exit=75
+<!-- art-p12-last-release 1792318580 -->
+- 2026-10-18T10:16:20Z pid=35246 WAIT_START owner=codex-art-pass12 purpose=baseline-W0-attempt2 hold_limit=3600
+- 2026-10-18T10:16:20Z pid=35246 CHECK load=18.21 processes= waited=0s
+- 2026-10-18T10:16:20Z pid=35246 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:16:50Z pid=35246 CHECK load=12.27 processes= waited=30s
+- 2026-10-18T10:16:50Z pid=35246 WAIT_BUSY next_poll=30s
