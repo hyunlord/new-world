@@ -31,3 +31,19 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   `-maxdepth 6`). No shift.
 - **L0.5 DGX load at the start.** Another user's ComfyUI process holds 29 GiB of GPU memory (not ours; never touched);
   RAM 62 GiB available, swap 0 B, load average 1.6. Recorded, not waited for (GOAL.md 1).
+
+## Part 1
+- **L1.1 Recorder calls of the rounds.** A round records only the worlds with a new cast. `--schedule-dir` without
+  `--include-factual` refuses a seed without a schedule file, and `--include-factual` would re-record every listed
+  seed's factual episode, so each world of a round is one recorder call (`--seeds s..s+1 --workers 1`), W calls in
+  parallel (`xargs -P W`, W = 8 with no training running, 4 beside one); the recorder's output never depends on the
+  worker count (`export.rs` `run`). The same pattern records the families (one call per (world, ref), as GOAL.md 6.2.5).
+- **L1.2 The `pre` member when `pre` is empty.** The recorder requires `--include-factual` with `--fork-tick`, so every
+  family has a `none` member (no schedule). When the world has no cast before c, `pre` is the empty schedule, i.e. the
+  `none` member itself; no `s<seed>_pre.json` is written and `wm5`'s loader maps `pre` → `none` (the members' naming:
+  `<scene>_s<seed>_<id>_r<k>` with id `none`, `pre`, `gf240`, `sp240`, `rw120`; `obs2.members`).
+- **L1.3 Checks beyond GOAL.md 6.2.** Round checks also verify every episode's sha256 and record whether the new episode
+  differs from the previous round's after the cast. `fam-check` also asserts that `none_r0` of every family with an
+  empty `pre` equals the world's round-0 factual episode (array sha256), the members are exactly `none`, the three arms
+  and `pre` (when not empty), and the fork is at c with the role's replicates. `finalize` replays the policy on every
+  observed episode and requires every round's casts and rows to be reproduced.
