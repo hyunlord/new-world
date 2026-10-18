@@ -1,0 +1,17 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+P12_DECLUMP_FIXTURE_BLOCK world=W0 running=false calls=200 ticks=40560..40560
+P12_DECLUMP_FIXTURE_BLOCK world=W0 running=true calls=200 ticks=40560..40759
+P12_DECLUMP_FIXTURE_BLOCK world=W1 running=false calls=200 ticks=126994..126994
+P12_DECLUMP_FIXTURE_BLOCK world=W1 running=true calls=200 ticks=126994..127194
+P12_DECLUMP_FIXTURE_BLOCK world=W200 running=false calls=200 ticks=1440..1440
+P12_DECLUMP_FIXTURE_BLOCK world=W200 running=true calls=200 ticks=1440..1802
+P12_DECLUMP_FIXTURE_BLOCK world=W500 running=false calls=200 ticks=1440..1440
+P12_DECLUMP_FIXTURE_BLOCK world=W500 running=true calls=200 ticks=1440..2436
+P12_DECLUMP_FIXTURE_BLOCK world=W-multi running=false calls=200 ticks=121080..121080
+P12_DECLUMP_FIXTURE_BLOCK world=W-multi running=true calls=200 ticks=121080..121280
+P12_DECLUMP_FIXTURE valid=true calls=2000 records=4000 errors=[]

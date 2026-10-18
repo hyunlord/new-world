@@ -8,6 +8,7 @@ const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
+const ArtDeclumpP12 = preload("res://scripts/ui/art_declump_p12.gd")
 const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
 const SETTLEMENT_OUTLINE = preload("res://shaders/settlement_outline.gdshader")
@@ -62,6 +63,8 @@ var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
+var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+var _declump_fixture_sink_p12: RefCounted
 var _activity_oracle_enabled: bool = not OS.get_environment("P10_ACTIVITY_OUT").is_empty()
 
 const SelectionIndex = preload("res://scripts/ui/agent_selection_index_p10.gd")
@@ -72,6 +75,15 @@ var _frame_choices = FrameChoices.new()
 var _frame_choices_ready: bool = false
 var _allocation_candidate: bool = true
 var _pose_output: Dictionary = {}
+
+func set_perf_candidate_p12(change_id: String, enabled: bool) -> bool:
+	if change_id != "declump-kernel":
+		return false
+	_declump_kernel_enabled_p12 = enabled
+	return true
+
+func get_perf_candidate_p12() -> Dictionary:
+	return {"change_id": "declump-kernel", "candidate_enabled": _declump_kernel_enabled_p12}
 
 func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
 	if change_id != "allocation-cache":
@@ -668,7 +680,9 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 			load_rect.position += load_layer.position
 			footprint = footprint.merge(load_rect)
 		rects[agent_id] = footprint
-	var declump: Dictionary = CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
+	if _declump_fixture_sink_p12 != null:
+		_declump_fixture_sink_p12.call("record", agents, targets, terrain, blocked, rects)
+	var declump: Dictionary = ArtDeclumpP12.declump(world_sim, agents, targets, terrain, blocked, rects, _spatial_hash_enabled) if _declump_kernel_enabled_p12 else CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var target: Vector2 = Vector2(targets[agent_id]) + Vector2(declump.get(agent_id, Vector2.ZERO))

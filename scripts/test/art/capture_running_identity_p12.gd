@@ -103,6 +103,8 @@ func _run() -> void:
 	var advance_calls: int = 0
 	var render_start: Dictionary = _render_counts()
 	var render_counts: Array[Dictionary] = []
+	var candidate_evidence: Dictionary = {}
+	var candidate_states: Array[Dictionary] = []
 	for index: int in capture_frames:
 		if advance_every > 0 and index % advance_every == 0:
 			if int(ReadRoute.mutate(_world, "advance_ticks", [1])) != int(spec[1]) + advance_calls + 1:
@@ -113,6 +115,11 @@ func _run() -> void:
 			camera.position = camera_start + Vector2(10.0 * float(index), 0.0)
 			camera.force_update_scroll()
 		await _until_frame(START_FRAME + WARMUP_FRAMES + index + 1)
+		candidate_evidence = _candidate_evidence_p12()
+		if not bool(candidate_evidence["valid"]):
+			_fail("declump candidate state mismatch: " + JSON.stringify(candidate_evidence))
+			return
+		candidate_states.append(candidate_evidence)
 		var time: Dictionary = _reads.call("time_snapshot")
 		var expected_tick: int = int(spec[1]) + advance_calls
 		if int(time["tick"]) != expected_tick:
@@ -127,6 +134,7 @@ func _run() -> void:
 		file.store_line(JSON.stringify({"frame": index + 1, "process_frame": Engine.get_process_frames(), "tick": time["tick"], "population": populations.back(), "camera": [camera.position.x, camera.position.y], "agents": _agents()}, "", true, true))
 	file.close()
 	var manifest: Dictionary = {
+		"perf_candidate_p12": candidate_evidence, "candidate_states": candidate_states,
 		"world": label, "seed": spec[0], "start_tick": spec[1], "end_tick": ticks.back(),
 		"frames": capture_frames, "fixed_fps": 60, "advance_every_frames": advance_every,
 		"mutation_route": "SimReads", "advance_calls": advance_calls, "process_frames": process_frames,
@@ -216,3 +224,18 @@ func _process(delta: float) -> bool:
 func _fail(message: String) -> void:
 	push_error("running-identity-p12: " + message)
 	quit(1)
+
+
+func _candidate_evidence_p12() -> Dictionary:
+	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+	var renderer: Node = _main.get_node_or_null("AgentRenderer")
+	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p12")
+	var actual: Dictionary = {}
+	if available:
+		var observed: Variant = renderer.call("get_perf_candidate_p12")
+		if observed is Dictionary:
+			actual = observed
+	var valid: bool = not requested and not available
+	if available:
+		valid = actual.get("change_id") == "declump-kernel" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested
+	return {"requested_kernel": requested, "method_available": available, "actual": actual, "valid": valid}

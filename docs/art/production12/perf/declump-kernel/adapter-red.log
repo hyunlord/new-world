@@ -1,0 +1,8 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: P12 packed declump adapter is not implemented
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_declump_adapter_p12.gd:9)
+       [1] _initialize (res://scripts/test/art/test_declump_adapter_p12.gd:14)

@@ -50,6 +50,7 @@ use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::art_kernels::{declump_offsets, DeclumpInput};
 use super::chronicle::{
     collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
     collect_settlement_chronicle, person_to_dict, rows_to_dict,
@@ -270,6 +271,54 @@ impl WorldSimNode {
     /// Emitted after a complete engine replacement so renderers refresh snapshots.
     #[signal]
     fn world_reset();
+
+    /// Rendering-only declump: packed inputs retain source order and f32 component bits.
+    #[func]
+    #[allow(clippy::too_many_arguments)]
+    fn art_declump(
+        &self,
+        row_ids: PackedInt64Array,
+        visible: PackedByteArray,
+        walking: PackedByteArray,
+        place_known: PackedByteArray,
+        target_ids: PackedInt64Array,
+        target_xy: PackedFloat32Array,
+        rect_ids: PackedInt64Array,
+        rect_xywh: PackedFloat32Array,
+        width: i64,
+        height: i64,
+        terrain: PackedByteArray,
+        blocked_xy: PackedInt32Array,
+        spatial: bool,
+    ) -> VarDictionary {
+        let input = DeclumpInput {
+            row_ids: row_ids.as_slice(),
+            visible: visible.as_slice(),
+            walking: walking.as_slice(),
+            place_known: place_known.as_slice(),
+            target_ids: target_ids.as_slice(),
+            target_xy: target_xy.as_slice(),
+            rect_ids: rect_ids.as_slice(),
+            rect_xywh: rect_xywh.as_slice(),
+            width,
+            height,
+            terrain: terrain.as_slice(),
+            blocked_xy: blocked_xy.as_slice(),
+            spatial,
+        };
+        let mut output = VarDictionary::new();
+        match declump_offsets(&input) {
+            Ok(result) => {
+                output.set("ids", PackedInt64Array::from(result.ids.as_slice()));
+                output.set("offsets", PackedFloat32Array::from(result.offsets.as_slice()));
+            }
+            Err(error) => {
+                godot_error!("art_declump: {}", error);
+                output.set("error", error);
+            }
+        }
+        output
+    }
 
     /// Rebuild the seeded world, preserving the caller's wall-clock speed setting.
     #[func]

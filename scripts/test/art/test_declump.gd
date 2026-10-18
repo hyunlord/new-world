@@ -2,6 +2,8 @@ extends SceneTree
 const Seats = preload("res://scripts/ui/camp_seats.gd")
 const Renderer = preload("res://scripts/ui/agent_renderer.gd")
 var failures: int = 0
+var _kernel_bridge: Node
+var _kernel_adapter: GDScript
 
 func check(ok: bool, message: String) -> void:
 	if not ok:
@@ -9,6 +11,14 @@ func check(ok: bool, message: String) -> void:
 		failures += 1
 
 func _initialize() -> void:
+	_kernel_bridge = ClassDB.instantiate("WorldSimNode") as Node
+	if not ResourceLoader.exists("res://scripts/ui/art_declump_p12.gd") or _kernel_bridge == null or not _kernel_bridge.has_method("art_declump"):
+		check(false, "Declump suite requires actual P12 kernel bridge and adapter")
+		if _kernel_bridge != null:
+			_kernel_bridge.free()
+		quit(1)
+		return
+	_kernel_adapter = load("res://scripts/ui/art_declump_p12.gd") as GDScript
 	var cells := PackedByteArray()
 	cells.resize(64 * 64)
 	var terrain: Dictionary = {"width": 64, "height": 64, "terrain": cells}
@@ -18,53 +28,54 @@ func _initialize() -> void:
 		{"id": 3, "visible": true, "moving": false}]
 	var targets: Dictionary = {2: feet, 3: feet + Vector2(0, 16)}
 	var rects: Dictionary = {2: Rect2(-8, -29, 16, 30), 3: Rect2(-8, -29, 16, 30)}
-	var offsets: Dictionary = Seats.declump(rows, {}, targets, terrain, {}, rects)
+	var offsets: Dictionary = _declump(rows, {}, targets, terrain, {}, rects)
 	check(offsets[2] == Vector2(6, 0), "equal x even ID tries right first and takes first shift below threshold")
 	check(offsets[3] == Vector2.ZERO, "frontmost villager remains still")
 	check(_coverage(targets, rects, offsets) < 0.30, "vertically adjacent same-x villagers end below 0.30")
 	var reversed: Array[Dictionary] = rows.duplicate(true)
 	reversed.reverse()
-	check(Seats.declump(reversed, {}, targets, terrain, {}, rects) == offsets, "same input and reordered rows produce identical offsets")
+	check(_declump(reversed, {}, targets, terrain, {}, rects) == offsets, "same input and reordered rows produce identical offsets")
 	rows[0]["moving"] = true
-	check(not Seats.declump(rows, {}, targets, terrain, {}, rects).has(2), "moving villagers never shift")
+	check(not _declump(rows, {}, targets, terrain, {}, rects).has(2), "moving villagers never shift")
 	rows[0]["moving"] = false
 	rows[0]["activity"] = "walk"
 	rows[0]["tile"] = Vector2i(30, 30)
-	check(not Seats.declump(rows, {}, targets, terrain, {}, rects).has(2), "paused walking animation never shifts")
+	check(not _declump(rows, {}, targets, terrain, {}, rects).has(2), "paused walking animation never shifts")
 	check(not Seats.spread_offsets([rows[0]], {}).has(2), "paused walking animation never spreads")
 	rows[0].erase("activity")
-	check(Seats.declump(rows, {2: feet}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated villagers now resolve foreground overlap")
-	check(Seats.declump(rows, {3: targets[3]}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated front villagers still occlude")
+	check(_declump(rows, {2: feet}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated villagers now resolve foreground overlap")
+	check(_declump(rows, {3: targets[3]}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated front villagers still occlude")
 	rows[1]["moving"] = true
-	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "moving front villagers still occlude")
+	check(_declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "moving front villagers still occlude")
 	rows[1]["moving"] = false
 	rows[1]["visible"] = false
-	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2.ZERO, "hidden villagers do not occlude")
+	check(_declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2.ZERO, "hidden villagers do not occlude")
 	rows[1]["visible"] = true
 	# At a tile's right edge every positive shift enters the water tile.
 	targets[2] = feet + Vector2(7, 0)
 	targets[3] = feet + Vector2(7, 16)
 	cells[30 * 64 + 31] = 4
 	terrain["terrain"] = cells
-	var wet: Dictionary = Seats.declump(rows, {}, targets, terrain, {}, rects)
+	var wet: Dictionary = _declump(rows, {}, targets, terrain, {}, rects)
 	check(wet[2] == Vector2(-6, 0), "water anywhere on map forces the other side")
 	check(_coverage(targets, rects, wet) < 0.30, "water avoidance still reaches coverage threshold")
 	cells[30 * 64 + 31] = 0
 	terrain["terrain"] = cells
-	check(Seats.declump(rows, {}, targets, terrain, {Vector2i(31, 30): true}, rects)[2] == Vector2(-6, 0), "obstructed feet tiles force the other side")
-	check(Seats.declump(rows, {}, targets, terrain, {Vector2i(30, 30): true, Vector2i(31, 30): true}, rects)[2] == Vector2.ZERO, "all shifts blocked returns zero")
+	check(_declump(rows, {}, targets, terrain, {Vector2i(31, 30): true}, rects)[2] == Vector2(-6, 0), "obstructed feet tiles force the other side")
+	check(_declump(rows, {}, targets, terrain, {Vector2i(30, 30): true, Vector2i(31, 30): true}, rects)[2] == Vector2.ZERO, "all shifts blocked returns zero")
 	# Wide overlapping frames cannot reach threshold within eight pixels.
 	rects[2] = Rect2(-24, -29, 48, 30)
 	rects[3] = Rect2(-24, -29, 48, 30)
-	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(8, 0), "unreachable threshold chooses allowed minimum coverage")
+	check(_declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(8, 0), "unreachable threshold chooses allowed minimum coverage")
 	targets[2] = feet + Vector2(-1, 0)
 	targets[3] = feet + Vector2(0, 16)
-	check((Seats.declump(rows, {}, targets, terrain, {}, rects)[2] as Vector2).x < 0, "first side points away from nearest front agent")
+	check((_declump(rows, {}, targets, terrain, {}, rects)[2] as Vector2).x < 0, "first side points away from nearest front agent")
 	_test_order_and_final_targets(terrain, feet)
 	_test_renderer(terrain, feet)
 	_test_d24(terrain, "d24_regression.json")
 	_test_d24(terrain, "d24_merged_regression.json")
 	print("DECLUMP %s: coverage, water, obstacles, exclusions, deterministic order, final front targets" % ("PASS" if failures == 0 else "FAIL"))
+	_kernel_bridge.free()
 	quit(1 if failures else 0)
 
 func _coverage(targets: Dictionary, rects: Dictionary, offsets: Dictionary) -> float:
@@ -81,13 +92,15 @@ func _test_order_and_final_targets(terrain: Dictionary, feet: Vector2) -> void:
 		{"id": 3, "visible": true, "moving": false}]
 	var targets: Dictionary = {1: feet, 2: feet, 3: feet}
 	var rects: Dictionary = {1: Rect2(-4, -29, 8, 30), 2: Rect2(-4, -29, 8, 30), 3: Rect2(-4, -29, 8, 30)}
-	var offsets: Dictionary = Seats.declump(rows, {}, targets, terrain, {}, rects)
+	var offsets: Dictionary = _declump(rows, {}, targets, terrain, {}, rects)
 	check(offsets[3] == Vector2.ZERO, "equal-y higher ID is frontmost")
 	check(offsets[2] == Vector2(6, 0), "middle ID moves right")
 	check(offsets[1] == Vector2(-6, 0), "rear odd ID chooses left against already-shifted fronts")
 
 func _test_renderer(terrain: Dictionary, feet: Vector2) -> void:
 	var renderer = Renderer.new()
+	renderer.world_sim = _kernel_bridge
+	check(renderer.set_perf_candidate_p12("declump-kernel", true), "renderer accepts actual kernel candidate")
 	var rows: Array[Dictionary] = []
 	for agent_id: int in [2, 3]:
 		var sprite := Sprite2D.new()
@@ -121,7 +134,7 @@ func _test_d24(terrain: Dictionary, fixture_name: String) -> void:
 		rects[agent_id] = Rect2(rect[0], rect[1], rect[2], rect[3])
 		if record["seated"]:
 			seats[agent_id] = targets[agent_id]
-	var offsets: Dictionary = Seats.declump(rows, seats, targets, terrain, {}, rects)
+	var offsets: Dictionary = _declump(rows, seats, targets, terrain, {}, rects)
 	for row: Dictionary in rows:
 		if row["activity"] == "walk":
 			check(not offsets.has(row["id"]), "d24 walking poses remain untouched even when moving flag false")
@@ -135,4 +148,12 @@ func _test_d24(terrain: Dictionary, fixture_name: String) -> void:
 		check(absf(offset.x) <= 8.0 and offset.y == 0.0, "d24 shifts stay within horizontal8px")
 	var reversed: Array[Dictionary] = rows.duplicate(true)
 	reversed.reverse()
-	check(Seats.declump(reversed, seats, targets, terrain, {}, rects) == offsets, "d24 front-to-back result deterministic")
+	check(_declump(reversed, seats, targets, terrain, {}, rects) == offsets, "d24 front-to-back result deterministic")
+
+func _declump(rows: Array[Dictionary], seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary) -> Dictionary:
+	var candidate: Dictionary = {}
+	for spatial: bool in [false, true]:
+		var reference: Dictionary = Seats.declump(rows, seated, targets, terrain, blocked, rects, spatial)
+		candidate = _kernel_adapter.declump(_kernel_bridge, rows, targets, terrain, blocked, rects, spatial)
+		check(_kernel_adapter.bit_equal(reference, candidate), "declump kernel preserves ordered ids and exact f32 offsets spatial=%s" % spatial)
+	return candidate

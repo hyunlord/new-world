@@ -96,6 +96,10 @@ func _run() -> void:
 	if framing == "P6" and not _main.get_node("UI/AgentInspectorPanel").is_visible_in_tree():
 		_fail("P6 requires the inspector to remain visible at capture")
 		return
+	var candidate_evidence: Dictionary = _candidate_evidence_p12()
+	if not bool(candidate_evidence["valid"]):
+		_fail("declump candidate state mismatch: " + JSON.stringify(candidate_evidence))
+		return
 	_draw_clock.draw_frame(Engine.get_process_frames())
 	var image: Image = root.get_texture().get_image()
 	var time: Dictionary = ReadRoute.read(_world, "get_time_snapshot")
@@ -109,7 +113,7 @@ func _run() -> void:
 	if not bool(draw_evidence["valid"]):
 		_fail("unexpected render steps; capture invalid: " + JSON.stringify(draw_evidence))
 		return
-	var manifest: Dictionary = {"census": _identity_census(), "draw_clock": draw_evidence, "framing": framing, "seed": spec[0], "tick": time["tick"], "state_change_frame": state_frame, "capture_frame": Engine.get_process_frames(), "settle_frames": 120, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001, "camera": [_camera.position.x, _camera.position.y], "zoom": spec[2], "debug_build": OS.is_debug_build(), "sim_reads": _reads != null}
+	var manifest: Dictionary = {"perf_candidate_p12": candidate_evidence, "census": _identity_census(), "draw_clock": draw_evidence, "framing": framing, "seed": spec[0], "tick": time["tick"], "state_change_frame": state_frame, "capture_frame": Engine.get_process_frames(), "settle_frames": 120, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001, "camera": [_camera.position.x, _camera.position.y], "zoom": spec[2], "debug_build": OS.is_debug_build(), "sim_reads": _reads != null}
 	var file := FileAccess.open(output.path_join(framing + ".json"), FileAccess.WRITE)
 	if file == null:
 		_fail("cannot save manifest")
@@ -155,3 +159,18 @@ func _identity_census() -> Dictionary:
 		"population": agent_ids.size(), "settlements": ReadRoute.read(_world, "get_settlement_snapshot"),
 		"clock": ReadRoute.read(_world, "get_time_snapshot"),
 		"loaded_bridge_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib")}
+
+
+func _candidate_evidence_p12() -> Dictionary:
+	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+	var renderer: Node = _main.get_node_or_null("AgentRenderer")
+	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p12")
+	var actual: Dictionary = {}
+	if available:
+		var observed: Variant = renderer.call("get_perf_candidate_p12")
+		if observed is Dictionary:
+			actual = observed
+	var valid: bool = not requested and not available
+	if available:
+		valid = actual.get("change_id") == "declump-kernel" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested
+	return {"requested_kernel": requested, "method_available": available, "actual": actual, "valid": valid}

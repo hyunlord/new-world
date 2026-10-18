@@ -280,6 +280,10 @@ func _run() -> void:
 			_fail("wall-clock advanced a frozen capture")
 			return
 		_shot_elapsed_s = float(Time.get_ticks_usec() - _last_cast_usec) / 1000000.0 if _last_cast_usec > 0 else 0.0
+		var candidate_evidence: Dictionary = _candidate_evidence_p12()
+		if not bool(candidate_evidence["valid"]):
+			_fail("declump candidate state mismatch: " + JSON.stringify(candidate_evidence))
+			return
 		var image: Image = root.get_texture().get_image()
 		if image == null or image.get_width() < 1920 or image.get_height() < 1080 or image.get_width() * 9 != image.get_height() * 16:
 			_fail("capture framebuffer must be at least 1920x1080 with 16:9 aspect; no placeholder is written")
@@ -303,11 +307,12 @@ func _run() -> void:
 			if identity_file == null:
 				_fail("cannot save P3 metadata")
 				return
-			identity_file.store_string(JSON.stringify({"census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
+			identity_file.store_string(JSON.stringify({"perf_candidate_p12": candidate_evidence, "census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
 		if not _write_entities(stem, target, image.get_size()):
 			return
 		print("capture saved: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		_manifest.append({
+			"perf_candidate_p12": candidate_evidence,
 			"file": filename, "tick": target, "framing": framing,
 			"identity_p12": OS.get_environment("CAPTURE_IDENTITY_P12") == "1",
 			"identity_state_frame": _identity_state_frame, "identity_capture_frame": _identity_capture_frame,
@@ -1090,3 +1095,18 @@ func _identity_census() -> Dictionary:
 		"population": agent_ids.size(), "settlements": ReadRoute.read(_world, "get_settlement_snapshot"),
 		"clock": ReadRoute.read(_world, "get_time_snapshot"),
 		"loaded_bridge_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib")}
+
+
+func _candidate_evidence_p12() -> Dictionary:
+	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+	var renderer: Node = _main.get_node_or_null("AgentRenderer")
+	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p12")
+	var actual: Dictionary = {}
+	if available:
+		var observed: Variant = renderer.call("get_perf_candidate_p12")
+		if observed is Dictionary:
+			actual = observed
+	var valid: bool = not requested and not available
+	if available:
+		valid = actual.get("change_id") == "declump-kernel" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested
+	return {"requested_kernel": requested, "method_available": available, "actual": actual, "valid": valid}

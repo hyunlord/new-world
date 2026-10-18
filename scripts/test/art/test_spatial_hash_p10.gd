@@ -3,6 +3,8 @@ const Candidate = preload("res://scripts/ui/camp_seats.gd")
 const Reference = preload("res://scripts/test/art/camp_seats_reference_p10.gd")
 var failures: int = 0
 var comparisons: int = 0
+var _kernel_bridge: Node
+var _kernel_adapter: GDScript
 
 func check(ok: bool, message: String) -> void:
 	if not ok:
@@ -14,6 +16,14 @@ func row(agent_id: int, walking: bool = false) -> Dictionary:
 		"activity": "walk" if walking else "idle", "walking_direction": Vector2.RIGHT}
 
 func _initialize() -> void:
+	_kernel_bridge = ClassDB.instantiate("WorldSimNode") as Node
+	if not ResourceLoader.exists("res://scripts/ui/art_declump_p12.gd") or _kernel_bridge == null or not _kernel_bridge.has_method("art_declump"):
+		check(false, "Spatial suite requires actual P12 kernel bridge and adapter")
+		if _kernel_bridge != null:
+			_kernel_bridge.free()
+		quit(1)
+		return
+	_kernel_adapter = load("res://scripts/ui/art_declump_p12.gd") as GDScript
 	_test_index()
 	var cells := PackedByteArray()
 	cells.resize(64 * 64)
@@ -21,6 +31,7 @@ func _initialize() -> void:
 	_test_nearest_global(terrain)
 	_test_varied_histories(terrain)
 	print("SPATIAL HASH P10 %s comparisons=%d" % ["PASS" if failures == 0 else "FAIL", comparisons])
+	_kernel_bridge.free()
 	quit(1 if failures else 0)
 
 func _test_index() -> void:
@@ -61,7 +72,11 @@ func compare_case(rows: Array[Dictionary], positions: Dictionary, rects: Diction
 	check(Candidate.declump(rows, {}, positions, terrain, blocked, rects, false) == declump, label + " reference branch declump")
 	check(Candidate.walker_offsets(rows, positions, rects, terrain, blocked, canvas, true) == walkers, label + " hash walkers")
 	check(Candidate.walker_offsets(rows, positions, rects, terrain, blocked, canvas, false) == walkers, label + " reference branch walkers")
-	comparisons += 4
+	for spatial: bool in [false, true]:
+		var original: Dictionary = Candidate.declump(rows, {}, positions, terrain, blocked, rects, spatial)
+		var actual: Dictionary = _kernel_adapter.declump(_kernel_bridge, rows, positions, terrain, blocked, rects, spatial)
+		check(_kernel_adapter.bit_equal(original, actual), label + " actual bridge ordered f32 bits spatial=%s" % spatial)
+	comparisons += 6
 
 func _test_nearest_global(terrain: Dictionary) -> void:
 	var feet := Vector2(936, 522)
