@@ -16,3 +16,7 @@ pauses.
 | 6 | 21:47 | | references: a `general-purpose` subagent verified 28 entries on the web (22:05); `references.bib`, `REFERENCES_CHECK.md` |
 | 1 (6.2.1) | | 22:08:39 | round 0: 1,640 episodes, all verified, 2,881 rows (≈ 51 min at 8 workers beside `crn_v2_s0`, load average 10–27) |
 | 1 (6.2.3) | 22:08:43 | | `obs2_pipeline.sh` (code `e875e413`, 4 workers): round 1 schedules (1,640 worlds read, 1,587 with a first act: 552 `gf240`, 702 `sp240`, 333 `rw120`), recording |
+| 4.1 | 22:19:44 | | `crn_v2_s0` ended: planned 15,700 + 53,800 steps both reached, α 0.9999 α_max, 2,618 s (load average 10–36); test effects (last, best) 22:20:47 / 22:20:54 (`finals_watch_v2`) |
+| 4 (cost) | 22:19:44 | 22:26:44 | `_cost_ct_v2` (300 s, beside round 1 at 4 workers, load average 33–36): 0.998 s/step, `val_roll` 11.7 s, peak GPU 13,013 MiB → predicted 11,998 s for 11,850 steps < 14,400 s: plan not reduced |
+| 4.1 | 22:26:44 | | `ct_v2_s0` started (≈ 0.95 s/step) |
+| 1 (6.2.3) | | 23:51:29 | round 1: 1,587 worlds recorded (≈ 13–17 episodes / min at 4 workers), `round1_check` all OK (prefix, casts, sha256; 1,580 differ after the act) |
