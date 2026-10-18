@@ -350,10 +350,65 @@ def factual_block(runs: Path) -> dict:
     return out
 
 
+GROUPS = {
+    "zero": {"v2": ["zero"], "obs": ["zero"], "obs2": ["zero"]},
+    "naive": {"obs": ["naive"], "obs2": ["naive"]},
+    "ipw": {"obs": ["ipw"], "obs2": ["ipw"]},
+    "match5": {"obs": ["match5"], "obs2": ["match5"]},
+    "an5_arm": {"v2": ["an5_arm"]},
+    "arm_mean": {"v2": ["arm_mean"]},
+    "floor": {"v2": ["floor"], "obs2": ["floor"]},
+    "ridge_obs": {"v2": ["ridge_obs"], "obs2": ["ridge_obs"]},
+    "ridge_priv": {"v2": ["ridge_priv"], "obs2": ["ridge_priv"]},
+    "m1b_v2": {"v2": [f"wm2_m1bact_v19_s{s}" for s in SEEDS3], "obs": [f"ref_wm2_m1bact_v19_s{s}_obs" for s in SEEDS3],
+               "obs2": [f"ref_wm2_m1bact_v19_s{s}" for s in SEEDS3]},
+    "wm3_full": {"v2": [f"wm3_full_s{s}" for s in SEEDS3], "obs": [f"ref_wm3_full_s{s}_obs" for s in SEEDS3],
+                 "obs2": [f"ref_wm3_full_s{s}" for s in SEEDS3]},
+    "m1b_obs": {"obs": [f"m1b_obs_s{s}" for s in SEEDS2], "obs2": [f"ref_m1b_obs_s{s}" for s in SEEDS2]},
+    "m1b_obs2": {"obs2": [f"m1b_obs2_s{s}" for s in SEEDS2]},
+    "crn_obs_wm4": {"obs": [f"crn_obs_s{s}" for s in SEEDS2], "obs2": [f"ref_crn_obs_s{s}" for s in SEEDS2]},
+    "ct_obs_wm4": {"obs": [f"ct_obs_s{s}" for s in SEEDS2], "obs2": [f"ref_ct_obs_s{s}" for s in SEEDS2]},
+    "crn_v2_wm4": {"v2": ["wm4:crn_v2_s0", "wm4:crn_v2_s1"]},
+    "ct_v2_wm4": {"v2": ["wm4:ct_v2_s0", "wm4:ct_v2_s1"]},
+    "crn_obs2": {"obs2": [f"crn_obs2_s{s}" for s in SEEDS2]},
+    "ct_obs2": {"obs2": [f"ct_obs2_s{s}" for s in SEEDS2]},
+    "crn_v2": {"v2": [f"crn_v2_s{s}" for s in SEEDS2]},
+    "ct_v2": {"v2": [f"ct_v2_s{s}" for s in SEEDS2]},
+}
+
+
+def main_table(j: dict) -> dict:
+    """Seed-averaged 12-cell scores per method group and split (the paper's main table): v2 and obs2 from this judge,
+    obs (and WM-4's v2 CRN / CT) from WM-4's committed judge. The mean over seeds equals the seed-averaged model's score
+    (the cell MAE is linear in the per-case errors)."""
+    j4 = load(WM4 / "judge4" / "judge.json") or {}
+    src = {"v2": j["v2"].get("cell_averages", {}), "obs2": j["obs2"].get("cell_averages", {}),
+           "obs": (j4.get("obs") or {}).get("cell_averages", {})}
+    v2_4 = (j4.get("v2") or {}).get("cell_averages", {})
+    out = {}
+    for g, splits in GROUPS.items():
+        for split, names in splits.items():
+            vals = []
+            for n in names:
+                ca = v2_4.get(n[4:]) if n.startswith("wm4:") else src[split].get(n)
+                if ca is not None:
+                    vals.append(ca)
+            if vals:
+                out.setdefault(g, {})[split] = {lag: float(np.mean([v[lag] for v in vals])) for lag in ("7d", "30d")} | {
+                    "seeds": len(vals)}
+    return out
+
+
 def build(runs: Path) -> dict:
     info = runs_block(runs)
     return {"obs2": obs2_block(runs), "v2": v2_block(runs), "D2": d2_block(runs), "runs": info, "R4": r4_block(info),
             "factual_obs2": factual_block(runs), "describe": load(runs / "describe" / "describe.json")}
+
+
+def build_all(runs: Path) -> dict:
+    j = build(runs)
+    j["main_table"] = main_table(j)
+    return j
 
 
 # ------------------------------------------------------------------ markdown ---------------------------------------
@@ -495,7 +550,7 @@ def main(argv=None) -> int:
     ap.add_argument("--runs", default=str(RUNS))
     ap.add_argument("--out", default=str(RUNS / "judge5"))
     a = ap.parse_args(argv)
-    j = build(Path(a.runs))
+    j = build_all(Path(a.runs))
     c.write_json(Path(a.out) / "judge.json", j)
     (Path(a.out) / "judge.md").write_text(markdown(j))
     print(markdown(j)[:6000])
