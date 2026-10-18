@@ -999,11 +999,12 @@ impl WorldRules {
     /// the avoid filter at every food-target selector, per-village-pair daily
     /// caps on what disputes (3) and quarrels (1) cost, exchange tried before
     /// aid, the aid keep line below the giver threshold (2,000 ‰ of a day),
-    /// and smaller losses / faster drift. The loss, drift and aid-threshold
-    /// values are the grid configuration G1 of the brief (7.2) until the grid
-    /// selects one; see `docs/revitalize/DECISIONS.md` Pass 21.
+    /// and smaller losses / faster drift. Quarrel loss, drift and the aid
+    /// thresholds are the pre-registered grid's selected configuration G2
+    /// (quarrel loss 40, drift 30 ‰, giver 2,500 ‰, receiver 2,000 ‰;
+    /// `docs/revitalize/probe/p21-2_grid/grid.md`), frozen.
     pub const V26_RELATIONS: RelationsRule = RelationsRule {
-        aid_giver_days_permille: 3000,
+        aid_giver_days_permille: 2500,
         aid_keep_days_permille: 2000,
         aid_receiver_days_permille: 2000,
         relation_drift_permille: 30,

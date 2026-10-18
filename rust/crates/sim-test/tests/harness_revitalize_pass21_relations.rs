@@ -170,6 +170,39 @@ fn harness_p21_game_v26_is_game_v25_with_the_v26_relations() {
 }
 
 #[test]
+fn harness_p21_v26_relations_frozen_at_grid_g2() {
+    // Pass 21 7.2: the grid's selected configuration G2, frozen; every field.
+    let r = V26;
+    assert_eq!(r.decision_minute, 480);
+    assert_eq!(r.latest_arrival_minute, 900);
+    assert_eq!(r.porter_max, 2);
+    assert_eq!(r.aid_giver_days_permille, 2500);
+    assert_eq!(r.aid_keep_days_permille, 2000);
+    assert_eq!(r.aid_receiver_days_permille, 2000);
+    assert_eq!(r.wood_giver_nights, 3);
+    assert_eq!(r.wood_keep_nights, 2);
+    assert_eq!(r.wood_receiver_nights, 1);
+    assert_eq!(r.trade_food_surplus_days_permille, 3000);
+    assert_eq!(r.trade_food_short_days_permille, 2000);
+    assert_eq!(r.trade_wood_surplus_nights, 4);
+    assert_eq!(r.trade_wood_short_nights, 2);
+    assert_eq!(r.relation_kin_parent, 300);
+    assert_eq!(r.relation_kin_sibling, 150);
+    assert_eq!(r.relation_other, 0);
+    assert_eq!(r.relation_drift_permille, 30);
+    assert_eq!(r.delivery_gain, 40);
+    assert_eq!(r.dispute_loss, 5);
+    assert_eq!(r.quarrel_loss, 40);
+    assert_eq!(r.estrange_at, -300);
+    assert_eq!(r.reconcile_at, -150);
+    assert_eq!(r.porter_hunger_max, 30);
+    assert!(r.avoid_gather);
+    assert_eq!(r.dispute_cap_per_pair_day, 3);
+    assert_eq!(r.quarrel_cap_per_pair_day, 1);
+    assert!(r.exchange_first);
+}
+
+#[test]
 fn harness_p21_relations_only_in_v25_and_v26() {
     for seed in [0, 19600] {
         assert!(WorldRules::game_v24(seed).society.relations.is_none());

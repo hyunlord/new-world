@@ -83,7 +83,7 @@ def main(argv: list[str]) -> int:
         "aid thresholds (keep 2,000 ‰, dispute loss 5, caps 3 / 1, avoid and exchange first always). Multi-village = ≥ 2 villages alive "
         "at once in that run. Bars: estranged share at day 120 ≤ 0.25; quarrels in ≥ 0.15 of multi-village worlds; with ≥ 3 "
         "estrangements, ≥ 0.5 reconciled.", "",
-        "| config | quarrel loss | drift ‰ | giver / receiver ‰ | multi-village | delivering share (worlds) | dispute share | quarrel share | estranged at d120 | estrangements | reconciled | quarrels while estranged | trips | exchange porters | aid-food pair-days (not estranged) | daughter deaths | qualifies |",
+        "| config | quarrel loss | drift ‰ | giver / receiver ‰ | multi-village | delivering share (worlds) | dispute share | quarrel share | estranged at d120 | estrangements | reconciled | quarrels while estranged | porters | exchange porters | aid-food pair-days (not estranged) | daughter deaths | qualifies |",
         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in reports:
         c = r["config"]
