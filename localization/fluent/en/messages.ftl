@@ -5317,3 +5317,20 @@ CHRON_FISSION_STARTED_FMT = %s began to split; %s leads a group away.
 CHRON_DAUGHTER_FOUNDED_FMT = %s was founded by people from %s.
 CHRON_FISSION_CANCELLED_FMT = The split of %s was called off.
 CHRON_SETTLEMENT_DISSOLVED_FMT = %s was abandoned.
+
+# Art Pass 12 village relations and porter presentation
+CHRON_PORTER_DEPARTED_FMT = Set out from %s for %s with %s ×%d (%s).
+CHRON_PORTER_DELIVERED_FMT = Brought %s ×%d from %s to %s (%s).
+CHRON_PORTER_FAILED_FMT = Could not reach %s and turned back (%s).
+CHRON_PORTER_AID = aid
+CHRON_PORTER_EXCHANGE = exchange
+CHRON_LOAD_FOOD = food
+CHRON_LOAD_WOOD = firewood
+CHRON_QUARREL_FMT = Quarrelled with %s of %s over a berry bush.
+CHRON_VILLAGES_ESTRANGED_FMT = %s and %s fell out.
+CHRON_VILLAGES_RECONCILED_FMT = %s and %s made peace.
+CHRON_PORTER_GROUP_FMT = Porters (%d) brought %s ×%d from %s to %s (%s).
+CHRON_PORTER_GROUP_FAILED_FMT = Porters (%d) from %s could not reach %s (%s).
+INSPECTOR_PORTER_OUT_FMT = Carrying %s ×%d to %s
+INSPECTOR_PORTER_BACK_FMT = Heading home to %s
+UI_RELATION_ESTRANGED = Estranged

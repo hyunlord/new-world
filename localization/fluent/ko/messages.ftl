@@ -5319,3 +5319,20 @@ CHRON_FISSION_STARTED_FMT = %s 갈라지기 시작 — 이끈 이: %s
 CHRON_DAUGHTER_FOUNDED_FMT = %s 세워짐 — %s에서 갈라져 나옴
 CHRON_FISSION_CANCELLED_FMT = %s 분열 취소
 CHRON_SETTLEMENT_DISSOLVED_FMT = %s 사라짐
+
+# Art Pass 12 village relations and porter presentation
+CHRON_PORTER_DEPARTED_FMT = 짐을 지고 떠남 — %s → %s, %s %d (%s)
+CHRON_PORTER_DELIVERED_FMT = 짐을 전함 — %s %d, %s → %s (%s)
+CHRON_PORTER_FAILED_FMT = %s까지 가지 못하고 돌아옴 (%s)
+CHRON_PORTER_AID = 원조
+CHRON_PORTER_EXCHANGE = 교환
+CHRON_LOAD_FOOD = 식량
+CHRON_LOAD_WOOD = 장작
+CHRON_QUARREL_FMT = 열매 덤불을 두고 다툼 — %s (%s)
+CHRON_VILLAGES_ESTRANGED_FMT = %s · %s 사이가 틀어짐
+CHRON_VILLAGES_RECONCILED_FMT = %s · %s 화해함
+CHRON_PORTER_GROUP_FMT = 짐꾼 %d명 — %s %d, %s → %s (%s)
+CHRON_PORTER_GROUP_FAILED_FMT = 짐꾼 %d명 — %s에서 %s까지 가지 못함 (%s)
+INSPECTOR_PORTER_OUT_FMT = 짐 나르는 중 — %s %d → %s
+INSPECTOR_PORTER_BACK_FMT = 집으로 돌아가는 중 — %s
+UI_RELATION_ESTRANGED = 사이가 틀어짐

@@ -18,6 +18,7 @@ const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Library = preload("res://scripts/ui/art_sprite_library.gd")
 const PANEL_WIDTH := 360.0
 const Names = preload("res://scripts/ui/person_names.gd")
+const Porter = preload("res://scripts/ui/porter_presentation_p12.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const ReadCache = preload("res://scripts/ui/person_read_cache.gd")
 var _person_cache := ReadCache.new()
@@ -74,6 +75,7 @@ const SettlementSelection = preload("res://scripts/core/settlement_selection.gd"
 var _village_label: Label
 var _vbox: VBoxContainer
 var _label_id: Label
+var _porter_status: Label
 var _label_age: Label
 var _label_pos: Label
 var _label_state: Label
@@ -131,6 +133,8 @@ func _ready() -> void:
 	_scroll_layout.resized.connect(_queue_readable_edges)
 	_label_id = _make_label("")
 	_label_id.theme_type_variation = &"Heading"
+	_porter_status = _make_label("")
+	_porter_status.hide()
 	var portrait_box: Control = Control.new()
 	portrait_box.custom_minimum_size = Vector2(128, 128)
 	_vbox.add_child(portrait_box)
@@ -298,6 +302,7 @@ func display_agent(detail: Dictionary) -> void:
 	if previous_selection != _selected_entity_bits:
 		_scroll.scroll_vertical = 0
 	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.present(agent_id, Chronicle.language(_locale)), agent_id]
+	_refresh_porter_status()
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
 	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
@@ -321,6 +326,22 @@ func display_agent(detail: Dictionary) -> void:
 	_cold_label.visible = _is_cold(agent_id)
 	visible = true
 	_refresh_personal_sections()
+
+
+func _refresh_porter_status() -> void:
+	_porter_status.text = ""
+	_porter_status.hide()
+	if _world_sim == null or not _world_sim.has_method("get_porter_snapshot"):
+		return
+	var row: Dictionary = Porter.rows(SimReads.read(_world_sim, "get_porter_snapshot")).get(_selected_entity_bits, {})
+	if row.is_empty():
+		return
+	if int(row["stage"]) == 0:
+		var load_name: String = _loc("CHRON_LOAD_WOOD" if int(row["kind"]) == 1 else "CHRON_LOAD_FOOD")
+		_porter_status.text = _loc("INSPECTOR_PORTER_OUT_FMT") % [load_name, int(row["amount"]), Names.unbroken(SettlementSelection.name_for(int(row["to"]), _locale))]
+	else:
+		_porter_status.text = _loc("INSPECTOR_PORTER_BACK_FMT") % Names.unbroken(SettlementSelection.name_for(int(row["from"]), _locale))
+	_porter_status.show()
 
 
 func _unhandled_input(event: InputEvent) -> void:

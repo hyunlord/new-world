@@ -1,5 +1,6 @@
 extends Node2D
 ## Names and selection use persistent AgentId/SettlementId joins, never spatial membership.
+const Relations = preload("res://scripts/ui/settlement_relations_p12.gd")
 const ActivitySummary = preload("res://scripts/ui/village_activity_summary_p11.gd")
 const Meter = preload("res://scripts/ui/restless_meter.gd")
 const Marker = preload("res://scripts/ui/offscreen_marker.gd")
@@ -12,6 +13,7 @@ const LABEL_PADDING := Vector2(5, 3)
 const LABEL_BACKPLATE := Color(0.08, 0.07, 0.06, 0.86)
 const LABEL_SPRITE_GAP_PX := 6.0
 var _selected_marker: Dictionary = {}
+var _relations: Node2D
 var _world: Node
 var _locale: Node
 var _labels: Dictionary = {}
@@ -34,6 +36,13 @@ func _ready() -> void:
 	configure(get_node_or_null("../WorldSim"))
 
 func configure(world: Node) -> void:
+	if is_instance_valid(_world) and _world.has_signal("world_reset") and _world.is_connected("world_reset", _reset):
+		_world.disconnect("world_reset", _reset)
+	if _relations == null:
+		_relations = Relations.new()
+		_relations.name = "SettlementRelations"
+		add_child(_relations)
+	_relations.configure(world, _locale)
 	_world = world
 	if _world != null and _world.has_signal("world_reset") and not _world.is_connected("world_reset", _reset):
 		_world.connect("world_reset", _reset)
@@ -86,6 +95,8 @@ func _process(_delta: float) -> void:
 	_update_abandoned()
 
 func _update_labels() -> void:
+	if _relations != null:
+		_relations.update_view()
 	_drawn.clear()
 	var zoom: float = maxf(0.01, get_global_transform_with_canvas().get_scale().x)
 	var seen: Dictionary = {}
@@ -287,6 +298,7 @@ func _update_abandoned() -> void:
 func capture_metadata() -> Dictionary:
 	var result: Dictionary = Selection.capture_metadata(_locale)
 	result["labels"] = _drawn.duplicate(true)
+	result["relations"] = _relations.capture_metadata() if _relations != null else {}
 	result["selected_marker"] = _selected_marker.duplicate(true)
 	var meters: Array[Dictionary] = []
 	for id: int in _meters:

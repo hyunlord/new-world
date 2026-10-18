@@ -38,6 +38,12 @@ static func village(id: int, locale: Node) -> String:
 static func death(cause: int, locale: Node) -> String:
 	return loc(locale, DEATH[cause]) if cause >= 0 and cause < DEATH.size() else loc(locale, "UI_UNKNOWN")
 
+static func porter_purpose(cause: int, locale: Node) -> String:
+	return loc(locale, "CHRON_PORTER_AID" if cause % 10 < 2 else "CHRON_PORTER_EXCHANGE")
+
+static func porter_load(cause: int, locale: Node) -> String:
+	return loc(locale, "CHRON_LOAD_FOOD" if cause % 10 % 2 == 0 else "CHRON_LOAD_WOOD")
+
 static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionary) -> String:
 	var kind: int = int(row.get("kind", -1))
 	var subject: int = int(row.get("subject", -1))
@@ -51,6 +57,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		match kind:
 			0: return loc(locale, "CHRON_CHILD_BORN_FMT") % person(subject, locale)
 			2: return loc(locale, "CHRON_PAIRED_FMT") % person(subject, locale)
+			19: return loc(locale, "CHRON_QUARREL_FMT") % [person(subject, locale), village(int(row.get("settlement", -1)), locale)]
 			_: return ""
 	var place: int = int(row.get("settlement", -1))
 	var parent: int = int(row.get("settlement2", -1))
@@ -77,6 +84,20 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		14: return loc(locale, "CHRON_DAUGHTER_FOUNDED_FMT") % [village(place, locale), village(parent, locale)]
 		15: return loc(locale, "CHRON_FISSION_CANCELLED_FMT") % village(place, locale)
 		16: return loc(locale, "CHRON_SETTLEMENT_DISSOLVED_FMT") % village(place, locale)
+		17: return loc(locale, "CHRON_PORTER_DEPARTED_FMT") % [village(place, locale), village(parent, locale), porter_load(cause, locale), value, porter_purpose(cause, locale)]
+		18:
+			var purpose: String = porter_purpose(cause, locale)
+			var count: int = int(row.get("porter_count", 0))
+			if count > 0:
+				if cause >= 10:
+					return loc(locale, "CHRON_PORTER_GROUP_FAILED_FMT") % [count, village(parent, locale), village(place, locale), purpose]
+				return loc(locale, "CHRON_PORTER_GROUP_FMT") % [count, porter_load(cause, locale), value, village(parent, locale), village(place, locale), purpose]
+			if cause >= 10:
+				return loc(locale, "CHRON_PORTER_FAILED_FMT") % [village(place, locale), purpose]
+			return loc(locale, "CHRON_PORTER_DELIVERED_FMT") % [porter_load(cause, locale), value, village(parent, locale), village(place, locale), purpose]
+		19: return loc(locale, "CHRON_QUARREL_FMT") % [person(other, locale), village(parent, locale)]
+		20: return loc(locale, "CHRON_VILLAGES_ESTRANGED_FMT") % [village(place, locale), village(parent, locale)]
+		21: return loc(locale, "CHRON_VILLAGES_RECONCILED_FMT") % [village(place, locale), village(parent, locale)]
 	return ""
 
 static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, world_feed: bool = false) -> String:
@@ -84,7 +105,7 @@ static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, w
 	if text.is_empty():
 		return ""
 	var prefix: String = loc(locale, "CHRONICLE_DAY_FMT") % day(int(row.get("tick", 0)), info)
-	if world_feed and int(row.get("subject", -1)) >= 0:
+	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and int(row.get("kind", -1)) not in [20, 21]:
 		text = person(int(row["subject"]), locale) + " — " + text
 	return prefix + " · " + text
 

@@ -19,12 +19,16 @@ static func apply(sprite: Sprite2D, activity: String) -> void:
 	var frame_id: String = str(sprite.get_meta("sprite_id", ""))
 	var entry: Dictionary = _manifest["sprites"].get(frame_id, {})
 	var enabled: bool = activity == "carry" and not entry.is_empty() and sprite.visible
+	var source: Dictionary = Library.frame(frame_id)
+	var approved: bool = str(source.get("qa_status", "")) == "accepted" or (str(source.get("qa_status", "")) == "derived" and str(source.get("source", "")) == "derived:same_cycle_phase_copy")
+	var baked_wood: bool = activity == "carry_wood" and sprite.visible and str(source.get("activity", "")) == "carry_wood" and approved and bool(source.get("drawable", true))
 	var layer: Sprite2D = sprite.get_node_or_null("CarryLoad") as Sprite2D
 	if layer != null:
 		layer.visible = false
-	sprite.set_meta("load_visible", enabled)
-	sprite.set_meta("load_kind", "food" if enabled else "")
-	sprite.set_meta("load_frame_id", frame_id if enabled else "")
+	sprite.set_meta("load_visible", enabled or baked_wood)
+	sprite.set_meta("load_kind", "food" if enabled else ("wood" if baked_wood else ""))
+	sprite.set_meta("load_frame_id", frame_id if enabled or baked_wood else "")
+	sprite.set_meta("load_baked", baked_wood)
 	if not enabled:
 		if sprite.texture == _body:
 			sprite.texture = load(str(Library.frame(frame_id).get("page", ""))) as Texture2D

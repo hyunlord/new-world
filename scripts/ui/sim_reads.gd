@@ -6,14 +6,17 @@ const GETTERS: Array[String] = [
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
 	"get_intervention_state", "get_world_info", "get_terrain_snapshot",
-	"get_activity_snapshot",
+	"get_activity_snapshot", "get_porter_snapshot", "get_settlement_relations",
 ]
+const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations"]
 const MUTATORS: Array[String] = [
 	"apply_intervention", "advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",
 ]
 var _world: Node
 var _cache: Dictionary = {}
+var _tick_cache: Dictionary = {}
+var _tick: int = -1
 var _terrain: Dictionary = {}
 var _terrain_valid: bool = false
 var _frame: int = -1
@@ -35,7 +38,7 @@ static func read(world: Node, raw_getter: String) -> Dictionary:
 	var reader: Node = resolve(world)
 	if reader != null:
 		return reader.read_raw(raw_getter)
-	if not is_instance_valid(world):
+	if not is_instance_valid(world) or (raw_getter in TICK_GETTERS and not world.has_method(raw_getter)):
 		return {}
 	var result: Variant = world.call(raw_getter)
 	return result if result is Dictionary else {}
@@ -91,6 +94,8 @@ func _sync_frame() -> void:
 
 func invalidate() -> void:
 	_cache.clear()
+	_tick_cache.clear()
+	_tick = -1
 
 func _on_world_reset() -> void:
 	invalidate()
@@ -103,11 +108,18 @@ func read_raw(raw_getter: String) -> Dictionary:
 		return {}
 	_sync_world()
 	_sync_frame()
-	if not is_instance_valid(_world):
+	if not is_instance_valid(_world) or (raw_getter in TICK_GETTERS and not _world.has_method(raw_getter)):
 		return {}
 	if not (_world is WorldSimNode):
 		var fake_result: Variant = _world.call(raw_getter)
 		return fake_result if fake_result is Dictionary else {}
+	if raw_getter in TICK_GETTERS:
+		var tick: int = int(read_raw("get_time_snapshot").get("tick", -1))
+		if tick != _tick:
+			_tick = tick
+			_tick_cache.clear()
+		if _tick_cache.has(raw_getter):
+			return _tick_cache[raw_getter]
 	if raw_getter == "get_terrain_snapshot" and _terrain_valid:
 		return _terrain
 	if _cache.has(raw_getter):
@@ -122,6 +134,8 @@ func read_raw(raw_getter: String) -> Dictionary:
 	if raw_getter == "get_terrain_snapshot":
 		_terrain = snapshot
 		_terrain_valid = true
+	elif raw_getter in TICK_GETTERS:
+		_tick_cache[raw_getter] = snapshot
 	else:
 		_cache[raw_getter] = snapshot
 	return snapshot
@@ -131,7 +145,7 @@ func peek_uncounted(raw_getter: String) -> Dictionary:
 		push_error("SimReads unsupported getter: " + raw_getter)
 		return {}
 	_sync_world()
-	if not is_instance_valid(_world):
+	if not is_instance_valid(_world) or (raw_getter in TICK_GETTERS and not _world.has_method(raw_getter)):
 		return {}
 	var result: Variant = _world.call(raw_getter)
 	var snapshot: Dictionary = result if result is Dictionary else {}

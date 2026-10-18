@@ -2,7 +2,7 @@ extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
-const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16]
+const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21]
 var _world: Node
 var _locale: Node
 var _title: Label
@@ -13,6 +13,8 @@ var _total: int = 0
 var _tick: int = -1
 var _language: String = ""
 var _entries: Array[Dictionary] = []
+var _pending_porter: Dictionary = {}
+var _unknown_kinds: int = 0
 
 func _ready() -> void:
 	_world = get_node_or_null("/root/Main/WorldSim")
@@ -54,13 +56,36 @@ func _process(_delta: float) -> void:
 		var page: Dictionary = _world.call("get_chronicle_since", _next, 512)
 		_next = int(page.get("next", _next))
 		_total = int(page.get("total", _next))
+		var unknown_before: int = _unknown_kinds
 		for row: Dictionary in Chronicle.rows(page):
-			if int(row["kind"]) in NOTABLE:
-				_entries.append(row)
+			_ingest_row(row)
+		if _unknown_kinds != unknown_before:
+			print_debug("Chronicle skipped unknown kinds: ", _unknown_kinds)
 		while _entries.size() > 60:
 			_entries.pop_front()
 	if visible and (changed or Chronicle.language(_locale) != _language):
 		_refresh()
+
+func _ingest_row(row: Dictionary) -> void:
+	var kind: int = int(row["kind"])
+	if kind != 18:
+		_pending_porter = {}
+		if kind >= 22:
+			_unknown_kinds += 1
+		elif kind in NOTABLE:
+			_entries.append(row)
+		return
+	var same_trip: bool = not _pending_porter.is_empty()
+	for key: String in ["tick", "settlement", "settlement2", "cause"]:
+		if row[key] != _pending_porter.get(key, -1):
+			same_trip = false
+	if same_trip:
+		_pending_porter["porter_count"] = int(_pending_porter["porter_count"]) + 1
+		_pending_porter["value"] = int(_pending_porter["value"]) + int(row["value"])
+	else:
+		_pending_porter = row.duplicate()
+		_pending_porter["porter_count"] = 1
+		_entries.append(_pending_porter)
 
 func _refresh() -> void:
 	_language = Chronicle.language(_locale)
@@ -105,5 +130,7 @@ func _reset() -> void:
 	_total = 0
 	_tick = -1
 	_entries.clear()
+	_pending_porter = {}
+	_unknown_kinds = 0
 	_refresh()
 	hide()
