@@ -124,3 +124,55 @@
 - 2026-10-18T10:31:16Z pid=12759 HOLD_START owner=codex-art-pass12 purpose=baseline-ablation-W200-attempt3 start=1792319476 load_before=4.77 contended=false waited=0s
 - 2026-10-18T10:31:17Z pid=12759 HOLD_END owner=codex-art-pass12 purpose=baseline-ablation-W200-attempt3 start=1792319476 end=1792319477 elapsed=1 load_before=4.77 load_after=4.77 contended=false exit=75
 <!-- art-p12-last-release 1792319477 -->
+- 2026-10-18T10:53:24Z pid=44036 WAIT_START owner=codex-art-pass12 purpose=pair-declump-kernel-W500 hold_limit=3600
+- 2026-10-18T10:53:24Z pid=44036 CHECK load=9.53 processes= waited=0s
+- 2026-10-18T10:53:24Z pid=44036 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:53:54Z pid=44036 CHECK load=7.67 processes= waited=30s
+- 2026-10-18T10:53:54Z pid=44036 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:54:24Z pid=44036 CHECK load=7.81 processes= waited=60s
+- 2026-10-18T10:54:24Z pid=44036 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W500 start=1792320864 load_before=7.81 contended=true waited=60s
+- 2026-10-18T10:54:25Z pid=44036 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W500 start=1792320864 end=1792320865 elapsed=1 load_before=7.81 load_after=7.81 contended=true exit=75
+<!-- art-p12-last-release 1792320865 -->
+- 2026-10-18T10:54:26Z pid=54149 WAIT_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 hold_limit=3600
+- 2026-10-18T10:54:26Z pid=54149 CHECK load=7.81 processes= waited=0s
+- 2026-10-18T10:54:26Z pid=54149 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:54:56Z pid=54149 CHECK load=8.51 processes= waited=30s
+- 2026-10-18T10:54:56Z pid=54149 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:55:26Z pid=54149 CHECK load=6.99 processes= waited=60s
+- 2026-10-18T10:55:26Z pid=54149 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792320926 load_before=6.99 contended=true waited=60s
+- 2026-10-18T10:55:27Z pid=54149 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792320926 end=1792320927 elapsed=1 load_before=6.99 load_after=6.99 contended=true exit=75
+<!-- art-p12-last-release 1792320927 -->
+- 2026-10-18T10:56:27Z pid=75361 WAIT_START owner=codex-art-pass12 purpose=pair-declump-kernel-W500 hold_limit=3600
+- 2026-10-18T10:56:28Z pid=75361 CHECK load=9.81 processes= waited=0s
+- 2026-10-18T10:56:28Z pid=75361 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:56:58Z pid=75361 CHECK load=13.38 processes= waited=31s
+- 2026-10-18T10:56:58Z pid=75361 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:57:28Z pid=75361 CHECK load=10.56 processes= waited=61s
+- 2026-10-18T10:57:28Z pid=75361 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W500 start=1792321048 load_before=10.56 contended=true waited=61s
+- 2026-10-18T10:57:29Z pid=75361 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W500 start=1792321048 end=1792321049 elapsed=1 load_before=10.56 load_after=9.88 contended=true exit=75
+<!-- art-p12-last-release 1792321049 -->
+- 2026-10-18T10:57:29Z pid=86007 WAIT_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 hold_limit=3600
+- 2026-10-18T10:57:29Z pid=86007 CHECK load=9.88 processes= waited=0s
+- 2026-10-18T10:57:29Z pid=86007 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:57:59Z pid=86007 CHECK load=10.63 processes= waited=30s
+- 2026-10-18T10:57:59Z pid=86007 WAIT_BUSY next_poll=30s
+- 2026-10-18T10:58:30Z pid=86007 CHECK load=8.14 processes= waited=60s
+- 2026-10-18T10:58:30Z pid=86007 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792321110 load_before=8.14 contended=true waited=61s
+- 2026-10-18T10:58:31Z pid=86007 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792321110 end=1792321111 elapsed=1 load_before=8.14 load_after=8.14 contended=true exit=75
+<!-- art-p12-last-release 1792321111 -->
+- 2026-10-18T10:59:31Z pid=1315 WAIT_START owner=codex-art-pass12 purpose=pair-declump-kernel-W500 hold_limit=3600
+- 2026-10-18T10:59:31Z pid=1315 CHECK load=6.90 processes= 1313  1311 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=0s
+- 2026-10-18T10:59:31Z pid=1315 WAIT_BUSY next_poll=30s
+- 2026-10-18T11:00:01Z pid=1315 CHECK load=6.57 processes= waited=30s
+- 2026-10-18T11:00:01Z pid=1315 WAIT_BUSY next_poll=30s
+- 2026-10-18T11:00:31Z pid=1315 CHECK load=6.14 processes= waited=60s
+- 2026-10-18T11:00:31Z pid=1315 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W500 start=1792321231 load_before=6.14 contended=true waited=60s
+- 2026-10-18T11:00:33Z pid=1315 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W500 start=1792321231 end=1792321233 elapsed=2 load_before=6.14 load_after=6.14 contended=true exit=75
+<!-- art-p12-last-release 1792321233 -->
+- 2026-10-18T11:00:33Z pid=7785 WAIT_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 hold_limit=3600
+- 2026-10-18T11:00:33Z pid=7785 CHECK load=6.14 processes= waited=0s
+- 2026-10-18T11:00:33Z pid=7785 WAIT_BUSY next_poll=30s
+- 2026-10-18T11:01:03Z pid=7785 CHECK load=5.11 processes= waited=30s
+- 2026-10-18T11:01:03Z pid=7785 HOLD_START owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792321263 load_before=5.11 contended=false waited=30s
+- 2026-10-18T11:01:04Z pid=7785 HOLD_END owner=codex-art-pass12 purpose=pair-declump-kernel-W200 start=1792321263 end=1792321264 elapsed=1 load_before=5.11 load_after=4.86 contended=false exit=75
+<!-- art-p12-last-release 1792321264 -->

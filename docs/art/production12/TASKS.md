@@ -7,8 +7,8 @@ Deadlines: Part 0 12:02Z; Part 1 15:32Z; Part 4 starts by 18:32Z; 12-hour rule 2
 | Part | State | Start UTC | End UTC | Evidence |
 |---|---|---|---|---|
 | 0 merge, contract, release baseline and running diagnosis | complete; measurements NOT_VERIFIED(contended) | 2026-10-18T09:32:00Z | 2026-10-18T10:32:55.172844+00:00 | full gate88/88; exact controls; admission-index |
-| 1 structural frame budget candidates | in progress | 2026-10-18T10:34:37.871766+00:00 | | kernel numeric probe, pure Rust and adapter/fixture lanes |
-| 2 names, life, crowds and input/blind tests | pending | | | |
+| 1 structural frame budget candidates | complete attempt; speed NOT_VERIFIED(contended), default off | 2026-10-18T10:34:37.871766+00:00 | 2026-10-18T11:03:58.842474+00:00 | 4000 exact fixture records; six framings/four running cases PASS; six invalid admissions |
+| 2 names, life, crowds and input/blind tests | in progress | 2026-10-18T11:03:58.842474+00:00 | | sidebranch UI edits now integrating; 10 focused tests PASS, visual/input pending |
 | 3 porters, relations and chronicle | pending | | | |
 | 4 frozen after measurements H1–H10 | pending | | | |
 | 5 independent review, full gate, publication/report | pending | | | |
