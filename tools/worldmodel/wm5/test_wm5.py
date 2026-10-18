@@ -312,5 +312,158 @@ class TestRounding(unittest.TestCase):
         self.assertEqual(r["deaths"]["30d"], 1.0)         # round(3.2 + 0.6) − round(3.2) = 4 − 3
 
 
+# ------------------------------------------------------------------ floors, baselines, regressions (7.1–7.3) --------
+def synth_confounded(n: int, seed: int = 0, h: int = 4, tau: float = 1.0, delta: float = 4.0, gamma: float = 6.0):
+    """A multi-cast confounded policy with a known regime effect, for GOAL.md 7.2's estimators. One risk-set row c0 per
+    world (rows c0 … c0 + h − 1 are decision rows, the last row is c0 + h). At c0 a prognostic state z (+γ in the
+    outcome) raises the gift probability (0.4 vs 0.05): `naive` is confounded. A gift adds τ and sends half the worlds
+    into a regime with +δ and a later cast hazard of 0.5 per row (the other half: none), so the treated who survive
+    (c0, c0 + h) without another cast are mostly the low regime: only the post-cast survival factor restores them.
+    True effects: gift τ + δ / 2, spoil −1. Every third world has an earlier cast in its history (allowed)."""
+    from wm5 import effects5 as e5
+    rng = np.random.default_rng(seed)
+    c0 = 5
+    rows, last = tuple(range(c0, c0 + h)), c0 + h
+    ws = []
+    for i in range(n):
+        z = rng.random() < 0.5
+        probs = {c0: (0.4 if z else 0.05, 0.05, 0.05)}
+        casts = {2: "rw120"} if i % 3 == 0 else {}
+        u, p = rng.random(), probs[c0]
+        a = "gf240" if u < p[0] else "sp240" if u < p[0] + p[1] else "rw120" if u < sum(p) else None
+        high = False
+        if a:
+            casts[c0] = a
+        if a == "gf240":
+            high = rng.random() < 0.5
+        y_end = gamma * z + rng.normal(0, 1) + (tau + delta * high if a == "gf240" else 0.0) + (-1.0 if a == "sp240" else 0.0)
+        for j in rows[1:]:
+            probs[j] = (0.25, 0.25, 0.0) if high else (0.0, 0.0, 0.0) if a == "gf240" else (0.02, 0.02, 0.02)
+            q, u = probs[j], rng.random()
+            b = "gf240" if u < q[0] else "sp240" if u < q[0] + q[1] else "rw120" if u < sum(q) else None
+            if b:
+                casts[j] = b
+                y_end += 50.0                              # a later cast: such units must leave both sets
+        y, zero = np.zeros(last + 1), np.zeros(last + 1)
+        y[last] = y_end
+        ws.append(e5.World5(i, {"food_stock": y, "alive": zero, "deaths": zero, "settlements_alive": zero},
+                            np.zeros((last + 1, 8)), casts, probs))
+    return ws, rows, last
+
+
+class TestBaselines5(unittest.TestCase):
+    def estimates(self, survival=True):
+        from wm5 import effects5 as e5
+        ws, rows, last = synth_confounded(20000, 0)
+        t, c = e5.stack(ws, 4, decision_rows=rows, last_row=last, survival=survival)
+        allc = [u for us in c.values() for u in us]
+        est = lambda a, wt: e5.wmean(t[a], "food_stock", wt) - e5.wmean(allc, "food_stock", wt)
+        return est, t, allc
+
+    def test_ipw_unbiased_naive_biased(self):
+        est, t, allc = self.estimates()
+        self.assertLess(abs(est("gf240", True) - 3.0), 0.4)
+        self.assertLess(abs(est("sp240", True) + 1.0), 0.4)
+        self.assertGreater(abs(est("gf240", False) - 3.0), 1.0)
+        self.assertTrue(all(u.dy["food_stock"] < 40 for u in t["gf240"] + allc))   # later casts excluded
+
+    def test_dropping_the_survival_factor_biases_ipw(self):
+        est, _, _ = self.estimates(survival=False)
+        self.assertGreater(abs(est("gf240", True) - 3.0), 1.0)
+
+    def test_weights_by_hand(self):
+        from wm5 import effects5 as e5
+        T = 20
+        z = np.zeros(T + 1)
+        w = e5.World5(1, {"food_stock": np.arange(T + 1.0), "alive": z, "deaths": z, "settlements_alive": z},
+                      np.zeros((T + 1, 8)), {4: "gf240", 12: "sp240"},
+                      {2: (0.1, 0.1, 0.1), 4: (0.2, 0.05, 0.05), 6: (0.0, 0.0, 0.0), 8: (0.1, 0.1, 0.0),
+                       10: (0.05, 0.05, 0.0), 12: (0.1, 0.2, 0.1)})
+        t, c = e5.stack([w], 6, decision_rows=(2, 4, 6, 8, 10, 12), last_row=T)
+        # treated at 4 (h = 6): rows 6, 8 in (4, 10): p_tot 0 and 0.2 -> 1 / (0.2 * 1.0 * 0.8)
+        self.assertEqual([u.row for u in t["gf240"]], [4])
+        self.assertAlmostEqual(t["gf240"][0].weight, 1 / (0.2 * 0.8))
+        self.assertEqual(t["gf240"][0].dy["food_stock"], 6.0)
+        # controls: row 2 has the cast at 4 in [2, 8): out; row 6 is refractory (p 0): not at risk; row 8: rows 8, 10
+        # in [8, 14) have no cast but 12 does -> out; row 10: the cast at 12 -> out
+        self.assertEqual(sorted(c), [])
+        t, c = e5.stack([w], 2, decision_rows=(2, 4, 6, 8, 10, 12), last_row=T)
+        self.assertEqual(sorted(c), [2, 8, 10])
+        self.assertAlmostEqual(c[8][0].weight, 1 / 0.8)
+        # the treated at 12 has an earlier cast (4) in its history: allowed
+        self.assertEqual([u.row for u in t["sp240"]], [12])
+        self.assertAlmostEqual(t["sp240"][0].weight, 1 / 0.2)
+
+
+def fake_case(seed, arm, rep, truth7, truth30=0.0):
+    from wm2 import effects as ef
+    tr = {o: {"7d": truth7, "30d": truth30} for o in ("food_stock", "alive", "deaths", "settlements_alive")}
+    return ef.Case(seed, arm, rep, "test", 600, 10, tr, 0.0, (False, False), None)
+
+
+class TestFloor(unittest.TestCase):
+    def test_other_replicate_truth(self):
+        from wm5 import effects5 as e5
+        cases = [fake_case(1, "gf240E", e5.rep_code("c1", 0), 5.0), fake_case(1, "gf240E", e5.rep_code("c1", 1), 7.0),
+                 fake_case(1, "gf240E", e5.rep_code("c2", 0), -2.0), fake_case(1, "gf240E", e5.rep_code("c2", 1), 1.0),
+                 fake_case(2, "sp240L", 0, 3.0)]
+        fl = e5.floor_predictions(cases)
+        self.assertEqual(fl["1:gf240E:0"]["effects"]["food_stock"]["7d"], 7.0)
+        self.assertEqual(fl["1:gf240E:1"]["effects"]["food_stock"]["7d"], 5.0)
+        self.assertEqual(fl["1:gf240E:2"]["effects"]["alive"]["7d"], 1.0)
+        self.assertNotIn("2:sp240L:0", fl)                 # no other replicate: no floor prediction
+        self.assertEqual((e5.ref_of(3), e5.other_rep(2)), (("c2", 1), 3))
+
+
+class TestRidge(unittest.TestCase):
+    def test_recovers_a_planted_linear_effect(self):
+        from wm5 import effects5 as e5
+        rng = np.random.default_rng(0)
+        X = rng.normal(3, 2, (400, 6))
+        w = np.array([1.5, -2.0, 0.0, 0.5, 0.0, 0.0])
+        y = X @ w + 4.0 + rng.normal(0, 0.01, 400)
+        m, s = e5.norm_stats(X)
+        r = e5.Ridge(0.01).fit(X, y, m, s)
+        Xt = rng.normal(3, 2, (50, 6))
+        self.assertLess(np.max(np.abs(r.predict(Xt) - (Xt @ w + 4.0))), 0.05)
+        self.assertLess(np.max(np.abs(r.w / s - w)), 0.01)
+
+    def test_lambda_chosen_on_val(self):
+        from wm5 import effects5 as e5
+        rng = np.random.default_rng(1)
+        tr = [fake_case(i, "gf240E", 0, 0.0) for i in range(60)]
+        va = [fake_case(100 + i, "gf240E", 0, 0.0) for i in range(30)]
+        X = {x.key: rng.normal(0, 1, 5) for x in tr + va}
+        for x in tr + va:                                   # pure noise targets: heavy shrinkage wins
+            x.truth["food_stock"]["7d"] = float(rng.normal())
+        cell = ("gf240E", "food_stock", "7d")
+        fits = e5.fit_cells(tr, va, X, X, {cell: 2.0}, [cell])
+        self.assertGreaterEqual(fits[cell]["lambda"], 100.0)
+        for x in tr + va:                                   # a strong linear signal: little shrinkage wins
+            x.truth["food_stock"]["7d"] = float(X[x.key] @ np.array([3.0, -2.0, 1.0, 0.0, 0.5]))
+        fits = e5.fit_cells(tr, va, X, X, {cell: 2.0}, [cell])
+        self.assertLessEqual(fits[cell]["lambda"], 1.0)
+        pred = e5.ridge_predict(fits, va[:3], X)
+        for x in va[:3]:
+            self.assertAlmostEqual(pred[x.key]["effects"]["food_stock"]["7d"], x.truth["food_stock"]["7d"], delta=0.2)
+
+    def test_observable_features_have_no_hidden_field(self):
+        from wm1 import data as d
+        from wm2 import v2
+        from wm4 import tokens  # noqa: F401
+        from wm5 import effects5 as e5
+        from wm4.test_wm4 import VARIANT
+        st = VARIANT.state_names
+        cal = tuple(VARIANT.input_names()[len(st): len(st) + 30])
+        names = e5.obs_feature_names(st, cal)
+        self.assertEqual(len(names), 37 * 3 + 30 + 4)
+        hidden = set(v2.HIDDEN_FIELDS) | set(d.HIDDEN_V2) | set(e5.HIDDEN_GLOBAL) | set(e5.HIDDEN_SETTLEMENT)
+        base = lambda n: n.split("@")[0].split(".", 1)[-1]
+        self.assertFalse([n for n in names if base(n) in hidden or n.startswith("hidden")])
+        priv = e5.priv_feature_names(("berry_bushes", "climate"))
+        self.assertTrue(all(n.startswith("hidden.") for n in priv))
+        self.assertEqual(len(priv), 3 + 7 + 6 + 2)
+
+
 if __name__ == "__main__":
     unittest.main()
