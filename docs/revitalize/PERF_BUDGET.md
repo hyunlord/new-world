@@ -188,3 +188,16 @@ To see where a tick's time goes, build `worldsim_perf` with `--features subprofi
 **Scale (Part 3, findings only).** `game_v24` single-camp stress worlds, two days, three repeats: mean tick 0.394 / 0.856 / 1.981 ms at 500 / 1,000 / 2,000 (2,000 on 128²: 1.955 ms), whole-tick slope 1.17, decision system 72 % of the 2,000 tick (slope 1.24), half of it the pre-loop maps. Peak memory footprint 8.4 / 11.4 / 16.5 MB. At 2× (the UI's fastest, 60 ticks/s) 2,000 people cost 12 % of one core. See [SCALE.md](SCALE.md).
 
 **For later passes:** compare against `game_v24` on the same build in the same hold, with five repeats; the mean target lies in the v21–v23 additions (attribute them with `subprofile` first) and the decision system's pre-loop maps.
+
+## Pass 20 — village relations (`game_v25`); the baseline moves to `game_v24` (new references)
+
+**Baseline (brief 4.5, the owner's decision of 2026-10-16).** From this pass later scenes are judged against **`game_v24`** — the routine's cost added by `game_v21` (Pass 18/19's mean regression against `game_v20`) is accepted. Same bars (mean ≤ +15 %, p99.9 ≤ +35 %, mean ≤ 4.0 ms, `AgentDecisionSystem` three-size slope < 1.7) and Pass 19's five-repeat stress procedure, plus a **natural multi-village** measurement: the stress world is one camp that never splits, so it cannot see the cost of porters, disputes or several villages. Natural: `worldsim_perf natural --days 120` on the four lowest evaluation seeds with ≥ 2 villages alive at day 60 in `game_v25` (19400, 19401, 19404, 19407), `game_v24` then `game_v25` per seed, three interleaved repeats, inside the quiet lock: per repeat the mean tick over the four worlds (sum of steady tick time ÷ steady ticks) and the mean of their p99.9, ratio of the medians over repeats ≤ 1.15 (mean) and ≤ 1.35 (p99.9); ms per agent-tick reported because populations differ. Runner `tools/revitalize/perf_p20.sh`, evaluator `evaluate_perf_p20.py`; one uncontended hold 12:15:33–12:31:05 KST (932 s, load 3.48). [t6](perf/p20-2/t6.md).
+
+| rules (Part 2 build `3562a9d4`) | stress mean (median of 5) | stress p99.9 | natural mean tick (median of 3) | natural p99.9 | ms / agent-tick |
+|---|---:|---:|---:|---:|---:|
+| `game_v24` | 0.3681 ms | 0.781 ms | 0.2156 ms | 0.468 ms | 0.003739 |
+| `game_v25` | 0.3778 ms | 0.797 ms | 0.2252 ms | 0.486 ms | 0.003903 |
+
+**T6: PASS** — stress mean +2.65 %, p99.9 +2.05 %, 0.378 ms ≤ 4.0, decision slope 0.979 (v24 0.983); natural mean ×1.045 (repeats ×1.050 / ×1.045 / ×1.048), p99.9 ×1.037. `RelationsSystem` itself is 0.02–0.03 % of the natural tick; the rest of the +4.5 % was not attributed (candidates: the decision system's per-tick dispute snapshot, one extra query over the agents, and the changed behaviour — porters walking, foragers re-choosing bushes; 19401, where no relation acted, has an identical fingerprint in both rules). `quick`: base 0.3032 ms, final 0.3071 ms, same fingerprint.
+
+**For later passes:** compare against `game_v24` (or the newest scene before yours) on the same build in the same hold, five stress repeats and the natural multi-village set; pick the natural seeds from your own evaluation run before measuring.
