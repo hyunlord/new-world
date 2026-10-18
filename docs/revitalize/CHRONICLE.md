@@ -43,6 +43,8 @@ Order: entries of one site are appended in `AgentId` order (then `SettlementId`)
 
 Kinds 17–21 (Pass 20) are written only under the relations rule (`game_v25`); 0–16 are unchanged. One `PorterDeparted` and at most one `PorterDelivered` per porter (a porter who dies or whose village dissolves on the way has none; its load is booked lost). Forage disputes are counted (`Tallies::forage_disputes`), not chronicled. See [RELATIONS.md](RELATIONS.md).
 
+Pass 21 (`game_v26`): **kinds unchanged** (0–21; no new kind). Kinds 17–21 are written under every relations rule (`game_v25` and `game_v26`). What changes is how often they appear: **`VillagesReconciled` now occurs** (8 in the 32 evaluation worlds on 19600–19631 and 13 on 19400–19431, against 0 in Pass 20), usually 10–15 days after the pair's `VillagesEstranged`; `Quarrel` entries are at most one per village pair and display day (the daily quarrel cap; a dispute past the cap is not a quarrel and writes nothing — disputes are never chronicled). The measurement-only dispute log is not part of the chronicle: `--chronicle-out` writes it beside it as `relations_<seed>.json`.
+
 ### Why each cause
 
 - **Born cause** tells a couple's child (both partners chose each other) from a fallback birth (no couple: the two lowest member ids are recorded as parents, Pass 17's legacy chain).
