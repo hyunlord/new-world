@@ -9,9 +9,9 @@ Deadlines: Part 0 12:02Z; Part 1 15:32Z; Part 4 starts by 18:32Z; 12-hour rule 2
 | 0 merge, contract, release baseline and running diagnosis | complete; measurements NOT_VERIFIED(contended) | 2026-10-18T09:32:00Z | 2026-10-18T10:32:55.172844+00:00 | full gate88/88; exact controls; admission-index |
 | 1 structural frame budget candidates | complete attempt; speed NOT_VERIFIED(contended), default off | 2026-10-18T10:34:37.871766+00:00 | 2026-10-18T11:03:58.842474+00:00 | 4000 exact fixture records; six framings/four running cases PASS; six invalid admissions |
 | 2 names, life, crowds and input/blind tests | complete implementation/attempt; H8 FAIL, live Life reading follows Part3 | 2026-10-18T11:03:58.842474+00:00 | 2026-10-18T11:20:04.857372+00:00 | windowed input13PASS; font/layoutPASS; activity3/10 plus4missing; crowdgeometry3PASS |
-| 3 porters, relations and chronicle | implementation/capture complete; fresh blind reading pending evidence on frozen build | 2026-10-18T11:20:04.857372+00:00 | 2026-10-18T11:47:23.770552+00:00 | attempt2 six cases exit0; 140 native images; corrected target26PASS |
+| 3 porters, relations and chronicle | complete attempt; H9 FAIL12 wrong assertions, crowd3/3PASS | 2026-10-18T11:20:04.857372+00:00 | 2026-10-18T11:47:23.770552+00:00 | attempt2 six cases exit0; 140 native images; corrected target26PASS |
 | 4 frozen after measurements H1–H10 | complete attempts; H1–6 NOT_VERIFIED(contended), H8 FAIL | 2026-10-18T11:47:23.770552+00:00 | 2026-10-18T11:50:41.582635+00:00 | frozen pushed c08076dd;21admissions rejected; no further code changes |
-| 5 independent review, full gate, publication/report | in progress | 2026-10-18T11:50:41.582635+00:00 | | round2review andfreshreading; finalgate next |
+| 5 independent review, full gate, publication/report | verification/report complete; publication receipt records final close | 2026-10-18T11:50:41.582635+00:00 | 2026-10-18T12:08:45.712139+00:00 | gate102/102exit0; finalreview boundedACCEPT, H8/H9FAIL; publication-receipt.json records final network/cleanup close |
 
 ## Part 0 checkpoints
 
