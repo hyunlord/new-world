@@ -145,6 +145,10 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "trips": len(trips), "failed": sum(r[FAILED] for r in trips), "lost_loads": sum(1 for r in trips if r[LOST] > 0),
             "causes": dict(Counter(r[CAUSE] for r in trips)),
             "pairs_end": block["pairs_end"],
+            # Brief 9 (reported): relations exist exactly for the living pairs
+            # (villages alive at the end), values within -1,000..=1,000.
+            "pairs_invariant": len(block["pairs_end"]) == (alive[-1] * (alive[-1] - 1) // 2 if alive else 0)
+                and all(-1000 <= p[2] <= 1000 for p in block["pairs_end"]),
             "daughter_deaths_v25": vc["daughter_deaths"], "daughter_deaths_v24": vb["daughter_deaths"],
             "alive_daughters_v25": vc["alive_daughters_at_day"], "alive_daughters_v24": vb["alive_daughters_at_day"],
             "received": sorted(received), "regions_v25": {str(k): v for k, v in vc["region"].items()},
@@ -206,6 +210,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     t7 = {"worlds_with_mismatch": t7_bad, "unbalanced_trips": sum(w["unbalanced_trips"] for w in worlds),
         "trips_with_village_change": sum(w["trips_with_village_change"] for w in worlds),
         "in_flight_units_end": sum(w["in_flight_units"] for w in worlds),
+        "pairs_invariant_worlds": sum(1 for w in worlds if w["pairs_invariant"]),
         "totals": {k: [sum(w["t7"][k][0] for w in worlds), sum(w["t7"][k][1] for w in worlds)] for k in worlds[0]["t7"]} if worlds else {},
         "verdict": "PASS" if not t7_bad else "FAIL"}
     return {"seeds": seeds, "worlds": worlds, "T1": t1, "T2": t2, "T3": t3, "T7": t7}
@@ -271,7 +276,8 @@ def markdown(report: Mapping[str, Any]) -> str:
     lines += ["", "## T7 totals (tally, ledger or chronicle)", ""]
     for key, (a, b) in t7["totals"].items():
         lines.append(f"- {key}: {a} / {b}")
-    lines += [f"- units in flight at day 120: {t7['in_flight_units_end']}", "",
+    lines += [f"- units in flight at day 120: {t7['in_flight_units_end']}",
+        f"- (brief 9, reported) worlds whose relations are exactly the living pairs with values in range: {t7['pairs_invariant_worlds']} of {len(report['worlds'])}", "",
         "T5 (identity) and T6 (performance) are judged outside this script.", ""]
     return "\n".join(lines)
 

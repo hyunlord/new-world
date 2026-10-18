@@ -1,6 +1,6 @@
 # Villages that help and villages that quarrel (Pass 20, `game_v25`)
 
-Until Pass 19 a world's one to three villages — a camp and the daughters its splits founded 22–28 tiles away — were kin but never met: nobody carried anything to another village and nothing recorded how villages felt about each other. They touched in one place only: a daughter's foragers can reach some of their parent's bushes, and bush claims are world-wide. `game_v25` = `game_v24` + `SocietyRules::relations` (`RelationsRule`, `WorldRules::V25_RELATIONS`). Every earlier scene has `relations: None` and is bit-identical (identity I1–I8, all pins). The live game starts in `game_v25`.
+Until Pass 19 a world's one to three villages — a camp and the daughters its splits founded 22–28 tiles away — were kin but never met: nobody carried anything to another village and nothing recorded how villages felt about each other. They touched in one place only: a daughter's foragers can reach some of their parent's bushes, and bush claims are world-wide. `game_v25` = `game_v24` + `SocietyRules::relations` (`RelationsRule`, `WorldRules::V25_RELATIONS`). Every earlier scene has `relations: None` and is unchanged: identity I1–I8 (probe summaries, the recorder's arrays, all pins) is identical on the Part 1 and final builds, and the `--chronicle-out` files are identical in content (their header's kind list grows from 17 to 22 names). The live game starts in `game_v25`.
 
 Fights, raids and deaths between villages are not part of v1.
 
@@ -51,9 +51,9 @@ Before the decision loop each tick, the system notes every forager at a bush (pi
 ## What the player sees
 
 - Someone walks out of a village at 08:00 with a load and comes back in the afternoon; the poorer village's store grows (food), or its woodpile (wood).
-- Two villages whose foragers keep meeting at the same bushes quarrel; when it gets bad they stop sending anything and keep to their own side of the land between them, until time heals it.
+- Two villages whose foragers keep meeting at the same bushes quarrel; when it gets bad (relation ≤ −300) they stop sending anything and their foraging trips keep to their own side of the land between them, until the relation climbs back to −150. **In the evaluated worlds this did not separate them:** the opportunistic pick-up of food within 8 tiles ignores the border, most quarrels came after the estrangement, the relation stayed near −1,000, and no pair reconciled (from −1,000 the drift alone needs 114 days to reach −150). See *Measured*.
 - The chronicle (C key) gets `PorterDeparted`, `PorterDelivered`, `Quarrel`, `VillagesEstranged` and `VillagesReconciled` entries ([CHRONICLE.md](CHRONICLE.md), kinds 17–21). Their wording and the porter's look are the next art pass's.
-- The bridge: `get_settlement_relations()` → `{a, b, value, estranged, base}` in key order; `get_porter_snapshot()` → `{ids (entity bits), from, to, kind (0 food / 1 wood), amount, stage (0 out / 1 back)}` by AgentId. Until the art line reads it, a porter shows in the existing snapshots as `Seeking { Agent(itself) }`.
+- The bridge: `get_settlement_relations()` → `{a, b, value, estranged, base}` in key order; `get_porter_snapshot()` → `{ids (entity bits), from, to, kind (0 food / 1 wood), amount, stage (0 out / 1 back)}` by AgentId. Until the art line reads it, a porter shows in the existing snapshots as `Seeking { Agent(itself) }`. `amount` is the load taken at departure: on the way back (`stage` 1) after a delivery the porter's hands are empty, so draw the load only while `stage` is 0 (or after a turn-back, when the load comes home).
 
 ## Measured (Pass 20)
 

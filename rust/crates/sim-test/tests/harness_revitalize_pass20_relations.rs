@@ -736,6 +736,31 @@ fn harness_relations_pair_key_and_estranged_lookup() {
 }
 
 #[test]
+fn harness_relations_trips_and_quarrels_are_deterministic() {
+    // Review round 1, m6: a twin over the relations code itself — porters
+    // walking out and back, a forced dispute — compared field by field.
+    let run = || {
+        let (mut engine, _) = two_villages([(100, 0), (10, 0)], &residents());
+        let start = decision(1);
+        walk(&mut engine, start - 1..start + 700);
+        let (mut quarrel, a, b) = dispute_world(1000, 0);
+        let tick = tick_where(&quarrel, a, true, 500);
+        *quarrel.world.get::<&mut Position>(b).expect("pos") = Position::new(33, 30);
+        decide_at(&mut quarrel, tick);
+        let positions: Vec<(AgentId, u32, u32)> = {
+            let mut rows: Vec<_> = engine.world.query::<(&Agent, &Position)>().iter().map(|(_, (a, p))| (a.id, p.x, p.y)).collect();
+            rows.sort_unstable();
+            rows
+        };
+        (engine.resources.settlement_relations.clone(), engine.resources.chronicle.clone(), engine.resources.tallies,
+            positions, quarrel.resources.settlement_relations.clone(), quarrel.resources.chronicle.clone())
+    };
+    let (first, second) = (run(), run());
+    assert!(first.0.trips.len() == 2 && first.4.pairs[&(1, 2)].value < 300, "the twin exercises trips and a quarrel");
+    assert_eq!(first, second);
+}
+
+#[test]
 fn harness_relations_game_v25_is_deterministic() {
     // Two engines of one seed agree on the fingerprint, the relations and
     // the chronicle at every day boundary.

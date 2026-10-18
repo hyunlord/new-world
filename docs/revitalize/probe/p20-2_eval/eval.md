@@ -71,5 +71,6 @@ Trips 38, porters 71, delivered food 634, wood 34, turned back 0, loads lost 0 (
 - returned_units: 0 / 0
 - lost_units: 0 / 0
 - units in flight at day 120: 0
+- (brief 9, reported) worlds whose relations are exactly the living pairs with values in range: 32 of 32
 
 T5 (identity) and T6 (performance) are judged outside this script.

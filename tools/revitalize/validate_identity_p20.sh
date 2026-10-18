@@ -38,7 +38,7 @@ for name in names:
             sys.exit(f'{name}: {key} differs')
 print(f'{len(names)} files equal (entries, people and every field but git_sha; kinds {len(a["kinds"])} -> {len(b["kinds"])} names)')
 PY
-); then
+2>&1); then
         echo "$label chronicles: PASS: $line"
     else
         echo "$label chronicles: FAIL: $line"; status=1
