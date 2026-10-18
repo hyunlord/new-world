@@ -11,3 +11,8 @@ pauses.
 | 1 (6.2.2) | 21:24:24 | 21:24:24 | METRICS.md part a committed and pushed (`2a97b4cd`) before any round-1 episode |
 | 4 (cost) | 21:29:44 | 21:35:44 | `_cost_crn_v2` (code `38bea0c5`, 300 s on `v2_v19`, beside round 0, load average 22–27): encoder 0.097 s/step, decoder 0.040 s/step, `val_roll` 0.14 s (80 val episodes, 800 jobs), peak GPU 973 MiB → predicted 3,694 s for the authors' 15,700 + 53,800 steps < 5,400 s: plan not reduced |
 | 4.1 | 21:35:44 | | `crn_v2_s0` started (queue, `--budget 5400`, safety cap 6,750 s) |
+| 3 | 21:39:47 | 21:39:47 | METRICS.md part b committed and pushed (`6e9e88ed`); `find` under `wm1-runs/wm5/` (outside `_code/`): no `effects*.json`, `obs2_base.json`, `ridge_*.json`, `floor*.json`, `rescored*.json`; `_setup/prereg_sha` = `6e9e88ed` |
+| 4.5 (D2) | 21:40:41 | 21:42:15 | `finals_rescore` (`finals5.sh rescore`, code `6e9e88ed`): WM-4's eight CRN / CT runs re-scored with rounding on their WM-4 test splits (3–35 s each); unrounded readouts equal WM-4's committed predictions (≤ 9e-16) except `ct_obs_s1` (GPU float nondeterminism, max 0.30; DECISIONS L4.2) |
+| 6 | 21:47 | | references: a `general-purpose` subagent verified 28 entries on the web (22:05); `references.bib`, `REFERENCES_CHECK.md` |
+| 1 (6.2.1) | | 22:08:39 | round 0: 1,640 episodes, all verified, 2,881 rows (≈ 51 min at 8 workers beside `crn_v2_s0`, load average 10–27) |
+| 1 (6.2.3) | 22:08:43 | | `obs2_pipeline.sh` (code `e875e413`, 4 workers): round 1 schedules (1,640 worlds read, 1,587 with a first act: 552 `gf240`, 702 `sp240`, 333 `rw120`), recording |
