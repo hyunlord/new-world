@@ -175,6 +175,7 @@
  "U4_health": {},
  "U4_verdict": "SKIPPED",
  "U7": {
+  "chronicle": "not evaluated",
   "in_flight_units_end": 0,
   "pairs_invariant_worlds": 32,
   "totals": {
@@ -245,7 +246,7 @@
   },
   "trips_with_village_change": 0,
   "unbalanced_trips": 0,
-  "verdict": "PASS",
+  "verdict": "PENDING",
   "worlds_with_mismatch": {}
  },
  "schema_version": 21,

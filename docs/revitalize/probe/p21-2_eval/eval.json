@@ -384,6 +384,7 @@
  },
  "U4_verdict": "FAIL",
  "U7": {
+  "chronicle": "C1 PASS, C2 PASS, C3 PASS, C4 PASS",
   "in_flight_units_end": 0,
   "pairs_invariant_worlds": 32,
   "totals": {

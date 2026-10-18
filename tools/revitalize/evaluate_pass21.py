@@ -132,8 +132,9 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                     chronicle(args.v24_chronicle, s), relations_log(args.v26_chronicle, s), day_tick) for s in seeds]
     multi = [w for w in worlds if w["multi_village"]]
     # U1.
-    porters = sum(w["porters"] for w in worlds)
-    failed = sum(w["failed"] for w in worlds)
+    # METRICS: failed share = porters turned back / porters departed (tallies).
+    porters = sum(w["tallies"]["porters_departed"] for w in worlds)
+    failed = sum(w["tallies"]["porter_turnbacks"] for w in worlds)
     u1_share = share([w["delivered_trips"] > 0 for w in multi])
     fail_share = failed / porters if porters else None
     u1 = {"multi_village_worlds": len(multi), "delivering_worlds": sum(1 for w in multi if w["delivered_trips"] > 0),
@@ -253,7 +254,7 @@ def markdown(report: Mapping[str, Any]) -> str:
         f"| U4 | daughter non-old-age deaths per multi-village world v26 − v24 ≤ 0 | {fmt(d24['metric'])} ({d24['v26']:.0f} vs {d24['v24']:.0f}) | {'PASS' if d24['ok'] else 'FAIL'} |",
         f"| U4 | the same against game_v25 | {fmt(d25['metric'])} ({d25['v26']:.0f} vs {d25['v25']:.0f}) | {'PASS' if d25['ok'] else 'FAIL'} |",
         f"| U4 | daughters alive at day 118 ≥ game_v24 | {alive['v26']} vs {alive['v24']} (game_v25 {alive['v25']}) | {'PASS' if alive['v26'] >= alive['v24'] else 'FAIL'} |",
-        f"| U7 | Pass 20's T7 on game_v26 + reconciliations = chronicle + costed + uncosted = disputes | mismatched worlds {len(u7['worlds_with_mismatch'])}, unbalanced trips {u7['unbalanced_trips']}, village changes {u7['trips_with_village_change']} | {u7['verdict']} (C1–C4: chronicle.md) |",
+        f"| U7 | Pass 20's T7 on game_v26 + reconciliations = chronicle + costed + uncosted = disputes; C1–C4 (`evaluate_pass20_chronicle.py`, C4 against run B) | mismatched worlds {len(u7['worlds_with_mismatch'])}, unbalanced trips {u7['unbalanced_trips']}, village changes {u7['trips_with_village_change']}; C1–C4 {u7['chronicle']} | {u7['verdict']} |",
         "", f"U4 overall: {report['U4_verdict']}.", "",
         "## Porters (U1, U2)", "",
         f"Trips {u1['trips']} ({u1['delivered_trips']} delivered), porters {u1['porters']}, food moved {u1['food_moved']}, wood {u1['wood_moved']}, turned back {u1['failed']}, "
@@ -290,9 +291,20 @@ def main(argv: Sequence[str]) -> int:
     parser.add_argument("--out-json", type=Path, required=True)
     parser.add_argument("--seeds", default="19600..19632")
     parser.add_argument("--no-u4", action="store_true", help="skip U4's health half (needs --agent-trace runs)")
+    parser.add_argument("--chronicle-json", type=Path, help="evaluate_pass20_chronicle.py output (C1-C4) for U7")
     args = parser.parse_args(argv)
     report = evaluate(args)
     report["schema_version"] = 21
+    # U7 needs C1-C4 as well; without the chronicle check it stays PENDING.
+    u7 = report["U7"]
+    if args.chronicle_json is None:
+        u7["chronicle"] = "not evaluated"
+        u7["verdict"] = "PENDING" if u7["verdict"] == "PASS" else u7["verdict"]
+    else:
+        verdict = json.loads(args.chronicle_json.read_text())["verdict"]
+        u7["chronicle"] = ", ".join(f"{k} {v}" for k, v in sorted(verdict.items()))
+        if any(verdict.get(k) != "PASS" for k in ("C1", "C2", "C3", "C4")):
+            u7["verdict"] = "FAIL"
     report["U4_health"] = {} if args.no_u4 else u4_health(args, report["seeds"])
     health_ok = bool(report["U4_health"]) and report["U4_health"]["health_ok"] and report["U4_health"]["family_within_0_05"]
     report["U4_verdict"] = "PASS" if health_ok and report["U4_deaths"]["ok"] else ("SKIPPED" if args.no_u4 else "FAIL")

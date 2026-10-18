@@ -101,9 +101,9 @@ The planner modelled a pair with λ disputes a day (0.5–2), a 0.28 quarrel sha
 ### What the player sees now
 
 - Two villages that fall out keep apart: foragers no longer cross to the other side of the line between the hearths, whether foraging on purpose or picking up food on the way. Quarrels between estranged villages fall from 81–89 % of all quarrels (`game_v25`, diagnostic and evaluation seeds) to 10–16 %.
-- Feuds end: in the evaluation 8 of 21 estrangements were reconciled within the 120 days (13 of 22 on Pass 20's seeds), after 10–15 days in 19 of 21 cases (the other two: 29 and 39 days). Pairs estranged at day 120 are mostly in the recovery band (between −300 and −150) — 7 of the 13.
+- Feuds end: in the evaluation 8 of 21 estrangements were reconciled within the 120 days (13 of 22 on Pass 20's seeds); of these 21 reconciliations on both seed sets, 19 came 10–15 days after the estrangement (the other two after 29 and 39 days). Pairs estranged at day 120 are mostly in the recovery band (between −300 and −150) — 7 of the 13.
 - Porters are more frequent and carry more: 13 of 19 multi-village worlds saw a delivery (`game_v25` 11), 89 delivered trips (170 porters, 1,510 food and 157 wood), none turned back.
-- Exchange still never happened: no village had ≥ 4 nights of wood beside a partner short of both wood and food at once.
+- Exchange still never happened. Its condition needs a food sender (≥ 3,000 ‰ food days, < 2 wood nights) beside a wood sender that is itself short of food (≥ 4 wood nights, < 2,000 ‰ food days). Over the 3,550 in-reach ordered pair-days of the evaluation the food-sender side held on 1,072 and the wood-sender side on only 15, never together: villages rich in wood are almost never short of food.
 - The chronicle now contains `VillagesReconciled` entries ([CHRONICLE.md](CHRONICLE.md)).
 
 ### Measured (Pass 21)

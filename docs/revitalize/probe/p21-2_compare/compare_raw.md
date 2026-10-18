@@ -10,7 +10,7 @@ Seeds 19400–19431 (32 worlds), 120 days, paired by seed; Pass 17's definitions
 | U4 | daughter non-old-age deaths per multi-village world v26 − v24 ≤ 0 | 0.316 [0.000, 0.895] (12 vs 6) | FAIL |
 | U4 | the same against game_v25 | -0.737 [-2.264, 0.105] (12 vs 26) | PASS |
 | U4 | daughters alive at day 118 ≥ game_v24 | 24 vs 24 (game_v25 24) | PASS |
-| U7 | Pass 20's T7 on game_v26 + reconciliations = chronicle + costed + uncosted = disputes | mismatched worlds 0, unbalanced trips 0, village changes 0 | PASS (C1–C4: chronicle.md) |
+| U7 | Pass 20's T7 on game_v26 + reconciliations = chronicle + costed + uncosted = disputes; C1–C4 (`evaluate_pass20_chronicle.py`, C4 against run B) | mismatched worlds 0, unbalanced trips 0, village changes 0; C1–C4 not evaluated | PENDING |
 
 U4 overall: SKIPPED.
 
