@@ -1,0 +1,9 @@
+   Compiling sim-core v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-test)
+    Finished `release` profile [optimized] target(s) in 13.06s
+quick_stress_v19_s15100_n500_side64_fed: mean 0.3204 ms p99.9 0.598 ms max 0.893 ms alive 500 wall 0.5 s
+worldsim_perf: 1 run(s) written
+quick mean_ms 0.3203557971014493 p999_ms 0.598 max_ms 0.893

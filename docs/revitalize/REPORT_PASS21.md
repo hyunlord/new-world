@@ -55,8 +55,8 @@ Pass 21은 새 메커니즘 없이 `game_v26` = `game_v25` + 고친 `RelationsRu
 - **p21-1** `0962d91c` Part 1 identity I1-I9 identical to the base; workspace tests 2,351/0/0 — `docs/revitalize/` (1), `docs/revitalize/probe/p21-1_identity/` (4), `docs/revitalize/probe/p21-1_identity/i1_v19/` (2), `docs/revitalize/probe/p21-1_identity/i3_v16/` (2), `docs/revitalize/probe/p21-1_identity/i4_v20/` (2), `docs/revitalize/probe/p21-1_identity/i5_v21/` (2), `docs/revitalize/probe/p21-1_identity/i6_v22/` (2), `docs/revitalize/probe/p21-1_identity/i7_v23/` (2), `docs/revitalize/probe/p21-1_identity/i8_v24/` (2), `docs/revitalize/probe/p21-1_identity/i9_v25/` (2)
 - **p21-3** `01ff3ce1` review round 1 and its fixes; C1-C4 on game_v26 (run B twin) — `docs/revitalize/` (2), `docs/revitalize/probe/p21-2_compare/` (3), `docs/revitalize/probe/p21-2_diag/` (1), `docs/revitalize/probe/p21-2_eval/` (5), `tools/revitalize/` (1)
 - **p21-3** `9be3647f` U5 final-build identity I1-I9 identical to the base; review round 2 and its fixes — `docs/revitalize/` (4), `docs/revitalize/probe/p21-2_diag/` (1), `docs/revitalize/probe/p21-3_final/` (4) and 9 label directories (2 each)
-- **p21-3** (이 보고서 커밋) REPORT_PASS21.md — `docs/revitalize/REPORT_PASS21.md`
-- **p21-3** (다음 기록 커밋) 최종 게이트 기록, 시간, 게시 — `docs/revitalize/`, `docs/revitalize/verification/p21_gate/`
+- **p21-3** `354e4a13` REPORT_PASS21.md (게이트를 거친 커밋, `codex/revitalize-2026-10`) — `docs/revitalize/REPORT_PASS21.md`
+- **p21-3** (이 기록 커밋, 문서 전용) 최종 게이트 기록, 시간, 게시 — `docs/revitalize/` (2), `docs/revitalize/verification/p21_gate/` (19)
 
 ### 측정 결과
 
@@ -157,9 +157,9 @@ Pass 21은 새 메커니즘 없이 `game_v26` = `game_v25` + 고친 `RelationsRu
 | 0 | 2026-10-18 22:21 | 2026-10-19 00:39 | 브리프 `637f63b1`, 핀 `69205067`, 도구 `5c74612f`; 기준 빌드 22:22–22:24; 기준 I1–I9 22:24–00:38(I1–I8 = Pass 20 최종 기록); 기록·푸시 `c0b36ffc` 00:39 |
 | 1 | 2026-10-18 22:25 | 2026-10-19 02:26 | 코드 22:25–22:48(`93c0f0bb`, `b1b1cab2`); 디버그 워크스페이스 테스트 22:48–02:17(2,351 통과 / 0 실패); Part 1 동일성 23:09–02:25(I1–I9 동일); 기록·푸시 `0962d91c` 02:26 |
 | 2 | 2026-10-18 22:48 | 2026-10-19 02:34 | 진단 22:48–23:08(`60e5e855`); 격자 23:08–00:12; G2 고정 `a48e5ec6`·규칙표 등록 `8f681805` 00:17; 평가 00:17–02:33(v26 A·v25 A, v24 A, v26 B, 비교 C); 조용 잠금 00:56:57–01:25:56(1,739초, 경합 없음); 평가 커밋 `ac412643` 02:04; C1–C4 `01ff3ce1` 02:34 |
-| 3 | 2026-10-19 02:04 | (게이트 뒤 기록 커밋에 기입) | 문서 `e2b318af`; 리뷰 1회차 02:05–02:20 → 수정 `01ff3ce1`; 최종 동일성 02:02–04:08; 예비 게이트 02:45–04:09(중단, 기록 안 함); 리뷰 2회차 03:15–03:40; 기록·수정 `9be3647f`; 보고서 커밋; 최종 게이트 (기록 커밋에 기입); 빨리 감기·PR #510·워크트리 제거·기록 커밋 |
+| 3 | 2026-10-19 02:04 | 2026-10-19 06:10 | 문서 `e2b318af`; 리뷰 1회차 02:05–02:20 → 수정 `01ff3ce1`; 최종 동일성 02:02–04:08; 예비 게이트 02:45–04:09(중단, 기록 안 함); 리뷰 2회차 03:15–03:40; 기록·수정 `9be3647f`; 보고서 커밋; 보고서 `354e4a13` 04:10; 최종 게이트 04:10–06:04 녹색; 빨리 감기·PR #510·워크트리 제거 06:05–06:07; 기록 커밋 06:10 |
 
-멈춤 없음, Mac 잠자기 없음. 6시간 점검: Part 1은 시작 4시간 5분 뒤(02:26) 푸시 — 생략 순서에 따라 뺀 것 없음(교환 우선·격자 12구성·비교 모두 실행). 작업 시간 총 (기록 커밋에 기입)(22:21–…, 멈춤 없음).
+멈춤 없음, Mac 잠자기 없음. 6시간 점검: Part 1은 시작 4시간 5분 뒤(02:26) 푸시 — 생략 순서에 따라 뺀 것 없음(교환 우선·격자 12구성·비교 모두 실행). 작업 시간 총 7시간 49분(2026-10-18 22:21 – 2026-10-19 06:10 KST, 멈춤 없음).
 
 ### 확인된 제한사항
 
@@ -172,7 +172,7 @@ Pass 21은 새 메커니즘 없이 `game_v26` = `game_v25` + 고친 `RelationsRu
 
 ### 게이트 결과
 
-최종 게이트(`gate_pass21.sh`, 15단계)는 이 보고서 커밋에서, 실행 중 아무것도 고치거나 커밋하지 않은 채 돌린다. 결과는 게이트가 끝난 뒤 이 절에 채워 문서 전용 기록 커밋으로 남긴다.
+최종 게이트(`gate_pass21.sh`, 15단계)를 보고서 커밋 `354e4a13`에서, 실행 중 아무것도 고치거나 커밋하지 않은 채 돌렸다(2026-10-19 04:10:22–06:04:41 KST, HEAD 불변, 감시기 정지 0초): **녹색, 15/15 exit 0** — debug 2,352 통과 / 0 실패 / 0 무시, release 2,352 / 0 / 0, `cargo clippy --workspace -D warnings`와 `--all-targets` 둘 다 깨끗, 금지 수학 없음, 브리지 빌드, Godot import·strict 검사·smoke(오류 0), Python 250(실패 0), worldmodel 49(24 건너뜀), perf_quick(시간 측정 아님: 평균 0.320 ms), 허용 경로(`6bb092d5` 대비 `rust/`·`tools/revitalize/`·`docs/revitalize/` 밖 변경 없음, 레코더 무변경). 기록: `verification/p21_gate/`. 이어서 `codex/revitalize-2026-10`을 `6e1446b4` → `354e4a13`으로 빨리 감기(ls-remote로 두 브랜치 모두 `354e4a13b21a20b28c65d84fab103c40b5143fa0` 확인), PR #510(초안, 미병합)에 Pass 21 절 추가(이전 절은 바이트 동일), `../new-world-p21-base` 제거. 예비 게이트(`01ff3ce1`, 02:45–04:09)는 디버그 테스트 1,893 통과·0 실패에서 최종 게이트에 기계를 넘기려고 중단했다(증거로 쓰지 않음). WIP에는 게이트를 거친 커밋 뒤에 이 기록 커밋(문서 전용)만 더 있다.
 
 ### 정직한 판단
 
