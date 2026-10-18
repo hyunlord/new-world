@@ -1,0 +1,30 @@
+{
+ "ct": {
+  "alpha_best": 0.005825042422159079,
+  "alpha_last": 0.009999091276128642,
+  "alpha_max": 0.01,
+  "best_step": 1580,
+  "best_val_roll": 1.507777287939088,
+  "epochs": 409,
+  "evals": 15,
+  "planned": 11850,
+  "steps": 11850,
+  "stop": "planned",
+  "val_roll_last": 1.9567604759610633
+ },
+ "reached": {
+  "alpha_fraction_min": 0.9999091276128642,
+  "planned_equal_authors": true,
+  "steps_fraction_min": 1.0,
+  "stop": [
+   "planned"
+  ]
+ },
+ "seconds": 12050.89015007019,
+ "val": {
+  "episodes": 80,
+  "jobs": 800,
+  "sampled": false
+ },
+ "val_roll": 1.9567604759610633
+}

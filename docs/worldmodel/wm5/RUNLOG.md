@@ -31,3 +31,4 @@ pauses.
 | 4.1 | 02:05:46 | 02:54:51 | `crn_v2_s1`: planned 15,700 + 53,800 reached, α 0.9999 α_max, 2,905 s; test effects 02:54:56 / 02:54:59; `ct_v2_s1` started |
 | 1 (6.2.5) | 02:11:30 | 04:01:45 | val families: 400 recorder calls (c1, c2; replicate 0), linked; test families recording |
 | 1 (6.2.6) | 04:02:12 | 04:02:31 | `describe` (`finals5.sh describe`, train worlds + val families only): IPW ESS 396–445 (7 d) and 127–141 (30 d) per act; DATASET_OBS2.md (train / val parts) |
+| 4.1 | 02:54:47 | 06:15:49 | `ct_v2_s1`: 11,850 / 11,850 steps, α 0.99991 α_max, 12,051 s (GPU shared at times); lowest `val_roll` at step 1,580; test effects by the watcher. The four v2 runs are done; `_cost_m1b_obs2` started |
