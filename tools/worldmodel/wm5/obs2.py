@@ -20,7 +20,7 @@ usage (DGX):
   obs2.py fam-jobs --root ROOT --role R                     one line per (ref, seed, fork tick, replicates)
   obs2.py fam-check --root ROOT --out JSON                  prefix, casts, fork, pre = unforked recording
   obs2.py unforked-seeds --root ROOT                         3 sampled test worlds with a non-empty `pre` at c2
-  obs2.py manifest --root ROOT --out obs2_manifest.json
+  obs2.py manifest --root ROOT --out obs2_manifest.json [--observed-only]
 """
 from __future__ import annotations
 
@@ -392,7 +392,7 @@ def entry(root: Path, path: Path, split: str, role: str, schedule_id: str, polic
             "files": {k: {"sha256": v["sha256"]} for k, v in sorted(meta["arrays"].items())}} | extra
 
 
-def build_manifest(root: Path) -> dict:
+def build_manifest(root: Path, observed_only: bool = False) -> dict:
     """`obs2_train` / `obs2_val` / `obs2_test`: the observed episode of every world (its last round's); `obs2fam_<id>`
     (`pre` and the three arms; the `pre` member is the recorder's `none` member, `member_id` `none`, when `pre` is
     empty): the family members of the val and test worlds with `ref` (c1 / c2) and `replicate`. Paths relative to the parent of
@@ -407,7 +407,7 @@ def build_manifest(root: Path) -> dict:
         sched = p2.schedule_rows(w["casts"])
         eps.append(entry(root, root / "observed" / f"{SCENE}_s{seed}_obs", f"obs2_{role}", role,
                          "obs" if w["casts"] else "none", psha, round=w["observed_round"], schedule=sched, ref=None))
-        if role == "train":
+        if role == "train" or observed_only:
             continue
         for ref in REFS:
             c = int(w["refs"][ref])
@@ -426,7 +426,8 @@ def build_manifest(root: Path) -> dict:
     for e in eps:
         cc = counts.setdefault(e["split"], {})
         cc[e["role"]] = cc.get(e["role"], 0) + 1
-    return {"dataset": "worldsim-wm obs2 (WM-5): the sequential multi-cast observational split of game_v19",
+    return {"dataset": "worldsim-wm obs2 (WM-5): the sequential multi-cast observational split of game_v19"
+            + (" — observed episodes only (DECISIONS L1.4)" if observed_only else ""), "observed_only": observed_only,
             "episode_count": len(eps), "git_sha": GIT_SHA, "policy_sha256": psha,
             "roles": {r: [lo, hi - 1] for r, (lo, hi) in ROLES.items()}, "counts_by_split_role": counts,
             "root_note": "paths relative to the parent of WM_DATA_ROOT's obs2/ directory, i.e. WM_DATA_ROOT",
@@ -443,6 +444,8 @@ def main(argv=None) -> int:
         p.add_argument("--out", required=True)
     for name in ("finalize", "fam-schedules", "manifest"):
         p = sub.add_parser(name); p.add_argument("--root", required=True); p.add_argument("--out", required=True)
+        if name == "manifest":
+            p.add_argument("--observed-only", dest="observed_only", action="store_true")
     p = sub.add_parser("fam-check"); p.add_argument("--root", required=True); p.add_argument("--out", required=True)
     p.add_argument("--unforked", default=None)
     p = sub.add_parser("fam-jobs"); p.add_argument("--root", required=True); p.add_argument("--role", required=True)
@@ -468,7 +471,7 @@ def main(argv=None) -> int:
     elif a.cmd == "fam-check":
         out = fam_check(Path(a.root), Path(a.unforked) if a.unforked else None)
     else:
-        out = build_manifest(Path(a.root))
+        out = build_manifest(Path(a.root), a.observed_only)
     out["seconds"] = time.time() - t0
     _write_json(Path(a.out), out)
     print(json.dumps({k: v for k, v in out.items() if k not in ("rows", "worlds", "episodes")})[:3000])
