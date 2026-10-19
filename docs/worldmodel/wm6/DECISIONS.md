@@ -78,7 +78,10 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 
 ## Part 3
 - **L3.1 Pre-registration before any training.** METRICS.md was committed and pushed at 00:59:27 (`f1777fb5`), before
-  the first WM-6 training and before any test feature or output exists; `wm6/_setup/prereg_sha` = `f1777fb5…`.
+  the first WM-6 training and before any test-role output or prepared test feature of a WM-6 model existed;
+  `wm6/_setup/prereg_sha` = `f1777fb5…`. (Review round 1, N12: the first DGX unit-test run, started 00:57:56, built
+  test-world features in memory for `TestWM5Reproduction` — a reproduction of WM-5's committed ridge, not a WM-6 number;
+  nothing was written.)
 - **L2.9 One BLAS thread.** Under the shared DGX's oversubscription (load average 45–75 on 20 cores from other users'
   jobs on 2026-10-20 night), numpy's multi-threaded OpenBLAS stalled: 50 ridge solves of a 800 × 145 design did not
   finish in 120 s with the default thread count and took 0.066 s with one thread (01:28 measurement). Every WM-6 job
@@ -86,7 +89,8 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   is imported and exported by `queue.sh`, `finals6.sh`, `gate.sh`). Results are unaffected beyond float rounding (the
   ridge reproduction tolerance is 1e-6). The first queue run (`ridge_obs_repro`, started 01:18:45 on `dd988bf7`, which
   also rebuilt its row index per case) and the first DGX unit-test run were stopped and restarted on the fixed commit;
-  the stopped run directory is kept under `_aborted/` (it had produced nothing).
+  the stopped run directory is kept under `_aborted/` (correction, review round 1 m6: its process had in fact finished at
+  01:29:59 with complete outputs — `wm5_check` max |Δ| 0.0 — just before it was stopped; those outputs are not used).
 
 ## Part 4
 - **L4.1 Two queues for 2.7 minutes (incident).** The 01:30 restart (L2.9) killed the first queue's `launch.sh`
@@ -95,8 +99,9 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   `mlp_obs_n400_s0`/`s1`, `mlp_priv_n400_s0`) — a breach of "one training job at a time" (GOAL.md 0.3.7). Every run is
   independent and seeded, so no result depends on it; the orphaned queue was killed at 01:33, its last run
   (`mlp_obs_n400_s2`, left without `train.exit`) was moved to `_aborted/` and re-run by the remaining queue. Two
-  checks: `ridge_obs_repro`'s files come from one process (the first queue's attempt was killed; its late `train.exit`
-  line in the queue log, "seconds=2", is the killed process's), and `grid_choice` — which started 2 s before the last
+  checks: `ridge_obs_repro`'s files come from one process (correction, review round 1 m6: the first queue's attempt had
+  finished normally; the orphaned queue then wrote `train.exit` / `train.end` into the new run directory at 01:30:16 —
+  the "seconds=2" log line — and the live queue overwrote both at 01:30:34, so no lasting effect), and `grid_choice` — which started 2 s before the last
   grid run's queue line ended — was recomputed from the eight finished grid runs: identical (`choice.json`). Later
   restarts kill the whole process group (`kill -- -<pgid>`; `launch.sh` starts every job with `setsid`).
 - **L4.2 The grid** (N = 400, seed 0, v2 val 24-cell average): `mlp_obs` width 512 / dropout 0.3 (0.456; the others
@@ -106,8 +111,8 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 ## Part 5 / 6
 - **L5.1 Judge additions after the reading.** `judge6.py` gained a `compute` block (recording and training wall times,
   epoch range, stop reasons) after the first full judge run, so that the paper's compute and Appendix B numbers are
-  traced; no rule, verdict or curve value changed (the rules, curves and reading blocks are byte-identical before and
-  after).
+  traced; no rule, verdict or curve value changed: every top-level block of `judge.json` except `runs` is identical
+  before (`dfe8348c`) and after, and `runs` only gained each run's `eval_obs2.end` time.
 - **L6.1 `figures.py`** (GOAL.md 2): only the number map changed — `SOURCES` gains `j6` (`wm6/runs/judge6/judge.json`)
   and `d6` (`wm6/runs/describe/describe.json`), and the placeholder pattern accepts them; rendering and `check` are
   unchanged. The learning-curve figure is drawn by `wm6/figures6.py`.
@@ -117,3 +122,26 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   room is learnable from the observable state" and give, beside it, the closure, the slow slope (with the flat last
   step), the one-month closure and the hidden-state share. The paper had no conclusion section; one was added
   (Section 7; limitations became Section 8). Section headings carry no internal study names.
+
+## Part 7
+- **L7.1 Review round 1 responses** (REVIEW.md; no BLOCKING, 2 MAJOR, 7 MINOR, 6 NOTE).
+  - M1 (the decisive slope interval resamples test worlds only): the judge gains a post hoc block (`posthoc`: per-seed
+    slopes, leave-one-seed-out slopes, a bootstrap over test worlds and training seeds with `default_rng(1)`, and the
+    learning-curve models against `an5_arm`, `wm3_full` and WM-5's ridge). Paper §5.4 gains a paragraph on it, the
+    limitations and the abstract / introduction mention the seed dependence; WM6.md, REPORT.md and READINESS.md state it.
+    The pre-registered reading is unchanged (the rule is applied as written).
+  - M2: four claims softened or labelled post hoc (the conclusion's "enter but do not finish" now bounded to the models
+    evaluated up to 2,000 worlds; "no lack of signal" post hoc with intervals; "no observable method can use" replaced;
+    "not chaos" post hoc). m4 "consistent with the same population"; m5 "(checked on one world)"; m6 L2.9 / L4.1
+    corrected; m7 limitations no longer call every direct model linear; m8 the last step is "uninformative", not flat; m9
+    "learnable" kept for the pre-registered sense only. N10 in-process vs queue wall time both stated; N11 the GBM round
+    cap disclosed; N12 L3.1 reworded; N13 the commit strings in the datasheet and DATASET_V2X.md; N14 `hestness2017scaling`
+    cited in §5.4; N15 the per-cell mechanism labelled post hoc.
+- **L7.2 The C1 / C2 choice follows METRICS literally** (review round 1, m3). METRICS.md 3 chooses "the one … whose
+  seed-averaged **predictions** have the lower v2 val 12-cell average"; `judge6.py` had chosen on seed-averaged errors.
+  The judge now averages the seeds' val predictions (`average_predictions`) and reports the other choice and its verdict
+  beside it. C1 is unchanged (`mlp_obs` both ways); C2 becomes `seq_obs` (0.4875 vs 0.4881 on val), KEEP (−0.123
+  [−0.154, −0.089]); the other choice (`mlp_obs`) is KEEP too. The reading depends on C1 only and is unchanged.
+- **L7.3 GBM run configs** lack `n_train_worlds` and `train_reps` (GOAL.md 4.4; review round 1, N11). They were not
+  re-run for this: their `n_train_cases` (1,145 / 2,284 / 4,579 / 5,733) equal the counts of replicate-0 W3 cases of the
+  nested worlds (checked by the reviewer against the manifest), and they read the same `load_sets` as the neural runs.

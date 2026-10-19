@@ -1,6 +1,6 @@
 {
  "note": "every quoted result of paper.md: its text, source file and key path (rendered from paper_src.md by tools/worldmodel/wm5/figures.py)",
- "count": 653,
+ "count": 673,
  "numbers": [
   {
    "text": "1,640",
@@ -3199,6 +3199,17 @@
    "placeholder": "{{j6:rules/C1/verdict/ratio#3}}"
   },
   {
+   "text": "seq_obs",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "rules",
+    "C2",
+    "chosen"
+   ],
+   "format": "str",
+   "placeholder": "{{j6:rules/C2/chosen#str}}"
+  },
+  {
    "text": "0.472",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
@@ -3524,6 +3535,72 @@
    "placeholder": "{{j6:rules/C6/seq_priv − seq_obs|30d/ci_diff#ci3}}"
   },
   {
+   "text": "1.560",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "per_cell",
+    "zero",
+    "gf240E|food_stock|7d"
+   ],
+   "format": "3",
+   "placeholder": "{{j6:per_cell/zero/gf240E|food_stock|7d#3}}"
+  },
+  {
+   "text": "0.567",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "per_cell",
+    "mlp_obs_n2000",
+    "gf240E|food_stock|7d"
+   ],
+   "format": "3",
+   "placeholder": "{{j6:per_cell/mlp_obs_n2000/gf240E|food_stock|7d#3}}"
+  },
+  {
+   "text": "0.843",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "per_cell",
+    "mlp_obs_n2000",
+    "sp240L|alive|7d"
+   ],
+   "format": "3",
+   "placeholder": "{{j6:per_cell/mlp_obs_n2000/sp240L|alive|7d#3}}"
+  },
+  {
+   "text": "0.268",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "per_cell",
+    "mlp_priv_n2000",
+    "sp240L|alive|7d"
+   ],
+   "format": "3",
+   "placeholder": "{{j6:per_cell/mlp_priv_n2000/sp240L|alive|7d#3}}"
+  },
+  {
+   "text": "0.717",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "per_cell",
+    "mlp_obs_n2000",
+    "sp240L|settlements_alive|7d"
+   ],
+   "format": "3",
+   "placeholder": "{{j6:per_cell/mlp_obs_n2000/sp240L|settlements_alive|7d#3}}"
+  },
+  {
+   "text": "0.355",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "per_cell",
+    "mlp_priv_n2000",
+    "sp240L|settlements_alive|7d"
+   ],
+   "format": "3",
+   "placeholder": "{{j6:per_cell/mlp_priv_n2000/sp240L|settlements_alive|7d#3}}"
+  },
+  {
    "text": "learnable_from_observables",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
@@ -3559,6 +3636,95 @@
    "placeholder": "{{j6:rules/C4/mlp_obs/slope/7d#ci4}}"
   },
   {
+   "text": "−0.0158",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "slopes",
+    "mlp_obs|7d",
+    "per_seed",
+    "0"
+   ],
+   "format": "4s",
+   "placeholder": "{{j6:posthoc/slopes/mlp_obs|7d/per_seed/0#4s}}"
+  },
+  {
+   "text": "−0.0023",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "slopes",
+    "mlp_obs|7d",
+    "per_seed",
+    "1"
+   ],
+   "format": "4s",
+   "placeholder": "{{j6:posthoc/slopes/mlp_obs|7d/per_seed/1#4s}}"
+  },
+  {
+   "text": "−0.0058",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "slopes",
+    "mlp_obs|7d",
+    "per_seed",
+    "2"
+   ],
+   "format": "4s",
+   "placeholder": "{{j6:posthoc/slopes/mlp_obs|7d/per_seed/2#4s}}"
+  },
+  {
+   "text": "−0.0040 [−0.0078, +0.0001]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "slopes",
+    "mlp_obs|7d",
+    "leave_one_seed_out",
+    "0"
+   ],
+   "format": "ci4",
+   "placeholder": "{{j6:posthoc/slopes/mlp_obs|7d/leave_one_seed_out/0#ci4}}"
+  },
+  {
+   "text": "−0.0080 [−0.0159, −0.0012]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "slopes",
+    "mlp_obs|7d",
+    "world_and_seed_bootstrap"
+   ],
+   "format": "ci4",
+   "placeholder": "{{j6:posthoc/slopes/mlp_obs|7d/world_and_seed_bootstrap#ci4}}"
+  },
+  {
+   "text": "+0.46 [+0.38, +0.53]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "curves",
+    "seq_obs",
+    "2000",
+    "7d",
+    "closure"
+   ],
+   "format": "ci2",
+   "placeholder": "{{j6:curves/seq_obs/2000/7d/closure#ci2}}"
+  },
+  {
+   "text": "−0.0056 [−0.0103, −0.0010]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "slopes",
+    "seq_obs|7d",
+    "world_and_seed_bootstrap"
+   ],
+   "format": "ci4",
+   "placeholder": "{{j6:posthoc/slopes/seq_obs|7d/world_and_seed_bootstrap#ci4}}"
+  },
+  {
    "text": "0.422",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
@@ -3584,6 +3750,18 @@
    "placeholder": "{{j6:references/an5_arm/7d/value#3}}"
   },
   {
+   "text": "−0.064 [−0.097, −0.028]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "versus",
+    "mlp_obs_n2000 − an5_arm|7d",
+    "ci_diff"
+   ],
+   "format": "ci3",
+   "placeholder": "{{j6:posthoc/versus/mlp_obs_n2000 − an5_arm|7d/ci_diff#ci3}}"
+  },
+  {
    "text": "0.496",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
@@ -3607,6 +3785,30 @@
    ],
    "format": "3",
    "placeholder": "{{j6:curves/mlp_obs/400/7d/value#3}}"
+  },
+  {
+   "text": "−0.047 [−0.081, −0.012]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "versus",
+    "mlp_obs_n400 − an5_arm|7d",
+    "ci_diff"
+   ],
+   "format": "ci3",
+   "placeholder": "{{j6:posthoc/versus/mlp_obs_n400 − an5_arm|7d/ci_diff#ci3}}"
+  },
+  {
+   "text": "−0.058 [−0.112, −0.018]",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "posthoc",
+    "versus",
+    "mlp_obs_n400 − wm3_full|7d",
+    "ci_diff"
+   ],
+   "format": "ci3",
+   "placeholder": "{{j6:posthoc/versus/mlp_obs_n400 − wm3_full|7d/ci_diff#ci3}}"
   },
   {
    "text": "0.226",
@@ -5546,6 +5748,16 @@
    ],
    "format": "0",
    "placeholder": "{{j6:compute/training_total#0}}"
+  },
+  {
+   "text": "1,680",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "compute",
+    "training_wall_total"
+   ],
+   "format": "0",
+   "placeholder": "{{j6:compute/training_wall_total#0}}"
   },
   {
    "text": "66",
@@ -7544,6 +7756,17 @@
    "placeholder": "{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}"
   },
   {
+   "text": "mlp_obs",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "rules",
+    "C1",
+    "chosen"
+   ],
+   "format": "str",
+   "placeholder": "{{j6:rules/C1/chosen#str}}"
+  },
+  {
    "text": "0.422",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
@@ -7592,6 +7815,17 @@
    "placeholder": "{{j6:rules/C1/verdict/verdict#str}}"
   },
   {
+   "text": "seq_obs",
+   "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
+   "key": [
+    "rules",
+    "C2",
+    "chosen"
+   ],
+   "format": "str",
+   "placeholder": "{{j6:rules/C2/chosen#str}}"
+  },
+  {
    "text": "0.472",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
@@ -7616,7 +7850,7 @@
    "placeholder": "{{j6:rules/C2/verdict/baseline#3}}"
   },
   {
-   "text": "−0.122 [−0.154, −0.087]",
+   "text": "−0.123 [−0.154, −0.089]",
    "file": "docs/worldmodel/wm6/runs/judge6/judge.json",
    "key": [
     "rules",

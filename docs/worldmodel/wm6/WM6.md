@@ -14,18 +14,25 @@ feature existed. Every number below comes from `runs/judge6/judge.md` / `judge.j
 - **The data.** v2x: 1,600 new worlds (50000–51599) recorded exactly as v2's train worlds with one replicate; 7,576
   episodes, every one verified; 1,600 / 1,600 families pass the prefix check; a per-world recorder call reproduces
   WM-2's members bit for bit; 40 two-sample KS tests against WM-2's train worlds: smallest p 0.066, largest D 0.078 —
-  the same population. Nested training sets of 400, 800, 1,600 and 2,000 worlds, replicate 0 only.
+  consistent with the same population (no test rejects; D ≈ 0.08 would be detectable), as the identical recorder and
+  design imply. Nested training sets of 400, 800, 1,600 and 2,000 worlds, replicate 0 only.
 - **The answer (pre-registered reading): "learnable from observables"** — by the second clause: the C1 model
   (`mlp_obs`, chosen on val) closes **0.449** [0.38, 0.52] of the one-week gap at 2,000 worlds (below the first clause's
   0.5) and its error falls with log₂ N (slope **−0.0080** [−0.0121, −0.0034] per doubling, CI below zero; closure ≥ 0.35).
+  The interval resamples test worlds only; post hoc, the three seeds' slopes are −0.0158, −0.0023 and −0.0058, leaving
+  seed 0 out gives −0.0040 [−0.0078, +0.0001] (touching zero), a bootstrap over worlds and seeds gives −0.0080
+  [−0.0159, −0.0012], and `seq_obs` (closure 0.457) meets clause 2 whichever seed is dropped. The reading stands with a
+  narrow margin on the size of the data effect.
 - **In proportion.** The observable gain over the linear map is real (C1 WEAK at 7 d, C2 KEEP at 30 d) but modest, and
-  the observable curve is flat over its last step (0.421 at 1,600, 0.422 at 2,000 worlds). At one month the observable models close
+  the observable curve's last step (0.421 at 1,600, 0.422 at 2,000 worlds) is uninformative (0.32 doublings, within
+  seed noise). At one month the observable models close
   only **0.07** of the gap. The **hidden state** (diagnostic) adds about half of what the observable model misses at one
   week (`mlp_priv` closure **0.72**; C6 −0.115 [−0.158, −0.079]) and keeps gaining with data three times as fast
-  (slope −0.027); with it the one-month effects become learnable too (closure 0.11 → 0.42 from 400 to 2,000 worlds).
-- **For the benchmark.** The room between `zero` and the floor is not chaos: a supervised nonlinear map of the pre-act
-  state enters it, already at v2's own 400 training worlds (`mlp_obs` 0.438 < every observable method of WM-5's
-  table), so the dynamics models' failure is not a lack of signal in the observable state. What remains at this scale
+  (slope −0.027); its one-month closure rises from 0.11 to 0.42 from 400 to 2,000 worlds.
+- **For the benchmark (post hoc).** The room between `zero` and the floor is not chaotic at this scale: a supervised
+  nonlinear map of the pre-act state enters it, already at v2's own 400 training worlds (`mlp_obs` 0.438 vs `an5_arm`
+  −0.047 [−0.081, −0.012], vs `wm3_full` −0.058 [−0.112, −0.018]), so the dynamics models' failure is not explained by a
+  lack of signal in the observable state alone. What remains at this scale
   is about half hidden state and half not reached by any model here. The paper's abstract, introduction and a new
   conclusion state this as the reading allows (section 6 below).
 
@@ -47,7 +54,8 @@ privileged set adds 27 hidden values); the GRU reads WM-2's 74 action-aware inpu
 One model per method with the arm as a one-hot input and eight outputs; loss = the metric's own (masked MAE of the
 scaled effects); early stopping on the v2 val 24-cell average. The grid at N = 400 chose width 512 / dropout 0.3 for
 `mlp_obs` and 256 / 0.3 for `mlp_priv` (DECISIONS L4.2). LightGBM ran in a side venv (L2.7). Every neural run stopped by
-patience (52–159 epochs, ≤ 27 s); the 74 trainings took 515 s in total.
+patience (52–159 epochs, ≤ 27 s); the 74 trainings took 515 s of in-process time (1,680 s of queue wall time). One GBM
+cell (`gbm_priv_n1600`, `sp240L|food_stock|30d`) reached the 500-round cap.
 
 **WM-5 reproduction** (GOAL.md 4.1): WM-5's ridge re-run on both replicates at N = 400 through WM-6's feature path gives
 the same λ in all 24 cells and test predictions within 1.25e-12 (`ridge_obs`) / 5.4e-13 (`ridge_priv`) of WM-5's
@@ -57,8 +65,8 @@ committed ones (12-cell averages 0.480 / 0.602 and 0.434 / 0.590, identical).
 
 | rule | result |
 |---|---|
-| C1 (7 d, N = 2,000) | `mlp_obs` (val 0.414 vs `seq_obs` 0.418) 0.422 vs `ridge_obs` 0.470, −0.049 [−0.078, −0.019], **WEAK** (ratio 0.896) |
-| C2 (30 d) | `mlp_obs` (val 0.489 vs 0.490) 0.472 vs `ridge_obs` 0.594, −0.122 [−0.154, −0.087], **KEEP** |
+| C1 (7 d, N = 2,000) | `mlp_obs` (val of the seed-averaged predictions 0.412 vs `seq_obs` 0.415) 0.422 vs `ridge_obs` 0.470, −0.049 [−0.078, −0.019], **WEAK** (ratio 0.896) |
+| C2 (30 d) | `seq_obs` (val of the seed-averaged predictions 0.4875 vs `mlp_obs` 0.4881) 0.472 vs `ridge_obs` 0.594, −0.123 [−0.154, −0.089], **KEEP**; by seed-averaged errors the choice would be `mlp_obs`, also KEEP (−0.122 [−0.154, −0.087]) (DECISIONS L7.2) |
 | C3 (diagnostic) | `mlp_priv` vs `ridge_priv`: 7 d 0.307 vs 0.427, −0.121 [−0.147, −0.096], **KEEP**; 30 d 0.394 vs 0.584, −0.191 [−0.216, −0.162], **KEEP** |
 | C4 (7 d, N = 2,000 vs 400) | `mlp_obs` −0.017 [−0.026, −0.006] **WEAK**; `seq_obs` −0.012 [−0.020, −0.002] **WEAK**; `mlp_priv` −0.060 [−0.077, −0.042] **WEAK** (ratio 0.836) |
 | C4 slopes per doubling | 7 d: `mlp_obs` −0.0080 [−0.0121, −0.0034], `seq_obs` −0.0056 [−0.0093, −0.0014], `mlp_priv` −0.0270 [−0.0346, −0.0191]; 30 d: −0.0040 [−0.0079, −0.0000], −0.0007 [−0.0044, +0.0034], −0.0312 [−0.0450, −0.0178] |
@@ -86,10 +94,17 @@ References: `zero` 0.612 / 0.487, floor 0.187 / 0.267, `an5_arm` 0.485 / 0.594 (
 **Reading the curves.** (i) At one week every observable nonlinear model beats the observable linear map at every N, and the three
 observable families end within 0.01 of each other (0.412–0.422): history over the last week (GRU) adds little to the
 summary features. (ii) The observable curves are shallow — about one hundredth of the 12-cell average per doubling —
-and the MLP's last step (1,600 → 2,000) is flat; the privileged curves are about three times steeper and also flatten
-between 1,600 and 2,000 (`gbm_priv` gains 0.004). (iii) At one month the observable models stay close to `zero` at every N (closure ≤ 0.09)
+and the last step (1,600 → 2,000, 0.32 doublings) is uninformative within seed noise for every model; the privileged
+curves are about three times steeper. (iii) At one month the observable models stay close to `zero` at every N (closure ≤ 0.09)
 while the privileged ones gain steadily: the month-ahead effect depends on the hidden fission state. (iv) The ridges'
 one-month closures are negative at every N (a squared-error fit against an absolute-error metric, WM-5 L7.1).
+
+**Per cell (descriptive; `judge.md`).** The observable models' gain over `zero` lies mostly in the one-week food-store
+cells (gift 1.560 → 0.567, rot 1.478 → 0.690, spoil 1.265 → 0.759 for `mlp_obs`) and in the rot's 30-day deaths (0.870
+→ 0.702); the hidden state's further gain lies in the spoil's population and settlement cells (one week: alive 0.843 →
+0.268, settlements 0.717 → 0.355; 30 days: food 0.821 → 0.437) — plausibly (post hoc, untested) whether the act tips a
+village into a split, which depends on the hidden fission pressure and threshold. Cells where `zero` is already near the floor or below it (deaths
+of gifts, the one-week settlement cells) stay at `zero`'s level for every model.
 
 **obs2 transfer** (GOAL.md 9.3, report only; WM-4's floored scales, 1,440 r0 cases): `mlp_obs` 0.226 / 0.236,
 `seq_obs` 0.228 / 0.240 vs `zero` 0.217 / 0.188 (NONE at both lags: +0.009 and +0.048) and WM-5's E1 row `ridge_obs`
@@ -115,5 +130,5 @@ per-world effects reaches about 45 % of the way from "no effect" to the noise fl
 worlds, and grows slowly with data. The methods the benchmark targets — dynamics models rolled out with and without the
 act, and estimators of time-varying treatment effects — are far from that point (WM-5), so the gap between them and a
 direct supervised map is a measured, attainable target, not an artefact of chaotic per-world effects. Beyond it, about
-half of the remaining one-week gap sits in hidden state that no observable method can use, and most of what is
-learnable at one month needs that hidden state; a method claiming more than that from observables would need to show it here.
+half of the remaining one-week gap is recovered when the hidden state is added (some of it may be inferable from longer
+observable history than the GRU's week), and most of what the models here learn at one month needs that hidden state; a method claiming more than that from observables would need to show it here.

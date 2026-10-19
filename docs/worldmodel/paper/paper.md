@@ -23,7 +23,8 @@ confounded split, at both horizons; (iii) rounding counts at readout does not ch
 split a linear map of the observable pre-act state reaches only the act's mean effect, and the hidden state adds a little
 more (both post hoc); (v) part of the room is learnable from the observable state: nonlinear direct effect models trained
 on up to five times as many training worlds close 0.45 of the one-week gap between
-"no effect" and the floor and improve slowly with more data (pre-registered reading: learnable from observables; the
+"no effect" and the floor and improve slowly with more data, by a margin that depends on the training seeds
+(pre-registered reading: learnable from observables; the
 same models given the hidden state close 0.72), while at one month the
 observable models barely beat "no effect". The benchmark, its pre-registered harness and the paper's numbers are traced
 to committed result files.
@@ -87,7 +88,8 @@ interventional split a linear regression on the observable pre-act state reaches
 branches ties or beats it. The room is partly learnable: at one week a nonlinear model of the observable pre-act state
 beats the linear one (C1 WEAK, 0.422 vs
 0.470) and closes +0.45 [+0.38, +0.52] of the gap at 2,000 worlds,
-improving by −0.0080 [−0.0121, −0.0034] per doubling of the data; with the hidden state the same model closes
+improving by −0.0080 [−0.0121, −0.0034] per doubling of the data (an interval over test worlds; its
+seed sensitivity is discussed in Section 5.4); with the hidden state the same model closes
 +0.72 [+0.65, +0.78]. About half of what the observable models still miss at one week is recovered by adding the hidden state, and at
 one month their gain over "no effect" is small (closure +0.07 [+0.01, +0.15]).
 
@@ -263,7 +265,7 @@ Section 5.2 shows room between `zero` and the floor that no evaluated method use
 nonlinear direct effect models on the v2 design with up to five times as many training worlds. **v2x** adds
 1,600 worlds (seeds 50000–51599) recorded exactly as v2's train worlds — the same frozen recorder,
 fork tick, four arms and cast-time rules — with one replicate (7,576 episodes); one recorder
-call per world reproduces v2's members bit for bit. The **training sets are nested** and use replicate 0 only: N = 400
+call per world reproduces v2's members bit for bit (checked on one world). The **training sets are nested** and use replicate 0 only: N = 400
 (v2's train worlds), 800, 1,600 and 2,000 worlds; validation (v2 val), the test cases, cells and scales are v2's,
 unchanged. The models:
 
@@ -399,17 +401,18 @@ are training-free or trained on v2 alone, so both columns repeat their value).*
 | `wm3_full` | 0.496 | 0.496 | 0.27 | 0.511 | 0.511 | −0.11 |
 | `floor` | 0.187 | 0.187 | 1.00 | 0.267 | 0.267 | 1.00 |
 
-**The new worlds are v2's population.** Across 40 two-sample Kolmogorov–Smirnov comparisons of the
+**The new worlds are consistent with v2's population.** Across 40 two-sample Kolmogorov–Smirnov comparisons of the
 true effects per act, outcome and horizon (and of the act rows and split shifts) between the 1,600
 v2x worlds and v2's 400 train worlds, the largest statistic is 0.078 and the smallest p-value
-0.066; the learning curve varies only the number of worlds.
+0.066: no test rejects, and at these sample sizes a difference of about D = 0.08 would be
+detectable. The same recorder and design generated both sets, so the learning curve varies only the number of worlds.
 
 **Nonlinearity helps (C1–C3).** At 2,000 worlds the observable model chosen on validation (`mlp_obs`)
 beats the observable ridge at one week (0.422 vs 0.470,
 −0.049 [−0.078, −0.019], **WEAK**: the interval excludes zero but the ratio
-0.896 misses the 0.8 bar) and at one month (0.472 vs
+0.896 misses the 0.8 bar) and at one month (the model chosen at that lag, `seq_obs`: 0.472 vs
 0.594, **KEEP**; the ridge is worse than `zero` there, the
-MLP slightly better). With the hidden state the gap to the ridge is larger (C3, diagnostic: one week
+chosen model slightly better). With the hidden state the gap to the ridge is larger (C3, diagnostic: one week
 0.307 vs 0.427, **KEEP**; one month
 0.394 vs 0.584, **KEEP**). The three
 observable nonlinear families (MLP, GRU over the last week, boosted trees) end between 0.412
@@ -421,13 +424,20 @@ adds little beyond the summary features.
 −0.012 [−0.020, −0.002] (**WEAK**); per doubling of the
 data, −0.0080 [−0.0121, −0.0034] and −0.0056 [−0.0093, −0.0014]. The privileged diagnostic gains
 about three times as fast (−0.0270 [−0.0346, −0.0191] per doubling; −0.060 [−0.077, −0.042]
-from 400 to 2,000 worlds, **WEAK**), and it also learns the one-month effects
-(closure +0.11 [−0.00, +0.23] at 400 worlds, +0.42 [+0.25, +0.73] at 2,000),
-which the observable models barely do.
+from 400 to 2,000 worlds, **WEAK**), and its one-month closure rises from
++0.11 [−0.00, +0.23] at 400 worlds to +0.42 [+0.25, +0.73] at 2,000, while
+the observable models' stays near zero.
 
 **Observable vs hidden (C6).** At 2,000 worlds adding the hidden state changes the error of the MLP by
 −0.115 [−0.158, −0.079] at one week and −0.079 [−0.116, −0.043] at one
 month (GRU: −0.114 [−0.159, −0.075], −0.092 [−0.133, −0.054]).
+Per cell (descriptive), the observable models' gain over `zero` lies mostly in the one-week food-store cells (a gift:
+`zero` 1.560, `mlp_obs` 0.567), and the
+hidden state's further gain in the spoil's population and settlement cells (one week: alive
+0.843 → 0.268, settlements
+0.717 → 0.355) —
+plausibly (post hoc, untested) whether the act tips a village into a split, which depends on the hidden fission pressure
+and threshold.
 
 **The pre-registered reading: `learnable_from_observables`.** The rule (METRICS.md, committed before any WM-6 model was
 trained) reads "learnable from observables" if the C1 model's one-week closure at the largest N is at least 0.5, or if
@@ -435,16 +445,30 @@ its C4 slope's interval lies below zero and its closure is at least 0.35. The cl
 0.449 (below 0.5) and the slope's interval −0.0080 [−0.0121, −0.0034] lies below
 zero, so the second clause applies. What this does and does not say: part of the room is learnable from the observable
 pre-act state, and the error fitted over 400–2,000 worlds still falls with more data; but the gain per doubling is small
-(and the last step, 1,600 to 2,000 worlds, shows none), more than half of the one-week gap remains open from observables at
+(the last step, 1,600 to 2,000 worlds, is only 0.32 doublings and uninformative within seed noise), more than half of the one-week gap remains open from observables at
 this scale, almost none of the one-month gap is closed, and about half of what the observable model misses at one week
 is recovered when the hidden state (the fission pressure and threshold, the latent table and the world's generation
-parameters) is added. We do not extrapolate the curve.
+parameters) is added. Learning curves are often summarized by power laws [@hestness2017scaling]; over 400–2,000
+worlds we fit only a log-linear slope and do not extrapolate it.
 
-**Against the methods of Section 5.1.** At one week `mlp_obs` at 2,000 worlds (0.422) is
-below every observable method of Table 1 on v2 — `an5_arm` 0.485, `wm3_full`
-0.496, CRN and CT far above (descriptive) — and so it is at 400 worlds
-(0.438), i.e. with replicate 0 of v2's own training worlds: the earlier models were not
-held back by the amount of data alone. On the obs2 test (a v2→obs2 transfer, report only) the same models do not beat `zero` (`mlp_obs`
+**How firm is the decisive interval? (post hoc).** The pre-registered intervals resample test worlds only; they do not
+include training-seed variation. The reading rests on clause 2, i.e. on the slope of `mlp_obs`, whose three seeds give
+−0.0158, −0.0023 and
+−0.0058 per doubling: without seed 0 the slope is
+−0.0040 [−0.0078, +0.0001], an interval that touches zero. A bootstrap over test worlds
+and training seeds keeps it below zero (−0.0080 [−0.0159, −0.0012]), and the GRU,
+which also has a closure above 0.35 (+0.46 [+0.38, +0.53]), meets clause 2 whichever seed is
+dropped (worlds and seeds: −0.0056 [−0.0103, −0.0010]). The reading therefore stands,
+with a narrow margin on the size of the data effect.
+
+**Against the methods of Section 5.1 (post hoc).** At one week `mlp_obs` at 2,000 worlds
+(0.422) is below every observable method of Table 1 on v2 — `an5_arm`
+0.485 (Δ −0.064 [−0.097, −0.028]), `wm3_full`
+0.496, CRN and CT far above — and so it is already at 400 worlds, i.e. with replicate 0 of
+v2's own training worlds (0.438; Δ vs `an5_arm`
+−0.047 [−0.081, −0.012], vs `wm3_full`
+−0.058 [−0.112, −0.018]): the earlier models were not held back by the amount of data
+alone. On the obs2 test (a v2→obs2 transfer, report only) the same models do not beat `zero` (`mlp_obs`
 0.226 vs 0.217 at one week,
 +0.009 [+0.001, +0.016]) but transfer far better than the ridge
 (0.537).
@@ -544,8 +568,9 @@ pre-act state: by the pre-registered reading, a nonlinear direct effect model tr
 worlds; at one month it
 closes almost none of it, and about half of what the observable model misses at one week is recovered once the
 hidden state is added. The benchmark therefore separates methods
-over a range that a learner can enter but not finish from observables alone, and it shows that the failure of the
-dynamics models is not a lack of signal in the observable state.
+over a range that the observable models evaluated here, up to 2,000 worlds, enter but do not finish; and (post hoc) a
+direct model of the observable state beats the dynamics models already at v2's own size, so their failure is not
+explained by a lack of signal in the observable state alone.
 
 ## 8 Limitations and broader impact
 
@@ -553,15 +578,16 @@ dynamics models is not a lack of signal in the observable state.
 are synthetic, with known propensities and a refractory period that a real decision-maker would not have; obs2's
 evaluation cases sit at the policy's act rows (and their fixed fallbacks), so they inherit its timing; the floor is the
 other replicate's effect, which over-states the irreducible error by about √2 for symmetric noise; the direct
-regressions are linear and trained on v2's counterfactual labels (another game split of the same simulator, not
-another simulator); CRN and CT run at daily resolution with one configuration each, chosen on the smaller obs split;
+regressions of Section 4.2 are linear, and every direct model is trained on counterfactual labels of the same
+simulator (other worlds of the same game, not another simulator); CRN and CT run at daily resolution with one configuration each, chosen on the smaller obs split;
 the world models run at hourly resolution; GPU-level numerical reproducibility of the transformer rollouts is not
 guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method (three for the
 learning-curve models); M1b-obs2 stopped at its 8,000-step cap without converging (kept step in the last 1 % of
 training). The learning curve has four points on one design (v2's arms and act times), one feature set, one small
 architecture grid chosen at 400 worlds and frozen, and stops at 2,000 worlds; its models are trained on true effects of
-other worlds, which only a simulator provides; the slope is a fit over 400–2,000 worlds, not a forecast; the obs2
-transfer of these models is reported, not judged. Claims are limited to
+other worlds, which only a simulator provides; the slope is a fit over 400–2,000 worlds, not a forecast; the
+pre-registered closure and slope intervals resample test worlds only, and with one of `mlp_obs`'s three seeds left out its
+slope interval touches zero (post hoc, Section 5.4); the obs2 transfer of these models is reported, not judged. Claims are limited to
 the pre-registered rules; comparisons labelled post hoc are descriptive.
 
 **Broader impact.** The benchmark is built on a toy simulation of a village and makes no claim about real societies or
@@ -651,7 +677,8 @@ GBM: one LightGBM regressor per cell, L1 objective, 31 leaves, learning rate 0.0
 rounds with early stopping after 50 rounds without validation improvement. Ridge: WM-5's per-cell λ ∈ {0.01, …, 1,000}
 on validation. Seeds 0–2 for the neural models. Every neural run stopped by patience
 (52–159 epochs, 56 runs);
-none reached the time cap (longest run 27 s).
+none reached the time cap (longest run 27 s). GBM stopped early in every cell but one
+(`gbm_priv` at 1,600 worlds, the spoil's 30-day food store, reached the 500-round cap).
 
 ## Appendix C. The observational policies
 
@@ -688,8 +715,9 @@ episodes, every one verified, used only to train the learning-curve models of Se
 people, no personal or sensitive data and no labels beyond what the simulator records. Roles (train / val / test) are
 fixed by seed ranges. Hidden columns must not be model inputs; they are kept for diagnostics.
 
-**Collection process.** Every episode was produced by one frozen recorder binary (source commit recorded in every
-episode's metadata; sha256 of the binary recorded), with byte-identical output across worker counts; every array is
+**Collection process.** Every episode was produced by one frozen recorder binary (sha256 recorded; built from commit
+`26b9af1f`, a merge of `f5373ab2`; the commit string in the episodes' metadata is `26b9af1f` for v2 and `f5373ab2` for
+obs2 and v2x, as each study's protocol fixed it), with byte-identical output across worker counts; every array is
 sha256-hashed in its episode's metadata and in the split's manifest. The observational policies are seeded and
 pre-registered; their propensities are recorded. Counterfactual families are forks of the same world state.
 
@@ -710,7 +738,8 @@ All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DG
 recording v2x took 25,733 s of wall time (11,823 s for the
 determinism-checked timeline in 16 chunks, 13,910 s for the families at eight recorder calls in
 parallel); its 74 trainings (including the grid and the two reproductions) took
-515 s in total, and its 66 test evaluations
+515 s of in-process time in total (1,680 s of queue wall time,
+start-up included), and its 66 test evaluations
 76 s.
 
 ## Appendix F. All pre-registered verdicts, training reached (R4) and rounding alone (D2)
@@ -756,7 +785,7 @@ parallel); its 74 trainings (including the grid and the two reproductions) took
 | D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | 0.483 | 0.378 | +0.106 [+0.076, +0.137] | **NONE** |
 | D1 obs2 30 d: M1b-obs2 vs M1b-obs | 0.194 | 0.197 | −0.004 [−0.006, −0.001] | **WEAK** |
 | C1 v2 7 d, N = 2,000: `mlp_obs` (val-chosen) vs `ridge_obs` | 0.422 | 0.470 | −0.049 [−0.078, −0.019] | **WEAK** |
-| C2 v2 30 d, N = 2,000: `mlp_obs` (val-chosen) vs `ridge_obs` | 0.472 | 0.594 | −0.122 [−0.154, −0.087] | **KEEP** |
+| C2 v2 30 d, N = 2,000: `seq_obs` (val-chosen) vs `ridge_obs` | 0.472 | 0.594 | −0.123 [−0.154, −0.089] | **KEEP** |
 | C3 v2 7 d, N = 2,000: `mlp_priv` vs `ridge_priv` (diagnostic) | 0.307 | 0.427 | −0.121 [−0.147, −0.096] | **KEEP** |
 | C3 v2 30 d, N = 2,000: `mlp_priv` vs `ridge_priv` (diagnostic) | 0.394 | 0.584 | −0.191 [−0.216, −0.162] | **KEEP** |
 | C4 v2 7 d: `mlp_obs` N = 2,000 vs N = 400 | 0.422 | 0.438 | −0.017 [−0.026, −0.006] | **WEAK** |

@@ -8,8 +8,8 @@ References (12-cell averages; closure = (zero − x) / (zero − floor)): `zero`
 
 | rule | model (seeds) | baseline | ratio | Δ = model − baseline [95 % CI] | verdict |
 |---|---|---|---|---|---|
-| C1 v2 7d, N = 2000: `mlp_obs` (val `mlp_obs` 0.414, `seq_obs` 0.418) | 0.422 (0.421, 0.426, 0.418) | `ridge_obs_n2000` 0.470 | 0.896 | -0.049 [-0.078, -0.019] | **WEAK** |
-| C2 v2 30d, N = 2000: `mlp_obs` (val `mlp_obs` 0.489, `seq_obs` 0.490) | 0.472 (0.473, 0.473, 0.471) | `ridge_obs_n2000` 0.594 | 0.795 | -0.122 [-0.154, -0.087] | **KEEP** |
+| C1 v2 7d, N = 2000: `mlp_obs` (val `mlp_obs` 0.412, `seq_obs` 0.415) | 0.422 (0.421, 0.426, 0.418) | `ridge_obs_n2000` 0.470 | 0.896 | -0.049 [-0.078, -0.019] | **WEAK** |
+| C2 v2 30d, N = 2000: `seq_obs` (val `mlp_obs` 0.488, `seq_obs` 0.487) | 0.472 (0.472, 0.469, 0.473) | `ridge_obs_n2000` 0.594 | 0.793 | -0.123 [-0.154, -0.089] | **KEEP** |
 | C3 v2 7d, N = 2000: `mlp_priv` vs `ridge_priv` (diagnostic) | 0.307 (0.306, 0.305, 0.309) | `ridge_priv_n2000` 0.427 | 0.718 | -0.121 [-0.147, -0.096] | **KEEP** |
 | C3 v2 30d, N = 2000: `mlp_priv` vs `ridge_priv` (diagnostic) | 0.394 (0.396, 0.393, 0.393) | `ridge_priv_n2000` 0.584 | 0.674 | -0.191 [-0.216, -0.162] | **KEEP** |
 | C4 v2 7d: `mlp_obs` N = 2000 vs N = 400 | 0.422 (0.421, 0.426, 0.418) | `mlp_obs_n400 (seeds 3)` 0.438 | 0.962 | -0.017 [-0.026, -0.006] | **WEAK** |
@@ -67,6 +67,35 @@ C1 model `mlp_obs`: 7-day closure 0.449, slope -0.0080 [-0.0121, -0.0034]; `mlp_
 | `mlp_priv` (diag.) | 0.464 (s=3); closure 0.11 [-0.00, 0.23] | 0.430 (s=3); closure 0.26 [0.13, 0.45] | 0.396 (s=3); closure 0.41 [0.24, 0.72] | 0.394 (s=3); closure 0.42 [0.25, 0.73] |
 | `seq_priv` (diag.) | 0.446 (s=3); closure 0.19 [-0.01, 0.38] | 0.411 (s=3); closure 0.34 [0.17, 0.59] | 0.379 (s=3); closure 0.49 [0.31, 0.84] | 0.379 (s=3); closure 0.49 [0.30, 0.85] |
 | `gbm_priv` (diag.) | 0.448 (s=1); closure 0.18 [0.07, 0.32] | 0.445 (s=1); closure 0.19 [0.08, 0.35] | 0.431 (s=1); closure 0.26 [0.11, 0.47] | 0.427 (s=1); closure 0.27 [0.13, 0.50] |
+
+## Post hoc (REVIEW.md round 1; not pre-registered): slope robustness and comparisons
+
+Slopes per doubling: per seed; leaving one seed out (test-world bootstrap CI); a bootstrap over test worlds and training seeds.
+
+| model | lag | per seed (s0, s1, s2) | without s0 | without s1 | without s2 | worlds + seeds [95 % CI] |
+|---|---|---|---|---|---|---|
+| `mlp_obs` | 7d | -0.0158, -0.0023, -0.0058 | -0.0040 [-0.0078, +0.0001] | -0.0108 [-0.0158, -0.0055] | -0.0090 [-0.0136, -0.0041] | -0.0080 [-0.0159, -0.0012] |
+| `mlp_obs` | 30d | -0.0077, -0.0019, -0.0025 | -0.0022 [-0.0048, +0.0008] | -0.0051 [-0.0102, +0.0001] | -0.0048 [-0.0095, -0.0000] | -0.0040 [-0.0107, +0.0005] |
+| `seq_obs` | 7d | -0.0045, -0.0062, -0.0059 | -0.0061 [-0.0101, -0.0019] | -0.0052 [-0.0090, -0.0010] | -0.0054 [-0.0095, -0.0009] | -0.0056 [-0.0103, -0.0010] |
+| `seq_obs` | 30d | +0.0004, -0.0012, -0.0012 | -0.0012 [-0.0056, +0.0035] | -0.0004 [-0.0038, +0.0033] | -0.0004 [-0.0041, +0.0036] | -0.0007 [-0.0047, +0.0036] |
+| `mlp_priv` | 7d | -0.0262, -0.0275, -0.0273 | -0.0274 [-0.0355, -0.0192] | -0.0268 [-0.0342, -0.0192] | -0.0269 [-0.0346, -0.0188] | -0.0270 [-0.0351, -0.0189] |
+| `mlp_priv` | 30d | -0.0312, -0.0304, -0.0320 | -0.0312 [-0.0444, -0.0183] | -0.0316 [-0.0465, -0.0171] | -0.0308 [-0.0444, -0.0175] | -0.0312 [-0.0451, -0.0176] |
+
+| comparison | lag | a | b | Δ [95 % CI] |
+|---|---|---|---|---|
+| mlp_obs_n400 − an5_arm | 7d | 0.438 | 0.485 | -0.047 [-0.081, -0.012] |
+| mlp_obs_n400 − an5_arm | 30d | 0.481 | 0.594 | -0.113 [-0.152, -0.069] |
+| mlp_obs_n400 − wm3_full | 7d | 0.438 | 0.496 | -0.058 [-0.112, -0.018] |
+| mlp_obs_n400 − wm3_full | 30d | 0.481 | 0.511 | -0.030 [-0.052, -0.011] |
+| mlp_obs_n2000 − an5_arm | 7d | 0.422 | 0.485 | -0.064 [-0.097, -0.028] |
+| mlp_obs_n2000 − an5_arm | 30d | 0.472 | 0.594 | -0.122 [-0.160, -0.077] |
+| mlp_obs_n2000 − wm3_full | 7d | 0.422 | 0.496 | -0.074 [-0.127, -0.034] |
+| mlp_obs_n2000 − wm3_full | 30d | 0.472 | 0.511 | -0.038 [-0.059, -0.021] |
+| mlp_obs_n400 − ridge_obs (WM-5) | 7d | 0.438 | 0.480 | -0.041 [-0.068, -0.014] |
+| mlp_obs_n400 − ridge_obs (WM-5) | 30d | 0.481 | 0.602 | -0.120 [-0.151, -0.089] |
+
+C1 choice (METRICS.md 3: the lower v2 val 12-cell average of the seed-averaged predictions): `mlp_obs`; by seed-averaged errors it would be `mlp_obs` (the same).
+C2 choice (METRICS.md 3: the lower v2 val 12-cell average of the seed-averaged predictions): `seq_obs`; by seed-averaged errors it would be `mlp_obs` (verdict KEEP).
 
 ## WM-5 reproduction (ridge, both replicates, N = 400)
 

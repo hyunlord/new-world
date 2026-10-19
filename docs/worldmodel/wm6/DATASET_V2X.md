@@ -10,8 +10,9 @@ exactly as WM-2's v2 train worlds — the frozen recorder `_build/src_wm2` (sha2
 `f5373ab2…`), WM-2's timeline flags and clock list, `timeline_p14.py` / `schedules_p14.py` with the arms `sp240L`,
 `sp120L`, `gf240E`, `rw120E`, the fork at tick 14,280, factual included — except **one replicate** (R = 1, replicate
 0, the no-op fork): WM-6 trains on replicate 0 only (GOAL.md 4.1). Role: train. One recorder call per world
-(DECISIONS L1.1) reproduces WM-2's members bit for bit (seed 40000, all five members, sha256 of `global.npy` and
-`settlements.npy`).
+(DECISIONS L1.1) reproduces WM-2's members bit for bit (checked on one world: seed 40000, all five members, sha256
+of `global.npy` and `settlements.npy`). The metadata commit string is `f5373ab2` (GOAL.md 1); the recorder binary was
+built from `26b9af1f`, a merge of `f5373ab2`, whose string WM-2's v2 episodes carry.
 
 **Checks.** The timeline probe ran in 16 chunks of 100 seeds, each with `--check-determinism` (DETERMINISM PASS in all
 16); `timeline_p14.py`'s line check reproduces every logged scarcity value (109,197 / 109,197). Every episode is
@@ -78,13 +79,15 @@ Cases (replicate 0): v2x 5,976, WM-2's 400 train worlds 1,490.
 
 KS summary: 40 tests, smallest p 0.0656, 0 below 0.05 (≈ 2.0 expected by chance), 0 below the Bonferroni level 0.00125; largest D 0.078.
 
-**Same population.** The two-sample KS statistic per arm × outcome × lag (and for the cast rows and split shifts)
+**Consistent with the same population.** The two-sample KS statistic per arm × outcome × lag (and for the cast rows and split shifts)
 between the new worlds' true effects and WM-2's 400 train worlds' (both replicate 0) is at most 0.078, with no p below
 0.05 in 40 tests (about 2 expected by chance; none below the Bonferroni level). T_low exists for 86.8 % of the new worlds
 (WM-2: 489 / 560 = 87.3 %), so the `sp*L` arms are present in 1,388 worlds. The integer outcomes (alive, deaths,
 settlements) have many ties, which makes the KS p-values conservative; their means and spreads agree as well (table).
 The cast rows of the `E` arms are the same row (490) in both sets; the `sp*L` cast rows (T_low) agree (D 0.021).
-The new worlds are the same population as v2's train worlds; adding them changes only the number of training worlds.
+No KS test rejects; at these sizes a difference of about D = 0.08 would be detectable at α = 0.05, so the test shows
+consistency, not identity. With the same recorder and design generating both sets, adding the new worlds changes only the
+number of training worlds.
 
 **Recording time** (DGX, other users' load present throughout, load average 7–61): timeline 16 chunks 00:44–04:01
 (15 at 8 workers, 565–1,183 s each; one, `probe_50200`, at 4 workers beside the N = 400 trainings, 1,401 s); families 04:01–07:53 (13,910 s,

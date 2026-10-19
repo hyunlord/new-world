@@ -94,6 +94,7 @@ class Scorer:
         self.runs = runs
         self.errs: dict = {}
         self.val_errs: dict = {}
+        self.val_preds: dict = {}
         for d_ in sorted(runs.iterdir()) if runs.exists() else []:
             e = load(d_ / "effects.json")
             if e is not None:
@@ -104,6 +105,7 @@ class Scorer:
                 vv = {k: p for k, p in v.items() if k in keep}
                 if len(vv) == len(keep):
                     self.val_errs[d_.name] = ef.cell_errors(self.val, vv, self.stds)
+                    self.val_preds[d_.name] = vv
 
     def stat(self, errs: dict, lag: str, counts=None):
         return ef.cell_stat(errs, self.cells[lag], self.worlds, counts)
@@ -167,6 +169,16 @@ def verdict(sc: Scorer, model: str, n: int, base_errs: dict, base_name: str, lag
         "model_name": model, "n": n, "runs": names, "baseline_member": base_name, "lag": lag}
 
 
+def average_predictions(preds: list[dict]) -> dict:
+    """Per case and target, the mean over seeds of the predicted effects (the seed-averaged predictions)."""
+    out = {}
+    for k in preds[0]:
+        eff = {o: {lag: float(np.mean([p[k]["effects"][o][lag] for p in preds])) for lag in preds[0][k]["effects"][o]}
+               for o in preds[0][k]["effects"]}
+        out[k] = {"effects": eff, "shift": 0.0}
+    return out
+
+
 def slope(sc: Scorer, model: str, lag: str) -> dict | None:
     pts = [(n, sc.model_errs(model, n)[0]) for n in NS]
     pts = [(n, e) for n, e in pts if e is not None]
@@ -194,13 +206,21 @@ def rules(sc: Scorer, cur: dict) -> dict:
         for m in ("mlp_obs", "seq_obs"):
             ve, names = sc.model_errs(m, nmax, val=True)
             if ve is not None:
-                choice[m] = {"val": ef.cell_stat(ve, sc.cells[lag], sc.val_worlds), "runs": names}
+                avg = average_predictions([sc.val_preds[r] for r in names])
+                choice[m] = {"val": ef.cell_stat(ef.cell_errors(sc.val, avg, sc.stds), sc.cells[lag], sc.val_worlds),
+                             "val_seed_averaged_errors": ef.cell_stat(ve, sc.cells[lag], sc.val_worlds), "runs": names}
         if not choice:
             continue
-        chosen = min(choice, key=lambda m: (choice[m]["val"], ("mlp_obs", "seq_obs").index(m)))
+        order = ("mlp_obs", "seq_obs")
+        chosen = min(choice, key=lambda m: (choice[m]["val"], order.index(m)))
+        alt = min(choice, key=lambda m: (choice[m]["val_seed_averaged_errors"], order.index(m)))
         ridge = sc.errs.get(f"ridge_obs_n{nmax}")
         out[rule] = {"chosen": chosen, "val_choice": choice,
-                     "verdict": verdict(sc, chosen, nmax, ridge, f"ridge_obs_n{nmax}", lag)}
+                     "choice_rule": "METRICS.md 3: the lower v2 val 12-cell average of the seed-averaged predictions",
+                     "verdict": verdict(sc, chosen, nmax, ridge, f"ridge_obs_n{nmax}", lag),
+                     "chosen_by_seed_averaged_errors": alt,
+                     "verdict_of_the_other_choice": (verdict(sc, alt, nmax, ridge, f"ridge_obs_n{nmax}", lag)
+                                                     if alt != chosen else None)}
     out["C3"] = {lag: verdict(sc, "mlp_priv", nmax, sc.errs.get(f"ridge_priv_n{nmax}"), f"ridge_priv_n{nmax}", lag)
                  for lag in LAGS}
     out["C4"] = {}
@@ -334,6 +354,58 @@ def runs_info(runs: Path, prereg_time: int | None) -> dict:
     return out
 
 
+def posthoc(sc: Scorer, nmax: int | None, seed: int = 1) -> dict:
+    """Post hoc (REVIEW.md round 1, MAJOR 1 / 2; not pre-registered): the C4 slopes per seed, leaving one seed out, and
+    with a bootstrap over test worlds and training seeds (per draw: the world draw of the main bootstrap and, per N,
+    three seeds drawn with replacement, `default_rng(1)`); and the learning-curve models against the other methods."""
+    out = {"note": "post hoc (REVIEW.md round 1); not a pre-registered rule"}
+    if nmax is None:
+        return out
+    rng = np.random.default_rng(seed)
+    x = np.log2(NS)
+    xc = x - x.mean()
+    fit = lambda vals: float(np.asarray(vals) @ xc / (xc @ xc))
+    out["slopes"] = {}
+    for m in ("mlp_obs", "seq_obs", "mlp_priv"):
+        for lag in LAGS:
+            per = {s: [sc.stat(sc.errs[f"{m}_n{n}_s{s}"], lag) for n in NS] for s in SEEDS
+                   if all(f"{m}_n{n}_s{s}" in sc.errs for n in NS)}
+            if len(per) < 3:
+                continue
+            node = {"per_seed": {str(s): fit(v) for s, v in per.items()}, "leave_one_seed_out": {}}
+            draws = {s: np.stack([sc.stat(sc.errs[f"{m}_n{n}_s{s}"], lag, sc.counts) for n in NS], axis=1)
+                     for s in per}                                                  # seed -> [B, 4]
+            for drop in per:
+                keep = [s for s in per if s != drop]
+                vals = np.mean([per[s] for s in keep], axis=0)
+                d = np.mean([draws[s] for s in keep], axis=0) @ xc / (xc @ xc)
+                lo, hi = pct(d)
+                node["leave_one_seed_out"][str(drop)] = {"point": fit(vals), "lo": lo, "hi": hi}
+            stack = np.stack([draws[s] for s in sorted(per)])                       # [S, B, 4]
+            pick = rng.integers(0, stack.shape[0], size=(stack.shape[1], len(NS), stack.shape[0]))   # [B, 4, S]
+            b_idx = np.arange(stack.shape[1])[:, None, None]
+            n_idx = np.arange(len(NS))[None, :, None]
+            boot = stack[pick, b_idx, n_idx].mean(axis=2)                           # [B, 4]
+            lo, hi = pct(boot @ xc / (xc @ xc))
+            node["world_and_seed_bootstrap"] = {"point": fit(np.mean([per[s] for s in per], axis=0)), "lo": lo, "hi": hi}
+            out["slopes"][f"{m}|{lag}"] = node
+    out["versus"] = {}
+    pairs = [("mlp_obs", 400, "an5_arm"), ("mlp_obs", 400, "wm3_full"), ("mlp_obs", nmax, "an5_arm"),
+             ("mlp_obs", nmax, "wm3_full")]
+    for m, n, b in pairs:
+        e = sc.model_errs(m, n)[0]
+        if e is not None:
+            for lag in LAGS:
+                r = ef.compare([e], sc.ref[b], sc.cells[lag], sc.worlds)
+                out["versus"][f"{m}_n{n} − {b}|{lag}"] = {"a": r["model"], "b": r["baseline"], "ci_diff": r["ci_diff"]}
+    repro = sc.errs.get("ridge_obs_repro")
+    if repro is not None:
+        for lag in LAGS:
+            r = ef.compare([sc.model_errs("mlp_obs", 400)[0]], repro, sc.cells[lag], sc.worlds)
+            out["versus"][f"mlp_obs_n400 − ridge_obs (WM-5)|{lag}"] = {"a": r["model"], "b": r["baseline"], "ci_diff": r["ci_diff"]}
+    return out
+
+
 def compute_block(runs: Path, info: dict) -> dict:
     """Wall times (s) of the v2x recording (`runs/record/`) and the trainings / evaluations (run files)."""
     rec = runs / "record"
@@ -351,6 +423,13 @@ def compute_block(runs: Path, info: dict) -> dict:
     eps = [r["epochs"] for n, r in info.items() if r.get("epochs") and r.get("model") in ("mlp", "seq")]
     out["neural_epochs"] = {"min": min(eps), "max": max(eps), "runs": len(eps)} if eps else None
     out["neural_stops"] = sorted({r.get("stop") for r in info.values() if r.get("model") in ("mlp", "seq")})
+    wall = [r["train.end"] - r["train.start"] for n, r in info.items() if "train.start" in r and "train.end" in r]
+    out["training_wall_total"] = sum(wall)
+    caps = []
+    for d_ in sorted(runs.glob("gbm_*")):
+        vm = load(d_ / "val_metrics.json") or {}
+        caps += [f"{d_.name}:{k}" for k, v in (vm.get("info") or {}).items() if v.get("best_iteration") == 500]
+    out["gbm_cells_at_round_cap"] = caps
     ev = [r["eval.end"] - r["eval.start"] for r in info.values() if "eval.start" in r and "eval.end" in r]
     out["evaluations"] = len(ev)
     out["evaluation_total"] = sum(ev)
@@ -365,7 +444,7 @@ def build(runs: Path) -> dict:
     info = runs_info(runs, (pre or {}).get("time"))
     evals = [r for r in info.values() if r.get("eval_after_prereg") is not None]
     return {"references": references(sc), "curves": cur, "rules": rl, "reproduction": reproduction(sc),
-            "compute": compute_block(runs, info),
+            "compute": compute_block(runs, info), "posthoc": posthoc(sc, rl.get("largest_n")),
             "obs2": obs2_block(sc, rl.get("largest_n")), "per_cell": per_cell(sc, rl.get("largest_n")), "runs": info,
             "prereg": pre, "prereg_order_ok": bool(evals) and all(r["eval_after_prereg"] for r in evals),
             "test_worlds": len(sc.worlds), "test_cases": len(sc.cases)}
@@ -436,6 +515,31 @@ def markdown(j: dict) -> str:
                 cells.append(f"{fmt(node[lag]['value'])} (s={node['seeds']}); closure {fmt(cl['point'], 2)} [{fmt(cl['lo'], 2)}, {fmt(cl['hi'], 2)}]")
             L.append(f"| `{m}`{' (diag.)' if m.endswith('priv') else ''} | " + " | ".join(cells) + " |")
         L.append("")
+    ph = j.get("posthoc") or {}
+    if ph.get("slopes"):
+        L += ["## Post hoc (REVIEW.md round 1; not pre-registered): slope robustness and comparisons", "",
+              "Slopes per doubling: per seed; leaving one seed out (test-world bootstrap CI); a bootstrap over test worlds "
+              "and training seeds.", "", "| model | lag | per seed (s0, s1, s2) | without s0 | without s1 | without s2 | "
+              "worlds + seeds [95 % CI] |", "|---|---|---|---|---|---|---|"]
+        for k, v in ph["slopes"].items():
+            m, lag = k.split("|")
+            lo = v["leave_one_seed_out"]
+            ws = v["world_and_seed_bootstrap"]
+            L.append(f"| `{m}` | {lag} | " + ", ".join(f"{x:+.4f}" for x in v["per_seed"].values()) + " | "
+                     + " | ".join(f"{lo[s]['point']:+.4f} [{lo[s]['lo']:+.4f}, {lo[s]['hi']:+.4f}]" for s in ("0", "1", "2"))
+                     + f" | {ws['point']:+.4f} [{ws['lo']:+.4f}, {ws['hi']:+.4f}] |")
+        L += ["", "| comparison | lag | a | b | Δ [95 % CI] |", "|---|---|---|---|---|"]
+        for k, v in ph["versus"].items():
+            pair, lag = k.split("|")
+            L.append(f"| {pair} | {lag} | {fmt(v['a'])} | {fmt(v['b'])} | {ci_text(v['ci_diff'])} |")
+        L.append("")
+    for rule in ("C1", "C2"):
+        ch = r.get(rule) or {}
+        if ch:
+            L.append(f"{rule} choice ({ch.get('choice_rule')}): `{ch['chosen']}`; by seed-averaged errors it would be "
+                     f"`{ch['chosen_by_seed_averaged_errors']}`" + (f" (verdict {ch['verdict_of_the_other_choice']['verdict']})"
+                                                                     if ch.get("verdict_of_the_other_choice") else " (the same)") + ".")
+    L.append("")
     rp = j.get("reproduction") or {}
     if rp:
         L += ["## WM-5 reproduction (ridge, both replicates, N = 400)", "", "| model | reproduced | test max |Δ| | val max |Δ| | "

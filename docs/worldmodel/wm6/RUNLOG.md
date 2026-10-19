@@ -31,3 +31,5 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 4 | 07:54:16 | 08:14:19 | N = 800 / 1,600 / 2,000 trainings (48 runs, one at a time, code `b7fad5bc`): every neural run stopped by patience (52–159 epochs; ≤ 27 s each), GBM by per-cell early stopping, ridges closed form |
 | 4 | 08:14:30 | 08:16 | `finals6.sh` (code `b7fad5bc`): 48 v2 test evaluations and 6 obs2 transfer evaluations (`mlp_obs` / `seq_obs` at N = 2,000), all exit 0 |
 | 5 | 08:17 | 08:19 | every run's small files fetched (`runs/`), `judge6.py`: largest N 2,000; reading "learnable from observables" (second clause) |
+| 7 (review 1) | 08:25 | 08:41 | review round 1 (fresh subagent, read-only, HEAD `008c8f90`): no BLOCKING, 2 MAJOR, 7 MINOR, 6 NOTE; independent recomputation of C1 and the closure agrees; responses 08:42–09:00 (DECISIONS L7.1–L7.3) |
+| 7 (pre-gate) | 08:26 | 08:31 | preliminary gate on `008c8f90`: Mac 243 OK (29 skipped), DGX 243 OK (0 skipped) |
