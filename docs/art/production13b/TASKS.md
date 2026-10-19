@@ -26,3 +26,9 @@ Retry ledger: no checks yet executed. Every target invocation including debug co
 - Base optimized-dev bridge build session49711 completed exit0 (4m40s); base import session19212 completed exit0 with no ERROR/SCRIPT ERROR. Copied existing import cache only, then actual base import refreshed it.
 - Release bridge build on measure worktree started session58740; log builds/measure-release.log. Not yet admitted performance evidence.
 - Six-framing reference A launched session34712 using unchanged run_identity_p13.sh, base8c1b18be/kernel1/skip0; external identity/six-A.log and .exit, plus identity/six/A/launches.tsv. Next A-prime and running/pan reference, serial through window lock.
+- Six A and Aprime completed exit0 (sessions34712/19951); each of12 launches reports present artifacts/no log errors/unchanged provenance. Reference comparator session52138 exit0: all6 A/Aprime RGBA differences0. The B input intentionally repeats A, so scope remains reference_integrity_only, never candidate acceptance.
+- Running reference launched session28397; external identity/running-base.log/.exit and running-base/launches.tsv. All5 worlds required; do not narrow completion to the first world.
+- Measure release build session58740 completed exit0 in2m34s. Debug-path/release SHA both7c4144a3ab6633568c9a17e565c8634c7b074afa7d43b80034fd0e45e5e2c73b. Measure import still pending.
+- Running-reference session28397 completed exit0: all5 launches present/no log errors/unchanged provenance; self-comparator exit0, valid=true, all required schedules/600+240 counts verified. No candidate acceptance claimed.
+- Measure resource import session8748 completed exit0 and no ERROR/SCRIPT ERROR; release readiness established, performance still unmeasured.
+- At12:32Z the only running task for Part0 is full gate session38045, Rust later suites still progressing. Do not re-run the gate or its already executed target checks.
