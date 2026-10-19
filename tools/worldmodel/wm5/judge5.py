@@ -417,10 +417,26 @@ def cost_block(runs: Path) -> dict:
     return out
 
 
+def compute_block(runs: Path, info: dict) -> dict:
+    """Wall times (s) of the recording stages (`runs/record/*.start|end`) and of every training (`val_metrics.json`)."""
+    rec = runs / "record"
+    out = {"recording": {}, "training": {}}
+    for name in ["r0"] + [f"round{k}_record" for k in range(1, 7)] + ["fam_val_record", "fam_test_record"]:
+        if (rec / f"{name}.start").exists() and (rec / f"{name}.end").exists():
+            out["recording"][name] = int((rec / f"{name}.end").read_text()) - int((rec / f"{name}.start").read_text())
+    out["recording_total"] = sum(out["recording"].values())
+    for n, r in info.items():
+        if r.get("seconds") is not None and not n.startswith("_"):
+            out["training"][n] = r["seconds"]
+    out["training_total_hours"] = sum(out["training"].values()) / 3600
+    return out
+
+
 def build_all(runs: Path) -> dict:
     j = build(runs)
     j["main_table"] = main_table(j)
     j["cost_checks"] = cost_block(runs)
+    j["compute"] = compute_block(runs, j["runs"])
     return j
 
 

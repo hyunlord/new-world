@@ -479,4 +479,4 @@ project repository; the episode arrays live outside version control (several GB 
 
 ## Appendix E. Compute
 
-{{sec:appendix_compute}}
+All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took {{j5:compute/recording_total#0}} s of wall time at four or eight recorder workers (round 0 {{j5:compute/recording/r0#0}} s; rounds 1–5 {{j5:compute/recording/round1_record#0}}, {{j5:compute/recording/round2_record#0}}, {{j5:compute/recording/round3_record#0}}, {{j5:compute/recording/round4_record#0}}, {{j5:compute/recording/round5_record#0}} s; val and test families {{j5:compute/recording/fam_val_record#0}} and {{j5:compute/recording/fam_test_record#0}} s). The trainings of this study took {{j5:compute/training_total_hours#1}} GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs.
