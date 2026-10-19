@@ -474,6 +474,7 @@ class TestPaperNumbers(unittest.TestCase):
         self.assertEqual(fg.fmt_value(0.0123, "3s"), "+0.012")
         self.assertEqual(fg.fmt_value(1640, "0"), "1,640")
         self.assertEqual(fg.fmt_value(0.0312, "pct1"), "3.1 %")
+        self.assertEqual(fg.fmt_value("WEAK", "str"), "WEAK")
         self.assertEqual(fg.fmt_ci({"point": 0.1, "lo": -0.02, "hi": 0.2}, 2), "+0.10 [−0.02, +0.20]")
 
     def test_render_and_check_on_a_synthetic_source(self):

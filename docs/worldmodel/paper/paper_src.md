@@ -219,7 +219,88 @@ in Appendix A.
 
 ## 5 Results
 
-{{sec:results}}
+### 5.1 Main results
+
+Table 1 lists the 12-cell scaled effect MAE (lower is better) of every method on every split. Multi-seed rows are
+seed-averaged; obs numbers are the earlier study's committed ones. CRN / CT on obs2 and v2 are trained on the authors'
+schedule and read at their last checkpoint with counts rounded (primary).
+
+| method | trained on | v2 7 d | v2 30 d | obs 7 d | obs 30 d | obs2 7 d | obs2 30 d |
+|---|---|---|---|---|---|---|---|
+| `zero` (no effect) | — | {{j5:main_table/zero/v2/7d#3}} | {{j5:main_table/zero/v2/30d#3}} | {{j5:main_table/zero/obs/7d#3}} | {{j5:main_table/zero/obs/30d#3}} | {{j5:main_table/zero/obs2/7d#3}} | {{j5:main_table/zero/obs2/30d#3}} |
+| `naive` | obs / obs2 train | — | — | {{j5:main_table/naive/obs/7d#3}} | {{j5:main_table/naive/obs/30d#3}} | {{j5:main_table/naive/obs2/7d#3}} | {{j5:main_table/naive/obs2/30d#3}} |
+| `ipw` (multi-act on obs2) | obs / obs2 train | — | — | {{j5:main_table/ipw/obs/7d#3}} | {{j5:main_table/ipw/obs/30d#3}} | {{j5:main_table/ipw/obs2/7d#3}} | {{j5:main_table/ipw/obs2/30d#3}} |
+| `match5` | obs / obs2 train | — | — | {{j5:main_table/match5/obs/7d#3}} | {{j5:main_table/match5/obs/30d#3}} | {{j5:main_table/match5/obs2/7d#3}} | {{j5:main_table/match5/obs2/30d#3}} |
+| `an5_arm` | v2 train | {{j5:main_table/an5_arm/v2/7d#3}} | {{j5:main_table/an5_arm/v2/30d#3}} | — | — | — | — |
+| `ridge_obs` | v2 train (counterfactual labels) | {{j5:main_table/ridge_obs/v2/7d#3}} | {{j5:main_table/ridge_obs/v2/30d#3}} | — | — | {{j5:main_table/ridge_obs/obs2/7d#3}} | {{j5:main_table/ridge_obs/obs2/30d#3}} |
+| `ridge_priv` (diagnostic) | v2 train, hidden state | {{j5:main_table/ridge_priv/v2/7d#3}} | {{j5:main_table/ridge_priv/v2/30d#3}} | — | — | {{j5:main_table/ridge_priv/obs2/7d#3}} | {{j5:main_table/ridge_priv/obs2/30d#3}} |
+| M1b (3 seeds) | v2 | {{j5:main_table/m1b_v2/v2/7d#3}} | {{j5:main_table/m1b_v2/v2/30d#3}} | {{j5:main_table/m1b_v2/obs/7d#3}} | {{j5:main_table/m1b_v2/obs/30d#3}} | {{j5:main_table/m1b_v2/obs2/7d#3}} | {{j5:main_table/m1b_v2/obs2/30d#3}} |
+| `wm3_full`, paired (3 seeds) | v2 | {{j5:main_table/wm3_full/v2/7d#3}} | {{j5:main_table/wm3_full/v2/30d#3}} | {{j5:main_table/wm3_full/obs/7d#3}} | {{j5:main_table/wm3_full/obs/30d#3}} | {{j5:main_table/wm3_full/obs2/7d#3}} | {{j5:main_table/wm3_full/obs2/30d#3}} |
+| M1b-obs (2 seeds) | obs | — | — | {{j5:main_table/m1b_obs/obs/7d#3}} | {{j5:main_table/m1b_obs/obs/30d#3}} | {{j5:main_table/m1b_obs/obs2/7d#3}} | {{j5:main_table/m1b_obs/obs2/30d#3}} |
+| M1b-obs2 (2 seeds) | obs2 | — | — | — | — | {{j5:main_table/m1b_obs2/obs2/7d#3}} | {{j5:main_table/m1b_obs2/obs2/30d#3}} |
+| CRN, time-capped (earlier study, 2 seeds) | obs / v2 | {{j5:main_table/crn_v2_wm4/v2/7d#3}} | {{j5:main_table/crn_v2_wm4/v2/30d#3}} | {{j5:main_table/crn_obs_wm4/obs/7d#3}} | {{j5:main_table/crn_obs_wm4/obs/30d#3}} | {{j5:main_table/crn_obs_wm4/obs2/7d#3}} | {{j5:main_table/crn_obs_wm4/obs2/30d#3}} |
+| CT, time-capped (earlier study, 2 seeds) | obs / v2 | {{j5:main_table/ct_v2_wm4/v2/7d#3}} | {{j5:main_table/ct_v2_wm4/v2/30d#3}} | {{j5:main_table/ct_obs_wm4/obs/7d#3}} | {{j5:main_table/ct_obs_wm4/obs/30d#3}} | {{j5:main_table/ct_obs_wm4/obs2/7d#3}} | {{j5:main_table/ct_obs_wm4/obs2/30d#3}} |
+| **CRN, authors' schedule (2 seeds)** | v2 / obs2 | {{j5:main_table/crn_v2/v2/7d#3}} | {{j5:main_table/crn_v2/v2/30d#3}} | — | — | {{j5:main_table/crn_obs2/obs2/7d#3}} | {{j5:main_table/crn_obs2/obs2/30d#3}} |
+| **CT, authors' schedule (2 seeds)** | v2 / obs2 | {{j5:main_table/ct_v2/v2/7d#3}} | {{j5:main_table/ct_v2/v2/30d#3}} | — | — | {{j5:main_table/ct_obs2/obs2/7d#3}} | {{j5:main_table/ct_obs2/obs2/30d#3}} |
+| floor (other replicate) | — | {{j5:main_table/floor/v2/7d#3}} | {{j5:main_table/floor/v2/30d#3}} | — | — | {{j5:main_table/floor/obs2/7d#3}} | {{j5:main_table/floor/obs2/30d#3}} |
+
+### 5.2 The headroom ladder (F1, F2)
+
+| split | lag | floor | `ridge_priv` | `ridge_obs` | `zero` | `zero` − floor [95 % CI] | `zero` − `ridge_obs` | `ridge_obs` − `ridge_priv` | `ridge_priv` − floor |
+|---|---|---|---|---|---|---|---|---|---|
+| v2 | 7 d | {{j5:v2/ladder/7d/values/floor#3}} | {{j5:v2/ladder/7d/values/ridge_priv#3}} | {{j5:v2/ladder/7d/values/ridge_obs#3}} | {{j5:v2/ladder/7d/values/zero#3}} | {{j5:v2/ladder/7d/steps/zero − floor/ci_diff#ci3}} | {{j5:v2/ladder/7d/steps/zero − ridge_obs/ci_diff#ci3}} | {{j5:v2/ladder/7d/steps/ridge_obs − ridge_priv/ci_diff#ci3}} | {{j5:v2/ladder/7d/steps/ridge_priv − floor/ci_diff#ci3}} |
+| v2 | 30 d | {{j5:v2/ladder/30d/values/floor#3}} | {{j5:v2/ladder/30d/values/ridge_priv#3}} | {{j5:v2/ladder/30d/values/ridge_obs#3}} | {{j5:v2/ladder/30d/values/zero#3}} | {{j5:v2/ladder/30d/steps/zero − floor/ci_diff#ci3}} | {{j5:v2/ladder/30d/steps/zero − ridge_obs/ci_diff#ci3}} | {{j5:v2/ladder/30d/steps/ridge_obs − ridge_priv/ci_diff#ci3}} | {{j5:v2/ladder/30d/steps/ridge_priv − floor/ci_diff#ci3}} |
+| obs2 | 7 d | {{j5:obs2/ladder/7d/values/floor#3}} | {{j5:obs2/ladder/7d/values/ridge_priv#3}} | {{j5:obs2/ladder/7d/values/ridge_obs#3}} | {{j5:obs2/ladder/7d/values/zero#3}} | {{j5:obs2/ladder/7d/steps/zero − floor/ci_diff#ci3}} | {{j5:obs2/ladder/7d/steps/zero − ridge_obs/ci_diff#ci3}} | {{j5:obs2/ladder/7d/steps/ridge_obs − ridge_priv/ci_diff#ci3}} | {{j5:obs2/ladder/7d/steps/ridge_priv − floor/ci_diff#ci3}} |
+| obs2 | 30 d | {{j5:obs2/ladder/30d/values/floor#3}} | {{j5:obs2/ladder/30d/values/ridge_priv#3}} | {{j5:obs2/ladder/30d/values/ridge_obs#3}} | {{j5:obs2/ladder/30d/values/zero#3}} | {{j5:obs2/ladder/30d/steps/zero − floor/ci_diff#ci3}} | {{j5:obs2/ladder/30d/steps/zero − ridge_obs/ci_diff#ci3}} | {{j5:obs2/ladder/30d/steps/ridge_obs − ridge_priv/ci_diff#ci3}} | {{j5:obs2/ladder/30d/steps/ridge_priv − floor/ci_diff#ci3}} |
+
+### 5.3 Pre-registered verdicts
+
+| rule | model (seed-averaged) | baseline | Δ = model − baseline [95 % CI] | verdict |
+|---|---|---|---|---|
+| R1 obs2 7 d: crn_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/crn_obs2/model#3}} | {{j5:obs2/rules/R1/crn_obs2/baseline#3}} | {{j5:obs2/rules/R1/crn_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/crn_obs2/verdict#str}}** |
+| R1 obs2 7 d: ct_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/ct_obs2/model#3}} | {{j5:obs2/rules/R1/ct_obs2/baseline#3}} | {{j5:obs2/rules/R1/ct_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/ct_obs2/verdict#str}}** |
+| R1 obs2 7 d: m1b_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/m1b_obs2/model#3}} | {{j5:obs2/rules/R1/m1b_obs2/baseline#3}} | {{j5:obs2/rules/R1/m1b_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/m1b_obs2/verdict#str}}** |
+| R2 obs2 30 d: crn_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/crn_obs2/model#3}} | {{j5:obs2/rules/R2/crn_obs2/baseline#3}} | {{j5:obs2/rules/R2/crn_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/crn_obs2/verdict#str}}** |
+| R2 obs2 30 d: ct_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/ct_obs2/model#3}} | {{j5:obs2/rules/R2/ct_obs2/baseline#3}} | {{j5:obs2/rules/R2/ct_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/ct_obs2/verdict#str}}** |
+| R2 obs2 30 d: m1b_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/m1b_obs2/model#3}} | {{j5:obs2/rules/R2/m1b_obs2/baseline#3}} | {{j5:obs2/rules/R2/m1b_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/m1b_obs2/verdict#str}}** |
+| R3 v2 7 d: crn_v2 vs `zero` | {{j5:v2/rules/R3/crn_v2|zero|7d/model#3}} | {{j5:v2/rules/R3/crn_v2|zero|7d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|zero|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|zero|7d/verdict#str}}** |
+| R3 v2 7 d: crn_v2 vs `an5_arm` | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/model#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|an5_arm|7d/verdict#str}}** |
+| R3 v2 30 d: crn_v2 vs `zero` | {{j5:v2/rules/R3/crn_v2|zero|30d/model#3}} | {{j5:v2/rules/R3/crn_v2|zero|30d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|zero|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|zero|30d/verdict#str}}** |
+| R3 v2 30 d: crn_v2 vs `an5_arm` | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/model#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|an5_arm|30d/verdict#str}}** |
+| R3 v2 7 d: ct_v2 vs `zero` | {{j5:v2/rules/R3/ct_v2|zero|7d/model#3}} | {{j5:v2/rules/R3/ct_v2|zero|7d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|zero|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|zero|7d/verdict#str}}** |
+| R3 v2 7 d: ct_v2 vs `an5_arm` | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/model#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|an5_arm|7d/verdict#str}}** |
+| R3 v2 30 d: ct_v2 vs `zero` | {{j5:v2/rules/R3/ct_v2|zero|30d/model#3}} | {{j5:v2/rules/R3/ct_v2|zero|30d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|zero|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|zero|30d/verdict#str}}** |
+| R3 v2 30 d: ct_v2 vs `an5_arm` | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/model#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|an5_arm|30d/verdict#str}}** |
+| E1 v2 7 d: `ridge_obs` vs `zero` | {{j5:v2/rules/E1/7d/model#3}} | {{j5:v2/rules/E1/7d/baseline#3}} | {{j5:v2/rules/E1/7d/ci_diff#ci3}} | **{{j5:v2/rules/E1/7d/verdict#str}}** |
+| E1 v2 30 d: `ridge_obs` vs `zero` | {{j5:v2/rules/E1/30d/model#3}} | {{j5:v2/rules/E1/30d/baseline#3}} | {{j5:v2/rules/E1/30d/ci_diff#ci3}} | **{{j5:v2/rules/E1/30d/verdict#str}}** |
+| E1 obs2 7 d: `ridge_obs` vs `zero` | {{j5:obs2/rules/E1/7d/model#3}} | {{j5:obs2/rules/E1/7d/baseline#3}} | {{j5:obs2/rules/E1/7d/ci_diff#ci3}} | **{{j5:obs2/rules/E1/7d/verdict#str}}** |
+| E1 obs2 30 d: `ridge_obs` vs `zero` | {{j5:obs2/rules/E1/30d/model#3}} | {{j5:obs2/rules/E1/30d/baseline#3}} | {{j5:obs2/rules/E1/30d/ci_diff#ci3}} | **{{j5:obs2/rules/E1/30d/verdict#str}}** |
+| E2 v2 7 d: crn_v2 vs `ridge_obs` | {{j5:v2/rules/E2/crn_v2|7d/model#3}} | {{j5:v2/rules/E2/crn_v2|7d/baseline#3}} | {{j5:v2/rules/E2/crn_v2|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/crn_v2|7d/verdict#str}}** |
+| E2 v2 7 d: ct_v2 vs `ridge_obs` | {{j5:v2/rules/E2/ct_v2|7d/model#3}} | {{j5:v2/rules/E2/ct_v2|7d/baseline#3}} | {{j5:v2/rules/E2/ct_v2|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/ct_v2|7d/verdict#str}}** |
+| E2 v2 7 d: wm3_full vs `ridge_obs` | {{j5:v2/rules/E2/wm3_full|7d/model#3}} | {{j5:v2/rules/E2/wm3_full|7d/baseline#3}} | {{j5:v2/rules/E2/wm3_full|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/wm3_full|7d/verdict#str}}** |
+| E2 v2 30 d: crn_v2 vs `ridge_obs` | {{j5:v2/rules/E2/crn_v2|30d/model#3}} | {{j5:v2/rules/E2/crn_v2|30d/baseline#3}} | {{j5:v2/rules/E2/crn_v2|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/crn_v2|30d/verdict#str}}** |
+| E2 v2 30 d: ct_v2 vs `ridge_obs` | {{j5:v2/rules/E2/ct_v2|30d/model#3}} | {{j5:v2/rules/E2/ct_v2|30d/baseline#3}} | {{j5:v2/rules/E2/ct_v2|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/ct_v2|30d/verdict#str}}** |
+| E2 v2 30 d: wm3_full vs `ridge_obs` | {{j5:v2/rules/E2/wm3_full|30d/model#3}} | {{j5:v2/rules/E2/wm3_full|30d/baseline#3}} | {{j5:v2/rules/E2/wm3_full|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/wm3_full|30d/verdict#str}}** |
+| E2 obs2 7 d: crn_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/crn_obs2|7d/model#3}} | {{j5:obs2/rules/E2/crn_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/crn_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/crn_obs2|7d/verdict#str}}** |
+| E2 obs2 7 d: ct_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/ct_obs2|7d/model#3}} | {{j5:obs2/rules/E2/ct_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/ct_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/ct_obs2|7d/verdict#str}}** |
+| E2 obs2 7 d: m1b_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/m1b_obs2|7d/model#3}} | {{j5:obs2/rules/E2/m1b_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/m1b_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/m1b_obs2|7d/verdict#str}}** |
+| E2 obs2 7 d: wm3_full vs `ridge_obs` | {{j5:obs2/rules/E2/wm3_full|7d/model#3}} | {{j5:obs2/rules/E2/wm3_full|7d/baseline#3}} | {{j5:obs2/rules/E2/wm3_full|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/wm3_full|7d/verdict#str}}** |
+| E2 obs2 30 d: crn_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/crn_obs2|30d/model#3}} | {{j5:obs2/rules/E2/crn_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/crn_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/crn_obs2|30d/verdict#str}}** |
+| E2 obs2 30 d: ct_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/ct_obs2|30d/model#3}} | {{j5:obs2/rules/E2/ct_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/ct_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/ct_obs2|30d/verdict#str}}** |
+| E2 obs2 30 d: m1b_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/m1b_obs2|30d/model#3}} | {{j5:obs2/rules/E2/m1b_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/m1b_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/m1b_obs2|30d/verdict#str}}** |
+| E2 obs2 30 d: wm3_full vs `ridge_obs` | {{j5:obs2/rules/E2/wm3_full|30d/model#3}} | {{j5:obs2/rules/E2/wm3_full|30d/baseline#3}} | {{j5:obs2/rules/E2/wm3_full|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/wm3_full|30d/verdict#str}}** |
+| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/verdict#str}}** |
+| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/verdict#str}}** |
+| D1 obs2 7 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/verdict#str}}** |
+| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/verdict#str}}** |
+| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/verdict#str}}** |
+| D1 obs2 30 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}** |
+
+R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` {{j5:R4/crn_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} α_max; `crn_v2_s1` {{j5:R4/crn_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} α_max; `ct_v2_s0` {{j5:R4/ct_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} α_max; `ct_v2_s1` {{j5:R4/ct_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} α_max; `crn_obs2_s0` {{j5:R4/crn_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} α_max; `crn_obs2_s1` {{j5:R4/crn_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} α_max; `ct_obs2_s0` {{j5:R4/ct_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} α_max; `ct_obs2_s1` {{j5:R4/ct_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
+
+D2 (rounding alone; the earlier study's runs on their own test splits, seed-averaged, rounded − as committed): crn_obs 7 d {{j5:D2/crn_obs/compare/7d/ci_diff#ci3}}; crn_obs 30 d {{j5:D2/crn_obs/compare/30d/ci_diff#ci3}}; ct_obs 7 d {{j5:D2/ct_obs/compare/7d/ci_diff#ci3}}; ct_obs 30 d {{j5:D2/ct_obs/compare/30d/ci_diff#ci3}}; crn_v2 7 d {{j5:D2/crn_v2/compare/7d/ci_diff#ci3}}; crn_v2 30 d {{j5:D2/crn_v2/compare/30d/ci_diff#ci3}}; ct_v2 7 d {{j5:D2/ct_v2/compare/7d/ci_diff#ci3}}; ct_v2 30 d {{j5:D2/ct_v2/compare/30d/ci_diff#ci3}}.
+
+{{sec:results_text}}
 
 ## 6 Analysis
 
@@ -281,7 +362,25 @@ bookkeeping are ours (no Lightning, Hydra or MLflow). The full list with reasons
 
 ## Appendix B. Hyper-parameters, budgets and training reached
 
-{{sec:appendix_runs}}
+Configurations (pre-registered grid on the obs split, reused): CRN encoder hidden 128, BR 64, FC 128, dropout 0.1,
+lr 1e-3, batch 64; decoder hidden 64 (the encoder's BR), BR 64, FC 32, dropout 0.1, lr 1e-3, batch 1,024; gradient
+reversal α_max 1. CT d_model 128, 2 layers, 4 heads, BR 64, FC 128, dropout 0.1, lr 1e-3, batch 128 (doubled by the
+masked-covariate copy), domain confusion α_max 0.01, EMA β 0.99, relative positions (max 15). Adam, no weight decay,
+no clipping. Budgets: CRN 5,400 s per run (both stages), CT 14,400 s, M1b 16,200 s (8,000 steps); safety cap 1.25 ×
+budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations (1.89 and
+1.83 s per step, which would have cut the plan to 62–65 %); the third, without them, measured 0.91 s per step and
+kept the authors' plan.
+
+| run | planned steps | reached | α / α_max at the last step | lowest-`val_roll` step | seconds |
+|---|---|---|---|---|---|
+| `crn_v2_s0` | {{j5:runs/crn_v2_s0/plan/planned/crn_enc#0}} + {{j5:runs/crn_v2_s0/plan/planned/crn_dec#0}} | {{j5:runs/crn_v2_s0/stages/encoder/steps#0}} + {{j5:runs/crn_v2_s0/stages/decoder/steps#0}} | {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} | {{j5:runs/crn_v2_s0/stages/decoder/best_step#0}} | {{j5:runs/crn_v2_s0/seconds#0}} |
+| `crn_v2_s1` | {{j5:runs/crn_v2_s1/plan/planned/crn_enc#0}} + {{j5:runs/crn_v2_s1/plan/planned/crn_dec#0}} | {{j5:runs/crn_v2_s1/stages/encoder/steps#0}} + {{j5:runs/crn_v2_s1/stages/decoder/steps#0}} | {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} | {{j5:runs/crn_v2_s1/stages/decoder/best_step#0}} | {{j5:runs/crn_v2_s1/seconds#0}} |
+| `ct_v2_s0` | {{j5:runs/ct_v2_s0/plan/planned/ct#0}} | {{j5:runs/ct_v2_s0/stages/ct/steps#0}} | {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} | {{j5:runs/ct_v2_s0/stages/ct/best_step#0}} | {{j5:runs/ct_v2_s0/seconds#0}} |
+| `ct_v2_s1` | {{j5:runs/ct_v2_s1/plan/planned/ct#0}} | {{j5:runs/ct_v2_s1/stages/ct/steps#0}} | {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} | {{j5:runs/ct_v2_s1/stages/ct/best_step#0}} | {{j5:runs/ct_v2_s1/seconds#0}} |
+| `crn_obs2_s0` | {{j5:runs/crn_obs2_s0/plan/planned/crn_enc#0}} + {{j5:runs/crn_obs2_s0/plan/planned/crn_dec#0}} | {{j5:runs/crn_obs2_s0/stages/encoder/steps#0}} + {{j5:runs/crn_obs2_s0/stages/decoder/steps#0}} | {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} | {{j5:runs/crn_obs2_s0/stages/decoder/best_step#0}} | {{j5:runs/crn_obs2_s0/seconds#0}} |
+| `crn_obs2_s1` | {{j5:runs/crn_obs2_s1/plan/planned/crn_enc#0}} + {{j5:runs/crn_obs2_s1/plan/planned/crn_dec#0}} | {{j5:runs/crn_obs2_s1/stages/encoder/steps#0}} + {{j5:runs/crn_obs2_s1/stages/decoder/steps#0}} | {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} | {{j5:runs/crn_obs2_s1/stages/decoder/best_step#0}} | {{j5:runs/crn_obs2_s1/seconds#0}} |
+| `ct_obs2_s0` | {{j5:runs/ct_obs2_s0/plan/planned/ct#0}} | {{j5:runs/ct_obs2_s0/stages/ct/steps#0}} | {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} | {{j5:runs/ct_obs2_s0/stages/ct/best_step#0}} | {{j5:runs/ct_obs2_s0/seconds#0}} |
+| `ct_obs2_s1` | {{j5:runs/ct_obs2_s1/plan/planned/ct#0}} | {{j5:runs/ct_obs2_s1/stages/ct/steps#0}} | {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} | {{j5:runs/ct_obs2_s1/stages/ct/best_step#0}} | {{j5:runs/ct_obs2_s1/seconds#0}} |
 
 ## Appendix C. The observational policies
 

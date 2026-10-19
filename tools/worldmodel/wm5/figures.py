@@ -8,7 +8,7 @@ WM-5 only.
     {{j4:…}} {{j3:…}} {{j2:…}}             WM-4 / WM-3 / WM-2's judge.json
     {{p5:summary/all/casts#0}}             obs2's policy summary (judge.json `describe`)
 
-Format suffixes: `#3` (decimals), `#3s` (signed), `#0` (integer with thousands separators), `#pct1` (a share as a
+Format suffixes: `#str` (a string as is, e.g. a verdict), `#3` (decimals), `#3s` (signed), `#0` (integer with thousands separators), `#pct1` (a share as a
 percentage with 1 decimal), `#ci3` (point [lo, hi], signed). `render` replaces every placeholder by its text, writes
 `paper.md` and `paper_numbers.json` (one entry per number: the text, the source file, the key path, the format), and
 refuses to leave a placeholder. `check` (a unit test calls it) re-reads every source and confirms each quoted text.
@@ -57,7 +57,9 @@ def lookup(obj, keys: list[str]):
     return obj
 
 
-def fmt_value(x: float, spec: str) -> str:
+def fmt_value(x, spec: str) -> str:
+    if spec == "str":
+        return str(x)
     if spec.startswith("pct"):
         return f"{100 * float(x):.{int(spec[3:])}f} %"
     if spec == "0":
