@@ -63,7 +63,7 @@ def main() -> int:
                            P12_DECLUMP_KERNEL="1" if args.kernel_state == "on" else "0", P13_WRITE_SKIP="0")
     command = ["bash", str(root / "tools/art_pipeline/with_quiet_lock_p13b.sh"), f"pair-{change}-{world}", "3600",
                environment.get("GODOT_BIN", "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot"),
-               "--path", str(checkout), "--resolution", "1920x1080", "--script", "res://scripts/test/art/perf_alternating_frames_p13.gd"]
+               "--path", str(checkout), "--resolution", "1920x1080", "--script", "res://scripts/test/art/perf_alternating_frames_p13b.gd"]
     launch: Record = {"change_id": change, "world": world, "before": before,
                       "started": datetime.datetime.now(datetime.timezone.utc).isoformat(), "command": command}
     if change == "write-skip":

@@ -1,0 +1,37 @@
+{
+  "items": {
+    "pair-write-skip-W500": [
+      1792413932.041713
+    ],
+    "pair-write-skip-W200": [
+      1792414027.820246
+    ]
+  },
+  "waiting_seconds": 0.0,
+  "wait_intervals": [
+    [
+      1792413931.0,
+      1792413931.0
+    ],
+    [
+      1792414027.0,
+      1792414027.0
+    ]
+  ],
+  "events": [
+    {
+      "epoch": 1792413932.041713,
+      "item": "pair-write-skip-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792413948.5452049
+    },
+    {
+      "epoch": 1792414027.820246,
+      "item": "pair-write-skip-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13b-evidence/write-skip/W200-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792414064.703841
+    }
+  ]
+}

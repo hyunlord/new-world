@@ -37,3 +37,10 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 
 - Part1 font24 implemented; glyph attempt1 exit0,10442 pairs, minimum KO regular1 design pixel. Real input attempt2 all17 steps passed at24px; windowed Life layoutP12/P13 and tooltip boundary tests all exit0. Screenshots visually inspected, fresh fact reading still pending. Strict check passed.
 - Write-skip six-frame candidate B launched session83203 on unchanged Part0 base with skip1. Must finish all6 and compare before claiming identity.
+
+- Write-skip identity COMPLETE: B runner83203 exit0; six comparison PASS with all RGBA differences0. Running runner3060 exit0; comparator PASS W0/W200/W-multi600 frames and both W500240-frame pans. Same8c1b18be build, kernelon, only skip polarity changes.
+- First W500 alternating session15560 admitted at12:45:32Z; waiting0. Threepairs in one session. No other Godot/build launched during measurement.
+- art-p13b-ui created from f55cf1e0 for required Part2 work. H10 helper prepared; parser/runtime/visual validation pending.
+
+- W500 attempt1 invalid: collector compared mutable counters to configuration. Preserved, p13b collector repaired with all config assertions intact. Earliest W500 retry13:15:50Z. W200 attempt1 session60018 exit0 VALID; pooled ratio0.9986985165 FAIL<=0.97; pair ratios1.0228750841,0.9823399557,0.9946989399. No fishing rerun: write-skip remainsOFF. W500 still mandatory to measure.
+- Part2 IN_PROGRESS on art-p13b-ui; H10 and badge evidence tools ready. Current core/render changes stable at font24 and tooltip fix; fresh captures scheduled while W500 cooldown runs.
