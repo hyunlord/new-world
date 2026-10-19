@@ -168,7 +168,74 @@ func _run() -> void:
 	var hangul: Array[String] = []
 	_scan_hangul(_main, hangul)
 	await _step("10_language_english", str(locale.get("_current_lang")) == "en" and hangul.is_empty(), {"language": locale.get("_current_lang"), "visible_hangul": hangul})
+	await _tooltip_checks()
 	_finish()
+
+func _tooltip_checks() -> void:
+	# A separate live activity world follows all original interaction steps.
+	for _attempt: int in range(3):
+		if not _inspector.visible:
+			break
+		await _key(KEY_ESCAPE)
+	_agents.set_process(true)
+	Reads.mutate(_world, "reset_world", [20261010])
+	var info: Dictionary = Reads.read(_world, "get_world_info", true)
+	var tpd: int = int(info["ticks_per_day"])
+	var activity_tick: int = 29 * tpd + floori(10.0 * tpd / 24.0) - int(info["clock_offset_ticks"])
+	Reads.mutate(_world, "advance_ticks", [activity_tick])
+	await _settle()
+	_agents.set_process(false)
+	var sprites: Dictionary = _agents.get("_sprites")
+	var active: Sprite2D
+	var inactive: Sprite2D
+	for id: int in sprites:
+		var sprite: Sprite2D = sprites[id]
+		if not sprite.visible or sprite.texture == null:
+			continue
+		var kind: int = int(sprite.get_meta("activity_kind", -1))
+		if active == null and kind >= 0 and kind < 7 and str(sprite.get_meta("fallback_kind", "")) == "activity_icon":
+			active = sprite
+		if inactive == null and kind < 0:
+			inactive = sprite
+	if active == null or inactive == null:
+		await _step("11_tooltip_live_targets", false, {"seed": 20261010, "tick": activity_tick, "active_found": active != null, "inactive_found": inactive != null})
+		return
+	# As in the original overlap test, only positions/visibility are arranged.
+	var hover_world := Vector2(936, 522)
+	_camera.position = hover_world
+	for id: int in sprites:
+		var sprite: Sprite2D = sprites[id]
+		sprite.visible = sprite == active or sprite == inactive
+	active.position = hover_world - _opaque(active).get_center()
+	inactive.position = hover_world + Vector2(55, 0) - _opaque(inactive).get_center()
+	await _settle()
+	var screen: Vector2 = _main.get_canvas_transform() * hover_world
+	var empty_screen: Vector2 = screen + Vector2(0, 180)
+	var inactive_screen: Vector2 = _main.get_canvas_transform() * (hover_world + Vector2(55, 0))
+	var tooltip: Control = _main.get_node("UI/ActivityTooltipP13") as Control
+	var panel: PanelContainer = tooltip.get("_panel") as PanelContainer
+	var label: Label = tooltip.get("_label") as Label
+	var selected: int = int(_inspector.call("get_selected_entity_bits"))
+	var kind: int = int(active.get_meta("activity_kind"))
+	var keys: Array[String] = ["UI_ACTIVITY_TEND_FIRE", "UI_ACTIVITY_CRAFT", "UI_ACTIVITY_REPAIR", "UI_ACTIVITY_HEARTH_CIRCLE", "UI_ACTIVITY_EXPLORE", "UI_ACTIVITY_PLAY", "UI_ACTIVITY_SIT_BY_FIRE"]
+	var locale: Node = root.get_node("Locale")
+	var expected: String = str(locale.call("ltr", "UI_TOOLTIP_PERSON_ACTIVITY_FMT")) % [PersonNames.display_name(int(active.get_meta("art_id")), str(locale.get("_current_lang"))), str(locale.call("ltr", keys[kind]))]
+	_move(empty_screen)
+	await _settle()
+	_move(screen)
+	await _settle()
+	if not await _step("11_tooltip_before_delay", not panel.visible and float(tooltip.get("_elapsed")) < 0.4, {"seed": 20261010, "tick": activity_tick, "agent_id": active.get_meta("art_id"), "entity_bits": active.get_meta("entity_bits"), "activity_kind": kind, "point": [screen.x, screen.y], "expected_text": expected, "tooltip_expected_visible": false, "tooltip_before_delay": true, "expected_hover_entity": int(active.get_meta("entity_bits")), "selection_before": selected}):
+		return
+	await create_timer(0.45).timeout
+	if not await _step("12_tooltip_after_delay", panel.visible and label.text == expected and float(tooltip.get("_elapsed")) >= 0.4, {"expected_text": expected, "tooltip_expected_visible": true, "expected_hover_entity": int(active.get_meta("entity_bits")), "selection_before": selected}):
+		return
+	_move(empty_screen)
+	await _settle()
+	if not await _step("13_tooltip_mouse_out", not panel.visible, {"point": [empty_screen.x, empty_screen.y], "tooltip_expected_visible": false, "expected_hover_entity": -1, "selection_before": selected}):
+		return
+	_move(inactive_screen)
+	await create_timer(0.45).timeout
+	await _step("14_tooltip_no_activity", not panel.visible, {"agent_id": inactive.get_meta("art_id"), "activity_kind": inactive.get_meta("activity_kind"), "point": [inactive_screen.x, inactive_screen.y], "tooltip_expected_visible": false, "expected_hover_entity": int(inactive.get_meta("entity_bits")), "selection_before": selected})
 
 func _find_dead_parent() -> bool:
 	var snapshot: Dictionary = Reads.read(_world, "get_agent_snapshot", true)
@@ -296,6 +363,22 @@ func _scan_hangul(node: Node, found: Array[String]) -> void:
 
 func _step(label: String, passed: bool, state: Dictionary) -> bool:
 	await _settle()
+	if state.has("tooltip_expected_visible"):
+		var tooltip: Control = _main.get_node("UI/ActivityTooltipP13") as Control
+		var panel: PanelContainer = tooltip.get("_panel") as PanelContainer
+		var text: Label = tooltip.get("_label") as Label
+		state["actual_visible"] = panel.visible
+		state["actual_text"] = text.text
+		state["elapsed"] = float(tooltip.get("_elapsed"))
+		state["viewport_mouse"] = str(root.get_mouse_position())
+		state["selection_after"] = int(_inspector.call("get_selected_entity_bits"))
+		state["actual_hover_entity"] = int(_agents.call("drawn_entity_at", _main.get_canvas_transform().affine_inverse() * root.get_mouse_position()))
+		passed = passed and state["actual_hover_entity"] == state["expected_hover_entity"]
+		passed = passed and panel.visible == bool(state["tooltip_expected_visible"]) and state["selection_after"] == state["selection_before"]
+		if bool(state.get("tooltip_before_delay", false)):
+			passed = passed and float(state["elapsed"]) < 0.4
+		if bool(state["tooltip_expected_visible"]):
+			passed = passed and text.text == str(state["expected_text"]) and float(state["elapsed"]) >= 0.4
 	RenderingServer.force_draw(false)
 	var path: String = _out.path_join(label + ".png")
 	var image: Image = root.get_texture().get_image()
