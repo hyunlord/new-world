@@ -41,3 +41,21 @@ The complete per-commit changed-file manifest (Git A/M/D status and path), plus 
 Historical references `8c1b18be8b05bfeaa062a937526fe4d9c2f53414` (backup/reference base) and `57ae7ac40abde7d24369606c9250d3e06e0f18d6` (prior publication) are not task commits.
 
 No Godot/build/check reruns or source/HEAD changes were made for this timeline. Unfinished parts have null end times; this snapshot does not establish identity, speed, final freeze, publication, or final acceptance.
+
+## Refresh through f5c8951e — 2026-10-19T15:00:52.563637+00:00
+
+The JSON now includes all 17 task commits, full SHAs and changed-file manifests through f5c8951e. Prior snapshot metadata is preserved. Part2 completion-with-limitations was reported 13:48:38.995382Z; Part1 completion 14:11:11.838176Z. These are reported checkpoints, not invented exact execution end times. Part3 gate1 failure reported 14:24:29.986878Z; gate2 exit-code pass with log errors reported 14:52:21.587959Z. Gate3 active, merged identity and Part4/final work pending. Admission waiting is now 3600 seconds; prior 1800 seconds remains historical. Earlier pending descriptions above are the original snapshot.
+
+| UTC | Full SHA | Subject | Changed files |
+|---|---|---|---:|
+| 2026-10-19T13:48:17+00:00 | `d56a926e9f665f4e0c04b70c9502533b9c96aedc` | art-p13b(p1): isolate capture input after a failed control repeat | 129 |
+| 2026-10-19T13:48:39+00:00 | `c1827b3b68bfac11155c8cd00e45ecfe69e3fdc6` | art-p13b(p2): preserve screen evidence without upgrading partial results | 110 |
+| 2026-10-19T14:12:11+00:00 | `a5771f1f489084d6e29032cb06365ffb87ff5731` | art-p13b(p1): enable walker only after exact identity and paired gains | 315 |
+| 2026-10-19T14:25:58+00:00 | `1f6ee3a0a51f41bd5b688f44738ee3a98b8ab9d0` | art-p13b(p3): make capture dispatch auditable and exercise the real bridge | 162 |
+| 2026-10-19T14:52:21+00:00 | `f5c8951e0a0a5861defe632cbd2a088dac71f692` | art-p13b(p3): give isolated renderer fixtures their required art bridge | 159 |
+
+## Part3 completion evidence — 2026-10-19T15:28:15.298609+00:00
+
+Gate3 clean audit: 15:13:04.508215Z, 120/120 and zero log errors. Merged release build exit 0 retains SHA256 `30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042`. Required merged identity: 28 launches 15:13:29Z–15:26:34Z; terminal exit 0 observed 15:26:57.646379Z, comparator PASS (all 6 RGBA/all 5 running exact). Part3 completion is evidenced by this observation; exact process-exit time remains unknown. This required identity repeat is not a speed measurement rerun.
+
+HEAD remains `f5c8951e0a0a5861defe632cbd2a088dac71f692`; the existing 17-commit census is unchanged. Part4/final work remains pending. Earlier in-progress entries are historical.

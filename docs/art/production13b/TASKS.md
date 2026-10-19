@@ -6,7 +6,7 @@ Part 1 deadline: 17:08Z. Part 4 freeze deadline: 19:08Z. Ten-hour cutoff: 22:08Z
 - Part 0 COMPLETE (baseline FAIL retained): original brief byte-verified and committed f962f5cd; backup at 8c1b18be. Calibration started 12:11Z, session 62867; full gate follows calibration because calibration must precede every Godot session.
 - Part 1 COMPLETE: font24/design glyph/layout/input verified; write-skip measured and rejected; walker identity and speed passed/defaultON; seats deferred.
 - Part 2 COMPLETE WITH LIMITATIONS: 161-image frozen fact reading scored; real input17/17; StageB12/14eligible (diagnostic10/12, fullbarNOT_VERIFIED); nolegend9/12; village2/6NOT_RUN; contrast12/21; H10roadFAIL3/3, relations/peaceENKOverified. UI evidence pushed at c1827b3b.
-- Part 3 IN_PROGRESS: merge UI and full gate; accepted candidate identity.
+- Part 3 COMPLETE: merged UI; full gate attempt3 120/120 with zero log errors; merged walker identity PASS (six exact RGBA framings and five exact running/pan conditions).
 - Part 4 PENDING: freeze by 19:08Z; after matrix and running timers; H1-H11.
 - Part 5 PENDING: independent review <=2 rounds, final gate, conditional publication, PR511, cleanup, Korean report.
 
@@ -74,3 +74,7 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - 2026-10-19T14:42:14.735583+00:00: Part3 attempt2 active session73134 at pushed1f6ee3a0a51f41bd5b688f44738ee3a98b8ab9d0, source/HEAD stable. Firstgate actual118/120, two exit0 additional logs emittedmissingbridge(test_agent_drawn_positions,test_cold_presentation); prepared externalp3-isolated-bridge-fixtures.patch, NOT applied duringactivegate. Applyafterterminal, verifybothzeroerrors, then cleanfullgate required. MainreleaseSHA30ed9754 remains, debugpath overwrittenbygate; restoreafterallbuilds beforemergedidentity. Measureworktree alreadydetached1f6ee3a0 withverifiedreleasebytes and5sourceparitychecks; no measurementsstarted.
 
 - 2026-10-19T14:52:21.587959+00:00: Part3 attempt2 session73134 exit0,120/120 exit-code checks. Not clean acceptance: two isolated renderer tests loggedmissingbridge errors. Both fixtures now haveactualWorldSimNode; individualretests zero failures/noERROR. Third completegate follows, no productionkernel orassertionchange.
+
+- 2026-10-19T15:13:31.125797+00:00: Part3 gate attempt3 session30784 terminal0,120/120 and zeroERROR/SCRIPT ERROR across all logs; root-audit.json retained. Release rebuild exit0, release/debug SHA30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042. Merged walker identity session53070 active at frozenf5c8951e; all28 captures and compound validator required before Part3 completion. No source/HEAD/build changes until terminal.
+
+- 2026-10-19T15:27:24.218793+00:00: Merged identity session53070 terminal0; all28 launches complete, compound passed=true/errors=[] on f5c8951e/release30ed9754. Root visually inspected full B/P3.png. Part3 evidence archive and push next, then freeze measure checkout for Part4; final publication still pending Part5.

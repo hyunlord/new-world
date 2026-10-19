@@ -1,0 +1,79 @@
+{
+  "scope": "reference_integrity_only",
+  "candidate": null,
+  "kernel_state": null,
+  "valid": true,
+  "status": "PASS",
+  "worlds": [
+    {
+      "scope": "reference_integrity_only",
+      "world": "W0",
+      "start_tick": 40560,
+      "frames": 600,
+      "fixed_fps": 60,
+      "advance_every_frames": 2,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-off/W0.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-on/W0.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "reference_integrity_only",
+      "world": "W200",
+      "start_tick": 1440,
+      "frames": 600,
+      "fixed_fps": 60,
+      "advance_every_frames": 2,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-off/W200.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-on/W200.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "reference_integrity_only",
+      "world": "W-multi",
+      "start_tick": 90840,
+      "frames": 600,
+      "fixed_fps": 60,
+      "advance_every_frames": 2,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-off/W-multi.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-on/W-multi.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "reference_integrity_only",
+      "world": "W500_FROZEN",
+      "start_tick": 1440,
+      "frames": 240,
+      "fixed_fps": 60,
+      "advance_every_frames": 0,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-off/W500_FROZEN.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-on/W500_FROZEN.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "reference_integrity_only",
+      "world": "W500_2X",
+      "start_tick": 1440,
+      "frames": 240,
+      "fixed_fps": 60,
+      "advance_every_frames": 1,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-off/W500_2X.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13b-evidence/walker-identity-merged/running-on/W500_2X.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    }
+  ]
+}
