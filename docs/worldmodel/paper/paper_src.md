@@ -399,7 +399,7 @@ at 30 on obs2). The simple contrasts and the observable-state regression get the
 (`ipw` {{j5:obs2/tables/ipw/sp240|food_stock|30d/mean_pred#1s}}, `ridge_obs` {{j5:obs2/tables/ridge_obs/sp240|food_stock|30d/mean_pred#1s}}); the learned
 dynamics models get it wrong, flat or small (seed 0 of each: CRN {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, M1b-obs2
 {{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, `wm3_full` {{j5:obs2/tables/ref_wm3_full_s0/sp240|food_stock|30d/mean_pred#1s}};
-CT {{j5:obs2/tables/ct_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} has the right sign at about a third of the size). Rolling the
+CT, the one exception, has the right sign but a smaller size in both seeds: {{j5:obs2/tables/ct_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} and {{j5:obs2/tables/ct_obs2_s1/sp240|food_stock|30d/mean_pred#1s}}). Rolling the
 dynamics forward does not reproduce the delayed mechanism (a split triggered by hidden pressure) that produces the
 reversal.
 
