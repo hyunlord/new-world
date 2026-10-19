@@ -36,3 +36,21 @@ Hájek-normalized IPW is cited through Hernán & Robins (2020).
 | `gebru2021datasheets` | Datasheets for Datasets | Gebru, Morgenstern, Vecchione, Vaughan, Wallach, Daumé III, Crawford | Communications of the ACM 64(12), 86–92 | 2021 | https://doi.org/10.1145/3458723 (Crossref record) | verified |
 | `vaswani2017attention` | Attention Is All You Need | Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, Polosukhin | NeurIPS 30 | 2017 | https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html | verified (in the bib, not cited) |
 | `hochreiter1997lstm` | Long Short-Term Memory | Hochreiter, Schmidhuber | Neural Computation 9(8), 1735–1780 | 1997 | https://doi.org/10.1162/neco.1997.9.8.1735 (Crossref record) | verified (in the bib, not cited) |
+
+## WM-6 additions (2026-10-20)
+
+Seven entries for the learnability section (WM-6 GOAL.md 11.2), verified on 2026-10-20 by a `general-purpose`
+subagent on the pages listed (read-only; nothing in the given titles, authors, venues or years was wrong; pages, DOIs,
+the JMLR issue and Hestness et al.'s full author list were added from the pages opened). The second author of
+`cho2014gru` is spelled as in Crossref ("van Merrienboer"). LightGBM's proceedings record gives no page range, so none
+is cited.
+
+| key | title | authors | venue | year | URL opened | status |
+|---|---|---|---|---|---|---|
+| `cho2014gru` | Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation | Cho, van Merrienboer, Gulcehre, Bahdanau, Bougares, Schwenk, Bengio | Proc. EMNLP 2014, 1724–1734 (ACL) | 2014 | https://api.crossref.org/works/10.3115/v1/D14-1179 ; https://export.arxiv.org/api/query?id_list=1406.1078 | verified (pages, DOI added) |
+| `ke2017lightgbm` | LightGBM: A Highly Efficient Gradient Boosting Decision Tree | Ke, Meng, Finley, Wang, Chen, Ma, Ye, Liu | NeurIPS 30 | 2017 | https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html | verified (no page range in the official record) |
+| `loshchilov2019adamw` | Decoupled Weight Decay Regularization | Loshchilov, Hutter | ICLR | 2019 | https://openreview.net/forum?id=Bkg6RiCqY7 ; https://export.arxiv.org/api/query?id_list=1711.05101 | verified |
+| `hendrycks2016gelu` | Gaussian Error Linear Units (GELUs) | Hendrycks, Gimpel | arXiv:1606.08415 | 2016 | https://export.arxiv.org/api/query?id_list=1606.08415 | verified |
+| `srivastava2014dropout` | Dropout: A Simple Way to Prevent Neural Networks from Overfitting | Srivastava, Hinton, Krizhevsky, Sutskever, Salakhutdinov | JMLR 15(56), 1929–1958 | 2014 | https://jmlr.org/papers/v15/srivastava14a.html | verified (issue, pages added) |
+| `hestness2017scaling` | Deep Learning Scaling is Predictable, Empirically | Hestness, Narang, Ardalani, Diamos, Jun, Kianinejad, Patwary, Yang, Zhou | arXiv:1712.00409 | 2017 | https://export.arxiv.org/api/query?id_list=1712.00409 | verified (full author list) |
+| `kunzel2019metalearners` | Metalearners for estimating heterogeneous treatment effects using machine learning | Künzel, Sekhon, Bickel, Yu | PNAS 116(10), 4156–4165 | 2019 | https://api.crossref.org/works/10.1073/pnas.1804597116 | verified (pages, DOI added) |

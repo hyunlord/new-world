@@ -18,3 +18,7 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 2 | 01:30:10 | 01:30:41 | DGX unit tests on `b5e31658`: 10 OK, 0 skipped (31 s), WM-5 reproduction included |
 | 4 | 01:30:14 | 01:30:36 | `ridge_obs_repro`, `ridge_priv_repro` (20 s each): λ equal to WM-5's in all 24 cells, val predictions equal to WM-5's committed ones within 2.1e-12 / 7.5e-13 |
 | 4 | 01:30:14 | 01:33 | N = 400 ridges (20 s each) and the 8 grid runs (20 s each including start-up; ≈ 3 s of training); grid choice `mlp_obs` 512 / 0.3, `mlp_priv` 256 / 0.3; a second, orphaned queue ran beside the first until 01:33 (DECISIONS L4.1) |
+| 4 | 01:32 | 01:36:54 | N = 400 finals of the queue: MLP / GRU × 3 seeds × {obs, priv} (2–9 s of training each, every stop "patience"), GBM obs / priv; queue idle (recorder back to 8 workers from `probe_50300`) |
+| 4 | 01:37:12 | 01:37:40 | `finals6.sh` (code `b5e31658`, after the METRICS commit 00:59:27): v2 test features prepared (302 rows, 604 cases), 18 evaluations (N = 400 runs and the two reproductions); ridge reproduction on test: max |Δ| 1.25e-12 / 5.4e-13 vs WM-5 |
+| 6 | 01:45 | 01:55 | references: a `general-purpose` subagent verified 7 new entries on the web (REFERENCES_CHECK.md) |
+| 1 | 01:18:45 | 01:42:06 | `probe_50200` at 4 workers (1,401 s); `probe_50300` and later at 8 |
