@@ -43,6 +43,11 @@ GUI 금지 이후 설치된 cli-anything-godot의 headless 실행만 허용했�
 - Part 5: [1e0ff6b1bde5097510a23f525c3d420aae5675cb](https://github.com/hyunlord/new-world/commit/1e0ff6b1bde5097510a23f525c3d420aae5675cb) — 스크롤 갱신 순서 수리, 정적 장면 자원 검사 보강, 실패 게이트 보존; 변경132개.
 - Part 5: [8be1a9dbdf7587ecc9622671be317f0133f8fb0b](https://github.com/hyunlord/new-world/commit/8be1a9dbdf7587ecc9622671be317f0133f8fb0b) — 모든 수리 시도·절차 초과·리뷰2·수정 동결 기록; 변경14개.
 
+- Part 5: [25ddf8fc43e7c1c68397ea88dab38c9c1873a03c](https://github.com/hyunlord/new-world/commit/25ddf8fc43e7c1c68397ea88dab38c9c1873a03c) — art-p13(p5): keep candidate dispatch statically auditable; 변경 2개.
+- Part 4: [f34b4a0bfa8b3929e7173cdab78566fca64fe000](https://github.com/hyunlord/new-world/commit/f34b4a0bfa8b3929e7173cdab78566fca64fe000) — art-p13(p4): preserve the frozen build and unavailable display measurements; 변경 27개.
+- Part 5: [a7efe9f47dca3c805f5d11623351cdf03eea7345](https://github.com/hyunlord/new-world/commit/a7efe9f47dca3c805f5d11623351cdf03eea7345) — art-p13(p5): retain tooltip checks at the real input boundary; 변경 2개.
+- Part 5: [0fac7632648053816696941c031027be79ae047a](https://github.com/hyunlord/new-world/commit/0fac7632648053816696941c031027be79ae047a) — art-p13(p5): publish the partial verdict without promoting unavailable checks; 변경 133개.
+
 [커밋별 전체 파일 원장](commit-files.json). 병합 원장은 첫 부모(기존 art WIP)와의 실제157파일 차이로 정정했다. 이전 원장에 섞였던 두 번째 부모 기준의 기존 art 파일 목록은 이번 병합 변경이 아니며, 해당 과거 원본은 f34b4a0b 커밋에 보존된다. 후속 보고서 커밋은 최종 원격 확인에 추가한다.
 
 ### 측정 결과
