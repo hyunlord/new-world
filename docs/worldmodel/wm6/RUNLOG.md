@@ -22,3 +22,6 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 4 | 01:37:12 | 01:37:40 | `finals6.sh` (code `b5e31658`, after the METRICS commit 00:59:27): v2 test features prepared (302 rows, 604 cases), 18 evaluations (N = 400 runs and the two reproductions); ridge reproduction on test: max |Δ| 1.25e-12 / 5.4e-13 vs WM-5 |
 | 6 | 01:45 | 01:55 | references: a `general-purpose` subagent verified 7 new entries on the web (REFERENCES_CHECK.md) |
 | 1 | 01:18:45 | 01:42:06 | `probe_50200` at 4 workers (1,401 s); `probe_50300` and later at 8 |
+| 1 | 01:52 | 04:01:21 | probe chunks `probe_50300` … `probe_51500` at 8 workers (≈ 10–14 min each, every one DETERMINISM PASS; load average 10–41) |
+| 1 | 04:01:21 | 04:01:23 | merge (1,600 runs, every chunk determinism-checked); `timeline_p14.py`: line check 109,197 / 109,197, T_low 1,388 / 1,600 (0.868; WM-2 0.873), T_high 1,260, never depart 588; `schedules_p14.py`: 5,976 files, 424 (seed, arm) missing (212 worlds × the two `sp…L` arms) |
+| 1 | 04:01:23 | | families: one recorder call per world, 8 in parallel (no training queued) |

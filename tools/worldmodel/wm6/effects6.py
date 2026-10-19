@@ -387,8 +387,19 @@ def run_meta(a, extra: dict) -> dict:
     return {"code_commit": c.git_commit(), "argv": sys.argv, "host": os.uname().nodename, "torch": torch.__version__,
             "numpy": np.__version__, "prep_sha256": {p.name: sha(p) for p in sorted(prep.glob("*.json"))},
             "base_sha256": sha(Path(a.base)), "v2_manifest_sha256": sha(c.REPO / "docs/worldmodel/wm2/v2_manifest.json"),
-            "v2x_manifest_sha256": (sha(c.REPO / "docs/worldmodel/wm6/v2x_manifest.json")
-                                    if (c.REPO / "docs/worldmodel/wm6/v2x_manifest.json").exists() else None)} | extra
+            "v2x_manifest_sha256": v2x_manifest_sha()} | extra
+
+
+V2X_MANIFESTS = (c.REPO / "docs/worldmodel/wm6/v2x_manifest.json",
+                 Path("/home/hyunlord/work/wm1-runs/wm6/v2x_manifest/v2x_manifest.json"))
+
+
+def v2x_manifest_sha() -> str | None:
+    """sha256 of the v2x manifest (the committed copy, else the DGX file it is copied from), None before it exists."""
+    for p in V2X_MANIFESTS:
+        if p.exists():
+            return sha(p)
+    return None
 
 
 def cmd_train(a) -> int:
@@ -565,7 +576,8 @@ def cmd_ridge(a) -> int:
 def run_meta_np(a) -> dict:
     prep = Path(a.prep)
     return {"code_commit": c.git_commit(), "argv": sys.argv, "host": os.uname().nodename, "numpy": np.__version__,
-            "prep_sha256": {p.name: sha(p) for p in sorted(prep.glob("*.json"))}, "base_sha256": sha(Path(a.base))}
+            "prep_sha256": {p.name: sha(p) for p in sorted(prep.glob("*.json"))}, "base_sha256": sha(Path(a.base)),
+            "v2x_manifest_sha256": v2x_manifest_sha()}
 
 
 def compare_preds(a: dict, b: dict) -> dict:

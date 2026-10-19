@@ -242,6 +242,34 @@ checkpoint is primary, as in the authors' code (CT's EMA weights), with the lowe
 secondary; and **counts are rounded at readout** (food, alive, cumulative deaths), as for M1. All adaptations are listed
 in Appendix A.
 
+### 4.5 Nonlinear direct effect models and a learning curve (WM-6)
+
+Section 5.2 shows room between `zero` and the floor that no evaluated method uses. To ask whether that room is
+**learnable** from the pre-act state, or whether per-world effects are close to unpredictable given it, we train
+nonlinear direct effect models on the v2 design with up to five times the counterfactual data. **v2x** adds
+{{d6:manifest/worlds#0}} worlds (seeds 50000–51599) recorded exactly as v2's train worlds — the same frozen recorder,
+fork tick, four arms and cast-time rules — with one replicate ({{d6:manifest/episode_count#0}} episodes); one recorder
+call per world reproduces v2's members bit for bit. The **training sets are nested** and use replicate 0 only: N = 400
+(v2's train worlds), 800, 1,600 and 2,000 worlds; validation (v2 val), the test cases, cells and scales are v2's,
+unchanged. The models:
+
+- `mlp_*`: an MLP (three hidden layers, GELU [@hendrycks2016gelu], dropout [@srivastava2014dropout]) on the ridge's
+  features and the act's one-hot, with eight outputs (four outcomes × two horizons), trained on the metric's own loss
+  (the mean absolute error of the scaled effects) with AdamW [@loshchilov2019adamw] and early stopping on v2 val; width
+  and dropout were chosen once on v2 val at N = 400 (observable {{j6:runs/mlp_obs_n400_s0/width#0}} /
+  {{j6:runs/mlp_obs_n400_s0/dropout#1}}, privileged {{j6:runs/mlp_priv_n400_s0/width#0}} /
+  {{j6:runs/mlp_priv_n400_s0/dropout#1}}) and frozen for every N;
+- `seq_*`: a two-layer GRU [@cho2014gru] over the 168 hourly rows of the 74 observable action-aware inputs that end at
+  the act, whose last state joins the same features before the same head;
+- `gbm_*`: gradient-boosted trees [@ke2017lightgbm], one per cell, with an absolute-error objective;
+- `ridge_*`: the regressions of Section 4.2, re-fitted at every N on replicate 0.
+
+`*_priv` variants add the hidden fields and are diagnostics. Neural models have three seeds. Like the ridges, these are
+supervised regressions on the true per-world effects of other worlds of the same game — a direct-target analogue of
+meta-learners for heterogeneous effects [@kunzel2019metalearners], possible here because the branches are exact. The
+rules (C1–C6) and the reading of the learning curve (Section 5.4) were committed before any of these models was
+trained.
+
 ## 5 Results
 
 ### 5.1 Main results
