@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import fcntl
+import hashlib
 import json
 import math
 import os
@@ -15,7 +16,7 @@ import re
 import subprocess
 import sys
 import time
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from cpu_probe_p13 import KERNEL_ID, Probe, reference_seconds, snapshot, write_json
@@ -31,9 +32,9 @@ def valid_snapshot(value: Probe | dict, reference: float | None = None) -> bool:
     return 0 < data['wall_seconds'] <= 1.05 * reference and reference > 0 and 0 <= data['load_1m'] < 8.0
 
 
-def load_reference(path: Path) -> float:
+def parse_reference(raw: bytes, path: Path) -> float:
     """Reject partial calibrations, changed work, or altered reference calculation."""
-    data = json.loads(path.read_text())
+    data = json.loads(raw)
     if not data.get('complete') or data.get('kernel_id') != KERNEL_ID:
         raise ValueError(f'incompatible calibration: {path}')
     runs = data['runs']
@@ -43,9 +44,33 @@ def load_reference(path: Path) -> float:
     return reference
 
 
+@dataclass(frozen=True, slots=True)
+class Calibration:
+    path: Path
+    seconds: float
+    sha256: str
+
+
+def load_reference(path: Path) -> float:
+    return parse_reference(path.read_bytes(), path)
+
+
+def canonical_calibration() -> Calibration:
+    """Read and hash exactly the same canonical reference bytes used to derive R."""
+    default = Path(__file__).resolve().parents[2] / 'docs/art/production13/perf/calibration.json'
+    path = Path(os.environ.get('P13_REFERENCE', str(default))).resolve(strict=True)
+    raw = path.read_bytes()
+    return Calibration(path, parse_reference(raw, path), hashlib.sha256(raw).hexdigest())
+
+
 def require_valid(path: Path) -> None:
     data = json.loads(path.read_text())
-    reference = data.get('reference_seconds')
+    calibration = canonical_calibration()
+    if (data.get('reference_path') != str(calibration.path)
+            or data.get('reference_sha256') != calibration.sha256
+            or data.get('reference_seconds') != calibration.seconds):
+        raise ValueError(f'NOT_VERIFIED (calibration provenance mismatch): {path}')
+    reference = calibration.seconds
     if data.get('kernel_id') != KERNEL_ID or data.get('exit_code') != 0 or not all(valid_snapshot(data.get(key, {}), reference) for key in ('start', 'end')):
         raise ValueError(f'NOT_VERIFIED (contended or unsuccessful): {path}')
 
@@ -109,14 +134,14 @@ def main() -> int:
     output = Path(os.environ['P13_VALIDITY_OUT'])
     if output.exists():
         raise FileExistsError(output)
-    reference_path = Path(os.environ['P13_REFERENCE'])
-    reference = load_reference(reference_path)
+    calibration = canonical_calibration()
+    reference = calibration.seconds
     if not record_attempt(output):
         write_json(output, {'valid': False, 'verdict': 'RETRY_NOT_ADMITTED', 'epoch': time.time()})
         return 75
     holds = Path(os.environ.get('P13_HOLDS', 'docs/art/production13/perf/holds.md'))
     start = snapshot()
-    data = {'kernel_id': KERNEL_ID, 'reference_seconds': reference, 'reference_path': str(reference_path),
+    data = {'kernel_id': KERNEL_ID, 'reference_seconds': reference, 'reference_path': str(calibration.path), 'reference_sha256': calibration.sha256,
             'start': asdict(start), 'valid': False, 'verdict': 'INCOMPLETE'}
     write_json(output, data)
     with holds.open('a') as handle:

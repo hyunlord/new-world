@@ -7,9 +7,9 @@
 """Verify complete deterministic running captures before claiming byte identity."""
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
-import sys
 from pathlib import Path
 from typing import Final, TypedDict
 
@@ -24,6 +24,7 @@ SCHEDULE_FIELDS: Final = (
 
 
 class WorldResult(TypedDict):
+    scope: str
     world: str
     start_tick: int
     frames: int
@@ -38,13 +39,42 @@ class WorldResult(TypedDict):
 
 
 class Report(TypedDict):
+    scope: str
     valid: bool
     status: str
     worlds: list[WorldResult]
 
 
-def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> WorldResult:
+def identity_scope(candidate: str | None) -> str:
+    """Keep reference reproduction distinct from validation of a named change."""
+    if candidate not in (None, "declump-kernel"):
+        raise ValueError(f"Unsupported candidate: {candidate}")
+    return "candidate_validation" if candidate else "reference_integrity_only"
+
+
+def kernel_stamp_errors(stamp: object, enabled: bool) -> list[str]:
+    """Require renderer readback, strict booleans and the requested polarity."""
+    if not isinstance(stamp, dict):
+        return ["missing or malformed perf_candidate_p12 stamp"]
+    errors: list[str] = []
+    if stamp.get("requested_kernel") is not enabled:
+        errors.append(f"requested_kernel must be {enabled}")
+    if stamp.get("method_available") is not True:
+        errors.append("candidate readback method unavailable")
+    if stamp.get("valid") is not True:
+        errors.append("collector candidate stamp is not valid")
+    actual = stamp.get("actual")
+    if not isinstance(actual, dict):
+        errors.append("missing candidate actual readback")
+    elif actual.get("change_id") != "declump-kernel" or actual.get("candidate_enabled") is not enabled:
+        errors.append(f"actual must identify declump-kernel with candidate_enabled={enabled}")
+    return errors
+
+
+def compare_world(base: Path, current: Path, spec: tuple[str, int, int],
+                  candidate: str | None = None) -> WorldResult:
     """Require full frame/tick schedules, nonempty agent rows and byte equality."""
+    scope = identity_scope(candidate)
     label, start_tick, seed = spec
     pan = label.startswith("W500")
     frozen = label == "W500_FROZEN"
@@ -55,7 +85,7 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
     errors: list[str] = []
     captures = []
     dumps = []
-    for directory in (base, current):
+    for capture_index, directory in enumerate((base, current)):
         metadata_path = directory / f"{label}.json"
         dump_path = directory / f"{label}.jsonl"
         try:
@@ -68,6 +98,17 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
         if not isinstance(metadata, dict):
             errors.append(f"{metadata_path}: metadata must be an object")
             continue
+        if candidate:
+            enabled = capture_index == 1
+            errors.extend(f"{metadata_path}: {error}" for error in
+                          kernel_stamp_errors(metadata.get("perf_candidate_p12"), enabled))
+            states = metadata.get("candidate_states")
+            if not isinstance(states, list) or len(states) != frames:
+                errors.append(f"{metadata_path}: expected {frames} candidate frame stamps")
+            if isinstance(states, list):
+                for index, stamp in enumerate(states):
+                    errors.extend(f"{metadata_path}: frame {index + 1}: {error}" for error in
+                                  kernel_stamp_errors(stamp, enabled))
         expected = {
             "world": label, "seed": seed, "start_tick": start_tick,
             "end_tick": start_tick + advances, "frames": frames, "fixed_fps": 60,
@@ -163,7 +204,7 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
     else:
         errors.append(f"{label}: both complete captures required")
     return {
-        "world": label, "start_tick": start_tick, "frames": frames, "fixed_fps": 60,
+        "scope": scope, "world": label, "start_tick": start_tick, "frames": frames, "fixed_fps": 60,
         "advance_every_frames": advance_every, "mutation_route": "SimReads",
         "base_dump": str((base / f"{label}.jsonl").resolve()),
         "candidate_dump": str((current / f"{label}.jsonl").resolve()),
@@ -171,20 +212,26 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int]) -> Worl
     }
 
 
-def compare(base: Path, current: Path, include_multi: bool = True) -> Report:
+def compare(base: Path, current: Path, include_multi: bool = True,
+            candidate: str | None = None) -> Report:
     """Compare both running worlds and both pan scenarios; missing evidence fails."""
-    worlds = [compare_world(base, current, spec) for spec in WORLDS]
+    scope = identity_scope(candidate)
+    worlds = [compare_world(base, current, spec, candidate) for spec in WORLDS]
     valid = all(world["valid"] for world in worlds)
-    return {"valid": valid, "status": "PASS" if valid else "FAIL", "worlds": worlds}
+    return {"scope": scope, "valid": valid, "status": "PASS" if valid else "FAIL", "worlds": worlds}
 
 
 def main() -> int:
     """Write a machine-readable report and fail closed on incomplete captures."""
-    if len(sys.argv) not in {4, 5} or (len(sys.argv) == 5 and sys.argv[4] != "--include-multi"):
-        print(__doc__ + "\nUsage: compare_running_identity_p13.py BASE CURRENT OUTPUT.json", file=sys.stderr)
-        return 2
-    result = compare(Path(sys.argv[1]), Path(sys.argv[2]), True)
-    output = Path(sys.argv[3])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("base", type=Path)
+    parser.add_argument("current", type=Path)
+    parser.add_argument("output", type=Path)
+    parser.add_argument("--include-multi", action="store_true", help="Legacy option; all worlds are always required")
+    parser.add_argument("--candidate", choices=("declump-kernel",))
+    args = parser.parse_args()
+    result = compare(args.base, args.current, True, args.candidate)
+    output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

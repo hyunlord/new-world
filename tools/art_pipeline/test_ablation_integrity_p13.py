@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 from cpu_probe_p13 import KERNEL_ID
+from session_validity_p13 import canonical_calibration
 
 from summarize_ablation_p13 import validate
 from summarize_perf_p13 import EvidenceError, METRICS, validate_provenance, load_session
@@ -94,9 +95,11 @@ class AblationIntegrity(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'session.json'
             path.write_text(json.dumps({'world': 'W200', 'phase': 'baseline', 'ablation_only': True}))
-            sample = {'wall_seconds': 2.0, 'load_1m': 1.0}
+            calibration = canonical_calibration()
+            sample = {'wall_seconds': calibration.seconds, 'load_1m': 1.0}
             Path(str(path) + '.validity.json').write_text(json.dumps({
-                'kernel_id': KERNEL_ID, 'reference_seconds': 2.0,
+                'kernel_id': KERNEL_ID, 'reference_seconds': calibration.seconds,
+                'reference_path': str(calibration.path), 'reference_sha256': calibration.sha256,
                 'start': sample, 'end': sample, 'exit_code': 0}))
             with self.assertRaisesRegex(EvidenceError, 'ablation-only'):
                 load_session(path)

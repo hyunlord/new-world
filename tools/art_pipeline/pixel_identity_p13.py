@@ -17,6 +17,8 @@ import typer
 from PIL import Image, ImageChops
 from pydantic import BaseModel, ConfigDict, StrictInt
 
+from compare_running_identity_p13 import identity_scope, kernel_stamp_errors
+
 FRAMINGS: Final = ("P1", "P2", "P3", "P4", "P5", "P6")
 
 
@@ -123,22 +125,32 @@ def compare(captures: tuple[Capture, Capture, Capture], output: Path) -> Result:
 
 
 # Four explicit paths are the CLI contract: three independently captured runs and one output.
-def main(a: Path, aprime: Path, b: Path, output: Path) -> None:
+def main(a: Path, aprime: Path, b: Path, output: Path, candidate: str | None = None) -> None:
     """Require all six controls; write machine and human-readable verdicts."""
+    scope = identity_scope(candidate)
+    errors: list[str] = []
     # A fresh output directory preserves rejected runs and prevents stale PASS reports.
     output.mkdir(parents=True, exist_ok=False)
     (output / "previews").mkdir(exist_ok=True)
     results = []
     for framing in FRAMINGS:
+        if candidate:
+            for folder, enabled in ((a, False), (aprime, False), (b, True)):
+                sidecar = folder / f"{framing}.json"
+                metadata = json.loads(sidecar.read_text())
+                stamp = metadata.get("perf_candidate_p12") if isinstance(metadata, dict) else None
+                errors.extend(f"{sidecar}: {error}" for error in kernel_stamp_errors(stamp, enabled))
         captures = tuple(Capture.read(folder / f"{framing}.png") for folder in (a, aprime, b))
         results.append(compare((captures[0], captures[1], captures[2]), output))
-    (output / "comparison.json").write_text(json.dumps({"schema_version": 1, "passed": all(row.passed for row in results), "framings": [asdict(row) for row in results]}, indent=2) + "\n")
-    lines = ["# Art Pass 13 pixel identity", "", "Every framing requires zero differing RGBA pixels in both A/A′ and A/B.", "", "| Framing | A/A′ pixels | A/A′ max | A/B pixels | A/B max | Result | Reproducibility |", "|---|---:|---:|---:|---:|---|---|"]
+    passed = all(row.passed for row in results) and not errors
+    (output / "comparison.json").write_text(json.dumps({"schema_version": 1, "scope": scope, "candidate": candidate, "passed": passed, "errors": errors, "framings": [asdict(row) for row in results]}, indent=2) + "\n")
+    lines = ["# Art Pass 13 pixel identity", "", f"Scope: {scope}; overall result: {'PASS' if passed else 'FAIL'}", "", "Every framing requires zero differing RGBA pixels in both A/A′ and A/B.", "", "| Framing | A/A′ pixels | A/A′ max | A/B pixels | A/B max | Result | Reproducibility |", "|---|---:|---:|---:|---:|---|---|"]
     for row in results:
         lines.append(f"| {row.framing} | {row.control.pixels} | {row.control.max_channel} | {row.candidate.pixels} | {row.candidate.max_channel} | {'PASS' if row.passed else 'FAIL'} | {row.cause} |")
+    lines.extend(["", *errors])
     lines.extend(["", "Previews are downscaled for review only. Metrics use full-resolution RGBA; diff images show the maximum absolute channel difference, with x16 previews.", ""])
     (output / "comparison.md").write_text("\n".join(lines))
-    raise typer.Exit(0 if all(row.passed for row in results) else 1)
+    raise typer.Exit(0 if passed else 1)
 
 
 if __name__ == "__main__":
