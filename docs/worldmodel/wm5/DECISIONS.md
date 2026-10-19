@@ -79,3 +79,10 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   below): `pre` and the arms are compared with the observed episode on rows < c; `none_r<k>` is compared with the world's
   round-0 factual episode on rows < c, and `none_r0` with it in full (sha256) for every family. No data changed; the
   failing rows showed only `none_r0` differences (`casts_ok`, `fork_ok`, `members_ok` true).
+- **L0.6 Pause.** The SSH stall of 2026-10-19 08:18–10:27 KST (7,740 s, RUNLOG) is a pause in the sense of GOAL.md
+  0.3.5: the deadline for starting a training moves to 2026-10-20 21:22:47 KST (epoch 1792498967), written to
+  `wm5/_setup/deadline_epoch`.
+- **L4.3 obs2 evaluations from the manifest commit.** The M1 evaluations on obs2 need `obs2_manifest.json` (the
+  `obs2_v19` test group for the drift statistic), which the pre-registration commit does not contain; every obs2 test
+  evaluation therefore runs from `f7cf620a` (`FINALS_SHA`), which changes no rule (it adds the manifest, the record
+  files, the dataset note and the `fam-check` correction). Each output records its `code_commit`.
