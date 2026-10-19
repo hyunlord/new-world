@@ -32,6 +32,9 @@ for scene_test in scripts/test/art/test_*.gd; do
  if [[ "$scene_test" == "scripts/test/art/test_real_input_p12.gd" || "$scene_test" == "scripts/test/art/test_real_input_p13.gd" ]]; then
   real_input_parent="$(mktemp -d "$(cd "$out" && pwd)/real-input.XXXXXX")"
   run_check "$(basename "$scene_test" .gd)" env P12_REAL_INPUT_OUT="$real_input_parent/capture" P13_REAL_INPUT_OUT="$real_input_parent/capture" bash tools/art_pipeline/with_window_lock.sh 600 "$GODOT_BIN" --path . --script "res://$scene_test"
+ elif [[ "$scene_test" == "scripts/test/art/test_glyph_distinct_p13.gd" ]]; then
+  glyph_output="${P13_GLYPH_OUT:-$(mktemp -d "${TMPDIR:-/tmp}/worldsim-p13-glyph.XXXXXX")}"
+  run_check "$(basename "$scene_test" .gd)" env P13_GLYPH_OUT="$glyph_output" bash tools/art_pipeline/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script "res://$scene_test"
  else
   run_check "$(basename "$scene_test" .gd)" bash tools/art_pipeline/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script "res://$scene_test"
  fi

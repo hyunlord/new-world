@@ -1,6 +1,12 @@
 # Active continuation checkpoint
 
-Goal remains active; only early Part0 has run. Original brief is GOAL.md; reread section4 on resume. Start2026-10-19T01:46Z; deadlines in TASKS.md. Do not end run early because load is high. No admitted release measurements yet. Calibration preceded all Godot sessions; census and six A captures completed.
+Goal remains active. Current HEAD9050fa0b348dcc9b76eb50a5de138e9c3eaf0d42 (WIP pushed and remote verified). Parts0/1 measured evidence is complete except write-skip interrupted by the user. Parts2/3 implementation and headless checks are recorded, with display acceptance explicitly missing. GUI WINDOWS ARE FORBIDDEN. Only audited CLI-Anything/headless engine execution is permitted. Start2026-10-19T01:46Z; deadlines in TASKS.md. Earlier checkpoint sections below are historical; the newest override wins.
+
+Current active work: final gate session12206, external log `/Users/rexxa/work/art-production13-evidence/headless-gate/final-gate.log`, committed-target output `docs/art/production13/gates/final/`. It uses GODOT_BIN external godot-no-window.sh which refuses any invocation lacking --headless (verified exit75). Therefore two real-input checks will be blocked, full gate cannot be claimed green, and art branch must not advance. Glyph output env points to external readability/final-gate. CARGO_BUILD_JOBS6. Poll12206; do not duplicate or launch another engine while it owns the lane. Fresh final reviewer `/root/final_review_round1` active (round1 of max2); no engine launches permitted to reviewer.
+
+Part2 e099b9fc: three focused headless tests passed; Python480 passed; all21 icon mask/hue pairs pass; fresh source-sheet blind7/7 (Craft low confidence retained), no framebuffer claim. Part3 actual24/36 Hangul failed, actual48 regular/bold passed10442 pairs through real CPU TextServer atlases; Life-only font-size overrides48 committed9050fa0b. Larger layout remains unverified. Strict six-file check found only glyph test integer-division warnings; explicit floor conversions fixed and strict glyph rerun passed. Final gate will rerun actual glyph test.
+
+Remaining: complete final headless gate and independent review, fix genuine defects, retain GUI-related omissions; update H evidence/report and PR511 draft as WIP-only, do not FF art without green full gate. Both detached worktrees still present (base6e01bb29, measuref8659c84), evidence outside them. Final display matrix/timers and StageB/fact/input captures cannot be obtained under current user prohibition. Do not claim goal complete merely because useful headless work finishes.
 
 ## Commits and refs
 - bc62745ee57e2fc24e8c140fdb845dd04c974005 clean Pass21 merge.
