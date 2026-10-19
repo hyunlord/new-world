@@ -7,8 +7,8 @@ Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live author
 | Part | Deliverable and verification | Status |
 |---|---|---|
 | 0 | Preserve original; merge Pass21; unchanged packed contract; tooling; 15-probe calibration; full gate; exact-clock references; release matrix and running diagnosis; commit/push | completed |
-| 1 | Kernel and conservative write-skip candidates; exact identities and valid alternating pairs; accept only original thresholds; commit/push | in progress |
-| 2 | Measured badge icons, tooltip if time, frozen two-stage fresh-reader tests and no-legend report; commit/push | pending |
+| 1 | Kernel accepted and default ON; write-skip stays OFF, NOT_VERIFIED after user window prohibition; evidence retained | closed with verification gap |
+| 2 | Measured badge icons, tooltip if time, frozen two-stage fresh-reader tests and no-legend report; commit/push | in progress, headless only |
 | 3 | All reachable name syllable glyph masks; fact/name split; input QA and capture-backed text fixes; commit/push | pending |
 | 4 | Freeze by hour9; complete release after matrix/timers; H1-H10 evidence verdicts; commit/push | pending |
 | 5 | Fresh independent review max2; final gate; FF art branch, PR511 report, cleanup worktrees; Korean full report | pending |
@@ -34,3 +34,5 @@ Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live author
 - 03:16:32Z: round2 envelope16928 terminal0; all9 individual admissions valid. Five-world matrix30blocks/9000frames independently audited. Three section timers/getter tables valid, including retained stale prose caveat. W200 ablation57blocks/8550frames, all21Main+6UIchildren, independently audited; full restoration verified. Required Part0 work complete; evidence prepared for commit/push. Optional Wmulti node ablation omitted in the prescribed drop order.
 
 - Part0 evidence93a344c75574139f69c7d130f147de4b4d7494d6 pushed; remoteWIPverified, artstill57ae7ac4. Part1started03:20Z: re-readsection5; kernelon6pixel+5running/panidentities then3alternatingpairsperW500/W200, sequentially. Defaultstilloff; noacceptanceclaim.
+
+- 2026-10-19T03:47:44.550253+00:00: Part1 closed under newer user no-window constraint. Kernel accepted with complete original acceptance; write-skip NOT_VERIFIED due interrupted identity/no speed, remains opt-in OFF. Candidate(c) has no eligible >=1ms outside presentation target in baseline diagnosis. No new admission waiting. Part2 begins with baseline source/retained-image/headless data; missing display evidence remains explicit.
