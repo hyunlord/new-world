@@ -1,0 +1,135 @@
+{
+  "items": {
+    "baseline-W0": [
+      1792376873.00596
+    ],
+    "baseline-W500": [
+      1792376878.531359
+    ],
+    "baseline-W1": [
+      1792376884.0008872
+    ],
+    "baseline-W200": [
+      1792376889.471622
+    ],
+    "baseline-W-multi": [
+      1792376895.027221
+    ],
+    "baseline-sections-W500": [
+      1792376943.750327
+    ],
+    "baseline-sections-W200": [
+      1792376949.410645
+    ],
+    "baseline-sections-W-multi": [
+      1792376954.8846002
+    ],
+    "baseline-ablation-W200": [
+      1792376960.56878
+    ]
+  },
+  "waiting_seconds": 0.0,
+  "wait_intervals": [
+    [
+      1792376872.0,
+      1792376872.0
+    ],
+    [
+      1792376878.0,
+      1792376878.0
+    ],
+    [
+      1792376883.0,
+      1792376883.0
+    ],
+    [
+      1792376889.0,
+      1792376889.0
+    ],
+    [
+      1792376894.0,
+      1792376894.0
+    ],
+    [
+      1792376943.0,
+      1792376943.0
+    ],
+    [
+      1792376949.0,
+      1792376949.0
+    ],
+    [
+      1792376954.0,
+      1792376954.0
+    ],
+    [
+      1792376960.0,
+      1792376960.0
+    ]
+  ],
+  "events": [
+    {
+      "epoch": 1792376873.00596,
+      "item": "baseline-W0",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt1.json.validity.json",
+      "completed_epoch": 1792376877.131273
+    },
+    {
+      "epoch": 1792376878.531359,
+      "item": "baseline-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt1.json.validity.json",
+      "completed_epoch": 1792376882.6000361
+    },
+    {
+      "epoch": 1792376884.0008872,
+      "item": "baseline-W1",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt1.json.validity.json",
+      "completed_epoch": 1792376888.111321
+    },
+    {
+      "epoch": 1792376889.471622,
+      "item": "baseline-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt1.json.validity.json",
+      "completed_epoch": 1792376893.61495
+    },
+    {
+      "epoch": 1792376895.027221,
+      "item": "baseline-W-multi",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt1.json.validity.json",
+      "completed_epoch": 1792376899.136864
+    },
+    {
+      "epoch": 1792376943.750327,
+      "item": "baseline-sections-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792376947.953461
+    },
+    {
+      "epoch": 1792376949.410645,
+      "item": "baseline-sections-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792376953.483657
+    },
+    {
+      "epoch": 1792376954.8846002,
+      "item": "baseline-sections-W-multi",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792376959.174334
+    },
+    {
+      "epoch": 1792376960.56878,
+      "item": "baseline-ablation-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.json.validity.json",
+      "completed_epoch": 1792376964.718786
+    }
+  ]
+}

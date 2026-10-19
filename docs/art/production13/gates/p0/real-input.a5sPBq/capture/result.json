@@ -1,0 +1,213 @@
+{
+	"bridge_sha256": "23fd558e371b6c52cb590d40ef511da5a996683b6fec68003a544c309850bc48",
+	"dead_parent": 0,
+	"errors": [],
+	"godot": {
+		"build": "official",
+		"hash": "89cea143987d564363e15d207438530651d943ac",
+		"hex": 263680,
+		"major": 4,
+		"minor": 6,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.6-stable (official)",
+		"timestamp": 0
+	},
+	"input_route": "Input.parse_input_event",
+	"seed": 20261010,
+	"steps": [
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/00_fixed_world.png",
+			"sha256": "97412de97e9b46375a6cb69dd3f95c35b9b2f178a2b32040fdc662412ffaae01",
+			"state": {
+				"dead_parent": 0,
+				"seed": 20261010,
+				"subject": 25,
+				"tick": 85080,
+				"world_info": {
+					"clock_offset_ticks": 480,
+					"height": 64,
+					"move_interval_ticks": 8,
+					"seed": 20261010,
+					"ticks_per_day": 1440,
+					"width": 64
+				}
+			},
+			"step": "00_fixed_world"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/02_click_0.png",
+			"sha256": "742082f82c2c5bdf760c3b9faa66ef7600e1985adfe152eadbd950eca79ef2ab",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(1144.0, 318.0)",
+				"world_mouse": "(982.0, 466.5)"
+			},
+			"step": "02_click_0"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/02_click_1.png",
+			"sha256": "a27b70a2be4ecb231aae9227563087a0d616d47c35e9eb94742880aac37d9dd3",
+			"state": {
+				"actual": 56,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 56,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(1144.0, 318.0)",
+				"world_mouse": "(982.0, 466.5)"
+			},
+			"step": "02_click_1"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/02_click_2.png",
+			"sha256": "4425f31821ab48b325a7fa977e0f03b4b7027723b0362f25e8d5c9b973b683ea",
+			"state": {
+				"actual": 55,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 55,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(1144.0, 318.0)",
+				"world_mouse": "(982.0, 466.5)"
+			},
+			"step": "02_click_2"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/02_click_3.png",
+			"sha256": "0304ceb597d038d7be9000ccb83b15c2554fc5f6d6076a879c3fb496bd210ddd",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(1144.0, 318.0)",
+				"world_mouse": "(982.0, 466.5)"
+			},
+			"step": "02_click_3"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/03_dead_parent_link.png",
+			"sha256": "4f16bca177f20fff407900ec2e8a287215e5c026af175b5ad17da06d50fe142c",
+			"state": {
+				"parent": 0,
+				"record_mode": true
+			},
+			"step": "03_dead_parent_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/04_wheel_end_last_line.png",
+			"sha256": "a7ae8c51771fa328f4d4d3148a0e2c7c862ef846cb953d563b0b03b39c895a26",
+			"state": {
+				"last_line_top": 664.0,
+				"line_height": 28.0,
+				"maximum": 663.0,
+				"scroll": 663.0,
+				"viewport_bottom": 728.0
+			},
+			"step": "04_wheel_end_last_line"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/05_escape_record.png",
+			"sha256": "4d165d6f75f1f4f467f99130ed38cb5c600e0fa78c920ef8e3ae54ea8d9036f1",
+			"state": {
+				"record_mode": false,
+				"visible": false
+			},
+			"step": "05_escape_record"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/06_chronicle_open.png",
+			"sha256": "d0870f28292c810c01328f3f95bae20dbb3f93d2c193b6e01373b8961c9757a1",
+			"state": {
+
+			},
+			"step": "06_chronicle_open"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/07_chronicle_name_link.png",
+			"sha256": "0461b1bd940eee47f2e739230dba6f0c44f46a21c1e6fe50ac862792ee602186",
+			"state": {
+				"link": "person:48",
+				"selected": 48
+			},
+			"step": "07_chronicle_name_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/08_chronicle_close.png",
+			"sha256": "ac97fb1e8c614ac7665f1baa161e58bc6542b94242e4f93cda0490ad1bc464fd",
+			"state": {
+
+			},
+			"step": "08_chronicle_close"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/09_language_korean.png",
+			"sha256": "ac97fb1e8c614ac7665f1baa161e58bc6542b94242e4f93cda0490ad1bc464fd",
+			"state": {
+				"language": "ko"
+			},
+			"step": "09_language_korean"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13/gates/p0/real-input.a5sPBq/capture/10_language_english.png",
+			"sha256": "3a92f11b01e2628391fb5b901deaf60530969af9ee30283b248e876c5f226cff",
+			"state": {
+				"language": "en",
+				"visible_hangul": []
+			},
+			"step": "10_language_english"
+		}
+	],
+	"subject": 25,
+	"test_sha256": "b9f40eb4953f2ebf064d28339c528dbefb2399176d070f9fbf5bc16b3eae5f69",
+	"tick": 85080,
+	"valid": true,
+	"windowed": true
+}
