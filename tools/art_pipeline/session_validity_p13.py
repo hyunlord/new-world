@@ -50,7 +50,7 @@ def require_valid(path: Path) -> None:
         raise ValueError(f'NOT_VERIFIED (contended or unsuccessful): {path}')
 
 
-def update_ledger(output: Path | None, wait: tuple[float, float] | None = None) -> bool:
+def update_ledger(output: Path | None, wait: tuple[float, float] | None = None, finish: Path | None = None) -> bool:
     """Serialize ledger mutations; count only the union of explicit waiting intervals."""
     ledger = Path(os.environ.get('P13_ATTEMPT_LEDGER', 'docs/art/production13/perf/attempts.json'))
     ledger.parent.mkdir(parents=True, exist_ok=True)
@@ -71,11 +71,18 @@ def update_ledger(output: Path | None, wait: tuple[float, float] | None = None) 
             data['wait_intervals'] = merged
             data['waiting_seconds'] = sum(end - start for start, end in merged)
         admitted = data['waiting_seconds'] <= 10800
+        if finish is not None:
+            for event in reversed(data['events']):
+                if event.get('admitted') and event.get('output') == str(finish):
+                    event.setdefault('completed_epoch', time.time())
+                    break
         if output is not None:
             item = os.environ.get('P13_ITEM', re.sub(r'-attempt\d+', '', os.environ.get('P13_PURPOSE', str(output))))
             attempts = data['items'].setdefault(item, [])
             now = time.time()
-            admitted = admitted and len(attempts) < 6 and (not attempts or now - attempts[-1] >= 1800)
+            prior = next((event for event in reversed(data['events']) if event.get('item') == item and event.get('admitted')), None)
+            completed = prior.get('completed_epoch') if prior else None
+            admitted = admitted and len(attempts) < 6 and (not attempts or (completed is not None and now - completed >= 1800))
             data['events'].append({'epoch': now, 'item': item, 'admitted': admitted, 'output': str(output)})
             if admitted:
                 attempts.append(now)
@@ -88,6 +95,15 @@ def record_attempt(output: Path) -> bool:
 
 
 def main() -> int:
+    if len(sys.argv) == 3 and sys.argv[1] == '--wait-budget':
+        update_ledger(None, (float(sys.argv[2]), time.time()))
+        ledger = Path(os.environ.get('P13_ATTEMPT_LEDGER', 'docs/art/production13/perf/attempts.json'))
+        remaining = max(0.0, 10800 - json.loads(ledger.read_text())['waiting_seconds'])
+        print(remaining)
+        return 0 if remaining > 0 else 75
+    if len(sys.argv) == 3 and sys.argv[1] == '--finish':
+        update_ledger(None, finish=Path(sys.argv[2]))
+        return 0
     if len(sys.argv) == 4 and sys.argv[1] == '--record-wait':
         return 0 if update_ledger(None, (float(sys.argv[2]), float(sys.argv[3]))) else 75
     output = Path(os.environ['P13_VALIDITY_OUT'])
@@ -110,6 +126,7 @@ def main() -> int:
     valid = valid_snapshot(start, reference) and valid_snapshot(end, reference) and code == 0
     data.update(end=asdict(end), exit_code=code, valid=valid, verdict='VALID' if valid else 'NOT_VERIFIED (contended or unsuccessful)')
     write_json(output, data)
+    update_ledger(None, finish=output)
     with holds.open('a') as handle:
         handle.write(f'- PROBE_AFTER {output} P={end.wall_seconds:.9f} R={reference:.9f} load={end.load_1m} valid={valid} exit={code}\n')
     return code if code else (0 if valid else 75)

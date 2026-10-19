@@ -32,6 +32,7 @@ cleanup() {
     kill -TERM -- "-$watcher" 2>/dev/null || true
     wait "$watcher" 2>/dev/null || true
   fi
+  python3 "$repo/tools/art_pipeline/session_validity_p13.py" --finish "$P13_VALIDITY_OUT" || true
   if (( owned )); then
     log "HOLD_END purpose=$purpose exit=$rc"
     if [[ -f $lock/info.txt ]] && grep -qx "pid=$$" "$lock/info.txt"; then
@@ -55,7 +56,9 @@ while ! mkdir "$lock" 2>/dev/null; do
     log "WAIT_EXHAUSTED purpose=$purpose"
     exit 75
   fi
-  sleep 30
+  remaining=$(python3 "$repo/tools/art_pipeline/session_validity_p13.py" --wait-budget "$wait_start") || exit 75
+  seconds=$(python3 -c 'import sys; print(min(30.0, float(sys.argv[1])))' "$remaining")
+  sleep "$seconds"
 done
 owned=1
 started=$(date +%s)
@@ -64,6 +67,7 @@ python3 "$repo/tools/art_pipeline/session_validity_p13.py" --record-wait "$wait_
 log "HOLD_START purpose=$purpose limit=$limit waited=$((started-wait_start))"
 export P13_HOLD_START="$started" P13_HOLD_OWNER=codex-art-pass13 P13_LOCK_WAIT_SECONDS=$((started-wait_start))
 export P13_CONTENDED=0 P10_CONTENDED=0
+export P13_WAIT_CALLBACK="$repo/tools/art_pipeline/session_validity_p13.py"
 set -m
 bash -c 'trap "exit 143" TERM HUP; source "$1" "$2" "${@:3}"' _ \
   "$repo/tools/art_pipeline/with_window_lock.sh" "$limit" python3 "$repo/tools/art_pipeline/session_validity_p13.py" "$@" &

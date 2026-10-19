@@ -93,12 +93,21 @@ for world in ${P13_WORLDS:-W0 W500 W1 W200 W-multi}; do
   success=0
   highest=0
   selected=""
-  for attempt in 1 2 3 4 5 6; do
+  # Filename slots preserve refusals; the shared ledger limits actual attempts.
+  slots=()
+  shopt -s nullglob
+  for artifact in "$evidence/$phase-$world-attempt"*.exit "$evidence/$phase-$world-attempt"*.log "$evidence/$phase-$world-attempt"*.json; do
+    slot=${artifact##*-attempt}
+    slot=${slot%%.*}
+    [[ $slot =~ ^[0-9]+$ ]] && [[ " ${slots[*]-} " != *" $slot "* ]] && slots+=("$slot")
+  done
+  shopt -u nullglob
+  for attempt in ${slots[@]+"${slots[@]}"}; do
     output="$evidence/$phase-$world-attempt$attempt.json"
     log="$evidence/$phase-$world-attempt$attempt.log"
     status="$evidence/$phase-$world-attempt$attempt.exit"
     if [[ -e $output || -e $log || -e $status ]]; then
-      highest=$attempt
+      (( attempt > highest )) && highest=$attempt
       if validate_session "$output" "$log" "$status" "$world"; then
         if [[ -z $selected ]]; then selected=$output; fi
       else
@@ -112,7 +121,7 @@ for world in ${P13_WORLDS:-W0 W500 W1 W200 W-multi}; do
     echo "Resuming with accepted evidence: $selected"
     continue
   fi
-  for (( attempt=highest+1; attempt<=6 && attempt==highest+1; attempt++ )); do
+  for (( attempt=highest+1; attempt==highest+1; attempt++ )); do
     if [[ -n ${P13_DEADLINE_EPOCH:-} ]] && (( $(date +%s) >= P13_DEADLINE_EPOCH )); then
       echo "Twelve-hour deadline reached; no new session for $world" >&2
       break

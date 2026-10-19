@@ -28,6 +28,7 @@ def load(path: Path) -> Record:
         raise perf.EvidenceError("Ablation ranking requires W500 release evidence")
     if data.get("valid") is not True or data.get("errors") != []:
         raise perf.EvidenceError("Ablation evidence must be valid with no errors")
+    perf.validate_provenance(data)
     if data.get("ablation_only") is True:
         blocks = [dict(perf.mapping(block)) for block in perf.sequence(data["blocks"])]
     else:
@@ -47,7 +48,7 @@ def load(path: Path) -> Record:
         row["neighbour_statistics"] = dict(on_stats)
         ranked.append(row)
     ranked.sort(key=lambda row: (-perf.number(perf.mapping(row)["cost_ms"]), str(perf.mapping(row)["node"])))
-    return {"source": str(path), "world": data["world"], "phase": data["phase"], "build_profile": "release", "ablation_only": data.get("ablation_only", False), "actual_alive": perf.mapping(data["initial"]).get("population"), "ranked": ranked, "top_three": [perf.mapping(row)["node"] for row in ranked[:3]], "floor": dict(perf.summary(perf.sequence(by_label["ablation_floor"]["samples"]), "primary_cpu_ms"))}
+    return {"source": str(path), "world": data["world"], "phase": data["phase"], "build_profile": "release", "ablation_only": data.get("ablation_only", False), "actual_alive": perf.mapping(data["initial"]).get("population"), "ranked": ranked, "top_three": [perf.mapping(row)["node"] for row in ranked if perf.mapping(row)["removable_cost"]][:3], "floor": dict(perf.summary(perf.sequence(by_label["ablation_floor"]["samples"]), "primary_cpu_ms"))}
 
 
 def validate(data: Record, blocks: list[Record]) -> None:
@@ -59,8 +60,13 @@ def validate(data: Record, blocks: list[Record]) -> None:
     layers = {str(row["node"]).split("/")[-1] for row in rows if row.get("layer_only") is True}
     if not any(row.get("layer_only") is False for row in rows):
         raise perf.EvidenceError("Mandatory node/shared-layer ablation missing")
-    if len(nodes) != len(set(nodes)) or any(node in {"WorldSim", "Camera2D"} for node in nodes):
-        raise perf.EvidenceError("Duplicate or prohibited ablation node")
+    inventory = [str(node) for node in perf.sequence(data.get("ablation_top_level_inventory", []))]
+    if len(nodes) != len(set(nodes)) or len(inventory) != len(set(inventory)):
+        raise perf.EvidenceError("Duplicate ablation node or inventory entry")
+    if not {"WorldSim", "Camera2D", "SimReads", "UI"} <= set(inventory) or not set(inventory) <= set(nodes):
+        raise perf.EvidenceError("Incomplete top-level ablation coverage")
+    if any("/" in node for node in inventory) or data.get("ablation_floor_role") != "simulation_disabled_all_targets_off":
+        raise perf.EvidenceError("Invalid top-level inventory or unlabelled simulator-off floor")
     expected = ["ablation_all_on_0"]
     previous = expected[0]
     for row in rows:
@@ -69,6 +75,9 @@ def validate(data: Record, blocks: list[Record]) -> None:
         if any(not isinstance(child, str) for child in perf.sequence(row.get("descendants_disabled_as_group"))):
             raise perf.EvidenceError("Ablation group descendants must be explicit node paths")
         node = str(row["node"])
+        role = {"WorldSim": "simulation_disabled_control", "Camera2D": "already_frozen_camera_control", "SimReads": "synchronous_reader_process_control"}.get(node, "presentation")
+        if row.get("role") != role or row.get("removable_cost") is not (role == "presentation"):
+            raise perf.EvidenceError("Missing or incorrect diagnostic control role")
         off, after = "off_" + node, "on_after_" + node
         if row["off_block"] != off or row["neighbour_blocks"] != [previous, after]:
             raise perf.EvidenceError("Ablation rows must reference their adjacent all-on neighbours")
@@ -94,6 +103,10 @@ def validate(data: Record, blocks: list[Record]) -> None:
         counted, discarded = perf.sequence(block["samples"]), perf.sequence(block["discarded"])
         if len(counted) != 150 or len(discarded) != 30:
             raise perf.EvidenceError("Ablation blocks require 150 counted and 30 discarded frames")
+        disabled = label in {"off_WorldSim", "ablation_floor"}
+        control = "simulation_disabled" if disabled else "running" if running else "frozen"
+        if block.get("simulation_disabled") is not disabled or block.get("diagnostic_control") != control:
+            raise perf.EvidenceError("Incorrect simulator process-state evidence")
         previous_tick = tick
         if block.get("fresh_setup") is not True or perf.mapping(block.get("start_state"))["tick"] != tick:
             raise perf.EvidenceError("Ablation lacks fresh setup")
@@ -109,8 +122,10 @@ def validate(data: Record, blocks: list[Record]) -> None:
                 raise perf.EvidenceError("Ablation frame stamps unpaired or non-increasing")
             previous_frame = frame
             state = perf.mapping(sample["state"])
-            if (not running and (sample["ticks_run"] != 0 or state["tick"] != tick)) or sample["ticks_run"] != perf.number(state["tick"]) - previous_tick or state["camera"] != initial["camera"] or state["zoom"] != [4, 4]:
+            if ((not running or disabled) and (sample["ticks_run"] != 0 or state["tick"] != tick)) or sample["ticks_run"] != perf.number(state["tick"]) - previous_tick or state["camera"] != initial["camera"] or state["zoom"] != [4, 4]:
                 raise perf.EvidenceError("Ablation tick/camera/zoom changed")
+            if state.get("simulation_frozen") is not disabled:
+                raise perf.EvidenceError("Simulator process mode differs from ablation control")
             previous_tick = perf.number(state["tick"])
             if data["phase"] == "after" or "ffi_calls" in sample:
                 counts = perf.mapping(sample.get("ffi_calls"))
@@ -120,6 +135,8 @@ def validate(data: Record, blocks: list[Record]) -> None:
                 context = perf.mapping(sample.get("direct_read_context"))
                 if context.get("inspector_visible") is not False or context.get("influence_channel") != -1:
                     raise perf.EvidenceError("Ablation inspector/overlay context is not closed")
+        if running and not disabled and not any(perf.number(perf.mapping(row)["ticks_run"]) > 0 for row in counted):
+            raise perf.EvidenceError("Running all-on or presentation-off block has no ticks")
     if not render_positive:
         raise perf.EvidenceError("Ablation render CPU unavailable")
 
@@ -139,10 +156,10 @@ def markdown(result: Record) -> str:
     world = str(result["world"])
     condition = "running 2×" if world in {"W200", "W-multi"} else "frozen"
     tick_description = "fresh start tick " + str(90840 if world == "W-multi" else 1440) + " per block" if world in {"W200", "W-multi"} else "tick 1440"
-    lines = [f"# {world} {condition} ablation ranking", "", f"Source: `{result['source']}`; actual alive: {result['actual_alive']}; release, {condition}, {tick_description}, Z4.", "", "Cost = median of 300 samples from neighbouring all-on blocks minus median of 150 node-off samples. Negative costs are retained.", "", "| Rank | Node/group | Cost ms | Off median | Neighbour median | Layer only |", "|---:|---|---:|---:|---:|---|"]
+    lines = [f"# {world} {condition} ablation ranking", "", f"Source: `{result['source']}`; actual alive: {result['actual_alive']}; release, {condition}, {tick_description}, Z4.", "", "Cost = median of 300 samples from neighbouring all-on blocks minus median of 150 node-off samples. Negative costs are retained.", "", "Diagnostic controls retain measured differences but are not removable costs. SimReads process-disable does not disable synchronous caching/getters. Floor disables simulation as well as presentation.", "", "| Rank | Node/group | Cost ms | Off median | Neighbour median | Layer only | Role |", "|---:|---|---:|---:|---:|---|---|"]
     for rank, raw in enumerate(perf.sequence(result["ranked"]), 1):
         row = perf.mapping(raw)
-        lines.append(f"| {rank} | {row['node']} | {row['cost_ms']} | {perf.mapping(row['off_statistics'])['median']} | {perf.mapping(row['neighbour_statistics'])['median']} | {row['layer_only']} |")
+        lines.append(f"| {rank} | {row['node']} | {row['cost_ms']} | {perf.mapping(row['off_statistics'])['median']} | {perf.mapping(row['neighbour_statistics'])['median']} | {row['layer_only']} | {row['role']} |")
     lines.extend(["", "Top three measured rows: " + ", ".join(map(str, perf.sequence(result["top_three"]))), "", "Floor: " + json.dumps(result["floor"]), ""])
     if "comparison" in result:
         lines.extend(["| Node/group | Before cost ms | After cost ms | Saved ms | Status |", "|---|---:|---:|---:|---|"])

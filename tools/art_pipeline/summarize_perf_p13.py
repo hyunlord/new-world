@@ -100,6 +100,23 @@ def table_row(world: str, condition: str, metric: str, samples: Sequence[Json]) 
     return "| " + " | ".join(fields) + " |"
 
 
+def validate_provenance(payload: Mapping[str, Json]) -> None:
+    """Shared release identity checks for matrix and standalone ablation evidence."""
+    phase = payload.get("phase")
+    if phase not in {"baseline", "after"}:
+        raise EvidenceError("Invalid measurement phase")
+    for key, length in (("build_commit", 40), ("build_sha256", 64), ("collector_sha256", 64)):
+        value = payload.get(key)
+        if not isinstance(value, str) or len(value) != length or any(character not in "0123456789abcdef" for character in value):
+            raise EvidenceError(f"Missing or invalid measurement provenance: {key}")
+    if not isinstance(payload.get("checkout"), str) or not Path(str(payload["checkout"])).is_absolute():
+        raise EvidenceError("Missing absolute checkout provenance")
+    if phase == "baseline" and payload["build_commit"] != payload.get("baseline_commit"):
+        raise EvidenceError("Baseline must use the recorded Part 0 tooling commit")
+    if payload.get("build_profile") != "release" or payload.get("release_sha256") != payload["build_sha256"]:
+        raise EvidenceError("Release profile and identical dylib SHA required")
+
+
 def load_session(path: Path) -> Session:
     raw: Json = json.loads(path.read_text())
     payload = mapping(raw)
@@ -113,18 +130,9 @@ def load_session(path: Path) -> Session:
         raise EvidenceError(f"Invalid world/phase in {path}")
     if payload.get("ablation_only"):
         raise EvidenceError(f"Part 3 ablation-only evidence cannot enter the full matrix: {path}")
-    for key, length in (("build_commit", 40), ("build_sha256", 64), ("collector_sha256", 64)):
-        value = payload.get(key)
-        if not isinstance(value, str) or len(value) != length or any(character not in "0123456789abcdef" for character in value):
-            raise EvidenceError(f"Missing or invalid measurement provenance: {key}")
-    if not isinstance(payload.get("checkout"), str) or not Path(str(payload["checkout"])).is_absolute():
-        raise EvidenceError("Missing absolute checkout provenance")
-    if phase == "baseline" and payload["build_commit"] != payload.get("baseline_commit"):
-        raise EvidenceError("Baseline must use the recorded Part 0 tooling commit")
+    validate_provenance(payload)
     if world == "W1000" and phase != "after":
         raise EvidenceError("W1000 is after-only")
-    if payload.get("build_profile") != "release" or payload.get("release_sha256") != payload["build_sha256"]:
-        raise EvidenceError("Release profile and identical dylib SHA required")
     for raw_fragment in sequence(payload.get("split_fragments", [])):
         fragment = mapping(raw_fragment)
         source = Path(str(fragment["source"]))

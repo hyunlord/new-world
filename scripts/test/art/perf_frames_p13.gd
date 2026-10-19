@@ -18,7 +18,7 @@ class MeasurementRuntime extends Session.Runtime:
 		var alive_settlements: int = 0
 		for count: int in settled.get("member_counts", []):
 			alive_settlements += int(count > 0)
-		return {"tick": int(read("get_time_snapshot")["tick"]), "camera": [camera.position.x, camera.position.y], "zoom": [camera.zoom.x, camera.zoom.y], "population": read("get_agent_snapshot")["agent_ids"].size(), "alive_settlements": alive_settlements, "selected_id": Selection.selected_id}
+		return {"tick": int(read("get_time_snapshot")["tick"]), "camera": [camera.position.x, camera.position.y], "zoom": [camera.zoom.x, camera.zoom.y], "population": read("get_agent_snapshot")["agent_ids"].size(), "alive_settlements": alive_settlements, "selected_id": Selection.selected_id, "simulation_frozen": world.process_mode == Node.PROCESS_MODE_DISABLED}
 
 var _main: Node
 var _world: Node
@@ -282,14 +282,19 @@ func _ablation_block(label: String, condition: String) -> Dictionary:
 	var block: Dictionary = await _block(label, 150, condition, 4, speed)
 	_world.call("set_sim_speed", 0.0)
 	block["fresh_setup"] = true
+	block["simulation_disabled"] = _world.process_mode == Node.PROCESS_MODE_DISABLED
+	block["diagnostic_control"] = "simulation_disabled" if block["simulation_disabled"] else "running" if speed > 0.0 else "frozen"
 	return block
 
 func _run_ablation() -> void:
 	var before: Dictionary = await _ablation_block("ablation_all_on_0", "ablation_reference")
 	var targets: Array[Dictionary] = []
+	var inventory: Array[String] = []
+	for child: Node in _main.get_children():
+		inventory.append(str(_main.get_path_to(child)))
+	_result["ablation_top_level_inventory"] = inventory
+	_result["ablation_floor_role"] = "simulation_disabled_all_targets_off"
 	for node: Node in _main.get_children() + (_main.get_node("UI").get_children() if _main.has_node("UI") else []):
-		if node == _world or node == _camera or node.name in ["SimReads", "UI"]:
-			continue
 		if node.has_method("_process") or node.name not in ["WorldObjects", "Shadows", "NightChillLayer"]:
 			var members: Array[String] = []
 			for child: Node in _walk(node):
@@ -309,7 +314,7 @@ func _run_ablation() -> void:
 		var neighbours: Array = before["samples"].duplicate()
 		neighbours.append_array(after["samples"])
 		var cost: float = float(_statistics(neighbours)["primary_cpu_ms"]["median"]) - float(off["statistics"]["primary_cpu_ms"]["median"])
-		_ablation.append({"node": label, "descendants_disabled_as_group": target["descendants"], "layer_only": target["layer_only"], "off_block": off["label"], "neighbour_blocks": [before["label"], after["label"]], "cost_ms": cost})
+		_ablation.append({"node": label, "role": "simulation_disabled_control" if node == _world else "already_frozen_camera_control" if node == _camera else "synchronous_reader_process_control" if node.name == "SimReads" else "presentation", "removable_cost": node != _world and node != _camera and node.name != "SimReads", "descendants_disabled_as_group": target["descendants"], "layer_only": target["layer_only"], "off_block": off["label"], "neighbour_blocks": [before["label"], after["label"]], "cost_ms": cost})
 		before = after
 	for target: Dictionary in targets:
 		_disable(target["node"], bool(target["layer_only"]))
