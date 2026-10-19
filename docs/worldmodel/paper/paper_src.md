@@ -321,8 +321,8 @@ time-capped) and of the v2-trained world models are evaluations of those checkpo
 | D1 obs2 30 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}** |
 
 E2 on obs2 compares with a regression that transfers badly from v2 (Section 6), so its WEAK / KEEP verdicts there say
-little about the models. A deterministic one-run side (`ridge_obs`) or a two-seed model with ratio ≤ 0.8 is capped by the
-W1 rule as written (one seed reaches WEAK at most).
+little about the models. Under the W1 rule a single run reaches WEAK at most, so the deterministic `ridge_obs` is WEAK in E1 on v2 at 7 days
+even with a ratio of {{j5:v2/rules/E1/7d/ratio#3}}.
 
 R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` {{j5:R4/crn_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} α_max; `crn_v2_s1` {{j5:R4/crn_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} α_max; `ct_v2_s0` {{j5:R4/ct_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} α_max; `ct_v2_s1` {{j5:R4/ct_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} α_max; `crn_obs2_s0` {{j5:R4/crn_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} α_max; `crn_obs2_s1` {{j5:R4/crn_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} α_max; `ct_obs2_s0` {{j5:R4/ct_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} α_max; `ct_obs2_s1` {{j5:R4/ct_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
 
