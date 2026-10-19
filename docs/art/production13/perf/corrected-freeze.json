@@ -7,9 +7,10 @@
   "reason": "Bounded post-freeze repair of stale scrollbar-page restoration exposed by actual48px headless layout tests; original band math and test criteria preserved.",
   "focused_layout_p12": "PASS headless only",
   "focused_layout_p13": "PASS headless only",
-  "full_repaired_gate": "PENDING",
+  "full_repaired_gate": "TERMINAL exit1:118/120 pass; real-input p12/p13 refused75",
   "final_display_matrix": "NOT_MEASURED",
   "final_running_section_timers": "NOT_MEASURED",
   "gui_input": "NOT_VERIFIED user prohibits windows",
-  "prior_measurements_reattributed": false
+  "prior_measurements_reattributed": false,
+  "final_gate_results": "../gates/final/results.tsv"
 }
