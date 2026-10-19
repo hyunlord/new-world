@@ -31,7 +31,7 @@ every round's acts and row probabilities (1,640 / 1,640), so the propensity of e
 **Realized.** 3,966 acts, **2.42 per world**, **3.2 % of worlds never acted** (GOAL.md expected 2–3 and ≈ 3 %); 39.9 %
 gift, 39.9 % spoil, 20.1 % rot; **60.0 % of acts had an earlier act in the world's history**. The confounding is WM-4's:
 in the low-food tercile 80.9 % of acts are gifts and 5.3 % spoils; in the high-food tercile 4.3 % gifts and 72.9 %
-spoils. **IPW effective sample sizes**: 396–445 treated per act at 7 days and 127–141 at 30 days (WM-4: 44–55), from
+spoils. **IPW effective sample sizes**: 396–445 treated per act at 7 days and 126–141 at 30 days (WM-4: 44–55), from
 1,163 / 1,174 / 572 treated units at 7 days, more than half of them with an earlier act.
 
 **Families.** For every val / test world at c1 (first act, or day 30) and c2 (second act, or c1 + 14 days): `pre` (the
@@ -79,7 +79,7 @@ L4.4: the first two ran beside our own evaluations).
 the seed-averaged 12-cell scores by −0.006 to +0.018, every interval containing 0 (obs: CRN +0.001 [−0.007, +0.010] at
 7 d, −0.003 [−0.008, +0.002] at 30 d; CT −0.006 [−0.014, +0.003], −0.004 [−0.010, +0.003]; v2: CRN +0.003 [−0.085,
 +0.099], −0.004 [−0.029, +0.021]; CT +0.018 [−0.060, +0.098], +0.016 [−0.013, +0.043]). The deaths cells barely move
-(e.g. `ct_v2_s0` 7 d 1.409 → 1.549, `crn_v2_s0` 30 d 4.187 → 4.183): the two rollouts of CRN / CT differ by whole deaths,
+(WM-4's runs, e.g. `wm4:ct_v2_s0` 7 d 1.409 → 1.549, `wm4:crn_v2_s0` 30 d 4.187 → 4.183): the two rollouts of CRN / CT differ by whole deaths,
 not by fractions that rounding would remove. WM-4's unrounded predictions are reproduced exactly by the re-score's
 unrounded readout for seven runs; `ct_obs_s1` differs at the 1e-4 relative level (GPU nondeterminism, DECISIONS L4.2).
 

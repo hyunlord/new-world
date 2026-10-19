@@ -131,7 +131,7 @@ def obs2_block(runs: Path) -> dict:
     errs_sec = {n: restrict(ef.cell_errors(test, p, fl), keep) for n, p in secondary.items()}
     sel = base["selection"]
     out = {"selection": sel, "selection_unfloored": base["selection_unfloored"], "worlds": len(worlds),
-           "cases": len(test), "cases_floor": len(base["floor_predictions"]), "rules": {}, "meta": meta,
+           "cases": len(test), "floor_predictions_all_replicates": len(base["floor_predictions"]), "rules": {}, "meta": meta,
            "estimates": base["estimates"], "distribution_test": base["distribution"]["test"],
            "distribution_test_by_ref": base["distribution"].get("test_by_ref"), "scales": base["scales"]}
     seeds_of = lambda kind: [f"{kind}_s{s}" for s in SEEDS2 if f"{kind}_s{s}" in errs]
@@ -432,11 +432,49 @@ def compute_block(runs: Path, info: dict) -> dict:
     return out
 
 
+def posthoc_block(j: dict, runs: Path) -> dict:
+    """Post hoc (review round 1, M1 / M2; not pre-registered): the direct regressions against the arm-level baselines on
+    v2, and the support shift between v2's training cases and the obs2 test cases (cast rows per arm)."""
+    out = {"note": "post hoc (REVIEW.md round 1, M1 / M2); not a pre-registered rule"}
+    base = load(WM2 / "effects_base" / "effects_base.json")
+    stds = ef.stds_from(base["stds"])
+    cases = [ef.case_from(x) for x in base["cases"]["test"]]
+    worlds = sorted({x.seed for x in cases})
+    cells = {lag: [(a, o, lag) for a in v2.W3_ARMS for o in v2.OUTCOMES if stds[(a, o, lag)] is not None]
+             for lag in v2.LAGS}
+    preds = {k: base["test_predictions"][k] for k in ("arm_mean", "an5_arm", "zero")}
+    for name in ("ridge_obs", "ridge_priv"):
+        e = load(runs / name / f"{name}.json")
+        if e is not None:
+            preds[name] = e["v2_test_predictions"]
+    errs = {n: ef.cell_errors(cases, p, stds) for n, p in preds.items()}
+    out["v2_vs_arm_level"] = {}
+    for r in ("ridge_obs", "ridge_priv"):
+        for b in ("arm_mean", "an5_arm"):
+            if r in errs:
+                for lag in v2.LAGS:
+                    out["v2_vs_arm_level"][f"{r}|{b}|{lag}"] = ef.compare([errs[r]], errs[b], cells[lag], worlds) | {
+                        "baseline_member": b}
+    train = [ef.case_from(x) for x in base["cases"]["train"]]
+    o2 = load(runs / "obs2_base" / "obs2_base.json")
+    if o2 is not None:
+        test = [x for x in o2["cases"]["test"] if x["rep"] in (0, 2)]
+        out["support"] = {}
+        for a_obs, a_v2 in (("gf240", "gf240E"), ("sp240", "sp240L"), ("rw120", "rw120E")):
+            rows_tr = {x.cast_row for x in train if x.arm == a_v2}
+            rows_te = [x["cast_row"] for x in test if x["arm"] == a_v2]
+            out["support"][a_obs] = {"v2_train_cast_rows": sorted(rows_tr), "obs2_test_distinct_rows": len(set(rows_te)),
+                                     "obs2_test_cases": len(rows_te),
+                                     "share_obs2_cases_at_a_v2_train_row": sum(r in rows_tr for r in rows_te) / max(1, len(rows_te))}
+    return out
+
+
 def build_all(runs: Path) -> dict:
     j = build(runs)
     j["main_table"] = main_table(j)
     j["cost_checks"] = cost_block(runs)
     j["compute"] = compute_block(runs, j["runs"])
+    j["posthoc"] = posthoc_block(j, runs)
     return j
 
 

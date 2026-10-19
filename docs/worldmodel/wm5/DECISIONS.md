@@ -48,6 +48,25 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   and `pre` (when not empty), and the fork is at c with the role's replicates. `finalize` replays the policy on every
   observed episode and requires every round's casts and rows to be reproduced.
 
+## Part 2
+- **L2.1 Risk set of the multi-cast baselines = rows with p_tot(c) > 0** (`effects5.stack`). A row that is refractory,
+  capped or not a decision can never be treated (p = 0), so as a control it would have no treated counterpart
+  (positivity); WM-4 L2.1 made the same choice for single casts. GOAL.md 7.2's weight products still run over every
+  decision row in the window (refractory rows contribute 1).
+- **L2.2 `match5`'s control row for a reference row past day 60.** Controls are matched at row c (WM-4's rule); a c2 of
+  c1 + 14 days can fall after day 60, where no decision row exists, so the last decision row at or before c is used
+  (`Baselines.control_row`). It affects only `match5` on such cases; `match5` was not chosen on val.
+- **L2.3 obs2 case keys.** A case's `rep` encodes (reference, replicate) as 2 · ref index + replicate so that WM-2's
+  case keys, `average_errors` and the world-level bootstrap work unchanged with two reference rows per world
+  (`effects5.rep_code`); the bootstrap resamples worlds, so both references and both replicates of a world move
+  together.
+- **L2.4 M1 on obs2 with 720-row rollouts** (`effects5.cmd_m1`): both lags are read from one rollout and the split shift
+  (reported only, never scored) is not predicted, as for CRN / CT; the full-horizon rollouts would cost ≈ 2.5 × the time
+  for numbers the rules do not use.
+- **L2.5 `ridge_priv`'s hidden set** (review round 1, N8): the hidden global columns, `latent.npy`, the hidden settlement
+  columns (sum and max over settlements) and the 11 numeric `world_variety` values; the nested `world_variety.regions`
+  block (region centres and water distances) is not included.
+
 ## Part 4
 - **L4.1 One queue** (WM-4 L4.1): `wm5/_setup/queue.sh` runs every training and cost check one at a time from
   `queue.txt`; test evaluations are launched by `finals5.sh` only after METRICS.md part b (`6e9e88ed`, `prereg_sha`).
@@ -104,3 +123,13 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   *Third measurement (11:45:52–11:51:52, after our evaluations ended; load average 15–21 from other users):*
   0.910 s/step, 14.7-s evaluation → predicted 11,006 s for the authors' 11,850 steps < 14,400 s: plan **not reduced**.
   `ct_obs2_s0` and `ct_obs2_s1` run on it.
+
+## Part 7
+- **L7.1 Review round 1 responses** (REVIEW.md): M1 and M2 are interpretive; the judge gains a post hoc block
+  (`posthoc`: the regressions vs `arm_mean` / `an5_arm` on v2, and the cast-row support of v2 training vs the obs2 test),
+  and WM5.md and the paper say that the observable rung on v2 is the arm-level mean, that the obs2 ridge rungs measure
+  v2→obs2 transfer, and why ridge loses to `zero` at 30 days (a squared-error fit vs an absolute-error metric). m1: the
+  missing `ct_v2_s1_effects/effects_best.json` was fetched. m2: L2.1–L2.4 recorded. m3: 30-day ESS 126–141. m4: the
+  paper no longer calls the floor a ceiling that no state-blind predictor can beat. m5: the reviewer's two extra checks
+  (419 / 419 `pre_r0` = round-1 episode; rows ≤ c and 1,152 truths in 24 test families) are cited in DATASET_OBS2.md.
+  The judge field `cases_floor` is renamed `floor_predictions_all_replicates` (N7).

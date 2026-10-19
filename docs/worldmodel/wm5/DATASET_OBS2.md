@@ -38,7 +38,7 @@ Gifts go to hungry worlds and spoils to fed ones, with WM-4's ratios (15 : 1 at 
 ## Families (val and test worlds, two reference rows each)
 
 Family schedules: 400 val and 480 test families (c1, c2 per world); a non-empty `pre` at c1 in 0 and at c2 in 419 families (an empty `pre` is the recorder's `none` member, DECISIONS L1.2). Val families: replicate 0; test families: replicates 0 and 1.
-`fam-check`: 880 / 880 families pass (every member equals the observed episode on rows < c, carries exactly `pre` (+ the act at c), fork at c with the role's replicates); `none_r0` = round-0 factual checked in 880 families; `pre_r0` = a fresh unforked recording in 3 sampled test families.
+`fam-check`: 880 / 880 families pass (every member equals the observed episode on rows < c, carries exactly `pre` (+ the act at c), fork at c with the role's replicates); `none_r0` = round-0 factual checked in 880 families; `pre_r0` = a fresh unforked recording in 3 sampled test families. The independent review (REVIEW.md round 1, m5) also found every non-empty `pre_r0` (419) identical to the world's round-1 episode, rows ≤ c (the fork row included) identical in 24 test families, and their 1,152 truths equal to `obs2_base.json`. Applied amounts: some acts apply less than requested (a spoil or rot limited by the store; `applied` 0 when the store is empty), as in WM-4; the recorded `applied` is in every member's interventions.
 
 ## Effective sample sizes of the multi-cast IPW (observed train worlds, GOAL.md 7.2)
 

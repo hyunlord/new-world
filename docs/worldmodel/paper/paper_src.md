@@ -153,9 +153,9 @@ are recorded as a family forked at c; test families have two replicates. Realize
 
 For every test case with two replicates, the **floor** predicts the case's effect by the other replicate's true effect
 (on v2 the family's other replicate; on obs2 the r0 case by its r1 twin). This is the error of a predictor that knows the
-world's full state at the act and lacks only the post-fork noise. For symmetric noise its mean absolute error is about
-√2 times the irreducible one, so it is a conservative stand-in for the ceiling: a perfect predictor could score below it,
-never a predictor that lacks the state. The **ladder** for a split and horizon is: floor ← `ridge_priv` (a regression on
+world's full state at the act and lacks only the post-fork noise. For continuous symmetric noise its mean absolute error is about
+√2 times the noise-limited one, so it over-states the attainable error; for sparse count cells (deaths at 30 days) it can
+even be worse than predicting no effect. It is a reference point for the 12-cell average, not a hard ceiling. The **ladder** for a split and horizon is: floor ← `ridge_priv` (a regression on
 the full pre-act state, including hidden fields) ← `ridge_obs` (the same on the observable state) ← `zero` (no effect).
 The gaps say how much headroom exists, how much of it the observable state carries linearly, and how much lies in hidden
 state.
@@ -305,20 +305,30 @@ D2 (rounding alone; the earlier study's runs on their own test splits, seed-aver
 ## 6 Analysis
 
 **The benchmark discriminates; the methods do not use the room.** On both splits and at both horizons the floor lies
-far below `zero` (Table 2): the per-world effect is mostly determined by the state at the act, and only a small part is
-post-act noise. On v2 at 7 days a linear map of the **observable** pre-act state already beats `zero`
-(`ridge_obs` {{j5:v2/ladder/7d/values/ridge_obs#3}} vs {{j5:v2/ladder/7d/values/zero#3}}, E1
-{{j5:v2/rules/E1/7d/verdict#str}}), and adding the **hidden** state helps a little more
-({{j5:v2/ladder/7d/values/ridge_priv#3}}); yet both stay far above the floor
-({{j5:v2/ladder/7d/values/floor#3}}): most of the headroom is neither linear in the observable state nor in the
-hidden fields at the act. At 30 days the regression trained on v2 does worse than `zero`
-({{j5:v2/ladder/30d/values/ridge_obs#3}} vs {{j5:v2/ladder/30d/values/zero#3}}), and on obs2 the v2-trained
-regressions transfer badly at both horizons ({{j5:obs2/ladder/7d/values/ridge_obs#3}} and
-{{j5:obs2/ladder/30d/values/ridge_obs#3}} vs `zero` {{j5:obs2/ladder/7d/values/zero#3}} and
-{{j5:obs2/ladder/30d/values/zero#3}}): obs2's acts fall at other times of the year and in other states than v2's
-rule-fixed acts, and the hidden state helps there only at 7 days ({{j5:obs2/ladder/7d/values/ridge_priv#3}}). So
-the gap between `zero` and the floor is real, partly reachable from the observable state on the interventional split,
-and not closed by any method we evaluated.
+far below `zero` (Table 2; v2 {{j5:v2/ladder/7d/steps/zero − floor/ci_diff#ci3}} at 7 days, obs2
+{{j5:obs2/ladder/7d/steps/zero − floor/ci_diff#ci3}}): the per-world effect is mostly fixed by the state at the act,
+and only a small part is post-act noise. What a simple map of the pre-act state captures is more modest. On v2 at 7
+days `ridge_obs` beats `zero` ({{j5:v2/ladder/7d/values/ridge_obs#3}} vs {{j5:v2/ladder/7d/values/zero#3}}, E1
+{{j5:v2/rules/E1/7d/verdict#str}}), but post hoc it only ties the act's mean effect (`arm_mean`:
+{{j5:posthoc/v2_vs_arm_level/ridge_obs|arm_mean|7d/ci_diff#ci3}}; `an5_arm`: {{j5:posthoc/v2_vs_arm_level/ridge_obs|an5_arm|7d/ci_diff#ci3}}): linearly, the
+observable state adds nothing measurable beyond the arm-level mean. Adding the **hidden** state does add per-world
+information (`ridge_priv` vs `arm_mean` {{j5:posthoc/v2_vs_arm_level/ridge_priv|arm_mean|7d/ci_diff#ci3}}, post hoc), yet `ridge_priv`
+({{j5:v2/ladder/7d/values/ridge_priv#3}}) stays far above the floor ({{j5:v2/ladder/7d/values/floor#3}}): most of
+the headroom is not linear in the state at the act, observable or hidden. At 30 days the regressions do worse than
+`zero` ({{j5:v2/ladder/30d/values/ridge_obs#3}} vs {{j5:v2/ladder/30d/values/zero#3}}), as `arm_mean` does: a
+squared-error fit predicts a mean, while the metric is an absolute error, which rewards a median near zero for these
+skewed, mostly-zero effects.
+
+On obs2 the regressions trained on v2 are a test of **transfer**, not of what obs2's state carries: every v2 training
+case of a gift or a rot sits at one cast row (the eve of the first winter) and the spoils at a few rule-fixed rows,
+while obs2's test cases spread over {{j5:posthoc/support/gf240/obs2_test_distinct_rows#0}} rows; no obs2 gift or rot case
+falls on a v2 training row ({{j5:posthoc/support/gf240/share_obs2_cases_at_a_v2_train_row#pct1}}; spoils
+{{j5:posthoc/support/sp240/share_obs2_cases_at_a_v2_train_row#pct1}}). Under this shift the
+regressions do far worse than `zero` ({{j5:obs2/ladder/7d/values/ridge_obs#3}} and
+{{j5:obs2/ladder/30d/values/ridge_obs#3}} vs {{j5:obs2/ladder/7d/values/zero#3}} and
+{{j5:obs2/ladder/30d/values/zero#3}}), and F2's ridge rungs say nothing about observable versus hidden state on obs2.
+So the gap between `zero` and the floor is real on both splits; on v2 a linear map reaches only the arm-level mean from
+the observable state, and no method we evaluated closes the gap.
 
 **Confounding, measured.** On obs2 the naive treated-minus-control contrast is far worse than `zero` at 7 days
 ({{j5:obs2/confounding/7d/naive_vs_zero/ci_diff#ci3}}); the multi-act inverse-propensity contrast removes most of

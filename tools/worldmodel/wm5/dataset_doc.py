@@ -94,7 +94,11 @@ def render() -> str:
         L.append(f"`fam-check`: {fc['families'] - len(fc['bad'])} / {fc['expected']} families pass (every member equals the observed "
                  f"episode on rows < c, carries exactly `pre` (+ the act at c), fork at c with the role's replicates); "
                  f"`none_r0` = round-0 factual checked in {fc['none_r0_equal_r0_checked']} families; "
-                 f"`pre_r0` = a fresh unforked recording in {fc['unforked_checked']} sampled test families.")
+                 f"`pre_r0` = a fresh unforked recording in {fc['unforked_checked']} sampled test families. The independent "
+                 "review (REVIEW.md round 1, m5) also found every non-empty `pre_r0` (419) identical to the world's round-1 "
+                 "episode, rows ≤ c (the fork row included) identical in 24 test families, and their 1,152 truths equal to "
+                 "`obs2_base.json`. Applied amounts: some acts apply less than requested (a spoil or rot limited by the store; "
+                 "`applied` 0 when the store is empty), as in WM-4; the recorded `applied` is in every member's interventions.")
     d = load(RUNS / "describe" / "describe.json")
     if d:
         L += ["", "## Effective sample sizes of the multi-cast IPW (observed train worlds, GOAL.md 7.2)", "",
