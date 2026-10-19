@@ -1,0 +1,34 @@
+{
+	"argv": [
+		"--script",
+		"res://scripts/test/art/walker_numeric_probe_p13b.gd"
+	],
+	"canvas_count": 7,
+	"cases": 560,
+	"direction_count": 10,
+	"double": false,
+	"errors": [],
+	"executable": "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot",
+	"executable_sha256": "974197a7e6663dba803ae97c3b2d987b77a37b6e70088400ecf0ccc591cbdfbc",
+	"fixture_sha256": "25106a5ff086b8371646422e2a2a044fff580b608c854685329e980c84047fe7",
+	"godot": {
+		"build": "official",
+		"hash": "89cea143987d564363e15d207438530651d943ac",
+		"hex": 263680,
+		"major": 4,
+		"minor": 6,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.6-stable (official)",
+		"timestamp": 0
+	},
+	"schema": "P13BNM01",
+	"screen_count": 8,
+	"source_sha256": {
+		"res://scripts/test/art/walker_numeric_probe_p13b.gd": "7286bcb3338dbc804a5a26c1465b2066d405fb168a4a38568b48b7657a50fa82",
+		"res://scripts/ui/camp_seats.gd": "f0bc0b1f23985a1f104e0607068ef8b8f7ae617166dd7c4e0835235c05b46298"
+	},
+	"user_argv": [],
+	"valid": true,
+	"version": 1
+}

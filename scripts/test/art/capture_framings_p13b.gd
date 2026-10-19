@@ -115,6 +115,8 @@ func _run() -> void:
 	# Freeze before adding the scene: even the first process frame is tick zero.
 	_world.call("set_sim_speed", 0.0)
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
+	if OS.get_environment("CAPTURE_IDENTITY_P13") == "1":
+		_camera.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(_main)
 	current_scene = _main
 	_camera.call("set_auto_track", false)
@@ -311,11 +313,14 @@ func _run() -> void:
 			if not bool(draw_evidence["valid"]):
 				_fail("unexpected render steps; capture invalid")
 				return
+			if _camera.process_mode != Node.PROCESS_MODE_DISABLED or bool(_camera.get("_paused")):
+				_fail("P3 camera input must stay disabled with initial pause state")
+				return
 			var identity_file := FileAccess.open(_out.path_join("P3.json"), FileAccess.WRITE)
 			if identity_file == null:
 				_fail("cannot save P3 metadata")
 				return
-			identity_file.store_string(JSON.stringify({"perf_candidate_p12": candidate_evidence, "perf_candidate_p13": write_skip_evidence, "perf_candidate_p13b": walker_evidence, "census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
+			identity_file.store_string(JSON.stringify({"perf_candidate_p12": candidate_evidence, "perf_candidate_p13": write_skip_evidence, "perf_candidate_p13b": walker_evidence, "census": _identity_census(), "draw_clock": draw_evidence, "camera_processing_disabled": _camera.process_mode == Node.PROCESS_MODE_DISABLED, "camera_paused": bool(_camera.get("_paused")), "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
 		if not _write_entities(stem, target, image.get_size()):
 			return
 		print("capture saved: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
