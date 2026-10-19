@@ -143,10 +143,11 @@ func _block(index: int) -> void:
 		_errors.append("Fresh alternating setup differs from initial state")
 	_world.call("set_sim_speed", _speed)
 	var enabled: bool = index % 2 == 1
-	if _renderer.call(_setter, _change, enabled) != true:
+	var switched: bool = _renderer.call("set_perf_candidate_p13", _change, enabled) if _change == "write-skip" else _renderer.call("set_perf_candidate_p12", _change, enabled)
+	if not switched:
 		_errors.append("Renderer rejected named candidate switch")
 		return
-	var state: Dictionary = _renderer.call(_getter)
+	var state: Dictionary = _renderer.call("get_perf_candidate_p13") if _change == "write-skip" else _renderer.call("get_perf_candidate_p12")
 	if state.get("change_id") != _change or not (state.get("candidate_enabled") is bool) or state.get("candidate_enabled") != enabled:
 		_errors.append("Renderer switch readback does not match requested candidate")
 		return
@@ -179,7 +180,7 @@ func _block(index: int) -> void:
 			discarded.append(sample)
 		else:
 			samples.append(sample)
-	var after: Dictionary = _renderer.call(_getter)
+	var after: Dictionary = _renderer.call("get_perf_candidate_p13") if _change == "write-skip" else _renderer.call("get_perf_candidate_p12")
 	if after != state:
 		_errors.append("Renderer switch changed inside a measured block")
 	var block_end: Dictionary = _runtime.snapshot()
