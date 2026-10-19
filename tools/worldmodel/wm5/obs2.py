@@ -318,10 +318,10 @@ def members(fam) -> dict[str, dict[int, object]]:
 
 
 def fam_check(root: Path, unforked: Path | None = None) -> dict:
-    """GOAL.md 6.2.5's checks per family: every member equals the observed episode on rows < c; every member carries
+    """GOAL.md 6.2.5's checks per family: every member (`pre`, the arms) equals the observed episode on rows < c; every member carries
     the `pre` casts (an arm member: `pre` + the arm at c, nothing else); the fork is at c with the role's replicates; the
-    members are exactly `none`, the three arms and `pre` when it is not empty. Also (L1.3): `none_r0` of a family whose
-    `pre` is empty equals the world's round-0 factual episode; `pre_r0` equals a fresh unforked recording of the same
+    members are exactly `none`, the three arms and `pre` when it is not empty. Also (L1.3): `none_r0` of every family equals the
+    world's round-0 factual episode (and every `none_r` equals it on rows < c when `pre` is not empty); `pre_r0` equals a fresh unforked recording of the same
     schedule for the sampled worlds under `unforked/` (`<role>/<ref>/<scene>_s<seed>_pre`)."""
     root = Path(root)
     policy = json.loads((root / "policy" / "policy.json").read_text())
@@ -341,17 +341,21 @@ def fam_check(root: Path, unforked: Path | None = None) -> dict:
             r["members_ok"] = sorted(fam.variants) == want
             r["fork_ok"] = fam.fork_tick == c * 60 and fam.replicates == REPLICATES[role]
             diffs, casts_ok, applied = [], True, {}
+            fac = load_episode(r0_dir(root, seed), arrays=fv.ARRAYS) if pre else None
             for eid, reps in [("none", fam.factual)] + sorted(fam.variants.items()):
                 for k, ep in reps.items():
-                    diffs += [f"{eid}_r{k}: {x}" for x in fv.compare_prefix(ep, obs, c - 1)]
+                    # the family members (`pre` and the arms) against the observed episode; the recorder's extra `none`
+                    # member of a family with a non-empty `pre` has no act at all, so it is checked against the
+                    # world's round-0 factual episode instead (DECISIONS L1.5)
+                    ref_ep = fac if (eid == "none" and pre) else obs
+                    diffs += [f"{eid}_r{k}: {x}" for x in fv.compare_prefix(ep, ref_ep, c - 1)]
                     want_casts = ([] if eid == "none" else pre if eid == "pre"
                                   else pre + [{"arm": eid, "tick": c * 60}])
                     ok = check_casts(ep.interventions, want_casts)
                     casts_ok &= ok
                     applied[f"{eid}_r{k}"] = [x.get("applied") for x in ep.interventions]
             r["prefix_ok"], r["diffs"], r["casts_ok"], r["applied"] = not diffs, diffs, casts_ok, applied
-            if not pre:
-                r["none_r0_equal_r0"] = array_shas(path / f"{SCENE}_s{seed}_none_r0") == array_shas(r0_dir(root, seed))
+            r["none_r0_equal_r0"] = array_shas(path / f"{SCENE}_s{seed}_none_r0") == array_shas(r0_dir(root, seed))
             if unforked is not None and (Path(unforked) / role / ref / f"{SCENE}_s{seed}_pre").exists():
                 r["pre_r0_equal_unforked"] = (array_shas(path / f"{SCENE}_s{seed}_{pre_id(fam)}_r0")
                                               == array_shas(Path(unforked) / role / ref / f"{SCENE}_s{seed}_pre"))

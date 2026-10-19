@@ -93,7 +93,7 @@ def render() -> str:
     if fc:
         L.append(f"`fam-check`: {fc['families'] - len(fc['bad'])} / {fc['expected']} families pass (every member equals the observed "
                  f"episode on rows < c, carries exactly `pre` (+ the act at c), fork at c with the role's replicates); "
-                 f"`none_r0` = round-0 factual checked in {fc['none_r0_equal_r0_checked']} families with an empty `pre`; "
+                 f"`none_r0` = round-0 factual checked in {fc["none_r0_equal_r0_checked"]} families; "
                  f"`pre_r0` = a fresh unforked recording in {fc['unforked_checked']} sampled test families.")
     d = load(RUNS / "describe" / "describe.json")
     if d:

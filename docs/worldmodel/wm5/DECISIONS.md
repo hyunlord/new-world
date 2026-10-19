@@ -71,3 +71,11 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   checked to be identical to the first. The trainings' `manifest_sha256` is therefore the observed-only file's; no
   training or selection reads a family member either way (GOAL.md 4.3). The order of GOAL.md 9.1 ("after obs2") is
   kept for the trainings' data; only their start no longer waits for the families' recording.
+- **L1.5 `fam-check` and the recorder's extra `none` member.** The first `fam-check` (08:28) failed 417 of 880 families:
+  exactly the families with a non-empty `pre` (c2 of a world that had acted), where the check compared **every**
+  recorded member, including the recorder's extra `none` member, with the observed episode on rows < c. That `none`
+  member has no act at all, so it legitimately diverges from the observed episode after the world's first act; it is not
+  a family member in GOAL.md 6.2.5's sense (`pre` and the three arms are). The check was corrected (`obs2.py`, commit
+  below): `pre` and the arms are compared with the observed episode on rows < c; `none_r<k>` is compared with the world's
+  round-0 factual episode on rows < c, and `none_r0` with it in full (sha256) for every family. No data changed; the
+  failing rows showed only `none_r0` differences (`casts_ok`, `fork_ok`, `members_ok` true).
