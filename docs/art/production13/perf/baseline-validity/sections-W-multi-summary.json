@@ -1,0 +1,167 @@
+{
+  "status": "VALID",
+  "valid": true,
+  "errors": [],
+  "exit_code": 0,
+  "diagnostic_only": true,
+  "section_statistics_usec": {
+    "reads_usec": {
+      "median": 53.0,
+      "p90": 62,
+      "p99": 69,
+      "max": 74
+    },
+    "checksum_talk_usec": {
+      "median": 64.0,
+      "p90": 72,
+      "p99": 90,
+      "max": 99
+    },
+    "chill_ingest_usec": {
+      "median": 38.0,
+      "p90": 43,
+      "p99": 49,
+      "max": 50
+    },
+    "activity_context_usec": {
+      "median": 79.0,
+      "p90": 85,
+      "p99": 92,
+      "max": 95
+    },
+    "tile_contexts_usec": {
+      "median": 378.0,
+      "p90": 398,
+      "p99": 415,
+      "max": 423
+    },
+    "agent_setup_usec": {
+      "median": 110.0,
+      "p90": 123,
+      "p99": 134,
+      "max": 135
+    },
+    "look_usec": {
+      "median": 310.0,
+      "p90": 334,
+      "p99": 351,
+      "max": 366
+    },
+    "pose_usec": {
+      "median": 613.0,
+      "p90": 644,
+      "p99": 671,
+      "max": 695
+    },
+    "frame_choice_usec": {
+      "median": 455.0,
+      "p90": 496,
+      "p99": 539,
+      "max": 570
+    },
+    "variant_usec": {
+      "median": 187.0,
+      "p90": 200,
+      "p99": 206,
+      "max": 213
+    },
+    "meta_usec": {
+      "median": 235.0,
+      "p90": 251,
+      "p99": 263,
+      "max": 291
+    },
+    "children_usec": {
+      "median": 559.5,
+      "p90": 597,
+      "p99": 631,
+      "max": 670
+    },
+    "draw_rows_usec": {
+      "median": 102.0,
+      "p90": 109,
+      "p99": 116,
+      "max": 119
+    },
+    "blocked_usec": {
+      "median": 47.0,
+      "p90": 50,
+      "p99": 55,
+      "max": 57
+    },
+    "seats_usec": {
+      "median": 5697.0,
+      "p90": 6085,
+      "p99": 6230,
+      "max": 6308
+    },
+    "footprints_usec": {
+      "median": 122.5,
+      "p90": 149,
+      "p99": 189,
+      "max": 215
+    },
+    "declump_usec": {
+      "median": 384.0,
+      "p90": 451,
+      "p99": 490,
+      "max": 517
+    },
+    "easing_usec": {
+      "median": 158.0,
+      "p90": 177,
+      "p99": 198,
+      "max": 208
+    },
+    "walker_offsets_usec": {
+      "median": 1353.5,
+      "p90": 1525,
+      "p99": 1591,
+      "max": 1618
+    },
+    "walker_apply_usec": {
+      "median": 46.0,
+      "p90": 54,
+      "p99": 59,
+      "max": 78
+    },
+    "post_loop_usec": {
+      "median": 382.0,
+      "p90": 405,
+      "p99": 442,
+      "max": 468
+    },
+    "retire_usec": {
+      "median": 14.0,
+      "p90": 20,
+      "p99": 23,
+      "max": 29
+    },
+    "selection_usec": {
+      "median": 7.0,
+      "p90": 9,
+      "p99": 13,
+      "max": 14
+    },
+    "causal_usec": {
+      "median": 80.0,
+      "p90": 96,
+      "p99": 108,
+      "max": 121
+    },
+    "other_usec": {
+      "median": 64.0,
+      "p90": 76,
+      "p99": 88,
+      "max": 92
+    },
+    "total_usec": {
+      "median": 11509.0,
+      "p90": 12120,
+      "p99": 12573,
+      "max": 12678
+    }
+  },
+  "percentile_method": "nearest-rank",
+  "founding_groups_status": "unavailable_separate_callback"
+}

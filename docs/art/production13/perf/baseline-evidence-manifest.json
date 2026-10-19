@@ -1,0 +1,546 @@
+{
+  "runtime_commit": "6d493fa8ade6d368eca8e7efa7ab3f668eea1827",
+  "scope": "Part0 completed baseline, including rejected attempt1 and accepted attempt2",
+  "files": [
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.json.validity.json",
+      "bytes": 176434,
+      "sha256": "97d67aa7a41a260224bfeff53d9fc22ba9987c08aa928134debd7328acf2b7a3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2-runner.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2-runner.log",
+      "bytes": 3437,
+      "sha256": "b8186ce75882e4f4d1f2b4d201cee73497e4f5796dcd56e6598723698486b362"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json",
+      "bytes": 18428050,
+      "sha256": "04b213e83a7570d86c34612806f58a04a5edaa17853bd568ad8371df1ede2f80"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json",
+      "bytes": 169874,
+      "sha256": "905ba0eb0cca326ebe9b7eb40699a6e355eb149290c97190f002562d2b5e9ac5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt1.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt1.json.validity.json",
+      "bytes": 176942,
+      "sha256": "f9563b623f839e5abdaaddd0a8516e77102b195090f5ba20a66b31b20fe5d770"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.json",
+      "bytes": 3385877,
+      "sha256": "ea04d7b727473347940d4e147b5d1eb00279b4d379920e3466497aaaee026cc6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.json.validity.json",
+      "bytes": 169254,
+      "sha256": "3b8c23e134c0f8895ddf96fdd117722d5199590b5b196b4651bfcfb4baca1913"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.log",
+      "bytes": 610,
+      "sha256": "65c101a55b3f1eccebcd18d97f087670d18d5d25eff40550aafd7426bdabf36a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt1.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt1.json.validity.json",
+      "bytes": 176892,
+      "sha256": "2c3631795d9476beb3b7bccf2516427894c0817e8e4c441925cd3d0690e21223"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.json",
+      "bytes": 3377051,
+      "sha256": "0ef85f94477f829276d3ff10e8692942d84311aac8a4a0e860836491f1a0209d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.json.validity.json",
+      "bytes": 169388,
+      "sha256": "315bad639b888543a78330ff37f7d8a60ff09d5432eec43217af9317257c66fb"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.log",
+      "bytes": 608,
+      "sha256": "37eec9773c15752a41c738d6c77c6e7c9f423de2d2f69d6eed17051ffd718948"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt1.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt1.json.validity.json",
+      "bytes": 177307,
+      "sha256": "69595e9b17b53fcfa1fbe2ef16ac635c86d11ba8df63e4d959be7fc5798e5047"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.json",
+      "bytes": 3384827,
+      "sha256": "2f22191d7711fab4a6e23d91351384668b5cb056f53df2ea1c183977cd6f19ec"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.json.validity.json",
+      "bytes": 169401,
+      "sha256": "e7ffb6926b7fe178242b8d08bdba14f00f3fe385615fff30731ba5c4d922cf86"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.log",
+      "bytes": 608,
+      "sha256": "b1e48bcf5888a842e9def227e44217f0f8cb9eee640d13fb9f733c625d21c497"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt1.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt1.json.validity.json",
+      "bytes": 177134,
+      "sha256": "f7c61b535010d71c6f9326f835fedcab62d7ba2a616042e32ddf439672361217"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.json",
+      "bytes": 3385096,
+      "sha256": "e46930f9da231dadd6ad11dbf8ffb9db2b50bb9453c90a46e777724c6aa153b5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.json.validity.json",
+      "bytes": 168980,
+      "sha256": "d0653257920c4c22527d3250466d0141bc5431c6f4f051fa38a721e1fb245c9f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.log",
+      "bytes": 601,
+      "sha256": "ced122f10164e08b2e563c5b12c65b82b77a43987c810e4f860cfcb9f9e2456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt1.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt1.json.validity.json",
+      "bytes": 177182,
+      "sha256": "a04e4374be4710b18fa23730e59ce5f1838e7ec70cec4f0219f4430b60103ead"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.json",
+      "bytes": 3383289,
+      "sha256": "f836cfe50c10d27fc582df5dca5dbb9a62e89a0ec122691b229c73b8f526a242"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.json.validity.json",
+      "bytes": 169815,
+      "sha256": "05b8fca1b3e4eddd34e039711513afcd7fa817c84f5c22e142fcca39280fec79"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.log",
+      "bytes": 609,
+      "sha256": "ab767fe1aa62b371c80be232607bc822264dd5c5d216a65fefe58e46934bfd55"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix-attempt1-runner.log",
+      "bytes": 1031,
+      "sha256": "396b46c33e964768b0c1604ba6df36d4ae5776f118210c5d01c60059762773cd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix-attempt2-runner.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/matrix-attempt2-runner.log",
+      "bytes": 1791,
+      "sha256": "5e3041b3396a0b36054fdb9a05b0f5f3b832da9f57267a93a8b0ea821cf9199c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/round2-completed",
+      "bytes": 29,
+      "sha256": "05c4c21eeb336c5397d433a55a5c660114e7ce6fb72768f4870ee1a05e0ee2bd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/round2-runner.log",
+      "bytes": 160,
+      "sha256": "aff077cfcee226c57a45bc07b481d7d337af4d07738135f3e48195b44edcefa1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/round2-started",
+      "bytes": 29,
+      "sha256": "0d5464e639b1f70c0c9bad15db994bd6b9f061a0cd7a06ba03c122b3bbc4f900"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/round2.sh",
+      "bytes": 2779,
+      "sha256": "916b07ace6dd4a2a6ae599a7680e0a6659e8cf4b179f33c99641a34c131f85fd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/agent_renderer_profile_p13.gd",
+      "bytes": 44769,
+      "sha256": "12a46d47eb490452c279f0e275e98ff92c85feb6dae41e88e7b259cdf54e456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/agent_renderer_profile_p13.manifest.json",
+      "bytes": 1249,
+      "sha256": "cc402a2954de3c3a640b4953fbd212ae7575b91b60bee5bda7e566b231df585e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/frames.json.validity.json",
+      "bytes": 176976,
+      "sha256": "fb7d3abbf4d8701fd3fc55f97ca9c6cad24434ced2ce152eb6ac2c592cfac808"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/launch.json",
+      "bytes": 66388,
+      "sha256": "a2fb83457f85c6b2b2a8ec2ae7bd075e9502dc42b1a63a50c1117a40a8bb27fa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/session.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/session.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/summary.json",
+      "bytes": 574,
+      "sha256": "1b870a452e047ac434494ab4d8ba791c961ee38012f846e3f0ec2efe51c5ae9a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1-runner.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1-runner.log",
+      "bytes": 574,
+      "sha256": "1b870a452e047ac434494ab4d8ba791c961ee38012f846e3f0ec2efe51c5ae9a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/agent_renderer_profile_p13.gd",
+      "bytes": 44769,
+      "sha256": "12a46d47eb490452c279f0e275e98ff92c85feb6dae41e88e7b259cdf54e456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/agent_renderer_profile_p13.manifest.json",
+      "bytes": 1249,
+      "sha256": "410163cd3bbaceaaec140154d7503ed1a0e2ac6f3c37f14562f06a181c48dad1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/frames.json",
+      "bytes": 951868,
+      "sha256": "38b0df1091216e2ef9655e7abc472c9fc22b19a3636570ccec04d71bd47f0989"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/frames.json.validity.json",
+      "bytes": 171571,
+      "sha256": "9861558c28dd2c5cf4138fa06432c2d85ebb917840790fe749300f290d3d6186"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/launch.json",
+      "bytes": 66389,
+      "sha256": "c8a311e1152ddad628bbca2f92249108e4da6b5bfd5245d1c043ddd81d5783c0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/session.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/session.log",
+      "bytes": 331,
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/summary.json",
+      "bytes": 2980,
+      "sha256": "9cff0d691267cbb0dc77a846b33af01296e13fca28ec0dc78c907f898fbb1a0d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2-runner.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2-runner.log",
+      "bytes": 2980,
+      "sha256": "9cff0d691267cbb0dc77a846b33af01296e13fca28ec0dc78c907f898fbb1a0d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/agent_renderer_profile_p13.gd",
+      "bytes": 44769,
+      "sha256": "12a46d47eb490452c279f0e275e98ff92c85feb6dae41e88e7b259cdf54e456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/agent_renderer_profile_p13.manifest.json",
+      "bytes": 1246,
+      "sha256": "099f785c1ee5cf76463dbc6ef53b62c76f1415bdf41307e22edb5ee495f07ab8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/frames.json.validity.json",
+      "bytes": 177100,
+      "sha256": "221cb3683d20f42bb470f14e4b279fdd45d8a0931384e27832575c4b8ebea5e5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/launch.json",
+      "bytes": 66382,
+      "sha256": "04dd804d8b0540599ce8f59ea45cefbab9455e59d507f4211495a4c13e21fcc5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/session.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/session.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/summary.json",
+      "bytes": 568,
+      "sha256": "5f6f6eb36ee7d1497fd0ee57a6d0e21ba8843ba6d0c88c6668ad3d0f238f5f61"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1-runner.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1-runner.log",
+      "bytes": 568,
+      "sha256": "5f6f6eb36ee7d1497fd0ee57a6d0e21ba8843ba6d0c88c6668ad3d0f238f5f61"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/agent_renderer_profile_p13.gd",
+      "bytes": 44769,
+      "sha256": "12a46d47eb490452c279f0e275e98ff92c85feb6dae41e88e7b259cdf54e456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/agent_renderer_profile_p13.manifest.json",
+      "bytes": 1246,
+      "sha256": "e5dde5c211b0eee1aa8bce19165f2a53d6d831234f23e996ff3e21096767f15a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/frames.json",
+      "bytes": 953300,
+      "sha256": "fcb910ec328336f830510f98f700db8e1366ce573d0e893c1a913977be9cd07a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/frames.json.validity.json",
+      "bytes": 171132,
+      "sha256": "d157bae769e1dc78e3ced2d7e84fa65857d212842ae2f6e74812005f7ba96840"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/launch.json",
+      "bytes": 66382,
+      "sha256": "d14deb92202ceb2ae383f413c01fe08a202bcaab127956b2ecde785cddedc072"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/session.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/session.log",
+      "bytes": 331,
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/summary.json",
+      "bytes": 2999,
+      "sha256": "60d2a208a939c245810a90621f82588b682085779607f74ae8b85d6ff3d89a3f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2-runner.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2-runner.log",
+      "bytes": 2999,
+      "sha256": "60d2a208a939c245810a90621f82588b682085779607f74ae8b85d6ff3d89a3f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/agent_renderer_profile_p13.gd",
+      "bytes": 44769,
+      "sha256": "12a46d47eb490452c279f0e275e98ff92c85feb6dae41e88e7b259cdf54e456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/agent_renderer_profile_p13.manifest.json",
+      "bytes": 1246,
+      "sha256": "c3dc8d46bc9ba72e0599744788b45f22bac7083ca01473ef50d619b404430c10"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/frames.json.validity.json",
+      "bytes": 176620,
+      "sha256": "a4c37d00a8cc00f7c1a563d59720969529729a16bcdf5f214feac7ed50269d5a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/launch.json",
+      "bytes": 66381,
+      "sha256": "5670188c69c9fe6a15cc06561015339f317a12ad86908e5a15255dbdd87a66e9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/session.exit",
+      "bytes": 3,
+      "sha256": "84b9bb077be0d8a29d0d01ef350d718b77c2ec5f40c3ab90502b1b4b5016c550"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/session.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/summary.json",
+      "bytes": 568,
+      "sha256": "cfd91854cd6e77f96adab6af3cc5869ccd426107bc8fff6b6057436d2da88936"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1-runner.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1-runner.log",
+      "bytes": 568,
+      "sha256": "cfd91854cd6e77f96adab6af3cc5869ccd426107bc8fff6b6057436d2da88936"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/agent_renderer_profile_p13.gd",
+      "bytes": 44769,
+      "sha256": "12a46d47eb490452c279f0e275e98ff92c85feb6dae41e88e7b259cdf54e456b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/agent_renderer_profile_p13.manifest.json",
+      "bytes": 1246,
+      "sha256": "fd1ace7f4380e4cd2b3aefbe840a9e0d5527343453c124cdafe58ccf92d34045"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/frames.json",
+      "bytes": 890408,
+      "sha256": "d70203b12beddc5edf6ffc118d326f27dd0caf50a2f55198d1ba3f1b4f531557"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/frames.json.validity.json",
+      "bytes": 170239,
+      "sha256": "365eb2c22426dcef90299941016061a3ed4455c115b32c3a554430679376901e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/launch.json",
+      "bytes": 66381,
+      "sha256": "d9161e7ceaf8b7f0440c9a2711e17edc6a4eb08f24fa69d241d9735cfe6c98b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/session.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/session.log",
+      "bytes": 331,
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/summary.json",
+      "bytes": 3016,
+      "sha256": "46d0679a7a28bdd31f29cea41b7e1ac20c3ec9aef4c0e0570e46f0c8724a6c0f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2-runner.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2-runner.log",
+      "bytes": 3016,
+      "sha256": "46d0679a7a28bdd31f29cea41b7e1ac20c3ec9aef4c0e0570e46f0c8724a6c0f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/wait1-start.epoch",
+      "bytes": 11,
+      "sha256": "6970f263a7c63d08d9c2b0c3aa1efcafa15830d58ad13fd996b1dcecbfdb88be"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13-evidence/baseline/wait2-start.epoch",
+      "bytes": 18,
+      "sha256": "60077c7040367436027a1a86841ddffa4c1f19b06b0f864e8036960eea655d61"
+    }
+  ]
+}

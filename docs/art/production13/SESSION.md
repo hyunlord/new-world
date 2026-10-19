@@ -40,3 +40,19 @@ Memory used MEMORY.md62–91 (earlier pass measurement/provenance discipline onl
 ## Latest override: 02:42Z
 
 Validator audit complete; full Python session86902 exit0, 467 tests passed. Actual reference-only comparisons pass and actual off/off candidate attempts fail as required. See DECISIONS.md latest section. No Godot/cargo/probe active. Resume explicit admission wait through02:59:30Z, record its union interval; prior wait207s. Baseline9 items still attempt1, no measured frames. Commit and push these validator/evidence changes before waiting.
+
+## Latest override: 02:42:13Z
+
+716e102cb52d500d00352c85e096c2da23b2bb34 pushed and ls-remote confirmed WIP; art remains57ae7ac4. Owned explicit wait session69502 now active through02:59:30Z; records union interval every30seconds using --record-wait. Start external baseline/wait2-start.epoch. Poll69502, do not duplicate or prematurely retry. No automatic retry runner. After terminal exit0 run baseline round2 all9 items with unique outputs and unchanged runtime6d493fa8. No Godot/cargo/probes currently active. Goal remains active, Parts0–5 unfinished.
+
+## Latest override: 02:43Z, deferred retry armed
+
+Owned session16928 runs external baseline/round2.sh (bash syntax verified), log baseline/round2-runner.log. It defers until02:59:35Z then sequentially invokes matrix5, sectionsW500/W200/W-multi, W200ablation with unique attempt2 paths and captures each exit. Session69502 remains sole explicit-wait accounting owner through02:59:30Z, confirmed live02:43:13Z. DO NOT start another round2 or any own Godot/cargo while16928 is pending/running. Poll these handles; round2-completed marks envelope terminal only, inspect individual results. Script verifiesmeasureHEAD and release/debug hash, usesPart0deadline05:16Z, unchanged6d493fa8 runtime. Initial script is external operation orchestration, not production/tooling revision.
+
+## Latest override: 03:02Z, first valid baseline
+
+Wait69502 terminal0 at02:59:30Z; interval fully recorded. Round2 session16928 is LIVE and started02:59:35Z. W0 attempt2 completed03:00:31Z: canonical-calibration-bound sidecar valid=true, P_before1.961287666/P_after2.004998625, loads2.50439453125/3.0498046875, collector+matrixvalidationpassed. W500attempt2 started03:00:31Z, preprobe1.963445375/load3.04541015625; actualGodotrunning, postprobe/validationnotyetavailable. Do NOT start any competing Godot/cargo/probes or duplicate matrix. RunnerwillcontinuethroughW1/W200/W-multi and3sections+ablation. Poll16928; all individual outputs retained. No admission wait currentlyrunning: active measurement is not waiting.
+
+## Latest override: Part0 complete, 03:17Z
+
+Session16928 terminal0 at03:16:32Z. No live waiting, Godot, cargo or probe session. All9 attempt2 admissions and validatorspass. Independent read-only probe agent audited matrix30blocks9000frames and ablation57blocks8550frames; tool_copies wrote section-timers.md fromall3validcaptures. Rawbaseline external unchanged; manifest+sidecars now indocs. running-diagnosis.md andbaselineauditcomplete. Part0 readycommit/push with explicitdocs paths only; .gitignore/.ignore/attempts.lock remainunstaged. W500runningpopulationloss excluded. NextstartPart1 section5: kernel exactidentity +alternatingW500/W200, noacceptanceyet. Runtimeworktreesremain6d493fa8.

@@ -19,3 +19,7 @@ First attempts: no Godot session was launched because pre-admission failed. No f
 All18 probe snapshots and process lists remain in the linked external JSONs; holds.md and attempts.json record timing. W-multi section post-probe also exceeds the CPU limit. All other first-round CPU probes meet the limit, but every load fails.
 
 Next common retry boundary:2026-10-19T02:59:25Z (matrix alone eligible from02:58:20Z). No admission waiting has yet been charged as of this record.
+
+## Attempt 2: completed 03:16:32Z
+
+All nine required sessions passed calibrated pre/post admission and their capture validators: five matrix worlds, three section diagnostics and W200 ablation. No admission retries remain pending for Part0. The first-attempt refusals above remain historical evidence. See baseline-audit.md, section-timers.md and running-diagnosis.md. Full raw-source hashes are in baseline-evidence-manifest.json; compact validity records are in baseline-validity/. Waiting total1243.6406910419464s (20m43.641s), union accounting; active measurement time excluded. W500 running population-loss blocks remain excluded despite valid admission.

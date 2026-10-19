@@ -1,34 +1,43 @@
 {
   "items": {
     "baseline-W0": [
-      1792376873.00596
+      1792376873.00596,
+      1792378775.3994648
     ],
     "baseline-W500": [
-      1792376878.531359
+      1792376878.531359,
+      1792378831.66896
     ],
     "baseline-W1": [
-      1792376884.0008872
+      1792376884.0008872,
+      1792378955.977185
     ],
     "baseline-W200": [
-      1792376889.471622
+      1792376889.471622,
+      1792379199.761707
     ],
     "baseline-W-multi": [
-      1792376895.027221
+      1792376895.027221,
+      1792379254.472527
     ],
     "baseline-sections-W500": [
-      1792376943.750327
+      1792376943.750327,
+      1792379423.0741272
     ],
     "baseline-sections-W200": [
-      1792376949.410645
+      1792376949.410645,
+      1792379441.0090392
     ],
     "baseline-sections-W-multi": [
-      1792376954.8846002
+      1792376954.8846002,
+      1792379457.549359
     ],
     "baseline-ablation-W200": [
-      1792376960.56878
+      1792376960.56878,
+      1792379489.524111
     ]
   },
-  "waiting_seconds": 207.0,
+  "waiting_seconds": 1243.6406910419464,
   "wait_intervals": [
     [
       1792376872.0,
@@ -69,6 +78,46 @@
     [
       1792377117.0,
       1792377324.0
+    ],
+    [
+      1792377733.364034,
+      1792378770.004725
+    ],
+    [
+      1792378775.0,
+      1792378775.0
+    ],
+    [
+      1792378831.0,
+      1792378831.0
+    ],
+    [
+      1792378955.0,
+      1792378955.0
+    ],
+    [
+      1792379199.0,
+      1792379199.0
+    ],
+    [
+      1792379254.0,
+      1792379254.0
+    ],
+    [
+      1792379422.0,
+      1792379422.0
+    ],
+    [
+      1792379440.0,
+      1792379440.0
+    ],
+    [
+      1792379457.0,
+      1792379457.0
+    ],
+    [
+      1792379489.0,
+      1792379489.0
     ]
   ],
   "events": [
@@ -134,6 +183,69 @@
       "admitted": true,
       "output": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.json.validity.json",
       "completed_epoch": 1792376964.718786
+    },
+    {
+      "epoch": 1792378775.3994648,
+      "item": "baseline-W0",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.json.validity.json",
+      "completed_epoch": 1792378830.124754
+    },
+    {
+      "epoch": 1792378831.66896,
+      "item": "baseline-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.json.validity.json",
+      "completed_epoch": 1792378954.491041
+    },
+    {
+      "epoch": 1792378955.977185,
+      "item": "baseline-W1",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.json.validity.json",
+      "completed_epoch": 1792379198.2126641
+    },
+    {
+      "epoch": 1792379199.761707,
+      "item": "baseline-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.json.validity.json",
+      "completed_epoch": 1792379252.977206
+    },
+    {
+      "epoch": 1792379254.472527,
+      "item": "baseline-W-multi",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.json.validity.json",
+      "completed_epoch": 1792379421.31138
+    },
+    {
+      "epoch": 1792379423.0741272,
+      "item": "baseline-sections-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/frames.json.validity.json",
+      "completed_epoch": 1792379439.5581172
+    },
+    {
+      "epoch": 1792379441.0090392,
+      "item": "baseline-sections-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/frames.json.validity.json",
+      "completed_epoch": 1792379456.095542
+    },
+    {
+      "epoch": 1792379457.549359,
+      "item": "baseline-sections-W-multi",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/frames.json.validity.json",
+      "completed_epoch": 1792379488.138033
+    },
+    {
+      "epoch": 1792379489.524111,
+      "item": "baseline-ablation-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json",
+      "completed_epoch": 1792379791.151336
     }
   ]
 }

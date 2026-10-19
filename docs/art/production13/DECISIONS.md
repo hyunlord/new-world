@@ -19,3 +19,10 @@
 - Fresh actual corrected-reference CLI checks pass (pixel and running). Deliberately submitting the actual off reference as candidate B fails both CLIs with exit 1. Evidence: external identity/validated-reference-control, validated-running-reference.json, negative-off-off-pixels and negative-off-off-running.json. No candidate acceptance is claimed.
 - Full Python discovery: 467 tests, 28.498 seconds, OK, exit 0; external acceptance-validator-full-python.log. Focused 52-test rerun also passed after updating an ablation fixture to provide canonical calibration provenance. The initial failed fixture run is retained. Code diff whitespace check passed.
 - These are retrospective comparator/admission-validation changes only. Runtime baseline, collectors and both detached worktrees remain 6d493fa8; no build or recapture required.
+
+## Part0 measured diagnosis
+
+- All9 required sessions succeeded on their second, properly spaced attempts; no continued baseline admission waiting needed. Keep the nine rejected first attempts and the W500 population-loss exclusions.
+- W200 AgentRenderer intervention21.8505ms; all outside presentation nodes below1ms. WorldSim9.7855ms is a simulation-disabled control and cannot be candidate(c). Do not change simulation or expand the prescribed candidate scope.
+- Optional Wmulti node ablation omitted in the explicit first-drop position to prioritize the kernel decision, write-skip trial and mandatory visual/readability work. Both required running section/getter diagnoses are complete.
+- Running section captures retain stale speed_evidence prose; actual setter/numeric conditions/tick trajectories establish speed2. Preserve the original evidence and flag the inconsistency; do not falsely recategorize them as frozen.

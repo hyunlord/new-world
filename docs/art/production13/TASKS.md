@@ -2,11 +2,11 @@
 
 Start: 2026-10-19T01:46:00Z (conservative, first attachment read).
 Part 0 deadline 05:16Z; Part 1 deadline 08:46Z; Part 4 freeze/start deadline 10:46Z; 12-hour cutoff 13:46Z.
-Admission waiting: 0 seconds so far. Image generations: 0/4.
+Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live authority is perf/attempts.json. Image generations: 0/4.
 
 | Part | Deliverable and verification | Status |
 |---|---|---|
-| 0 | Preserve original; merge Pass21; unchanged packed contract; tooling; 15-probe calibration; full gate; exact-clock references; release matrix and running diagnosis; commit/push | in progress |
+| 0 | Preserve original; merge Pass21; unchanged packed contract; tooling; 15-probe calibration; full gate; exact-clock references; release matrix and running diagnosis; commit/push | completed |
 | 1 | Kernel and conservative write-skip candidates; exact identities and valid alternating pairs; accept only original thresholds; commit/push | pending |
 | 2 | Measured badge icons, tooltip if time, frozen two-stage fresh-reader tests and no-legend report; commit/push | pending |
 | 3 | All reachable name syllable glyph masks; fact/name split; input QA and capture-backed text fixes; commit/push | pending |
@@ -28,3 +28,7 @@ Admission waiting: 0 seconds so far. Image generations: 0/4.
 - 02:11Z: both base and measure actual builds/import confirmations finished successfully; initial empty-cache font errors retained separately. Census all11 rows complete, failures empty. Derived P3 tick46189/day33 09:49, population37/two villages. Six A captures all exit0, no log errors, provenance unchanged. Aprime session27034 and running/pan reference session81087 started under window lock. Full gate90444 still running; no pass claimed.
 - 02:18Z: initial six A/Aprime pixel differences zero for all6; running600×3 and pan240×2 metadata/dumps complete (self-check only). Admission and ablation audit fixed before measurements; corrected tooling6d493fa8 pushed, remote verified. Both worktrees advanced and actual builds/imports confirmed; corrected reference chain18959 active.42p13 Python tests and corrected GDS parse passed. Full gate rust/clippy/strict/smoke/Python and real input checks passed so far, remaining scene checks active.
 - 02:29Z: corrected references complete:all6 controlsRGBA0; all5 running/pan valid completeness; c1b→6d pixel/dump comparisons exact. Full gate116/116. First9 release admissions refused on load; no frames measured. Every probe recorded in perf/baseline-admission.md +rawexternal. Next common retry02:59:25Z; no wait charged yet.
+
+- 03:00:31Z: first valid release baseline: W0 attempt2 passed pre/post calibrated admission and collector validation. Round2 continues all remaining matrix and diagnosis items; no aggregate or Part0 completion claimed.
+
+- 03:16:32Z: round2 envelope16928 terminal0; all9 individual admissions valid. Five-world matrix30blocks/9000frames independently audited. Three section timers/getter tables valid, including retained stale prose caveat. W200 ablation57blocks/8550frames, all21Main+6UIchildren, independently audited; full restoration verified. Required Part0 work complete; evidence prepared for commit/push. Optional Wmulti node ablation omitted in the prescribed drop order.

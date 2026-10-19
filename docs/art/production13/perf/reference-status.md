@@ -27,3 +27,7 @@ Full Part0 gate `gates/p0/results.tsv`:116 checks, all exit0, summed check time1
 - Fresh actual corrected-reference CLI checks pass (pixel and running). Deliberately submitting the actual off reference as candidate B fails both CLIs with exit 1. Evidence: external identity/validated-reference-control, validated-running-reference.json, negative-off-off-pixels and negative-off-off-running.json. No candidate acceptance is claimed.
 - Full Python discovery: 467 tests, 28.498 seconds, OK, exit 0; external acceptance-validator-full-python.log. Focused 52-test rerun also passed after updating an ablation fixture to provide canonical calibration provenance. The initial failed fixture run is retained. Code diff whitespace check passed.
 - These are retrospective comparator/admission-validation changes only. Runtime baseline, collectors and both detached worktrees remain 6d493fa8; no build or recapture required.
+
+## Part0 measurement completion
+
+As of03:16:32Z all9 required baseline/diagnostic sessions completed validly on attempt2. Earlier statements that no frame evidence existed describe the first-attempt checkpoint only. See baseline-audit.md and running-diagnosis.md for actual results and retained exclusions. No performance candidate has yet been accepted.
