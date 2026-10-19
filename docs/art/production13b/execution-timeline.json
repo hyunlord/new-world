@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "snapshot_at_utc": "2026-10-19T17:22:01.293761+00:00",
+  "snapshot_at_utc": "2026-10-19T17:24:47.008395+00:00",
   "scope": {
     "first_task_commit": "f962f5cd6e671c6b000ca6e0734b904449360650",
-    "last_task_commit": "40aa7a463d740b776248828211251187319c6af6",
-    "observed_head": "40aa7a463d740b776248828211251187319c6af6",
+    "last_task_commit": "3159d83c77646d2efaba9a0228bb0abcd206b39f",
+    "observed_head": "3159d83c77646d2efaba9a0228bb0abcd206b39f",
     "source_freeze": "No source/HEAD changes made; docs-only snapshot.",
-    "commit_selection": "Inclusive f962f5cd^..40aa7a46 (18task commits)"
+    "commit_selection": "Inclusive f962f5cd^..3159d83c;19task commits"
   },
   "anchors": {
     "deadline_anchor_utc": "2026-10-19T12:08:00Z",
@@ -101,14 +101,17 @@
       "freeze_commit": "40aa7a463d740b776248828211251187319c6af6",
       "freeze_commit_utc": "2026-10-19T15:28:46Z",
       "note": "Execution terminated, acceptance incomplete.29slots7collectors4valid3invalid21probe denials1wrong-item policy denial. Further cooldown exceeds remaining wait budget.",
-      "terminal_observed_utc": "2026-10-19T17:21:02.485487+00:00"
+      "terminal_observed_utc": "2026-10-19T17:21:02.485487Z",
+      "documentation_commit": "3159d83c77646d2efaba9a0228bb0abcd206b39f",
+      "documentation_commit_utc": "2026-10-19T17:24:03Z"
     },
     {
       "part": 5,
-      "status": "FINAL_GATE_PASS_OTHER_COMPLETION_PENDING",
+      "status": "ACTIVE_DELIVERY_REVIEW_CLOSED",
       "actual_start_utc": null,
       "actual_end_utc": null,
-      "final_gate_audit_utc": "2026-10-19T16:11:30.179086Z"
+      "final_gate_audit_utc": "2026-10-19T16:11:30.179086Z",
+      "note": "Same round2 review lanes closed; publication, final report and delivery receipt remain leader-owned. Technical gate eligibility does not upgrade partial/failed targets."
     }
   ],
   "overlap": {
@@ -6965,6 +6968,1169 @@
         }
       ],
       "changed_file_count": 433
+    },
+    {
+      "sha": "3159d83c77646d2efaba9a0228bb0abcd206b39f",
+      "author_time": "2026-10-20T02:24:03+09:00",
+      "committer_time": "2026-10-20T02:24:03+09:00",
+      "committer_time_utc": "2026-10-19T17:24:03+00:00",
+      "subject": "art-p13b(p4): preserve admitted results without upgrading contended measurements",
+      "part_label": "p4",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/DECISIONS.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/execution-timeline.json"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/execution-timeline.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/SHA256-MANIFEST.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/aggregation/after-detail.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/aggregation/after-detail.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/aggregation/helper/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/aggregation/helper/aggregate_after.py"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/archive-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt1.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt2.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt2.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt3.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt3.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt3.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt4.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt4.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt4.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt5.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt5.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt5.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt1.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt2.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt2.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt3.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt3.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt3.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W1-attempt1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W1-attempt1.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W1-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W200-attempt1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W200-attempt1.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W200-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt1.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt2.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt2.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt3.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt3.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt3.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/built-root-Cargo.lock"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/frozen-manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/identity-source-equivalence.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/identity-source-manifest-differences.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt1/after.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt2/after.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt3/after.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt4-terminal/after.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/retry2-initial-manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/retry3-initial-manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/retry4-initial-manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/retry4-recovery-initial-manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.runner.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.runner.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/agent_renderer_profile_p13.gd"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/agent_renderer_profile_p13.manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/frames.json.validity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/launch.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/session.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/session.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/summary.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt2.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt3.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt4-recovery.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt4.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/attempts/unused-measure-Cargo.lock"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/calibration/calibration.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/calibration/calibration.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/after-attempt1-supervisor.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/after-attempt2-supervisor.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/after-attempt3-supervisor.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/after-attempt4-recovery-supervisor.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/after-attempt4-supervisor.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/attempt3-terminal-audit.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/part4-freeze.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/part4-terminal-audit.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/partial-after-archive-root-audit.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/prepublication-invariants.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/run-after-attempt1.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/run-after-attempt2.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/run-after-attempt3.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/run-after-attempt4-recovery.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/run-after-attempt4.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/wait-and-run-after-attempt3.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/control/wait-and-run-after-attempt4.sh"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/SHA256-MANIFEST.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/archive-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/partial-after-archive-root-audit.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/comparison.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/draft-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/comparison.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/draft-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/four-world-comparison.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/comparison.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/finalize_terminal.py"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/four-world-comparison.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/prepare_report.py"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/terminal-disposition.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/report-prep/terminal-verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after-evidence/root-audit.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/after.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/perf/attempts.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/freeze.json"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/perf/holds.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/retries.json"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/retries.md"
+        }
+      ],
+      "changed_file_count": 288
     }
   ],
   "unique_changed_paths": [
@@ -7755,12 +8921,292 @@
     "docs/art/production13b/life-capture-report/life-estranged-attempt3.log",
     "docs/art/production13b/life-capture-report/life-resume-attempt2.log",
     "docs/art/production13b/life-capture-report/raw-manifest.json",
+    "docs/art/production13b/perf/after-evidence/README.md",
+    "docs/art/production13b/perf/after-evidence/SHA256-MANIFEST.json",
+    "docs/art/production13b/perf/after-evidence/aggregation/after-detail.json",
+    "docs/art/production13b/perf/after-evidence/aggregation/after-detail.md",
+    "docs/art/production13b/perf/after-evidence/aggregation/helper/README.md",
+    "docs/art/production13b/perf/after-evidence/aggregation/helper/aggregate_after.py",
+    "docs/art/production13b/perf/after-evidence/archive-verification.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt1.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt2.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt3.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/ablation-W200-attempt4.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt1.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt1.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt1.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt2.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt2.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt2.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt3.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt3.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt3.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt4.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt4.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt4.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt5.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt5.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W-multi-attempt5.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt1.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt1.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt1.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt2.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt2.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt2.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt3.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt3.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W0-attempt3.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W1-attempt1.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W1-attempt1.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W1-attempt1.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W200-attempt1.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W200-attempt1.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W200-attempt1.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt1.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt1.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt1.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt2.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt2.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt2.log",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt3.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt3.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/after-W500-attempt3.log",
+    "docs/art/production13b/perf/after-evidence/attempts/built-root-Cargo.lock",
+    "docs/art/production13b/perf/after-evidence/attempts/frozen-manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/identity-source-equivalence.md",
+    "docs/art/production13b/perf/after-evidence/attempts/identity-source-manifest-differences.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt1.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt2.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt3.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4-recovery.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/matrix-attempt4.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt1/after.md",
+    "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt2/after.md",
+    "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt3/after.md",
+    "docs/art/production13b/perf/after-evidence/attempts/partial-summary-attempt4-terminal/after.md",
+    "docs/art/production13b/perf/after-evidence/attempts/retry2-initial-manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/retry3-initial-manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/retry4-initial-manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/retry4-recovery-initial-manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt1/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt2/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt3/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W-multi-attempt4/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt1/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt2/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt3/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W200-attempt4/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt1/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt2/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt3/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.after.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.before.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.runner.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4.runner.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/agent_renderer_profile_p13.gd",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/agent_renderer_profile_p13.manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/frames.json.validity.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/launch.json",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/session.exit",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/session.log",
+    "docs/art/production13b/perf/after-evidence/attempts/sections-W500-attempt4/summary.json",
+    "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt2.json",
+    "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt3.json",
+    "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt4-recovery.json",
+    "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest-attempt4.json",
+    "docs/art/production13b/perf/after-evidence/attempts/terminal-manifest.json",
+    "docs/art/production13b/perf/after-evidence/attempts/unused-measure-Cargo.lock",
+    "docs/art/production13b/perf/after-evidence/calibration/calibration.json",
+    "docs/art/production13b/perf/after-evidence/calibration/calibration.md",
+    "docs/art/production13b/perf/after-evidence/control/after-attempt1-supervisor.log",
+    "docs/art/production13b/perf/after-evidence/control/after-attempt2-supervisor.log",
+    "docs/art/production13b/perf/after-evidence/control/after-attempt3-supervisor.log",
+    "docs/art/production13b/perf/after-evidence/control/after-attempt4-recovery-supervisor.log",
+    "docs/art/production13b/perf/after-evidence/control/after-attempt4-supervisor.log",
+    "docs/art/production13b/perf/after-evidence/control/attempt3-terminal-audit.json",
+    "docs/art/production13b/perf/after-evidence/control/part4-freeze.json",
+    "docs/art/production13b/perf/after-evidence/control/part4-terminal-audit.json",
+    "docs/art/production13b/perf/after-evidence/control/partial-after-archive-root-audit.json",
+    "docs/art/production13b/perf/after-evidence/control/prepublication-invariants.json",
+    "docs/art/production13b/perf/after-evidence/control/run-after-attempt1.sh",
+    "docs/art/production13b/perf/after-evidence/control/run-after-attempt2.sh",
+    "docs/art/production13b/perf/after-evidence/control/run-after-attempt3.sh",
+    "docs/art/production13b/perf/after-evidence/control/run-after-attempt4-recovery.sh",
+    "docs/art/production13b/perf/after-evidence/control/run-after-attempt4.sh",
+    "docs/art/production13b/perf/after-evidence/control/wait-and-run-after-attempt3.sh",
+    "docs/art/production13b/perf/after-evidence/control/wait-and-run-after-attempt4.sh",
+    "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/README.md",
+    "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/SHA256-MANIFEST.json",
+    "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/archive-verification.json",
+    "docs/art/production13b/perf/after-evidence/historical/partial-attempts1-3/partial-after-archive-root-audit.json",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/README.md",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/comparison.json",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/comparison.md",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-attempt3-regeneration/draft-verification.json",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/README.md",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/comparison.json",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/comparison.md",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/draft-verification.json",
+    "docs/art/production13b/perf/after-evidence/historical/report-prep-snapshots/pre-terminal/four-world-comparison.md",
+    "docs/art/production13b/perf/after-evidence/report-prep/README.md",
+    "docs/art/production13b/perf/after-evidence/report-prep/comparison.json",
+    "docs/art/production13b/perf/after-evidence/report-prep/comparison.md",
+    "docs/art/production13b/perf/after-evidence/report-prep/finalize_terminal.py",
+    "docs/art/production13b/perf/after-evidence/report-prep/four-world-comparison.md",
+    "docs/art/production13b/perf/after-evidence/report-prep/prepare_report.py",
+    "docs/art/production13b/perf/after-evidence/report-prep/terminal-disposition.md",
+    "docs/art/production13b/perf/after-evidence/report-prep/terminal-verification.json",
+    "docs/art/production13b/perf/after-evidence/root-audit.json",
+    "docs/art/production13b/perf/after.json",
+    "docs/art/production13b/perf/after.md",
     "docs/art/production13b/perf/attempts.json",
     "docs/art/production13b/perf/before-after-comparison-caveats.md",
     "docs/art/production13b/perf/before-reference.json",
     "docs/art/production13b/perf/before-reference.md",
     "docs/art/production13b/perf/calibration.json",
     "docs/art/production13b/perf/calibration.md",
+    "docs/art/production13b/perf/freeze.json",
     "docs/art/production13b/perf/holds.md",
     "docs/art/production13b/perf/identity/README.md",
     "docs/art/production13b/perf/identity/reference-control.json",
@@ -8743,8 +10189,8 @@
     }
   ],
   "gaps": [
-    "Part4 terminal partial acceptance: W-multi/3sections/ablation NOT_VERIFIED.",
-    "Final review/publication decision and future Part4documentation commit not yet recorded."
+    "Final report commit and final delivery/publication receipt not yet recorded.",
+    "Review file mtimes are artifact timestamps, not exact completion instants."
   ],
   "snapshot_history": [
     {
@@ -9028,5 +10474,32 @@
     "path": "docs/art/production13b/gates/final/root-audit.json",
     "sha256": "74d625ea5cbc4f637807102df504ca86b6c234edc8b112cb4eb2e8c99fb7233d",
     "bytes": 285
+  },
+  "same_round_reviews": [
+    {
+      "lane": "code",
+      "evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/review-round2-code.md",
+        "sha256": "f27081533770ebfca49536a9cd6547c04e2e354ea05c2bf715acaeacf71e3d8a",
+        "bytes": 8943
+      },
+      "file_modified_utc": "2026-10-19T15:36:51.924878+00:00",
+      "timestamp_kind": "Saved-file mtime, not precise reviewer completion instant; same round2, no new round."
+    },
+    {
+      "lane": "evidence",
+      "evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/review-round2-evidence.md",
+        "sha256": "95556112b0cc8accb1d61bf95b50f3507f152fa299c56f6c66f75f0e391143d6",
+        "bytes": 14351
+      },
+      "file_modified_utc": "2026-10-19T17:23:38.135786+00:00",
+      "timestamp_kind": "Saved-file mtime, not precise reviewer completion instant; same round2, no new round."
+    }
+  ],
+  "delivery_receipt": {
+    "final_report_commit_sha": null,
+    "status": "NOT_CREATED_AT_SNAPSHOT",
+    "note": "Final delivery receipt will list its own final report commit hash after creation; no future hash invented."
   }
 }

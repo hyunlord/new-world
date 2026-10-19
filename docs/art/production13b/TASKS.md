@@ -101,3 +101,11 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - External launch-order bug retained: W-multi slot4 inherited ablation item, rejected before probe; corrected fresh-shell slot5 denied by actual start load17.5810546875. No history rewritten and no collector executed by either invocation.
 - Final census29slots/7collectors/4valid/3invalid/21probe refusals/1policy refusal. Wait9487.316187858582seconds.
 - Part5 active: finish same-round independent evidence review, archive and report; push Part4 then publish only with clean final technical gate. Performance/visual failures remain failures.
+
+### Part5 first publication and cleanup — 2026-10-19T17:26:08Z
+
+- Same second independent review round closed; no outstanding P1/P2 reporting defects. Overall art/performance remains PARTIAL.
+- Published3159d83c77646d2efaba9a0228bb0abcd206b39f by fast-forward; both remote art refs confirmed identical. Final runtime source remains40aa7a46, with120/120 final gate and zero ERROR freshly re-audited.
+- PR511 Art Pass13b section written and fetched back byte-for-byte; draft/base unchanged.
+- Both run-owned base/measure worktrees removed; unrelated art-production-audit preserved.
+- Final report/evidence documentation commit and its remote receipt remain the last delivery step; no runtime work remains authorized by this pass.

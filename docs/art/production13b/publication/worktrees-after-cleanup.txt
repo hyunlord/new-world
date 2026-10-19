@@ -1,0 +1,8 @@
+worktree /Users/rexxa/work/new-world-art-prod
+HEAD 3159d83c77646d2efaba9a0228bb0abcd206b39f
+branch refs/heads/codex/art-production-2026-10-wip
+
+worktree /Users/rexxa/work/art-production-audit
+HEAD a4c168fb684bd17e743d03bb152acfa71b8c558f
+detached
+

@@ -77,3 +77,9 @@ Attempt4 is waiting (session26762), earliest **17:18:49Z**, epoch1792430329 afte
 External order change leaked exported `P13_ITEM=after-ablation-W200` into matrix execution. W-multi file4 was refused under the wrong policy item **before any probe or Godot**. Fresh-shell recovery explicitly unset `P13_ITEM`/`P13_VALIDITY_OUT`; file5 was the true fourth W-multi admitted opportunity and was denied on start load 17.5810546875. Both artifacts and original ledger history remain; file numbering is not rewritten or treated as five collector runs.
 
 Final booked wait **9487.316187858582 seconds** leaves **1312.6838121414185 seconds < 1800 seconds** mandatory cooldown. Further admission retry is barred. This is terminal execution, not completed acceptance. Source/bridge freeze is unchanged; the forthcoming Part4 documentation commit is not invented. Prior planned/waiting notes above are historical.
+
+## Part4 commit / Part5 active
+
+19th task commit: `3159d83c77646d2efaba9a0228bb0abcd206b39f`, **2026-10-19T17:24:03Z**, `art-p13b(p4): preserve admitted results without upgrading contended measurements` (288 changed paths; exact manifest in JSON). Part4 terminal observation remains17:21:02.485487Z and acceptance remains partial/NOT_VERIFIED.
+
+Same-round review evidence closure is retained in `review-round2-evidence.md`; saved-file modification time is 2026-10-19T17:23:38.135786+00:00. This is an artifact timestamp, not an invented exact completion instant or a new review round. Both round2 lanes are closed; Part5 delivery is active. No final report commit exists at this snapshot. The final receipt will list that commit’s own hash after creation.
