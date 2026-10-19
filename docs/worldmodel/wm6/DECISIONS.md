@@ -102,3 +102,18 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 - **L4.2 The grid** (N = 400, seed 0, v2 val 24-cell average): `mlp_obs` width 512 / dropout 0.3 (0.456; the others
   0.462, 0.462, 0.464), `mlp_priv` width 256 / dropout 0.3 (0.415; 0.424, 0.430, 0.425); frozen for every N and for the
   GRU heads. At N = 400 `ridge_obs` scores 0.547 and `ridge_priv` 0.526 on the same val statistic.
+
+## Part 5 / 6
+- **L5.1 Judge additions after the reading.** `judge6.py` gained a `compute` block (recording and training wall times,
+  epoch range, stop reasons) after the first full judge run, so that the paper's compute and Appendix B numbers are
+  traced; no rule, verdict or curve value changed (the rules, curves and reading blocks are byte-identical before and
+  after).
+- **L6.1 `figures.py`** (GOAL.md 2): only the number map changed — `SOURCES` gains `j6` (`wm6/runs/judge6/judge.json`)
+  and `d6` (`wm6/runs/describe/describe.json`), and the placeholder pattern accepts them; rendering and `check` are
+  unchanged. The learning-curve figure is drawn by `wm6/figures6.py`.
+- **L6.2 WM5.md pointer.** GOAL.md 11.1's line is inserted directly under WM5.md's title (as WM-5 did for WM4.md).
+- **L6.3 The paper's wording follows the reading's clause.** The reading is "learnable from observables" through its
+  second clause (closure 0.449 < 0.5, slope CI < 0); the abstract, introduction and the new conclusion say "part of the
+  room is learnable from the observable state" and give, beside it, the closure, the slow slope (with the flat last
+  step), the one-month closure and the hidden-state share. The paper had no conclusion section; one was added
+  (Section 7; limitations became Section 8). Section headings carry no internal study names.

@@ -21,8 +21,12 @@ time-varying treatment effects, CRN and the Causal Transformer, trained for the 
 Causal Transformer authors' public implementation (which includes CRN) and read at their last checkpoint, are worse than predicting no effect on both the interventional and the sequentially
 confounded split, at both horizons; (iii) rounding counts at readout does not change this; (iv) on the interventional
 split a linear map of the observable pre-act state reaches only the act's mean effect, and the hidden state adds a little
-more (both post hoc). The benchmark, its pre-registered harness
-and the paper's numbers are traced to committed result files.
+more (both post hoc); (v) part of the room is learnable from the observable state: nonlinear direct effect models trained
+on up to five times as many training worlds close {{j6:rules/reading/c1_closure_7d#2}} of the one-week gap between
+"no effect" and the floor and improve slowly with more data (pre-registered reading: learnable from observables; the
+same models given the hidden state close {{j6:rules/reading/mlp_priv_closure_7d#2}}), while at one month the
+observable models barely beat "no effect". The benchmark, its pre-registered harness and the paper's numbers are traced
+to committed result files.
 
 ## 1 Introduction
 
@@ -46,7 +50,9 @@ treatment effects, the Counterfactual Recurrent Network (CRN) [@bica2020crn] and
 [@melnychuk2022ct], did not beat "predict no effect" on either an interventional or a confounded observational split.
 A reviewer could object to the last finding on three grounds: (1) the two methods were not trained as their authors train
 them; (2) the observational split was too small, with a single act per world, for balancing to matter; (3) perhaps
-nothing can beat "no effect", i.e. the benchmark may not discriminate between methods at all. This paper answers each.
+nothing can beat "no effect", i.e. the benchmark may not discriminate between methods at all. This paper answers each,
+and then asks the question the third answer raises: (4) is the room between "no effect" and the noise floor **learnable**
+from the pre-act state, or is the per-world effect essentially unpredictable given it?
 
 **Contributions.**
 
@@ -65,6 +71,9 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
    are — beside observational baselines (naive contrast, multi-cast inverse propensity weighting, matching), world
    models trained on factual and on paired data, and the direct regressions. Everything is pre-registered (W1 rule,
    world-level paired bootstrap).
+4. **A learning curve of the headroom** (Sections 4.5, 5.4): nonlinear direct effect models (MLP, GRU, gradient-boosted
+   trees; observable and, as diagnostics, privileged) trained on nested sets of 400 to 2,000 worlds of paired
+   counterfactual branches, with a pre-registered reading of the curve.
 
 **Findings.** On a split three times larger than before, with {{p5:all/casts_per_world_mean#2}} acts per world and
 inverse-propensity effective sample sizes of {{j5:describe/pooled/sp240/7d/ess_treated#0}}–{{j5:describe/pooled/rw120/7d/ess_treated#0}}
@@ -75,7 +84,12 @@ whose intervals all contain zero. The gap between "no effect" and the
 effect floor is large on both splits with noise replicates (v2, obs2), so the benchmark can separate methods; on the
 interventional split a linear regression on the observable pre-act state reaches the act's mean effect but no further
 (post hoc), and on that split, among the learned models compared with it (E2), only the world model trained on paired
-branches ties or beats it.
+branches ties or beats it. The room is partly learnable: at one week a nonlinear model of the observable pre-act state
+beats the linear one (C1 {{j6:rules/C1/verdict/verdict#str}}, {{j6:rules/C1/verdict/model#3}} vs
+{{j6:rules/C1/verdict/baseline#3}}) and closes {{j6:curves/mlp_obs/2000/7d/closure#ci2}} of the gap at 2,000 worlds,
+improving by {{j6:rules/C4/mlp_obs/slope/7d#ci4}} per doubling of the data; with the hidden state the same model closes
+{{j6:curves/mlp_priv/2000/7d/closure#ci2}}. About half of what the observable models still miss at one week is recovered by adding the hidden state, and at
+one month their gain over "no effect" is small (closure {{j6:curves/mlp_obs/2000/30d/closure#ci2}}).
 
 ## 2 Related work
 
@@ -242,11 +256,11 @@ checkpoint is primary, as in the authors' code (CT's EMA weights), with the lowe
 secondary; and **counts are rounded at readout** (food, alive, cumulative deaths), as for M1. All adaptations are listed
 in Appendix A.
 
-### 4.5 Nonlinear direct effect models and a learning curve (WM-6)
+### 4.5 Nonlinear direct effect models and a learning curve
 
 Section 5.2 shows room between `zero` and the floor that no evaluated method uses. To ask whether that room is
 **learnable** from the pre-act state, or whether per-world effects are close to unpredictable given it, we train
-nonlinear direct effect models on the v2 design with up to five times the counterfactual data. **v2x** adds
+nonlinear direct effect models on the v2 design with up to five times as many training worlds. **v2x** adds
 {{d6:manifest/worlds#0}} worlds (seeds 50000–51599) recorded exactly as v2's train worlds — the same frozen recorder,
 fork tick, four arms and cast-time rules — with one replicate ({{d6:manifest/episode_count#0}} episodes); one recorder
 call per world reproduces v2's members bit for bit. The **training sets are nested** and use replicate 0 only: N = 400
@@ -276,7 +290,8 @@ trained.
 
 Table 1 lists the 12-cell scaled effect MAE (lower is better) of every method on every split. Multi-seed rows are
 seed-averaged; obs numbers are the earlier study's committed ones. CRN / CT on obs2 and v2 are trained on the authors'
-schedule and read at their last checkpoint with counts rounded (primary). The obs2 columns of the earlier obs-trained runs (M1b-obs, CRN / CT
+schedule and read at their last checkpoint with counts rounded (primary). The learning-curve models of Section 4.5 are
+listed at their largest training set (2,000 worlds). The obs2 columns of the earlier obs-trained runs (M1b-obs, CRN / CT
 time-capped) and of the v2-trained world models are evaluations of those checkpoints on the obs2 test; the obs2 columns of the two regressions are a v2→obs2 transfer.
 
 | method | trained on | v2 7 d | v2 30 d | obs 7 d | obs 30 d | obs2 7 d | obs2 30 d |
@@ -296,6 +311,9 @@ time-capped) and of the v2-trained world models are evaluations of those checkpo
 | CT, time-capped (earlier study, 2 seeds) | obs / v2 | {{j5:main_table/ct_v2_wm4/v2/7d#3}} | {{j5:main_table/ct_v2_wm4/v2/30d#3}} | {{j5:main_table/ct_obs_wm4/obs/7d#3}} | {{j5:main_table/ct_obs_wm4/obs/30d#3}} | {{j5:main_table/ct_obs_wm4/obs2/7d#3}} | {{j5:main_table/ct_obs_wm4/obs2/30d#3}} |
 | **CRN, authors' schedule (2 seeds)** | v2 / obs2 | {{j5:main_table/crn_v2/v2/7d#3}} | {{j5:main_table/crn_v2/v2/30d#3}} | — | — | {{j5:main_table/crn_obs2/obs2/7d#3}} | {{j5:main_table/crn_obs2/obs2/30d#3}} |
 | **CT, authors' schedule (2 seeds)** | v2 / obs2 | {{j5:main_table/ct_v2/v2/7d#3}} | {{j5:main_table/ct_v2/v2/30d#3}} | — | — | {{j5:main_table/ct_obs2/obs2/7d#3}} | {{j5:main_table/ct_obs2/obs2/30d#3}} |
+| `mlp_obs`, N = 2,000 (3 seeds; obs2: transfer) | v2 + v2x train (counterfactual labels) | {{j6:curves/mlp_obs/2000/7d/value#3}} | {{j6:curves/mlp_obs/2000/30d/value#3}} | — | — | {{j6:obs2/cell_averages/mlp_obs/7d#3}} | {{j6:obs2/cell_averages/mlp_obs/30d#3}} |
+| `seq_obs` (GRU), N = 2,000 (3 seeds; obs2: transfer) | v2 + v2x train (counterfactual labels) | {{j6:curves/seq_obs/2000/7d/value#3}} | {{j6:curves/seq_obs/2000/30d/value#3}} | — | — | {{j6:obs2/cell_averages/seq_obs/7d#3}} | {{j6:obs2/cell_averages/seq_obs/30d#3}} |
+| `mlp_priv`, N = 2,000 (diagnostic, 3 seeds) | v2 + v2x train, hidden state | {{j6:curves/mlp_priv/2000/7d/value#3}} | {{j6:curves/mlp_priv/2000/30d/value#3}} | — | — | — | — |
 | floor (other replicate) | — | {{j5:main_table/floor/v2/7d#3}} | {{j5:main_table/floor/v2/30d#3}} | — | — | {{j5:main_table/floor/obs2/7d#3}} | {{j5:main_table/floor/obs2/30d#3}} |
 
 ### 5.2 The headroom ladder (F1, F2)
@@ -320,7 +338,7 @@ multi-seed models; clipped at 3). The v2 counterpart is `figures/cells_v2.png`.*
 
 ### 5.3 Pre-registered verdicts
 
-Appendix F lists all 38 pre-registered verdicts with their intervals, the training-reached check (R4) and rounding
+Appendix F lists all 38 pre-registered verdicts of the CRN / CT rematch and the seven of the learning curve (Section 5.4) with their intervals, the training-reached check (R4) and rounding
 alone (D2). In brief: every R1–R3 comparison of CRN and CT with `zero` or `an5_arm` is NONE; M1b-obs2 ties `zero` at 7
 days ({{j5:obs2/rules/R1/m1b_obs2/verdict#str}}) and is {{j5:obs2/rules/R2/m1b_obs2/verdict#str}} at 30 days; E1 is
 {{j5:v2/rules/E1/7d/verdict#str}} for `ridge_obs` on v2 at 7 days (under the W1 rule a single deterministic run reaches
@@ -355,6 +373,82 @@ checkpoint there).
 **Q4: rounding alone changes little.** Re-scoring the earlier study's runs with rounded counts moves their seed-averaged
 scores by amounts whose intervals all contain zero (D2, Appendix F).
 
+### 5.4 Is the headroom learnable? (C1–C6)
+
+![Figure 5](figures/learning_curve.png)
+
+*Figure 5. Learning curves on the v2 test: the 12-cell error (top) and the closure (`zero` − model) / (`zero` − floor)
+with 95 % world-bootstrap intervals (bottom) against the number of training worlds (replicate 0), at one week (left)
+and one month (right). Solid: observable models; dashed: privileged diagnostics. Grey: `zero`, `an5_arm` and the floor.*
+
+*Table 3. 12-cell error at N = 400 and N = 2,000 worlds and closure at N = 2,000 [95 % CI] (v2 test; reference rows
+are training-free or trained on v2 alone, so both columns repeat their value).*
+
+| model | 7 d, N = 400 | 7 d, N = 2,000 | closure 7 d | 30 d, N = 400 | 30 d, N = 2,000 | closure 30 d |
+|---|---|---|---|---|---|---|
+| `ridge_obs` | {{j6:curves/ridge_obs/400/7d/value#3}} | {{j6:curves/ridge_obs/2000/7d/value#3}} | {{j6:curves/ridge_obs/2000/7d/closure#ci2}} | {{j6:curves/ridge_obs/400/30d/value#3}} | {{j6:curves/ridge_obs/2000/30d/value#3}} | {{j6:curves/ridge_obs/2000/30d/closure#ci2}} |
+| `mlp_obs` (3 seeds) | {{j6:curves/mlp_obs/400/7d/value#3}} | {{j6:curves/mlp_obs/2000/7d/value#3}} | {{j6:curves/mlp_obs/2000/7d/closure#ci2}} | {{j6:curves/mlp_obs/400/30d/value#3}} | {{j6:curves/mlp_obs/2000/30d/value#3}} | {{j6:curves/mlp_obs/2000/30d/closure#ci2}} |
+| `seq_obs` (3 seeds) | {{j6:curves/seq_obs/400/7d/value#3}} | {{j6:curves/seq_obs/2000/7d/value#3}} | {{j6:curves/seq_obs/2000/7d/closure#ci2}} | {{j6:curves/seq_obs/400/30d/value#3}} | {{j6:curves/seq_obs/2000/30d/value#3}} | {{j6:curves/seq_obs/2000/30d/closure#ci2}} |
+| `gbm_obs` | {{j6:curves/gbm_obs/400/7d/value#3}} | {{j6:curves/gbm_obs/2000/7d/value#3}} | {{j6:curves/gbm_obs/2000/7d/closure#ci2}} | {{j6:curves/gbm_obs/400/30d/value#3}} | {{j6:curves/gbm_obs/2000/30d/value#3}} | {{j6:curves/gbm_obs/2000/30d/closure#ci2}} |
+| `ridge_priv` (diagnostic) | {{j6:curves/ridge_priv/400/7d/value#3}} | {{j6:curves/ridge_priv/2000/7d/value#3}} | {{j6:curves/ridge_priv/2000/7d/closure#ci2}} | {{j6:curves/ridge_priv/400/30d/value#3}} | {{j6:curves/ridge_priv/2000/30d/value#3}} | {{j6:curves/ridge_priv/2000/30d/closure#ci2}} |
+| `mlp_priv` (diagnostic, 3 seeds) | {{j6:curves/mlp_priv/400/7d/value#3}} | {{j6:curves/mlp_priv/2000/7d/value#3}} | {{j6:curves/mlp_priv/2000/7d/closure#ci2}} | {{j6:curves/mlp_priv/400/30d/value#3}} | {{j6:curves/mlp_priv/2000/30d/value#3}} | {{j6:curves/mlp_priv/2000/30d/closure#ci2}} |
+| `seq_priv` (diagnostic, 3 seeds) | {{j6:curves/seq_priv/400/7d/value#3}} | {{j6:curves/seq_priv/2000/7d/value#3}} | {{j6:curves/seq_priv/2000/7d/closure#ci2}} | {{j6:curves/seq_priv/400/30d/value#3}} | {{j6:curves/seq_priv/2000/30d/value#3}} | {{j6:curves/seq_priv/2000/30d/closure#ci2}} |
+| `gbm_priv` (diagnostic) | {{j6:curves/gbm_priv/400/7d/value#3}} | {{j6:curves/gbm_priv/2000/7d/value#3}} | {{j6:curves/gbm_priv/2000/7d/closure#ci2}} | {{j6:curves/gbm_priv/400/30d/value#3}} | {{j6:curves/gbm_priv/2000/30d/value#3}} | {{j6:curves/gbm_priv/2000/30d/closure#ci2}} |
+| `zero` | {{j6:references/zero/7d/value#3}} | {{j6:references/zero/7d/value#3}} | {{j6:references/zero/7d/closure#2}} | {{j6:references/zero/30d/value#3}} | {{j6:references/zero/30d/value#3}} | {{j6:references/zero/30d/closure#2}} |
+| `an5_arm` | {{j6:references/an5_arm/7d/value#3}} | {{j6:references/an5_arm/7d/value#3}} | {{j6:references/an5_arm/7d/closure#2}} | {{j6:references/an5_arm/30d/value#3}} | {{j6:references/an5_arm/30d/value#3}} | {{j6:references/an5_arm/30d/closure#2}} |
+| `wm3_full` | {{j6:references/wm3_full/7d/value#3}} | {{j6:references/wm3_full/7d/value#3}} | {{j6:references/wm3_full/7d/closure#2}} | {{j6:references/wm3_full/30d/value#3}} | {{j6:references/wm3_full/30d/value#3}} | {{j6:references/wm3_full/30d/closure#2}} |
+| `floor` | {{j6:references/floor/7d/value#3}} | {{j6:references/floor/7d/value#3}} | {{j6:references/floor/7d/closure#2}} | {{j6:references/floor/30d/value#3}} | {{j6:references/floor/30d/value#3}} | {{j6:references/floor/30d/closure#2}} |
+
+**The new worlds are v2's population.** Across {{d6:ks_summary/tests#0}} two-sample Kolmogorov–Smirnov comparisons of the
+true effects per act, outcome and horizon (and of the act rows and split shifts) between the {{d6:manifest/worlds#0}}
+v2x worlds and v2's 400 train worlds, the largest statistic is {{d6:ks_summary/max_D#3}} and the smallest p-value
+{{d6:ks_summary/min_p#3}}; the learning curve varies only the number of worlds.
+
+**Nonlinearity helps (C1–C3).** At 2,000 worlds the observable model chosen on validation (`{{j6:rules/C1/chosen#str}}`)
+beats the observable ridge at one week ({{j6:rules/C1/verdict/model#3}} vs {{j6:rules/C1/verdict/baseline#3}},
+{{j6:rules/C1/verdict/ci_diff#ci3}}, **{{j6:rules/C1/verdict/verdict#str}}**: the interval excludes zero but the ratio
+{{j6:rules/C1/verdict/ratio#3}} misses the 0.8 bar) and at one month ({{j6:rules/C2/verdict/model#3}} vs
+{{j6:rules/C2/verdict/baseline#3}}, **{{j6:rules/C2/verdict/verdict#str}}**; the ridge is worse than `zero` there, the
+MLP slightly better). With the hidden state the gap to the ridge is larger (C3, diagnostic: one week
+{{j6:rules/C3/7d/model#3}} vs {{j6:rules/C3/7d/baseline#3}}, **{{j6:rules/C3/7d/verdict#str}}**; one month
+{{j6:rules/C3/30d/model#3}} vs {{j6:rules/C3/30d/baseline#3}}, **{{j6:rules/C3/30d/verdict#str}}**). The three
+observable nonlinear families (MLP, GRU over the last week, boosted trees) end between {{j6:curves/gbm_obs/2000/7d/value#3}}
+and {{j6:curves/mlp_obs/2000/7d/value#3}} at one week (descriptive; no rule compares them): the GRU's week of hourly history
+adds little beyond the summary features.
+
+**More data helps, slowly from observables (C4).** From 400 to 2,000 worlds `mlp_obs` improves by
+{{j6:rules/C4/mlp_obs/verdict_7d/ci_diff#ci3}} (**{{j6:rules/C4/mlp_obs/verdict_7d/verdict#str}}**) and `seq_obs` by
+{{j6:rules/C4/seq_obs/verdict_7d/ci_diff#ci3}} (**{{j6:rules/C4/seq_obs/verdict_7d/verdict#str}}**); per doubling of the
+data, {{j6:rules/C4/mlp_obs/slope/7d#ci4}} and {{j6:rules/C4/seq_obs/slope/7d#ci4}}. The privileged diagnostic gains
+about three times as fast ({{j6:rules/C4/mlp_priv/slope/7d#ci4}} per doubling; {{j6:rules/C4/mlp_priv/verdict_7d/ci_diff#ci3}}
+from 400 to 2,000 worlds, **{{j6:rules/C4/mlp_priv/verdict_7d/verdict#str}}**), and it also learns the one-month effects
+(closure {{j6:curves/mlp_priv/400/30d/closure#ci2}} at 400 worlds, {{j6:curves/mlp_priv/2000/30d/closure#ci2}} at 2,000),
+which the observable models barely do.
+
+**Observable vs hidden (C6).** At 2,000 worlds adding the hidden state changes the error of the MLP by
+{{j6:rules/C6/mlp_priv − mlp_obs|7d/ci_diff#ci3}} at one week and {{j6:rules/C6/mlp_priv − mlp_obs|30d/ci_diff#ci3}} at one
+month (GRU: {{j6:rules/C6/seq_priv − seq_obs|7d/ci_diff#ci3}}, {{j6:rules/C6/seq_priv − seq_obs|30d/ci_diff#ci3}}).
+
+**The pre-registered reading: `{{j6:rules/reading/label#str}}`.** The rule (METRICS.md, committed before any WM-6 model was
+trained) reads "learnable from observables" if the C1 model's one-week closure at the largest N is at least 0.5, or if
+its C4 slope's interval lies below zero and its closure is at least 0.35. The closure is
+{{j6:rules/reading/c1_closure_7d#3}} (below 0.5) and the slope's interval {{j6:rules/C4/mlp_obs/slope/7d#ci4}} lies below
+zero, so the second clause applies. What this does and does not say: part of the room is learnable from the observable
+pre-act state, and the error fitted over 400–2,000 worlds still falls with more data; but the gain per doubling is small
+(and the last step, 1,600 to 2,000 worlds, shows none), more than half of the one-week gap remains open from observables at
+this scale, almost none of the one-month gap is closed, and about half of what the observable model misses at one week
+is recovered when the hidden state (the fission pressure and threshold, the latent table and the world's generation
+parameters) is added. We do not extrapolate the curve.
+
+**Against the methods of Section 5.1.** At one week `mlp_obs` at 2,000 worlds ({{j6:curves/mlp_obs/2000/7d/value#3}}) is
+below every observable method of Table 1 on v2 — `an5_arm` {{j6:references/an5_arm/7d/value#3}}, `wm3_full`
+{{j6:references/wm3_full/7d/value#3}}, CRN and CT far above (descriptive) — and so it is at 400 worlds
+({{j6:curves/mlp_obs/400/7d/value#3}}), i.e. with replicate 0 of v2's own training worlds: the earlier models were not
+held back by the amount of data alone. On the obs2 test (a v2→obs2 transfer, report only) the same models do not beat `zero` (`mlp_obs`
+{{j6:obs2/cell_averages/mlp_obs/7d#3}} vs {{j6:obs2/cell_averages/zero/7d#3}} at one week,
+{{j6:obs2/models/mlp_obs/7d/vs_zero/ci_diff#ci3}}) but transfer far better than the ridge
+({{j6:obs2/cell_averages/ridge_obs (WM-5)/7d#3}}).
+
 ## 6 Analysis
 
 **The benchmark discriminates; the methods do not use the room.** On both splits and at both horizons the floor lies
@@ -367,7 +461,8 @@ days `ridge_obs` beats `zero` ({{j5:v2/ladder/7d/values/ridge_obs#3}} vs {{j5:v2
 observable state adds nothing measurable beyond the arm-level mean. Adding the **hidden** state does add per-world
 information (`ridge_priv` vs `arm_mean` {{j5:posthoc/v2_vs_arm_level/ridge_priv|arm_mean|7d/ci_diff#ci3}}, post hoc), yet `ridge_priv`
 ({{j5:v2/ladder/7d/values/ridge_priv#3}}) stays far above the floor ({{j5:v2/ladder/7d/values/floor#3}}): most of
-the headroom is not linear in the state at the act, observable or hidden. At 30 days the regressions do worse than
+the headroom is not linear in the state at the act, observable or hidden (Section 5.4: nonlinear models of the same
+state close more of it). At 30 days the regressions do worse than
 `zero` ({{j5:v2/ladder/30d/values/ridge_obs#3}} vs {{j5:v2/ladder/30d/values/zero#3}}), as `arm_mean` does. A likely
 reason (post hoc, not tested) is that a squared-error fit predicts a mean, while the metric is an absolute error, which
 rewards a median near zero for these skewed, mostly-zero effects.
@@ -381,7 +476,8 @@ regressions do far worse than `zero` ({{j5:obs2/ladder/7d/values/ridge_obs#3}} a
 {{j5:obs2/ladder/30d/values/ridge_obs#3}} vs {{j5:obs2/ladder/7d/values/zero#3}} and
 {{j5:obs2/ladder/30d/values/zero#3}}), and F2's ridge rungs say nothing about observable versus hidden state on obs2.
 So the gap between `zero` and the floor is real on both splits; on v2 a linear map reaches only the arm-level mean from
-the observable state, and no method we evaluated closes the gap.
+the observable state, and none of the methods of Sections 4.1–4.4 closes the gap; the nonlinear direct models of
+Section 5.4 close part of it.
 
 ![Figure 3](figures/obs2_confounding.png)
 
@@ -437,7 +533,21 @@ CRN seed 1's error in that cell is {{j5:obs2/tables/crn_obs2_s1/gf240|food_stock
 {{j5:obs2/tables/zero/gf240|food_stock|30d/mae#3}} for `zero`.
 
 
-## 7 Limitations and broader impact
+## 7 Conclusion
+
+Against exact counterfactual branches, two established estimators of time-varying treatment effects, trained as their
+authors' implementation trains them, are worse than predicting no effect on the interventional and the sequentially
+confounded split; world models trained on the factual stream barely respond to the act, and the one trained on paired
+branches beats "no effect" only at one week on the interventional split — although the measured floor shows ample room. That room is partly learnable from the observable
+pre-act state: by the pre-registered reading, a nonlinear direct effect model trained on true per-world effects closes
+{{j6:rules/reading/c1_closure_7d#2}} of the one-week gap at 2,000 worlds, with a small negative slope over 400–2,000
+worlds; at one month it
+closes almost none of it, and about half of what the observable model misses at one week is recovered once the
+hidden state is added. The benchmark therefore separates methods
+over a range that a learner can enter but not finish from observables alone, and it shows that the failure of the
+dynamics models is not a lack of signal in the observable state.
+
+## 8 Limitations and broader impact
 
 **Limitations.** One simulator and one scene; single acts of three kinds at one amount each; the observational policies
 are synthetic, with known propensities and a refractory period that a real decision-maker would not have; obs2's
@@ -446,8 +556,12 @@ other replicate's effect, which over-states the irreducible error by about √2 
 regressions are linear and trained on v2's counterfactual labels (another game split of the same simulator, not
 another simulator); CRN and CT run at daily resolution with one configuration each, chosen on the smaller obs split;
 the world models run at hourly resolution; GPU-level numerical reproducibility of the transformer rollouts is not
-guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method; M1b-obs2 stopped at
-its 8,000-step cap without converging (kept step in the last 1 % of training). Claims are limited to
+guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method (three for the
+learning-curve models); M1b-obs2 stopped at its 8,000-step cap without converging (kept step in the last 1 % of
+training). The learning curve has four points on one design (v2's arms and act times), one feature set, one small
+architecture grid chosen at 400 worlds and frozen, and stops at 2,000 worlds; its models are trained on true effects of
+other worlds, which only a simulator provides; the slope is a fit over 400–2,000 worlds, not a forecast; the obs2
+transfer of these models is reported, not judged. Claims are limited to
 the pre-registered rules; comparisons labelled post hoc are descriptive.
 
 **Broader impact.** The benchmark is built on a toy simulation of a village and makes no claim about real societies or
@@ -524,6 +638,21 @@ converged).
 study's time-capped runs (WM-4) and this study's runs on the authors' schedule (WM-5). The lower panels use different validation sets (obs vs
 obs2), so only their shapes compare.*
 
+**Learning-curve models (Section 4.5).** Inputs normalized by the training rows' mean and standard deviation (a
+feature constant on the training rows is set to zero); targets the true effects divided by v2's per-cell scales; loss the
+mean absolute error over the case's eight targets (lags past the episode masked). MLP: three hidden layers, GELU, the
+grid width {256, 512} × dropout {0.1, 0.3} searched once at 400 worlds (seed 0) on the v2 validation 24-cell average and
+frozen (observable {{j6:runs/mlp_obs_n400_s0/width#0}} / {{j6:runs/mlp_obs_n400_s0/dropout#1}}, privileged
+{{j6:runs/mlp_priv_n400_s0/width#0}} / {{j6:runs/mlp_priv_n400_s0/dropout#1}}); AdamW, lr 1e-3, weight decay 1e-4, batch
+256, at most 400 epochs, early stopping with patience 30 on the same validation statistic, the best epoch kept, a
+3,600-s cap. GRU: two layers, hidden 128, over rows c − 167 … c of the 74 observable inputs (the 27 hidden values appended
+for the diagnostic), its last state concatenated with the features and the act one-hot before the frozen MLP head.
+GBM: one LightGBM regressor per cell, L1 objective, 31 leaves, learning rate 0.05, at least 20 rows per leaf, up to 500
+rounds with early stopping after 50 rounds without validation improvement. Ridge: WM-5's per-cell λ ∈ {0.01, …, 1,000}
+on validation. Seeds 0–2 for the neural models. Every neural run stopped by patience
+({{j6:compute/neural_epochs/min#0}}–{{j6:compute/neural_epochs/max#0}} epochs, {{j6:compute/neural_epochs/runs#0}} runs);
+none reached the time cap (longest run {{j6:compute/training_max#0}} s).
+
 ## Appendix C. The observational policies
 
 **obs (one act).** Decision rows: 06:00 of display days 8–60 (53 rows). State: food per person f = Σ store / max(1,
@@ -577,7 +706,12 @@ project repository; the episode arrays live outside version control (several GB 
 
 ## Appendix E. Compute
 
-All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took {{j5:compute/recording_total#0}} s of wall time at four or eight recorder workers (round 0 {{j5:compute/recording/r0#0}} s; rounds 1–5 {{j5:compute/recording/round1_record#0}}, {{j5:compute/recording/round2_record#0}}, {{j5:compute/recording/round3_record#0}}, {{j5:compute/recording/round4_record#0}}, {{j5:compute/recording/round5_record#0}} s; val and test families {{j5:compute/recording/fam_val_record#0}} and {{j5:compute/recording/fam_test_record#0}} s). The trainings of this study took {{j5:compute/training_total_hours#1}} GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs.
+All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took {{j5:compute/recording_total#0}} s of wall time at four or eight recorder workers (round 0 {{j5:compute/recording/r0#0}} s; rounds 1–5 {{j5:compute/recording/round1_record#0}}, {{j5:compute/recording/round2_record#0}}, {{j5:compute/recording/round3_record#0}}, {{j5:compute/recording/round4_record#0}}, {{j5:compute/recording/round5_record#0}} s; val and test families {{j5:compute/recording/fam_val_record#0}} and {{j5:compute/recording/fam_test_record#0}} s). The trainings of this study took {{j5:compute/training_total_hours#1}} GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs. The learning curve (Section 5.4):
+recording v2x took {{j6:compute/recording_total#0}} s of wall time ({{j6:compute/probe_total#0}} s for the
+determinism-checked timeline in 16 chunks, {{j6:compute/families#0}} s for the families at eight recorder calls in
+parallel); its {{j6:compute/training_runs#0}} trainings (including the grid and the two reproductions) took
+{{j6:compute/training_total#0}} s in total, and its {{j6:compute/evaluations#0}} test evaluations
+{{j6:compute/evaluation_total#0}} s.
 
 ## Appendix F. All pre-registered verdicts, training reached (R4) and rounding alone (D2)
 
@@ -621,6 +755,13 @@ All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DG
 | D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/verdict#str}}** |
 | D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/verdict#str}}** |
 | D1 obs2 30 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}** |
+| C1 v2 7 d, N = 2,000: `mlp_obs` (val-chosen) vs `ridge_obs` | {{j6:rules/C1/verdict/model#3}} | {{j6:rules/C1/verdict/baseline#3}} | {{j6:rules/C1/verdict/ci_diff#ci3}} | **{{j6:rules/C1/verdict/verdict#str}}** |
+| C2 v2 30 d, N = 2,000: `mlp_obs` (val-chosen) vs `ridge_obs` | {{j6:rules/C2/verdict/model#3}} | {{j6:rules/C2/verdict/baseline#3}} | {{j6:rules/C2/verdict/ci_diff#ci3}} | **{{j6:rules/C2/verdict/verdict#str}}** |
+| C3 v2 7 d, N = 2,000: `mlp_priv` vs `ridge_priv` (diagnostic) | {{j6:rules/C3/7d/model#3}} | {{j6:rules/C3/7d/baseline#3}} | {{j6:rules/C3/7d/ci_diff#ci3}} | **{{j6:rules/C3/7d/verdict#str}}** |
+| C3 v2 30 d, N = 2,000: `mlp_priv` vs `ridge_priv` (diagnostic) | {{j6:rules/C3/30d/model#3}} | {{j6:rules/C3/30d/baseline#3}} | {{j6:rules/C3/30d/ci_diff#ci3}} | **{{j6:rules/C3/30d/verdict#str}}** |
+| C4 v2 7 d: `mlp_obs` N = 2,000 vs N = 400 | {{j6:rules/C4/mlp_obs/verdict_7d/model#3}} | {{j6:rules/C4/mlp_obs/verdict_7d/baseline#3}} | {{j6:rules/C4/mlp_obs/verdict_7d/ci_diff#ci3}} | **{{j6:rules/C4/mlp_obs/verdict_7d/verdict#str}}** |
+| C4 v2 7 d: `seq_obs` N = 2,000 vs N = 400 | {{j6:rules/C4/seq_obs/verdict_7d/model#3}} | {{j6:rules/C4/seq_obs/verdict_7d/baseline#3}} | {{j6:rules/C4/seq_obs/verdict_7d/ci_diff#ci3}} | **{{j6:rules/C4/seq_obs/verdict_7d/verdict#str}}** |
+| C4 v2 7 d: `mlp_priv` N = 2,000 vs N = 400 (diagnostic) | {{j6:rules/C4/mlp_priv/verdict_7d/model#3}} | {{j6:rules/C4/mlp_priv/verdict_7d/baseline#3}} | {{j6:rules/C4/mlp_priv/verdict_7d/ci_diff#ci3}} | **{{j6:rules/C4/mlp_priv/verdict_7d/verdict#str}}** |
 
 R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` {{j5:R4/crn_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} α_max; `crn_v2_s1` {{j5:R4/crn_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} α_max; `ct_v2_s0` {{j5:R4/ct_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} α_max; `ct_v2_s1` {{j5:R4/ct_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} α_max; `crn_obs2_s0` {{j5:R4/crn_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} α_max; `crn_obs2_s1` {{j5:R4/crn_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} α_max; `ct_obs2_s0` {{j5:R4/ct_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} α_max; `ct_obs2_s1` {{j5:R4/ct_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
 

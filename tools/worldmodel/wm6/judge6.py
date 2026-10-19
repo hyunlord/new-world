@@ -324,13 +324,36 @@ def runs_info(runs: Path, prereg_time: int | None) -> dict:
         if val:
             node |= {k: val.get(k) for k in ("stop", "best_epoch", "epochs", "seconds")}
             node["val_both"] = (val.get("val") or {}).get("both")
-        for f in ("train.start", "train.end", "eval.start", "eval.end", "eval_obs2.start"):
+        for f in ("train.start", "train.end", "eval.start", "eval.end", "eval_obs2.start", "eval_obs2.end"):
             if (d_ / f).exists():
                 node[f] = int((d_ / f).read_text().split()[0])
         if prereg_time is not None:
             ev = [node[f] for f in ("eval.start", "eval_obs2.start") if f in node]
             node["eval_after_prereg"] = all(t > prereg_time for t in ev) if ev else None
         out[d_.name] = node
+    return out
+
+
+def compute_block(runs: Path, info: dict) -> dict:
+    """Wall times (s) of the v2x recording (`runs/record/`) and the trainings / evaluations (run files)."""
+    rec = runs / "record"
+    t = lambda n: (int((rec / f"{n}.end").read_text()) - int((rec / f"{n}.start").read_text())
+                   if (rec / f"{n}.start").exists() and (rec / f"{n}.end").exists() else None)
+    probes = {p.stem: t(p.stem) for p in sorted(rec.glob("probe_*.start"))}
+    out = {"probe_chunks": probes, "probe_total": sum(v for v in probes.values() if v),
+           "probe_workers": {p.stem.replace(".workers", ""): int(p.read_text()) for p in sorted(rec.glob("probe_*.workers"))},
+           "families": t("families"), "post": {n: t(n) for n in ("post_manifest", "post_prep", "post_describe")}}
+    out["recording_total"] = out["probe_total"] + (out["families"] or 0)
+    train = {n: r["seconds"] for n, r in info.items() if r.get("seconds") is not None}
+    out["training_runs"] = len(train)
+    out["training_total"] = sum(train.values())
+    out["training_max"] = max(train.values()) if train else None
+    eps = [r["epochs"] for n, r in info.items() if r.get("epochs") and r.get("model") in ("mlp", "seq")]
+    out["neural_epochs"] = {"min": min(eps), "max": max(eps), "runs": len(eps)} if eps else None
+    out["neural_stops"] = sorted({r.get("stop") for r in info.values() if r.get("model") in ("mlp", "seq")})
+    ev = [r["eval.end"] - r["eval.start"] for r in info.values() if "eval.start" in r and "eval.end" in r]
+    out["evaluations"] = len(ev)
+    out["evaluation_total"] = sum(ev)
     return out
 
 
@@ -342,6 +365,7 @@ def build(runs: Path) -> dict:
     info = runs_info(runs, (pre or {}).get("time"))
     evals = [r for r in info.values() if r.get("eval_after_prereg") is not None]
     return {"references": references(sc), "curves": cur, "rules": rl, "reproduction": reproduction(sc),
+            "compute": compute_block(runs, info),
             "obs2": obs2_block(sc, rl.get("largest_n")), "per_cell": per_cell(sc, rl.get("largest_n")), "runs": info,
             "prereg": pre, "prereg_order_ok": bool(evals) and all(r["eval_after_prereg"] for r in evals),
             "test_worlds": len(sc.worlds), "test_cases": len(sc.cases)}

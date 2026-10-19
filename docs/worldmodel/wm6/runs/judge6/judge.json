@@ -1,4 +1,63 @@
 {
+ "compute": {
+  "evaluation_total": 76,
+  "evaluations": 66,
+  "families": 13910,
+  "neural_epochs": {
+   "max": 159,
+   "min": 52,
+   "runs": 56
+  },
+  "neural_stops": [
+   "patience"
+  ],
+  "post": {
+   "post_describe": 0,
+   "post_manifest": 7,
+   "post_prep": 14
+  },
+  "probe_chunks": {
+   "probe_50000": 884,
+   "probe_50100": 1183,
+   "probe_50200": 1401,
+   "probe_50300": 616,
+   "probe_50400": 830,
+   "probe_50500": 771,
+   "probe_50600": 565,
+   "probe_50700": 596,
+   "probe_50800": 599,
+   "probe_50900": 613,
+   "probe_51000": 576,
+   "probe_51100": 636,
+   "probe_51200": 640,
+   "probe_51300": 614,
+   "probe_51400": 715,
+   "probe_51500": 584
+  },
+  "probe_total": 11823,
+  "probe_workers": {
+   "probe_50000": 8,
+   "probe_50100": 8,
+   "probe_50200": 4,
+   "probe_50300": 8,
+   "probe_50400": 8,
+   "probe_50500": 8,
+   "probe_50600": 8,
+   "probe_50700": 8,
+   "probe_50800": 8,
+   "probe_50900": 8,
+   "probe_51000": 8,
+   "probe_51100": 8,
+   "probe_51200": 8,
+   "probe_51300": 8,
+   "probe_51400": 8,
+   "probe_51500": 8
+  },
+  "recording_total": 25733,
+  "training_max": 26.564988613128662,
+  "training_runs": 74,
+  "training_total": 514.6361043453217
+ },
  "curves": {
   "gbm_obs": {
    "1600": {
@@ -2636,6 +2695,7 @@
    "eval.end": 1792451677,
    "eval.start": 1792451675,
    "eval_after_prereg": true,
+   "eval_obs2.end": 1792451741,
    "eval_obs2.start": 1792451724,
    "feat": "obs",
    "model": "mlp",
@@ -2663,6 +2723,7 @@
    "eval.end": 1792451678,
    "eval.start": 1792451677,
    "eval_after_prereg": true,
+   "eval_obs2.end": 1792451748,
    "eval_obs2.start": 1792451741,
    "feat": "obs",
    "model": "mlp",
@@ -2690,6 +2751,7 @@
    "eval.end": 1792451679,
    "eval.start": 1792451678,
    "eval_after_prereg": true,
+   "eval_obs2.end": 1792451755,
    "eval_obs2.start": 1792451748,
    "feat": "obs",
    "model": "mlp",
@@ -3503,6 +3565,7 @@
    "eval.end": 1792451703,
    "eval.start": 1792451701,
    "eval_after_prereg": true,
+   "eval_obs2.end": 1792451763,
    "eval_obs2.start": 1792451755,
    "feat": "obs",
    "model": "seq",
@@ -3530,6 +3593,7 @@
    "eval.end": 1792451704,
    "eval.start": 1792451703,
    "eval_after_prereg": true,
+   "eval_obs2.end": 1792451770,
    "eval_obs2.start": 1792451763,
    "feat": "obs",
    "model": "seq",
@@ -3557,6 +3621,7 @@
    "eval.end": 1792451706,
    "eval.start": 1792451704,
    "eval_after_prereg": true,
+   "eval_obs2.end": 1792451777,
    "eval_obs2.start": 1792451770,
    "feat": "obs",
    "model": "seq",
