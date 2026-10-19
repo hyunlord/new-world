@@ -60,6 +60,8 @@ func run() -> void:
 func _test_renderer(feet: Vector2, terrain: Dictionary) -> void:
 	var renderer = Renderer.new()
 	root.add_child(renderer)
+	var bridge := ClassDB.instantiate("WorldSimNode") as WorldSimNode
+	renderer.world_sim = bridge
 	renderer.set_process(false)
 	renderer.ingest_chill_snapshot({"agent_ids": PackedInt64Array([2]), "xs": PackedInt32Array([30]), "ys": PackedInt32Array([29])}, 1)
 	renderer.ingest_chill_snapshot({"agent_ids": PackedInt64Array([2]), "xs": PackedInt32Array([30]), "ys": PackedInt32Array([30])}, 2)
@@ -90,3 +92,4 @@ func _test_renderer(feet: Vector2, terrain: Dictionary) -> void:
 	check(not outline.visible and renderer._sprites[2].visible, "A30 hides outline while keeping base sprite")
 	Selection.layers_enabled = true
 	renderer.free()
+	bridge.free()

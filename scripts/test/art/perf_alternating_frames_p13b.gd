@@ -145,6 +145,22 @@ func _run() -> void:
 	file.close()
 	quit(0 if _errors.is_empty() else 1)
 
+func _switch_candidate(enabled: bool) -> bool:
+	match _change:
+		"walker":
+			return _renderer.call("set_perf_candidate_p13b", _change, enabled)
+		"write-skip":
+			return _renderer.call("set_perf_candidate_p13", _change, enabled)
+	return _renderer.call("set_perf_candidate_p12", _change, enabled)
+
+func _candidate_state() -> Dictionary:
+	match _change:
+		"walker":
+			return _renderer.call("get_perf_candidate_p13b")
+		"write-skip":
+			return _renderer.call("get_perf_candidate_p13")
+	return _renderer.call("get_perf_candidate_p12")
+
 func _block(index: int) -> void:
 	_world.call("set_sim_speed", 0.0)
 	Reads.mutate(_world, "reset_world_stress" if int(_spec[2]) > 0 else "reset_world", [_spec[0], _spec[2]] if int(_spec[2]) > 0 else [_spec[0]])
@@ -158,11 +174,11 @@ func _block(index: int) -> void:
 		_errors.append("Fresh alternating setup differs from initial state")
 	_world.call("set_sim_speed", _speed)
 	var enabled: bool = index % 2 == 1
-	var switched: bool = _renderer.call(_setter, _change, enabled)
+	var switched: bool = _switch_candidate(enabled)
 	if not switched:
 		_errors.append("Renderer rejected named candidate switch")
 		return
-	var state: Dictionary = _renderer.call(_getter)
+	var state: Dictionary = _candidate_state()
 	if state.get("change_id") != _change or not (state.get("candidate_enabled") is bool) or state.get("candidate_enabled") != enabled:
 		_errors.append("Renderer switch readback does not match requested candidate")
 		return
@@ -203,7 +219,7 @@ func _block(index: int) -> void:
 			discarded.append(sample)
 		else:
 			samples.append(sample)
-	var after: Dictionary = _renderer.call(_getter)
+	var after: Dictionary = _candidate_state()
 	var configuration_before: Dictionary = state.duplicate()
 	var configuration_after: Dictionary = after.duplicate()
 	if _change == "write-skip":

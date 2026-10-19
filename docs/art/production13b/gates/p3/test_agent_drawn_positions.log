@@ -1,0 +1,64 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:16)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:16)
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:19)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:19)
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:22)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:22)
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:30)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:30)
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:35)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _initialize (res://scripts/test/art/test_agent_drawn_positions.gd:35)
+agent drawn positions: 0 failures

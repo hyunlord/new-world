@@ -775,7 +775,26 @@ func _write_forest_evidence() -> void:
 
 func _draw_counter(node_name: String, method: String) -> Variant:
 	var node: Node = _main.get_node_or_null(NodePath(node_name))
-	return node.call(method) if node != null and node.has_method(method) else null
+	if node == null or not node.has_method(method):
+		return null
+	match method:
+		"get_drawn_head_dot_count":
+			return node.call("get_drawn_head_dot_count")
+		"get_drawn_icon_count":
+			return node.call("get_drawn_icon_count")
+		"get_drawn_icon_agent_ids":
+			return node.call("get_drawn_icon_agent_ids")
+		"capture_metadata":
+			return node.call("capture_metadata")
+		"get_feed_log":
+			return node.call("get_feed_log")
+		"get_visible_feed":
+			return node.call("get_visible_feed")
+		"capture_feed_metadata":
+			return node.call("capture_feed_metadata")
+		"get_death_total":
+			return node.call("get_death_total")
+	return null
 
 
 func _tint_strength() -> float:

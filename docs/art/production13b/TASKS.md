@@ -68,3 +68,5 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - 2026-10-19T13:53:44.244478+00:00: Completewalkeridentityattempt2 active session11368 at frozenHEADc1827b3b, same releaseSHA30ed9754. Speedrequirementsverified separately(W200.6492237648,W500.9446215390,3/3fasterboth); defaultOFF untilidentitypasses. IndependentreviewROUND1 started two readonlylanes code/evidence; finalROUND2reserved aftermerge/aftermatrix. Specializedreviewrole modelunavailable beforeexecution; replaced by nativeinherited reviewer, noextra reviewround.
 
 - 2026-10-19T14:11:11.838176+00:00: Part1 COMPLETE: font24/glyph/input verified, write-skip measured/rejected, walker identity attempt2 PASS and corrected speedPASS; defaultON accepted. Part2 completewithlimitations previously pushed c1827b3b. Part3 merge/fullgate/mergedidentity next.
+
+- 2026-10-19T14:24:29.986878+00:00: Part3 first full gate session45941 exit1,118/120; real-inputP12/P13 pass. Boundary regression in newcollector dynamic calls repaired; targetedcheck and strict active. Complete gate attempt2 next; firstp3 evidence preserved.

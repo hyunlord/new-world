@@ -1,0 +1,2 @@
+docs/art/production13b/gates/p3-fixes/p3-dispatch-targeted.log:13: new blank line at EOF.
+docs/art/production13b/gates/p3/test_capture_sprite_order_p11.log:3: new blank line at EOF.
