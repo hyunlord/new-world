@@ -47,7 +47,7 @@ func _run() -> void:
 	_camera.position_smoothing_enabled = false
 	_camera.process_mode = Node.PROCESS_MODE_DISABLED
 	var seed: int = 19603
-	_expected_tick = int(OS.get_environment("P13B_H10_TICK")) if OS.has_environment("P13B_H10_TICK") else 122430
+	_expected_tick = int(OS.get_environment("P13B_H10_TICK")) if OS.has_environment("P13B_H10_TICK") else (122450 if _case == "road" else 122430)
 	if _expected_tick <= 0 or _expected_tick >= 172320:
 		_fail("capture must be within displayed day120")
 		return
@@ -107,27 +107,56 @@ func _run() -> void:
 func _road() -> bool:
 	var porters: Dictionary = ReadRoute.read(_world, "get_porter_snapshot")
 	var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
-	var index: int = -1
+	var settlements: Dictionary = ReadRoute.read(_world, "get_settlement_snapshot")
+	var candidates: Array[Dictionary] = []
 	for i: int in porters.get("ids", []).size():
-		if int(porters["stage"][i]) == 0:
-			index = i
-			break
-	if index < 0:
-		_fail("actual outbound porter absent at requested tick")
-		return false
-	var entity: int = int(porters["ids"][index])
-	var agent_index: int = agents["ids"].find(entity)
-	if agent_index < 0:
-		_fail("porter entity has no live agent")
-		return false
-	_captured["outbound_porter"] = {"entity_bits": entity, "agent_id": agents["agent_ids"][agent_index], "porter_snapshot": porters}
+		var agent_index: int = agents["ids"].find(int(porters["ids"][i]))
+		if int(porters["stage"][i]) == 0 and agent_index >= 0:
+			candidates.append({"porter_index": i, "agent_index": agent_index, "agent_id": int(agents["agent_ids"][agent_index])})
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["agent_id"]) < int(b["agent_id"]))
+	_captured["road_candidates"] = []
+	_captured["saved_coverage"] = {}
 	_inspector.hide()
-	_camera.position = Vector2(456, 36) + Vector2(agents["xs"][agent_index], agents["ys"][agent_index]) * 16.0
 	_set_zoom(4)
+	var entity: int = -1
+	for candidate: Dictionary in candidates:
+		var i: int = int(candidate["porter_index"])
+		var agent_index: int = int(candidate["agent_index"])
+		var tile := Vector2(agents["xs"][agent_index], agents["ys"][agent_index])
+		var source_index: int = settlements["settlement_ids"].find(int(porters["from"][i]))
+		var destination_index: int = settlements["settlement_ids"].find(int(porters["to"][i]))
+		candidate["road_eligible"] = false
+		if source_index >= 0 and destination_index >= 0:
+			var source := Vector2(settlements["formation_xs"][source_index], settlements["formation_ys"][source_index])
+			var destination := Vector2(settlements["formation_xs"][destination_index], settlements["formation_ys"][destination_index])
+			candidate["source_distance_tiles"] = tile.distance_to(source)
+			candidate["destination_distance_tiles"] = tile.distance_to(destination)
+			candidate["road_eligible"] = tile.distance_to(source) > 2.0 and tile.distance_to(destination) > 2.0 and Vector2(agents["target_xs"][agent_index], agents["target_ys"][agent_index]) == destination and (float(agents["carried_foods"][agent_index]) > 0.0 or int(agents["carried_woods"][agent_index]) > 0)
+		if bool(candidate["road_eligible"]):
+			_camera.position = Vector2(456, 36) + tile * 16.0
+			_camera.force_update_scroll()
+			await process_frame
+			await process_frame
+			candidate["coverage"] = _road_coverage(int(porters["ids"][i]))
+		_captured["road_candidates"].append(candidate.duplicate(true))
+		if bool(candidate["road_eligible"]) and bool(candidate["coverage"]["clear"]):
+			entity = int(porters["ids"][i])
+			_captured["outbound_porter"] = {"entity_bits": entity, "agent_id": candidate["agent_id"], "porter_snapshot": porters}
+			break
+	if entity < 0:
+		_fail("no outbound porter has an unobscured road position at requested tick")
+		return false
 	for lang: String in ["en", "ko"]:
 		root.get_node("Locale").call("set_language", lang)
 		_page_context = {"language": lang, "section": "porter_road", "zoom": 4}
 		if not await _save("porter_road_z4_" + lang):
+			return false
+		# No await after _save: collect the same scene state used by force_draw.
+		var coverage: Dictionary = _road_coverage(entity)
+		coverage["png_sha256"] = _images.back()["png_sha256"]
+		_captured["saved_coverage"][lang] = coverage
+		if not bool(coverage["clear"]):
+			_fail("saved porter frame has foreign body/icon coverage")
 			return false
 		var sprite: Dictionary = _images.back()["page_context"]["porter_sprite"]
 		var metadata: Dictionary = sprite.get("metadata", {})
@@ -138,6 +167,39 @@ func _road() -> bool:
 			_fail("saved porter lacks expected glyph and carry pose")
 			return false
 	return true
+
+func _road_coverage(entity: int) -> Dictionary:
+	var sprite: Dictionary = _sprite_evidence(entity)
+	var ordering := SpriteOrder.new()
+	var rows: Array[Dictionary] = ordering.collect(_main.get_node("WorldObjects") as Node2D)
+	var result: Dictionary = {"clear": false, "sprite": sprite, "draw_rects": rows, "errors": ordering.errors.duplicate(), "body_blockers": [], "icon_blockers": []}
+	if not ordering.errors.is_empty() or not bool(sprite.get("visible", false)) or not bool(sprite.get("fully_inside_viewport", false)) or not bool(sprite.get("icon_visible", false)):
+		return result
+	var body_rank: int = -1
+	var icon_rank: int = -1
+	for row: Dictionary in rows:
+		if str(row["node_path"]) == str(sprite["node_path"]):
+			body_rank = int(row["draw_rank"])
+		if str(row["node_path"]) == str(sprite["icon_node_path"]):
+			icon_rank = int(row["draw_rank"])
+	result["body_draw_rank"] = body_rank
+	result["icon_draw_rank"] = icon_rank
+	var body := Rect2(sprite["rect"][0], sprite["rect"][1], sprite["rect"][2], sprite["rect"][3])
+	var icon := Rect2(sprite["icon_rect"][0], sprite["icon_rect"][1], sprite["icon_rect"][2], sprite["icon_rect"][3])
+	if body_rank < 0 or icon_rank < 0 or not Rect2(0, 0, 1920, 1080).encloses(icon):
+		return result
+	var owner: String = str(sprite["node_path"])
+	for row: Dictionary in rows:
+		var path: String = str(row["node_path"])
+		if path == owner or path.begins_with(owner + "/"):
+			continue
+		var rect := Rect2(row["rect"][0], row["rect"][1], row["rect"][2], row["rect"][3])
+		if int(row["draw_rank"]) > body_rank and body.intersects(rect):
+			result["body_blockers"].append(row)
+		if int(row["draw_rank"]) > icon_rank and icon.intersects(rect):
+			result["icon_blockers"].append(row)
+	result["clear"] = result["body_blockers"].is_empty() and result["icon_blockers"].is_empty()
+	return result
 
 func _relations_view() -> bool:
 	_inspector.hide()

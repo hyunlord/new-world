@@ -11,3 +11,9 @@
 
 ## Input coordinate repair (Part1)
 Preserve the baseline failing attempt. Tooltip and independent input witness now consume delivered motion coordinates, since required Input.parse_input_event does not move the OS cursor. No cursor warping, handler invocation or weaker visibility/text/delay/selection assertions. Gate entry forwards to p13b test copy. Windowed attempt2 passed17/17.
+
+## Capture repairs after first live attempts
+- H10 road attempt1 runtime passed but visual failed: foreign badge obscured porter glyph. Attempt2 uses actual seed19603/t122450 and deterministic AgentId-order road candidates; require zero later-drawn foreign body/icon rectangle overlap. No world state alteration.
+- Life estranged attempt1 failed at seed19414/t34680. Historical v26 source `/Users/rexxa/work/p21-data/p2/C/chronicle_game_v26/chronicle_19414.json`, SHA70727508335abfd2c969d3367a457012bbe4eb5040f824a0bb6d6e46fc25c8f9, first kind19 at31769 and first kind20 at51840. Copy collector to p13b and change only that case tick to51840. Resume runner captures estranged/crowds only; previous valid live/multi images retained and will join final anonymous bundle by explicit map. Current reproduction pending.
+- StageB preparer copy changes only inherited stale report bar10/14 to12/14. Geometry/eligibility unchanged.
+- Strict parser/warnings and FFI checks passed both repaired capture scripts; windowed/visual verification follows.

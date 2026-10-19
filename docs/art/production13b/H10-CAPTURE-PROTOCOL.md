@@ -8,7 +8,7 @@ Run after source freeze, one case per fresh output, with window lock and the inh
 P13B_H10_CASE=road \
 P13B_H10_OUT=/Users/rexxa/work/art-production13b-evidence/h10-road-attempt1 \
 P13B_H10_BUILD_PROFILE=release \
-P13B_H10_TICK=122430 \
+P13B_H10_TICK=122450 \
 bash tools/art_pipeline/with_window_lock.sh 1800 bash -c \
 'while [[ -d /Users/rexxa/work/.mac_quiet.lock ]]; do sleep 30; done; exec "$@"' \
 h10 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot \
@@ -18,7 +18,7 @@ h10 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot \
 
 Capture stdout/stderr outside the fresh output directory. Do not pre-create `P13B_H10_OUT`. An existing directory is refused without writing to it. The outer window-lock wait must be supervised by the leader's deadline; its command limit starts after acquiring the window lock.
 
-- Seed is fixed19603, actual game_v26 main scene and reset. Default tick122430 (display day86 08:30),30 ticks after the historical kind21 and porter departures. Override tick is positive and strictly below172320 (display day121 starts there). Tick selection does not inject data or reorder sprites.
+- Seed is fixed19603, actual game_v26 main scene and reset. Road default tick122450; other cases122430 (display day86 08:30),30 ticks after the historical kind21 and porter departures. Override tick is positive and strictly below172320 (display day121 starts there). Tick selection does not inject data or reorder sprites.
 - `road`: actual outbound porter, camera centred on it at Z4, EN/KO, body/glyph frame evidence, expected `p12_porter_food` or `p12_porter_wood`, actual carry/carry_wood pose. Metadata assertions do not replace visual road-position/pose review.
 - `relations`: Z1, camera centred on actual formation anchors, EN/KO; requires two distinct relation colours with each counted line's endpoints onscreen. On-frame relation metadata and native screenshots retained. Metadata is not framebuffer/occlusion proof.
 - `chronicle`: requires actual kind21, captures every real chronicle panel page in EN/KO, then checks its localized sentence is in the rendered text. Inspect the saved page containing that sentence for visible, readable made-peace text; rendered text alone is not visual acceptance.
