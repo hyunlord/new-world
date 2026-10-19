@@ -35,6 +35,12 @@
     "baseline-ablation-W200": [
       1792376960.56878,
       1792379489.524111
+    ],
+    "pair-declump-kernel-W500": [
+      1792380346.22273
+    ],
+    "pair-declump-kernel-W200": [
+      1792380387.0522292
     ]
   },
   "waiting_seconds": 1243.6406910419464,
@@ -118,6 +124,14 @@
     [
       1792379489.0,
       1792379489.0
+    ],
+    [
+      1792380346.0,
+      1792380346.0
+    ],
+    [
+      1792380386.0,
+      1792380386.0
     ]
   ],
   "events": [
@@ -246,6 +260,20 @@
       "admitted": true,
       "output": "/Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json",
       "completed_epoch": 1792379791.151336
+    },
+    {
+      "epoch": 1792380346.22273,
+      "item": "pair-declump-kernel-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/kernel/pairs-W500-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792380385.657894
+    },
+    {
+      "epoch": 1792380387.0522292,
+      "item": "pair-declump-kernel-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13-evidence/kernel/pairs-W200-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792380424.258751
     }
   ]
 }

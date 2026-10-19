@@ -26,3 +26,7 @@
 - W200 AgentRenderer intervention21.8505ms; all outside presentation nodes below1ms. WorldSim9.7855ms is a simulation-disabled control and cannot be candidate(c). Do not change simulation or expand the prescribed candidate scope.
 - Optional Wmulti node ablation omitted in the explicit first-drop position to prioritize the kernel decision, write-skip trial and mandatory visual/readability work. Both required running section/getter diagnoses are complete.
 - Running section captures retain stale speed_evidence prose; actual setter/numeric conditions/tick trajectories establish speed2. Preserve the original evidence and flag the inconsistency; do not falsely recategorize them as frozen.
+
+## Kernel accepted, Part1
+
+Original §5.1 met: all6exactRGBA, all2280running/panframesexactwithoff/onstamps; admittedW500ratio0.7962943016 andW2000.9642023799,3/3fastereach. Independentrawauditagrees. DefaultonwithP12_DECLUMP_KERNEL=0 referenceescape. Stageonlythisone-lineproductchangeforacceptedkernelcommit; preparedwrite-skipworkremainsunstagedandunaccepted. Re-captureaccepted-buildreferencesbeforejudgingnextcandidate.

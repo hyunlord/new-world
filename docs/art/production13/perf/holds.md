@@ -88,3 +88,13 @@
 - PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json P=2.008760750 R=2.008996167 load=3.60986328125
 - PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json P=2.018011041 R=2.008996167 load=6.0234375 valid=True exit=0
 - 2026-10-19T03:16:32Z pid=18457 HOLD_END purpose=baseline-ablation-W200-attempt2 exit=0
+- 2026-10-19T03:25:46Z pid=72773 WAIT_START purpose=pair-declump-kernel-W500
+- 2026-10-19T03:25:46Z pid=72773 HOLD_START purpose=pair-declump-kernel-W500 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/kernel/pairs-W500-attempt1/frames.json.validity.json P=2.003321375 R=2.008996167 load=3.98876953125
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/kernel/pairs-W500-attempt1/frames.json.validity.json P=2.021951709 R=2.008996167 load=3.8291015625 valid=True exit=0
+- 2026-10-19T03:26:26Z pid=72773 HOLD_END purpose=pair-declump-kernel-W500 exit=0
+- 2026-10-19T03:26:26Z pid=75246 WAIT_START purpose=pair-declump-kernel-W200
+- 2026-10-19T03:26:26Z pid=75246 HOLD_START purpose=pair-declump-kernel-W200 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/kernel/pairs-W200-attempt1/frames.json.validity.json P=1.938035084 R=2.008996167 load=3.8291015625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/kernel/pairs-W200-attempt1/frames.json.validity.json P=1.975303625 R=2.008996167 load=6.2890625 valid=True exit=0
+- 2026-10-19T03:27:05Z pid=75246 HOLD_END purpose=pair-declump-kernel-W200 exit=0

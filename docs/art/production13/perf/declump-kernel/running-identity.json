@@ -1,0 +1,77 @@
+{
+  "scope": "candidate_validation",
+  "valid": true,
+  "status": "PASS",
+  "worlds": [
+    {
+      "scope": "candidate_validation",
+      "world": "W0",
+      "start_tick": 40560,
+      "frames": 600,
+      "fixed_fps": 60,
+      "advance_every_frames": 2,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13-evidence/identity/corrected-running-reference/W0.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13-evidence/kernel/running/W0.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "candidate_validation",
+      "world": "W200",
+      "start_tick": 1440,
+      "frames": 600,
+      "fixed_fps": 60,
+      "advance_every_frames": 2,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13-evidence/identity/corrected-running-reference/W200.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13-evidence/kernel/running/W200.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "candidate_validation",
+      "world": "W-multi",
+      "start_tick": 90840,
+      "frames": 600,
+      "fixed_fps": 60,
+      "advance_every_frames": 2,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13-evidence/identity/corrected-running-reference/W-multi.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13-evidence/kernel/running/W-multi.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "candidate_validation",
+      "world": "W500_FROZEN",
+      "start_tick": 1440,
+      "frames": 240,
+      "fixed_fps": 60,
+      "advance_every_frames": 0,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13-evidence/identity/corrected-running-reference/W500_FROZEN.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13-evidence/kernel/running/W500_FROZEN.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "scope": "candidate_validation",
+      "world": "W500_2X",
+      "start_tick": 1440,
+      "frames": 240,
+      "fixed_fps": 60,
+      "advance_every_frames": 1,
+      "mutation_route": "SimReads",
+      "base_dump": "/Users/rexxa/work/art-production13-evidence/identity/corrected-running-reference/W500_2X.jsonl",
+      "candidate_dump": "/Users/rexxa/work/art-production13-evidence/kernel/running/W500_2X.jsonl",
+      "valid": true,
+      "status": "PASS",
+      "errors": []
+    }
+  ]
+}

@@ -67,7 +67,7 @@ var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
-var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
 var _declump_fixture_sink_p12: RefCounted
 var _hovered_person_p12: int = -1
 var _hover_owner_p12: int = 0
