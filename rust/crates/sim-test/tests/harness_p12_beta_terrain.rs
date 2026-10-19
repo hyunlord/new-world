@@ -66,7 +66,6 @@ const TILESET_PATH: &str = "assets/tilesets/world_terrain.tres";
 const WORLD_RENDERER_PATH: &str = "scripts/ui/world_renderer.gd";
 const RUNTIME_HARNESS_PATH: &str =
     "scripts/test/p12_beta_terrain_and_buildings/harness_terrain.gd";
-const AGENT_RENDERER_PATH: &str = "scripts/ui/agent_renderer.gd";
 const MAIN_TSCN_PATH: &str = "scenes/main.tscn";
 
 // ─── Assertion 1: tileset_resource_exists_and_nonempty ───────────────────
@@ -146,9 +145,9 @@ fn harness_p12_beta_a5_tileset_references_three_variants_per_material() {
 #[test]
 fn harness_p12_beta_a6_world_renderer_loads_terrain_tileset() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("terrain_v8.png"));
-    assert!(src.contains("range(5)"));
-    assert!(src.contains("range(4)"));
+    assert!(src.contains("res://assets/art/terrain/terrain_manifest.json"));
+    assert!(src.contains("for description: Dictionary in manifest[\"layers\"]"));
+    assert!(src.contains("for tile: Dictionary in description[\"tiles\"]"));
     assert!(src.contains("atlas.create_tile"));
     assert!(src.contains("tiles.add_source(atlas, 0)"));
 }
@@ -157,9 +156,9 @@ fn harness_p12_beta_a6_world_renderer_loads_terrain_tileset() {
 #[test]
 fn harness_p12_beta_a7_world_renderer_instantiates_tilemaplayer_with_tileset() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -168,9 +167,10 @@ fn harness_p12_beta_a7_world_renderer_instantiates_tilemaplayer_with_tileset() {
 #[test]
 fn harness_p12_beta_a8_world_renderer_populates_all_grid_cells() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("\"rock\": return code == 2"));
     assert!(src.contains("_terrain[y * _width + x]"));
-    assert!(src.contains("TERRAIN_ROWS.get(code, 0)"));
-    assert!(src.contains("2: 3, 3: 2"));
+    assert!(src.contains("_member(layer_name, x, y)"));
+    assert!(src.contains("\"hill\": return code == 2 or code == 3"));
 }
 
 // ─── Assertion 9: terrain_placement_is_deterministic ─────────────────────
@@ -180,7 +180,7 @@ fn harness_p12_beta_a9_terrain_placement_is_deterministic() {
     assert!(src.contains("73856093"));
     assert!(src.contains("19349663"));
     assert!(src.contains("0x7fffffff"));
-    assert!(src.contains("% 4"));
+    assert!(src.contains("% count"));
     assert!(!src.contains("RandomNumberGenerator"));
 }
 
@@ -188,18 +188,24 @@ fn harness_p12_beta_a9_terrain_placement_is_deterministic() {
 #[test]
 fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 11: bootstrap_sprite_positioned_at_bootstrap_tile ─────────
 #[test]
 fn harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 12: z_order_constants_match_spec ──────────────────────────
@@ -453,46 +459,38 @@ fn harness_p12_beta_a20_runtime_harness_verifies_overlay_z_and_alpha() {
 // ─── Assertion 21: phase_4_gamma_sprite_scale_invariant_preserved ────────
 #[test]
 fn harness_p12_beta_a21_phase4_gamma_sprite_scale_invariant_preserved() {
-    // Type: D — regression guard. SPRITE_SCALE = 0.25 in agent_renderer.gd.
-    let src = read_file(AGENT_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
 
-    let accepted = [
-        "SPRITE_SCALE := 0.25",
-        "SPRITE_SCALE: float = 0.25",
-        "SPRITE_SCALE :float = 0.25",
-        "SPRITE_SCALE: float= 0.25",
-        "SPRITE_SCALE = 0.25",
-    ];
-    let matched = accepted.iter().any(|c| stripped.contains(c));
-    assert!(
-        matched,
-        "A21: agent_renderer.gd must preserve SPRITE_SCALE = 0.25 \
-         (Phase 4-γ tile-fit invariant)"
-    );
-    println!("[P12-β A21] SPRITE_SCALE = 0.25 preserved ✓");
 }
 
 // ─── Assertion 22: d1_state_tints_palette_preserved ──────────────────────
 #[test]
 fn harness_p12_beta_a22_d1_state_tints_palette_preserved() {
-    // Type: D — regression guard. All 4 D1 STATE_TINTS Color literals preserved.
-    let src = read_file(AGENT_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    let required = [
-        "Color(0.55, 0.70, 0.95, 1.0)",
-        "Color(1.0, 0.85, 0.15, 1.0)",
-        "Color(1.0, 0.40, 0.75, 1.0)",
-        "Color(0.30, 0.95, 0.35, 1.0)",
-    ];
-    for needle in required.iter() {
-        assert!(
-            stripped.contains(needle),
-            "A22: agent_renderer.gd MUST preserve D1 STATE_TINTS literal `{needle}`"
-        );
-    }
-    println!("[P12-β A22] all 4 D1 STATE_TINTS Color literals preserved ✓");
 }
 
 // ─── Assertion 23: phase_12_alpha_camera_zoom_invariant_preserved ────────

@@ -1,0 +1,67 @@
+{
+  "candidate": "declump-kernel",
+  "verdict": "ACCEPTED",
+  "identity": "PASS",
+  "runtime_baseline": "6d493fa8ade6d368eca8e7efa7ab3f668eea1827",
+  "worlds": {
+    "W500": {
+      "pooled_median_ratio": 0.7962943015737632,
+      "pair_ratios": [
+        0.7820915219906681,
+        0.796256798319723,
+        0.7986974328660994
+      ],
+      "control": {
+        "count": 450,
+        "median": 27.84899999940395,
+        "p90": 29.3659999966621,
+        "p99": 30.6520000040531,
+        "maximum": 31.2780000033379,
+        "over_budget": 450
+      },
+      "candidate": {
+        "count": 450,
+        "median": 22.1760000040531,
+        "p90": 23.8089999945164,
+        "p99": 24.99000000453,
+        "maximum": 25.9180000085831,
+        "over_budget": 450
+      },
+      "valid": true,
+      "speed_pass": true
+    },
+    "W200": {
+      "pooled_median_ratio": 0.9642023798670909,
+      "pair_ratios": [
+        0.9582264067810362,
+        0.9657586633679335,
+        0.9729393707951997
+      ],
+      "control": {
+        "count": 450,
+        "median": 25.714000002086152,
+        "p90": 27.7939999955893,
+        "p99": 30.1849999980926,
+        "maximum": 64.4340000064373,
+        "over_budget": 450
+      },
+      "candidate": {
+        "count": 450,
+        "median": 24.793499997913848,
+        "p90": 27.160999994278,
+        "p99": 29.4970000009537,
+        "maximum": 61.0430000030994,
+        "over_budget": 450
+      },
+      "valid": true,
+      "speed_pass": true
+    }
+  },
+  "thresholds": {
+    "maximum_pooled_ratio": 0.97,
+    "minimum_faster_pairs_per_world": 2
+  },
+  "default": "on; P12_DECLUMP_KERNEL=0 retains GDScript reference",
+  "accepted_reference_recapture": "PASS: six exact RGBA controls and 2280 byte-exact running/pan frames; all kernel ON",
+  "accepted_commit": "6e01bb2997bb00b4441277ebd92d79e2ad2ce76a"
+}

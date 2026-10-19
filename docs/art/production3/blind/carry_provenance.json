@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1018,
+    "body": "adult_a",
+    "activity": "carry",
+    "sprite_id": "V_a2_04",
+    "fallback_kind": "idle_icon"
+  },
+  {
+    "id": 1002,
+    "body": "adult_b",
+    "activity": "carry",
+    "sprite_id": "V_b3_02",
+    "fallback_kind": ""
+  },
+  {
+    "id": 1010,
+    "body": "adult_a",
+    "activity": "carry",
+    "sprite_id": "V_a2_04",
+    "fallback_kind": "idle_icon"
+  }
+]

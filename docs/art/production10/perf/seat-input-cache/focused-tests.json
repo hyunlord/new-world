@@ -1,0 +1,22 @@
+{
+  "recorded_utc": "2026-10-15T19:46:58.095286+00:00",
+  "tests": [
+    {
+      "script": "scripts/test/art/test_camp_seat_cache_p10.gd",
+      "exit_code": 0,
+      "stdout_marker": "CAMP SEAT CACHE P10 PASS",
+      "exec_session": 49668
+    },
+    {
+      "script": "scripts/test/art/test_camp_seats.gd",
+      "exit_code": 0,
+      "stdout_marker": "CAMP SEATS PASS: 41 villagers, separation, persistence, eligibility, rebuild, spread",
+      "exec_chunk": "afd208"
+    }
+  ],
+  "source_sha256": {
+    "scripts/ui/camp_seats.gd": "2ed9f0bcf434246ae5563504a880144007c53c572f49ce09ab4296364671f4f2",
+    "scripts/ui/agent_renderer.gd": "0aa7f50c479629b6dbc54211bf12507aec1c355059a17d1eed86d72af53c3619",
+    "scripts/test/art/test_camp_seat_cache_p10.gd": "d354fdc436ad2fedbb000fc132590734366309ad5fccc91d884b95c77fd5edeb"
+  }
+}

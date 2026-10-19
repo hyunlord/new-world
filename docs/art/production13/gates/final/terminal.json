@@ -1,0 +1,25 @@
+{
+  "session_id": 24830,
+  "exit_code": 1,
+  "checks": 120,
+  "passed": 118,
+  "nonpassing": [
+    {
+      "name": "test_real_input_p12",
+      "exit_code": 75,
+      "seconds": 0
+    },
+    {
+      "name": "test_real_input_p13",
+      "exit_code": 75,
+      "seconds": 0
+    }
+  ],
+  "runtime_commit": "1e0ff6b1bde5097510a23f525c3d420aae5675cb",
+  "checked_head": "8be1a9dbdf7587ecc9622671be317f0133f8fb0b",
+  "dev_opt_level": 2,
+  "test_opt_level": 2,
+  "cargo_jobs": 6,
+  "gui_permitted": false,
+  "full_green": false
+}

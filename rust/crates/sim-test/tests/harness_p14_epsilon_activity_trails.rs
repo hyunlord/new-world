@@ -47,18 +47,9 @@ fn read_main_tscn_src() -> String {
     read_file(&["scenes", "main.tscn"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
-
 
 fn read_hud_topbar_src() -> String {
     read_file(&["scripts", "ui", "panels", "hud_topbar.gd"])
-}
-
-fn read_hud_status_panel_src() -> String {
-    read_file(&["scripts", "ui", "panels", "hud_status_panel.gd"])
 }
 
 fn strip_gd_comments(src: &str) -> String {
@@ -501,43 +492,48 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 17, "A12.2: load_steps must equal 17 (Phase 14-ζ 9 → 11, viz-B 11 → 12, viz-D 12 → 13); got {n}");
-    println!("[P14-ε A12] load_steps = 17 (post viz-D DeathVizRenderer) ✓");
+    assert_eq!(n, 24, "Art Pass 13: twenty-three external resources plus the main scene; got {n}");
+    assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/ui/person_activity_tooltip_p13.gd\" id=\"23_activity_tooltip\"]"));
+    assert!(src.contains("[node name=\"ActivityTooltipP13\" type=\"Control\" parent=\"UI\"]\nmouse_filter = 2\nscript = ExtResource(\"23_activity_tooltip\")"));
+    assert!(src.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
+    assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
+    assert!(src.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
+    assert!(src.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
+    println!("[P14-ε A12] load_steps = 24 (Art Pass 13 activity tooltip added) ✓");
 }
 
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
 #[test]
 fn harness_p14_epsilon_a13_regression_guard_agent_renderer_phase_invariants_intact() {
-    // Type D — five canonical literals all present.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let needles = [
-        "ROLE_BUCKET_COUNT",
-        "ICON_OFFSET_PX",
-        "STATE_SCALE_BOOST",
-        "STATE_TINTS",
-        "SPRITE_SCALE",
-    ];
-    let mut missing: Vec<&str> = Vec::new();
-    for n in needles.iter() {
-        if !stripped.contains(n) {
-            missing.push(n);
-        }
-    }
-    assert!(
-        missing.is_empty(),
-        "A13: agent_renderer.gd must keep all 5 invariant literals; missing={missing:?}"
-    );
-    println!("[P14-ε A13] agent_renderer.gd 5-literal regression guard intact ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+    assert!(src.contains("ICON_OFFSET_PX"));
+    assert!(!src.contains("STATE_TINTS"));
+
 }
 
 // ─── A14: world_renderer.gd Phase 14-β invariants intact ─────────────────
 #[test]
 fn harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -573,7 +569,7 @@ fn harness_p14_epsilon_a15_regression_guard_hud_topbar_phase_13_delta_intact() {
 #[test]
 fn harness_p14_epsilon_a16_regression_guard_hud_status_panel_phase_14_delta_intact() {
     // Type D — three canonical literals all present.
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     let needles = ["get_time_snapshot", "get_resource_snapshot", "get_tallies"];
     let mut missing: Vec<&str> = Vec::new();
     for n in needles.iter() {

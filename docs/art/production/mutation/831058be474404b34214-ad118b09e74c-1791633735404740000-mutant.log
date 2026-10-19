@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running tests/harness_b1_zoom_default_raise.rs (target/debug/deps/harness_b1_zoom_default_raise-33ce42d68d33306d)
+
+running 1 test
+test harness_b1_a2_zoom_min_preserved ... 
+thread 'harness_b1_a2_zoom_min_preserved' (49043960) panicked at crates/sim-test/tests/harness_b1_zoom_default_raise.rs:217:5:
+assertion `left == right` failed: a2.2: ZOOM_MIN must equal Vector2(1.0,1.0) (Phase 12-α invariant); got `__MUTATED__`
+  left: "__MUTATED__"
+ right: "Vector2(1.0,1.0)"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_b1_a2_zoom_min_preserved
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_b1_zoom_default_raise`

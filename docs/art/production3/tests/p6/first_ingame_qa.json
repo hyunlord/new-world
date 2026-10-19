@@ -1,0 +1,97 @@
+[
+  {
+    "code": "CAPTURE_SET",
+    "status": "PASS",
+    "detail": "94/94 entries; missing=[]; extra=[]"
+  },
+  {
+    "code": "A1",
+    "status": "PASS",
+    "detail": "{\"thresholds\": {\"luma_std_min\": 0.04, \"colors_min\": 64}, \"old_all_frames\": {\"count\": 101, \"status\": \"FAIL\", \"failures\": [[\"a_calib_z4\", 0.0645, 61], [\"a_calib_z6\", 0.0967, 61], [\"a_lineup_z2\", 0.0397, 82]]}, \"gameplay_only\": {\"count\": 97, \"failures\": []}, \"excluded\": [\"a_calib_z4\", \"a_calib_z6\", \"a_lineup_z4\", \"a_lineup_z2\"]}"
+  },
+  {
+    "code": "LONG_CAPTURE_SET",
+    "status": "PASS",
+    "detail": "7/7 captures (six requested, d32 supplementary); missing=[]; extra=[]"
+  },
+  {
+    "code": "A2",
+    "status": "PASS",
+    "detail": "raw checker zero mixed pixels: [(4.0, True), (6.0, True)]"
+  },
+  {
+    "code": "A3",
+    "status": "PASS",
+    "detail": "1705 drawn rects; wrong=[]; adult S-idle frames=4, aspect failures=[]; absent S-idle cannot pass"
+  },
+  {
+    "code": "A4",
+    "status": "PASS",
+    "detail": "[(4.0, 'north', 5232, 1.0), (4.0, 'south', 4672, 1.0), (6.0, 'north', 11772, 1.0), (6.0, 'south', 10512, 1.0)]"
+  },
+  {
+    "code": "RAMP",
+    "status": "PASS",
+    "detail": "actual framebuffer agrees with region-indexed ramp texels: [(4.0, 10, 1.0), (4.0, 11, 1.0), (4.0, 12, 1.0), (4.0, 13, 1.0), (4.0, 14, 1.0), (4.0, 15, 1.0), (4.0, 16, 1.0), (4.0, 17, 1.0), (4.0, 18, 1.0), (4.0, 19, 1.0), (4.0, 20, 1.0), (4.0, 21, 1.0), (6.0, 10, 1.0), (6.0, 11, 1.0), (6.0, 12, 1.0), (6.0, 13, 1.0), (6.0, 14, 1.0), (6.0, 15, 1.0), (6.0, 16, 1.0), (6.0, 17, 1.0), (6.0, 18, 1.0), (6.0, 19, 1.0), (6.0, 20, 1.0), (6.0, 21, 1.0)]"
+  },
+  {
+    "code": "A5",
+    "status": "FAIL",
+    "detail": "{\"a_d2_1200_F2\": {\"code\": \"A5\", \"status\": \"FAIL\", \"detail\": \"median=0.0953; min=0.0029; per actor=[(8, 0.24774242214532877), (21, 0.036607909895817636), (20, 0.026238360422215584), (9, 0.046958027770425376), (1, 0.1970912237456387), (2, 0.03199489595294497), (4, 0.09709706124425083), (7, 0.01536957234254932), (11, 0.0029404793112262073), (14, 0.12113701018795031), (16, 0.1484354099940603), (19, 0.2722619607843138), (0, 0.04552958489274744), (23, 0.2282202827177384), (17, 0.007770893246187294), (5, 0.09346881211743965), (18, 0.17002238601464698), (15, 0.32607121601790817), (13, 0.04394084816876437), (10, 0.08140083967434936), (24, 0.34341230730535655), (25, 0.20357225436416773)]; unmeasurable=[6]; opaque front occluders excluded; faded canopy pixels measured directly from blended framebuffer\"}, \"l_d24_1200_F2\": {\"code\": \"A5\", \"status\": \"FAIL\", \"detail\": \"median=0.1093; min=0.0008; per actor=[(1, 0.2627293567251462), (16, 0.14718843430734374), (0, 0.12608627450980392), (29, 0.22445734405016332), (17, 0.021448230506354804), (2, 0.0957041755125721), (11, 0.06927349477425382), (4, 0.22665149752208577), (10, 0.1784910596579057), (22, 0.09264624901863175), (3, 0.21274206132045573), (5, 0.03387120019757783), (6, 0.03868216280451564), (8, 0.12588829335527477), (12, 0.0995603494219329), (13, 0.0190577199094496), (18, 0.044476259014509134), (27, 0.1932074261238168), (14, 0.07248457516339873), (26, 0.19826782805429866), (32, 0.18192699070473953), (9, 0.11428064073532393), (33, 0.10933695611577962), (25, 0.17749556764194183), (30, 0.1105912513368984), (24, 0.02458855263796439), (15, 0.04068482916428168), (31, 0.027203479975711847), (20, 0.08300056388067487), (40, 0.1964667144544565), (41, 0.01395776196011575), (34, 0.1805489872721018), (36, 0.07928667928724373), (35, 0.2853723621812362), (37, 0.15089291191103305), (38, 0.048559291854740644), (39, 0.07079935022240269), (23, 0.12850432902238915), (19, 0.0008337254901960784), (7, 0.003066561352588981), (44, 0.33314899430740047), (45, 0.020149598662318136), (43, 0.24179781121751032)]; unmeasurable=[28, 42]; opaque front occluders excluded; faded canopy pixels measured directly from blended framebuffer\"}}"
+  },
+  {
+    "code": "A6",
+    "status": "PASS",
+    "detail": "noon/night world=[0.3135035469107191, 0.1545769560639905]; 48px hearth means=[0.25690392618991303]; each hearth tested"
+  },
+  {
+    "code": "A7",
+    "status": "FAIL",
+    "detail": "moving samples=37; distinct frames/full moving second={0: 2, 1: 2, 2: 2}; changing fraction=1.000; duration=3.980s; interval range=0.073..0.117s"
+  },
+  {
+    "code": "A8",
+    "status": "PASS",
+    "detail": "96 scenes checked; failures=[]"
+  },
+  {
+    "code": "A9",
+    "status": "PASS",
+    "detail": "97 scenes checked; failures=[]"
+  },
+  {
+    "code": "A10",
+    "status": "PASS",
+    "detail": "n=300, median=6.726ms, p95=14.450ms; live simulation=True"
+  },
+  {
+    "code": "A11",
+    "status": "FAIL",
+    "detail": "{\"count\": 24, \"absent_activities\": [], \"observer_labels_sha256\": \"94fca0335bc21d31f3d7e159bcc69da205b94ae8e1ac5f069ac70ed76f246036\", \"calibration_lineup\": true, \"confusion\": {\"4x\": {\"child\": {\"drink\": 1, \"child\": 2}, \"talk\": {\"talk\": 2}, \"gather\": {\"gather\": 3}, \"build\": {\"walk\": 1, \"build\": 1, \"carry\": 1}, \"eat\": {\"eat\": 3}, \"sit\": {\"sit\": 2}, \"carry\": {\"drink\": 1, \"carry\": 2}, \"drink\": {\"drink\": 1, \"build\": 1}, \"walk\": {\"walk\": 2, \"carry\": 1}}, \"2x\": {\"child\": {\"walk\": 2, \"child\": 1}, \"talk\": {\"build\": 1, \"talk\": 1}, \"gather\": {\"gather\": 3}, \"build\": {\"walk\": 1, \"build\": 1, \"sit\": 1}, \"eat\": {\"eat\": 2, \"drink\": 1}, \"sit\": {\"build\": 1, \"sit\": 1}, \"carry\": {\"carry\": 3}, \"drink\": {\"drink\": 1, \"walk\": 1}, \"walk\": {\"talk\": 2, \"walk\": 1}}}, \"accuracy_4x\": 0.75, \"accuracy_2x\": 0.5833333333333334}"
+  },
+  {
+    "code": "A13",
+    "status": "PASS",
+    "detail": "foot-anchor opaque symmetric difference/union; best frames=[('adult_a', 'walk', 'V_a1_11', 0.2111368909512761), ('adult_a', 'carry', 'V_a2_05', 0.19114219114219114), ('adult_a', 'gather', 'V_a2_11', 0.22648752399232247), ('adult_a', 'build', 'V_a2_13', 0.2242562929061785), ('adult_a', 'eat', 'V_a3_06', 0.30948419301164726), ('adult_a', 'drink', 'V_a3_03', 0.3197781885397412), ('adult_a', 'sit', 'V_a3_08', 0.26476190476190475), ('adult_a', 'talk', 'V_a3_09', 0.29239766081871343), ('adult_b', 'walk', 'V_b1_11', 0.2420091324200913), ('adult_b', 'carry', 'V_b2_02', 0.22897196261682243), ('adult_b', 'gather', 'V_b2_11', 0.1833976833976834), ('adult_b', 'build', 'V_b2_15', 0.24869565217391304), ('adult_b', 'eat', 'P2V_b_E_eat_01', 0.2630208333333333), ('adult_b', 'drink', 'P2V_b_S_drink_01', 0.3095823095823096), ('adult_b', 'sit', 'V_b3_08', 0.35514018691588783), ('adult_b', 'talk', 'V_b3_11', 0.3286004056795132), ('child', 'walk', 'V_c1_11', 0.1773049645390071), ('child', 'carry', 'P2V_c_E_carry_01', 0.15658362989323843), ('child', 'gather', 'P2V_c_E_gather_02', 0.15658362989323843), ('child', 'build', 'P2V_c_E_build_02', 0.15658362989323843), ('child', 'eat', 'V_c2_14', 0.3205574912891986), ('child', 'drink', 'P2V_c_E_drink_01', 0.2857142857142857), ('child', 'sit', 'V_c2_02', 0.24662162162162163), ('child', 'talk', 'V_c2_12', 0.2422360248447205)]; missing=[]; forbidden berry-ramp counts=[]"
+  },
+  {
+    "code": "A14",
+    "status": "PASS",
+    "detail": "captured tick=1680; forest-tree tiles=325/1190 (0.27311); duplicate tree tiles=0; clearing centers=18; checked objects=453; violations=[]"
+  },
+  {
+    "code": "A12",
+    "status": "PASS",
+    "detail": "22 tuples/23 villagers; identical neighbors=0/58 (0.000)"
+  },
+  {
+    "code": "A15",
+    "status": "PASS",
+    "detail": "{\"tick\": 1680, \"checked_placements\": 670, \"clearing_centers\": 18, \"violations\": [], \"duplicate_tiles\": {\"rock\": 0, \"decal\": 0}, \"densities\": [{\"kind\": \"rock\", \"terrain_code\": 3, \"count\": 24, \"all_tiles\": 397, \"share\": 0.060453400503778336, \"pass\": true}, {\"kind\": \"rock\", \"terrain_code\": 2, \"count\": 72, \"all_tiles\": 159, \"share\": 0.4528301886792453, \"pass\": true}, {\"kind\": \"decal\", \"terrain_code\": 0, \"count\": 72, \"all_tiles\": 2222, \"share\": 0.032403240324032405, \"pass\": true}, {\"kind\": \"decal\", \"terrain_code\": 1, \"count\": 29, \"all_tiles\": 1190, \"share\": 0.024369747899159664, \"pass\": true}], \"native\": [{\"id\": \"N3_01\", \"size\": [7, 6], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_02\", \"size\": [8, 7], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_03\", \"size\": [8, 8], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_04\", \"size\": [7, 8], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_05\", \"size\": [8, 8], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_09\", \"size\": [7, 8], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_10\", \"size\": [8, 8], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_11\", \"size\": [8, 6], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_12\", \"size\": [8, 7], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_13\", \"size\": [7, 6], \"limit\": 8, \"pass\": true}, {\"id\": \"N3_14\", \"size\": [6, 6], \"limit\": 6, \"pass\": true}, {\"id\": \"N3_15\", \"size\": [6, 6], \"limit\": 6, \"pass\": true}, {\"id\": \"N3_16\", \"size\": [7, 5], \"limit\": 8, \"pass\": true}], \"installed_decals\": 13, \"scope\": \"all shown placements, including offscreen; density denominator is every terrain tile\"}"
+  },
+  {
+    "code": "A16",
+    "status": "FAIL",
+    "detail": "{\"hud\": [{\"day\": 10, \"season\": 1, \"season_day\": 3, \"labels\": [\"10일차 12:00 · 낮 · 여름 3일째\", \"인구 42\", \"정착지 1\", \"거처 6\", \"건설 중 0\", \"식량 223\", \"열매 4\", \"출생 18\", \"사망 0\", \"속도 1.0배\"], \"season_label_matches_snapshot\": true, \"runtime_clock_consistent\": true, \"death_total\": 0, \"death_label_matches\": true, \"tallies\": {\"births\": 18, \"deaths_combat\": 0, \"deaths_dehydration\": 0, \"deaths_old_age\": 0, \"deaths_starvation\": 0}}, {\"day\": 18, \"season\": 2, \"season_day\": 4, \"labels\": [\"18일차 12:00 · 낮 · 가을 4일째\", \"인구 42\", \"정착지 1\", \"거처 6\", \"건설 중 0\", \"식량 372\", \"열매 27\", \"출생 18\", \"사망 0\", \"속도 1.0배\"], \"season_label_matches_snapshot\": true, \"runtime_clock_consistent\": true, \"death_total\": 0, \"death_label_matches\": true, \"tallies\": {\"births\": 18, \"deaths_combat\": 0, \"deaths_dehydration\": 0, \"deaths_old_age\": 0, \"deaths_starvation\": 0}}, {\"day\": 24, \"season\": 3, \"season_day\": 3, \"labels\": [\"24일차 12:00 · 낮 · 겨울 3일째\", \"인구 42\", \"정착지 1\", \"거처 6\", \"건설 중 0\", \"식량 190\", \"열매 34\", \"출생 22\", \"사망 4\", \"속도 1.0배\"], \"season_label_matches_snapshot\": true, \"runtime_clock_consistent\": true, \"death_total\": 4, \"death_label_matches\": true, \"tallies\": {\"births\": 22, \"deaths_combat\": 0, \"deaths_dehydration\": 0, \"deaths_old_age\": 4, \"deaths_starvation\": 0}}, {\"day\": 40, \"season\": 1, \"season_day\": 5, \"labels\": [\"40일차 12:00 · 낮 · 여름 5일째\", \"인구 42\", \"정착지 1\", \"거처 6\", \"건설 중 0\", \"식량 245\", \"열매 2\", \"출생 32\", \"사망 14\", \"속도 1.0배\"], \"season_label_matches_snapshot\": true, \"runtime_clock_consistent\": true, \"death_total\": 14, \"death_label_matches\": true, \"tallies\": {\"births\": 32, \"deaths_combat\": 0, \"deaths_dehydration\": 0, \"deaths_old_age\": 14, \"deaths_starvation\": 0}}], \"brief_season_contract\": {\"pass\": false, \"expected\": {\"10\": 1, \"18\": 2, \"24\": 3, \"40\": 0}, \"actual\": {\"10\": 1, \"18\": 2, \"24\": 3, \"40\": 1}, \"note\": \"Brief requests day40 spring; seven-day runtime seasons put day40 in summer. Runtime correctness is measured separately; this discrepancy is not relabelled.\"}, \"terrain\": {\"pass\": true, \"camera_aligned\": true, \"camera_positions\": [[824.0, 324.0], [824.0, 324.0]], \"mask_pixels\": 336016, \"formula\": \"mean(B)/mean(R); winter ratio / summer ratio >= 1.03\", \"mask\": \"common central [400:1520,180:800] viewport; all visible object/cue/panel rectangles expanded 8px and label rectangles expanded 4px excluded; both RGB minima >8\", \"summer_blue_red\": 0.7643667396019499, \"winter_blue_red\": 0.8925390662548638, \"winter_over_summer\": 1.1676843326799655}, \"winter_ramps\": {\"pass\": true, \"formula\": \"region 2/3/4 framebuffer RGB agrees with placed(variants=True) within +/-1 on every channel; agreement >= .99 per measurable actor\", \"occlusion\": \"foreground object/cue rectangles and UI rectangles excluded, including translucent foreground\", \"actors\": [{\"id\": 1, \"pixels\": 36, \"agreement\": 1.0}, {\"id\": 16, \"pixels\": 2057, \"agreement\": 1.0}, {\"id\": 0, \"pixels\": 0, \"agreement\": null}, {\"id\": 29, \"pixels\": 336, \"agreement\": 1.0}, {\"id\": 17, \"pixels\": 3268, \"agreement\": 1.0}, {\"id\": 2, \"pixels\": 1240, \"agreement\": 1.0}, {\"id\": 11, \"pixels\": 21, \"agreement\": 1.0}, {\"id\": 4, \"pixels\": 0, \"agreement\": null}, {\"id\": 10, \"pixels\": 1540, \"agreement\": 1.0}, {\"id\": 22, \"pixels\": 1524, \"agreement\": 1.0}, {\"id\": 3, \"pixels\": 496, \"agreement\": 1.0}, {\"id\": 5, \"pixels\": 900, \"agreement\": 1.0}, {\"id\": 6, \"pixels\": 188, \"agreement\": 1.0}, {\"id\": 8, \"pixels\": 3171, \"agreement\": 1.0}, {\"id\": 28, \"pixels\": 0, \"agreement\": null}, {\"id\": 12, \"pixels\": 2515, \"agreement\": 1.0}, {\"id\": 13, \"pixels\": 3088, \"agreement\": 1.0}, {\"id\": 18, \"pixels\": 868, \"agreement\": 1.0}, {\"id\": 27, \"pixels\": 2368, \"agreement\": 1.0}, {\"id\": 14, \"pixels\": 1148, \"agreement\": 1.0}, {\"id\": 26, \"pixels\": 276, \"agreement\": 1.0}, {\"id\": 32, \"pixels\": 2459, \"agreement\": 1.0}, {\"id\": 9, \"pixels\": 1867, \"agreement\": 1.0}, {\"id\": 33, \"pixels\": 3296, \"agreement\": 1.0}, {\"id\": 25, \"pixels\": 3131, \"agreement\": 1.0}, {\"id\": 30, \"pixels\": 667, \"agreement\": 1.0}, {\"id\": 24, \"pixels\": 1748, \"agreement\": 1.0}, {\"id\": 15, \"pixels\": 2880, \"agreement\": 1.0}, {\"id\": 31, \"pixels\": 1200, \"agreement\": 1.0}, {\"id\": 20, \"pixels\": 3216, \"agreement\": 1.0}, {\"id\": 40, \"pixels\": 432, \"agreement\": 1.0}, {\"id\": 41, \"pixels\": 3088, \"agreement\": 1.0}, {\"id\": 34, \"pixels\": 2368, \"agreement\": 1.0}, {\"id\": 36, \"pixels\": 2184, \"agreement\": 1.0}, {\"id\": 35, \"pixels\": 272, \"agreement\": 1.0}, {\"id\": 37, \"pixels\": 1696, \"agreement\": 1.0}, {\"id\": 38, \"pixels\": 2880, \"agreement\": 1.0}, {\"id\": 39, \"pixels\": 3216, \"agreement\": 1.0}, {\"id\": 23, \"pixels\": 0, \"agreement\": null}, {\"id\": 19, \"pixels\": 0, \"agreement\": null}, {\"id\": 7, \"pixels\": 2660, \"agreement\": 1.0}, {\"id\": 44, \"pixels\": 0, \"agreement\": null}, {\"id\": 45, \"pixels\": 2096, \"agreement\": 1.0}, {\"id\": 42, \"pixels\": 0, \"agreement\": null}, {\"id\": 43, \"pixels\": 1596, \"agreement\": 1.0}], \"unmeasurable_ids\": [0, 4, 28, 23, 19, 44, 42]}, \"day40_hair\": {\"pass\": false, \"visible_elders\": 9, \"actors\": [{\"id\": 16, \"stage\": 2, \"hair\": 4}, {\"id\": 0, \"stage\": null, \"hair\": 4}, {\"id\": 29, \"stage\": 0, \"hair\": 0}, {\"id\": 17, \"stage\": 2, \"hair\": 4}, {\"id\": 2, \"stage\": 2, \"hair\": 4}, {\"id\": 11, \"stage\": null, \"hair\": 3}, {\"id\": 54, \"stage\": 1, \"hair\": 1}, {\"id\": 10, \"stage\": 2, \"hair\": 3}, {\"id\": 22, \"stage\": 0, \"hair\": 0}, {\"id\": 55, \"stage\": 1, \"hair\": 0}, {\"id\": 5, \"stage\": 2, \"hair\": 4}, {\"id\": 6, \"stage\": 2, \"hair\": 3}, {\"id\": 8, \"stage\": null, \"hair\": 0}, {\"id\": 28, \"stage\": 0, \"hair\": 1}, {\"id\": 12, \"stage\": null, \"hair\": 4}, {\"id\": 13, \"stage\": 2, \"hair\": 3}, {\"id\": 21, \"stage\": 2, \"hair\": 4}, {\"id\": 49, \"stage\": 0, \"hair\": 0}, {\"id\": 32, \"stage\": 0, \"hair\": 0}, {\"id\": 53, \"stage\": 0, \"hair\": 1}, {\"id\": 33, \"stage\": 0, \"hair\": 0}, {\"id\": 25, \"stage\": 0, \"hair\": 0}, {\"id\": 24, \"stage\": 0, \"hair\": 2}, {\"id\": 15, \"stage\": null, \"hair\": 4}, {\"id\": 31, \"stage\": 0, \"hair\": 1}, {\"id\": 20, \"stage\": 2, \"hair\": 4}, {\"id\": 34, \"stage\": 0, \"hair\": 0}, {\"id\": 36, \"stage\": 0, \"hair\": 1}, {\"id\": 35, \"stage\": 0, \"hair\": 0}, {\"id\": 46, \"stage\": 0, \"hair\": 1}, {\"id\": 42, \"stage\": 0, \"hair\": 2}, {\"id\": 50, \"stage\": 0, \"hair\": 0}], \"missing_stage_ids\": [0, 11, 8, 12, 15]}}"
+  }
+]

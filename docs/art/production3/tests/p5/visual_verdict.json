@@ -1,0 +1,17 @@
+{
+  "status": "captured_and_inspected",
+  "frames": [
+    "a_d2_1200_F2",
+    "l_d10_1200_F2",
+    "l_d18_1200_F2",
+    "l_d24_1200_F2",
+    "l_d32_1200_F2",
+    "l_d40_1200_F2"
+  ],
+  "notes": [
+    "camp clear",
+    "season labels match runtime",
+    "d40 is summer; d32 is spring",
+    "remaining activity-art limitations preserved"
+  ]
+}

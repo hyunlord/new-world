@@ -1,0 +1,67 @@
+{
+  "files": [
+    "tools/art_pipeline/artboards_p8.py",
+    "tools/art_pipeline/blind_identity_p8.py",
+    "tools/art_pipeline/crosscheck_days_p8.py",
+    "tools/art_pipeline/event_oracle_p8.py",
+    "tools/art_pipeline/feed_adapter_p8.py",
+    "tools/art_pipeline/harvest_integrity_p8.py",
+    "tools/art_pipeline/ingame_qa_founding_p8.py",
+    "tools/art_pipeline/ingame_qa_intervention_p8.py",
+    "tools/art_pipeline/ingame_qa_new_p8.py",
+    "tools/art_pipeline/ingame_qa_news_p8.py",
+    "tools/art_pipeline/ingame_qa_observed_p8.py",
+    "tools/art_pipeline/ingame_qa_society_p8.py",
+    "tools/art_pipeline/measure_days_p8.py",
+    "tools/art_pipeline/measure_p8.py",
+    "tools/art_pipeline/merge_capture_segments_p8.py",
+    "tools/art_pipeline/normalize_evidence_p8.py",
+    "tools/art_pipeline/observation_rules_p8.py",
+    "tools/art_pipeline/pack_evidence_p8.py",
+    "tools/art_pipeline/prepare_blind_p8.py",
+    "tools/art_pipeline/probe_models_p8.py",
+    "tools/art_pipeline/test_measurement_p8.py",
+    "tools/art_pipeline/test_normalize_evidence_p8.py",
+    "tools/art_pipeline/test_pack_evidence_p8.py",
+    "tools/art_pipeline/test_prepare_blind_p8.py",
+    "tools/art_pipeline/upgrade_published_png_p8.py",
+    "tools/art_pipeline/way_adapter_p8.py"
+  ],
+  "count": 26,
+  "config": {
+    "include": [
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/artboards_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/blind_identity_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/crosscheck_days_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/event_oracle_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/feed_adapter_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/harvest_integrity_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/ingame_qa_founding_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/ingame_qa_intervention_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/ingame_qa_new_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/ingame_qa_news_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/ingame_qa_observed_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/ingame_qa_society_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/measure_days_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/measure_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/merge_capture_segments_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/normalize_evidence_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/observation_rules_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/pack_evidence_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/prepare_blind_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/probe_models_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/test_measurement_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/test_normalize_evidence_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/test_pack_evidence_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/test_prepare_blind_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/upgrade_published_png_p8.py",
+      "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/way_adapter_p8.py"
+    ],
+    "executionEnvironments": [
+      {
+        "root": "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline"
+      }
+    ],
+    "pythonVersion": "3.14"
+  }
+}

@@ -1,0 +1,522 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_a4_01",
+      "candidate_id": "V_a4_01@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The 2x shoulder load reads as sticks, but the hair mask also selects several separated wood texels on the left; the white preview whitens the load beyond the two-texel allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_02",
+      "candidate_id": "V_a4_02@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The carried sticks are legible, but the mask leaves dark hair patches and includes multiple texels at the right-hand load; the white preview does not isolate whole hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_03",
+      "candidate_id": "V_a4_03@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The 2x carry pose is clear, but blue coverage reaches the left sticks and several right load texels, producing white marks outside the hair beyond tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_04",
+      "candidate_id": "V_a4_04@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The sticks and south-facing carry pose read clearly. Several brown forehead/fringe hair texels remain inside the white-hair area, and the dark lower facial hair remains uncovered.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_05",
+      "candidate_id": "V_a4_05@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east-facing load is legible, but a multi-texel brown fringe and lower long-hair patch remain outside the mask; the white preview retains substantial brown hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_06",
+      "candidate_id": "V_a4_06@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The sticks read at 2x, but the white preview retains a broad brown fringe inside the scalp region and the mask extends onto exposed face/arm areas.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_07",
+      "candidate_id": "V_a4_07@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The 2x load reads as sticks, but multiple separated left-side stick texels are included in the hair mask and become white in the preview, exceeding the non-hair allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_08",
+      "candidate_id": "V_a4_08@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east-facing carry is recognizable, but the mask covers several left bundle texels, including an isolated outer tip; the white preview whitens wood beyond the allowed two texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_09",
+      "candidate_id": "V_a4_09@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear-view sticks protrude on both sides at 2x. The hair mask also selects multiple left and right bundle/arm texels, producing white non-hair marks beyond tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_10",
+      "candidate_id": "V_a4_10@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear-view sticks protrude on both sides at 2x, but the mask includes the left shoulder/load texel and two adjacent right bundle texels, exceeding the two non-hair texel allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_11",
+      "candidate_id": "V_a4_11@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The rear carry load is visible on both sides, but one left bundle texel and multiple right bundle texels are recoloured as hair; the white preview exceeds the non-hair tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_12",
+      "candidate_id": "V_a4_12@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The rear bundle reads on both sides, but several separate right stick/hand texels and a left shoulder texel are covered by the mask and turn white.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_13",
+      "candidate_id": "V_a4_13@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The crouched pickup reaches a visible stick at 2x, but the white preview leaves the broad dark beard/lower hair region uncovered, exceeding the hair-edge allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_14",
+      "candidate_id": "V_a4_14@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "The standing south-facing gather frame does not show a clearly identifiable held stick at 2x; the raised dark shape beside the torso reads as an arm/hand mass rather than gathered wood.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_15",
+      "candidate_id": "V_a4_15@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The bent east-facing pickup reaches a visible ground stick, but several brown fringe texels remain within the white-hair scalp region; the preview does not recolour the whole hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_16",
+      "candidate_id": "V_a4_16@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The raised stick is legible, but multiple texels of the stick/hand are selected by the mask and turn white, while brown fringe hair remains uncovered.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_01",
+      "candidate_id": "V_b4_01@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Carry load reads as sticks at 2x, but the blue hair mask covers multiple bundle pixels; the white preview recolours the wood.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_02",
+      "candidate_id": "V_b4_02@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Sticks remain legible at 2x, but multiple pixels of the left bundle are included in the hair mask and turn white.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_03",
+      "candidate_id": "V_b4_03@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Visible stick bundle passes action legibility; blue mask and white preview visibly recolour several wood pixels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_04",
+      "candidate_id": "V_b4_04@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Carrying pose and sticks read at 2x, but the hair mask spills across the left bundle and right load edge beyond the two-pixel tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_05",
+      "candidate_id": "V_b4_05@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Profile carrying action is legible, but several horizontal wood pixels are blue-masked and white in the recolour preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_06",
+      "candidate_id": "V_b4_06@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Stick load is visible at 2x; the mask includes a broad horizontal section of the bundle, recolouring non-hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_07",
+      "candidate_id": "V_b4_07@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Walking carry and stick load are legible, but a horizontal band of bundle pixels is included in the hair mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_08",
+      "candidate_id": "V_b4_08@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Carry load reads as wood, but the blue mask covers multiple bundle pixels and the white preview changes their colour.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_09",
+      "candidate_id": "V_b4_09@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear carry shows protruding sticks; mask visibly includes several pixels of both load ends, making wood white.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_10",
+      "candidate_id": "V_b4_10@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear stick load is legible, but bundle pixels on both sides are included in the hair mask; dark interior rear hair also remains.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_11",
+      "candidate_id": "V_b4_11@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear carry has a visible stick bundle, but a multi-pixel band of the right bundle is blue-masked and turns white.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_12",
+      "candidate_id": "V_b4_12@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear carry and sticks are visible, but the mask includes wood on both sides and leaves a dark interior patch in rear hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_13",
+      "candidate_id": "V_b4_13@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Ground pickup and sticks are clear at 2x, but visible scalp and side hair have no meaningful mask coverage; white preview retains brown hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_14",
+      "candidate_id": "V_b4_14@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Held stick reads at 2x, but the mask covers only upper hair and leaves an extended dark-brown side-hair region in the white preview, beyond two edge texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_15",
+      "candidate_id": "V_b4_15@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Bent pickup pose clearly reaches for a ground stick, but visible scalp and long rear hair remain entirely brown in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_16",
+      "candidate_id": "V_b4_16@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Held stick is visible at 2x, but the white preview retains brown interior side/scalp hair below the recoloured crown, beyond the edge tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_01",
+      "candidate_id": "V_c3_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry shows a horizontal bundle with separate brown sticks and pale ends at 2x; child identity and cream clothing match.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_02",
+      "candidate_id": "V_c3_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front stepping pose visibly supports a bundle across the shoulders; stick shafts and ends remain readable at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_03",
+      "candidate_id": "V_c3_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry retains a compact but recognizable projecting stick bundle at 2x, with matching hair, tan skin and cream tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_04",
+      "candidate_id": "V_c3_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry has visible parallel wood pieces beside the head at 2x; pose and child proportions are coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_05",
+      "candidate_id": "V_c3_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing carry shows the bundle projecting behind the shoulder, with wood ends and short parallel shafts readable at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_06",
+      "candidate_id": "V_c3_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing child supports a horizontal wood bundle with visible brown shafts and pale ends at 2x; identity remains consistent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_07",
+      "candidate_id": "V_c3_07@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "At 2x the shoulder load reads as rounded brown lobes beside the head; separate sticks or a bundled-stick silhouette are not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_08",
+      "candidate_id": "V_c3_08@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "At 2x the carried load merges into compact brown blocks around the head, without a readable stick bundle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_09",
+      "candidate_id": "V_c3_09@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "Rear view is clear, but at 2x the load appears as two brown side lumps rather than recognizable bundled sticks.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_10",
+      "candidate_id": "V_c3_10@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "Rear carry forms a broad dark shoulder bar with blocky side ends at 2x; the load does not clearly read as sticks.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_11",
+      "candidate_id": "V_c3_11@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "Rear-facing child is coherent, but the small brown side blocks at 2x do not resolve into a stick bundle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_12",
+      "candidate_id": "V_c3_12@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Rear carry clearly exposes parallel horizontal sticks beyond both shoulders at 2x; rear view and child identity are consistent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_13",
+      "candidate_id": "V_c3_13@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Crouched front gather pose reaches to a visible short horizontal stick at ground level; pickup action remains readable at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_14",
+      "candidate_id": "V_c3_14@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front gather recovery holds a visible brown stick beside the shoulder at 2x; matching tan skin, brown hair and cream clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_15",
+      "candidate_id": "V_c3_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing crouch bends and reaches down to an elongated ground stick; pickup action and anatomy read clearly at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_16",
+      "candidate_id": "V_c3_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing upright gather frame visibly holds an angled stick in the raised hand at 2x; identity and colour families match.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_01",
+      "candidate_id": "W1_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Dense intersecting dead branches read as the fullest stage; the cluster remains distinct at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_02",
+      "candidate_id": "W1_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Full branched deadwood cluster has a distinct second silhouette and reads at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_03",
+      "candidate_id": "W1_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Reduced branch count and lower spread read as the next depletion stage at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_04",
+      "candidate_id": "W1_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Reduced cluster retains visible cut limbs and reads as less wood than stage 3.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_05",
+      "candidate_id": "W1_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Sparse crossed limbs read as a nearly depleted deadwood source at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_06",
+      "candidate_id": "W1_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Few remaining limbs form a sparse variant clearly below stage 2 in abundance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_07",
+      "candidate_id": "W1_07@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Low bare patch with a few residual twigs reads as depleted at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_08",
+      "candidate_id": "W1_08@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Flat scattered twig patch reads as depleted and is visibly sparser than stage 1.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_09",
+      "candidate_id": "W1_09@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Compact few-log pile reads as the small stack, with visible cut ends at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_10",
+      "candidate_id": "W1_10@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "A saturated blue horizontal patch protrudes beneath the lower-right log in the medium stack.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_11",
+      "candidate_id": "W1_11@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Broad multi-log pile reads as the large stack, with distinguishable log ends at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_12",
+      "candidate_id": "W1_12@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "Saturated blue patches occupy the right edges of the upper and lower tied-stick bundle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_13",
+      "candidate_id": "W1_13@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Few angled logs read as a small alternative stack at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_14",
+      "candidate_id": "W1_14@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "A pale cyan patch borders the lower-left log end, appearing as a foreign texel block.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_15",
+      "candidate_id": "W1_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Numerous log ends and a taller layered silhouette read as the large alternative stack at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "W1_16",
+      "candidate_id": "W1_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Upright sticks crossed by a horizontal binding read as a tied wood bundle at 2x.",
+      "unfitted_acceptable": null
+    }
+  ],
+  "review_sources_sha256": {
+    "docs/art/production4/wood/reviews/V_a4_attempt_1.json": "104cd8255c881386c771ef3be659e1fa8c67e9e023a6618c3358f69adb91cfab",
+    "docs/art/production4/wood/reviews/V_b4_attempt_1.json": "5eaf9f81851f0392e4d293a976adda236e58262a2df316b3610b019041b4c649",
+    "docs/art/production4/wood/reviews/V_c3_attempt_1.json": "8a5a95fac901c2f2479c9df527764702bda09af9554ed91174a1d473c62f8158",
+    "docs/art/production4/wood/reviews/W1_attempt_1.json": "563f4e852a454204cdb5d36edb7d00d70ed18bf34e1e5c4771d6a38e8a4d3839"
+  }
+}

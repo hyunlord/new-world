@@ -1,0 +1,82 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+rock density code=3 24/397 = 0.06045340050378
+rock density code=2 72/159 = 0.45283018867925
+decal density code=0 72/2222 = 0.03240324032403
+decal density code=1 29/1190 = 0.02436974789916
+decal density code=0 72/2222 = 0.03240324032403
+decal density code=1 29/1190 = 0.02436974789916
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/01_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/02_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/03_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/04_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/05_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/09_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/10_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/11_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/12_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/13_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/14_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/15_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/art/production/N3/16_native.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+     at: load_from_file (core/io/image.cpp:2766)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://scripts/test/art/test_nature_density.gd:74)
+         [1] _decals (res://scripts/test/art/test_nature_density.gd:130)
+forest density 302/1190 = 0.25378151260504
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+decal density code=0 72/2222 = 0.03240324032403
+decal density code=1 29/1190 = 0.02436974789916
+test_nature_density: PASS failures=0

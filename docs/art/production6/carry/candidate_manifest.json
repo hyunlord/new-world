@@ -1,0 +1,422 @@
+[
+  {
+    "sprite_id": "V_a2_01",
+    "group": "adult_a_carry_S",
+    "anchor": [
+      12,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_02",
+    "group": "adult_a_carry_S",
+    "anchor": [
+      13,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_03",
+    "group": "adult_a_carry_S",
+    "anchor": [
+      13,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_04",
+    "group": "adult_a_carry_S",
+    "anchor": [
+      13,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_05",
+    "group": "adult_a_carry_E",
+    "anchor": [
+      14,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_06",
+    "group": "adult_a_carry_E",
+    "anchor": [
+      13,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_07",
+    "group": "adult_a_carry_E",
+    "anchor": [
+      14,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a2_08",
+    "group": "adult_a_carry_E",
+    "anchor": [
+      13,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a3_01",
+    "group": "adult_a_carry_N",
+    "anchor": [
+      15,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a3_02",
+    "group": "adult_a_carry_N",
+    "anchor": [
+      15,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a4_09",
+    "group": "adult_a_carry_wood_N",
+    "anchor": [
+      22,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a4_10",
+    "group": "adult_a_carry_wood_N",
+    "anchor": [
+      22,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a4_11",
+    "group": "adult_a_carry_wood_N",
+    "anchor": [
+      22,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_a4_12",
+    "group": "adult_a_carry_wood_N",
+    "anchor": [
+      22,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_01",
+    "group": "adult_b_carry_S",
+    "anchor": [
+      10,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_02",
+    "group": "adult_b_carry_S",
+    "anchor": [
+      10,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_03",
+    "group": "adult_b_carry_S",
+    "anchor": [
+      10,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_04",
+    "group": "adult_b_carry_S",
+    "anchor": [
+      10,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_05",
+    "group": "adult_b_carry_E",
+    "anchor": [
+      15,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_06",
+    "group": "adult_b_carry_E",
+    "anchor": [
+      12,
+      15
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_07",
+    "group": "adult_b_carry_E",
+    "anchor": [
+      15,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b2_08",
+    "group": "adult_b_carry_E",
+    "anchor": [
+      12,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b3_01",
+    "group": "adult_b_carry_N",
+    "anchor": [
+      14,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b3_02",
+    "group": "adult_b_carry_N",
+    "anchor": [
+      14,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b4_09",
+    "group": "adult_b_carry_wood_N",
+    "anchor": [
+      23,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b4_10",
+    "group": "adult_b_carry_wood_N",
+    "anchor": [
+      20,
+      15
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b4_11",
+    "group": "adult_b_carry_wood_N",
+    "anchor": [
+      23,
+      16
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  },
+  {
+    "sprite_id": "V_b4_12",
+    "group": "adult_b_carry_wood_N",
+    "anchor": [
+      20,
+      15
+    ],
+    "size": [
+      9,
+      7
+    ],
+    "source": "own_frame_load_area_crop",
+    "limitation": "Original chest/shoulder load retained; own-load-area crop can include adjacent body colors",
+    "enabled": false
+  }
+]

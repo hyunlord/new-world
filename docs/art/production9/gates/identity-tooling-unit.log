@@ -1,0 +1,15 @@
+$ python3 -m unittest discover -s tools/art_pipeline -p test_pixel_identity_p9.py -v
+test_alpha_only_change_counts (test_pixel_identity_p9.PixelIdentityTests.test_alpha_only_change_counts) ... ok
+test_both_bounds (test_pixel_identity_p9.PixelIdentityTests.test_both_bounds) ... ok
+test_cli_requires_all_six_and_writes_complete_table (test_pixel_identity_p9.PixelIdentityTests.test_cli_requires_all_six_and_writes_complete_table) ... ok
+test_compare_writes_visible_alpha_diff (test_pixel_identity_p9.PixelIdentityTests.test_compare_writes_visible_alpha_diff) ... ok
+test_rgb_change_counts_with_unchanged_alpha (test_pixel_identity_p9.PixelIdentityTests.test_rgb_change_counts_with_unchanged_alpha) ... ok
+test_schedule_mismatch_rejected (test_pixel_identity_p9.PixelIdentityTests.test_schedule_mismatch_rejected) ... ok
+test_size_mismatch_is_not_a_pixel_pass (test_pixel_identity_p9.PixelIdentityTests.test_size_mismatch_is_not_a_pixel_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.034s
+
+OK
+
+exit_code=0

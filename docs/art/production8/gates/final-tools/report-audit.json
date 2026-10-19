@@ -1,0 +1,26 @@
+{
+  "main_status_rows": 33,
+  "pass": 22,
+  "fail": 11,
+  "status_mismatches": [],
+  "missing_major_filenames": [
+    "founding_group.gd",
+    "selection_manager.gd",
+    "intervention_effects.gd"
+  ],
+  "missing_markdown_links": [],
+  "checked_quantitative_claims": [
+    "A1 120 natural",
+    "A3 1438",
+    "A5 .3175/.3007",
+    "A6 .3122/.1564",
+    "A7 240/3.977s",
+    "A10 11.387/13.352ms",
+    "A15 534/13",
+    "A17 16 unique carrier IDs/2 bodies",
+    "A30 18.9845/17.0990 and300each",
+    "A31 17/1249/1",
+    "A33 ratios0/.454819277 andticks43080/84840=>days31/60"
+  ],
+  "quantitative_mismatches": []
+}

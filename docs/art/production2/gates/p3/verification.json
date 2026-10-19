@@ -1,0 +1,12 @@
+{
+  "python_tests": 126,
+  "python_pass": true,
+  "native_size_godot_exit": 0,
+  "manifest_audit": "docs/art/production2/manifest_audit.json",
+  "manifest_pngs": 612,
+  "manifest_pass": true,
+  "old_production_documents_changed": false,
+  "full_gate": "deferred to mandatory Part8; Part3 focused checks only",
+  "static_review_rounds": 2,
+  "static_review_findings_remaining": 0
+}

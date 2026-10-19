@@ -1,0 +1,917 @@
+{
+  "images": [
+    {
+      "candidate_id": "P2_fill_02_13@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_02_13_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_02/attempt_1.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_02_13_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_02_14@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_02_14_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_02/attempt_1.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_02_14_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_02_15@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_02_15_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_02/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_02_15_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_02_16@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_02_16_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_02/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_02_16_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_04_02@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_04_02_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_04/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_04_02_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_01@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_01_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_01_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_02@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_02_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_02_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_03@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_03_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_03_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_04@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_04_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_04_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_07@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_07_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_07_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_08@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_08_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_08_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_09@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_09_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_09_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P2_fill_05_11@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P2_fill_05_11_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/fills/P2_fill_05_11_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P3_fill_02_03@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P3_fill_02_03_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production3-raw/P3_fill_02/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/raw_cells/P3_fill_02_03_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P3_fill_02_04@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P3_fill_02_04_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production3-raw/P3_fill_02/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/raw_cells/P3_fill_02_04_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P3_fill_02_11@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P3_fill_02_11_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production3-raw/P3_fill_02/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/raw_cells/P3_fill_02_11_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P3_fill_02_12@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P3_fill_02_12_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production3-raw/P3_fill_02/attempt_1.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/raw_cells/P3_fill_02_12_1/unfitted.png"
+    },
+    {
+      "candidate_id": "P3_fill_02_15@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/P3_fill_02_15_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production3-raw/P3_fill_02/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/raw_cells/P3_fill_02_15_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a2_10@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a2_10_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_a2/attempt_3.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_a2_10_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b1_09@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b1_09_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b1/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b1_09_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b1_09@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b1_09_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b1/attempt_2.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b1_09_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b1_09@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b1_09_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b1/attempt_3.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b1_09_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b1_10@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b1_10_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b1/attempt_3.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b1_10_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b1_11@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b1_11_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b1/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b1_11_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b1_12@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b1_12_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b1/attempt_3.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b1_12_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_01@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_01_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_01_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_01@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_01_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_01_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_02@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_02_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_02_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_03@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_03_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_03_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_03@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_03_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_03_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_04@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_04_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_04_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_05@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_05_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_05_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_05@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_05_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_05_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_06@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_06_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_06_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_06@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_06_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_06_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_07@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_07_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_07_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_07@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_07_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_07_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_09@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_09_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_09_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_09@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_09_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_09_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_10@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_10_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_10_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_10@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_10_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_10_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_13@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_13_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_13_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_14@2:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_14_2_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_14_2/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b2_14@3:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b2_14_3_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b2_14_3/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b3_16@1:p3:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b3_16_1_p3_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production-raw/V_b3/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/V_b3_16_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_01@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_01_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_01_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_02@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_02_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_02_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_03@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_03_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_03_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_04@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_04_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_04_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_05@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_05_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_05_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_06@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_06_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_06_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_07@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_07_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_07_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_08@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_08_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_08_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_09@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_09_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_09_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_10@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_10_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_10_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_11@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_11_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_11_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_12@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_12_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_12_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_13@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_13_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_13_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_15@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_15_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_15_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_a4_16@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_a4_16_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_a4/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_a4_attempt_1/cells/V_a4_16_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_01@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_01_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_01_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_02@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_02_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_02_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_03@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_03_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_03_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_04@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_04_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_04_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_05@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_05_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_05_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_06@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_06_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_06_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_07@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_07_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_07_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_08@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_08_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_08_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_09@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_09_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_09_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_10@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_10_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_10_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_11@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_11_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_11_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_12@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_12_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_12_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_13@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_13_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_13_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_14@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_14_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_14_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_15@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_15_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_15_1/unfitted.png"
+    },
+    {
+      "candidate_id": "V_b4_16@1:mask5",
+      "path": "docs/art/production5/masks/raw_context/V_b4_16_1_mask5.png",
+      "raw_source": "/Users/rexxa/work/art-production4-raw/V_b4/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "unfitted_source": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/wood/processed/V_b4_attempt_1/cells/V_b4_16_1/unfitted.png"
+    }
+  ],
+  "note": "Supplement only. Original round1 cards and verdicts retained unchanged; recovery ancestry supplied these raw crops."
+}

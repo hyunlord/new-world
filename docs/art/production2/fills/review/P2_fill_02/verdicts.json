@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "round": 1,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "candidates_sha256": "6b441e013e2df0c33c51ed87998de812e3f42cd49b8df213b912189bf504cf0a",
+  "preview_sha256": "e7bf381af7cc89946edf51b6d24d71dc13b2612de614c3767b72d7d6e28a6f2a",
+  "source_parts": {
+    "docs/art/production2/fills/review/P2_fill_02/verdicts_reviewer.json": "d67a80cd6d307a9e0ed11159b5d1942a9111a0efca9d23f30383688ab7f309b9"
+  },
+  "references": {
+    "adult_a": "V_a1_01@1",
+    "adult_b": "V_b1_01@2",
+    "child": "V_c1_01@1"
+  },
+  "previews": {
+    "P2_fill_02_01": "P2_fill_02_01@1",
+    "P2_fill_02_02": "P2_fill_02_02@1",
+    "P2_fill_02_03": "P2_fill_02_03@1",
+    "P2_fill_02_04": "P2_fill_02_04@1",
+    "P2_fill_02_05": "P2_fill_02_05@1",
+    "P2_fill_02_06": "P2_fill_02_06@1:derived",
+    "P2_fill_02_07": "P2_fill_02_07@1",
+    "P2_fill_02_08": "P2_fill_02_08@1",
+    "P2_fill_02_09": "P2_fill_02_09@1",
+    "P2_fill_02_10": "P2_fill_02_10@1",
+    "P2_fill_02_11": "P2_fill_02_11@1",
+    "P2_fill_02_12": "P2_fill_02_12@1",
+    "P2_fill_02_13": "P2_fill_02_13@1",
+    "P2_fill_02_14": "P2_fill_02_14@1",
+    "P2_fill_02_15": "P2_fill_02_15@1",
+    "P2_fill_02_16": "P2_fill_02_16@1"
+  },
+  "candidate_fingerprints": {
+    "P2_fill_02_01": "513c4199ba1325ab2f43eabc5e6d41914e44123ba50be992defdac75e27ad7fb",
+    "P2_fill_02_02": "dae96187abd877e88cb76be5292964110a1c4b6e2737426d515b5fee186e9982",
+    "P2_fill_02_03": "de97e69cf12e4a244a6e9b1e5c51e6657f89a23dea9b7c24bc4e48e784631741",
+    "P2_fill_02_04": "9d31d90600c46b0ac7f8600c0b4b13af0054141b14fc6f5de235130f9b136455",
+    "P2_fill_02_05": "29f846c75255c643c997b3480df9482c96368d9abd746c430d80cdb3f7ccc8ad",
+    "P2_fill_02_06": "f74768ae2ea1539b9627ec2f6c54be8bfcad80d20005043bba2d88abdeab7b00",
+    "P2_fill_02_07": "fc2c5618cab7f4568356a1912946f452732fe364c2d26bd043f5f2428101b625",
+    "P2_fill_02_08": "ee03435ebce9b94b8c6a056701e873b30c345b746bf42f28962a2fe3d8897716",
+    "P2_fill_02_09": "7616013b157fba3284e7b8d8369d89bd8e2154efbde090710c271f94ffcfc54c",
+    "P2_fill_02_10": "ea2127f082b24e9978038dea029cff8156a75e94d648e602c6cef41d59568bd8",
+    "P2_fill_02_11": "1e87f5390cd406ee39d4cc3c975735cdf0918ca75caae1f9cbd2bb2f7219e119",
+    "P2_fill_02_12": "72e7adf91db48b5446478e6341d5a31f215a1d59a711b82d1a82eb12e71fdb77",
+    "P2_fill_02_13": "b4ba30f0dea32ddca6ba6fe9905e92ce7dfdfe6f6ad42cff40fcdffba546392f",
+    "P2_fill_02_14": "89f86e37625c6705d9d43df5d7e960fbc0b675c85e8042d91674f2ffccf3322c",
+    "P2_fill_02_15": "2b1079fd529a4bb521489f592d9546062da4e0d47e506405521718df299c7e9e",
+    "P2_fill_02_16": "72ffb42965877d98be572decec2fb2a4359308d5c9d2dda7f001d9a49524b201"
+  },
+  "rendered_fingerprints": {
+    "P2_fill_02_01": "29de11412879408f041d74408ae748e32c2bf1312238ac382a4c14e2f90e15f5",
+    "P2_fill_02_02": "a8cdecf282a8db02b6961c2a8713fd5f709288c9e693c4a1a535d3412ca13570",
+    "P2_fill_02_03": "6a571f6e435e9eb7b67f286424bc4d3d6b91f97516cbadeb1de97f33818e76c8",
+    "P2_fill_02_04": "ea6e874c6b7ff8a33ab65ddbb780ac060340019b69f380cbe9b6d3e02497f2f7",
+    "P2_fill_02_05": "dc7eef1000085d8c2b9e9e800d98a3b91aaa8afde4fa6b226dc74d0a416da62a",
+    "P2_fill_02_06": "66763713461d23d212e5a13f832f1a6d5996b23f5f28021c941363b2672f74fd",
+    "P2_fill_02_07": "c08f0fe1942c062e723cba50316b79ad5f1249be9d61558b24277019401003f3",
+    "P2_fill_02_08": "f6285fbc63b7626f891870deb34878ff39e58ac5740157024db7f0dd35aad58d",
+    "P2_fill_02_09": "58fe503de97acc1879007a3f50fb4012cf2a5719e37957d56c69db4babb322b7",
+    "P2_fill_02_10": "39b47e600b4ba6faa43ab45cad7becf3d55b609ed82db4aa557bea60689bf076",
+    "P2_fill_02_11": "c935b1f979a5fb1f040ab8fd6a99eab61cbff1f53875c3641bd5a3ebc35e6020",
+    "P2_fill_02_12": "952a739cb4452daec53e7fb8a01a54e7a4aaf3114c192f503f38e7a54b4be55b",
+    "P2_fill_02_13": "e4957eadedad7186881de9e85bd0a692a01b5b792ad2a2c12c459c2ae3a862c6",
+    "P2_fill_02_14": "96da1f2a655cde7c25cf1e7047582f6723ee6dbaffe95f063eefc4b68215ce36",
+    "P2_fill_02_15": "642e374f5192b678f18d0b3d74cc8370cb91fc5411a914211d057b38c6b78d8b",
+    "P2_fill_02_16": "e92d8da41ef3c4107016ccc51325ea04dee7af2d0bad926c1a56df4de3c9eb58"
+  },
+  "review_images_sha256": {
+    "P2_fill_02.png": "c928981fd1f53f550c040ee4bf4a3ff5f7b4f0b52ffa0ff6930a94db432af390",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previous_round_sha256": null,
+  "expected_slots": [
+    "P2_fill_02_01",
+    "P2_fill_02_02",
+    "P2_fill_02_03",
+    "P2_fill_02_04",
+    "P2_fill_02_05",
+    "P2_fill_02_06",
+    "P2_fill_02_07",
+    "P2_fill_02_08",
+    "P2_fill_02_09",
+    "P2_fill_02_10",
+    "P2_fill_02_11",
+    "P2_fill_02_12",
+    "P2_fill_02_13",
+    "P2_fill_02_14",
+    "P2_fill_02_15",
+    "P2_fill_02_16"
+  ],
+  "verdicts": [
+    {
+      "sprite_id": "P2_fill_02_01",
+      "candidate_id": "P2_fill_02_01@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing walking stride and long brown hair agree with the reference; the brown boot areas are mapped peach as skin rather than footwear/other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_02",
+      "candidate_id": "P2_fill_02_02@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing close-step walk preserves the reference hair and outfit; both brown boot areas are classified predominantly as peach skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_03",
+      "candidate_id": "P2_fill_02_03@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing stride has coherent arms and legs and the reference identity; the brown footwear is mapped peach as skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_04",
+      "candidate_id": "P2_fill_02_04@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing passing-step pose is readable and identity is consistent; the brown boots are included in the peach skin region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_05",
+      "candidate_id": "P2_fill_02_05@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing basket carry is readable and matches the reference identity, but the basket body is mapped broadly peach as skin, merging it with the hands.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_06",
+      "candidate_id": "P2_fill_02_06@1:derived",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing close-step basket carry matches the reference identity; the basket body is classified as peach skin instead of other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_07",
+      "candidate_id": "P2_fill_02_07@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing carrying stride and basket remain legible; the basket body is assigned to the peach skin region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_08",
+      "candidate_id": "P2_fill_02_08@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing basket carry has coherent anatomy and consistent hair; the broad basket front is mapped peach as skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_09",
+      "candidate_id": "P2_fill_02_09@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing extended-step carry clearly holds a basket; most of the basket body is mapped peach as skin and merges with the forearms.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_10",
+      "candidate_id": "P2_fill_02_10@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing compact-step carry retains a readable basket and reference identity; the basket rim/body includes green clothing and peach skin regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_11",
+      "candidate_id": "P2_fill_02_11@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing carrying stride and identity are coherent; substantial basket pixels are peach skin or green clothing rather than other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_12",
+      "candidate_id": "P2_fill_02_12@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing close-step carry remains readable; the basket body is merged into peach skin and green clothing regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_13",
+      "candidate_id": "P2_fill_02_13@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing bent gathering pose, berry bush and identity are clear; detached berry/highlight pixels within the bush are classified peach as skin, and boots are also peach.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_14",
+      "candidate_id": "P2_fill_02_14@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing bent gathering pose reaches the berry bush; several isolated bush pixels and the brown boot areas are incorrectly mapped peach as skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_15",
+      "candidate_id": "P2_fill_02_15@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing raised-tool build pose is coherent and keeps the reference identity; the brown boot areas are classified peach as skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_02_16",
+      "candidate_id": "P2_fill_02_16@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing bent tool-strike pose and stone pile are readable; several stone-pile and flying-fragment pixels are classified green as clothing.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "verdict": "NEEDS WORK",
+  "independent_reviews": [
+    "integrity_review.md",
+    "precision_review.md"
+  ],
+  "objective_diff": "image_diff.json",
+  "remaining": [
+    "A11 action recognition 21/24 at4x and14/24 at2x",
+    "A18 d24 three half-hidden villagers,limit1",
+    "Natural cold visible count0; A19b N/A",
+    "Small world labels and subtle seasonal distinction"
+  ],
+  "review_rounds": 1
+}

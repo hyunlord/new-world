@@ -1,0 +1,22 @@
+[
+  {
+    "original_path": "docs/art/production7/measurements/headless_20261010.json",
+    "archived_exact_bytes": "/Users/rexxa/work/art-production7-evidence/headless_uncompressed_archive/headless_20261010.json",
+    "uncompressed_sha256": "3695ab08904c614cc256bb42d3dc90cbd43ea187b89b3181a30bb76e0ce6a949",
+    "gzip_path": "docs/art/production7/measurements/headless_20261010.json.gz",
+    "gzip_sha256": "b7c56a4eb0ab4c96de0af710f96f3c7f50547a0c3b41afe8d617b8c20133daa5",
+    "original_bytes": 420822,
+    "gzip_bytes": 13422,
+    "rows": 361
+  },
+  {
+    "original_path": "docs/art/production7/measurements/headless_20261013.json",
+    "archived_exact_bytes": "/Users/rexxa/work/art-production7-evidence/headless_uncompressed_archive/headless_20261013.json",
+    "uncompressed_sha256": "c7233ad8d2d6135a8c6531baee5490c907cef00e47a615219b9dcd971f0b5a43",
+    "gzip_path": "docs/art/production7/measurements/headless_20261013.json.gz",
+    "gzip_sha256": "a86a2e3a5e8afa1184e7dfd5e81c08dec97f10f9764ade0112fb6f232c6720f6",
+    "original_bytes": 456532,
+    "gzip_bytes": 17170,
+    "rows": 361
+  }
+]

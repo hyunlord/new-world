@@ -430,7 +430,13 @@ fn harness_death_a6_scene_wiring_additive() {
         .count();
 
     // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
-    assert_eq!(ext_count_after, 16, "all sixteen renderer/UI script resources remain");
+    assert_eq!(ext_count_after, 23, "twenty-two prior resources plus ActivityTooltipP13");
+    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/ui/person_activity_tooltip_p13.gd\" id=\"23_activity_tooltip\"]"));
+    assert!(scene.contains("[node name=\"ActivityTooltipP13\" type=\"Control\" parent=\"UI\"]\nmouse_filter = 2\nscript = ExtResource(\"23_activity_tooltip\")"));
+    assert!(scene.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
+    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
+    assert!(scene.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
+    assert!(scene.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
     assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
     // Exact ext_resource PATH string (not a bare filename substring) — a typo'd
     // or loose path on a present node must FAIL. Capture the ext_resource id so we

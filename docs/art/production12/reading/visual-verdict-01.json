@@ -1,0 +1,10 @@
+{
+  "verdict": "REVISE",
+  "font": "PASS: 24px joiner zero pixel difference in regular/bold; ti/di 24/32 differing pixels",
+  "layout": "FAIL: ko-bottom opposite viewport edge clips preceding text line",
+  "evidence": [
+    "/Users/rexxa/work/art-production12-evidence/p2/font-attempt1/bold-glyph-line.png",
+    "/Users/rexxa/work/art-production12-evidence/p2/layout-attempt1/ko-bottom.png"
+  ],
+  "next": "Repair actual scroll boundaries, preserve complete text and rerun literal clipping checks"
+}

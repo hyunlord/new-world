@@ -1,0 +1,38 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _test_renderer (res://scripts/test/art/test_meal_ring.gd:79)
+       [3] run (res://scripts/test/art/test_meal_ring.gd:56)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _test_renderer (res://scripts/test/art/test_meal_ring.gd:79)
+       [3] run (res://scripts/test/art/test_meal_ring.gd:56)
+ERROR: fractional world offset survives final world rounding at zoom four
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_meal_ring.gd:10)
+       [1] _test_renderer (res://scripts/test/art/test_meal_ring.gd:81)
+       [2] run (res://scripts/test/art/test_meal_ring.gd:56)
+ERROR: P12 declump candidate requires actual art_declump bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] declump (res://scripts/ui/art_declump_p12.gd:47)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:817)
+       [2] _test_renderer (res://scripts/test/art/test_meal_ring.gd:83)
+       [3] run (res://scripts/test/art/test_meal_ring.gd:56)
+ERROR: P13b walker candidate requires actual art_walker_offsets bridge
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] walker_offsets (res://scripts/ui/art_walker_p13b.gd:19)
+       [1] _apply_drawn_positions (res://scripts/ui/agent_renderer.gd:845)
+       [2] _test_renderer (res://scripts/test/art/test_meal_ring.gd:83)
+       [3] run (res://scripts/test/art/test_meal_ring.gd:56)
+MEAL_RING failures=1

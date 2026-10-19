@@ -15,6 +15,7 @@
 //! Godot dictionaries. Sim-test exercises the collectors directly.
 
 pub mod activity;
+pub mod art_kernels;
 pub mod chronicle;
 pub mod family;
 pub mod relations;

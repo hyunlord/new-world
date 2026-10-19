@@ -1,0 +1,693 @@
+{
+  "schema_version": 1,
+  "scope": "Frozen fact reader, 161 images: part1 images 1–119 split 1a/1b, part2 6, part3 36.",
+  "fact_bar": "PASS_WITHIN_SCORED_VERIFIABLE_NON_NAME_SCOPE",
+  "verified_incorrect": 0,
+  "unverified_excluded_from_fact_bar": true,
+  "image_based_activity_recognition": "NOT_ESTABLISHED",
+  "h9_overall": "NOT_DETERMINED_BY_THIS_REPORT",
+  "aggregation_policy": "Preserve heterogeneous counting units; no pooled fact denominator or uniform percentage. Repeated images/EN-KO readings are not independent samples.",
+  "reader_provenance": [
+    {
+      "part": 1,
+      "frozen": "2026-10-19T13:10:05.688040+00:00",
+      "sha256": "e6e2f47ceba07220fb6b11375dd6a221b7ba090dd65d21bbb79b7b6ea5171311",
+      "images": 119,
+      "reader_reference_access": false,
+      "answer_file": "fact-reader-answers-part1.md",
+      "freeze_file": "fact-reader-freeze-part1.json",
+      "freeze_sha256": "13a39e0ea03c58336ad876f9ce96c1733d0dececfb09e78e56dcb330b121ff85",
+      "map_file": "life-reader-part1-private-map.json",
+      "map_sha256": "6a87ecf08851000cc029f7e4e4e264f5701212796333ff7c11b50e91dcba4b6f",
+      "source_png_hashes_verified": 119
+    },
+    {
+      "part": 2,
+      "frozen": "2026-10-19T13:11:11.128064+00:00",
+      "sha256": "a1615ec056fbfbc8327b845a45ee862200c8e610439b62bfbde7727280ce6ec8",
+      "images": 6,
+      "reader_reference_access": false,
+      "answer_file": "fact-reader-answers-part2.md",
+      "freeze_file": "fact-reader-freeze-part2.json",
+      "freeze_sha256": "e549a179b63b43dc109c59d5b3db850ce188106f26817696f9a2407a7e660de0",
+      "map_file": "life-reader-part2-private-map.json",
+      "map_sha256": "6ebaf1661ce52eb09c7863c536ad732e3fc069e0a39e63e620f10fb7c8a330c9",
+      "source_png_hashes_verified": 6
+    },
+    {
+      "part": 3,
+      "frozen": "2026-10-19T13:14:16.721643+00:00",
+      "sha256": "486b6a4700ab4adc51244d7634348a41238a1b80f68d1d3e797f56e88602319f",
+      "images": 36,
+      "reader_reference_access": false,
+      "answer_file": "fact-reader-answers-part3.md",
+      "freeze_file": "fact-reader-freeze-part3.json",
+      "freeze_sha256": "4414027c7b5857198f4698db86761bb922bb048fbe3bf1daf12182505530ebf4",
+      "map_file": "life-reader-part3-private-map.json",
+      "map_sha256": "8da09bd1c92576943d653058fe2052c33d49e97d4e5dd2a1d6d8a47b418078c1",
+      "source_png_hashes_verified": 36
+    }
+  ],
+  "score_sources": [
+    {
+      "part": "part1a",
+      "json": "part1a-score.json",
+      "json_sha256": "3af60f7ebdb532730cb4a703faca2ebeb9d0e4da05b67fdab75d54a51d6c0008",
+      "report": "part1a-score.md",
+      "report_sha256": "34ce643a85cfa729f9067812d222aace4dc61d7572e135efbb4a63b47885df66"
+    },
+    {
+      "part": "part1b",
+      "json": "part1b-score.json",
+      "json_sha256": "503d26d2aff1da013fe5129ffe269320b8d9d4448af401f946ba214ae73bc7b8",
+      "report": "part1b-score.md",
+      "report_sha256": "5f64739d78404395cd597f97bdce4f48be8defd996f9a4d2f6866c729f2fdad4"
+    },
+    {
+      "part": "part2",
+      "json": "part2-score.json",
+      "json_sha256": "2986d94c36239d95b754bf4dcd2ea3f88bb788048bc8006f0c6002e464b76e63",
+      "report": "part2-score.md",
+      "report_sha256": "2635175080d06e19da65eb78e29069e4e888efe176c43638fd210c11a1a268e5"
+    },
+    {
+      "part": "part3",
+      "json": "part3-score.json",
+      "json_sha256": "1e75482f42dda384543e0c2f6d22d5ac5ac5c1d5b6f538fb93373a635866453b",
+      "report": "part3-score.md",
+      "report_sha256": "d22e18402e0e228a1fab162a763915fabdc57eebd6bfb50f94288c02445bba7b"
+    }
+  ],
+  "slices": [
+    {
+      "part": "part1a",
+      "images": 65,
+      "independently_verified_correct": 665,
+      "verified_incorrect": 0,
+      "screen_only_not_independently_verified": 127,
+      "abstentions": 8,
+      "inferences_inside_ledger_not_scored": 2,
+      "method": "Bundled events and relationship clauses; scalar state/HUD fields. Includes 65 artifact-observation and 48 visual-category rows in ledger.",
+      "source_counts": {
+        "images": 65,
+        "claims_total": 802,
+        "claim_status": {
+          "CORRECT": 665,
+          "CORRECT_VISUAL_ONLY": 127,
+          "NOT_SCORED_ABSTENTION": 8,
+          "NOT_SCORED_INFERENCE": 2
+        },
+        "claim_categories": {
+          "event": 258,
+          "state": 131,
+          "hud": 94,
+          "visual": 48,
+          "abstention": 8,
+          "inference": 2,
+          "artifact_observation": 65,
+          "named_relationship": 196
+        },
+        "name_occurrences": 424,
+        "name_status": {
+          "CORRECT": 411,
+          "CORRECT_PARTIAL_UNCERTAIN": 2,
+          "INCORRECT": 11
+        },
+        "confusion_pairs": [
+          {
+            "expected": "Demu",
+            "read": "Oemu",
+            "occurrences": 2
+          },
+          {
+            "expected": "Tanuka",
+            "read": "Taruka",
+            "occurrences": 3
+          },
+          {
+            "expected": "Dehona",
+            "read": "Oehona",
+            "occurrences": 2
+          },
+          {
+            "expected": "Sogaru",
+            "read": "Sogeru",
+            "occurrences": 1
+          },
+          {
+            "expected": "소가루",
+            "read": "소거루",
+            "occurrences": 1
+          },
+          {
+            "expected": "Inayo",
+            "read": "Irayo",
+            "occurrences": 2
+          }
+        ]
+      }
+    },
+    {
+      "part": "part1b",
+      "images": 54,
+      "independently_verified_correct": 595,
+      "verified_incorrect": 0,
+      "screen_only_not_independently_verified": 4,
+      "annotations_outside_fact_ledger": {
+        "QUALITATIVE_UNSCORED": 54,
+        "CORRECT_VISUAL_ONLY": 16
+      },
+      "method": "Bundled events, separate named-event bindings, HUD scalars, village map-label bundles.",
+      "source_counts": {
+        "images": 54,
+        "non_name_claims": {
+          "CORRECT": 595,
+          "CORRECT_VISUAL_ONLY": 4
+        },
+        "non_name_by_category": {
+          "event": 286,
+          "named_event_binding": 282,
+          "hud": 29,
+          "map_label": 2
+        },
+        "name_occurrences": {
+          "CORRECT": 586,
+          "WRONG": 29,
+          "UNCERTAIN": 2
+        },
+        "annotations": {
+          "QUALITATIVE_UNSCORED": 54,
+          "CORRECT_VISUAL_ONLY": 16
+        }
+      }
+    },
+    {
+      "part": "part2",
+      "images": 6,
+      "independently_verified_correct": 117,
+      "verified_incorrect": 0,
+      "screen_only_not_independently_verified": 14,
+      "picture_inference_entries_outside_fact_ledger": 6,
+      "method": "Atomic scalar text facts; coordinate pair one claim; repeated EN/KO occurrences count separately. Six images represent three subjects.",
+      "source_counts": {
+        "atomic_text_claims": 131,
+        "verified_correct": 117,
+        "verified_incorrect": 0,
+        "screen_matches_without_independent_reference": 14,
+        "name_readings": 6,
+        "name_visible_exact_matches": 6,
+        "name_visible_errors": 0,
+        "picture_activity_confident_recognition": "NOT_ESTABLISHED",
+        "picture_activity_inference_entries": 6,
+        "underlying_distinct_subjects": 3
+      }
+    },
+    {
+      "part": "part3",
+      "images": 36,
+      "independently_verified_correct": 624,
+      "verified_incorrect": 0,
+      "screen_only_not_independently_verified": 68,
+      "picture_inference_entries_outside_fact_ledger": 7,
+      "method": "Atomic scalar/relation fields; event day and kind separate; coordinate pair one claim. Artifact observations excluded.",
+      "source_counts": {
+        "atomic_text_claims": 692,
+        "VERIFIED_CORRECT": 624,
+        "SCREEN_MATCH_ONLY_NOT_VERIFIED": 68,
+        "name_readings": 336,
+        "name_exact_matches": 320,
+        "name_transcription_errors": 16,
+        "picture_activity_confident_recognition": "NOT_ESTABLISHED",
+        "picture_activity_inference_entries": 7,
+        "screens_visually_inspected": 36,
+        "image_hashes_verified": 36,
+        "VERIFIED_INCORRECT": 0
+      }
+    }
+  ],
+  "name_counts": {
+    "written_occurrences": 1383,
+    "exact_correct_as_scored": 1323,
+    "correct_partial_uncertain_separate": 2,
+    "incorrect": 56,
+    "uncertain_alternative_tokens_separate": 2,
+    "part1b_partial_visibility_already_in_exact_correct": 2
+  },
+  "name_confusion_pairs": [
+    {
+      "expected": "Awado",
+      "read": "Avado",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 97,
+          "name_id": "97-N3"
+        }
+      ]
+    },
+    {
+      "expected": "Baga",
+      "read": "Baya",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0015.png"
+        },
+        {
+          "part": "part3",
+          "image": "image_0020.png"
+        }
+      ]
+    },
+    {
+      "expected": "Bubono",
+      "read": "Budoho",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0015.png"
+        }
+      ]
+    },
+    {
+      "expected": "Buyobi",
+      "read": "Buyohi",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0014.png"
+        }
+      ]
+    },
+    {
+      "expected": "Dakoha",
+      "read": "Dakona",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 94,
+          "name_id": "94-N6"
+        }
+      ]
+    },
+    {
+      "expected": "Dedo",
+      "read": "Oedo",
+      "count": 4,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 68,
+          "name_id": "68-N8"
+        },
+        {
+          "part": "part1b",
+          "image": 76,
+          "name_id": "76-N5"
+        },
+        {
+          "part": "part3",
+          "image": "image_0011.png"
+        },
+        {
+          "part": "part3",
+          "image": "image_0012.png"
+        }
+      ]
+    },
+    {
+      "expected": "Dehona",
+      "read": "Dehoha",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0022.png"
+        },
+        {
+          "part": "part3",
+          "image": "image_0023.png"
+        }
+      ]
+    },
+    {
+      "expected": "Dehona",
+      "read": "Oehona",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part1a",
+          "image": "image_0024.png",
+          "name_id": "P1A-N0159"
+        },
+        {
+          "part": "part1a",
+          "image": "image_0025.png",
+          "name_id": "P1A-N0160"
+        }
+      ]
+    },
+    {
+      "expected": "Demu",
+      "read": "Oemu",
+      "count": 8,
+      "occurrences": [
+        {
+          "part": "part1a",
+          "image": "image_0015.png",
+          "name_id": "P1A-N0072"
+        },
+        {
+          "part": "part1a",
+          "image": "image_0016.png",
+          "name_id": "P1A-N0075"
+        },
+        {
+          "part": "part1b",
+          "image": 70,
+          "name_id": "70-N14"
+        },
+        {
+          "part": "part1b",
+          "image": 71,
+          "name_id": "71-N3"
+        },
+        {
+          "part": "part1b",
+          "image": 73,
+          "name_id": "73-N6"
+        },
+        {
+          "part": "part1b",
+          "image": 76,
+          "name_id": "76-N7"
+        },
+        {
+          "part": "part1b",
+          "image": 77,
+          "name_id": "77-N5"
+        },
+        {
+          "part": "part1b",
+          "image": 94,
+          "name_id": "94-N4"
+        }
+      ]
+    },
+    {
+      "expected": "Denoba",
+      "read": "Oenoba",
+      "count": 4,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 100,
+          "name_id": "100-N2"
+        },
+        {
+          "part": "part1b",
+          "image": 106,
+          "name_id": "106-N7"
+        },
+        {
+          "part": "part1b",
+          "image": 107,
+          "name_id": "107-N7"
+        },
+        {
+          "part": "part1b",
+          "image": 107,
+          "name_id": "107-N11"
+        }
+      ]
+    },
+    {
+      "expected": "Dotibi",
+      "read": "Ootibi",
+      "count": 3,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 98,
+          "name_id": "98-N11"
+        },
+        {
+          "part": "part1b",
+          "image": 99,
+          "name_id": "99-N9"
+        },
+        {
+          "part": "part1b",
+          "image": 101,
+          "name_id": "101-N4"
+        }
+      ]
+    },
+    {
+      "expected": "Etuba",
+      "read": "Etuha",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0010.png"
+        }
+      ]
+    },
+    {
+      "expected": "Iano",
+      "read": "Iaho",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 94,
+          "name_id": "94-N1"
+        }
+      ]
+    },
+    {
+      "expected": "Inayo",
+      "read": "Irayo",
+      "count": 5,
+      "occurrences": [
+        {
+          "part": "part1a",
+          "image": "image_0059.png",
+          "name_id": "P1A-N0412"
+        },
+        {
+          "part": "part1a",
+          "image": "image_0060.png",
+          "name_id": "P1A-N0415"
+        },
+        {
+          "part": "part1b",
+          "image": 75,
+          "name_id": "75-N5"
+        },
+        {
+          "part": "part1b",
+          "image": 104,
+          "name_id": "104-N4"
+        },
+        {
+          "part": "part1b",
+          "image": 104,
+          "name_id": "104-N10"
+        }
+      ]
+    },
+    {
+      "expected": "Nieba",
+      "read": "Neba",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0014.png"
+        },
+        {
+          "part": "part3",
+          "image": "image_0015.png"
+        }
+      ]
+    },
+    {
+      "expected": "Nitiso",
+      "read": "Ntiso",
+      "count": 3,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0009.png"
+        },
+        {
+          "part": "part3",
+          "image": "image_0019.png"
+        },
+        {
+          "part": "part3",
+          "image": "image_0021.png"
+        }
+      ]
+    },
+    {
+      "expected": "Robonu",
+      "read": "Roboru",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 97,
+          "name_id": "97-N5"
+        },
+        {
+          "part": "part1b",
+          "image": 101,
+          "name_id": "101-N2"
+        }
+      ]
+    },
+    {
+      "expected": "Sogaru",
+      "read": "Sogeru",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part1a",
+          "image": "image_0025.png",
+          "name_id": "P1A-N0164"
+        },
+        {
+          "part": "part1b",
+          "image": 73,
+          "name_id": "73-N10"
+        }
+      ]
+    },
+    {
+      "expected": "Tanuka",
+      "read": "Taruka",
+      "count": 3,
+      "occurrences": [
+        {
+          "part": "part1a",
+          "image": "image_0016.png",
+          "name_id": "P1A-N0084"
+        },
+        {
+          "part": "part1a",
+          "image": "image_0017.png",
+          "name_id": "P1A-N0086"
+        },
+        {
+          "part": "part1a",
+          "image": "image_0022.png",
+          "name_id": "P1A-N0135"
+        }
+      ]
+    },
+    {
+      "expected": "Tugami",
+      "read": "Tugemi",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 100,
+          "name_id": "100-N4"
+        }
+      ]
+    },
+    {
+      "expected": "부보노",
+      "read": "부도호",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0029.png"
+        }
+      ]
+    },
+    {
+      "expected": "부요비",
+      "read": "부요히",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part3",
+          "image": "image_0028.png"
+        }
+      ]
+    },
+    {
+      "expected": "소가루",
+      "read": "소거루",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part1a",
+          "image": "image_0038.png",
+          "name_id": "P1A-N0298"
+        },
+        {
+          "part": "part1b",
+          "image": 87,
+          "name_id": "87-N7"
+        }
+      ]
+    },
+    {
+      "expected": "이아노",
+      "read": "이아호",
+      "count": 2,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 108,
+          "name_id": "108-N8"
+        },
+        {
+          "part": "part1b",
+          "image": 109,
+          "name_id": "109-N1"
+        }
+      ]
+    },
+    {
+      "expected": "투가미",
+      "read": "투거미",
+      "count": 1,
+      "occurrences": [
+        {
+          "part": "part1b",
+          "image": 114,
+          "name_id": "114-N1"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Screen matches without independent data remain unverified; none are promoted to verified correct.",
+    "Abstentions, offscreen information and inferred motion/activity do not enter the fact bar. Qualitative artifacts have source-specific inclusion rules.",
+    "Part1a counts daytime among corroborated claims; parts2/3 retain daytime as screen-only without inventing a raw day/night threshold. Source adjudications are preserved, not normalized.",
+    "Name oracle differs: part1a validates PersonNames after freeze; others align visible rendered spellings/IDs, while raw references lack independent generated-name strings.",
+    "This is aggregation of existing visual scoring, not a new blind reading or fresh visual inspection.",
+    "H9 also requires glyph and real-input evidence; this report does not decide those gates."
+  ],
+  "verification": {
+    "frozen_answer_hashes_verified": 3,
+    "source_png_hashes_verified": 161,
+    "score_claim_status_counts_recomputed": true,
+    "confusion_occurrences_recomputed": 56,
+    "runtime_launched": false,
+    "source_files_modified": false
+  }
+}

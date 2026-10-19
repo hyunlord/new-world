@@ -1,0 +1,210 @@
+B008 Do not perform function call `Path.cwd` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> tools/art_pipeline/harvest_integrity_p8.py:101:28
+    |
+101 | def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
+    |                            ^^^^^^^^^^
+102 |     """Audit current assets against frozen Pass 5 hair and harvest approvals read-only."""
+103 |     read = lambda path: json.loads(Path(path).read_text())
+    |
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> tools/art_pipeline/harvest_integrity_p8.py:148:31
+    |
+146 |               if all(row.get('candidate_id') == identity for row, identity in zip(installed, group['candidate_ids'])):
+147 |                   key = tuple(group['group'])
+148 |                   groups[key] = dict(group=group['group'], source=group['source'],
+    |  _______________________________^
+149 | |                     copied_frames=[records[i]['frame'] for i in group['candidate_ids'] if records[i]['source_kind']=='derived'],
+150 | |                     animation_review=group['id'], candidate_ids=group['candidate_ids'],
+151 | |                     installation=str(directory.relative_to(root)), board=group['board'], gif=group['gif'])
+    | |__________________________________________________________________________________________________________^
+152 |                   if reviews.get(group['id'], {}).get('verdict') != 'ok':
+153 |                       errors.append(f'{key}:animation_not_ok')
+    |
+help: Rewrite as a literal
+    |
+147 |                 key = tuple(group['group'])
+    -                 groups[key] = dict(group=group['group'], source=group['source'],
+    -                     copied_frames=[records[i]['frame'] for i in group['candidate_ids'] if records[i]['source_kind']=='derived'],
+    -                     animation_review=group['id'], candidate_ids=group['candidate_ids'],
+    -                     installation=str(directory.relative_to(root)), board=group['board'], gif=group['gif'])
+148 +                 groups[key] = {'group': group['group'], 'source': group['source'],
+149 +                     'copied_frames': [records[i]['frame'] for i in group['candidate_ids'] if records[i]['source_kind']=='derived'],
+150 +                     'animation_review': group['id'], 'candidate_ids': group['candidate_ids'],
+151 +                     'installation': str(directory.relative_to(root)), 'board': group['board'], 'gif': group['gif']}
+152 |                 if reviews.get(group['id'], {}).get('verdict') != 'ok':
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> tools/art_pipeline/harvest_integrity_p8.py:171:36
+    |
+169 |                 else:
+170 |                     with Image.open(mask_path) as mask:
+171 |                         expected = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+172 |                     if content[target].get('mask') != expected:
+173 |                         reasons.append('installed_mask_changed')
+    |
+help: Rewrite as a literal
+    |
+170 |                     with Image.open(mask_path) as mask:
+    -                         expected = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+171 +                         expected = {'size': list(mask.size), 'rgba_sha256': rgba_hash(mask)}
+172 |                     if content[target].get('mask') != expected:
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> tools/art_pipeline/harvest_integrity_p8.py:200:25
+    |
+198 |             covered.add(target)
+199 |             errors.extend(f'{target}:{reason}' for reason in reasons)
+200 |             rows.append(dict(target=target, candidate_id=identity, installation=str(directory.relative_to(root)), errors=reasons))
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+201 |     mask_report = base / 'masks/mask_installation.json'
+202 |     if mask_report.exists() and read(mask_report).get('applied'):
+    |
+help: Rewrite as a literal
+    |
+199 |             errors.extend(f'{target}:{reason}' for reason in reasons)
+    -             rows.append(dict(target=target, candidate_id=identity, installation=str(directory.relative_to(root)), errors=reasons))
+200 +             rows.append({'target': target, 'candidate_id': identity, 'installation': str(directory.relative_to(root)), 'errors': reasons})
+201 |     mask_report = base / 'masks/mask_installation.json'
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> tools/art_pipeline/harvest_integrity_p8.py:223:33
+    |
+221 |                 errors.append(f'{target}:mask_not_approved')
+222 |             with Image.open(root / entry['mask_path']) as mask:
+223 |                 expected_mask = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+224 |             if content[target].get('mask') != expected_mask:
+225 |                 errors.append(f'{target}:installed_mask_changed')
+    |
+help: Rewrite as a literal
+    |
+222 |             with Image.open(root / entry['mask_path']) as mask:
+    -                 expected_mask = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+223 +                 expected_mask = {'size': list(mask.size), 'rgba_sha256': rgba_hash(mask)}
+224 |             if content[target].get('mask') != expected_mask:
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+   --> tools/art_pipeline/harvest_integrity_p8.py:244:27
+    |
+242 |               key = tuple(group['group'])
+243 |               sheet, attempt = sources[0].rsplit('@',1)
+244 |               groups[key] = dict(group=group['group'],source=[sheet,int(attempt)],
+    |  ___________________________^
+245 | |                 copied_frames=[r['frame'] for r in current if r['source'].startswith('derived:')],
+246 | |                 candidate_ids=[r.get('candidate_id') for r in current],animation_review=group['id'],
+247 | |                 installation='docs/art/production5/masks',board=group['board'],gif=group['gif'])
+    | |________________________________________________________________________________________________^
+248 |       changed = []
+249 |       for target, row in manifest.items():
+    |
+help: Rewrite as a literal
+    |
+243 |             sheet, attempt = sources[0].rsplit('@',1)
+    -             groups[key] = dict(group=group['group'],source=[sheet,int(attempt)],
+    -                 copied_frames=[r['frame'] for r in current if r['source'].startswith('derived:')],
+    -                 candidate_ids=[r.get('candidate_id') for r in current],animation_review=group['id'],
+    -                 installation='docs/art/production5/masks',board=group['board'],gif=group['gif'])
+244 +             groups[key] = {'group': group['group'],'source': [sheet,int(attempt)],
+245 +                 'copied_frames': [r['frame'] for r in current if r['source'].startswith('derived:')],
+246 +                 'candidate_ids': [r.get('candidate_id') for r in current],'animation_review': group['id'],
+247 +                 'installation': 'docs/art/production5/masks','board': group['board'],'gif': group['gif']}
+248 |     changed = []
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+SIM102 Use a single `if` statement instead of nested `if` statements
+  --> tools/art_pipeline/ingame_qa_news_p8.py:86:13
+   |
+84 |               if event['event_class'] == 'routine' and (event['visible'] or identity in visible):
+85 |                   errors.append(prefix + 'visible routine event: ' + identity)
+86 | /             if identity in protected:
+87 | |                 if identity not in visible | overflow:
+   | |______________________________________________________^
+88 |                       errors.append(prefix + 'new protected event absent from feed/+N: ' + identity)
+89 |           for summary in frame['summaries']:
+   |
+help: Combine `if` statements using `and`
+
+F841 Local variable `day` is assigned to but never used
+  --> tools/art_pipeline/ingame_qa_observed_p8.py:48:9
+   |
+46 |         settlement = data.get('settlement_snapshot', {})
+47 |         entities = data.get('entities', [])
+48 |         day = int(time.get('day_index', -2)) + 1
+   |         ^^^
+49 |         hour = float(time.get('time_of_day', -1))
+50 |         severity = int(time.get('winter_severity', -1))
+   |
+help: Remove assignment to unused variable `day`
+   |
+47 |         entities = data.get('entities', [])
+   -         day = int(time.get('day_index', -2)) + 1
+48 +         int(time.get('day_index', -2)) + 1
+49 |         hour = float(time.get('time_of_day', -1))
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+F841 Local variable `manifest` is assigned to but never used
+  --> tools/art_pipeline/ingame_qa_society_p8.py:20:5
+   |
+18 |     """Evaluate every frame; zero eligible frames never satisfies a gate."""
+19 |     manifest_path = society_dir/'manifest.json'
+20 |     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+   |     ^^^^^^^^
+21 |     deaths = []
+22 |     village_errors = []
+   |
+help: Remove assignment to unused variable `manifest`
+   |
+19 |     manifest_path = society_dir/'manifest.json'
+   -     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+20 +     json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+21 |     deaths = []
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+SIM102 Use a single `if` statement instead of nested `if` statements
+   --> tools/art_pipeline/measure_days_p8.py:113:9
+    |
+111 |           prior = by_tick.get(row.tick - 720)
+112 |           night = by_tick.get(row.tick - 315)
+113 | /         if row.minute_of_day == 435 and clock.day(row.tick) <= 60 and prior and night:
+114 | |             if prior.cold_member_hours_total == row.cold_member_hours_total and night.fire_lit > 0 and row.cold_members == 0:
+    | |_____________________________________________________________________________________________________________________________^
+115 |                   warm.append(row)
+116 |       inspected_seeds = [20261010] + ([selected.seed] if selected else [])
+    |
+help: Combine `if` statements using `and`
+
+TRY004 Prefer `TypeError` exception for invalid type
+  --> tools/art_pipeline/merge_capture_segments_p8.py:35:9
+   |
+33 | def record(value: Json) -> Record:
+34 |     if not isinstance(value, dict):
+35 |         raise ValueError('expected JSON object')
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+36 |     return value
+   |
+
+TRY004 Prefer `TypeError` exception for invalid type
+  --> tools/art_pipeline/merge_capture_segments_p8.py:41:9
+   |
+39 | def rows(value: Json) -> list[Record]:
+40 |     if not isinstance(value, list):
+41 |         raise ValueError('expected JSON array')
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+42 |     return [record(item) for item in value]
+   |
+
+Found 27 errors (15 fixed, 12 remaining).
+7 unsafe fixes available with `--fix --unsafe-fixes`.

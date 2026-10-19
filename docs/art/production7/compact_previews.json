@@ -1,0 +1,236 @@
+[
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5080,
+    "preview_fps": 5.118110236220472,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 1003813,
+    "preview_bytes": 634430,
+    "source_sha256": "b2f2f1f23f6645b2d666158c1e4862081071212ebf6f520611a31366926c2756",
+    "preview_sha256": "bf9577ce4e56d16603d8d69c8fbd060308d51fbb64ad1952a60cfac86a6c41d1",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d23_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d23_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5080,
+    "preview_fps": 5.118110236220472,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 1111010,
+    "preview_bytes": 681301,
+    "source_sha256": "4486335667da236e6cb5a1ea2d8ba55940784e258ff0451bb3dcc525a4db719d",
+    "preview_sha256": "fdefeebdf4e8c3cea104bce8fdf27d17391b2027497b4bc45fe023cf3eb0e9ab",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d24_2300_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d24_2300_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5050,
+    "preview_fps": 5.148514851485149,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 1041333,
+    "preview_bytes": 624332,
+    "source_sha256": "80f15f8f5382ab707ad0f326f1e593fbddf221276252398b0160649272ff7b90",
+    "preview_sha256": "b869f3116ba80bcfd8242a802a199bb3d5ef32edbebac55ca0742d14d56c27d6",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d25_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d25_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5060,
+    "preview_fps": 5.138339920948616,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 1178688,
+    "preview_bytes": 655931,
+    "source_sha256": "ef823191b9fa08e6e106790952b651d253bab259be4e023f6529075d2dd0a877",
+    "preview_sha256": "b961e27536f7a3e3de6cf5110502afa50d882d9b21179415c1fe5db3715a5939",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d27_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d27_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5040,
+    "preview_fps": 5.158730158730159,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 275149,
+    "preview_bytes": 193187,
+    "source_sha256": "6851634e01377753dcebc34a95ba38476dfa4461bf81459b6eeea44eb6092588",
+    "preview_sha256": "5acc3be2ddf5bb74a3b7a0f7fabb9e124489be360b65ea4426e22d8444f7c72c",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d28_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d28_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5080,
+    "preview_fps": 5.118110236220472,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 264288,
+    "preview_bytes": 176521,
+    "source_sha256": "bf726243f8d969f0fba85983ef725c15f122134c78f20865db5a044fbc5e562d",
+    "preview_sha256": "1d7e53697a47c48cc60120f5e6d9fa682dc6bb9b3084bbcf8ad31ca1d5b0acfb",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d28_0200_F2Z.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d28_0200_F2Z.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5090,
+    "preview_fps": 5.1080550098231825,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 293102,
+    "preview_bytes": 198165,
+    "source_sha256": "a9e61e9e694fda50ba7c1e6e66a4511b985c373b900a4eb5d6bdb3a580cad2fc",
+    "preview_sha256": "45b2c593b9de2e3c23860754453d33c36699db31daec77b7eaace4db9a93712a",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d29_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d29_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5100,
+    "preview_fps": 5.098039215686274,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 342454,
+    "preview_bytes": 227217,
+    "source_sha256": "db962533a4fbbe1786dfc1f1bf3c011dc161b32d52052abe852868ea81ca4a41",
+    "preview_sha256": "4ac6f08b8df6321ef0182b7febab002db9c73d45ff0772b52c3c7f622abbc34d",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d56_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d56_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5050,
+    "preview_fps": 5.148514851485149,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 277757,
+    "preview_bytes": 192914,
+    "source_sha256": "ed333413456dfa3a3d5288a13ab8e447c060c3d9dbd860d8d8905b5bfbbd8181",
+    "preview_sha256": "e36d396a676ce073f5a5872589a16cb3187a21e3e85473cc64c6eadf9a906aaa",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d57_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d57_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5060,
+    "preview_fps": 5.138339920948616,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 362045,
+    "preview_bytes": 230229,
+    "source_sha256": "b4febad2b050cbb8c23c62278bcbc4cc83d8e3637d480063edaa54cae0e76d80",
+    "preview_sha256": "3dea405d29afc0c8d01c705a31fae8974ec872c3d000755a9f5b9593e8a74fe3",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d57_0301_DE.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d57_0301_DE.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5110,
+    "preview_fps": 5.088062622309198,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 266041,
+    "preview_bytes": 184448,
+    "source_sha256": "45f0889f6192c659418566b96aabf3a14db0197a82dd64e0560ab6b698ac976c",
+    "preview_sha256": "25e1daef8ce5f426480fdddb89ea5f07ac0d0ad247c078a2dc25ab512e767112",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d84_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d84_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5090,
+    "preview_fps": 5.1080550098231825,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 282169,
+    "preview_bytes": 198298,
+    "source_sha256": "06d780202da79c323553f1e00a152dd7212b33fd80dc6a5f1d9cfe41a49e3cef",
+    "preview_sha256": "bfca9df90d3da17d58173b840ecca4320098e40253fa90e87767f87dd222db51",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d85_0200_F2N.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d85_0200_F2N.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  },
+  {
+    "original_frames": 51,
+    "preview_frames": 26,
+    "duration_ms": 5060,
+    "preview_fps": 5.138339920948616,
+    "size": [
+      960,
+      540
+    ],
+    "original_bytes": 395459,
+    "preview_bytes": 245970,
+    "source_sha256": "2abff0d11f77bfa09930b3ac1949eba478ab25981e9fd5e2c83da93b86356d93",
+    "preview_sha256": "f73314d3f0600a9651ae126a2ff091981cd162337851ebad14315b30d30ad6fe",
+    "verification": "Each selected decoded RGB frame identical; total encoded duration identical.",
+    "full_raw_external_path": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_long/l_d85_0401_DE.cold_cycle.json",
+    "published_file": "docs/art/production7/shots/l_d85_0401_DE.cold_cycle.gif",
+    "note": "Derived preview only: every second temporal sample; no spatial or selected-pixel changes. Full raw cycle remains measurement source."
+  }
+]

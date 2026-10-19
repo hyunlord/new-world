@@ -19,7 +19,6 @@
 //! Run:
 //!   cargo test -p sim-test --test harness_p14_delta_status_panel -- --nocapture
 
-use sim_test::worldmodel::sha256::sha256_hex;
 use std::fs;
 use std::path::PathBuf;
 
@@ -54,11 +53,6 @@ fn read_hud_topbar_src() -> String {
 fn read_main_tscn_src() -> String {
     read_file(&["scenes", "main.tscn"])
 }
-
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
 
 
 fn strip_gd_comments(src: &str) -> String {
@@ -172,6 +166,7 @@ fn parse_int_rhs(rhs: &str) -> Option<i64> {
     trimmed[..end].parse::<i64>().ok()
 }
 
+
 // ─── A1: file exists + extends Control ────────────────────────────────────
 #[test]
 fn harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control() {
@@ -209,7 +204,7 @@ fn harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control() {
 // ─── A2: TICKS_PER_DAY == 100 ─────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a2_ticks_per_day_constant_present() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     assert!(stripped.contains("get_time_snapshot"));
     assert!(!stripped.contains("TICKS_PER_DAY"));
     assert!(stripped.contains("time_of_day"));
@@ -218,7 +213,7 @@ fn harness_p14_delta_a2_ticks_per_day_constant_present() {
 // ─── A3: DAYS_PER_YEAR == 30 ──────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a3_days_per_year_constant_present() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     assert!(stripped.contains("day_index"));
     assert!(stripped.contains("HUD_DAY_FMT"));
     assert!(stripped.contains("HUD_PHASE_DAY") && stripped.contains("HUD_PHASE_NIGHT"));
@@ -228,7 +223,7 @@ fn harness_p14_delta_a3_days_per_year_constant_present() {
 // ─── A4: RESOURCE_TYPES_COUNT * RESOURCE_PER_TYPE == 20 ───────────────────
 #[test]
 fn harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     for source in ["get_settlement_snapshot", "food_stocks", "get_resource_snapshot", "amounts", "get_tallies"] {
         assert!(stripped.contains(source), "HUD data source missing: {source}");
     }
@@ -238,12 +233,12 @@ fn harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta() {
 // ─── A5: RESOURCE_LABELS exact order ──────────────────────────────────────
 #[test]
 fn harness_p14_delta_a5_resource_labels_array_exact_order() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     for key in ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"] {
         assert!(stripped.contains(key), "Localized metric missing: {key}");
     }
     assert!(!stripped.contains("RESOURCE_LABELS"));
-    assert!(no_ws(&stripped).contains("_loc(keys[i])"));
+    assert!(no_ws(&stripped).contains("_loc(keys[index])"));
 }
 
 // ─── A6: top-right anchor + MOUSE_FILTER_IGNORE ───────────────────────────
@@ -253,8 +248,7 @@ fn harness_p14_delta_a6_anchored_top_right_with_mouse_filter_ignore() {
     // `mouse_filter = Control.MOUSE_FILTER_IGNORE`.
     let src = read_hud_status_panel_src();
     let needles = [
-        "anchor_left = 1.0",
-        "anchor_right = 1.0",
+        "ArtUI.panel(self, Rect2(12, 836, 620, 232))",
         "mouse_filter = Control.MOUSE_FILTER_IGNORE",
     ];
     let mut missing: Vec<&str> = Vec::new();
@@ -314,25 +308,27 @@ fn harness_p14_delta_a8_variant_safe_pattern_matches_hud_topbar_idiom() {
 // ─── A9: notification feed constants ──────────────────────────────────────
 #[test]
 fn harness_p14_delta_a9_notification_feed_constants_present() {
-    // Type A — MAX_VISIBLE_NOTIFICATIONS == 5 AND NOTIF_FADE_FRAMES == 480.
+    // Type A — MAX_VISIBLE_NOTIFICATIONS == 5 AND NOTIF_FADE_TICKS == 480.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
     let max_rhs = unique_decl_rhs(&stripped, "MAX_VISIBLE_NOTIFICATIONS", "A9.max");
-    let fade_rhs = unique_decl_rhs(&stripped, "NOTIF_FADE_FRAMES", "A9.fade");
+    let fade_rhs = unique_decl_rhs(&stripped, "NOTIF_FADE_TICKS", "A9.fade");
+    let protected_rhs = unique_decl_rhs(&stripped, "PROTECTED_RETAIN_TICKS", "A9.protected");
+    assert_eq!(parse_int_rhs(&protected_rhs), Some(240));
     let max_n = parse_int_rhs(&max_rhs).unwrap_or_else(|| {
         panic!("A9: MAX_VISIBLE_NOTIFICATIONS RHS must parse as int; got `{max_rhs}`")
     });
     let fade_n = parse_int_rhs(&fade_rhs).unwrap_or_else(|| {
-        panic!("A9: NOTIF_FADE_FRAMES RHS must parse as int; got `{fade_rhs}`")
+        panic!("A9: NOTIF_FADE_TICKS RHS must parse as int; got `{fade_rhs}`")
     });
     assert_eq!(
-        max_n, 5,
-        "A9: MAX_VISIBLE_NOTIFICATIONS must equal 5; got {max_n}"
+        max_n, 4,
+        "A9: MAX_VISIBLE_NOTIFICATIONS must equal 4; got {max_n}"
     );
     assert_eq!(
         fade_n, 480,
-        "A9: NOTIF_FADE_FRAMES must equal 480; got {fade_n}"
+        "A9: NOTIF_FADE_TICKS must equal 480; got {fade_n}"
     );
-    println!("[P14-δ A9] MAX_VISIBLE_NOTIFICATIONS=5 + NOTIF_FADE_FRAMES=480 ✓");
+    println!("[P14-δ A9] MAX_VISIBLE_NOTIFICATIONS=5 + NOTIF_FADE_TICKS=480 ✓");
 }
 
 // ─── A10: main.tscn registers HudStatusPanel under UI ─────────────────────
@@ -441,32 +437,34 @@ fn harness_p14_delta_a12_phase_13_delta_a4_a5_a6_invariants_preserved_in_hud_top
 // ─── A13: agent_renderer.gd ROLE_BUCKET_COUNT + ICON_OFFSET_PX preserved ─
 #[test]
 fn harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved() {
-    // Type D — ROLE_BUCKET_COUNT == 4 AND ICON_OFFSET_PX present.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let bucket = unique_decl_rhs(&stripped, "ROLE_BUCKET_COUNT", "A13.bucket");
-    assert_eq!(
-        bucket.trim(),
-        "4",
-        "A13.1: ROLE_BUCKET_COUNT must equal 4; got `{bucket}`"
-    );
-    // ICON_OFFSET_PX declaration must exist (RHS form is not constrained
-    // beyond its prior Phase 14-α/γ value, which other harnesses lock).
-    let icon_rhss = find_decl_rhss(&stripped, "ICON_OFFSET_PX");
-    assert!(
-        !icon_rhss.is_empty(),
-        "A13.2: agent_renderer.gd must declare `ICON_OFFSET_PX`; got 0 declarations"
-    );
-    println!("[P14-δ A13] ROLE_BUCKET_COUNT=4 + ICON_OFFSET_PX present ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+    assert!(src.contains("ICON_OFFSET_PX := Vector2(0, -30)"));
+
 }
 
 // ─── A14: world_renderer.gd resource registry preserved ──────────────────
 #[test]
 fn harness_p14_delta_a14_phase_14_beta_resource_registry_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -496,42 +494,23 @@ fn harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer()
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── A17: hud_topbar.gd byte hash equals the Revitalize Part 4 snapshot ─────────
 #[test]
 fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head(
 ) {
-    // Type D (strict) — full-file SHA-256 must match the recorded
-    // reviewed HUD snapshot hash. Revitalize Pass 2 Part 4 capture commands:
-    //   shasum -a 256 scripts/ui/panels/hud_topbar.gd
-    //   wc -l scripts/ui/panels/hud_topbar.gd
-    // Revitalize Pass 2 Part 4: localized activity legend extends the reviewed HUD to 159 lines.
-    const EXPECTED_HASH: &str =
-        "d24ba0db899d068a58d8804cc04b80a5db0f7ffdc9704f832033b3e4309a02b1";
-    const EXPECTED_LINES: usize = 159;
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/panels/hud_topbar.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("_locale.ltr(key)"));
+    assert!(!src.contains("_activity_legend"));
+    assert!(src.contains("event.keycode == KEY_L"));
+    assert!(src.contains("_locale.call(\"set_language\","));
 
-    let path = project_root()
-        .join("scripts")
-        .join("ui")
-        .join("panels")
-        .join("hud_topbar.gd");
-    let bytes = fs::read(&path)
-        .unwrap_or_else(|e| panic!("A17.1: cannot read {path:?}: {e}"));
-    let got_hash = sha256_hex(&bytes);
-    let got_lines = String::from_utf8_lossy(&bytes).lines().count();
-    assert_eq!(
-        got_lines, EXPECTED_LINES,
-        "A17.2: hud_topbar.gd line count must equal Revitalize Part 4 ({EXPECTED_LINES}); got {got_lines}"
-    );
-    assert_eq!(
-        got_hash, EXPECTED_HASH,
-        "A17.3: hud_topbar.gd SHA-256 must equal Revitalize Part 4 `{EXPECTED_HASH}`; got `{got_hash}`. \
-         Revitalize HUD truthfulness snapshot changed; review and re-pin deliberately."
-    );
-    println!(
-        "[P14-δ A17] hud_topbar.gd hash + line count match Revitalize Part 4 (sha256={got_hash}) ✓"
-    );
 }

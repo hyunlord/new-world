@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/summary.json",
+      "archive": "docs/art/production13b/walker/performance/W200/summary.json",
+      "sha256": "4e822ca1db4b52a2a35db4dfe0f71e390814d48e201ebd218473c0ac6aa91531",
+      "bytes": 9828
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/launch.json",
+      "archive": "docs/art/production13b/walker/performance/W200/launch.json",
+      "sha256": "d1475bc7168912c40627b3187fc356ba4d57f75856f72ba683813a78d1c7e923",
+      "bytes": 69706
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/frames.json.validity.json",
+      "archive": "docs/art/production13b/walker/performance/W200/frames.json.validity.json",
+      "sha256": "c6394802c9f6c1bdb701412c7d035d7e58947359f1623dff41716187880b856d",
+      "bytes": 180624
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/session.exit",
+      "archive": "docs/art/production13b/walker/performance/W200/session.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/session.log",
+      "archive": "docs/art/production13b/walker/performance/W200/session.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/frames.json",
+      "archive": null,
+      "sha256": "c743f9004ce766824fe0f64429ada274c95368ecfbbb883093c9c2a5a8ab44fc",
+      "bytes": 1445528,
+      "retention": "external raw frames retained unchanged"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/summary.json",
+      "archive": "docs/art/production13b/walker/performance/W500/summary.json",
+      "sha256": "4b74dbf3966e20da428ad0a8b324b3a9c24d7811b52afd98d0d05320f3349df5",
+      "bytes": 9849
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/launch.json",
+      "archive": "docs/art/production13b/walker/performance/W500/launch.json",
+      "sha256": "55f4fde20549ca270bc1609ad9abe8f0dd67889e27693c210c57535e285ab30c",
+      "bytes": 69706
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/frames.json.validity.json",
+      "archive": "docs/art/production13b/walker/performance/W500/frames.json.validity.json",
+      "sha256": "2190e3596dbffac5b763d189eea9836a1a69b6d4770609325f155ebb4f414ed3",
+      "bytes": 175918
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/session.exit",
+      "archive": "docs/art/production13b/walker/performance/W500/session.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/session.log",
+      "archive": "docs/art/production13b/walker/performance/W500/session.log",
+      "sha256": "11b9856bc1a2fd2086905e2063cb956966d1068751c19c3f399edbd9cf05a877",
+      "bytes": 468
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/frames.json",
+      "archive": null,
+      "sha256": "6272ca8fbbf086ea31db0d327a1d423047dca41f897f36eab82b306d0a351a9b",
+      "bytes": 1446187,
+      "retention": "external raw frames retained unchanged"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt1/walker-pairs.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt1/walker-pairs.json",
+      "sha256": "2c5bd4bcfea22d08182d463ecc720991d360f0745b238494798f2e7488179a7d",
+      "bytes": 2649
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt1/walker-pairs.md",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt1/walker-pairs.md",
+      "sha256": "2228e338f36461c86b9ae590598dbfc01ffb69c3c5a5a33f46797e33ede15206",
+      "bytes": 606
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt1.log",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt1/validator.log",
+      "sha256": "2c5bd4bcfea22d08182d463ecc720991d360f0745b238494798f2e7488179a7d",
+      "bytes": 2649
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt1.exit",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt1/validator.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2/W200-inherited.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/W200-inherited.json",
+      "sha256": "4e822ca1db4b52a2a35db4dfe0f71e390814d48e201ebd218473c0ac6aa91531",
+      "bytes": 9828
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2/W500-inherited.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/W500-inherited.json",
+      "sha256": "4b74dbf3966e20da428ad0a8b324b3a9c24d7811b52afd98d0d05320f3349df5",
+      "bytes": 9849
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2/invocation.md",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/invocation.md",
+      "sha256": "ffa9a4026509391ae5451bba5ab783f12391aaab67f2615b84edf002a88cd955",
+      "bytes": 714
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2/walker-pairs.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/walker-pairs.json",
+      "sha256": "02c1bb373cbf25ea2d6ef8234f6724263ff150f2f19de536b548f86f04a952b4",
+      "bytes": 3334
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2/walker-pairs.md",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/walker-pairs.md",
+      "sha256": "ef1280e1c3263296cea72c16af9e1d1d2e663f7b43f9adb204d4bda9fe0cee7e",
+      "bytes": 1087
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2.log",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/validator.log",
+      "sha256": "02c1bb373cbf25ea2d6ef8234f6724263ff150f2f19de536b548f86f04a952b4",
+      "bytes": 3334
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt2.exit",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt2/validator.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3/W200-inherited.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/W200-inherited.json",
+      "sha256": "4e822ca1db4b52a2a35db4dfe0f71e390814d48e201ebd218473c0ac6aa91531",
+      "bytes": 9828
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3/W500-inherited.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/W500-inherited.json",
+      "sha256": "4b74dbf3966e20da428ad0a8b324b3a9c24d7811b52afd98d0d05320f3349df5",
+      "bytes": 9849
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3/invocation.md",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/invocation.md",
+      "sha256": "9a637b9ad78ec11c3af6752632434caafa0fe664637bb9c1fe4945f053bfe290",
+      "bytes": 997
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3/walker-pairs.json",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/walker-pairs.json",
+      "sha256": "f09dbcf7574f201ed30754624d38e2c27e8b50d1b98220d376d86037027c4806",
+      "bytes": 3351
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3/walker-pairs.md",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/walker-pairs.md",
+      "sha256": "a42bf1399398eb0758b97be499f918975f5a342c6b3f56d9926f8fa3fcd998d0",
+      "bytes": 1119
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3.log",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/validator.log",
+      "sha256": "f09dbcf7574f201ed30754624d38e2c27e8b50d1b98220d376d86037027c4806",
+      "bytes": 3351
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-comparison-attempt3.exit",
+      "archive": "docs/art/production13b/walker/performance/comparison-attempt3/validator.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    }
+  ]
+}

@@ -68,9 +68,6 @@ fn read_palette_shader_src() -> String {
     read_file(&["shaders", "palette_swap.gdshader"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
 
 fn read_world_renderer_src() -> String {
     read_file(&["scripts", "ui", "world_renderer.gd"])
@@ -437,8 +434,8 @@ fn harness_h_a9_zoom_invariants_unchanged() {
     let def_rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "a9.3");
     assert_eq!(
         no_ws(&min_rhs),
-        "Vector2(0.5,0.5)",
-        "a9.4: ZOOM_MIN must equal Vector2(0.5,0.5); got `{min_rhs}`"
+        "Vector2(1.0,1.0)",
+        "a9.4: ZOOM_MIN must equal Vector2(1.0,1.0); got `{min_rhs}`"
     );
     assert_eq!(
         no_ws(&max_rhs),
@@ -545,26 +542,25 @@ fn harness_h_a13_shader_rowselect_logic_preserved() {
 // ─── a14: agent_renderer invariants intact ────────────────────────────────────
 #[test]
 fn harness_h_a14_agent_renderer_untouched_invariants() {
-    // Type D — regression guard. Section 2 lists agent_renderer.gd as "Not
-    // changed". Phase 4-γ SPRITE_SCALE=0.25, Phase 11-α STATE_TINTS, and G
-    // Phase A SHEET_COLS must all survive untouched.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "a14.1");
-    let f = parse_float_rhs(&rhs)
-        .unwrap_or_else(|| panic!("a14.2: SPRITE_SCALE RHS must parse as float; got `{rhs}`"));
-    assert!(
-        (f - 0.25).abs() < 1e-9,
-        "a14.3: SPRITE_SCALE must equal 0.25 (Phase 4-γ invariant); got {f}"
-    );
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "a14.4: agent_renderer.gd must keep STATE_TINTS (Phase 11-α)"
-    );
-    assert!(
-        stripped.contains("SHEET_COLS"),
-        "a14.5: agent_renderer.gd must keep SHEET_COLS (G Phase A)"
-    );
-    println!("[H a14] agent_renderer SPRITE_SCALE=0.25 + STATE_TINTS + SHEET_COLS intact ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+    assert!(src.contains("ICON_OFFSET_PX"));
+    assert!(!src.contains("STATE_TINTS"));
+
 }
 
 // ─── a15: world_renderer KEY_SPACE overlay intact ─────────────────────────────

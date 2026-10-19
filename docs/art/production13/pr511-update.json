@@ -1,0 +1,14 @@
+{
+  "baseRefName": "codex/revitalize-2026-10",
+  "headRefName": "codex/art-production-2026-10",
+  "isDraft": true,
+  "state": "OPEN",
+  "url": "https://github.com/hyunlord/new-world/pull/511",
+  "verified_at_utc": "2026-10-19T04:38:21Z",
+  "prior_body_characters": 38476,
+  "prior_body_sha256": "f4369f8b853036b4e7ef7b37ff9c86ecb847a40fcc5f8f8b74dd9d5ca52de1ec",
+  "updated_body_sha256": "2df647c8b06531778e6279b4f6e18a032f4eb50322033189ef45c1c1699efed6",
+  "prior_body_exact_prefix": true,
+  "raw_before": "/Users/rexxa/work/art-production13-evidence/pr511-before-final.json",
+  "raw_after": "/Users/rexxa/work/art-production13-evidence/pr511-after-pass13.json"
+}

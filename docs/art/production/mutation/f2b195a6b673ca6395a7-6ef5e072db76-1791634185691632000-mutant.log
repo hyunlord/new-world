@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running tests/harness_show_agent_needs_bars.rs (target/debug/deps/harness_show_agent_needs_bars-9d30a7e07c826392)
+
+running 1 test
+test harness_needs_a5_renderer_and_bridge_contract ... 
+thread 'harness_needs_a5_renderer_and_bridge_contract' (49606915) panicked at crates/sim-test/tests/harness_show_agent_needs_bars.rs:415:5:
+A5(a): renderer follows the rendered agent by identity at its native head anchor
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_needs_a5_renderer_and_bridge_contract
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_show_agent_needs_bars`

@@ -1,0 +1,6 @@
+script	exit
+capture_framings_p13	0
+capture_identity_p13	0
+capture_running_identity_p13	0
+perf_alternating_frames_p13	0
+generated	0

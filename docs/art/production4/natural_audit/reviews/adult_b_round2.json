@@ -1,0 +1,348 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_b2_15",
+      "candidate_id": "V_b2_15",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The raised tool reads at 2x, but the mask leaves the lower side locks dark beside the shoulders in the white-hair preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_16",
+      "candidate_id": "V_b2_16",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The lowered tool is visible at 2x; dark long hair remains below the recoloured cap on both sides of the head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The carried red-topped load reads at 2x; the white preview retains a dark interior lock behind the cheek and beside the shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The load and east-facing profile are clear; the back edge of the long hair retains a substantial dark strip below the white crown.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_07",
+      "candidate_id": "V_b2_07",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east carry pose and load remain readable; a dark long-hair strip remains behind the recoloured front lock.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_08",
+      "candidate_id": "V_b2_08",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The bent stride and carried load read at 2x; the white-hair view leaves dark lower hair beside the neck and shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_01",
+      "candidate_id": "V_b2_01",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The requested south carry presents a right-facing profile, with the face and long front lock arranged like the east carry cells.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_02",
+      "candidate_id": "V_b2_02",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The south-labelled carry has a right-facing profile and side-on face rather than a front-facing south head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_03",
+      "candidate_id": "V_b2_03",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The south-labelled carry repeats the east-facing head/profile while holding the load to the left.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_04",
+      "candidate_id": "V_b2_04",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The head and torso read as the same east-facing carry profile as the east frames, not the requested south view.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_14",
+      "candidate_id": "V_b3_14",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The crouched knees and front-facing head are legible; long dark hair remains down both sides below the blue scalp mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_15",
+      "candidate_id": "V_b3_15",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The low crouch reads clearly, but white hair stops around the forehead while lower side locks remain dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_03",
+      "candidate_id": "V_b3_03",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Hands reach the mouth at 2x; the mask covers the crown but leaves a broad dark back lock extending toward the shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_04",
+      "candidate_id": "V_b3_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east-facing drink brings the hands to the mouth at 2x; the mask follows the crown and long rear lock, with skin and cream clothing preserved.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_drink_01",
+      "candidate_id": "P2V_b_S_drink_01",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The cup and hands sit at the mouth, but the left crown and long left-side hair remain dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_drink_02",
+      "candidate_id": "P2V_b_S_drink_02",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front-facing cup reaches the mouth; the blue mask omits dark crown and lower side-hair regions visible in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_E_eat_01",
+      "candidate_id": "P2V_b_E_eat_01",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The right-facing eating hand is raised to the face; the rear lower hair remains dark beneath the recoloured crown.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_E_eat_02",
+      "candidate_id": "P2V_b_E_eat_02",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east eating pose is readable, but the white preview retains a dark lower back lock beside the neck.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_eat_01",
+      "candidate_id": "P2V_b_N_eat_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The back of the head faces the viewer and the eating arm rises at the side; the blue mask spans the visible rear hair and the white preview preserves skin and clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_eat_02",
+      "candidate_id": "P2V_b_N_eat_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north-facing head and raised eating arm are consistent; the rear hair is recoloured without whitening the hand or cream tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_05",
+      "candidate_id": "V_b3_05",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south eating pose shows food at the mouth; lower long hair beside the face remains dark outside the scalp mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_06",
+      "candidate_id": "V_b3_06",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The food and raised hand read at 2x; dark long locks remain beside the cheeks below the recoloured upper hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_11",
+      "candidate_id": "V_b2_11",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The figure gathers at a visible berry bush; the mask covers the top hair but leaves dark lower locks beside the face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_12",
+      "candidate_id": "V_b2_12",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Hands and berry bush make the gathering pose clear; dark side hair remains beneath the white crown on both sides.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_04",
+      "candidate_id": "V_b1_04",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The idle is a clear east profile; a broad dark back lock remains outside the blue mask and stays dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_03",
+      "candidate_id": "V_b1_03",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The north idle shows rear hair, but an interior vertical dark gap remains in the lower right portion of the white-hair mass.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_01",
+      "candidate_id": "V_b1_01",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front idle retains tan skin and cream clothes, but long dark hair beside the neck is excluded from the recoloured scalp.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_02",
+      "candidate_id": "V_b1_02",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south idle reads correctly; dark hair remains beside the cheeks and at the lower locks after the crown is whitened.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_08",
+      "candidate_id": "V_b3_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east seated pose has legs extended forward; the blue mask follows the long rear hair and white recolouring preserves the face and clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_sit_01",
+      "candidate_id": "P2V_b_N_sit_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The seated back view shows the rear head and forward bent legs; the visible hair is recoloured while the exposed arm and tunic retain their colours.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_07",
+      "candidate_id": "V_b3_07",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front-facing seated knees read clearly; substantial dark side locks remain below the masked upper hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_11",
+      "candidate_id": "V_b3_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east-facing talk gesture extends an open hand; the white preview follows the crown and rear lock without whitening the gesture or clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_12",
+      "candidate_id": "V_b3_12",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east-facing hands form a talk gesture, but a dark interior hair section remains between the white crown and the long rear lock.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_09",
+      "candidate_id": "V_b3_09",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south-facing raised hand reads as talk; the long locks framing the lower face remain dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_10",
+      "candidate_id": "V_b3_10",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Both hands lift in a front-facing talk gesture; dark lower side locks remain outside the blue scalp mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_13",
+      "candidate_id": "V_b1_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north walk shows rear hair and a stepping silhouette; the white-hair preview preserves tan arms and cream clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_14",
+      "candidate_id": "V_b1_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north walk presents the back of the head and alternating legs; the blue mask follows the rear hair and the white preview leaves the body colours intact.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_15",
+      "candidate_id": "V_b1_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north stride and turned rear head remain legible at 2x; white recolouring follows the rear hair without colouring the arms or tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_16",
+      "candidate_id": "V_b1_16",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The rear-facing walk keeps the long hair and cream tunic consistent; the white preview recolours the rear hair while preserving skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_05",
+      "candidate_id": "V_b1_05",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south-facing stride is readable; the white crown leaves dark long side locks beside the face and collar.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_06",
+      "candidate_id": "V_b1_06",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front walk and alternating feet read at 2x; a substantial dark side lock remains below the masked crown.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_07",
+      "candidate_id": "V_b1_07",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south walk retains the reference skin and tunic colours, but dark lower hair beside the neck remains outside the mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_08",
+      "candidate_id": "V_b1_08",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front-facing walking pose is clear; the white preview leaves a dark interior lock on the right side of the head and neck.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

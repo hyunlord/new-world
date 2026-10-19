@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-19T17:26:08.715167+00:00",
+  "initial_published_head": "3159d83c77646d2efaba9a0228bb0abcd206b39f",
+  "measured_and_tested_runtime_head": "40aa7a463d740b776248828211251187319c6af6",
+  "gate_checks": 120,
+  "gate_errors": [],
+  "runtime_diff_empty": true,
+  "own_worktrees_removed": true,
+  "unrelated_audit_worktree_preserved": true,
+  "pr511_body_verified": true,
+  "overall_art_performance_verdict": "PARTIAL",
+  "remaining_delivery": "Commit final report/evidence, fast-forward both remote branches, verify final receipt."
+}

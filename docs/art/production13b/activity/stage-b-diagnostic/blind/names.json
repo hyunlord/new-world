@@ -1,0 +1,12 @@
+{
+  "choices": [
+    "TendFire",
+    "Craft",
+    "Repair",
+    "HearthCircle",
+    "Explore",
+    "Play",
+    "SitByFire"
+  ],
+  "instructions": "Identify each numbered crop. Freeze answers before the village task; do not open any key."
+}

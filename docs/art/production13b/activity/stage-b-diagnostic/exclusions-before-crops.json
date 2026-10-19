@@ -1,0 +1,4379 @@
+{
+  "frozen_ns": 1792415129924821000,
+  "capture_order": [
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json"
+  ],
+  "source_hashes": {
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.json": "e2fef0ce40abc8e21f01a6b7e529105ffd8afc7e6e1e2a680838694f712c33f3",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.png": "5f5f49292842210fae5742b8f38c9333381cde1f35a2b3bc93d0a45a190f33b5",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json": "5182b31aacc4a07debe76df55b849578cfdd20e3783986b545dfd7e44fe4b822",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.png": "6baf656049f43c81fc6911d304f8a97b81bfe626da7949b546fcebdbb535a047",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json": "34b08bf23ddecae288b33706180458950abb77c3865abb7bac8bb80751865c15",
+    "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.png": "3ca066b5907613e46a1326e53ff779ffe4a9eb9d686079774644d88d6e5d8435",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json": "bd280aa76e3b7f28dcf8e18bb9492cb09a31ee70050c57fd37fb12c43fa0ee6f",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.png": "3a31ee9f70330a1c3e0978004d99469765d718e57d8ff27fbdd8d2db6eb5dbc8",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json": "57c27f9b1d34dfffca0f42636d2db7186feeb82b849edcba289208c4742cfa01",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.png": "6275fd4f2d2d1992275c11c0d05cb525c6f9850d24bd6d82b954b29a8d4d66b1",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json": "b532af7fe8a1229aa0d82dcdb2c82368aee5fabb1c015b8bf0889d61524da604",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.png": "467b8afebed309c842805b3a2eddab944f674accbad085c5b5c6401f453f1648",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json": "2a51167c33084f4b4b20e59b06d43f8a3202312cbaf03edeb905d41ce52500f1",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.png": "68dcbe6288fa1cb879ca6135d5f8ff7558307a21dcc2072b875ea2ee46ac93de",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json": "b9329d483dc5ec430a828596d6c6e439f6664a0fe39f5cc9c139cf84fffa973a",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.png": "fad4696844fe20c393aa8143e70057f01481385136ea10ef8a3a79a8b526ea44",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json": "e44af1283ef784772cc7dc054194764f73089d4016335ffbfa95b69ca1d78ee6",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.png": "acd6a4e203ddf343780a9e7a058d9f848c62ed3722fefd4cf740fb17fba667ad",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json": "a5f66ef64a57dc3e6143fc09546b2219e23da68c7370adfd6b095e838da22c2e",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.png": "eeb6a4a016f68e66389f42202d6aced47363e57084fcbe434e528a535ab8622a",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json": "3581816882719188510c73986129cb3d8a0b0a62d7887298a4e3aa0b3c3af88c",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.png": "1ad6ed53801a9288552a33b67119b5d1f939857b44e48d66628c755b6c1094fd",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json": "bd9395fcfceeb7798a35f867a7c6270082d98c901bbab237f2199b260f31edd0",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.png": "7767d69a2d4231562bcfae79adb3cfc7f9cfedb5ea9dcd3c7c593c1bfc714429",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json": "fd95e45af04f12f76630c2083f42baa4459c50ee663c2b7986eaef48e0d1f9db",
+    "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.png": "115fbaf3c1001a06605ad55fec1cb06fe19999ad7761255234cb3646b5edae4a"
+  },
+  "exclusions": [
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.json",
+      "agent_id": 1,
+      "kind": 3,
+      "box": [
+        920,
+        252,
+        1120,
+        452
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8009259259259259,
+      "icon_covered_fraction": 0.15,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.json",
+      "agent_id": 16,
+      "kind": 6,
+      "box": [
+        804,
+        304,
+        1012,
+        512
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7237762237762237,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.json",
+      "agent_id": 33,
+      "kind": 5,
+      "box": [
+        868,
+        176,
+        1068,
+        376
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.0175,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 3,
+      "kind": 6,
+      "box": [
+        786,
+        356,
+        1002,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9658385093167702,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 16,
+      "kind": 6,
+      "box": [
+        976,
+        240,
+        1184,
+        448
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.722027972027972,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 17,
+      "kind": 6,
+      "box": [
+        854,
+        304,
+        1070,
+        520
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5680272108843537,
+      "icon_covered_fraction": 0.1425,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 18,
+      "kind": 3,
+      "box": [
+        990,
+        356,
+        1206,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6583850931677019,
+      "icon_covered_fraction": 0.1975,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 22,
+      "kind": 3,
+      "box": [
+        856,
+        252,
+        1056,
+        452
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9907407407407407,
+      "icon_covered_fraction": 0.3475,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 23,
+      "kind": 6,
+      "box": [
+        912,
+        360,
+        1120,
+        568
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.965034965034965,
+      "icon_covered_fraction": 0.4,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 24,
+      "kind": 3,
+      "box": [
+        918,
+        224,
+        1134,
+        440
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7857142857142857,
+      "icon_covered_fraction": 0.3375,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 31,
+      "kind": 2,
+      "box": [
+        780,
+        160,
+        1004,
+        384
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6166666666666667,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 32,
+      "kind": 1,
+      "box": [
+        910,
+        408,
+        1134,
+        632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5372670807453416,
+      "icon_covered_fraction": 0.371900826446281,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 33,
+      "kind": 5,
+      "box": [
+        1016,
+        240,
+        1216,
+        440
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.821078431372549,
+      "icon_covered_fraction": 0.55,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 34,
+      "kind": 5,
+      "box": [
+        808,
+        120,
+        1008,
+        320
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8553921568627451,
+      "icon_covered_fraction": 0.4,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 35,
+      "kind": 5,
+      "box": [
+        1004,
+        120,
+        1204,
+        320
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8137254901960784,
+      "icon_covered_fraction": 0.36,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 29,
+      "kind": 6,
+      "box": [
+        926,
+        368,
+        1142,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.968944099378882,
+      "icon_covered_fraction": 0.2625,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 30,
+      "kind": 6,
+      "box": [
+        838,
+        296,
+        1054,
+        512
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8996598639455783,
+      "icon_covered_fraction": 0.4425,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 37,
+      "kind": 3,
+      "box": [
+        978,
+        356,
+        1194,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.2975,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 41,
+      "kind": 3,
+      "box": [
+        742,
+        428,
+        958,
+        644
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9394409937888198,
+      "icon_covered_fraction": 0.0425,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 42,
+      "kind": 6,
+      "box": [
+        978,
+        228,
+        1194,
+        444
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9968944099378882,
+      "icon_covered_fraction": 0.4875,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 44,
+      "kind": 3,
+      "box": [
+        2028,
+        1968,
+        2228,
+        2168
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.90625,
+      "icon_covered_fraction": 0.25,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 46,
+      "kind": 6,
+      "box": [
+        774,
+        288,
+        990,
+        504
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8913043478260869,
+      "icon_covered_fraction": 0.18,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 48,
+      "kind": 6,
+      "box": [
+        2088,
+        1900,
+        2296,
+        2108
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9965034965034965,
+      "icon_covered_fraction": 0.145,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 50,
+      "kind": 4,
+      "box": [
+        1088,
+        936,
+        1312,
+        1160
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 51,
+      "kind": 3,
+      "box": [
+        2126,
+        1892,
+        2342,
+        2108
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9658385093167702,
+      "icon_covered_fraction": 0.45,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 54,
+      "kind": 4,
+      "box": [
+        1604,
+        924,
+        1828,
+        1148
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9907407407407407,
+      "icon_covered_fraction": 0.4275,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 57,
+      "kind": 0,
+      "box": [
+        2066,
+        1824,
+        2282,
+        2040
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9922360248447205,
+      "icon_covered_fraction": 0.87,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 62,
+      "kind": 3,
+      "box": [
+        1930,
+        1968,
+        2146,
+        2184
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.061224489795918366,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 63,
+      "kind": 0,
+      "box": [
+        902,
+        304,
+        1118,
+        520
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9829192546583851,
+      "icon_covered_fraction": 0.26,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 64,
+      "kind": 4,
+      "box": [
+        1500,
+        924,
+        1724,
+        1148
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7722222222222223,
+      "icon_covered_fraction": 0.2875,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 68,
+      "kind": 4,
+      "box": [
+        1368,
+        928,
+        1592,
+        1152
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5666666666666667,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 69,
+      "kind": 3,
+      "box": [
+        1020,
+        232,
+        1228,
+        440
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9772727272727273,
+      "icon_covered_fraction": 0.65,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 72,
+      "kind": 4,
+      "box": [
+        1744,
+        932,
+        1968,
+        1156
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 74,
+      "kind": 3,
+      "box": [
+        2132,
+        1712,
+        2340,
+        1920
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.958041958041958,
+      "icon_covered_fraction": 0.135,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 76,
+      "kind": 4,
+      "box": [
+        1424,
+        924,
+        1648,
+        1148
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.4185185185185185,
+      "icon_covered_fraction": 0.285,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 88,
+      "kind": 2,
+      "box": [
+        1812,
+        1692,
+        2036,
+        1916
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6428571428571429,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 90,
+      "kind": 3,
+      "box": [
+        2082,
+        1968,
+        2298,
+        2184
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1989795918367347,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 92,
+      "kind": 0,
+      "box": [
+        1930,
+        1916,
+        2134,
+        2120
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.92,
+      "icon_covered_fraction": 0.3325,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 93,
+      "kind": 4,
+      "box": [
+        1560,
+        928,
+        1784,
+        1152
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.12105263157894737,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 95,
+      "kind": 0,
+      "box": [
+        2070,
+        1768,
+        2286,
+        1984
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9518633540372671,
+      "icon_covered_fraction": 0.285,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 99,
+      "kind": 4,
+      "box": [
+        1820,
+        928,
+        2044,
+        1152
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0475,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 104,
+      "kind": 4,
+      "box": [
+        1180,
+        924,
+        1404,
+        1148
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.24210526315789474,
+      "icon_covered_fraction": 0.1275,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 105,
+      "kind": 3,
+      "box": [
+        2140,
+        1976,
+        2348,
+        2184
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.583916083916084,
+      "icon_covered_fraction": 0.27,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 106,
+      "kind": 4,
+      "box": [
+        1248,
+        936,
+        1472,
+        1160
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6842105263157895,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 120,
+      "kind": 5,
+      "box": [
+        2176,
+        1716,
+        2376,
+        1916
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9629629629629629,
+      "icon_covered_fraction": 0.4825,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 123,
+      "kind": 5,
+      "box": [
+        724,
+        176,
+        924,
+        376
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6029411764705882,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 124,
+      "kind": 5,
+      "box": [
+        760,
+        176,
+        960,
+        376
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8676470588235294,
+      "icon_covered_fraction": 0.55,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json",
+      "agent_id": 3,
+      "kind": 3,
+      "box": [
+        786,
+        548,
+        1002,
+        764
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.827639751552795,
+      "icon_covered_fraction": 0.1425,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json",
+      "agent_id": 9,
+      "kind": 3,
+      "box": [
+        1030,
+        544,
+        1246,
+        760
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7950310559006211,
+      "icon_covered_fraction": 0.765,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json",
+      "agent_id": 16,
+      "kind": 6,
+      "box": [
+        868,
+        496,
+        1076,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7237762237762237,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json",
+      "agent_id": 17,
+      "kind": 3,
+      "box": [
+        1046,
+        432,
+        1262,
+        648
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7437888198757764,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/capture.json",
+      "agent_id": 34,
+      "kind": 5,
+      "box": [
+        872,
+        376,
+        1072,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6666666666666666,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json",
+      "agent_id": 3,
+      "kind": 3,
+      "box": [
+        786,
+        420,
+        1002,
+        636
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.827639751552795,
+      "icon_covered_fraction": 0.1425,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json",
+      "agent_id": 9,
+      "kind": 3,
+      "box": [
+        1030,
+        416,
+        1246,
+        632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7950310559006211,
+      "icon_covered_fraction": 0.765,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json",
+      "agent_id": 16,
+      "kind": 6,
+      "box": [
+        868,
+        368,
+        1076,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7237762237762237,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json",
+      "agent_id": 17,
+      "kind": 3,
+      "box": [
+        1046,
+        304,
+        1262,
+        520
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7437888198757764,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/capture.json",
+      "agent_id": 34,
+      "kind": 5,
+      "box": [
+        872,
+        248,
+        1072,
+        448
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6666666666666666,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 28,
+      "kind": 3,
+      "box": [
+        -180,
+        -212,
+        28,
+        -4
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6048951048951049,
+      "icon_covered_fraction": 0.13,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 30,
+      "kind": 6,
+      "box": [
+        -122,
+        -280,
+        94,
+        -64
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9968944099378882,
+      "icon_covered_fraction": 0.195,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        -24,
+        -264,
+        176,
+        -64
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8148148148148148,
+      "icon_covered_fraction": 0.5,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 35,
+      "kind": 3,
+      "box": [
+        104,
+        -144,
+        312,
+        64
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.13986013986013987,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 41,
+      "kind": 3,
+      "box": [
+        -154,
+        -148,
+        62,
+        68
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.08385093167701864,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 45,
+      "kind": 6,
+      "box": [
+        -112,
+        -216,
+        96,
+        -8
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7097902097902098,
+      "icon_covered_fraction": 0.195,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 47,
+      "kind": 6,
+      "box": [
+        1098,
+        1188,
+        1314,
+        1404
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.641156462585034,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        12,
+        -264,
+        220,
+        -56
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.3111888111888112,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 70,
+      "kind": 3,
+      "box": [
+        982,
+        1384,
+        1198,
+        1600
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.782608695652174,
+      "icon_covered_fraction": 0.95,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 86,
+      "kind": 3,
+      "box": [
+        1186,
+        1384,
+        1402,
+        1600
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.576530612244898,
+      "icon_covered_fraction": 0.475,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 93,
+      "kind": 4,
+      "box": [
+        664,
+        352,
+        888,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9754385964912281,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 106,
+      "kind": 4,
+      "box": [
+        352,
+        360,
+        576,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5631578947368421,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 120,
+      "kind": 5,
+      "box": [
+        1260,
+        1012,
+        1460,
+        1212
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7685185185185185,
+      "icon_covered_fraction": 0.58,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 121,
+      "kind": 5,
+      "box": [
+        936,
+        1084,
+        1136,
+        1284
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5098039215686274,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        -240,
+        -452,
+        -40,
+        -252
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 28,
+      "kind": 3,
+      "box": [
+        -564,
+        -852,
+        -356,
+        -644
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6048951048951049,
+      "icon_covered_fraction": 0.13,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 30,
+      "kind": 6,
+      "box": [
+        -506,
+        -920,
+        -290,
+        -704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9968944099378882,
+      "icon_covered_fraction": 0.195,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        -408,
+        -904,
+        -208,
+        -704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8148148148148148,
+      "icon_covered_fraction": 0.5,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 35,
+      "kind": 3,
+      "box": [
+        -280,
+        -784,
+        -72,
+        -576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.13986013986013987,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 41,
+      "kind": 3,
+      "box": [
+        -538,
+        -788,
+        -322,
+        -572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.08385093167701864,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 45,
+      "kind": 6,
+      "box": [
+        -496,
+        -856,
+        -288,
+        -648
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7097902097902098,
+      "icon_covered_fraction": 0.195,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 47,
+      "kind": 6,
+      "box": [
+        714,
+        548,
+        930,
+        764
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.641156462585034,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        -372,
+        -904,
+        -164,
+        -696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.3111888111888112,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 70,
+      "kind": 3,
+      "box": [
+        598,
+        744,
+        814,
+        960
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.782608695652174,
+      "icon_covered_fraction": 0.95,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 72,
+      "kind": 4,
+      "box": [
+        464,
+        -284,
+        688,
+        -60
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 86,
+      "kind": 3,
+      "box": [
+        802,
+        744,
+        1018,
+        960
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.576530612244898,
+      "icon_covered_fraction": 0.475,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 93,
+      "kind": 4,
+      "box": [
+        280,
+        -288,
+        504,
+        -64
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9754385964912281,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 106,
+      "kind": 4,
+      "box": [
+        -32,
+        -280,
+        192,
+        -56
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5631578947368421,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 120,
+      "kind": 5,
+      "box": [
+        876,
+        372,
+        1076,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7685185185185185,
+      "icon_covered_fraction": 0.58,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 121,
+      "kind": 5,
+      "box": [
+        552,
+        444,
+        752,
+        644
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5098039215686274,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        -624,
+        -1092,
+        -424,
+        -892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 28,
+      "kind": 3,
+      "box": [
+        780,
+        428,
+        988,
+        636
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6048951048951049,
+      "icon_covered_fraction": 0.13,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 30,
+      "kind": 6,
+      "box": [
+        838,
+        360,
+        1054,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9968944099378882,
+      "icon_covered_fraction": 0.195,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        936,
+        376,
+        1136,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8148148148148148,
+      "icon_covered_fraction": 0.5,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 45,
+      "kind": 6,
+      "box": [
+        848,
+        424,
+        1056,
+        632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7097902097902098,
+      "icon_covered_fraction": 0.195,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 47,
+      "kind": 6,
+      "box": [
+        2058,
+        1828,
+        2274,
+        2044
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.641156462585034,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 70,
+      "kind": 3,
+      "box": [
+        1942,
+        2024,
+        2158,
+        2240
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.782608695652174,
+      "icon_covered_fraction": 0.95,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 72,
+      "kind": 4,
+      "box": [
+        1808,
+        996,
+        2032,
+        1220
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 86,
+      "kind": 3,
+      "box": [
+        2146,
+        2024,
+        2362,
+        2240
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.576530612244898,
+      "icon_covered_fraction": 0.475,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 93,
+      "kind": 4,
+      "box": [
+        1624,
+        992,
+        1848,
+        1216
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9754385964912281,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 106,
+      "kind": 4,
+      "box": [
+        1312,
+        1000,
+        1536,
+        1224
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5631578947368421,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 120,
+      "kind": 5,
+      "box": [
+        2220,
+        1652,
+        2420,
+        1852
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7685185185185185,
+      "icon_covered_fraction": 0.58,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 121,
+      "kind": 5,
+      "box": [
+        1896,
+        1724,
+        2096,
+        1924
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5098039215686274,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 28,
+      "kind": 6,
+      "box": [
+        -308,
+        -1108,
+        -100,
+        -900
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8525,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 29,
+      "kind": 3,
+      "box": [
+        -290,
+        -912,
+        -74,
+        -696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        -368,
+        -1040,
+        -160,
+        -832
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.4075,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 38,
+      "kind": 3,
+      "box": [
+        -104,
+        -1160,
+        104,
+        -952
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7692307692307693,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 41,
+      "kind": 6,
+      "box": [
+        -282,
+        -1044,
+        -66,
+        -828
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9083850931677019,
+      "icon_covered_fraction": 0.3,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 45,
+      "kind": 3,
+      "box": [
+        -132,
+        -1048,
+        76,
+        -840
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.37,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 46,
+      "kind": 6,
+      "box": [
+        -378,
+        -992,
+        -162,
+        -776
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8881987577639752,
+      "icon_covered_fraction": 0.3425,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        -180,
+        -1032,
+        28,
+        -824
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9230769230769231,
+      "icon_covered_fraction": 0.36,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 55,
+      "kind": 0,
+      "box": [
+        842,
+        364,
+        1046,
+        568
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.96,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 59,
+      "kind": 4,
+      "box": [
+        144,
+        -472,
+        368,
+        -248
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 62,
+      "kind": 2,
+      "box": [
+        838,
+        236,
+        1058,
+        456
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.746551724137931,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 63,
+      "kind": 0,
+      "box": [
+        -250,
+        -1104,
+        -34,
+        -888
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8291925465838509,
+      "icon_covered_fraction": 0.24,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 69,
+      "kind": 3,
+      "box": [
+        -68,
+        -1048,
+        140,
+        -840
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5734265734265734,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 73,
+      "kind": 3,
+      "box": [
+        -374,
+        -928,
+        -158,
+        -712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.040372670807453416,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 76,
+      "kind": 0,
+      "box": [
+        858,
+        432,
+        1062,
+        636
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.92,
+      "icon_covered_fraction": 0.12,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 82,
+      "kind": 0,
+      "box": [
+        922,
+        500,
+        1126,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6690909090909091,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 83,
+      "kind": 1,
+      "box": [
+        -156,
+        -856,
+        60,
+        -640
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.458041958041958,
+      "icon_covered_fraction": 0.23553719008264462,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 86,
+      "kind": 0,
+      "box": [
+        886,
+        360,
+        1102,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9720496894409938,
+      "icon_covered_fraction": 0.4375,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 87,
+      "kind": 3,
+      "box": [
+        -108,
+        -968,
+        100,
+        -760
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9895104895104895,
+      "icon_covered_fraction": 0.63,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 88,
+      "kind": 2,
+      "box": [
+        982,
+        224,
+        1202,
+        444
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9482758620689655,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 99,
+      "kind": 0,
+      "box": [
+        934,
+        372,
+        1138,
+        576
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8222222222222222,
+      "icon_covered_fraction": 0.1225,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 100,
+      "kind": 0,
+      "box": [
+        -314,
+        -988,
+        -98,
+        -772
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9937888198757764,
+      "icon_covered_fraction": 0.8475,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 102,
+      "kind": 0,
+      "box": [
+        998,
+        368,
+        1202,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8870588235294118,
+      "icon_covered_fraction": 0.2575,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 103,
+      "kind": 0,
+      "box": [
+        970,
+        436,
+        1174,
+        640
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9927272727272727,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 112,
+      "kind": 2,
+      "box": [
+        -432,
+        -1244,
+        -208,
+        -1020
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.38095238095238093,
+      "icon_covered_fraction": 0.245,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 114,
+      "kind": 3,
+      "box": [
+        864,
+        564,
+        1064,
+        764
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.55,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 118,
+      "kind": 3,
+      "box": [
+        -342,
+        -1048,
+        -126,
+        -832
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8575,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        -368,
+        -1220,
+        -168,
+        -1020
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6813725490196079,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 123,
+      "kind": 5,
+      "box": [
+        -24,
+        -1232,
+        176,
+        -1032
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.005,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 125,
+      "kind": 5,
+      "box": [
+        -96,
+        -1292,
+        104,
+        -1092
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5955882352941176,
+      "icon_covered_fraction": 0.2025,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 28,
+      "kind": 6,
+      "box": [
+        -308,
+        -980,
+        -100,
+        -772
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8525,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 29,
+      "kind": 3,
+      "box": [
+        -290,
+        -784,
+        -74,
+        -568
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        -368,
+        -912,
+        -160,
+        -704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.4075,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 38,
+      "kind": 3,
+      "box": [
+        -104,
+        -1032,
+        104,
+        -824
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7692307692307693,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 41,
+      "kind": 6,
+      "box": [
+        -282,
+        -916,
+        -66,
+        -700
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9083850931677019,
+      "icon_covered_fraction": 0.3,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 45,
+      "kind": 3,
+      "box": [
+        -132,
+        -920,
+        76,
+        -712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.37,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 46,
+      "kind": 6,
+      "box": [
+        -378,
+        -864,
+        -162,
+        -648
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8881987577639752,
+      "icon_covered_fraction": 0.3425,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        -180,
+        -904,
+        28,
+        -696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9230769230769231,
+      "icon_covered_fraction": 0.36,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 55,
+      "kind": 0,
+      "box": [
+        842,
+        492,
+        1046,
+        696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.96,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 59,
+      "kind": 4,
+      "box": [
+        144,
+        -344,
+        368,
+        -120
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 62,
+      "kind": 2,
+      "box": [
+        838,
+        364,
+        1058,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.746551724137931,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 63,
+      "kind": 0,
+      "box": [
+        -250,
+        -976,
+        -34,
+        -760
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8291925465838509,
+      "icon_covered_fraction": 0.24,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 69,
+      "kind": 3,
+      "box": [
+        -68,
+        -920,
+        140,
+        -712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5734265734265734,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 73,
+      "kind": 3,
+      "box": [
+        -374,
+        -800,
+        -158,
+        -584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.040372670807453416,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 76,
+      "kind": 0,
+      "box": [
+        858,
+        560,
+        1062,
+        764
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.92,
+      "icon_covered_fraction": 0.12,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 82,
+      "kind": 0,
+      "box": [
+        922,
+        628,
+        1126,
+        832
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6690909090909091,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 83,
+      "kind": 1,
+      "box": [
+        -156,
+        -728,
+        60,
+        -512
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.458041958041958,
+      "icon_covered_fraction": 0.23553719008264462,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 86,
+      "kind": 0,
+      "box": [
+        886,
+        488,
+        1102,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9720496894409938,
+      "icon_covered_fraction": 0.4375,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 87,
+      "kind": 3,
+      "box": [
+        -108,
+        -840,
+        100,
+        -632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9895104895104895,
+      "icon_covered_fraction": 0.63,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 88,
+      "kind": 2,
+      "box": [
+        982,
+        352,
+        1202,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9482758620689655,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 99,
+      "kind": 0,
+      "box": [
+        934,
+        500,
+        1138,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8222222222222222,
+      "icon_covered_fraction": 0.1225,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 100,
+      "kind": 0,
+      "box": [
+        -314,
+        -860,
+        -98,
+        -644
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9937888198757764,
+      "icon_covered_fraction": 0.8475,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 102,
+      "kind": 0,
+      "box": [
+        998,
+        496,
+        1202,
+        700
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8870588235294118,
+      "icon_covered_fraction": 0.2575,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 103,
+      "kind": 0,
+      "box": [
+        970,
+        564,
+        1174,
+        768
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9927272727272727,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 112,
+      "kind": 2,
+      "box": [
+        -432,
+        -1116,
+        -208,
+        -892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.38095238095238093,
+      "icon_covered_fraction": 0.245,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 114,
+      "kind": 3,
+      "box": [
+        864,
+        692,
+        1064,
+        892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.55,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 118,
+      "kind": 3,
+      "box": [
+        -342,
+        -920,
+        -126,
+        -704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8575,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        -368,
+        -1092,
+        -168,
+        -892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6813725490196079,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 123,
+      "kind": 5,
+      "box": [
+        -24,
+        -1104,
+        176,
+        -904
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.005,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/capture.json",
+      "agent_id": 125,
+      "kind": 5,
+      "box": [
+        -96,
+        -1164,
+        104,
+        -964
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5955882352941176,
+      "icon_covered_fraction": 0.2025,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 28,
+      "kind": 6,
+      "box": [
+        396,
+        -276,
+        604,
+        -68
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8525,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 29,
+      "kind": 3,
+      "box": [
+        414,
+        -80,
+        630,
+        136
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        336,
+        -208,
+        544,
+        0
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.4075,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 38,
+      "kind": 3,
+      "box": [
+        600,
+        -328,
+        808,
+        -120
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7692307692307693,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 39,
+      "kind": 6,
+      "box": [
+        1500,
+        1332,
+        1708,
+        1540
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.2097902097902098,
+      "icon_covered_fraction": 0.04,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 41,
+      "kind": 6,
+      "box": [
+        422,
+        -212,
+        638,
+        4
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9083850931677019,
+      "icon_covered_fraction": 0.3,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 45,
+      "kind": 3,
+      "box": [
+        572,
+        -216,
+        780,
+        -8
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.37,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 46,
+      "kind": 6,
+      "box": [
+        326,
+        -160,
+        542,
+        56
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8881987577639752,
+      "icon_covered_fraction": 0.3425,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        524,
+        -200,
+        732,
+        8
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9230769230769231,
+      "icon_covered_fraction": 0.36,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 55,
+      "kind": 0,
+      "box": [
+        1546,
+        1196,
+        1750,
+        1400
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.96,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 62,
+      "kind": 2,
+      "box": [
+        1542,
+        1068,
+        1762,
+        1288
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.746551724137931,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 63,
+      "kind": 0,
+      "box": [
+        454,
+        -272,
+        670,
+        -56
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8291925465838509,
+      "icon_covered_fraction": 0.24,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 69,
+      "kind": 3,
+      "box": [
+        636,
+        -216,
+        844,
+        -8
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5734265734265734,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 73,
+      "kind": 3,
+      "box": [
+        330,
+        -96,
+        546,
+        120
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.040372670807453416,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 76,
+      "kind": 0,
+      "box": [
+        1562,
+        1264,
+        1766,
+        1468
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.92,
+      "icon_covered_fraction": 0.12,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 80,
+      "kind": 3,
+      "box": [
+        1756,
+        1324,
+        1964,
+        1532
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1958041958041958,
+      "icon_covered_fraction": 0.18,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 82,
+      "kind": 0,
+      "box": [
+        1626,
+        1332,
+        1830,
+        1536
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6690909090909091,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 83,
+      "kind": 1,
+      "box": [
+        548,
+        -24,
+        764,
+        192
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.458041958041958,
+      "icon_covered_fraction": 0.23553719008264462,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 84,
+      "kind": 0,
+      "box": [
+        1694,
+        1332,
+        1898,
+        1536
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1223529411764706,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 86,
+      "kind": 0,
+      "box": [
+        1590,
+        1192,
+        1806,
+        1408
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9720496894409938,
+      "icon_covered_fraction": 0.4375,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 87,
+      "kind": 3,
+      "box": [
+        596,
+        -136,
+        804,
+        72
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9895104895104895,
+      "icon_covered_fraction": 0.63,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 88,
+      "kind": 2,
+      "box": [
+        1686,
+        1056,
+        1906,
+        1276
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9482758620689655,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 99,
+      "kind": 0,
+      "box": [
+        1638,
+        1204,
+        1842,
+        1408
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8222222222222222,
+      "icon_covered_fraction": 0.1225,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 100,
+      "kind": 0,
+      "box": [
+        390,
+        -156,
+        606,
+        60
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9937888198757764,
+      "icon_covered_fraction": 0.8475,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 102,
+      "kind": 0,
+      "box": [
+        1702,
+        1200,
+        1906,
+        1404
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8870588235294118,
+      "icon_covered_fraction": 0.2575,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 103,
+      "kind": 0,
+      "box": [
+        1674,
+        1268,
+        1878,
+        1472
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9927272727272727,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 112,
+      "kind": 2,
+      "box": [
+        272,
+        -412,
+        496,
+        -188
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.38095238095238093,
+      "icon_covered_fraction": 0.245,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 114,
+      "kind": 3,
+      "box": [
+        1568,
+        1396,
+        1768,
+        1596
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.55,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 115,
+      "kind": 3,
+      "box": [
+        1752,
+        1144,
+        1960,
+        1352
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.42132867132867136,
+      "icon_covered_fraction": 0.105,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 118,
+      "kind": 3,
+      "box": [
+        362,
+        -216,
+        578,
+        0
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8575,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 121,
+      "kind": 5,
+      "box": [
+        1896,
+        1084,
+        2096,
+        1284
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.3333333333333333,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        336,
+        -388,
+        536,
+        -188
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6813725490196079,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 123,
+      "kind": 5,
+      "box": [
+        680,
+        -400,
+        880,
+        -200
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.005,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 125,
+      "kind": 5,
+      "box": [
+        608,
+        -460,
+        808,
+        -260
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5955882352941176,
+      "icon_covered_fraction": 0.2025,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 28,
+      "kind": 6,
+      "box": [
+        -628,
+        -980,
+        -420,
+        -772
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8525,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 29,
+      "kind": 3,
+      "box": [
+        -610,
+        -784,
+        -394,
+        -568
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        -688,
+        -912,
+        -480,
+        -704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.4075,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 38,
+      "kind": 3,
+      "box": [
+        -424,
+        -1032,
+        -216,
+        -824
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7692307692307693,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 41,
+      "kind": 6,
+      "box": [
+        -602,
+        -916,
+        -386,
+        -700
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9083850931677019,
+      "icon_covered_fraction": 0.3,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 45,
+      "kind": 3,
+      "box": [
+        -452,
+        -920,
+        -244,
+        -712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.37,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 46,
+      "kind": 6,
+      "box": [
+        -698,
+        -864,
+        -482,
+        -648
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8881987577639752,
+      "icon_covered_fraction": 0.3425,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        -500,
+        -904,
+        -292,
+        -696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9230769230769231,
+      "icon_covered_fraction": 0.36,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 55,
+      "kind": 0,
+      "box": [
+        522,
+        492,
+        726,
+        696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.96,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 59,
+      "kind": 4,
+      "box": [
+        -176,
+        -344,
+        48,
+        -120
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 62,
+      "kind": 2,
+      "box": [
+        518,
+        364,
+        738,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.746551724137931,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 63,
+      "kind": 0,
+      "box": [
+        -570,
+        -976,
+        -354,
+        -760
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8291925465838509,
+      "icon_covered_fraction": 0.24,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 69,
+      "kind": 3,
+      "box": [
+        -388,
+        -920,
+        -180,
+        -712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5734265734265734,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 73,
+      "kind": 3,
+      "box": [
+        -694,
+        -800,
+        -478,
+        -584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.040372670807453416,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 76,
+      "kind": 0,
+      "box": [
+        538,
+        560,
+        742,
+        764
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.92,
+      "icon_covered_fraction": 0.12,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 82,
+      "kind": 0,
+      "box": [
+        602,
+        628,
+        806,
+        832
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6690909090909091,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 83,
+      "kind": 1,
+      "box": [
+        -476,
+        -728,
+        -260,
+        -512
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.458041958041958,
+      "icon_covered_fraction": 0.23553719008264462,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 86,
+      "kind": 0,
+      "box": [
+        566,
+        488,
+        782,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9720496894409938,
+      "icon_covered_fraction": 0.4375,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 87,
+      "kind": 3,
+      "box": [
+        -428,
+        -840,
+        -220,
+        -632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9895104895104895,
+      "icon_covered_fraction": 0.63,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 88,
+      "kind": 2,
+      "box": [
+        662,
+        352,
+        882,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9482758620689655,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 99,
+      "kind": 0,
+      "box": [
+        614,
+        500,
+        818,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8222222222222222,
+      "icon_covered_fraction": 0.1225,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 100,
+      "kind": 0,
+      "box": [
+        -634,
+        -860,
+        -418,
+        -644
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9937888198757764,
+      "icon_covered_fraction": 0.8475,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 102,
+      "kind": 0,
+      "box": [
+        678,
+        496,
+        882,
+        700
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8870588235294118,
+      "icon_covered_fraction": 0.2575,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 103,
+      "kind": 0,
+      "box": [
+        650,
+        564,
+        854,
+        768
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9927272727272727,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 112,
+      "kind": 2,
+      "box": [
+        -752,
+        -1116,
+        -528,
+        -892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.38095238095238093,
+      "icon_covered_fraction": 0.245,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 114,
+      "kind": 3,
+      "box": [
+        544,
+        692,
+        744,
+        892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.55,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 118,
+      "kind": 3,
+      "box": [
+        -662,
+        -920,
+        -446,
+        -704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8575,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        -688,
+        -1092,
+        -488,
+        -892
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6813725490196079,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 123,
+      "kind": 5,
+      "box": [
+        -344,
+        -1104,
+        -144,
+        -904
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.005,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/capture.json",
+      "agent_id": 125,
+      "kind": 5,
+      "box": [
+        -416,
+        -1164,
+        -216,
+        -964
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5955882352941176,
+      "icon_covered_fraction": 0.2025,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 28,
+      "kind": 6,
+      "box": [
+        844,
+        364,
+        1052,
+        572
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8525,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 34,
+      "kind": 6,
+      "box": [
+        784,
+        432,
+        992,
+        640
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.4075,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 38,
+      "kind": 3,
+      "box": [
+        1048,
+        312,
+        1256,
+        520
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.7692307692307693,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 39,
+      "kind": 6,
+      "box": [
+        1948,
+        1972,
+        2156,
+        2180
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.2097902097902098,
+      "icon_covered_fraction": 0.04,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 41,
+      "kind": 6,
+      "box": [
+        870,
+        428,
+        1086,
+        644
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9083850931677019,
+      "icon_covered_fraction": 0.3,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 45,
+      "kind": 3,
+      "box": [
+        1020,
+        424,
+        1228,
+        632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.37,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 46,
+      "kind": 6,
+      "box": [
+        774,
+        480,
+        990,
+        696
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8881987577639752,
+      "icon_covered_fraction": 0.3425,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "box": [
+        972,
+        440,
+        1180,
+        648
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9230769230769231,
+      "icon_covered_fraction": 0.36,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 55,
+      "kind": 0,
+      "box": [
+        1994,
+        1836,
+        2198,
+        2040
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.96,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 59,
+      "kind": 4,
+      "box": [
+        1296,
+        1000,
+        1520,
+        1224
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 62,
+      "kind": 2,
+      "box": [
+        1990,
+        1708,
+        2210,
+        1928
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.746551724137931,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 63,
+      "kind": 0,
+      "box": [
+        902,
+        368,
+        1118,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8291925465838509,
+      "icon_covered_fraction": 0.24,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 69,
+      "kind": 3,
+      "box": [
+        1084,
+        424,
+        1292,
+        632
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5734265734265734,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 76,
+      "kind": 0,
+      "box": [
+        2010,
+        1904,
+        2214,
+        2108
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.92,
+      "icon_covered_fraction": 0.12,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 80,
+      "kind": 3,
+      "box": [
+        2204,
+        1964,
+        2412,
+        2172
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1958041958041958,
+      "icon_covered_fraction": 0.18,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 82,
+      "kind": 0,
+      "box": [
+        2074,
+        1972,
+        2278,
+        2176
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6690909090909091,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 84,
+      "kind": 0,
+      "box": [
+        2142,
+        1972,
+        2346,
+        2176
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1223529411764706,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 86,
+      "kind": 0,
+      "box": [
+        2038,
+        1832,
+        2254,
+        2048
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9720496894409938,
+      "icon_covered_fraction": 0.4375,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 87,
+      "kind": 3,
+      "box": [
+        1044,
+        504,
+        1252,
+        712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9895104895104895,
+      "icon_covered_fraction": 0.63,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 88,
+      "kind": 2,
+      "box": [
+        2134,
+        1696,
+        2354,
+        1916
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9482758620689655,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 99,
+      "kind": 0,
+      "box": [
+        2086,
+        1844,
+        2290,
+        2048
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8222222222222222,
+      "icon_covered_fraction": 0.1225,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 100,
+      "kind": 0,
+      "box": [
+        838,
+        484,
+        1054,
+        700
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9937888198757764,
+      "icon_covered_fraction": 0.8475,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 102,
+      "kind": 0,
+      "box": [
+        2150,
+        1840,
+        2354,
+        2044
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.8870588235294118,
+      "icon_covered_fraction": 0.2575,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 103,
+      "kind": 0,
+      "box": [
+        2122,
+        1908,
+        2326,
+        2112
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.9927272727272727,
+      "icon_covered_fraction": 0.2,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 114,
+      "kind": 3,
+      "box": [
+        2016,
+        2036,
+        2216,
+        2236
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.55,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 115,
+      "kind": 3,
+      "box": [
+        2200,
+        1784,
+        2408,
+        1992
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.42132867132867136,
+      "icon_covered_fraction": 0.105,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 118,
+      "kind": 3,
+      "box": [
+        810,
+        424,
+        1026,
+        640
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 1.0,
+      "icon_covered_fraction": 0.8575,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 121,
+      "kind": 5,
+      "box": [
+        2344,
+        1724,
+        2544,
+        1924
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.3333333333333333,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "reason": "original_crop_outside_frame"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "box": [
+        784,
+        252,
+        984,
+        452
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.6813725490196079,
+      "icon_covered_fraction": 0.0,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 125,
+      "kind": 5,
+      "box": [
+        1056,
+        180,
+        1256,
+        380
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.5955882352941176,
+      "icon_covered_fraction": 0.2025,
+      "excluded": true,
+      "reason": "body_or_icon_more_than_50_percent_covered"
+    }
+  ],
+  "counts": [
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2
+  ],
+  "missing_kinds": [
+    0,
+    2
+  ]
+}

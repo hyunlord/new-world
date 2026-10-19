@@ -1,0 +1,130 @@
+[
+  {
+    "sprite_id": "P2_fill_01_01",
+    "candidate_id": "P2_fill_01_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Front-facing relaxed idle; long brown hair, build and hide clothing match the reference. Face, hair and main garment regions remain recognizable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_02",
+    "candidate_id": "P2_fill_01_02@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing walk and identity read correctly, but a bright cyan texel protrudes at the right-hand edge of the fitted sprite.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_03",
+    "candidate_id": "P2_fill_01_03@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "South-facing walking step with overlapping legs and coherent arms; hair, build and clothing agree with the idle reference and the principal mapped regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_04",
+    "candidate_id": "P2_fill_01_04@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "South-facing alternate walking step is legible; the character retains the reference hair and build, with recognizable skin, hair and garment map regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_05",
+    "candidate_id": "P2_fill_01_05@1",
+    "verdict": "reject",
+    "reason": "wrong_pose",
+    "observation": "The cell is labeled S_walk_4, but both hands hold a full basket across the torso instead of showing an ordinary walking arm pose.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_06",
+    "candidate_id": "P2_fill_01_06@1:derived",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Basket carry pose and reference identity read clearly, but the large brown basket body is mapped peach like skin, with green clothing labels across its lower edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_07",
+    "candidate_id": "P2_fill_01_07@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "South-facing basket carry is legible and matches the reference identity; the basket body is largely peach in the map instead of other-object magenta.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_08",
+    "candidate_id": "P2_fill_01_08@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The carried basket is visible between both hands, but its brown body is classified largely as peach skin in the region map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_09",
+    "candidate_id": "P2_fill_01_09@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The carry stance and long-haired identity are coherent; the basket body is mapped peach and its lower edge green rather than consistently identifying the held object.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_10",
+    "candidate_id": "P2_fill_01_10@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Leaning reach toward the berry bush reads as gathering; hair, build and garment remain consistent with the reference, and the bush is distinctly mapped as other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_11",
+    "candidate_id": "P2_fill_01_11@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Deeper bent gathering pose clearly reaches toward the bush; anatomy and reference identity remain coherent, with the main bush, hair and garment regions separated.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_12",
+    "candidate_id": "P2_fill_01_12@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Raised hammer/tool and braced stance read as building, but the tool head above the hand is mapped blue and green, conflating the object with hair and clothing.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_13",
+    "candidate_id": "P2_fill_01_13@1:derived",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Overhead tool pose remains recognizable and identity is consistent, but the tool head is classified blue and green in the region map instead of other-object magenta.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_14",
+    "candidate_id": "P2_fill_01_14@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Right-facing kneeling profile with a hand raised to the mouth reads as drinking; long brown hair and hide garment match the reference, and the principal map regions are coherent.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_15",
+    "candidate_id": "P2_fill_01_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Right-facing kneeling drinking gesture is readable with coherent arm and leg placement; reference hair/build and principal region assignments remain consistent.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_01_16",
+    "candidate_id": "P2_fill_01_16@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "South-facing open-hand gesture reads as talking; long hair, body build and hide clothing match the reference, with coherent principal anatomical map regions.",
+    "unfitted_acceptable": null
+  }
+]

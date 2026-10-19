@@ -1,0 +1,414 @@
+{
+  "crops": [
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 49,
+      "kind": 6,
+      "entity_bits": 4294967346,
+      "box": [
+        972,
+        376,
+        1180,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.3111888111888112,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        1032.0,
+        472.0,
+        88.0,
+        104.0
+      ],
+      "icon_rect": [
+        1036.0,
+        384.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 342,
+      "icon_draw_rank": 343,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_01"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/capture.json",
+      "agent_id": 112,
+      "kind": 2,
+      "entity_bits": 8589934600,
+      "box": [
+        720,
+        228,
+        944,
+        452
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.38095238095238093,
+      "icon_covered_fraction": 0.245,
+      "excluded": false,
+      "body_rect": [
+        804.0,
+        324.0,
+        56.0,
+        120.0
+      ],
+      "icon_rect": [
+        792.0,
+        236.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 295,
+      "icon_draw_rank": 296,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_02"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/capture.json",
+      "agent_id": 59,
+      "kind": 4,
+      "entity_bits": 12884901894,
+      "box": [
+        848,
+        360,
+        1072,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        924.0,
+        456.0,
+        72.0,
+        120.0
+      ],
+      "icon_rect": [
+        920.0,
+        368.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 537,
+      "icon_draw_rank": 538,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_03"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 39,
+      "kind": 6,
+      "entity_bits": 4294967336,
+      "box": [
+        796,
+        500,
+        1004,
+        708
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.2097902097902098,
+      "icon_covered_fraction": 0.04,
+      "excluded": false,
+      "body_rect": [
+        856.0,
+        596.0,
+        88.0,
+        104.0
+      ],
+      "icon_rect": [
+        860.0,
+        508.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 697,
+      "icon_draw_rank": 698,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_04"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/capture.json",
+      "agent_id": 5,
+      "kind": 3,
+      "entity_bits": 4294967301,
+      "box": [
+        980,
+        376,
+        1188,
+        584
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        1040.0,
+        472.0,
+        88.0,
+        104.0
+      ],
+      "icon_rect": [
+        1044.0,
+        384.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 173,
+      "icon_draw_rank": 174,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_05"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 61,
+      "kind": 1,
+      "entity_bits": 4294967347,
+      "box": [
+        932,
+        556,
+        1148,
+        772
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        996.0,
+        660.0,
+        88.0,
+        104.0
+      ],
+      "icon_rect": [
+        996.0,
+        564.0,
+        88.0,
+        88.0
+      ],
+      "body_draw_rank": 435,
+      "icon_draw_rank": 436,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_06"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/capture.json",
+      "agent_id": 43,
+      "kind": 3,
+      "entity_bits": 4294967340,
+      "box": [
+        732,
+        504,
+        940,
+        712
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.07692307692307693,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        792.0,
+        600.0,
+        88.0,
+        104.0
+      ],
+      "icon_rect": [
+        796.0,
+        512.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 420,
+      "icon_draw_rank": 421,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_07"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 84,
+      "kind": 0,
+      "entity_bits": 4294967362,
+      "box": [
+        990,
+        500,
+        1194,
+        704
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1223529411764706,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        1060.0,
+        596.0,
+        68.0,
+        100.0
+      ],
+      "icon_rect": [
+        1052.0,
+        508.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 690,
+      "icon_draw_rank": 691,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_08"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/capture.json",
+      "agent_id": 121,
+      "kind": 5,
+      "entity_bits": 12884901915,
+      "box": [
+        1192,
+        252,
+        1392,
+        452
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.3333333333333333,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        1260.0,
+        348.0,
+        68.0,
+        96.0
+      ],
+      "icon_rect": [
+        1252.0,
+        260.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 630,
+      "icon_draw_rank": 631,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_09"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/capture.json",
+      "agent_id": 72,
+      "kind": 4,
+      "entity_bits": 4294967355,
+      "box": [
+        848,
+        356,
+        1072,
+        580
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        924.0,
+        452.0,
+        76.0,
+        120.0
+      ],
+      "icon_rect": [
+        920.0,
+        364.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 503,
+      "icon_draw_rank": 504,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_10"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/capture.json",
+      "agent_id": 122,
+      "kind": 5,
+      "entity_bits": 8589934626,
+      "box": [
+        720,
+        188,
+        920,
+        388
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.0,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        788.0,
+        284.0,
+        68.0,
+        96.0
+      ],
+      "icon_rect": [
+        780.0,
+        196.0,
+        80.0,
+        80.0
+      ],
+      "body_draw_rank": 276,
+      "icon_draw_rank": 277,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_11"
+    },
+    {
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/capture.json",
+      "agent_id": 30,
+      "kind": 1,
+      "entity_bits": 8589934612,
+      "box": [
+        960,
+        416,
+        1184,
+        640
+      ],
+      "upscale": 1,
+      "resampling": "none",
+      "body_covered_fraction": 0.1360544217687075,
+      "icon_covered_fraction": 0.0,
+      "excluded": false,
+      "body_rect": [
+        1032.0,
+        520.0,
+        84.0,
+        112.0
+      ],
+      "icon_rect": [
+        1028.0,
+        424.0,
+        88.0,
+        88.0
+      ],
+      "body_draw_rank": 188,
+      "icon_draw_rank": 189,
+      "icon_rect_source": "actual_sprite",
+      "blind_id": "crop_12"
+    }
+  ],
+  "frozen_ns": 1792415129924821000,
+  "protocol_status": {
+    "mode": "partial_diagnostic",
+    "actual_count": 12,
+    "required_count": 14,
+    "full_protocol_complete": false,
+    "acceptance": "NOT_VERIFIED",
+    "required_bar": "at least 12/14 AND no activity scores 0/2",
+    "terminal_shortage": {
+      "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+      "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+      "reason": "TendFire and Repair each received three supplemental acquisition attempts. Attempts1/2 had no arrived holder; attempt3 yielded only one eligible unique holder each, leaving the two-per-kind target unmet. Stop these failing targets under the three-strike rule; preserve all exclusions and score only a partial diagnostic, never the full 14-crop gate."
+    }
+  }
+}

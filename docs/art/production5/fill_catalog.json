@@ -1,0 +1,693 @@
+{
+  "schema_version": 1,
+  "source_selection": "docs/art/production2/final_selection.json",
+  "source_selection_sha256": "01bdd4a62ffc76a99927234193874d151562bd497fa708cb3fb569c31a06b368",
+  "checkpoint_attempted_cells": 16,
+  "sheets": [
+    {
+      "id": "V_a6",
+      "body": "adult_a",
+      "derive_missing": false,
+      "key_hair": true,
+      "reference_candidate": "V_a1_01@1",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_a1_05",
+          "name": "walk_S_0",
+          "activity": "walk",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_a1_06",
+          "name": "walk_S_1",
+          "activity": "walk",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_a1_07",
+          "name": "walk_S_2",
+          "activity": "walk",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_a1_08",
+          "name": "walk_S_3",
+          "activity": "walk",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_a1_09",
+          "name": "walk_E_0",
+          "activity": "walk",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_a1_10",
+          "name": "walk_E_1",
+          "activity": "walk",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_a1_11",
+          "name": "walk_E_2",
+          "activity": "walk",
+          "view": "E",
+          "frame": 2
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_a1_12",
+          "name": "walk_E_3",
+          "activity": "walk",
+          "view": "E",
+          "frame": 3
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_a3_01",
+          "name": "carry_N_0",
+          "activity": "carry",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_a3_02",
+          "name": "carry_N_1",
+          "activity": "carry",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_a2_13",
+          "name": "build_E_0",
+          "activity": "build",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_a2_14",
+          "name": "build_E_1",
+          "activity": "build",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 13,
+          "target_slot": "P2V_a_N_build_01",
+          "name": "build_N_0",
+          "activity": "build",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "P2V_a_N_build_02",
+          "name": "build_N_1",
+          "activity": "build",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_a2_09",
+          "name": "gather_E_0",
+          "activity": "gather",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_a2_10",
+          "name": "gather_E_1",
+          "activity": "gather",
+          "view": "E",
+          "frame": 1
+        }
+      ]
+    },
+    {
+      "id": "V_a5",
+      "body": "adult_a",
+      "derive_missing": false,
+      "key_hair": true,
+      "reference_candidate": "V_a1_01@1",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_a4_01",
+          "name": "carry_wood_S_0",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_a4_02",
+          "name": "carry_wood_S_1",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_a4_03",
+          "name": "carry_wood_S_2",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_a4_04",
+          "name": "carry_wood_S_3",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_a4_05",
+          "name": "carry_wood_E_0",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_a4_06",
+          "name": "carry_wood_E_1",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_a4_07",
+          "name": "carry_wood_E_2",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 2
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_a4_08",
+          "name": "carry_wood_E_3",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 3
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_a4_09",
+          "name": "carry_wood_N_0",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_a4_10",
+          "name": "carry_wood_N_1",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_a4_11",
+          "name": "carry_wood_N_2",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 2
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_a4_12",
+          "name": "carry_wood_N_3",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 3
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_a4_13",
+          "name": "gather_wood_S_0",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_a4_14",
+          "name": "gather_wood_S_1",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_a4_15",
+          "name": "gather_wood_E_0",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_a4_16",
+          "name": "gather_wood_E_1",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 1
+        }
+      ]
+    },
+    {
+      "id": "V_b5",
+      "body": "adult_b",
+      "derive_missing": false,
+      "key_hair": true,
+      "reference_candidate": "V_b1_01@2",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_b4_01",
+          "name": "carry_wood_S_0",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_b4_02",
+          "name": "carry_wood_S_1",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_b4_03",
+          "name": "carry_wood_S_2",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_b4_04",
+          "name": "carry_wood_S_3",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_b4_05",
+          "name": "carry_wood_E_0",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_b4_06",
+          "name": "carry_wood_E_1",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_b4_07",
+          "name": "carry_wood_E_2",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 2
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_b4_08",
+          "name": "carry_wood_E_3",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 3
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_b4_09",
+          "name": "carry_wood_N_0",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_b4_10",
+          "name": "carry_wood_N_1",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_b4_11",
+          "name": "carry_wood_N_2",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 2
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_b4_12",
+          "name": "carry_wood_N_3",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 3
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_b4_13",
+          "name": "gather_wood_S_0",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_b4_14",
+          "name": "gather_wood_S_1",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_b4_15",
+          "name": "gather_wood_E_0",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_b4_16",
+          "name": "gather_wood_E_1",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 1
+        }
+      ]
+    },
+    {
+      "id": "V_b6",
+      "body": "adult_b",
+      "derive_missing": false,
+      "key_hair": true,
+      "reference_candidate": "V_b1_01@2",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_b2_13",
+          "name": "build_E_0",
+          "activity": "build",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_b2_14",
+          "name": "build_E_1",
+          "activity": "build",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "P2V_b_N_build_01",
+          "name": "build_N_0",
+          "activity": "build",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 4,
+          "target_slot": "P2V_b_N_build_02",
+          "name": "build_N_1",
+          "activity": "build",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_b2_09",
+          "name": "gather_E_0",
+          "activity": "gather",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_b2_10",
+          "name": "gather_E_1",
+          "activity": "gather",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "P2V_b_N_gather_01",
+          "name": "gather_N_0",
+          "activity": "gather",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 8,
+          "target_slot": "P2V_b_N_gather_02",
+          "name": "gather_N_1",
+          "activity": "gather",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 9,
+          "target_slot": "P2V_b_N_drink_01",
+          "name": "drink_N_0",
+          "activity": "drink",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "P2V_b_N_drink_02",
+          "name": "drink_N_1",
+          "activity": "drink",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_b3_01",
+          "name": "carry_N_0",
+          "activity": "carry",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_b3_02",
+          "name": "carry_N_1",
+          "activity": "carry",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_b3_16",
+          "name": "crossed_S_0",
+          "activity": "crossed",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_b1_01",
+          "name": "idle_S_0",
+          "activity": "idle",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_b1_02",
+          "name": "idle_S_1",
+          "activity": "idle",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_b1_04",
+          "name": "idle_E_0",
+          "activity": "idle",
+          "view": "E",
+          "frame": 0
+        }
+      ]
+    },
+    {
+      "id": "V_c4",
+      "body": "child",
+      "derive_missing": false,
+      "key_hair": false,
+      "reference_candidate": "V_c1_01@1",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "P2V_c_S_carry_01",
+          "name": "carry_S_0",
+          "activity": "carry",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "P2V_c_S_carry_02",
+          "name": "carry_S_1",
+          "activity": "carry",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "P2V_c_S_carry_03",
+          "name": "carry_S_2",
+          "activity": "carry",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "P2V_c_S_carry_04",
+          "name": "carry_S_3",
+          "activity": "carry",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "P2V_c_S_gather_01",
+          "name": "gather_S_0",
+          "activity": "gather",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "P2V_c_S_gather_02",
+          "name": "gather_S_1",
+          "activity": "gather",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "P2V_c_E_gather_01",
+          "name": "gather_E_0",
+          "activity": "gather",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 8,
+          "target_slot": "P2V_c_E_gather_02",
+          "name": "gather_E_1",
+          "activity": "gather",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 9,
+          "target_slot": "P2V_c_E_drink_01",
+          "name": "drink_E_0",
+          "activity": "drink",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "P2V_c_E_drink_02",
+          "name": "drink_E_1",
+          "activity": "drink",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "P2V_c_E_build_01",
+          "name": "build_E_0",
+          "activity": "build",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 12,
+          "target_slot": "P2V_c_E_build_02",
+          "name": "build_E_1",
+          "activity": "build",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_c2_03",
+          "name": "hop_S_0",
+          "activity": "hop",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_c2_04",
+          "name": "hop_S_1",
+          "activity": "hop",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_c2_09",
+          "name": "talk_S_0",
+          "activity": "talk",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_c2_10",
+          "name": "talk_S_1",
+          "activity": "talk",
+          "view": "S",
+          "frame": 1
+        }
+      ]
+    }
+  ]
+}

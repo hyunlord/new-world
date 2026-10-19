@@ -1,0 +1,11 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+REAL_INTERVENTION gift_food { "ok": true, "applied": 60, "tick": 60 }
+REAL_INTERVENTION spoil_food { "ok": true, "applied": 60, "tick": 60 }
+REAL_INTERVENTION gift_wood { "ok": true, "applied": 40, "tick": 60 }
+REAL_INTERVENTION rot_wood { "ok": true, "applied": 40, "tick": 60 }
+REAL_INTERVENTION rain { "ok": true, "applied": 13, "tick": 60 }
+REAL_INTERVENTION cold_snap { "ok": true, "applied": 1, "tick": 60 }
+REAL_INTERVENTION windfall { "ok": true, "applied": 0, "tick": 60 }
+INTERVENTIONS_REAL_P6 PASS: seven real commands and read-only state

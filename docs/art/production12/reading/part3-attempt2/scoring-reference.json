@@ -1,0 +1,1099 @@
+{
+  "live": {
+    "clock": {
+      "day_index": 59,
+      "day_of_season": 4,
+      "days_per_season": 7,
+      "season": 0,
+      "tick": 85080,
+      "ticks_per_day": 1440,
+      "time_of_day": 10.0,
+      "winter_severity": -1
+    },
+    "population": 29,
+    "tallies": {
+      "area_floor_placed": 0,
+      "births": 32,
+      "cold_member_hours": 927,
+      "deaths_combat": 0,
+      "deaths_dehydration": 0,
+      "deaths_exposure": 1,
+      "deaths_old_age": 27,
+      "deaths_starvation": 0,
+      "fissions": 0,
+      "fissions_cancelled": 0,
+      "gather_preempted": 2,
+      "ground_meals": 197,
+      "meals_from_store": 3788,
+      "remnant_merges": 0,
+      "wet_burn_wood": 0,
+      "wood_gathered": 1492,
+      "wood_trips": 874
+    },
+    "settlements": {
+      "centroid_xs": [
+        21
+      ],
+      "centroid_ys": [
+        23
+      ],
+      "fire_lit": [
+        0
+      ],
+      "food_stocks": [
+        174
+      ],
+      "formation_xs": [
+        22
+      ],
+      "formation_ys": [
+        20
+      ],
+      "ids": [
+        1
+      ],
+      "member_counts": [
+        29
+      ],
+      "settlement_ids": [
+        1
+      ],
+      "wood_stocks": [
+        20
+      ],
+      "wood_targets": [
+        39
+      ]
+    },
+    "buildings": {
+      "ids": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        75
+      ],
+      "kinds": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1
+      ],
+      "xs": [
+        22,
+        20,
+        24,
+        22,
+        24,
+        21
+      ],
+      "ys": [
+        20,
+        19,
+        19,
+        22,
+        22,
+        18
+      ]
+    },
+    "subjects": {
+      "25": {
+        "person": {
+          "alive": true,
+          "born_tick": 881,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 1,
+          "female": 0,
+          "found": true,
+          "ha": 261,
+          "mother": 0,
+          "ns": 478,
+          "p": 590,
+          "rd": 320
+        },
+        "agent": {
+          "agent_ids": 25,
+          "ages_days": 58,
+          "carried_foods": 0,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 32.2765769958496,
+          "ids": 8589934617,
+          "life_stages": 2,
+          "seek_kinds": 0,
+          "sleeps": 7.19999980926514,
+          "states": 4,
+          "target_kinds": 8,
+          "target_xs": -1,
+          "target_ys": -1,
+          "thirsts": 40.9119987487793,
+          "xs": 23,
+          "ys": 18
+        },
+        "activity": {
+          "ids": 8589934617,
+          "kinds": 6,
+          "place_x": 23,
+          "place_y": 18,
+          "until_tick": 85164
+        }
+      },
+      "0": {
+        "person": {
+          "alive": false,
+          "born_tick": -50047,
+          "death_reason": 3,
+          "died_tick": 31800,
+          "father": -1,
+          "female": 0,
+          "found": true,
+          "ha": 428,
+          "mother": -1,
+          "ns": 261,
+          "p": 565,
+          "rd": 645
+        }
+      }
+    }
+  },
+  "multi": {
+    "clock": {
+      "day_index": 84,
+      "day_of_season": 1,
+      "days_per_season": 7,
+      "season": 0,
+      "tick": 121080,
+      "ticks_per_day": 1440,
+      "time_of_day": 10.0,
+      "winter_severity": -1
+    },
+    "population": 65,
+    "tallies": {
+      "area_floor_placed": 19,
+      "births": 88,
+      "cold_member_hours": 1502,
+      "deaths_combat": 0,
+      "deaths_dehydration": 0,
+      "deaths_exposure": 1,
+      "deaths_old_age": 44,
+      "deaths_starvation": 0,
+      "fissions": 1,
+      "fissions_cancelled": 0,
+      "gather_preempted": 8,
+      "ground_meals": 387,
+      "meals_from_store": 8323,
+      "remnant_merges": 0,
+      "wet_burn_wood": 0,
+      "wood_gathered": 2599,
+      "wood_trips": 1551
+    },
+    "settlements": {
+      "centroid_xs": [
+        18,
+        9
+      ],
+      "centroid_ys": [
+        33,
+        60
+      ],
+      "fire_lit": [
+        0,
+        0
+      ],
+      "food_stocks": [
+        182,
+        187
+      ],
+      "formation_xs": [
+        21,
+        4
+      ],
+      "formation_ys": [
+        41,
+        63
+      ],
+      "ids": [
+        1,
+        2
+      ],
+      "member_counts": [
+        41,
+        24
+      ],
+      "settlement_ids": [
+        1,
+        2
+      ],
+      "wood_stocks": [
+        2,
+        10
+      ],
+      "wood_targets": [
+        39,
+        39
+      ]
+    },
+    "buildings": {
+      "ids": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        75,
+        950,
+        2173,
+        26327,
+        26334,
+        26341,
+        26419,
+        27950
+      ],
+      "kinds": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "xs": [
+        21,
+        19,
+        23,
+        21,
+        23,
+        19,
+        20,
+        21,
+        4,
+        2,
+        5,
+        3,
+        4
+      ],
+      "ys": [
+        41,
+        40,
+        40,
+        43,
+        43,
+        39,
+        39,
+        39,
+        63,
+        62,
+        61,
+        61,
+        61
+      ]
+    },
+    "subjects": {
+      "45": {
+        "person": {
+          "alive": true,
+          "born_tick": 41461,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 24,
+          "female": 0,
+          "found": true,
+          "ha": 428,
+          "mother": 28,
+          "ns": 590,
+          "p": 729,
+          "rd": 597
+        },
+        "agent": {
+          "agent_ids": 45,
+          "ages_days": 55,
+          "carried_foods": 0,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 31.9815444946289,
+          "ids": 8589934599,
+          "life_stages": 2,
+          "seek_kinds": 0,
+          "sleeps": 7.19999980926514,
+          "states": 4,
+          "target_kinds": 8,
+          "target_xs": -1,
+          "target_ys": -1,
+          "thirsts": 33.2319984436035,
+          "xs": 3,
+          "ys": 62
+        },
+        "activity": {
+          "ids": 8589934599,
+          "kinds": 6,
+          "place_x": 3,
+          "place_y": 62,
+          "until_tick": 121189
+        }
+      },
+      "47": {
+        "person": {
+          "alive": true,
+          "born_tick": 42901,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 31,
+          "female": 0,
+          "found": true,
+          "ha": 226,
+          "mother": 33,
+          "ns": 675,
+          "p": 348,
+          "rd": 518
+        },
+        "agent": {
+          "agent_ids": 47,
+          "ages_days": 54,
+          "carried_foods": 0,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 19.9812660217285,
+          "ids": 8589934603,
+          "life_stages": 2,
+          "seek_kinds": 0,
+          "sleeps": 8.64000034332275,
+          "states": 4,
+          "target_kinds": 8,
+          "target_xs": -1,
+          "target_ys": -1,
+          "thirsts": 38.0320014953613,
+          "xs": 6,
+          "ys": 63
+        },
+        "activity": {
+          "ids": 8589934603,
+          "kinds": 3,
+          "place_x": 6,
+          "place_y": 63,
+          "until_tick": 121144
+        }
+      },
+      "69": {
+        "person": {
+          "alive": true,
+          "born_tick": 86433,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 47,
+          "female": 1,
+          "found": true,
+          "ha": 346,
+          "mother": 50,
+          "ns": 814,
+          "p": 512,
+          "rd": 726
+        },
+        "agent": {
+          "agent_ids": 69,
+          "ages_days": 24,
+          "carried_foods": 10,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 34.0461540222168,
+          "ids": 4294967342,
+          "life_stages": 0,
+          "seek_kinds": 0,
+          "sleeps": 8.06999969482422,
+          "states": 1,
+          "target_kinds": 5,
+          "target_xs": 21,
+          "target_ys": 41,
+          "thirsts": 36.4959983825684,
+          "xs": 21,
+          "ys": 48
+        }
+      }
+    }
+  },
+  "estranged": {
+    "clock": {
+      "day_index": 24,
+      "day_of_season": 4,
+      "days_per_season": 7,
+      "season": 3,
+      "tick": 34680,
+      "ticks_per_day": 1440,
+      "time_of_day": 10.0,
+      "winter_severity": 2
+    },
+    "population": 74,
+    "tallies": {
+      "area_floor_placed": 7,
+      "births": 59,
+      "cold_member_hours": 0,
+      "deaths_combat": 0,
+      "deaths_dehydration": 0,
+      "deaths_exposure": 0,
+      "deaths_old_age": 3,
+      "deaths_starvation": 0,
+      "fissions": 1,
+      "fissions_cancelled": 0,
+      "gather_preempted": 0,
+      "ground_meals": 77,
+      "meals_from_store": 2210,
+      "remnant_merges": 0,
+      "wet_burn_wood": 0,
+      "wood_gathered": 1041,
+      "wood_trips": 602
+    },
+    "settlements": {
+      "centroid_xs": [
+        24,
+        31
+      ],
+      "centroid_ys": [
+        33,
+        8
+      ],
+      "fire_lit": [
+        0,
+        0
+      ],
+      "food_stocks": [
+        240,
+        167
+      ],
+      "formation_xs": [
+        28,
+        30
+      ],
+      "formation_ys": [
+        34,
+        10
+      ],
+      "ids": [
+        1,
+        2
+      ],
+      "member_counts": [
+        42,
+        32
+      ],
+      "settlement_ids": [
+        1,
+        2
+      ],
+      "wood_stocks": [
+        28,
+        37
+      ],
+      "wood_targets": [
+        208,
+        208
+      ]
+    },
+    "buildings": {
+      "ids": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        392,
+        1264,
+        2440,
+        4000,
+        4350,
+        4357,
+        4364,
+        4444,
+        6577,
+        9249
+      ],
+      "kinds": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "xs": [
+        28,
+        26,
+        30,
+        28,
+        30,
+        26,
+        27,
+        28,
+        29,
+        30,
+        28,
+        32,
+        28,
+        29,
+        30
+      ],
+      "ys": [
+        34,
+        33,
+        33,
+        36,
+        36,
+        32,
+        32,
+        32,
+        32,
+        10,
+        9,
+        9,
+        8,
+        8,
+        8
+      ]
+    },
+    "subjects": {
+      "23": {
+        "person": {
+          "alive": true,
+          "born_tick": 4320,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 11,
+          "female": 0,
+          "found": true,
+          "ha": 398,
+          "mother": 6,
+          "ns": 637,
+          "p": 513,
+          "rd": 419
+        },
+        "agent": {
+          "agent_ids": 23,
+          "ages_days": 21,
+          "carried_foods": 6,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 22.7360572814941,
+          "ids": 4294967320,
+          "life_stages": 0,
+          "seek_kinds": 2,
+          "sleeps": 7.19999980926514,
+          "states": 1,
+          "target_kinds": 2,
+          "target_xs": 30,
+          "target_ys": 33,
+          "thirsts": 54.4000015258789,
+          "xs": 23,
+          "ys": 33
+        }
+      }
+    }
+  },
+  "crowd1": {
+    "clock": {
+      "day_index": 29,
+      "day_of_season": 2,
+      "days_per_season": 7,
+      "season": 0,
+      "tick": 41880,
+      "ticks_per_day": 1440,
+      "time_of_day": 10.0,
+      "winter_severity": -1
+    },
+    "population": 29,
+    "tallies": {
+      "area_floor_placed": 0,
+      "births": 11,
+      "cold_member_hours": 463,
+      "deaths_combat": 0,
+      "deaths_dehydration": 0,
+      "deaths_exposure": 0,
+      "deaths_old_age": 7,
+      "deaths_starvation": 0,
+      "fissions": 0,
+      "fissions_cancelled": 0,
+      "gather_preempted": 0,
+      "ground_meals": 107,
+      "meals_from_store": 1885,
+      "remnant_merges": 0,
+      "wet_burn_wood": 0,
+      "wood_gathered": 742,
+      "wood_trips": 430
+    },
+    "settlements": {
+      "centroid_xs": [
+        24
+      ],
+      "centroid_ys": [
+        18
+      ],
+      "fire_lit": [
+        0
+      ],
+      "food_stocks": [
+        135
+      ],
+      "formation_xs": [
+        22
+      ],
+      "formation_ys": [
+        20
+      ],
+      "ids": [
+        1
+      ],
+      "member_counts": [
+        29
+      ],
+      "settlement_ids": [
+        1
+      ],
+      "wood_stocks": [
+        12
+      ],
+      "wood_targets": [
+        39
+      ]
+    },
+    "buildings": {
+      "ids": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        75
+      ],
+      "kinds": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1
+      ],
+      "xs": [
+        22,
+        20,
+        24,
+        22,
+        24,
+        21
+      ],
+      "ys": [
+        20,
+        19,
+        19,
+        22,
+        22,
+        18
+      ]
+    },
+    "subjects": {
+      "1": {
+        "person": {
+          "alive": true,
+          "born_tick": -24853,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": -1,
+          "female": 1,
+          "found": true,
+          "ha": 273,
+          "mother": -1,
+          "ns": 285,
+          "p": 688,
+          "rd": 693
+        },
+        "agent": {
+          "agent_ids": 1,
+          "ages_days": 46,
+          "carried_foods": 0,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 22.9760284423828,
+          "ids": 4294967297,
+          "life_stages": 2,
+          "seek_kinds": 0,
+          "sleeps": 7.19999980926514,
+          "states": 4,
+          "target_kinds": 8,
+          "target_xs": -1,
+          "target_ys": -1,
+          "thirsts": 28.3999996185303,
+          "xs": 23,
+          "ys": 18
+        },
+        "activity": {
+          "ids": 4294967297,
+          "kinds": 3,
+          "place_x": 23,
+          "place_y": 18,
+          "until_tick": 41960
+        }
+      }
+    }
+  },
+  "crowd2": {
+    "clock": {
+      "day_index": 59,
+      "day_of_season": 4,
+      "days_per_season": 7,
+      "season": 0,
+      "tick": 85080,
+      "ticks_per_day": 1440,
+      "time_of_day": 10.0,
+      "winter_severity": -1
+    },
+    "population": 92,
+    "tallies": {
+      "area_floor_placed": 9,
+      "births": 98,
+      "cold_member_hours": 2444,
+      "deaths_combat": 0,
+      "deaths_dehydration": 0,
+      "deaths_exposure": 1,
+      "deaths_old_age": 32,
+      "deaths_starvation": 0,
+      "fissions": 1,
+      "fissions_cancelled": 0,
+      "gather_preempted": 2,
+      "ground_meals": 344,
+      "meals_from_store": 7842,
+      "remnant_merges": 0,
+      "wet_burn_wood": 0,
+      "wood_gathered": 2224,
+      "wood_trips": 1294
+    },
+    "settlements": {
+      "centroid_xs": [
+        40,
+        53
+      ],
+      "centroid_ys": [
+        35,
+        56
+      ],
+      "fire_lit": [
+        0,
+        0
+      ],
+      "food_stocks": [
+        211,
+        278
+      ],
+      "formation_xs": [
+        39,
+        57
+      ],
+      "formation_ys": [
+        35,
+        58
+      ],
+      "ids": [
+        1,
+        2
+      ],
+      "member_counts": [
+        42,
+        50
+      ],
+      "settlement_ids": [
+        1,
+        2
+      ],
+      "wood_stocks": [
+        27,
+        57
+      ],
+      "wood_targets": [
+        39,
+        39
+      ]
+    },
+    "buildings": {
+      "ids": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        75,
+        395,
+        1562,
+        3024,
+        14905,
+        14912,
+        14919,
+        15130,
+        17080,
+        20973,
+        24251,
+        27612
+      ],
+      "kinds": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "xs": [
+        39,
+        37,
+        41,
+        39,
+        41,
+        37,
+        38,
+        39,
+        40,
+        57,
+        55,
+        58,
+        55,
+        56,
+        57,
+        55,
+        59
+      ],
+      "ys": [
+        35,
+        34,
+        34,
+        37,
+        37,
+        33,
+        33,
+        33,
+        33,
+        58,
+        57,
+        56,
+        56,
+        56,
+        56,
+        58,
+        58
+      ]
+    },
+    "subjects": {
+      "29": {
+        "person": {
+          "alive": true,
+          "born_tick": 2171,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 1,
+          "female": 1,
+          "found": true,
+          "ha": 487,
+          "mother": 0,
+          "ns": 473,
+          "p": 591,
+          "rd": 629
+        },
+        "agent": {
+          "agent_ids": 29,
+          "ages_days": 57,
+          "carried_foods": 0,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 31.6778907775879,
+          "ids": 4294967326,
+          "life_stages": 2,
+          "seek_kinds": 0,
+          "sleeps": 7.19999980926514,
+          "states": 4,
+          "target_kinds": 8,
+          "target_xs": -1,
+          "target_ys": -1,
+          "thirsts": 26.7520008087158,
+          "xs": 41,
+          "ys": 33
+        },
+        "activity": {
+          "ids": 4294967326,
+          "kinds": 6,
+          "place_x": 41,
+          "place_y": 33,
+          "until_tick": 85132
+        }
+      }
+    }
+  },
+  "crowd3": {
+    "clock": {
+      "day_index": 29,
+      "day_of_season": 2,
+      "days_per_season": 7,
+      "season": 0,
+      "tick": 42180,
+      "ticks_per_day": 1440,
+      "time_of_day": 15.0,
+      "winter_severity": -1
+    },
+    "population": 28,
+    "tallies": {
+      "area_floor_placed": 0,
+      "births": 11,
+      "cold_member_hours": 463,
+      "deaths_combat": 0,
+      "deaths_dehydration": 0,
+      "deaths_exposure": 0,
+      "deaths_old_age": 8,
+      "deaths_starvation": 0,
+      "fissions": 0,
+      "fissions_cancelled": 0,
+      "gather_preempted": 0,
+      "ground_meals": 107,
+      "meals_from_store": 1885,
+      "remnant_merges": 0,
+      "wet_burn_wood": 0,
+      "wood_gathered": 775,
+      "wood_trips": 447
+    },
+    "settlements": {
+      "centroid_xs": [
+        23
+      ],
+      "centroid_ys": [
+        20
+      ],
+      "fire_lit": [
+        0
+      ],
+      "food_stocks": [
+        161
+      ],
+      "formation_xs": [
+        22
+      ],
+      "formation_ys": [
+        20
+      ],
+      "ids": [
+        1
+      ],
+      "member_counts": [
+        28
+      ],
+      "settlement_ids": [
+        1
+      ],
+      "wood_stocks": [
+        46
+      ],
+      "wood_targets": [
+        39
+      ]
+    },
+    "buildings": {
+      "ids": [
+        0,
+        7,
+        14,
+        21,
+        28,
+        75
+      ],
+      "kinds": [
+        0,
+        1,
+        1,
+        1,
+        2,
+        1
+      ],
+      "xs": [
+        22,
+        20,
+        24,
+        22,
+        24,
+        21
+      ],
+      "ys": [
+        20,
+        19,
+        19,
+        22,
+        22,
+        18
+      ]
+    },
+    "subjects": {
+      "30": {
+        "person": {
+          "alive": true,
+          "born_tick": 28801,
+          "death_reason": -1,
+          "died_tick": -1,
+          "father": 4,
+          "female": 0,
+          "found": true,
+          "ha": 172,
+          "mother": 5,
+          "ns": 536,
+          "p": 376,
+          "rd": 541
+        },
+        "agent": {
+          "agent_ids": 30,
+          "ages_days": 9,
+          "carried_foods": 0,
+          "carried_woods": 0,
+          "colds": 0,
+          "hungers": 36.5177955627441,
+          "ids": 8589934612,
+          "life_stages": 0,
+          "seek_kinds": 0,
+          "sleeps": 16.2000007629395,
+          "states": 4,
+          "target_kinds": 8,
+          "target_xs": -1,
+          "target_ys": -1,
+          "thirsts": 44.0320014953613,
+          "xs": 24,
+          "ys": 21
+        },
+        "activity": {
+          "ids": 8589934612,
+          "kinds": 1,
+          "place_x": 24,
+          "place_y": 21,
+          "until_tick": 42244
+        }
+      }
+    }
+  }
+}

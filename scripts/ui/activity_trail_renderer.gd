@@ -37,6 +37,7 @@ var _drawn_segment_count: int = 0
 var _world_sim: Node = null
 var _inspector: Node = null
 var _camera: Camera2D = null
+var _agent_renderer: Node = null
 var _selected_agent: int = -1
 var _seek_kind: Dictionary = {}
 # agent_id (int) → Array[Vector2] history (most-recent at end).
@@ -51,13 +52,14 @@ func _ready() -> void:
 		_world_sim.connect("world_reset", _on_world_reset)
 	_inspector = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	_camera = get_node_or_null("/root/Main/Camera2D") as Camera2D
+	_agent_renderer = get_node_or_null("/root/Main/AgentRenderer")
 	z_index = Z_TRAIL
 
 
 func _process(_delta: float) -> void:
 	if _world_sim == null:
 		return
-	var snap: Variant = _world_sim.call("get_agent_snapshot")
+	var snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap
@@ -95,6 +97,8 @@ func _process(_delta: float) -> void:
 		var py: float = float(SPRITE_ORIGIN_Y + ys_arr[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var hist: Array = _history.get(aid, []) as Array
 		var point: Vector2 = Vector2(px, py)
+		if _agent_renderer != null and bool(_agent_renderer.call("has_drawn_position", aid)):
+			point = _agent_renderer.call("get_drawn_position", aid) as Vector2
 		if hist.is_empty() or hist.back() != point:
 			hist.append(point)
 		while hist.size() > TRAIL_LENGTH:

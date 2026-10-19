@@ -1,0 +1,20 @@
+{
+  "target_head": "0189eead423c0496bda04d93b2e2da57a3efea27",
+  "execution_scope": "all ledger-mapped candidates",
+  "audit_executed": true,
+  "mapped_audit_complete": true,
+  "mapped_candidates": 467,
+  "killed": 467,
+  "survived": 0,
+  "invalid": 0,
+  "baseline_invalid": 0,
+  "ledger_rows": 336,
+  "rows_killed": 331,
+  "diagnostic_only_rows_with_written_reasons": 5,
+  "inventory_candidates": 758,
+  "unexecuted_unmapped_inventory_candidates": 291,
+  "assertion_accounting_complete": true,
+  "audit_worktree_clean": true,
+  "current_production_source_or_test_drift": [],
+  "baseline_function_count": 151
+}

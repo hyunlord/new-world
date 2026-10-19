@@ -1,0 +1,12 @@
+{
+  "head": "9eba38ffae8095b5f108722cd120a1a71e87aa59",
+  "frozen_product_head": "c08076dd67ee0a54470f16fc6b993c3172752320",
+  "exit_code": 0,
+  "checks": 102,
+  "passed": 102,
+  "failed": [],
+  "script_parse_error_matches": [],
+  "finished_observed_utc": "2026-10-18T12:07:50.901171+00:00",
+  "command": "GATE_OUTPUT_DIR=docs/art/production12/gates/final CARGO_BUILD_JOBS=6 CARGO_PROFILE_DEV_OPT_LEVEL=2 CARGO_PROFILE_TEST_OPT_LEVEL=2 bash tools/art_pipeline/gate.sh final",
+  "results_sha256": "dee4f57e04f69b096d9d3dae43a9ee194b615da0fe0f585f84c6f1fefc82d356"
+}

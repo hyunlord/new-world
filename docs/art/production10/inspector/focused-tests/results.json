@@ -1,0 +1,35 @@
+[
+  {
+    "name": "personal",
+    "exit": 0,
+    "command": [
+      "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot",
+      "--headless",
+      "--path",
+      "/Users/rexxa/work/new-world-art-prod",
+      "--script",
+      "res://scripts/test/art/test_inspector_personal_p10.gd"
+    ]
+  },
+  {
+    "name": "activity",
+    "exit": 0,
+    "command": [
+      "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot",
+      "--headless",
+      "--path",
+      "/Users/rexxa/work/new-world-art-prod",
+      "--script",
+      "res://scripts/test/art/test_inspector_activity_p10.gd"
+    ]
+  },
+  {
+    "name": "locale",
+    "exit": 0,
+    "command": [
+      "bash",
+      "tools/harness/locale_check.sh",
+      "/Users/rexxa/work/art-production10-evidence/part3-focused-attempt1/locale"
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [optimized + debuginfo] target(s) in 9.23s
+     Running tests/harness_art_p9_sim_reads.rs (target/debug/deps/harness_art_p9_sim_reads-5e081a581ef23cb8)
+
+running 4 tests
+test hearth_hoisting_keeps_original_snapshot_inputs_and_elapsed_clock ... ok
+test reader_resource_and_node_are_additive_immediately_after_world ... ok
+test scanner_detects_calls_comments_fakes_and_dynamic_helpers ... ok
+test every_game_test_capture_and_transitive_support_script_routes_world_reads ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

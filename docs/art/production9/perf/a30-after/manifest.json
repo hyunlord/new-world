@@ -1,0 +1,12 @@
+{
+	"captures": [],
+	"git_sha": "46193a0301d335fc04dcfd6460e59cc0f1370d08",
+	"intervention_casts": [],
+	"performance_only": true,
+	"plan": "art_society",
+	"run_id": "96728-631710",
+	"scenario": "SOCIETY SCENARIO seed 20261013",
+	"schema_version": 3,
+	"seed": 20261013,
+	"worktree_changed_paths": 0
+}

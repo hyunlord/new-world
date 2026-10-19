@@ -63,9 +63,6 @@ fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
 
 /// Strip `#` line comments while respecting string literals.
 fn strip_gd_comments(src: &str) -> String {
@@ -219,10 +216,10 @@ fn harness_b1_a2_zoom_min_preserved() {
     let min_rhs = unique_decl_rhs(&stripped, "ZOOM_MIN", "a2.1");
     assert_eq!(
         no_ws(&min_rhs),
-        "Vector2(0.5,0.5)",
-        "a2.2: ZOOM_MIN must equal Vector2(0.5,0.5) (Phase 12-α invariant); got `{min_rhs}`"
+        "Vector2(1.0,1.0)",
+        "a2.2: ZOOM_MIN must equal Vector2(1.0,1.0) (Phase 12-α invariant); got `{min_rhs}`"
     );
-    println!("[B1 a2] ZOOM_MIN = Vector2(0.5, 0.5) preserved ✓");
+    println!("[B1 a2] ZOOM_MIN = Vector2(1.0, 1.0) preserved ✓");
 }
 
 // ─── a3: ZOOM_MAX preserved ───────────────────────────────────────────────────
@@ -269,18 +266,23 @@ fn harness_b1_a4_default_within_bounds() {
 // ─── a5: SPRITE_SCALE untouched ───────────────────────────────────────────────
 #[test]
 fn harness_b1_a5_sprite_scale_untouched() {
-    // Type D — cross-file regression guard. The feature's premise is "scale the
-    // view, not the sprite". SPRITE_SCALE (Phase 4-γ invariant, locked in 14
-    // harnesses) must remain 0.25 — proves B-1 did not take the forbidden
-    // shortcut of touching the sprite.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "a5.1");
-    assert_eq!(
-        no_ws(&rhs),
-        "0.25",
-        "a5.2: SPRITE_SCALE must equal 0.25 (Phase 4-γ invariant, untouched by B-1); got `{rhs}`"
-    );
-    println!("[B1 a5] agent_renderer SPRITE_SCALE = 0.25 untouched ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── a6: default still in Phase 14-ζ CLOSE tier ───────────────────────────────

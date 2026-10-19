@@ -1,5 +1,6 @@
 extends Node2D
 
+const WOOD = preload("res://scripts/ui/wood_visuals.gd")
 const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const TILE_SIZE: int = 16
 const NIGHT_TINT: Color = Color(0.42, 0.48, 0.68)
@@ -12,12 +13,16 @@ var _glows: Dictionary = {}
 var _glow_texture: Texture2D
 var _glow_material: CanvasItemMaterial
 var _frame: int = 0
+var _elapsed: float = 0.0
+var _doorways: Dictionary = {}
+var _doorway_texture: Texture2D
 
 func _ready() -> void:
 	z_index = 6
 	_world_sim = get_node("../WorldSim") as WorldSimNode
 	_modulate = get_node("CanvasModulate") as CanvasModulate
-	_glow_texture = load("res://assets/sprites/fx/glow_radial.png") as Texture2D
+	_glow_texture = _radial_texture(160)
+	_doorway_texture = _radial_texture(20)
 	_glow_material = CanvasItemMaterial.new()
 	_glow_material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	_world_sim.connect("world_reset", refresh_snapshot)
@@ -27,14 +32,16 @@ func refresh_snapshot() -> void:
 	_reconcile_hearths()
 	_update_daylight()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_elapsed += delta
 	_frame += 1
 	if _frame % 30 == 0 or _glows.is_empty():
 		_reconcile_hearths()
 	_update_daylight()
+	_update_doorways()
 
 func _update_daylight() -> void:
-	var snapshot: Dictionary = _world_sim.get_time_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var hour: float = fposmod(float(snapshot.get("time_of_day", 0.0)), 24.0)
 	var tint: Color = NIGHT_TINT
 	for i: int in range(HOURS.size() - 1):
@@ -44,12 +51,16 @@ func _update_daylight() -> void:
 			break
 	_modulate.color = tint
 	var night_factor: float = clampf((1.0 - tint.r) / (1.0 - NIGHT_TINT.r), 0.0, 1.0)
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	for id: int in _glows.keys():
 		var glow: Sprite2D = _glows[id] as Sprite2D
-		glow.modulate = Color(1.0, 0.6, 0.25, 0.55 * night_factor)
+		var state: Dictionary = WOOD.settlement(settlements, glow.get_meta("tile", Vector2i.ZERO))
+		glow.modulate = Color(1.0, 0.6, 0.25, WOOD.glow_alpha(state, night_factor, _elapsed))
+		glow.set_meta("fire_lit", state.get("fire_lit", null))
+		glow.set_meta("glow_alpha", glow.modulate.a)
 
 func _reconcile_hearths() -> void:
-	var snapshot: Dictionary = _world_sim.get_building_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
@@ -65,6 +76,9 @@ func _reconcile_hearths() -> void:
 			glow.material = _glow_material
 			add_child(glow)
 			_glows[ids[i]] = glow
+		glow.set_meta("tile", Vector2i(xs[i], ys[i]))
+		glow.set_meta("art_kind", "hearth_glow")
+		glow.set_meta("art_id", ids[i])
 		glow.position = SPRITE_ORIGIN + Vector2(xs[i], ys[i]) * TILE_SIZE + Vector2.ONE * (TILE_SIZE / 2.0)
 		seen[ids[i]] = true
 	for id: int in _glows.keys():
@@ -72,3 +86,53 @@ func _reconcile_hearths() -> void:
 			var stale: Sprite2D = _glows[id] as Sprite2D
 			stale.queue_free()
 			_glows.erase(id)
+
+func _radial_texture(size: int) -> Texture2D:
+	var image := Image.create(size,size,false,Image.FORMAT_RGBA8)
+	var center := Vector2(float(size-1)/2.0,float(size-1)/2.0)
+	for y: int in range(size):
+		for x: int in range(size):
+			var distance: float = Vector2(x,y).distance_to(center)/(float(size)/2.0)
+			image.set_pixel(x,y,Color(1,1,1,pow(maxf(0.0,1.0-distance),2)))
+	return ImageTexture.create_from_image(image)
+
+func _update_doorways() -> void:
+	var hour: float = float(SimReads.read(_world_sim, "get_time_snapshot").get("time_of_day",12.0))
+	var seen: Dictionary = {}
+	var objects: Node2D = get_node_or_null("../WorldObjects") as Node2D
+	if objects == null:
+		return
+	var sleeping: Dictionary = _sheltered_sleep_tiles()
+	if hour>=20.0 or hour<6.0:
+		for child: Node in objects.get_children():
+			if child.get_meta("art_kind","") != "building" or int(child.get_meta("building_kind",-1)) != 1:
+				continue
+			var tile := Vector2i(int(child.get_meta("tile_x",0)),int(child.get_meta("tile_y",0)))
+			if not sleeping.has(tile):
+				continue
+			var id: int = int(child.get_meta("art_id",0))
+			var glow: Sprite2D = _doorways.get(id) as Sprite2D
+			if glow == null:
+				glow = Sprite2D.new()
+				glow.texture = _doorway_texture
+				glow.material = _glow_material
+				add_child(glow)
+				_doorways[id] = glow
+			glow.position = (child as Sprite2D).position+Vector2(0,-5)
+			glow.modulate = Color(1.0,0.6,0.25,0.45)
+			seen[id] = true
+	for id: int in _doorways.keys():
+		if not seen.has(id):
+			(_doorways[id] as Sprite2D).queue_free()
+			_doorways.erase(id)
+
+func _sheltered_sleep_tiles() -> Dictionary:
+	var sleeping: Dictionary = {}
+	var agents: Node = get_node_or_null("../AgentRenderer")
+	if agents == null or not bool(agents.call("is_capture_visible")):
+		return sleeping
+	var active: Array = agents.call("get_active_agent_sprites")
+	for sprite: Sprite2D in active:
+		if bool(sprite.get_meta("sheltered_sleep",false)):
+			sleeping[Vector2i(int(sprite.get_meta("tile_x",0)),int(sprite.get_meta("tile_y",0)))] = true
+	return sleeping

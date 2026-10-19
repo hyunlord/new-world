@@ -1,0 +1,106 @@
+{
+  "reviewer": "p2_deaths",
+  "review_mode": "read-only focused measurement/observer/provenance/budget review; report file only",
+  "created_utc": "2026-10-13T04:06:52.518986+00:00",
+  "head_at_report": "369f2200406233e6c32454a4389b5296f4ea8276",
+  "findings_as_observed": [
+    {
+      "id": "M01",
+      "severity": "medium",
+      "path": "tools/art_pipeline/ingame_qa_founding_p7.py",
+      "lines": [
+        15,
+        17
+      ],
+      "title": "A28 accepts arbitrary suppression labels instead of allowed raw-state exceptions",
+      "evidence": "check_group with valid trail/marker geometry, agent_in_view=true, visible=false, suppressed=not_founder returns [] (no errors). check_founding_frame does not validate exemption against carried_foods/carried_woods/state.",
+      "impact": "A visible founder without a bundle can avoid an A28 failure through an invalid suppression reason. Current renderer correctness does not prove the checker rejects this failure.",
+      "handoff": "Root delegated gate strengthening and negative test to p0_measure."
+    },
+    {
+      "id": "M02",
+      "severity": "medium",
+      "path": "tools/art_pipeline/blind_p7.py",
+      "lines": [
+        99,
+        102
+      ],
+      "title": "Blind verification hashes originals but not observer image copies",
+      "evidence": "check_blind iterates frozen key sources and validates source.source SHA; source.image is not read. All six currently frozen A27/A28 observer image copies were checked separately and match source.sha256.",
+      "impact": "A later changed observer-facing copy can pass this provenance gate; no mismatch was observed in the current six images.",
+      "handoff": "Root delegated copied-image hash validation and negative test to p0_measure."
+    }
+  ],
+  "resolution_updates": [
+    {
+      "verified_utc": "2026-10-13T04:08:52.393173+00:00",
+      "reviewer": "p2_deaths",
+      "findings": [
+        "M01",
+        "M02"
+      ],
+      "status": "resolved_verified",
+      "evidence": {
+        "M01": "Source now cross-checks visible founder suppression with independent raw load/state/target and entity pose. Negative test rejects not_founder, hidden_agent, unsupported real_load/eat/asleep; positive cases require real load or correct eat state.",
+        "M02": "Source now hashes both observer copy and original source. Negative test starts with PASS then changes only observer-copy bytes and requires FAIL.",
+        "test_command": "python3 -m pytest tools/art_pipeline/test_measurement_p7.py -q",
+        "test_exit_code": 0,
+        "test_result": "10 passed in 0.07s"
+      },
+      "source_sha256": {
+        "ingame_qa_founding_p7.py": "3b950d5dc57602b55d30a247aa23ccd1b5020c2d57abf6d370ffcb7c5c79c1c6",
+        "blind_p7.py": "7b57fa458731abf18951a9658627a25937ac8fa5f2a87c61054ffeb8c53a6f14",
+        "test_measurement_p7.py": "c97d21b3ee83acbae8452a9e5efd86cfe89731a863d509a3134759c8ff888db3"
+      },
+      "limits": "Original findings preserved. This verifies the two checker corrections and targeted regression suite, not a new production-render acceptance claim."
+    }
+  ],
+  "verified_properties": [
+    "A26 compares independent FFI census counts with each of five cumulative tallies, exactly-one feed identity/key/tick, drawn death multisets and per-reason RGB; actual HUD text is checked in addition to numeric getter.",
+    "A27 compares raw settlement IDs/parent/member fields with UI rows, view transforms, font9–12, distinct overview colors and selected membership outlines.",
+    "A28 verifies source fission ticks, one feed event per departure/founding/cancellation and tally agreement; group leaders/members/site tiles derive from raw Founding fields.",
+    "A29 requires raw daughter-only rain targeting, applied toast, simultaneous daughter-ash/original-fire evidence and hash-bound independent review.",
+    "A30 requires two300-frame finite positive datasets, matching run/seed/zoom/frozen mode, load records, source manifest and median ratio<=1.15 plus39audit closures.",
+    "Blind scores are recomputed against frozen answer bytes and observer byte hashes; two distinct observers and unchanged3/4(A27),2/2(A28) thresholds are required.",
+    "Final A11 verifier compares reconstructed crop pixels exactly with frozen4x/2x grids; measure_p7 checks final raw lineup file hashes before accepting the identity result.",
+    "compact_previews_p7 modifies only published GIFs, verifies retained decoded pixels and total duration, preserves external raw cycles and writes reduction provenance."
+  ],
+  "limits": [
+    "Focused source review, not a comprehensive audit of every inherited A1–A25 implementation.",
+    "No production rendering files changed, no windowed sessions or full measurement reruns launched.",
+    "No claim that source checks replace independent image observation, final gate, same-load performance run or publication byte-budget measurement.",
+    "Findings are retained as observed; later fixes belong in resolution_updates rather than rewriting original verdicts."
+  ],
+  "files_read": [
+    "measure_p7.py",
+    "ingame_qa_society_p7.py",
+    "ingame_qa_deaths_p7.py",
+    "ingame_qa_villages_p7.py",
+    "ingame_qa_founding_p7.py",
+    "ingame_qa_intervention_p7.py",
+    "ingame_qa_performance_p7.py",
+    "blind_p7.py",
+    "verify_blind_identity_p7.py",
+    "compact_previews_p7.py",
+    "measurement_summary_p7.py",
+    "capture_contract_p7.py",
+    "observation_rules_p7.py",
+    "ingame_qa_observed_p7.py"
+  ],
+  "source_sha256_at_report": {
+    "measure_p7.py": "d87ca2b91fc1adfb8d39dd4e53dc79b3f8f4a5eeb3c3bc808ae393e6565aa8bd",
+    "ingame_qa_society_p7.py": "010c726653523e189d64f598db7e4b2363b6f8908bf6b1fe3e1ed4fd05fa138b",
+    "ingame_qa_deaths_p7.py": "eec0b754739a7ee8b0c882f861ec94bd310134513bd7d520141b50056d68dc9e",
+    "ingame_qa_villages_p7.py": "b21a39364d77e219ac6f0a1677a8903ed7caf247fefec7fbaac09d10245a7aaa",
+    "ingame_qa_founding_p7.py": "af778f8c59c1301a3327e462e3cacf37402af3c3fc563eac4b3e1fa49dc8c927",
+    "ingame_qa_intervention_p7.py": "16fd9500e9d7920510f972126f0d465b4f8bd72c4d9a74e4bd827b7bfc1bd233",
+    "ingame_qa_performance_p7.py": "29b093b98488a6286b83b7f736314e411e36ae8e0ea1c4c4748a1399c78025b3",
+    "blind_p7.py": "79d742e531c17c094c32f2021c53ee760c9a316972436aa07011ee3afe63c331",
+    "verify_blind_identity_p7.py": "8c51f9574583c58abebf1f5ac2d590970b58c4af1d96af2d09094b411ad829a1",
+    "compact_previews_p7.py": "7a397f3353892833669bc56935417482c7a12a4aaf60057e90d06e736718979f",
+    "measurement_summary_p7.py": "ac31450fa0b268c6ee983ad6b4d1553ea801ee186eb47531826350312f7c7c19",
+    "capture_contract_p7.py": "a86cc22b6fc676018da709d95d95d98d50f3b763e3fd17a239609eff10095c66",
+    "observation_rules_p7.py": "cd311e09846a956c24826f072bb295c10047f8cc07dd8c4303d4b80302c03cf8",
+    "ingame_qa_observed_p7.py": "5dbb05fb5080465efe05073eba36ae3091093dfceda3e04a09a83c4915d87f04"
+  }
+}

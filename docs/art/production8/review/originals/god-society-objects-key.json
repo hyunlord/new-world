@@ -1,0 +1,382 @@
+{
+  "created_ns": 1791948248811952000,
+  "frames": {
+    "O001": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d50_1700_F2_soc_rain_daughter.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O001.png",
+      "sha256": "7c30cc32f4f656dae2aa266b960b6f05b6046e834e84fe3c9cfcf728d5cee1a8",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O001_ids.png",
+      "annotated_sha256": "b77078e0351c469c92596d7ef277610f9b217b6c1c0761bf77bfbd4709046330",
+      "objects": [
+        {
+          "label": "A5",
+          "id": 5,
+          "kind": "agent"
+        },
+        {
+          "label": "A13",
+          "id": 13,
+          "kind": "agent"
+        },
+        {
+          "label": "A60",
+          "id": 60,
+          "kind": "agent"
+        },
+        {
+          "label": "A74",
+          "id": 74,
+          "kind": "agent"
+        },
+        {
+          "label": "A65",
+          "id": 65,
+          "kind": "agent"
+        },
+        {
+          "label": "A77",
+          "id": 77,
+          "kind": "agent"
+        },
+        {
+          "label": "A69",
+          "id": 69,
+          "kind": "agent"
+        },
+        {
+          "label": "A64",
+          "id": 64,
+          "kind": "agent"
+        },
+        {
+          "label": "A72",
+          "id": 72,
+          "kind": "agent"
+        },
+        {
+          "label": "A58",
+          "id": 58,
+          "kind": "agent"
+        },
+        {
+          "label": "A46",
+          "id": 46,
+          "kind": "agent"
+        },
+        {
+          "label": "A44",
+          "id": 44,
+          "kind": "agent"
+        },
+        {
+          "label": "A67",
+          "id": 67,
+          "kind": "agent"
+        },
+        {
+          "label": "A50",
+          "id": 50,
+          "kind": "agent"
+        },
+        {
+          "label": "A80",
+          "id": 80,
+          "kind": "agent"
+        },
+        {
+          "label": "A54",
+          "id": 54,
+          "kind": "agent"
+        },
+        {
+          "label": "A62",
+          "id": 62,
+          "kind": "agent"
+        },
+        {
+          "label": "A79",
+          "id": 79,
+          "kind": "agent"
+        },
+        {
+          "label": "A56",
+          "id": 56,
+          "kind": "agent"
+        },
+        {
+          "label": "A63",
+          "id": 63,
+          "kind": "agent"
+        },
+        {
+          "label": "A52",
+          "id": 52,
+          "kind": "agent"
+        },
+        {
+          "label": "A73",
+          "id": 73,
+          "kind": "agent"
+        },
+        {
+          "label": "A71",
+          "id": 71,
+          "kind": "agent"
+        },
+        {
+          "label": "A76",
+          "id": 76,
+          "kind": "agent"
+        },
+        {
+          "label": "A70",
+          "id": 70,
+          "kind": "agent"
+        },
+        {
+          "label": "A48",
+          "id": 48,
+          "kind": "agent"
+        },
+        {
+          "label": "A83",
+          "id": 83,
+          "kind": "agent"
+        },
+        {
+          "label": "A25",
+          "id": 25,
+          "kind": "agent"
+        },
+        {
+          "label": "A37",
+          "id": 37,
+          "kind": "agent"
+        },
+        {
+          "label": "A30",
+          "id": 30,
+          "kind": "agent"
+        },
+        {
+          "label": "A32",
+          "id": 32,
+          "kind": "agent"
+        },
+        {
+          "label": "A28",
+          "id": 28,
+          "kind": "agent"
+        },
+        {
+          "label": "A34",
+          "id": 34,
+          "kind": "agent"
+        },
+        {
+          "label": "A22",
+          "id": 22,
+          "kind": "agent"
+        },
+        {
+          "label": "A23",
+          "id": 23,
+          "kind": "agent"
+        },
+        {
+          "label": "A19",
+          "id": 19,
+          "kind": "agent"
+        },
+        {
+          "label": "B10873",
+          "id": 10873,
+          "kind": "building"
+        },
+        {
+          "label": "B10880",
+          "id": 10880,
+          "kind": "building"
+        },
+        {
+          "label": "B10887",
+          "id": 10887,
+          "kind": "building"
+        },
+        {
+          "label": "B11252",
+          "id": 11252,
+          "kind": "building"
+        },
+        {
+          "label": "B12791",
+          "id": 12791,
+          "kind": "building"
+        },
+        {
+          "label": "B14827",
+          "id": 14827,
+          "kind": "building"
+        }
+      ]
+    },
+    "O002": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_F2N_soc_rain_night_daughter.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O002.png",
+      "sha256": "e20968b43df97e22379e8b9cf3a73c5bbc1bffb830d3ee28ba0e33e7f6296518",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O002_ids.png",
+      "annotated_sha256": "38a82cf3f2cba9c84c119eeb5e0dbc65fa44529d83b4d51f80ca68a688974822",
+      "objects": [
+        {
+          "label": "B10873",
+          "id": 10873,
+          "kind": "building"
+        },
+        {
+          "label": "B10880",
+          "id": 10880,
+          "kind": "building"
+        },
+        {
+          "label": "B10887",
+          "id": 10887,
+          "kind": "building"
+        },
+        {
+          "label": "B11252",
+          "id": 11252,
+          "kind": "building"
+        },
+        {
+          "label": "B12791",
+          "id": 12791,
+          "kind": "building"
+        },
+        {
+          "label": "B14827",
+          "id": 14827,
+          "kind": "building"
+        }
+      ]
+    },
+    "O003": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_F2N_soc_original_night_orig.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O003.png",
+      "sha256": "22bcaa62f08af8b827441d72b41ff77b9c0e0b9d6648a1a7c1b3c8d35392ad7e",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O003_ids.png",
+      "annotated_sha256": "bc4198e074ee671d9559892d9a7d760476db75bba935173c7e8877d0d9801a63",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B344",
+          "id": 344,
+          "kind": "building"
+        },
+        {
+          "label": "B1220",
+          "id": 1220,
+          "kind": "building"
+        }
+      ]
+    },
+    "O004": {
+      "source": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_FV_soc_both_night_all.png",
+      "image": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O004.png",
+      "sha256": "0b320141545a4cf7b7c4b9a1ff71eeca93ebbeba856e680a2b657343d13b2404",
+      "annotated": "/Users/rexxa/work/art-production8-evidence/blind-round1/god-society-review/packets/objects/batch001/O004_ids.png",
+      "annotated_sha256": "450666541156c43faaf57ecca7301543f3a45c1450f36a85d5bba468b43e16ec",
+      "objects": [
+        {
+          "label": "B0",
+          "id": 0,
+          "kind": "building"
+        },
+        {
+          "label": "B7",
+          "id": 7,
+          "kind": "building"
+        },
+        {
+          "label": "B14",
+          "id": 14,
+          "kind": "building"
+        },
+        {
+          "label": "B21",
+          "id": 21,
+          "kind": "building"
+        },
+        {
+          "label": "B28",
+          "id": 28,
+          "kind": "building"
+        },
+        {
+          "label": "B344",
+          "id": 344,
+          "kind": "building"
+        },
+        {
+          "label": "B1220",
+          "id": 1220,
+          "kind": "building"
+        },
+        {
+          "label": "B10873",
+          "id": 10873,
+          "kind": "building"
+        },
+        {
+          "label": "B10880",
+          "id": 10880,
+          "kind": "building"
+        },
+        {
+          "label": "B10887",
+          "id": 10887,
+          "kind": "building"
+        },
+        {
+          "label": "B11252",
+          "id": 11252,
+          "kind": "building"
+        },
+        {
+          "label": "B12791",
+          "id": 12791,
+          "kind": "building"
+        },
+        {
+          "label": "B14827",
+          "id": 14827,
+          "kind": "building"
+        }
+      ]
+    }
+  },
+  "cycles": []
+}

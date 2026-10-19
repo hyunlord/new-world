@@ -1,0 +1,15 @@
+{
+  "gate_head": "49bc0b7c87159340b8024d6b9327bc394dc6daa0",
+  "CARGO_BUILD_JOBS": 6,
+  "CARGO_PROFILE_TEST_OPT_LEVEL": 1,
+  "CARGO_PROFILE_TEST_DEBUG_ASSERTIONS": true,
+  "CARGO_PROFILE_TEST_OVERFLOW_CHECKS": true,
+  "test_threads": 6,
+  "bound_seconds_per_check": 1800,
+  "editor_library_profile": "dev debug, unchanged",
+  "working_tree_note": "Part0 tooling plus test-only Tween.finished synchronization repair; integration gate, not final publication evidence.",
+  "completed_at": "2026-10-15T08:16:55.487655+09:00",
+  "checks": 65,
+  "exit_code": 0,
+  "rust_passed": 2138
+}

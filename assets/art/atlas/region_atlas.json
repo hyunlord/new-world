@@ -1,0 +1,2262 @@
+{
+  "version": 1,
+  "encoding": {
+    "r": "hair 3, otherwise 0",
+    "g": "shade integer 0..2",
+    "a": "binary source alpha"
+  },
+  "pages": {
+    "res://assets/art/atlas/world_0.png": "res://assets/art/atlas/world_0_regions.png"
+  },
+  "sprites": {
+    "P2V_a_N_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1236,
+        1,
+        19,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_a_N_build_01.png",
+      "reviewed_mask_sha256": "0945d97010bd5da7da1c2de50a460b5b4c191949b808253f55cfe997bbb99028"
+    },
+    "P2V_a_N_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1257,
+        1,
+        19,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_a_N_build_02.png",
+      "reviewed_mask_sha256": "ed44fbebe54953a2ef5ebcd603ccaad624a6bbbf7a9c77c322fd775d6b183d9b"
+    },
+    "P2V_a_N_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1278,
+        1,
+        18,
+        25
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_a_N_drink_01.png",
+      "reviewed_mask_sha256": "e44b8b5ee00cea8a49e1f0a79af352cf5cf8cb52ac011a98ec8d024839eb69e3"
+    },
+    "P2V_a_N_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1298,
+        1,
+        17,
+        26
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_a_N_drink_02.png",
+      "reviewed_mask_sha256": "ff3ddce87d7c2234b17e1768c86d56c62b9d94423f12048bff333b9da9f9782c"
+    },
+    "P2V_b_E_eat_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1317,
+        1,
+        15,
+        24
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_E_eat_01.png",
+      "reviewed_mask_sha256": "8bc8dbe6eedba4c54310b4a8100c1c0c72f92fb2c6ff98df1f63fcfbb2098586"
+    },
+    "P2V_b_E_eat_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1334,
+        1,
+        15,
+        28
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_E_eat_02.png",
+      "reviewed_mask_sha256": "f928314fa8766ddc120a380e1ea79e5af6c1a4df2292ef31b74cc6f1aceb4559"
+    },
+    "P2V_b_N_asleep_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1351,
+        1,
+        30,
+        18
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_asleep_01.png",
+      "reviewed_mask_sha256": "f7dcfadf5227314ddce8f946941698e32948c44116a2eb08160ce29e6807a337"
+    },
+    "P2V_b_N_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1383,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_build_01.png",
+      "reviewed_mask_sha256": "cb7fceb510957b6396dcd90d1a1d7d933d45d70be4becf458d011982ad18fce3"
+    },
+    "P2V_b_N_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1403,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_build_02.png",
+      "reviewed_mask_sha256": "d5ee5246e35fc51b9196f2fb559a22145a6310616e904e9dd85c1735600269d2"
+    },
+    "P2V_b_N_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1423,
+        1,
+        18,
+        26
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_drink_02.png",
+      "reviewed_mask_sha256": "805718dddbd772e8c06f9e21de06d4783b4a92b22b0e7ddc34d441bccd0832ef"
+    },
+    "P2V_b_N_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1443,
+        1,
+        18,
+        26
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_drink_02.png",
+      "reviewed_mask_sha256": "805718dddbd772e8c06f9e21de06d4783b4a92b22b0e7ddc34d441bccd0832ef"
+    },
+    "P2V_b_N_eat_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1463,
+        1,
+        16,
+        25
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_eat_01.png",
+      "reviewed_mask_sha256": "0867ac374f437cd48eadd12896b284d4ef17d0e6435270ce65ee8d01de4fe9f5"
+    },
+    "P2V_b_N_eat_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1481,
+        1,
+        16,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_eat_02.png",
+      "reviewed_mask_sha256": "d9ef961023246f010a7b123f63ac8ca3649bf011a4af6172993741ea4ebc1b11"
+    },
+    "P2V_b_N_gather_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1499,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_gather_01.png",
+      "reviewed_mask_sha256": "cb7fceb510957b6396dcd90d1a1d7d933d45d70be4becf458d011982ad18fce3"
+    },
+    "P2V_b_N_gather_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1519,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_gather_02.png",
+      "reviewed_mask_sha256": "d5ee5246e35fc51b9196f2fb559a22145a6310616e904e9dd85c1735600269d2"
+    },
+    "P2V_b_N_sit_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1539,
+        1,
+        20,
+        24
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_N_sit_01.png",
+      "reviewed_mask_sha256": "9677572c1aae8f30ff7c43dbcaba390763494799d2ea13a6d77026d84bbabfdf"
+    },
+    "P2V_b_S_asleep_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1561,
+        1,
+        30,
+        15
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_S_asleep_01.png",
+      "reviewed_mask_sha256": "9aa83a0be85e058360f074986cd652a1d9f375e38bd1e6c9e416d833acd6c6c8"
+    },
+    "P2V_b_S_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1593,
+        1,
+        16,
+        22
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_S_drink_01.png",
+      "reviewed_mask_sha256": "4b736883b45bdc9f68921f4718a819a81e36e16e117e266a74672a7186b2bbda"
+    },
+    "P2V_b_S_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1611,
+        1,
+        16,
+        26
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_b_S_drink_02.png",
+      "reviewed_mask_sha256": "f639c3996ec6e9bfc34202fbc96cee8cd2d20d4ec2a579f831f75e097d9782cc"
+    },
+    "P2V_c_E_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1629,
+        1,
+        12,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_E_build_01.png",
+      "reviewed_mask_sha256": "aabbef1d4cbfeff03d3d5de14d3d572dcaa7a2e9cf0253ba982206b8afaa5758"
+    },
+    "P2V_c_E_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1643,
+        1,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_E_build_02.png",
+      "reviewed_mask_sha256": "5881d5fbbbc494c1bbff4895b816341c9d97ac88026f2485c849a168ba9e8d45"
+    },
+    "P2V_c_E_carry_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1658,
+        1,
+        16,
+        22
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "P2V_c_E_carry_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1676,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "P2V_c_E_carry_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1692,
+        1,
+        16,
+        22
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "P2V_c_E_carry_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1710,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "P2V_c_E_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1726,
+        1,
+        13,
+        19
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_E_drink_02.png",
+      "reviewed_mask_sha256": "e96d1d2d11ad97f2e104c419c54c464402cef023e3d340ddaa61f56f816f870d"
+    },
+    "P2V_c_E_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1741,
+        1,
+        13,
+        19
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_E_drink_02.png",
+      "reviewed_mask_sha256": "e96d1d2d11ad97f2e104c419c54c464402cef023e3d340ddaa61f56f816f870d"
+    },
+    "P2V_c_E_gather_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1756,
+        1,
+        12,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_E_gather_01.png",
+      "reviewed_mask_sha256": "aabbef1d4cbfeff03d3d5de14d3d572dcaa7a2e9cf0253ba982206b8afaa5758"
+    },
+    "P2V_c_E_gather_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1770,
+        1,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_E_gather_02.png",
+      "reviewed_mask_sha256": "5881d5fbbbc494c1bbff4895b816341c9d97ac88026f2485c849a168ba9e8d45"
+    },
+    "P2V_c_S_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1785,
+        1,
+        18,
+        25
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "P2V_c_S_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1805,
+        1,
+        16,
+        22
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "P2V_c_S_carry_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1823,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_S_carry_01.png",
+      "reviewed_mask_sha256": "d4f7065d3ea4f1a6fc8d6a44bc6b968134d59ead5f061faa7da42c54d75b3add"
+    },
+    "P2V_c_S_carry_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1839,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_S_carry_04.png",
+      "reviewed_mask_sha256": "097f6ef19e461238b07c73e0fc4d60b7261289a3533713a0e71a97feee731ae4"
+    },
+    "P2V_c_S_carry_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1855,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_S_carry_04.png",
+      "reviewed_mask_sha256": "097f6ef19e461238b07c73e0fc4d60b7261289a3533713a0e71a97feee731ae4"
+    },
+    "P2V_c_S_carry_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1871,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_S_carry_04.png",
+      "reviewed_mask_sha256": "097f6ef19e461238b07c73e0fc4d60b7261289a3533713a0e71a97feee731ae4"
+    },
+    "P2V_c_S_gather_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1887,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_S_gather_01.png",
+      "reviewed_mask_sha256": "99b4eba4d0a1d41c4c663cd14b330e222e4ceed1a9b0d01231f774bc01bfa0c0"
+    },
+    "P2V_c_S_gather_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1903,
+        1,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/P2V_c_S_gather_02.png",
+      "reviewed_mask_sha256": "097f6ef19e461238b07c73e0fc4d60b7261289a3533713a0e71a97feee731ae4"
+    },
+    "V_a1_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1074,
+        44,
+        18,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_01.png",
+      "reviewed_mask_sha256": "8e46e335b553126fc7b34841bc9f203aa9d9fb678290ea15c3f2938c5c6b5553"
+    },
+    "V_a1_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1094,
+        44,
+        18,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_02.png",
+      "reviewed_mask_sha256": "916b4a1209b823fdb1e9788af2a4002d086eb057b6ef308d1d64a08a9d8e6502"
+    },
+    "V_a1_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1114,
+        44,
+        19,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_03.png",
+      "reviewed_mask_sha256": "1b0a8b86a0c10914c1ddba4d10541ced59c25732442afc25a4d67d762d5df233"
+    },
+    "V_a1_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1135,
+        44,
+        14,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_04.png",
+      "reviewed_mask_sha256": "f62e4b362b8ece0ad9b93dac5bfb536dd3308c5e300e32c63b4bbb0244958810"
+    },
+    "V_a1_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1151,
+        44,
+        18,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_05.png",
+      "reviewed_mask_sha256": "22a4352eeb07a01adab977342b74c98a8179a414f05f4758caf09d691601f2ce"
+    },
+    "V_a1_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1171,
+        44,
+        18,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_08.png",
+      "reviewed_mask_sha256": "5a0e71576b1a09cec98cd3311fff939d2c6b807b2dd61c17d5759f8b9f10e0cf"
+    },
+    "V_a1_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1191,
+        44,
+        18,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_07.png",
+      "reviewed_mask_sha256": "6344edb1c05f26cd603eda4d186a3689617f717b9deaa226b0caed486ab0bad2"
+    },
+    "V_a1_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1211,
+        44,
+        18,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_08.png",
+      "reviewed_mask_sha256": "5a0e71576b1a09cec98cd3311fff939d2c6b807b2dd61c17d5759f8b9f10e0cf"
+    },
+    "V_a1_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1231,
+        44,
+        14,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_09.png",
+      "reviewed_mask_sha256": "e9025b356a1a3cbed1d64b497a43e5ee39e4796c1e8fdc392c59472ee2d2cd9c"
+    },
+    "V_a1_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1247,
+        44,
+        14,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_12.png",
+      "reviewed_mask_sha256": "a69e9a76de824fe44e9bc6818c8f5ca77cb0480a0a93beca0ea3ec1e2775060f"
+    },
+    "V_a1_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1263,
+        44,
+        14,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_11.png",
+      "reviewed_mask_sha256": "c99a5a088ab42ceb4defca4729eb2c4903b78a828208c5cd9ef85f4848409364"
+    },
+    "V_a1_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1279,
+        44,
+        14,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_12.png",
+      "reviewed_mask_sha256": "a69e9a76de824fe44e9bc6818c8f5ca77cb0480a0a93beca0ea3ec1e2775060f"
+    },
+    "V_a1_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1295,
+        44,
+        20,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_13.png",
+      "reviewed_mask_sha256": "fd9a72bd0f29d3cc72a55e410efd78b3b5be8a208510a7ecb6a19630ce3097d9"
+    },
+    "V_a1_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1317,
+        44,
+        19,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_14.png",
+      "reviewed_mask_sha256": "b16a71a1f319742abd8d96d2b34b8895b2ff7cc082f74cdadf5e8bab6e6aff00"
+    },
+    "V_a1_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1338,
+        44,
+        20,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_15.png",
+      "reviewed_mask_sha256": "98161f3cecd90cb99ad20f1f4970d1d8be2657ac9f1a58573fa60c27d60b61fd"
+    },
+    "V_a1_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1360,
+        44,
+        18,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a1_16.png",
+      "reviewed_mask_sha256": "3fccc6c0572950f696298738aa027be278569b93552d73959e9f32608047f87e"
+    },
+    "V_a2_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1380,
+        44,
+        16,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_01.png",
+      "reviewed_mask_sha256": "ad089797209307f029e2639cbf924cc6101f98dcab1f2826ff076b1f3f1c1f26"
+    },
+    "V_a2_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1398,
+        44,
+        17,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_04.png",
+      "reviewed_mask_sha256": "176b1114b1ef69c7a4973d30044cdc1e01069880b0157e75e68d0ba74ed064f3"
+    },
+    "V_a2_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1417,
+        44,
+        17,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_03.png",
+      "reviewed_mask_sha256": "63312394246d2306fa92de8f8df4a84d59b93709b2c38d0e424eacec7be7502e"
+    },
+    "V_a2_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1436,
+        44,
+        17,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_04.png",
+      "reviewed_mask_sha256": "176b1114b1ef69c7a4973d30044cdc1e01069880b0157e75e68d0ba74ed064f3"
+    },
+    "V_a2_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1455,
+        44,
+        18,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_07.png",
+      "reviewed_mask_sha256": "227f4778cf09e7f4ded76c3a121fb789a490baf37c65d1372e9d3c85308862af"
+    },
+    "V_a2_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1475,
+        44,
+        17,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_08.png",
+      "reviewed_mask_sha256": "3ce299a8f95ffae120df60341bd47a7861ca005a12a4d4e368842b3a37ff34bb"
+    },
+    "V_a2_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1494,
+        44,
+        18,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_07.png",
+      "reviewed_mask_sha256": "227f4778cf09e7f4ded76c3a121fb789a490baf37c65d1372e9d3c85308862af"
+    },
+    "V_a2_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1514,
+        44,
+        17,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_08.png",
+      "reviewed_mask_sha256": "3ce299a8f95ffae120df60341bd47a7861ca005a12a4d4e368842b3a37ff34bb"
+    },
+    "V_a2_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1533,
+        44,
+        13,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a2_09.png",
+      "reviewed_mask_sha256": "761b15145f6b07fad1a88ff6e5f9d15be97a612424d3589ca1318474f0650697"
+    },
+    "V_a2_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1548,
+        44,
+        14,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a2_10.png",
+      "reviewed_mask_sha256": "f62e4b362b8ece0ad9b93dac5bfb536dd3308c5e300e32c63b4bbb0244958810"
+    },
+    "V_a2_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1564,
+        44,
+        24,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a2_12.png",
+      "reviewed_mask_sha256": "f3ecb49a8853074f510d1cb297fcbd73dfeccc57cc6e8ccc98033d2477cb2f6b"
+    },
+    "V_a2_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1590,
+        44,
+        24,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a2_12.png",
+      "reviewed_mask_sha256": "f3ecb49a8853074f510d1cb297fcbd73dfeccc57cc6e8ccc98033d2477cb2f6b"
+    },
+    "V_a2_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1616,
+        44,
+        13,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a2_13.png",
+      "reviewed_mask_sha256": "761b15145f6b07fad1a88ff6e5f9d15be97a612424d3589ca1318474f0650697"
+    },
+    "V_a2_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1631,
+        44,
+        14,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a2_14.png",
+      "reviewed_mask_sha256": "f62e4b362b8ece0ad9b93dac5bfb536dd3308c5e300e32c63b4bbb0244958810"
+    },
+    "V_a2_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1647,
+        44,
+        22,
+        32
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/recovery/V_a2_15.png",
+      "reviewed_mask_sha256": "8f12a8c0bb3216bf1793241b41ef0221f7bb5761f3255b6e011dc6f8c55cedd9"
+    },
+    "V_a2_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1671,
+        44,
+        20,
+        29
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/recovery/V_a2_16.png",
+      "reviewed_mask_sha256": "1f96307fdbaaec38be538b872cb321c4c901a81dc2a729e1574c14a567ed945e"
+    },
+    "V_a3_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1693,
+        44,
+        19,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_02.png",
+      "reviewed_mask_sha256": "ed44fbebe54953a2ef5ebcd603ccaad624a6bbbf7a9c77c322fd775d6b183d9b"
+    },
+    "V_a3_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1714,
+        44,
+        19,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_02.png",
+      "reviewed_mask_sha256": "ed44fbebe54953a2ef5ebcd603ccaad624a6bbbf7a9c77c322fd775d6b183d9b"
+    },
+    "V_a3_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1735,
+        44,
+        23,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_03.png",
+      "reviewed_mask_sha256": "c9f57cb72177284482d0392a3ccf04868a7138eed054503872dd670e39245155"
+    },
+    "V_a3_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1760,
+        44,
+        22,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_04.png",
+      "reviewed_mask_sha256": "82bf4562d7109b521d97c421e8796dcdf6b7a145f1537c523ac9c82d535302f7"
+    },
+    "V_a3_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1784,
+        44,
+        19,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_05.png",
+      "reviewed_mask_sha256": "b804fbe4b691a873c2934d431a97748456a729feecab7bb7e5b87597265e0575"
+    },
+    "V_a3_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1805,
+        44,
+        22,
+        35
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_06.png",
+      "reviewed_mask_sha256": "a78ffd24d6a73be4c0e161686e86192c8c80a99bf3fac06d21607f0eb906fccb"
+    },
+    "V_a3_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1829,
+        44,
+        21,
+        28
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_07.png",
+      "reviewed_mask_sha256": "088797df4df912a3a8a8d83354fc821475fef87ad92b3f9af9d919b2a45b0bb6"
+    },
+    "V_a3_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1852,
+        44,
+        23,
+        28
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_08.png",
+      "reviewed_mask_sha256": "7e4292b0c3116c637fe1aeb16107c9c170beabe8dc980ea8092c9a0c5a9c9fe4"
+    },
+    "V_a3_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1877,
+        44,
+        21,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_09.png",
+      "reviewed_mask_sha256": "fb712978dd54b4dae459913066532009911ac5648869d9b43070cfb20402bb00"
+    },
+    "V_a3_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1900,
+        44,
+        21,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_10.png",
+      "reviewed_mask_sha256": "7209510aba7f0d579bb78f5c7b05c1bd44c985c97f36ae95a2666307ec58e481"
+    },
+    "V_a3_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1923,
+        44,
+        20,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_11.png",
+      "reviewed_mask_sha256": "29160cbe30fea630b7afc891255755f08874e9d307d31c990e454ba7ff64dbd7"
+    },
+    "V_a3_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1945,
+        44,
+        20,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_12.png",
+      "reviewed_mask_sha256": "44202b2e89fd5c8274c89ee5ec441303f58e08b4da69dd88f2ed622ba1c924ad"
+    },
+    "V_a3_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1967,
+        44,
+        30,
+        14
+      ],
+      "body": "adult_a",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_13.png",
+      "reviewed_mask_sha256": "1d0ec20f10c2677439bd9faa11c541cde5b18a7bd29f6c61d4df97db8c0a7bba"
+    },
+    "V_a3_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1999,
+        44,
+        23,
+        28
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_14.png",
+      "reviewed_mask_sha256": "183ff3315008068065fe0a3ffe6448bceb357497687f3378193f859c03e05bae"
+    },
+    "V_a3_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        2024,
+        44,
+        22,
+        25
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_15.png",
+      "reviewed_mask_sha256": "e588e35c44b85a84c0a788c97e52126e221b4c04c3add7e571f96f98989ff094"
+    },
+    "V_a3_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1,
+        81,
+        24,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_a3_16.png",
+      "reviewed_mask_sha256": "3aaf6536cd9beb6e27caa7a96b43bb3860567cca96ccb00773a5c9178ea267da"
+    },
+    "V_a4_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        27,
+        81,
+        27,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a4_11.png",
+      "reviewed_mask_sha256": "e46d91992c49aa3d33d15309d7ee797f39ae3572a2f5a6021f3dcfe4cb0d2334"
+    },
+    "V_a4_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        56,
+        81,
+        26,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a4_12.png",
+      "reviewed_mask_sha256": "50fef75b3c78219f17cedf287cb697f656402f622b4817e3384f34672dbbff33"
+    },
+    "V_a4_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        84,
+        81,
+        27,
+        30
+      ],
+      "body": "adult_a",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a4_11.png",
+      "reviewed_mask_sha256": "e46d91992c49aa3d33d15309d7ee797f39ae3572a2f5a6021f3dcfe4cb0d2334"
+    },
+    "V_a4_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        113,
+        81,
+        26,
+        31
+      ],
+      "body": "adult_a",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_a4_12.png",
+      "reviewed_mask_sha256": "50fef75b3c78219f17cedf287cb697f656402f622b4817e3384f34672dbbff33"
+    },
+    "V_b1_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        141,
+        81,
+        15,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_01.png",
+      "reviewed_mask_sha256": "a3d10635f5a81d107a10ba5e1e774c211b430b62a72f60061467695c8537c466"
+    },
+    "V_b1_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        158,
+        81,
+        18,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_02.png",
+      "reviewed_mask_sha256": "4c3640b82e6d05e9dc17a02f584c13329e705db7bd421b09733bdff820be0af4"
+    },
+    "V_b1_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        178,
+        81,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_03.png",
+      "reviewed_mask_sha256": "06f8c951b5c8cc169fa85ceb2c67f9002714b1fe09ba23fe6a94b54022e1f984"
+    },
+    "V_b1_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        198,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_04.png",
+      "reviewed_mask_sha256": "d26d533bc3b6d6c78d4cf77849d90680bf5cb5259ded20e9e813456772a748c8"
+    },
+    "V_b1_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        214,
+        81,
+        17,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_05.png",
+      "reviewed_mask_sha256": "4838e6be7612ce543bd7a979169bffb3ad5f9e15800714a1ae8873276e846e97"
+    },
+    "V_b1_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        233,
+        81,
+        15,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b1_06.png",
+      "reviewed_mask_sha256": "4192c1eecd571799cc55a0b5de3c4d05410d3a95121ae6be9d36b1a95283f37c"
+    },
+    "V_b1_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        250,
+        81,
+        17,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b1_07.png",
+      "reviewed_mask_sha256": "30e1fd5c1bb28d4ad6ddcd323ba72d3b2058ac925faddaf0844b5a9b2ea94702"
+    },
+    "V_b1_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        269,
+        81,
+        16,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b1_08.png",
+      "reviewed_mask_sha256": "19c6d12cfcfeeb5f2431e452ee7d6a169d46faf433c3f450b51618a35bcfc6ff"
+    },
+    "V_b1_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        287,
+        81,
+        18,
+        32
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_09.png",
+      "reviewed_mask_sha256": "f5374cef32c968792c7eae9269d3fce07ce8622d895116a0c245b050dd9416f0"
+    },
+    "V_b1_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        307,
+        81,
+        14,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_10.png",
+      "reviewed_mask_sha256": "869bfd5d64da5bb649d954ab49e8856a70a27c288b3672059188a4ede8206e69"
+    },
+    "V_b1_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        323,
+        81,
+        18,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_11.png",
+      "reviewed_mask_sha256": "96fdf5a9f7b7ba4034dc075b3c0aabf83781562699cb5f77835647c6a0eee944"
+    },
+    "V_b1_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        343,
+        81,
+        13,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_12.png",
+      "reviewed_mask_sha256": "7a83ea0c9bd16be623485e4915a2e95ca76e06b3b0fdbdc9982ba0d1e9aac915"
+    },
+    "V_b1_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        358,
+        81,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_15.png",
+      "reviewed_mask_sha256": "9d974c2c160b4e2956110ef02eecf40f5a09f5b20239ed215dfe1c57bbbfb2d8"
+    },
+    "V_b1_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        378,
+        81,
+        16,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_16.png",
+      "reviewed_mask_sha256": "c2564d7c72ca2d48316405bf992d332f3c0dfa4b7dbc11de06b5065ab59b8858"
+    },
+    "V_b1_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        396,
+        81,
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_15.png",
+      "reviewed_mask_sha256": "9d974c2c160b4e2956110ef02eecf40f5a09f5b20239ed215dfe1c57bbbfb2d8"
+    },
+    "V_b1_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        416,
+        81,
+        16,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b1_16.png",
+      "reviewed_mask_sha256": "c2564d7c72ca2d48316405bf992d332f3c0dfa4b7dbc11de06b5065ab59b8858"
+    },
+    "V_b2_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        434,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_01.png",
+      "reviewed_mask_sha256": "da1e8b2de1ba65c4532a0c3c3a24cd61df0c2517516549dd1650999435ae7fbd"
+    },
+    "V_b2_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        450,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_04.png",
+      "reviewed_mask_sha256": "d45507da7e137ad9cd27144f5887e8a85f293bbed86df2e6e78304892505d147"
+    },
+    "V_b2_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        466,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_03.png",
+      "reviewed_mask_sha256": "ed94a2506b1839f8b0a9554086546253071c8a680fa2a80d8ed9d2d34d5df865"
+    },
+    "V_b2_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        482,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_04.png",
+      "reviewed_mask_sha256": "d45507da7e137ad9cd27144f5887e8a85f293bbed86df2e6e78304892505d147"
+    },
+    "V_b2_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        498,
+        81,
+        19,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_07.png",
+      "reviewed_mask_sha256": "d42bdcb9a4e3b189096f184d36ee174d773ba69aed9f6a927a7acca03b6630ff"
+    },
+    "V_b2_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        519,
+        81,
+        16,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_06.png",
+      "reviewed_mask_sha256": "ce3c0fad7f3a746a3e21fe1e2ddcab00c40f574a8a7e37b7afd323a02707b48b"
+    },
+    "V_b2_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        537,
+        81,
+        19,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_07.png",
+      "reviewed_mask_sha256": "d42bdcb9a4e3b189096f184d36ee174d773ba69aed9f6a927a7acca03b6630ff"
+    },
+    "V_b2_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        558,
+        81,
+        16,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "p4_stored",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_08.png",
+      "reviewed_mask_sha256": "b58cf205aff8e38e6500cf3ac13aa7904da49c3c729c7a7ffac27123b4546b01"
+    },
+    "V_b2_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        576,
+        81,
+        13,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b2_09.png",
+      "reviewed_mask_sha256": "58120d40d64853aa9a50ef4435101236754c627e289b86f3e48a72a1c27de8f3"
+    },
+    "V_b2_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        591,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b2_10.png",
+      "reviewed_mask_sha256": "02d3aaa2ce09ec7ad69f3ba3be3cbf75a3121396345f847e837bc32d0598f090"
+    },
+    "V_b2_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        607,
+        81,
+        22,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_11.png",
+      "reviewed_mask_sha256": "17bc6677b4aa8307b75845724778f13089af17d2f3c908c9fca1a638f42a94f2"
+    },
+    "V_b2_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        631,
+        81,
+        19,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_12.png",
+      "reviewed_mask_sha256": "6aa3c42fb49730e430bca6f14c012c4182b41672d097bdd2d0e9a0dcabaf5a78"
+    },
+    "V_b2_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        652,
+        81,
+        13,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b2_13.png",
+      "reviewed_mask_sha256": "58120d40d64853aa9a50ef4435101236754c627e289b86f3e48a72a1c27de8f3"
+    },
+    "V_b2_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        667,
+        81,
+        14,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b2_14.png",
+      "reviewed_mask_sha256": "02d3aaa2ce09ec7ad69f3ba3be3cbf75a3121396345f847e837bc32d0598f090"
+    },
+    "V_b2_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        683,
+        81,
+        24,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_15.png",
+      "reviewed_mask_sha256": "a9939fae159268678db18829b409f075de6e0eaaecc7eea766f4e3875debad2e"
+    },
+    "V_b2_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        709,
+        81,
+        22,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_16.png",
+      "reviewed_mask_sha256": "1f22742f18c088df86eef4d9d4795c43c51a879d67b98fff12f84986eb9e3d4e"
+    },
+    "V_b3_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        733,
+        81,
+        18,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_01.png",
+      "reviewed_mask_sha256": "1275a8cf097b94f25a2214cf53004e4acdeb22e2281ef6d150d469e60e8aa886"
+    },
+    "V_b3_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        753,
+        81,
+        18,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_02.png",
+      "reviewed_mask_sha256": "36e29f62ea431232b22151e78f64c2a7e990aa6ecdda5a0e779a135717a83569"
+    },
+    "V_b3_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        773,
+        81,
+        19,
+        23
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_03.png",
+      "reviewed_mask_sha256": "ef0e964769590f4f830e31904fd0d1c82edf7634efaa6e5028991d8db6453848"
+    },
+    "V_b3_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        794,
+        81,
+        19,
+        27
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_04.png",
+      "reviewed_mask_sha256": "34bcd292f8df11148db5808fe0a69b804fdd83d1230ff099c955c894346db270"
+    },
+    "V_b3_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        815,
+        81,
+        17,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_05.png",
+      "reviewed_mask_sha256": "e279334b314ed7f6a72954d2476ee888c8d3574aff2142275b9c0201abe1e079"
+    },
+    "V_b3_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        834,
+        81,
+        17,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_06.png",
+      "reviewed_mask_sha256": "89c627ba46ae5ff79a047d5181c0f9779d3e9ad2643de33e78c8247cf1def4ad"
+    },
+    "V_b3_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        853,
+        81,
+        18,
+        24
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_07.png",
+      "reviewed_mask_sha256": "81fa7f2c09656ef778542749db45214b99dc1af65f09a8cae9635d9296f47100"
+    },
+    "V_b3_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        873,
+        81,
+        22,
+        26
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_08.png",
+      "reviewed_mask_sha256": "5af17511f7a603e153258ccb7bc4d6e1556c7a2cc7ede451b3052124aae2f27b"
+    },
+    "V_b3_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        897,
+        81,
+        22,
+        31
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_09.png",
+      "reviewed_mask_sha256": "445414c02d54348a6f6adcd0ebfb5046d57cd08913525496086803e299a56e56"
+    },
+    "V_b3_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        921,
+        81,
+        24,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_10.png",
+      "reviewed_mask_sha256": "6f912b7b8ee5c577b62646a8b02904e13d60d0e0877c7bd3e2e6e0a1cd02e895"
+    },
+    "V_b3_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        947,
+        81,
+        18,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_11.png",
+      "reviewed_mask_sha256": "21c175ce191f00ad385629354a426c5c81bb8b790c5921054eb14e882e46d760"
+    },
+    "V_b3_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        967,
+        81,
+        18,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_12.png",
+      "reviewed_mask_sha256": "dbc73add64c2154202b9c9c65a63ea9efed3981323d2881b26d9678155f2d005"
+    },
+    "V_b3_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        987,
+        81,
+        31,
+        14
+      ],
+      "body": "adult_b",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/recovery/V_b3_13.png",
+      "reviewed_mask_sha256": "fb959602974c060d57ee8dd64f9485e7b0e0f46a0d0299f798261a7179084464"
+    },
+    "V_b3_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1020,
+        81,
+        18,
+        25
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_14.png",
+      "reviewed_mask_sha256": "9985cca87ad3796dee33a7e65dba3f841edf3f41f921b506a48ccec532555f8e"
+    },
+    "V_b3_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1040,
+        81,
+        17,
+        25
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b3_15.png",
+      "reviewed_mask_sha256": "06bcb88b9f16d74b10d444e893f7a2bf4208dd4eb67cc7be35db1b7f40ed1b35"
+    },
+    "V_b3_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1059,
+        81,
+        15,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_b3_16.png",
+      "reviewed_mask_sha256": "ec4bb3222aaa219a8b1fcbe5a2c89c89d6d31522c6f6e2810c36b7239ab90f1b"
+    },
+    "V_b4_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1076,
+        81,
+        27,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b4_09.png",
+      "reviewed_mask_sha256": "a00b3d095a87deb6429aa9e23b3706dcf46bb128d6882261157b977e03971da0"
+    },
+    "V_b4_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1105,
+        81,
+        24,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b4_12.png",
+      "reviewed_mask_sha256": "92ba45301385e6fbb6293c3c964b32f72f54187c999aa97ce14226fbacfe8b88"
+    },
+    "V_b4_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1131,
+        81,
+        27,
+        30
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b4_11.png",
+      "reviewed_mask_sha256": "fbe72921c9be46ffd418be01d715596060f0958c016202a9c16a4d6fe2c8d55a"
+    },
+    "V_b4_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1160,
+        81,
+        24,
+        29
+      ],
+      "body": "adult_b",
+      "classification_source": "template_v5",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p5/V_b4_12.png",
+      "reviewed_mask_sha256": "92ba45301385e6fbb6293c3c964b32f72f54187c999aa97ce14226fbacfe8b88"
+    },
+    "V_c1_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1186,
+        81,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c1_01.png",
+      "reviewed_mask_sha256": "d4f7065d3ea4f1a6fc8d6a44bc6b968134d59ead5f061faa7da42c54d75b3add"
+    },
+    "V_c1_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1202,
+        81,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c1_02.png",
+      "reviewed_mask_sha256": "097f6ef19e461238b07c73e0fc4d60b7261289a3533713a0e71a97feee731ae4"
+    },
+    "V_c1_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1218,
+        81,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c1_03.png",
+      "reviewed_mask_sha256": "dd348c05cfa669d9765a075ce45e7bd334d8a434f39fd66f4573af053a391e25"
+    },
+    "V_c1_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1234,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c1_04.png",
+      "reviewed_mask_sha256": "5881d5fbbbc494c1bbff4895b816341c9d97ac88026f2485c849a168ba9e8d45"
+    },
+    "V_c1_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1249,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1264,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1279,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1294,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1309,
+        81,
+        14,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1325,
+        81,
+        13,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1340,
+        81,
+        14,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1356,
+        81,
+        13,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1371,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1386,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1401,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c1_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1416,
+        81,
+        13,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c2_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1431,
+        81,
+        14,
+        20
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_01.png",
+      "reviewed_mask_sha256": "7772f15b1f8c8c9e963bf0ba4b8e2ae57788c020726b5ca1293563a4e51bf851"
+    },
+    "V_c2_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1447,
+        81,
+        16,
+        20
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_02.png",
+      "reviewed_mask_sha256": "e58968d120fc19f2fdf789ab8df9c4ff09d9240bbaa965bcfd2b84c2b9ab0033"
+    },
+    "V_c2_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1465,
+        81,
+        14,
+        23
+      ],
+      "body": "child",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/recovery/V_c2_03.png",
+      "reviewed_mask_sha256": "4ac62e45f263c2142ba3eeb6f23fa49535f2c526fa93de54aa6c898dc4ae72eb"
+    },
+    "V_c2_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1481,
+        81,
+        14,
+        22
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_04.png",
+      "reviewed_mask_sha256": "586caeb69040c50f1a95b683e4296226cc2dff9575f08e35506b10b41ba3eccf"
+    },
+    "V_c2_05": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1497,
+        81,
+        18,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c2_06": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1517,
+        81,
+        17,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c2_07": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1536,
+        81,
+        17,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c2_08": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1555,
+        81,
+        17,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps"
+    },
+    "V_c2_09": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1574,
+        81,
+        15,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_09.png",
+      "reviewed_mask_sha256": "27cbe5038efa73c754086eb30c301fe0832a95fd505f852d834ea9360135e8ec"
+    },
+    "V_c2_10": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1591,
+        81,
+        15,
+        23
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_10.png",
+      "reviewed_mask_sha256": "fd4a6739ce902cf18923055b58354a9a82a2ce018e540214edf68a5907ea1291"
+    },
+    "V_c2_11": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1608,
+        81,
+        15,
+        22
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_11.png",
+      "reviewed_mask_sha256": "a5b7169b01cb4d8573fdcce1fbdd749339f1b493b677c559a46cc4ffd13d14f3"
+    },
+    "V_c2_12": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1625,
+        81,
+        17,
+        24
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_12.png",
+      "reviewed_mask_sha256": "2db3a3a31011bf091bcc09828a79805ac575ba70f7eef9b636e946b0d75f0549"
+    },
+    "V_c2_13": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1644,
+        81,
+        23,
+        13
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_13.png",
+      "reviewed_mask_sha256": "f861b4041e02b7ba7b783239c48f19fd7005ce757aa6032933609ddd1eff30a7"
+    },
+    "V_c2_14": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1669,
+        81,
+        15,
+        20
+      ],
+      "body": "child",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/recovery/V_c2_14.png",
+      "reviewed_mask_sha256": "e403409fd95fa5ddce3a696346fdb715134a70dc671d4499bc90f5c251eab69f"
+    },
+    "V_c2_15": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1686,
+        81,
+        15,
+        21
+      ],
+      "body": "child",
+      "classification_source": "installed_map",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/V_c2_15.png",
+      "reviewed_mask_sha256": "6edcbcd9365544a80c7166d277b0902f42b78ab2182f7ebbb6c80832f740e702"
+    },
+    "V_c2_16": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1703,
+        81,
+        13,
+        24
+      ],
+      "body": "child",
+      "classification_source": "hair_maps",
+      "reviewed_mask_path": "tools/art_pipeline/hair_masks_p4/recovery/V_c2_16.png",
+      "reviewed_mask_sha256": "acc6ac1d510faee2ae7985846aa1204dc27ba5362b60cd2d6a07dfe346cb5f11"
+    },
+    "direction_09_villager_gatherer": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        263,
+        115,
+        17,
+        30
+      ],
+      "body": "",
+      "classification_source": "hair_maps"
+    },
+    "direction_10_villager_builder": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        282,
+        115,
+        22,
+        30
+      ],
+      "body": "",
+      "classification_source": "hair_maps"
+    },
+    "direction_11_villager_elder": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        306,
+        115,
+        21,
+        30
+      ],
+      "body": "",
+      "classification_source": "hair_maps"
+    },
+    "direction_12_villager_child": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        329,
+        115,
+        14,
+        23
+      ],
+      "body": "",
+      "classification_source": "hair_maps"
+    }
+  }
+}

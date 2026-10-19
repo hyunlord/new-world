@@ -1,0 +1,17 @@
+{
+  "phase": "Part4",
+  "freeze_utc": "2026-10-19T15:29:20.921086+00:00",
+  "head": "40aa7a463d740b776248828211251187319c6af6",
+  "release_hashes": {
+    "/Users/rexxa/work/new-world-art-prod/rust/target/release/libsim_bridge.dylib": "30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042",
+    "/Users/rexxa/work/art-p13b-measure/rust/target/release/libsim_bridge.dylib": "30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042",
+    "/Users/rexxa/work/art-p13b-measure/rust/target/debug/libsim_bridge.dylib": "30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042"
+  },
+  "resource_import_exit": 0,
+  "resource_import_errors": [],
+  "candidate_env": {
+    "P13B_WALKER_KERNEL": "1",
+    "P12_DECLUMP_KERNEL": "1",
+    "P13_WRITE_SKIP": "0"
+  }
+}

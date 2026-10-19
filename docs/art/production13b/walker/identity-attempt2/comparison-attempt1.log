@@ -1,0 +1,77 @@
+{
+  "scope": "compound_walker_candidate_identity",
+  "candidate": "walker",
+  "passed": true,
+  "errors": [],
+  "kernel": "ON",
+  "write_skip": "OFF",
+  "still_polarity": [
+    false,
+    false,
+    true
+  ],
+  "running_polarity": [
+    false,
+    true
+  ],
+  "inherited_scope": "reference_integrity_only",
+  "rgba_reference_passed": true,
+  "running_reference_passed": true,
+  "expected_stamp_coverage": "18 capture-time still stamps; 4560 running-frame stamps plus 10 final stamps",
+  "limitations": [
+    "Still collectors do not emit per-frame candidate stamps.",
+    "Identity only: no performance, visual acceptance or candidate installation approval."
+  ],
+  "inputs": [
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on"
+  ],
+  "evidence_sha256": {
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/launches.tsv": "19640e49e1b8ceaa7a5c3c752b8b9b7768d4b60a44cf4d6bbc571903a8692dbb",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/initial.json": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P1.json": "ff62f2b0bbd6bd2f526f917838a7fd908d9510c47dcd474372a564f0f151574a",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P2.json": "ff5905a79a80966e8e082bf5431687c5815dc92185df8b9151311d72195cd536",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P3.json": "2ac7fade824ecc64ad682df7878a678ff05a994389297b21577b52c89f7c1c89",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P4.json": "f7a89497ef3732c3ca02c861c8fdf32a420461298b8eed008e3445d881986752",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P5.json": "fb53be7a6a3adc789adb4935a98408cc553b6c1054d538e0c70b6d7521cad117",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P6.json": "ce132fa6e43f256c29ac524d457cb8f6d331662ecf2294492cc12d0be8fcba9a",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/launches.tsv": "9e62a175a7c75680eb24e73fefb867418b28ded93434491cc3588bcc5257695d",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/initial.json": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P1.json": "fd7a0358e5b09a7c598206fe214d9684fb6fb7ba12d786aad2f01926f7d11145",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P2.json": "ff5905a79a80966e8e082bf5431687c5815dc92185df8b9151311d72195cd536",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P3.json": "2ac7fade824ecc64ad682df7878a678ff05a994389297b21577b52c89f7c1c89",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P4.json": "f7a89497ef3732c3ca02c861c8fdf32a420461298b8eed008e3445d881986752",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P5.json": "fb53be7a6a3adc789adb4935a98408cc553b6c1054d538e0c70b6d7521cad117",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P6.json": "d1263792df34846776f1da1a90a7d64dabc23869f4d7977756aaa02abdf4fdf7",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/launches.tsv": "fc715df158f2e60d2e8bd15a7f6c98a77015e0497c2dffc1c5250ad6fc065f67",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/initial.json": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P1.json": "273bf5b4e2e5de1acf139f040dd610d63a32f4f89b6c898f0ca36aa945386de9",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P2.json": "c217c13ebf24a6597d93b017b0c8cb734882afa0be8da5e0a3df1bd4860e02bb",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P3.json": "2eaa42416f92ce1676b9a7c236759bc0238656a3e90024f274bb28702e374ac6",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P4.json": "9e13e619e41e5aceb62b044e068ee8d3d5204ebebc2d1b40b1c8205071aa45af",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P5.json": "a5365736e1e9611acfb26e1d02c468ebb13dfd293d57f61c6e8d85945688b5f7",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P6.json": "16258c438db644a812e3e718e15a3265b939c5644f5fc152e83117a46bc5c72b",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/launches.tsv": "1707885b6a22138d6bff25f51be18256584a45b95bc5b81a85243a27953e3158",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/initial.json": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W0.json": "776f5497875b600a7b21c8a9974cfeb4abce1ea8d2d12fba6d53abdf12073c90",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W200.json": "e039d2b7c50e5d00034a05462cb09a406cac58c66737521340278f85fafeae80",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W-multi.json": "f79e6f6d106697b65deb75ffca6aaad82f4dc103f0cc4809ed5cd361324e8870",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W500_FROZEN.json": "a212f51a91c5b2d00dfb7acf3a6129e0c9fcb23085c0425efd9ff2d9ee0ab44f",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W500_2X.json": "cf9e026ec3c50ade9e001a9fba4ee84e58ae6c76292bfb3a3ed4f490bf080c05",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/launches.tsv": "73cd9eb670aad760a47901b013e54df4126fa0198affbb774132be3ec5c25449",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/initial.json": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W0.json": "a7b4bd86ab6b81dfaf41aa4da7cc8a15f0ef3988fd2823ef66f8c952cb3671ee",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W200.json": "e819c5c6be45015e25cf1563173eaa352b038c1f7dd40c9bb9f94e7f1a958473",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W-multi.json": "4619b9302d0bc5d21d108613d710fffeb302c51239259a8546acdf3efa9809ba",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W500_FROZEN.json": "b73f1440cd356e8bd543cbc4f337d88cdb45a01f0386b5a0dc259efb258c9e39",
+    "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W500_2X.json": "22d778887b235001972ee0feda5e9e13456fac90d9e37cf718e14ab031acfa78"
+  },
+  "validator_sha256": "52a5b63d59890dd883b4af5bd0a8ae1c10b243c8621b9399cc1282a803070deb",
+  "inherited_comparator_sha256": {
+    "pixel_identity_p13.py": "1e7b5cc9a30c2cec6cae4bc50306a081ab1165e644f4930549e5d4d553649ddd",
+    "compare_running_identity_p13.py": "19ec200fd25ed14eb6fb027b57b6fdb2e2fa3e583c97eee1cd3e3ab94db6614a"
+  }
+}

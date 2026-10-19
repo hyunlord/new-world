@@ -1,0 +1,2 @@
+  PID  PPID STARTED                      ELAPSED      TIME COMMAND
+35601     1 Thu Oct 15 07:53:46 2026       01:44  10:18.29 /Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/harness_revitalize_pass12_frozen-b9d94dad5414af95 --test-threads=6

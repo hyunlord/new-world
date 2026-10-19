@@ -1,0 +1,82 @@
+{
+  "verdicts": [
+    {
+      "id": "adult_b_E_carry_7acb418f9e",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The four ordered frames keep the east-facing carrier, held load, palette and head scale coherent; leg separation supplies the carry walk."
+    },
+    {
+      "id": "adult_b_E_drink_4faf0422e7",
+      "verdict": "reject",
+      "reason": "cycle_pop",
+      "observation": "Between frames 0 and 1 the head and shoulders jump upward substantially while the grounded lower silhouette barely moves; the drinking figure visibly stretches on the loop."
+    },
+    {
+      "id": "adult_b_E_eat_e9ac7e626d",
+      "verdict": "reject",
+      "reason": "cycle_pop",
+      "observation": "Frame 1 becomes markedly taller and longer through the torso than frame 0 with the feet remaining grounded; the eat loop changes body proportions."
+    },
+    {
+      "id": "adult_b_E_talk_a19bc640a0",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing hand gestures retain consistent standing height, hair, clothing and body placement across both frames."
+    },
+    {
+      "id": "adult_b_S_build_3b9b0e0672",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Raised and lowered tool poses read as a build stroke; head height, workpiece placement and character palette remain coherent."
+    },
+    {
+      "id": "adult_b_S_crouch_1f2f3e7d39",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Both frames maintain a low front-facing crouch with matching head height and grounded legs; arm movement is plausible."
+    },
+    {
+      "id": "adult_b_S_drink_522334dc88",
+      "verdict": "reject",
+      "reason": "cycle_pop",
+      "observation": "The second frame raises the entire head and lengthens the upper body noticeably while the lower body remains fixed; repeated drinking produces a strong height pop."
+    },
+    {
+      "id": "adult_b_S_eat_ddcf130df3",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Both front-facing eating frames keep the same standing height, hair mass and clothing while hands move around the food at the mouth."
+    },
+    {
+      "id": "adult_b_S_gather_aac3997f40",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The forward gathering pose transitions to a more upright hand-to-body pose; the modest head rise follows the lean and the character identity remains coherent."
+    },
+    {
+      "id": "adult_b_S_idle_4180085fa1",
+      "verdict": "reject",
+      "reason": "cycle_pop",
+      "observation": "Frame 1 abruptly widens the shoulders and torso and changes the narrow oblique idle into a broad frontal silhouette; the loop reshapes the body instead of a small idle motion."
+    },
+    {
+      "id": "adult_b_S_sit_16445a25fb",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The single supplied frame reads as a compact front-facing seated pose with bent legs and matching hair and clothing; there is no multi-frame cycle to compare."
+    },
+    {
+      "id": "adult_b_S_talk_9d888d0403",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "One-hand and two-hand gestures preserve front view, head scale and grounded standing height with only a small plausible bob."
+    },
+    {
+      "id": "adult_b_S_walk_56dbaf63ec",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The four frames alternate leg and arm placement with a small walk bob; overall height, palette and character proportions remain consistent."
+    }
+  ]
+}

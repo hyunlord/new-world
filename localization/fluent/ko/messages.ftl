@@ -162,8 +162,8 @@ ALERT_HUD_INJURED_FMT = 부상자 {n}명
 ALERT_HUD_LOW_FOOD = 식량 부족
 ALERT_HUD_TECH_RISK_FMT = 기술 소실 위험 {n}건
 HUD_STOCKPILE_FOOD = 식량
-HUD_FEED_STOCKPILE_DEPOSIT = 정착지 %d 식량 %d 적재
-HUD_FEED_STOCKPILE_CONSUME = 정착지 %d 기근 식량 %d 소비
+HUD_FEED_STOCKPILE_DEPOSIT = %d번 마을 식량 %d 저장
+HUD_FEED_STOCKPILE_CONSUME = %d번 마을 식량 %d 소비
 ALERT_HUNGER = 배고픔 - 식량 부족
 ALERT_HUNGRY = 배고픔
 ALERT_HUNGRY_DETAIL = 식량 부족
@@ -5154,9 +5154,9 @@ HUD_PHASE_NIGHT = 밤
 
 HUD_BERRIES = 열매
 
-HUD_FEED_SETTLEMENT_FORMED = 정착지 %d 형성
+HUD_FEED_SETTLEMENT_FORMED = %d번 마을이 형성되었다
 
-HUD_FEED_SETTLEMENT_DISSOLVED = 정착지 %d 해체
+HUD_FEED_SETTLEMENT_DISSOLVED = %d번 마을이 버려졌다
 
 HUD_FEED_SITE_STARTED = 건설 %d 시작
 
@@ -5193,3 +5193,148 @@ HUD_ACTIVITY_LEGEND = 활동 표시
 HUD_ACTIVITY_OTHER = 다른 목표
 
 HUD_ACTIVITY_BUSY = 활동 중
+
+# Art production interface
+HUD_NEWS_TITLE = 마을 소식
+INSPECTOR_CARRYING_FMT = 식량 %d개 운반 중
+HUD_SPEED_FMT = 속도 %s배
+
+# Art production pass 2: death news and optional seasons
+HUD_FEED_DEATH_STARVATION = 주민이 굶주려 죽었다
+HUD_FEED_DEATH_DEHYDRATION = 주민이 목말라 죽었다
+HUD_FEED_DEATH_COMBAT = 주민이 싸움으로 죽었다
+HUD_FEED_DEATH_OLD_AGE = 주민이 노환으로 세상을 떠났다
+HUD_SEASON_SPRING = 봄
+HUD_SEASON_SUMMER = 여름
+HUD_SEASON_AUTUMN = 가을
+HUD_SEASON_WINTER = 겨울
+HUD_SEASON_DAY_FMT = %s %d일째
+
+INSPECTOR_AGE_FMT = 나이 %d일
+INSPECTOR_STAGE_CHILD = 아이
+INSPECTOR_STAGE_ADULT = 어른
+INSPECTOR_STAGE_ELDER = 노인
+
+HUD_STOCKPILE_WOOD = 장작
+INSPECTOR_TARGET_WOOD = 땔감
+INSPECTOR_CARRYING_WOOD_FMT = 나무 %d개 운반 중
+
+HUD_COLD = 추위
+INSPECTOR_COLD = 불이 꺼져 추위에 떨고 있음
+
+HUD_SEASON_LAST_NIGHT_FMT = %s %d일째 밤
+HUD_WINTER_MILD = 온화한 겨울
+HUD_WINTER_NORMAL = 보통 겨울
+HUD_WINTER_HARSH = 혹독한 겨울
+GOD_HAND_TITLE = 신의 손
+GOD_HAND_GIFT_FOOD = 식량 내리기
+GOD_HAND_SPOIL_FOOD = 식량 썩히기
+GOD_HAND_GIFT_WOOD = 장작 내리기
+GOD_HAND_ROT_WOOD = 장작 썩히기
+GOD_HAND_RAIN = 비
+GOD_HAND_COLD_SNAP = 한파
+GOD_HAND_WINDFALL = 바람
+GOD_HAND_APPLIED_FMT = %s %s — 적용 %d
+GOD_HAND_FAILED = 아무 일도 일어나지 않았다
+GOD_HAND_COLD_SNAP_ACTIVE = 한파: %d밤
+GOD_HAND_LOG = 최근의 손길
+GOD_HAND_UNIT_HOURS = 시간
+GOD_HAND_UNIT_NIGHTS = 밤
+HUD_FEED_DEATH_EXPOSURE = 주민이 얼어 죽었다
+
+# Art Pass 7: many villages and founding
+SETTLEMENT_LABEL_FMT = %d번 마을
+SETTLEMENT_LABEL_DAUGHTER_FMT = %d번 마을 · %d번에서
+SETTLEMENT_ABANDONED_FMT = 버려진 %d번 마을
+HUD_SETTLEMENTS_FMT = 마을 %d
+GOD_HAND_TARGET_FMT = 신의 손 — %s
+GOD_HAND_APPLIED_TARGET_FMT = %s: %s %s — 적용 %d
+HUD_FEED_FISSION_DEPARTED = %d명이 %d번 마을을 떠났다
+HUD_FEED_SETTLEMENT_FOUNDED = %d번 마을이 세워졌다
+HUD_FEED_FISSION_CANCELLED = 무리가 돌아왔다
+HUD_FEED_SETTLEMENT_ABANDONED = %d번 마을이 버려졌다
+HUD_FEED_DAY_SUMMARY_FMT = %d번 마을 오늘: 식량 %+d (저장 %d, 소비 %d)
+HUD_FEED_MORE_FMT = +%d건 더
+HUD_FEED_GOD_CAST_FMT = %d번 마을에 신의 손: %s
+
+FOUNDING_SITE_DISTANCE_FMT = %d칸
+
+VILLAGE_RESTLESS_CALM = 평온
+VILLAGE_RESTLESS_UNEASY = 술렁임
+VILLAGE_RESTLESS_READY = 갈라질 기세
+VILLAGE_RESTLESS_TITLE = 술렁임 정도
+
+# Art Pass 10
+UI_ACTIVITY_TEND_FIRE = 불을 지키는 중
+UI_ACTIVITY_CRAFT = 무언가 만드는 중
+UI_ACTIVITY_REPAIR = 쉼터를 손보는 중
+UI_ACTIVITY_HEARTH_CIRCLE = 화덕가에 둘러앉음
+UI_ACTIVITY_EXPLORE = 멀리 둘러보는 중
+UI_ACTIVITY_PLAY = 노는 중
+UI_ACTIVITY_SIT_BY_FIRE = 불가에서 쉬는 중
+INSPECTOR_TARGET_ACTIVITY_PLACE_FMT = 장소 (%d, %d)
+
+# Art Pass 10
+UI_INSPECTOR_TEMPERAMENT = 기질
+UI_TEMPERAMENT_NS = 호기심
+UI_TEMPERAMENT_HA = 신중함
+UI_TEMPERAMENT_RD = 정
+UI_TEMPERAMENT_P = 끈기
+UI_FAMILY_CHILDREN_FMT = 자녀: %d명
+
+## Art Pass 11: names and life records
+INSPECTOR_PERSON_FMT = %s · #%d
+INSPECTOR_RECORD_LIFE_FMT = %d일째 태어남 · %d일째 세상을 떠남
+INSPECTOR_RECORD_FOUNDER_LIFE_FMT = 첫 주민 · %d일째 세상을 떠남
+UI_CHRONICLE_MORE_FMT = 이전 기록 %d개
+CHRONICLE_DAY_FMT = %d일째
+CHRON_BORN_FMT = %s에서 태어남. 부모: %s, %s
+CHRON_BORN_FALLBACK_NOTE = (마을이 정한 부모)
+CHRON_CHILD_BORN_FMT = 아이가 태어남 — %s
+CHRON_FOUNDER_FMT = %s의 첫 주민.
+CHRON_PAIRED_FMT = 짝이 됨 — %s
+CHRON_CAME_OF_AGE = 어른이 됨.
+CHRON_BECAME_ELDER = 노인이 됨.
+CHRON_DEPARTED_FMT = 떠남 — %s, 이끈 이: %s. %s
+CHRON_CAUSE_RANKED = 떠날 사람으로 뽑힘.
+CHRON_CAUSE_SEED = 먼저 떠나기로 함.
+CHRON_CAUSE_HOUSEHOLD = 가족을 따라감.
+CHRON_CAUSE_ELDER_PARTNER = 짝을 따라감.
+CHRON_CAUSE_TOP_UP = 무리를 채우려 합류함.
+CHRON_DEPARTURE_CANCELLED_FMT = 이주 취소 — %s
+CHRON_SETTLED_FMT = 새 마을에 정착함 — %s (%s에서 옴)
+CHRON_JOINED_FMT = 합류함 — %s
+CHRON_LEFT_FMT = 떠남 — %s
+CHRON_LEFT_BROKE_UP_FMT = 흩어진 마을을 떠남 — %s
+CHRON_WIDOWED_FMT = 짝을 잃음 — %s
+CHRON_DIED_FMT = %d일을 살고 세상을 떠남 — %s
+CHRON_DIED_NO_AGE_FMT = 세상을 떠남 — %s
+CHRON_DEATH_STARVATION = 굶주림
+CHRON_DEATH_DEHYDRATION = 목마름
+CHRON_DEATH_COMBAT = 싸움
+CHRON_DEATH_OLD_AGE = 노환
+CHRON_DEATH_EXPOSURE = 추위
+CHRON_SETTLEMENT_FORMED_FMT = %s 세워짐 — %d명
+CHRON_FISSION_STARTED_FMT = %s 갈라지기 시작 — 이끈 이: %s
+CHRON_DAUGHTER_FOUNDED_FMT = %s 세워짐 — %s에서 갈라져 나옴
+CHRON_FISSION_CANCELLED_FMT = %s 분열 취소
+CHRON_SETTLEMENT_DISSOLVED_FMT = %s 사라짐
+
+# Art Pass 12 village relations and porter presentation
+CHRON_PORTER_DEPARTED_FMT = 짐을 지고 떠남 — %s → %s, %s %d (%s)
+CHRON_PORTER_DELIVERED_FMT = 짐을 전함 — %s %d, %s → %s (%s)
+CHRON_PORTER_FAILED_FMT = %s까지 가지 못하고 돌아옴 (%s)
+CHRON_PORTER_AID = 원조
+CHRON_PORTER_EXCHANGE = 교환
+CHRON_LOAD_FOOD = 식량
+CHRON_LOAD_WOOD = 장작
+CHRON_QUARREL_FMT = 열매 덤불을 두고 다툼 — %s (%s)
+CHRON_VILLAGES_ESTRANGED_FMT = %s · %s 사이가 틀어짐
+CHRON_VILLAGES_RECONCILED_FMT = %s · %s 화해함
+CHRON_PORTER_GROUP_FMT = 짐꾼 %d명 — %s %d, %s → %s (%s)
+CHRON_PORTER_GROUP_FAILED_FMT = 짐꾼 %d명 — %s에서 %s까지 가지 못함 (%s)
+INSPECTOR_PORTER_OUT_FMT = 짐 나르는 중 — %s %d → %s
+INSPECTOR_PORTER_BACK_FMT = 집으로 돌아가는 중 — %s
+UI_RELATION_ESTRANGED = 사이가 틀어짐
+
+UI_TOOLTIP_PERSON_ACTIVITY_FMT = %s — %s

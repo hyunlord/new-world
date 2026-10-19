@@ -1,0 +1,11 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+ERROR: no outbound porter has an unobscured road position at requested tick
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://scripts/test/art/capture_h10_p13b.gd:272)
+       [1] _road (res://scripts/test/art/capture_h10_p13b.gd:150)

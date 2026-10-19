@@ -1,0 +1,25 @@
+{
+  "observer_id": "blind_observer_a",
+  "frames": {
+    "O001": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13\n소식: 2번 마을에 신의 손: 비",
+      "observations": "The nearest central village label is 2번 마을 · 1번에서 (36); 1번 마을 (30) is visible farther up. B10873 at the front/bottom of the central camp is a pale stone ring with a dark center, partly bordered or obscured by people; no orange flame is visible in it. B10880, B12791, B14827, B11252 and B10887 are brown shelters. Many people have blue outlines, including A22 and A83 near B10873. Fine blue vertical dash-like marks are visible across the lower gray area and around the camp; these look rain-like. Their full extent is difficult to isolate because the lower gray area extends to the image boundaries and the upper area is crowded. The weather marks are nearest the village 2 camp, but confinement to only that village is uncertain in this close view. The panel/news explicitly confirm rain as text; no separate floating toast is visible.",
+      "world_effect_visibly_identified": true
+    },
+    "O002": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13",
+      "observations": "The world is dark blue-gray and the HUD says 밤. The central village label reads 2번 마을 · 1번에서 (36); 1번 마을 (30) is above it. B10873 is clearly an unlit dark-centered gray stone ring, without an orange/yellow flame or warm glow. B10880, B12791, B14827, B11252 and B10887 are shelters with pale blue/gray edging. No A-labeled people are visible. Fine blue vertical rain-like dashes cover the gray lower area and appear over/near the central camp. This close view does not establish a clear weather boundary or exclusive village confinement. Panel text remains a rain confirmation; the left news instead shows daily food accounting.",
+      "world_effect_visibly_identified": true
+    },
+    "O003": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13",
+      "observations": "The centered village is labeled 1번 마을 (30). B0 has an actual orange/red/yellow flame inside its pale stone ring, a warm surrounding glow and a pale smoke-like puff above it. B344, B1220, B7, B14 and B21 are brown shelters; B28 is a filled basket. No A-labeled people are visible. The image is generally dark blue-gray, consistent with the visible 밤 HUD label. I cannot identify a distinct localized rain curtain or rain-area boundary around this village from this still; the scattered tiny terrain marks are not enough to establish it. A label for 2번 마을 · 1번에서 (36) is partially visible at the bottom edge. The panel heading selects 1번 마을 but the confirmation text still names 2번 마을; that text does not establish rain over village 1.",
+      "world_effect_visibly_identified": "unknown"
+    },
+    "O004": {
+      "toast_text": "패널: 2번 마을: 비 13시간 — 적용 13",
+      "observations": "The wider view shows 1번 마을 (30) in the upper-middle and 2번 마을 · 1번에서 (36) below it near the bottom map edge. Village 1 has a warm pale-yellow circular glow around B0, whose small orange flame is visible. Village 2 has a blue circular tinted area centered around its front stone-ring area B10873 and extending below the map boundary; B10873 appears dark and unlit, with no orange flame. Fine blue rain-like dashes are visible around the lower village and across parts of the gray area below the map. The blue circular tint is localized near village 2 and does not cover village 1. The dash distribution is less sharply bounded than that circle, so I cannot say every weather mark is confined inside it. Village 1 shelters include B344, B1220, B7, B14 and B21, with basket B28. Village 2 shelter labels overlap at this scale but include B10880, B12791, B14827, B11252 and B10887. No people are discernible. The panel heading names village 1 while the retained rain-confirmation text names village 2.",
+      "world_effect_visibly_identified": true
+    }
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "simulation_green_sha": "0c46f69c31344f3bde23ce625a84214c5ed72fc0",
+  "art_parent_sha": "84cb3da6939d5776e1e692f605db77b255dd9ea3",
+  "local_merge_sha": "631434e331265800b6d7524d40e513ea04947f3d",
+  "conflicts": [
+    {
+      "file": "rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs",
+      "resolution": "whitespace-only conflict; both assertion sets retained",
+      "targeted_tests_passed": 17
+    }
+  ],
+  "pushed": false,
+  "temporary_detached_head": true,
+  "checks": [
+    [
+      "bridge",
+      "0"
+    ],
+    [
+      "strict",
+      "0"
+    ],
+    [
+      "smoke",
+      "0"
+    ],
+    [
+      "test_agent_activity",
+      "0"
+    ],
+    [
+      "test_agent_click_drawn",
+      "0"
+    ],
+    [
+      "test_agent_drawn_positions",
+      "0"
+    ],
+    [
+      "test_agent_native_size",
+      "0"
+    ],
+    [
+      "test_art_hash",
+      "0"
+    ],
+    [
+      "test_camp_seats",
+      "0"
+    ],
+    [
+      "test_canopy_fade",
+      "0"
+    ],
+    [
+      "test_capture_metadata",
+      "0"
+    ],
+    [
+      "test_cold_presentation",
+      "0"
+    ],
+    [
+      "test_declump",
+      "0"
+    ],
+    [
+      "test_effect_lifecycle",
+      "0"
+    ],
+    [
+      "test_elder_variant",
+      "0"
+    ],
+    [
+      "test_hud_old_age",
+      "0"
+    ],
+    [
+      "test_hud_season_label",
+      "0"
+    ],
+    [
+      "test_hud_wood",
+      "0"
+    ],
+    [
+      "test_idle_camp_pose",
+      "0"
+    ],
+    [
+      "test_idle_facing",
+      "0"
+    ],
+    [
+      "test_inspector_age",
+      "0"
+    ],
+    [
+      "test_inspector_cold",
+      "0"
+    ],
+    [
+      "test_inspector_wood",
+      "0"
+    ],
+    [
+      "test_meal_pose",
+      "0"
+    ],
+    [
+      "test_nature_clearance",
+      "0"
+    ],
+    [
+      "test_nature_density",
+      "0"
+    ],
+    [
+      "test_need_warning",
+      "0"
+    ],
+    [
+      "test_season_tint",
+      "0"
+    ],
+    [
+      "test_structure_states",
+      "0"
+    ],
+    [
+      "test_terrain_layers",
+      "0"
+    ],
+    [
+      "test_variant_codes",
+      "0"
+    ],
+    [
+      "test_ysort_props",
+      "0"
+    ],
+    [
+      "test_zoom_ladder",
+      "0"
+    ],
+    [
+      "runtime_errors",
+      "0"
+    ]
+  ],
+  "all_checks_pass": true,
+  "windowed_captures": 10,
+  "raw_hashes_verified": 10,
+  "window_errors": 0,
+  "parent_viewed": [
+    "d2_1200_F2.jpg",
+    "d2_2200_F2N.jpg"
+  ],
+  "runtime_source": "WorldSimNode constructors use game_v13; actual bridge built in local merge",
+  "limits": [
+    "d1,d2,d6 compatibility only; not Pass6 long A1-A20 measurements",
+    "Later simulation merge remains unpublished"
+  ],
+  "raw_evidence": "/Users/rexxa/work/art-production5-evidence/compatibility/shots/final",
+  "returned_to_wip": "codex/art-production-2026-10-wip",
+  "returned_head": "84cb3da6939d5776e1e692f605db77b255dd9ea3",
+  "pass6_bridge_rebuilt": true
+}

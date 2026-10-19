@@ -1,0 +1,447 @@
+{
+  "check": "A20",
+  "passed": true,
+  "errors": [],
+  "installations": 2,
+  "final_bound_frames": 74,
+  "changed_villager_frames": 61,
+  "animation_groups": 20,
+  "rows": [
+    {
+      "target": "W1_01",
+      "candidate_id": "W1_01@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_02",
+      "candidate_id": "W1_02@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_03",
+      "candidate_id": "W1_03@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_04",
+      "candidate_id": "W1_04@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_05",
+      "candidate_id": "W1_05@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_06",
+      "candidate_id": "W1_06@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_07",
+      "candidate_id": "W1_07@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_08",
+      "candidate_id": "W1_08@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_09",
+      "candidate_id": "W1_09@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_11",
+      "candidate_id": "W1_11@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_13",
+      "candidate_id": "W1_13@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_15",
+      "candidate_id": "W1_15@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_16",
+      "candidate_id": "W1_16@1",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_05",
+      "candidate_id": "P3_fill_01_05@1:missing:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_06",
+      "candidate_id": "P3_fill_01_06@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_07",
+      "candidate_id": "P3_fill_01_07@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_08",
+      "candidate_id": "P3_fill_01_08@1:missing:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_01",
+      "candidate_id": "P3_fill_01_01@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_02",
+      "candidate_id": "P3_fill_01_02@1:p3:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_03",
+      "candidate_id": "P3_fill_01_03@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a2_04",
+      "candidate_id": "P3_fill_01_04@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_05",
+      "candidate_id": "P2_fill_02_09@1:p3:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_06",
+      "candidate_id": "P2_fill_02_10@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_07",
+      "candidate_id": "P2_fill_02_11@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_08",
+      "candidate_id": "P2_fill_02_12@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_01",
+      "candidate_id": "P2_fill_02_05@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_02",
+      "candidate_id": "P2_fill_02_06@1:missing:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_03",
+      "candidate_id": "P2_fill_02_07@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b2_04",
+      "candidate_id": "P2_fill_02_08@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "P2V_c_E_carry_01",
+      "candidate_id": "P2_fill_06_01@1:p3:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "P2V_c_E_carry_02",
+      "candidate_id": "P2_fill_06_02@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "P2V_c_E_carry_03",
+      "candidate_id": "P2_fill_06_03@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "P2V_c_E_carry_04",
+      "candidate_id": "P2_fill_06_04@1:p3:derived",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c2_05",
+      "candidate_id": "V_c2_05@3:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c2_06",
+      "candidate_id": "V_c2_06@3:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c2_07",
+      "candidate_id": "V_c2_07@3:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c2_08",
+      "candidate_id": "V_c2_08@3:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_09",
+      "candidate_id": "P2_fill_03_05@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_10",
+      "candidate_id": "P2_fill_03_06@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_11",
+      "candidate_id": "P2_fill_03_07@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_12",
+      "candidate_id": "P2_fill_03_08@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_13",
+      "candidate_id": "P2_fill_03_09@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_14",
+      "candidate_id": "P2_fill_03_10@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_15",
+      "candidate_id": "P2_fill_03_11@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_16",
+      "candidate_id": "P2_fill_03_12@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "P2V_c_S_build_01",
+      "candidate_id": "P3_fill_03_13@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "P2V_c_S_build_02",
+      "candidate_id": "P3_fill_03_14@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_05",
+      "candidate_id": "P2_fill_03_01@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_06",
+      "candidate_id": "P2_fill_03_02@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_07",
+      "candidate_id": "P2_fill_03_03@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_c1_08",
+      "candidate_id": "P2_fill_03_04@1:p3",
+      "installation": "docs/art/production5/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_01",
+      "candidate_id": "W1_01@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_02",
+      "candidate_id": "W1_02@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_03",
+      "candidate_id": "W1_03@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_04",
+      "candidate_id": "W1_04@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_05",
+      "candidate_id": "W1_05@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_06",
+      "candidate_id": "W1_06@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_07",
+      "candidate_id": "W1_07@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_08",
+      "candidate_id": "W1_08@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_09",
+      "candidate_id": "W1_09@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_11",
+      "candidate_id": "W1_11@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_13",
+      "candidate_id": "W1_13@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_15",
+      "candidate_id": "W1_15@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "W1_16",
+      "candidate_id": "W1_16@1",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a4_09",
+      "candidate_id": "V_a4_09@1:mask5:derived",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a4_10",
+      "candidate_id": "V_a4_10@1:mask5",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a4_11",
+      "candidate_id": "V_a4_11@1:mask5",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_a4_12",
+      "candidate_id": "V_a4_12@1:mask5:derived",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b4_09",
+      "candidate_id": "V_b4_09@1:mask5:r2",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b4_10",
+      "candidate_id": "V_b4_10@1:mask5:r2",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b4_11",
+      "candidate_id": "V_b4_11@1:mask5",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    },
+    {
+      "target": "V_b4_12",
+      "candidate_id": "V_b4_12@1:missing:derived",
+      "installation": "docs/art/production5/masks/harvest",
+      "errors": []
+    }
+  ],
+  "head": "cefc77b088d6fa3baf21b766cdc40e3fdf045d36",
+  "atlas_sha256": "72a01917bc9cdd151da3a2e8074bfa2e1963627aadd693680f5a1eb143e8c274",
+  "scope": "Current assets; inherited Pass 5 hair masks and harvest installed-frame provenance",
+  "reference_base": "docs/art/production5"
+}

@@ -1,0 +1,5 @@
+[gdcheck] FAIL parse/warning: scripts/test/art/perf_frames_p12.gd
+SCRIPT ERROR: Parse Error: Integer division. Decimal part will be discarded. (Warning treated as error.)
+ERROR: Failed to load script "res://scripts/test/art/perf_frames_p12.gd" with error "Parse error".
+[gdcheck] FFI bindings: 6 GDScript call(s) all match Rust #[func] exports ✓
+[gdcheck] FAIL: parse=1 FFI=0

@@ -1,0 +1,134 @@
+[
+  {
+    "frame": "soc_d32_2000_F2_orig_selected_orig.entities.json.gz",
+    "tick": 45360,
+    "settlements": [
+      {
+        "id": 1,
+        "restlessness": {
+          "pressure": 323,
+          "ratio": 0.97289156626506,
+          "stage": 2,
+          "state_key": "VILLAGE_RESTLESS_READY",
+          "threshold": 332,
+          "visible": true
+        }
+      }
+    ],
+    "meters": [
+      {
+        "color": "e0b060",
+        "id": 1,
+        "pressure": 323,
+        "ratio": 0.97289156626506,
+        "screen_rect": [
+          1005.5,
+          297.0,
+          26.0,
+          6.0
+        ],
+        "stage": 2,
+        "state_key": "VILLAGE_RESTLESS_READY",
+        "threshold": 332,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "frame": "soc_d33_0630_FD_leader.entities.json.gz",
+    "tick": 45990,
+    "settlements": [
+      {
+        "id": 1,
+        "restlessness": {
+          "pressure": 0,
+          "ratio": 0.0,
+          "stage": 0,
+          "state_key": "VILLAGE_RESTLESS_CALM",
+          "threshold": 2792,
+          "visible": true
+        }
+      }
+    ],
+    "meters": [
+      {
+        "color": "e0b060",
+        "id": 1,
+        "pressure": 0,
+        "ratio": 0.0,
+        "screen_rect": [
+          1197.5,
+          361.0,
+          26.0,
+          6.0
+        ],
+        "stage": 0,
+        "state_key": "VILLAGE_RESTLESS_CALM",
+        "threshold": 2792,
+        "visible": true
+      }
+    ]
+  },
+  {
+    "frame": "soc_d33_0859_FS_daughter_selected_daughter.entities.json.gz",
+    "tick": 46139,
+    "settlements": [
+      {
+        "id": 1,
+        "restlessness": {
+          "pressure": 0,
+          "ratio": 0.0,
+          "stage": 0,
+          "state_key": "VILLAGE_RESTLESS_CALM",
+          "threshold": 2792,
+          "visible": true
+        }
+      },
+      {
+        "id": 2,
+        "restlessness": {
+          "pressure": 0,
+          "ratio": 0.0,
+          "stage": 0,
+          "state_key": "VILLAGE_RESTLESS_CALM",
+          "threshold": 198,
+          "visible": true
+        }
+      }
+    ],
+    "meters": [
+      {
+        "color": "e0b060",
+        "id": 1,
+        "pressure": 0,
+        "ratio": 0.0,
+        "screen_rect": [
+          878.0,
+          125.0,
+          26.0,
+          6.0
+        ],
+        "stage": 0,
+        "state_key": "VILLAGE_RESTLESS_CALM",
+        "threshold": 2792,
+        "visible": true
+      },
+      {
+        "color": "7fb0d8",
+        "id": 2,
+        "pressure": 0,
+        "ratio": 0.0,
+        "screen_rect": [
+          1033.0,
+          297.0,
+          26.0,
+          6.0
+        ],
+        "stage": 0,
+        "state_key": "VILLAGE_RESTLESS_CALM",
+        "threshold": 198,
+        "visible": true
+      }
+    ]
+  }
+]

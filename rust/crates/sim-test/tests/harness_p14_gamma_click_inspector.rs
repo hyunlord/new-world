@@ -57,9 +57,6 @@ fn read_inspector_panel_src() -> String {
     read_file(&["scripts", "ui", "panels", "agent_inspector_panel.gd"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
 
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
@@ -829,11 +826,14 @@ fn harness_p14_gamma_a19_inspector_panel_hidden_until_display_agent() {
     let da_idx = stripped
         .find("func display_agent")
         .expect("A19: `func display_agent` must exist");
-    let da_window = &stripped[da_idx..(da_idx + 2000).min(stripped.len())];
-    let da_compact = no_ws(da_window);
+    let da_body = stripped[da_idx..]
+        .split("\nfunc ")
+        .next()
+        .expect("A19: display_agent function body must exist");
+    let da_compact = no_ws(da_body);
     assert!(
         da_compact.contains("visible=true"),
-        "A19: `display_agent` must set `visible = true`. Window:\n{da_window}"
+        "A19: `display_agent` must set `visible = true`. Body:\n{da_body}"
     );
     println!("[P14-γ A19] hidden at _ready(); shown by display_agent ✓");
 }
@@ -1039,27 +1039,25 @@ fn harness_p14_gamma_a24_main_tscn_registers_inspector_panel() {
 
 #[test]
 fn harness_p14_gamma_a26_phase14_alpha_invariants_preserved() {
-    // Type D — Phase 4-γ + Phase 14-α locked constants.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let sprite_scale = unique_decl_rhs(&stripped, "SPRITE_SCALE", "A26.SPRITE_SCALE");
-    assert_eq!(
-        sprite_scale.trim(),
-        "0.25",
-        "A26: SPRITE_SCALE must be 0.25; got `{sprite_scale}`"
-    );
-    let bucket = unique_decl_rhs(&stripped, "ROLE_BUCKET_COUNT", "A26.ROLE_BUCKET_COUNT");
-    assert_eq!(
-        bucket.trim(),
-        "4",
-        "A26: ROLE_BUCKET_COUNT must be 4; got `{bucket}`"
-    );
-    let icon = unique_decl_rhs(&stripped, "ICON_OFFSET_PX", "A26.ICON_OFFSET_PX");
-    assert_eq!(
-        no_ws(&icon),
-        "Vector2(0,-12)",
-        "A26: ICON_OFFSET_PX must be Vector2(0, -12); got `{icon}`"
-    );
-    println!("[P14-γ A26] Phase 4-γ + Phase 14-α invariants preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(src.contains("ICON_OFFSET_PX := Vector2(0, -30)"));
+
 }
 
 #[test]
@@ -1070,23 +1068,26 @@ fn harness_p14_gamma_a27_phase14_beta_invariants_preserved() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 #[test]
 fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     // Type D — Phase 12-α to 13-ε constants.
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
-    assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("sprite.modulate.a = 0.35"));
+    assert!(src.contains("direction_04_shelter_frame"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/stockpile/1.png"));
+    assert!(src.contains("direction_03_storage_pit"));
     assert!(src.contains("kind == 2"));
     assert!(src.contains("_stockpile_positions.append"));
     let cam_stripped = strip_gd_comments(&read_camera_controller_src());
@@ -1101,8 +1102,8 @@ fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     let zmin = unique_decl_rhs(&cam_stripped, "ZOOM_MIN", "A28.ZMIN");
     assert_eq!(
         no_ws(&zmin),
-        "Vector2(0.5,0.5)",
-        "A28: ZOOM_MIN must be Vector2(0.5, 0.5); got `{zmin}`"
+        "Vector2(1.0,1.0)",
+        "A28: ZOOM_MIN must be Vector2(1.0, 1.0); got `{zmin}`"
     );
     let zmax = unique_decl_rhs(&cam_stripped, "ZOOM_MAX", "A28.ZMAX");
     assert_eq!(
@@ -1153,7 +1154,9 @@ fn harness_revitalize_inspector_gather_food_is_not_social_target() {
         .filter(|line| line.starts_with('"'))
         .map(|line| line.trim_end_matches(',').trim_matches('"'))
         .collect();
-    assert_eq!(keys.len(), 7, "all FFI target codes including GatherFood map explicitly");
+    assert_eq!(keys.len(), 9, "all FFI target codes including GatherFood, GatherWood and Activity map explicitly");
     assert_eq!(keys[5], "INSPECTOR_TARGET_AGENT");
     assert_eq!(keys[6], "INSPECTOR_TARGET_FOOD");
+    assert_eq!(keys[7], "INSPECTOR_TARGET_WOOD");
+    assert_eq!(keys[8], "INSPECTOR_TARGET_ACTIVITY_PLACE_FMT");
 }

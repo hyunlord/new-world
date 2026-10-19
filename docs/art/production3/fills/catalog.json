@@ -1,0 +1,621 @@
+{
+  "schema_version": 1,
+  "source_selection": "docs/art/production2/final_selection.json",
+  "source_selection_sha256": "01bdd4a62ffc76a99927234193874d151562bd497fa708cb3fb569c31a06b368",
+  "checkpoint_calls": 4,
+  "checkpoint_attempted_cells": 64,
+  "max_calls": 12,
+  "sheets": [
+    {
+      "id": "P3_fill_01",
+      "call_order": 1,
+      "body": "adult_a",
+      "reference_candidate": "V_a1_01@1",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_a2_01",
+          "view": "S",
+          "activity": "carry",
+          "frame": 0,
+          "name": "S_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_a2_02",
+          "view": "S",
+          "activity": "carry",
+          "frame": 1,
+          "name": "S_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_a2_03",
+          "view": "S",
+          "activity": "carry",
+          "frame": 2,
+          "name": "S_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_a2_04",
+          "view": "S",
+          "activity": "carry",
+          "frame": 3,
+          "name": "S_carry_4",
+          "budget_alias": null
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_a2_05",
+          "view": "E",
+          "activity": "carry",
+          "frame": 0,
+          "name": "E_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_a2_06",
+          "view": "E",
+          "activity": "carry",
+          "frame": 1,
+          "name": "E_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_a2_07",
+          "view": "E",
+          "activity": "carry",
+          "frame": 2,
+          "name": "E_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_a2_08",
+          "view": "E",
+          "activity": "carry",
+          "frame": 3,
+          "name": "E_carry_4",
+          "budget_alias": null
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_a3_01",
+          "view": "N",
+          "activity": "carry",
+          "frame": 0,
+          "name": "N_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_a3_02",
+          "view": "N",
+          "activity": "carry",
+          "frame": 1,
+          "name": "N_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 11,
+          "target_slot": "P2V_a_N_carry_03",
+          "view": "N",
+          "activity": "carry",
+          "frame": 2,
+          "name": "adult_a_N_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 12,
+          "target_slot": "P2V_a_N_carry_04",
+          "view": "N",
+          "activity": "carry",
+          "frame": 3,
+          "name": "adult_a_N_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_a2_15",
+          "view": "S",
+          "activity": "build",
+          "frame": 0,
+          "name": "S_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_a2_16",
+          "view": "S",
+          "activity": "build",
+          "frame": 1,
+          "name": "S_build_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_a2_13",
+          "view": "E",
+          "activity": "build",
+          "frame": 0,
+          "name": "E_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_a2_14",
+          "view": "E",
+          "activity": "build",
+          "frame": 1,
+          "name": "E_build_2",
+          "budget_alias": null
+        }
+      ]
+    },
+    {
+      "id": "P3_fill_02",
+      "call_order": 2,
+      "body": "adult_b",
+      "reference_candidate": "V_b1_01@2",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_b2_01",
+          "view": "S",
+          "activity": "carry",
+          "frame": 0,
+          "name": "S_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_b2_02",
+          "view": "S",
+          "activity": "carry",
+          "frame": 1,
+          "name": "S_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_b2_03",
+          "view": "S",
+          "activity": "carry",
+          "frame": 2,
+          "name": "S_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_b2_04",
+          "view": "S",
+          "activity": "carry",
+          "frame": 3,
+          "name": "S_carry_4",
+          "budget_alias": null
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_b2_05",
+          "view": "E",
+          "activity": "carry",
+          "frame": 0,
+          "name": "E_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_b2_06",
+          "view": "E",
+          "activity": "carry",
+          "frame": 1,
+          "name": "E_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_b2_07",
+          "view": "E",
+          "activity": "carry",
+          "frame": 2,
+          "name": "E_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_b2_08",
+          "view": "E",
+          "activity": "carry",
+          "frame": 3,
+          "name": "E_carry_4",
+          "budget_alias": null
+        },
+        {
+          "cell": 9,
+          "target_slot": "P2V_b_N_carry_03",
+          "view": "N",
+          "activity": "carry",
+          "frame": 2,
+          "name": "adult_b_N_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 10,
+          "target_slot": "P2V_b_N_carry_04",
+          "view": "N",
+          "activity": "carry",
+          "frame": 3,
+          "name": "adult_b_N_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_b2_13",
+          "view": "E",
+          "activity": "build",
+          "frame": 0,
+          "name": "E_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_b2_14",
+          "view": "E",
+          "activity": "build",
+          "frame": 1,
+          "name": "E_build_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 13,
+          "target_slot": "P2V_b_N_build_01",
+          "view": "N",
+          "activity": "build",
+          "frame": 0,
+          "name": "N_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 14,
+          "target_slot": "P2V_b_N_build_02",
+          "view": "N",
+          "activity": "build",
+          "frame": 1,
+          "name": "N_build_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 15,
+          "target_slot": "P2V_b_S_drink_01",
+          "view": "S",
+          "activity": "drink",
+          "frame": 0,
+          "name": "S_drink_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 16,
+          "target_slot": "P2V_b_N_drink_01",
+          "view": "N",
+          "activity": "drink",
+          "frame": 0,
+          "name": "N_drink_1",
+          "budget_alias": null
+        }
+      ]
+    },
+    {
+      "id": "P3_fill_03",
+      "call_order": 3,
+      "body": "child",
+      "reference_candidate": "V_c1_01@1",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "P2V_c_S_carry_01",
+          "view": "S",
+          "activity": "carry",
+          "frame": 0,
+          "name": "S_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 2,
+          "target_slot": "P2V_c_S_carry_02",
+          "view": "S",
+          "activity": "carry",
+          "frame": 1,
+          "name": "S_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 3,
+          "target_slot": "P2V_c_S_carry_03",
+          "view": "S",
+          "activity": "carry",
+          "frame": 2,
+          "name": "S_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 4,
+          "target_slot": "P2V_c_S_carry_04",
+          "view": "S",
+          "activity": "carry",
+          "frame": 3,
+          "name": "S_carry_4",
+          "budget_alias": null
+        },
+        {
+          "cell": 5,
+          "target_slot": "P2V_c_E_carry_01",
+          "view": "E",
+          "activity": "carry",
+          "frame": 0,
+          "name": "E_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 6,
+          "target_slot": "P2V_c_E_carry_02",
+          "view": "E",
+          "activity": "carry",
+          "frame": 1,
+          "name": "E_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 7,
+          "target_slot": "P2V_c_E_carry_03",
+          "view": "E",
+          "activity": "carry",
+          "frame": 2,
+          "name": "E_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 8,
+          "target_slot": "P2V_c_E_carry_04",
+          "view": "E",
+          "activity": "carry",
+          "frame": 3,
+          "name": "E_carry_4",
+          "budget_alias": null
+        },
+        {
+          "cell": 9,
+          "target_slot": "P2V_c_N_carry_01",
+          "view": "N",
+          "activity": "carry",
+          "frame": 0,
+          "name": "child_N_carry_0",
+          "budget_alias": null
+        },
+        {
+          "cell": 10,
+          "target_slot": "P2V_c_N_carry_02",
+          "view": "N",
+          "activity": "carry",
+          "frame": 1,
+          "name": "child_N_carry_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 11,
+          "target_slot": "P2V_c_N_carry_03",
+          "view": "N",
+          "activity": "carry",
+          "frame": 2,
+          "name": "child_N_carry_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 12,
+          "target_slot": "P2V_c_N_carry_04",
+          "view": "N",
+          "activity": "carry",
+          "frame": 3,
+          "name": "child_N_carry_3",
+          "budget_alias": null
+        },
+        {
+          "cell": 13,
+          "target_slot": "P2V_c_S_build_01",
+          "view": "S",
+          "activity": "build",
+          "frame": 0,
+          "name": "S_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 14,
+          "target_slot": "P2V_c_S_build_02",
+          "view": "S",
+          "activity": "build",
+          "frame": 1,
+          "name": "S_build_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 15,
+          "target_slot": "P2V_c_E_build_01",
+          "view": "E",
+          "activity": "build",
+          "frame": 0,
+          "name": "E_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 16,
+          "target_slot": "P2V_c_E_build_02",
+          "view": "E",
+          "activity": "build",
+          "frame": 1,
+          "name": "E_build_2",
+          "budget_alias": null
+        }
+      ]
+    },
+    {
+      "id": "P3_fill_04",
+      "call_order": 4,
+      "body": "child",
+      "reference_candidate": "V_c1_01@1",
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "P2V_c_N_build_01",
+          "view": "N",
+          "activity": "build",
+          "frame": 0,
+          "name": "child_N_build_0",
+          "budget_alias": null
+        },
+        {
+          "cell": 2,
+          "target_slot": "P2V_c_N_build_02",
+          "view": "N",
+          "activity": "build",
+          "frame": 1,
+          "name": "child_N_build_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 3,
+          "target_slot": "P2V_c_S_drink_01",
+          "view": "S",
+          "activity": "drink",
+          "frame": 0,
+          "name": "child_S_drink_0",
+          "budget_alias": null
+        },
+        {
+          "cell": 4,
+          "target_slot": "P2V_c_S_drink_02",
+          "view": "S",
+          "activity": "drink",
+          "frame": 1,
+          "name": "child_S_drink_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 5,
+          "target_slot": "P2V_c_E_drink_01",
+          "view": "E",
+          "activity": "drink",
+          "frame": 0,
+          "name": "E_drink_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 6,
+          "target_slot": "P2V_c_E_drink_02",
+          "view": "E",
+          "activity": "drink",
+          "frame": 1,
+          "name": "E_drink_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 7,
+          "target_slot": "P2V_c_N_drink_01",
+          "view": "N",
+          "activity": "drink",
+          "frame": 0,
+          "name": "child_N_drink_0",
+          "budget_alias": null
+        },
+        {
+          "cell": 8,
+          "target_slot": "P2V_c_N_drink_02",
+          "view": "N",
+          "activity": "drink",
+          "frame": 1,
+          "name": "child_N_drink_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 9,
+          "target_slot": "P2V_c_S_asleep_01",
+          "view": "S",
+          "activity": "asleep",
+          "frame": 0,
+          "name": "child_S_asleep_0",
+          "budget_alias": null
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_c2_13",
+          "view": "E",
+          "activity": "asleep",
+          "frame": 0,
+          "name": "E_asleep_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 11,
+          "target_slot": "P2V_c_N_asleep_01",
+          "view": "N",
+          "activity": "asleep",
+          "frame": 0,
+          "name": "child_N_asleep_0",
+          "budget_alias": null
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_c2_14",
+          "view": "S",
+          "activity": "eat",
+          "frame": 0,
+          "name": "S_eat_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 13,
+          "target_slot": "P2V_c_S_gather_01",
+          "view": "S",
+          "activity": "gather",
+          "frame": 0,
+          "name": "S_gather_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 14,
+          "target_slot": "P2V_c_S_gather_02",
+          "view": "S",
+          "activity": "gather",
+          "frame": 1,
+          "name": "S_gather_2",
+          "budget_alias": null
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_c2_03",
+          "view": "S",
+          "activity": "hop",
+          "frame": 0,
+          "name": "S_hop_1",
+          "budget_alias": null
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_c2_04",
+          "view": "S",
+          "activity": "hop",
+          "frame": 1,
+          "name": "S_hop_2",
+          "budget_alias": null
+        }
+      ]
+    }
+  ],
+  "installation_holds": {
+    "V_a1_01@1": "Part3 leader observed a blue crown texel; keep frozen Part2 verdict unchanged, require clean same-body fill idle before installation."
+  }
+}

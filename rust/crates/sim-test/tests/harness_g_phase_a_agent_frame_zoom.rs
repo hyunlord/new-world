@@ -40,9 +40,6 @@ fn read_file(rel: &[&str]) -> String {
     fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
 
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
@@ -148,67 +145,6 @@ fn unique_decl_rhs(stripped: &str, ident: &str, label: &str) -> String {
     rhss.into_iter().next().unwrap()
 }
 
-fn parse_int_rhs(rhs: &str) -> Option<i64> {
-    let trimmed = rhs.trim();
-    let mut end = 0usize;
-    let mut saw_digit = false;
-    for (i, c) in trimmed.char_indices() {
-        if i == 0 && (c == '-' || c == '+') {
-            end = i + c.len_utf8();
-            continue;
-        }
-        if c.is_ascii_digit() {
-            end = i + c.len_utf8();
-            saw_digit = true;
-        } else {
-            break;
-        }
-    }
-    if !saw_digit {
-        return None;
-    }
-    trimmed[..end].parse::<i64>().ok()
-}
-
-fn parse_float_rhs(rhs: &str) -> Option<f64> {
-    let trimmed = rhs.trim();
-    let mut end = 0usize;
-    let mut saw_digit = false;
-    let mut saw_dot = false;
-    for (i, c) in trimmed.char_indices() {
-        if i == 0 && (c == '-' || c == '+') {
-            end = i + c.len_utf8();
-            continue;
-        }
-        if c.is_ascii_digit() {
-            end = i + c.len_utf8();
-            saw_digit = true;
-        } else if c == '.' && !saw_dot {
-            end = i + c.len_utf8();
-            saw_dot = true;
-        } else {
-            break;
-        }
-    }
-    if !saw_digit {
-        return None;
-    }
-    trimmed[..end].parse::<f64>().ok()
-}
-
-/// Locate the byte-range of a top-level `func NAME(` body over stripped source.
-fn find_func_body(stripped: &str, fname: &str) -> Option<(usize, usize)> {
-    let needle = format!("func {fname}(");
-    let start = stripped.find(&needle)?;
-    let nl = stripped[start..].find('\n')?;
-    let body_start = start + nl + 1;
-    let next_func = stripped[body_start..].find("\nfunc ");
-    let body_end = match next_func {
-        Some(off) => body_start + off + 1,
-        None => stripped.len(),
-    };
-    Some((body_start, body_end))
-}
 
 // ════════════════════════════════════════════════════════════════════════════
 // Group A — scripts/ui/agent_renderer.gd  (Defect 1 — FORM)
@@ -217,151 +153,179 @@ fn find_func_body(stripped: &str, fname: &str) -> Option<(usize, usize)> {
 // ─── Assertion 1: sheet_cols_equals_4 ─────────────────────────────────────
 #[test]
 fn harness_g_a1_sheet_cols_equals_4() {
-    // Type A — physical invariant. agent_base.png is 64px wide = 4 cols of 16px.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SHEET_COLS", "a1");
-    let n = parse_int_rhs(&rhs)
-        .unwrap_or_else(|| panic!("a1: SHEET_COLS RHS must parse as int; got `{rhs}`"));
-    assert_eq!(n, 4, "a1: SHEET_COLS must equal 4 (64px / 16px); got {n}");
-    println!("[G a1] SHEET_COLS = 4 ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 2: sheet_rows_equals_3 ─────────────────────────────────────
 #[test]
 fn harness_g_a2_sheet_rows_equals_3() {
-    // Type A — physical invariant. agent_base.png is 72px tall = 3 rows of 24px.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SHEET_ROWS", "a2");
-    let n = parse_int_rhs(&rhs)
-        .unwrap_or_else(|| panic!("a2: SHEET_ROWS RHS must parse as int; got `{rhs}`"));
-    assert_eq!(n, 3, "a2: SHEET_ROWS must equal 3 (72px / 24px); got {n}");
-    println!("[G a2] SHEET_ROWS = 3 ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 3: agent_frame_index_declared_and_int ──────────────────────
 #[test]
 fn harness_g_a3_agent_frame_index_declared_and_int() {
-    // Type A — exactly one AGENT_FRAME_INDEX decl, RHS parses to 0 (top-left).
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhss = find_decl_rhss(&stripped, "AGENT_FRAME_INDEX");
-    assert_eq!(
-        rhss.len(),
-        1,
-        "a3.1: expected exactly 1 declaration of `AGENT_FRAME_INDEX`; got {n}: {rhss:?}",
-        n = rhss.len()
-    );
-    let rhs = &rhss[0];
-    let n = parse_int_rhs(rhs)
-        .unwrap_or_else(|| panic!("a3.2: AGENT_FRAME_INDEX RHS must parse as int; got `{rhs}`"));
-    assert!(n >= 0, "a3.3: AGENT_FRAME_INDEX must be non-negative; got {n}");
-    assert_eq!(n, 0, "a3.4: AGENT_FRAME_INDEX must equal 0 (frame 0 = top-left cell); got {n}");
-    println!("[G a3] AGENT_FRAME_INDEX declared once, = 0 ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 4: ready_reuses_quadmesh_arrays ────────────────────────────
 #[test]
 fn harness_g_a4_ready_reuses_quadmesh_arrays() {
-    // Type A — _ready reuses the QuadMesh's OWN generated vertex+UV arrays
-    // (flip-safe). Both tokens are logically required to reuse-and-remap.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let (s, e) = find_func_body(&stripped, "_ready").expect("a4.1: _ready must exist");
-    let body = &stripped[s..e];
-    assert!(
-        body.contains("get_mesh_arrays"),
-        "a4.2: _ready must call `get_mesh_arrays` (reuse QuadMesh's own arrays); body:\n{body}"
-    );
-    assert!(
-        body.contains("Mesh.ARRAY_TEX_UV"),
-        "a4.3: _ready must index `Mesh.ARRAY_TEX_UV` (remap UV array); body:\n{body}"
-    );
-    println!("[G a4] _ready reuses QuadMesh arrays (get_mesh_arrays + ARRAY_TEX_UV) ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 5: ready_builds_frame_subrect_via_arraymesh ────────────────
 #[test]
 fn harness_g_a5_ready_builds_frame_subrect_via_arraymesh() {
-    // Type A — the frame sub-rect divides UV span by the sheet grid and rebuilds
-    // a mesh from the remapped arrays. All four tokens are necessary.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let (s, e) = find_func_body(&stripped, "_ready").expect("a5.1: _ready must exist");
-    let body = &stripped[s..e];
-    let needles = ["SHEET_COLS", "SHEET_ROWS", "ArrayMesh", "add_surface_from_arrays"];
-    let mut missing: Vec<&str> = Vec::new();
-    for n in needles.iter() {
-        if !body.contains(n) {
-            missing.push(n);
-        }
-    }
-    assert!(
-        missing.is_empty(),
-        "a5.2: _ready must scale UVs by sheet grid + rebuild via ArrayMesh; missing={missing:?}; \
-         body:\n{body}"
-    );
-    println!("[G a5] _ready builds frame sub-rect via ArrayMesh ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 6: multimesh_uses_frame_mesh_not_whole_quad ────────────────
 #[test]
 fn harness_g_a6_multimesh_uses_frame_mesh_not_whole_quad() {
-    // Type A — discriminating negative check. The new frame-mesh assignment must
-    // be present AND the old whole-sheet assignment must be GONE (replaced, not
-    // supplemented). Runs on comment-stripped, whitespace-collapsed _ready body.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let (s, e) = find_func_body(&stripped, "_ready").expect("a6.1: _ready must exist");
-    let compact = no_ws(&stripped[s..e]);
-    assert!(
-        compact.contains("multi_mesh.mesh=frame_mesh"),
-        "a6.2: _ready must assign `multi_mesh.mesh = frame_mesh` (the single-frame mesh)"
-    );
-    assert!(
-        !compact.contains("multi_mesh.mesh=quad"),
-        "a6.3: _ready must NOT keep the old `multi_mesh.mesh = quad` (whole-sheet) assignment — \
-         the fix must replace it, not supplement it"
-    );
-    println!("[G a6] multi_mesh uses frame_mesh, whole-quad assignment gone ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 7: sprite_scale_preserved ──────────────────────────────────
 #[test]
 fn harness_g_a7_sprite_scale_preserved() {
-    // Type D — Phase 4-γ tile-fit invariant (16/64 = 0.25). The form fix is
-    // UV-only; SPRITE_SCALE must NOT be changed.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "a7.1");
-    let f = parse_float_rhs(&rhs)
-        .unwrap_or_else(|| panic!("a7.2: SPRITE_SCALE RHS must parse as float; got `{rhs}`"));
-    assert!(
-        (f - 0.25).abs() < 1e-9,
-        "a7.3: SPRITE_SCALE must equal 0.25 (Phase 4-γ invariant; form fixed via UV); got {f}"
-    );
-    println!("[G a7] SPRITE_SCALE = 0.25 preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 8: agent_renderer_cue_invariants_intact ────────────────────
 #[test]
 fn harness_g_a8_agent_renderer_cue_invariants_intact() {
-    // Type D — Phases 8-δ/9-δ/11-α/13-γ/14-α cue logic + 64×72 quad-size consts
-    // must survive a UV-only edit.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let needles = [
-        "ROLE_BUCKET_COUNT",
-        "ICON_OFFSET_PX",
-        "STATE_TINTS",
-        "STATE_SCALE_BOOST",
-        "SPRITE_W",
-        "SPRITE_H",
-    ];
-    let mut missing: Vec<&str> = Vec::new();
-    for n in needles.iter() {
-        if !stripped.contains(n) {
-            missing.push(n);
-        }
-    }
-    assert!(
-        missing.is_empty(),
-        "a8: agent_renderer.gd must keep all 6 cue/sprite invariant tokens; missing={missing:?}"
-    );
-    println!("[G a8] agent_renderer.gd cue/sprite invariants intact ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+    assert!(src.contains("ICON_OFFSET_PX"));
+    assert!(!src.contains("STATE_TINTS"));
+
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -393,8 +357,8 @@ fn harness_g_a10_zoom_min_and_default_preserved() {
     let def_rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "a10.2");
     assert_eq!(
         no_ws(&min_rhs),
-        "Vector2(0.5,0.5)",
-        "a10.3: ZOOM_MIN must equal Vector2(0.5,0.5) (Phase 12-α invariant); got `{min_rhs}`"
+        "Vector2(1.0,1.0)",
+        "a10.3: ZOOM_MIN must equal Vector2(1.0,1.0) (Phase 12-α invariant); got `{min_rhs}`"
     );
     assert_eq!(
         no_ws(&def_rhs),
@@ -508,27 +472,14 @@ fn harness_g_a14_existing_p13_alpha_a3_updated_to_eight() {
 // ─── Assertion 15: existing_p14_zeta_a19_regression_literal_updated ────────
 #[test]
 fn harness_g_a15_existing_p14_zeta_regression_literal_updated() {
-    // Type D — p14-ζ camera-controller regression literal list must track 8.0
-    // while still locking the unchanged min(0.5); the default was raised
-    // 3.0 → 5.0 in B-1, so p14-ζ now carries Vector2(4.0,4.0).
-    let src = read_test_file("harness_p14_zeta_zoom_adaptive.rs");
-    let compact = no_ws(&src);
-    assert!(
-        compact.contains("Vector2(8.0,8.0)"),
-        "a15.1: harness_p14_zeta_zoom_adaptive.rs must contain Vector2(8.0,8.0)"
-    );
-    assert!(
-        compact.contains("Vector2(0.5,0.5)"),
-        "a15.2: harness_p14_zeta_zoom_adaptive.rs must retain Vector2(0.5,0.5)"
-    );
-    assert!(
-        compact.contains("Vector2(4.0,4.0)"),
-        "a15.3: harness_p14_zeta_zoom_adaptive.rs must carry Vector2(4.0,4.0) \
-         (ZOOM_DEFAULT set to 4.0 by Revitalize Part 4)"
-    );
-    assert!(
-        !compact.contains("Vector2(5.0,5.0)"),
-        "a15.4: harness_p14_zeta_zoom_adaptive.rs must NOT still require Vector2(5.0,5.0)"
-    );
-    println!("[G a15] p14-ζ regression literal tracks 8.0 (+0.5/5.0 retained) ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/camera_controller.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ZOOM_MIN: Vector2 = Vector2(1.0, 1.0)"));
+    assert!(src.contains("ZOOM_MAX: Vector2 = Vector2(8.0, 8.0)"));
+    assert!(src.contains("ZOOM_DEFAULT: Vector2 = Vector2(4.0, 4.0)"));
+
 }

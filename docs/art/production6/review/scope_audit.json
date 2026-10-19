@@ -1,0 +1,12 @@
+{
+  "art_diff_base": "54ad3458",
+  "paths_checked": 650,
+  "unauthorized_paths": [],
+  "earlier_art_evidence_changed": [],
+  "preexisting_user_edits_excluded": [
+    ".gitignore",
+    ".ignore"
+  ],
+  "goal_sha256": "776d8bf4ac83ef4660db81a58e3f627baa6e09f577d8f52476d44426e2f00a5b",
+  "final_staged_evidence_paths": 155
+}

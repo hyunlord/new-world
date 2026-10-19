@@ -1,0 +1,35 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/00_fixed_world.png","sha256":"919d6d3a60fca18518eba4dc27f4955cf87a6bc81ab9c1da4eec7f01eecf21b6","state":{"dead_parent":0,"seed":20261010,"subject":25,"tick":85080,"world_info":{"clock_offset_ticks":480,"height":64,"move_interval_ticks":8,"seed":20261010,"ticks_per_day":1440,"width":64}},"step":"00_fixed_world"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/02_click_0.png","sha256":"b25c4dbe5f6e63d4523459f7e46924cead8e0cceac472d5b1e319d2cd64f60a9","state":{"actual":25,"chosen":[25,56,55],"drawn_pick_at_intended":8589934617,"expected":25,"point":[960.0,540.0],"viewport_mouse":"(262.0, 592.0)","world_mouse":"(761.5, 535.0)"},"step":"02_click_0"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/02_click_1.png","sha256":"7ccb07ab02eb58a5b5dd509b1c69faf9264afbf451d318b006598fdc8c9fd08a","state":{"actual":56,"chosen":[25,56,55],"drawn_pick_at_intended":8589934617,"expected":56,"point":[960.0,540.0],"viewport_mouse":"(262.0, 592.0)","world_mouse":"(761.5, 535.0)"},"step":"02_click_1"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/02_click_2.png","sha256":"0721ca3e61b2419fae63edad2ec70b6a4788727bd0d556a63cc08e491e6955a7","state":{"actual":55,"chosen":[25,56,55],"drawn_pick_at_intended":8589934617,"expected":55,"point":[960.0,540.0],"viewport_mouse":"(262.0, 592.0)","world_mouse":"(761.5, 535.0)"},"step":"02_click_2"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(960.0, 540.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/02_click_3.png","sha256":"d3221b82f5d53bc83dc2533dd9faf43329b5043f4a1dd5daae252d0cb5eb9b24","state":{"actual":25,"chosen":[25,56,55],"drawn_pick_at_intended":8589934617,"expected":25,"point":[960.0,540.0],"viewport_mouse":"(262.0, 592.0)","world_mouse":"(761.5, 535.0)"},"step":"02_click_3"}
+P12_INPUT_WITNESS {"event_position":"(1726.0, 696.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(1726.0, 696.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/03_dead_parent_link.png","sha256":"9c7628c339c49c93e0030d2002b451976050b927cf5c3de42ec6737480af817f","state":{"parent":0,"record_mode":true},"step":"03_dead_parent_link"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/04_wheel_end_last_line.png","sha256":"bff9533c497f51ff64807a61769b572728bc4e826a1e8da6b6b5c0c8c7601644","state":{"last_line_top":664.0,"line_height":28.0,"maximum":663.0,"scroll":663.0,"viewport_bottom":728.0},"step":"04_wheel_end_last_line"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/05_escape_record.png","sha256":"8431edc1f026709c57f5058a175726dfec562f9cb63e499fc3a28154e5a025e9","state":{"record_mode":false,"visible":false},"step":"05_escape_record"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/06_chronicle_open.png","sha256":"7c837dea0a943a9a55784ba7312a94c97531d64a7d0f2d8f03bba185d9b1d3b0","state":{},"step":"06_chronicle_open"}
+P12_INPUT_WITNESS {"event_position":"(29.0, 169.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(29.0, 169.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(37.0, 169.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(37.0, 169.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(45.0, 169.0)","pressed":true,"viewport_mouse":"(262.0, 592.0)"}
+P12_INPUT_WITNESS {"event_position":"(45.0, 169.0)","pressed":false,"viewport_mouse":"(262.0, 592.0)"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/07_chronicle_name_link.png","sha256":"e8523ab6c97cc923ff308ef1f9eb17394c757fc22e80e0ead56ec0a58078f791","state":{"link":"person:48","selected":48},"step":"07_chronicle_name_link"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/08_chronicle_close.png","sha256":"fe0698bdd35f8ab086c16c78651ef7bf4746dac4d6481a7978b0876ffeddb87a","state":{},"step":"08_chronicle_close"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/09_language_korean.png","sha256":"fe0698bdd35f8ab086c16c78651ef7bf4746dac4d6481a7978b0876ffeddb87a","state":{"language":"ko"},"step":"09_language_korean"}
+REAL_INPUT_P12 {"passed":true,"screenshot":"/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3/real-input.qn6As1/capture/10_language_english.png","sha256":"1ad89f65a4802caf7863e7afe60ba200a71288e2413f2a8716bd20efcef5ed6f","state":{"language":"en","visible_hangul":[]},"step":"10_language_english"}

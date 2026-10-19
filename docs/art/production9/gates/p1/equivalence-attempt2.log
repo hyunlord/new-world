@@ -1,0 +1,16 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+WARNING: Adding 'SimReads' as child to 'Main' will make owner 'Main' inconsistent. Consider unsetting the owner beforehand.
+     at: add_child (scene/main/node.cpp:1716)
+     GDScript backtrace (most recent call first):
+         [0] _test_advanced_worlds (res://scripts/test/art/test_sim_reads_equivalence_p9.gd:132)
+         [1] _run (res://scripts/test/art/test_sim_reads_equivalence_p9.gd:67)
+WARNING: Adding 'SimReads' as child to 'Main' will make owner 'Main' inconsistent. Consider unsetting the owner beforehand.
+     at: add_child (scene/main/node.cpp:1716)
+     GDScript backtrace (most recent call first):
+         [0] _test_advanced_worlds (res://scripts/test/art/test_sim_reads_equivalence_p9.gd:132)
+         [1] _run (res://scripts/test/art/test_sim_reads_equivalence_p9.gd:67)
+SIM READS EQUIVALENCE P9: 461 assertions, 0 failures

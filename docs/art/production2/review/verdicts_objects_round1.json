@@ -1,0 +1,1026 @@
+[
+  {
+    "sprite_id": "N1_01",
+    "candidate_id": "N1_01@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Rounded broadleaf crown and branching trunk remain readable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_02",
+    "candidate_id": "N1_02@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Broad crown with a forked trunk reads as a large deciduous tree.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_03",
+    "candidate_id": "N1_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Large lobed crown and exposed branches remain distinct.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_04",
+    "candidate_id": "N1_04@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Smaller leafy tree retains its trunk and rounded crown.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_05",
+    "candidate_id": "N1_05@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Compact broadleaf tree has an intact canopy and short trunk.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_06",
+    "candidate_id": "N1_06@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Tiered triangular foliage and central trunk read as a conifer.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_07",
+    "candidate_id": "N1_07@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "Detached horizontal brown and black strip floats above the fitted conifer, including on grass.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_08",
+    "candidate_id": "N1_08@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "Detached horizontal strip floats above the bare branching tree in fitted and grass views.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_09",
+    "candidate_id": "N1_09@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Rooted stump silhouette remains readable, though cut-surface detail is reduced.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_10",
+    "candidate_id": "N1_10@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Jagged broken stump and spreading roots remain readable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_11",
+    "candidate_id": "N1_11@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Red berries remain visible within the low shrub silhouette.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_12",
+    "candidate_id": "N1_12@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Low leafy shrub remains recognizable after fitting.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_13",
+    "candidate_id": "N1_13@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Pale blossoms remain distributed across the rounded shrub.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_14",
+    "candidate_id": "N1_14@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Thin stem and separated leaf pairs read as a sapling.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_15",
+    "candidate_id": "N1_15@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Horizontal log retains its pale cut end and broken branch.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N1_16",
+    "candidate_id": "N1_16@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Pale trunk with dark bark marks remains distinct beneath the foliage.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_01",
+    "candidate_id": "N2_01@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Multiple red berries remain distinct against the foliage.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_02",
+    "candidate_id": "N2_02@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two red berries remain separately visible on the bush.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_03",
+    "candidate_id": "N2_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "One red berry remains visible in the leafy bush.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_04",
+    "candidate_id": "N2_04@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Bare branching shrub has no fruit or foliage.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_05",
+    "candidate_id": "N2_05@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Small rounded boulder retains light and shadow faces.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_06",
+    "candidate_id": "N2_06@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Rounded medium boulder and grass at its base remain readable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_07",
+    "candidate_id": "N2_07@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Large rounded boulder retains its irregular stone contour.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_08",
+    "candidate_id": "N2_08@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Several overlapping rocks form a readable cluster.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_09",
+    "candidate_id": "N2_09@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Low rock cluster retains separate highlighted stones.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_10",
+    "candidate_id": "N2_10@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Tall pointed stone outcrop retains its multiple peaks.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_11",
+    "candidate_id": "N2_11@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Upright rock outcrop and surrounding smaller stones remain legible.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_12",
+    "candidate_id": "N2_12@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Angular dark flint shard retains a pale chipped edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_13",
+    "candidate_id": "N2_13@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Narrow green reed blades remain distinct.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_14",
+    "candidate_id": "N2_14@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Dense upright reeds retain a recognizable grassy silhouette.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_15",
+    "candidate_id": "N2_15@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Tall curved reed blades remain separated at their tips.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N2_16",
+    "candidate_id": "N2_16@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Brown seed heads remain visible above green cattail leaves.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_01",
+    "candidate_id": "N3_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Short grass tuft retains several pointed blades.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_02",
+    "candidate_id": "N3_02@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Grass tuft remains recognizable with separate upper blades.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_03",
+    "candidate_id": "N3_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Low grass tuft remains a readable ground plant.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_04",
+    "candidate_id": "N3_04@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Upright grass clump retains its pointed silhouette.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_05",
+    "candidate_id": "N3_05@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "White petals and warm centers remain visible in three flowers.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_06",
+    "candidate_id": "N3_06@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Yellow blossoms remain distinguishable from their green leaves.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_07",
+    "candidate_id": "N3_07@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "Purple petals visible in the raw cell disappear in the unfitted and fitted views, leaving holes and disconnected dark flecks.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_08",
+    "candidate_id": "N3_08@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Red blossoms remain visible on green stems.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_09",
+    "candidate_id": "N3_09@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Brown mushroom cap and pale stem remain distinct.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_10",
+    "candidate_id": "N3_10@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Red mushroom cap retains white spots and a pale stem.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_11",
+    "candidate_id": "N3_11@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Small pale pebble cluster remains readable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_12",
+    "candidate_id": "N3_12@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two adjacent tan pebbles retain separate contours.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_13",
+    "candidate_id": "N3_13@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Single rounded gray pebble retains highlighted volume.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_14",
+    "candidate_id": "N3_14@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Green leaf retains a central vein and pointed tip.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_15",
+    "candidate_id": "N3_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Brown leaf retains its tapered outline and short stem.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "N3_16",
+    "candidate_id": "N3_16@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Rounded green lily pad retains its characteristic notch.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_01",
+    "candidate_id": "S1_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Unlit stone hearth retains its ring and dark center.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_02",
+    "candidate_id": "S1_02@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Flame and crossed logs remain readable inside the stone ring.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_03",
+    "candidate_id": "S1_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Tall flame remains distinct above the surrounding stones.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_04",
+    "candidate_id": "S1_04@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Compact flame remains visible within the hearth.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_05",
+    "candidate_id": "S1_05@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Flame and rising sparks remain recognizable as a lit hearth.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_06",
+    "candidate_id": "S1_06@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Red embers remain visible in the dark stone-ring center.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_07",
+    "candidate_id": "S1_07@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Separate red coals remain readable within the ring.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_08",
+    "candidate_id": "S1_08@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Empty woven container retains an open dark interior.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_09",
+    "candidate_id": "S1_09@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Low storage container visibly holds a few tan items.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_10",
+    "candidate_id": "S1_10@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Filled basket retains visible red and green contents.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_11",
+    "candidate_id": "S1_11@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "A-frame shelter retains crossed roof poles and open entrance.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_12",
+    "candidate_id": "S1_12@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Asymmetric shelter retains hide covering and exposed frame.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_13",
+    "candidate_id": "S1_13@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Rounded hide shelter retains a dark doorway and anchoring stones.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_14",
+    "candidate_id": "S1_14@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Stacked logs retain round cut ends and horizontal bark.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_15",
+    "candidate_id": "S1_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Horizontal sitting log retains short supports and a cut end.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S1_16",
+    "candidate_id": "S1_16@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Cold stone ring retains its dark empty center.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_01",
+    "candidate_id": "S2_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Four short stakes and connecting perimeter remain visible.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_02",
+    "candidate_id": "S2_02@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Bare triangular construction frame retains crosspieces and feet.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_03",
+    "candidate_id": "S2_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Partly covered shelter shows both exposed frame and hide.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_04",
+    "candidate_id": "S2_04@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Nearly covered shelter retains its triangular entrance.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_05",
+    "candidate_id": "S2_05@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two hanging items remain visible beneath a supported crossbar.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_06",
+    "candidate_id": "S2_06@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Stretched hide remains attached within a rectangular wooden frame.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_07",
+    "candidate_id": "S2_07@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Kneeling figure holds a raised stone above the working stones.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_08",
+    "candidate_id": "S2_08@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Hide bedroll retains a curled end and irregular fur edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_09",
+    "candidate_id": "S2_09@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Leather waterskin retains a narrow neck and looped strap.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_10",
+    "candidate_id": "S2_10@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Empty woven basket retains a dark open rim.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_11",
+    "candidate_id": "S2_11@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Basket retains distinct red berries above its woven sides.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_12",
+    "candidate_id": "S2_12@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Small cairn retains overlapping stones and a raised top rock.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_13",
+    "candidate_id": "S2_13@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Tall cairn retains its upright capstone and supporting rocks.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_14",
+    "candidate_id": "S2_14@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Upright stones form a visible circular arrangement.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_15",
+    "candidate_id": "S2_15@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Bundle of sticks retains a binding across the middle.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "S2_16",
+    "candidate_id": "S2_16@3",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Balanced stone stack retains multiple horizontal layers.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_01",
+    "candidate_id": "F1_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Pale smoke puff and smaller trailing puff remain distinct.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_02",
+    "candidate_id": "F1_02@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Rounded smoke puff retains a smaller trailing lobe.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_03",
+    "candidate_id": "F1_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Clustered smoke lobes remain recognizable as a drifting puff.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_04",
+    "candidate_id": "F1_04@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Large pale smoke cloud retains smaller trailing particles.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_05",
+    "candidate_id": "F1_05@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Bright central spark and surrounding particles remain readable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_06",
+    "candidate_id": "F1_06@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Radiating spark retains a bright center and orange rays.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_07",
+    "candidate_id": "F1_07@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Brown dust particles remain visibly clustered.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_08",
+    "candidate_id": "F1_08@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Separate dust fragments remain readable around the center.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_09",
+    "candidate_id": "F1_09@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Central dust cloud and surrounding particles remain visible.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_10",
+    "candidate_id": "F1_10@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Blue splash retains its curved base and raised droplets.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_11",
+    "candidate_id": "F1_11@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Upward water spray retains separated pale droplets.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_12",
+    "candidate_id": "F1_12@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Broad blue splash retains droplets above its base.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_13",
+    "candidate_id": "F1_13@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Four-point golden sparkle remains distinct.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_14",
+    "candidate_id": "F1_14@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two golden sparkles retain separate bright centers.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_15",
+    "candidate_id": "F1_15@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Seated resting figure remains recognizable, though the sleep glyph is simplified.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F1_16",
+    "candidate_id": "F1_16@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Reclining figure remains readable as sleeping with floating blue marks.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_01",
+    "candidate_id": "F2_01@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Sideways brown bird retains a pale breast, beak, and tail.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_02",
+    "candidate_id": "F2_02@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Bird retains its raised wing and forward-pointing beak.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_03",
+    "candidate_id": "F2_03@1",
+    "verdict": "reject",
+    "reason": "detail_destroyed_by_fit",
+    "observation": "The two legs and feet visible in the raw and unfitted bird disappear after fitting, leaving the standing bird suspended.",
+    "unfitted_acceptable": true
+  },
+  {
+    "sprite_id": "F2_04",
+    "candidate_id": "F2_04@1",
+    "verdict": "reject",
+    "reason": "detail_destroyed_by_fit",
+    "observation": "Both feet visible under the unfitted spread-wing bird disappear in the fitted view.",
+    "unfitted_acceptable": true
+  },
+  {
+    "sprite_id": "F2_05",
+    "candidate_id": "F2_05@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Orange butterfly retains paired patterned wings.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_06",
+    "candidate_id": "F2_06@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Folded orange butterfly retains a narrow side silhouette.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_07",
+    "candidate_id": "F2_07@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Blue butterfly retains paired pale-spotted wings.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_08",
+    "candidate_id": "F2_08@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Folded blue butterfly retains its small side-wing silhouette.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_09",
+    "candidate_id": "F2_09@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Curved fish retains green back, pale belly, and orange tail.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_10",
+    "candidate_id": "F2_10@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Horizontal fish retains its fins and contrasting belly.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_11",
+    "candidate_id": "F2_11@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Upward angled fish retains its tapered body and tail.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_12",
+    "candidate_id": "F2_12@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Downward angled fish retains its curved body and orange tail.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_13",
+    "candidate_id": "F2_13@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Dragonfly retains four pale wings and long narrow abdomen.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_14",
+    "candidate_id": "F2_14@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Diagonal dragonfly retains paired wings and an extended abdomen.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_15",
+    "candidate_id": "F2_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Green oval leaf retains its vein and short brown stem.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "F2_16",
+    "candidate_id": "F2_16@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Lobed green leaf retains its irregular edge and central vein.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_01",
+    "candidate_id": "U1_01@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two separate human figures and a long held tool remain readable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_02",
+    "candidate_id": "U1_02@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Flame inside a stone ring remains readable as a hearth icon.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_03",
+    "candidate_id": "U1_03@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Triangular shelter and open entrance remain recognizable.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_04",
+    "candidate_id": "U1_04@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Stone hammer head remains perpendicular to its brown handle.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_05",
+    "candidate_id": "U1_05@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Woven basket retains red contents at its rim.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_06",
+    "candidate_id": "U1_06@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Red berries remain visible in the green bush icon.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_07",
+    "candidate_id": "U1_07@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two green leaves rise from a small soil mound.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_08",
+    "candidate_id": "U1_08@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Stacked pale stones remain recognizable as a cairn.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_09",
+    "candidate_id": "U1_09@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Round golden sun retains radial rays.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_10",
+    "candidate_id": "U1_10@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Pale crescent moon retains its open dark side.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_11",
+    "candidate_id": "U1_11@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Parallel blue and white wave lines remain legible.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_12",
+    "candidate_id": "U1_12@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Single red berry retains green attached leaves.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_13",
+    "candidate_id": "U1_13@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Reclining figure remains recognizable as sleeping despite simplified floating marks.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_14",
+    "candidate_id": "U1_14@2",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two separated vertical bars remain legible as pause.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_15",
+    "candidate_id": "U1_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Two right-pointing triangles remain legible as fast-forward.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "U1_16",
+    "candidate_id": "U1_16@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "Parchment scroll retains curled ends and interior marks.",
+    "unfitted_acceptable": null
+  }
+]

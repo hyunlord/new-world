@@ -1,0 +1,400 @@
+{
+  "schema_version": 1,
+  "render_head": "28f58e56a2289bde129946b7f630192cd94496b2",
+  "phase": "final_capture_complete_performance_failed",
+  "scope": "Audit disposition only; fixed means implemented/tested, not visual acceptance. Pending capture/measurement checks remain pending.",
+  "items": [
+    {
+      "id": "U01",
+      "status": "fixed",
+      "reason": "`scripts/ui/wood_visuals.gd:6` 정확 좌표 매칭. `test_every_hearth.gd`, p1/every_hearth.log failures=0.",
+      "evidence": [
+        "scripts/ui/wood_visuals.gd",
+        "docs/art/production7/gates/p1/every_hearth.log"
+      ]
+    },
+    {
+      "id": "U02",
+      "status": "fixed",
+      "reason": "`scripts/ui/wood_visuals.gd:27` 미소속 재, `:39` 광원 0. p1/cold_hearth.log와 every_hearth.log failures=0.",
+      "evidence": [
+        "scripts/ui/wood_visuals.gd",
+        "docs/art/production7/gates/p1/cold_hearth.log"
+      ]
+    },
+    {
+      "id": "U03",
+      "status": "fixed",
+      "reason": "`scripts/ui/building_renderer.gd:321` 기본 fire=false. `scripts/ui/settlement_labels.gd:159` abandoned shader 적용. p4/abandoned.log failures=0; 실제 자연 소멸 화면은 대기.",
+      "evidence": [
+        "scripts/ui/building_renderer.gd",
+        "scripts/ui/settlement_labels.gd",
+        "docs/art/production7/gates/p4/abandoned.log"
+      ]
+    },
+    {
+      "id": "U04",
+      "status": "fixed",
+      "reason": "`scripts/ui/daylight_controller.gd:57` 공통 정확 매칭 helper 소비. `test_every_hearth.gd` 개별 lit/unlit/orphan 광원 검사. 실제 밤 화면은 대기.",
+      "evidence": [
+        "scripts/ui/daylight_controller.gd",
+        "scripts/test/art/test_every_hearth.gd",
+        "docs/art/production7/gates/p1/every_hearth.log"
+      ]
+    },
+    {
+      "id": "U05",
+      "status": "fixed",
+      "reason": "`scripts/ui/world_effects.gd:114` 메타 누락 false. 실제 effects 인스턴스의 미소속·소멸 smoke 제거를 p1/every_hearth.log에서 확인.",
+      "evidence": [
+        "scripts/ui/world_effects.gd",
+        "docs/art/production7/gates/p1/every_hearth.log"
+      ]
+    },
+    {
+      "id": "U06",
+      "status": "justified",
+      "reason": "`scripts/ui/camera_controller.gd:180` 최초 중심만 최대 마을로 지정, 이후 pending=false. 새 마을 출현 시 카메라를 재중앙화하지 않는 탐색 기본값.",
+      "evidence": [
+        "scripts/ui/camera_controller.gd"
+      ]
+    },
+    {
+      "id": "U07",
+      "status": "justified",
+      "reason": "`scripts/ui/nature_layout.gd:19` 모든 buildings/sites/formation을 순회한다. 첫 마을만 clearing하지 않는다.",
+      "evidence": [
+        "scripts/ui/nature_layout.gd"
+      ]
+    },
+    {
+      "id": "U08",
+      "status": "pending",
+      "reason": "formation 변경 시 전체 계층 갱신 구현은 유지된다. 최종 1/3마을 300프레임 중앙값 9.7695→15.828ms, 비율1.620144(+62.01%)로 +15% 한도를 초과했다. 같은 실행·줌1·simulation frozen이나 호스트 1분 부하176.70→36.20으로 통제된 동일 부하가 아니다. 이 측정으로 개별 renderer 원인을 확정할 수 없고 성능 우려가 해결되지 않아 pending을 유지한다.",
+      "evidence": [
+        "scripts/ui/terrain_renderer.gd",
+        "docs/art/production7/performance_final/frame_times_soc_1.json.gz",
+        "docs/art/production7/performance_final/frame_times_soc_3.json.gz",
+        "docs/art/production7/performance_final/manifest_art_society.json"
+      ]
+    },
+    {
+      "id": "U09",
+      "status": "pending",
+      "reason": "formation 변경 시 전체 계층 갱신 구현은 유지된다. 최종 1/3마을 300프레임 중앙값 9.7695→15.828ms, 비율1.620144(+62.01%)로 +15% 한도를 초과했다. 같은 실행·줌1·simulation frozen이나 호스트 1분 부하176.70→36.20으로 통제된 동일 부하가 아니다. 이 측정으로 개별 renderer 원인을 확정할 수 없고 성능 우려가 해결되지 않아 pending을 유지한다.",
+      "evidence": [
+        "scripts/ui/nature_renderer.gd",
+        "docs/art/production7/performance_final/frame_times_soc_1.json.gz",
+        "docs/art/production7/performance_final/frame_times_soc_3.json.gz",
+        "docs/art/production7/performance_final/manifest_art_society.json"
+      ]
+    },
+    {
+      "id": "U10",
+      "status": "fixed",
+      "reason": "`scripts/ui/settlement_overview_renderer.gd:98`, `:107` 마을별 전달 색/이름 사용; getter 범위·alpha 0.28 유지. `scripts/ui/settlement_labels.gd:64` 10px 라벨. p4/labels_pair_isolated.log failures=0; A27 블라인드 대기.",
+      "evidence": [
+        "scripts/ui/settlement_overview_renderer.gd",
+        "scripts/ui/settlement_labels.gd",
+        "docs/art/production7/gates/p4/labels_pair_isolated.log"
+      ]
+    },
+    {
+      "id": "U11",
+      "status": "justified",
+      "reason": "기존 zoom tier는 전체 렌더 계층 정책. `scripts/ui/settlement_overview_renderer.gd:112` 코드 생성 labels와 `scripts/ui/settlement_labels.gd:94` 역줌 스케일로 라벨 분리. 모든 줌 화면 검증 대기.",
+      "evidence": [
+        "scripts/ui/zoom_lod_controller.gd",
+        "scripts/ui/settlement_labels.gd"
+      ]
+    },
+    {
+      "id": "U12",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/hud_topbar.gd:153` 새 문자열/다중 마을 가시성. `test_settlement_labels.gd` 실제 row/icon 숨김과 다른 HUD 보존 확인; p4/labels_pair_isolated.log failures=0.",
+      "evidence": [
+        "scripts/ui/panels/hud_topbar.gd",
+        "docs/art/production7/gates/p4/labels_pair_isolated.log"
+      ]
+    },
+    {
+      "id": "U13",
+      "status": "justified",
+      "reason": "`scripts/ui/panels/hud_topbar.gd:167` 이후 전체 식량/장작 합계는 세계 자원 의미. 소속 판단에 사용하지 않는다.",
+      "evidence": [
+        "scripts/ui/panels/hud_topbar.gd"
+      ]
+    },
+    {
+      "id": "U14",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/hud_topbar.gd:28`, `:268` 명시적 다섯 death key. `test_death_exposure.gd` 추가 deaths_unrelated=999 제외까지 확인; p2/death_exposure_green.log.",
+      "evidence": [
+        "scripts/ui/panels/hud_topbar.gd",
+        "docs/art/production7/gates/p2/death_exposure_green.log"
+      ]
+    },
+    {
+      "id": "U15",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/hud_status_panel.gd:280` fission 로그 tick으로 depart/found/cancel 복원·중복 방지, disappeared는 최초 관측 tick임을 메타에 명시. p5/founding_group_green.log failures=0. 실제 사회 장면 A28 대기.",
+      "evidence": [
+        "scripts/ui/panels/hud_status_panel.gd",
+        "docs/art/production7/gates/p5/founding_group_green.log"
+      ]
+    },
+    {
+      "id": "U16",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/hud_status_panel.gd:108`, `:111` Selection.number_for(sid). `test_founding_group.gd:68` raw42 대신 UI2 검증.",
+      "evidence": [
+        "scripts/ui/panels/hud_status_panel.gd",
+        "scripts/test/art/test_founding_group.gd"
+      ]
+    },
+    {
+      "id": "U17",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/hud_status_panel.gd:43`, `:165`, `:239` 다섯 이유·무제한 feed_log·reset 경계. p2/death_exposure_green.log. 동기 advance 캡처에서 모든 사망 수집 확인은 U29와 함께 대기.",
+      "evidence": [
+        "scripts/ui/panels/hud_status_panel.gd",
+        "docs/art/production7/gates/p2/death_exposure_green.log"
+      ]
+    },
+    {
+      "id": "U18",
+      "status": "fixed",
+      "reason": "`scripts/ui/death_viz_renderer.gd:108` exposure 얼음색, unknown 회색/한 번 경고. `test_death_exposure.gd` 다섯 색/미지 이유 검증. 실제 죽음 화면 A26 대기.",
+      "evidence": [
+        "scripts/ui/death_viz_renderer.gd",
+        "docs/art/production7/gates/p2/death_exposure_green.log"
+      ]
+    },
+    {
+      "id": "U19",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/agent_inspector_panel.gd:158` AgentId→home→마을 이름. FFI join은 p3/society-short.log와 society-natural.log failures=0. 실제 inspector 화면 검증은 별도.",
+      "evidence": [
+        "scripts/ui/panels/agent_inspector_panel.gd",
+        "docs/art/production7/gates/p3/society-natural.log"
+      ]
+    },
+    {
+      "id": "U20",
+      "status": "fixed",
+      "reason": "기존 모든 화덕 근접 연출 유지. `scripts/ui/agent_renderer.gd:623` 소속 outline, `scripts/ui/founding_group_renderer.gd:1` 별도 founder 레이어. p4/select.log와 p5/founding_group_green.log failures=0; A27/A28 화면 대기.",
+      "evidence": [
+        "scripts/ui/agent_renderer.gd",
+        "scripts/ui/founding_group_renderer.gd",
+        "docs/art/production7/gates/p4/select.log"
+      ]
+    },
+    {
+      "id": "U21",
+      "status": "justified",
+      "reason": "`scripts/ui/building_renderer.gd:210` 모든 마을 stock을 nearest anchor로 한 번씩 합산. 저장소 소유권 표시가 아닌 자원 anchor 정책.",
+      "evidence": [
+        "scripts/ui/building_renderer.gd"
+      ]
+    },
+    {
+      "id": "U22",
+      "status": "justified",
+      "reason": "`scripts/ui/building_renderer.gd:471` 공유 anchor의 목표는 최근접 마을 하나. 실제 소유권 FFI 없음. 합계 재고/단일 목표 혼합 가능성을 그대로 공개하며 정확 소속 정보로 해석하지 않는다.",
+      "evidence": [
+        "scripts/ui/building_renderer.gd"
+      ]
+    },
+    {
+      "id": "U23",
+      "status": "fixed",
+      "reason": "`scripts/ui/panels/god_hand_panel.gd:88`, `:92`, `:110` 선택 ID와 대상 이름, 시전 후 선택 변경에도 toast 대상 유지. p4/select.log failures=0; 실제 daughter rain A29 대기.",
+      "evidence": [
+        "scripts/ui/panels/god_hand_panel.gd",
+        "docs/art/production7/gates/p4/select.log"
+      ]
+    },
+    {
+      "id": "U24",
+      "status": "justified",
+      "reason": "`scripts/rendering/art/god_hand_effects.gd:74` 실제 rain ids 별 중심을 순회. stub 테스트와 P6 God hand 회귀는 통과했으나 실제 선택 daughter 및 원래 불 동시 화면은 A29 대기.",
+      "evidence": [
+        "scripts/rendering/art/god_hand_effects.gd",
+        "docs/art/production7/gates/p6/god_hand.log"
+      ]
+    },
+    {
+      "id": "U25",
+      "status": "fixed",
+      "reason": "`scripts/rendering/art/god_hand_effects.gd:113`, `:148`, `:229` 시전 당시 target 보존 후 해당 저장고 flash. p4/select.log의 target freeze, p6/god_hand.log 회귀 failures=0.",
+      "evidence": [
+        "scripts/rendering/art/god_hand_effects.gd",
+        "docs/art/production7/gates/p4/select.log"
+      ]
+    },
+    {
+      "id": "U26",
+      "status": "justified",
+      "reason": "`scenes/main.tscn:1` load_steps=21 유지; `scripts/ui/settlement_overview_renderer.gd:112` 동적 labels, `scripts/ui/agent_renderer.gd:60`이 founding 레이어 생성. scene 노드 하나는 다중 마을 순회 renderer다.",
+      "evidence": [
+        "scenes/main.tscn",
+        "scripts/ui/settlement_overview_renderer.gd",
+        "scripts/ui/agent_renderer.gd"
+      ]
+    },
+    {
+      "id": "U27",
+      "status": "fixed",
+      "reason": "RESET와 orig/daughter/leader/all 대상, FD/FS/FV 구현 및 사회 manifest 17장을 확인했다. 사회/개입 원본은 0f634fec, 최종 자연 원본은 28f58e56이다. FD 깃발 화면 밖 A28 실패는 기능 구현과 별도로 유지한다. 최종 재촬영은 모든 시나리오가 동일 source28f58e56으로 갱신되었고 final_capture_integrity.json에서154쌍 오류0을 확인했다.",
+      "evidence": [
+        "scripts/test/capture_framings.gd",
+        "scripts/test/art/capture_plans.gd",
+        "docs/art/production7/shots/manifest_art_society.json",
+        "docs/art/production7/final_capture_integrity.json"
+      ]
+    },
+    {
+      "id": "U28",
+      "status": "fixed",
+      "reason": "_scenario() 및 사회/선택/feed/death metadata 수집 구현과 실제 자연/사회/개입 manifest를 확인했다. 원본 HEAD 차이를 기록하며 최종 전체 측정 결과와 기능 구현을 구분한다. 최종 재촬영은 모든 시나리오가 동일 source28f58e56으로 갱신되었고 final_capture_integrity.json에서154쌍 오류0을 확인했다.",
+      "evidence": [
+        "scripts/test/capture_framings.gd",
+        "docs/art/production7/shots/manifest_art.json",
+        "docs/art/production7/shots/manifest_art_society.json",
+        "docs/art/production7/shots/manifest_art_god.json",
+        "docs/art/production7/final_capture_integrity.json"
+      ]
+    },
+    {
+      "id": "U29",
+      "status": "fixed",
+      "reason": "동기 chunk별 feed ingest와 1/3마을 300프레임 수집 도구를 실행했다. 최종154쌍 무결성 검사에서 death census 오류0이며 성능도 같은run43729-352817/줌1/frozen으로 수집했다. 수집 기능은 완료되었지만 중앙값+62.01%로 예산 실패이며 호스트 부하 차이 때문에 동일 부하 비교도 충족하지 못했다. A30 PASS가 아니다.",
+      "evidence": [
+        "scripts/test/capture_framings.gd",
+        "docs/art/production7/final_capture_integrity.json",
+        "docs/art/production7/performance_final/frame_times_soc_1.json.gz",
+        "docs/art/production7/performance_final/frame_times_soc_3.json.gz"
+      ]
+    },
+    {
+      "id": "U30",
+      "status": "justified",
+      "reason": "deadwood_tile은 전달받은 target village 주변을 고르는 framing helper이며 소속을 추론하지 않는다. 실제 자연 ART 94장/LONG 27장 manifest를 확인했다. 대상 선택은 capture_framings가 담당한다.",
+      "evidence": [
+        "scripts/test/art/capture_metadata.gd",
+        "docs/art/production7/shots/manifest_art.json",
+        "docs/art/production7/shots/manifest_art_long.json"
+      ]
+    },
+    {
+      "id": "U31",
+      "status": "fixed",
+      "reason": "society whitelist와 society/god 자연 합본 제외를 확인했다. 실제 합본 121장은 ART 94장+LONG 27장이고, 사회 17장과 개입 12장은 별도 manifest에 있다.",
+      "evidence": [
+        "tools/art_pipeline/capture_art.sh",
+        "docs/art/production7/shots/manifest.json",
+        "docs/art/production7/shots/manifest_art_society.json",
+        "docs/art/production7/shots/manifest_art_god.json"
+      ]
+    },
+    {
+      "id": "U32",
+      "status": "fixed",
+      "reason": "정확 formation 매칭, 미소속 owner/stock/stage=-1 보존, fire=false 및 cold ash 검사를 구현했다. 현재 A17 실측 PASS는 화덕 74회 검사다. 자연 미소속 사례가 없어 이 경계의 실증은 test_every_hearth로 한정한다.",
+      "evidence": [
+        "tools/art_pipeline/ingame_qa_wood_p7.py",
+        "docs/art/production7/measurements.json",
+        "docs/art/production7/gates/p1/every_hearth.log"
+      ]
+    },
+    {
+      "id": "U33",
+      "status": "justified",
+      "reason": "검사 도구는 모든 마을 stock 합계와 anchor 표시를 검사하며 현재 A17은 PASS다. 공유 anchor 목표가 최근접 마을 하나의 값인 기존 한계는 남는다. 이는 저장소 소유권 정확성의 PASS를 뜻하지 않는다.",
+      "evidence": [
+        "tools/art_pipeline/ingame_qa_wood_p7.py",
+        "scripts/ui/building_renderer.gd",
+        "docs/art/production7/measurements.json"
+      ]
+    },
+    {
+      "id": "U34",
+      "status": "justified",
+      "reason": "observed/wood/pixels 검사는 모든 보이는 화덕을 순회한다. 단일 마을 제한이 없음을 코드로 확인했으며 A21/A24 등 개별 화면 실패는 독립 측정에서 유지한다.",
+      "evidence": [
+        "tools/art_pipeline/ingame_qa_observed_p7.py",
+        "tools/art_pipeline/ingame_qa_wood_p7.py",
+        "tools/art_pipeline/ingame_qa_pixels.py"
+      ]
+    },
+    {
+      "id": "U35",
+      "status": "fixed",
+      "reason": "production7 cold 검사 복사본과 모든 target/label 순회를 구현하고 최종 자연 프레임 및 독립 cold 관측 기록을 확보했다. 문간 숨결9/13, shiver 식별 없음 등의 실제 시각 제한은 최종 A19/A21 판정에 그대로 남긴다. 검사 도구의 다중 마을 처리 완료를 시각 PASS로 해석하지 않는다.",
+      "evidence": [
+        "tools/art_pipeline/ingame_qa_cold_p7.py",
+        "docs/art/production7/final_capture_integrity.json",
+        "docs/art/production7/review/cold_observer_final.json"
+      ]
+    },
+    {
+      "id": "U36",
+      "status": "justified",
+      "reason": "atlas/camp coverage는 모든 formation 좌표를 사용하고 첫 행만 고르지 않는다. p7 실행기가 자연 프레임을 전달하는 범위를 현재 소스로 확인했다.",
+      "evidence": [
+        "tools/art_pipeline/ingame_qa_atlas.py",
+        "tools/art_pipeline/ingame_qa_camp_p3.py",
+        "tools/art_pipeline/ingame_qa_p7.py"
+      ]
+    },
+    {
+      "id": "U37",
+      "status": "fixed",
+      "reason": "최종 동일source28f58e56 이미지/sidecar154쌍을 확인했다. 자연117/사회17/개입12/교정8로 분리되며 seed/scenario 오류와 death census 오류는0이다. production7 측정 도구는 A18_SOCIETY를 별도 계산한다. 이전 god0 중간 측정은 역사이며 최종 시각 실패를 변경하지 않는다.",
+      "evidence": [
+        "tools/art_pipeline/measure_p7.py",
+        "docs/art/production7/final_capture_integrity.json",
+        "docs/art/production7/shots/manifest.json",
+        "docs/art/production7/shots/manifest_art_society.json",
+        "docs/art/production7/shots/manifest_art_god.json"
+      ]
+    },
+    {
+      "id": "U38",
+      "status": "fixed",
+      "reason": "`scripts/test/art/test_structure_states.gd:30`, `:42`, `:63` 빈 상태 재/정확 좌표/no glow로 기대 변경. p1/structure_states.log PASS. 이전 코드의 잘못된 최근접 기대는 보존 대상 동작이 아니다.",
+      "evidence": [
+        "scripts/test/art/test_structure_states.gd",
+        "docs/art/production7/gates/p1/structure_states.log"
+      ]
+    },
+    {
+      "id": "U39",
+      "status": "justified",
+      "reason": "`scripts/ui/building_renderer.gd:357`, `:378` 미소속 장식 fallback/첫 shelter 장식은 소속·실제 재고 수치 아님. 생존 마을 수·정체성을 표현하는 라벨을 대신하지 않는다.",
+      "evidence": [
+        "scripts/ui/building_renderer.gd"
+      ]
+    }
+  ],
+  "evidence_heads": {
+    "all_final_captures": "28f58e56a2289bde129946b7f630192cd94496b2"
+  },
+  "performance_verdict": {
+    "status": "FAIL",
+    "median_ms": [
+      9.7695,
+      15.828
+    ],
+    "ratio": 1.6201443267311528,
+    "threshold": 1.15,
+    "same_run": true,
+    "same_zoom": true,
+    "same_load_controlled": false,
+    "simulation_frozen": true,
+    "pending_items": [
+      "U08",
+      "U09"
+    ]
+  }
+}

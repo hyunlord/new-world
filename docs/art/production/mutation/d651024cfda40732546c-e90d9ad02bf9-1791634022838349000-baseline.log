@@ -1,0 +1,9 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running tests/harness_p14_alpha_agent_sprite_overhaul.rs (target/debug/deps/harness_p14_alpha_agent_sprite_overhaul-6857a1b5da9c330a)
+
+running 1 test
+test harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.00s
+

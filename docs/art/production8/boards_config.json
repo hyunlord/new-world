@@ -1,0 +1,52 @@
+{
+  "news": {
+    "caption": "SOCiETY SCENARIO: before and after news feed; unaltered captures",
+    "paths": [
+      "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0900_F2W_orig.1920.png"
+    ]
+  },
+  "way": {
+    "caption": "SOCIETY SCENARIO: leader arrow and actual destination stake",
+    "paths": [
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0630_FD_leader.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0630_FT_site.1920.png"
+    ]
+  },
+  "restless": {
+    "caption": "SOCIETY SCENARIO: pressure before split and daughter after founding",
+    "paths": [
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d32_2200_F2W_orig.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0859_FS_daughter.1920.png"
+    ]
+  },
+  "crowds": {
+    "caption": "NATURAL SCENARIO: prior and current morning; simulation versions differ",
+    "paths": [
+      "/Users/rexxa/work/art-production7-evidence/shots/art_long/l_d29_0630_F2.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0630_F2.1920.png"
+    ]
+  },
+  "effects": {
+    "caption": "INTERVENTION SCENARIO: actual food and wood cast effects",
+    "paths": [
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_god/god_d10_1200_F2_spoil.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_god/god_d10_1205_F2_rot_wood.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_god/god_d10_1210_F2_gift_food.1920.png"
+    ]
+  },
+  "before-after-live": {
+    "caption": "NATURAL SCENARIO same v19 seed/day/framing: before and after",
+    "paths": [
+      "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art/a_d2_1200_F2.1920.png"
+    ]
+  },
+  "before-after-society": {
+    "caption": "SOCIETY SCENARIO same v19 seed/tick/FV: before and after",
+    "paths": [
+      "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.1920.png",
+      "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0949_FV_all.1920.png"
+    ]
+  }
+}

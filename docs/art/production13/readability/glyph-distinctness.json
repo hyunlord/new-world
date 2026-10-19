@@ -1,0 +1,1673 @@
+{
+  "status": "FAIL_AT_ACTUAL_24",
+  "raw_directory": "/Users/rexxa/work/art-production13-evidence/readability/glyph-attempt4",
+  "cli_result": "/Users/rexxa/work/art-production13-evidence/glyph-cli-attempt4.json",
+  "font_design_grid": [
+    {
+      "weight": "regular",
+      "path": "assets/fonts/galmuri/Galmuri11.ttf",
+      "sha256": "2c709890595668f7bdb6df408420fda957dde0288e95b31a1cc17a2ab98b4b4f",
+      "units_per_em": 1200,
+      "outline_coordinate_gcd": 100,
+      "coordinate_count": 2148660,
+      "simple_glyph_count": 20961,
+      "design_size": 12,
+      "method": "fontTools TTFont: expand every glyf entry; gcd all signed x/y coordinates; head.unitsPerEm / gcd"
+    },
+    {
+      "weight": "bold",
+      "path": "assets/fonts/galmuri/Galmuri11-Bold.ttf",
+      "sha256": "5265b2f437fe81f0c8095b44c0173dd9a276b58a42552bf983f21c0e69e6e8af",
+      "units_per_em": 1200,
+      "outline_coordinate_gcd": 100,
+      "coordinate_count": 1044388,
+      "simple_glyph_count": 12691,
+      "design_size": 12,
+      "method": "fontTools TTFont: expand every glyf entry; gcd all signed x/y coordinates; head.unitsPerEm / gcd"
+    }
+  ],
+  "result": {
+    "actual_life_size": 24,
+    "actual_pass": false,
+    "alignment": "same origin and baseline; TextServer shaped advances and offsets; no crop normalization",
+    "carry_closure": "Every suffix/carry assignment is (index+1)%46. Thus both tables are closed under carry; all46 entries included, plus all46 Latin initial-capital forms.",
+    "design_size": 12,
+    "display": "headless",
+    "errors": [],
+    "font_settings": {
+      "bold": {
+        "antialiasing": 0,
+        "force_autohinter": false,
+        "hinting": 0,
+        "msdf": false,
+        "oversampling": 0.0,
+        "path": "res://assets/fonts/galmuri/Galmuri11-Bold.ttf",
+        "sha256": "5265b2f437fe81f0c8095b44c0173dd9a276b58a42552bf983f21c0e69e6e8af",
+        "subpixel_positioning": 0
+      },
+      "regular": {
+        "antialiasing": 0,
+        "force_autohinter": false,
+        "hinting": 0,
+        "msdf": false,
+        "oversampling": 0.0,
+        "path": "res://assets/fonts/galmuri/Galmuri11.ttf",
+        "sha256": "2c709890595668f7bdb6df408420fda957dde0288e95b31a1cc17a2ab98b4b4f",
+        "subpixel_positioning": 0
+      }
+    },
+    "godot": {
+      "build": "official",
+      "hash": "89cea143987d564363e15d207438530651d943ac",
+      "hex": 263680,
+      "major": 4,
+      "minor": 6,
+      "patch": 0,
+      "status": "stable",
+      "string": "4.6-stable (official)",
+      "timestamp": 0
+    },
+    "integer_scale": true,
+    "minimum_differing_pixels": 12,
+    "rows": [
+      {
+        "atlas_cell_size": 96,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 12,
+            "left": "nu",
+            "right": "hu"
+          },
+          {
+            "differing_pixels": 12,
+            "left": "no",
+            "right": "ho"
+          },
+          {
+            "differing_pixels": 12,
+            "left": "na",
+            "right": "ha"
+          },
+          {
+            "differing_pixels": 12,
+            "left": "ni",
+            "right": "hi"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "do",
+            "right": "de"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "go",
+            "right": "ge"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "Do",
+            "right": "De"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "o",
+            "right": "e"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "i",
+            "right": "I"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "Go",
+            "right": "Ge"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 4186,
+        "passed": true,
+        "script": "en",
+        "size": 24,
+        "syllables": [
+          "a",
+          "i",
+          "o",
+          "e",
+          "ka",
+          "ki",
+          "ku",
+          "ko",
+          "ta",
+          "ti",
+          "tu",
+          "to",
+          "na",
+          "ni",
+          "nu",
+          "no",
+          "ma",
+          "mi",
+          "mu",
+          "mo",
+          "ra",
+          "ri",
+          "ru",
+          "ro",
+          "sa",
+          "si",
+          "su",
+          "so",
+          "ha",
+          "hi",
+          "hu",
+          "ho",
+          "ya",
+          "yu",
+          "yo",
+          "wa",
+          "ba",
+          "bi",
+          "bo",
+          "bu",
+          "da",
+          "do",
+          "ga",
+          "go",
+          "de",
+          "ge",
+          "A",
+          "I",
+          "O",
+          "E",
+          "Ka",
+          "Ki",
+          "Ku",
+          "Ko",
+          "Ta",
+          "Ti",
+          "Tu",
+          "To",
+          "Na",
+          "Ni",
+          "Nu",
+          "No",
+          "Ma",
+          "Mi",
+          "Mu",
+          "Mo",
+          "Ra",
+          "Ri",
+          "Ru",
+          "Ro",
+          "Sa",
+          "Si",
+          "Su",
+          "So",
+          "Ha",
+          "Hi",
+          "Hu",
+          "Ho",
+          "Ya",
+          "Yu",
+          "Yo",
+          "Wa",
+          "Ba",
+          "Bi",
+          "Bo",
+          "Bu",
+          "Da",
+          "Do",
+          "Ga",
+          "Go",
+          "De",
+          "Ge"
+        ],
+        "weight": "regular"
+      },
+      {
+        "atlas_cell_size": 96,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 4,
+            "left": "마",
+            "right": "미"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "타",
+            "right": "티"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "나",
+            "right": "니"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "라",
+            "right": "리"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "사",
+            "right": "시"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "하",
+            "right": "히"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "바",
+            "right": "비"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "카",
+            "right": "키"
+          },
+          {
+            "differing_pixels": 4,
+            "left": "아",
+            "right": "이"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "투",
+            "right": "루"
+          }
+        ],
+        "failed_pairs": 11,
+        "pair_count": 1035,
+        "passed": false,
+        "script": "ko",
+        "size": 24,
+        "syllables": [
+          "아",
+          "이",
+          "오",
+          "에",
+          "카",
+          "키",
+          "쿠",
+          "코",
+          "타",
+          "티",
+          "투",
+          "토",
+          "나",
+          "니",
+          "누",
+          "노",
+          "마",
+          "미",
+          "무",
+          "모",
+          "라",
+          "리",
+          "루",
+          "로",
+          "사",
+          "시",
+          "수",
+          "소",
+          "하",
+          "히",
+          "후",
+          "호",
+          "야",
+          "유",
+          "요",
+          "와",
+          "바",
+          "비",
+          "보",
+          "부",
+          "다",
+          "도",
+          "가",
+          "고",
+          "데",
+          "게"
+        ],
+        "weight": "regular"
+      },
+      {
+        "atlas_cell_size": 96,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 24,
+            "left": "no",
+            "right": "ho"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "na",
+            "right": "ha"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "nu",
+            "right": "hu"
+          },
+          {
+            "differing_pixels": 24,
+            "left": "ni",
+            "right": "hi"
+          },
+          {
+            "differing_pixels": 28,
+            "left": "Bo",
+            "right": "Go"
+          },
+          {
+            "differing_pixels": 28,
+            "left": "Bo",
+            "right": "Do"
+          },
+          {
+            "differing_pixels": 28,
+            "left": "Ba",
+            "right": "Ga"
+          },
+          {
+            "differing_pixels": 28,
+            "left": "Ba",
+            "right": "Da"
+          },
+          {
+            "differing_pixels": 28,
+            "left": "ho",
+            "right": "bo"
+          },
+          {
+            "differing_pixels": 28,
+            "left": "hu",
+            "right": "bu"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 4186,
+        "passed": true,
+        "script": "en",
+        "size": 24,
+        "syllables": [
+          "a",
+          "i",
+          "o",
+          "e",
+          "ka",
+          "ki",
+          "ku",
+          "ko",
+          "ta",
+          "ti",
+          "tu",
+          "to",
+          "na",
+          "ni",
+          "nu",
+          "no",
+          "ma",
+          "mi",
+          "mu",
+          "mo",
+          "ra",
+          "ri",
+          "ru",
+          "ro",
+          "sa",
+          "si",
+          "su",
+          "so",
+          "ha",
+          "hi",
+          "hu",
+          "ho",
+          "ya",
+          "yu",
+          "yo",
+          "wa",
+          "ba",
+          "bi",
+          "bo",
+          "bu",
+          "da",
+          "do",
+          "ga",
+          "go",
+          "de",
+          "ge",
+          "A",
+          "I",
+          "O",
+          "E",
+          "Ka",
+          "Ki",
+          "Ku",
+          "Ko",
+          "Ta",
+          "Ti",
+          "Tu",
+          "To",
+          "Na",
+          "Ni",
+          "Nu",
+          "No",
+          "Ma",
+          "Mi",
+          "Mu",
+          "Mo",
+          "Ra",
+          "Ri",
+          "Ru",
+          "Ro",
+          "Sa",
+          "Si",
+          "Su",
+          "So",
+          "Ha",
+          "Hi",
+          "Hu",
+          "Ho",
+          "Ya",
+          "Yu",
+          "Yo",
+          "Wa",
+          "Ba",
+          "Bi",
+          "Bo",
+          "Bu",
+          "Da",
+          "Do",
+          "Ga",
+          "Go",
+          "De",
+          "Ge"
+        ],
+        "weight": "bold"
+      },
+      {
+        "atlas_cell_size": 96,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 8,
+            "left": "아",
+            "right": "이"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "나",
+            "right": "니"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "마",
+            "right": "미"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "하",
+            "right": "히"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "사",
+            "right": "시"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "바",
+            "right": "비"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "라",
+            "right": "리"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "타",
+            "right": "티"
+          },
+          {
+            "differing_pixels": 8,
+            "left": "카",
+            "right": "키"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "쿠",
+            "right": "무"
+          }
+        ],
+        "failed_pairs": 9,
+        "pair_count": 1035,
+        "passed": false,
+        "script": "ko",
+        "size": 24,
+        "syllables": [
+          "아",
+          "이",
+          "오",
+          "에",
+          "카",
+          "키",
+          "쿠",
+          "코",
+          "타",
+          "티",
+          "투",
+          "토",
+          "나",
+          "니",
+          "누",
+          "노",
+          "마",
+          "미",
+          "무",
+          "모",
+          "라",
+          "리",
+          "루",
+          "로",
+          "사",
+          "시",
+          "수",
+          "소",
+          "하",
+          "히",
+          "후",
+          "호",
+          "야",
+          "유",
+          "요",
+          "와",
+          "바",
+          "비",
+          "보",
+          "부",
+          "다",
+          "도",
+          "가",
+          "고",
+          "데",
+          "게"
+        ],
+        "weight": "bold"
+      },
+      {
+        "atlas_cell_size": 144,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 27,
+            "left": "nu",
+            "right": "hu"
+          },
+          {
+            "differing_pixels": 27,
+            "left": "no",
+            "right": "ho"
+          },
+          {
+            "differing_pixels": 27,
+            "left": "na",
+            "right": "ha"
+          },
+          {
+            "differing_pixels": 27,
+            "left": "ni",
+            "right": "hi"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "do",
+            "right": "de"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "go",
+            "right": "ge"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "Do",
+            "right": "De"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "o",
+            "right": "e"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "i",
+            "right": "I"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "Go",
+            "right": "Ge"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 4186,
+        "passed": true,
+        "script": "en",
+        "size": 36,
+        "syllables": [
+          "a",
+          "i",
+          "o",
+          "e",
+          "ka",
+          "ki",
+          "ku",
+          "ko",
+          "ta",
+          "ti",
+          "tu",
+          "to",
+          "na",
+          "ni",
+          "nu",
+          "no",
+          "ma",
+          "mi",
+          "mu",
+          "mo",
+          "ra",
+          "ri",
+          "ru",
+          "ro",
+          "sa",
+          "si",
+          "su",
+          "so",
+          "ha",
+          "hi",
+          "hu",
+          "ho",
+          "ya",
+          "yu",
+          "yo",
+          "wa",
+          "ba",
+          "bi",
+          "bo",
+          "bu",
+          "da",
+          "do",
+          "ga",
+          "go",
+          "de",
+          "ge",
+          "A",
+          "I",
+          "O",
+          "E",
+          "Ka",
+          "Ki",
+          "Ku",
+          "Ko",
+          "Ta",
+          "Ti",
+          "Tu",
+          "To",
+          "Na",
+          "Ni",
+          "Nu",
+          "No",
+          "Ma",
+          "Mi",
+          "Mu",
+          "Mo",
+          "Ra",
+          "Ri",
+          "Ru",
+          "Ro",
+          "Sa",
+          "Si",
+          "Su",
+          "So",
+          "Ha",
+          "Hi",
+          "Hu",
+          "Ho",
+          "Ya",
+          "Yu",
+          "Yo",
+          "Wa",
+          "Ba",
+          "Bi",
+          "Bo",
+          "Bu",
+          "Da",
+          "Do",
+          "Ga",
+          "Go",
+          "De",
+          "Ge"
+        ],
+        "weight": "regular"
+      },
+      {
+        "atlas_cell_size": 144,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 9,
+            "left": "마",
+            "right": "미"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "타",
+            "right": "티"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "나",
+            "right": "니"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "라",
+            "right": "리"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "사",
+            "right": "시"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "하",
+            "right": "히"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "바",
+            "right": "비"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "카",
+            "right": "키"
+          },
+          {
+            "differing_pixels": 9,
+            "left": "아",
+            "right": "이"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "투",
+            "right": "루"
+          }
+        ],
+        "failed_pairs": 9,
+        "pair_count": 1035,
+        "passed": false,
+        "script": "ko",
+        "size": 36,
+        "syllables": [
+          "아",
+          "이",
+          "오",
+          "에",
+          "카",
+          "키",
+          "쿠",
+          "코",
+          "타",
+          "티",
+          "투",
+          "토",
+          "나",
+          "니",
+          "누",
+          "노",
+          "마",
+          "미",
+          "무",
+          "모",
+          "라",
+          "리",
+          "루",
+          "로",
+          "사",
+          "시",
+          "수",
+          "소",
+          "하",
+          "히",
+          "후",
+          "호",
+          "야",
+          "유",
+          "요",
+          "와",
+          "바",
+          "비",
+          "보",
+          "부",
+          "다",
+          "도",
+          "가",
+          "고",
+          "데",
+          "게"
+        ],
+        "weight": "regular"
+      },
+      {
+        "atlas_cell_size": 144,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 54,
+            "left": "no",
+            "right": "ho"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "na",
+            "right": "ha"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "nu",
+            "right": "hu"
+          },
+          {
+            "differing_pixels": 54,
+            "left": "ni",
+            "right": "hi"
+          },
+          {
+            "differing_pixels": 63,
+            "left": "Bo",
+            "right": "Go"
+          },
+          {
+            "differing_pixels": 63,
+            "left": "Bo",
+            "right": "Do"
+          },
+          {
+            "differing_pixels": 63,
+            "left": "Ba",
+            "right": "Ga"
+          },
+          {
+            "differing_pixels": 63,
+            "left": "Ba",
+            "right": "Da"
+          },
+          {
+            "differing_pixels": 63,
+            "left": "ho",
+            "right": "bo"
+          },
+          {
+            "differing_pixels": 63,
+            "left": "hu",
+            "right": "bu"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 4186,
+        "passed": true,
+        "script": "en",
+        "size": 36,
+        "syllables": [
+          "a",
+          "i",
+          "o",
+          "e",
+          "ka",
+          "ki",
+          "ku",
+          "ko",
+          "ta",
+          "ti",
+          "tu",
+          "to",
+          "na",
+          "ni",
+          "nu",
+          "no",
+          "ma",
+          "mi",
+          "mu",
+          "mo",
+          "ra",
+          "ri",
+          "ru",
+          "ro",
+          "sa",
+          "si",
+          "su",
+          "so",
+          "ha",
+          "hi",
+          "hu",
+          "ho",
+          "ya",
+          "yu",
+          "yo",
+          "wa",
+          "ba",
+          "bi",
+          "bo",
+          "bu",
+          "da",
+          "do",
+          "ga",
+          "go",
+          "de",
+          "ge",
+          "A",
+          "I",
+          "O",
+          "E",
+          "Ka",
+          "Ki",
+          "Ku",
+          "Ko",
+          "Ta",
+          "Ti",
+          "Tu",
+          "To",
+          "Na",
+          "Ni",
+          "Nu",
+          "No",
+          "Ma",
+          "Mi",
+          "Mu",
+          "Mo",
+          "Ra",
+          "Ri",
+          "Ru",
+          "Ro",
+          "Sa",
+          "Si",
+          "Su",
+          "So",
+          "Ha",
+          "Hi",
+          "Hu",
+          "Ho",
+          "Ya",
+          "Yu",
+          "Yo",
+          "Wa",
+          "Ba",
+          "Bi",
+          "Bo",
+          "Bu",
+          "Da",
+          "Do",
+          "Ga",
+          "Go",
+          "De",
+          "Ge"
+        ],
+        "weight": "bold"
+      },
+      {
+        "atlas_cell_size": 144,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 18,
+            "left": "아",
+            "right": "이"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "나",
+            "right": "니"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "마",
+            "right": "미"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "하",
+            "right": "히"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "사",
+            "right": "시"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "바",
+            "right": "비"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "라",
+            "right": "리"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "타",
+            "right": "티"
+          },
+          {
+            "differing_pixels": 18,
+            "left": "카",
+            "right": "키"
+          },
+          {
+            "differing_pixels": 36,
+            "left": "쿠",
+            "right": "무"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 1035,
+        "passed": true,
+        "script": "ko",
+        "size": 36,
+        "syllables": [
+          "아",
+          "이",
+          "오",
+          "에",
+          "카",
+          "키",
+          "쿠",
+          "코",
+          "타",
+          "티",
+          "투",
+          "토",
+          "나",
+          "니",
+          "누",
+          "노",
+          "마",
+          "미",
+          "무",
+          "모",
+          "라",
+          "리",
+          "루",
+          "로",
+          "사",
+          "시",
+          "수",
+          "소",
+          "하",
+          "히",
+          "후",
+          "호",
+          "야",
+          "유",
+          "요",
+          "와",
+          "바",
+          "비",
+          "보",
+          "부",
+          "다",
+          "도",
+          "가",
+          "고",
+          "데",
+          "게"
+        ],
+        "weight": "bold"
+      },
+      {
+        "atlas_cell_size": 192,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 48,
+            "left": "nu",
+            "right": "hu"
+          },
+          {
+            "differing_pixels": 48,
+            "left": "no",
+            "right": "ho"
+          },
+          {
+            "differing_pixels": 48,
+            "left": "na",
+            "right": "ha"
+          },
+          {
+            "differing_pixels": 48,
+            "left": "ni",
+            "right": "hi"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "do",
+            "right": "de"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "go",
+            "right": "ge"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "Do",
+            "right": "De"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "o",
+            "right": "e"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "i",
+            "right": "I"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "Go",
+            "right": "Ge"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 4186,
+        "passed": true,
+        "script": "en",
+        "size": 48,
+        "syllables": [
+          "a",
+          "i",
+          "o",
+          "e",
+          "ka",
+          "ki",
+          "ku",
+          "ko",
+          "ta",
+          "ti",
+          "tu",
+          "to",
+          "na",
+          "ni",
+          "nu",
+          "no",
+          "ma",
+          "mi",
+          "mu",
+          "mo",
+          "ra",
+          "ri",
+          "ru",
+          "ro",
+          "sa",
+          "si",
+          "su",
+          "so",
+          "ha",
+          "hi",
+          "hu",
+          "ho",
+          "ya",
+          "yu",
+          "yo",
+          "wa",
+          "ba",
+          "bi",
+          "bo",
+          "bu",
+          "da",
+          "do",
+          "ga",
+          "go",
+          "de",
+          "ge",
+          "A",
+          "I",
+          "O",
+          "E",
+          "Ka",
+          "Ki",
+          "Ku",
+          "Ko",
+          "Ta",
+          "Ti",
+          "Tu",
+          "To",
+          "Na",
+          "Ni",
+          "Nu",
+          "No",
+          "Ma",
+          "Mi",
+          "Mu",
+          "Mo",
+          "Ra",
+          "Ri",
+          "Ru",
+          "Ro",
+          "Sa",
+          "Si",
+          "Su",
+          "So",
+          "Ha",
+          "Hi",
+          "Hu",
+          "Ho",
+          "Ya",
+          "Yu",
+          "Yo",
+          "Wa",
+          "Ba",
+          "Bi",
+          "Bo",
+          "Bu",
+          "Da",
+          "Do",
+          "Ga",
+          "Go",
+          "De",
+          "Ge"
+        ],
+        "weight": "regular"
+      },
+      {
+        "atlas_cell_size": 192,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 16,
+            "left": "마",
+            "right": "미"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "타",
+            "right": "티"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "나",
+            "right": "니"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "라",
+            "right": "리"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "사",
+            "right": "시"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "하",
+            "right": "히"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "바",
+            "right": "비"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "카",
+            "right": "키"
+          },
+          {
+            "differing_pixels": 16,
+            "left": "아",
+            "right": "이"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "투",
+            "right": "루"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 1035,
+        "passed": true,
+        "script": "ko",
+        "size": 48,
+        "syllables": [
+          "아",
+          "이",
+          "오",
+          "에",
+          "카",
+          "키",
+          "쿠",
+          "코",
+          "타",
+          "티",
+          "투",
+          "토",
+          "나",
+          "니",
+          "누",
+          "노",
+          "마",
+          "미",
+          "무",
+          "모",
+          "라",
+          "리",
+          "루",
+          "로",
+          "사",
+          "시",
+          "수",
+          "소",
+          "하",
+          "히",
+          "후",
+          "호",
+          "야",
+          "유",
+          "요",
+          "와",
+          "바",
+          "비",
+          "보",
+          "부",
+          "다",
+          "도",
+          "가",
+          "고",
+          "데",
+          "게"
+        ],
+        "weight": "regular"
+      },
+      {
+        "atlas_cell_size": 192,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 96,
+            "left": "no",
+            "right": "ho"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "na",
+            "right": "ha"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "nu",
+            "right": "hu"
+          },
+          {
+            "differing_pixels": 96,
+            "left": "ni",
+            "right": "hi"
+          },
+          {
+            "differing_pixels": 112,
+            "left": "Bo",
+            "right": "Go"
+          },
+          {
+            "differing_pixels": 112,
+            "left": "Bo",
+            "right": "Do"
+          },
+          {
+            "differing_pixels": 112,
+            "left": "Ba",
+            "right": "Ga"
+          },
+          {
+            "differing_pixels": 112,
+            "left": "Ba",
+            "right": "Da"
+          },
+          {
+            "differing_pixels": 112,
+            "left": "ho",
+            "right": "bo"
+          },
+          {
+            "differing_pixels": 112,
+            "left": "hu",
+            "right": "bu"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 4186,
+        "passed": true,
+        "script": "en",
+        "size": 48,
+        "syllables": [
+          "a",
+          "i",
+          "o",
+          "e",
+          "ka",
+          "ki",
+          "ku",
+          "ko",
+          "ta",
+          "ti",
+          "tu",
+          "to",
+          "na",
+          "ni",
+          "nu",
+          "no",
+          "ma",
+          "mi",
+          "mu",
+          "mo",
+          "ra",
+          "ri",
+          "ru",
+          "ro",
+          "sa",
+          "si",
+          "su",
+          "so",
+          "ha",
+          "hi",
+          "hu",
+          "ho",
+          "ya",
+          "yu",
+          "yo",
+          "wa",
+          "ba",
+          "bi",
+          "bo",
+          "bu",
+          "da",
+          "do",
+          "ga",
+          "go",
+          "de",
+          "ge",
+          "A",
+          "I",
+          "O",
+          "E",
+          "Ka",
+          "Ki",
+          "Ku",
+          "Ko",
+          "Ta",
+          "Ti",
+          "Tu",
+          "To",
+          "Na",
+          "Ni",
+          "Nu",
+          "No",
+          "Ma",
+          "Mi",
+          "Mu",
+          "Mo",
+          "Ra",
+          "Ri",
+          "Ru",
+          "Ro",
+          "Sa",
+          "Si",
+          "Su",
+          "So",
+          "Ha",
+          "Hi",
+          "Hu",
+          "Ho",
+          "Ya",
+          "Yu",
+          "Yo",
+          "Wa",
+          "Ba",
+          "Bi",
+          "Bo",
+          "Bu",
+          "Da",
+          "Do",
+          "Ga",
+          "Go",
+          "De",
+          "Ge"
+        ],
+        "weight": "bold"
+      },
+      {
+        "atlas_cell_size": 192,
+        "atlas_columns": 10,
+        "closest10": [
+          {
+            "differing_pixels": 32,
+            "left": "아",
+            "right": "이"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "나",
+            "right": "니"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "마",
+            "right": "미"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "하",
+            "right": "히"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "사",
+            "right": "시"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "바",
+            "right": "비"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "라",
+            "right": "리"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "타",
+            "right": "티"
+          },
+          {
+            "differing_pixels": 32,
+            "left": "카",
+            "right": "키"
+          },
+          {
+            "differing_pixels": 64,
+            "left": "쿠",
+            "right": "무"
+          }
+        ],
+        "failed_pairs": 0,
+        "pair_count": 1035,
+        "passed": true,
+        "script": "ko",
+        "size": 48,
+        "syllables": [
+          "아",
+          "이",
+          "오",
+          "에",
+          "카",
+          "키",
+          "쿠",
+          "코",
+          "타",
+          "티",
+          "투",
+          "토",
+          "나",
+          "니",
+          "누",
+          "노",
+          "마",
+          "미",
+          "무",
+          "모",
+          "라",
+          "리",
+          "루",
+          "로",
+          "사",
+          "시",
+          "수",
+          "소",
+          "하",
+          "히",
+          "후",
+          "호",
+          "야",
+          "유",
+          "요",
+          "와",
+          "바",
+          "비",
+          "보",
+          "부",
+          "다",
+          "도",
+          "가",
+          "고",
+          "데",
+          "게"
+        ],
+        "weight": "bold"
+      }
+    ],
+    "text_server": "ICU / HarfBuzz / Graphite (Built-in)",
+    "threshold_alpha": 0.5
+  }
+}

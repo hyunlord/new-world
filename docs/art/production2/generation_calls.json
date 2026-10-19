@@ -1,0 +1,157 @@
+{
+  "budget": 18,
+  "calls": [
+    {
+      "call": 1,
+      "sheet": "P2_fill_01",
+      "attempt": 1,
+      "status": "generated",
+      "started_utc": "2026-10-10T14:07:53.111777+00:00",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with at least 22 % empty margin on every side; nothing touches a cell edge or another item; no shadows on the background; no text, numbers or labels. Same pixel-art style, palette and lighting as the reference image. Items, left to right, top to bottom: Row 1: facing the viewer, standing at rest, relaxed arms, no basket; facing the viewer, walk, left foot forward, no basket; facing the viewer, walk, feet passing, no basket; facing the viewer, walk, right foot forward, no basket. Row 2: facing the viewer, walk, feet passing, no basket; facing the viewer, carry, left foot forward, holding a basket of berries at the chest; facing the viewer, carry, feet passing, holding a basket of berries at the chest; facing the viewer, carry, right foot forward, holding a basket of berries at the chest. Row 3: facing the viewer, carry, feet passing, holding a basket of berries at the chest; facing the viewer, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing the viewer, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing the viewer, stone hammer raised to strike, no basket. Row 4: facing the viewer, striking with a stone hammer, no basket; facing right, kneeling with cupped hands brought to the mouth, no basket; facing right, kneeling with cupped hands brought to the mouth, no basket; facing the viewer, talking with a hand gesture, no basket. Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. All sixteen cells show the same person as the reference image, same hair, face and clothing. Same body proportions, clothes, colours and size in every cell; only the pose changes. Flat, bold pixel art with strong silhouettes and minimal texture; large simple shapes that stay readable at small size; a dark outline around every figure and object; light from the upper left; the facing direction and pose specified in each cell; Stone Age materials, simple hide and fur clothing with warm skin tones for people; crisp square pixels, no anti-aliasing, no blur, no gradients. No stray coloured pixels or background remnants on the head or body.\nInput image 1 is the style and lighting reference. Input image 2 is the character identity reference; ignore its isolated stray blue crown pixel. Draw only the requested sixteen poses, not a copy of either reference sheet.",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/docs/art/D3/corrected_sheet_v2.png",
+        "/Users/rexxa/work/new-world-art-prod/docs/art/production2/review/round2/reference_adult_a_8x.png"
+      ],
+      "raw_path": "/Users/rexxa/work/art-production2-raw/P2_fill_01/attempt_1.png",
+      "completed_utc": "2026-10-10T14:08:45.565698+00:00",
+      "sha256": "ddc113025d2b52487a4a242e97964a5a9f2f5607debede04503326f9c8c251f0",
+      "bytes": 1516254,
+      "size": [
+        1254,
+        1254
+      ],
+      "generated_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-6c52bf2e-c47a-4d7f-b890-e9e36ea33847.png"
+    },
+    {
+      "call": 2,
+      "sheet": "P2_fill_02",
+      "attempt": 1,
+      "status": "generated",
+      "started_utc": "2026-10-10T14:09:44.317412+00:00",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with at least 22 % empty margin on every side; nothing touches a cell edge or another item; no shadows on the background; no text, numbers or labels. Same pixel-art style, palette and lighting as the reference image. Items, left to right, top to bottom: Row 1: facing right, walk, left foot forward, no basket; facing right, walk, feet passing, no basket; facing right, walk, right foot forward, no basket; facing right, walk, feet passing, no basket. Row 2: facing the viewer, carry, left foot forward, holding a basket of berries at the chest; facing the viewer, carry, feet passing, holding a basket of berries at the chest; facing the viewer, carry, right foot forward, holding a basket of berries at the chest; facing the viewer, carry, feet passing, holding a basket of berries at the chest. Row 3: facing right, carry, left foot forward, holding a basket of berries at the chest; facing right, carry, feet passing, holding a basket of berries at the chest; facing right, carry, right foot forward, holding a basket of berries at the chest; facing right, carry, feet passing, holding a basket of berries at the chest. Row 4: facing right, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing right, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing right, stone hammer raised to strike, no basket; facing right, striking with a stone hammer, no basket. Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. All sixteen cells show the same person as the reference image, same hair, face and clothing. Same body proportions, clothes, colours and size in every cell; only the pose changes. Flat, bold pixel art with strong silhouettes and minimal texture; large simple shapes that stay readable at small size; a dark outline around every figure and object; light from the upper left; the facing direction and pose specified in each cell; Stone Age materials, simple hide and fur clothing with warm skin tones for people; crisp square pixels, no anti-aliasing, no blur, no gradients.\nInput image 1 is the style and lighting reference. Input image 2 is the character identity reference. Draw only the requested sixteen poses, not a copy of either reference sheet.",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/docs/art/D3/corrected_sheet_v2.png",
+        "/Users/rexxa/work/new-world-art-prod/docs/art/production2/review/round2/reference_adult_b_8x.png"
+      ],
+      "raw_path": "/Users/rexxa/work/art-production2-raw/P2_fill_02/attempt_1.png",
+      "completed_utc": "2026-10-10T14:10:48.238197+00:00",
+      "sha256": "7cc54951266f986a06c5154ebc0582cd8d6a3f367d5f7f5ffc1269118c5860df",
+      "bytes": 1479473,
+      "size": [
+        1254,
+        1254
+      ],
+      "generated_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-ee887c58-475a-4836-ba6c-ef6d061c1a5c.png"
+    },
+    {
+      "call": 3,
+      "sheet": "P2_fill_03",
+      "attempt": 1,
+      "status": "generated",
+      "started_utc": "2026-10-10T14:10:48.242592+00:00",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with at least 22 % empty margin on every side; nothing touches a cell edge or another item; no shadows on the background; no text, numbers or labels. Same pixel-art style, palette and lighting as the reference image. Items, left to right, top to bottom: Row 1: facing the viewer, walk, left foot forward, no basket; facing the viewer, walk, feet passing, no basket; facing the viewer, walk, right foot forward, no basket; facing the viewer, walk, feet passing, no basket. Row 2: facing right, walk, left foot forward, no basket; facing right, walk, feet passing, no basket; facing right, walk, right foot forward, no basket; facing right, walk, feet passing, no basket. Row 3: facing away, walk, left foot forward, no basket; facing away, walk, feet passing, no basket; facing away, walk, right foot forward, no basket; facing away, walk, feet passing, no basket. Row 4: facing the viewer, carry, left foot forward, holding a basket of berries at the chest; facing the viewer, carry, feet passing, holding a basket of berries at the chest; facing the viewer, carry, right foot forward, holding a basket of berries at the chest; facing the viewer, carry, feet passing, holding a basket of berries at the chest. Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. All sixteen cells show the same person as the reference image, same hair, face and clothing. Same body proportions, clothes, colours and size in every cell; only the pose changes. Flat, bold pixel art with strong silhouettes and minimal texture; large simple shapes that stay readable at small size; a dark outline around every figure and object; light from the upper left; the facing direction and pose specified in each cell; Stone Age materials, simple hide and fur clothing with warm skin tones for people; crisp square pixels, no anti-aliasing, no blur, no gradients.\nInput image 1 is the style and lighting reference. Input image 2 is the child character identity reference. Draw only the requested sixteen child poses, not a copy of either reference sheet.",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/docs/art/D3/corrected_sheet_v2.png",
+        "/Users/rexxa/work/new-world-art-prod/docs/art/production2/review/round2/reference_child_8x.png"
+      ],
+      "raw_path": "/Users/rexxa/work/art-production2-raw/P2_fill_03/attempt_1.png",
+      "completed_utc": "2026-10-10T14:12:05.628720+00:00",
+      "sha256": "2e239ef08306d0b73d82c489b0a98d74dca21aa253149002b8848d0745e5c96f",
+      "bytes": 1403325,
+      "size": [
+        1254,
+        1254
+      ],
+      "generated_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-b9ab3f30-e8d4-464c-bf51-85bbe4cf66aa.png"
+    },
+    {
+      "call": 4,
+      "sheet": "P2_fill_04",
+      "attempt": 1,
+      "status": "generated",
+      "started_utc": "2026-10-10T14:12:05.633134+00:00",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with at least 22 % empty margin on every side; nothing touches a cell edge or another item; no shadows on the background; no text, numbers or labels. Same pixel-art style, palette and lighting as the reference image. Items, left to right, top to bottom: Row 1: facing right, carry, left foot forward, holding a basket of berries at the chest; facing right, carry, feet passing, holding a basket of berries at the chest; facing right, carry, right foot forward, holding a basket of berries at the chest; facing right, carry, feet passing, holding a basket of berries at the chest. Row 2: facing away, carry, left foot forward, holding a basket of berries at the chest; facing away, carry, feet passing, holding a basket of berries at the chest; facing right, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing right, bending and reaching toward a berry bush with an empty hand, no basket, no basket. Row 3: facing right, stone hammer raised to strike, no basket; facing right, striking with a stone hammer, no basket; facing away, stone hammer raised to strike, no basket; facing away, striking with a stone hammer, no basket. Row 4: facing away, kneeling with cupped hands brought to the mouth, no basket; facing away, kneeling with cupped hands brought to the mouth, no basket; facing right, talking with a hand gesture, no basket; facing right, talking with a hand gesture, no basket. Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. All sixteen cells show the same person as the reference image, same hair, face and clothing. Same body proportions, clothes, colours and size in every cell; only the pose changes. Flat, bold pixel art with strong silhouettes and minimal texture; large simple shapes that stay readable at small size; a dark outline around every figure and object; light from the upper left; the facing direction and pose specified in each cell; Stone Age materials, simple hide and fur clothing with warm skin tones for people; crisp square pixels, no anti-aliasing, no blur, no gradients.\nInput image 1 is the style and lighting reference. Input image 2 is the character identity reference; ignore its isolated stray blue crown pixel. Draw only the requested sixteen poses, not a copy of either reference sheet.",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/docs/art/D3/corrected_sheet_v2.png",
+        "/Users/rexxa/work/new-world-art-prod/docs/art/production2/review/round2/reference_adult_a_8x.png"
+      ],
+      "raw_path": "/Users/rexxa/work/art-production2-raw/P2_fill_04/attempt_1.png",
+      "completed_utc": "2026-10-10T14:13:52.308176+00:00",
+      "sha256": "dc23b117482e56d90e11a23aa6cbed70613c9a52028161b4fa0be982de891917",
+      "bytes": 1462065,
+      "size": [
+        1254,
+        1254
+      ],
+      "generated_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-0d6601a2-8159-4bd1-82cc-4b78990ed9d4.png"
+    },
+    {
+      "call": 5,
+      "sheet": "P2_fill_05",
+      "attempt": 1,
+      "status": "generated",
+      "started_utc": "2026-10-10T14:13:52.320969+00:00",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with at least 22 % empty margin on every side; nothing touches a cell edge or another item; no shadows on the background; no text, numbers or labels. Same pixel-art style, palette and lighting as the reference image. Items, left to right, top to bottom: Row 1: facing away, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing away, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing away, stone hammer raised to strike, no basket; facing away, striking with a stone hammer, no basket. Row 2: facing the viewer, kneeling with cupped hands brought to the mouth, no basket; facing the viewer, kneeling with cupped hands brought to the mouth, no basket; facing away, kneeling with cupped hands brought to the mouth, no basket; facing away, kneeling with cupped hands brought to the mouth, no basket. Row 3: facing right, bringing berries to the mouth with one hand; facing right, bringing berries to the mouth with one hand; facing away, bringing berries to the mouth with one hand; facing away, bringing berries to the mouth with one hand. Row 4: facing right, lying horizontally asleep on a fur bedroll, no basket; facing the viewer, lying horizontally asleep on a fur bedroll, no basket; facing away, lying horizontally asleep on a fur bedroll, no basket; facing away, sitting on the ground with knees up, no basket. Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. All sixteen cells show the same person as the reference image, same hair, face and clothing. Same body proportions, clothes, colours and size in every cell; only the pose changes. Flat, bold pixel art with strong silhouettes and minimal texture; large simple shapes that stay readable at small size; a dark outline around every figure and object; light from the upper left; the facing direction and pose specified in each cell; Stone Age materials, simple hide and fur clothing with warm skin tones for people; crisp square pixels, no anti-aliasing, no blur, no gradients.\nInput image 1 is the style and lighting reference. Input image 2 is the character identity reference. Draw only the requested sixteen poses, not a copy of either reference sheet.",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/docs/art/D3/corrected_sheet_v2.png",
+        "/Users/rexxa/work/new-world-art-prod/docs/art/production2/review/round2/reference_adult_b_8x.png"
+      ],
+      "raw_path": "/Users/rexxa/work/art-production2-raw/P2_fill_05/attempt_1.png",
+      "completed_utc": "2026-10-10T14:15:57.174703+00:00",
+      "sha256": "f2383ae358b3702f2dd8a8c44d5bbf6eb5d3f76e31e40b289d9dd63c3e8add32",
+      "bytes": 1429541,
+      "size": [
+        1254,
+        1254
+      ],
+      "generated_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-b72e9d9c-4e20-4c3c-ba0e-b8a88855edc6.png"
+    },
+    {
+      "call": 6,
+      "sheet": "P2_fill_06",
+      "attempt": 1,
+      "status": "generated",
+      "started_utc": "2026-10-10T14:15:57.180497+00:00",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with at least 22 % empty margin on every side; nothing touches a cell edge or another item; no shadows on the background; no text, numbers or labels. Same pixel-art style, palette and lighting as the reference image. Items, left to right, top to bottom: Row 1: facing right, carry, left foot forward, holding a basket of berries at the chest; facing right, carry, feet passing, holding a basket of berries at the chest; facing right, carry, right foot forward, holding a basket of berries at the chest; facing right, carry, feet passing, holding a basket of berries at the chest. Row 2: facing the viewer, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing the viewer, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing right, bending and reaching toward a berry bush with an empty hand, no basket, no basket; facing right, bending and reaching toward a berry bush with an empty hand, no basket, no basket. Row 3: facing the viewer, stone hammer raised to strike, no basket; facing the viewer, striking with a stone hammer, no basket; facing right, stone hammer raised to strike, no basket; facing right, striking with a stone hammer, no basket. Row 4: facing right, kneeling with cupped hands brought to the mouth, no basket; facing right, kneeling with cupped hands brought to the mouth, no basket; facing the viewer, bringing berries to the mouth with one hand; facing the viewer, bringing berries to the mouth with one hand. Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. All sixteen cells show the same person as the reference image, same hair, face and clothing. Same body proportions, clothes, colours and size in every cell; only the pose changes. Flat, bold pixel art with strong silhouettes and minimal texture; large simple shapes that stay readable at small size; a dark outline around every figure and object; light from the upper left; the facing direction and pose specified in each cell; Stone Age materials, simple hide and fur clothing with warm skin tones for people; crisp square pixels, no anti-aliasing, no blur, no gradients.\nInput image 1 is the style and lighting reference. Input image 2 is the child character identity reference. Draw only the requested sixteen child poses, not a copy of either reference sheet.",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/docs/art/D3/corrected_sheet_v2.png",
+        "/Users/rexxa/work/new-world-art-prod/docs/art/production2/review/round2/reference_child_8x.png"
+      ],
+      "raw_path": "/Users/rexxa/work/art-production2-raw/P2_fill_06/attempt_1.png",
+      "completed_utc": "2026-10-10T14:17:09.887876+00:00",
+      "sha256": "d3f163da24df48f38578ce6020257cb6f9f694d41edbe2f4fd00b2a1ff5a13b7",
+      "bytes": 1478146,
+      "size": [
+        1254,
+        1254
+      ],
+      "generated_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-d48e4d76-566f-48cc-b168-27fa56321fa3.png"
+    }
+  ],
+  "checkpoint_status": "STOP: fewer than half of first96 fill cells newly accepted",
+  "checkpoint": {
+    "path": "docs/art/production2/fills/checkpoint6.json",
+    "sha256": "c3f4b9520ca2f1833e59402b0160790da628ee2294262c0d98bdd61455e71b5e",
+    "attempted_cells": 96,
+    "newly_accepted_unique_targets": [
+      "P2V_a_N_drink_01",
+      "P2V_a_N_drink_02",
+      "P2V_b_E_eat_02",
+      "P2V_b_N_eat_02",
+      "P2V_b_N_sit_01",
+      "P2V_b_S_drink_02",
+      "V_a1_01",
+      "V_a3_03",
+      "V_a3_04",
+      "V_a3_11",
+      "V_a3_12",
+      "V_b1_09",
+      "V_b1_10",
+      "V_b1_11",
+      "V_b1_12"
+    ],
+    "newly_accepted_count": 15,
+    "acceptance_fraction": 0.15625,
+    "stop_generation": true
+  }
+}

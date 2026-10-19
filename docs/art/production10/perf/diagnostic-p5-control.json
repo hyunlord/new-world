@@ -1,0 +1,33 @@
+{
+  "scope": "diagnostic P5 only; not final Part1 H5",
+  "result": {
+    "framing": "P5",
+    "control": {
+      "pixels": 0,
+      "max_channel": 0
+    },
+    "candidate": {
+      "pixels": 0,
+      "max_channel": 0
+    },
+    "bit_reproducible": true,
+    "passed": true,
+    "cause": "bit-reproducible",
+    "rgba_sha256": [
+      "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+      "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+      "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38"
+    ],
+    "capture_frame": 130,
+    "state_change_frame": 10
+  },
+  "installation": {
+    "clock_sha256": "88b131e73899d62d7f0bae685a0711895bd75e9c7c91edeaf4bddb7fbe102a0a",
+    "founding_groups_status": "unavailable_separate_callback",
+    "original_capture_sha256": "abd16022df6b9af4712eba3c2bcff5a68a3310aabf578242991bea520ec7c2b4",
+    "output_sha256": "fa0cd852c07b15facb60ab66c0eda98ed70579dd3d12952ca6ba7e019311c6ad",
+    "receipt_scope": "installation_only_not_capture_success",
+    "source_sha256": "f733d2d355a7cdd5dee623e0b0bfde7d4a9aa574c88f407ea716bdbf634215fc",
+    "valid": true
+  }
+}

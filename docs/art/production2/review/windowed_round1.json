@@ -1,0 +1,28 @@
+{
+  "source_head": "37fc6ca004e49df29293ed5ea29c2c1667a85b2e",
+  "capture_source_dirty": true,
+  "subsequent_source_commit": "5433649aa123e0b1e84ec031efdf5a0b3123af52",
+  "source_note": "Window run started just before capture tooling commit; no rendering source changed during run. Compression-only publication changed after capture.",
+  "windowed_art_captures": 94,
+  "windowed_calibration_captures": 4,
+  "parent_viewed": [
+    "shots/a_d2_1200_F2.png",
+    "shots/a_d2_2300_F2N.png"
+  ],
+  "visual_findings": [
+    "Generated groves and clearings visible; village still crowded by rocks and agents.",
+    "Night hearth pool visible, villagers remain low contrast.",
+    "Activity icon fallback visible; no distinct carry-animation acceptance claim."
+  ],
+  "blind_reviewers": {
+    "4x": "fresh /root/blind4",
+    "2x": "fresh /root/blind2"
+  },
+  "key_opened_after_labels_saved_and_hashed": true,
+  "visual_failures": [
+    "A1: checker scenes have 61 colors below 64 threshold",
+    "A5: median and minimum contrast fail",
+    "A11: 16/24 at 4x, 13/24 at 2x below thresholds"
+  ],
+  "a13_limitation": "PASS is silhouette difference versus S idle only; E/N idle fallback can differ from S idle without a recognizable activity pose. A11 governs human readability."
+}

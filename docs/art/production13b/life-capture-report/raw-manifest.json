@@ -1,0 +1,1505 @@
+{
+  "external_root": "/Users/rexxa/work/art-production13b-evidence",
+  "files": [
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/estranged/failure.json",
+      "bytes": 34653,
+      "sha256": "3bfda99d2537046731a8215e50e7cd91df2722a51ed4e1e6460c9a1c82fefad4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/estranged-result.json",
+      "bytes": 154,
+      "sha256": "0e8d42bda4d4881287a2ee3a343045eabd916464706aa24ea5a9174ae0fe28f3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/estranged.log",
+      "bytes": 705,
+      "sha256": "dd322932c14e707e1de8fc36b0bf4a502b31e03438611c540691c9ccfdc1b40b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_000.json",
+      "bytes": 48159,
+      "sha256": "cf4ee1ff81f876bd2b5a43b248ebc7a96b7456af637f273978b843123b4d85ca"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_000.png",
+      "bytes": 128480,
+      "sha256": "3f4e841168150dcf81b3a4f68545a453d497cf3a68e2d0de5d56088bd7c99329"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_001.json",
+      "bytes": 48161,
+      "sha256": "479408cd30c2bb33de9ad469baec8bfb1c7456bd6ae6dcd1d70274a422fcfc0a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_001.png",
+      "bytes": 128783,
+      "sha256": "c295ec60561dab75f3affa0d75e8d41409fdb0c8cb60ffff7e77b1428f1db86f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_002.json",
+      "bytes": 48161,
+      "sha256": "040fe87d8be17d264d8d16f485ee59a27c7e7eaa9e92be335eb019098b337710"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_002.png",
+      "bytes": 128601,
+      "sha256": "a815c890d91cbf84401d0d7892234dc13bd3a3a6d860974b0ebb9b8e4b57158e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_003.json",
+      "bytes": 48162,
+      "sha256": "e75ef230d13d75ddf82bbdfbf86a646871f2ab6fed55fd9d243abc60cba7ffb6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_003.png",
+      "bytes": 128260,
+      "sha256": "6e09417566a32d13ba5776cbc61ebb669fb857ae15acd228289370010a495138"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_004.json",
+      "bytes": 48162,
+      "sha256": "1c57f9824ade499a12958e050fe35e26120703e913594d0ac92e6f5eabff52ce"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_004.png",
+      "bytes": 129010,
+      "sha256": "e240db40f79a9f79acb0e9ff13ad28808554dd98989af4781a7552dadf6ce577"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_005.json",
+      "bytes": 48162,
+      "sha256": "ec284307d9d636e066200b6ccd2eba7f7536ba567786ff305206cbe77d64f9b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_005.png",
+      "bytes": 128527,
+      "sha256": "08e7cd7db459110588394f68637dfa13bdcc93f2dfbe052da0652d8e09141b8f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_006.json",
+      "bytes": 48162,
+      "sha256": "80739ba0bc012a053621c20866dfd51831da1faea8f9a03c9d68c01b1be6879a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_006.png",
+      "bytes": 128612,
+      "sha256": "41afc87acdff47bbf42ad9eff0faecaffda3a2e277eda5d6b9958ac36ebe14ee"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_007.json",
+      "bytes": 48162,
+      "sha256": "64cd5af2f5f4dc7bc313ddb5366a480ca3562694aef0630e68c6346930b6171a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_007.png",
+      "bytes": 128480,
+      "sha256": "e4beb572f334b12c0c842f0bfe4d13aa0821fd83fc3e4758c49052a814bf5730"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_008.json",
+      "bytes": 48162,
+      "sha256": "05280b3961a5afa768386249bedccb7b39a7df817dec1a0b7b8c4e993d9f90d0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_008.png",
+      "bytes": 128861,
+      "sha256": "5b7c54e0eee423970e31143dee09f3fcc040d809f77c8f45d806ed250fbaf034"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_009.json",
+      "bytes": 48162,
+      "sha256": "de722ccf4134b600149908e99c343ea08b0dc3fdd4c5fd87ff049cde9d3a3375"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_009.png",
+      "bytes": 129097,
+      "sha256": "520a5843d7147b8334897660657ffae7ba480f519ff98c13a17a1f33460ec3af"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_010.json",
+      "bytes": 48162,
+      "sha256": "eb5f69a967d8a6975f99cc629a45f18853c0eea0aa752c1c85f71d88ba838494"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_010.png",
+      "bytes": 129123,
+      "sha256": "2d1ee24dfb52a88f81b854068dc57a4314b59e8fe2387bb4bd9380bf79328bae"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_011.json",
+      "bytes": 48162,
+      "sha256": "4271b0201ee57244b1e32fe4b80ec151c2c830b5c707b17569b24449c0ba7f41"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_011.png",
+      "bytes": 128449,
+      "sha256": "4645793bc1716d5de1f442b57c38f5e9c7f909ccfee7186575ddb38b3ddb1f9b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_012.json",
+      "bytes": 48162,
+      "sha256": "5f7d916410a7e1414c9ee63e7241ccc1a2b5492f7ad937592ec51a833143ed45"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_012.png",
+      "bytes": 128712,
+      "sha256": "161f40637f14b2891aac451cbec0903f1c580a66cde9a48b21708db947be119c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_013.json",
+      "bytes": 48162,
+      "sha256": "04ac66aa68675b04561c6da5afd8336705d8495119ab91b0c07f29e21edfbf6f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_013.png",
+      "bytes": 128529,
+      "sha256": "2c66dff3f7a7235e3cbefcc0baedb64c6768fdef254b2835ec3f907c4505543b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_014.json",
+      "bytes": 48162,
+      "sha256": "6ab59c24024fb4e20741c5be3e909e3aa49dce6afd328156186b564e01564582"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_en_page_014.png",
+      "bytes": 128826,
+      "sha256": "6016571adf6f3cbd51eed00847be876105a31c8d5018de92deaceb1613b29f7a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_000.json",
+      "bytes": 47762,
+      "sha256": "a3228330292bd89b45cea6b9ebdfbb0137bf9bdaaf083d9f154556a91121195b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_000.png",
+      "bytes": 126436,
+      "sha256": "8240f3afc527dd0135481602fa88e84635f517874eaad888da5bdced39a1a184"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_001.json",
+      "bytes": 47764,
+      "sha256": "e6ba3726ea8ae66e03263a4f30afd001925ff824da3b4dd9d8f62744a66da97e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_001.png",
+      "bytes": 127556,
+      "sha256": "3263877391feb0eb473b750672bb906f6bc8e22f3f6e06cdd0dd6243fc276f1a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_002.json",
+      "bytes": 47764,
+      "sha256": "914d9506f8dc4676b412fdd86e8b13d3dfe6312930ec33ce187f3fc477fdafba"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_002.png",
+      "bytes": 126514,
+      "sha256": "8270596254b1b035e7970e412a18ba63f9f4715f8ded1abc4cf26d20815ea38f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_003.json",
+      "bytes": 47765,
+      "sha256": "fb94de62a9bd4f86663abb7a9a431d9f4880c8d2e70e008f9b96cb4e65d70a46"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_003.png",
+      "bytes": 125727,
+      "sha256": "04517b3fb615ca3ffd933f5c81a2485bfb2c01cec108d06f86fa46dc543bde25"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_004.json",
+      "bytes": 47765,
+      "sha256": "e69da9ff173520bf5cfb5fc8c2ac21822666fa6bdf20b14ff7be67d512fe0b5e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_004.png",
+      "bytes": 125462,
+      "sha256": "0058a5847a37fe04bf1feadc53338859454a93117d9184313d9abe735b2e7b85"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_005.json",
+      "bytes": 47765,
+      "sha256": "60d4866dfd437502010a5cdcb42eed3b0d91abf37288bfdd9523a7118b852b9c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_005.png",
+      "bytes": 126744,
+      "sha256": "37e3be07d70f92d4df0e0194c8f9fc6e301d02eec3c9dfcde3fff48dc8383d68"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_006.json",
+      "bytes": 47765,
+      "sha256": "3f572584dd87eee7bfe00632d8fbc008fba16e1f691eb1a4869570f44fb4d7ab"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_006.png",
+      "bytes": 126648,
+      "sha256": "cc6649236b0771bb7e73206848765922841e44007845ec7ce1eb0b4fc82121c4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_007.json",
+      "bytes": 47765,
+      "sha256": "17c699f873236eec096db2da047b738601e2ee3711d53d20823f8ba3c82f4428"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_007.png",
+      "bytes": 126908,
+      "sha256": "3be94a1b78f22eb22d3e0debcd2ce47212f313da2dce7a61e2e1ccb1062f1495"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_008.json",
+      "bytes": 47765,
+      "sha256": "8ba547d76546c211cfeb5dfae545aef175a1c7e9d546a8a40f6958be1096bb49"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_008.png",
+      "bytes": 127391,
+      "sha256": "54eb8e990582742bcc0d2a50b03458c1abf6cc25218eaada447b6d8271055101"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_009.json",
+      "bytes": 47765,
+      "sha256": "f159382dd2d0d5173131bc99608c524e1baac33afb3a6c97c6275e75d3649bd4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_009.png",
+      "bytes": 126869,
+      "sha256": "231aff459d02213f1a9ccd0545b085039c5b985ada53419e3b1cb92e816c5b61"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_010.json",
+      "bytes": 47765,
+      "sha256": "d0944bff5362010ba73e03b47451c52ac94e663c16e17cc42d7079e5c319b1a7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_010.png",
+      "bytes": 126486,
+      "sha256": "d0f512ce6b3c51be39d0e7f31458c5ebccb235b56aa31a248b5b0358f017c1dd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_011.json",
+      "bytes": 47765,
+      "sha256": "29276029c5e3b6473b5b3820261940b516379a6aa6b757af3772edcb5ee614a9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/chronicle_ko_page_011.png",
+      "bytes": 125980,
+      "sha256": "9fa9586c52b03195094bf1df829a333e1e2812a0bcf170697d4ceb40b9ca4957"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_en_page_000.json",
+      "bytes": 39079,
+      "sha256": "b28dfb2c172d43cec1159bca1523b2eae1ec2c488e09df39f66eecfb1a88248b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_en_page_000.png",
+      "bytes": 131219,
+      "sha256": "6efdb039f3a4810f53363e880c0e927a0b3166da525a7505bb4acba6057f6a30"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_en_page_001.json",
+      "bytes": 39081,
+      "sha256": "d127812d07b6eefcbf3089e0255c3c80c23835739a359970b50066e96d7e8618"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_en_page_001.png",
+      "bytes": 131097,
+      "sha256": "4f291dbeda9d6b6fc56bcfc66f559055c2b7b02a342d1923a3ce73a8fc50fa90"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_en_page_002.json",
+      "bytes": 39081,
+      "sha256": "fb5322f103b4f38ec0639072efa75768fcc0550566ca0a30f72abd278e878fde"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_en_page_002.png",
+      "bytes": 129820,
+      "sha256": "e6acacba2e6a9c1c4610a0d10f84f7f0eda9de1b5a4d4369dd3c862b83f5d9c3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_ko_page_000.json",
+      "bytes": 39076,
+      "sha256": "8d3fbb6b61c1f8032c33766df28ba9843732f1205e2fc676ce8ac1acb6053ccf"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_ko_page_000.png",
+      "bytes": 126561,
+      "sha256": "7d4c59eaa27131168d3309ae2c96e6a6ad06f85bc476b1169233f51d2dc2e472"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_ko_page_001.json",
+      "bytes": 39078,
+      "sha256": "fd69e33371d5bc100ee611018f0d98fa9a0114cd714000a2add7ac76b7e8cc6b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_ko_page_001.png",
+      "bytes": 127184,
+      "sha256": "3cf1c0eb1d90a5702b217d8d3522e6f1db44184853e117f715ce78c480da3372"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_ko_page_002.json",
+      "bytes": 39078,
+      "sha256": "082c6fae7a186a6035468774c0e6fbb56e2fd3a102b881a02e9ec2337db157b4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/dead_parent_ko_page_002.png",
+      "bytes": 126574,
+      "sha256": "5bab06a5b7c606be7eb055f32a5369597e296ea48c4e2e17b8fd364f89d7bfc0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_000.json",
+      "bytes": 39351,
+      "sha256": "77be1128fd7a6793e3d96bb02fafb0b3593f5cc866ccdb6ad055114b32595751"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_000.png",
+      "bytes": 129823,
+      "sha256": "45f0a5520b2afb32840189faa8b53ee8e0119232106741002580b895a73687aa"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_001.json",
+      "bytes": 39353,
+      "sha256": "5846e30954b046de95801952e54605248aed37ce2044d03a43b1ff15c37b96f3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_001.png",
+      "bytes": 129396,
+      "sha256": "b421057ad712c37df7e329058bce855fa649684f25e857694f8e2bbdee967b8e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_002.json",
+      "bytes": 39354,
+      "sha256": "396888c251009787d09a70014265a109c170271d93457c2a8492f41981d56bcf"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_002.png",
+      "bytes": 131230,
+      "sha256": "73c55244c6cbc56cc457266acf901c7ac478be05794109905a531b341b28b0a2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_003.json",
+      "bytes": 39354,
+      "sha256": "496b41b19dac425d44fa9084cf09238475b76ae693729cb9d7f7e766186b2cd6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_en_page_003.png",
+      "bytes": 129333,
+      "sha256": "99deff5a1264bb869330e974d88a285ae8822cb9a67640881a09e779e437e1a2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_000.json",
+      "bytes": 39300,
+      "sha256": "7ef163ba41c012b5906d465f356d51294fdea42a398c03044d562bae320909b1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_000.png",
+      "bytes": 125766,
+      "sha256": "9dd9c27e0f9bf2efd68d6eabb8e001629a887563e36ed695a69e0b21ca92ae45"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_001.json",
+      "bytes": 39302,
+      "sha256": "005ae66df12c964e9d6131ed0e926a0901c11b5b1297aa703bcaf9571834d7ab"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_001.png",
+      "bytes": 125675,
+      "sha256": "271710c29a29a31a98481d774b3ab6e4b3d4b7373f86f38d4564ed2807a235e4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_002.json",
+      "bytes": 39303,
+      "sha256": "44ef2e9e3a84123d305d919ce9dcd99b6dc4d20132f942f495fd1118a386dd8e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_002.png",
+      "bytes": 127734,
+      "sha256": "083e4dd8d127bad51db837c47e97b1e74d4e7bdc4f330334d8ab046dde62038a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_003.json",
+      "bytes": 39303,
+      "sha256": "618bdeddf5067368ea7e5b2e9e6fa189f9ba2b274fad843572500e75b0ff6b3c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/living_dead_parent_ko_page_003.png",
+      "bytes": 127194,
+      "sha256": "6b83407bb6193d49f4e060abcc2f0e4b0a2b9875de4761585990859391cca15c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live/reference-data.json",
+      "bytes": 1960738,
+      "sha256": "6630bbad55194d4acb1aa192480eac79ba80d11c5ac047343cf4050773e637fd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live-result.json",
+      "bytes": 127,
+      "sha256": "47287ec14e9d8d4a07a26da0ae6054f15cf93542dcc6091091765778981a6f16"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/live.log",
+      "bytes": 329,
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_000.json",
+      "bytes": 51261,
+      "sha256": "2ae97dcdb9f86ecad5ed45b8bb5877163327c671f8d60794df714bf37ca5c73c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_000.png",
+      "bytes": 372536,
+      "sha256": "b615f6989b7ebba2ac637a7ff0d98f14761624c8ebac5aee5008578c1260fbda"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_001.json",
+      "bytes": 51263,
+      "sha256": "f72d6a94ee4bb7a05fa3a69f054ad6d708f3a1e995074bf51bded386806c1872"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_001.png",
+      "bytes": 374509,
+      "sha256": "4b311f941e34e57e1ec6c196ce596786dd8d00436c5804b2a146c1bdddcbcfa4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_002.json",
+      "bytes": 51263,
+      "sha256": "afdc8ba7dd14f89c018b4e351d3a39ff27debd50ecb9c6496985c34d7efeb558"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_002.png",
+      "bytes": 372020,
+      "sha256": "3c7bbda66c4f422abc8599911b78cb99a7fb42a08d07767a20ca1d43adc9346b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_003.json",
+      "bytes": 51264,
+      "sha256": "a5c8bc4bd928bc5e7d1a401a145bda18d69ece3a1f4c867635c464547ee24700"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_003.png",
+      "bytes": 372255,
+      "sha256": "614e54228a7e284c82681de55ee3b6319e817c8205c3bb6f5eda122f9791aa54"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_004.json",
+      "bytes": 51264,
+      "sha256": "fdd3fa77c85fd79c80c84e432e0fb7e1ad291340456ac8841a0a3f4bdfcf1e7f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_004.png",
+      "bytes": 374500,
+      "sha256": "7a4120c2c8d96db048a1dfc8fde955cf2985084e43789bb20bf65fdfd465f038"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_005.json",
+      "bytes": 51264,
+      "sha256": "d202c98e92711e9799a4bdeb19630e53f83442142257ab13efff3a8fc1cd96e9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_005.png",
+      "bytes": 373060,
+      "sha256": "281770b78e7bb05994ddf13c02ff8b7934de946fe74e065f537e3b1b014cd028"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_006.json",
+      "bytes": 51264,
+      "sha256": "1fa0be5073db9cd729e8c7097e65f29414ccd626383a68773390416d307b08fe"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_006.png",
+      "bytes": 372092,
+      "sha256": "c78cff22c2dc4f09801ef7cb0e2cbb6220f50fc163e48d2563a0dcd30d5bbdb7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_007.json",
+      "bytes": 51264,
+      "sha256": "b6b6296704e345b0540cee914b95838ae717e565276513f928563f11957faedd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_007.png",
+      "bytes": 373179,
+      "sha256": "5b04afbd728d5ff3917e30cf49f8190eb01611f1e5973bd467033331c1e7f46e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_008.json",
+      "bytes": 51264,
+      "sha256": "636556e3ac561eafc128aa6bcbc040bae6b6dfe7ca061d49d0e6093676acc33e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_008.png",
+      "bytes": 373268,
+      "sha256": "32665d0b4d6fde5daec544c508d340c3a361155f14cf94a6d56049c10687d754"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_009.json",
+      "bytes": 51264,
+      "sha256": "a0e910704e5ab09069687d757eee0f95ea16901e59a927636ce6fa5c5539654d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_009.png",
+      "bytes": 372433,
+      "sha256": "7e85ae892e19ae4838eea66e176f12ccd027294c2adb23ea887912a606121ec9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_010.json",
+      "bytes": 51264,
+      "sha256": "4a770fc5a910f455143b1cbda3d1779f4c96afb2996ee233212033b7ffb0b533"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_010.png",
+      "bytes": 371648,
+      "sha256": "17b6065bbebfa4cbf80dc1a9eab9fb8c94eff9cbb4cbb68df088557eec57ef59"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_011.json",
+      "bytes": 51264,
+      "sha256": "40c14a9e8837527ae5e2c02997bb2f7630133bbcf30fb33140102f7009555333"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_011.png",
+      "bytes": 372673,
+      "sha256": "5e35f9f50291cc88fbe7044d851b04556d1198a064aa5987785117c1e2267c7b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_012.json",
+      "bytes": 51264,
+      "sha256": "f1a8c6a4e628def31851e55d9ba0674a85386a15ba7db76d662125b740ecea25"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_012.png",
+      "bytes": 371827,
+      "sha256": "22f7073f7677e2e88fd69becad54076a254a4b2410e628c415e7d1d29f7bffe9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_013.json",
+      "bytes": 51264,
+      "sha256": "a8508ecb81caf6148ce9ec9ed1cf56c7b1e4d958cbd7c8b1e9d9dd2361fc92bc"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_013.png",
+      "bytes": 371914,
+      "sha256": "e7ef2022d20f270420e5fdf7102a2bcbc7ba26d5b686ec142811209af766a39e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_014.json",
+      "bytes": 51264,
+      "sha256": "d037fa6319f74bcd2eee64056f0cf8470affef421368e266886599d40c3cfb16"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_en_page_014.png",
+      "bytes": 372644,
+      "sha256": "32f189452da38a6e19b7b7472665a1f74f9e60da09239580009b60b05c98f7a1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_000.json",
+      "bytes": 50662,
+      "sha256": "9d25cb0e4c31ac79bfa0c9ed3bad2d418d31e0fbcf7e7c9e73831aae7466c4bf"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_000.png",
+      "bytes": 371197,
+      "sha256": "ccb65500dccfd84033c6f3cbc2b352b26dc7ddfb929b10ffb87267bf37b4a3be"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_001.json",
+      "bytes": 50664,
+      "sha256": "aead24586667dcc278f976b0e33daf626d773eb2645a7134af9a5c81e2c6ddcc"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_001.png",
+      "bytes": 371668,
+      "sha256": "2c674e9d17419c427ead90039b2e9a1c106e7a4eb957451a073f0adcd91d2e7a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_002.json",
+      "bytes": 50664,
+      "sha256": "d04bea81a8ec4b58495eae17a867fdb6d3bf934234de966e32d49d7afad6f058"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_002.png",
+      "bytes": 370786,
+      "sha256": "49f01ebfc75ccc233fb9b38b63af26b363b75fe7f6ccd89aae9e1a13eeebe44a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_003.json",
+      "bytes": 50665,
+      "sha256": "b1127a9dc8dbac76517752a522e78a2ecdce637bf9f21e2dc78592b4db4ac8c6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_003.png",
+      "bytes": 370415,
+      "sha256": "1a65316e6d4a901d6267fa6d503caacfe40b51ddc7b0d0d837360b22f91ad82a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_004.json",
+      "bytes": 50665,
+      "sha256": "be2d089091feee96d2461adae8546c10a2c4f3ca47370d5762016bb70828ab36"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_004.png",
+      "bytes": 371844,
+      "sha256": "509ea08673891db84ccc124b6c98ce06dc9f2fb7e31c90fc456e3d375979abe5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_005.json",
+      "bytes": 50665,
+      "sha256": "3b946b45e2e3ecc91002c9124f661167196397b406da44e880a878706ce797d8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_005.png",
+      "bytes": 370569,
+      "sha256": "490c5633fd561f978ace6e3d44079b4ff0087523559569e6c9dc840aae6f79eb"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_006.json",
+      "bytes": 50665,
+      "sha256": "814bd07963efe1a5a95efad8eac5e8d39ce883ec19fb22a15536369c8653415c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_006.png",
+      "bytes": 370851,
+      "sha256": "f1888c9de4de2c532194b2cf3eb618574742599d3a90653c477679af0ff181b3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_007.json",
+      "bytes": 50665,
+      "sha256": "154e306849177ecbdf125a7c3292158256d69b6e5171f524b7d26da86c150894"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_007.png",
+      "bytes": 372149,
+      "sha256": "9a685eaf1082523b97987684d099c904b8d73890517c1f18cfcbcdec8217f497"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_008.json",
+      "bytes": 50665,
+      "sha256": "590159bea03a55fe35daa040d559d01d5748aca8df4af4b4bb67df39bf3a26b6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_008.png",
+      "bytes": 371009,
+      "sha256": "f45f9f2db9f1ff7a4474a66235a7b56f33a61e83165ddf7e969e07262fedabf9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_009.json",
+      "bytes": 50665,
+      "sha256": "153a9d38d043307459ce09bb0bc9de3f018e42243ab44fa5a5b383ae1966be51"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_009.png",
+      "bytes": 371192,
+      "sha256": "6f452468b4145076d9112177c59609d989851beb2490354933f4245eedb3b476"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_010.json",
+      "bytes": 50665,
+      "sha256": "886fa5586fcdc80ee82b6398d07ef6500fcf8f90b4f9a178ad1a9aabefd63555"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_010.png",
+      "bytes": 371116,
+      "sha256": "984b0c71bc04d3fce75cbb9d840475042073e7fa0a217976cb5e706dd550ed7d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_011.json",
+      "bytes": 50665,
+      "sha256": "d2148eaca13a29ca4dc35d3969a2b259bc6c968c1e4b8d45f3e0a7f95869e22f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/chronicle_ko_page_011.png",
+      "bytes": 371456,
+      "sha256": "ef212430e3f66a882ce8516b72018d073922a019416f3437e17d203f93ba9e88"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_000.json",
+      "bytes": 41187,
+      "sha256": "9de89db6946a8cbdec379cd15b04e83b251028aadea28d120efbd29dd5a80743"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_000.png",
+      "bytes": 113058,
+      "sha256": "e1ad9592b5fd522e026aa5083feb3b1d82b7d6384e561ee4995f85f3b1c12b20"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_001.json",
+      "bytes": 41189,
+      "sha256": "d6577348694ce841b67030b2868cacd03eacc93518a2ff274a5bb297151f5f38"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_001.png",
+      "bytes": 111960,
+      "sha256": "bde023c52d2b8b77660637c3121531851cd679105cec891e2b96f72cfb77798b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_002.json",
+      "bytes": 41190,
+      "sha256": "1d6be7975d67ea8bf1e253f22fa7b283f118b8eb8ff3cf33c059c007d73355b6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_002.png",
+      "bytes": 115643,
+      "sha256": "e306bb66a33c7284a112f7f3325514ff678f32a29edb5cde8a67c396d1b30b38"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_003.json",
+      "bytes": 41190,
+      "sha256": "184b520663c086438cc1dbab74e7be0ba1eadc8a397fbfd08bdbb3e86fe83e7f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_en_page_003.png",
+      "bytes": 114083,
+      "sha256": "7388cf807bc5b2b9dbe0ef6a93be8cc0cc44fbc7017a9eece8e24f893746a8ae"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_000.json",
+      "bytes": 41178,
+      "sha256": "3c42061636ea1a2c50d0fad6e1029cd21f1b944360916bce54913156af71973b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_000.png",
+      "bytes": 110423,
+      "sha256": "88e3bc9842cd41922e36ce1c26e0edbca5c1b25b9ea200fc7e39b11594787308"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_001.json",
+      "bytes": 41180,
+      "sha256": "d30254837e34e22514b4eb760d99ecc9dced3b78a1263e21affa26ecc737dcd4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_001.png",
+      "bytes": 109405,
+      "sha256": "66401fa7ae935e6c1bfebd24fa0ecc98001a573910aa1c577bcf0a22c54fe0a9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_002.json",
+      "bytes": 41181,
+      "sha256": "3b285f995bcd78f20242b2161ada8fbe88838912bdee981014d1c0f4879e842f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_002.png",
+      "bytes": 112523,
+      "sha256": "732e86819d2cfabd1116328990fe92f21abf57d3dec69fb644f51b47fd2a4b5d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_003.json",
+      "bytes": 41181,
+      "sha256": "190f40d007a857df3a5086089898637c430c6c031d596a9e40e7dd7cdcbd0fb7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_1_ko_page_003.png",
+      "bytes": 111093,
+      "sha256": "69b33ca33f046756a44e7380f9174c0d334a6403274659991bfdc9ed99100097"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_000.json",
+      "bytes": 41197,
+      "sha256": "5979c3f5e92834a2d2dc890d20473bcb1c6b6cf89ed928c8725944bc941e0b62"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_000.png",
+      "bytes": 112690,
+      "sha256": "47d2a8d870a34930c73505459964963322f523ae7d2ef7e2deb5ecf2a9d70f59"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_001.json",
+      "bytes": 41199,
+      "sha256": "985b79d75fb2a17ac1bd64052f2713d2e56ab3a41e8b8f9f283a991229c54d2b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_001.png",
+      "bytes": 111765,
+      "sha256": "6c5a16489b38f8db1104f3eb1c3d2e02350e31c87bdf2e81da51261da4dbf3bc"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_002.json",
+      "bytes": 41200,
+      "sha256": "16671eed0c822b5d67b2e5e15e2556a9011c7aa24f2a876a7fd26ac1c7dc97a2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_002.png",
+      "bytes": 114353,
+      "sha256": "5774c52b01f3814c707ec10c6239644117cdc5bad3ba6b99ec067af8ecbdca0c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_003.json",
+      "bytes": 41200,
+      "sha256": "87a9e679a6d7573cfaee53f98b17c0e93f00d5d966bcd558f8d399f3d2609861"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_en_page_003.png",
+      "bytes": 112998,
+      "sha256": "3d86012d5245f17ec7cd6f455685e64c03061063e87997d263808794c3b429c4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_000.json",
+      "bytes": 41174,
+      "sha256": "be22fc60c82feea0891d632c26fb37c961d85407d3a33d9f6f49b07561809122"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_000.png",
+      "bytes": 109292,
+      "sha256": "85be20e1bae8c87748912b58b252daf61a85cdc5c30c4d5b62c232fb52ce9bc6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_001.json",
+      "bytes": 41176,
+      "sha256": "34e0d6f8079a76171b58ace48f4299f22ca6bb47ab8caf51cc176c1414248660"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_001.png",
+      "bytes": 108345,
+      "sha256": "5e2fd3293a8e974e67c8a7eb6e4254261d52df7e03779d155754c50f02d5009b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_002.json",
+      "bytes": 41177,
+      "sha256": "197255f3f8d714da15d8c235b25380a8b962d0876f03bd22ef3beb6bd2902fff"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_002.png",
+      "bytes": 112045,
+      "sha256": "3523c1245593f588cbe63f4849057c830d8ef6b41c7babcc3f1c43b8e5789cf0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_003.json",
+      "bytes": 41177,
+      "sha256": "2134251d4a1364f7c7846385146313f48cadee252c9c0b40457604b48ed4b12f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/depart_cause_2_ko_page_003.png",
+      "bytes": 111353,
+      "sha256": "d37eef76cf9e3b7134b2668121fab024e6dfe37d695f2be4344e392cfe1c2352"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_en_page_000.json",
+      "bytes": 40811,
+      "sha256": "8383119b7de20c0baae633a894f081ba1e97cdccb30742de1dc8c97d26b6f1c6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_en_page_000.png",
+      "bytes": 113840,
+      "sha256": "04f22f8a572ece820c419e27da0d702807c2d56a452f3ed6f7dfb2c3a4419fbb"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_en_page_001.json",
+      "bytes": 40813,
+      "sha256": "63485ca05653f68d73bbfdf5f21c378d670a16e37b4874a0dde24ae4e9b6f92c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_en_page_001.png",
+      "bytes": 112301,
+      "sha256": "32d2f521246a2af51531f39e9fdc43b676a241cdafd8aeb61fd82c77ff1ae56a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_en_page_002.json",
+      "bytes": 40813,
+      "sha256": "93b5f01b9e66ac9f8f7d5eb403640f55629d30c13421b6e61fb06ec5c98213ab"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_en_page_002.png",
+      "bytes": 115425,
+      "sha256": "a46336a360ffc1c49b605817f0a9a819e8a5a8a2075dcf9d09e18eace0033c73"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_ko_page_000.json",
+      "bytes": 40805,
+      "sha256": "57909f04e997122d26de8cab59ba440d2ba3ed810b9f0a4350f0a67cbc8a0171"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_ko_page_000.png",
+      "bytes": 111299,
+      "sha256": "b4d7ac293cf0217a2882f312e89c204ecd3de363a703aa1f35f13033fe062fec"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_ko_page_001.json",
+      "bytes": 40807,
+      "sha256": "7644fd82210649ba0f96b99cc4116484c0a435aa1f3deb0fc9b4c1e229e211cb"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_ko_page_001.png",
+      "bytes": 109770,
+      "sha256": "f64360a5d89323652a34de40e25f0867127dda5b7676964209c3dcdcac46b329"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_ko_page_002.json",
+      "bytes": 40807,
+      "sha256": "8b96e01e65e2cd2b8457ddbbbc934c52de40d05d5aa759980c732c93ef598f65"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_life_ko_page_002.png",
+      "bytes": 112876,
+      "sha256": "919c0acc3dd9b6a0eef27ec1c784cf81674c0493266bf0f85d98567687dd069d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_road_z1.json",
+      "bytes": 42596,
+      "sha256": "83288417c44308e058f33aabc64d0ebffb1ba125e9439d14fb8827499abba1f5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_road_z1.png",
+      "bytes": 368479,
+      "sha256": "615c61d098a91d70c7a4aa920bc97d2bf37d7e948b4816b98e85447704c6e652"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_road_z4.json",
+      "bytes": 42253,
+      "sha256": "a5e33163acd194b1dd650344e58a2251ce8943c7bf63f99d2dfdda6db599019c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/porter_road_z4.png",
+      "bytes": 86253,
+      "sha256": "b8281c8faa48743307505203a314396601208dcfbe7144995a853f0e78eac3b9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi/reference-data.json",
+      "bytes": 2547172,
+      "sha256": "dbc82a329e7b60257983c5b5d2ec6a13e566b78271b503fa21e80372dfa0bd2b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi-result.json",
+      "bytes": 127,
+      "sha256": "e17d6aa86b57109fe1422d81f26325813cdb423c5e3da196758f7286772f053d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/multi.log",
+      "bytes": 329,
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/registration.json",
+      "bytes": 597,
+      "sha256": "99f1854b52a24153da39efd52aa1ad5503b8d5b75a6a3d17ac06ab0fb7c69ae7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/working-tree.patch",
+      "bytes": 243,
+      "sha256": "558a4deab525ae44ec34b4fddf2553dfd0d5cce27913b20d51dcc6e41bfa9953"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2/estranged/failure.json",
+      "bytes": 34766,
+      "sha256": "5f87215e64d968428d6155346ce2ab90ca3a5333b49a97dced594598b9145f84"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2/estranged-result.json",
+      "bytes": 154,
+      "sha256": "0e8d42bda4d4881287a2ee3a343045eabd916464706aa24ea5a9174ae0fe28f3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2/estranged.log",
+      "bytes": 708,
+      "sha256": "1b9dc4180791ca1aa5186bb3ac963ebf0410332015719ca96d8169aa614956d2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2/registration.json",
+      "bytes": 547,
+      "sha256": "4092f47538c926034abc6d039015b007f0f0be2b36fe5d0e7f2c8214466eef07"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2/working-tree.patch",
+      "bytes": 243,
+      "sha256": "558a4deab525ae44ec34b4fddf2553dfd0d5cce27913b20d51dcc6e41bfa9953"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_000.json",
+      "bytes": 51381,
+      "sha256": "2811441b9c552b4fc9dd42f93ce5e897c8630df453239b423a27a1ee9e03e121"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_000.png",
+      "bytes": 418496,
+      "sha256": "c1d57ecfc53c3b853fb32c1b40d0caf8aabc89002351e176e03db6b72749d7d4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_001.json",
+      "bytes": 51383,
+      "sha256": "3f0feccdb7c71cad485c04c519f7cc86a4a532dd5c458469b9f13308fdfb4449"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_001.png",
+      "bytes": 419896,
+      "sha256": "afcb02139c7451ef07c15ced891b0b438eb5e966b09a9b2221c635b87ee12005"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_002.json",
+      "bytes": 51383,
+      "sha256": "06a8ad7c61cdf62a1bb18f60e646d29b4271ec48b55d9577bc727f609833be10"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_002.png",
+      "bytes": 420128,
+      "sha256": "20c080414a982703286f7db5da7d26a3ae520ce4c9dbbdf42fe4c8089fa41f73"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_003.json",
+      "bytes": 51384,
+      "sha256": "7b1c4fb5c1d9dab09e742b66a0956070655a50f0058a9e80dd77c5fef7604944"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_003.png",
+      "bytes": 420286,
+      "sha256": "f1ef8d77724f0fdee7f7902ce53eac20825c34b3a50529bc35b03210e77115c3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_004.json",
+      "bytes": 51384,
+      "sha256": "d0d64fb1c385ec90fd1bca916dddd86efaaec2a0a0361d2797688e79e83d35ba"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_004.png",
+      "bytes": 417498,
+      "sha256": "2b9af74adcefd4a52b1d8f579479ee4633c68b377643613327e0432f4e6d0703"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_005.json",
+      "bytes": 51384,
+      "sha256": "d6c07413d7bc045720041a3750f7e9025f393665d97bb6a2cf30f33de44d3ce0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_005.png",
+      "bytes": 418100,
+      "sha256": "f770a48144ff369088bcce11356bf0ab4ba0ee1bd2a3146980cc917aecb93276"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_006.json",
+      "bytes": 51384,
+      "sha256": "1ec2fff4bec4cc1093f6d82746cdf801d199dd08ec9094fef1e5e66018934014"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_006.png",
+      "bytes": 419584,
+      "sha256": "c99a4691754ed526136a882a44c8b05bc11a4a4f8e15046126cc4e4c8bdae264"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_007.json",
+      "bytes": 51384,
+      "sha256": "80a594ba8edc72e040eaadbfbee4dde633d5fd885e46c1ecff598d6fc56c2748"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_007.png",
+      "bytes": 417948,
+      "sha256": "5cd5d80f646a7ac7e0fcd9655b897beed1f9f3385b028c8620b7624d00ef6a42"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_008.json",
+      "bytes": 51384,
+      "sha256": "0b075a93dbc6f9ebee7cbc4f82538e27307c623999d36ab30d7f720e17fdd07b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_008.png",
+      "bytes": 417824,
+      "sha256": "f053e372a43285679e74c211c7772009a3ed24b1cc0064f08158502e84b54cee"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_009.json",
+      "bytes": 51384,
+      "sha256": "f3dbea4ee4c2789f74314e83a1f13525b60593ceecc31375817f32f359e8a0e9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_009.png",
+      "bytes": 418529,
+      "sha256": "d0ee66987b1eb89e7fffe3a601f73b57cdb84aae80c7d16de09d6571b1d60764"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_010.json",
+      "bytes": 51384,
+      "sha256": "3be3cae6fa5159659b8960a785a7ca85de8a049e151a9f050ce786d9c845b8d9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_010.png",
+      "bytes": 419398,
+      "sha256": "d3cc4170e267a1bbd23b286e4fd13c9e9c51db61b441645f29b3b154938bb8fe"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_011.json",
+      "bytes": 51384,
+      "sha256": "3da1847a84106570db458ab9d19ba3cc3cae3ba1bf48b314c91b5125051f0472"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_011.png",
+      "bytes": 419875,
+      "sha256": "64eb146ee7eb002213f15bf28569ae05bb154f52ed65f39f9d281fed22d41ce3"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_012.json",
+      "bytes": 51384,
+      "sha256": "54147a1e407e0f842b3074f9a000e302b2b1a5355beb14c77e9e2aa6d97b3d0a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_012.png",
+      "bytes": 419677,
+      "sha256": "9f619b0e5df70d828c7a300907f857034d55fa9c879424fc58a86d22ca629563"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_013.json",
+      "bytes": 51384,
+      "sha256": "43e720b21b427e52b70bfe5550fedfa065f34767d88a9efe65d25fe845201e4d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_013.png",
+      "bytes": 418886,
+      "sha256": "147a005fdd40c05e84b86801d8f51d401bfe76f414bcc88a86cbeeab72e4fc41"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_014.json",
+      "bytes": 51384,
+      "sha256": "ac7f5684c4714d4acb8da5f0171629619ad42c7307b2761f0ae310972450eb1a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_en_page_014.png",
+      "bytes": 418667,
+      "sha256": "81740eb1cf993f4aca15c95332672928aaabc90f56910aff308a1e56965336be"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_000.json",
+      "bytes": 50743,
+      "sha256": "71c9d010d7e397a924beb7aec4c43a43013c3c67c05966981804b7a470fc2ec5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_000.png",
+      "bytes": 415651,
+      "sha256": "b33dca94cb39daba3734b86c70404f49deb531715eda80077e32c67429f69cfc"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_001.json",
+      "bytes": 50745,
+      "sha256": "bf0758a99d4021a0043d601f3993ac4a6dd84de15c2e3809b8b4729f61cc026f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_001.png",
+      "bytes": 416382,
+      "sha256": "edadd6e4133a7ad52e041e709f003408824375ca9d1c0ffda0c626650db8ab08"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_002.json",
+      "bytes": 50745,
+      "sha256": "de53776196dac4b875903d519d06b726e37e35cf3008cb4e167098134902e069"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_002.png",
+      "bytes": 416512,
+      "sha256": "c3a1bd93d5af98d42cc5a1b459b360ada930c33bb45d8bd97545dad8cc70298a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_003.json",
+      "bytes": 50746,
+      "sha256": "dc5b85bd4719740345a2c636435e9e691811e4eb2acdab3a2b1e9f5ca4ce3451"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_003.png",
+      "bytes": 416962,
+      "sha256": "dac3cfb1edbfb8401d1edde6f8d9e13473f58d975a41b122c0b4241ee306d37b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_004.json",
+      "bytes": 50746,
+      "sha256": "4b32e99cfd3d1f671d05595d0ef9ab558b6733121a4a13895d0e771bd3a5946d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_004.png",
+      "bytes": 416895,
+      "sha256": "ad602c016a4a35fdd7a1d758991d096b7a1c2f53f4a3058522dc0e891ab4cd3e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_005.json",
+      "bytes": 50746,
+      "sha256": "7b2341647c19f758965f7b162960c58ce950847dc8322f193dc8813b7f182968"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_005.png",
+      "bytes": 416702,
+      "sha256": "2b671aaceae1ef436f354e1c4e1d8f92533b20ba583bca20660b8ad44546cd00"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_006.json",
+      "bytes": 50746,
+      "sha256": "ce6339d00beeb026185de7efdff25369b7cca002684f6ca305ceeef0befe583a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_006.png",
+      "bytes": 417049,
+      "sha256": "62b4dd0cf078c46732c7f2fa15186e1ac5a539b3b34103cb4046e0a870f19915"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_007.json",
+      "bytes": 50746,
+      "sha256": "f3fd0ad03eb3a1c0a8617567cf0ad96eaf97ea08f7d519424ca1732e23cbd223"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_007.png",
+      "bytes": 416526,
+      "sha256": "323a7bdf1e7505e6b825139cc2e63914baed95fce7f434834a7a8dfabf07a3ae"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_008.json",
+      "bytes": 50746,
+      "sha256": "293920f54b2b94c725441f47a1cf6cfa71c55dc8339eaff71e0c77866fea05e7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_008.png",
+      "bytes": 416785,
+      "sha256": "31bf5c8dfa7731037ad44581e6f67288a39bb42eff2d3b6b2a9b4fe90fc3751d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_009.json",
+      "bytes": 50746,
+      "sha256": "219df1d8e654f969b83e30ab2c13c23629fb9cb2f801c638067f6eaaf1a2d7ce"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_009.png",
+      "bytes": 415759,
+      "sha256": "82cbe608a55ea4ac44da52ef94e5161c48fd2eb436c378f1ab192cd02314f552"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_010.json",
+      "bytes": 50746,
+      "sha256": "b9137bc279cac9e9b7c072c70431730d486f2279bb64b29c2937b95aa05f0c99"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_010.png",
+      "bytes": 415561,
+      "sha256": "cb58f7e0743d2bdd05134db230feabde3b3b81817eb21962cf233df56c5ead39"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_011.json",
+      "bytes": 50746,
+      "sha256": "3f73b7862b1322e9b5378d0ee72b4aff36b3a2333b6284d1f639d4df55240a0f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_011.png",
+      "bytes": 416889,
+      "sha256": "f6a62d57df0934b8898a82318119f7285f1ff72d3f7ca201eee28b6fd7a24e10"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_012.json",
+      "bytes": 50746,
+      "sha256": "aec3c124928c65ac7075f7ad923268150201df909495d08f6f193fc82f361f2f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/chronicle_ko_page_012.png",
+      "bytes": 415716,
+      "sha256": "ad96cbdd4447d6e6dc4310581035e41367182c7211930c045a6026435777a9c1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/estranged_villages_z1.json",
+      "bytes": 40783,
+      "sha256": "dc829943cbd32a9ed009c5e540fd4a825b3c8cca2e3da83e1cdcc424fd663023"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/estranged_villages_z1.png",
+      "bytes": 407440,
+      "sha256": "5b53d316cd8c1003cc75fc11dbc38503f6540549220cf84e9415c5129638fe57"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_000.json",
+      "bytes": 41245,
+      "sha256": "695fa47bcf54367ef2841aeaa82c9d33a05cd36bde2cd157327878a24f5aa604"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_000.png",
+      "bytes": 107939,
+      "sha256": "5e8b7e13f046a6c7b8f9f0b3bf5595e5194d4168f122e14c178b7b2a8f8c857d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_001.json",
+      "bytes": 41247,
+      "sha256": "3de58df28813eff2790cbdd365809c7706bd2f9840abbdc4bacd47ac41f3b3f4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_001.png",
+      "bytes": 108469,
+      "sha256": "2b9bdd82fe8849c9dab0a0d3796bd3ec5ee1a75acbce37461c81d683e3f74f9d"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_002.json",
+      "bytes": 41248,
+      "sha256": "ac271245c409748c6391d77aa690174944734a2962a56077a747e325e1178c73"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_002.png",
+      "bytes": 111478,
+      "sha256": "0063d7e9b9c720242901528134c608291a679206e3a67046e36cc8049f28302b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_003.json",
+      "bytes": 41248,
+      "sha256": "cfc52565ee21e050528cf73574691e7113265ca511812f75cad7524edf71c122"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_en_page_003.png",
+      "bytes": 109410,
+      "sha256": "d6bd5f3deb4fbd013d613b21fe2117b6b8265f9fbfcaecc3736e4384935fd05c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_ko_page_000.json",
+      "bytes": 41225,
+      "sha256": "a95eaa642d09071d06487680a7b819d301a41db1e7ec9bb19281b7b940b7c4ba"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_ko_page_000.png",
+      "bytes": 105105,
+      "sha256": "fd08059e44c8ebe9669ae7816638250ff3e6f6fd308cb2c23298a90ba4459a8f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_ko_page_001.json",
+      "bytes": 41227,
+      "sha256": "0c3e87a1876f10ab0a446cd423784ebdb13d7bda58732f047fe5830aba85e848"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_ko_page_001.png",
+      "bytes": 104838,
+      "sha256": "5a4a0be8a14860724575ae4ad20d4f68b2a6fc01a8ac13ae75b93b96333a580c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_ko_page_002.json",
+      "bytes": 41228,
+      "sha256": "8111d948ce964303df86def21a10f380ac3efc9f867abedaf9205dee0a7bfcfd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/quarreller_life_ko_page_002.png",
+      "bytes": 108529,
+      "sha256": "5bd573e1bd4b0ea8bdd0d7ec01889eef7c8991cba0734882884075904a27a0ca"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/reference-data.json",
+      "bytes": 1907671,
+      "sha256": "fab34ec990cd7332f24d47663559d83b40db77e134730ae510a1b323d697c7e7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3.log",
+      "bytes": 329,
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/crowd1_en-crowd-proof.json",
+      "bytes": 830,
+      "sha256": "1d88a079dd8d250bc3a86dcd0d49ce2919425e037b1d3f6fb5946e85a39629ee"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/crowd1_en.json",
+      "bytes": 266732,
+      "sha256": "cbad1afa6f495ead1ce7f9347cf669c20b241715cf36f7d8259f12a3e9fec600"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/crowd1_en.png",
+      "bytes": 131925,
+      "sha256": "674fbcdff67ccaf1e6d56a3cfeaa8f733b54a50a9865530ee18e96f32d8162f7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/crowd1_ko-crowd-proof.json",
+      "bytes": 830,
+      "sha256": "1d88a079dd8d250bc3a86dcd0d49ce2919425e037b1d3f6fb5946e85a39629ee"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/crowd1_ko.json",
+      "bytes": 266736,
+      "sha256": "70483d760eec37d90a252ff3440855410d482d1406b23e0771ffd0002c2829e4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/crowd1_ko.png",
+      "bytes": 128709,
+      "sha256": "af7b80bcc77d60e693fc0a6bf66a6d20f446af11dee3749cbe8f9230403f51f8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1/reference-data.json",
+      "bytes": 638850,
+      "sha256": "7b3d3801e9b42db2a835bedc4cd5dd4644a0a14d21717bbc72007ca59c15ce0e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd1-attempt1.log",
+      "bytes": 329,
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/crowd2_en-crowd-proof.json",
+      "bytes": 1070,
+      "sha256": "6bf83665e199abdca45a203581683c6b43e85324d5ec04d299f977e1bbbacae6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/crowd2_en.json",
+      "bytes": 380661,
+      "sha256": "beb3847e96e2b9fa2139a42eee42d726ddbb529a6dbdff465564165213ee8066"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/crowd2_en.png",
+      "bytes": 112033,
+      "sha256": "13a40f06c159b6a906eb6fd31e78c62dfd62f4b5ad5c6a3785d32abd6666b7c8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/crowd2_ko-crowd-proof.json",
+      "bytes": 1070,
+      "sha256": "6bf83665e199abdca45a203581683c6b43e85324d5ec04d299f977e1bbbacae6"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/crowd2_ko.json",
+      "bytes": 380687,
+      "sha256": "cb25c5850f3cb3da4fa197b5bf869f4adb124952b02fcd12987ed1ac5926f01c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/crowd2_ko.png",
+      "bytes": 108785,
+      "sha256": "4bf21b87c0d4fa017154615ed3c016ea6675663302e024d9dc89f58c926ca252"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1/reference-data.json",
+      "bytes": 957946,
+      "sha256": "fb1e3a9cfeb3ed23b446c93096000815941b0437dee8b1879c7f9ba2bdea1d65"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd2-attempt1.log",
+      "bytes": 329,
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/crowd3_en-crowd-proof.json",
+      "bytes": 830,
+      "sha256": "ce51ff00f7627a3f99e4aca268e3944a53d37f6a68223fcf2ce1ae1b21738875"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/crowd3_en.json",
+      "bytes": 267472,
+      "sha256": "44cb40c2879fccb8ce5008eb21ae6aac2bf039b80f56d7bd4a472bfe67cd5cfc"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/crowd3_en.png",
+      "bytes": 128650,
+      "sha256": "56adb503f3146969a146fb02e4c0c6fd573c3e289a7190076ab891b3b54b2f14"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/crowd3_ko-crowd-proof.json",
+      "bytes": 830,
+      "sha256": "ce51ff00f7627a3f99e4aca268e3944a53d37f6a68223fcf2ce1ae1b21738875"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/crowd3_ko.json",
+      "bytes": 267476,
+      "sha256": "04f4709cf1a42b4b6995007ff3dd710b52af9d092c4cd4d4c4de64a5e852216a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/crowd3_ko.png",
+      "bytes": 126002,
+      "sha256": "d314fa5174482d3e4729a418d6994aa8f8db29db712bee9d6a1c74dad41b0ff7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1/reference-data.json",
+      "bytes": 640977,
+      "sha256": "4e3ee112fd074750de9de8cc48a741b27756fac925004b6143a2e5eaf44c84dc"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/life-crowd3-attempt1.log",
+      "bytes": 329,
+      "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7"
+    }
+  ]
+}

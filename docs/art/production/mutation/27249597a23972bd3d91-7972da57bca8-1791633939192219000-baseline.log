@@ -1,0 +1,10 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.25s
+     Running tests/harness_p13_delta_basic_hud.rs (target/debug/deps/harness_p13_delta_basic_hud-afa6db47221cdff6)
+
+running 1 test
+test harness_p13_delta_a13_phase12_alpha_camera_zoom_bounds_unchanged ... [P13-δ A13] ZOOM_MIN(0.5,0.5) + ZOOM_MAX(8.0,8.0) (G Phase A) ✓
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+

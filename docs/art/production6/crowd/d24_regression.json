@@ -1,0 +1,594 @@
+[
+  {
+    "id": 13,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      708.0,
+      396.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 30,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      708.0,
+      330.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 22,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      768.0,
+      312.0
+    ],
+    "rect": [
+      -9,
+      -23,
+      18.0,
+      24.0
+    ]
+  },
+  {
+    "id": 25,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      779.0,
+      377.0
+    ],
+    "rect": [
+      -8,
+      -29,
+      17.0,
+      30.0
+    ]
+  },
+  {
+    "id": 44,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      816.0,
+      312.0
+    ],
+    "rect": [
+      -7,
+      -22,
+      14.0,
+      23.0
+    ]
+  },
+  {
+    "id": 4,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      800.0,
+      384.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 18,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      760.0,
+      330.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 32,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      784.0,
+      276.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 2,
+    "activity": "carry_wood",
+    "moving": false,
+    "seated": false,
+    "target": [
+      644.0,
+      426.0
+    ],
+    "rect": [
+      -7.0,
+      -28,
+      14.0,
+      29.0
+    ]
+  },
+  {
+    "id": 5,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      727.0,
+      236.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 29,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      634.0,
+      204.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 3,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      784.0,
+      384.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 28,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      784.0,
+      348.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 0,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      768.0,
+      384.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 8,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      776.0,
+      366.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 6,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      940.0,
+      396.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 16,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      792.0,
+      366.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 26,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      692.0,
+      393.0
+    ],
+    "rect": [
+      -9.0,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 17,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      765.0,
+      412.0
+    ],
+    "rect": [
+      -9,
+      -28,
+      18.0,
+      29.0
+    ]
+  },
+  {
+    "id": 33,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      776.0,
+      330.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 27,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      736.0,
+      348.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 15,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      840.0,
+      366.0
+    ],
+    "rect": [
+      -9,
+      -23,
+      18.0,
+      24.0
+    ]
+  },
+  {
+    "id": 24,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      768.0,
+      348.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 11,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      744.0,
+      366.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 9,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      760.0,
+      366.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 12,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      752.0,
+      348.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 10,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      756.0,
+      412.0
+    ],
+    "rect": [
+      -8,
+      -30,
+      17.0,
+      31.0
+    ]
+  },
+  {
+    "id": 40,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      804.0,
+      441.0
+    ],
+    "rect": [
+      -8,
+      -29,
+      16.0,
+      30.0
+    ]
+  },
+  {
+    "id": 39,
+    "activity": "carry",
+    "moving": false,
+    "seated": false,
+    "target": [
+      873.0,
+      459.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      14.0,
+      30.0
+    ]
+  },
+  {
+    "id": 36,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      816.0,
+      348.0
+    ],
+    "rect": [
+      -9,
+      -23,
+      18.0,
+      24.0
+    ]
+  },
+  {
+    "id": 34,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      800.0,
+      348.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 41,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      816.0,
+      384.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 38,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      680.0,
+      428.0
+    ],
+    "rect": [
+      -7.0,
+      -30,
+      13.0,
+      31.0
+    ]
+  },
+  {
+    "id": 45,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      848.0,
+      384.0
+    ],
+    "rect": [
+      -7,
+      -22,
+      14.0,
+      23.0
+    ]
+  },
+  {
+    "id": 7,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      809.0,
+      344.0
+    ],
+    "rect": [
+      -9,
+      -28,
+      18.0,
+      29.0
+    ]
+  },
+  {
+    "id": 43,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      832.0,
+      312.0
+    ],
+    "rect": [
+      -7,
+      -22,
+      14.0,
+      23.0
+    ]
+  },
+  {
+    "id": 42,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      776.0,
+      294.0
+    ],
+    "rect": [
+      -7,
+      -21,
+      14.0,
+      22.0
+    ]
+  }
+]

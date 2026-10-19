@@ -1,0 +1,13 @@
+{
+  "identity": {
+    "head": "37be1b855aa5f8da93c35db3d735b5babed5eced",
+    "profile": "dev-opt2",
+    "loaded_sha256": "ed600ac38228c72962d4459a7ea7b9fcbd63a0a0be4bd75e46403690b2b66a27"
+  },
+  "measure": {
+    "head": "37be1b855aa5f8da93c35db3d735b5babed5eced",
+    "profile": "release",
+    "loaded_sha256": "1e6f76187e9e0d87e87426fe2b0aa510c3c797efd61b9cb14fed383531d2bf91",
+    "release_sha256": "1e6f76187e9e0d87e87426fe2b0aa510c3c797efd61b9cb14fed383531d2bf91"
+  }
+}

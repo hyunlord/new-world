@@ -1,0 +1,66 @@
+{
+  "created_ns": 1791863856550699000,
+  "A27": {
+    "1": {
+      "count": 2,
+      "parents": {
+        "2": 1
+      }
+    },
+    "2": {
+      "count": 2,
+      "parents": {
+        "2": 1
+      }
+    },
+    "3": {
+      "count": 2,
+      "parents": {
+        "2": 1
+      }
+    },
+    "4": {
+      "count": 3,
+      "parents": {
+        "2": 1,
+        "3": 1
+      }
+    }
+  },
+  "A28": {
+    "1": "moving away to settle",
+    "2": "moving away to settle"
+  },
+  "sources": {
+    "A27_1": {
+      "sha256": "a4f8fbefeaf2b615fcb6d761aa7953d7207363a272a84b571a1036ec2e6eb9ec",
+      "source": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_1200_FV_all.png",
+      "image": "docs/art/production7/blind_society/A27_1.png"
+    },
+    "A27_2": {
+      "sha256": "bee5b758cadb4256b421d9253682b1d98263dfca2a58645885fd60cd3fb6f320",
+      "source": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d51_1200_FV_all.png",
+      "image": "docs/art/production7/blind_society/A27_2.png"
+    },
+    "A27_3": {
+      "sha256": "0ef1bde9130475d0144656742a9298090ccf34632c5e267b3653e51b7856c9a6",
+      "source": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d84_1200_FV_all.png",
+      "image": "docs/art/production7/blind_society/A27_3.png"
+    },
+    "A27_4": {
+      "sha256": "e6deae612ddcf8e93f64de30e401c689f87f9a2c1a2ec6584971343b73b138ba",
+      "source": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d85_0842_FV_all.png",
+      "image": "docs/art/production7/blind_society/A27_4.png"
+    },
+    "A28_1": {
+      "sha256": "4f4cd903876f77ffbc2b7290adbd172a5353400f184678f244b01064167b88f6",
+      "source": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0630_FD_leader.png",
+      "image": "docs/art/production7/blind_society/A28_1.png"
+    },
+    "A28_2": {
+      "sha256": "6bfe02b672b66da362c2f53c074f9c571d863abb63c0ba757d0a12476efd1b16",
+      "source": "/Users/rexxa/work/art-production7-evidence/final_capture/shots/art_society/soc_d29_0800_FD_leader.png",
+      "image": "docs/art/production7/blind_society/A28_2.png"
+    }
+  }
+}

@@ -95,7 +95,6 @@ fn strip_gd_comments(src: &str) -> String {
 
 const WORLD_NODE_PATH: &str = "rust/crates/sim-bridge/src/ffi/world_node.rs";
 const WORLD_RENDERER_PATH: &str = "scripts/ui/world_renderer.gd";
-const AGENT_RENDERER_PATH: &str = "scripts/ui/agent_renderer.gd";
 const MAIN_TSCN_PATH: &str = "scenes/main.tscn";
 
 // ─── Assertion 1: settlement_snapshot_collector_exists ────────────────────
@@ -386,7 +385,7 @@ fn harness_p12_gamma_a8_settlement_with_missing_member_position_is_handled() {
 #[test]
 fn harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_constants() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/stockpile/1.png"));
+    assert!(src.contains("direction_03_storage_pit"));
     assert!(src.contains("kind == 2"));
     assert!(src.contains("_stockpile_positions.append"));
 }
@@ -395,7 +394,7 @@ fn harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_cons
 #[test]
 fn harness_p12_gamma_a10_world_renderer_polls_ffi_and_reaps_stale_sprites() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));
@@ -405,37 +404,23 @@ fn harness_p12_gamma_a10_world_renderer_polls_ffi_and_reaps_stale_sprites() {
 // ─── Assertion 11: phase4_gamma_and_d1_invariants_preserved ───────────────
 #[test]
 fn harness_p12_gamma_a11_phase4_gamma_and_d1_invariants_preserved() {
-    // Type: D — regression guard. SPRITE_SCALE = 0.25 + 4 D1 STATE_TINTS
-    // Color literals must persist.
-    let src = read_file(AGENT_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
 
-    let scale_forms = [
-        "SPRITE_SCALE := 0.25",
-        "SPRITE_SCALE: float = 0.25",
-        "SPRITE_SCALE :float = 0.25",
-        "SPRITE_SCALE: float= 0.25",
-        "SPRITE_SCALE = 0.25",
-    ];
-    let scale_ok = scale_forms.iter().any(|c| stripped.contains(c));
-    assert!(
-        scale_ok,
-        "A11.1: agent_renderer.gd must preserve SPRITE_SCALE = 0.25 (Phase 4-γ)"
-    );
-
-    let required_tints = [
-        "Color(0.55, 0.70, 0.95, 1.0)",
-        "Color(1.0, 0.85, 0.15, 1.0)",
-        "Color(1.0, 0.40, 0.75, 1.0)",
-        "Color(0.30, 0.95, 0.35, 1.0)",
-    ];
-    for needle in required_tints.iter() {
-        assert!(
-            stripped.contains(needle),
-            "A11.2: agent_renderer.gd MUST preserve D1 STATE_TINTS literal `{needle}`"
-        );
-    }
-    println!("[P12-γ A11] Phase 4-γ SPRITE_SCALE + D1 STATE_TINTS preserved ✓");
 }
 
 // ─── Assertion 12: phase12_alpha_beta1_beta2_invariants_preserved ─────────
@@ -459,15 +444,18 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     let renderer = read_file(WORLD_RENDERER_PATH);
     let stripped = strip_gd_comments(&renderer);
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 
     let alpha_line = stripped
         .lines()
@@ -488,9 +476,9 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
 
     // β.2 A3: CONSTRUCTION_SPRITE_PATH + Z_CONSTRUCTION = 5.
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
-    assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("sprite.modulate.a = 0.35"));
+    assert!(src.contains("direction_04_shelter_frame"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("z_index = 5"));
     println!("[P12-γ A12] Phase 12-α + β.1 + β.2 A3 invariants preserved ✓");
@@ -571,7 +559,7 @@ fn harness_p12_gamma_a14_dict_marshaller_sets_formation_keys() {
 #[test]
 fn harness_p12_gamma_a15_world_renderer_reads_formation_arrays() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));

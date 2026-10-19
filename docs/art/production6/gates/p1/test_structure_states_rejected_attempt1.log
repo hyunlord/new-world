@@ -1,0 +1,25 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+SCRIPT ERROR: Invalid call. Nonexistent function 'get_agent_snapshot' in base 'Node (ResourceDouble)'.
+          at: _update_shelter_cold (gdscript://-9223372007075215935.gd:511)
+          GDScript backtrace (most recent call first):
+              [0] _update_shelter_cold (gdscript://-9223372007075215935.gd:511)
+              [1] _process (gdscript://-9223372007075215935.gd:67)
+              [2] _test_deadwood_rows (res://scripts/test/art/test_structure_states.gd:137)
+              [3] _initialize (res://scripts/test/art/test_structure_states.gd:102)
+SCRIPT ERROR: Invalid call. Nonexistent function 'get_agent_snapshot' in base 'Node (ResourceDouble)'.
+          at: _update_shelter_cold (gdscript://-9223372007075215935.gd:511)
+          GDScript backtrace (most recent call first):
+              [0] _update_shelter_cold (gdscript://-9223372007075215935.gd:511)
+              [1] _process (gdscript://-9223372007075215935.gd:67)
+              [2] _test_deadwood_rows (res://scripts/test/art/test_structure_states.gd:147)
+              [3] _initialize (res://scripts/test/art/test_structure_states.gd:102)
+SCRIPT ERROR: Invalid call. Nonexistent function 'get_agent_snapshot' in base 'Node (ResourceDouble)'.
+          at: _update_shelter_cold (gdscript://-9223372007075215935.gd:511)
+          GDScript backtrace (most recent call first):
+              [0] _update_shelter_cold (gdscript://-9223372007075215935.gd:511)
+              [1] _process (gdscript://-9223372007075215935.gd:67)
+              [2] _test_deadwood_rows (res://scripts/test/art/test_structure_states.gd:158)
+              [3] _initialize (res://scripts/test/art/test_structure_states.gd:102)
+ART STRUCTURE STATES PASS: construction, hearth clock, storage tiers, day-long cairn fade

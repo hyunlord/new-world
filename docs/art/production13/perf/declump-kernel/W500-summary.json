@@ -1,0 +1,405 @@
+{
+  "pooled_median_ratio": 0.7962943015737632,
+  "pair_ratios": [
+    0.7820915219906681,
+    0.796256798319723,
+    0.7986974328660994
+  ],
+  "speed_pass": true,
+  "valid": true,
+  "world": "W500",
+  "change_id": "declump-kernel",
+  "blocks": [
+    {
+      "index": 0,
+      "mode": "control",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 28.037000004768352,
+          "p90": 29.8329999952316,
+          "p99": 30.7670000047684,
+          "maximum": 31.2780000033379,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 27.792,
+          "p90": 29.578,
+          "p99": 30.522,
+          "maximum": 31.019,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.245000004768372,
+          "p90": 0.273000001907349,
+          "p99": 0.296999990940094,
+          "maximum": 0.303999990224838,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.051000000000000004,
+          "p90": 0.062,
+          "p99": 0.075,
+          "maximum": 0.078,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 30.189,
+          "p90": 32.072,
+          "p99": 33.165,
+          "maximum": 33.73,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 1,
+      "mode": "candidate",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 21.92750000578165,
+          "p90": 23.454999992609,
+          "p99": 24.290999992609,
+          "maximum": 24.3149999966621,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 21.682,
+          "p90": 23.213,
+          "p99": 24.052,
+          "maximum": 24.074,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.243000000715256,
+          "p90": 0.264999985694885,
+          "p99": 0.287999987602234,
+          "maximum": 0.305999994277954,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.051,
+          "p90": 0.069,
+          "p99": 0.086,
+          "maximum": 0.108,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 24.066499999999998,
+          "p90": 25.67,
+          "p99": 26.649,
+          "maximum": 26.742,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 2,
+      "mode": "control",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 28.1310000077486,
+          "p90": 29.3570000040531,
+          "p99": 30.2449999979734,
+          "maximum": 30.6059999939203,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 27.8735,
+          "p90": 29.105,
+          "p99": 29.996,
+          "maximum": 30.359,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.245000004768372,
+          "p90": 0.270999997854233,
+          "p99": 0.287999987602234,
+          "maximum": 0.289000004529953,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.051,
+          "p90": 0.062,
+          "p99": 0.069,
+          "maximum": 0.069,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 30.3335,
+          "p90": 31.541,
+          "p99": 32.883,
+          "maximum": 33.056,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 3,
+      "mode": "candidate",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 22.399499999702,
+          "p90": 23.9680000066757,
+          "p99": 25.1049999864101,
+          "maximum": 25.9180000085831,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 22.157,
+          "p90": 23.7,
+          "p99": 24.847,
+          "maximum": 25.627,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.246999993920326,
+          "p90": 0.270999997854233,
+          "p99": 0.289000004529953,
+          "maximum": 0.291000008583069,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.055,
+          "p90": 0.075,
+          "p99": 0.084,
+          "maximum": 0.103,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 24.5475,
+          "p90": 26.294,
+          "p99": 27.585,
+          "maximum": 28.392,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 4,
+      "mode": "control",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 27.714499997377402,
+          "p90": 28.6810000067949,
+          "p99": 30.1910000081062,
+          "maximum": 30.3529999986887,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 27.468,
+          "p90": 28.435,
+          "p99": 29.937,
+          "maximum": 30.111,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.242499999701977,
+          "p90": 0.264999985694885,
+          "p99": 0.29899999499321,
+          "maximum": 0.300000011920929,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.045,
+          "p90": 0.058,
+          "p99": 0.069,
+          "maximum": 0.07,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 29.826500000000003,
+          "p90": 30.93,
+          "p99": 32.497,
+          "maximum": 32.69,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 5,
+      "mode": "candidate",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 22.13550000107285,
+          "p90": 23.8089999945164,
+          "p99": 24.7089999911785,
+          "maximum": 25.1410000038147,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 21.896,
+          "p90": 23.547,
+          "p99": 24.456,
+          "maximum": 24.845,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.245500005781651,
+          "p90": 0.270999997854233,
+          "p99": 0.294999986886978,
+          "maximum": 0.296000003814697,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.053,
+          "p90": 0.071,
+          "p99": 0.1,
+          "maximum": 0.116,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 24.3265,
+          "p90": 26.092,
+          "p99": 27.038,
+          "maximum": 27.655,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        }
+      }
+    }
+  ],
+  "control": {
+    "count": 450,
+    "median": 27.84899999940395,
+    "p90": 29.3659999966621,
+    "p99": 30.6520000040531,
+    "maximum": 31.2780000033379,
+    "over_budget": 450
+  },
+  "candidate": {
+    "count": 450,
+    "median": 22.1760000040531,
+    "p90": 23.8089999945164,
+    "p99": 24.99000000453,
+    "maximum": 25.9180000085831,
+    "over_budget": 450
+  },
+  "median_speedup": 1.255817099310696,
+  "pixel_identity": "NOT_VERIFIED",
+  "source": "/Users/rexxa/work/art-production13-evidence/kernel/pairs-W500-attempt1"
+}

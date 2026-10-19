@@ -1,0 +1,11 @@
+{
+  "reviewer": "/root/prod_static",
+  "rounds": 2,
+  "initial_findings": [
+    "A11_lineup_omits_fallback_icon_and_body_only_crop_excludes_cue"
+  ],
+  "final_findings": [],
+  "resolved": true,
+  "scope": "A5,A13,A14 thresholds and metadata; lineup shared runtime choice/icon path; blind cue bounds; forest evidence copying",
+  "runtime_acceptance": false
+}

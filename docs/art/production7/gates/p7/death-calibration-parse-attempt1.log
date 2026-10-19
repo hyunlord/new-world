@@ -1,0 +1,11 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "res://scripts/ui/panels/hud_topbar.gd".
+          at: GDScript::reload (res://scripts/test/art/capture_deaths_p7.gd:113)
+SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "res://scripts/ui/panels/hud_status_panel.gd".
+          at: GDScript::reload (res://scripts/test/art/capture_deaths_p7.gd:113)
+SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "res://scripts/ui/death_viz_renderer.gd".
+          at: GDScript::reload (res://scripts/test/art/capture_deaths_p7.gd:113)
+ERROR: Failed to load script "res://scripts/test/art/capture_deaths_p7.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)

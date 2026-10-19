@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS for bounded Part1 windowed check",
+  "scope": "soc_d33_0900_F2_orig, departure plus180game ticks",
+  "reviewer": "implementation parent, not blind reviewer",
+  "observations": [
+    "13-person departure and Village2 founding fully readable",
+    "No routine visible",
+    "+8 additional protected history visible insidepanel",
+    "Independent raw event oracle28events, coverage complete"
+  ],
+  "audit": "../measurements/p1-news-audit.json",
+  "limitations": [
+    "Final full A31 capture set and independent final review pending"
+  ]
+}

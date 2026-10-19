@@ -1,0 +1,30 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+EDGE begin 0.0 max=3534.0 page=604.0 layout=604.0 box=3534.0 pad=0.0
+EDGE target start=0.0 boundary=582.0 padding=22.0
+EDGE restore top=true max=3534.0 page=604.0
+EDGE begin 2952.0 max=3534.0 page=582.0 layout=604.0 box=3534.0 pad=22.0
+EDGE target start=2930.0 boundary=2966.0 padding=36.0
+EDGE restore top=false max=3534.0 page=582.0
+ERROR: visible line crosses scroll edge: @RichTextLabel@70 [P: (1560.0, 90.0), S: (132.0, 56.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 568.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p13.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p13.gd:101)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p13.gd:103)
+       [3] _run (res://scripts/test/art/test_life_layout_p13.gd:55)
+EDGE begin 0.0 max=3534.0 page=568.0 layout=604.0 box=4458.0 pad=36.0
+EDGE target start=0.0 boundary=582.0 padding=22.0
+EDGE restore top=true max=3534.0 page=568.0
+EDGE begin 3876.0 max=4458.0 page=582.0 layout=604.0 box=4458.0 pad=22.0
+EDGE target start=3854.0 boundary=3890.0 padding=36.0
+EDGE restore top=false max=4458.0 page=582.0
+ERROR: visible line crosses scroll edge: @RichTextLabel@70 [P: (1560.0, 90.0), S: (108.0, 56.0)] viewport=[P: (1560.0, 132.0), S: (340.0, 568.0)]
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_life_layout_p13.gd:13)
+       [1] _check_boundary_lines (res://scripts/test/art/test_life_layout_p13.gd:101)
+       [2] _check_boundary_lines (res://scripts/test/art/test_life_layout_p13.gd:103)
+       [3] _run (res://scripts/test/art/test_life_layout_p13.gd:55)
+LIFE_LAYOUT_P12 failures=2

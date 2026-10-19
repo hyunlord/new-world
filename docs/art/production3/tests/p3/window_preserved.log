@@ -1,0 +1,433 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (132 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | world_0_regions.png[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | _277026c214ec90882aa2d740b13db486d8e964235ee5d71172bdefbf36dd2e28.png[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | _a23f5f9b42dd65336a0fc02d8b0d29c0c2c1a10a15544e01aaf76a9190961e1b.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | _a861f085553e0da929549c1280699f62630b73c809be7edee0b4cfc30e1c0ec9.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | _fc9da40eac4016d6294aa74be67c39b278f519ffdf13ec2d16cdf7985073acc6.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | adult_a_0aefd559f4c0821b7b94793bc60bf032fb05d2b1e3f4b198899d8ef9a378c30e.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | adult_a_0b360354e3db46a62070b7b5b0e539e690fdb6d81830398246401d0bf63b0e5d.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | adult_a_3b76e87eedd2d81929c019275806a9ab44e254dcc30246c6085f04ae5e9ee246.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | adult_a_3f43166178edfe5b1c4d123fabd7d2427adbfe26a5f7eea25b3f5b4ed510b1a5.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | adult_a_4c59cb2c006b8191e60683fbc2035a40f944810cdc500a63943a4988cfd52208.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | adult_a_6da530f08db15ae6156bf7c00e45213740e03adda25ea47a2b20bd4d6fd56b5f.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | adult_a_8a21daef5cc61d7119981b84627fcf2af3e7b8b463bba6139a847dba8b7aea26.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | adult_a_8b28ea286ae00a5b23d06f96a91c2e7d6cad466ab0c8a204c656eb9ca43750c2.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | adult_a_9cca13b36a8892932bb90c8dc2eba20fe5c6f09e3836171806443ac874445793.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | adult_a_19afa5f93f47e0454534f9995ff6465f781b676c43770c98df181af1c7622a4c.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | adult_a_49c18f3d2e73ed6fcb6ededdbae241ffe5131eafacc4ccff8a15281b8cdfaa7e.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | adult_a_65d70a8d1720cbcdd892536342490818dfd7db287e9cfafa5ebc9c2019089fe1.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | adult_a_65e4b7ea6af12576588052ae04f675db879d10815d07a4f0ecad774742253bcf.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | adult_a_93badfe24709ebe18a9d054dbc1e9bc9e3001859a8a67d0e581ff25b70b7c875.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | adult_a_103b69ff84763427e9a2ac75edaf258a52e9ee6fe3dd1e3e1cc235160c007ea6.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | adult_a_277f4562ae7ec81b9dc4e518018c14a2f45804d0fddaa93cc2d059c22254853a.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | adult_a_450f7a807f60fb605013dd0fbed151434b9e3b5e81e1f658a01b38195fd90fc9.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | adult_a_794ac9a48506e6aad334ced389274e1aaadea1f58974c4d6b00c69ee11648298.png[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | adult_a_917c1060508301168c221886665fc019bc4f6c0c9bb2495362d6487594894b9e.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | adult_a_996dde0d721f598ce949cc1b35408d37d470ebcb81899218f1f13949a7a98c9a.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | adult_a_7997f8e531f9d156f0f111fc3a53ec4b4a7f60b03938925b962cbe66eb0006c5.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | adult_a_38339ee8ea634cfe13d5c0ede4f7a20dc64116c204674816e65fe132419eaa92.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | adult_a_12157633d44a275a9b7b748411534c19e5869f63b58218d0af60806479763fd8.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | adult_a_a838010cf862960c4e4cee5262e08bd9d52b67cf48a89fdb7a8a71e401e82a05.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | adult_a_afbf53ffd8ec4a2840ffd3b61bea1da17e176713fba21e74cf60cf26924fb7e1.png[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | adult_a_b3c2165fa82fa4788300ee46e0ddc69fb0d5e7162da720ee5b7dc0c9719e2819.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | adult_a_b42dca99c5b2abcdcdeb283f7fe4287e9d373de90663a8ae0ad9bc7f26a44114.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | adult_a_b81e30c95b769e89c8d653a52697f948e31cef64839f4cd9b2a587990e2c9f62.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | adult_a_b91c898cd72733a2eb5d57cab7d1f4d35c852c22a95dbadf405f40d687e70728.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | adult_a_b77462c8a47bab9ffea1dfc9547600a070afb707938d6ac6390647029612dc4f.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | adult_a_c632d430a423b3e34b1dce2ff1c5e8ef3e719022cbe63662f7762ab9015d2d9d.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | adult_a_cc029f4e3fc2d7ca4366812871e02b9d318229e0f0e1ee83d097647c1ef18c00.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | adult_a_ccaa2c58ea7192762a7fda1371c780b1354e6eb1bbac9ff6d7a05287116b16bf.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | adult_a_ce970d901017b11cc80ae86f06cc9975c0061bc022b278b7ff7c02494b412d02.png[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | adult_a_deefa23a44cdb0034224fdef8c07006cc630278e8dd71fea53d7e0132cc8e972.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | adult_a_e6f207e2311a1dae7e6fc7ed5b86bbd5de78c204a60ecdd070aab35457a2a8a9.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | adult_a_e5294c1b34843ed664cdb280dafcaa7a420851c3a2eda61545132e6e3dc1ee5a.png[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | adult_a_eafc1ae2c5e7977785183634863283870c6d7359273dc67168fce461abe6c2f5.png[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | adult_a_f242cd9a73ff86b314029fb699ce1223d64de7fe20b11e9127e7238ec55764e1.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | adult_a_f303b471e85103ad25d82663fe0ef72f0e8553722ef87a044a68b79faa0ecb13.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | adult_a_f6155945cb5e7ba8d07a5009d8a946d26a2b077b8eb2822af454d795c7a6e1d0.png[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | adult_a_fbb4faebb2cb31b8218c22ab88cda97d1a2968e3fcd3417efe945e51b96f9d74.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | adult_a_fe128d2aa25fdce70a304018c38dd53ee1ef67c5950a2669e399321ab8f76786.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | adult_b_01c896fb3f17c2d0be3968aabb0fd81a73dbd3048a16852d50fe2795531c9956.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | adult_b_2c34b449016c8ac0adcecbc5a453439561b18c9da658ae78fab53099dbb174c5.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | adult_b_3f2aa1ba5616f51bb9f24eaa2ea2f4d617dcb0512bb7f668d23683a18b3d676b.png[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | adult_b_4a5fb20bf7fd5444d3dbf344301f8f8055e674f12f3a5141873f17ce945f4a26.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | adult_b_4c548aa080a002230d28ab20716aeb783cfd9dcb10d9e7cb62e0eeaa8feb3ccb.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | adult_b_5bcfff16e5276c2220ed83cb02463fd77880ee9f4cff80cc639e9f65a69fe592.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | adult_b_6e28465dc64ad7eae8ef6124192e1c295773f2e61df23e2b682822207a685c43.png[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | adult_b_7b0862f597cec547e0b8c0ef191440ff2bfe2c0fce0b029a8da79dfe9b3ee685.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | adult_b_9d00290b68811f985edc210dc3eb76de078bb097ffb54ca8147866a3c8544ced.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | adult_b_9fa3829eb2f1846713c6640e056d78a8f4f265346cf4f68c8557e00926256398.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | adult_b_11e232755f26352e3c3b403d4c9be43f989154247356042fb26bc65ed32579f0.png[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | adult_b_15fc08eb2104248b000a0c8eaca43d28b4f2d26320bb9c8783281f6ceafd81fb.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | adult_b_36a020afd2c4e9e41407c89e430dbc9ca880ae8c9cbffa528499a801ee810cc0.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | adult_b_60ac2fe6a6e054d727a276ba242721621e6f3539a2307a2cb97f3d6e2ca25cf1.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | adult_b_64d3cf1fed8e6761fdfde441b2b8ff1e0545b8ab68c984dc7b7fe0e3e56d6732.png[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | adult_b_85e97a49bb7670cefdc1a6d9e4cc2c5f8f59c180f852562c0a68b5a7b32397e9.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | adult_b_189a829f5379662e364758a5e44346631b6b385e1b419067e2b7fb91451a8c9c.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | adult_b_465ec77b65e79d6c0f727478e6eb01195c1e3fcf54af33f1348f3f37b0677f4f.png[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | adult_b_474a78c167e254dbfcc9c619f0602d62cf939dd473c7eee166cb792dcc2e1fcc.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | adult_b_508d7b0c6a041cfb435b047a107e4c3e177fc450bed1bd5b3c271509fcd14835.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | adult_b_3773b3f67d49daae0d97e382488145e780e54ec291e4882835a7f596b7642d8a.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | adult_b_4438eb69f9bef9ca18f65e79a527ac539b48cb77bc94e9e2d2c58ed15e5c5f8b.png[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | adult_b_6591d979b67a18ffa7d47c48f61f1e13525d23c65a189fbc662415f88a62d45a.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | adult_b_7515c0b8b4cd7708a6faac69e49057010d59ec5e1d568c8e1d64e36e64a8f163.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | adult_b_9012bb7eb9d25391fe8dd09778ee67752a5304b89d5244b64dfa75a59192d7c8.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | adult_b_44969fd9515cca1eaf043dc32d4fd6da650d1763b3148923e80273623bb62e91.png[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | adult_b_57002eeeb4be19f80b11762d27225ef276977e8ed41456bd0b3cdb392fec6591.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | adult_b_60001efec23e006fe275d8ed9f164f5966a09b5654fc764c4de9b5c02ffa9577.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | adult_b_64856e02723ca796023b52d4822da4fc8a8b5e3c89b085de87738e3919cc4457.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | adult_b_80940aae1f1fb3f5dfb3a38dbb23713473ff2018f5077d7267b93ffa0d5cf4f2.png[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | adult_b_89357fad06df85efc770fc7bbd215b672d3ae62b237a6069db0ea01708b74a75.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | adult_b_a483db722039f85d44baf12615d910e7e85d338b927f53587520caf57b377d8d.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | adult_b_a860df11c90ec46e95f72b0f7b6e1c540fd2f19277dc8b4c1fe1ecefaf881e67.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | adult_b_acd1ec22f4163aa5b705ba38fdf294862166d2c54e4f8b01cb2829519bfce569.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | adult_b_ad7f6c90d2a9a4ce2d0fec0b0d8a65a55225c5795a37e784127e68da1fd931d1.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | adult_b_afa9a470adc351bc2b1db3a9d662fd48634073f00d2e326c45246a48cd149034.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | adult_b_b01dcfdce23a3ba14e79cfcde059523ba16f5a29d60b6a8302b05656cfc0e0cb.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | adult_b_b721aa9bf1e1b136ce59e0e7fbeb2102a72004d43352d73275604f3371b93760.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | adult_b_bae391806859cf9662eb662edeb16cf997ccf5a33882271c9042a120639c3c52.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | adult_b_c9fa8ed1bed6fd7cd8a679ed38f1197f367f5e15be5dc610dc70c717902e929e.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | adult_b_c13940a49f663895d413073fe9be344e4063f41133f22018b208de8617e43400.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | adult_b_cfe9555fe8b7e45d81734cc5b89af5fd9731802a4927418dfe99a864ed27258a.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | adult_b_cff19733d07c38cb5ee2881b2369618da285cb8a34e38842a6fd77167ab31ed9.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | adult_b_d62ea0a9d9d80423fb7bdcb040151870a1ead2d3279269d65285bc221d7da8b2.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | adult_b_d109654dee91efac68bca49c5173ad9588c2cd16855cf84e9f662ac4802ab170.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | adult_b_db5ea0c89f6d79d5d6cdec3b7e67c68508a5de82caaea2413b7e9f1796a04b49.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | adult_b_ee3f4c5a3887ea9e8779c00af5ad8be05ac9bdec24a0c69bc64b11dc206cb392.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | adult_b_fcbe95fc2826a7217c270e58ee1b20d26c1fe84d63968e0ec63ba6941c59b1ac.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | adult_b_fd83448fe232fcc15c1107f8a965b6ce20934b0acb18f98115e8c2f03826b8d4.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | child_1c63dbc122f4dc383c349d19002404de4fb62f58993a87d7d117eba2e55c46d9.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | child_2d43a249dd1a10163a4afbcd0326a3b11669cce4f14e7f0264db985c2f133491.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | child_3c1ce8cf0b6c59b1c8ed5e017bf1ec1be95235f97cbba112ea5613e52730e079.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | child_3d62e43584eaac2946035b315eb26f543899da08c98d561fc018f9d6791850a8.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | child_3e78f5b2835a519188825542edb89d9a3766e98b4e4ed9d05e997683b7103a0b.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | child_3fc904c6c9445562b1bbaa4427ee4dbd62a320daffc8a4f62ef6b77341f922cd.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | child_04c1ccdeb616ea842da21c8c634b4e0d889ff214df505b5c66ac7f0ac6eaef12.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | child_05eac1e410cf4e4a9bf111df7a85e1c574c61fda04deb6e2e3aa7c077429ac38.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | child_7d4877be022871696f8f56835554dd3842595f4d9baf9727bd865672ff40b5c5.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | child_7e996a8114a064247b10447a8c8fcf290d526e83a3242b0e02009ae35f7d5a13.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | child_8a8e2b5d674812f1a32540c28d53567f6fd345322c0534c10e2323acc8a6960d.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | child_22ff44a45c8951ee493d6857c97f77ae5ed72f1e530def4326d2900d6d421d54.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | child_57e10309d4290323a8b9193e9f2a0dc4db522c9c7973f7abdb1742d257726327.png[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | child_60dac99a582302f003d27c6a65aaa24c9e25c8977ea7cfda63d62b2710570fee.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | child_2174e2d00fad770e280441223a62b19f4f3e28c0d77bb0fbe339c26c5d44fab2.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | child_12509eee895c351dd98284f3de323b7dd7edfd5cdadf55fe8f2ca42c5791ffb5.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | child_213339e4ba7938e0a02c296adcf176d02d03a5b648b0d226dfedf97978849f1e.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | child_268092f2bc80ab39198a47be5696e8ea443db5569b9a76269fdc7855b6b244ec.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | child_9679409f3141c2fd6084a46dd1be6111df41ab4496fdc8ce56536a523b737aa1.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | child_4212423880b6a44d44d959b9f638c451a4215682760c78602575ef273178e295.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | child_abd5498a572db4644dbb08afb08c4c7166818bbff67bc0b782c14ff860c5e08c.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | child_ac281d86e336c51ddf36bea9aaa86179f29ba401d40d68a6e6fc4b48e7a36440.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | child_b07513bcc2043bfb76d4532862de89449b89b4b60270c5095bce39416e0a9beb.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | child_b15498309d3304c637dc96461b239dd613c39cc94f556d18aa72851c666cab11.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | child_ceab10e5db9f15a30bb0bdc296368f9f2b935b27dd4f861e71685a74d295ccf3.png[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | child_d3b186c9e8ff37e5abed2103549dc61897597573de59cd53752f02dbd493b7aa.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | child_dd3f0aa2cef1ebaf2aa3adc09fe4d0863e46344bc105925c9db95ef880f170b2.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | child_df6d89c7171e41daf944a85ce623e00185cc8829fcf5cc86db99d1d2d50d9c1f.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | child_e7c1cc14dbe28763ec0a68cefdc876b1fd8661defde993a3fd31f0e3e9689ae1.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | child_ff058d67ee5406472b4c7fe4625a79212309f0aca020b09a6e511d0cd9d70768.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | baseline_t0_F1.jpg[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | baseline_t0_F2.jpg[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | baseline_t1440_F1.jpg[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | baseline_t1440_F2.jpg[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | installed_regions_preserved.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (132 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | child_2d43a249dd1a10163a4afbcd0326a3b11669cce4f14e7f0264db985c2f133491.png[39m[0m
+[   0% ] [90m[1mreimport[22m | child_1c63dbc122f4dc383c349d19002404de4fb62f58993a87d7d117eba2e55c46d9.png[39m[0m
+[   1% ] [90m[1mreimport[22m | adult_b_fd83448fe232fcc15c1107f8a965b6ce20934b0acb18f98115e8c2f03826b8d4.png[39m[0m
+[   2% ] [90m[1mreimport[22m | adult_b_fcbe95fc2826a7217c270e58ee1b20d26c1fe84d63968e0ec63ba6941c59b1ac.png[39m[0m
+[   3% ] [90m[1mreimport[22m | adult_b_ee3f4c5a3887ea9e8779c00af5ad8be05ac9bdec24a0c69bc64b11dc206cb392.png[39m[0m
+[   3% ] [90m[1mreimport[22m | adult_b_db5ea0c89f6d79d5d6cdec3b7e67c68508a5de82caaea2413b7e9f1796a04b49.png[39m[0m
+[   4% ] [90m[1mreimport[22m | adult_b_d109654dee91efac68bca49c5173ad9588c2cd16855cf84e9f662ac4802ab170.png[39m[0m
+[   5% ] [90m[1mreimport[22m | adult_b_d62ea0a9d9d80423fb7bdcb040151870a1ead2d3279269d65285bc221d7da8b2.png[39m[0m
+[   6% ] [90m[1mreimport[22m | adult_b_cff19733d07c38cb5ee2881b2369618da285cb8a34e38842a6fd77167ab31ed9.png[39m[0m
+[   6% ] [90m[1mreimport[22m | adult_b_cfe9555fe8b7e45d81734cc5b89af5fd9731802a4927418dfe99a864ed27258a.png[39m[0m
+[   7% ] [90m[1mreimport[22m | adult_b_c13940a49f663895d413073fe9be344e4063f41133f22018b208de8617e43400.png[39m[0m
+[   8% ] [90m[1mreimport[22m | adult_b_c9fa8ed1bed6fd7cd8a679ed38f1197f367f5e15be5dc610dc70c717902e929e.png[39m[0m
+[   9% ] [90m[1mreimport[22m | adult_b_bae391806859cf9662eb662edeb16cf997ccf5a33882271c9042a120639c3c52.png[39m[0m
+[   9% ] [90m[1mreimport[22m | adult_b_b721aa9bf1e1b136ce59e0e7fbeb2102a72004d43352d73275604f3371b93760.png[39m[0m
+[  10% ] [90m[1mreimport[22m | adult_b_b01dcfdce23a3ba14e79cfcde059523ba16f5a29d60b6a8302b05656cfc0e0cb.png[39m[0m
+[  11% ] [90m[1mreimport[22m | adult_b_afa9a470adc351bc2b1db3a9d662fd48634073f00d2e326c45246a48cd149034.png[39m[0m
+[  12% ] [90m[1mreimport[22m | adult_b_474a78c167e254dbfcc9c619f0602d62cf939dd473c7eee166cb792dcc2e1fcc.png[39m[0m
+[  12% ] [90m[1mreimport[22m | adult_b_508d7b0c6a041cfb435b047a107e4c3e177fc450bed1bd5b3c271509fcd14835.png[39m[0m
+[  13% ] [90m[1mreimport[22m | adult_b_3773b3f67d49daae0d97e382488145e780e54ec291e4882835a7f596b7642d8a.png[39m[0m
+[  14% ] [90m[1mreimport[22m | adult_b_4438eb69f9bef9ca18f65e79a527ac539b48cb77bc94e9e2d2c58ed15e5c5f8b.png[39m[0m
+[  15% ] [90m[1mreimport[22m | adult_b_6591d979b67a18ffa7d47c48f61f1e13525d23c65a189fbc662415f88a62d45a.png[39m[0m
+[  15% ] [90m[1mreimport[22m | adult_b_7515c0b8b4cd7708a6faac69e49057010d59ec5e1d568c8e1d64e36e64a8f163.png[39m[0m
+[  16% ] [90m[1mreimport[22m | adult_b_9012bb7eb9d25391fe8dd09778ee67752a5304b89d5244b64dfa75a59192d7c8.png[39m[0m
+[  17% ] [90m[1mreimport[22m | adult_b_44969fd9515cca1eaf043dc32d4fd6da650d1763b3148923e80273623bb62e91.png[39m[0m
+[  18% ] [90m[1mreimport[22m | adult_b_57002eeeb4be19f80b11762d27225ef276977e8ed41456bd0b3cdb392fec6591.png[39m[0m
+[  18% ] [90m[1mreimport[22m | adult_b_60001efec23e006fe275d8ed9f164f5966a09b5654fc764c4de9b5c02ffa9577.png[39m[0m
+[  19% ] [90m[1mreimport[22m | adult_b_64856e02723ca796023b52d4822da4fc8a8b5e3c89b085de87738e3919cc4457.png[39m[0m
+[  20% ] [90m[1mreimport[22m | adult_b_80940aae1f1fb3f5dfb3a38dbb23713473ff2018f5077d7267b93ffa0d5cf4f2.png[39m[0m
+[  21% ] [90m[1mreimport[22m | adult_b_89357fad06df85efc770fc7bbd215b672d3ae62b237a6069db0ea01708b74a75.png[39m[0m
+[  21% ] [90m[1mreimport[22m | adult_b_a483db722039f85d44baf12615d910e7e85d338b927f53587520caf57b377d8d.png[39m[0m
+[  22% ] [90m[1mreimport[22m | adult_b_a860df11c90ec46e95f72b0f7b6e1c540fd2f19277dc8b4c1fe1ecefaf881e67.png[39m[0m
+[  23% ] [90m[1mreimport[22m | adult_b_acd1ec22f4163aa5b705ba38fdf294862166d2c54e4f8b01cb2829519bfce569.png[39m[0m
+[  24% ] [90m[1mreimport[22m | adult_b_ad7f6c90d2a9a4ce2d0fec0b0d8a65a55225c5795a37e784127e68da1fd931d1.png[39m[0m
+[  24% ] [90m[1mreimport[22m | installed_regions_preserved.png[39m[0m
+[  25% ] [90m[1mreimport[22m | baseline_t1440_F2.jpg[39m[0m
+[  26% ] [90m[1mreimport[22m | baseline_t1440_F1.jpg[39m[0m
+[  27% ] [90m[1mreimport[22m | baseline_t0_F2.jpg[39m[0m
+[  27% ] [90m[1mreimport[22m | baseline_t0_F1.jpg[39m[0m
+[  28% ] [90m[1mreimport[22m | child_ff058d67ee5406472b4c7fe4625a79212309f0aca020b09a6e511d0cd9d70768.png[39m[0m
+[  29% ] [90m[1mreimport[22m | child_e7c1cc14dbe28763ec0a68cefdc876b1fd8661defde993a3fd31f0e3e9689ae1.png[39m[0m
+[  30% ] [90m[1mreimport[22m | child_df6d89c7171e41daf944a85ce623e00185cc8829fcf5cc86db99d1d2d50d9c1f.png[39m[0m
+[  30% ] [90m[1mreimport[22m | child_dd3f0aa2cef1ebaf2aa3adc09fe4d0863e46344bc105925c9db95ef880f170b2.png[39m[0m
+[  31% ] [90m[1mreimport[22m | child_d3b186c9e8ff37e5abed2103549dc61897597573de59cd53752f02dbd493b7aa.png[39m[0m
+[  32% ] [90m[1mreimport[22m | child_ceab10e5db9f15a30bb0bdc296368f9f2b935b27dd4f861e71685a74d295ccf3.png[39m[0m
+[  33% ] [90m[1mreimport[22m | child_b15498309d3304c637dc96461b239dd613c39cc94f556d18aa72851c666cab11.png[39m[0m
+[  33% ] [90m[1mreimport[22m | child_b07513bcc2043bfb76d4532862de89449b89b4b60270c5095bce39416e0a9beb.png[39m[0m
+[  34% ] [90m[1mreimport[22m | child_ac281d86e336c51ddf36bea9aaa86179f29ba401d40d68a6e6fc4b48e7a36440.png[39m[0m
+[  35% ] [90m[1mreimport[22m | child_abd5498a572db4644dbb08afb08c4c7166818bbff67bc0b782c14ff860c5e08c.png[39m[0m
+[  36% ] [90m[1mreimport[22m | child_4212423880b6a44d44d959b9f638c451a4215682760c78602575ef273178e295.png[39m[0m
+[  36% ] [90m[1mreimport[22m | child_3c1ce8cf0b6c59b1c8ed5e017bf1ec1be95235f97cbba112ea5613e52730e079.png[39m[0m
+[  37% ] [90m[1mreimport[22m | child_3d62e43584eaac2946035b315eb26f543899da08c98d561fc018f9d6791850a8.png[39m[0m
+[  38% ] [90m[1mreimport[22m | child_3e78f5b2835a519188825542edb89d9a3766e98b4e4ed9d05e997683b7103a0b.png[39m[0m
+[  39% ] [90m[1mreimport[22m | child_3fc904c6c9445562b1bbaa4427ee4dbd62a320daffc8a4f62ef6b77341f922cd.png[39m[0m
+[  39% ] [90m[1mreimport[22m | child_04c1ccdeb616ea842da21c8c634b4e0d889ff214df505b5c66ac7f0ac6eaef12.png[39m[0m
+[  40% ] [90m[1mreimport[22m | child_05eac1e410cf4e4a9bf111df7a85e1c574c61fda04deb6e2e3aa7c077429ac38.png[39m[0m
+[  41% ] [90m[1mreimport[22m | child_7d4877be022871696f8f56835554dd3842595f4d9baf9727bd865672ff40b5c5.png[39m[0m
+[  42% ] [90m[1mreimport[22m | child_7e996a8114a064247b10447a8c8fcf290d526e83a3242b0e02009ae35f7d5a13.png[39m[0m
+[  42% ] [90m[1mreimport[22m | child_8a8e2b5d674812f1a32540c28d53567f6fd345322c0534c10e2323acc8a6960d.png[39m[0m
+[  43% ] [90m[1mreimport[22m | child_22ff44a45c8951ee493d6857c97f77ae5ed72f1e530def4326d2900d6d421d54.png[39m[0m
+[  44% ] [90m[1mreimport[22m | child_57e10309d4290323a8b9193e9f2a0dc4db522c9c7973f7abdb1742d257726327.png[39m[0m
+[  45% ] [90m[1mreimport[22m | child_60dac99a582302f003d27c6a65aaa24c9e25c8977ea7cfda63d62b2710570fee.png[39m[0m
+[  45% ] [90m[1mreimport[22m | child_2174e2d00fad770e280441223a62b19f4f3e28c0d77bb0fbe339c26c5d44fab2.png[39m[0m
+[  46% ] [90m[1mreimport[22m | child_12509eee895c351dd98284f3de323b7dd7edfd5cdadf55fe8f2ca42c5791ffb5.png[39m[0m
+[  47% ] [90m[1mreimport[22m | child_213339e4ba7938e0a02c296adcf176d02d03a5b648b0d226dfedf97978849f1e.png[39m[0m
+[  48% ] [90m[1mreimport[22m | child_268092f2bc80ab39198a47be5696e8ea443db5569b9a76269fdc7855b6b244ec.png[39m[0m
+[  48% ] [90m[1mreimport[22m | child_9679409f3141c2fd6084a46dd1be6111df41ab4496fdc8ce56536a523b737aa1.png[39m[0m
+[  49% ] [90m[1mreimport[22m | adult_a_b81e30c95b769e89c8d653a52697f948e31cef64839f4cd9b2a587990e2c9f62.png[39m[0m
+[  50% ] [90m[1mreimport[22m | adult_a_b42dca99c5b2abcdcdeb283f7fe4287e9d373de90663a8ae0ad9bc7f26a44114.png[39m[0m
+[  51% ] [90m[1mreimport[22m | adult_a_b3c2165fa82fa4788300ee46e0ddc69fb0d5e7162da720ee5b7dc0c9719e2819.png[39m[0m
+[  51% ] [90m[1mreimport[22m | adult_a_afbf53ffd8ec4a2840ffd3b61bea1da17e176713fba21e74cf60cf26924fb7e1.png[39m[0m
+[  52% ] [90m[1mreimport[22m | adult_a_a838010cf862960c4e4cee5262e08bd9d52b67cf48a89fdb7a8a71e401e82a05.png[39m[0m
+[  53% ] [90m[1mreimport[22m | adult_a_12157633d44a275a9b7b748411534c19e5869f63b58218d0af60806479763fd8.png[39m[0m
+[  54% ] [90m[1mreimport[22m | adult_a_38339ee8ea634cfe13d5c0ede4f7a20dc64116c204674816e65fe132419eaa92.png[39m[0m
+[  54% ] [90m[1mreimport[22m | adult_a_7997f8e531f9d156f0f111fc3a53ec4b4a7f60b03938925b962cbe66eb0006c5.png[39m[0m
+[  55% ] [90m[1mreimport[22m | adult_a_996dde0d721f598ce949cc1b35408d37d470ebcb81899218f1f13949a7a98c9a.png[39m[0m
+[  56% ] [90m[1mreimport[22m | adult_a_917c1060508301168c221886665fc019bc4f6c0c9bb2495362d6487594894b9e.png[39m[0m
+[  57% ] [90m[1mreimport[22m | adult_a_794ac9a48506e6aad334ced389274e1aaadea1f58974c4d6b00c69ee11648298.png[39m[0m
+[  57% ] [90m[1mreimport[22m | adult_a_450f7a807f60fb605013dd0fbed151434b9e3b5e81e1f658a01b38195fd90fc9.png[39m[0m
+[  58% ] [90m[1mreimport[22m | adult_a_277f4562ae7ec81b9dc4e518018c14a2f45804d0fddaa93cc2d059c22254853a.png[39m[0m
+[  59% ] [90m[1mreimport[22m | adult_a_103b69ff84763427e9a2ac75edaf258a52e9ee6fe3dd1e3e1cc235160c007ea6.png[39m[0m
+[  60% ] [90m[1mreimport[22m | adult_a_93badfe24709ebe18a9d054dbc1e9bc9e3001859a8a67d0e581ff25b70b7c875.png[39m[0m
+[  60% ] [90m[1mreimport[22m | adult_a_65e4b7ea6af12576588052ae04f675db879d10815d07a4f0ecad774742253bcf.png[39m[0m
+[  61% ] [90m[1mreimport[22m | world_0_regions.png[39m[0m
+[  62% ] [90m[1mreimport[22m | _277026c214ec90882aa2d740b13db486d8e964235ee5d71172bdefbf36dd2e28.png[39m[0m
+[  63% ] [90m[1mreimport[22m | _a23f5f9b42dd65336a0fc02d8b0d29c0c2c1a10a15544e01aaf76a9190961e1b.png[39m[0m
+[  63% ] [90m[1mreimport[22m | _a861f085553e0da929549c1280699f62630b73c809be7edee0b4cfc30e1c0ec9.png[39m[0m
+[  64% ] [90m[1mreimport[22m | _fc9da40eac4016d6294aa74be67c39b278f519ffdf13ec2d16cdf7985073acc6.png[39m[0m
+[  65% ] [90m[1mreimport[22m | adult_a_0aefd559f4c0821b7b94793bc60bf032fb05d2b1e3f4b198899d8ef9a378c30e.png[39m[0m
+[  66% ] [90m[1mreimport[22m | adult_a_0b360354e3db46a62070b7b5b0e539e690fdb6d81830398246401d0bf63b0e5d.png[39m[0m
+[  66% ] [90m[1mreimport[22m | adult_a_3b76e87eedd2d81929c019275806a9ab44e254dcc30246c6085f04ae5e9ee246.png[39m[0m
+[  67% ] [90m[1mreimport[22m | adult_a_3f43166178edfe5b1c4d123fabd7d2427adbfe26a5f7eea25b3f5b4ed510b1a5.png[39m[0m
+[  68% ] [90m[1mreimport[22m | adult_a_4c59cb2c006b8191e60683fbc2035a40f944810cdc500a63943a4988cfd52208.png[39m[0m
+[  69% ] [90m[1mreimport[22m | adult_a_6da530f08db15ae6156bf7c00e45213740e03adda25ea47a2b20bd4d6fd56b5f.png[39m[0m
+[  69% ] [90m[1mreimport[22m | adult_a_8a21daef5cc61d7119981b84627fcf2af3e7b8b463bba6139a847dba8b7aea26.png[39m[0m
+[  70% ] [90m[1mreimport[22m | adult_a_8b28ea286ae00a5b23d06f96a91c2e7d6cad466ab0c8a204c656eb9ca43750c2.png[39m[0m
+[  71% ] [90m[1mreimport[22m | adult_a_9cca13b36a8892932bb90c8dc2eba20fe5c6f09e3836171806443ac874445793.png[39m[0m
+[  72% ] [90m[1mreimport[22m | adult_a_19afa5f93f47e0454534f9995ff6465f781b676c43770c98df181af1c7622a4c.png[39m[0m
+[  72% ] [90m[1mreimport[22m | adult_a_49c18f3d2e73ed6fcb6ededdbae241ffe5131eafacc4ccff8a15281b8cdfaa7e.png[39m[0m
+[  73% ] [90m[1mreimport[22m | adult_a_65d70a8d1720cbcdd892536342490818dfd7db287e9cfafa5ebc9c2019089fe1.png[39m[0m
+[  74% ] [90m[1mreimport[22m | adult_b_465ec77b65e79d6c0f727478e6eb01195c1e3fcf54af33f1348f3f37b0677f4f.png[39m[0m
+[  75% ] [90m[1mreimport[22m | adult_b_189a829f5379662e364758a5e44346631b6b385e1b419067e2b7fb91451a8c9c.png[39m[0m
+[  75% ] [90m[1mreimport[22m | adult_b_85e97a49bb7670cefdc1a6d9e4cc2c5f8f59c180f852562c0a68b5a7b32397e9.png[39m[0m
+[  76% ] [90m[1mreimport[22m | adult_b_64d3cf1fed8e6761fdfde441b2b8ff1e0545b8ab68c984dc7b7fe0e3e56d6732.png[39m[0m
+[  77% ] [90m[1mreimport[22m | adult_b_60ac2fe6a6e054d727a276ba242721621e6f3539a2307a2cb97f3d6e2ca25cf1.png[39m[0m
+[  78% ] [90m[1mreimport[22m | adult_b_36a020afd2c4e9e41407c89e430dbc9ca880ae8c9cbffa528499a801ee810cc0.png[39m[0m
+[  78% ] [90m[1mreimport[22m | adult_b_15fc08eb2104248b000a0c8eaca43d28b4f2d26320bb9c8783281f6ceafd81fb.png[39m[0m
+[  79% ] [90m[1mreimport[22m | adult_b_11e232755f26352e3c3b403d4c9be43f989154247356042fb26bc65ed32579f0.png[39m[0m
+[  80% ] [90m[1mreimport[22m | adult_b_9fa3829eb2f1846713c6640e056d78a8f4f265346cf4f68c8557e00926256398.png[39m[0m
+[  81% ] [90m[1mreimport[22m | adult_b_9d00290b68811f985edc210dc3eb76de078bb097ffb54ca8147866a3c8544ced.png[39m[0m
+[  81% ] [90m[1mreimport[22m | adult_b_7b0862f597cec547e0b8c0ef191440ff2bfe2c0fce0b029a8da79dfe9b3ee685.png[39m[0m
+[  82% ] [90m[1mreimport[22m | adult_b_6e28465dc64ad7eae8ef6124192e1c295773f2e61df23e2b682822207a685c43.png[39m[0m
+[  83% ] [90m[1mreimport[22m | adult_b_5bcfff16e5276c2220ed83cb02463fd77880ee9f4cff80cc639e9f65a69fe592.png[39m[0m
+[  84% ] [90m[1mreimport[22m | adult_b_4c548aa080a002230d28ab20716aeb783cfd9dcb10d9e7cb62e0eeaa8feb3ccb.png[39m[0m
+[  84% ] [90m[1mreimport[22m | adult_b_4a5fb20bf7fd5444d3dbf344301f8f8055e674f12f3a5141873f17ce945f4a26.png[39m[0m
+[  85% ] [90m[1mreimport[22m | adult_b_3f2aa1ba5616f51bb9f24eaa2ea2f4d617dcb0512bb7f668d23683a18b3d676b.png[39m[0m
+[  86% ] [90m[1mreimport[22m | adult_a_b91c898cd72733a2eb5d57cab7d1f4d35c852c22a95dbadf405f40d687e70728.png[39m[0m
+[  87% ] [90m[1mreimport[22m | adult_a_b77462c8a47bab9ffea1dfc9547600a070afb707938d6ac6390647029612dc4f.png[39m[0m
+[  87% ] [90m[1mreimport[22m | adult_a_c632d430a423b3e34b1dce2ff1c5e8ef3e719022cbe63662f7762ab9015d2d9d.png[39m[0m
+[  88% ] [90m[1mreimport[22m | adult_a_cc029f4e3fc2d7ca4366812871e02b9d318229e0f0e1ee83d097647c1ef18c00.png[39m[0m
+[  89% ] [90m[1mreimport[22m | adult_a_ccaa2c58ea7192762a7fda1371c780b1354e6eb1bbac9ff6d7a05287116b16bf.png[39m[0m
+[  90% ] [90m[1mreimport[22m | adult_a_ce970d901017b11cc80ae86f06cc9975c0061bc022b278b7ff7c02494b412d02.png[39m[0m
+[  90% ] [90m[1mreimport[22m | adult_a_deefa23a44cdb0034224fdef8c07006cc630278e8dd71fea53d7e0132cc8e972.png[39m[0m
+[  91% ] [90m[1mreimport[22m | adult_a_e6f207e2311a1dae7e6fc7ed5b86bbd5de78c204a60ecdd070aab35457a2a8a9.png[39m[0m
+[  92% ] [90m[1mreimport[22m | adult_a_e5294c1b34843ed664cdb280dafcaa7a420851c3a2eda61545132e6e3dc1ee5a.png[39m[0m
+[  93% ] [90m[1mreimport[22m | adult_a_eafc1ae2c5e7977785183634863283870c6d7359273dc67168fce461abe6c2f5.png[39m[0m
+[  93% ] [90m[1mreimport[22m | adult_a_f242cd9a73ff86b314029fb699ce1223d64de7fe20b11e9127e7238ec55764e1.png[39m[0m
+[  94% ] [90m[1mreimport[22m | adult_a_f303b471e85103ad25d82663fe0ef72f0e8553722ef87a044a68b79faa0ecb13.png[39m[0m
+[  95% ] [90m[1mreimport[22m | adult_a_f6155945cb5e7ba8d07a5009d8a946d26a2b077b8eb2822af454d795c7a6e1d0.png[39m[0m
+[  96% ] [90m[1mreimport[22m | adult_a_fbb4faebb2cb31b8218c22ab88cda97d1a2968e3fcd3417efe945e51b96f9d74.png[39m[0m
+[  96% ] [90m[1mreimport[22m | adult_a_fe128d2aa25fdce70a304018c38dd53ee1ef67c5950a2669e399321ab8f76786.png[39m[0m
+[  97% ] [90m[1mreimport[22m | adult_b_01c896fb3f17c2d0be3968aabb0fd81a73dbd3048a16852d50fe2795531c9956.png[39m[0m
+[  98% ] [90m[1mreimport[22m | adult_b_2c34b449016c8ac0adcecbc5a453439561b18c9da658ae78fab53099dbb174c5.png[39m[0m
+[  99% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (132 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Max
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+Published 4 captures; raw framebuffers: .harness/evidence/art-production3/p3_preserved/shots/baseline

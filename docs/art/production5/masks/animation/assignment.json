@@ -1,0 +1,134 @@
+{
+  "images": [
+    {
+      "id": "adult_b_E_carry_7acb418f9e",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_carry_7acb418f9e.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_carry_7acb418f9e.gif"
+    },
+    {
+      "id": "adult_b_E_drink_4faf0422e7",
+      "group": [
+        "adult_b",
+        "E",
+        "drink"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_drink_4faf0422e7.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_drink_4faf0422e7.gif"
+    },
+    {
+      "id": "adult_b_E_eat_e9ac7e626d",
+      "group": [
+        "adult_b",
+        "E",
+        "eat"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_eat_e9ac7e626d.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_eat_e9ac7e626d.gif"
+    },
+    {
+      "id": "adult_b_E_talk_a19bc640a0",
+      "group": [
+        "adult_b",
+        "E",
+        "talk"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_talk_a19bc640a0.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_E_talk_a19bc640a0.gif"
+    },
+    {
+      "id": "adult_b_S_build_3b9b0e0672",
+      "group": [
+        "adult_b",
+        "S",
+        "build"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_build_3b9b0e0672.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_build_3b9b0e0672.gif"
+    },
+    {
+      "id": "adult_b_S_crouch_1f2f3e7d39",
+      "group": [
+        "adult_b",
+        "S",
+        "crouch"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_crouch_1f2f3e7d39.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_crouch_1f2f3e7d39.gif"
+    },
+    {
+      "id": "adult_b_S_drink_522334dc88",
+      "group": [
+        "adult_b",
+        "S",
+        "drink"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_drink_522334dc88.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_drink_522334dc88.gif"
+    },
+    {
+      "id": "adult_b_S_eat_ddcf130df3",
+      "group": [
+        "adult_b",
+        "S",
+        "eat"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_eat_ddcf130df3.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_eat_ddcf130df3.gif"
+    },
+    {
+      "id": "adult_b_S_gather_aac3997f40",
+      "group": [
+        "adult_b",
+        "S",
+        "gather"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_gather_aac3997f40.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_gather_aac3997f40.gif"
+    },
+    {
+      "id": "adult_b_S_idle_4180085fa1",
+      "group": [
+        "adult_b",
+        "S",
+        "idle"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_idle_4180085fa1.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_idle_4180085fa1.gif"
+    },
+    {
+      "id": "adult_b_S_sit_16445a25fb",
+      "group": [
+        "adult_b",
+        "S",
+        "sit"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_sit_16445a25fb.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_sit_16445a25fb.gif"
+    },
+    {
+      "id": "adult_b_S_talk_9d888d0403",
+      "group": [
+        "adult_b",
+        "S",
+        "talk"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_talk_9d888d0403.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_talk_9d888d0403.gif"
+    },
+    {
+      "id": "adult_b_S_walk_56dbaf63ec",
+      "group": [
+        "adult_b",
+        "S",
+        "walk"
+      ],
+      "board": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_walk_56dbaf63ec.png",
+      "gif": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/animation/adult_b_S_walk_56dbaf63ec.gif"
+    }
+  ]
+}

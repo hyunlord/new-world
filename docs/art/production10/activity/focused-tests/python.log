@@ -1,0 +1,9 @@
+...Capture six live activity frames after Part 2 integration; never stress worlds.
+Usage: run_activity_captures_p10.py CHECKOUT NEWDIR POPULOUS_SEED SELECTION_EVIDENCE
+Capture six live activity frames after Part 2 integration; never stress worlds.
+Usage: run_activity_captures_p10.py CHECKOUT NEWDIR POPULOUS_SEED SELECTION_EVIDENCE
+............................................
+----------------------------------------------------------------------
+Ran 47 tests in 3.282s
+
+OK

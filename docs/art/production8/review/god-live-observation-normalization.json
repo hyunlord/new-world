@@ -1,0 +1,109 @@
+{
+  "sources": [
+    {
+      "path": "docs/art/production8/review/originals/observer-a-god-live-objects.json",
+      "sha256": "a356e2d1eb3d27cb1befdcd230bb7ba6e2455f32316fe8c1bb5ed4fcc1aa0da6",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-a/god-live-objects.json"
+    },
+    {
+      "path": "docs/art/production8/review/originals/observer-b-god-live-objects.json",
+      "sha256": "54947fe9f50bdab10ca09c4713df673861c6c3b5c03d9241970c606574daf01a",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-b/god-live-objects.json"
+    }
+  ],
+  "identity_key": {
+    "path": "docs/art/production8/review/originals/god-live-objects-key.json",
+    "sha256": "13f2ff3b6c644dbdd2b7a001ae9d00d44d705d3d6952a895175a6e9800b7890f"
+  },
+  "preserved_rows": 120,
+  "added_rows": 10,
+  "total_rows": 130,
+  "policy": {
+    "expected_metadata_used": false,
+    "identity_key_only": true,
+    "original_prose_and_world_identification_flag_preserved": true,
+    "rain": "Explicit rain-like world streaks map to rain.",
+    "panel": "Only the explicitly expanded history panel maps to panel.",
+    "windfall": "Cream rings and expansion are observed, but causal meaning is unknown. Neither dust nor drop/ended labels inferred from filenames, timestamps, panel text or metadata.",
+    "ambiguous": "Night tint and standing log pile do not establish the intervention; unknown retained."
+  },
+  "rows": [
+    {
+      "opaque_frame": "O001",
+      "stem": "god_d10_1200_F2_spoil",
+      "intervention_effects": [],
+      "intervention_identification_status": "not_identified",
+      "world_effect_visibly_identified": false
+    },
+    {
+      "opaque_frame": "O002",
+      "stem": "god_d10_1205_F2_rot_wood",
+      "intervention_effects": [],
+      "intervention_identification_status": "not_identified",
+      "world_effect_visibly_identified": false
+    },
+    {
+      "opaque_frame": "O003",
+      "stem": "god_d10_1210_F2_gift_food",
+      "intervention_effects": [],
+      "intervention_identification_status": "not_identified",
+      "world_effect_visibly_identified": false
+    },
+    {
+      "opaque_frame": "O004",
+      "stem": "god_d17_0200_F2N_cold_snap",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown",
+      "world_effect_visibly_identified": "unknown"
+    },
+    {
+      "opaque_frame": "O005",
+      "stem": "god_d23_1200_F2_gift",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown",
+      "world_effect_visibly_identified": "unknown"
+    },
+    {
+      "opaque_frame": "O006",
+      "stem": "god_d23_1205_F2_windfall_0200ms",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown",
+      "world_effect_visibly_identified": true
+    },
+    {
+      "opaque_frame": "O007",
+      "stem": "god_d23_1205_F2_windfall_1000ms",
+      "intervention_effects": [],
+      "intervention_identification_status": "unknown",
+      "world_effect_visibly_identified": true
+    },
+    {
+      "opaque_frame": "O008",
+      "stem": "god_d24_1830_F2_rain",
+      "intervention_effects": [
+        "rain"
+      ],
+      "intervention_identification_status": "identified",
+      "world_effect_visibly_identified": true
+    },
+    {
+      "opaque_frame": "O009",
+      "stem": "god_d25_0200_F2N_rain_night",
+      "intervention_effects": [
+        "rain"
+      ],
+      "intervention_identification_status": "identified",
+      "world_effect_visibly_identified": true
+    },
+    {
+      "opaque_frame": "O010",
+      "stem": "god_d25_0200_F2_panel_log",
+      "intervention_effects": [
+        "rain",
+        "panel"
+      ],
+      "intervention_identification_status": "identified",
+      "world_effect_visibly_identified": true
+    }
+  ]
+}

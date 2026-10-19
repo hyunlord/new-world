@@ -1,0 +1,130 @@
+[
+  {
+    "sprite_id": "P2_fill_05_01",
+    "candidate_id": "P2_fill_05_01@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "North-facing gathering pose remains coherent; an isolated peach skin pixel persists within the separate bush below the hand.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_02",
+    "candidate_id": "P2_fill_05_02@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing gathering pose and reference identity remain readable; bush and boots are now separated into other regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_03",
+    "candidate_id": "P2_fill_05_03@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "North-facing raised-tool build pose remains coherent; green clothing and peach skin patches persist on the separate rock at its left edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_04",
+    "candidate_id": "P2_fill_05_04@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "North-facing build strike remains readable; a green clothing patch persists on the separate rock immediately below the tool.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_05",
+    "candidate_id": "P2_fill_05_05@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing kneeling drinking pose remains coherent; unchanged isolated blue texels persist outside the left arm and beside the right hip.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_06",
+    "candidate_id": "P2_fill_05_06@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "South-facing kneeling hands-to-mouth pose remains readable with consistent identity and plausible anatomical regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_07",
+    "candidate_id": "P2_fill_05_07@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North-facing kneeling drinking pose remains coherent; the unchanged isolated blue texel persists at the lower-left edge beside the knees.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_08",
+    "candidate_id": "P2_fill_05_08@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North-facing kneeling drinking pose remains coherent; unchanged blue stray pixels persist at the lower-left silhouette beside the knees.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_09",
+    "candidate_id": "P2_fill_05_09@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "East-facing food-to-mouth pose remains clear; unchanged blue pixels interrupt the brown crown of the hair.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_10",
+    "candidate_id": "P2_fill_05_10@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing hand-to-mouth eating pose retains consistent identity; corrected brown boot regions resolve the previous objection.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_11",
+    "candidate_id": "P2_fill_05_11@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North-facing eating pose remains readable; the unchanged conspicuous blue texel persists in the gap between the legs.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_12",
+    "candidate_id": "P2_fill_05_12@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing eating pose and reference identity remain coherent; boot bands are now correctly separated from skin.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_13",
+    "candidate_id": "P2_fill_05_13@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-oriented reclining sleep pose retains identity; the distinct bedding is now separated into the other region.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_14",
+    "candidate_id": "P2_fill_05_14@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing sleeping head and corrected bedding region are readable; an isolated blue texel remains outside the lower-left bedding edge.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_15",
+    "candidate_id": "P2_fill_05_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing reclining sleep pose remains coherent with consistent hair and outfit; separate bedding is now other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_05_16",
+    "candidate_id": "P2_fill_05_16@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing seated pose and bent limbs remain coherent; the extended brown boot is now separated from skin.",
+    "unfitted_acceptable": null
+  }
+]

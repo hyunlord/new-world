@@ -1,0 +1,77 @@
+{
+  "status": "NOT_RUN",
+  "reason": "fewer_than_six_eligible_village_capture_pairs",
+  "eligible_count": 2,
+  "required_count": 6,
+  "source_count": 3,
+  "created_utc": "2026-10-19T13:02:30.477130+00:00",
+  "protocol": "production11/GOAL.md section 6.5(d); prepare_activity_villages_p13.py eligibility rules",
+  "source_hashes": [
+    {
+      "source_id": "s20261010_d30_1000_z1",
+      "json": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z1/capture.json",
+      "json_sha256": "45e7e2c67c92c1abb613e7a214034cf9f10f2b58dcaa076026e5bdc138cfd0e5",
+      "png": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z1/capture.png",
+      "png_sha256": "cab1c79569e747afa8d80d8f7ce43dee8c845b0f997e1c315935e5e6d766ea06"
+    },
+    {
+      "source_id": "s20261010_d30_1500_z1",
+      "json": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z1/capture.json",
+      "json_sha256": "b24a9c98b34de3912c60e03905f96a9952ea5ae7c8940bc087defce114e5cc7d",
+      "png": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z1/capture.png",
+      "png_sha256": "445a33111173f511589d659ac11b19d2b90c9a0f3cf45368abb720620958892c"
+    },
+    {
+      "source_id": "s20261018_d60_1000_z1",
+      "json": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z1/capture.json",
+      "json_sha256": "f7f2dad162dc8b0c6bb39e55a4ca5b180917d8536b6eb85bcb748da9572a099d",
+      "png": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z1/capture.png",
+      "png_sha256": "71f6fcbbdfc21e4931dd2a0e03de5f4678f9e3faae7436601eaa9279278aa22b"
+    }
+  ],
+  "eligible_pairs": [
+    {
+      "source_id": "s20261010_d30_1000_z1",
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z1/capture.json",
+      "seed": 20261010,
+      "village": 1,
+      "screen_rect": [
+        922.5,
+        431.0,
+        173.0,
+        44.0
+      ]
+    },
+    {
+      "source_id": "s20261018_d60_1000_z1",
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z1/capture.json",
+      "seed": 20261018,
+      "village": 2,
+      "screen_rect": [
+        1181.5,
+        799.0,
+        189.0,
+        44.0
+      ]
+    }
+  ],
+  "exclusions": [
+    {
+      "source_id": "s20261010_d30_1500_z1",
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z1/capture.json",
+      "seed": 20261010,
+      "village": 1,
+      "reason": "top_two_tie"
+    },
+    {
+      "source_id": "s20261018_d60_1000_z1",
+      "source": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z1/capture.json",
+      "seed": 20261018,
+      "village": 1,
+      "reason": "top_two_tie"
+    }
+  ],
+  "blind_answers_read": false,
+  "scored": false,
+  "extra_captures": false
+}

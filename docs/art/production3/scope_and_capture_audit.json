@@ -1,0 +1,19 @@
+{
+  "art_baseline_merge": "c18077ea1f5a5e4a66081e78be09583aad221ba6",
+  "source_head": "f2f93835207bf7587df27dda27d70dbdd7cf04b3",
+  "changed_paths": 2248,
+  "outside_allowed": [],
+  "rust_changes": [],
+  "prior_art_evidence_changes": [],
+  "goal_sha256": "22231c4fae1cb1ec6fa35c98dd46ed98659b7e681402fa2f7db23c34b15f927a",
+  "capture_head": "bd1f22dfaf68b6822deb05d0fe967e4a7d5ecf5d",
+  "capture_worktree_dirty": true,
+  "capture_fix_committed_in": "f2f93835207bf7587df27dda27d70dbdd7cf04b3",
+  "post_capture_runtime_changes": [],
+  "capture_limit": "Not a clean-final-head capture; the visibility correction was in the working tree, then committed in P6. Later P7 changes are evidence only.",
+  "final_capture_error_counts": {
+    "art_fixed.log": 0,
+    "art_long_fixed.log": 0,
+    "calibration_fixed.log": 0
+  }
+}

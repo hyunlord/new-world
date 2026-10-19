@@ -1,0 +1,231 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (52 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   5% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  66% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | SimReads[39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (53 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | d2_1200_F2.png[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | soc_d33_0949_FV_all.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | god_d10_1200_F2_spoil.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | god_d10_1205_F2_rot_wood.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | god_d10_1210_F2_gift_food.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | god_d17_0200_F2N_cold_snap.jpg[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | god_d23_1200_F2_gift.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | god_d23_1205_F2_windfall_0200ms.png[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | god_d23_1205_F2_windfall_1000ms.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | god_d24_1830_F2_rain.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | god_d25_0200_F2N_rain_night.jpg[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | god_d25_0200_F2_panel_log.jpg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | god_d50_1700_F2_soc_rain_daughter.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | god_d51_0200_F2N_soc_original_night_orig.jpg[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | god_d51_0200_F2N_soc_rain_night_daughter.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | god_d51_0200_FV_soc_both_night_all.jpg[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | god_p_gift_d30_0600_F2_cast_orig.jpg[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | god_p_gift_d31_0600_F2_cast_orig.jpg[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | god_p_gift_d31_0600_F2_morning_orig.jpg[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | god_p_gift_d32_0600_F2_cast_orig.jpg[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | god_p_gift_d32_0600_F2_morning_orig.jpg[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | god_p_gift_d33_0600_F2_morning_orig.jpg[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | god_p_gift_d120_1200_FV_final_all.jpg[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d30_0600_F2_cast_orig.jpg[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d31_0600_F2_cast_orig.jpg[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d31_0600_F2_morning_orig.jpg[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d32_0600_F2_cast_orig.jpg[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d32_0600_F2_morning_orig.jpg[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d33_0600_F2_morning_orig.jpg[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | god_p_spoil_d120_1200_FV_final_all.jpg[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | d2_1200_F2.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | soc_d33_0900_F2_orig.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | soc_d33_0900_F2_orig.png[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | soc_d32_2000_F2_orig_selected_orig.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | soc_d33_0630_FD_leader.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | soc_d33_0859_FS_daughter_selected_daughter.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | l_d26_0715_F2.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | l_d28_0715_F2.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | l_d29_0630_F2.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | l_d29_0715_F2.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | god_d23_1200_F2_spoil.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | god_d23_1201_F2_gift_food.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | god_d23_1202_F2_rot_wood.png[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | god_d23_1203_F2_gift.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | god_d23_1205_F2_windfall_0200ms.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | god_d23_1205_F2_windfall_1000ms.png[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | before-after-live.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | before-after-society.png[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | crowds.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | effects.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | news.png[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | restless.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | way.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (47 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | god_p_spoil_d31_0600_F2_cast_orig.jpg[39m[0m
+[   2% ] [90m[1mreimport[22m | god_p_spoil_d31_0600_F2_morning_orig.jpg[39m[0m
+[   4% ] [90m[1mreimport[22m | god_p_spoil_d32_0600_F2_cast_orig.jpg[39m[0m
+[   6% ] [90m[1mreimport[22m | god_p_spoil_d32_0600_F2_morning_orig.jpg[39m[0m
+[   8% ] [90m[1mreimport[22m | god_p_spoil_d33_0600_F2_morning_orig.jpg[39m[0m
+[  10% ] [90m[1mreimport[22m | god_p_spoil_d120_1200_FV_final_all.jpg[39m[0m
+[  12% ] [90m[1mreimport[22m | d2_1200_F2.png[39m[0m
+[  14% ] [90m[1mreimport[22m | soc_d33_0900_F2_orig.png[39m[0m
+[  16% ] [90m[1mreimport[22m | soc_d33_0900_F2_orig.png[39m[0m
+[  18% ] [90m[1mreimport[22m | soc_d32_2000_F2_orig_selected_orig.png[39m[0m
+[  20% ] [90m[1mreimport[22m | soc_d33_0630_FD_leader.png[39m[0m
+[  22% ] [90m[1mreimport[22m | soc_d33_0859_FS_daughter_selected_daughter.png[39m[0m
+[  25% ] [90m[1mreimport[22m | l_d26_0715_F2.png[39m[0m
+[  27% ] [90m[1mreimport[22m | l_d28_0715_F2.png[39m[0m
+[  29% ] [90m[1mreimport[22m | l_d29_0630_F2.png[39m[0m
+[  31% ] [90m[1mreimport[22m | l_d29_0715_F2.png[39m[0m
+[  33% ] [90m[1mreimport[22m | god_d23_1200_F2_spoil.png[39m[0m
+[  35% ] [90m[1mreimport[22m | god_d23_1201_F2_gift_food.png[39m[0m
+[  37% ] [90m[1mreimport[22m | god_d23_1202_F2_rot_wood.png[39m[0m
+[  39% ] [90m[1mreimport[22m | god_d23_1203_F2_gift.png[39m[0m
+[  41% ] [90m[1mreimport[22m | god_d23_1205_F2_windfall_0200ms.png[39m[0m
+[  43% ] [90m[1mreimport[22m | god_d23_1205_F2_windfall_1000ms.png[39m[0m
+[  45% ] [90m[1mreimport[22m | effects.png[39m[0m
+[  47% ] [90m[1mreimport[22m | d2_1200_F2.png[39m[0m
+[  50% ] [90m[1mreimport[22m | soc_d33_0949_FV_all.png[39m[0m
+[  52% ] [90m[1mreimport[22m | god_d10_1200_F2_spoil.png[39m[0m
+[  54% ] [90m[1mreimport[22m | god_d10_1205_F2_rot_wood.png[39m[0m
+[  56% ] [90m[1mreimport[22m | god_d10_1210_F2_gift_food.png[39m[0m
+[  58% ] [90m[1mreimport[22m | god_d17_0200_F2N_cold_snap.jpg[39m[0m
+[  60% ] [90m[1mreimport[22m | god_d23_1200_F2_gift.png[39m[0m
+[  62% ] [90m[1mreimport[22m | god_d23_1205_F2_windfall_0200ms.png[39m[0m
+[  64% ] [90m[1mreimport[22m | god_d23_1205_F2_windfall_1000ms.png[39m[0m
+[  66% ] [90m[1mreimport[22m | god_d24_1830_F2_rain.png[39m[0m
+[  68% ] [90m[1mreimport[22m | god_d25_0200_F2N_rain_night.jpg[39m[0m
+[  70% ] [90m[1mreimport[22m | god_d25_0200_F2_panel_log.jpg[39m[0m
+[  72% ] [90m[1mreimport[22m | god_d50_1700_F2_soc_rain_daughter.png[39m[0m
+[  75% ] [90m[1mreimport[22m | god_d51_0200_F2N_soc_original_night_orig.jpg[39m[0m
+[  77% ] [90m[1mreimport[22m | god_d51_0200_F2N_soc_rain_night_daughter.png[39m[0m
+[  79% ] [90m[1mreimport[22m | god_d51_0200_FV_soc_both_night_all.jpg[39m[0m
+[  81% ] [90m[1mreimport[22m | god_p_gift_d30_0600_F2_cast_orig.jpg[39m[0m
+[  83% ] [90m[1mreimport[22m | god_p_gift_d31_0600_F2_cast_orig.jpg[39m[0m
+[  85% ] [90m[1mreimport[22m | god_p_gift_d31_0600_F2_morning_orig.jpg[39m[0m
+[  87% ] [90m[1mreimport[22m | god_p_gift_d32_0600_F2_cast_orig.jpg[39m[0m
+[  89% ] [90m[1mreimport[22m | god_p_gift_d32_0600_F2_morning_orig.jpg[39m[0m
+[  91% ] [90m[1mreimport[22m | god_p_gift_d33_0600_F2_morning_orig.jpg[39m[0m
+[  93% ] [90m[1mreimport[22m | god_p_gift_d120_1200_FV_final_all.jpg[39m[0m
+[  95% ] [90m[1mreimport[22m | god_p_spoil_d30_0600_F2_cast_orig.jpg[39m[0m
+[  97% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (47 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m

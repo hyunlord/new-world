@@ -1,0 +1,8 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+SCRIPT ERROR: Assertion failed: all five causes must count
+          at: _run (res://scripts/test/art/test_death_exposure.gd:33)
+          GDScript backtrace (most recent call first):
+              [0] _run (res://scripts/test/art/test_death_exposure.gd:33)
+command exceeded 15 s

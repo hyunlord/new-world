@@ -1,0 +1,261 @@
+{
+  "art_sha": "73972b0fcb5b72ab612254170c729dc33bc50363",
+  "simulation_sha": "a8611e07aabbb4043f5fac2e8dd14b375a0ada5d",
+  "temporary_merge_sha": "ce6d9494ba763b6f3f5689f333f60154ac7f39fb",
+  "temporary_branch_deleted": true,
+  "temporary_branch_pushed": false,
+  "raw_path": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-compat/shots/art",
+  "observations": [
+    {
+      "capture": "a_d2_1200_F2",
+      "tick": 1680,
+      "new_snapshot_keys": {
+        "target_kinds": true,
+        "life_stages": true
+      },
+      "life_stages": {
+        "0": 24,
+        "1": 1
+      },
+      "target_kinds": {
+        "0": 21,
+        "6": 1,
+        "2": 3
+      },
+      "actors": 25,
+      "shown_nodes": 25,
+      "rect_intersects_viewport": 25,
+      "activities": {
+        "walk": 3,
+        "idle": 21,
+        "carry": 1
+      },
+      "sitting": {
+        "count": 0,
+        "viewport_rect_count": 0,
+        "maximum_chebyshev_distance_from_hearth": null
+      },
+      "sleeping": {
+        "count": 0,
+        "hidden_nodes": 0,
+        "on_shelter_tiles": 0,
+        "locations": []
+      },
+      "children": [
+        {
+          "id": 24,
+          "body": "child",
+          "sprite_id": "V_c1_02",
+          "shown": true,
+          "visible": true,
+          "tile_x": 25,
+          "tile_y": 20,
+          "activity": "idle",
+          "rect": [
+            1060.0,
+            596.0,
+            56.0,
+            92.0
+          ]
+        }
+      ],
+      "shown_when_others_sleep": []
+    },
+    {
+      "capture": "a_d2_1930_F2",
+      "tick": 2130,
+      "new_snapshot_keys": {
+        "target_kinds": true,
+        "life_stages": true
+      },
+      "life_stages": {
+        "0": 24,
+        "1": 1
+      },
+      "target_kinds": {
+        "0": 16,
+        "6": 4,
+        "1": 1,
+        "2": 4
+      },
+      "actors": 25,
+      "shown_nodes": 25,
+      "rect_intersects_viewport": 23,
+      "activities": {
+        "sit": 16,
+        "carry": 5,
+        "walk": 4
+      },
+      "sitting": {
+        "count": 16,
+        "viewport_rect_count": 16,
+        "maximum_chebyshev_distance_from_hearth": 3
+      },
+      "sleeping": {
+        "count": 0,
+        "hidden_nodes": 0,
+        "on_shelter_tiles": 0,
+        "locations": []
+      },
+      "children": [
+        {
+          "id": 24,
+          "body": "child",
+          "sprite_id": "V_c2_01",
+          "shown": true,
+          "visible": true,
+          "tile_x": 20,
+          "tile_y": 18,
+          "activity": "sit",
+          "rect": [
+            740.0,
+            492.0,
+            56.0,
+            68.0
+          ]
+        }
+      ],
+      "shown_when_others_sleep": []
+    },
+    {
+      "capture": "a_d2_2300_F2N",
+      "tick": 2340,
+      "new_snapshot_keys": {
+        "target_kinds": true,
+        "life_stages": true
+      },
+      "life_stages": {
+        "0": 24,
+        "1": 2
+      },
+      "target_kinds": {
+        "3": 25,
+        "2": 1
+      },
+      "actors": 26,
+      "shown_nodes": 3,
+      "rect_intersects_viewport": 3,
+      "activities": {
+        "asleep": 23,
+        "walk": 1,
+        "carry": 2
+      },
+      "sitting": {
+        "count": 0,
+        "viewport_rect_count": 0,
+        "maximum_chebyshev_distance_from_hearth": null
+      },
+      "sleeping": {
+        "count": 23,
+        "hidden_nodes": 23,
+        "on_shelter_tiles": 23,
+        "locations": [
+          {
+            "tile": [
+              21,
+              16
+            ],
+            "count": 6
+          },
+          {
+            "tile": [
+              25,
+              17
+            ],
+            "count": 8
+          },
+          {
+            "tile": [
+              21,
+              17
+            ],
+            "count": 7
+          },
+          {
+            "tile": [
+              23,
+              20
+            ],
+            "count": 2
+          }
+        ]
+      },
+      "children": [
+        {
+          "id": 24,
+          "body": "child",
+          "sprite_id": "V_c2_13",
+          "shown": false,
+          "visible": false,
+          "tile_x": 23,
+          "tile_y": 20,
+          "activity": "asleep",
+          "rect": [
+            916.0,
+            632.0,
+            92.0,
+            56.0
+          ]
+        },
+        {
+          "id": 25,
+          "body": "child",
+          "sprite_id": "V_c2_13",
+          "shown": false,
+          "visible": false,
+          "tile_x": 23,
+          "tile_y": 20,
+          "activity": "asleep",
+          "rect": [
+            928.0,
+            636.0,
+            92.0,
+            56.0
+          ]
+        }
+      ],
+      "shown_when_others_sleep": [
+        {
+          "id": 5,
+          "activity": "walk",
+          "tile": [
+            27,
+            19
+          ],
+          "target_kind": 3
+        },
+        {
+          "id": 6,
+          "activity": "carry",
+          "tile": [
+            22,
+            25
+          ],
+          "target_kind": 3
+        },
+        {
+          "id": 11,
+          "activity": "carry",
+          "tile": [
+            25,
+            25
+          ],
+          "target_kind": 2
+        }
+      ]
+    }
+  ],
+  "visual_review": {
+    "noon_child": "Child node24 uses V_c1_02 at14x23 native pixels, shown/in viewport, but its framebuffer rectangle is occluded by foreground trees and stockpile text. No independent noon child visual-readability claim.",
+    "evening_child": "Child node24 uses V_c2_01 at14x17 native pixels. Its cropped rectangle shows a small seated figure among overlapping figures; identity/child recognition is metadata-supported, not a blind identification result.",
+    "night": "Framebuffer shows the village largely emptied of actors while shelters remain. Metadata establishes23 hidden asleep actors on shelter tiles; the screenshot alone does not show their interior state."
+  },
+  "limitations": [
+    "One pinned compatibility merge and one capture run only, not exhaustive merge compatibility.",
+    "Renderer activity metadata and shelter tile coincidence do not establish legal ownership of each shelter.",
+    "PackedByteArray snapshot fields were decoded from Godot JSON bracket strings before counting.",
+    "visible metadata means shown bounding rectangle intersects viewport, not unoccluded opaque pixels.",
+    "No claim that all26 villagers were asleep:3 remained rendered, including2 with Sleep targets and1 with Water target.",
+    "No compatibility gameplay balance or simulation correctness acceptance."
+  ]
+}

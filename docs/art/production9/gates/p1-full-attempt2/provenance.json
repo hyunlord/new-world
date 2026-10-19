@@ -1,0 +1,28 @@
+{
+  "gate_head": "034b8b1300efd344390a4187c7a4aa3842d71f78",
+  "started_at": "2026-10-15T08:39:41.349185+09:00",
+  "CARGO_BUILD_JOBS": 6,
+  "CARGO_PROFILE_TEST_OPT_LEVEL": 1,
+  "CARGO_PROFILE_TEST_DEBUG_ASSERTIONS": true,
+  "CARGO_PROFILE_TEST_OVERFLOW_CHECKS": true,
+  "test_threads": 6,
+  "editor_library_profile": "dev debug unchanged",
+  "working_tree_note": "Part1 source migration plus semantics-preserving static repins; integration gate not final publication evidence",
+  "status": "passed",
+  "exit_code": 0,
+  "finished_at": "2026-10-15T08:56:54.342109+09:00",
+  "checks_passed": 70,
+  "checks_total": 70,
+  "rust_tests_passed": 2146,
+  "post_gate_changes": {
+    "tools/art_pipeline/test_compare_perf_p9.py": "Two extra native A30 schema cases; separately rerun in p1-tooling-final.log",
+    "tools/art_pipeline/run_perf_matrix_p9.sh": "Required-first optional-world switch; shell syntax verified",
+    "tools/art_pipeline/run_a30_p9.sh": "New timing orchestration wrapper; shell syntax verified"
+  },
+  "warnings": "13 image-file export warnings in test_nature_density, identical count and messages in p0 baseline; no new consumer/equivalence warnings",
+  "supplemental_tooling_tests": {
+    "passed": 34,
+    "log": "gates/p1-tooling-final.log",
+    "source_diff_check": "passed"
+  }
+}

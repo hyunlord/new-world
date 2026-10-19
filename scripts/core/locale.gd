@@ -1,5 +1,7 @@
 extends Node
 
+signal language_changed(language: String)
+
 # Locale autoload — compiled JSON loader (en+ko)
 # V7 Phase 3-γ (γ-2-α): first autoload, consumed by causal_panel.gd
 # Primary source: localization/compiled/{lang}.json (output of
@@ -13,9 +15,14 @@ extends Node
 #   key_count()        returns the number of loaded keys.
 
 var _strings: Dictionary = {}
-var _current_lang: String = "en"
+var _current_lang: String = "ko"
 
 func _ready() -> void:
+	var file: FileAccess = FileAccess.open("res://localization/manifest.json", FileAccess.READ)
+	if file != null:
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if parsed is Dictionary:
+			_current_lang = str(parsed.get("default_locale", "ko"))
 	_load_lang(_current_lang)
 
 func _load_lang(lang: String) -> void:
@@ -76,6 +83,7 @@ func ltr(key: String) -> String:
 func set_language(lang: String) -> void:
 	_current_lang = lang
 	_load_lang(lang)
+	language_changed.emit(lang)
 
 func key_count() -> int:
 	return _strings.size()

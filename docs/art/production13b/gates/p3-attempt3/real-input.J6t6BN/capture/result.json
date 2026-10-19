@@ -1,0 +1,311 @@
+{
+	"bridge_sha256": "6fd3f38ad4548bb9eec2d5e7204c3aee76237440adf876e82a39f379b7e573fa",
+	"dead_parent": 0,
+	"errors": [],
+	"godot": {
+		"build": "official",
+		"hash": "89cea143987d564363e15d207438530651d943ac",
+		"hex": 263680,
+		"major": 4,
+		"minor": 6,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.6-stable (official)",
+		"timestamp": 0
+	},
+	"input_route": "Input.parse_input_event",
+	"seed": 20261010,
+	"steps": [
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/00_fixed_world.png",
+			"sha256": "7d218f20a70f1ca8646d6ccecbeab59a612ea03f73abd5ffbf0b3f9bb08a8950",
+			"state": {
+				"dead_parent": 0,
+				"seed": 20261010,
+				"subject": 25,
+				"tick": 85080,
+				"world_info": {
+					"clock_offset_ticks": 480,
+					"height": 64,
+					"move_interval_ticks": 8,
+					"seed": 20261010,
+					"ticks_per_day": 1440,
+					"width": 64
+				}
+			},
+			"step": "00_fixed_world"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_0.png",
+			"sha256": "18b1f879197d997d839612b15b69e981b705e66eecdae52e665e74570d47201a",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(990.0, 906.0)",
+				"world_mouse": "(943.5, 613.5)"
+			},
+			"step": "02_click_0"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_1.png",
+			"sha256": "7609dd6a917a30c12f6f349103fd72b0045e5aeb748b9963f7b478902f2bc99f",
+			"state": {
+				"actual": 56,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 56,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(990.0, 906.0)",
+				"world_mouse": "(943.5, 613.5)"
+			},
+			"step": "02_click_1"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_2.png",
+			"sha256": "66b85a69e98bbd5844623cd6fd0184f7a13d74d69bcad689cb0b7b913e2b26f7",
+			"state": {
+				"actual": 55,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 55,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(990.0, 906.0)",
+				"world_mouse": "(943.5, 613.5)"
+			},
+			"step": "02_click_2"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_3.png",
+			"sha256": "7dd9d3ad421701c4f84b481f266632b711a5243d000819d358cfe5f42eec47ee",
+			"state": {
+				"actual": 25,
+				"chosen": [
+					25,
+					56,
+					55
+				],
+				"drawn_pick_at_intended": 8589934617,
+				"expected": 25,
+				"point": [
+					960.0,
+					540.0
+				],
+				"viewport_mouse": "(990.0, 906.0)",
+				"world_mouse": "(943.5, 613.5)"
+			},
+			"step": "02_click_3"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/03_dead_parent_link.png",
+			"sha256": "859198fd6446354fdfb959d4aea8667fbcb58aac483e4a9d643ca1ac2683e3b3",
+			"state": {
+				"parent": 0,
+				"record_mode": true
+			},
+			"step": "03_dead_parent_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/04_wheel_end_last_line.png",
+			"sha256": "802ee0c244e09b3f02e6892861abd11693507038f69908dc6a6c6c0b028fe33a",
+			"state": {
+				"last_line_top": 664.0,
+				"line_height": 28.0,
+				"maximum": 663.0,
+				"scroll": 663.0,
+				"viewport_bottom": 728.0
+			},
+			"step": "04_wheel_end_last_line"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/05_escape_record.png",
+			"sha256": "bf1cbc8a30f9dbe573fe4494dd986d106c8c17152bc3285d586e15c29fb0acd1",
+			"state": {
+				"record_mode": false,
+				"visible": false
+			},
+			"step": "05_escape_record"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/06_chronicle_open.png",
+			"sha256": "099525ea5b40cedc334b4a715f30c2f9dfa17cac94053ad46f68296f0ad43533",
+			"state": {
+
+			},
+			"step": "06_chronicle_open"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/07_chronicle_name_link.png",
+			"sha256": "85804c326a39ee0cdc42da81c90a368125d546456940e0893639bf5b5c83a73b",
+			"state": {
+				"link": "person:48",
+				"selected": 48
+			},
+			"step": "07_chronicle_name_link"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/08_chronicle_close.png",
+			"sha256": "bf21baf50a6d640df28ae4f96ef7e08c4136d7569f56e36f933162b1c1a93467",
+			"state": {
+
+			},
+			"step": "08_chronicle_close"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/09_language_korean.png",
+			"sha256": "bf21baf50a6d640df28ae4f96ef7e08c4136d7569f56e36f933162b1c1a93467",
+			"state": {
+				"language": "ko"
+			},
+			"step": "09_language_korean"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/10_language_english.png",
+			"sha256": "c48bc68bd017cd2ef001be706560fbf72672b8fae52f9f42f1e77842d4cfb273",
+			"state": {
+				"language": "en",
+				"visible_hangul": []
+			},
+			"step": "10_language_english"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/11_tooltip_before_delay.png",
+			"sha256": "65649bdd90461f063b1396b28b982438c3606248b46251832b2ab1511e9a043d",
+			"state": {
+				"activity_kind": 6,
+				"actual_hover_entity": 4294967305,
+				"actual_text": "",
+				"actual_visible": false,
+				"agent_id": 9,
+				"elapsed": 0.025,
+				"entity_bits": 4294967305,
+				"expected_hover_entity": 4294967305,
+				"expected_text": "Hubo — Resting by the fire",
+				"point": [
+					960.0,
+					540.0
+				],
+				"received_motions": 36,
+				"received_pointer": "(960.0, 540.0)",
+				"seed": 20261010,
+				"selection_after": -1,
+				"selection_before": -1,
+				"tick": 41880,
+				"tooltip_before_delay": true,
+				"tooltip_expected_visible": false,
+				"viewport_mouse": "(990.0, 906.0)"
+			},
+			"step": "11_tooltip_before_delay"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/12_tooltip_after_delay.png",
+			"sha256": "4ea2ad1392538e823085de74efcffe0ce18150afb4ab8d18f26c1af5e4e8904d",
+			"state": {
+				"actual_hover_entity": 4294967305,
+				"actual_text": "Hubo — Resting by the fire",
+				"actual_visible": true,
+				"elapsed": 0.491474958336538,
+				"expected_hover_entity": 4294967305,
+				"expected_text": "Hubo — Resting by the fire",
+				"received_motions": 36,
+				"received_pointer": "(960.0, 540.0)",
+				"selection_after": -1,
+				"selection_before": -1,
+				"tooltip_expected_visible": true,
+				"viewport_mouse": "(990.0, 906.0)"
+			},
+			"step": "12_tooltip_after_delay"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/13_tooltip_mouse_out.png",
+			"sha256": "a6d1f0e4935a0f4040298fdaf5d2a52e6d4172ea22d122f88aa2fa9e97df8617",
+			"state": {
+				"actual_hover_entity": -1,
+				"actual_text": "Hubo — Resting by the fire",
+				"actual_visible": false,
+				"elapsed": 0.0,
+				"expected_hover_entity": -1,
+				"point": [
+					960.0,
+					720.0
+				],
+				"received_motions": 37,
+				"received_pointer": "(960.0, 720.0)",
+				"selection_after": -1,
+				"selection_before": -1,
+				"tooltip_expected_visible": false,
+				"viewport_mouse": "(990.0, 906.0)"
+			},
+			"step": "13_tooltip_mouse_out"
+		},
+		{
+			"passed": true,
+			"screenshot": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/14_tooltip_no_activity.png",
+			"sha256": "c96bd5aee9a4557b3aed86412ec2fc403557725a3486b83c2435ec104548cf17",
+			"state": {
+				"activity_kind": -1,
+				"actual_hover_entity": 8589934605,
+				"actual_text": "Hubo — Resting by the fire",
+				"actual_visible": false,
+				"agent_id": 34,
+				"elapsed": 0.0,
+				"expected_hover_entity": 8589934605,
+				"point": [
+					1180.0,
+					540.0
+				],
+				"received_motions": 38,
+				"received_pointer": "(1180.0, 540.0)",
+				"selection_after": -1,
+				"selection_before": -1,
+				"tooltip_expected_visible": false,
+				"viewport_mouse": "(990.0, 906.0)"
+			},
+			"step": "14_tooltip_no_activity"
+		}
+	],
+	"subject": 25,
+	"test_sha256": "5b6c3d6afc77a0889e9c869232f409df64600ef5b0ab1d76271edee4e2b5da86",
+	"tick": 85080,
+	"valid": true,
+	"windowed": true
+}

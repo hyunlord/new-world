@@ -1,0 +1,369 @@
+{
+  "round": 1,
+  "authoritative_sha256": "17c29c135ceff042c688ec2cf5ee5c7704c25835fcc48ac4877764002cd7e346",
+  "accepted": {
+    "S1_01": "S1_01@1",
+    "S1_04": "S1_04@1",
+    "S1_05": "S1_05@1",
+    "S1_06": "S1_06@1",
+    "S1_07": "S1_07@1",
+    "S1_08": "S1_08@1",
+    "S1_09": "S1_09@3",
+    "S1_10": "S1_10@1",
+    "S1_11": "S1_11@2",
+    "S1_12": "S1_12@1",
+    "S1_13": "S1_13@2",
+    "S1_14": "S1_14@2",
+    "S1_15": "S1_15@1",
+    "S1_16": "S1_16@2",
+    "S1_02": "S1_02@3",
+    "S1_03": "S1_03@2",
+    "S2_01": "S2_01@1",
+    "S2_02": "S2_02@1",
+    "S2_03": "S2_03@2",
+    "S2_04": "S2_04@1",
+    "S2_05": "S2_05@2",
+    "S2_06": "S2_06@1",
+    "S2_07": "S2_07@1",
+    "S2_09": "S2_09@1",
+    "S2_12": "S2_12@3",
+    "S2_13": "S2_13@3",
+    "S2_14": "S2_14@1",
+    "S2_15": "S2_15@3",
+    "S2_16": "S2_16@3",
+    "N1_01": "N1_01@2",
+    "N1_02": "N1_02@2",
+    "N1_03": "N1_03@2",
+    "N1_04": "N1_04@2",
+    "N1_05": "N1_05@2",
+    "N1_06": "N1_06@2",
+    "N1_09": "N1_09@1",
+    "N1_10": "N1_10@2",
+    "N1_11": "N1_11@1",
+    "N1_14": "N1_14@1",
+    "N1_12": "N1_12@2",
+    "N1_13": "N1_13@2",
+    "N1_15": "N1_15@2",
+    "N1_16": "N1_16@2",
+    "N2_01": "N2_01@2",
+    "N2_02": "N2_02@2",
+    "N2_03": "N2_03@2",
+    "N2_04": "N2_04@2",
+    "N2_05": "N2_05@1",
+    "N2_06": "N2_06@2",
+    "N2_07": "N2_07@2",
+    "N2_08": "N2_08@2",
+    "N2_09": "N2_09@2",
+    "N2_10": "N2_10@2",
+    "N2_11": "N2_11@2",
+    "N2_12": "N2_12@2",
+    "N2_13": "N2_13@2",
+    "N2_16": "N2_16@2",
+    "N3_04": "N3_04@1",
+    "N3_05": "N3_05@1",
+    "N3_08": "N3_08@1",
+    "N3_10": "N3_10@1",
+    "N3_12": "N3_12@1",
+    "N3_13": "N3_13@1",
+    "N3_14": "N3_14@1",
+    "N3_15": "N3_15@1",
+    "N3_16": "N3_16@1",
+    "N3_11": "N3_11@2",
+    "F1_01": "F1_01@1",
+    "F1_02": "F1_02@1",
+    "F1_04": "F1_04@1",
+    "F1_07": "F1_07@2",
+    "F1_08": "F1_08@1",
+    "F1_09": "F1_09@1",
+    "F1_03": "F1_03@2",
+    "F1_15": "F1_15@2",
+    "F2_01": "F2_01@2",
+    "F2_02": "F2_02@2",
+    "F2_13": "F2_13@1",
+    "F2_09": "F2_09@2",
+    "F2_10": "F2_10@2",
+    "F2_11": "F2_11@2",
+    "F2_12": "F2_12@2",
+    "F2_14": "F2_14@2",
+    "U1_01": "U1_01@1",
+    "U1_03": "U1_03@2",
+    "U1_05": "U1_05@2",
+    "U1_06": "U1_06@1",
+    "U1_12": "U1_12@1",
+    "U1_14": "U1_14@2",
+    "U1_15": "U1_15@1",
+    "U1_16": "U1_16@1",
+    "U1_04": "U1_04@2",
+    "U1_08": "U1_08@2",
+    "U1_10": "U1_10@2",
+    "V_a1_01": "V_a1_01@1",
+    "V_a1_03": "V_a1_03@1",
+    "V_a1_04": "V_a1_04@1",
+    "V_a3_04": "V_a3_04@3",
+    "V_a3_05": "V_a3_05@3",
+    "V_a3_06": "V_a3_06@3",
+    "V_a3_15": "V_a3_15@3",
+    "V_a3_16": "V_a3_16@3",
+    "V_b1_01": "V_b1_01@2",
+    "V_b1_02": "V_b1_02@2",
+    "V_b1_03": "V_b1_03@2",
+    "V_b1_04": "V_b1_04@2",
+    "V_b1_05": "V_b1_05@2",
+    "V_b1_06": "V_b1_06@2",
+    "V_b1_07": "V_b1_07@2",
+    "V_b1_08": "V_b1_08@2",
+    "V_b1_14": "V_b1_14@2",
+    "V_b1_15": "V_b1_15@2",
+    "V_b1_13": "V_b1_13@2:derived",
+    "V_b1_16": "V_b1_16@2:derived",
+    "V_b2_11": "V_b2_11@3",
+    "V_b2_12": "V_b2_12@3",
+    "V_b3_01": "V_b3_01@2",
+    "V_b3_02": "V_b3_02@2",
+    "V_b3_05": "V_b3_05@1",
+    "V_b3_06": "V_b3_06@1",
+    "V_b3_07": "V_b3_07@1",
+    "V_b3_09": "V_b3_09@1",
+    "V_b3_10": "V_b3_10@1",
+    "V_b3_14": "V_b3_14@1",
+    "V_b3_15": "V_b3_15@1",
+    "V_c1_01": "V_c1_01@1",
+    "V_c1_02": "V_c1_02@1",
+    "V_c1_04": "V_c1_04@1",
+    "V_c2_01": "V_c2_01@2",
+    "V_c2_02": "V_c2_02@2",
+    "V_c2_10": "V_c2_10@2",
+    "V_c2_11": "V_c2_11@3",
+    "V_c2_12": "V_c2_12@3",
+    "V_c2_14": "V_c2_14@2"
+  },
+  "not_accepted": {
+    "N1_07": [
+      "no_current_visual_approval"
+    ],
+    "N1_08": [
+      "no_current_visual_approval"
+    ],
+    "F2_03": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_02": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_05": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_06": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_11": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_13": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_15": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_01": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_03": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_06": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_11": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_12": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_15": [
+      "no_current_visual_approval"
+    ],
+    "V_a2_16": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_01": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_03": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_07": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_08": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_09": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_10": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_11": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_12": [
+      "no_current_visual_approval"
+    ],
+    "V_a3_14": [
+      "no_current_visual_approval"
+    ],
+    "V_b1_09": [
+      "no_current_visual_approval"
+    ],
+    "V_b1_10": [
+      "no_current_visual_approval"
+    ],
+    "V_b1_11": [
+      "no_current_visual_approval"
+    ],
+    "V_b1_12": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_01": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_02": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_03": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_04": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_05": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_06": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_07": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_08": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_15": [
+      "no_current_visual_approval"
+    ],
+    "V_b2_16": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_03": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_04": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_08": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_11": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_12": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_13": [
+      "no_current_visual_approval"
+    ],
+    "V_b3_16": [
+      "no_current_visual_approval"
+    ],
+    "V_c1_03": [
+      "no_current_visual_approval"
+    ],
+    "V_c1_10": [
+      "no_current_visual_approval"
+    ],
+    "V_c1_11": [
+      "no_current_visual_approval"
+    ],
+    "V_c2_05": [
+      "no_current_visual_approval"
+    ],
+    "V_c2_06": [
+      "no_current_visual_approval"
+    ],
+    "V_c2_09": [
+      "no_current_visual_approval"
+    ],
+    "V_c2_15": [
+      "no_current_visual_approval"
+    ],
+    "V_c2_16": [
+      "no_current_visual_approval"
+    ],
+    "V_a1_07": [
+      "pending_cycle_completion"
+    ],
+    "V_a1_08": [
+      "pending_cycle_completion"
+    ],
+    "V_a1_09": [
+      "pending_cycle_completion"
+    ],
+    "V_a1_10": [
+      "pending_cycle_completion"
+    ],
+    "V_a1_12": [
+      "pending_cycle_completion"
+    ],
+    "V_a1_14": [
+      "pending_cycle_completion"
+    ],
+    "V_a1_16": [
+      "pending_cycle_completion"
+    ],
+    "V_a2_02": [
+      "pending_cycle_completion"
+    ],
+    "V_a2_04": [
+      "pending_cycle_completion"
+    ],
+    "V_a2_05": [
+      "pending_cycle_completion"
+    ],
+    "V_a2_07": [
+      "pending_cycle_completion"
+    ],
+    "V_a2_08": [
+      "pending_cycle_completion"
+    ],
+    "V_a3_02": [
+      "pending_cycle_completion"
+    ],
+    "V_c1_09": [
+      "pending_cycle_completion"
+    ],
+    "V_c1_12": [
+      "pending_cycle_completion"
+    ],
+    "V_c2_07": [
+      "pending_cycle_completion"
+    ],
+    "V_c2_08": [
+      "pending_cycle_completion"
+    ]
+  },
+  "cross_guards_before_exclusions": {
+    "errors": [],
+    "warnings": [],
+    "passed": true
+  },
+  "final_cross_guards": {
+    "errors": [],
+    "warnings": [],
+    "passed": true
+  },
+  "statistics": {
+    "accepted": 134,
+    "visually_ok": 189
+  }
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "test": "test_agent_activity",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_agent_click_drawn",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_agent_drawn_positions",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_agent_native_size",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_art_hash",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_camp_seats",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_canopy_fade",
+    "exit": 1,
+    "errors": true
+  },
+  {
+    "test": "test_capture_metadata",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_effect_lifecycle",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_elder_variant",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_hud_old_age",
+    "exit": 0,
+    "errors": true
+  },
+  {
+    "test": "test_hud_season_label",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_idle_camp_pose",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_idle_facing",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_inspector_age",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_nature_clearance",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_nature_density",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_need_warning",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_season_tint",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_structure_states",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_terrain_layers",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_variant_codes",
+    "exit": 0,
+    "errors": false
+  },
+  {
+    "test": "test_ysort_props",
+    "exit": 1,
+    "errors": true
+  },
+  {
+    "test": "test_zoom_ladder",
+    "exit": 0,
+    "errors": false
+  }
+]

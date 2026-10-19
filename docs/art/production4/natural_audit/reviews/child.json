@@ -1,0 +1,404 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_c2_13",
+      "candidate_id": "V_c2_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Horizontal sleeping silhouette with tucked limbs, dark hair and recognizable cream garment at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_build_01",
+      "candidate_id": "P2V_c_E_build_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_build_02",
+      "candidate_id": "P2V_c_E_build_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_build_01",
+      "candidate_id": "P2V_c_S_build_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_build_02",
+      "candidate_id": "P2V_c_S_build_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_01",
+      "candidate_id": "P2V_c_E_carry_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_02",
+      "candidate_id": "P2V_c_E_carry_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_03",
+      "candidate_id": "P2V_c_E_carry_03",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_04",
+      "candidate_id": "P2V_c_E_carry_04",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_01",
+      "candidate_id": "P2V_c_S_carry_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_02",
+      "candidate_id": "P2V_c_S_carry_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_03",
+      "candidate_id": "P2V_c_S_carry_03",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_04",
+      "candidate_id": "P2V_c_S_carry_04",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_drink_01",
+      "candidate_id": "P2V_c_E_drink_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Hands remain near chest or waist below the mouth at 2x and 6x; drinking does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_drink_02",
+      "candidate_id": "P2V_c_E_drink_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Hands remain near chest or waist below the mouth at 2x and 6x; drinking does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_14",
+      "candidate_id": "V_c2_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front seated eating pose holds a pale bowl or food shape across the lap, with hands above it.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_15",
+      "candidate_id": "V_c2_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front seated pose holds pale food between both hands; dark hair and cream garment remain coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_gather_01",
+      "candidate_id": "P2V_c_E_gather_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_gather_02",
+      "candidate_id": "P2V_c_E_gather_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_gather_01",
+      "candidate_id": "P2V_c_S_gather_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_gather_02",
+      "candidate_id": "P2V_c_S_gather_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_03",
+      "candidate_id": "V_c2_03",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front hop shows one lifted leg and one downward leg; face and cream garment remain readable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_04",
+      "candidate_id": "V_c2_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front landing pose has separated feet and lowered arms; anatomy remains coherent at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_16",
+      "candidate_id": "V_c2_16",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x a head over a short cream rectangular base is visible; no embracing arms make a hug readable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_04",
+      "candidate_id": "V_c1_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East profile has a clear nose, rounded dark hair, cream garment and two feet matching reference build.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_03",
+      "candidate_id": "V_c1_03",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North idle shows the back of dark hair and pale garment with exposed shoulders; orientation is clear.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_01",
+      "candidate_id": "V_c1_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front idle has both eyes, lowered arms, separate feet and the reference dark hair and cream garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_02",
+      "candidate_id": "V_c1_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front idle shifts the torso while retaining rounded hair, cream garment and intact limbs.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_05",
+      "candidate_id": "V_c2_05",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run contact pose has slight leg separation and forward profile; compact body remains coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_06",
+      "candidate_id": "V_c2_06",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run passing pose has close feet beneath torso; head and cream garment remain intact.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_07",
+      "candidate_id": "V_c2_07",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run visibly extends one leg behind and one down; movement silhouette is visible at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_08",
+      "candidate_id": "V_c2_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run recovery has close feet beneath forward profile, with intact arms and garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_02",
+      "candidate_id": "V_c2_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East seated child has bent knees, lowered torso and hands ahead; pale garment remains recognizable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_01",
+      "candidate_id": "V_c2_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front seated child has raised knees framing pale torso and hands; sitting reads at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_11",
+      "candidate_id": "V_c2_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East talk extends one hand outward at chest height; face, arm and cream garment stay distinct.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_12",
+      "candidate_id": "V_c2_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East talk bends an arm upward before the face; gesture and legs remain distinct at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_09",
+      "candidate_id": "V_c2_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front talk raises one hand beside the upper torso; face and cream garment remain legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_10",
+      "candidate_id": "V_c2_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front talk maintains an outward hand gesture with intact legs and dark hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_09",
+      "candidate_id": "V_c1_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk contact has close feet and clear profile; cream garment and dark hair match reference.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_10",
+      "candidate_id": "V_c1_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk offsets feet with one leg behind torso; anatomy remains readable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_11",
+      "candidate_id": "V_c1_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk extends one foot forward and one down, producing a stepping silhouette.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_12",
+      "candidate_id": "V_c1_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk passing frame brings feet together below intact cream-clad torso.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_13",
+      "candidate_id": "V_c1_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk has back-of-head dark hair and one leg stepping out below pale garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_14",
+      "candidate_id": "V_c1_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk passing frame has close feet, clear back view and readable pale garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_15",
+      "candidate_id": "V_c1_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk offsets feet below pale garment and keeps a solid rear hair silhouette.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_16",
+      "candidate_id": "V_c1_16",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk maintains back view with close feet and arms beside pale garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_05",
+      "candidate_id": "V_c1_05",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk extends one leg down and shifts arms; dark hair and cream clothes match reference.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_06",
+      "candidate_id": "V_c1_06",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk passing frame has separated feet beneath cream garment and readable face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_07",
+      "candidate_id": "V_c1_07",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk moves one leg forward and the other back; stepping silhouette remains visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_08",
+      "candidate_id": "V_c1_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk recovery returns feet under body; face, arms and cream garment remain coherent.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

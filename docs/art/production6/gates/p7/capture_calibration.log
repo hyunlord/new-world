@@ -1,0 +1,142 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (36 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | hud_batch_001.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | hud_batch_002.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | hud_batch_003.png[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | hud_batch_004.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | hud_batch_005.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | hud_batch_006.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | hud_batch_007.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | hud_batch_008.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | hud_batch_009.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | hud_batch_010.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | hud_batch_011.png[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | hud_batch_012.png[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | hud_batch_013.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | hud_batch_014.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | hud_batch_015.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | hud_batch_016.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | hud_batch_017.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | hud_batch_018.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | hud_batch_019.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | hud_batch_020.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | hud_batch_021.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | hud_batch_022.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | hud_batch_023.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | hud_batch_024.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | hud_batch_025.png[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | hud_batch_026.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | hud_batch_027.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | hud_batch_028.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | god_d10_1200_F2_spoil.jpg[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | god_d17_0200_F2N_cold_snap.jpg[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | god_d23_1200_F2_gift.jpg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | god_d23_1205_F2_windfall_0200ms.jpg[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | god_d23_1205_F2_windfall_1000ms.jpg[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | god_d24_1830_F2_rain.jpg[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | god_d25_0200_F2N_rain_night.jpg[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | god_d25_0200_F2_panel_log.jpg[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (36 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | hud_batch_019.png[39m[0m
+[   2% ] [90m[1mreimport[22m | hud_batch_020.png[39m[0m
+[   5% ] [90m[1mreimport[22m | hud_batch_021.png[39m[0m
+[   8% ] [90m[1mreimport[22m | hud_batch_022.png[39m[0m
+[  10% ] [90m[1mreimport[22m | hud_batch_023.png[39m[0m
+[  13% ] [90m[1mreimport[22m | hud_batch_024.png[39m[0m
+[  16% ] [90m[1mreimport[22m | hud_batch_025.png[39m[0m
+[  18% ] [90m[1mreimport[22m | hud_batch_026.png[39m[0m
+[  21% ] [90m[1mreimport[22m | hud_batch_027.png[39m[0m
+[  24% ] [90m[1mreimport[22m | hud_batch_028.png[39m[0m
+[  27% ] [90m[1mreimport[22m | god_d10_1200_F2_spoil.jpg[39m[0m
+[  29% ] [90m[1mreimport[22m | god_d17_0200_F2N_cold_snap.jpg[39m[0m
+[  32% ] [90m[1mreimport[22m | god_d23_1200_F2_gift.jpg[39m[0m
+[  35% ] [90m[1mreimport[22m | god_d23_1205_F2_windfall_0200ms.jpg[39m[0m
+[  37% ] [90m[1mreimport[22m | god_d23_1205_F2_windfall_1000ms.jpg[39m[0m
+[  40% ] [90m[1mreimport[22m | god_d24_1830_F2_rain.jpg[39m[0m
+[  43% ] [90m[1mreimport[22m | god_d25_0200_F2N_rain_night.jpg[39m[0m
+[  45% ] [90m[1mreimport[22m | god_d25_0200_F2_panel_log.jpg[39m[0m
+[  48% ] [90m[1mreimport[22m | hud_batch_001.png[39m[0m
+[  51% ] [90m[1mreimport[22m | hud_batch_002.png[39m[0m
+[  54% ] [90m[1mreimport[22m | hud_batch_003.png[39m[0m
+[  56% ] [90m[1mreimport[22m | hud_batch_004.png[39m[0m
+[  59% ] [90m[1mreimport[22m | hud_batch_005.png[39m[0m
+[  62% ] [90m[1mreimport[22m | hud_batch_006.png[39m[0m
+[  64% ] [90m[1mreimport[22m | hud_batch_007.png[39m[0m
+[  67% ] [90m[1mreimport[22m | hud_batch_008.png[39m[0m
+[  70% ] [90m[1mreimport[22m | hud_batch_009.png[39m[0m
+[  72% ] [90m[1mreimport[22m | hud_batch_010.png[39m[0m
+[  75% ] [90m[1mreimport[22m | hud_batch_011.png[39m[0m
+[  78% ] [90m[1mreimport[22m | hud_batch_012.png[39m[0m
+[  81% ] [90m[1mreimport[22m | hud_batch_013.png[39m[0m
+[  83% ] [90m[1mreimport[22m | hud_batch_014.png[39m[0m
+[  86% ] [90m[1mreimport[22m | hud_batch_015.png[39m[0m
+[  89% ] [90m[1mreimport[22m | hud_batch_016.png[39m[0m
+[  91% ] [90m[1mreimport[22m | hud_batch_017.png[39m[0m
+[  94% ] [90m[1mreimport[22m | hud_batch_018.png[39m[0m
+[  97% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (36 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Max
+
+Published 4 captures; raw framebuffers: /Users/rexxa/work/art-production6-evidence/shots/calibration

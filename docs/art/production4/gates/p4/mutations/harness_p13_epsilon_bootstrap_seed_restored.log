@@ -1,0 +1,24 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.70s
+     Running tests/harness_p13_epsilon_bootstrap_seed.rs (rust/target/debug/deps/harness_p13_epsilon_bootstrap_seed-1887bdc6cadec9d5)
+
+running 16 tests
+test harness_p13_epsilon_a12_phase13_alpha_centre_bootstrap_preserved ... ok
+test harness_p13_epsilon_a15_phase13_delta_hud_topbar_present ... ok
+test harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved ... ok
+test harness_p13_epsilon_a16_no_rust_simulation_crate_modification ... ok
+test harness_p13_epsilon_a1_bootstrap_x_left_constant_declared ... ok
+test harness_p13_epsilon_a2_bootstrap_x_right_constant_declared ... ok
+test harness_p13_epsilon_a3_three_on_building_placed_calls_total ... ok
+test harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved ... ok
+test harness_p13_epsilon_a14_phase13_gamma_state_scale_boost_preserved ... ok
+test harness_p13_epsilon_a10_phase12_alpha_zoom_invariants_preserved ... ok
+test harness_p13_epsilon_a4_on_building_placed_arg_signatures ... ok
+test harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building ... ok
+test harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex ... ok
+test harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y ... ok
+test harness_p13_epsilon_a9_d1_state_tints_palette_preserved ... ok
+test harness_p13_epsilon_a8_phase4_gamma_sprite_scale_preserved ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

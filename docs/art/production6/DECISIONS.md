@@ -1,0 +1,40 @@
+# Art Pass 6 decisions
+
+- GOAL.md is the owner's existing document and remains byte-for-byte unchanged. Its explicit branch/scope instructions override the generic lead/main reset workflow.
+- Initial HEAD and remote WIP both equal ca47e703f7136a00cac83eb242fbec8dccc77d52. No local-only commits require backup. Existing .gitignore and .ignore edits are left untouched and excluded from staging.
+- Merge exactly 4c35e29573bc28878de0cfed9ac67e0df0aa4c48. The sole conflict is rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs; keep the art version (content assertions, no hash pin). This version contains no sha256_hex import, so no unused import remains.
+- The goal is already a decision-complete execution plan. Execute its Parts directly; no additional planning approval or interview is appropriate under the explicit never-ask instruction.
+- Use project-owned D3 assets and existing UI tokens. Optional generated god icons default to localized text; reserve the six-image budget for rejected carry props if needed.
+- P0 first gate exposed an art-tool regression: `test_capture_metadata.gd:83` still pinned ART_LONG to 13 after the explicitly requested expansion to21. Updated count to21 without weakening frame membership/order assertions; targeted runtime recheck passed. Original failed log retained. The assertion halted its SceneTree before quit, so terminated only our known gate child PID23974 to let remaining checks continue.
+
+- P0 remeasurement confirms v14 natural cold nights28,29,54–57,84–85 (42/42 cold), lit first-winter nights23–27. Day15/16 GatherWood targets14/8; moving carriers9/6 (planner9/7). Keep planned dates since both have carriers. Fresh-world gift fails at tick0 and succeeds with applied10 after settlement forms at tick60.
+- P0 baseline window captures: ART94 and ART_LONG21, prior to any presentation edit. Exact own Godot process required foregrounding after concurrent headless app use obscured its window; native framebuffer files retained.
+- P0 full gate:2005 Rust tests across133 suites pass, Clippy/strict/bridge/smoke/Python pass.38 checks total:37 zero; metadata-count assertion failed with241, then corrected 13→21 and focused rerun passed. Final full gate will recheck together; no original verdict rewritten.
+
+- Parts 1–3 keep all cold/chill presentation outside simulation. Morning flags use their own keys; winter-night HUD follows the bridge's booked severity rather than the calendar. Shared intervention translation keys were compiled with the Part3 localization edit.
+- Part5 compatibility exception: world_node.rs gains only get_intervention_state, its pure collector/columns, and one unit test (+102 lines). It reports active rain and the last32 canonical intervention records without mutation or randomness. The next simulation pass must inherit this additive FFI method.
+- Part5 integrated headless main scene and seven real-node casts pass. The early windfall cast at tick60 applies0, which satisfies command behavior but is not proof of visible falling branches; the prescribed later capture will judge that separately.
+- Part4 independent review stopped after the second round as required. Six food composite groups are approved; both wood composites remain rejected. Keep the existing approved wood art and repair its facing fallback selection. The food reviewer notes blocky orange torso patches even in approved action-readability groups; preserve that limitation. No image generation used.
+- Final screenshot waits use RenderingServer.force_draw(false) to avoid the observed occluded-window wait. Performance sampling retains natural frame_post_draw (forced_draw:false), so this workaround cannot improve reported frame timing. Cold cycles retain actual framebuffer frames for independent visual observation.
+
+- First final ART capture exposed Godot export warnings from Image.load_from_file on carry resource paths. This was a warning, not SCRIPT ERROR; stopped only our capture PID55052 and preserved its raw partial run under evidence/rejected/capture_attempt1. Use imported Texture2D resources instead; pixel provenance is unchanged. Re-run all final plans from the corrected source commit.
+
+- Second ART attempt failed because the natural frame-post-draw measurement waited on a backgrounded Mac window while simulation was already running, overshooting the next fixed capture tick. Preserve rejected/capture_attempt2. Activate only the current capture PID through macOS System Events and keep simulation frozen until the first real drawable; then measure300 normal draws with live simulation, no forced draws.
+
+- First blind round retained unchanged (observer1 0.875/0.875, observer2 0.667/0.667). Investigation found calibration_scene used base sprites without the new CarryLoad layer, unlike live gameplay. Wire the same production load helper into the lineup and add a regression; the second and final blind round will use corrected framebuffer captures with a newly frozen key. This is a capture-surface fix, not a reinterpretation of the failed verdict.
+- A23 requires a snapshot-matching cold count in every frame: show the valid typed zero count as well, with neutral text and no snowflake. Invalid/missing legacy snapshot still hides it. The first natural set is preserved as round1; all final plans recapture at the correction commit.
+
+## Final capture and evidence packaging
+
+- All four final plans bind to 44011f92347dc4176cc115195b1cc55a16ff93ae. Earlier failed capture attempts and first screen-review round remain under external rejected/ and round1/; final logs contain zero SCRIPT ERROR.
+- Four warm-control cycle GIFs were moved byte-for-byte to the external evidence directory to meet the 30 MB documentation budget. Compressed sidecars retain absolute paths and SHA256; natural cold GIFs, original samples, contact sheets and required village GIFs are retained. See review/budget_relocations.json.
+- Cold-count zero is shown when a valid typed snapshot supplies zero; unavailable legacy counts remain hidden. Calibration now uses the same attached-load renderer as gameplay, so the second blind round assesses the installed composition.
+
+- Final A22 remeasurement finds the nominated day27 warm control was not cold-free throughout the night: FFI trace last_cold_tick37320 and first_clear_tick37328, with39 visible chill-tagged agents at07:15. Do not hide genuine recent cold or relabel the control; keep A22 FAIL. Day29 visible chill counts42/31 lack independently identifiable pixel cues. See review/morning_trace_summary.json.
+- Final full-gate attempt1 failed a stale3-argument hearth-call source pin. Eight allowed Rust static-source suites had13 such pins; update to severity-aware calls and strengthen ash/smoke assertions, retaining legacy fallback checks. Original failed gate preserved as final_attempt1; focused160 tests and scopedClippy pass; full gate reruns.
+- Measurement corrections preserve thresholds: A16 omits a screen-space tint rectangle from object occluder masks while retaining its rendered RGB; A17 derives missing animation movement records from adjacent captured snapshots within8ticks, same IDs, SHA-bound sources. Original failing measurement retained externally.
+
+- Full-gate attempt2 progressed past hearth checks and exposed main.tscn load_steps19 pinned before the two GodHand resources; actual21 is required. Preserve final_attempt2, audit all remaining static scene pins before the third/final gate. This is a source-count compatibility update, not a simulation change.
+- A24 measurement now uses the exact0.6s windfall lifetime, with boundary regression at0.59/0.60; this tightens the previous helper cutoff0.7 without altering any captured-frame verdict. Twelve measurement tests pass.
+
+- Third/final full gate at source7afa014d passed45/45 checks: Rust2006, Python275, Godot38, clippy/strict/bridge/smoke all green. Subsequent commit contains documentation/evidence only; original capture runtime remains44011f92. Publish by ordinary fast-forward after committing the evidence, retaining21 PASS/4 FAIL and A19 body N/A.

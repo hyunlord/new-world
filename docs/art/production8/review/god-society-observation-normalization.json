@@ -1,0 +1,129 @@
+{
+  "sources": [
+    {
+      "path": "docs/art/production8/review/originals/observer-a-god-society-objects.json",
+      "sha256": "9aa9c4d071f65faee91fbb7456589913fa4709195bd0221dd088cd1173681e3b",
+      "original_source": "/Users/rexxa/work/art-production8-evidence/blind-round1/observer-a/god-society-objects.json"
+    }
+  ],
+  "identity_key": {
+    "path": "docs/art/production8/review/originals/god-society-objects-key.json",
+    "sha256": "3ce72acfc4b48ca1884dc416a81c3fc17ef61077c8fe6b00adac697c178ee139"
+  },
+  "preserved_rows": 130,
+  "added_rows": 4,
+  "total_rows": 134,
+  "policy": {
+    "expected_target_used": false,
+    "settlement_metadata_use": "Only displayed name-to-ID identity mapping; no rain or fire truth fields consulted.",
+    "toast": "Literal observer text retained; panel confirmation never proves world effect.",
+    "hearths": "Explicit B10873 dark/unlit and B0 flame labels map through neutral object key.",
+    "rain": "Observed near village2 maps to observed_rain_near_settlement_ids; confinement explicitly uncertain in prose, so rain_settlement_ids empty plus unknown status. Blue circle boundary does not prove every rain dash confined."
+  },
+  "rows": [
+    {
+      "opaque_frame": "O001",
+      "stem": "god_d50_1700_F2_soc_rain_daughter",
+      "ash_hearth_ids": [
+        10873
+      ],
+      "lit_hearth_ids": [],
+      "observed_rain_near_settlement_ids": [
+        2
+      ],
+      "rain_confinement_status": "unknown",
+      "identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d50_1700_F2_soc_rain_daughter.entities.json",
+        "sha256": "d1fc655a126cb009a0b98fc5756305a3c934016163cd1d40fbae4db6e3353577",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    },
+    {
+      "opaque_frame": "O002",
+      "stem": "god_d51_0200_F2N_soc_rain_night_daughter",
+      "ash_hearth_ids": [
+        10873
+      ],
+      "lit_hearth_ids": [],
+      "observed_rain_near_settlement_ids": [
+        2
+      ],
+      "rain_confinement_status": "unknown",
+      "identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_F2N_soc_rain_night_daughter.entities.json",
+        "sha256": "9dd4be05807291db27260cd663a8b09e67be67e5f3b04b19bbb696c70a8c4df5",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    },
+    {
+      "opaque_frame": "O003",
+      "stem": "god_d51_0200_F2N_soc_original_night_orig",
+      "ash_hearth_ids": [],
+      "lit_hearth_ids": [
+        0
+      ],
+      "observed_rain_near_settlement_ids": [],
+      "rain_confinement_status": "unknown",
+      "identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_F2N_soc_original_night_orig.entities.json",
+        "sha256": "32ce53ba39b109aa74516471bea47a14a68948f4b9980d65592e0264d3fea71d",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    },
+    {
+      "opaque_frame": "O004",
+      "stem": "god_d51_0200_FV_soc_both_night_all",
+      "ash_hearth_ids": [
+        10873
+      ],
+      "lit_hearth_ids": [
+        0
+      ],
+      "observed_rain_near_settlement_ids": [
+        2
+      ],
+      "rain_confinement_status": "unknown",
+      "identity_source": {
+        "path": "/Users/rexxa/work/art-production8-evidence/final-god-society/shots/art_god/god_d51_0200_FV_soc_both_night_all.entities.json",
+        "sha256": "13c38c15c947e444aa3a82d9a3a11aad6983d770dc8c3201c386bfa8c35fc8b1",
+        "identities": [
+          {
+            "id": 1,
+            "name": "1번 마을"
+          },
+          {
+            "id": 2,
+            "name": "2번 마을 · 1번에서"
+          }
+        ]
+      }
+    }
+  ]
+}

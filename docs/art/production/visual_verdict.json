@@ -1,0 +1,36 @@
+{
+  "verdict": "REVISE",
+  "delivery": "bounded partial",
+  "surface": "Godot 4.6 real window, OpenGL, 1920x1080",
+  "captures": 92,
+  "parent_opened": [
+    "a_d2_1200_F2",
+    "a_d2_2300_F2N",
+    "a_d2_1200_F1",
+    "a_d2_1200_F4",
+    "a_calib_z4",
+    "blind_4x",
+    "blind_2x"
+  ],
+  "reviewers": [
+    "visual_review_functional.md",
+    "visual_review_fidelity.md"
+  ],
+  "good": [
+    "native sprite proportions and exact integer pixel grid",
+    "actual region-ramp and y-sort pixel agreement",
+    "Korean Galmuri panels without observed clipping",
+    "untinted UI at night and warm hearth light",
+    "300 actual live frames meet performance threshold"
+  ],
+  "blocking_visual_findings": [
+    "A5 minimum contrast 0.0548 and8unmeasurable occluded actors",
+    "A11 activity identification4/24 at4x and2x",
+    "missing directional and distinct adult body identity",
+    "flat repetitive procedural canopies beside textured D3 objects",
+    "small low-contrast interface glyphs"
+  ],
+  "fix_rounds": 2,
+  "thresholds_unchanged": true,
+  "method": "Native framebuffer A1-A12 instead of unrelated web/TUI metrics; independent functional and CJK/fidelity reviewers directly viewed screenshots."
+}

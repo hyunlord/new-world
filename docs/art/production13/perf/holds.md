@@ -1,0 +1,100 @@
+- 2026-10-19T02:27:52Z pid=32177 WAIT_START purpose=baseline-W0-attempt1
+- 2026-10-19T02:27:52Z pid=32177 HOLD_START purpose=baseline-W0-attempt1 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt1.json.validity.json P=2.045171833 R=2.008996167 load=22.86669921875
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt1.json.validity.json P=2.000379750 R=2.008996167 load=23.837890625 valid=False exit=75
+- 2026-10-19T02:27:58Z pid=32177 HOLD_END purpose=baseline-W0-attempt1 exit=75
+- 2026-10-19T02:27:58Z pid=32653 WAIT_START purpose=baseline-W500-attempt1
+- 2026-10-19T02:27:58Z pid=32653 HOLD_START purpose=baseline-W500-attempt1 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt1.json.validity.json P=1.967913750 R=2.008996167 load=23.837890625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt1.json.validity.json P=2.024051958 R=2.008996167 load=26.7333984375 valid=False exit=75
+- 2026-10-19T02:28:03Z pid=32653 HOLD_END purpose=baseline-W500-attempt1 exit=75
+- 2026-10-19T02:28:03Z pid=33080 WAIT_START purpose=baseline-W1-attempt1
+- 2026-10-19T02:28:03Z pid=33080 HOLD_START purpose=baseline-W1-attempt1 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt1.json.validity.json P=2.020485500 R=2.008996167 load=25.07275390625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt1.json.validity.json P=2.010546667 R=2.008996167 load=25.07275390625 valid=False exit=75
+- 2026-10-19T02:28:09Z pid=33080 HOLD_END purpose=baseline-W1-attempt1 exit=75
+- 2026-10-19T02:28:09Z pid=33634 WAIT_START purpose=baseline-W200-attempt1
+- 2026-10-19T02:28:09Z pid=33634 HOLD_START purpose=baseline-W200-attempt1 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt1.json.validity.json P=2.056259209 R=2.008996167 load=24.02587890625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt1.json.validity.json P=2.009438875 R=2.008996167 load=24.02587890625 valid=False exit=75
+- 2026-10-19T02:28:14Z pid=33634 HOLD_END purpose=baseline-W200-attempt1 exit=75
+- 2026-10-19T02:28:14Z pid=34218 WAIT_START purpose=baseline-W-multi-attempt1
+- 2026-10-19T02:28:14Z pid=34218 HOLD_START purpose=baseline-W-multi-attempt1 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt1.json.validity.json P=1.993373917 R=2.008996167 load=24.18359375
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt1.json.validity.json P=2.032287750 R=2.008996167 load=24.18359375 valid=False exit=75
+- 2026-10-19T02:28:20Z pid=34218 HOLD_END purpose=baseline-W-multi-attempt1 exit=75
+- 2026-10-19T02:29:03Z pid=37990 WAIT_START purpose=agent-sections-W500
+- 2026-10-19T02:29:03Z pid=37990 HOLD_START purpose=agent-sections-W500 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/frames.json.validity.json P=2.096809458 R=2.008996167 load=26.2880859375
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt1/frames.json.validity.json P=2.023052791 R=2.008996167 load=25.5439453125 valid=False exit=75
+- 2026-10-19T02:29:09Z pid=37990 HOLD_END purpose=agent-sections-W500 exit=75
+- 2026-10-19T02:29:09Z pid=38443 WAIT_START purpose=agent-sections-W200
+- 2026-10-19T02:29:09Z pid=38443 HOLD_START purpose=agent-sections-W200 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/frames.json.validity.json P=1.969317041 R=2.008996167 load=26.060546875
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt1/frames.json.validity.json P=2.023593708 R=2.008996167 load=26.060546875 valid=False exit=75
+- 2026-10-19T02:29:14Z pid=38443 HOLD_END purpose=agent-sections-W200 exit=75
+- 2026-10-19T02:29:14Z pid=38960 WAIT_START purpose=agent-sections-W-multi
+- 2026-10-19T02:29:14Z pid=38960 HOLD_START purpose=agent-sections-W-multi limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/frames.json.validity.json P=2.071241292 R=2.008996167 load=26.8564453125
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt1/frames.json.validity.json P=2.137553250 R=2.008996167 load=26.8564453125 valid=False exit=75
+- 2026-10-19T02:29:20Z pid=38960 HOLD_END purpose=agent-sections-W-multi exit=75
+- 2026-10-19T02:29:20Z pid=39399 WAIT_START purpose=baseline-ablation-W200-attempt1
+- 2026-10-19T02:29:20Z pid=39399 HOLD_START purpose=baseline-ablation-W200-attempt1 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.json.validity.json P=2.076126125 R=2.008996167 load=27.58837890625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt1.json.validity.json P=1.996885958 R=2.008996167 load=27.58837890625 valid=False exit=75
+- 2026-10-19T02:29:25Z pid=39399 HOLD_END purpose=baseline-ablation-W200-attempt1 exit=75
+- 2026-10-19T02:59:35Z pid=69527 WAIT_START purpose=baseline-W0-attempt2
+- 2026-10-19T02:59:35Z pid=69527 HOLD_START purpose=baseline-W0-attempt2 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.json.validity.json P=1.961287666 R=2.008996167 load=2.50439453125
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W0-attempt2.json.validity.json P=2.004998625 R=2.008996167 load=3.0498046875 valid=True exit=0
+- 2026-10-19T03:00:31Z pid=69527 HOLD_END purpose=baseline-W0-attempt2 exit=0
+- 2026-10-19T03:00:31Z pid=73142 WAIT_START purpose=baseline-W500-attempt2
+- 2026-10-19T03:00:31Z pid=73142 HOLD_START purpose=baseline-W500-attempt2 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.json.validity.json P=1.963445375 R=2.008996167 load=3.04541015625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W500-attempt2.json.validity.json P=1.978084709 R=2.008996167 load=3.447265625 valid=True exit=0
+- 2026-10-19T03:02:35Z pid=73142 HOLD_END purpose=baseline-W500-attempt2 exit=0
+- 2026-10-19T03:02:35Z pid=80962 WAIT_START purpose=baseline-W1-attempt2
+- 2026-10-19T03:02:35Z pid=80962 HOLD_START purpose=baseline-W1-attempt2 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.json.validity.json P=2.047919750 R=2.008996167 load=3.3310546875
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W1-attempt2.json.validity.json P=2.082988875 R=2.008996167 load=3.60302734375 valid=True exit=0
+- 2026-10-19T03:06:39Z pid=80962 HOLD_END purpose=baseline-W1-attempt2 exit=0
+- 2026-10-19T03:06:39Z pid=98407 WAIT_START purpose=baseline-W200-attempt2
+- 2026-10-19T03:06:39Z pid=98407 HOLD_START purpose=baseline-W200-attempt2 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.json.validity.json P=1.962020917 R=2.008996167 load=3.71484375
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W200-attempt2.json.validity.json P=2.021250292 R=2.008996167 load=3.47265625 valid=True exit=0
+- 2026-10-19T03:07:34Z pid=98407 HOLD_END purpose=baseline-W200-attempt2 exit=0
+- 2026-10-19T03:07:34Z pid=2560 WAIT_START purpose=baseline-W-multi-attempt2
+- 2026-10-19T03:07:34Z pid=2560 HOLD_START purpose=baseline-W-multi-attempt2 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.json.validity.json P=2.006688000 R=2.008996167 load=3.5146484375
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/matrix/baseline-W-multi-attempt2.json.validity.json P=1.988965625 R=2.008996167 load=3.78955078125 valid=True exit=0
+- 2026-10-19T03:10:22Z pid=2560 HOLD_END purpose=baseline-W-multi-attempt2 exit=0
+- 2026-10-19T03:10:22Z pid=13880 WAIT_START purpose=agent-sections-W500
+- 2026-10-19T03:10:22Z pid=13880 HOLD_START purpose=agent-sections-W500 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/frames.json.validity.json P=1.956553625 R=2.008996167 load=3.96630859375
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/sections-W500-attempt2/frames.json.validity.json P=2.022985417 R=2.008996167 load=3.54248046875 valid=True exit=0
+- 2026-10-19T03:10:40Z pid=13880 HOLD_END purpose=agent-sections-W500 exit=0
+- 2026-10-19T03:10:40Z pid=14986 WAIT_START purpose=agent-sections-W200
+- 2026-10-19T03:10:40Z pid=14986 HOLD_START purpose=agent-sections-W200 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/frames.json.validity.json P=1.941547791 R=2.008996167 load=3.54248046875
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/sections-W200-attempt2/frames.json.validity.json P=2.052496583 R=2.008996167 load=3.87744140625 valid=True exit=0
+- 2026-10-19T03:10:57Z pid=14986 HOLD_END purpose=agent-sections-W200 exit=0
+- 2026-10-19T03:10:57Z pid=16121 WAIT_START purpose=agent-sections-W-multi
+- 2026-10-19T03:10:57Z pid=16121 HOLD_START purpose=agent-sections-W-multi limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/frames.json.validity.json P=1.996171167 R=2.008996167 load=4.20751953125
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/sections-W-multi-attempt2/frames.json.validity.json P=1.991115166 R=2.008996167 load=3.40185546875 valid=True exit=0
+- 2026-10-19T03:11:29Z pid=16121 HOLD_END purpose=agent-sections-W-multi exit=0
+- 2026-10-19T03:11:29Z pid=18457 WAIT_START purpose=baseline-ablation-W200-attempt2
+- 2026-10-19T03:11:29Z pid=18457 HOLD_START purpose=baseline-ablation-W200-attempt2 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json P=2.008760750 R=2.008996167 load=3.60986328125
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/baseline/ablation-W200-attempt2.json.validity.json P=2.018011041 R=2.008996167 load=6.0234375 valid=True exit=0
+- 2026-10-19T03:16:32Z pid=18457 HOLD_END purpose=baseline-ablation-W200-attempt2 exit=0
+- 2026-10-19T03:25:46Z pid=72773 WAIT_START purpose=pair-declump-kernel-W500
+- 2026-10-19T03:25:46Z pid=72773 HOLD_START purpose=pair-declump-kernel-W500 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/kernel/pairs-W500-attempt1/frames.json.validity.json P=2.003321375 R=2.008996167 load=3.98876953125
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/kernel/pairs-W500-attempt1/frames.json.validity.json P=2.021951709 R=2.008996167 load=3.8291015625 valid=True exit=0
+- 2026-10-19T03:26:26Z pid=72773 HOLD_END purpose=pair-declump-kernel-W500 exit=0
+- 2026-10-19T03:26:26Z pid=75246 WAIT_START purpose=pair-declump-kernel-W200
+- 2026-10-19T03:26:26Z pid=75246 HOLD_START purpose=pair-declump-kernel-W200 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13-evidence/kernel/pairs-W200-attempt1/frames.json.validity.json P=1.938035084 R=2.008996167 load=3.8291015625
+- PROBE_AFTER /Users/rexxa/work/art-production13-evidence/kernel/pairs-W200-attempt1/frames.json.validity.json P=1.975303625 R=2.008996167 load=6.2890625 valid=True exit=0
+- 2026-10-19T03:27:05Z pid=75246 HOLD_END purpose=pair-declump-kernel-W200 exit=0

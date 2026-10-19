@@ -1,0 +1,9 @@
+{
+  "script": "scripts/test/art/capture_activities_p10.gd",
+  "script_sha256": "7eaff13e05cb2b2b4d779d7c2c93ab4589aa3eaf601d3985f3862b0d2dac2b85",
+  "log": "/Users/rexxa/work/art-production10-evidence/activity-capture-check-only.log",
+  "log_sha256": "46ae6973b239ca8dd1790998db01093c1f7f157d6729184c539d68e1397c865f",
+  "exit_code": 0,
+  "log_errors": false,
+  "scope": "Godot --headless --check-only; no activity runtime or expected-pose verification"
+}

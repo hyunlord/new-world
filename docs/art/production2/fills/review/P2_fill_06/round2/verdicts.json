@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "round": 2,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "candidates_sha256": "7dc7dbe02111a8e4c0d3056b409ca07babecad3033681659ffde0a4a9ed896a3",
+  "preview_sha256": "09a209e93c87bcb6111679823ff99c73e95f14d272b10a112f5c413451dd1ed5",
+  "source_parts": {
+    "docs/art/production2/fills/review/P2_fill_06/round2/verdicts_reviewer.json": "0f18913c08cb868a81742cf6f478f9d388a12d10dad2b64fc165ad2e97c8d37b"
+  },
+  "references": {
+    "adult_a": "V_a1_01@1",
+    "adult_b": "V_b1_01@2",
+    "child": "V_c1_01@1"
+  },
+  "previews": {
+    "P2_fill_06_01": "P2_fill_06_01@1",
+    "P2_fill_06_02": "P2_fill_06_02@1",
+    "P2_fill_06_03": "P2_fill_06_03@1",
+    "P2_fill_06_04": "P2_fill_06_04@1",
+    "P2_fill_06_05": "P2_fill_06_05@1",
+    "P2_fill_06_06": "P2_fill_06_06@1",
+    "P2_fill_06_07": "P2_fill_06_07@1:derived",
+    "P2_fill_06_08": "P2_fill_06_08@1",
+    "P2_fill_06_09": "P2_fill_06_09@1",
+    "P2_fill_06_10": "P2_fill_06_10@1:derived",
+    "P2_fill_06_11": "P2_fill_06_11@1",
+    "P2_fill_06_12": "P2_fill_06_12@1",
+    "P2_fill_06_13": "P2_fill_06_13@1",
+    "P2_fill_06_14": "P2_fill_06_14@1",
+    "P2_fill_06_15": "P2_fill_06_15@1",
+    "P2_fill_06_16": "P2_fill_06_16@1"
+  },
+  "candidate_fingerprints": {
+    "P2_fill_06_01": "cb1552cb74c8f24e034ba49c898f9bca32f378ac9e632fb7ba8f78e92f08f855",
+    "P2_fill_06_02": "818ff4c6280d4b20e3043e1972d0f133e14e0cf960e9493992348d3576176a04",
+    "P2_fill_06_03": "a09fd71ae155fa909472c450236a24d4778744c246eece3577de62523b4f864f",
+    "P2_fill_06_04": "46fd8c3c90fd9e012abd37cc4f7905889bb88c0cff2aeec74fde410da149dfc8",
+    "P2_fill_06_05": "6969aac9053c2073650b9ff72ce3dcc645d7e384f5364fe7ef4a8ef382412c0e",
+    "P2_fill_06_06": "a5e88de3c97f1cd39a4d55ce39b6b9e0a126e1773cf80d3f34ef6ae97ed852f0",
+    "P2_fill_06_07": "a366ab3c469f94de1fc1eb6319813175f62e6868892872468d6d5e09a6388567",
+    "P2_fill_06_08": "b012dd532eac3c915c5f370f9a1cdfd504e756757938f503779fc2ff19933cbe",
+    "P2_fill_06_09": "8c97980a9654d98469eaa1dfdbcfc6dd04a0d83651a0a0ee4c00f38f9857eb1f",
+    "P2_fill_06_10": "956228e813a6dc47685bb0ae2e5eae1a24447b351ff0f88775e637e5b6532600",
+    "P2_fill_06_11": "aa20fbc2d9de84b3cf7b3eae70a7b1b82734e5ba0bc0ce96651b3a55e48500ea",
+    "P2_fill_06_12": "dac621a914fb6c1c70897d3e4cbc7f25b15cf2a4eb1f01666f2c79349b7b950c",
+    "P2_fill_06_13": "f2e6f06f7ac7d69f4867071aef3a9b2dff858c4744ee38e9d44e32969396eff7",
+    "P2_fill_06_14": "31f6deacb3e6443ad27f17f7efe2562be3ee0344afaf39bca6a05435b97da5cd",
+    "P2_fill_06_15": "73bf765b943d310ee5807ee696a2d41c6c88b6792630f360ad4d9e46154ff1b9",
+    "P2_fill_06_16": "1cdbf741c8a05d3b047459e89a181ac342730e8f7da0815bcc4807fe72be740c"
+  },
+  "rendered_fingerprints": {
+    "P2_fill_06_01": "e52e5c0ea26202ec4113380b4de807a03debe1b40f420f13a621757494e1b265",
+    "P2_fill_06_02": "08e9b28624b25c32182f9f36f2e4dde0adeb3dca777ca51e77fc3d321aeea8cb",
+    "P2_fill_06_03": "670e6db80528a02e12df7aabec80ea035025474b72becca80ad841b1cf76851f",
+    "P2_fill_06_04": "f3b21abf574bff4b074ad21ab4d61752c0d39b9ac054db1bbe93e66f9ce51ec1",
+    "P2_fill_06_05": "78c29e01f5ef7671a4ee1c5f90c647d52502ff87af2e68e66e9395b57e2ebac5",
+    "P2_fill_06_06": "6587663168f62a54c29eb835d5df87121ae65853badd9ec9c8da17ac4b8ee21c",
+    "P2_fill_06_07": "b4266570179dec0889e576f26fb2ac41562c51dff6e7eb04ba7db5eeee616985",
+    "P2_fill_06_08": "e3dbf7db52ec9fcb95714a8d320b2cbc32a02af0b1c80f91cc95729dddd52496",
+    "P2_fill_06_09": "1c8cb73eebfb292bd7a6346338e5b95434523955e5ee54717030fd7ac567ebb5",
+    "P2_fill_06_10": "21d6ef54cff4e96b5fb32bccd8941dc20516ef59b5ea85afbe2ae8366c76d59e",
+    "P2_fill_06_11": "f8fe538735311b5ddac75adfba1945885281d799c85dd1ff957a7e5c34d31a7f",
+    "P2_fill_06_12": "f02aa56b0b81ddff2c23072609b7bd5cf1ffd8813b1be057524a0a71adfcdf7a",
+    "P2_fill_06_13": "e1ea20dc7ddc54a77ec6ea69c8f229ef291292839d952588ea1225a6bab07a6b",
+    "P2_fill_06_14": "ca399285b058140535c6b931aa622a5479ca065d84badbc3f574695e3b540b5f",
+    "P2_fill_06_15": "1a127b0f3d7d4ac7779399e05586317e8675195f07802e0cc1c2094e94c0eaa5",
+    "P2_fill_06_16": "ae1d79a5c2c8c55c3a2ce53acd267738f92c43660a1933f8fe164e2aac1c8d11"
+  },
+  "review_images_sha256": {
+    "P2_fill_06.png": "24f15bbec35e2ccb2996ec47bf42be54ba8869dfc56c036cd1d412a9378877c6",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previous_round_sha256": "8e738bbb6aa0614a44e8bf07aa9f8e2fc7a34bf1eea7a5e7e84ef9003f714f6b",
+  "expected_slots": [
+    "P2_fill_06_01",
+    "P2_fill_06_02",
+    "P2_fill_06_03",
+    "P2_fill_06_04",
+    "P2_fill_06_05",
+    "P2_fill_06_06",
+    "P2_fill_06_07",
+    "P2_fill_06_08",
+    "P2_fill_06_09",
+    "P2_fill_06_10",
+    "P2_fill_06_11",
+    "P2_fill_06_12",
+    "P2_fill_06_13",
+    "P2_fill_06_14",
+    "P2_fill_06_15",
+    "P2_fill_06_16"
+  ],
+  "verdicts": [
+    {
+      "sprite_id": "P2_fill_06_01",
+      "candidate_id": "P2_fill_06_01@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "The basket is now other and exposed chest is skin; bare ankle and foot pixels still map to magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_02",
+      "candidate_id": "P2_fill_06_02@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Basket classification is improved, but bare cheek and elbow pixels remain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_03",
+      "candidate_id": "P2_fill_06_03@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing carry remains coherent; exposed arm and rear-leg skin still include magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_04",
+      "candidate_id": "P2_fill_06_04@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Basket and upper torso regions are improved, but the bare rear leg and ankle retain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_05",
+      "candidate_id": "P2_fill_06_05@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing gathering reads correctly; the bare foot and arm edge still contain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_06",
+      "candidate_id": "P2_fill_06_06@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "The exposed chest is corrected, but bare arm-edge and foot pixels remain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_07",
+      "candidate_id": "P2_fill_06_07@1:derived",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing reach and bush remain readable; bare shoulder and hand-edge pixels still map to magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_08",
+      "candidate_id": "P2_fill_06_08@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing gather pose is consistent; magenta other remains on bare shoulder and hand-edge pixels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_09",
+      "candidate_id": "P2_fill_06_09@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Tool and rock are now other, but the raised bare forearm has magenta pixels and the diagonal garment boundary remains assigned to other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_10",
+      "candidate_id": "P2_fill_06_10@1:derived",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Tool and rock classification is improved; raised-forearm skin and the diagonal garment boundary still contain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_11",
+      "candidate_id": "P2_fill_06_11@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Tool and rock map correctly, but bare upper-arm and foot-edge pixels remain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_12",
+      "candidate_id": "P2_fill_06_12@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing strike is readable; bare shoulder and forearm-edge pixels still map to magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_13",
+      "candidate_id": "P2_fill_06_13@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "The raised forearm is now skin, but cheek and bare knee-edge pixels remain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_14",
+      "candidate_id": "P2_fill_06_14@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Drink pose and raised arm are readable; bare knee-edge and shoulder pixels remain magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_15",
+      "candidate_id": "P2_fill_06_15@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "The raised arm is improved, but the hand/cheek boundary and exposed leg edge still include magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_06_16",
+      "candidate_id": "P2_fill_06_16@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing eating remains coherent; bare leg and foot pixels retain magenta other.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

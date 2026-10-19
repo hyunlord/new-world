@@ -69,7 +69,7 @@ func _on_frame() -> void:
 
 
 func _run_assertions() -> void:
-	var snap: Variant = _world_sim.call("get_agent_snapshot")
+	var snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	var has_dict := snap is Dictionary
 	_record("snapshot_is_dictionary", has_dict, "type=%s" % typeof(snap))
 	if not has_dict:

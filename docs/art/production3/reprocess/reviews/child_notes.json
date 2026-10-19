@@ -1,0 +1,30 @@
+{
+  "boards_directly_opened": [
+    "docs/art/production3/reprocess/boards/child_01.png",
+    "docs/art/production3/reprocess/boards/child_02.png",
+    "docs/art/production3/reprocess/boards/child_03.png",
+    "docs/art/production3/reprocess/boards/child_04.png",
+    "docs/art/production3/reprocess/boards/child_05.png",
+    "docs/art/production3/reprocess/boards/child_06.png",
+    "docs/art/production3/reprocess/boards/child_07.png",
+    "docs/art/production3/reprocess/boards/child_08.png",
+    "docs/art/production3/reprocess/boards/child_09.png"
+  ],
+  "reviewed_candidates": 98,
+  "coverage_exact": true,
+  "candidate_ledger_sha256_verified": "7e83bcbbadbcfa246b44e83cc5ff2cea5b4833d388b57019196cce699fffa94d",
+  "candidate_fingerprints_verified": 98,
+  "candidate_image_sha256_verified": true,
+  "board_sha256_verified": 9,
+  "counts": {
+    "reject": 98
+  },
+  "reasons": {
+    "artefact": 8,
+    "region_map_wrong": 85,
+    "wrong_view": 2,
+    "wrong_pose": 3
+  },
+  "fit_damage_claims": 0,
+  "notes": "All nine supplied child boards opened directly using view_image, including the 2x sprites without icons and anatomical maps. No old verdicts read. No candidate unavailable. Region errors are visual classifications, not inferred from technical warnings."
+}

@@ -1,0 +1,27 @@
+{
+  "binding_stage": "at installation; boards unchanged after review queue freeze",
+  "sha256": {
+    "docs/art/production5/harvest/animation/round1_reviews.json": "9ab44ae191889a07312010f1b422757b4c9c1a4e40dbc527276d6641cc4cbe64",
+    "docs/art/production5/harvest/animation/final_reviews.json": "9ab44ae191889a07312010f1b422757b4c9c1a4e40dbc527276d6641cc4cbe64",
+    "docs/art/production5/harvest/animation/adult_a_E_carry_2853a70ad4.png": "2d2a60e10aafed4392ae9e4e3d3d698e07f4ed2f2a1915ad9662c8a20f6c3819",
+    "docs/art/production5/harvest/animation/adult_a_E_carry_2853a70ad4.gif": "9823f741bb290d933cc453dae1b0066b7730eff89a8ba2e9e03ce799ad2ef8c0",
+    "docs/art/production5/harvest/animation/adult_a_S_carry_3b62976eb3.png": "f029a8e1d91f08dff369a5f28dd9c49796958bd2017b9d2b9064f9b80591cfba",
+    "docs/art/production5/harvest/animation/adult_a_S_carry_3b62976eb3.gif": "00345ce9e51c914541688a4224ea6fa49de78392ab02e228279121384ecc6871",
+    "docs/art/production5/harvest/animation/adult_b_E_carry_318c1faae0.png": "3f92d4dbf016d6e587c8ba29d9635d32cc9eaa105273ac9c68d8cc5ab5e4917e",
+    "docs/art/production5/harvest/animation/adult_b_E_carry_318c1faae0.gif": "7dd1fa51fd56a2028e6c2af53b1ee0bd86237d98f721d1be8344934f2ba9591a",
+    "docs/art/production5/harvest/animation/adult_b_S_carry_82ad145c3c.png": "b43798a32a77f8291cd210ad6a3aa5a16b645378bafa42c15aba779f161ee0ad",
+    "docs/art/production5/harvest/animation/adult_b_S_carry_82ad145c3c.gif": "7311d5ac51cca192d41a8ebcf127c5632df2f7fd3743e0de44b7fa93dfff2135",
+    "docs/art/production5/harvest/animation/child_E_carry_90b292eb75.png": "f9b99bfa64f69501264d372eed953aa5adfcd9c5539851cec4ec4d156f14014f",
+    "docs/art/production5/harvest/animation/child_E_carry_90b292eb75.gif": "b7af7d31fb1474ff1d342bf0dbffe65ed459cc0c1d943ea84484f0d220e631ce",
+    "docs/art/production5/harvest/animation/child_E_run_e2449b8b7d.png": "9823a096d431798edb99c944c62c3d956e8a2e2d7bc7f460cdf4bbe9bd93acad",
+    "docs/art/production5/harvest/animation/child_E_run_e2449b8b7d.gif": "b7818daf42f19beead2055a68d211732e9e4d1f3d19c761e133f944633f0b475",
+    "docs/art/production5/harvest/animation/child_E_walk_3d861bcd73.png": "f66c4fe6c8d2a0ac0ef78522f03b091afc4630882ef2e52a2273ad3814b951f6",
+    "docs/art/production5/harvest/animation/child_E_walk_3d861bcd73.gif": "7009b4b8b37a4df94b78ae1070942daba05d33df926571c026fd4ef20478d9e4",
+    "docs/art/production5/harvest/animation/child_N_walk_a7fb830e31.png": "4e4160462693309b54958d1bd47234fc63fca940cad9d39e78ae0bee2d1bf6c3",
+    "docs/art/production5/harvest/animation/child_N_walk_a7fb830e31.gif": "a153986235e2565562ab981081b99bd951845e0ecbb943c3642dac105e70e4da",
+    "docs/art/production5/harvest/animation/child_S_build_2ffc94e5c1.png": "c3a6224b66202b96a3aeab8a7b7cd941434bb81cb2aca951b2d64b4641af99e1",
+    "docs/art/production5/harvest/animation/child_S_build_2ffc94e5c1.gif": "d0c20274f3bfd40f1b62c4ba160f45e170e4ec39ee8526466826143a73a9ab78",
+    "docs/art/production5/harvest/animation/child_S_walk_08d1ab3e49.png": "15d73ea3a81b389a04dfe87828c79e70b42e29d777fc178b007f2c7390040120",
+    "docs/art/production5/harvest/animation/child_S_walk_08d1ab3e49.gif": "53c0202a93c9344ade9b8731b108313452066146c512fbb4bfee0af3cdc55679"
+  }
+}

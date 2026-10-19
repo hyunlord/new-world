@@ -1,0 +1,4 @@
+Independent Art Pass4 recovery review. Read docs/art/production4/REVIEW_RUBRIC.md.
+Use only your body boards listed in index.json and templates/<body>.json. Do not inspect pipeline code, candidate ledger, previous verdicts or GOAL section3.
+Each label gives unique candidate ID, physical slot and logical target. Boards show exact unchanged outlined installation sprite and its sprite_hair_mask. Judge action at2x withouticons, natural colours, anatomy and hairmask.
+Return one verdict per candidate ID using template fields; no installation judgement. Child masks are intentionallyempty.

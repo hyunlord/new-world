@@ -1,0 +1,11 @@
+{
+  "started": "2026-10-15T14:55:07.895108+09:00",
+  "head": "46193a0301d335fc04dcfd6460e59cc0f1370d08",
+  "source_manifest": "../final-source-manifest.json",
+  "library_sha256_before": "69c336daf1d952bcb0ca40bf5faad3edf5f437611c000c4a4a7a1e6675a6239d",
+  "CARGO_BUILD_JOBS": 6,
+  "CARGO_PROFILE_TEST_OPT_LEVEL": 1,
+  "CARGO_PROFILE_TEST_DEBUG_ASSERTIONS": true,
+  "CARGO_PROFILE_TEST_OVERFLOW_CHECKS": true,
+  "dev_profile": "unoptimized debug"
+}

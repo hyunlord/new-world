@@ -1,0 +1,1262 @@
+{
+	"complete": true,
+	"elapsed_seconds": 1482.304,
+	"failures": [],
+	"options": {
+		"mode": "framings"
+	},
+	"rows": [
+		{
+			"activity_snapshot": {
+				"ids": [
+					4294967299,
+					4294967301,
+					4294967303,
+					4294967306,
+					4294967307,
+					4294967309,
+					4294967312,
+					4294967313,
+					4294967314,
+					4294967318,
+					4294967319,
+					4294967320,
+					8589934613,
+					8589934598
+				],
+				"kinds": "[6, 3, 6, 6, 6, 3, 3, 3, 3, 3, 3, 3, 5, 5]",
+				"place_x": [
+					22,
+					24,
+					23,
+					22,
+					21,
+					20,
+					24,
+					20,
+					21,
+					24,
+					20,
+					23,
+					21,
+					22
+				],
+				"place_y": [
+					19,
+					18,
+					18,
+					18,
+					19,
+					22,
+					21,
+					20,
+					22,
+					20,
+					21,
+					22,
+					17,
+					17
+				],
+				"until_tick": [
+					40595,
+					40601,
+					-1,
+					40565,
+					40613,
+					40578,
+					40639,
+					40568,
+					-1,
+					40567,
+					40589,
+					-1,
+					40616,
+					40610
+				]
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					75
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1]",
+				"xs": [
+					22,
+					20,
+					24,
+					22,
+					24,
+					21
+				],
+				"ys": [
+					20,
+					19,
+					19,
+					22,
+					22,
+					18
+				]
+			},
+			"clock": {
+				"day_index": 28,
+				"day_of_season": 1,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 40560,
+				"ticks_per_day": 1440,
+				"time_of_day": 12.0,
+				"winter_severity": -1
+			},
+			"five_families": [],
+			"label": "P1",
+			"lit_fire_count": 0,
+			"lit_night": false,
+			"population": 29,
+			"settlement_count": 1,
+			"settlements": {
+				"centroid_xs": [
+					25
+				],
+				"centroid_ys": [
+					21
+				],
+				"fire_lit": "[0]",
+				"food_stocks": [
+					143
+				],
+				"formation_xs": [
+					22
+				],
+				"formation_ys": [
+					20
+				],
+				"ids": [
+					1
+				],
+				"member_counts": [
+					29
+				],
+				"settlement_ids": [
+					1
+				],
+				"wood_stocks": [
+					10
+				],
+				"wood_targets": [
+					39
+				]
+			},
+			"state_tag4_agents": [
+				{
+					"agent_id": 18,
+					"entity_bits": 4294967314,
+					"kind": 3
+				},
+				{
+					"agent_id": 7,
+					"entity_bits": 4294967303,
+					"kind": 6
+				},
+				{
+					"agent_id": 24,
+					"entity_bits": 4294967320,
+					"kind": 3
+				},
+				{
+					"agent_id": 17,
+					"entity_bits": 4294967313,
+					"kind": 3
+				},
+				{
+					"agent_id": 22,
+					"entity_bits": 4294967318,
+					"kind": 3
+				},
+				{
+					"agent_id": 23,
+					"entity_bits": 4294967319,
+					"kind": 3
+				},
+				{
+					"agent_id": 10,
+					"entity_bits": 4294967306,
+					"kind": 6
+				},
+				{
+					"agent_id": 11,
+					"entity_bits": 4294967307,
+					"kind": 6
+				},
+				{
+					"agent_id": 13,
+					"entity_bits": 4294967309,
+					"kind": 3
+				},
+				{
+					"agent_id": 5,
+					"entity_bits": 4294967301,
+					"kind": 3
+				},
+				{
+					"agent_id": 3,
+					"entity_bits": 4294967299,
+					"kind": 6
+				},
+				{
+					"agent_id": 16,
+					"entity_bits": 4294967312,
+					"kind": 3
+				},
+				{
+					"agent_id": 33,
+					"entity_bits": 8589934598,
+					"kind": 5
+				},
+				{
+					"agent_id": 32,
+					"entity_bits": 8589934613,
+					"kind": 5
+				}
+			],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 8,
+				"Play": 2,
+				"Repair": 0,
+				"SitByFire": 4,
+				"TendFire": 0
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261010,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"activity_snapshot": {
+				"ids": [],
+				"kinds": "[]",
+				"place_x": [],
+				"place_y": [],
+				"until_tick": []
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					75
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1]",
+				"xs": [
+					22,
+					20,
+					24,
+					22,
+					24,
+					21
+				],
+				"ys": [
+					20,
+					19,
+					19,
+					22,
+					22,
+					18
+				]
+			},
+			"clock": {
+				"day_index": 22,
+				"day_of_season": 2,
+				"days_per_season": 7,
+				"season": 3,
+				"tick": 31320,
+				"ticks_per_day": 1440,
+				"time_of_day": 2.0,
+				"winter_severity": 1
+			},
+			"five_families": [],
+			"label": "P2",
+			"lit_fire_count": 1,
+			"lit_night": true,
+			"population": 29,
+			"settlement_count": 1,
+			"settlements": {
+				"centroid_xs": [
+					21
+				],
+				"centroid_ys": [
+					19
+				],
+				"fire_lit": "[1]",
+				"food_stocks": [
+					362
+				],
+				"formation_xs": [
+					22
+				],
+				"formation_ys": [
+					20
+				],
+				"ids": [
+					1
+				],
+				"member_counts": [
+					29
+				],
+				"settlement_ids": [
+					1
+				],
+				"wood_stocks": [
+					147
+				],
+				"wood_targets": [
+					156
+				]
+			},
+			"state_tag4_agents": [],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 0,
+				"Play": 0,
+				"Repair": 0,
+				"SitByFire": 0,
+				"TendFire": 0
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261010,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"activity_snapshot": {
+				"ids": [
+					4294967308,
+					8589934609,
+					4294967333
+				],
+				"kinds": "[6, 5, 5]",
+				"place_x": [
+					23,
+					19,
+					20
+				],
+				"place_y": [
+					38,
+					37,
+					37
+				],
+				"until_tick": [
+					46219,
+					46237,
+					46233
+				]
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					282,
+					1111,
+					10680,
+					10687,
+					10694
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1, 1, 0, 1, 1]",
+				"xs": [
+					22,
+					20,
+					24,
+					22,
+					24,
+					20,
+					21,
+					24,
+					23,
+					26
+				],
+				"ys": [
+					40,
+					39,
+					39,
+					42,
+					42,
+					38,
+					38,
+					63,
+					61,
+					62
+				]
+			},
+			"clock": {
+				"day_index": 32,
+				"day_of_season": 5,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 46189,
+				"ticks_per_day": 1440,
+				"time_of_day": 9.81666666666667,
+				"winter_severity": -1
+			},
+			"five_families": [],
+			"label": "P3",
+			"lit_fire_count": 0,
+			"lit_night": false,
+			"population": 37,
+			"settlement_count": 2,
+			"settlements": {
+				"centroid_xs": [
+					22,
+					25
+				],
+				"centroid_ys": [
+					41,
+					58
+				],
+				"fire_lit": "[0, 0]",
+				"food_stocks": [
+					139,
+					81
+				],
+				"formation_xs": [
+					22,
+					24
+				],
+				"formation_ys": [
+					40,
+					63
+				],
+				"ids": [
+					1,
+					2
+				],
+				"member_counts": [
+					22,
+					15
+				],
+				"settlement_ids": [
+					1,
+					2
+				],
+				"wood_stocks": [
+					17,
+					9
+				],
+				"wood_targets": [
+					39,
+					39
+				]
+			},
+			"state_tag4_agents": [
+				{
+					"agent_id": 44,
+					"entity_bits": 4294967333,
+					"kind": 5
+				},
+				{
+					"agent_id": 43,
+					"entity_bits": 8589934609,
+					"kind": 5
+				},
+				{
+					"agent_id": 12,
+					"entity_bits": 4294967308,
+					"kind": 6
+				}
+			],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 0,
+				"Play": 2,
+				"Repair": 0,
+				"SitByFire": 1,
+				"TendFire": 0
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261013,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"activity_snapshot": {
+				"ids": [
+					8589934601,
+					4294967336,
+					4294967339,
+					4294967341,
+					4294967343,
+					8589934641,
+					4294967346,
+					4294967348,
+					4294967349,
+					4294967351,
+					4294967352,
+					4294967353,
+					4294967355,
+					4294967356,
+					8589934653,
+					4294967358,
+					4294967359,
+					4294967361,
+					8589934604,
+					8589934602,
+					8589934626,
+					8589934625,
+					12884901899,
+					12884901891,
+					8589934636,
+					12884901892
+				],
+				"kinds": "[3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 3, 3, 6, 6, 6, 3, 3, 0, 3, 3, 2, 5, 5]",
+				"place_x": [
+					24,
+					26,
+					23,
+					23,
+					20,
+					22,
+					23,
+					22,
+					22,
+					24,
+					25,
+					23,
+					24,
+					22,
+					22,
+					24,
+					23,
+					3,
+					24,
+					20,
+					22,
+					25,
+					20,
+					23,
+					19,
+					23
+				],
+				"place_y": [
+					61,
+					63,
+					38,
+					41,
+					41,
+					39,
+					63,
+					62,
+					38,
+					38,
+					63,
+					62,
+					41,
+					63,
+					61,
+					62,
+					62,
+					14,
+					40,
+					40,
+					41,
+					61,
+					42,
+					59,
+					37,
+					60
+				],
+				"until_tick": [
+					127019,
+					-1,
+					127078,
+					127044,
+					126999,
+					127035,
+					-1,
+					127020,
+					127096,
+					127057,
+					127021,
+					127024,
+					127049,
+					-1,
+					127091,
+					-1,
+					127025,
+					-1,
+					-1,
+					127056,
+					127023,
+					-1,
+					127043,
+					-1,
+					127051,
+					127075
+				]
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					282,
+					1111,
+					10680,
+					10687,
+					10694,
+					10802,
+					12047,
+					13888,
+					50109,
+					50116,
+					50123
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1]",
+				"xs": [
+					22,
+					20,
+					24,
+					22,
+					24,
+					20,
+					21,
+					24,
+					23,
+					26,
+					26,
+					24,
+					25,
+					5,
+					3,
+					7
+				],
+				"ys": [
+					40,
+					39,
+					39,
+					42,
+					42,
+					38,
+					38,
+					63,
+					61,
+					62,
+					61,
+					60,
+					60,
+					16,
+					15,
+					15
+				]
+			},
+			"clock": {
+				"day_index": 88,
+				"day_of_season": 5,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 126994,
+				"ticks_per_day": 1440,
+				"time_of_day": 12.5666666666667,
+				"winter_severity": -1
+			},
+			"five_families": [],
+			"label": "P4",
+			"lit_fire_count": 0,
+			"lit_night": false,
+			"population": 66,
+			"settlement_count": 3,
+			"settlements": {
+				"centroid_xs": [
+					21,
+					22,
+					6
+				],
+				"centroid_ys": [
+					39,
+					59,
+					23
+				],
+				"fire_lit": "[0, 0, 0]",
+				"food_stocks": [
+					176,
+					212,
+					93
+				],
+				"formation_xs": [
+					22,
+					24,
+					5
+				],
+				"formation_ys": [
+					40,
+					63,
+					16
+				],
+				"ids": [
+					1,
+					2,
+					3
+				],
+				"member_counts": [
+					30,
+					24,
+					12
+				],
+				"settlement_ids": [
+					1,
+					2,
+					3
+				],
+				"wood_stocks": [
+					50,
+					39,
+					12
+				],
+				"wood_targets": [
+					39,
+					39,
+					39
+				]
+			},
+			"state_tag4_agents": [
+				{
+					"agent_id": 112,
+					"entity_bits": 8589934636,
+					"kind": 5
+				},
+				{
+					"agent_id": 113,
+					"entity_bits": 12884901892,
+					"kind": 5
+				},
+				{
+					"agent_id": 106,
+					"entity_bits": 12884901891,
+					"kind": 2
+				},
+				{
+					"agent_id": 100,
+					"entity_bits": 8589934625,
+					"kind": 3
+				},
+				{
+					"agent_id": 80,
+					"entity_bits": 8589934602,
+					"kind": 3
+				},
+				{
+					"agent_id": 103,
+					"entity_bits": 12884901899,
+					"kind": 3
+				},
+				{
+					"agent_id": 91,
+					"entity_bits": 8589934626,
+					"kind": 0
+				},
+				{
+					"agent_id": 74,
+					"entity_bits": 4294967358,
+					"kind": 6
+				},
+				{
+					"agent_id": 60,
+					"entity_bits": 4294967346,
+					"kind": 6
+				},
+				{
+					"agent_id": 77,
+					"entity_bits": 4294967361,
+					"kind": 6
+				},
+				{
+					"agent_id": 72,
+					"entity_bits": 4294967356,
+					"kind": 3
+				},
+				{
+					"agent_id": 50,
+					"entity_bits": 4294967336,
+					"kind": 3
+				},
+				{
+					"agent_id": 78,
+					"entity_bits": 8589934604,
+					"kind": 3
+				},
+				{
+					"agent_id": 57,
+					"entity_bits": 4294967343,
+					"kind": 6
+				},
+				{
+					"agent_id": 67,
+					"entity_bits": 4294967353,
+					"kind": 6
+				},
+				{
+					"agent_id": 71,
+					"entity_bits": 4294967355,
+					"kind": 3
+				},
+				{
+					"agent_id": 75,
+					"entity_bits": 4294967359,
+					"kind": 6
+				},
+				{
+					"agent_id": 59,
+					"entity_bits": 8589934641,
+					"kind": 6
+				},
+				{
+					"agent_id": 73,
+					"entity_bits": 8589934653,
+					"kind": 3
+				},
+				{
+					"agent_id": 53,
+					"entity_bits": 4294967339,
+					"kind": 3
+				},
+				{
+					"agent_id": 66,
+					"entity_bits": 4294967352,
+					"kind": 6
+				},
+				{
+					"agent_id": 63,
+					"entity_bits": 4294967349,
+					"kind": 6
+				},
+				{
+					"agent_id": 65,
+					"entity_bits": 4294967351,
+					"kind": 6
+				},
+				{
+					"agent_id": 46,
+					"entity_bits": 8589934601,
+					"kind": 3
+				},
+				{
+					"agent_id": 62,
+					"entity_bits": 4294967348,
+					"kind": 6
+				},
+				{
+					"agent_id": 55,
+					"entity_bits": 4294967341,
+					"kind": 6
+				}
+			],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 10,
+				"Play": 2,
+				"Repair": 1,
+				"SitByFire": 12,
+				"TendFire": 1
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261013,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"activity_snapshot": {
+				"ids": [],
+				"kinds": "[]",
+				"place_x": [],
+				"place_y": [],
+				"until_tick": []
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					75,
+					205,
+					399,
+					607,
+					904,
+					1216,
+					1759,
+					3890
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1]",
+				"xs": [
+					35,
+					33,
+					37,
+					35,
+					37,
+					34,
+					35,
+					36,
+					37,
+					37,
+					37,
+					33,
+					34
+				],
+				"ys": [
+					29,
+					28,
+					28,
+					31,
+					31,
+					27,
+					27,
+					27,
+					27,
+					29,
+					30,
+					31,
+					31
+				]
+			},
+			"clock": {
+				"day_index": 1,
+				"day_of_season": 2,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 1440,
+				"ticks_per_day": 1440,
+				"time_of_day": 8.0,
+				"winter_severity": -1
+			},
+			"five_families": [],
+			"label": "P5",
+			"lit_fire_count": 0,
+			"lit_night": false,
+			"population": 500,
+			"settlement_count": 1,
+			"settlements": {
+				"centroid_xs": [
+					35
+				],
+				"centroid_ys": [
+					30
+				],
+				"fire_lit": "[0]",
+				"food_stocks": [
+					0
+				],
+				"formation_xs": [
+					35
+				],
+				"formation_ys": [
+					29
+				],
+				"ids": [
+					1
+				],
+				"member_counts": [
+					500
+				],
+				"settlement_ids": [
+					1
+				],
+				"wood_stocks": [
+					57
+				],
+				"wood_targets": [
+					39
+				]
+			},
+			"state_tag4_agents": [],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 0,
+				"Play": 0,
+				"Repair": 0,
+				"SitByFire": 0,
+				"TendFire": 0
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 15100,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"activity_snapshot": {
+				"ids": [
+					4294967299,
+					4294967301,
+					4294967303,
+					4294967306,
+					4294967307,
+					4294967309,
+					4294967312,
+					4294967313,
+					4294967314,
+					4294967318,
+					4294967319,
+					4294967320,
+					8589934613,
+					8589934598
+				],
+				"kinds": "[6, 3, 6, 6, 6, 3, 3, 3, 3, 3, 3, 3, 5, 5]",
+				"place_x": [
+					22,
+					24,
+					23,
+					22,
+					21,
+					20,
+					24,
+					20,
+					21,
+					24,
+					20,
+					23,
+					21,
+					22
+				],
+				"place_y": [
+					19,
+					18,
+					18,
+					18,
+					19,
+					22,
+					21,
+					20,
+					22,
+					20,
+					21,
+					22,
+					17,
+					17
+				],
+				"until_tick": [
+					40595,
+					40601,
+					-1,
+					40565,
+					40613,
+					40578,
+					40639,
+					40568,
+					-1,
+					40567,
+					40589,
+					-1,
+					40616,
+					40610
+				]
+			},
+			"buildings": {
+				"ids": [
+					0,
+					7,
+					14,
+					21,
+					28,
+					75
+				],
+				"kinds": "[0, 1, 1, 1, 2, 1]",
+				"xs": [
+					22,
+					20,
+					24,
+					22,
+					24,
+					21
+				],
+				"ys": [
+					20,
+					19,
+					19,
+					22,
+					22,
+					18
+				]
+			},
+			"clock": {
+				"day_index": 28,
+				"day_of_season": 1,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 40560,
+				"ticks_per_day": 1440,
+				"time_of_day": 12.0,
+				"winter_severity": -1
+			},
+			"five_families": [],
+			"label": "P6",
+			"lit_fire_count": 0,
+			"lit_night": false,
+			"population": 29,
+			"settlement_count": 1,
+			"settlements": {
+				"centroid_xs": [
+					25
+				],
+				"centroid_ys": [
+					21
+				],
+				"fire_lit": "[0]",
+				"food_stocks": [
+					143
+				],
+				"formation_xs": [
+					22
+				],
+				"formation_ys": [
+					20
+				],
+				"ids": [
+					1
+				],
+				"member_counts": [
+					29
+				],
+				"settlement_ids": [
+					1
+				],
+				"wood_stocks": [
+					10
+				],
+				"wood_targets": [
+					39
+				]
+			},
+			"state_tag4_agents": [
+				{
+					"agent_id": 18,
+					"entity_bits": 4294967314,
+					"kind": 3
+				},
+				{
+					"agent_id": 7,
+					"entity_bits": 4294967303,
+					"kind": 6
+				},
+				{
+					"agent_id": 24,
+					"entity_bits": 4294967320,
+					"kind": 3
+				},
+				{
+					"agent_id": 17,
+					"entity_bits": 4294967313,
+					"kind": 3
+				},
+				{
+					"agent_id": 22,
+					"entity_bits": 4294967318,
+					"kind": 3
+				},
+				{
+					"agent_id": 23,
+					"entity_bits": 4294967319,
+					"kind": 3
+				},
+				{
+					"agent_id": 10,
+					"entity_bits": 4294967306,
+					"kind": 6
+				},
+				{
+					"agent_id": 11,
+					"entity_bits": 4294967307,
+					"kind": 6
+				},
+				{
+					"agent_id": 13,
+					"entity_bits": 4294967309,
+					"kind": 3
+				},
+				{
+					"agent_id": 5,
+					"entity_bits": 4294967301,
+					"kind": 3
+				},
+				{
+					"agent_id": 3,
+					"entity_bits": 4294967299,
+					"kind": 6
+				},
+				{
+					"agent_id": 16,
+					"entity_bits": 4294967312,
+					"kind": 3
+				},
+				{
+					"agent_id": 33,
+					"entity_bits": 8589934598,
+					"kind": 5
+				},
+				{
+					"agent_id": 32,
+					"entity_bits": 8589934613,
+					"kind": 5
+				}
+			],
+			"state_tag4_counts": {
+				"Craft": 0,
+				"Explore": 0,
+				"HearthCircle": 8,
+				"Play": 2,
+				"Repair": 0,
+				"SitByFire": 4,
+				"TendFire": 0
+			},
+			"state_tag4_unknown": 0,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261010,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		}
+	],
+	"schema_version": 1,
+	"source": "WorldSimNode reset + deterministic advance_ticks; no interventions"
+}

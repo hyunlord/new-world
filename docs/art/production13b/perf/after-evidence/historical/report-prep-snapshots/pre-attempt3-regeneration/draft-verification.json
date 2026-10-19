@@ -1,0 +1,12 @@
+{
+  "status": "DRAFT_VERIFIED",
+  "admitted_matrix": [
+    "W1",
+    "W200"
+  ],
+  "official_statistic_checks": 96,
+  "calibration_rows": 15,
+  "measurement_attempts": 9,
+  "endpoint_rows": 18,
+  "invalid_raw_in_after_values": false
+}

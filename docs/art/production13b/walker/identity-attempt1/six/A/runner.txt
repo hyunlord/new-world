@@ -1,0 +1,6 @@
+checkout=/Users/rexxa/work/new-world-art-prod
+label=A
+fixed_fps=60
+resolution=1920x1080
+limit_seconds=1800
+quiet_lock=/Users/rexxa/work/.mac_quiet.lock

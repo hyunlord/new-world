@@ -1,0 +1,130 @@
+[
+  {
+    "sprite_id": "P3_fill_02_01",
+    "candidate_id": "P3_fill_02_01@1:p3",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing carry has a readable red-filled basket at 2x, but an isolated blue strip remains along the left arm silhouette.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_02",
+    "candidate_id": "P3_fill_02_02@1:p3",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "South-facing carry and basket read at 2x; a detached black vertical fragment floats beside the right arm.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_03",
+    "candidate_id": "P3_fill_02_03@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "South carry load is readable, but the region map labels large portions of the exposed lower legs and feet pink other rather than peach skin.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_04",
+    "candidate_id": "P3_fill_02_04@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The south carry basket and stride read at 2x, but exposed shins and feet contain broad pink other regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_05",
+    "candidate_id": "P3_fill_02_05@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East profile supports a clearly visible basket at 2x; exposed lower legs and feet are partly pink other instead of skin in the region map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_06",
+    "candidate_id": "P3_fill_02_06@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing basket carry reads, but exposed leg surfaces below the green garment are extensively classified pink other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_07",
+    "candidate_id": "P3_fill_02_07@1:p3",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "East carry has a readable basket and walking stride, but a blue horizontal fleck sits on top of the brown hair.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_08",
+    "candidate_id": "P3_fill_02_08@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing carry load reads at 2x; exposed lower legs and foot are striped with pink other classification.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_09",
+    "candidate_id": "P3_fill_02_09@1:p3",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North-facing figure has a detached black clump well below the feet, visible in both the large preview and 2x sprite.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_10",
+    "candidate_id": "P3_fill_02_10@1:p3",
+    "verdict": "reject",
+    "reason": "wrong_pose",
+    "observation": "The north-facing 2x figure has arms across the waist with no visible carried load; the required carry action cannot be read without an icon.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_11",
+    "candidate_id": "P3_fill_02_11@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East build raises a clearly readable hammer at 2x, but the exposed raised forearm and lower legs include pink other patches.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_12",
+    "candidate_id": "P3_fill_02_12@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East build bends forward with a readable hammer; much of the exposed forward forearm and hand is pink other in the region map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_13",
+    "candidate_id": "P3_fill_02_13@1:p3",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North build raises a readable hammer, but a bright blue vertical strip remains on the left outer arm.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_14",
+    "candidate_id": "P3_fill_02_14@1:p3",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North build shows a low hammer to the right at 2x, but a blue rectangular patch remains on the exposed right elbow/arm.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_15",
+    "candidate_id": "P3_fill_02_15@1:p3",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "South drink brings both hands to the mouth at 2x; the map labels broad areas of brown hair and exposed arms pink other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P3_fill_02_16",
+    "candidate_id": "P3_fill_02_16@1:p3",
+    "verdict": "reject",
+    "reason": "wrong_pose",
+    "observation": "North drink shows arms held low across the torso beneath the hair; hands at the mouth are not readable in the 2x sprite.",
+    "unfitted_acceptable": null
+  }
+]

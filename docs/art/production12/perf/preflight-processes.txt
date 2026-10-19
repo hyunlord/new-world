@@ -1,0 +1,15 @@
+  PID  PPID  %CPU COMM
+19091 19086  93.4 /Users/rexxa/github/make-meme/.venv/bin/python3
+  399     1  72.5 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+25340 16092  69.2 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc
+25439 16092  69.0 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc
+25089 16092  55.7 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc
+25338 16092  49.4 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc
+  688     1  34.8 /System/Library/CoreServices/Finder.app/Contents/MacOS/Finder
+  368     1  27.2 /usr/libexec/xprotectd
+  357     1  24.1 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds
+  573   560  15.5 osascript
+ 1088   664  12.8 /Applications/Orca.app/Contents/Frameworks/Orca Helper (Renderer).app/Contents/MacOS/Orca Helper (Renderer)
+  604     1  10.0 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores
+  624     1   8.0 /usr/libexec/pboard
+  333     1   7.9 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/Support/fseventsd

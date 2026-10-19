@@ -1,0 +1,41 @@
+{
+  "reason": "Preserve four warm-control animation files externally with exact bytes while keeping production6 below26MB; natural cold and required animation deliverables remain published.",
+  "files": [
+    {
+      "original_path": "docs/art/production6/shots/l_d23_0200_F2N.cold_cycle.gif",
+      "external_path": "/Users/rexxa/work/art-production6-evidence/published_controls/l_d23_0200_F2N.cold_cycle.gif",
+      "sha256": "9e2f22388b149e7e299e8a780a4983d16fbfbbed5c16b16c681afa75bef61c44",
+      "bytes": 1124626,
+      "sidecar": "docs/art/production6/shots/l_d23_0200_F2N.cold_cycle.json.gz",
+      "sidecar_before_sha256": "efb1f47017cf8ae464a98e1edd866bf108bb782d8693f7da4a5e546dcf1ff608",
+      "sidecar_after_sha256": "2f573ed24bd304e3b53623d3c727af82c0d65043651dd9f5bf77d45c316c954b"
+    },
+    {
+      "original_path": "docs/art/production6/shots/l_d24_2300_F2N.cold_cycle.gif",
+      "external_path": "/Users/rexxa/work/art-production6-evidence/published_controls/l_d24_2300_F2N.cold_cycle.gif",
+      "sha256": "c09a1f727ac50587c0f195c2dc396b8ffac6be50b20b40c6e875509d02682093",
+      "bytes": 1321807,
+      "sidecar": "docs/art/production6/shots/l_d24_2300_F2N.cold_cycle.json.gz",
+      "sidecar_before_sha256": "efe3705fbde92e38f54d087e93db83785f1680d36c53075add6d0e332aaffd36",
+      "sidecar_after_sha256": "0099c72964738c1bdbbe93039f396fbad51f6780366d5d0964c2d199fa480700"
+    },
+    {
+      "original_path": "docs/art/production6/shots/l_d25_0200_F2N.cold_cycle.gif",
+      "external_path": "/Users/rexxa/work/art-production6-evidence/published_controls/l_d25_0200_F2N.cold_cycle.gif",
+      "sha256": "4cb12afcc0298a75bf297e70c192d93dbd21f7d72c57aebeb6b4b567cc6db3c1",
+      "bytes": 1310519,
+      "sidecar": "docs/art/production6/shots/l_d25_0200_F2N.cold_cycle.json.gz",
+      "sidecar_before_sha256": "b49370016e0b27195b2e77efcdf1e30321407501ed9b73c708184470ac710c9c",
+      "sidecar_after_sha256": "00bfb557d211e995ff2fbfae0f66290568556677932c9f31274b5975301ac557"
+    },
+    {
+      "original_path": "docs/art/production6/shots/l_d27_0200_F2N.cold_cycle.gif",
+      "external_path": "/Users/rexxa/work/art-production6-evidence/published_controls/l_d27_0200_F2N.cold_cycle.gif",
+      "sha256": "bd29d8cdce319983674b75b0e4da9e24d07415f3107a9f49c1f456ee4ce11790",
+      "bytes": 1114988,
+      "sidecar": "docs/art/production6/shots/l_d27_0200_F2N.cold_cycle.json.gz",
+      "sidecar_before_sha256": "9de6aed4e1f0297e9b2d098bc5c9cbd9d6322d1547f9020158b840d38ccb04cd",
+      "sidecar_after_sha256": "b02440f8236c442c69122de210e8afbe3bb85194c3692666936b58b8ee93739e"
+    }
+  ]
+}

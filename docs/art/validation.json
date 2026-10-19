@@ -1,0 +1,21 @@
+{
+  "structural_pass": true,
+  "failures": [],
+  "warnings": [
+    "D1: readability 0.008213 below art target 0.15; comparison result, not production acceptance",
+    "D2: readability 0.002254 below art target 0.15; comparison result, not production acceptance"
+  ],
+  "measurements": [
+    "D1: palette=31, minimum_pair_deltaE76=3.867142",
+    "D1: readability minimum=0.008213",
+    "D2: palette=48, minimum_pair_deltaE76=3.528974",
+    "D2: readability minimum=0.002254",
+    "D3: palette=19, minimum_pair_deltaE76=5.971228",
+    "D3: readability minimum=0.214027"
+  ],
+  "docs_art_bytes": 14981091,
+  "changed_paths_checked": 114,
+  "required_main_frames": 9,
+  "required_hud_frames": 6,
+  "required_sprites": 48
+}

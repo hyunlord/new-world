@@ -1,0 +1,26 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: en bottom=false line=14 rect=(396.0, 424.0) viewport=(4.0, 404.0) scroll=0.0
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_chronicle_layout_p12.gd:13)
+       [1] _run (res://scripts/test/art/test_chronicle_layout_p12.gd:46)
+ERROR: en bottom=true line=164 rect=(-16.0, 12.0) viewport=(4.0, 404.0) scroll=4612.0
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_chronicle_layout_p12.gd:13)
+       [1] _run (res://scripts/test/art/test_chronicle_layout_p12.gd:46)
+CHRONICLE_LAYOUT geometry en size=(596.0, 432.0) lines=179 content=5012 max=5012.0 page=400.0
+ERROR: ko bottom=false line=14 rect=(396.0, 424.0) viewport=(4.0, 404.0) scroll=0.0
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_chronicle_layout_p12.gd:13)
+       [1] _run (res://scripts/test/art/test_chronicle_layout_p12.gd:46)
+ERROR: ko bottom=true line=164 rect=(-16.0, 12.0) viewport=(4.0, 404.0) scroll=4612.0
+   at: push_error (core/variant/variant_utility.cpp:1024)
+   GDScript backtrace (most recent call first):
+       [0] check (res://scripts/test/art/test_chronicle_layout_p12.gd:13)
+       [1] _run (res://scripts/test/art/test_chronicle_layout_p12.gd:46)
+CHRONICLE_LAYOUT geometry ko size=(596.0, 432.0) lines=179 content=5012 max=5012.0 page=400.0
+CHRONICLE_LAYOUT_P12 checks=64 failures=4

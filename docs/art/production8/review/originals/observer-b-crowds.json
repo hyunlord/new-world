@@ -1,0 +1,53 @@
+{
+  "observer_id": "blind_observer_b",
+  "frames": {
+    "C01": {
+      "answer": "roughly",
+      "reason": "The pale contours help separate exposed figures, but the upper and central clusters contain substantial overlap."
+    },
+    "C02": {
+      "answer": "roughly",
+      "reason": "Several people are separated, but the northern cluster and southern pairs overlap strongly."
+    },
+    "C03": {
+      "answer": "roughly",
+      "reason": "Most heads are distinguishable; some figures are behind shelters, each other, trees, or the HUD."
+    },
+    "C04": {
+      "answer": "roughly",
+      "reason": "Many individual heads and contours are visible, but central overlap prevents a confident exact count."
+    },
+    "C05": {
+      "answer": "roughly",
+      "reason": "Most visible bodies can be distinguished, with uncertain overlapping and partly tree-covered people at the bottom."
+    },
+    "C06": {
+      "answer": "roughly",
+      "reason": "The central group has several nearly coincident bodies and heads; isolated figures are easier to distinguish."
+    },
+    "C07": {
+      "answer": "no",
+      "reason": "Trees and the HUD obscure substantial portions of the few visible people; I cannot reliably separate everyone present."
+    },
+    "C08": {
+      "answer": "roughly",
+      "reason": "People are relatively spread out, but several are obscured by the HUD, shelters, or lower foliage."
+    },
+    "C09": {
+      "answer": "no",
+      "reason": "The central person or people are heavily obscured by tree foliage, and additional figures are clipped by the HUD."
+    },
+    "C10": {
+      "answer": "no",
+      "reason": "Overlapping trees conceal bodies in the center, leaving too little visible information for a reliable count."
+    },
+    "C11": {
+      "answer": "no",
+      "reason": "Foliage hides most of the central bodies and the HUD hides upper figures."
+    },
+    "C12": {
+      "answer": "roughly",
+      "reason": "Most people are distinct, but a tight group near the upper shelter and figures under the HUD make an exact count uncertain."
+    }
+  }
+}

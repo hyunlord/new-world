@@ -1,0 +1,13 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+ERROR: Dictionary is in read-only state.
+   at: set (core/variant/dictionary.cpp:207)
+   GDScript backtrace (most recent call first):
+       [0] run (res://scripts/test/art/test_write_skip_p13.gd:173)
+SCRIPT ERROR: Invalid assignment on read-only value (on base: 'Dictionary').
+          at: run (res://scripts/test/art/test_write_skip_p13.gd:173)
+          GDScript backtrace (most recent call first):
+              [0] run (res://scripts/test/art/test_write_skip_p13.gd:173)

@@ -1,0 +1,13 @@
+{
+  "mode": "partial_diagnostic",
+  "actual_count": 12,
+  "required_count": 14,
+  "full_protocol_complete": false,
+  "acceptance": "NOT_VERIFIED",
+  "required_bar": "at least 12/14 AND no activity scores 0/2",
+  "terminal_shortage": {
+    "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+    "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+    "reason": "TendFire and Repair each received three supplemental acquisition attempts. Attempts1/2 had no arrived holder; attempt3 yielded only one eligible unique holder each, leaving the two-per-kind target unmet. Stop these failing targets under the three-strike rule; preserve all exclusions and score only a partial diagnostic, never the full 14-crop gate."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "forbidden_paths_changed_after_pinned_merge": [],
+  "original_production_docs_changed": [],
+  "rust_static_assertions_changed": [],
+  "mutation_audit": "No modified Rust static assertions, hence no applicable mutation targets.",
+  "temporary_branch_exists": false,
+  "generation_calls": 6,
+  "source_scope_pass": true
+}

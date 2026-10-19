@@ -1,0 +1,29 @@
+{
+  "kernel_id": "p13-int32-byte-sweep-v1-64",
+  "reference_seconds": 2.762010041042231,
+  "reference_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/perf/calibration.json",
+  "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+  "start": {
+    "epoch": 1792417584.577514,
+    "wall_seconds": 2.8551294580101967,
+    "load_1m": 6.6953125,
+    "checksum": 4216682400
+  },
+  "valid": true,
+  "verdict": "VALID",
+  "end": {
+    "epoch": 1792417632.341439,
+    "wall_seconds": 2.802626542048529,
+    "load_1m": 6.53125,
+    "checksum": 4216682400
+  },
+  "exit_code": 0,
+  "derivation": {
+    "source_sha256": "9b38e054a9158fb962e7f7154697993b1a193aba02f403528f0a959db16a39d3",
+    "omitted_fields": [
+      "start.ps",
+      "end.ps"
+    ],
+    "note": "Original complete process snapshots retained at manifest source."
+  }
+}

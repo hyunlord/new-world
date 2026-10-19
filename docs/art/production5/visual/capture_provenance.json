@@ -1,0 +1,18 @@
+{
+  "pre_gate_code_head": "f3418ef7c19bf98da19823db52616158fe005c24",
+  "capture_head": "42f15c7e5231e788f540227e949c770d928211b2",
+  "intervening_changes": "REPORT,TASKS and pre_capture gate evidence only; git diff verified",
+  "published_code_head": "49f9a00cd9439741eb901e084152766c52012676",
+  "capture_to_p8_runtime_changes": [
+    "scripts/test/art/capture_cold_p5.gd: standalone controlled scene viewport only"
+  ],
+  "capture_dirty_counts": {
+    "art": 0,
+    "art_long": 1,
+    "calibration": 2
+  },
+  "dirty_scope_limit": "Capture records store counts rather than paths. Generated capture/blind evidence was being written; exact historical dirty path list was not frozen. No game renderer or simulation source changed between captures.",
+  "pass6_ancestor_verified": true,
+  "simulation_source_commits_after_pass6": [],
+  "manifest_repair": "80 GIF-frame entity references now point to actual external lossless metadata with SHA256; published dimensions/frame indices explicit"
+}

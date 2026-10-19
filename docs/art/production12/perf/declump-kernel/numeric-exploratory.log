@@ -1,0 +1,7 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+ERROR: Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.
+   at: intersects (./core/math/rect2.h:57)
+   GDScript backtrace (most recent call first):
+       [0] _initialize (res://scripts/test/art/probe_numeric_p12.gd:26)

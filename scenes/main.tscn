@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://v7init"]
+[gd_scene load_steps=24 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
@@ -17,16 +17,46 @@
 [ext_resource type="Script" path="res://scripts/ui/terrain_renderer.gd" id="14_terrain"]
 [ext_resource type="Script" path="res://scripts/ui/building_renderer.gd" id="15_buildings"]
 [ext_resource type="Script" path="res://scripts/ui/daylight_controller.gd" id="16_daylight"]
+[ext_resource type="Script" path="res://scripts/ui/nature_renderer.gd" id="17_nature"]
+[ext_resource type="Script" path="res://scripts/ui/world_effects.gd" id="18_effects"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/god_hand_panel.tscn" id="19_god_panel"]
+[ext_resource type="Script" path="res://scripts/rendering/art/god_hand_effects.gd" id="20_god_effects"]
+
+[ext_resource type="Script" path="res://scripts/ui/sim_reads.gd" id="21_sim_reads"]
+
+[ext_resource type="Script" path="res://scripts/ui/panels/chronicle_panel.gd" id="22_chronicle"]
+
+[ext_resource type="Script" path="res://scripts/ui/person_activity_tooltip_p13.gd" id="23_activity_tooltip"]
 
 [node name="Main" type="Node2D"]
 
 [node name="WorldSim" type="WorldSimNode" parent="."]
+
+[node name="SimReads" type="Node" parent="."]
+script = ExtResource("21_sim_reads")
+
+[node name="Shadows" type="Node2D" parent="."]
+z_index = 3
+
+[node name="WorldObjects" type="Node2D" parent="."]
+z_index = 4
+y_sort_enabled = true
 
 [node name="TerrainRenderer" type="Node2D" parent="."]
 script = ExtResource("14_terrain")
 
 [node name="BuildingRenderer" type="Node2D" parent="."]
 script = ExtResource("15_buildings")
+
+[node name="NatureRenderer" type="Node2D" parent="."]
+script = ExtResource("17_nature")
+
+[node name="WorldEffects" type="Node2D" parent="."]
+script = ExtResource("18_effects")
+
+[node name="GodHandEffects" type="Node2D" parent="."]
+script = ExtResource("20_god_effects")
 
 [node name="DaylightController" type="Node2D" parent="."]
 script = ExtResource("16_daylight")
@@ -67,6 +97,9 @@ script = ExtResource("4_camera")
 [node name="CausalPanel" type="Control" parent="UI"]
 script = ExtResource("2_causal")
 
+[node name="ChroniclePanel" type="Control" parent="UI"]
+script = ExtResource("22_chronicle")
+
 [node name="HudTopbar" type="Control" parent="UI"]
 script = ExtResource("5_hud")
 
@@ -75,3 +108,9 @@ script = ExtResource("6_inspector")
 
 [node name="HudStatusPanel" type="Control" parent="UI"]
 script = ExtResource("7_status")
+
+[node name="GodHandPanel" parent="UI" instance=ExtResource("19_god_panel")]
+
+[node name="ActivityTooltipP13" type="Control" parent="UI"]
+mouse_filter = 2
+script = ExtResource("23_activity_tooltip")

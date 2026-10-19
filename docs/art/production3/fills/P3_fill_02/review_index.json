@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "candidates_sha256": "1047f8174dc99129e08e662af6dbe054b1c88c847e0451dfa5c4a5a560fa5cb0",
+  "candidate_fingerprints": {
+    "P3_fill_02_01@1:p3": "66d1a18cef71f286043cf1443dbda5a04137be376d8f0ea35e37149ab4f97ac4",
+    "P3_fill_02_02@1:p3": "2a38dc06bddd1f82d7a152ae944b7b325c41cf71e995393e32a435f3f9e52e53",
+    "P3_fill_02_03@1:p3": "495c96d68e02f88773f14d12ca2d6d3ff3aa055c482e2e85932eb15e4d5a42ea",
+    "P3_fill_02_04@1:p3": "e935aacd8650b8f9499585804787dd87f92968af676d411322e488ce90ca1acd",
+    "P3_fill_02_05@1:p3": "472c43f1c220e3c96c19ce62fdcb01b2ec6a295f621403543a51a2c3605c879b",
+    "P3_fill_02_06@1:p3": "7e133fd559634dcd69ec5bcae8275535ea55cd4659636236bf7ef74b57f88fd9",
+    "P3_fill_02_07@1:p3": "dfa2ebe6faaabfd685594e05f9eff96545ed4b7a52ff3cbe9fd97e9ae6ecd36d",
+    "P3_fill_02_08@1:p3": "b4130e1f6c9368baae222d0447a629437dfb44436df6ee10e6a81f3547fb8bf5",
+    "P3_fill_02_09@1:p3": "f480afd8463f283467dcd1fff8e729144c647d9dd2fe2f5b5bd192baad2f07c9",
+    "P3_fill_02_10@1:p3": "6fb9f59a8cce59c7cbf3ee48b0e3a1d338a1cc87b6af199667e98e0819b5b6a3",
+    "P3_fill_02_11@1:p3": "302270c3a8b95dd917af989b4510c5d6d03e9bd656c9aca625c181ddf8a3eb43",
+    "P3_fill_02_12@1:p3": "b1af75b2eb64078528edaab23a910c10217238196ac935a105345024a11d7707",
+    "P3_fill_02_13@1:p3": "2e1efd853d1e0c26f146e622b79b5cd979ef9a0bc470b03fbd2cecf72b8b30d9",
+    "P3_fill_02_14@1:p3": "796bae5eca346f0e1b62490def320408a0c0c5190011f3560ccb7d0618e026a3",
+    "P3_fill_02_15@1:p3": "cae873c992bbad85d37b4878f06da4a87004be7cc16fb829f8bd7b747475b711",
+    "P3_fill_02_16@1:p3": "a3e0f24bdaee31fd58c64e6e4757522757e3fafbf161ff43c8b430625e83ccfb"
+  },
+  "images_sha256": {
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/boards/adult_b_01.png": "f4fc386c97c8f56234dd9c38014636948eb2d520003fd84945a943a65f34698c",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/boards/adult_b_02.png": "fd86ed8682cd59ed87a228eeb5fdf6d2c2e2b165a2edd20f19dd30abcd9fa825"
+  }
+}

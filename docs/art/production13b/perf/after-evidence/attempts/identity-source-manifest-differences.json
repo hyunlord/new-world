@@ -1,0 +1,3504 @@
+{
+  "identity_full_manifest_sha256": "0a9091c208ba409583e8c847d241265f7fdaccf53ff1a1411075de0c371f74de",
+  "measurement_full_manifest_sha256": "bebf9d6b062361d2b5a01c536e3020bad2010060502a722e6fbd72a3ef9c75d8",
+  "differences": [
+    "assets/art/atlas/world_0.png.import",
+    "assets/art/atlas/world_0_regions.png.import",
+    "assets/art/production/F1/01.png.import",
+    "assets/art/production/F1/01_native.png.import",
+    "assets/art/production/F1/02.png.import",
+    "assets/art/production/F1/02_native.png.import",
+    "assets/art/production/F1/03.png.import",
+    "assets/art/production/F1/03_native.png.import",
+    "assets/art/production/F1/04.png.import",
+    "assets/art/production/F1/04_native.png.import",
+    "assets/art/production/F1/07.png.import",
+    "assets/art/production/F1/07_native.png.import",
+    "assets/art/production/F1/08.png.import",
+    "assets/art/production/F1/08_native.png.import",
+    "assets/art/production/F1/09.png.import",
+    "assets/art/production/F1/09_native.png.import",
+    "assets/art/production/F1/15.png.import",
+    "assets/art/production/F1/15_native.png.import",
+    "assets/art/production/F2/01.png.import",
+    "assets/art/production/F2/01_native.png.import",
+    "assets/art/production/F2/02.png.import",
+    "assets/art/production/F2/02_native.png.import",
+    "assets/art/production/F2/03.png.import",
+    "assets/art/production/F2/03_native.png.import",
+    "assets/art/production/F2/09.png.import",
+    "assets/art/production/F2/09_native.png.import",
+    "assets/art/production/F2/10.png.import",
+    "assets/art/production/F2/10_native.png.import",
+    "assets/art/production/F2/11.png.import",
+    "assets/art/production/F2/11_native.png.import",
+    "assets/art/production/F2/12.png.import",
+    "assets/art/production/F2/12_native.png.import",
+    "assets/art/production/F2/13.png.import",
+    "assets/art/production/F2/13_native.png.import",
+    "assets/art/production/F2/14.png.import",
+    "assets/art/production/F2/14_native.png.import",
+    "assets/art/production/N1/01.png.import",
+    "assets/art/production/N1/01_native.png.import",
+    "assets/art/production/N1/02.png.import",
+    "assets/art/production/N1/02_native.png.import",
+    "assets/art/production/N1/03.png.import",
+    "assets/art/production/N1/03_native.png.import",
+    "assets/art/production/N1/04.png.import",
+    "assets/art/production/N1/04_native.png.import",
+    "assets/art/production/N1/05.png.import",
+    "assets/art/production/N1/05_native.png.import",
+    "assets/art/production/N1/06.png.import",
+    "assets/art/production/N1/06_native.png.import",
+    "assets/art/production/N1/08.png.import",
+    "assets/art/production/N1/08_native.png.import",
+    "assets/art/production/N1/09.png.import",
+    "assets/art/production/N1/09_native.png.import",
+    "assets/art/production/N1/10.png.import",
+    "assets/art/production/N1/10_native.png.import",
+    "assets/art/production/N1/11.png.import",
+    "assets/art/production/N1/11_native.png.import",
+    "assets/art/production/N1/12.png.import",
+    "assets/art/production/N1/12_native.png.import",
+    "assets/art/production/N1/13.png.import",
+    "assets/art/production/N1/13_native.png.import",
+    "assets/art/production/N1/14.png.import",
+    "assets/art/production/N1/14_native.png.import",
+    "assets/art/production/N1/15.png.import",
+    "assets/art/production/N1/15_native.png.import",
+    "assets/art/production/N1/16.png.import",
+    "assets/art/production/N1/16_native.png.import",
+    "assets/art/production/N2/01.png.import",
+    "assets/art/production/N2/01_native.png.import",
+    "assets/art/production/N2/02.png.import",
+    "assets/art/production/N2/02_native.png.import",
+    "assets/art/production/N2/03.png.import",
+    "assets/art/production/N2/03_native.png.import",
+    "assets/art/production/N2/04.png.import",
+    "assets/art/production/N2/04_native.png.import",
+    "assets/art/production/N2/05.png.import",
+    "assets/art/production/N2/05_native.png.import",
+    "assets/art/production/N2/06.png.import",
+    "assets/art/production/N2/06_native.png.import",
+    "assets/art/production/N2/07.png.import",
+    "assets/art/production/N2/07_native.png.import",
+    "assets/art/production/N2/08.png.import",
+    "assets/art/production/N2/08_native.png.import",
+    "assets/art/production/N2/09.png.import",
+    "assets/art/production/N2/09_native.png.import",
+    "assets/art/production/N2/10.png.import",
+    "assets/art/production/N2/10_native.png.import",
+    "assets/art/production/N2/11.png.import",
+    "assets/art/production/N2/11_native.png.import",
+    "assets/art/production/N2/12.png.import",
+    "assets/art/production/N2/12_native.png.import",
+    "assets/art/production/N2/13.png.import",
+    "assets/art/production/N2/13_native.png.import",
+    "assets/art/production/N2/16.png.import",
+    "assets/art/production/N2/16_native.png.import",
+    "assets/art/production/N3/01.png.import",
+    "assets/art/production/N3/01_native.png.import",
+    "assets/art/production/N3/02.png.import",
+    "assets/art/production/N3/02_native.png.import",
+    "assets/art/production/N3/03.png.import",
+    "assets/art/production/N3/03_native.png.import",
+    "assets/art/production/N3/04.png.import",
+    "assets/art/production/N3/04_native.png.import",
+    "assets/art/production/N3/05.png.import",
+    "assets/art/production/N3/05_native.png.import",
+    "assets/art/production/N3/08.png.import",
+    "assets/art/production/N3/08_native.png.import",
+    "assets/art/production/N3/09.png.import",
+    "assets/art/production/N3/09_native.png.import",
+    "assets/art/production/N3/10.png.import",
+    "assets/art/production/N3/10_native.png.import",
+    "assets/art/production/N3/11.png.import",
+    "assets/art/production/N3/11_native.png.import",
+    "assets/art/production/N3/12.png.import",
+    "assets/art/production/N3/12_native.png.import",
+    "assets/art/production/N3/13.png.import",
+    "assets/art/production/N3/13_native.png.import",
+    "assets/art/production/N3/14.png.import",
+    "assets/art/production/N3/14_native.png.import",
+    "assets/art/production/N3/15.png.import",
+    "assets/art/production/N3/15_native.png.import",
+    "assets/art/production/N3/16.png.import",
+    "assets/art/production/N3/16_native.png.import",
+    "assets/art/production/P2V_c_E_carry/01.png.import",
+    "assets/art/production/P2V_c_E_carry/01_native.png.import",
+    "assets/art/production/P2V_c_E_carry/02.png.import",
+    "assets/art/production/P2V_c_E_carry/02_native.png.import",
+    "assets/art/production/P2V_c_E_carry/03.png.import",
+    "assets/art/production/P2V_c_E_carry/03_native.png.import",
+    "assets/art/production/P2V_c_E_carry/04.png.import",
+    "assets/art/production/P2V_c_E_carry/04_native.png.import",
+    "assets/art/production/P2V_c_S_build/01.png.import",
+    "assets/art/production/P2V_c_S_build/01_native.png.import",
+    "assets/art/production/P2V_c_S_build/02.png.import",
+    "assets/art/production/P2V_c_S_build/02_native.png.import",
+    "assets/art/production/S1/01.png.import",
+    "assets/art/production/S1/01_native.png.import",
+    "assets/art/production/S1/02.png.import",
+    "assets/art/production/S1/02_native.png.import",
+    "assets/art/production/S1/03.png.import",
+    "assets/art/production/S1/03_native.png.import",
+    "assets/art/production/S1/04.png.import",
+    "assets/art/production/S1/04_native.png.import",
+    "assets/art/production/S1/05.png.import",
+    "assets/art/production/S1/05_native.png.import",
+    "assets/art/production/S1/06.png.import",
+    "assets/art/production/S1/06_native.png.import",
+    "assets/art/production/S1/07.png.import",
+    "assets/art/production/S1/07_native.png.import",
+    "assets/art/production/S1/08.png.import",
+    "assets/art/production/S1/08_native.png.import",
+    "assets/art/production/S1/09.png.import",
+    "assets/art/production/S1/09_native.png.import",
+    "assets/art/production/S1/10.png.import",
+    "assets/art/production/S1/10_native.png.import",
+    "assets/art/production/S1/11.png.import",
+    "assets/art/production/S1/11_native.png.import",
+    "assets/art/production/S1/12.png.import",
+    "assets/art/production/S1/12_native.png.import",
+    "assets/art/production/S1/13.png.import",
+    "assets/art/production/S1/13_native.png.import",
+    "assets/art/production/S1/14.png.import",
+    "assets/art/production/S1/14_native.png.import",
+    "assets/art/production/S1/15.png.import",
+    "assets/art/production/S1/15_native.png.import",
+    "assets/art/production/S1/16.png.import",
+    "assets/art/production/S1/16_native.png.import",
+    "assets/art/production/S2/01.png.import",
+    "assets/art/production/S2/01_native.png.import",
+    "assets/art/production/S2/02.png.import",
+    "assets/art/production/S2/02_native.png.import",
+    "assets/art/production/S2/03.png.import",
+    "assets/art/production/S2/03_native.png.import",
+    "assets/art/production/S2/04.png.import",
+    "assets/art/production/S2/04_native.png.import",
+    "assets/art/production/S2/05.png.import",
+    "assets/art/production/S2/05_native.png.import",
+    "assets/art/production/S2/06.png.import",
+    "assets/art/production/S2/06_native.png.import",
+    "assets/art/production/S2/07.png.import",
+    "assets/art/production/S2/07_native.png.import",
+    "assets/art/production/S2/09.png.import",
+    "assets/art/production/S2/09_native.png.import",
+    "assets/art/production/S2/12.png.import",
+    "assets/art/production/S2/12_native.png.import",
+    "assets/art/production/S2/13.png.import",
+    "assets/art/production/S2/13_native.png.import",
+    "assets/art/production/S2/14.png.import",
+    "assets/art/production/S2/14_native.png.import",
+    "assets/art/production/S2/15.png.import",
+    "assets/art/production/S2/15_native.png.import",
+    "assets/art/production/S2/16.png.import",
+    "assets/art/production/S2/16_native.png.import",
+    "assets/art/production/U1/01.png.import",
+    "assets/art/production/U1/01_native.png.import",
+    "assets/art/production/U1/03.png.import",
+    "assets/art/production/U1/03_native.png.import",
+    "assets/art/production/U1/04.png.import",
+    "assets/art/production/U1/04_native.png.import",
+    "assets/art/production/U1/05.png.import",
+    "assets/art/production/U1/05_native.png.import",
+    "assets/art/production/U1/06.png.import",
+    "assets/art/production/U1/06_native.png.import",
+    "assets/art/production/U1/08.png.import",
+    "assets/art/production/U1/08_native.png.import",
+    "assets/art/production/U1/10.png.import",
+    "assets/art/production/U1/10_native.png.import",
+    "assets/art/production/U1/12.png.import",
+    "assets/art/production/U1/12_native.png.import",
+    "assets/art/production/U1/14.png.import",
+    "assets/art/production/U1/14_native.png.import",
+    "assets/art/production/U1/15.png.import",
+    "assets/art/production/U1/15_native.png.import",
+    "assets/art/production/U1/16.png.import",
+    "assets/art/production/U1/16_native.png.import",
+    "assets/art/production/V_a1/01.png.import",
+    "assets/art/production/V_a1/01_native.png.import",
+    "assets/art/production/V_a1/02.png.import",
+    "assets/art/production/V_a1/02_native.png.import",
+    "assets/art/production/V_a1/03.png.import",
+    "assets/art/production/V_a1/03_native.png.import",
+    "assets/art/production/V_a1/04.png.import",
+    "assets/art/production/V_a1/04_native.png.import",
+    "assets/art/production/V_a1/05.png.import",
+    "assets/art/production/V_a1/05_native.png.import",
+    "assets/art/production/V_a1/06.png.import",
+    "assets/art/production/V_a1/06_native.png.import",
+    "assets/art/production/V_a1/07.png.import",
+    "assets/art/production/V_a1/07_native.png.import",
+    "assets/art/production/V_a1/08.png.import",
+    "assets/art/production/V_a1/08_native.png.import",
+    "assets/art/production/V_a1/09.png.import",
+    "assets/art/production/V_a1/09_native.png.import",
+    "assets/art/production/V_a1/10.png.import",
+    "assets/art/production/V_a1/10_native.png.import",
+    "assets/art/production/V_a1/11.png.import",
+    "assets/art/production/V_a1/11_native.png.import",
+    "assets/art/production/V_a1/12.png.import",
+    "assets/art/production/V_a1/12_native.png.import",
+    "assets/art/production/V_a1/13.png.import",
+    "assets/art/production/V_a1/13_native.png.import",
+    "assets/art/production/V_a1/14.png.import",
+    "assets/art/production/V_a1/14_native.png.import",
+    "assets/art/production/V_a1/15.png.import",
+    "assets/art/production/V_a1/15_native.png.import",
+    "assets/art/production/V_a1/16.png.import",
+    "assets/art/production/V_a1/16_native.png.import",
+    "assets/art/production/V_a2/01.png.import",
+    "assets/art/production/V_a2/01_native.png.import",
+    "assets/art/production/V_a2/02.png.import",
+    "assets/art/production/V_a2/02_native.png.import",
+    "assets/art/production/V_a2/03.png.import",
+    "assets/art/production/V_a2/03_native.png.import",
+    "assets/art/production/V_a2/04.png.import",
+    "assets/art/production/V_a2/04_native.png.import",
+    "assets/art/production/V_a2/05.png.import",
+    "assets/art/production/V_a2/05_native.png.import",
+    "assets/art/production/V_a2/06.png.import",
+    "assets/art/production/V_a2/06_native.png.import",
+    "assets/art/production/V_a2/07.png.import",
+    "assets/art/production/V_a2/07_native.png.import",
+    "assets/art/production/V_a2/08.png.import",
+    "assets/art/production/V_a2/08_native.png.import",
+    "assets/art/production/V_a2/09.png.import",
+    "assets/art/production/V_a2/09_native.png.import",
+    "assets/art/production/V_a2/10.png.import",
+    "assets/art/production/V_a2/10_native.png.import",
+    "assets/art/production/V_a2/11.png.import",
+    "assets/art/production/V_a2/11_native.png.import",
+    "assets/art/production/V_a2/12.png.import",
+    "assets/art/production/V_a2/12_native.png.import",
+    "assets/art/production/V_a2/13.png.import",
+    "assets/art/production/V_a2/13_native.png.import",
+    "assets/art/production/V_a2/14.png.import",
+    "assets/art/production/V_a2/14_native.png.import",
+    "assets/art/production/V_a2/15.png.import",
+    "assets/art/production/V_a2/15_native.png.import",
+    "assets/art/production/V_a2/16.png.import",
+    "assets/art/production/V_a2/16_native.png.import",
+    "assets/art/production/V_a3/01.png.import",
+    "assets/art/production/V_a3/01_native.png.import",
+    "assets/art/production/V_a3/02.png.import",
+    "assets/art/production/V_a3/02_native.png.import",
+    "assets/art/production/V_a3/03.png.import",
+    "assets/art/production/V_a3/03_native.png.import",
+    "assets/art/production/V_a3/04.png.import",
+    "assets/art/production/V_a3/04_native.png.import",
+    "assets/art/production/V_a3/05.png.import",
+    "assets/art/production/V_a3/05_native.png.import",
+    "assets/art/production/V_a3/06.png.import",
+    "assets/art/production/V_a3/06_native.png.import",
+    "assets/art/production/V_a3/07.png.import",
+    "assets/art/production/V_a3/07_native.png.import",
+    "assets/art/production/V_a3/08.png.import",
+    "assets/art/production/V_a3/08_native.png.import",
+    "assets/art/production/V_a3/09.png.import",
+    "assets/art/production/V_a3/09_native.png.import",
+    "assets/art/production/V_a3/10.png.import",
+    "assets/art/production/V_a3/10_native.png.import",
+    "assets/art/production/V_a3/11.png.import",
+    "assets/art/production/V_a3/11_native.png.import",
+    "assets/art/production/V_a3/12.png.import",
+    "assets/art/production/V_a3/12_native.png.import",
+    "assets/art/production/V_a3/13.png.import",
+    "assets/art/production/V_a3/13_native.png.import",
+    "assets/art/production/V_a3/14.png.import",
+    "assets/art/production/V_a3/14_native.png.import",
+    "assets/art/production/V_a3/15.png.import",
+    "assets/art/production/V_a3/15_native.png.import",
+    "assets/art/production/V_a3/16.png.import",
+    "assets/art/production/V_a3/16_native.png.import",
+    "assets/art/production/V_b1/01.png.import",
+    "assets/art/production/V_b1/01_native.png.import",
+    "assets/art/production/V_b1/02.png.import",
+    "assets/art/production/V_b1/02_native.png.import",
+    "assets/art/production/V_b1/03.png.import",
+    "assets/art/production/V_b1/03_native.png.import",
+    "assets/art/production/V_b1/04.png.import",
+    "assets/art/production/V_b1/04_native.png.import",
+    "assets/art/production/V_b1/05.png.import",
+    "assets/art/production/V_b1/05_native.png.import",
+    "assets/art/production/V_b1/06.png.import",
+    "assets/art/production/V_b1/06_native.png.import",
+    "assets/art/production/V_b1/07.png.import",
+    "assets/art/production/V_b1/07_native.png.import",
+    "assets/art/production/V_b1/08.png.import",
+    "assets/art/production/V_b1/08_native.png.import",
+    "assets/art/production/V_b1/09.png.import",
+    "assets/art/production/V_b1/09_native.png.import",
+    "assets/art/production/V_b1/10.png.import",
+    "assets/art/production/V_b1/10_native.png.import",
+    "assets/art/production/V_b1/11.png.import",
+    "assets/art/production/V_b1/11_native.png.import",
+    "assets/art/production/V_b1/12.png.import",
+    "assets/art/production/V_b1/12_native.png.import",
+    "assets/art/production/V_b1/13.png.import",
+    "assets/art/production/V_b1/13_native.png.import",
+    "assets/art/production/V_b1/14.png.import",
+    "assets/art/production/V_b1/14_native.png.import",
+    "assets/art/production/V_b1/15.png.import",
+    "assets/art/production/V_b1/15_native.png.import",
+    "assets/art/production/V_b1/16.png.import",
+    "assets/art/production/V_b1/16_native.png.import",
+    "assets/art/production/V_b2/01.png.import",
+    "assets/art/production/V_b2/01_native.png.import",
+    "assets/art/production/V_b2/02.png.import",
+    "assets/art/production/V_b2/02_native.png.import",
+    "assets/art/production/V_b2/03.png.import",
+    "assets/art/production/V_b2/03_native.png.import",
+    "assets/art/production/V_b2/04.png.import",
+    "assets/art/production/V_b2/04_native.png.import",
+    "assets/art/production/V_b2/05.png.import",
+    "assets/art/production/V_b2/05_native.png.import",
+    "assets/art/production/V_b2/06.png.import",
+    "assets/art/production/V_b2/06_native.png.import",
+    "assets/art/production/V_b2/07.png.import",
+    "assets/art/production/V_b2/07_native.png.import",
+    "assets/art/production/V_b2/08.png.import",
+    "assets/art/production/V_b2/08_native.png.import",
+    "assets/art/production/V_b2/09.png.import",
+    "assets/art/production/V_b2/09_native.png.import",
+    "assets/art/production/V_b2/10.png.import",
+    "assets/art/production/V_b2/10_native.png.import",
+    "assets/art/production/V_b2/11.png.import",
+    "assets/art/production/V_b2/11_native.png.import",
+    "assets/art/production/V_b2/12.png.import",
+    "assets/art/production/V_b2/12_native.png.import",
+    "assets/art/production/V_b2/13.png.import",
+    "assets/art/production/V_b2/13_native.png.import",
+    "assets/art/production/V_b2/14.png.import",
+    "assets/art/production/V_b2/14_native.png.import",
+    "assets/art/production/V_b2/15.png.import",
+    "assets/art/production/V_b2/15_native.png.import",
+    "assets/art/production/V_b2/16.png.import",
+    "assets/art/production/V_b2/16_native.png.import",
+    "assets/art/production/V_b3/01.png.import",
+    "assets/art/production/V_b3/01_native.png.import",
+    "assets/art/production/V_b3/02.png.import",
+    "assets/art/production/V_b3/02_native.png.import",
+    "assets/art/production/V_b3/03.png.import",
+    "assets/art/production/V_b3/03_native.png.import",
+    "assets/art/production/V_b3/04.png.import",
+    "assets/art/production/V_b3/04_native.png.import",
+    "assets/art/production/V_b3/05.png.import",
+    "assets/art/production/V_b3/05_native.png.import",
+    "assets/art/production/V_b3/06.png.import",
+    "assets/art/production/V_b3/06_native.png.import",
+    "assets/art/production/V_b3/07.png.import",
+    "assets/art/production/V_b3/07_native.png.import",
+    "assets/art/production/V_b3/08.png.import",
+    "assets/art/production/V_b3/08_native.png.import",
+    "assets/art/production/V_b3/09.png.import",
+    "assets/art/production/V_b3/09_native.png.import",
+    "assets/art/production/V_b3/10.png.import",
+    "assets/art/production/V_b3/10_native.png.import",
+    "assets/art/production/V_b3/11.png.import",
+    "assets/art/production/V_b3/11_native.png.import",
+    "assets/art/production/V_b3/12.png.import",
+    "assets/art/production/V_b3/12_native.png.import",
+    "assets/art/production/V_b3/13.png.import",
+    "assets/art/production/V_b3/13_native.png.import",
+    "assets/art/production/V_b3/14.png.import",
+    "assets/art/production/V_b3/14_native.png.import",
+    "assets/art/production/V_b3/15.png.import",
+    "assets/art/production/V_b3/15_native.png.import",
+    "assets/art/production/V_b3/16.png.import",
+    "assets/art/production/V_b3/16_native.png.import",
+    "assets/art/production/V_c1/01.png.import",
+    "assets/art/production/V_c1/01_native.png.import",
+    "assets/art/production/V_c1/02.png.import",
+    "assets/art/production/V_c1/02_native.png.import",
+    "assets/art/production/V_c1/03.png.import",
+    "assets/art/production/V_c1/03_native.png.import",
+    "assets/art/production/V_c1/04.png.import",
+    "assets/art/production/V_c1/04_native.png.import",
+    "assets/art/production/V_c1/05.png.import",
+    "assets/art/production/V_c1/05_native.png.import",
+    "assets/art/production/V_c1/06.png.import",
+    "assets/art/production/V_c1/06_native.png.import",
+    "assets/art/production/V_c1/07.png.import",
+    "assets/art/production/V_c1/07_native.png.import",
+    "assets/art/production/V_c1/08.png.import",
+    "assets/art/production/V_c1/08_native.png.import",
+    "assets/art/production/V_c1/09.png.import",
+    "assets/art/production/V_c1/09_native.png.import",
+    "assets/art/production/V_c1/10.png.import",
+    "assets/art/production/V_c1/10_native.png.import",
+    "assets/art/production/V_c1/11.png.import",
+    "assets/art/production/V_c1/11_native.png.import",
+    "assets/art/production/V_c1/12.png.import",
+    "assets/art/production/V_c1/12_native.png.import",
+    "assets/art/production/V_c1/13.png.import",
+    "assets/art/production/V_c1/13_native.png.import",
+    "assets/art/production/V_c1/14.png.import",
+    "assets/art/production/V_c1/14_native.png.import",
+    "assets/art/production/V_c1/15.png.import",
+    "assets/art/production/V_c1/15_native.png.import",
+    "assets/art/production/V_c1/16.png.import",
+    "assets/art/production/V_c1/16_native.png.import",
+    "assets/art/production/V_c2/01.png.import",
+    "assets/art/production/V_c2/01_native.png.import",
+    "assets/art/production/V_c2/02.png.import",
+    "assets/art/production/V_c2/02_native.png.import",
+    "assets/art/production/V_c2/03.png.import",
+    "assets/art/production/V_c2/03_native.png.import",
+    "assets/art/production/V_c2/04.png.import",
+    "assets/art/production/V_c2/04_native.png.import",
+    "assets/art/production/V_c2/05.png.import",
+    "assets/art/production/V_c2/05_native.png.import",
+    "assets/art/production/V_c2/06.png.import",
+    "assets/art/production/V_c2/06_native.png.import",
+    "assets/art/production/V_c2/07.png.import",
+    "assets/art/production/V_c2/07_native.png.import",
+    "assets/art/production/V_c2/08.png.import",
+    "assets/art/production/V_c2/08_native.png.import",
+    "assets/art/production/V_c2/09.png.import",
+    "assets/art/production/V_c2/09_native.png.import",
+    "assets/art/production/V_c2/10.png.import",
+    "assets/art/production/V_c2/10_native.png.import",
+    "assets/art/production/V_c2/11.png.import",
+    "assets/art/production/V_c2/11_native.png.import",
+    "assets/art/production/V_c2/12.png.import",
+    "assets/art/production/V_c2/12_native.png.import",
+    "assets/art/production/V_c2/13.png.import",
+    "assets/art/production/V_c2/13_native.png.import",
+    "assets/art/production/V_c2/14.png.import",
+    "assets/art/production/V_c2/14_native.png.import",
+    "assets/art/production/V_c2/15.png.import",
+    "assets/art/production/V_c2/15_native.png.import",
+    "assets/art/production/V_c2/16.png.import",
+    "assets/art/production/V_c2/16_native.png.import",
+    "assets/art/villager_ramps.png.import",
+    "rust/Cargo.lock",
+    "scripts/core/locale.gd.uid",
+    "scripts/core/settlement_selection.gd.uid",
+    "scripts/rendering/art/god_hand_effects.gd.uid",
+    "scripts/test/art/agent_section_clock_p13.gd.uid",
+    "scripts/test/art/calibration_scene.gd.uid",
+    "scripts/test/art/capture_activities_p11.gd.uid",
+    "scripts/test/art/capture_activities_p13.gd.uid",
+    "scripts/test/art/capture_age_consumers.gd.uid",
+    "scripts/test/art/capture_cold_p5.gd.uid",
+    "scripts/test/art/capture_deaths_p7.gd.uid",
+    "scripts/test/art/capture_declump_fixture_p13.gd.uid",
+    "scripts/test/art/capture_event_trace_p8.gd.uid",
+    "scripts/test/art/capture_framings_p12.gd.uid",
+    "scripts/test/art/capture_framings_p13.gd.uid",
+    "scripts/test/art/capture_framings_p13b.gd.uid",
+    "scripts/test/art/capture_h10_p13b.gd.uid",
+    "scripts/test/art/capture_identity_p11.gd.uid",
+    "scripts/test/art/capture_identity_p12.gd.uid",
+    "scripts/test/art/capture_identity_p13.gd.uid",
+    "scripts/test/art/capture_identity_p13b.gd.uid",
+    "scripts/test/art/capture_identity_p9.gd.uid",
+    "scripts/test/art/capture_life_p11.gd.uid",
+    "scripts/test/art/capture_life_p12.gd.uid",
+    "scripts/test/art/capture_life_p13.gd.uid",
+    "scripts/test/art/capture_life_p13b.gd.uid",
+    "scripts/test/art/capture_metadata.gd.uid",
+    "scripts/test/art/capture_metadata_check.gd.uid",
+    "scripts/test/art/capture_plans.gd.uid",
+    "scripts/test/art/capture_running_identity_p11.gd.uid",
+    "scripts/test/art/capture_running_identity_p12.gd.uid",
+    "scripts/test/art/capture_running_identity_p13.gd.uid",
+    "scripts/test/art/capture_running_identity_p13b.gd.uid",
+    "scripts/test/art/capture_sprite_order_p13.gd.uid",
+    "scripts/test/art/capture_walker_fixture_p13b.gd.uid",
+    "scripts/test/art/declump_fixture_recorder_p13.gd.uid",
+    "scripts/test/art/frame_cpu_probe_p13.gd.uid",
+    "scripts/test/art/frame_measure_session.gd.uid",
+    "scripts/test/art/frame_measure_session_p13.gd.uid",
+    "scripts/test/art/glyph_distinct_p13b.gd.uid",
+    "scripts/test/art/identity_draw_clock_p11.gd.uid",
+    "scripts/test/art/identity_draw_clock_p13.gd.uid",
+    "scripts/test/art/measure_days_p7.gd.uid",
+    "scripts/test/art/measure_days_p8.gd.uid",
+    "scripts/test/art/perf_alternating_frames_p13.gd.uid",
+    "scripts/test/art/perf_alternating_frames_p13b.gd.uid",
+    "scripts/test/art/perf_frames_p12.gd.uid",
+    "scripts/test/art/perf_frames_p13.gd.uid",
+    "scripts/test/art/perf_frames_p9.gd.uid",
+    "scripts/test/art/probe_activity_baseline_p13.gd.uid",
+    "scripts/test/art/probe_baseline_p13.gd.uid",
+    "scripts/test/art/probe_life_font_p13.gd.uid",
+    "scripts/test/art/probe_numeric_p13.gd.uid",
+    "scripts/test/art/probe_p6.gd.uid",
+    "scripts/test/art/probe_porter_p12.gd.uid",
+    "scripts/test/art/probe_porter_p13.gd.uid",
+    "scripts/test/art/profile_agent_sections_p13.gd.uid",
+    "scripts/test/art/qa_offscreen_marker_windowed.gd.uid",
+    "scripts/test/art/real_input_p13b.gd.uid",
+    "scripts/test/art/section_profile_loader_p13.gd.uid",
+    "scripts/test/art/test_activity_icons_p13.gd.uid",
+    "scripts/test/art/test_activity_p11.gd.uid",
+    "scripts/test/art/test_agent_activity.gd.uid",
+    "scripts/test/art/test_agent_click_drawn.gd.uid",
+    "scripts/test/art/test_agent_drawn_positions.gd.uid",
+    "scripts/test/art/test_agent_native_size.gd.uid",
+    "scripts/test/art/test_art_hash.gd.uid",
+    "scripts/test/art/test_camp_seats.gd.uid",
+    "scripts/test/art/test_canopy_fade.gd.uid",
+    "scripts/test/art/test_capture_event_trace_p8.gd.uid",
+    "scripts/test/art/test_capture_metadata.gd.uid",
+    "scripts/test/art/test_capture_plans_p6.gd.uid",
+    "scripts/test/art/test_carry_load_layer.gd.uid",
+    "scripts/test/art/test_chronicle_layout_p12.gd.uid",
+    "scripts/test/art/test_chronicle_layout_p13.gd.uid",
+    "scripts/test/art/test_chronicle_panel_p11.gd.uid",
+    "scripts/test/art/test_chronicle_text_p11.gd.uid",
+    "scripts/test/art/test_cold_hearth.gd.uid",
+    "scripts/test/art/test_crowds_p13.gd.uid",
+    "scripts/test/art/test_death_exposure.gd.uid",
+    "scripts/test/art/test_declump.gd.uid",
+    "scripts/test/art/test_declump_adapter_p13.gd.uid",
+    "scripts/test/art/test_elder_variant.gd.uid",
+    "scripts/test/art/test_feed_casts.gd.uid",
+    "scripts/test/art/test_feed_priority.gd.uid",
+    "scripts/test/art/test_glyph_distinct_p13.gd.uid",
+    "scripts/test/art/test_god_hand.gd.uid",
+    "scripts/test/art/test_hud_old_age.gd.uid",
+    "scripts/test/art/test_hud_season_label.gd.uid",
+    "scripts/test/art/test_hud_wood.gd.uid",
+    "scripts/test/art/test_idle_camp_pose.gd.uid",
+    "scripts/test/art/test_idle_facing.gd.uid",
+    "scripts/test/art/test_inspector_life_p11.gd.uid",
+    "scripts/test/art/test_inspector_porter_p12.gd.uid",
+    "scripts/test/art/test_inspector_porter_p13.gd.uid",
+    "scripts/test/art/test_inspector_wood.gd.uid",
+    "scripts/test/art/test_interventions_real_p6.gd.uid",
+    "scripts/test/art/test_life_layout_p12.gd.uid",
+    "scripts/test/art/test_life_layout_p13.gd.uid",
+    "scripts/test/art/test_link_hover_p12.gd.uid",
+    "scripts/test/art/test_link_hover_p13.gd.uid",
+    "scripts/test/art/test_name_presentation_p13.gd.uid",
+    "scripts/test/art/test_nature_clearance.gd.uid",
+    "scripts/test/art/test_nature_density.gd.uid",
+    "scripts/test/art/test_person_activity_tooltip_p13.gd.uid",
+    "scripts/test/art/test_porter_p12.gd.uid",
+    "scripts/test/art/test_porter_p13.gd.uid",
+    "scripts/test/art/test_porter_renderer_p12.gd.uid",
+    "scripts/test/art/test_porter_renderer_p13.gd.uid",
+    "scripts/test/art/test_real_input_p12.gd.uid",
+    "scripts/test/art/test_real_input_p13.gd.uid",
+    "scripts/test/art/test_relations_chronicle_p12.gd.uid",
+    "scripts/test/art/test_relations_chronicle_p13.gd.uid",
+    "scripts/test/art/test_restless_meter.gd.uid",
+    "scripts/test/art/test_season_tint.gd.uid",
+    "scripts/test/art/test_settlement_labels.gd.uid",
+    "scripts/test/art/test_settlement_relations_p12.gd.uid",
+    "scripts/test/art/test_settlement_relations_p13.gd.uid",
+    "scripts/test/art/test_shelter_cold.gd.uid",
+    "scripts/test/art/test_sim_reads_equivalence_p9.gd.uid",
+    "scripts/test/art/test_sim_reads_relations_p12.gd.uid",
+    "scripts/test/art/test_sim_reads_relations_p13.gd.uid",
+    "scripts/test/art/test_society_snapshot_p7.gd.uid",
+    "scripts/test/art/test_spatial_hash_p10.gd.uid",
+    "scripts/test/art/test_stockpile_locale_p12.gd.uid",
+    "scripts/test/art/test_stockpile_locale_p13.gd.uid",
+    "scripts/test/art/test_structure_states.gd.uid",
+    "scripts/test/art/test_terrain_layers.gd.uid",
+    "scripts/test/art/test_variant_codes.gd.uid",
+    "scripts/test/art/test_write_skip_p13.gd.uid",
+    "scripts/test/art/test_ysort_props.gd.uid",
+    "scripts/test/art/test_zoom_ladder.gd.uid",
+    "scripts/test/art/walker_bridge_p13b.gd.uid",
+    "scripts/test/art/walker_fixture_recorder_p13b.gd.uid",
+    "scripts/test/art/walker_numeric_probe_p13b.gd.uid",
+    "scripts/test/capture_framings.gd.uid",
+    "scripts/test/capture_framings_p11.gd.uid",
+    "scripts/test/capture_framings_p9.gd.uid",
+    "scripts/test/fix_settlement_marker/harness_marker_fixed_a12.gd.uid",
+    "scripts/test/p4_gamma_rendering/harness_agent_rendering.gd.uid",
+    "scripts/ui/activity_icons_p11.gd.uid",
+    "scripts/ui/activity_trail_renderer.gd.uid",
+    "scripts/ui/agent_activity.gd.uid",
+    "scripts/ui/agent_frame_choices_p10.gd.uid",
+    "scripts/ui/agent_pose_moments.gd.uid",
+    "scripts/ui/agent_renderer.gd.uid",
+    "scripts/ui/art_hash.gd.uid",
+    "scripts/ui/art_season_tint.gd.uid",
+    "scripts/ui/art_sprite_library.gd.uid",
+    "scripts/ui/art_walker_p13b.gd.uid",
+    "scripts/ui/building_renderer.gd.uid",
+    "scripts/ui/camera_controller.gd.uid",
+    "scripts/ui/camp_seats.gd.uid",
+    "scripts/ui/carry_load_layer.gd.uid",
+    "scripts/ui/chronicle_text.gd.uid",
+    "scripts/ui/daylight_controller.gd.uid",
+    "scripts/ui/death_viz_renderer.gd.uid",
+    "scripts/ui/founding_group_renderer.gd.uid",
+    "scripts/ui/morning_chill.gd.uid",
+    "scripts/ui/nature_layout.gd.uid",
+    "scripts/ui/nature_renderer.gd.uid",
+    "scripts/ui/need_bar_renderer.gd.uid",
+    "scripts/ui/panels/agent_inspector_panel.gd.uid",
+    "scripts/ui/panels/causal_panel.gd.uid",
+    "scripts/ui/panels/chronicle_panel.gd.uid",
+    "scripts/ui/panels/god_hand_panel.gd.uid",
+    "scripts/ui/panels/hud_status_panel.gd.uid",
+    "scripts/ui/panels/hud_topbar.gd.uid",
+    "scripts/ui/person_activity_tooltip_p13.gd.uid",
+    "scripts/ui/person_names.gd.uid",
+    "scripts/ui/porter_presentation_p12.gd.uid",
+    "scripts/ui/seek_viz_renderer.gd.uid",
+    "scripts/ui/settlement_labels.gd.uid",
+    "scripts/ui/settlement_overview_renderer.gd.uid",
+    "scripts/ui/settlement_relations_p12.gd.uid",
+    "scripts/ui/shelter_cold.gd.uid",
+    "scripts/ui/sim_reads.gd.uid",
+    "scripts/ui/terrain_renderer.gd.uid",
+    "scripts/ui/village_activity_summary_p11.gd.uid",
+    "scripts/ui/wood_visuals.gd.uid",
+    "scripts/ui/world_effects.gd.uid",
+    "scripts/ui/world_renderer.gd.uid",
+    "shaders/settlement_outline.gdshader.uid",
+    "shaders/villager_ramp.gdshader.uid"
+  ],
+  "tracked_differences": [],
+  "import_settings_differences_excluding_uid": [],
+  "imported_cache_checks": [
+    {
+      "resource": "assets/art/atlas/world_0.png.import",
+      "cache_path": ".godot/imported/world_0.png-2d76208da333a027578ea844f76eb25a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/atlas/world_0_regions.png.import",
+      "cache_path": ".godot/imported/world_0_regions.png-488664b295ece7a4a5b0d6cc7f4fac5d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/01.png.import",
+      "cache_path": ".godot/imported/01.png-c90d88e37f23eebc853c65ad43fc6dd3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-e8fa5040efef378d70c29bf5967a246d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/02.png.import",
+      "cache_path": ".godot/imported/02.png-b38ef3493c091ded23489d3b9c5c0140.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-e6c9aaa1dede0256f25d75df3d3cc23c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/03.png.import",
+      "cache_path": ".godot/imported/03.png-fe16892ba25d641aaf2fafa040af1133.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-1470511bf1b9cb49ec2ae63da57c38a6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/04.png.import",
+      "cache_path": ".godot/imported/04.png-696da47575dfb864318e6e9b32a374f5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-7ae921afd064732ea3a4f60d447d0b4e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/07.png.import",
+      "cache_path": ".godot/imported/07.png-8c08e108dd8cae4170318d8270f31def.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-77e5dd6cc28ecf6bd8b68cbb4d05e831.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/08.png.import",
+      "cache_path": ".godot/imported/08.png-f88b589832dda7db73e26f421d4d98eb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-f13b2ac5f61994fe0c2052e077785f63.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/09.png.import",
+      "cache_path": ".godot/imported/09.png-47b427d400798f395b94b180a25f62bb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-5b5c06044eee53610c37431b09f91bb9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/15.png.import",
+      "cache_path": ".godot/imported/15.png-006ddc4e9bda98ec8c6eef58207b2a81.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-e091765812f959b108573f4d090045de.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/01.png.import",
+      "cache_path": ".godot/imported/01.png-7321fe23b3f584422e1c4f70ea9c6ce5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-5c39851b13895b5051e5fd19018756f3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/02.png.import",
+      "cache_path": ".godot/imported/02.png-f9fdff73e7c115b1266ecc69045a0a8a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-462dd90f885cbf9116bd648ca1f2131a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/03.png.import",
+      "cache_path": ".godot/imported/03.png-b82af12c437cf5d438da6a26a5397b37.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-d6dfdb5968cbe6dc1778fe9968ebaa5c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/09.png.import",
+      "cache_path": ".godot/imported/09.png-ec7f0ff41e08c9f3c6a9c4d7e8b1d49d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-07b8507eed36a5598f049a4e870737d1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/10.png.import",
+      "cache_path": ".godot/imported/10.png-64c571fb09f5e84ddd34d2da96eb4438.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-35ba8902f1cbf918ee5fb4f132e6f86d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/11.png.import",
+      "cache_path": ".godot/imported/11.png-5c0f6b3080f148fc69c606420a0e302a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-bca1e7142ed96b443ae9b01ad7025849.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/12.png.import",
+      "cache_path": ".godot/imported/12.png-7287c8e1d57ac9579a6d80bbec287271.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-6abc146acddaa077ca757a917378b8ad.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/13.png.import",
+      "cache_path": ".godot/imported/13.png-fd49e366c53811d1eb6b4866c7b2a769.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-5dba9dd6ffd9c02622475a541a96fc07.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/14.png.import",
+      "cache_path": ".godot/imported/14.png-600b46fc726b36943d2340fb5cee71cb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/F2/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-5b51fd20ec93d40204ffdb7ad7f769e9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/01.png.import",
+      "cache_path": ".godot/imported/01.png-28f963399186b0faa9265997d362d073.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-452ad09ac65c6b2b48db74432f5b74a1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/02.png.import",
+      "cache_path": ".godot/imported/02.png-677af73c3192ce568d971f207bf40e96.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-c5a1e1cffee476141a9467ad38703b6c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/03.png.import",
+      "cache_path": ".godot/imported/03.png-29fcf5bfd4f3166f8916326656738a56.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-86b9ed232b66875e667767a16c83077b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/04.png.import",
+      "cache_path": ".godot/imported/04.png-01c7decbad12bd6ff429446e48a5dea7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-4be6c24612a519db305056cef4d0fbc3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/05.png.import",
+      "cache_path": ".godot/imported/05.png-9ef50a70a8692d09fffafa39a481b038.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-b5ea0631f6246cfd38967cc37848b1e2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/06.png.import",
+      "cache_path": ".godot/imported/06.png-df7bbc9254b260ca0945e9a994e5e80d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-53e6ad836749c7c972f4786d766447c2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/08.png.import",
+      "cache_path": ".godot/imported/08.png-afe492681b181bd3753ea80b8939b8c8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-70d818c0dd6962c6e02495770365744d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/09.png.import",
+      "cache_path": ".godot/imported/09.png-f9c1959a41b988bc503881bb82eb7758.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-68e39659ec8ff10d59da8cca8a4aa07a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/10.png.import",
+      "cache_path": ".godot/imported/10.png-4e4b224383a3f03457226606574b33d2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-ecc25caa725156f8177e3c784e955da4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/11.png.import",
+      "cache_path": ".godot/imported/11.png-488a268df218a32c7ec0a3b76f851ac1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-a7aad005c236ef89050ef3da410fa71b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/12.png.import",
+      "cache_path": ".godot/imported/12.png-772a75fd012ed7bfc65c4f329921fc4b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-979c9cbc27028e7d0b952b01f5b8ac30.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/13.png.import",
+      "cache_path": ".godot/imported/13.png-c9035b1e56462bdff2ea90cea8ab21f8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-36c21f047c89bff0f53742083e280880.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/14.png.import",
+      "cache_path": ".godot/imported/14.png-5e886e2e7d69ad7683540be4a63953e2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-9087bc45b49a348057f5ad542b0df8b7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/15.png.import",
+      "cache_path": ".godot/imported/15.png-4f4aa814c3d938eb8e48d372d0929791.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-a7f8178905f8bf4069017e1c34651f48.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/16.png.import",
+      "cache_path": ".godot/imported/16.png-5ede2b5c2569902ec47c8cf0171246b7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N1/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-71039d112717a572aa86deb55604424a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/01.png.import",
+      "cache_path": ".godot/imported/01.png-c2c529cb824d861bb99e2315e0616f44.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-64e79fb63f7e162f790af8ea739cc255.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/02.png.import",
+      "cache_path": ".godot/imported/02.png-0d3d1c1932b0fd7ec95736e812991cf3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-56766f2617f588cf14861695bf4836b4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/03.png.import",
+      "cache_path": ".godot/imported/03.png-484b40e9b48584c632a60673bacfa953.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-1e60e2fab9d5ebe1c07e69fae64f2322.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/04.png.import",
+      "cache_path": ".godot/imported/04.png-9dbf3190fb25e04465b9f91e24140f5d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-7f8b817dc85d5cc49a7b321d91f854e8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/05.png.import",
+      "cache_path": ".godot/imported/05.png-99a471029c05cb20d9dda81dd2abfa02.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-b1f17070f2c7635e4bc04f0eb09d43cc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/06.png.import",
+      "cache_path": ".godot/imported/06.png-414758917a8fb8672c1fbb32a739c919.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-c4e7f6653ee2ee2dd391cf1248edc18e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/07.png.import",
+      "cache_path": ".godot/imported/07.png-1de18606977e500878c116ef11e54d78.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-cec03e3ab31577c64bdef2ae241268c6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/08.png.import",
+      "cache_path": ".godot/imported/08.png-aab1166832ca9ad403be067de2590663.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-bdbdb8b218d6586d8235d22a69e0cff1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/09.png.import",
+      "cache_path": ".godot/imported/09.png-f522bd6a4dfc462c0d36a63cebb04bcc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-d3f382976bfe0d308e790deb3c4ad38b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/10.png.import",
+      "cache_path": ".godot/imported/10.png-8e40049c3ce8c6fb3162d7fc81d4107a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-0c6d36f0f74d8e0f3987d2b28c685da5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/11.png.import",
+      "cache_path": ".godot/imported/11.png-0185f8e31d70b2c3437709ae1f4929f8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-c956bc22f500eddfec54e1f3d7a42799.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/12.png.import",
+      "cache_path": ".godot/imported/12.png-6b605fb09dfe5eb6c7c96a490957c4fc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-316b997f5d0710835712bc6c5d1c29b0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/13.png.import",
+      "cache_path": ".godot/imported/13.png-2d4d5a2940f0b3d7a0ffb7552fad361a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-e2765804f9b9d3a5d2e3e7d27a5a8f39.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/16.png.import",
+      "cache_path": ".godot/imported/16.png-d4df349d107efec51aef5ede5e966488.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N2/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-d5fdaa97d91f43dd7c47b6bda05636a1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/01.png.import",
+      "cache_path": ".godot/imported/01.png-fe3a0637255a8cf3cb96cb4c1f404146.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-708aca0e435046aa11aa20e2a4b171b7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/02.png.import",
+      "cache_path": ".godot/imported/02.png-ff748566132586c3f125a803271443fb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-74c4b659402d0c5fa6503e390c91f1e0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/03.png.import",
+      "cache_path": ".godot/imported/03.png-0cf9784d27e883eef162a5b78f66b528.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-f1bcfe3a5ddf551cd74d1c0291b7a5c5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/04.png.import",
+      "cache_path": ".godot/imported/04.png-5ce26a79c64cd559f72398f8716022d4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-fc760075df634ef14a5bdbe3a18cf030.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/05.png.import",
+      "cache_path": ".godot/imported/05.png-c966e434c2385630496a8c4137f0109b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-0209d49c526c50caeed1950a74ab66a8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/08.png.import",
+      "cache_path": ".godot/imported/08.png-da274e99cccfa7860cc0d53b4d35c2f9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-ee76d3086c3ad419ed51e7293c86b1dc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/09.png.import",
+      "cache_path": ".godot/imported/09.png-c33d8fd21e101462689a85f1f661f3a7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-e8827693d5d29eed73797f455690ab9f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/10.png.import",
+      "cache_path": ".godot/imported/10.png-9fd6b86c8af0a0de37cdf0c0d1949fe9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-861ee876045612c7d51755ed28e65ec6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/11.png.import",
+      "cache_path": ".godot/imported/11.png-06a1c56fb3222d286c9539800279f2d4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-52f977d78421ad227bb06c36201cdbe3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/12.png.import",
+      "cache_path": ".godot/imported/12.png-c6dab006cf6e0a8158ee7671f2feea36.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-8329c3c69aed6b19494197a49600b55d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/13.png.import",
+      "cache_path": ".godot/imported/13.png-10ec5dfdecbcc9c2f1b87f76119f7d41.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-7e05e8f420bcedbef51ef06137e72d01.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/14.png.import",
+      "cache_path": ".godot/imported/14.png-3752d6e786dc250f85540cc618448ddf.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-9ea8ac32ef4b302e02ee825cd9360e1e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/15.png.import",
+      "cache_path": ".godot/imported/15.png-90cb7b6e02051a34de208c1be73abb36.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-20814c8d3a92b878435900d539a7e7a0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/16.png.import",
+      "cache_path": ".godot/imported/16.png-8160920122d7a7a2fd52d768201bc2ce.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/N3/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-9b58d0c2db7eaf3ac1af589089156bca.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/01.png.import",
+      "cache_path": ".godot/imported/01.png-2f5776ad5285029cd6272923bdeb982f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-fb6279b716b99174aaf7e4546bd6bdac.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/02.png.import",
+      "cache_path": ".godot/imported/02.png-559fb0d91fb80a3f7a39e2628f834589.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-0cdfa51634017e3aaa7bd5da2e7ce11b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/03.png.import",
+      "cache_path": ".godot/imported/03.png-9e142f7cfc06dfce43ae76acf10bc105.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-d3e3e3797f5db4fe665481c860b2aabc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/04.png.import",
+      "cache_path": ".godot/imported/04.png-6b96cc7d1d6c341b42a5b52676245f3a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_E_carry/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-1f6350112ac2aa34e5d8b26f914d1982.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_S_build/01.png.import",
+      "cache_path": ".godot/imported/01.png-5bff52b9aeff00c545ea9f555ec3a23d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_S_build/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-95ca3049cc62aa656dca7a841c02dce1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_S_build/02.png.import",
+      "cache_path": ".godot/imported/02.png-2534ceff56a69928358eb1b67c0d6f43.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/P2V_c_S_build/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-9ffeb93ccff3465b79f2a52ef7d9fdd0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/01.png.import",
+      "cache_path": ".godot/imported/01.png-290400886047005680121f3e0451c746.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-ab48c25e08b653fc0c272fcdbdc97898.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/02.png.import",
+      "cache_path": ".godot/imported/02.png-c6bdc929960584269e7f354292737372.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-c212fa18fee636ba3b86e2cea19ee784.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/03.png.import",
+      "cache_path": ".godot/imported/03.png-d004301d7485f0baef0db75b2eb89936.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-954750c072a6abf9897356f1e0e00a45.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/04.png.import",
+      "cache_path": ".godot/imported/04.png-01873f4059e0e8bba4ebce307e61a883.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-44da07341c34a8cdbb063221c060bb0d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/05.png.import",
+      "cache_path": ".godot/imported/05.png-52b24f51aeb81d46e513afad79c6f855.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-fb67af155698c65652a7ed9ee8186d29.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/06.png.import",
+      "cache_path": ".godot/imported/06.png-bb1b48e0161da22a85cad1ba36121da9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-4724e9f7159b19d463e9fe4b383360e6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/07.png.import",
+      "cache_path": ".godot/imported/07.png-c97a64a4dd2e47237dd6994d403cd584.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-b3f12862ee2f49ae88b24606edec1ac1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/08.png.import",
+      "cache_path": ".godot/imported/08.png-5fb54d07d0372e8a0bc7450872cb6b73.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-ce434f38b4bae50b1acd4b5989dd231b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/09.png.import",
+      "cache_path": ".godot/imported/09.png-d00138ed30bac0b79382117209154694.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-9d0834e6a7e79ce3c414044dfee1a76c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/10.png.import",
+      "cache_path": ".godot/imported/10.png-ffb929f76c14fb5154991a3734ee5838.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-316dea9348e8cadb7aaf28a20229986e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/11.png.import",
+      "cache_path": ".godot/imported/11.png-e09315efd1e9dd0af08126ebf6929d98.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-8ecb38e638482445c13bff1caaf3c90c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/12.png.import",
+      "cache_path": ".godot/imported/12.png-862cb2efee0db5ebe41bdd653d1bb30f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-a60c291f44eefd12f24abf408adb2b6a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/13.png.import",
+      "cache_path": ".godot/imported/13.png-2bcb58efdcbad07ef1eefa626cb2ec90.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-2fee779a0cc7dc625a39f5a2adba9d32.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/14.png.import",
+      "cache_path": ".godot/imported/14.png-684d0fe2604e2d5eb054c106efc646a2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-695f24ee48dfd4a3a3c32e41f07951b3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/15.png.import",
+      "cache_path": ".godot/imported/15.png-8baa719daffd1c5075c1b8f4df2e50c9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-5bccd1a1c0f8100d38eb2d026cac954a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/16.png.import",
+      "cache_path": ".godot/imported/16.png-f0b02ebc93b94a381d1ee5070700a0a5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S1/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-6bd02170aeadf7f88cddcac475cb6289.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/01.png.import",
+      "cache_path": ".godot/imported/01.png-8c853c3c6af3ad6395b9c35da763248f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-e4b0c3e0173f299c83d66f8307eee215.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/02.png.import",
+      "cache_path": ".godot/imported/02.png-0db013e9e307d180427b03ab24187a11.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-3d681c8d6f9d0588fd25cc8e3851d7ca.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/03.png.import",
+      "cache_path": ".godot/imported/03.png-4ab9ad95bb08ba71d05efc72d11dc4bc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-a242114cd4d6f2a387a9892ce8167132.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/04.png.import",
+      "cache_path": ".godot/imported/04.png-3f54e0075537297d2c7e568964aca2ce.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-d50adc6f992d8eab959d59dced76c120.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/05.png.import",
+      "cache_path": ".godot/imported/05.png-39bba241c94e4f8ed5e5ab653fe3ce73.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-a374710162151f5da0c4fd33625ddc71.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/06.png.import",
+      "cache_path": ".godot/imported/06.png-b8fc024d6ec31f1dbabfd91edb273135.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-16b675fe6a6c7278a63f6685b6310e50.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/07.png.import",
+      "cache_path": ".godot/imported/07.png-93a39e4e83c197a5debcdcf38891bd6a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-3d9b4ecdaeed6318c6b60f38e80eecb6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/09.png.import",
+      "cache_path": ".godot/imported/09.png-6a94dbc87fc702e18569b4dd47f36fc5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-46e348b9ececcc3c657ecf9a2d74e9b8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/12.png.import",
+      "cache_path": ".godot/imported/12.png-08ec0a775cee0af04dfece2d2a790db5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-76cfc469cdb7d2a28bc7491fb50baa47.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/13.png.import",
+      "cache_path": ".godot/imported/13.png-ba40f9c21af3ab00f663e0d97f7e75f0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-7775cf035f6b25edd901bae592060005.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/14.png.import",
+      "cache_path": ".godot/imported/14.png-ade29687a99d1a5c6e9f4994f7c17518.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-9f9e92ece1a6074e08b38b174959079f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/15.png.import",
+      "cache_path": ".godot/imported/15.png-3ca2c133aa363c3aa131603de11bd5b2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-e70fd0314998a7262c182ea6d3e2ab86.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/16.png.import",
+      "cache_path": ".godot/imported/16.png-7f6ed89b9d5a48f49a193b5b538762cd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/S2/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-c8d90961a685a6ecf2994766b708e95d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/01.png.import",
+      "cache_path": ".godot/imported/01.png-af402be02ccabb4aed5fadef9db059ee.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-448cc658829dc1f8901b6e48357dd9e4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/03.png.import",
+      "cache_path": ".godot/imported/03.png-9d9e4c02bb76fa48be6996effc6468cc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-e1f8f7d4391e104c75d4c841addb4f16.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/04.png.import",
+      "cache_path": ".godot/imported/04.png-e7b787c8ae6ee64f439a36edd0f62dfb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-df9169d063ff21feb0d0651c055e7f3d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/05.png.import",
+      "cache_path": ".godot/imported/05.png-8167dbaa0608b4795c3c6d9077af0afa.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-b09cdf588660441efffaf3effebc6df5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/06.png.import",
+      "cache_path": ".godot/imported/06.png-406b0b1a9feca246c3efb361cf8b9c17.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-5a9e0a05943cc26c5ba6cac3d9210f76.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/08.png.import",
+      "cache_path": ".godot/imported/08.png-1534114f38338564b807338274a172f4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-ffdff644f4d83ab3abeb06d3d597a6df.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/10.png.import",
+      "cache_path": ".godot/imported/10.png-99f971bb8549d4b17a56f26a8e2512ab.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-fad5fa7bf8cb9bb14c6ed864bdb8c86a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/12.png.import",
+      "cache_path": ".godot/imported/12.png-21d9821e08921596a861168985254f69.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-2910fb8832b62961208f07f1f4fd9780.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/14.png.import",
+      "cache_path": ".godot/imported/14.png-583009eac5f7ec45cff15138f2f5db2c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-a5c92efd5d53d9a8a528af7d9c78c299.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/15.png.import",
+      "cache_path": ".godot/imported/15.png-0f08a734c8fef7db597f0112b6acbe40.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-79d80ecd356d1fa0fd23745e95d2c50a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/16.png.import",
+      "cache_path": ".godot/imported/16.png-0ec76c0c04d6caee3b0548827ca5cfee.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/U1/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-b1db2bf724bd28ccf8608b6a4d0c5dfd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/01.png.import",
+      "cache_path": ".godot/imported/01.png-3b9db7ac1b789af02adce4bc55cc8c14.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-4e88fe0014b85a248fd6130b7f40dd5b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/02.png.import",
+      "cache_path": ".godot/imported/02.png-2986432ab2afabe28bb8ab63fdf4a6a5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-9ed869ca2b9604fa5ddd704fce007c02.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/03.png.import",
+      "cache_path": ".godot/imported/03.png-7d8dca1f369742c85698282ec28e1554.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-ebb7e820fbfac6dadbaaa43f6a4b01a8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/04.png.import",
+      "cache_path": ".godot/imported/04.png-17287990b934123e6fd9ff8e1fa366a5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-014dbb2e05448ccfbd24a4e70d9d2e52.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/05.png.import",
+      "cache_path": ".godot/imported/05.png-58f1142e63601f857ee68cd38f91cb1f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-032876509d7a0e9c43ce416d3f538f0a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/06.png.import",
+      "cache_path": ".godot/imported/06.png-fefd3d6854a6ed48c1a832f21e5f2b38.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-bba0c5c5784334b72b0e67c3bc3ad8ca.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/07.png.import",
+      "cache_path": ".godot/imported/07.png-2960a4584586be82a9a39626420c21fd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-4d63b23a1abf91ec07c946d24db67e63.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/08.png.import",
+      "cache_path": ".godot/imported/08.png-5923e2f42a04c0d3e2619190bc998d3d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-e32e22b839f5a3d96424cecf398bc951.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/09.png.import",
+      "cache_path": ".godot/imported/09.png-4918735a759cb66c61c3e13b1a3782d3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-d043b8eaefef5a2795b5a067c67ef233.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/10.png.import",
+      "cache_path": ".godot/imported/10.png-cc16c43f18b85b270bd68faccaf93a5c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-0efa8b726d39c393593ad9ad5c29f745.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/11.png.import",
+      "cache_path": ".godot/imported/11.png-2afa16b1b1b87ed9f7e4b3364417170a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-bab238439f320b42d20ad539c0569def.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/12.png.import",
+      "cache_path": ".godot/imported/12.png-6e75336640454ceca7b906111e3ebe84.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-e327169f3eb1817b7fc080250dfb574b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/13.png.import",
+      "cache_path": ".godot/imported/13.png-274b27c143c926e150f1cd9cc6e9a8fc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-cc77abc33ebd9d07ee00d0c2b028c1cd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/14.png.import",
+      "cache_path": ".godot/imported/14.png-8edcbc8701bea991536894b9a24d411e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-84b9f9d7c65f2b0a2a6e36fb6787ce6c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/15.png.import",
+      "cache_path": ".godot/imported/15.png-59e47b0e5616604c4200aded8be091ea.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-cfb868cd022f388d60436e4e8abf4277.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/16.png.import",
+      "cache_path": ".godot/imported/16.png-3edb74ee38e85adda9aebe381cd56977.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a1/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-c1830ec1b057cfbe13d6a036816bf505.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/01.png.import",
+      "cache_path": ".godot/imported/01.png-ac58e15439fe0f1259876cce9004d60e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-ccca650912de46446910f055d16100e4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/02.png.import",
+      "cache_path": ".godot/imported/02.png-f8ae834a24d36d3664cf1a37ecf0e1c0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-25a9746c5131c02b1b30aacfd1f9007b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/03.png.import",
+      "cache_path": ".godot/imported/03.png-ef391d3ab6eab8160959871b93a7a856.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-f7e1b5fecd1fbb7d50fe4494483fa230.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/04.png.import",
+      "cache_path": ".godot/imported/04.png-c53f8d5bea6ed600f1d4df6101687f9a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-9868778180069c751e8147f575da2ac2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/05.png.import",
+      "cache_path": ".godot/imported/05.png-af16ce759ffcbe2804debee641009321.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-4bb6b8ec584508aada9e1f8249e36d85.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/06.png.import",
+      "cache_path": ".godot/imported/06.png-15bdbccc7e565fa0fef5640d845bb75f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-270b211bc966ce3aa7ad12b954280977.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/07.png.import",
+      "cache_path": ".godot/imported/07.png-6070bc8c9acb8465b3ab92da728442a0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-cbc1aedfbfc4874db6d4a62d4de97e81.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/08.png.import",
+      "cache_path": ".godot/imported/08.png-41abf5bc3beb96af1413ee549fc086c8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-1bbb99aa689f3fb740e2f8b1fc7f8a3e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/09.png.import",
+      "cache_path": ".godot/imported/09.png-d760cb4b69fbfca9f54846f56a46b995.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-9f6f5fc920006c13904fba2486a25d9a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/10.png.import",
+      "cache_path": ".godot/imported/10.png-8a89dca5235052e8a9e9908a090c4976.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-95bc3a7b1ca0c922d582acc088093e3a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/11.png.import",
+      "cache_path": ".godot/imported/11.png-da478a045e1cf6adc835169a1a280c57.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-0423743227d2defcb3310af14eb9cb3d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/12.png.import",
+      "cache_path": ".godot/imported/12.png-405c0ec0d8191002f259076fe35eea37.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-2e5235418b5a11ed7db2a0fcd35d7b8b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/13.png.import",
+      "cache_path": ".godot/imported/13.png-dc85a6da6c6db957836561c038418c85.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-ac36b52d8e8cb74fb2de3d8477363d15.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/14.png.import",
+      "cache_path": ".godot/imported/14.png-112a1487ecfaa8f2a3292554554dbfa1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-c02c2c0e72534152e60907c388b35ebc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/15.png.import",
+      "cache_path": ".godot/imported/15.png-0c3d81b4fc5cc4b436fce6cfb7ac00c3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-5e2aa9b954b35f1dec9ee5b6f6b3dc5c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/16.png.import",
+      "cache_path": ".godot/imported/16.png-68ec35f9d206d544a043420a1f5af562.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a2/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-11872622a6bb502af6e74aa726b0ba70.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/01.png.import",
+      "cache_path": ".godot/imported/01.png-87a1b020f1b5c144d1896c24ceb1bb7f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-2641663c32087ca37f94e7a419af5552.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/02.png.import",
+      "cache_path": ".godot/imported/02.png-a08ac338699b06a0fc5e78f2cfe2e8cf.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-a185533afb6e229aadc12554973c7174.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/03.png.import",
+      "cache_path": ".godot/imported/03.png-673e2d220e54a4963b1cf7d613ee10ff.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-7518a8441fbd9f83fe20f7d8148511b5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/04.png.import",
+      "cache_path": ".godot/imported/04.png-8a55fcc3cd6ce02f3070107491598185.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-4ac597cbe0fe8946b899da4a2c073db4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/05.png.import",
+      "cache_path": ".godot/imported/05.png-e6bff5fc9a19a953b58330e9b166e40e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-19cb4331132a35b8562a6a09c66e09f7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/06.png.import",
+      "cache_path": ".godot/imported/06.png-63736014af0c196aadfb4fe21dfe1a8d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-ae3a846bc98dec0e28a4169f01fdd94f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/07.png.import",
+      "cache_path": ".godot/imported/07.png-9f8f553ba73169cb1b12995f75a786ec.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-565a9cd085e59aaa5f63725888a065f1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/08.png.import",
+      "cache_path": ".godot/imported/08.png-1629fb7427b6ad7377b0b327c0d013ba.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-d912e45fee9a5b3362ead262b75df782.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/09.png.import",
+      "cache_path": ".godot/imported/09.png-ace990697bc809a648f468e870df37c7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-0f954daf03b10fe45bfe793731ed94cf.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/10.png.import",
+      "cache_path": ".godot/imported/10.png-b3649231d2379e189e3cfa4415319489.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-2901d3b011a9bccd5d3ccff60f196bd3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/11.png.import",
+      "cache_path": ".godot/imported/11.png-0452ec179ca68fc5686324dbb7189a5f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-0b1d21044be0626cda2bf2d6fdf85fa1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/12.png.import",
+      "cache_path": ".godot/imported/12.png-f37f5eb5cbd5e956698d843a51f406b2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-d99745354173a49f178ac7080a7b949c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/13.png.import",
+      "cache_path": ".godot/imported/13.png-f1112bb01612b405ed054c5cd46fc266.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-1729e762de508da084282f4d39dc93e8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/14.png.import",
+      "cache_path": ".godot/imported/14.png-72837030c7fbbb77427279545f869a6d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-ea80a8178813f07eb3513dbd7ebdd268.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/15.png.import",
+      "cache_path": ".godot/imported/15.png-b8b7396436851b3189361b0ab3e4c056.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-ae981fbc6b2f65faaba9f2dcf14cd799.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/16.png.import",
+      "cache_path": ".godot/imported/16.png-669b4c0b2da084a9c9034c4aff711bb9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_a3/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-aa41a566cf32f6992aa15eba8ccd7f5d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/01.png.import",
+      "cache_path": ".godot/imported/01.png-82097c1322ffb19206f0a8e5a7697862.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-491fc57a1ef74aa4703ac7a454710c5c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/02.png.import",
+      "cache_path": ".godot/imported/02.png-72bb305a28c9c166e3a28b03f2e1f9d9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-bb1f96fbdc95690bbdc413690bdadb87.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/03.png.import",
+      "cache_path": ".godot/imported/03.png-caed7fc608c22a1f99350dfe59772ba5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-81f867c8d951810265ad773d93add6fb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/04.png.import",
+      "cache_path": ".godot/imported/04.png-9fae131603db4f1bdf50a533253f84ff.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-9805b6fbb9bb9c993c3f6bd752b430eb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/05.png.import",
+      "cache_path": ".godot/imported/05.png-22c4316a636b2821fccb22b4b24f9eb8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-edc2183b5c9d6f6ec774d7847537124c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/06.png.import",
+      "cache_path": ".godot/imported/06.png-56e8aa6263473d1d6d2285926c1bfc08.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-12305ac45b006095994757476df81155.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/07.png.import",
+      "cache_path": ".godot/imported/07.png-78bfa4fc9fbe27d68c3989c219428deb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-8d2fa35a0c8dd2f5c009d2fe4c279251.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/08.png.import",
+      "cache_path": ".godot/imported/08.png-e3ddea627502197cf88f58ef1c26b31d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-c55d8877d63f603cbe1b6a48d1288b2f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/09.png.import",
+      "cache_path": ".godot/imported/09.png-29228117ad17f31b520e6de7bb1ab192.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-889ea2f915df3e8e6c1832d5ad139d88.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/10.png.import",
+      "cache_path": ".godot/imported/10.png-dbdfb58c429c86a55acbaf51ef19b306.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-64a424860e273735b1e5ffb8802daebd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/11.png.import",
+      "cache_path": ".godot/imported/11.png-0467bccbd2304aaacbe52f37ef6a9f79.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-052bc7435c6ce690d96c6419fb7e9be9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/12.png.import",
+      "cache_path": ".godot/imported/12.png-8e2408093c17bb2cf866a9b30404b4d3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-4756a2d58b2fbcc3642f73d410ff3df9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/13.png.import",
+      "cache_path": ".godot/imported/13.png-2c8ebc9ac47508d045a2c97e60186f44.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-63d6b575014ef09fb89aef52e64d6fe1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/14.png.import",
+      "cache_path": ".godot/imported/14.png-21b2657dc24db25905f5c67c27c08ac6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-7fbda7fad3e8c002087dc36764969e7d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/15.png.import",
+      "cache_path": ".godot/imported/15.png-57cc8c059a06e5b51570b2c8a6432183.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-d0565c7065e0c06ca03eb3695ff2a9c4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/16.png.import",
+      "cache_path": ".godot/imported/16.png-ac46d9a0490ed5f1ea28515de47392c4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b1/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-41517f4a3c800c7e7ffd0d173f7acab0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/01.png.import",
+      "cache_path": ".godot/imported/01.png-c5e72323075fa28c4f67511ad2d62a67.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-1c729ea41d7c5ab4267219b7ece740e1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/02.png.import",
+      "cache_path": ".godot/imported/02.png-00e18f9158e67f38e81c401415a1fa09.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-47ee9d80d20d40b83f58b5b6e0498ec1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/03.png.import",
+      "cache_path": ".godot/imported/03.png-25c246f1fecc8ca94dbbb0cfd2efdca6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-1b09785227369f31677b31b2edfba640.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/04.png.import",
+      "cache_path": ".godot/imported/04.png-c6da1c66263f832b6205a19cae44638f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-6f160a52a01498c3276202917fa6ec6d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/05.png.import",
+      "cache_path": ".godot/imported/05.png-fdb2102bc0ba99fc8fece98d45dafe07.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-5fca8dbfe353b2914cd3272e81351646.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/06.png.import",
+      "cache_path": ".godot/imported/06.png-0ce62b012fb880f7f953ddbc0b624c57.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-67a9a6d397fbeb6aa8153ef17c7d1277.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/07.png.import",
+      "cache_path": ".godot/imported/07.png-74fc1617ea022ca5771b49cab119e6b0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-a5141acc8bff1df1e76285bd916c0eaa.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/08.png.import",
+      "cache_path": ".godot/imported/08.png-16f39b8f6fc881524de66815602ca1e5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-1f1bfbe2de9daa3e94e63b8bf4df1697.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/09.png.import",
+      "cache_path": ".godot/imported/09.png-d7f13a6866a7e012b4ad0a608e66ff1b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-d6624fd681008c95bf1dd983e4b805b5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/10.png.import",
+      "cache_path": ".godot/imported/10.png-6ef87a9971e9aca0c8b958453b267219.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-8bba077764c8fd61b62d4af93126320f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/11.png.import",
+      "cache_path": ".godot/imported/11.png-b39112a73e497cc1851ae1b0d04dbeb7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-be49815f9647f3129414c2c96ac38fa0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/12.png.import",
+      "cache_path": ".godot/imported/12.png-978274f499f0a55538ac2016347187e3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-e78fc7fd2aeb78da675350f81120f228.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/13.png.import",
+      "cache_path": ".godot/imported/13.png-4eddee1cfea84c59f1ffec6b731b7a31.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-a622f9de8a0c70acfe00e29c044b1d5f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/14.png.import",
+      "cache_path": ".godot/imported/14.png-4a82bfd377ec09b278a6efcebf7ced40.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-da886b0d88b642716f609c4831a08c59.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/15.png.import",
+      "cache_path": ".godot/imported/15.png-e32f90076bb75f11e92bfd1d33a834a2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-e19e37d4d952a2e4d753efa2c10a8a21.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/16.png.import",
+      "cache_path": ".godot/imported/16.png-9d0b2fce4d589ad87068be81df414d60.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b2/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-1ea1db39b17577eaebd564389fe29009.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/01.png.import",
+      "cache_path": ".godot/imported/01.png-79e7290531b7e6f8299a330c1ce372c6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-b4ee6eccf8c177bbd38beaf223bc1a56.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/02.png.import",
+      "cache_path": ".godot/imported/02.png-2a2aa70fa00cf5fe60140c728d7adf31.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-f5f02c8e8ce9fc086f492f733dc5950c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/03.png.import",
+      "cache_path": ".godot/imported/03.png-af16d0375ef8bda9ca39ebb93ae81de0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-252b591b5bc3bd38a2421511837559ac.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/04.png.import",
+      "cache_path": ".godot/imported/04.png-d48a3367a1ea58ad7cc9e8bd9503cefa.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-97fa1367940be113573b0a9fc4d9f5b7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/05.png.import",
+      "cache_path": ".godot/imported/05.png-e9e1a4a3116cb772bde96ecdbdda9d4d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-7d5a3edbd3ec25296c1c1982dfbcb7ef.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/06.png.import",
+      "cache_path": ".godot/imported/06.png-495a3f673b4ce9ee58dea1f7016c9251.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-5f7691dfa5b1ae27ecbbc87bbefdf19c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/07.png.import",
+      "cache_path": ".godot/imported/07.png-1d9146871bed26b6898f4a7ab8fb98fb.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-b929fc8ab5300c166dcccc14396961fd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/08.png.import",
+      "cache_path": ".godot/imported/08.png-33d9c52c220aac665256a0291dd8fba2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-eac126c601bb950521607e840cb9ee65.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/09.png.import",
+      "cache_path": ".godot/imported/09.png-4fcda0f857eafc890f06b85ff690af8c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-823d94e2469e196351a9652268cb0de2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/10.png.import",
+      "cache_path": ".godot/imported/10.png-1e11b2d0ef51d970f12efdceb6430b79.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-fabd11dfcd5dc51607e0d68740c2f2d1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/11.png.import",
+      "cache_path": ".godot/imported/11.png-b764a914db776e7f1b0eb3d1650cf7fe.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-23e7d23e867c7414cbb4c2c7bc8073c7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/12.png.import",
+      "cache_path": ".godot/imported/12.png-577199b86608df651497f1490787806a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-0e371e39a200a38dd627023d79e0b71d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/13.png.import",
+      "cache_path": ".godot/imported/13.png-b7723a728501aaea3d38644ec99db2b6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-43bffa9128dd2b47e677944652fa0ee0.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/14.png.import",
+      "cache_path": ".godot/imported/14.png-9a2b13890d2202c2ce2eb26018e167f9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-69bb156b979991f9f72278f0d2ea28e7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/15.png.import",
+      "cache_path": ".godot/imported/15.png-d84beeea2f30c89cb8bed0585a4cf658.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-a3c579049fd7d539016ccf4652675da2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/16.png.import",
+      "cache_path": ".godot/imported/16.png-6eac2bb10ecb994a3344a1eda16cfe42.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_b3/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-334ead723db07bc263786d03bf58d96d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/01.png.import",
+      "cache_path": ".godot/imported/01.png-9de51d098a1385f2546e32189aa834e8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-17fbbe4e14aacc1c641d83d07352a6bf.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/02.png.import",
+      "cache_path": ".godot/imported/02.png-2dc5e830090bea8c8dd52e1b4a67bb8a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-579dd7772d92633b724d86b5b95223d7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/03.png.import",
+      "cache_path": ".godot/imported/03.png-dc416b51bd9ba82559267657f4395314.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-1694430eee9704e3e61144729fe7bd4f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/04.png.import",
+      "cache_path": ".godot/imported/04.png-b3a577eadd54305be26293be49c7b572.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-5be88bf2db154fb282fc0cd6c92d227e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/05.png.import",
+      "cache_path": ".godot/imported/05.png-8d943eb88a9fb4e6541718fd62c0e80e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-01b127d4fa6b938f5721b2bafd1edab3.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/06.png.import",
+      "cache_path": ".godot/imported/06.png-4cb64ec2401aa95b015bc8c092827970.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-3939e786e65ffc9cff520e7056dec852.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/07.png.import",
+      "cache_path": ".godot/imported/07.png-5f48c8c79786d580f204f5a9bc91b87a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-b4aae841bbb25dee8ee32533d44496cd.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/08.png.import",
+      "cache_path": ".godot/imported/08.png-bfd1ba916fdabfa31906106163532886.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-78382df47739d9eb8cdf2d1dde85cccc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/09.png.import",
+      "cache_path": ".godot/imported/09.png-b93f8fa842558b09bda21f743220e250.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-1064156de78ab3e072fd67c5ab6f2f9c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/10.png.import",
+      "cache_path": ".godot/imported/10.png-d6a51bf4a5898f3fe8d3f4b2193f9917.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-e4aed50df6155f97239128216b8489a2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/11.png.import",
+      "cache_path": ".godot/imported/11.png-aaedef268616032016a4a1991d547de2.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-84a6d60445e6fc4b649802d66cac797b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/12.png.import",
+      "cache_path": ".godot/imported/12.png-b4c3c8e505f5e4f3fe13f3c495d1ef17.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-d673142bd0a6d6d58c3243c68bfb07af.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/13.png.import",
+      "cache_path": ".godot/imported/13.png-64ef0d1ef2ab34e874e42405ece388c7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-e0e4f46ed6ca1255d871c18a19ff7c25.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/14.png.import",
+      "cache_path": ".godot/imported/14.png-8f10b551063dfc936e18f4cc239dde9a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-b4579eeae41e0f1c775dfad4573b180b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/15.png.import",
+      "cache_path": ".godot/imported/15.png-da5bf1f5ec3d44b6f658282fabf5621a.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-14419cc36e2fd8e718fa731507a880cc.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/16.png.import",
+      "cache_path": ".godot/imported/16.png-f8ef1399260a55448f8dde35e54e8bab.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c1/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-066df821a24a44930daf032e3823bb41.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/01.png.import",
+      "cache_path": ".godot/imported/01.png-b12d06631200d06cbfd6ef535d32a45d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/01_native.png.import",
+      "cache_path": ".godot/imported/01_native.png-1c547e66ee46ecde2d199c632235cc78.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/02.png.import",
+      "cache_path": ".godot/imported/02.png-c5faa29d0f8a99de2e505a15e3621ec6.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/02_native.png.import",
+      "cache_path": ".godot/imported/02_native.png-a57fa4e12b6715c9abe96f98c4ca0e9b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/03.png.import",
+      "cache_path": ".godot/imported/03.png-deb8d0f45bc3330f0f381145188e76b7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/03_native.png.import",
+      "cache_path": ".godot/imported/03_native.png-fd4c8c46234b28e25acc14eba52147e8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/04.png.import",
+      "cache_path": ".godot/imported/04.png-d3fa1b352587eaa625f25a02a611615f.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/04_native.png.import",
+      "cache_path": ".godot/imported/04_native.png-14806f4985c118ba60d6c2bacd465cba.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/05.png.import",
+      "cache_path": ".godot/imported/05.png-4d6a4a06c525cbb2fa174d2691f9e4ab.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/05_native.png.import",
+      "cache_path": ".godot/imported/05_native.png-f159edcbf68e13f7523f750a1e0553d7.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/06.png.import",
+      "cache_path": ".godot/imported/06.png-1f20fa8602d3a91e27038dc624f8cada.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/06_native.png.import",
+      "cache_path": ".godot/imported/06_native.png-0b57670cf7314d53b3deb949cd139166.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/07.png.import",
+      "cache_path": ".godot/imported/07.png-93b04a2f4059f9a35d246c7dba14d0e5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/07_native.png.import",
+      "cache_path": ".godot/imported/07_native.png-ab2e394dfc03196a294790c5b9c5b978.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/08.png.import",
+      "cache_path": ".godot/imported/08.png-4fd3e61bc2afe0d9fa7094d4c7afc6c5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/08_native.png.import",
+      "cache_path": ".godot/imported/08_native.png-ece36e48686cc06bd5b5f9404bcd27e5.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/09.png.import",
+      "cache_path": ".godot/imported/09.png-8d71115a8b3d76d38394f17a0a1d6b27.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/09_native.png.import",
+      "cache_path": ".godot/imported/09_native.png-f32ed3b249c2af50f957df95ad7cdf8b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/10.png.import",
+      "cache_path": ".godot/imported/10.png-be05495bb9786bd17fdf83ed8f4c8277.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/10_native.png.import",
+      "cache_path": ".godot/imported/10_native.png-6b7559d0d5a4ba4a07386e11fcb5e5a8.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/11.png.import",
+      "cache_path": ".godot/imported/11.png-cd78857d1d62acf1640dda4867ac8e74.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/11_native.png.import",
+      "cache_path": ".godot/imported/11_native.png-01a20d07b10d379562a2e35b3d2c927e.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/12.png.import",
+      "cache_path": ".godot/imported/12.png-390ddecfd7145680917b9f298c16f21b.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/12_native.png.import",
+      "cache_path": ".godot/imported/12_native.png-f5a16ae46e189f2a0a8d9d312caf14b4.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/13.png.import",
+      "cache_path": ".godot/imported/13.png-e1b80bc83f73f31ae7fd0d287fe0652c.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/13_native.png.import",
+      "cache_path": ".godot/imported/13_native.png-c0763f232d4fc25f239d114fe67c98c1.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/14.png.import",
+      "cache_path": ".godot/imported/14.png-cb5b63f76dc35cb80132bb1c9774b091.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/14_native.png.import",
+      "cache_path": ".godot/imported/14_native.png-6a21e153b2e35a042d33447831babe40.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/15.png.import",
+      "cache_path": ".godot/imported/15.png-36950abf02c300fecf77e9ef5c732ce9.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/15_native.png.import",
+      "cache_path": ".godot/imported/15_native.png-afd61c50d53d2a0e48f7ae27bfac4cca.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/16.png.import",
+      "cache_path": ".godot/imported/16.png-54ec354248457e70ca67cbd75ee462da.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/production/V_c2/16_native.png.import",
+      "cache_path": ".godot/imported/16_native.png-6740cd3dbb667a3d7e8f5c70053f2a4d.ctex",
+      "exists_both": true,
+      "equal": true
+    },
+    {
+      "resource": "assets/art/villager_ramps.png.import",
+      "cache_path": ".godot/imported/villager_ramps.png-1dc5814a5fac141c51bcbe17580f1673.ctex",
+      "exists_both": true,
+      "equal": true
+    }
+  ],
+  "imported_cache_not_equal": [],
+  "built-root_cargo_lock_sha256": "775fbb33a4576fe84c076ce9a023187be58d0944d953e820695574adfe132214",
+  "unused-measure_cargo_lock_sha256": "ab69d6e4185c7b2845952f347b425af1c08c6c3aebece113298e10e2f8c2bde3",
+  "interpretation": {
+    "tracked_runtime_source_differences": 0,
+    "generated_uid_files_differ": 183,
+    "import_metadata_files_differ_only_uid": 471,
+    "compiled_import_resource_pairs_byte_equal": 471,
+    "unused_measure_cargo_lock_differs": true,
+    "loaded_bridge_copied_from_built_root": "30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042",
+    "full_manifest_equality": false,
+    "measurement_checkout_rebuilt": false
+  }
+}

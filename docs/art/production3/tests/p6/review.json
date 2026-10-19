@@ -1,0 +1,13 @@
+{
+  "gd_review": "no actionable findings; static review only",
+  "python_review": "frozen evidence rerun overwrite risk fixed with early refusal and regression",
+  "visual": "corrected d40 and winter night opened; required seasonframes opened earlier; ghost IDs removed",
+  "known_failures": [
+    "A5",
+    "A7",
+    "A11",
+    "A16 brief day40season"
+  ],
+  "rounds": 2,
+  "python_final_review": "No findings: early refusal precedes writes and inventory; independent frozen-file regression checks unchanged bytes and file set."
+}

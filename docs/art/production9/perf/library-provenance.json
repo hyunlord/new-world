@@ -1,0 +1,38 @@
+{
+  "recorded_at": "2026-10-15T09:40:44.335938+09:00",
+  "builds": [
+    {
+      "label": "baseline",
+      "checkout": "/Users/rexxa/work/art-p9-base",
+      "head": "49bc0b7c87159340b8024d6b9327bc394dc6daa0",
+      "library": "/Users/rexxa/work/art-p9-base/rust/target/debug/libsim_bridge.dylib",
+      "sha256": "8c5eda9e452bf2383b6a7dbe45411d6702248a19c5922d313894a033355aea2f",
+      "size": 12384736,
+      "build_profile": "dev debug unoptimized; no release substitution",
+      "archive": "/Users/rexxa/work/art-production9-evidence/libraries/baseline-8c5eda9e.dylib"
+    },
+    {
+      "label": "part1",
+      "checkout": "/Users/rexxa/work/new-world-art-prod",
+      "head": "2e16580e286c06f9cd0fa2cf5add95cd0c3228fb",
+      "library": "/Users/rexxa/work/new-world-art-prod/rust/target/debug/libsim_bridge.dylib",
+      "sha256": "69c336daf1d952bcb0ca40bf5faad3edf5f437611c000c4a4a7a1e6675a6239d",
+      "size": 12521344,
+      "build_profile": "dev debug unoptimized; no release substitution"
+    },
+    {
+      "label": "final-source-post-gate",
+      "checkout": "/Users/rexxa/work/new-world-art-prod",
+      "head": "46193a0301d335fc04dcfd6460e59cc0f1370d08",
+      "library": "/Users/rexxa/work/new-world-art-prod/rust/target/debug/libsim_bridge.dylib",
+      "sha256": "b2ba6ef135c366862b5d016357d42353c5feb2493f39e9150c059ca974bae706",
+      "size": 12521344,
+      "build_profile": "dev debug unoptimized + debuginfo; bridge.log confirms; no release substitution",
+      "archive": "/Users/rexxa/work/art-production9-evidence/libraries/after-final-gate-b2ba6ef.dylib",
+      "used_for": "final-post-gate identity, after W200 and A30; final gate runtime tests",
+      "source_binding": "../gates/final-source-manifest.json",
+      "limitation": "Same committed Rust source and profile as pre-gate after W0/W500/W1, but relinked bytes differ. Byte-difference cause not established. Earlier library hash and timings retained."
+    }
+  ],
+  "recorded_after_relink_at": "2026-10-15T15:10:49.772515+09:00"
+}

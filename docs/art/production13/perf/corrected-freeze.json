@@ -1,0 +1,16 @@
+{
+  "recorded_at_utc": "2026-10-19T04:22:27Z",
+  "runtime_commit": "1e0ff6b1bde5097510a23f525c3d420aae5675cb",
+  "remote_wip_confirmed": "1e0ff6b1bde5097510a23f525c3d420aae5675cb",
+  "remote_publish_unchanged": "57ae7ac40abde7d24369606c9250d3e06e0f18d6",
+  "historical_preliminary_freeze": "9050fa0b348dcc9b76eb50a5de138e9c3eaf0d42",
+  "reason": "Bounded post-freeze repair of stale scrollbar-page restoration exposed by actual48px headless layout tests; original band math and test criteria preserved.",
+  "focused_layout_p12": "PASS headless only",
+  "focused_layout_p13": "PASS headless only",
+  "full_repaired_gate": "TERMINAL exit1:118/120 pass; real-input p12/p13 refused75",
+  "final_display_matrix": "NOT_MEASURED",
+  "final_running_section_timers": "NOT_MEASURED",
+  "gui_input": "NOT_VERIFIED user prohibits windows",
+  "prior_measurements_reattributed": false,
+  "final_gate_results": "../gates/final/results.tsv"
+}

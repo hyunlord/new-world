@@ -1,0 +1,72 @@
+{
+  "captures": [
+    {
+      "entities": "baseline_t0_F1.entities.json.gz",
+      "file": "baseline_t0_F1.png",
+      "framing": "F1",
+      "height": 1080,
+      "tick": 0,
+      "tile_x": 32.0,
+      "tile_y": 32.0,
+      "time_of_day": 8.0,
+      "width": 1920,
+      "zoom": 1.0,
+      "raw_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t0_F1.png",
+      "raw_sha256": "87549c96489fa8482c3b332e8fbaae4dfb272d9253e8b33a2f5ea48989177dcd",
+      "standard_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t0_F1.1920.png",
+      "published_file": "baseline_t0_F1.jpg"
+    },
+    {
+      "entities": "baseline_t0_F2.entities.json.gz",
+      "file": "baseline_t0_F2.png",
+      "framing": "F2",
+      "height": 1080,
+      "tick": 0,
+      "tile_x": 32.0,
+      "tile_y": 32.0,
+      "time_of_day": 8.0,
+      "width": 1920,
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t0_F2.png",
+      "raw_sha256": "ff81beb0f5d72385a95eb8234a4833bcb8a88231affdf2deaf5b91e03214d09f",
+      "standard_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t0_F2.1920.png",
+      "published_file": "baseline_t0_F2.jpg"
+    },
+    {
+      "entities": "baseline_t1440_F1.entities.json.gz",
+      "file": "baseline_t1440_F1.png",
+      "framing": "F1",
+      "height": 1080,
+      "tick": 1440,
+      "tile_x": 32.0,
+      "tile_y": 32.0,
+      "time_of_day": 8.0,
+      "width": 1920,
+      "zoom": 1.0,
+      "raw_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t1440_F1.png",
+      "raw_sha256": "704cbfe7c154ef58cd1d998c62853833ab0457dd4cec1b95788089884d78ec30",
+      "standard_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t1440_F1.1920.png",
+      "published_file": "baseline_t1440_F1.jpg"
+    },
+    {
+      "entities": "baseline_t1440_F2.entities.json.gz",
+      "file": "baseline_t1440_F2.png",
+      "framing": "F2",
+      "height": 1080,
+      "tick": 1440,
+      "tile_x": 23.0,
+      "tile_y": 18.0,
+      "time_of_day": 8.0,
+      "width": 1920,
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t1440_F2.png",
+      "raw_sha256": "3227f660346e7ee7f2d06bcb4e57294b46d54f734ce97d1765ecfb38c89469a5",
+      "standard_file": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production3/p2/shots/baseline/baseline_t1440_F2.1920.png",
+      "published_file": "baseline_t1440_F2.jpg"
+    }
+  ],
+  "git_sha": "fa21393fdcd3d8810e5354e5d0b2136d5edaef67",
+  "plan": "baseline",
+  "schema_version": 2,
+  "worktree_changed_paths": 8
+}

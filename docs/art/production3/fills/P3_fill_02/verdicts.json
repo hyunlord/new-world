@@ -1,0 +1,15 @@
+{
+  "candidates_sha256": "1047f8174dc99129e08e662af6dbe054b1c88c847e0451dfa5c4a5a560fa5cb0",
+  "round": 1,
+  "candidate_fingerprints": {},
+  "verdicts": [],
+  "review_sources_sha256": {
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/review.json": "483057ba3f6ce9871298625b87c0cd7baf54788f5f5c1efa0b185332a964f2c9"
+  },
+  "prereview_bindings_sha256": {
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/review_index.json": "600d414db00ed27b4532aff56200f9e20711c8b54b059a66811b067a54f1b6fe",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/candidates.json": "1047f8174dc99129e08e662af6dbe054b1c88c847e0451dfa5c4a5a560fa5cb0",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/boards/adult_b_01.png": "f4fc386c97c8f56234dd9c38014636948eb2d520003fd84945a943a65f34698c",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_02/boards/adult_b_02.png": "fd86ed8682cd59ed87a228eeb5fdf6d2c2e2b165a2edd20f19dd30abcd9fa825"
+  }
+}

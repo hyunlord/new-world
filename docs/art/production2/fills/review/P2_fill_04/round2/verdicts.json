@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "round": 2,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "candidates_sha256": "1e5a77a1f91314c436bead9cdfbd35eb4b8284ff2879b1a1420a80e643e9db2a",
+  "preview_sha256": "04a1e2fac79e69bef5edfbab79b77a49b59eefc0f59927605844f44f90fe2b97",
+  "source_parts": {
+    "docs/art/production2/fills/review/P2_fill_04/round2/verdicts_reviewer.json": "01225df560d64d2f94647b8e72acca3a3a4cdb8b809dd2f716ba2a4230cd4d35"
+  },
+  "references": {
+    "adult_a": "V_a1_01@1",
+    "adult_b": "V_b1_01@2",
+    "child": "V_c1_01@1"
+  },
+  "previews": {
+    "P2_fill_04_01": "P2_fill_04_01@1",
+    "P2_fill_04_02": "P2_fill_04_02@1",
+    "P2_fill_04_03": "P2_fill_04_03@1",
+    "P2_fill_04_04": "P2_fill_04_04@1",
+    "P2_fill_04_05": "P2_fill_04_05@1",
+    "P2_fill_04_06": "P2_fill_04_06@1",
+    "P2_fill_04_07": "P2_fill_04_07@1",
+    "P2_fill_04_08": "P2_fill_04_08@1",
+    "P2_fill_04_09": "P2_fill_04_09@1",
+    "P2_fill_04_10": "P2_fill_04_10@1",
+    "P2_fill_04_11": "P2_fill_04_11@1",
+    "P2_fill_04_12": "P2_fill_04_12@1",
+    "P2_fill_04_13": "P2_fill_04_13@1",
+    "P2_fill_04_14": "P2_fill_04_14@1",
+    "P2_fill_04_15": "P2_fill_04_15@1",
+    "P2_fill_04_16": "P2_fill_04_16@1"
+  },
+  "candidate_fingerprints": {
+    "P2_fill_04_01": "af7350382ef028b8b02411543ca914e1946612e9115f5441b45e150cfb35f901",
+    "P2_fill_04_02": "7fd17dbf709bbcdb9fe57b0ff3ed31750e87fa8367722fe8cb4210e27bba400e",
+    "P2_fill_04_03": "2cbc79e7f5f4c14e482063dc427e100a7bbcc18c2042914e25f78529a7719882",
+    "P2_fill_04_04": "580ccd2861985f403e70c8a6d15b8f0d541a84675a9536697859299a6b1b3855",
+    "P2_fill_04_05": "9c86af508589d3cc97bbd42cdce7da2c281bc70716a26309f277a1f421c62781",
+    "P2_fill_04_06": "72b507ff0458021afad8bf1d43e6adc8ffecfb43fd4bbb4bd63fab1025a0dcf6",
+    "P2_fill_04_07": "1795d7521ea7c0caba9967480bedb40bcb4b67d2c97b160b2e12b9d345ca05b2",
+    "P2_fill_04_08": "6673f667d6743041d70401356d6465cd90ede62b54ba6e022da355958e1e5f06",
+    "P2_fill_04_09": "a2bc0dccbbf01001f46424cce95ada594720a708ce84689d81d36d3233d38156",
+    "P2_fill_04_10": "e60c581d0444b45852a0f64d031675b4be4a5c7cfef9cf35a710aa03a0f24d5f",
+    "P2_fill_04_11": "8f9c0ec1af08c4abbfd5941d3d75a620bfebc2bff6bca070dd4f71dd13d8054f",
+    "P2_fill_04_12": "c6651b782461984a30bda18ff44f7cc0808a095d21c9db3a8aee6b1c9fec9b38",
+    "P2_fill_04_13": "ff1f5a2124fda464d29ce275e47c6d9865a89c19cf11c741c9f8ffd4f5e88fae",
+    "P2_fill_04_14": "1010c9d92f4d0d08f991a808c9a28b43d8bd3aec351fbc874d62ad3ecd0f304d",
+    "P2_fill_04_15": "23ae6e1de39947cc191a70977195e27b6d11e8b3570001d696a5db14689d6daa",
+    "P2_fill_04_16": "d4090ff4c5e24e3a49b433820e2a52c9b5c01ebd66d0ecb63239cf052d873952"
+  },
+  "rendered_fingerprints": {
+    "P2_fill_04_01": "094793b117f4242906af935093f305a38430f5a78556fb08d70cc2f57f7183f2",
+    "P2_fill_04_02": "2054befc6bb071daa4b6482f2f047cf383efe664e8189531121fc68086ecf446",
+    "P2_fill_04_03": "15786eb2d8736b9c34f41aa32294dfc223dcfd891d7a25ee8849a9f511b3677b",
+    "P2_fill_04_04": "d222b8a598ddef37750233a801fc925745b16182b9f7063940f2efd9a87569e5",
+    "P2_fill_04_05": "03d107776f1413633a6f672c37733805d9ee73a125dd01371f5ccf91444ab8ea",
+    "P2_fill_04_06": "bb45613d9dbb4f4b0c7bbe63c133638fd288ab44a10d28fddf9914afbc2dcddd",
+    "P2_fill_04_07": "262220ff23e20104287dd9d613a4a1527e97e68b10672537cc04f40d908bab00",
+    "P2_fill_04_08": "20d0af233f0e201f0760f131725c9658ac37340c318bec6e07555fd0a076cd0e",
+    "P2_fill_04_09": "34ea87751adae4673ceceacb1414b7399ddb059bba00f92e4d1becbad394b547",
+    "P2_fill_04_10": "a67b52c900038e81ed704b9415aa848318a5c282ac4616ba6d1b0e2cb52e9f7f",
+    "P2_fill_04_11": "f12ae1c1f106e8f262d1535146d356485f26a74528d8a79fba585dd380c6a751",
+    "P2_fill_04_12": "4d350e7476b7e9f1d3f4f4ba41a83a0124f0193f044449697f973fb0e1782f34",
+    "P2_fill_04_13": "5cc64b8d0c303919b9ce317d0384e09c840aae0cda1415b80206cd09e5a704b6",
+    "P2_fill_04_14": "05059bd3ceba0615d1c9f345acc3d3dc56efedf64feee4bc2e5636def54cbde6",
+    "P2_fill_04_15": "67cb6a94ec9e8b089b8314221df323066f0b8b5f2beb0635cbd41e3cd40affd6",
+    "P2_fill_04_16": "d4c3395349a58df8978cf4e43feebf95161e44f621af9ee17ddb1039eb77cafc"
+  },
+  "review_images_sha256": {
+    "P2_fill_04.png": "60139f5b7a86319d1c14cb1b03a302f12a38f2958d1a06c24aafdade06911658",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previous_round_sha256": "fb39bfd2ad345f3afcee59987654293173907f469c64adea26de9e237b33dcac",
+  "expected_slots": [
+    "P2_fill_04_01",
+    "P2_fill_04_02",
+    "P2_fill_04_03",
+    "P2_fill_04_04",
+    "P2_fill_04_05",
+    "P2_fill_04_06",
+    "P2_fill_04_07",
+    "P2_fill_04_08",
+    "P2_fill_04_09",
+    "P2_fill_04_10",
+    "P2_fill_04_11",
+    "P2_fill_04_12",
+    "P2_fill_04_13",
+    "P2_fill_04_14",
+    "P2_fill_04_15",
+    "P2_fill_04_16"
+  ],
+  "verdicts": [
+    {
+      "sprite_id": "P2_fill_04_01",
+      "candidate_id": "P2_fill_04_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing basket carry retains the reference profile; the corrected map separates the basket body as magenta other from the supporting arms.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_02",
+      "candidate_id": "P2_fill_04_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing carry step remains coherent; the basket wall is now mapped as other rather than skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_03",
+      "candidate_id": "P2_fill_04_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing extended carry step retains the reference hair and clothing, and the corrected map distinctly identifies the basket body.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_04",
+      "candidate_id": "P2_fill_04_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing carry remains readable, with the basket now separated from the hands by its other-object region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_05",
+      "candidate_id": "P2_fill_04_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing walking carry has bent arms and a visible load edge beyond the shoulder; reference hair, build and hide outfit remain coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_06",
+      "candidate_id": "P2_fill_04_06@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "North-facing carry remains readable, but the isolated blue texel still sits outside the left lower garment edge in the fitted sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_07",
+      "candidate_id": "P2_fill_04_07@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "East-facing gathering reach remains recognizable, but blue stray texels still protrude along the face contour and behind the rear heel.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_08",
+      "candidate_id": "P2_fill_04_08@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing crouched reach toward the berry bush reads as gathering; anatomy, reference identity and principal map regions remain coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_09",
+      "candidate_id": "P2_fill_04_09@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing overhead tool action reads as building; corrected magenta regions now identify the rock and raised tool separately from clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_10",
+      "candidate_id": "P2_fill_04_10@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing downward tool action remains readable; the rock is now a coherent magenta other-object region rather than green clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_11",
+      "candidate_id": "P2_fill_04_11@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing raised-tool building pose retains reference identity, and the tool head is now correctly separated as magenta other.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_12",
+      "candidate_id": "P2_fill_04_12@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "North-facing downward build action and corrected rock map are legible, but isolated blue texels remain along the base beneath the feet and rock.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_13",
+      "candidate_id": "P2_fill_04_13@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing kneeling pose brings a small blue vessel beside the head; the back hair silhouette, hide outfit and principal map regions remain consistent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_14",
+      "candidate_id": "P2_fill_04_14@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing kneeling figure raises both arms toward the mouth; the occluded drinking gesture, anatomy and reference identity remain plausible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_15",
+      "candidate_id": "P2_fill_04_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing open-hand gesture reads as talking; hair, build, hide garment and principal map regions remain consistent with the reference.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_16",
+      "candidate_id": "P2_fill_04_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing extended-hand conversational gesture is coherent and retains the reference hair/build, with recognizable skin, hair and garment map regions.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

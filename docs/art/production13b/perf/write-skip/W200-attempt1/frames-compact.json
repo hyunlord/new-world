@@ -1,0 +1,433 @@
+{
+  "build_commit": "8c1b18be8b05bfeaa062a937526fe4d9c2f53414",
+  "build_profile": "release",
+  "build_sha256": "7c4144a3ab6633568c9a17e565c8634c7b074afa7d43b80034fd0e45e5e2c73b",
+  "change_id": "write-skip",
+  "contended": false,
+  "errors": [],
+  "final": {
+    "alive_count": 1,
+    "camera": [
+      1016.0,
+      500.0
+    ],
+    "population": 200,
+    "selected_id": -1,
+    "simulation_frozen": false,
+    "tick": 1732,
+    "zoom": [
+      4.0,
+      4.0
+    ]
+  },
+  "initial": {
+    "alive_count": 1,
+    "camera": [
+      1016.0,
+      500.0
+    ],
+    "population": 200,
+    "selected_id": -1,
+    "simulation_frozen": false,
+    "tick": 1440,
+    "zoom": [
+      4.0,
+      4.0
+    ]
+  },
+  "kernel_enabled": true,
+  "metric": "process_ms + render_cpu_ms",
+  "release_sha256": "7c4144a3ab6633568c9a17e565c8634c7b074afa7d43b80034fd0e45e5e2c73b",
+  "restoration": {
+    "camera_process_restored": true,
+    "layers_restored": true,
+    "probes_removed": true,
+    "render_measure_restored_to": false,
+    "vsync_restored": true
+  },
+  "schema_version": 1,
+  "simulation_speed": 2.0,
+  "valid": true,
+  "world": "W200",
+  "blocks": [
+    {
+      "camera_process_frozen": true,
+      "end_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1732,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "fresh_setup": true,
+      "index": 0,
+      "max_fps": 60,
+      "mode": "control",
+      "population_end": 200,
+      "population_flagged": false,
+      "population_start": 200,
+      "start_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1440,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "switch_state": {
+        "candidate_enabled": false,
+        "change_id": "write-skip",
+        "forced": 0,
+        "hits": 0,
+        "kernel_enabled": true,
+        "misses": 0
+      },
+      "switch_state_after": {
+        "candidate_enabled": false,
+        "change_id": "write-skip",
+        "forced": 0,
+        "hits": 0,
+        "kernel_enabled": true,
+        "misses": 0
+      },
+      "vsync_disabled": true,
+      "window_size": [
+        1920,
+        1080
+      ],
+      "sample_count": 150,
+      "discarded_count": 30
+    },
+    {
+      "camera_process_frozen": true,
+      "end_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1735,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "fresh_setup": true,
+      "index": 1,
+      "max_fps": 60,
+      "mode": "candidate",
+      "population_end": 200,
+      "population_flagged": false,
+      "population_start": 200,
+      "start_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1440,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "switch_state": {
+        "candidate_enabled": true,
+        "change_id": "write-skip",
+        "forced": 0,
+        "hits": 0,
+        "kernel_enabled": true,
+        "misses": 0
+      },
+      "switch_state_after": {
+        "candidate_enabled": true,
+        "change_id": "write-skip",
+        "forced": 200,
+        "hits": 21625,
+        "kernel_enabled": true,
+        "misses": 14375
+      },
+      "vsync_disabled": true,
+      "window_size": [
+        1920,
+        1080
+      ],
+      "sample_count": 150,
+      "discarded_count": 30
+    },
+    {
+      "camera_process_frozen": true,
+      "end_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1736,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "fresh_setup": true,
+      "index": 2,
+      "max_fps": 60,
+      "mode": "control",
+      "population_end": 200,
+      "population_flagged": false,
+      "population_start": 200,
+      "start_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1440,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "switch_state": {
+        "candidate_enabled": false,
+        "change_id": "write-skip",
+        "forced": 400,
+        "hits": 21699,
+        "kernel_enabled": true,
+        "misses": 14701
+      },
+      "switch_state_after": {
+        "candidate_enabled": false,
+        "change_id": "write-skip",
+        "forced": 400,
+        "hits": 21699,
+        "kernel_enabled": true,
+        "misses": 14701
+      },
+      "vsync_disabled": true,
+      "window_size": [
+        1920,
+        1080
+      ],
+      "sample_count": 150,
+      "discarded_count": 30
+    },
+    {
+      "camera_process_frozen": true,
+      "end_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1734,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "fresh_setup": true,
+      "index": 3,
+      "max_fps": 60,
+      "mode": "candidate",
+      "population_end": 200,
+      "population_flagged": false,
+      "population_start": 200,
+      "start_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1440,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "switch_state": {
+        "candidate_enabled": true,
+        "change_id": "write-skip",
+        "forced": 400,
+        "hits": 21699,
+        "kernel_enabled": true,
+        "misses": 14701
+      },
+      "switch_state_after": {
+        "candidate_enabled": true,
+        "change_id": "write-skip",
+        "forced": 600,
+        "hits": 43219,
+        "kernel_enabled": true,
+        "misses": 29181
+      },
+      "vsync_disabled": true,
+      "window_size": [
+        1920,
+        1080
+      ],
+      "sample_count": 150,
+      "discarded_count": 30
+    },
+    {
+      "camera_process_frozen": true,
+      "end_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1733,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "fresh_setup": true,
+      "index": 4,
+      "max_fps": 60,
+      "mode": "control",
+      "population_end": 200,
+      "population_flagged": false,
+      "population_start": 200,
+      "start_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1440,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "switch_state": {
+        "candidate_enabled": false,
+        "change_id": "write-skip",
+        "forced": 800,
+        "hits": 43293,
+        "kernel_enabled": true,
+        "misses": 29507
+      },
+      "switch_state_after": {
+        "candidate_enabled": false,
+        "change_id": "write-skip",
+        "forced": 800,
+        "hits": 43293,
+        "kernel_enabled": true,
+        "misses": 29507
+      },
+      "vsync_disabled": true,
+      "window_size": [
+        1920,
+        1080
+      ],
+      "sample_count": 150,
+      "discarded_count": 30
+    },
+    {
+      "camera_process_frozen": true,
+      "end_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1732,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "fresh_setup": true,
+      "index": 5,
+      "max_fps": 60,
+      "mode": "candidate",
+      "population_end": 200,
+      "population_flagged": false,
+      "population_start": 200,
+      "start_state": {
+        "alive_count": 1,
+        "camera": [
+          1016.0,
+          500.0
+        ],
+        "population": 200,
+        "selected_id": -1,
+        "simulation_frozen": false,
+        "tick": 1440,
+        "zoom": [
+          4.0,
+          4.0
+        ]
+      },
+      "switch_state": {
+        "candidate_enabled": true,
+        "change_id": "write-skip",
+        "forced": 800,
+        "hits": 43293,
+        "kernel_enabled": true,
+        "misses": 29507
+      },
+      "switch_state_after": {
+        "candidate_enabled": true,
+        "change_id": "write-skip",
+        "forced": 1000,
+        "hits": 64818,
+        "kernel_enabled": true,
+        "misses": 43982
+      },
+      "vsync_disabled": true,
+      "window_size": [
+        1920,
+        1080
+      ],
+      "sample_count": 150,
+      "discarded_count": 30
+    }
+  ],
+  "source_sha256": "d943a33f14291881fb4e2abffa28b0af0fa2b10bf1bc11165f380999ad8877e8"
+}

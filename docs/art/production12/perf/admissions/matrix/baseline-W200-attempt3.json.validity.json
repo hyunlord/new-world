@@ -1,0 +1,21 @@
+{
+  "start": {
+    "epoch": 1792319459.544872,
+    "load_1m": 5.27197265625,
+    "ps": "  PID  %CPU COMM\n77138  96.9 /Users/rexxa/github/make-meme/.venv/bin/python3\n19091  93.7 /Users/rexxa/github/make-meme/.venv/bin/python3\n10481  91.9 node\n  399  31.9 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n10531  30.5 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n10565  20.3 node\n  604  20.2 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores\n10583  18.2 node\n80055  17.9 /usr/libexec/sysmond\n  573  17.0 osascript\n10578  16.0 node\n10574  14.2 node\n10582  14.0 node\n 8167  12.8 /usr/libexec/trustd\n",
+    "owned_pids": [
+      10832
+    ]
+  },
+  "end": {
+    "epoch": 1792319459.5825548,
+    "load_1m": 5.27197265625,
+    "ps": "  PID  %CPU COMM\n77138  96.9 /Users/rexxa/github/make-meme/.venv/bin/python3\n19091  93.7 /Users/rexxa/github/make-meme/.venv/bin/python3\n10481  91.9 node\n  399  31.9 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n10531  30.5 /opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex\n10565  20.3 node\n  604  20.2 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Support/mds_stores\n10583  18.2 node\n80055  17.9 /usr/libexec/sysmond\n  573  17.0 osascript\n10578  16.0 node\n10574  14.2 node\n10582  14.0 node\n 8167  12.8 /usr/libexec/trustd\n",
+    "owned_pids": [
+      10832
+    ]
+  },
+  "exit_code": 75,
+  "valid": false,
+  "verdict": "NOT_VERIFIED (contended or unsuccessful)"
+}
