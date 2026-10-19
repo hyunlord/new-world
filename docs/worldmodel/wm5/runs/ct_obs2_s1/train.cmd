@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset obs2_v19 --seed 1 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s1

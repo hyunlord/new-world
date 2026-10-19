@@ -133,3 +133,6 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   paper no longer calls the floor a ceiling that no state-blind predictor can beat. m5: the reviewer's two extra checks
   (419 / 419 `pre_r0` = round-1 episode; rows ≤ c and 1,152 truths in 24 test families) are cited in DATASET_OBS2.md.
   The judge field `cases_floor` is renamed `floor_predictions_all_replicates` (N7).
+- **L0.7 Second pause.** The Mac slept (lid closed) 2026-10-19 17:58:33–19:40:59 KST (6,146 s); the DGX continued
+  (`ct_obs2_s1` ended and was evaluated, `m1b_obs2_s1` started 18:08:56). Every training had started before the
+  deadline, so the pause changes no decision; it is recorded for the time per Part.
