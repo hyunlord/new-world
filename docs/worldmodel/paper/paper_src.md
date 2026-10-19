@@ -147,7 +147,7 @@ so far, and the policy continues reading from the row after its last act — unt
 policy on a world's final (observed) episode reproduces every round's decisions, so the propensity of every decision row
 is known. Every val / test world has two **reference rows**: c1 (its first act, or day 30) and c2 (its second act, or
 c1 + 14 days). For each, a `pre` schedule (the world's acts before c) and three act schedules (`pre` plus the act at c)
-are recorded as a family forked at c; test families have two replicates. {{sec:obs2_counts}}
+are recorded as a family forked at c; test families have two replicates. Realized ({{p5:all/worlds#0}} worlds): {{p5:all/casts#0}} acts, {{p5:all/casts_per_world_mean#2}} per world, {{p5:all/never_share#pct1}} of worlds never acted, and {{p5:all/share_with_earlier_cast#pct1}} of acts had an earlier act in the world's history. The confounding is the obs split's: in the low-food tercile {{p5:by_f_tercile/0/arm_shares/gf240#pct1}} of acts are gifts and {{p5:by_f_tercile/0/arm_shares/sp240#pct1}} spoils; in the high-food tercile {{p5:by_f_tercile/2/arm_shares/gf240#pct1}} gifts and {{p5:by_f_tercile/2/arm_shares/sp240#pct1}} spoils. With several acts per world the multi-act IPW has effective sample sizes of {{j5:describe/pooled/sp240/7d/ess_treated#0}}–{{j5:describe/pooled/rw120/7d/ess_treated#0}} treated units per act at 7 days and {{j5:describe/pooled/sp240/30d/ess_treated#0}}–{{j5:describe/pooled/rw120/30d/ess_treated#0}} at 30 days (obs: {{j4:obs/estimates/counts/gf240/7d/ess_treated#0}}–{{j4:obs/estimates/counts/sp240/7d/ess_treated#0}}). Test: {{j5:obs2/worlds#0}} worlds, {{j5:obs2/cases#0}} primary cases (two reference rows × three acts, replicate 0) and their replicate-1 twins for the floor.
 
 ### 3.4 The effect floor and the headroom ladder
 
@@ -367,9 +367,7 @@ lr 1e-3, batch 64; decoder hidden 64 (the encoder's BR), BR 64, FC 32, dropout 0
 reversal α_max 1. CT d_model 128, 2 layers, 4 heads, BR 64, FC 128, dropout 0.1, lr 1e-3, batch 128 (doubled by the
 masked-covariate copy), domain confusion α_max 0.01, EMA β 0.99, relative positions (max 15). Adam, no weight decay,
 no clipping. Budgets: CRN 5,400 s per run (both stages), CT 14,400 s, M1b 16,200 s (8,000 steps); safety cap 1.25 ×
-budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations (1.89 and
-1.83 s per step, which would have cut the plan to 62–65 %); the third, without them, measured 0.91 s per step and
-kept the authors' plan.
+budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations ({{j5:cost_checks/aborted:_cost_ct_obs2_contaminated/stages/ct/s_per_step#2}} and {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated_2/stages/ct/s_per_step#2}} s per step, which would have cut the plan to {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated/plan/planned/ct#0}} and {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated_2/plan/planned/ct#0}} steps); the third, without them, measured {{j5:cost_checks/_cost_ct_obs2/stages/ct/s_per_step#2}} s per step and kept the authors' plan. CT-v2: {{j5:cost_checks/_cost_ct_v2/stages/ct/s_per_step#2}} s per step; CRN-v2: {{j5:cost_checks/_cost_crn_v2/stages/crn_enc/s_per_step#3}} / {{j5:cost_checks/_cost_crn_v2/stages/crn_dec/s_per_step#3}} s per encoder / decoder step; CRN-obs2: {{j5:cost_checks/_cost_crn_obs2/stages/crn_enc/s_per_step#3}} / {{j5:cost_checks/_cost_crn_obs2/stages/crn_dec/s_per_step#3}}. No plan was reduced.
 
 | run | planned steps | reached | α / α_max at the last step | lowest-`val_roll` step | seconds |
 |---|---|---|---|---|---|

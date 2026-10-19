@@ -405,9 +405,22 @@ def build(runs: Path) -> dict:
             "factual_obs2": factual_block(runs), "describe": load(runs / "describe" / "describe.json")}
 
 
+def cost_block(runs: Path) -> dict:
+    """Every cost check (GOAL.md 9.1), including the two CT-obs2 measurements taken beside our own evaluations
+    (`_aborted/`, DECISIONS L4.4)."""
+    out = {}
+    paths = sorted(runs.glob("_cost_*/cost.json")) + sorted(runs.glob("_aborted/_cost_*/cost.json"))
+    for p in paths:
+        cst = load(p)
+        name = p.parent.name if p.parent.parent == runs else "aborted:" + p.parent.name
+        out[name] = {"stages": cst["stages"], "plan": cst["plan"], "peak_gpu_mib": cst.get("peak_gpu_mib")}
+    return out
+
+
 def build_all(runs: Path) -> dict:
     j = build(runs)
     j["main_table"] = main_table(j)
+    j["cost_checks"] = cost_block(runs)
     return j
 
 
