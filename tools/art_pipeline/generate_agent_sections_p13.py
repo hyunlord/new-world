@@ -94,10 +94,31 @@ def inject(body: str, markers: tuple[tuple[str, str], ...]) -> str:
 
 
 
+def write_skip_markers(source: str, markers: tuple[tuple[str, str], ...]) -> tuple[tuple[str, str], ...]:
+    """Recognize the reviewed guard; hits never execute miss-only checkpoints."""
+    if '\t\tvar skip_writes_p13:' not in source:
+        return markers
+    guarded = list(markers)
+    variant = guarded.index(('\t\tSpriteLibrary.apply_variant(', 'variant'))
+    guarded[variant:variant + 1] = [
+        ('\t\tvar write_key_p13:', 'other'),
+        ('\t\tif not skip_writes_p13:', 'other'),
+        ('\t\t\tif sprite_id.is_empty():', 'frame_choice'),
+        ('\t\t\tSpriteLibrary.apply_variant(', 'variant'),
+    ]
+    guarded[guarded.index(('\t\tsprite.flip_h =', 'meta'))] = ('\t\t\tsprite.flip_h =', 'meta')
+    children = guarded.index(('\t\tCarryLoad.apply(', 'children'))
+    guarded[children:children + 1] = [
+        ('\t\t\tCarryLoad.apply(', 'children'),
+        ('\t\tif _activity_oracle_enabled:', 'other'),
+    ]
+    return tuple(guarded)
+
+
 def process_markers(source: str) -> tuple[tuple[str, str], ...]:
     """Use reviewed anchors for tick-cache and daily-activity renderer shapes."""
     if '\tvar cache_tick: bool =' not in source:
-        return PROCESS
+        return write_skip_markers(source, PROCESS)
     markers = list(PROCESS)
     markers.remove(('\tvar time:', 'reads'))
     markers.remove(('\tvar tick:', 'other'))
@@ -115,7 +136,7 @@ def process_markers(source: str) -> tuple[tuple[str, str], ...]:
         ]
         body = markers.index(('\t\tvar body:', 'look')) + 1
         markers[body:body] = [('\t\tif daily_active and not bool(moments["pickup"]):', 'pose')]
-    return tuple(markers)
+    return write_skip_markers(source, tuple(markers))
 
 
 def generate(source: str) -> str:

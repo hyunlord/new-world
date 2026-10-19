@@ -105,6 +105,8 @@ func _run() -> void:
 	var render_counts: Array[Dictionary] = []
 	var candidate_evidence: Dictionary = {}
 	var candidate_states: Array[Dictionary] = []
+	var write_skip_evidence: Dictionary = {}
+	var write_skip_states: Array[Dictionary] = []
 	for index: int in capture_frames:
 		if advance_every > 0 and index % advance_every == 0:
 			if int(ReadRoute.mutate(_world, "advance_ticks", [1])) != int(spec[1]) + advance_calls + 1:
@@ -119,6 +121,11 @@ func _run() -> void:
 		if not bool(candidate_evidence["valid"]):
 			_fail("declump candidate state mismatch: " + JSON.stringify(candidate_evidence))
 			return
+		write_skip_evidence = _write_skip_evidence_p13(candidate_evidence)
+		if not bool(write_skip_evidence["valid"]):
+			_fail("write-skip candidate state mismatch: " + JSON.stringify(write_skip_evidence))
+			return
+		write_skip_states.append(write_skip_evidence)
 		candidate_states.append(candidate_evidence)
 		var time: Dictionary = _reads.call("time_snapshot")
 		var expected_tick: int = int(spec[1]) + advance_calls
@@ -135,6 +142,7 @@ func _run() -> void:
 	file.close()
 	var manifest: Dictionary = {
 		"perf_candidate_p12": candidate_evidence, "candidate_states": candidate_states,
+		"perf_candidate_p13": write_skip_evidence, "write_skip_states": write_skip_states,
 		"world": label, "seed": spec[0], "start_tick": spec[1], "end_tick": ticks.back(),
 		"frames": capture_frames, "fixed_fps": 60, "advance_every_frames": advance_every,
 		"mutation_route": "SimReads", "advance_calls": advance_calls, "process_frames": process_frames,
@@ -227,7 +235,7 @@ func _fail(message: String) -> void:
 
 
 func _candidate_evidence_p12() -> Dictionary:
-	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
 	var renderer: Node = _main.get_node_or_null("AgentRenderer")
 	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p12")
 	var actual: Dictionary = {}
@@ -239,3 +247,20 @@ func _candidate_evidence_p12() -> Dictionary:
 	if available:
 		valid = actual.get("change_id") == "declump-kernel" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested
 	return {"requested_kernel": requested, "method_available": available, "actual": actual, "valid": valid}
+
+
+func _write_skip_evidence_p13(kernel: Dictionary) -> Dictionary:
+	var requested: bool = OS.get_environment("P13_WRITE_SKIP") == "1"
+	var requested_kernel: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
+	var renderer: Node = _main.get_node_or_null("AgentRenderer")
+	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p13")
+	var actual: Dictionary = {}
+	if available:
+		var observed: Variant = renderer.call("get_perf_candidate_p13")
+		if observed is Dictionary:
+			actual = observed
+	var valid: bool = not requested and not available
+	if available:
+		var kernel_actual: Dictionary = kernel.get("actual", {})
+		valid = actual.get("change_id") == "write-skip" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested and actual.get("kernel_enabled") is bool and actual.get("kernel_enabled") == requested_kernel and kernel.get("method_available") == true and kernel.get("valid") == true and kernel_actual.get("candidate_enabled") == requested_kernel
+	return {"requested_write_skip": requested, "requested_kernel": requested_kernel, "method_available": available, "actual": actual, "valid": valid}

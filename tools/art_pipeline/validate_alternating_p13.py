@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 import summarize_perf_p13 as perf
+from compare_running_identity_p13 import write_skip_stamp_errors
 
 Record = dict[str, perf.Json]
 
@@ -48,6 +49,10 @@ def validate(folder: Path) -> Record:
         raise perf.EvidenceError("World/candidate launch mismatch")
     if data.get("valid") is not True or data.get("errors") != [] or data.get("metric") != "process_ms + render_cpu_ms":
         raise perf.EvidenceError("Invalid measurement or metric")
+    fixed_kernel = launch.get("kernel_enabled")
+    if data.get("change_id") == "write-skip":
+        if type(fixed_kernel) is not bool or data.get("kernel_enabled") is not fixed_kernel:
+            raise perf.EvidenceError("Missing or inconsistent explicit kernel baseline")
     initial = perf.mapping(data["initial"])
     speed = 2 if data["world"] == "W200" else 0
     if (speed == 0 and data.get("final") != initial) or initial.get("zoom") != [4, 4] or data.get("simulation_speed") != speed or initial.get("simulation_frozen") is not False:
@@ -68,6 +73,8 @@ def validate(folder: Path) -> Record:
         switch = perf.mapping(block.get("switch_state", {}))
         if block.get("index") != index or block.get("mode") != mode or switch.get("candidate_enabled") is not enabled or switch.get("change_id") != data["change_id"]:
             raise perf.EvidenceError("Control/candidate order or switch readback mismatch")
+        if data["change_id"] == "write-skip" and switch.get("kernel_enabled") is not fixed_kernel:
+            raise perf.EvidenceError("Block switch changed accepted kernel baseline")
         samples, discarded = perf.sequence(block.get("samples")), perf.sequence(block.get("discarded"))
         if len(samples) != 150 or len(discarded) != 30:
             raise perf.EvidenceError("Requires 30 discarded and 150 counted frames per block")
@@ -78,6 +85,11 @@ def validate(folder: Path) -> Record:
         previous_tick = perf.number(initial["tick"])
         for raw in [*discarded, *samples]:
             row = perf.mapping(raw)
+            if data["change_id"] == "write-skip":
+                assert isinstance(fixed_kernel, bool)
+                stamp_errors = write_skip_stamp_errors(row.get("perf_candidate_p13"), row.get("perf_candidate_p12"), enabled, fixed_kernel)
+                if stamp_errors:
+                    raise perf.EvidenceError("Per-frame write-skip/kernel readback: " + "; ".join(stamp_errors))
             frame = perf.number(row.get("process_frame"))
             if (speed == 0 and row.get("state") != initial) or row.get("paired") is not True or frame <= last_frame or (speed == 0 and row.get("ticks_run") != 0):
                 raise perf.EvidenceError("Frame pairing/order or frozen-world mismatch")

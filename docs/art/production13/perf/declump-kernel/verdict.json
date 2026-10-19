@@ -62,5 +62,6 @@
     "minimum_faster_pairs_per_world": 2
   },
   "default": "on; P12_DECLUMP_KERNEL=0 retains GDScript reference",
-  "accepted_reference_recapture": "PENDING"
+  "accepted_reference_recapture": "PASS: six exact RGBA controls and 2280 byte-exact running/pan frames; all kernel ON",
+  "accepted_commit": "6e01bb2997bb00b4441277ebd92d79e2ad2ce76a"
 }

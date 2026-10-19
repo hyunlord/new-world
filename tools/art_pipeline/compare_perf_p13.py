@@ -76,6 +76,17 @@ def verdict(before: list[perf.Json], after: list[perf.Json], median_limit: float
 
 
 def identity_verdict(payload: Record) -> Record:
+    if payload.get("scope") != "candidate_validation":
+        return {"status": "NOT_VERIFIED", "reason": "Requires candidate validation; reference integrity is not candidate acceptance"}
+    if payload.get("candidate") not in ("declump-kernel", "write-skip"):
+        return {"status": "NOT_VERIFIED", "reason": "Missing or unsupported identity candidate"}
+    if payload.get("candidate") == "write-skip" and payload.get("kernel_state") not in ("on", "off"):
+        return {"status": "NOT_VERIFIED", "reason": "Write-skip requires explicit accepted kernel state"}
+    if type(payload.get("passed")) is not bool or not isinstance(payload.get("errors"), list):
+        return {"status": "NOT_VERIFIED", "reason": "Missing or malformed candidate verdict"}
+    if payload["passed"] is not True or payload["errors"] != []:
+        return {"status": "FAIL", "reason": "Candidate identity collector/comparator rejected evidence",
+                "candidate": payload["candidate"], "errors": payload["errors"]}
     rows = [perf.mapping(row) for row in perf.sequence(payload.get("framings", []))]
     if len(rows) != 6 or {str(row.get("framing")) for row in rows} != {f"P{i}" for i in range(1, 7)}:
         return {"status": "NOT_VERIFIED", "reason": "Requires all six identity framings"}
@@ -125,6 +136,18 @@ def combined(rows: list[Record]) -> str:
 
 
 def running_verdict(payload: Record) -> Record:
+    candidate = payload.get("candidate")
+    kernel_state = payload.get("kernel_state")
+    if payload.get("scope") != "candidate_validation" or candidate not in ("declump-kernel", "write-skip"):
+        return {"status": "NOT_VERIFIED", "reason": "Requires named running candidate validation"}
+    if type(payload.get("valid")) is not bool:
+        return {"status": "NOT_VERIFIED", "reason": "Missing running candidate verdict"}
+    if payload["valid"] is not True or payload.get("status") != "PASS":
+        return {"status": "FAIL", "reason": "Running candidate comparator rejected evidence"}
+    if kernel_state not in (None, "on", "off") or (candidate == "write-skip" and kernel_state is None):
+        return {"status": "NOT_VERIFIED", "reason": "Write-skip requires explicit accepted kernel state"}
+    assert isinstance(candidate, str)
+    assert kernel_state is None or isinstance(kernel_state, str)
     rows = [perf.mapping(row) for row in perf.sequence(payload.get("worlds", []))]
     if len(rows) != len(running_identity.WORLDS) or {row.get("world") for row in rows} != {spec[0] for spec in running_identity.WORLDS}:
         return {"status": "NOT_VERIFIED", "reason": "Requires W0, W200 and W-multi running dumps plus both W500 pans"}
@@ -137,7 +160,7 @@ def running_verdict(payload: Record) -> Record:
         paths = [Path(str(row[key])) for key in ("base_dump", "candidate_dump")]
         if any(path.name != f"{world}.jsonl" or not path.with_suffix(".json").is_file() for path in paths):
             return {"status": "NOT_VERIFIED", "reason": "Running metadata absent or nonstandard dump name"}
-        result = running_identity.compare_world(paths[0].parent, paths[1].parent, spec)
+        result = running_identity.compare_world(paths[0].parent, paths[1].parent, spec, candidate, kernel_state)
         checked.append(dict(perf.mapping(json.loads(json.dumps(result)))))
     return {"status": combined(checked), "worlds": checked}
 

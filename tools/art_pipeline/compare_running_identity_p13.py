@@ -13,6 +13,8 @@ import json
 from pathlib import Path
 from typing import Final, TypedDict
 
+from summarize_perf_p13 import Json
+
 WORLDS: Final = (("W0", 40560, 20261010), ("W200", 1440, 15100), ("W-multi", 90840, 19603), ("W500_FROZEN", 1440, 15100), ("W500_2X", 1440, 15100))
 SCHEDULE_FIELDS: Final = (
     "world", "seed", "start_tick", "end_tick", "frames", "fixed_fps",
@@ -39,6 +41,8 @@ class WorldResult(TypedDict):
 
 
 class Report(TypedDict):
+    candidate: str | None
+    kernel_state: str | None
     scope: str
     valid: bool
     status: str
@@ -47,7 +51,7 @@ class Report(TypedDict):
 
 def identity_scope(candidate: str | None) -> str:
     """Keep reference reproduction distinct from validation of a named change."""
-    if candidate not in (None, "declump-kernel"):
+    if candidate not in (None, "declump-kernel", "write-skip"):
         raise ValueError(f"Unsupported candidate: {candidate}")
     return "candidate_validation" if candidate else "reference_integrity_only"
 
@@ -71,10 +75,42 @@ def kernel_stamp_errors(stamp: object, enabled: bool) -> list[str]:
     return errors
 
 
+def expected_kernel(candidate: str | None, kernel_state: str | None) -> bool | None:
+    """Write-skip must name its accepted kernel baseline explicitly."""
+    if kernel_state not in (None, "on", "off"):
+        raise ValueError("kernel-state must be on or off")
+    if candidate == "write-skip" and kernel_state is None:
+        raise ValueError("write-skip requires --kernel-state on|off")
+    return None if kernel_state is None else kernel_state == "on"
+
+
+def write_skip_stamp_errors(stamp: Json, kernel_stamp: Json,
+                           enabled: bool, kernel_enabled: bool) -> list[str]:
+    """Check independent candidate and fixed-kernel readbacks without coercion."""
+    errors = kernel_stamp_errors(kernel_stamp, kernel_enabled)
+    if not isinstance(stamp, dict):
+        return [*errors, "missing or malformed perf_candidate_p13 stamp"]
+    if stamp.get("requested_write_skip") is not enabled:
+        errors.append(f"requested_write_skip must be {enabled}")
+    if stamp.get("requested_kernel") is not kernel_enabled:
+        errors.append(f"requested_kernel must remain {kernel_enabled}")
+    if stamp.get("method_available") is not True or stamp.get("valid") is not True:
+        errors.append("write-skip readback unavailable or invalid")
+    actual = stamp.get("actual")
+    if not isinstance(actual, dict):
+        errors.append("missing write-skip actual readback")
+    elif (actual.get("change_id") != "write-skip"
+          or actual.get("candidate_enabled") is not enabled
+          or actual.get("kernel_enabled") is not kernel_enabled):
+        errors.append("write-skip actual candidate/kernel state mismatch")
+    return errors
+
+
 def compare_world(base: Path, current: Path, spec: tuple[str, int, int],
-                  candidate: str | None = None) -> WorldResult:
+                  candidate: str | None = None, kernel_state: str | None = None) -> WorldResult:
     """Require full frame/tick schedules, nonempty agent rows and byte equality."""
     scope = identity_scope(candidate)
+    fixed_kernel = expected_kernel(candidate, kernel_state)
     label, start_tick, seed = spec
     pan = label.startswith("W500")
     frozen = label == "W500_FROZEN"
@@ -100,15 +136,31 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int],
             continue
         if candidate:
             enabled = capture_index == 1
+            if candidate == "write-skip":
+                assert isinstance(fixed_kernel, bool)
+            kernel_enabled = fixed_kernel if candidate == "write-skip" else enabled
+            assert isinstance(kernel_enabled, bool)
             errors.extend(f"{metadata_path}: {error}" for error in
-                          kernel_stamp_errors(metadata.get("perf_candidate_p12"), enabled))
+                          kernel_stamp_errors(metadata.get("perf_candidate_p12"), kernel_enabled))
             states = metadata.get("candidate_states")
             if not isinstance(states, list) or len(states) != frames:
                 errors.append(f"{metadata_path}: expected {frames} candidate frame stamps")
             if isinstance(states, list):
                 for index, stamp in enumerate(states):
                     errors.extend(f"{metadata_path}: frame {index + 1}: {error}" for error in
-                                  kernel_stamp_errors(stamp, enabled))
+                                  kernel_stamp_errors(stamp, kernel_enabled))
+            if candidate == "write-skip":
+                assert isinstance(fixed_kernel, bool)
+                errors.extend(f"{metadata_path}: {error}" for error in write_skip_stamp_errors(
+                    metadata.get("perf_candidate_p13"), metadata.get("perf_candidate_p12"), enabled, fixed_kernel))
+                skip_states = metadata.get("write_skip_states")
+                if not isinstance(skip_states, list) or len(skip_states) != frames:
+                    errors.append(f"{metadata_path}: expected {frames} write-skip frame stamps")
+                if isinstance(skip_states, list):
+                    for index, stamp in enumerate(skip_states):
+                        kernel_stamp = states[index] if isinstance(states, list) and index < len(states) else None
+                        errors.extend(f"{metadata_path}: frame {index + 1}: {error}" for error in
+                                      write_skip_stamp_errors(stamp, kernel_stamp, enabled, fixed_kernel))
         expected = {
             "world": label, "seed": seed, "start_tick": start_tick,
             "end_tick": start_tick + advances, "frames": frames, "fixed_fps": 60,
@@ -213,12 +265,13 @@ def compare_world(base: Path, current: Path, spec: tuple[str, int, int],
 
 
 def compare(base: Path, current: Path, include_multi: bool = True,
-            candidate: str | None = None) -> Report:
+            candidate: str | None = None, kernel_state: str | None = None) -> Report:
     """Compare both running worlds and both pan scenarios; missing evidence fails."""
     scope = identity_scope(candidate)
-    worlds = [compare_world(base, current, spec, candidate) for spec in WORLDS]
+    expected_kernel(candidate, kernel_state)
+    worlds = [compare_world(base, current, spec, candidate, kernel_state) for spec in WORLDS]
     valid = all(world["valid"] for world in worlds)
-    return {"scope": scope, "valid": valid, "status": "PASS" if valid else "FAIL", "worlds": worlds}
+    return {"scope": scope, "candidate": candidate, "kernel_state": kernel_state, "valid": valid, "status": "PASS" if valid else "FAIL", "worlds": worlds}
 
 
 def main() -> int:
@@ -228,9 +281,10 @@ def main() -> int:
     parser.add_argument("current", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--include-multi", action="store_true", help="Legacy option; all worlds are always required")
-    parser.add_argument("--candidate", choices=("declump-kernel",))
+    parser.add_argument("--candidate", choices=("declump-kernel", "write-skip"))
+    parser.add_argument("--kernel-state", choices=("on", "off"))
     args = parser.parse_args()
-    result = compare(args.base, args.current, True, args.candidate)
+    result = compare(args.base, args.current, True, args.candidate, args.kernel_state)
     output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")

@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "scope": "reference_integrity_only",
+  "candidate": null,
+  "kernel_state": null,
+  "passed": true,
+  "errors": [],
+  "framings": [
+    {
+      "framing": "P1",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "076d22bf7587b6901f51d4b2b9960b3ab62a3995cc72f8ca317965079dd3ec2e",
+        "076d22bf7587b6901f51d4b2b9960b3ab62a3995cc72f8ca317965079dd3ec2e",
+        "076d22bf7587b6901f51d4b2b9960b3ab62a3995cc72f8ca317965079dd3ec2e"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P2",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "a480eddfd9a7560fce67f637a411da737faa3dc43c999871bf7c40f84035a54e",
+        "a480eddfd9a7560fce67f637a411da737faa3dc43c999871bf7c40f84035a54e",
+        "a480eddfd9a7560fce67f637a411da737faa3dc43c999871bf7c40f84035a54e"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P3",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "61d1d30137821388066761009273bf47690d5518ca6cd9d90920edd9b4840c2c",
+        "61d1d30137821388066761009273bf47690d5518ca6cd9d90920edd9b4840c2c",
+        "61d1d30137821388066761009273bf47690d5518ca6cd9d90920edd9b4840c2c"
+      ],
+      "capture_frame": 121,
+      "state_change_frame": 1
+    },
+    {
+      "framing": "P4",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "49a8f4cad89819faf4c47c0dfbe7e89b88679e58e20a54ae729471e6c9bce69f",
+        "49a8f4cad89819faf4c47c0dfbe7e89b88679e58e20a54ae729471e6c9bce69f",
+        "49a8f4cad89819faf4c47c0dfbe7e89b88679e58e20a54ae729471e6c9bce69f"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P5",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+        "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38",
+        "439dc8420d24e72b763fc0048cb24909b6328bceb15aa2dc1482882408958a38"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    },
+    {
+      "framing": "P6",
+      "control": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "candidate": {
+        "pixels": 0,
+        "max_channel": 0
+      },
+      "bit_reproducible": true,
+      "passed": true,
+      "cause": "bit-reproducible",
+      "rgba_sha256": [
+        "06085db1405c96adf0226049783f3ff4ab7e14a343468dca6f0ebcaa98d95280",
+        "06085db1405c96adf0226049783f3ff4ab7e14a343468dca6f0ebcaa98d95280",
+        "06085db1405c96adf0226049783f3ff4ab7e14a343468dca6f0ebcaa98d95280"
+      ],
+      "capture_frame": 130,
+      "state_change_frame": 10
+    }
+  ]
+}

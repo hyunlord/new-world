@@ -7,7 +7,7 @@ Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live author
 | Part | Deliverable and verification | Status |
 |---|---|---|
 | 0 | Preserve original; merge Pass21; unchanged packed contract; tooling; 15-probe calibration; full gate; exact-clock references; release matrix and running diagnosis; commit/push | completed |
-| 1 | Kernel and conservative write-skip candidates; exact identities and valid alternating pairs; accept only original thresholds; commit/push | pending |
+| 1 | Kernel and conservative write-skip candidates; exact identities and valid alternating pairs; accept only original thresholds; commit/push | in progress |
 | 2 | Measured badge icons, tooltip if time, frozen two-stage fresh-reader tests and no-legend report; commit/push | pending |
 | 3 | All reachable name syllable glyph masks; fact/name split; input QA and capture-backed text fixes; commit/push | pending |
 | 4 | Freeze by hour9; complete release after matrix/timers; H1-H10 evidence verdicts; commit/push | pending |
@@ -32,3 +32,5 @@ Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live author
 - 03:00:31Z: first valid release baseline: W0 attempt2 passed pre/post calibrated admission and collector validation. Round2 continues all remaining matrix and diagnosis items; no aggregate or Part0 completion claimed.
 
 - 03:16:32Z: round2 envelope16928 terminal0; all9 individual admissions valid. Five-world matrix30blocks/9000frames independently audited. Three section timers/getter tables valid, including retained stale prose caveat. W200 ablation57blocks/8550frames, all21Main+6UIchildren, independently audited; full restoration verified. Required Part0 work complete; evidence prepared for commit/push. Optional Wmulti node ablation omitted in the prescribed drop order.
+
+- Part0 evidence93a344c75574139f69c7d130f147de4b4d7494d6 pushed; remoteWIPverified, artstill57ae7ac4. Part1started03:20Z: re-readsection5; kernelon6pixel+5running/panidentities then3alternatingpairsperW500/W200, sequentially. Defaultstilloff; noacceptanceclaim.

@@ -86,6 +86,38 @@ var _frame_choices = FrameChoices.new()
 var _frame_choices_ready: bool = false
 var _allocation_candidate: bool = true
 var _pose_output: Dictionary = {}
+var _write_skip_enabled_p13: bool = OS.get_environment("P13_WRITE_SKIP") == "1"
+var _write_keys_p13: Dictionary = {}
+var _write_hits_p13: int = 0
+var _write_misses_p13: int = 0
+var _write_forced_p13: int = 0
+
+func set_perf_candidate_p13(change_id: String, enabled: bool) -> bool:
+	if change_id != "write-skip":
+		return false
+	_write_skip_enabled_p13 = enabled
+	_invalidate_write_keys_p13()
+	return true
+
+func get_perf_candidate_p13() -> Dictionary:
+	return {"change_id": "write-skip", "candidate_enabled": _write_skip_enabled_p13,
+		"kernel_enabled": _declump_kernel_enabled_p12, "hits": _write_hits_p13,
+		"misses": _write_misses_p13, "forced": _write_forced_p13}
+
+func _invalidate_write_keys_p13() -> void:
+	_write_keys_p13.clear()
+
+func _on_write_locale_changed_p13(_language: String) -> void:
+	_invalidate_write_keys_p13()
+
+func _write_children_p13(agent_id: int, sprite: Sprite2D) -> Array:
+	var carry: Node = sprite.get_node_or_null("CarryLoad")
+	var founder: Node = sprite.get_node_or_null("FounderBundle")
+	var icon: Variant = _activity_icons.get(agent_id)
+	return [carry.get_instance_id() if is_instance_valid(carry) else 0,
+		founder.get_instance_id() if is_instance_valid(founder) else 0,
+		icon.get_instance_id() if is_instance_valid(icon) else 0]
+
 
 func set_perf_candidate_p12(change_id: String, enabled: bool) -> bool:
 	if change_id != "declump-kernel":
@@ -99,6 +131,7 @@ func get_perf_candidate_p12() -> Dictionary:
 func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
 	if change_id != "allocation-cache":
 		return false
+	_invalidate_write_keys_p13()
 	_camp_seats.set_input_cache_enabled(true)
 	_spatial_hash_enabled = true
 	_allocation_candidate = enabled
@@ -112,6 +145,9 @@ func get_perf_candidate_p10() -> Dictionary:
 	return {"change_id": "allocation-cache", "candidate_enabled": _allocation_candidate}
 
 func _ready() -> void:
+	var locale: Node = get_node_or_null("/root/Locale")
+	if locale != null:
+		locale.connect("language_changed", _on_write_locale_changed_p13)
 	_porter_lines = Porter.new()
 	_porter_lines.name = "PorterRoutes"
 	_porter_lines.z_index = 2
@@ -184,6 +220,11 @@ func _process(delta: float) -> void:
 	var tick: int = int(time.get("tick", 0))
 	ingest_chill_snapshot(snap, tick)
 	var hour: float = float(time.get("time_of_day", 12.0))
+	var selected_bits_p13: int = -1
+	if _write_skip_enabled_p13:
+		var inspector_p13: Node = get_node_or_null("../UI/AgentInspectorPanel")
+		if inspector_p13 != null:
+			selected_bits_p13 = int(inspector_p13.call("get_selected_entity_bits"))
 	var draw_agents: Array[Dictionary] = []
 	for i in n:
 		var agent_id: int = int(agent_ids[i])
@@ -261,46 +302,76 @@ func _process(delta: float) -> void:
 		if daily_active and not bool(moments["pickup"]) and not bool(moments["meal"]):
 			choice = _frame_choices.with_daily_icon(choice, daily_kind) if _allocation_candidate else Activity.with_daily_icon(choice, daily_kind)
 		var sprite_id: String = str(choice.get("sprite_id", ""))
-		if sprite_id.is_empty():
-			sprite.texture = null
-			sprite.set_meta("sprite_id", "")
-		elif str(sprite.get_meta("sprite_id", "")) != sprite_id:
-			SpriteLibrary.apply(sprite, sprite_id)
-		SpriteLibrary.apply_variant(sprite, look)
-		sprite.flip_h = facing == "W"
 		var sheltered_sleep: bool = Activity.hidden(activity, has_targets, tile)
-		sprite.set_meta("sheltered_sleep", sheltered_sleep)
-		sprite.visible = _capture_visible and not sheltered_sleep and not sprite_id.is_empty()
-		sprite.set_meta("p10_activity_schema", 1)
-		sprite.set_meta("activity_kind", daily_kind)
-		sprite.set_meta("activity_place_known", arrived)
-		sprite.set_meta("activity_overrides", overrides)
-		sprite.set_meta("activity_frame_view", str(choice.get("view", "")))
-		sprite.set_meta("activity_frame_activity", str(choice.get("activity", "")))
+		var write_key_p13: Array = []
+		var skip_writes_p13: bool = false
+		if _write_skip_enabled_p13:
+			# Only resolved property inputs are owned here; timers and borrowed decision rows stay live.
+			write_key_p13 = [agent_id, int(ids[i]), sprite.get_instance_id(), sprite_id,
+				str(choice.get("view", "")), str(choice.get("activity", "")),
+				str(choice.get("activity", pose)), str(choice.get("fallback_kind", "")),
+				str(choice.get("qa_status", "unavailable")), look["tone"], look["hair"], body,
+				sheltered_sleep, daily_kind, arrived, overrides.duplicate(), int(xs[i]), int(ys[i]),
+				activity, pose, base_pose, moving, facing, _capture_visible,
+				_capture_visible and not sheltered_sleep and not sprite_id.is_empty(),
+				(sprite.get_parent() as CanvasItem).is_visible_in_tree(),
+				pose if not porter.is_empty() else activity, sprite.z_index,
+				founders.has(agent_id), carried, wood, str(choice.get("activity_icon", "")),
+				_porter_lines.zoom, not porter.is_empty(), int(porter.get("kind", -1)),
+				int(porter.get("stage", -1)), _write_children_p13(agent_id, sprite)]
+			var forced_p13: bool = int(ids[i]) == selected_bits_p13 or not _write_keys_p13.has(agent_id)
+			skip_writes_p13 = not forced_p13 and _write_keys_p13[agent_id] == write_key_p13
+			if skip_writes_p13:
+				_write_hits_p13 += 1
+			else:
+				_write_misses_p13 += 1
+				if forced_p13:
+					_write_forced_p13 += 1
+		if not skip_writes_p13:
+			if sprite_id.is_empty():
+				sprite.texture = null
+				sprite.set_meta("sprite_id", "")
+			elif str(sprite.get_meta("sprite_id", "")) != sprite_id:
+				SpriteLibrary.apply(sprite, sprite_id)
+			SpriteLibrary.apply_variant(sprite, look)
+			sprite.flip_h = facing == "W"
+			sprite.set_meta("sheltered_sleep", sheltered_sleep)
+			sprite.visible = _capture_visible and not sheltered_sleep and not sprite_id.is_empty()
+			sprite.set_meta("p10_activity_schema", 1)
+			sprite.set_meta("activity_kind", daily_kind)
+			sprite.set_meta("activity_place_known", arrived)
+			sprite.set_meta("activity_overrides", overrides)
+			sprite.set_meta("activity_frame_view", str(choice.get("view", "")))
+			sprite.set_meta("activity_frame_activity", str(choice.get("activity", "")))
+
+			sprite.set_meta("entity_bits", int(ids[i]))
+			sprite.set_meta("body", body)
+			sprite.set_meta("variant", {"tone": look["tone"], "hair": look["hair"]})
+			sprite.set_meta("tile_x", int(xs[i]))
+			sprite.set_meta("tile_y", int(ys[i]))
+			sprite.set_meta("activity", activity)
+			sprite.set_meta("pose", pose)
+			sprite.set_meta("cold_pose", str(choice.get("activity", pose)))
+			sprite.set_meta("cold_base_pose", base_pose)
+			sprite.set_meta("moving", moving)
+			sprite.set_meta("facing", facing)
+			sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
+			sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
+			CarryLoad.apply(sprite, pose if not porter.is_empty() else activity)
+			CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
+			_update_activity_icon(agent_id, sprite, choice, porter)
+			if _write_skip_enabled_p13:
+				# Writes can create children; retain their resulting identities, not the pre-write set.
+				write_key_p13[-1] = _write_children_p13(agent_id, sprite)
+				_write_keys_p13[agent_id] = write_key_p13
 		if _activity_oracle_enabled:
 			sprite.set_meta("activity_oracle_inputs", {"schema": 1,
 				"animation_seconds": _animation_time, "previous_facing": previous_facing,
 				"movement": [movement.x, movement.y], "pickup": bool(moments["pickup"]), "meal": bool(moments["meal"]),
 				"morning_chill_alpha": _morning_chill.alpha(agent_id, tick), "capture_visible": _capture_visible,
 				"parent_visible_in_tree": (sprite.get_parent() as CanvasItem).is_visible_in_tree()})
-		sprite.set_meta("entity_bits", int(ids[i]))
 		if _selection_lookup_enabled:
 			_selection_index.observe(int(ids[i]), agent_id)
-		sprite.set_meta("body", body)
-		sprite.set_meta("variant", {"tone": look["tone"], "hair": look["hair"]})
-		sprite.set_meta("tile_x", int(xs[i]))
-		sprite.set_meta("tile_y", int(ys[i]))
-		sprite.set_meta("activity", activity)
-		sprite.set_meta("pose", pose)
-		sprite.set_meta("cold_pose", str(choice.get("activity", pose)))
-		sprite.set_meta("cold_base_pose", base_pose)
-		sprite.set_meta("moving", moving)
-		sprite.set_meta("facing", facing)
-		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
-		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
-		CarryLoad.apply(sprite, pose if not porter.is_empty() else activity)
-		CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
-		_update_activity_icon(agent_id, sprite, choice, porter)
 		if not porter.is_empty():
 			var destination: Vector2i = Porter.destination(porter, porter_settlements)
 			if destination.x >= 0:
@@ -326,6 +397,7 @@ func _process(delta: float) -> void:
 func _ensure_agent(agent_id: int) -> Sprite2D:
 	if _sprites.has(agent_id):
 		return _sprites[agent_id] as Sprite2D
+	_write_keys_p13.erase(agent_id)
 	var sprite: Sprite2D = _sprite_pool.pop_back() if not _sprite_pool.is_empty() else Sprite2D.new()
 	if sprite.get_parent() == null:
 		_objects.add_child(sprite)
@@ -373,6 +445,7 @@ func _retire_missing(live: Dictionary) -> void:
 		sprite.visible = false
 		_sprite_pool.append(sprite)
 		_sprites.erase(agent_id)
+		_write_keys_p13.erase(agent_id)
 		if _activity_icons.has(agent_id):
 			(_activity_icons[agent_id] as Sprite2D).queue_free()
 			_activity_icons.erase(agent_id)
@@ -392,6 +465,8 @@ func _retire_missing(live: Dictionary) -> void:
 			_cues.erase(agent_id)
 
 func set_capture_visible(shown: bool) -> void:
+	if shown != _capture_visible:
+		_invalidate_write_keys_p13()
 	_capture_visible = shown
 	_process(0.0)
 
@@ -413,6 +488,7 @@ func ingest_chill_snapshot(snapshot: Dictionary, tick: int) -> void:
 
 
 func refresh_snapshot() -> void:
+	_invalidate_write_keys_p13()
 	_prev_positions.clear()
 	_curr_positions.clear()
 	_snapshot_checksum = -1
@@ -422,6 +498,7 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
+	_invalidate_write_keys_p13()
 	if is_instance_valid(_porter_lines):
 		_porter_lines.routes.clear()
 		_porter_lines.queue_redraw()
@@ -560,6 +637,7 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 
 func _prepare_frame_choices() -> void:
 	if _frame_groups.is_empty():
+		_invalidate_write_keys_p13()
 		_frame_groups = Activity.build_frame_groups(SpriteLibrary.entries())
 	if _allocation_candidate and not _frame_choices_ready:
 		_frame_choices.configure(_frame_groups, SpriteLibrary.entries())
@@ -575,6 +653,8 @@ func _animation_frame(body: String, activity: String, facing: String, phase: flo
 	return str(frame_choice(body, activity, facing, phase).get("sprite_id", ""))
 
 func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary, porter: Dictionary = {}) -> void:
+	if _activity_icons.has(agent_id) and not is_instance_valid(_activity_icons[agent_id]):
+		_activity_icons.erase(agent_id)
 	var camera: Camera2D = get_node_or_null("../Camera2D") as Camera2D
 	var zoom: float = camera.zoom.x if camera != null else 1.0
 	var show_icon: bool = (not porter.is_empty() or Activity.show_activity_icon(choice, zoom)) and sprite.visible

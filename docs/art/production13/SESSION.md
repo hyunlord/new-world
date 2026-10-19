@@ -56,3 +56,13 @@ Wait69502 terminal0 at02:59:30Z; interval fully recorded. Round2 session16928 is
 ## Latest override: Part0 complete, 03:17Z
 
 Session16928 terminal0 at03:16:32Z. No live waiting, Godot, cargo or probe session. All9 attempt2 admissions and validatorspass. Independent read-only probe agent audited matrix30blocks9000frames and ablation57blocks8550frames; tool_copies wrote section-timers.md fromall3validcaptures. Rawbaseline external unchanged; manifest+sidecars now indocs. running-diagnosis.md andbaselineauditcomplete. Part0 readycommit/push with explicitdocs paths only; .gitignore/.ignore/attempts.lock remainunstaged. W500runningpopulationloss excluded. NextstartPart1 section5: kernel exactidentity +alternatingW500/W200, noacceptanceyet. Runtimeworktreesremain6d493fa8.
+
+## Latest override: Part1 kernel session45953 LIVE
+
+Part0commit93a344c75574139f69c7d130f147de4b4d7494d6 pushed andls-remoteconfirmed; artstill57ae7ac4. NoPart0runsremaining. External /Users/rexxa/work/art-production13-evidence/kernel/run-kernel.sh syntaxchecked andrunning session45953. Sequentially collects kernelon six/B, compareswithcorrectedA/Aprime using--candidate declump-kernel, collects kernelonrunning/pan5worlds, comparesexact+polarity, thenalternating3pairsperW500/W200 (pairs-WORLD-attempt1) withreleasebaseline6d. Eachcommandexit/logpreserved; runner-completed onlyenvelopeterminal, inspecteachactualresult. DoNOTstartcompetingGodot/cargo/probes orduplicatekernelrunner. No productchangesyet, defaultkernelstilloff. GoalPart1inprogress, Parts2–5pending.
+
+## Latest override: 03:35Z, accepted kernel reference
+
+Kernel ACCEPTED after exact six framings and 2280 running/pan frames, valid W500/W200 pooled ratios0.7962943016/0.9642023799, all3pairs faster each. Commit6e01bb2997bb00b4441277ebd92d79e2ad2ce76a makes only kernel default on and is pushed/remote verified. Base checkout now6e01bb29; measure remains6d493fa8. Owned session8101 runs external kernel/recapture-accepted.sh on base, explicit P12=1/P13_WRITE_SKIP=0; captures A/Aprime and running five worlds. Do not start competing Godot/cargo/probes until terminal.
+
+Root uncommitted write-skip candidate remains OFF. Runtime forced-case test attempt3 and kernel-default-on rerun passed; failed attempts1/2 preserved under external write-skip. Tool readback integration finished; root62 p13tests passed, fullPython session73957 pending. Probe agent independently reviews renderer boundary read-only. Next: verify accepted reference, GDS harness validation, commit candidate OFF and advance measure checkout; capture candidate/control with kernelON and measure three alternating pairs each W500/W200. No Part2 edits yet.

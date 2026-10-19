@@ -281,6 +281,10 @@ func _run() -> void:
 			return
 		_shot_elapsed_s = float(Time.get_ticks_usec() - _last_cast_usec) / 1000000.0 if _last_cast_usec > 0 else 0.0
 		var candidate_evidence: Dictionary = _candidate_evidence_p12()
+		var write_skip_evidence: Dictionary = _write_skip_evidence_p13(candidate_evidence)
+		if not bool(write_skip_evidence["valid"]):
+			_fail("write-skip candidate state mismatch: " + JSON.stringify(write_skip_evidence))
+			return
 		if not bool(candidate_evidence["valid"]):
 			_fail("declump candidate state mismatch: " + JSON.stringify(candidate_evidence))
 			return
@@ -307,12 +311,12 @@ func _run() -> void:
 			if identity_file == null:
 				_fail("cannot save P3 metadata")
 				return
-			identity_file.store_string(JSON.stringify({"perf_candidate_p12": candidate_evidence, "census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
+			identity_file.store_string(JSON.stringify({"perf_candidate_p12": candidate_evidence, "perf_candidate_p13": write_skip_evidence, "census": _identity_census(), "draw_clock": draw_evidence, "framing": "P3", "capture_frame": _identity_capture_frame, "state_change_frame": _identity_state_frame, "tick": target, "seed": _seed, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001}, "\t") + "\n")
 		if not _write_entities(stem, target, image.get_size()):
 			return
 		print("capture saved: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		_manifest.append({
-			"perf_candidate_p12": candidate_evidence,
+			"perf_candidate_p12": candidate_evidence, "perf_candidate_p13": write_skip_evidence,
 			"file": filename, "tick": target, "framing": framing,
 			"identity_p12": OS.get_environment("CAPTURE_IDENTITY_P13") == "1",
 			"identity_state_frame": _identity_state_frame, "identity_capture_frame": _identity_capture_frame,
@@ -1098,7 +1102,7 @@ func _identity_census() -> Dictionary:
 
 
 func _candidate_evidence_p12() -> Dictionary:
-	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") == "1"
+	var requested: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
 	var renderer: Node = _main.get_node_or_null("AgentRenderer")
 	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p12")
 	var actual: Dictionary = {}
@@ -1110,3 +1114,20 @@ func _candidate_evidence_p12() -> Dictionary:
 	if available:
 		valid = actual.get("change_id") == "declump-kernel" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested
 	return {"requested_kernel": requested, "method_available": available, "actual": actual, "valid": valid}
+
+
+func _write_skip_evidence_p13(kernel: Dictionary) -> Dictionary:
+	var requested: bool = OS.get_environment("P13_WRITE_SKIP") == "1"
+	var requested_kernel: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
+	var renderer: Node = _main.get_node_or_null("AgentRenderer")
+	var available: bool = renderer != null and renderer.has_method("get_perf_candidate_p13")
+	var actual: Dictionary = {}
+	if available:
+		var observed: Variant = renderer.call("get_perf_candidate_p13")
+		if observed is Dictionary:
+			actual = observed
+	var valid: bool = not requested and not available
+	if available:
+		var kernel_actual: Dictionary = kernel.get("actual", {})
+		valid = actual.get("change_id") == "write-skip" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == requested and actual.get("kernel_enabled") is bool and actual.get("kernel_enabled") == requested_kernel and kernel.get("method_available") == true and kernel.get("valid") == true and kernel_actual.get("candidate_enabled") == requested_kernel
+	return {"requested_write_skip": requested, "requested_kernel": requested_kernel, "method_available": available, "actual": actual, "valid": valid}

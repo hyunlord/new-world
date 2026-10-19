@@ -1,0 +1,7 @@
+framing	started_utc	finished_utc	exit_code	artifacts	log_errors	provenance
+P1	2026-10-19T03:34:17Z	2026-10-19T03:34:32Z	0	present	none	unchanged
+P2	2026-10-19T03:34:36Z	2026-10-19T03:34:51Z	0	present	none	unchanged
+P3	2026-10-19T03:34:55Z	2026-10-19T03:35:21Z	0	present	none	unchanged
+P4	2026-10-19T03:35:27Z	2026-10-19T03:36:16Z	0	present	none	unchanged
+P5	2026-10-19T03:36:20Z	2026-10-19T03:36:33Z	0	present	none	unchanged
+P6	2026-10-19T03:36:38Z	2026-10-19T03:36:53Z	0	present	none	unchanged
