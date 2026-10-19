@@ -25,3 +25,6 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 1 | 01:52 | 04:01:21 | probe chunks `probe_50300` … `probe_51500` at 8 workers (≈ 10–14 min each, every one DETERMINISM PASS; load average 10–41) |
 | 1 | 04:01:21 | 04:01:23 | merge (1,600 runs, every chunk determinism-checked); `timeline_p14.py`: line check 109,197 / 109,197, T_low 1,388 / 1,600 (0.868; WM-2 0.873), T_high 1,260, never depart 588; `schedules_p14.py`: 5,976 files, 424 (seed, arm) missing (212 worlds × the two `sp…L` arms) |
 | 1 | 04:01:23 | | families: one recorder call per world, 8 in parallel (no training queued) |
+| 1 | 04:01:23 | 07:53:13 | families: 1,600 per-world calls (8 in parallel; 13,910 s; 7,576 episodes, ≈ 1.8 s per episode; 0 failed; load average 4–25) |
+| 1 | 07:53:13 | 07:53:17 | link (1,600 worlds) and prefix check: 1,600 / 1,600 families OK (7,576 members); `record_v2x` done; data 6.7 GB episodes + 18 GB timeline |
+| 1 | 07:53:55 | 07:54:16 | `post_v2x.sh` (code `b7fad5bc`): manifest (7,576 episodes verified, sha256 `34ddda51…`), v2x features (2,988 rows of 5,976 cases, 14 s), describe (40 KS tests, smallest p 0.066, largest D 0.078); 48 queue lines appended |

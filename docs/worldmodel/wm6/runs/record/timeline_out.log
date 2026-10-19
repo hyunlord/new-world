@@ -1,0 +1,1 @@
+{"line_check": [109197, 109197], "count": {"T_low": 1388, "T_high": 1260, "T_eve": 1600, "seeds": 1600, "never_depart": 588, "low_after_first_departure": 111, "departures_cancelled": 0}, "share": {"T_low": 0.8675, "T_high": 0.7875, "T_eve": 1.0}, "max_s0_ratio": {"min": 1.0020833333333334, "median": 1.5807291666666667, "max": 1.8619402985074627, "n": 1390}}

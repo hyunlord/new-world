@@ -1,0 +1,1 @@
+{"kind": "v2x", "role": "train", "n_rows": 2988, "n_cases": 5976, "worlds": 1600, "arms_per_world": {"sp240L": 1388, "sp120L": 1388, "gf240E": 1600, "rw120E": 1600}, "seconds": 14.001540422439575, "code_commit": "b7fad5bc"}

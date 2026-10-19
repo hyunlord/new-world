@@ -1,5 +1,7 @@
 # WM-5: a fair rematch and a paper draft — CRN and CT on their authors' schedule, the multi-cast observational split obs2, and the headroom ladder
 
+Followed by docs/worldmodel/wm6/WM6.md (learning curves of nonlinear direct effect models).
+
 Run of `docs/worldmodel/wm5/GOAL.md` on `codex/worldmodel-2026-10-wip` (base `64d633ff`, WM-4 final). Pre-registration:
 `METRICS.md` part a (`2a97b4cd`, 2026-10-18 21:24:24 KST, before any round-1 episode of obs2) and part b (`6e9e88ed`,
 21:39:47 KST, before any test-role number of a WM-5 model or baseline). Every number below comes from

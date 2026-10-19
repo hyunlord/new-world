@@ -183,6 +183,38 @@ def describe(new_cases: list, old_cases: list) -> dict:
     return out
 
 
+def dataset_md(j: dict) -> str:
+    """The numbers part of DATASET_V2X.md from `describe.json` (tables only; the prose is written around them)."""
+    f = lambda x, d=2: "—" if x is None else f"{x:.{d}f}"
+    man, tl = j["manifest"], j["timeline"]
+    L = [f"Worlds {man['worlds']:,}, episodes {man['episode_count']:,} (every one verified); members per arm "
+         + ", ".join(f"`{k}` {v:,}" for k, v in sorted(man["members_per_arm"].items())) + ".", "",
+         "| members of a world | worlds |", "|---|---|"]
+    for k, v in sorted(man["member_patterns"].items(), key=lambda kv: -kv[1]):
+        L.append(f"| {k} | {v:,} |")
+    L += ["", f"Timeline: T_low for {tl['count']['T_low']:,} of {tl['count']['seeds']:,} worlds "
+          f"({100 * tl['share']['T_low']:.1f} %), T_high {tl['count']['T_high']:,}, never departing "
+          f"{tl['count']['never_depart']:,}; line check {tl['line_check'][0]:,} / {tl['line_check'][1]:,}.", "",
+          f"Cases (replicate 0): v2x {j['cases_new']:,}, WM-2's 400 train worlds {j['cases_wm2_r0']:,}.", "",
+          "| arm | outcome | lag | v2x mean (std) | v2x median [p10, p90] | WM-2 train mean (std) | KS D | p | n v2x / WM-2 |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for key, ks in j["ks"].items():
+        parts = key.split("|")
+        arm = parts[0]
+        if len(parts) == 3:
+            dn, do = j["distribution_new"][arm][f"{parts[1]}|{parts[2]}"], j["distribution_wm2"][arm][f"{parts[1]}|{parts[2]}"]
+            L.append(f"| {arm} | {parts[1]} | {parts[2]} | {f(dn['mean'])} ({f(dn['std'])}) | {f(dn['median'])} "
+                     f"[{f(dn['p10'])}, {f(dn['p90'])}] | {f(do['mean'])} ({f(do['std'])}) | {ks['D']:.3f} | {ks['p']:.3f} | "
+                     f"{ks['n_a']} / {ks['n_b']} |")
+        else:
+            L.append(f"| {arm} | {parts[1]} | — | | | | {ks['D']:.3f} | {ks['p']:.3f} | {ks['n_a']} / {ks['n_b']} |")
+    ksum = j["ks_summary"]
+    L += ["", f"KS summary: {ksum['tests']} tests, smallest p {ksum['min_p']:.4f}, {ksum['below_0.05']} below 0.05 "
+          f"(≈ {0.05 * ksum['tests']:.1f} expected by chance), {ksum['below_bonferroni']} below the Bonferroni level "
+          f"{ksum['bonferroni_0.05']:.5f}; largest D {ksum['max_D']:.3f}."]
+    return "\n".join(L) + "\n"
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -211,6 +243,7 @@ def main(argv=None) -> int:
             "cases_new": len(new), "cases_wm2_r0": len(old), "seconds": time.time() - t0}
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         Path(a.out).write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
+        Path(a.out).with_suffix(".md").write_text(dataset_md(out))
         print(json.dumps(out["ks_summary"]))
         return 0
     if a.cmd == "merge-timeline":

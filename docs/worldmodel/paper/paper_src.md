@@ -553,7 +553,9 @@ error. Created by [AUTHORS]; funding [OWNER].
 39 global and 14 per-settlement columns plus hidden tables (marked) and the list of interventions. Three splits:
 v2 (560 worlds; families of the no-act member and four arms, two replicates each; 5,316 family episodes plus 560
 `game_v16` control episodes and noise-floor families), obs (560 worlds; 2,219 episodes), obs2 (1,640 worlds; round
-episodes of a sequential policy and two families per val / test world; 7,080 episodes in its manifest). Instances are synthetic worlds; there are no
+episodes of a sequential policy and two families per val / test world; 7,080 episodes in its manifest), and **v2x**
+({{d6:manifest/worlds#0}} further train worlds of v2's design with one replicate; {{d6:manifest/episode_count#0}}
+episodes, every one verified, used only to train the learning-curve models of Section 5.4). Instances are synthetic worlds; there are no
 people, no personal or sensitive data and no labels beyond what the simulator records. Roles (train / val / test) are
 fixed by seed ranges. Hidden columns must not be model inputs; they are kept for diagnostics.
 
