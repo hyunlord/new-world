@@ -20,3 +20,6 @@ Retry ledger: no checks yet executed. Every target invocation including debug co
 - WIP9c023aea pushed and ls-remote verified; publish57ae7ac4 unchanged.
 - Next: finish baseline gate; retain every failure for Part1 (three-strike ledger). Populate/import identity worktree using verified bridge; six A/Aprime and full running/pan references. Finish Part0 and push before font/candidate changes.
 - Environment recipe: /Users/rexxa/work/art-production13b-evidence/environment.sh. No new performance session launched yet; admission waiting remains0.
+- Identity bridge actual optimized-dev build started in base worktree, session49711; log builds/base-dev.log in external evidence. Independent of main gate target directory; no performance measurement overlaps either build.
+- Historical H10 seed19603/t122400 reconciliation located and provenance recorded in H10-SOURCES.md; current-build reproduction is still required.
+- Screen-reading protocol preregistered in BLIND-PROTOCOL.md before any new captures/readers.
