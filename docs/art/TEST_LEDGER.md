@@ -607,3 +607,12 @@ Each row is one changed assertion. Hearth arguments are hoisted once per refresh
 | Test | Change | Preserved meaning | Evidence |
 |---|---|---|---|
 | harness_art_p9_sim_reads::every_game_test_capture_and_transitive_support_script_routes_world_reads | Add scripts/test/art/capture_framings_p12.gd to the exact capture helper paths | All helper calls still pass safe_counter_dispatch's literal UI node/method validation; WorldSim and unresolved calls remain rejected | production12/gates/p0/cargo_test.log records missing-path failure; targeted rerun recorded under production12/gates/p0-repin |
+
+## Art Pass 13
+
+| Test | Change | Preserved meaning | Evidence |
+|---|---|---|---|
+| `harness_p14_epsilon_activity_trails.rs` / scene resource count | Exact load_steps 23 → 24 | Existing scene checks retained; also require the exact ActivityTooltipP13 script resource and UI node binding with mouse_filter=2 | `production13/gates/final-attempt2/cargo_test.log` retains the old-count failure; optimized full workspace rerun pending |
+| `harness_p14_zeta_zoom_adaptive.rs` / scene resource count | Exact load_steps 23 → 24 | Same one-resource addition, exact tooltip resource and node binding checks; prior node checks retained | Same final-attempt2 source state; optimized full workspace rerun pending |
+| `harness_show_agent_needs_bars.rs` / scene resource count | Exact external-resource count 22 → 23 | Exact tooltip resource and node binding checks added; load_steps=count+1 and existing bindings retained | Full workspace rerun pending; no simulation code or expected simulation outcome changed |
+| `harness_show_death_visual.rs` / scene resource count | Exact external-resource count 22 → 23 | Exact tooltip resource and node binding checks added; load_steps=count+1 and existing bindings retained | Full workspace rerun pending; no simulation code or expected simulation outcome changed |

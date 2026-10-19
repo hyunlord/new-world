@@ -1,0 +1,8 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+NAME_COLLISIONS lang=en ids=500 excess=5 share=0.01 unique=495
+NAME_COLLISIONS lang=en ids=10000 excess=1889 share=0.1889 unique=8111
+NAME_COLLISIONS lang=ko ids=500 excess=5 share=0.01 unique=495
+NAME_COLLISIONS lang=ko ids=10000 excess=1889 share=0.1889 unique=8111
+PERSON_NAMES_P11 failures=0

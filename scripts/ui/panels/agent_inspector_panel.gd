@@ -208,11 +208,15 @@ func _align_readable_edges() -> void:
 	if is_equal_approx(_edge_padding.custom_minimum_size.y, padding):
 		return
 	_edge_padding.custom_minimum_size.y = ceilf(padding)
-	_restore_scroll_edge.call_deferred(at_top)
+	# Wait for the resized scroll container to update its scrollbar page.
+	# A plain deferred restore still clamps against the previous page size.
+	_scroll.resized.connect(_restore_scroll_edge.bind(at_top), CONNECT_ONE_SHOT | CONNECT_DEFERRED)
 
 
 func _restore_scroll_edge(at_top: bool) -> void:
-	_scroll.scroll_vertical = 0 if at_top else int(_scroll.get_v_scroll_bar().max_value)
+	_scroll.queue_sort()
+	await _scroll.sort_children
+	_scroll.set_deferred("scroll_vertical", 0 if at_top else int(_scroll.get_v_scroll_bar().max_value))
 
 
 func _text_line_bands(node: Node) -> Array[Vector2]:

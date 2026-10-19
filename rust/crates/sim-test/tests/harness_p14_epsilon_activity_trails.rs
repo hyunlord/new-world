@@ -492,12 +492,14 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 23, "Art Pass 11: twenty-two external resources plus the main scene; got {n}");
+    assert_eq!(n, 24, "Art Pass 13: twenty-three external resources plus the main scene; got {n}");
+    assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/ui/person_activity_tooltip_p13.gd\" id=\"23_activity_tooltip\"]"));
+    assert!(src.contains("[node name=\"ActivityTooltipP13\" type=\"Control\" parent=\"UI\"]\nmouse_filter = 2\nscript = ExtResource(\"23_activity_tooltip\")"));
     assert!(src.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
     assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
     assert!(src.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
     assert!(src.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
-    println!("[P14-ε A12] load_steps = 23 (Art Pass 11 ChroniclePanel added) ✓");
+    println!("[P14-ε A12] load_steps = 24 (Art Pass 13 activity tooltip added) ✓");
 }
 
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
