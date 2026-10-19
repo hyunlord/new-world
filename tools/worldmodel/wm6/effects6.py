@@ -181,10 +181,18 @@ class Part:
     seq: np.ndarray
     seqh: np.ndarray
     meta: dict
+    _pos: dict | None = dataclasses.field(default=None, repr=False)
 
 
 def row_key(x) -> str:
     return f"{x.seed}:{x.rep}:{x.cast_row}"
+
+
+def positions(p: Part) -> dict:
+    """{row key: index} of a part, built once."""
+    if p._pos is None:
+        p._pos = {k: i for i, k in enumerate(p.keys)}
+    return p._pos
 
 
 def build_part(root: Path, kind: str, cases: list, role: str) -> Part:
@@ -258,8 +266,7 @@ def gather(parts: list[Part], cases: list, feat: str, stds: dict, with_seq: bool
     xs, ss = [], []
     for x in cases:
         for p in parts:
-            pos = p.meta.setdefault("_pos", {k: i for i, k in enumerate(p.keys)})
-            i = pos.get(row_key(x))
+            i = positions(p).get(row_key(x))
             if i is not None:
                 break
         else:
@@ -496,8 +503,7 @@ def feature_dict(parts: list[Part], cases: list, feat: str) -> dict:
     out = {}
     for x in cases:
         for p in parts:
-            pos = p.meta.setdefault("_pos", {k: i for i, k in enumerate(p.keys)})
-            i = pos.get(row_key(x))
+            i = positions(p).get(row_key(x))
             if i is not None:
                 out[x.key] = np.concatenate([p.obs[i], p.priv[i]]) if feat == "priv" else p.obs[i]
                 break
@@ -717,7 +723,7 @@ def cmd_evaluate(a) -> int:
 def gather_any(part: Part, cases: list, feat: str, stds: dict, seq: bool) -> Data:
     """`gather` for evaluation: every case (any arm; non-W3 rows predicted and then set to 0) of one part."""
     xs, ss = [], []
-    pos = {k: i for i, k in enumerate(part.keys)}
+    pos = positions(part)
     for x in cases:
         i = pos[row_key(x)]
         xs.append(np.concatenate([part.obs[i], part.priv[i]]) if feat == "priv" else part.obs[i])

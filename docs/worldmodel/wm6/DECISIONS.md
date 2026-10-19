@@ -26,3 +26,56 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 - **L0.6 Recorder `WORLDSIM_GIT_SHA`.** WM-2's `record_v2.sh` set `26b9af1f…`; GOAL.md 1 fixes
   `f5373ab2b7679c4a0d3a5c86b256971c86f93d41` for WM-6 recordings (as WM-5's obs2). The recorder binary is the same
   (sha256 above), so only the metadata string differs; the v2x manifest checks it against `f5373ab2…`.
+
+## Part 1
+- **L1.1 One recorder call per world.** GOAL.md 6.1.2's single call (`--seeds 50000..51600 --workers 8`) cannot change
+  its worker count when a training starts (GOAL.md 0.3.7: 8 workers with no training, 4 beside one). The families are
+  therefore recorded with one call per world (`--seeds s..s+1 --workers 1`, every other flag as GOAL.md 6.1.2), up to 8
+  (no training) or 4 (a training running) in parallel, the cap re-read before every launch (`launch/record_v2x.sh`).
+  Such a call reproduces WM-2's members bit for bit: a smoke test recorded seed 40000 this way with `--replicates 1`
+  and `WM-2`'s schedules (DGX, 00:41, scratch directory since removed); `global.npy` and `settlements.npy` of all five
+  members (`none`, `gf240E`, `sp240L`, `rw120E`, `sp120L`, replicate 0) equal WM-2's `v2/v19/flat/` files by sha256.
+  The recorder's output never depends on the worker count (WM-5 L1.1).
+- **L1.2 The timeline in chunks.** `worldsim_probe` runs in 16 chunks of 100 seeds (`--seeds a..a+100`, WM-2's clock
+  list, `--sample-every 60`, `--check-determinism`), each chunk's worker count chosen at its start by the same rule,
+  into `v2x/timeline/c<a>/`; `timeline_p14.py` reads only `scene` and `runs` of a summary, so `data6.py merge-timeline`
+  concatenates the chunks' `runs` (each chunk's seeds checked complete; every chunk determinism-checked) into
+  `v2x/timeline/summary.json`.
+- **L1.3 Recording ↔ training handshake.** The training queue (`launch/queue.sh`) touches `_setup/training.want`
+  before a run and waits until the recorder reports at most 4 running workers (`_record/rec.load`) or is not running;
+  the marker is removed when the queue has no pending line, so the recorder returns to 8 workers between training
+  phases. A probe chunk started at 8 workers finishes at 8 (≈ 15 min), which the queue waits for.
+
+## Part 2
+- **L2.1 The arms of the models.** The 24 target cells (GOAL.md 7.1) are the W3 arms' (`sp240L`, `gf240E`, `rw120E`)
+  × 4 outcomes × 2 lags, as WM-5's ridge (`e4.CELLS`). The neural and GBM models train on those arms' cases only, with
+  a 3-way arm one-hot; `sp120L` cases (recorded, as WM-2) are predicted 0 at evaluation (their cells are never scored).
+- **L2.2 The ridge keeps WM-5's code.** At every N `ridge_*` is `effects5.fit_cells` on the replicate-0 cases of the
+  nested worlds of every recorded arm (WM-5 passed every train case; `fit_cells`' feature normalization uses every
+  case, its fits only the cell's arm), λ per cell on all v2 val cases. The reproduction (`--repro`) passes WM-2's train
+  cases with both replicates, exactly WM-5's call.
+- **L2.3 Constant features.** Inputs are normalized by the training rows' mean / std; a feature whose training std is
+  0 (the earlier-cast terms, 0 on v2; a few calendar one-hots) is set to 0 after normalization, so it carries no weight,
+  as in the ridge (whose centered column is 0). This matters only for the obs2 transfer, where the earlier-cast terms
+  are not 0.
+- **L2.4 Window padding.** The GRU window is rows c − 167 … c (168 rows ending at the pre-act row c, whose state the
+  act does not yet change; `obs_features` reads the same rows). Every v2 cast row is >= 238 (the fork row), so no v2 window
+  is padded; obs2 reference rows can be 166 (day 8, 06:00), where rows before 0 repeat row 0 (obs2 transfer only).
+- **L2.5 The validation statistic.** Early stopping, the grid and every val choice use the v2 val 24-cell average (the
+  12-cell averages of both lags, averaged), on every val case of both replicates, with WM-2's scales (the scoring
+  scales; targets are the true effects divided by them, the same at every N).
+- **L2.6 The grid.** Done separately for `mlp_obs` and `mlp_priv` (seed 0, N = 400); `seq_obs` / `seq_priv` take their
+  feature set's choice for the head (GOAL.md 7.5). The grid runs are their own run directories (`grid_*`); the final
+  runs (`mlp_*_n<N>_s<k>`) are trained from scratch with the frozen choice, seed 0 included.
+- **L2.7 LightGBM** (7.4) in a separate venv `/home/hyunlord/work/wm6-gbm-venv` (created from the wm1 venv's
+  interpreter with `--system-site-packages`; a `.pth` file appends the wm1 venv's site-packages read-only, so numpy
+  2.5.2 and torch are the same), `pip install --no-deps` of `lightgbm-4.7.0` (wheel sha256 `d4529ace…695b8`), its
+  imports `scipy-1.18.1` (`3c085faa…12d89`) and `narwhals-2.27.1` (`d057df13…b31`); `wm1-venv` untouched. The native
+  API (`lightgbm.train`) is used (the sklearn wrapper needs scikit-learn). Early stopping after 50 rounds without
+  improvement of the val L1 of the cell (GOAL.md: "500 rounds with early stopping on val"), `deterministic`, 4 threads.
+- **L2.8 GRU unit test on the DGX** (gate): the planted-sequence test trains on the device `auto` (CUDA on the DGX),
+  because a 60-s CPU budget under other users' load (load average 55 on 20 cores at 00:59) gave too few epochs.
+
+## Part 3
+- **L3.1 Pre-registration before any training.** METRICS.md was committed and pushed at 00:59:27 (`f1777fb5`), before
+  the first WM-6 training and before any test feature or output exists; `wm6/_setup/prereg_sha` = `f1777fb5…`.

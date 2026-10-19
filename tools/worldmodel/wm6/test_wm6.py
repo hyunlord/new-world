@@ -188,7 +188,7 @@ class TestPlanted(unittest.TestCase):
             synthetic_prep(t, fx, fs, n_seq=6 if fs else 74)
             out = t / "run"
             rc = e6.main(["train", "--model", model, "--feat", "obs", "--n", "400", "--seed", "0", "--prep", str(t),
-                          "--base", str(t / "base.json"), "--max-seconds", str(max_seconds), "--device", "cpu",
+                          "--base", str(t / "base.json"), "--max-seconds", str(max_seconds), "--device", "auto",
                           "--out", str(out)])
             self.assertEqual(rc, 0)
             val = json.loads((out / "val_metrics.json").read_text())
@@ -232,6 +232,21 @@ class TestTimelineMerge(unittest.TestCase):
             (t / "c12" / "summary.json").write_text(json.dumps({"scene": "game_v19", "runs": [{"seed": 13}]}))
             with self.assertRaises(ValueError):
                 d6.merge_timeline(t, 10, 13, 2)
+
+
+class TestKS(unittest.TestCase):
+    def test_ks_statistic_and_p(self):
+        r = np.random.default_rng(0)
+        same = d6.ks_2samp(r.normal(size=400), r.normal(size=1600))
+        shifted = d6.ks_2samp(r.normal(size=400), r.normal(0.5, 1.0, size=1600))
+        self.assertGreater(same["p"], 0.05)
+        self.assertLess(shifted["p"], 1e-6)
+        self.assertAlmostEqual(d6.ks_2samp([0, 1, 2], [0, 1, 2])["D"], 0.0)
+        self.assertAlmostEqual(d6.ks_2samp([0, 0], [1, 1])["D"], 1.0)
+        # D by brute force over every threshold
+        a, b = r.integers(0, 4, 50), r.integers(0, 5, 70)
+        brute = max(abs(np.mean(a <= t) - np.mean(b <= t)) for t in np.concatenate([a, b]))
+        self.assertAlmostEqual(d6.ks_2samp(a, b)["D"], brute)
 
 
 @unittest.skipUnless(HAVE_V2 and BASE.exists(), "needs the recorded v2 data (DGX)")

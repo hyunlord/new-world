@@ -8,9 +8,16 @@ arms forked at tick 14,280), their manifest and their population check against W
   fork tick, path, rows, schema, git sha, casts, files with sha256), every episode verified (`wm_data.verify_episode`);
   wm6's own loader because `families_v2.build_manifest` asserts R = {0, 1}. Role `train` for every seed (GOAL.md 4.2).
 
+- `describe` (DATASET_V2X.md): counts, arms per world, the effect distribution per arm, outcome and lag on the new
+  worlds, and per cell the two-sample Kolmogorov–Smirnov statistic of the new worlds' true effects (replicate 0)
+  against WM-2's 400 train worlds' (replicate 0, `effects_base.json`), with its asymptotic p-value (Stephens'
+  approximation; ties in the integer outcomes make it conservative) — the new worlds are the same population; also
+  the cast rows of the `sp*L` arms and the split shifts.
+
 usage (DGX):
   data6.py merge-timeline --root DIR --lo 50000 --hi 51600 --chunk 100 --out SUMMARY.json
   data6.py manifest --root ROOT --git-sha SHA --out JSON
+  data6.py describe --prep DIR --base effects_base.json --manifest v2x_manifest.json --timeline timeline.json --out JSON
 """
 from __future__ import annotations
 
@@ -22,7 +29,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import numpy as np  # noqa: F401
+import numpy as np
 
 import wm6  # noqa: F401
 from wm_data import verify_episode
@@ -135,6 +142,42 @@ def build_manifest(root: Path, git_sha: str = GIT_SHA, verify: bool = True, sche
             "episodes": eps}
 
 
+# ------------------------------------------------------------------ population check --------------------------------
+def ks_2samp(a, b) -> dict:
+    """Two-sample KS statistic D = sup |F_a − F_b| and the asymptotic p-value (Stephens: λ = (√n_e + 0.12 + 0.11 / √n_e)
+    D, p = 2 Σ_{j>=1} (−1)^{j−1} exp(−2 j² λ²)), n_e = n_a n_b / (n_a + n_b). numpy only."""
+    a, b = np.sort(np.asarray(a, dtype=np.float64)), np.sort(np.asarray(b, dtype=np.float64))
+    grid = np.concatenate([a, b])
+    fa = np.searchsorted(a, grid, side="right") / len(a)
+    fb = np.searchsorted(b, grid, side="right") / len(b)
+    dstat = float(np.max(np.abs(fa - fb)))
+    ne = len(a) * len(b) / (len(a) + len(b))
+    lam = (np.sqrt(ne) + 0.12 + 0.11 / np.sqrt(ne)) * dstat
+    j = np.arange(1, 101)
+    p = float(np.clip(2.0 * np.sum((-1.0) ** (j - 1) * np.exp(-2.0 * j ** 2 * lam ** 2)), 0.0, 1.0)) if lam > 0 else 1.0
+    return {"D": dstat, "p": p, "n_a": int(len(a)), "n_b": int(len(b))}
+
+
+def describe(new_cases: list, old_cases: list) -> dict:
+    """Per (arm, outcome, lag) the distribution of the new worlds' true effects and the KS comparison with WM-2's train
+    worlds (both replicate 0); the same for the cast rows and the split shifts."""
+    from wm2 import effects as ef
+    out = {"distribution_new": ef.distribution(new_cases), "distribution_wm2": ef.distribution(old_cases), "ks": {}}
+    for arm in v2.ARMS:
+        na, oa = [x for x in new_cases if x.arm == arm], [x for x in old_cases if x.arm == arm]
+        for o in v2.OUTCOMES:
+            for lag in v2.LAGS:
+                out["ks"][f"{arm}|{o}|{lag}"] = ks_2samp([x.truth[o][lag] for x in na if lag in x.truth[o]],
+                                                         [x.truth[o][lag] for x in oa if lag in x.truth[o]])
+        out["ks"][f"{arm}|cast_row"] = ks_2samp([x.cast_row for x in na], [x.cast_row for x in oa])
+        out["ks"][f"{arm}|shift"] = ks_2samp([x.shift for x in na], [x.shift for x in oa])
+    ps = [v["p"] for v in out["ks"].values()]
+    out["ks_summary"] = {"tests": len(ps), "min_p": min(ps), "below_0.05": sum(p < 0.05 for p in ps),
+                         "bonferroni_0.05": 0.05 / len(ps), "below_bonferroni": sum(p < 0.05 / len(ps) for p in ps),
+                         "max_D": max(v["D"] for v in out["ks"].values())}
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -145,8 +188,26 @@ def main(argv=None) -> int:
     p = sub.add_parser("manifest")
     p.add_argument("--root", default="/home/hyunlord/work/worldsim-wm-data"); p.add_argument("--git-sha", default=GIT_SHA)
     p.add_argument("--out", required=True)
+    p = sub.add_parser("describe")
+    p.add_argument("--prep", required=True); p.add_argument("--base", required=True)
+    p.add_argument("--manifest", required=True); p.add_argument("--timeline", required=True)
+    p.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     t0 = time.time()
+    if a.cmd == "describe":
+        from wm2 import effects as ef
+        new = [ef.case_from(x) for x in json.loads((Path(a.prep) / "v2x.json").read_text())["cases"]]
+        old = [ef.case_from(x) for x in json.loads(Path(a.base).read_text())["cases"]["train"] if x["rep"] == 0]
+        man = json.loads(Path(a.manifest).read_text())
+        tl = json.loads(Path(a.timeline).read_text())
+        out = describe(new, old) | {
+            "manifest": {k: v for k, v in man.items() if k != "episodes"},
+            "timeline": {k: tl.get(k) for k in ("count", "share", "line_check")},
+            "cases_new": len(new), "cases_wm2_r0": len(old), "seconds": time.time() - t0}
+        Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+        Path(a.out).write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
+        print(json.dumps(out["ks_summary"]))
+        return 0
     if a.cmd == "merge-timeline":
         out = merge_timeline(Path(a.root), a.lo, a.hi, a.chunk)
         Path(a.out).write_text(json.dumps(out) + "\n")
