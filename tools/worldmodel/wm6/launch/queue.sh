@@ -12,6 +12,7 @@
 # No evaluation is launched from here (test evaluations wait for METRICS.md, finals6.sh).
 # usage: queue.sh
 set -u
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1      # multi-threaded OpenBLAS stalls on the shared DGX (DECISIONS L2.9)
 W=/home/hyunlord/work/wm1-runs/wm6
 R=/home/hyunlord/work/wm1-runs
 MIN_SECONDS=${MIN_SECONDS:-600}

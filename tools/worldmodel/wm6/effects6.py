@@ -40,11 +40,15 @@ usage (DGX):
 """
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")      # multi-threaded OpenBLAS stalls on the shared DGX (DECISIONS L2.9)
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+
 import argparse
 import dataclasses
 import hashlib
 import json
-import os
 import sys
 import time
 from pathlib import Path

@@ -2,6 +2,7 @@
 # WM-6 gate, DGX half (GOAL.md 4.5): unittest discovery in the venv at SHA, zero skips expected.
 # usage: gate.sh SHA
 set -u
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1      # multi-threaded OpenBLAS stalls on the shared DGX (DECISIONS L2.9)
 SHA=$1
 W=/home/hyunlord/work/wm1-runs
 D=$(bash $W/wm6/_setup/code.sh $SHA) || exit 9

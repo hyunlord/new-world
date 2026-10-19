@@ -79,3 +79,11 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 ## Part 3
 - **L3.1 Pre-registration before any training.** METRICS.md was committed and pushed at 00:59:27 (`f1777fb5`), before
   the first WM-6 training and before any test feature or output exists; `wm6/_setup/prereg_sha` = `f1777fb5…`.
+- **L2.9 One BLAS thread.** Under the shared DGX's oversubscription (load average 45–75 on 20 cores from other users'
+  jobs on 2026-10-20 night), numpy's multi-threaded OpenBLAS stalled: 50 ridge solves of a 800 × 145 design did not
+  finish in 120 s with the default thread count and took 0.066 s with one thread (01:28 measurement). Every WM-6 job
+  therefore runs with `OPENBLAS_NUM_THREADS=1` and `OMP_NUM_THREADS=1` (set in `effects6.py` / `data6.py` before numpy
+  is imported and exported by `queue.sh`, `finals6.sh`, `gate.sh`). Results are unaffected beyond float rounding (the
+  ridge reproduction tolerance is 1e-6). The first queue run (`ridge_obs_repro`, started 01:18:45 on `dd988bf7`, which
+  also rebuilt its row index per case) and the first DGX unit-test run were stopped and restarted on the fixed commit;
+  the stopped run directory is kept under `_aborted/` (it had produced nothing).
