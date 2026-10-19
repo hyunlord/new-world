@@ -44,3 +44,4 @@ pauses.
 | 4 (cost) | 11:45:52 | 11:51:52 | `_cost_ct_obs2` third measurement (no evaluation of ours running): 0.910 s/step → full plan; `ct_obs2_s0` started 11:51:52 |
 | 7 (review 1) | 11:55 | 12:25 | review round 1 (fresh subagent, read-only, HEAD `cc3f744c`): no BLOCKING, 2 MAJOR, 5 MINOR, 12 NOTE; fixes `c5ecf7b7` (judge post hoc block, wording, DECISIONS L2.1–L2.5 / L7.1, missing file) |
 | 4.1 | 11:51:52 | 14:49:54 | `ct_obs2_s0`: 11,850 / 11,850 steps, α 0.99991 α_max, 10,665 s; lowest `val_roll` at step 790; test effects 14:5x; `crn_obs2_s1` started |
+| 4.1 | 14:49:54 | 15:20:54 | `crn_obs2_s1`: planned steps reached, α 0.9999 α_max; test effects by the watcher; `ct_obs2_s1` started 15:20:54 |
