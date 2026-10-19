@@ -7,7 +7,22 @@ Submitted to [VENUE] (datasets and benchmarks track). Draft generated from `docs
 
 ## Abstract
 
-{{sec:abstract}}
+Can a model learned from recorded trajectories predict what an intervention will do? We study this in WorldSim, a
+deterministic agent-based village simulation in which a "god" can gift or spoil food or rot wood, and in which every
+recorded world can be forked into exact counterfactual branches. The benchmark has three splits from one frozen
+simulator: an interventional split with paired branches and noise replicates, a confounded observational split with one
+act per world, and a new sequentially confounded split in which a known policy acts up to five times per world, reading
+the trajectory its earlier acts have changed ({{p5:all/worlds#0}} worlds, {{p5:all/casts#0}} acts, every propensity
+recorded). The task is the per-world effect of an act on food, population, deaths and settlements at one week and one
+month, scored against the true branch with a pre-registered rule. We find that (i) the benchmark has room: an effect
+floor from noise replicates lies far below predicting no effect on every split ({{j5:v2/ladder/7d/values/floor#3}} vs
+{{j5:v2/ladder/7d/values/zero#3}} on the interventional split at one week); (ii) two established estimators of
+time-varying treatment effects, CRN and the Causal Transformer, trained on their authors' full optimizer-step schedules
+and read at their last checkpoint, are worse than predicting no effect on both the interventional and the sequentially
+confounded split, at both horizons; (iii) rounding counts at readout does not change this; (iv) a linear map of the
+observable pre-act state reaches only the act's mean effect (the hidden state adds a little more, post hoc), and the
+learned dynamics models reproduce at most a fraction of the delayed sign reversal of food effects at one month. The benchmark, its pre-registered harness
+and the paper's numbers are traced to committed result files.
 
 ## 1 Introduction
 
@@ -50,7 +65,14 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
    models trained on factual and on paired data, and the direct regressions. Everything is pre-registered (W1 rule,
    world-level paired bootstrap).
 
-{{sec:intro_findings}}
+**Findings.** On a split three times larger than before, with {{p5:all/casts_per_world_mean#2}} acts per world and
+inverse-propensity effective sample sizes of {{j5:describe/pooled/sp240/7d/ess_treated#0}}–{{j5:describe/pooled/rw120/7d/ess_treated#0}}
+per act, CRN and CT trained as their authors train them do not beat "predict no effect" (Section 5.3: every comparison
+NONE), and on the interventional split they are further behind than the earlier, budget-capped runs. Rounding their
+counts changes the earlier study's numbers by less than its confidence intervals. The gap between "no effect" and the
+effect floor is large on every split, so the benchmark can separate methods; on the interventional split a linear
+regression on the observable pre-act state reaches the act's mean effect but no further (post hoc), and among the
+learned models compared with it (E2) only the world model trained on paired branches ties or beats it.
 
 ## 2 Related work
 
@@ -300,7 +322,24 @@ R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2
 
 D2 (rounding alone; the earlier study's runs on their own test splits, seed-averaged, rounded − as committed): crn_obs 7 d {{j5:D2/crn_obs/compare/7d/ci_diff#ci3}}; crn_obs 30 d {{j5:D2/crn_obs/compare/30d/ci_diff#ci3}}; ct_obs 7 d {{j5:D2/ct_obs/compare/7d/ci_diff#ci3}}; ct_obs 30 d {{j5:D2/ct_obs/compare/30d/ci_diff#ci3}}; crn_v2 7 d {{j5:D2/crn_v2/compare/7d/ci_diff#ci3}}; crn_v2 30 d {{j5:D2/crn_v2/compare/30d/ci_diff#ci3}}; ct_v2 7 d {{j5:D2/ct_v2/compare/7d/ci_diff#ci3}}; ct_v2 30 d {{j5:D2/ct_v2/compare/30d/ci_diff#ci3}}.
 
-{{sec:results_text}}
+**Q1: trained as their authors train them, CRN and CT still lose to "no effect".** Every primary CRN / CT run
+completed the authors' number of optimizer steps with the balancing weight at its maximum (R4). On obs2 their 12-cell
+errors are {{j5:obs2/rules/R1/crn_obs2/model#3}} (CRN) and {{j5:obs2/rules/R1/ct_obs2/model#3}} (CT) at 7 days and
+{{j5:obs2/rules/R2/crn_obs2/model#3}} and {{j5:obs2/rules/R2/ct_obs2/model#3}} at 30 days, against
+{{j5:obs2/rules/R1/crn_obs2/baseline#3}} and {{j5:obs2/rules/R2/crn_obs2/baseline#3}} for `zero` (the baseline chosen on
+the val families); on v2 {{j5:v2/rules/R3/crn_v2|zero|7d/model#3}} and {{j5:v2/rules/R3/ct_v2|zero|7d/model#3}} at 7 days
+against `zero` {{j5:v2/rules/R3/crn_v2|zero|7d/baseline#3}} and `an5_arm` {{j5:v2/rules/R3/crn_v2|an5_arm|7d/baseline#3}}.
+The world model trained on obs2 (M1b-obs2) ties `zero` at 7 days
+({{j5:obs2/rules/R1/m1b_obs2/ci_diff#ci3}}), as world models did on the earlier splits, because it barely responds to
+the act.
+
+**Q3: more observational data does not help.** M1b-obs2 is marginally better than the earlier M1b-obs on the obs2 test
+({{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/ci_diff#ci3}} at 7 days), and CT-obs2 is not better than the earlier,
+budget-capped CT-obs ({{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/ci_diff#ci3}} at 7 days,
+{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} at 30 days).
+
+**Q4: rounding alone changes little.** Re-scoring the earlier study's runs with rounded counts moves their seed-averaged
+scores by amounts whose intervals all contain zero (D2 above).
 
 ## 6 Analysis
 
@@ -357,9 +396,10 @@ M1b-obs2 (seed 0) predicts a spoil's 7-day food effect of {{j5:obs2/tables/m1b_o
 **The 30-day sign reversal.** In the simulator a spoil empties the store for a week and, through an earlier split and a
 second village gathering, leaves more food a month later ({{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}} at 7 days, {{j5:obs2/tables/zero/sp240|food_stock|30d/mean_true#1s}}
 at 30 on obs2). The simple contrasts and the observable-state regression get the sign of the 30-day mean right
-(`ipw` {{j5:obs2/tables/ipw/sp240|food_stock|30d/mean_pred#1s}}, `ridge_obs` {{j5:obs2/tables/ridge_obs/sp240|food_stock|30d/mean_pred#1s}}); every learned
-dynamics model gets it wrong or flat (seed 0 of each: CRN {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, M1b-obs2
-{{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, `wm3_full` {{j5:obs2/tables/ref_wm3_full_s0/sp240|food_stock|30d/mean_pred#1s}}). Rolling the
+(`ipw` {{j5:obs2/tables/ipw/sp240|food_stock|30d/mean_pred#1s}}, `ridge_obs` {{j5:obs2/tables/ridge_obs/sp240|food_stock|30d/mean_pred#1s}}); the learned
+dynamics models get it wrong, flat or small (seed 0 of each: CRN {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, M1b-obs2
+{{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, `wm3_full` {{j5:obs2/tables/ref_wm3_full_s0/sp240|food_stock|30d/mean_pred#1s}};
+CT {{j5:obs2/tables/ct_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} has the right sign at about a third of the size). Rolling the
 dynamics forward does not reproduce the delayed mechanism (a split triggered by hidden pressure) that produces the
 reversal.
 
