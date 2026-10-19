@@ -18,3 +18,13 @@
 - PROBE_BEFORE /Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt3/frames.json.validity.json P=2.855129458 R=2.762010041 load=6.6953125
 - PROBE_AFTER /Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt3/frames.json.validity.json P=2.802626542 R=2.762010041 load=6.53125 valid=True exit=0
 - 2026-10-19T13:47:16Z pid=38433 HOLD_END purpose=pair-write-skip-W500 exit=0
+- 2026-10-19T13:48:54Z pid=49562 WAIT_START purpose=pair-walker-W200
+- 2026-10-19T13:48:54Z pid=49562 HOLD_START purpose=pair-walker-W200 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/frames.json.validity.json P=2.888793041 R=2.762010041 load=5.9990234375
+- PROBE_AFTER /Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/frames.json.validity.json P=2.870396292 R=2.762010041 load=6.80322265625 valid=True exit=0
+- 2026-10-19T13:49:40Z pid=49562 HOLD_END purpose=pair-walker-W200 exit=0
+- 2026-10-19T13:50:11Z pid=54707 WAIT_START purpose=pair-walker-W500
+- 2026-10-19T13:50:11Z pid=54707 HOLD_START purpose=pair-walker-W500 limit=3600 waited=0
+- PROBE_BEFORE /Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/frames.json.validity.json P=2.895591250 R=2.762010041 load=6.1767578125
+- PROBE_AFTER /Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/frames.json.validity.json P=2.860388708 R=2.762010041 load=5.720703125 valid=True exit=0
+- 2026-10-19T13:51:03Z pid=54707 HOLD_END purpose=pair-walker-W500 exit=0

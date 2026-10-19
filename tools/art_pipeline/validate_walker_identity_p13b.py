@@ -19,7 +19,7 @@ import typer
 from pydantic import BaseModel, ConfigDict, Field, JsonValue, StrictBool, StrictInt
 
 import pixel_identity_p13 as pixels
-from compare_running_identity_p13 import WORLDS, compare, write_skip_stamp_errors
+from compare_running_identity_p13 import WORLDS, Report, compare, write_skip_stamp_errors
 
 
 class Model(BaseModel):
@@ -146,6 +146,10 @@ def validate_run(run: Run) -> Provenance:
             observed = Provenance.model_validate_json((run.folder / "provenance" / f"{label}.{phase}.json").read_text())
             require(observed == initial, f"{run.folder}/{label}.{phase}: provenance changed")
         metadata = Capture.model_validate_json((run.folder / f"{label}.json").read_text())
+        if not run.running and label == "P3":
+            extra = metadata.model_extra or {}
+            require(extra.get("camera_processing_disabled") is True
+                    and extra.get("camera_paused") is False, "P3 camera input/pause state is not isolated")
         errors = walker_errors(metadata.perf_candidate_p13b, run.enabled)
         errors += write_skip_stamp_errors(metadata.perf_candidate_p13, metadata.perf_candidate_p12, False, True)
         if run.running:
@@ -178,7 +182,7 @@ def main(a: Path, aprime: Path, b: Path, running_off: Path, running_on: Path, ou
     for run in runs:
         try:
             provenance.append(validate_run(run))
-        except (OSError, ValueError, KeyError) as exc:
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError) as exc:
             errors.append(f"{run.folder}: {exc}")
     if len(provenance) == len(runs):
         cores = [p.model_dump(include={"checkout", "head", "debug_sha256", "source_sha256", "sources"}) for p in provenance]
@@ -191,14 +195,29 @@ def main(a: Path, aprime: Path, b: Path, running_off: Path, running_on: Path, ou
         if running[0] != running[1]:
             errors.append("running provenance differs beyond candidate env")
     pixel_pass = False
-    running_report = compare(running_off, running_on)
+    running_report: Report = {"candidate": None, "kernel_state": None,
+                              "scope": "reference_integrity_only", "valid": False,
+                              "status": "FAIL", "worlds": []}
+    try:
+        running_report = compare(running_off, running_on)
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError) as exc:
+        errors.append(f"inherited running comparator: {type(exc).__name__}: {exc}")
     try:
         pixels.main(a, aprime, b, output / "rgba-reference")
     except typer.Exit as exc:
         pixel_pass = exc.exit_code == 0
-    except (OSError, ValueError, KeyError) as exc:
-        errors.append(f"inherited RGBA comparator: {exc}")
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, IndexError, typer.BadParameter) as exc:
+        errors.append(f"inherited RGBA comparator: {type(exc).__name__}: {exc}")
     (output / "running-reference.json").write_text(json.dumps(running_report, indent=2) + "\n")
+    evidence_hashes: dict[str, str] = {}
+    for run in runs:
+        for path in [run.folder / "launches.tsv", run.folder / "provenance/initial.json",
+                     *(run.folder / f"{label}.json" for label in run.labels)]:
+            try:
+                if path.is_file():
+                    evidence_hashes[str(path.resolve())] = digest(path)
+            except OSError as exc:
+                errors.append(f"evidence checksum {path}: {exc}")
     passed = not errors and pixel_pass and running_report["valid"]
     report = {"scope": "compound_walker_candidate_identity", "candidate": "walker", "passed": passed,
               "errors": errors, "kernel": "ON", "write_skip": "OFF", "still_polarity": [False, False, True],
@@ -208,9 +227,7 @@ def main(a: Path, aprime: Path, b: Path, running_off: Path, running_on: Path, ou
               "limitations": ["Still collectors do not emit per-frame candidate stamps.",
                               "Identity only: no performance, visual acceptance or candidate installation approval."],
               "inputs": [str(run.folder.resolve()) for run in runs],
-              "evidence_sha256": {str(path.resolve()): digest(path) for run in runs
-                                  for path in [run.folder / "launches.tsv", run.folder / "provenance/initial.json",
-                                               *(run.folder / f"{label}.json" for label in run.labels)] if path.is_file()},
+              "evidence_sha256": evidence_hashes,
               "validator_sha256": digest(Path(__file__)),
               "inherited_comparator_sha256": {name: digest(Path(__file__).with_name(name)) for name in
                                               ("pixel_identity_p13.py", "compare_running_identity_p13.py")}}

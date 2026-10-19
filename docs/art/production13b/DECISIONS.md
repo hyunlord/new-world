@@ -31,3 +31,13 @@ Preserve the baseline failing attempt. Tooltip and independent input witness now
 
 - Walker identity attempt1: all5 running/pan dumps exact; A/B RGBA all6 exact, but P3 A/Aprime control differed924pixels within pause icon. Its alpha differed0.35/1.0; P3 collector left Camera2D input enabled unlike otherframings. Originating input notlogged (NOT_VERIFIED). Fix onlynewp13b capture: disable camera before scene insertion and assert/stamp initial unpaused state. No pixelmask/thresholdchange; preserve attempt1 and rerun complete identity on one new frozen source/HEAD.
 - Write-skip measurement complete: W500attempt3valid pooled0.9472853932,3/3faster; W200valid0.9986985165 fails0.97. Candidate remainsOFF because bothworkloadsrequired. Total conservative admissionwait3600seconds.
+
+- 2026-10-19T13:50:54.452573+00:00: Seats deferred before implementation. Walker is not yet accepted (control-repeat repair stillneeds fullidentity). Read-only closure analysis estimates170–305minutes for stateful/history-aware exact port plus acceptance, excluding admissionwait. Remaining Part1window<200minutes; existing fullidentityrepeat (~20minutes) plus mandatorymerge/gate reserve (~25minutes) already exceed lower-bound capacity. Do not add an unverified persistent-state kernel or weaken numeric/history coverage to claim itfits. Existing seats reference remains unchanged; feasibility retained.
+
+## Round 1 review remediation (2026-10-19T14:00:33.572695+00:00)
+- Retain inherited >=2/3 faster-pair requirement for W500 as well as W200; only W500 pooled ceiling changes to1.00. Existing measurements are3/3, so recompute the comparator without rerunning Godot.
+- Duplicate-ID custom-sort parity is not independently established by the unique-ID real fixtures. Preserve this explicit limitation; no arbitrary-duplicate parity claim is accepted. Actual captured inputs reject duplicate IDs.
+- Malformed identity evidence must emit terminal FAIL JSON; improve failure reporting without changing valid-input acceptance.
+- Refresh global retry census after subsequent gates. Legend-first acknowledgment has a contemporaneous TASKS attestation but timestamped original acknowledgment is not yet available; do not invent provenance.
+
+- 2026-10-19T14:11:11.838176+00:00: Walker ACCEPTED after complete identity attempt2 passed (all six A/Aprime and A/B zero RGBA; all five running/pan schedules exact; full provenance/polarity valid) plus corrected performance verdict W2000.6492237648/W5000.9446215390,3/3fasterboth. Default ON with explicit0 preserving unchanged GDScript oracle. Write-skip remains OFF; seats deferred. Part3 merged-build full gate and identity remain required.

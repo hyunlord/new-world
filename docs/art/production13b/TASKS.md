@@ -4,9 +4,9 @@ Timing anchor: 2026-10-19T12:08Z (conservative deadline anchor, not an observed 
 Part 1 deadline: 17:08Z. Part 4 freeze deadline: 19:08Z. Ten-hour cutoff: 22:08Z.
 
 - Part 0 COMPLETE (baseline FAIL retained): original brief byte-verified and committed f962f5cd; backup at 8c1b18be. Calibration started 12:11Z, session 62867; full gate follows calibration because calibration must precede every Godot session.
-- Part 1 IN_PROGRESS: owner feedback/font24/design glyph rule/windowed layout; write-skip identity and valid pairs; optional walker then seats.
-- Part 2 COMPLETE WITH LIMITATIONS: 161-image frozen fact reading scored; real input17/17; StageB12/14eligible (diagnostic10/12, fullbarNOT_VERIFIED); nolegend9/12; village2/6NOT_RUN; contrast12/21; H10roadFAIL3/3, relations/peaceENKOverified. UI evidence awaits next source-freeze-end commit/push.
-- Part 3 PENDING: merge UI and full gate; accepted candidate identity.
+- Part 1 COMPLETE: font24/design glyph/layout/input verified; write-skip measured and rejected; walker identity and speed passed/defaultON; seats deferred.
+- Part 2 COMPLETE WITH LIMITATIONS: 161-image frozen fact reading scored; real input17/17; StageB12/14eligible (diagnostic10/12, fullbarNOT_VERIFIED); nolegend9/12; village2/6NOT_RUN; contrast12/21; H10roadFAIL3/3, relations/peaceENKOverified. UI evidence pushed at c1827b3b.
+- Part 3 IN_PROGRESS: merge UI and full gate; accepted candidate identity.
 - Part 4 PENDING: freeze by 19:08Z; after matrix and running timers; H1-H11.
 - Part 5 PENDING: independent review <=2 rounds, final gate, conditional publication, PR511, cleanup, Korean report.
 
@@ -64,3 +64,7 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - 13:24Z walker pure tests57/57 and clippy pass; release built, actual bridge attempt2 passes12calls/24nonempty bit-exact comparisons after recorded startup-coverage failure1. Full six/running identity active session89216 at frozenHEADaf30bb29, releaseSHA30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042. No source/build/HEAD edits until finish; docs only allowed. Speed remainspending; defaultOFF.
 
 - 2026-10-19T13:48:38.995382+00:00: Part2 evidence completewithlimitations and readyforpush. Write-skip never-drop measurement COMPLETE, rejectedoverall/W200fails; W500valid0.9472853932. Walkeridentityattempt1FAILonlyP3controlpauseicon; runningall5exactandA/Ball6exact. P3captureinputisolated/strictpass; completeattempt2next.
+
+- 2026-10-19T13:53:44.244478+00:00: Completewalkeridentityattempt2 active session11368 at frozenHEADc1827b3b, same releaseSHA30ed9754. Speedrequirementsverified separately(W200.6492237648,W500.9446215390,3/3fasterboth); defaultOFF untilidentitypasses. IndependentreviewROUND1 started two readonlylanes code/evidence; finalROUND2reserved aftermerge/aftermatrix. Specializedreviewrole modelunavailable beforeexecution; replaced by nativeinherited reviewer, noextra reviewround.
+
+- 2026-10-19T14:11:11.838176+00:00: Part1 COMPLETE: font24/glyph/input verified, write-skip measured/rejected, walker identity attempt2 PASS and corrected speedPASS; defaultON accepted. Part2 completewithlimitations previously pushed c1827b3b. Part3 merge/fullgate/mergedidentity next.

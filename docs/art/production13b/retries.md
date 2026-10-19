@@ -1,10 +1,10 @@
-# Retry ledger
+# Retry census
 
-Evidence snapshot: 2026-10-19T13:28:17.877697+00:00. Docs-only audit; no checks rerun.
+Snapshot: 2026-10-19T14:01:19.431878+00:00. Supersedes the earlier bounded report; its complete JSON is preserved in `historical_snapshots`. No runtime checks were rerun for this audit.
 
-GOAL §0.5 counts every executed check, including debug runs, and stops a failing target after three. §0.8 separately limits admission to six slots per item, at least 30 minutes apart, with three hours total wait. An admission refusal before Godot is not an executed check.
+**Global three-strike compliance is not certified.** Every executed target check counts, including offline/debug checks. Acquisition campaigns, their subprocesses, offline comparisons, and pre-Godot admission refusals are recorded separately. Pending identity/final gates and the Stage-B denominator ambiguity remain explicit.
 
-| Target | Observed executions | Outcomes | Current status |
+| Target | Completed executed checks/acquisitions | Outcomes | Status |
 |---|---:|---|---|
 | real-input-p13 | 2 | 1: FAIL; 2: PASS | PASS |
 | H10-road-porter | 3 | 1: VISUAL_FAIL; 2: FAIL; 3: FAIL | TERMINAL_FAIL |
@@ -16,22 +16,38 @@ GOAL §0.5 counts every executed check, including debug runs, and stops a failin
 | Stage-B-kind4-supplemental-acquisition | 3 | 1: ACQUISITION_FAIL; 2: CAPTURE_CONTRACT_PASS; 3: CAPTURE_CONTRACT_PASS | INVENTORY_FILLED |
 | Stage-B-kind5-supplemental-acquisition | 3 | 1: CAPTURE_CONTRACT_PASS; 2: CAPTURE_CONTRACT_PASS; 3: CAPTURE_CONTRACT_PASS | INVENTORY_FILLED |
 | Stage-B-kind6-supplemental-acquisition | 3 | 1: CAPTURE_CONTRACT_PASS; 2: CAPTURE_CONTRACT_PASS; 3: CAPTURE_CONTRACT_PASS | INVENTORY_FILLED |
-| write-skip-W500 | 1 | 1: COLLECTOR_FAIL; 2: ADMISSION_REFUSED (not executed) | NOT_VERIFIED |
+| write-skip-W500 | 2 | 1: COLLECTOR_FAIL; 2: ADMISSION_REFUSED; 3: SPEED_PASS | VALID_MEASUREMENT_PASS_JOINT_ACCEPTANCE_FAIL |
 | write-skip-W200 | 1 | 1: SPEED_FAIL | VALID_MEASUREMENT_THRESHOLD_FAIL |
 | walker-cargo-tests | 2 | 1: COMPILE_FAIL; 2: PASS | PASS |
 | walker-bridge | 2 | 1: COVERAGE_FAIL; 2: PASS | PASS |
 | walker-numeric | 1 | 1: PASS | PASS |
 | walker-fixture | 1 | 1: PASS | PASS |
-| walker-identity | Unknown / pending | Terminal evidence not observed | COMPLETION_NOT_OBSERVED |
+| walker-identity | 1 | 1: FAIL; 2: IN_PROGRESS | ATTEMPT2_IN_PROGRESS_NOT_ACCEPTED |
+| Stage-B-initial-generic-matrix | 6 | 1: CAPTURE_CONTRACT_PASS; 2: CAPTURE_CONTRACT_PASS; 3: CAPTURE_CONTRACT_PASS; 4: CAPTURE_CONTRACT_PASS; 5: CAPTURE_CONTRACT_PASS; 6: CAPTURE_CONTRACT_PASS | ACQUIRED |
+| walker-speed-W200 | 1 | 1: PASS | VALID_SPEED_PASS_IDENTITY_SEPARATE |
+| walker-speed-W500 | 1 | 1: PASS | VALID_SPEED_PASS_IDENTITY_SEPARATE |
+| walker-speed-comparator | 3 | 1: FAIL; 2: PASS; 3: PASS | PASS |
 
-H10 road attempt 1 returned runtime 0 but failed visual review: a foreign mint SitByFire badge covers the porter glyph in EN/KO. Attempts 2/3 fail the strict unobscured-candidate requirement. Preserve all three; H10 is FAIL despite successful relations and peace captures. Estranged succeeded on its third execution at 51870; its first two failures remain counted.
+## Reconciliation
 
-W500 has **one executed failed collector and one refused runtime admission**, across two policy slots. The ledger’s `admitted=true` is policy-spacing permission. Attempt2 has load 23.0029 (limit<8), exit 75, and no collector execution under `session_validity_p13.py:149`. W200 has one valid measurement execution containing three pairs; its ratio 0.9986985 fails the 0.97 speed threshold. The admission ledger records 1800 seconds waiting.
+**Stage B: 21 runtime acquisitions = 6 initial generic captures + 15 targeted supplements.** The initial matrix contains three Z4 sources and three Z1 views. Stage-B selection uses the three Z4 sources plus ten successful supplements: 13 sources, or 26 PNG/JSON files. Five supplements failed acquisition. Each missing kinds 0/2/4/5/6 received three supplements; final eligible inventory remains [1,2,1,2,2,2,2]. Kinds 0/2 remain terminal shortages.
 
-Stage B has three supplemental acquisitions for each of kinds 0, 2, 4, 5, 6. Runtime/capture-contract success is not proof of two eligible distinct holders. Final inventory is [1,2,1,2,2,2,2]; kinds 0/2 stop with one eligible crop each. These are supplemental-run counts; the initial matrix is not silently folded into or erased from a purported global per-kind count.
+The prospective protocol specifies three Z4 scenes and two eligible holders per activity; it does not unambiguously define whether each generic scene also consumes a retry for every missing kind. If treated that way, supplemented kinds have six acquisition exposures each, not three. This census does not retroactively redefine the target or assert blanket compliance. All acquisitions remain visible; successful capture contracts are distinct from successful reader/recognition checks.
 
-Walker cargo attempt 1 failed compilation before tests; attempt 2 passed 57 tests. Actual bridge attempt 1 lacked nonempty coverage (22/24), then attempt 2 covered 24/24. Numeric 560 cases and fixture 4000 records each passed their single observed run. These do not establish the unfinished identity gate.
+**W500 write-skip:** attempt 1 executed and failed collector validation; attempt 2 was denied before Godot; attempt 3 executed and passed with ratio 0.947285393220096. Thus three admission slots, two actual collectors. W200 has one valid session with ratio 0.9986985164993292: threshold FAIL. Write-skip remains default OFF.
 
-Every completed evidence file referenced in [retries.json](retries.json) has its path, byte length, and SHA256. Active identity outputs are intentionally unhashed. See [H10 report](h10/REPORT.md) and [Life report](life-capture-report/REPORT.md) for visual/capture provenance.
+**Walker:** bridge coverage FAIL1 (22/24 nonempty), PASS2 (24/24). Identity comparator1 FAIL retains 924 differing control pixels; acquisition 2 is in progress, not accepted. Runtime speed sessions are one per world; latest ratios are W200 0.64922376483374 and W500 0.9446215390142153. Offline speed comparison executes three times: calibrationFAIL1, corrected invocationPASS2, strengthened W500 guardrailPASS3. These are three checks of the same runtime data, not extra runtime measurements.
 
-Limits: this is a bounded ledger, not a global run census. Blind/fact reading is separate and no reader answers were inspected. No source files or capture artifacts were modified.
+**H10 and Life:** road has three failures, including runtime 0/visualFAIL attempt 1; relations/peace success does not repair H10. Estranged failures1/2 and success3 remain preserved. Cargo compileFAIL1 counts as failed verification invocation, although tests did not execute; attempt 2 passes 57 tests. Numeric/fixture each retain their single observed pass.
+
+Admission waiting is **3600 seconds**, from `perf/attempts.json` SHA256 `6a74b477fbcd05943eb62c75db859194cda4f1238670ea67adb8ef3f706c4bda`. Its `admitted=true` means policy-spacing permission; W500 slot2 has invalid runtime probe/exit 75 and no Godot. Current six slots correspond to five runtime measurement launches.
+
+## Legend acknowledgment
+
+No original timestamped legend acknowledgment was located in the searched saved evidence/OMX outputs. TASKS contains the contemporaneous narrative that a fresh fork-none reader acknowledged seven names before crop delivery. The original message timestamp remains **NOT_AVAILABLE**; reader answer-freeze timestamps are not substituted. No reader rerun or fabricated attestation was created.
+
+## Census boundaries
+
+The JSON inventories all current external top-level logs and baseline gate row logs with hashes, preserves prior failures, and includes actual launch tables for identity campaigns. Ancillary format/strict/tool/build logs are retained without inventing invocation counts or terminal verdicts. It is not a claim that every recursive subprocess or later final-gate check has been exhaustively classified. Future terminal checks must extend this census before final reporting. No hidden reader answers were inspected.
+
+See [retries.json](retries.json), [H10 report](h10/REPORT.md), and [write-skip report](perf/write-skip/REPORT.md).

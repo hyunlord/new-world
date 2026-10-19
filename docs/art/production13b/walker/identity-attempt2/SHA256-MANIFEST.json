@@ -1,0 +1,2214 @@
+{
+  "schema_version": 1,
+  "external_root": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2",
+  "files": [
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P1-candidate-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P1-candidate-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P1-candidate-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P1-control-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P1-control-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P1-control-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P2-candidate-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P2-candidate-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P2-candidate-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P2-control-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P2-control-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P2-control-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P3-candidate-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P3-candidate-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P3-candidate-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P3-control-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P3-control-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P3-control-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P4-candidate-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P4-candidate-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P4-candidate-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P4-control-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P4-control-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P4-control-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P5-candidate-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P5-candidate-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P5-candidate-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P5-control-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P5-control-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P5-control-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P6-candidate-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P6-candidate-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P6-candidate-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/P6-control-diff.png",
+      "relative_path": "comparison-attempt1/rgba-reference/P6-control-diff.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/P6-control-diff.png",
+      "sha256": "ba066b09aee8ba319e67e36883944ba5285b1a48941baa79ecd144182737c41d",
+      "bytes": 2090,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/comparison.json",
+      "relative_path": "comparison-attempt1/rgba-reference/comparison.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/comparison.json",
+      "sha256": "8239479e8c9aa997a1601b5a6a4b00eea9611b29fbacb6d246908b5f3ec6afe5",
+      "bytes": 3721,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/comparison.md",
+      "relative_path": "comparison-attempt1/rgba-reference/comparison.md",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/comparison.md",
+      "sha256": "503ccf01635f6446d26f2245646d621a582176fba01a60305af12a933a20142c",
+      "bytes": 733,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-A.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P1-A.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-A.png",
+      "sha256": "53c27aafb40f926caa963ccc2b6d92d51a257cc8918ac4bb9e8de90cefdd1b1b",
+      "bytes": 217590,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-Aprime.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P1-Aprime.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-Aprime.png",
+      "sha256": "53c27aafb40f926caa963ccc2b6d92d51a257cc8918ac4bb9e8de90cefdd1b1b",
+      "bytes": 217590,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-B.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P1-B.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-B.png",
+      "sha256": "53c27aafb40f926caa963ccc2b6d92d51a257cc8918ac4bb9e8de90cefdd1b1b",
+      "bytes": 217590,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-candidate-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P1-candidate-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-candidate-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-control-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P1-control-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P1-control-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-A.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P2-A.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-A.png",
+      "sha256": "8843131040d7edc579e0b20dc02fb941735fefe4829b2704d86a4277e214c542",
+      "bytes": 175838,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-Aprime.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P2-Aprime.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-Aprime.png",
+      "sha256": "8843131040d7edc579e0b20dc02fb941735fefe4829b2704d86a4277e214c542",
+      "bytes": 175838,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-B.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P2-B.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-B.png",
+      "sha256": "8843131040d7edc579e0b20dc02fb941735fefe4829b2704d86a4277e214c542",
+      "bytes": 175838,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-candidate-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P2-candidate-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-candidate-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-control-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P2-control-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P2-control-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-A.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P3-A.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-A.png",
+      "sha256": "13f77e47a51c3ee809a8794bbc56a3a9d76e138874b4f71926b9b171fad14267",
+      "bytes": 147812,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-Aprime.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P3-Aprime.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-Aprime.png",
+      "sha256": "13f77e47a51c3ee809a8794bbc56a3a9d76e138874b4f71926b9b171fad14267",
+      "bytes": 147812,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-B.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P3-B.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-B.png",
+      "sha256": "13f77e47a51c3ee809a8794bbc56a3a9d76e138874b4f71926b9b171fad14267",
+      "bytes": 147812,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-candidate-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P3-candidate-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-candidate-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-control-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P3-control-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P3-control-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-A.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P4-A.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-A.png",
+      "sha256": "57c4cbdc45bf404c28ccfaa91e0eaa73469518a8d782529be4676bddc8c68d12",
+      "bytes": 179252,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-Aprime.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P4-Aprime.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-Aprime.png",
+      "sha256": "57c4cbdc45bf404c28ccfaa91e0eaa73469518a8d782529be4676bddc8c68d12",
+      "bytes": 179252,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-B.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P4-B.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-B.png",
+      "sha256": "57c4cbdc45bf404c28ccfaa91e0eaa73469518a8d782529be4676bddc8c68d12",
+      "bytes": 179252,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-candidate-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P4-candidate-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-candidate-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-control-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P4-control-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P4-control-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-A.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P5-A.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-A.png",
+      "sha256": "85a65779b3c7ddc1d3c50f9d100d244a7c2d4c3629857e8d8513155dcf352290",
+      "bytes": 276020,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-Aprime.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P5-Aprime.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-Aprime.png",
+      "sha256": "85a65779b3c7ddc1d3c50f9d100d244a7c2d4c3629857e8d8513155dcf352290",
+      "bytes": 276020,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-B.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P5-B.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-B.png",
+      "sha256": "85a65779b3c7ddc1d3c50f9d100d244a7c2d4c3629857e8d8513155dcf352290",
+      "bytes": 276020,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-candidate-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P5-candidate-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-candidate-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-control-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P5-control-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P5-control-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-A.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P6-A.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-A.png",
+      "sha256": "f0539bf648b68677599df1b5e7fc99eabb859bcd8602e81ab0a114f258e0557d",
+      "bytes": 220346,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-Aprime.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P6-Aprime.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-Aprime.png",
+      "sha256": "f0539bf648b68677599df1b5e7fc99eabb859bcd8602e81ab0a114f258e0557d",
+      "bytes": 220346,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-B.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P6-B.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-B.png",
+      "sha256": "f0539bf648b68677599df1b5e7fc99eabb859bcd8602e81ab0a114f258e0557d",
+      "bytes": 220346,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-candidate-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P6-candidate-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-candidate-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-control-diff-x16.png",
+      "relative_path": "comparison-attempt1/rgba-reference/previews/P6-control-diff-x16.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/rgba-reference/previews/P6-control-diff-x16.png",
+      "sha256": "88023d90926d5a6983bd8d848ab811a63c8684ef9588128d2ba0e7cb57f09145",
+      "bytes": 750,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/running-reference.json",
+      "relative_path": "comparison-attempt1/running-reference.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/running-reference.json",
+      "sha256": "82c560e6d998fdf891d6809c6b3f5fd2a94a51932612bd78070a35fcfbb9ac28",
+      "bytes": 2757,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1/walker-identity.json",
+      "relative_path": "comparison-attempt1/walker-identity.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1/walker-identity.json",
+      "sha256": "910213b3e731aef530a26a261e37666a70b0b0af05f55029c1ff6dbd9a3dfedf",
+      "bytes": 7780,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1.exit",
+      "relative_path": "comparison-attempt1.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/comparison-attempt1.log",
+      "relative_path": "comparison-attempt1.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/comparison-attempt1.log",
+      "sha256": "910213b3e731aef530a26a261e37666a70b0b0af05f55029c1ff6dbd9a3dfedf",
+      "bytes": 7780,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W-multi.json",
+      "relative_path": "running-off/W-multi.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/W-multi.json",
+      "sha256": "f79e6f6d106697b65deb75ffca6aaad82f4dc103f0cc4809ed5cd361324e8870",
+      "bytes": 519841,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W-multi.jsonl",
+      "relative_path": "running-off/W-multi.jsonl",
+      "archive_path": null,
+      "sha256": "f47179259b8c28211bbb2a371e886056e478afe2cfe96471aed6ba281b5b8ce1",
+      "bytes": 6893641,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W0.json",
+      "relative_path": "running-off/W0.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/W0.json",
+      "sha256": "776f5497875b600a7b21c8a9974cfeb4abce1ea8d2d12fba6d53abdf12073c90",
+      "bytes": 519998,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W0.jsonl",
+      "relative_path": "running-off/W0.jsonl",
+      "archive_path": null,
+      "sha256": "d15500ab867ce8727f2bb544fe05dcced6db3e1a4aeecd96b394e8c515f4e6ee",
+      "bytes": 5747456,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W200.json",
+      "relative_path": "running-off/W200.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/W200.json",
+      "sha256": "e039d2b7c50e5d00034a05462cb09a406cac58c66737521340278f85fafeae80",
+      "bytes": 519995,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W200.jsonl",
+      "relative_path": "running-off/W200.jsonl",
+      "archive_path": null,
+      "sha256": "229c536a650a43f9f855f01c51545fc29735b0c526e6c02618129980d24793f0",
+      "bytes": 17408890,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W500_2X.json",
+      "relative_path": "running-off/W500_2X.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/W500_2X.json",
+      "sha256": "cf9e026ec3c50ade9e001a9fba4ee84e58ae6c76292bfb3a3ed4f490bf080c05",
+      "bytes": 208592,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W500_2X.jsonl",
+      "relative_path": "running-off/W500_2X.jsonl",
+      "archive_path": null,
+      "sha256": "12b2e71fd8c85719552a8f9b85bca4d80e6e8b31eea14c8dba4f1c3618ce2b77",
+      "bytes": 3965550,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W500_FROZEN.json",
+      "relative_path": "running-off/W500_FROZEN.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/W500_FROZEN.json",
+      "sha256": "a212f51a91c5b2d00dfb7acf3a6129e0c9fcb23085c0425efd9ff2d9ee0ab44f",
+      "bytes": 208594,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/W500_FROZEN.jsonl",
+      "relative_path": "running-off/W500_FROZEN.jsonl",
+      "archive_path": null,
+      "sha256": "cca766b559e6c9b7e7623806d5510681aff4a9af22ff8b91ef035eab36b8f1ec",
+      "bytes": 4180973,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/launches.tsv",
+      "relative_path": "running-off/launches.tsv",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/launches.tsv",
+      "sha256": "1707885b6a22138d6bff25f51be18256584a45b95bc5b81a85243a27953e3158",
+      "bytes": 444,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W-multi.exit",
+      "relative_path": "running-off/logs/W-multi.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W-multi.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W-multi.log",
+      "relative_path": "running-off/logs/W-multi.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W-multi.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W0.exit",
+      "relative_path": "running-off/logs/W0.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W0.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W0.log",
+      "relative_path": "running-off/logs/W0.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W0.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W200.exit",
+      "relative_path": "running-off/logs/W200.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W200.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W200.log",
+      "relative_path": "running-off/logs/W200.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W200.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W500_2X.exit",
+      "relative_path": "running-off/logs/W500_2X.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W500_2X.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W500_2X.log",
+      "relative_path": "running-off/logs/W500_2X.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W500_2X.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W500_FROZEN.exit",
+      "relative_path": "running-off/logs/W500_FROZEN.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W500_FROZEN.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/logs/W500_FROZEN.log",
+      "relative_path": "running-off/logs/W500_FROZEN.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/logs/W500_FROZEN.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W-multi.after.json",
+      "relative_path": "running-off/provenance/W-multi.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W-multi.after.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W-multi.before.json",
+      "relative_path": "running-off/provenance/W-multi.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W-multi.before.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W-multi.inside.json",
+      "relative_path": "running-off/provenance/W-multi.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W-multi.inside.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W0.after.json",
+      "relative_path": "running-off/provenance/W0.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W0.after.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W0.before.json",
+      "relative_path": "running-off/provenance/W0.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W0.before.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W0.inside.json",
+      "relative_path": "running-off/provenance/W0.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W0.inside.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W200.after.json",
+      "relative_path": "running-off/provenance/W200.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W200.after.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W200.before.json",
+      "relative_path": "running-off/provenance/W200.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W200.before.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W200.inside.json",
+      "relative_path": "running-off/provenance/W200.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W200.inside.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W500_2X.after.json",
+      "relative_path": "running-off/provenance/W500_2X.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W500_2X.after.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W500_2X.before.json",
+      "relative_path": "running-off/provenance/W500_2X.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W500_2X.before.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W500_2X.inside.json",
+      "relative_path": "running-off/provenance/W500_2X.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W500_2X.inside.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W500_FROZEN.after.json",
+      "relative_path": "running-off/provenance/W500_FROZEN.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W500_FROZEN.after.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W500_FROZEN.before.json",
+      "relative_path": "running-off/provenance/W500_FROZEN.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W500_FROZEN.before.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/W500_FROZEN.inside.json",
+      "relative_path": "running-off/provenance/W500_FROZEN.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/W500_FROZEN.inside.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/provenance/initial.json",
+      "relative_path": "running-off/provenance/initial.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/provenance/initial.json",
+      "sha256": "6e5eeeffdeee98e1b275babd6ecfcc31f5cef1fa4c13c8387f4641204439fbab",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off/runner.txt",
+      "relative_path": "running-off/runner.txt",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off/runner.txt",
+      "sha256": "0bfb26c0229e41b796070134a8b4b515f52c4ac995f14cfeebe2396548cc89b3",
+      "bytes": 268,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-off.log",
+      "relative_path": "running-off.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-off.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W-multi.json",
+      "relative_path": "running-on/W-multi.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/W-multi.json",
+      "sha256": "4619b9302d0bc5d21d108613d710fffeb302c51239259a8546acdf3efa9809ba",
+      "bytes": 518798,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W-multi.jsonl",
+      "relative_path": "running-on/W-multi.jsonl",
+      "archive_path": null,
+      "sha256": "f47179259b8c28211bbb2a371e886056e478afe2cfe96471aed6ba281b5b8ce1",
+      "bytes": 6893641,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W0.json",
+      "relative_path": "running-on/W0.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/W0.json",
+      "sha256": "a7b4bd86ab6b81dfaf41aa4da7cc8a15f0ef3988fd2823ef66f8c952cb3671ee",
+      "bytes": 518733,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W0.jsonl",
+      "relative_path": "running-on/W0.jsonl",
+      "archive_path": null,
+      "sha256": "d15500ab867ce8727f2bb544fe05dcced6db3e1a4aeecd96b394e8c515f4e6ee",
+      "bytes": 5747456,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W200.json",
+      "relative_path": "running-on/W200.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/W200.json",
+      "sha256": "e819c5c6be45015e25cf1563173eaa352b038c1f7dd40c9bb9f94e7f1a958473",
+      "bytes": 516987,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W200.jsonl",
+      "relative_path": "running-on/W200.jsonl",
+      "archive_path": null,
+      "sha256": "229c536a650a43f9f855f01c51545fc29735b0c526e6c02618129980d24793f0",
+      "bytes": 17408890,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W500_2X.json",
+      "relative_path": "running-on/W500_2X.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/W500_2X.json",
+      "sha256": "22d778887b235001972ee0feda5e9e13456fac90d9e37cf718e14ab031acfa78",
+      "bytes": 208836,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W500_2X.jsonl",
+      "relative_path": "running-on/W500_2X.jsonl",
+      "archive_path": null,
+      "sha256": "12b2e71fd8c85719552a8f9b85bca4d80e6e8b31eea14c8dba4f1c3618ce2b77",
+      "bytes": 3965550,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W500_FROZEN.json",
+      "relative_path": "running-on/W500_FROZEN.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/W500_FROZEN.json",
+      "sha256": "b73f1440cd356e8bd543cbc4f337d88cdb45a01f0386b5a0dc259efb258c9e39",
+      "bytes": 208112,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/W500_FROZEN.jsonl",
+      "relative_path": "running-on/W500_FROZEN.jsonl",
+      "archive_path": null,
+      "sha256": "cca766b559e6c9b7e7623806d5510681aff4a9af22ff8b91ef035eab36b8f1ec",
+      "bytes": 4180973,
+      "retention": "complete raw JSONL retained externally"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/launches.tsv",
+      "relative_path": "running-on/launches.tsv",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/launches.tsv",
+      "sha256": "73cd9eb670aad760a47901b013e54df4126fa0198affbb774132be3ec5c25449",
+      "bytes": 444,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W-multi.exit",
+      "relative_path": "running-on/logs/W-multi.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W-multi.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W-multi.log",
+      "relative_path": "running-on/logs/W-multi.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W-multi.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W0.exit",
+      "relative_path": "running-on/logs/W0.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W0.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W0.log",
+      "relative_path": "running-on/logs/W0.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W0.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W200.exit",
+      "relative_path": "running-on/logs/W200.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W200.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W200.log",
+      "relative_path": "running-on/logs/W200.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W200.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W500_2X.exit",
+      "relative_path": "running-on/logs/W500_2X.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W500_2X.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W500_2X.log",
+      "relative_path": "running-on/logs/W500_2X.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W500_2X.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W500_FROZEN.exit",
+      "relative_path": "running-on/logs/W500_FROZEN.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W500_FROZEN.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/logs/W500_FROZEN.log",
+      "relative_path": "running-on/logs/W500_FROZEN.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/logs/W500_FROZEN.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W-multi.after.json",
+      "relative_path": "running-on/provenance/W-multi.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W-multi.after.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W-multi.before.json",
+      "relative_path": "running-on/provenance/W-multi.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W-multi.before.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W-multi.inside.json",
+      "relative_path": "running-on/provenance/W-multi.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W-multi.inside.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W0.after.json",
+      "relative_path": "running-on/provenance/W0.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W0.after.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W0.before.json",
+      "relative_path": "running-on/provenance/W0.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W0.before.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W0.inside.json",
+      "relative_path": "running-on/provenance/W0.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W0.inside.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W200.after.json",
+      "relative_path": "running-on/provenance/W200.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W200.after.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W200.before.json",
+      "relative_path": "running-on/provenance/W200.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W200.before.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W200.inside.json",
+      "relative_path": "running-on/provenance/W200.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W200.inside.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W500_2X.after.json",
+      "relative_path": "running-on/provenance/W500_2X.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W500_2X.after.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W500_2X.before.json",
+      "relative_path": "running-on/provenance/W500_2X.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W500_2X.before.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W500_2X.inside.json",
+      "relative_path": "running-on/provenance/W500_2X.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W500_2X.inside.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W500_FROZEN.after.json",
+      "relative_path": "running-on/provenance/W500_FROZEN.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W500_FROZEN.after.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W500_FROZEN.before.json",
+      "relative_path": "running-on/provenance/W500_FROZEN.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W500_FROZEN.before.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/W500_FROZEN.inside.json",
+      "relative_path": "running-on/provenance/W500_FROZEN.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/W500_FROZEN.inside.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/provenance/initial.json",
+      "relative_path": "running-on/provenance/initial.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/provenance/initial.json",
+      "sha256": "feae929497813e7a5456236c7fac7c957165120aa229d8fffbd9835bd9533c57",
+      "bytes": 327917,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on/runner.txt",
+      "relative_path": "running-on/runner.txt",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on/runner.txt",
+      "sha256": "0bfb26c0229e41b796070134a8b4b515f52c4ac995f14cfeebe2396548cc89b3",
+      "bytes": 268,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/running-on.log",
+      "relative_path": "running-on.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/running-on.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P1.json",
+      "relative_path": "six/A/P1.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P1.json",
+      "sha256": "ff62f2b0bbd6bd2f526f917838a7fd908d9510c47dcd474372a564f0f151574a",
+      "bytes": 33372,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P1.png",
+      "relative_path": "six/A/P1.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P1.png",
+      "sha256": "afac44292726b4761485dc6d825e8124f7218f3a5b7783c7779a65b4316e9fe8",
+      "bytes": 118673,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P2.json",
+      "relative_path": "six/A/P2.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P2.json",
+      "sha256": "ff5905a79a80966e8e082bf5431687c5815dc92185df8b9151311d72195cd536",
+      "bytes": 29189,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P2.png",
+      "relative_path": "six/A/P2.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P2.png",
+      "sha256": "8c87670976cd58d47a725a10bf0af86889893d32a716d5dd8c2bc0dfb660edf6",
+      "bytes": 116120,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P3.json",
+      "relative_path": "six/A/P3.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P3.json",
+      "sha256": "2ac7fade824ecc64ad682df7878a678ff05a994389297b21577b52c89f7c1c89",
+      "bytes": 42040,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P3.png",
+      "relative_path": "six/A/P3.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P3.png",
+      "sha256": "47e33fac19234224fc9e05085c81a278f9aff3cd9e33517b6cc21c640564e453",
+      "bytes": 316639,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P4.json",
+      "relative_path": "six/A/P4.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P4.json",
+      "sha256": "f7a89497ef3732c3ca02c861c8fdf32a420461298b8eed008e3445d881986752",
+      "bytes": 44036,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P4.png",
+      "relative_path": "six/A/P4.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P4.png",
+      "sha256": "0b63e245c30d4ea0bb0bdc60b4c9886025faf4d593de95f9e9689e90d89a2886",
+      "bytes": 414214,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P5.json",
+      "relative_path": "six/A/P5.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P5.json",
+      "sha256": "fb53be7a6a3adc789adb4935a98408cc553b6c1054d538e0c70b6d7521cad117",
+      "bytes": 29180,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P5.png",
+      "relative_path": "six/A/P5.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P5.png",
+      "sha256": "7f99ecb1303926e3c40c560630427484156cb829ea6a84c629970ca467cb466a",
+      "bytes": 150954,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P6.json",
+      "relative_path": "six/A/P6.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P6.json",
+      "sha256": "ce132fa6e43f256c29ac524d457cb8f6d331662ecf2294492cc12d0be8fcba9a",
+      "bytes": 43736,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/P6.png",
+      "relative_path": "six/A/P6.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/P6.png",
+      "sha256": "1ab75ed23d113c5d904319c108a982bbe301954d719c2dcff75c0e0fa95f59c6",
+      "bytes": 124022,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/launches.tsv",
+      "relative_path": "six/A/launches.tsv",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/launches.tsv",
+      "sha256": "19640e49e1b8ceaa7a5c3c752b8b9b7768d4b60a44cf4d6bbc571903a8692dbb",
+      "bytes": 495,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P1.exit",
+      "relative_path": "six/A/logs/P1.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P1.log",
+      "relative_path": "six/A/logs/P1.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P1.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P2.exit",
+      "relative_path": "six/A/logs/P2.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P2.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P2.log",
+      "relative_path": "six/A/logs/P2.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P2.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P3.exit",
+      "relative_path": "six/A/logs/P3.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P3.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P3.log",
+      "relative_path": "six/A/logs/P3.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P3.log",
+      "sha256": "fc0223fe226cf2ed249f08da7fcf56de6fff4021cdb20ade3b010183d9469a77",
+      "bytes": 450,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P4.exit",
+      "relative_path": "six/A/logs/P4.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P4.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P4.log",
+      "relative_path": "six/A/logs/P4.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P4.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P5.exit",
+      "relative_path": "six/A/logs/P5.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P5.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P5.log",
+      "relative_path": "six/A/logs/P5.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P5.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P6.exit",
+      "relative_path": "six/A/logs/P6.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P6.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/logs/P6.log",
+      "relative_path": "six/A/logs/P6.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/logs/P6.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/manifest.json",
+      "relative_path": "six/A/manifest.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/manifest.json",
+      "sha256": "19fbf0e009f4f881d78e257938c5af639b317e6d54933c911473076ba5e4aa0f",
+      "bytes": 1761,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/p3-plan.json",
+      "relative_path": "six/A/p3-plan.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/p3-plan.json",
+      "sha256": "3ae653b39c1e167d1aa30af2a5d7451a46b0746ec19a200bf99c378d54b478bf",
+      "bytes": 50,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P1.after.json",
+      "relative_path": "six/A/provenance/P1.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P1.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P1.before.json",
+      "relative_path": "six/A/provenance/P1.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P1.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P1.inside.json",
+      "relative_path": "six/A/provenance/P1.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P1.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P2.after.json",
+      "relative_path": "six/A/provenance/P2.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P2.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P2.before.json",
+      "relative_path": "six/A/provenance/P2.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P2.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P2.inside.json",
+      "relative_path": "six/A/provenance/P2.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P2.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P3.after.json",
+      "relative_path": "six/A/provenance/P3.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P3.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P3.before.json",
+      "relative_path": "six/A/provenance/P3.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P3.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P3.inside.json",
+      "relative_path": "six/A/provenance/P3.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P3.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P4.after.json",
+      "relative_path": "six/A/provenance/P4.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P4.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P4.before.json",
+      "relative_path": "six/A/provenance/P4.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P4.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P4.inside.json",
+      "relative_path": "six/A/provenance/P4.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P4.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P5.after.json",
+      "relative_path": "six/A/provenance/P5.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P5.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P5.before.json",
+      "relative_path": "six/A/provenance/P5.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P5.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P5.inside.json",
+      "relative_path": "six/A/provenance/P5.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P5.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P6.after.json",
+      "relative_path": "six/A/provenance/P6.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P6.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P6.before.json",
+      "relative_path": "six/A/provenance/P6.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P6.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/P6.inside.json",
+      "relative_path": "six/A/provenance/P6.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/P6.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/provenance/initial.json",
+      "relative_path": "six/A/provenance/initial.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/provenance/initial.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/runner.txt",
+      "relative_path": "six/A/runner.txt",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/runner.txt",
+      "sha256": "fcd14eafe918b4086182ba51db2eeb2383fd84d4d807a7ab44119be54d9376e6",
+      "bytes": 152,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/soc_d33_0949_FV_all.entities.json",
+      "relative_path": "six/A/soc_d33_0949_FV_all.entities.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/soc_d33_0949_FV_all.entities.json",
+      "sha256": "6e97a01a81af7887b5374f621ed81bea27e410fd93be5f7f83c1cb4fa16ffac1",
+      "bytes": 1909669,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/A/soc_d33_0949_FV_all.png",
+      "relative_path": "six/A/soc_d33_0949_FV_all.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/A/soc_d33_0949_FV_all.png",
+      "sha256": "47e33fac19234224fc9e05085c81a278f9aff3cd9e33517b6cc21c640564e453",
+      "bytes": 316639,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P1.json",
+      "relative_path": "six/Aprime/P1.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P1.json",
+      "sha256": "fd7a0358e5b09a7c598206fe214d9684fb6fb7ba12d786aad2f01926f7d11145",
+      "bytes": 33741,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P1.png",
+      "relative_path": "six/Aprime/P1.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P1.png",
+      "sha256": "afac44292726b4761485dc6d825e8124f7218f3a5b7783c7779a65b4316e9fe8",
+      "bytes": 118673,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P2.json",
+      "relative_path": "six/Aprime/P2.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P2.json",
+      "sha256": "ff5905a79a80966e8e082bf5431687c5815dc92185df8b9151311d72195cd536",
+      "bytes": 29189,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P2.png",
+      "relative_path": "six/Aprime/P2.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P2.png",
+      "sha256": "8c87670976cd58d47a725a10bf0af86889893d32a716d5dd8c2bc0dfb660edf6",
+      "bytes": 116120,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P3.json",
+      "relative_path": "six/Aprime/P3.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P3.json",
+      "sha256": "2ac7fade824ecc64ad682df7878a678ff05a994389297b21577b52c89f7c1c89",
+      "bytes": 42040,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P3.png",
+      "relative_path": "six/Aprime/P3.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P3.png",
+      "sha256": "47e33fac19234224fc9e05085c81a278f9aff3cd9e33517b6cc21c640564e453",
+      "bytes": 316639,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P4.json",
+      "relative_path": "six/Aprime/P4.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P4.json",
+      "sha256": "f7a89497ef3732c3ca02c861c8fdf32a420461298b8eed008e3445d881986752",
+      "bytes": 44036,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P4.png",
+      "relative_path": "six/Aprime/P4.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P4.png",
+      "sha256": "0b63e245c30d4ea0bb0bdc60b4c9886025faf4d593de95f9e9689e90d89a2886",
+      "bytes": 414214,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P5.json",
+      "relative_path": "six/Aprime/P5.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P5.json",
+      "sha256": "fb53be7a6a3adc789adb4935a98408cc553b6c1054d538e0c70b6d7521cad117",
+      "bytes": 29180,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P5.png",
+      "relative_path": "six/Aprime/P5.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P5.png",
+      "sha256": "7f99ecb1303926e3c40c560630427484156cb829ea6a84c629970ca467cb466a",
+      "bytes": 150954,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P6.json",
+      "relative_path": "six/Aprime/P6.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P6.json",
+      "sha256": "d1263792df34846776f1da1a90a7d64dabc23869f4d7977756aaa02abdf4fdf7",
+      "bytes": 43859,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/P6.png",
+      "relative_path": "six/Aprime/P6.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/P6.png",
+      "sha256": "1ab75ed23d113c5d904319c108a982bbe301954d719c2dcff75c0e0fa95f59c6",
+      "bytes": 124022,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/launches.tsv",
+      "relative_path": "six/Aprime/launches.tsv",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/launches.tsv",
+      "sha256": "9e62a175a7c75680eb24e73fefb867418b28ded93434491cc3588bcc5257695d",
+      "bytes": 495,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P1.exit",
+      "relative_path": "six/Aprime/logs/P1.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P1.log",
+      "relative_path": "six/Aprime/logs/P1.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P1.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P2.exit",
+      "relative_path": "six/Aprime/logs/P2.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P2.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P2.log",
+      "relative_path": "six/Aprime/logs/P2.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P2.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P3.exit",
+      "relative_path": "six/Aprime/logs/P3.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P3.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P3.log",
+      "relative_path": "six/Aprime/logs/P3.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P3.log",
+      "sha256": "34fcf2d61c8f3160e92c561bae796767c8d915819dbf6e5b4e9726208deafae5",
+      "bytes": 450,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P4.exit",
+      "relative_path": "six/Aprime/logs/P4.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P4.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P4.log",
+      "relative_path": "six/Aprime/logs/P4.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P4.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P5.exit",
+      "relative_path": "six/Aprime/logs/P5.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P5.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P5.log",
+      "relative_path": "six/Aprime/logs/P5.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P5.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P6.exit",
+      "relative_path": "six/Aprime/logs/P6.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P6.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/logs/P6.log",
+      "relative_path": "six/Aprime/logs/P6.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/logs/P6.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/manifest.json",
+      "relative_path": "six/Aprime/manifest.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/manifest.json",
+      "sha256": "be9e12a02ce753cb1cdfc2c14023156e882710b9cf4a5c5c5ea41eea21195a18",
+      "bytes": 1761,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/p3-plan.json",
+      "relative_path": "six/Aprime/p3-plan.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/p3-plan.json",
+      "sha256": "3ae653b39c1e167d1aa30af2a5d7451a46b0746ec19a200bf99c378d54b478bf",
+      "bytes": 50,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P1.after.json",
+      "relative_path": "six/Aprime/provenance/P1.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P1.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P1.before.json",
+      "relative_path": "six/Aprime/provenance/P1.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P1.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P1.inside.json",
+      "relative_path": "six/Aprime/provenance/P1.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P1.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P2.after.json",
+      "relative_path": "six/Aprime/provenance/P2.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P2.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P2.before.json",
+      "relative_path": "six/Aprime/provenance/P2.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P2.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P2.inside.json",
+      "relative_path": "six/Aprime/provenance/P2.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P2.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P3.after.json",
+      "relative_path": "six/Aprime/provenance/P3.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P3.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P3.before.json",
+      "relative_path": "six/Aprime/provenance/P3.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P3.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P3.inside.json",
+      "relative_path": "six/Aprime/provenance/P3.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P3.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P4.after.json",
+      "relative_path": "six/Aprime/provenance/P4.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P4.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P4.before.json",
+      "relative_path": "six/Aprime/provenance/P4.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P4.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P4.inside.json",
+      "relative_path": "six/Aprime/provenance/P4.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P4.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P5.after.json",
+      "relative_path": "six/Aprime/provenance/P5.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P5.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P5.before.json",
+      "relative_path": "six/Aprime/provenance/P5.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P5.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P5.inside.json",
+      "relative_path": "six/Aprime/provenance/P5.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P5.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P6.after.json",
+      "relative_path": "six/Aprime/provenance/P6.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P6.after.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P6.before.json",
+      "relative_path": "six/Aprime/provenance/P6.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P6.before.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/P6.inside.json",
+      "relative_path": "six/Aprime/provenance/P6.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/P6.inside.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/provenance/initial.json",
+      "relative_path": "six/Aprime/provenance/initial.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/provenance/initial.json",
+      "sha256": "22870512701975f01fa77e30fca9ede67b693b281d18c0ccac5826a6efdc6dd6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/runner.txt",
+      "relative_path": "six/Aprime/runner.txt",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/runner.txt",
+      "sha256": "2132619f34a8ae684822bee83f1df7067614a56a696eb0ef000058bf44439649",
+      "bytes": 157,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/soc_d33_0949_FV_all.entities.json",
+      "relative_path": "six/Aprime/soc_d33_0949_FV_all.entities.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/soc_d33_0949_FV_all.entities.json",
+      "sha256": "7411dd961a9dd2ad9033e55fd514ee7533d0709bee613e7ca96266afc1738e81",
+      "bytes": 1909669,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/Aprime/soc_d33_0949_FV_all.png",
+      "relative_path": "six/Aprime/soc_d33_0949_FV_all.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/Aprime/soc_d33_0949_FV_all.png",
+      "sha256": "47e33fac19234224fc9e05085c81a278f9aff3cd9e33517b6cc21c640564e453",
+      "bytes": 316639,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P1.json",
+      "relative_path": "six/B/P1.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P1.json",
+      "sha256": "273bf5b4e2e5de1acf139f040dd610d63a32f4f89b6c898f0ca36aa945386de9",
+      "bytes": 33370,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P1.png",
+      "relative_path": "six/B/P1.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P1.png",
+      "sha256": "afac44292726b4761485dc6d825e8124f7218f3a5b7783c7779a65b4316e9fe8",
+      "bytes": 118673,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P2.json",
+      "relative_path": "six/B/P2.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P2.json",
+      "sha256": "c217c13ebf24a6597d93b017b0c8cb734882afa0be8da5e0a3df1bd4860e02bb",
+      "bytes": 29187,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P2.png",
+      "relative_path": "six/B/P2.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P2.png",
+      "sha256": "8c87670976cd58d47a725a10bf0af86889893d32a716d5dd8c2bc0dfb660edf6",
+      "bytes": 116120,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P3.json",
+      "relative_path": "six/B/P3.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P3.json",
+      "sha256": "2eaa42416f92ce1676b9a7c236759bc0238656a3e90024f274bb28702e374ac6",
+      "bytes": 42038,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P3.png",
+      "relative_path": "six/B/P3.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P3.png",
+      "sha256": "47e33fac19234224fc9e05085c81a278f9aff3cd9e33517b6cc21c640564e453",
+      "bytes": 316639,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P4.json",
+      "relative_path": "six/B/P4.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P4.json",
+      "sha256": "9e13e619e41e5aceb62b044e068ee8d3d5204ebebc2d1b40b1c8205071aa45af",
+      "bytes": 44034,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P4.png",
+      "relative_path": "six/B/P4.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P4.png",
+      "sha256": "0b63e245c30d4ea0bb0bdc60b4c9886025faf4d593de95f9e9689e90d89a2886",
+      "bytes": 414214,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P5.json",
+      "relative_path": "six/B/P5.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P5.json",
+      "sha256": "a5365736e1e9611acfb26e1d02c468ebb13dfd293d57f61c6e8d85945688b5f7",
+      "bytes": 29178,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P5.png",
+      "relative_path": "six/B/P5.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P5.png",
+      "sha256": "7f99ecb1303926e3c40c560630427484156cb829ea6a84c629970ca467cb466a",
+      "bytes": 150954,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P6.json",
+      "relative_path": "six/B/P6.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P6.json",
+      "sha256": "16258c438db644a812e3e718e15a3265b939c5644f5fc152e83117a46bc5c72b",
+      "bytes": 43857,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/P6.png",
+      "relative_path": "six/B/P6.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/P6.png",
+      "sha256": "1ab75ed23d113c5d904319c108a982bbe301954d719c2dcff75c0e0fa95f59c6",
+      "bytes": 124022,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/launches.tsv",
+      "relative_path": "six/B/launches.tsv",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/launches.tsv",
+      "sha256": "fc715df158f2e60d2e8bd15a7f6c98a77015e0497c2dffc1c5250ad6fc065f67",
+      "bytes": 495,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P1.exit",
+      "relative_path": "six/B/logs/P1.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P1.log",
+      "relative_path": "six/B/logs/P1.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P1.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P2.exit",
+      "relative_path": "six/B/logs/P2.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P2.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P2.log",
+      "relative_path": "six/B/logs/P2.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P2.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P3.exit",
+      "relative_path": "six/B/logs/P3.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P3.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P3.log",
+      "relative_path": "six/B/logs/P3.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P3.log",
+      "sha256": "1a299c9ef0fa8f49701deec894939b964aa0401994291b2b891e2aafef3771ed",
+      "bytes": 450,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P4.exit",
+      "relative_path": "six/B/logs/P4.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P4.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P4.log",
+      "relative_path": "six/B/logs/P4.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P4.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P5.exit",
+      "relative_path": "six/B/logs/P5.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P5.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P5.log",
+      "relative_path": "six/B/logs/P5.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P5.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P6.exit",
+      "relative_path": "six/B/logs/P6.exit",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P6.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/logs/P6.log",
+      "relative_path": "six/B/logs/P6.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/logs/P6.log",
+      "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+      "bytes": 331,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/manifest.json",
+      "relative_path": "six/B/manifest.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/manifest.json",
+      "sha256": "88d1601d591348e58e36b62c6e06eafaef65c3aa0dc6e704c7d5b6a00704dad6",
+      "bytes": 1759,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/p3-plan.json",
+      "relative_path": "six/B/p3-plan.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/p3-plan.json",
+      "sha256": "3ae653b39c1e167d1aa30af2a5d7451a46b0746ec19a200bf99c378d54b478bf",
+      "bytes": 50,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P1.after.json",
+      "relative_path": "six/B/provenance/P1.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P1.after.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P1.before.json",
+      "relative_path": "six/B/provenance/P1.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P1.before.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P1.inside.json",
+      "relative_path": "six/B/provenance/P1.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P1.inside.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P2.after.json",
+      "relative_path": "six/B/provenance/P2.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P2.after.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P2.before.json",
+      "relative_path": "six/B/provenance/P2.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P2.before.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P2.inside.json",
+      "relative_path": "six/B/provenance/P2.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P2.inside.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P3.after.json",
+      "relative_path": "six/B/provenance/P3.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P3.after.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P3.before.json",
+      "relative_path": "six/B/provenance/P3.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P3.before.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P3.inside.json",
+      "relative_path": "six/B/provenance/P3.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P3.inside.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P4.after.json",
+      "relative_path": "six/B/provenance/P4.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P4.after.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P4.before.json",
+      "relative_path": "six/B/provenance/P4.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P4.before.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P4.inside.json",
+      "relative_path": "six/B/provenance/P4.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P4.inside.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P5.after.json",
+      "relative_path": "six/B/provenance/P5.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P5.after.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P5.before.json",
+      "relative_path": "six/B/provenance/P5.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P5.before.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P5.inside.json",
+      "relative_path": "six/B/provenance/P5.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P5.inside.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P6.after.json",
+      "relative_path": "six/B/provenance/P6.after.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P6.after.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P6.before.json",
+      "relative_path": "six/B/provenance/P6.before.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P6.before.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/P6.inside.json",
+      "relative_path": "six/B/provenance/P6.inside.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/P6.inside.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/provenance/initial.json",
+      "relative_path": "six/B/provenance/initial.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/provenance/initial.json",
+      "sha256": "7d14efe2e9f977c26d2f48df087772647b0a91d7343f046c484efcc641b5efb6",
+      "bytes": 328219,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/runner.txt",
+      "relative_path": "six/B/runner.txt",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/runner.txt",
+      "sha256": "70f2449977e9dbf7cb13f9391ce67ffce77ecbfc45b2ee780ecea76dc3acd194",
+      "bytes": 152,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/soc_d33_0949_FV_all.entities.json",
+      "relative_path": "six/B/soc_d33_0949_FV_all.entities.json",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/soc_d33_0949_FV_all.entities.json",
+      "sha256": "ed009a8df22b2b027b6bbe1dc47e55c0f029dc9dc276bc05dd8874b92644fdcc",
+      "bytes": 1909669,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six/B/soc_d33_0949_FV_all.png",
+      "relative_path": "six/B/soc_d33_0949_FV_all.png",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six/B/soc_d33_0949_FV_all.png",
+      "sha256": "47e33fac19234224fc9e05085c81a278f9aff3cd9e33517b6cc21c640564e453",
+      "bytes": 316639,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six-A.log",
+      "relative_path": "six-A.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six-A.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six-Aprime.log",
+      "relative_path": "six-Aprime.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six-Aprime.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retention": "archived and external"
+    },
+    {
+      "external_path": "/Users/rexxa/work/art-production13b-evidence/walker-identity-attempt2/six-B.log",
+      "relative_path": "six-B.log",
+      "archive_path": "docs/art/production13b/walker/identity-attempt2/six-B.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "retention": "archived and external"
+    }
+  ]
+}

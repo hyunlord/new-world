@@ -1,0 +1,20 @@
+[
+  {
+    "case": "missing",
+    "exit": 1,
+    "report_written": true,
+    "correct_failure": true
+  },
+  {
+    "case": "bad_schedule",
+    "exit": 1,
+    "report_written": true,
+    "correct_failure": true
+  },
+  {
+    "case": "bad_running_series",
+    "exit": 1,
+    "report_written": true,
+    "correct_failure": true
+  }
+]

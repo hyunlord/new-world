@@ -7,6 +7,12 @@
     ],
     "pair-write-skip-W200": [
       1792414027.820246
+    ],
+    "pair-walker-W200": [
+      1792417734.927285
+    ],
+    "pair-walker-W500": [
+      1792417811.6888142
     ]
   },
   "waiting_seconds": 3600.0,
@@ -30,6 +36,14 @@
     [
       1792417584.0,
       1792417584.0
+    ],
+    [
+      1792417734.0,
+      1792417734.0
+    ],
+    [
+      1792417811.0,
+      1792417811.0
     ]
   ],
   "events": [
@@ -60,6 +74,20 @@
       "admitted": true,
       "output": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt3/frames.json.validity.json",
       "completed_epoch": 1792417635.145739
+    },
+    {
+      "epoch": 1792417734.927285,
+      "item": "pair-walker-W200",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792417779.8225322
+    },
+    {
+      "epoch": 1792417811.6888142,
+      "item": "pair-walker-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W500-attempt1/frames.json.validity.json",
+      "completed_epoch": 1792417862.319812
     }
   ]
 }

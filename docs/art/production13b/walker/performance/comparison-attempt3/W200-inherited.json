@@ -1,0 +1,405 @@
+{
+  "pooled_median_ratio": 0.64922376483374,
+  "pair_ratios": [
+    0.6472445182148864,
+    0.6466932537831592,
+    0.6541020267706434
+  ],
+  "speed_pass": true,
+  "valid": true,
+  "world": "W200",
+  "change_id": "walker",
+  "blocks": [
+    {
+      "index": 0,
+      "mode": "control",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 35.320500005424,
+          "p90": 37.028000007391,
+          "p99": 39.7320000040531,
+          "maximum": 90.1529999939203,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 35.0715,
+          "p90": 36.779,
+          "p99": 39.48,
+          "maximum": 89.906,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.2534999996423725,
+          "p90": 0.27700001001358,
+          "p99": 0.312999993562698,
+          "maximum": 0.324999988079071,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.033,
+          "p90": 0.037,
+          "p99": 0.043,
+          "maximum": 0.046,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 37.1265,
+          "p90": 38.857,
+          "p99": 41.473,
+          "maximum": 92.065,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 2.0,
+          "p90": 3.0,
+          "p99": 4.0,
+          "maximum": 5.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 1,
+      "mode": "candidate",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 22.86100000911955,
+          "p90": 23.5099999959469,
+          "p99": 27.1190000112057,
+          "maximum": 72.2580000007153,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 22.6045,
+          "p90": 23.262,
+          "p99": 26.812,
+          "maximum": 72.015,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.252000004053116,
+          "p90": 0.275999993085861,
+          "p99": 0.293999999761581,
+          "maximum": 0.307000011205673,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.0315,
+          "p90": 0.039,
+          "p99": 0.049,
+          "maximum": 0.049,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 24.633,
+          "p90": 25.383,
+          "p99": 29.017,
+          "maximum": 74.175,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 1.0,
+          "p90": 2.0,
+          "p99": 2.0,
+          "maximum": 4.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 2,
+      "mode": "control",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 35.4805000026226,
+          "p90": 37.3590000107288,
+          "p99": 40.1809999952316,
+          "maximum": 85.771,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 35.212500000000006,
+          "p90": 37.089,
+          "p99": 39.926,
+          "maximum": 85.521,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.25900000333786,
+          "p90": 0.27700001001358,
+          "p99": 0.298000007867813,
+          "maximum": 0.312999993562698,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.034,
+          "p90": 0.04,
+          "p99": 0.046,
+          "maximum": 0.047,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 37.2875,
+          "p90": 39.233,
+          "p99": 42.014,
+          "maximum": 87.741,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 2.0,
+          "p90": 3.0,
+          "p99": 3.0,
+          "maximum": 5.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 3,
+      "mode": "candidate",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 22.9449999925494,
+          "p90": 23.7689999923706,
+          "p99": 28.1870000138283,
+          "maximum": 73.6660000047684,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 22.691,
+          "p90": 23.514,
+          "p99": 27.864,
+          "maximum": 73.421,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.254000008106232,
+          "p90": 0.275999993085861,
+          "p99": 0.323000013828278,
+          "maximum": 0.337999999523163,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.032,
+          "p90": 0.042,
+          "p99": 0.052,
+          "maximum": 0.053,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 24.6685,
+          "p90": 25.548,
+          "p99": 30.116,
+          "maximum": 75.55,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 1.0,
+          "p90": 2.0,
+          "p99": 2.0,
+          "maximum": 4.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 4,
+      "mode": "control",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 35.324000005066395,
+          "p90": 37.9100000140667,
+          "p99": 40.178999989748,
+          "maximum": 85.1599999911785,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 35.0715,
+          "p90": 37.631,
+          "p99": 39.912,
+          "maximum": 84.907,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.258999988436699,
+          "p90": 0.282000005245209,
+          "p99": 0.324000000953674,
+          "maximum": 0.331000000238419,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.033,
+          "p90": 0.039,
+          "p99": 0.045,
+          "maximum": 0.05,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 37.1395,
+          "p90": 39.621,
+          "p99": 42.157,
+          "maximum": 87.177,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 2.0,
+          "p90": 3.0,
+          "p99": 3.0,
+          "maximum": 5.0,
+          "over_budget": 150
+        }
+      }
+    },
+    {
+      "index": 5,
+      "mode": "candidate",
+      "metrics": {
+        "primary_cpu_ms": {
+          "count": 150,
+          "median": 23.105499996960148,
+          "p90": 24.0559999856949,
+          "p99": 24.6640000033379,
+          "maximum": 72.9739999959469,
+          "over_budget": 150
+        },
+        "process_ms": {
+          "count": 150,
+          "median": 22.858,
+          "p90": 23.789,
+          "p99": 24.405,
+          "maximum": 72.726,
+          "over_budget": 150
+        },
+        "render_cpu_ms": {
+          "count": 150,
+          "median": 0.25450000166893,
+          "p90": 0.279000014066696,
+          "p99": 0.294999986886978,
+          "maximum": 0.298000007867813,
+          "over_budget": 150
+        },
+        "setup_cpu_ms": {
+          "count": 150,
+          "median": 0.033,
+          "p90": 0.041,
+          "p99": 0.055,
+          "maximum": 0.056,
+          "over_budget": 150
+        },
+        "gpu_ms": {
+          "count": 150,
+          "median": 0.0,
+          "p90": 0.0,
+          "p99": 0.0,
+          "maximum": 0.0,
+          "over_budget": 150
+        },
+        "pacing_ms": {
+          "count": 150,
+          "median": 24.833,
+          "p90": 25.848,
+          "p99": 26.615,
+          "maximum": 74.9,
+          "over_budget": 150
+        },
+        "ticks_run": {
+          "count": 150,
+          "median": 1.5,
+          "p90": 2.0,
+          "p99": 2.0,
+          "maximum": 3.0,
+          "over_budget": 150
+        }
+      }
+    }
+  ],
+  "control": {
+    "count": 450,
+    "median": 35.36299999588725,
+    "p90": 37.4859999985695,
+    "p99": 40.178999989748,
+    "maximum": 90.1529999939203,
+    "over_budget": 450
+  },
+  "candidate": {
+    "count": 450,
+    "median": 22.958499993145452,
+    "p90": 23.9390000019073,
+    "p99": 27.2309999995232,
+    "maximum": 73.6660000047684,
+    "over_budget": 450
+  },
+  "median_speedup": 1.5403009781320782,
+  "pixel_identity": "NOT_VERIFIED",
+  "source": "/Users/rexxa/work/art-production13b-evidence/walker-performance-W200-attempt1"
+}

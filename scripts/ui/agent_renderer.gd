@@ -71,7 +71,7 @@ var _spatial_hash_enabled: bool = true
 var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
 var _declump_fixture_sink_p12: RefCounted
 var _walker_fixture_sink_p13b: RefCounted
-var _walker_kernel_enabled_p13b: bool = OS.get_environment("P13B_WALKER_KERNEL") == "1"
+var _walker_kernel_enabled_p13b: bool = OS.get_environment("P13B_WALKER_KERNEL") != "0"
 var _hovered_person_p12: int = -1
 var _hover_owner_p12: int = 0
 var _hover_marker_p12: Dictionary = {}
