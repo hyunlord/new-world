@@ -1,0 +1,1985 @@
+{
+  "schema_version": 1,
+  "snapshot_at_utc": "2026-10-19T13:35:09.710118+00:00",
+  "scope": {
+    "first_task_commit": "f962f5cd6e671c6b000ca6e0734b904449360650",
+    "last_task_commit": "af30bb29b01c88b6c3f6475e7cf179dc8232bb45",
+    "observed_head": "af30bb29b01c88b6c3f6475e7cf179dc8232bb45",
+    "source_freeze": "No source/HEAD changes made; docs-only snapshot.",
+    "commit_selection": "Inclusive f962f5cd^..af30bb29; historical references are not task commits."
+  },
+  "anchors": {
+    "deadline_anchor_utc": "2026-10-19T12:08:00Z",
+    "deadline_anchor_kind": "conservative scheduling anchor; not observed start",
+    "first_artifact_utc": "2026-10-19T12:10:39.358835Z",
+    "first_artifact_source": {
+      "path": "docs/art/production13b/GOAL.md",
+      "sha256": "b7989410dc248d0f17b0b9f1641e4b9569c1968950a5bcdc7a733ff28805cb61"
+    },
+    "first_artifact_timestamp_kind": "filesystem birthtime corroborated by TASKS; not simulation timestamp",
+    "first_commit_utc": "2026-10-19T12:10:57Z",
+    "part1_deadline_utc": "2026-10-19T17:08:00Z",
+    "part4_freeze_deadline_utc": "2026-10-19T19:08:00Z",
+    "ten_hour_cutoff_utc": "2026-10-19T22:08:00Z"
+  },
+  "task_ledger_source": {
+    "path": "docs/art/production13b/TASKS.md",
+    "sha256": "5f8ecce4486e241177041eba4f15d0c76a4e4f88d67a7f8c7be0c65c0e96f6af"
+  },
+  "parts": [
+    {
+      "part": 0,
+      "status": "COMPLETE_BASELINE_FAIL_RETAINED",
+      "first_durable_artifact_utc": "2026-10-19T12:10:39Z",
+      "completion_documented_by_commit": "4a954fa9266ab24f7d3f9ba5c1fc3414ca33ba85",
+      "completion_documented_by_utc": "2026-10-19T12:40:03Z",
+      "actual_end_utc": null,
+      "note": "Commit TASKS snapshot declares completion; actual completion instant not separately established. Baseline119/120."
+    },
+    {
+      "part": 1,
+      "status": "IN_PROGRESS",
+      "in_progress_documented_by_commit": "f55cf1e0e60a381c9c0d0199c26d07e1c57fc155",
+      "in_progress_documented_by_utc": "2026-10-19T12:42:45Z",
+      "actual_start_utc": null,
+      "actual_end_utc": null,
+      "note": "Current TASKS still in progress; walker identity/speed pending. Commit timestamps are checkpoints, not phase start/end times."
+    },
+    {
+      "part": 2,
+      "status": "COMPLETE_WITH_LIMITATIONS_REPORTED_IN_WORKING_TASKS",
+      "first_part_label_commit": "8ca6b93018b0ec0b795f8312c549197a97f851da",
+      "first_part_label_commit_utc": "2026-10-19T12:48:22Z",
+      "first_observed_base_capture_started_utc": "2026-10-19T12:48:36.311838Z",
+      "actual_start_utc": null,
+      "actual_end_utc": null,
+      "note": "Current uncommitted TASKS declares complete with limitations. Committed af30bb29 TASKS header still says PENDING; checkpoint prose records active work. No exact completion timestamp inferred from that stale header or file mtime."
+    },
+    {
+      "part": 3,
+      "status": "PENDING_IN_TASKS",
+      "actual_start_utc": null,
+      "actual_end_utc": null
+    },
+    {
+      "part": 4,
+      "status": "PENDING_IN_TASKS",
+      "actual_start_utc": null,
+      "actual_end_utc": null
+    },
+    {
+      "part": 5,
+      "status": "PENDING_IN_TASKS",
+      "actual_start_utc": null,
+      "actual_end_utc": null
+    }
+  ],
+  "overlap": {
+    "description": "Part1 write-skip admission cooldown overlapped Part2 UI capture work; parts are not sequential elapsed-time buckets.",
+    "evidence": "TASKS created art-p13b-ui from f55cf1e0 during Part1; timestamped activity launches fall inside booked cooldown.",
+    "cooldown_utc": [
+      "2026-10-19T12:45:50Z",
+      "2026-10-19T13:15:50Z"
+    ],
+    "base_capture_window_utc": [
+      "2026-10-19T12:48:36.311838Z",
+      "2026-10-19T12:49:58.229844Z"
+    ],
+    "supplement_window_utc": [
+      "2026-10-19T12:50:46.388591Z",
+      "2026-10-19T13:04:35.246185Z"
+    ]
+  },
+  "admission_wait": {
+    "seconds": 1800.0,
+    "source": {
+      "path": "docs/art/production13b/perf/attempts.json",
+      "sha256": "141a5bdaec1dcc1f465cff519e61a9b567b7a9461c8766b9d2ae2ddfaf831d15"
+    },
+    "intervals": [
+      {
+        "start_utc": "2026-10-19T12:45:31Z",
+        "end_utc": "2026-10-19T12:45:31Z",
+        "seconds": 0.0
+      },
+      {
+        "start_utc": "2026-10-19T12:45:50Z",
+        "end_utc": "2026-10-19T13:15:50Z",
+        "seconds": 1800.0
+      },
+      {
+        "start_utc": "2026-10-19T13:16:01Z",
+        "end_utc": "2026-10-19T13:16:01Z",
+        "seconds": 0.0
+      }
+    ],
+    "note": "1800 seconds is separately booked admission wait, including time also used for UI work. Do not subtract it from wall-clock deadlines or sum overlapping phase durations. admitted=true in this ledger is policy permission, not proof Godot ran."
+  },
+  "commits": [
+    {
+      "sha": "f962f5cd6e671c6b000ca6e0734b904449360650",
+      "author_time": "2026-10-19T21:10:57+09:00",
+      "committer_time": "2026-10-19T21:10:57+09:00",
+      "committer_time_utc": "2026-10-19T12:10:57Z",
+      "subject": "art-p13b(p0): preserve the execution contract before windowed validation",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/art/production13b/GOAL.md"
+        }
+      ],
+      "changed_file_count": 1
+    },
+    {
+      "sha": "9c023aea430c9d0122c9883f7509712f88c2b188",
+      "author_time": "2026-10-19T21:15:08+09:00",
+      "committer_time": "2026-10-19T21:15:08+09:00",
+      "committer_time_utc": "2026-10-19T12:15:08Z",
+      "subject": "art-p13b(p0): isolate new measurements from preserved pass13 evidence",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/art/production13b/DECISIONS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/TOOLING.md"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/run_agent_sections_p13b.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/run_alternating_p13b.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/run_perf_matrix_p13b.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/with_quiet_lock_p13b.sh"
+        }
+      ],
+      "changed_file_count": 7
+    },
+    {
+      "sha": "22d92922f513569df8f4a6e6a9b4e8d866dbb3be",
+      "author_time": "2026-10-19T21:17:00+09:00",
+      "committer_time": "2026-10-19T21:17:00+09:00",
+      "committer_time_utc": "2026-10-19T12:17:00Z",
+      "subject": "art-p13b(p0): bind new admission decisions to a fresh measured reference",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/calibration.json"
+        }
+      ],
+      "changed_file_count": 2
+    },
+    {
+      "sha": "8900e1c69f8ba3aa8775d6f1af154e622bcb87df",
+      "author_time": "2026-10-19T21:20:50+09:00",
+      "committer_time": "2026-10-19T21:20:50+09:00",
+      "committer_time_utc": "2026-10-19T12:20:50Z",
+      "subject": "art-p13b(p0): fix screen-reading rules before collecting new answers",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/art/production13b/BLIND-PROTOCOL.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/H10-SOURCES.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        }
+      ],
+      "changed_file_count": 3
+    },
+    {
+      "sha": "32b33df8a53f8d6f4c2958d21106308e358e54f0",
+      "author_time": "2026-10-19T21:25:03+09:00",
+      "committer_time": "2026-10-19T21:25:03+09:00",
+      "committer_time_utc": "2026-10-19T12:25:03Z",
+      "subject": "art-p13b(p0): preserve reference-build progress and walker prerequisites",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/WALKER-SCOPE.md"
+        }
+      ],
+      "changed_file_count": 2
+    },
+    {
+      "sha": "c774ff518ace7abd0e01e77af3d4752149d7901e",
+      "author_time": "2026-10-19T21:33:01+09:00",
+      "committer_time": "2026-10-19T21:33:01+09:00",
+      "committer_time_utc": "2026-10-19T12:33:01Z",
+      "subject": "art-p13b(p0): establish complete deterministic reference evidence",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/calibration.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/reference-control.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/reference-control.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/running-reference-integrity.json"
+        }
+      ],
+      "changed_file_count": 6
+    },
+    {
+      "sha": "4a954fa9266ab24f7d3f9ba5c1fc3414ca33ba85",
+      "author_time": "2026-10-19T21:40:03+09:00",
+      "committer_time": "2026-10-19T21:40:03+09:00",
+      "committer_time_utc": "2026-10-19T12:40:03Z",
+      "subject": "art-p13b(p0): preserve baseline evidence before correcting hover input",
+      "part_label": "p0",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/bridge.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/cargo_test.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/clippy.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/python.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/00_fixed_world.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_0.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/03_dead_parent_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/04_wheel_end_last_line.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/05_escape_record.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/06_chronicle_open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/07_chronicle_name_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/08_chronicle_close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/09_language_korean.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/10_language_english.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/11_tooltip_before_delay.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.hePPGr/capture/result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/00_fixed_world.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_0.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/03_dead_parent_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/04_wheel_end_last_line.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/05_escape_record.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/06_chronicle_open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/07_chronicle_name_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/08_chronicle_close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/09_language_korean.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/10_language_english.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/results.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/smoke.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/smoke_errors.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/strict.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_abandoned_village.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_activity_icons_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_activity_installed_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_activity_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_activity.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_click_drawn.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_derived_cache_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_drawn_positions.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_frame_choices_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_native_size.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_agent_selection_index_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_art_hash.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_building_derived_cache_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_camp_seat_cache_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_camp_seats.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_canopy_fade.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_cold_trace_p6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_event_trace_p8.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_metadata.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_pair_p8.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_plans_p6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_society_trace.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_capture_sprite_order_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_carry_load_layer.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_causal_batch_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_chronicle_layout_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_chronicle_layout_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_chronicle_panel_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_chronicle_text_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_cold_hearth.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_cold_presentation.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_crowds_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_crowds_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_death_exposure.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_declump.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_declump_adapter_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_declump_adapter_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_effect_lifecycle.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_elder_variant.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_every_hearth.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_feed_casts.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_feed_priority.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_feed_wording.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_fixed_delta_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_founding_group.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_frame_measure.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_glyph_distinct_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_god_hand.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_hud_old_age.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_hud_season_label.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_hud_wood.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_idle_camp_pose.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_idle_facing.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_activity_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_age.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_cold.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_life_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_personal_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_porter_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_porter_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_inspector_wood.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_intervention_world_effects.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_interventions_real_p6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_life_layout_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_life_layout_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_link_hover_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_link_hover_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_meal_pose.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_meal_ring.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_morning_chill.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_morning_chill_v2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_name_presentation_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_name_presentation_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_nature_clearance.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_nature_density.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_nature_derived_cache_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_need_warning.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_offscreen_marker.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_person_activity_tooltip_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_person_names_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_porter_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_porter_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_porter_renderer_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_porter_renderer_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_pose_reuse_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_real_input_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_real_input_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_relations_chronicle_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_relations_chronicle_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_restless_meter.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_season_tint.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_settlement_labels.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_settlement_relations_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_settlement_relations_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_settlement_select.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_shelter_cold.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_sim_reads_consumers_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_sim_reads_equivalence_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_sim_reads_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_sim_reads_relations_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_sim_reads_relations_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_society_snapshot_p7.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_spatial_hash_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_stockpile_locale_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_stockpile_locale_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_structure_states.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_terrain_layers.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_variant_codes.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_variant_regions_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_village_layers.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_write_skip_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_ysort_props.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p0/test_zoom_ladder.log"
+        }
+      ],
+      "changed_file_count": 151
+    },
+    {
+      "sha": "f55cf1e0e60a381c9c0d0199c26d07e1c57fc155",
+      "author_time": "2026-10-19T21:42:45+09:00",
+      "committer_time": "2026-10-19T21:42:45+09:00",
+      "committer_time_utc": "2026-10-19T12:42:45Z",
+      "subject": "art-p13b(p1): restore readable Life scale and honor delivered hover coordinates",
+      "part_label": "p1",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/DECISIONS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/GLYPH-CHANGE-PLAN.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/TOOLTIP-DEBUG.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/00_fixed_world.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/02_click_0.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/02_click_1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/02_click_2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/02_click_3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/03_dead_parent_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/04_wheel_end_last_line.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/05_escape_record.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/06_chronicle_open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/07_chronicle_name_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/08_chronicle_close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/09_language_korean.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/10_language_english.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/11_tooltip_before_delay.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/12_tooltip_after_delay.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/13_tooltip_mouse_out.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/14_tooltip_no_activity.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/real-input-attempt2/result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/strict.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/test_life_layout_p12.windowed.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/test_life_layout_p13.windowed.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/test_person_activity_tooltip_p13.windowed.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p1/windowed-results.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/REPORT.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/en-bold-12-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/en-bold-24-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/en-bold-design12-screen24-all-pairs.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/en-regular-12-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/en-regular-24-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/en-regular-design12-screen24-all-pairs.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/glyph-result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/ko-bold-12-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/ko-bold-24-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/ko-bold-design12-screen24-all-pairs.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/ko-regular-12-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/ko-regular-24-binary-atlas.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/glyph/attempt1/ko-regular-design12-screen24-all-pairs.json"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/glyph_distinct_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/real_input_p13b.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/test/art/test_glyph_distinct_p13.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/test/art/test_real_input_p13.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/ui/panels/agent_inspector_panel.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/ui/person_activity_tooltip_p13.gd"
+        }
+      ],
+      "changed_file_count": 48
+    },
+    {
+      "sha": "8ca6b93018b0ec0b795f8312c549197a97f851da",
+      "author_time": "2026-10-19T21:48:22+09:00",
+      "committer_time": "2026-10-19T21:48:22+09:00",
+      "committer_time_utc": "2026-10-19T12:48:22Z",
+      "subject": "art-p13b(p2): bind window evidence and separate switch settings from counters",
+      "part_label": "p2",
+      "changed_files": [
+        {
+          "status": "A",
+          "path": "docs/art/production13b/BADGE-METHOD.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/H10-CAPTURE-PROTOCOL.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/PERF-COLLECTOR-DEBUG.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/attempts.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/holds.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/write-skip/running.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/write-skip/six.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/identity/write-skip/six.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/write-skip/W200-attempt1-summary.json"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/capture_h10_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/perf_alternating_frames_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/badge_evidence_p13b.py"
+        },
+        {
+          "status": "M",
+          "path": "tools/art_pipeline/run_alternating_p13b.py"
+        }
+      ],
+      "changed_file_count": 14
+    },
+    {
+      "sha": "3bee1316acdbcb891bda0be1385ba959bbb1e7f1",
+      "author_time": "2026-10-19T21:59:43+09:00",
+      "committer_time": "2026-10-19T21:59:43+09:00",
+      "committer_time_utc": "2026-10-19T12:59:43Z",
+      "subject": "art-p13b(p2): require visible porter evidence and reachable estrangement",
+      "part_label": "p2",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/DECISIONS.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/H10-CAPTURE-PROTOCOL.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "M",
+          "path": "scripts/test/art/capture_h10_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/capture_life_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/prepare_blind_crops_p13b.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/run_life_captures_p13b.py"
+        }
+      ],
+      "changed_file_count": 7
+    },
+    {
+      "sha": "75c2ea6a2cdfb085a4a4a90ceaf9fe257cda16a3",
+      "author_time": "2026-10-19T22:06:55+09:00",
+      "committer_time": "2026-10-19T22:06:55+09:00",
+      "committer_time_utc": "2026-10-19T13:06:55Z",
+      "subject": "art-p13b(p2): preserve screen limits and correct final event boundary",
+      "part_label": "p2",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/DECISIONS.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/H10-CAPTURE-PROTOCOL.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/contrast.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/review-contact.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-00-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-00-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-00-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-01-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-01-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-01-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-02-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-02-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-02-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-03-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-03-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-03-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-04-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-04-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-04-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-05-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-05-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-05-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-06-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-06-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-06-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-07-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-07-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-07-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-08-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-08-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-08-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-09-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-09-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-09-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-10-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-10-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-10-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-11-background-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-11-fill-mask.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/sample-11-review.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/contrast/samples.json"
+        },
+        {
+          "status": "M",
+          "path": "scripts/test/art/capture_h10_p13b.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/test/art/capture_life_p13b.gd"
+        }
+      ],
+      "changed_file_count": 44
+    },
+    {
+      "sha": "af30bb29b01c88b6c3f6475e7cf179dc8232bb45",
+      "author_time": "2026-10-19T22:23:43+09:00",
+      "committer_time": "2026-10-19T22:23:43+09:00",
+      "committer_time_utc": "2026-10-19T13:23:43Z",
+      "subject": "art-p13b(p1): verify walker semantics before considering activation",
+      "part_label": "p1",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/DECISIONS.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/walker-cargo-test-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/walker-cargo-test-attempt2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/walker-clippy-attempt1.log"
+        },
+        {
+          "status": "M",
+          "path": "rust/crates/sim-bridge/src/ffi/art_kernels.rs"
+        },
+        {
+          "status": "M",
+          "path": "rust/crates/sim-bridge/src/ffi/world_node.rs"
+        },
+        {
+          "status": "A",
+          "path": "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_numeric_v1.bin"
+        },
+        {
+          "status": "A",
+          "path": "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_numeric_v1.bin.json"
+        },
+        {
+          "status": "A",
+          "path": "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_v1.bin"
+        },
+        {
+          "status": "A",
+          "path": "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_v1.bin.json"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/capture_framings_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/capture_identity_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/capture_running_identity_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/capture_walker_fixture_p13b.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/test/art/perf_alternating_frames_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/walker_bridge_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/walker_fixture_recorder_p13b.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/test/art/walker_numeric_probe_p13b.gd"
+        },
+        {
+          "status": "M",
+          "path": "scripts/ui/agent_renderer.gd"
+        },
+        {
+          "status": "A",
+          "path": "scripts/ui/art_walker_p13b.gd"
+        },
+        {
+          "status": "M",
+          "path": "tools/art_pipeline/run_alternating_p13b.py"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/run_identity_p13b.sh"
+        },
+        {
+          "status": "A",
+          "path": "tools/art_pipeline/run_running_identity_p13b.sh"
+        }
+      ],
+      "changed_file_count": 24
+    }
+  ],
+  "unique_changed_paths": [
+    "docs/art/production13b/BADGE-METHOD.md",
+    "docs/art/production13b/BLIND-PROTOCOL.md",
+    "docs/art/production13b/DECISIONS.md",
+    "docs/art/production13b/GLYPH-CHANGE-PLAN.md",
+    "docs/art/production13b/GOAL.md",
+    "docs/art/production13b/H10-CAPTURE-PROTOCOL.md",
+    "docs/art/production13b/H10-SOURCES.md",
+    "docs/art/production13b/PERF-COLLECTOR-DEBUG.md",
+    "docs/art/production13b/TASKS.md",
+    "docs/art/production13b/TOOLING.md",
+    "docs/art/production13b/TOOLTIP-DEBUG.md",
+    "docs/art/production13b/WALKER-SCOPE.md",
+    "docs/art/production13b/contrast/README.md",
+    "docs/art/production13b/contrast/contrast.json",
+    "docs/art/production13b/contrast/review-contact.png",
+    "docs/art/production13b/contrast/sample-00-background-mask.png",
+    "docs/art/production13b/contrast/sample-00-fill-mask.png",
+    "docs/art/production13b/contrast/sample-00-review.png",
+    "docs/art/production13b/contrast/sample-01-background-mask.png",
+    "docs/art/production13b/contrast/sample-01-fill-mask.png",
+    "docs/art/production13b/contrast/sample-01-review.png",
+    "docs/art/production13b/contrast/sample-02-background-mask.png",
+    "docs/art/production13b/contrast/sample-02-fill-mask.png",
+    "docs/art/production13b/contrast/sample-02-review.png",
+    "docs/art/production13b/contrast/sample-03-background-mask.png",
+    "docs/art/production13b/contrast/sample-03-fill-mask.png",
+    "docs/art/production13b/contrast/sample-03-review.png",
+    "docs/art/production13b/contrast/sample-04-background-mask.png",
+    "docs/art/production13b/contrast/sample-04-fill-mask.png",
+    "docs/art/production13b/contrast/sample-04-review.png",
+    "docs/art/production13b/contrast/sample-05-background-mask.png",
+    "docs/art/production13b/contrast/sample-05-fill-mask.png",
+    "docs/art/production13b/contrast/sample-05-review.png",
+    "docs/art/production13b/contrast/sample-06-background-mask.png",
+    "docs/art/production13b/contrast/sample-06-fill-mask.png",
+    "docs/art/production13b/contrast/sample-06-review.png",
+    "docs/art/production13b/contrast/sample-07-background-mask.png",
+    "docs/art/production13b/contrast/sample-07-fill-mask.png",
+    "docs/art/production13b/contrast/sample-07-review.png",
+    "docs/art/production13b/contrast/sample-08-background-mask.png",
+    "docs/art/production13b/contrast/sample-08-fill-mask.png",
+    "docs/art/production13b/contrast/sample-08-review.png",
+    "docs/art/production13b/contrast/sample-09-background-mask.png",
+    "docs/art/production13b/contrast/sample-09-fill-mask.png",
+    "docs/art/production13b/contrast/sample-09-review.png",
+    "docs/art/production13b/contrast/sample-10-background-mask.png",
+    "docs/art/production13b/contrast/sample-10-fill-mask.png",
+    "docs/art/production13b/contrast/sample-10-review.png",
+    "docs/art/production13b/contrast/sample-11-background-mask.png",
+    "docs/art/production13b/contrast/sample-11-fill-mask.png",
+    "docs/art/production13b/contrast/sample-11-review.png",
+    "docs/art/production13b/contrast/samples.json",
+    "docs/art/production13b/gates/p0/bridge.log",
+    "docs/art/production13b/gates/p0/cargo_test.log",
+    "docs/art/production13b/gates/p0/clippy.log",
+    "docs/art/production13b/gates/p0/python.log",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/00_fixed_world.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_0.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_1.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_2.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/02_click_3.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/03_dead_parent_link.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/04_wheel_end_last_line.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/05_escape_record.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/06_chronicle_open.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/07_chronicle_name_link.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/08_chronicle_close.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/09_language_korean.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/10_language_english.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/11_tooltip_before_delay.png",
+    "docs/art/production13b/gates/p0/real-input.hePPGr/capture/result.json",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/00_fixed_world.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_0.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_1.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_2.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/02_click_3.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/03_dead_parent_link.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/04_wheel_end_last_line.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/05_escape_record.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/06_chronicle_open.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/07_chronicle_name_link.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/08_chronicle_close.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/09_language_korean.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/10_language_english.png",
+    "docs/art/production13b/gates/p0/real-input.qZFzOl/capture/result.json",
+    "docs/art/production13b/gates/p0/results.tsv",
+    "docs/art/production13b/gates/p0/smoke.log",
+    "docs/art/production13b/gates/p0/smoke_errors.log",
+    "docs/art/production13b/gates/p0/strict.log",
+    "docs/art/production13b/gates/p0/test_abandoned_village.log",
+    "docs/art/production13b/gates/p0/test_activity_icons_p13.log",
+    "docs/art/production13b/gates/p0/test_activity_installed_p10.log",
+    "docs/art/production13b/gates/p0/test_activity_p11.log",
+    "docs/art/production13b/gates/p0/test_agent_activity.log",
+    "docs/art/production13b/gates/p0/test_agent_click_drawn.log",
+    "docs/art/production13b/gates/p0/test_agent_derived_cache_p9.log",
+    "docs/art/production13b/gates/p0/test_agent_drawn_positions.log",
+    "docs/art/production13b/gates/p0/test_agent_frame_choices_p10.log",
+    "docs/art/production13b/gates/p0/test_agent_native_size.log",
+    "docs/art/production13b/gates/p0/test_agent_selection_index_p10.log",
+    "docs/art/production13b/gates/p0/test_art_hash.log",
+    "docs/art/production13b/gates/p0/test_building_derived_cache_p9.log",
+    "docs/art/production13b/gates/p0/test_camp_seat_cache_p10.log",
+    "docs/art/production13b/gates/p0/test_camp_seats.log",
+    "docs/art/production13b/gates/p0/test_canopy_fade.log",
+    "docs/art/production13b/gates/p0/test_capture_cold_trace_p6.log",
+    "docs/art/production13b/gates/p0/test_capture_event_trace_p8.log",
+    "docs/art/production13b/gates/p0/test_capture_metadata.log",
+    "docs/art/production13b/gates/p0/test_capture_pair_p8.log",
+    "docs/art/production13b/gates/p0/test_capture_plans_p6.log",
+    "docs/art/production13b/gates/p0/test_capture_society_trace.log",
+    "docs/art/production13b/gates/p0/test_capture_sprite_order_p11.log",
+    "docs/art/production13b/gates/p0/test_carry_load_layer.log",
+    "docs/art/production13b/gates/p0/test_causal_batch_p9.log",
+    "docs/art/production13b/gates/p0/test_chronicle_layout_p12.log",
+    "docs/art/production13b/gates/p0/test_chronicle_layout_p13.log",
+    "docs/art/production13b/gates/p0/test_chronicle_panel_p11.log",
+    "docs/art/production13b/gates/p0/test_chronicle_text_p11.log",
+    "docs/art/production13b/gates/p0/test_cold_hearth.log",
+    "docs/art/production13b/gates/p0/test_cold_presentation.log",
+    "docs/art/production13b/gates/p0/test_crowds_p12.log",
+    "docs/art/production13b/gates/p0/test_crowds_p13.log",
+    "docs/art/production13b/gates/p0/test_death_exposure.log",
+    "docs/art/production13b/gates/p0/test_declump.log",
+    "docs/art/production13b/gates/p0/test_declump_adapter_p12.log",
+    "docs/art/production13b/gates/p0/test_declump_adapter_p13.log",
+    "docs/art/production13b/gates/p0/test_effect_lifecycle.log",
+    "docs/art/production13b/gates/p0/test_elder_variant.log",
+    "docs/art/production13b/gates/p0/test_every_hearth.log",
+    "docs/art/production13b/gates/p0/test_feed_casts.log",
+    "docs/art/production13b/gates/p0/test_feed_priority.log",
+    "docs/art/production13b/gates/p0/test_feed_wording.log",
+    "docs/art/production13b/gates/p0/test_fixed_delta_p9.log",
+    "docs/art/production13b/gates/p0/test_founding_group.log",
+    "docs/art/production13b/gates/p0/test_frame_measure.log",
+    "docs/art/production13b/gates/p0/test_glyph_distinct_p13.log",
+    "docs/art/production13b/gates/p0/test_god_hand.log",
+    "docs/art/production13b/gates/p0/test_hud_old_age.log",
+    "docs/art/production13b/gates/p0/test_hud_season_label.log",
+    "docs/art/production13b/gates/p0/test_hud_wood.log",
+    "docs/art/production13b/gates/p0/test_idle_camp_pose.log",
+    "docs/art/production13b/gates/p0/test_idle_facing.log",
+    "docs/art/production13b/gates/p0/test_inspector_activity_p10.log",
+    "docs/art/production13b/gates/p0/test_inspector_age.log",
+    "docs/art/production13b/gates/p0/test_inspector_cold.log",
+    "docs/art/production13b/gates/p0/test_inspector_life_p11.log",
+    "docs/art/production13b/gates/p0/test_inspector_personal_p10.log",
+    "docs/art/production13b/gates/p0/test_inspector_porter_p12.log",
+    "docs/art/production13b/gates/p0/test_inspector_porter_p13.log",
+    "docs/art/production13b/gates/p0/test_inspector_wood.log",
+    "docs/art/production13b/gates/p0/test_intervention_world_effects.log",
+    "docs/art/production13b/gates/p0/test_interventions_real_p6.log",
+    "docs/art/production13b/gates/p0/test_life_layout_p12.log",
+    "docs/art/production13b/gates/p0/test_life_layout_p13.log",
+    "docs/art/production13b/gates/p0/test_link_hover_p12.log",
+    "docs/art/production13b/gates/p0/test_link_hover_p13.log",
+    "docs/art/production13b/gates/p0/test_meal_pose.log",
+    "docs/art/production13b/gates/p0/test_meal_ring.log",
+    "docs/art/production13b/gates/p0/test_morning_chill.log",
+    "docs/art/production13b/gates/p0/test_morning_chill_v2.log",
+    "docs/art/production13b/gates/p0/test_name_presentation_p12.log",
+    "docs/art/production13b/gates/p0/test_name_presentation_p13.log",
+    "docs/art/production13b/gates/p0/test_nature_clearance.log",
+    "docs/art/production13b/gates/p0/test_nature_density.log",
+    "docs/art/production13b/gates/p0/test_nature_derived_cache_p9.log",
+    "docs/art/production13b/gates/p0/test_need_warning.log",
+    "docs/art/production13b/gates/p0/test_offscreen_marker.log",
+    "docs/art/production13b/gates/p0/test_person_activity_tooltip_p13.log",
+    "docs/art/production13b/gates/p0/test_person_names_p11.log",
+    "docs/art/production13b/gates/p0/test_porter_p12.log",
+    "docs/art/production13b/gates/p0/test_porter_p13.log",
+    "docs/art/production13b/gates/p0/test_porter_renderer_p12.log",
+    "docs/art/production13b/gates/p0/test_porter_renderer_p13.log",
+    "docs/art/production13b/gates/p0/test_pose_reuse_p10.log",
+    "docs/art/production13b/gates/p0/test_real_input_p12.log",
+    "docs/art/production13b/gates/p0/test_real_input_p13.log",
+    "docs/art/production13b/gates/p0/test_relations_chronicle_p12.log",
+    "docs/art/production13b/gates/p0/test_relations_chronicle_p13.log",
+    "docs/art/production13b/gates/p0/test_restless_meter.log",
+    "docs/art/production13b/gates/p0/test_season_tint.log",
+    "docs/art/production13b/gates/p0/test_settlement_labels.log",
+    "docs/art/production13b/gates/p0/test_settlement_relations_p12.log",
+    "docs/art/production13b/gates/p0/test_settlement_relations_p13.log",
+    "docs/art/production13b/gates/p0/test_settlement_select.log",
+    "docs/art/production13b/gates/p0/test_shelter_cold.log",
+    "docs/art/production13b/gates/p0/test_sim_reads_consumers_p9.log",
+    "docs/art/production13b/gates/p0/test_sim_reads_equivalence_p9.log",
+    "docs/art/production13b/gates/p0/test_sim_reads_p9.log",
+    "docs/art/production13b/gates/p0/test_sim_reads_relations_p12.log",
+    "docs/art/production13b/gates/p0/test_sim_reads_relations_p13.log",
+    "docs/art/production13b/gates/p0/test_society_snapshot_p7.log",
+    "docs/art/production13b/gates/p0/test_spatial_hash_p10.log",
+    "docs/art/production13b/gates/p0/test_stockpile_locale_p12.log",
+    "docs/art/production13b/gates/p0/test_stockpile_locale_p13.log",
+    "docs/art/production13b/gates/p0/test_structure_states.log",
+    "docs/art/production13b/gates/p0/test_terrain_layers.log",
+    "docs/art/production13b/gates/p0/test_variant_codes.log",
+    "docs/art/production13b/gates/p0/test_variant_regions_p10.log",
+    "docs/art/production13b/gates/p0/test_village_layers.log",
+    "docs/art/production13b/gates/p0/test_write_skip_p13.log",
+    "docs/art/production13b/gates/p0/test_ysort_props.log",
+    "docs/art/production13b/gates/p0/test_zoom_ladder.log",
+    "docs/art/production13b/gates/p1/real-input-attempt2.log",
+    "docs/art/production13b/gates/p1/real-input-attempt2/00_fixed_world.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/02_click_0.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/02_click_1.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/02_click_2.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/02_click_3.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/03_dead_parent_link.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/04_wheel_end_last_line.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/05_escape_record.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/06_chronicle_open.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/07_chronicle_name_link.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/08_chronicle_close.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/09_language_korean.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/10_language_english.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/11_tooltip_before_delay.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/12_tooltip_after_delay.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/13_tooltip_mouse_out.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/14_tooltip_no_activity.png",
+    "docs/art/production13b/gates/p1/real-input-attempt2/result.json",
+    "docs/art/production13b/gates/p1/strict.log",
+    "docs/art/production13b/gates/p1/test_life_layout_p12.windowed.log",
+    "docs/art/production13b/gates/p1/test_life_layout_p13.windowed.log",
+    "docs/art/production13b/gates/p1/test_person_activity_tooltip_p13.windowed.log",
+    "docs/art/production13b/gates/p1/windowed-results.tsv",
+    "docs/art/production13b/glyph/REPORT.md",
+    "docs/art/production13b/glyph/attempt1/en-bold-12-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/en-bold-24-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/en-bold-design12-screen24-all-pairs.json",
+    "docs/art/production13b/glyph/attempt1/en-regular-12-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/en-regular-24-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/en-regular-design12-screen24-all-pairs.json",
+    "docs/art/production13b/glyph/attempt1/glyph-result.json",
+    "docs/art/production13b/glyph/attempt1/ko-bold-12-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/ko-bold-24-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/ko-bold-design12-screen24-all-pairs.json",
+    "docs/art/production13b/glyph/attempt1/ko-regular-12-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/ko-regular-24-binary-atlas.png",
+    "docs/art/production13b/glyph/attempt1/ko-regular-design12-screen24-all-pairs.json",
+    "docs/art/production13b/perf/attempts.json",
+    "docs/art/production13b/perf/calibration.json",
+    "docs/art/production13b/perf/calibration.md",
+    "docs/art/production13b/perf/holds.md",
+    "docs/art/production13b/perf/identity/README.md",
+    "docs/art/production13b/perf/identity/reference-control.json",
+    "docs/art/production13b/perf/identity/reference-control.md",
+    "docs/art/production13b/perf/identity/running-reference-integrity.json",
+    "docs/art/production13b/perf/identity/write-skip/running.json",
+    "docs/art/production13b/perf/identity/write-skip/six.json",
+    "docs/art/production13b/perf/identity/write-skip/six.md",
+    "docs/art/production13b/perf/write-skip/W200-attempt1-summary.json",
+    "docs/art/production13b/walker/walker-cargo-test-attempt1.log",
+    "docs/art/production13b/walker/walker-cargo-test-attempt2.log",
+    "docs/art/production13b/walker/walker-clippy-attempt1.log",
+    "rust/crates/sim-bridge/src/ffi/art_kernels.rs",
+    "rust/crates/sim-bridge/src/ffi/world_node.rs",
+    "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_numeric_v1.bin",
+    "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_numeric_v1.bin.json",
+    "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_v1.bin",
+    "rust/crates/sim-bridge/tests/fixtures/art_p13b/walker_v1.bin.json",
+    "scripts/test/art/capture_framings_p13b.gd",
+    "scripts/test/art/capture_h10_p13b.gd",
+    "scripts/test/art/capture_identity_p13b.gd",
+    "scripts/test/art/capture_life_p13b.gd",
+    "scripts/test/art/capture_running_identity_p13b.gd",
+    "scripts/test/art/capture_walker_fixture_p13b.gd",
+    "scripts/test/art/glyph_distinct_p13b.gd",
+    "scripts/test/art/perf_alternating_frames_p13b.gd",
+    "scripts/test/art/real_input_p13b.gd",
+    "scripts/test/art/test_glyph_distinct_p13.gd",
+    "scripts/test/art/test_real_input_p13.gd",
+    "scripts/test/art/walker_bridge_p13b.gd",
+    "scripts/test/art/walker_fixture_recorder_p13b.gd",
+    "scripts/test/art/walker_numeric_probe_p13b.gd",
+    "scripts/ui/agent_renderer.gd",
+    "scripts/ui/art_walker_p13b.gd",
+    "scripts/ui/panels/agent_inspector_panel.gd",
+    "scripts/ui/person_activity_tooltip_p13.gd",
+    "tools/art_pipeline/badge_evidence_p13b.py",
+    "tools/art_pipeline/prepare_blind_crops_p13b.py",
+    "tools/art_pipeline/run_agent_sections_p13b.py",
+    "tools/art_pipeline/run_alternating_p13b.py",
+    "tools/art_pipeline/run_identity_p13b.sh",
+    "tools/art_pipeline/run_life_captures_p13b.py",
+    "tools/art_pipeline/run_perf_matrix_p13b.sh",
+    "tools/art_pipeline/run_running_identity_p13b.sh",
+    "tools/art_pipeline/with_quiet_lock_p13b.sh"
+  ],
+  "artifact_launches": [
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z1/launch.json",
+        "sha256": "853af0962984326006d63ae1c4c4f5cb4446024190aa5c08a300416d5e541475"
+      },
+      "started_utc": "2026-10-19T12:48:44.448476Z",
+      "finished_utc": "2026-10-19T12:48:52.441788Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1000_z4/launch.json",
+        "sha256": "5453ee823f25d13a929829153607bb699e1cd47bd31192de623283885e092b49"
+      },
+      "started_utc": "2026-10-19T12:48:36.311838Z",
+      "finished_utc": "2026-10-19T12:48:44.395086Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z1/launch.json",
+        "sha256": "6ef652fdc2cee3ed795f61819ea64b71d1e25761767eaa6626095388cbc2b29a"
+      },
+      "started_utc": "2026-10-19T12:49:00.379661Z",
+      "finished_utc": "2026-10-19T12:49:08.280786Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261010_d30_1500_z4/launch.json",
+        "sha256": "77fa3fd1aa195262089e3a817348e960aba05acabb16e908c2b57cad84066514"
+      },
+      "started_utc": "2026-10-19T12:48:52.466576Z",
+      "finished_utc": "2026-10-19T12:49:00.353115Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z1/launch.json",
+        "sha256": "3cdec059547a56fd3515288e672a284a7aac7cfbb11d6f16e12d0d4c119edb2e"
+      },
+      "started_utc": "2026-10-19T12:49:33.153889Z",
+      "finished_utc": "2026-10-19T12:49:58.229844Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-attempt1/s20261018_d60_1000_z4/launch.json",
+        "sha256": "d178e8e88886c8bdaeb6101efbe0d8cfa2c28af13d574544999a4e97d2989e7f"
+      },
+      "started_utc": "2026-10-19T12:49:08.306000Z",
+      "finished_utc": "2026-10-19T12:49:33.124338Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt1/launch.json",
+        "sha256": "0e98f947bd52ffa6a42345668e2523badd9956c3ebb4a30fb0345b38e5a7d92e"
+      },
+      "started_utc": "2026-10-19T12:50:46.388591Z",
+      "finished_utc": "2026-10-19T12:52:53.133319Z",
+      "exit_code": 1
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt2/launch.json",
+        "sha256": "c8bdb8d19bf8252fb0f1f386c6d902fa9285ddc934abc9ed01cfc621317aff24"
+      },
+      "started_utc": "2026-10-19T12:54:21.159966Z",
+      "finished_utc": "2026-10-19T12:55:14.786033Z",
+      "exit_code": 1
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/launch.json",
+        "sha256": "3c3ce3b059f70b0bf9cf3a3188ec97ffa1a3cf16c149839c753a85971daec9cb"
+      },
+      "started_utc": "2026-10-19T13:00:01.514242Z",
+      "finished_utc": "2026-10-19T13:02:09.407477Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt1/launch.json",
+        "sha256": "602f542684abaff0b1ebd71ecb2529b8c4bbad0e8cfe1d336bd12089d8d04811"
+      },
+      "started_utc": "2026-10-19T12:52:53.402584Z",
+      "finished_utc": "2026-10-19T12:53:00.091169Z",
+      "exit_code": 1
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt2/launch.json",
+        "sha256": "ca5c905690f1d5fa3158653bd47658c1856c0b374280de15b53f14e846e1b6d6"
+      },
+      "started_utc": "2026-10-19T12:55:15.044215Z",
+      "finished_utc": "2026-10-19T12:55:38.463079Z",
+      "exit_code": 1
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/launch.json",
+        "sha256": "813400e18d361dd9cc8d1a5209c83de94696005f0e2da8e218d0ffaa9bb62c62"
+      },
+      "started_utc": "2026-10-19T13:02:09.859195Z",
+      "finished_utc": "2026-10-19T13:02:45.839055Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt1/launch.json",
+        "sha256": "c50010d6e85e4187c4c5288844e4e5b8c1587e63e16962216c5a81d33eaaa182"
+      },
+      "started_utc": "2026-10-19T12:53:00.369152Z",
+      "finished_utc": "2026-10-19T12:53:07.141757Z",
+      "exit_code": 1
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/launch.json",
+        "sha256": "ad16e29d28f81ceb9745f47d25cdf6bfdf51dcb3fce9fffc62c230951c5a5f70"
+      },
+      "started_utc": "2026-10-19T12:55:38.730643Z",
+      "finished_utc": "2026-10-19T12:56:03.362493Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/launch.json",
+        "sha256": "f31a2d168c06f380bfc332e60393cf0d00a09d80d637110b2fa4370fb56a02f9"
+      },
+      "started_utc": "2026-10-19T13:02:46.172117Z",
+      "finished_utc": "2026-10-19T13:03:22.303404Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/launch.json",
+        "sha256": "1fc8fecbe5ca0c2191f03d09437c3121d679abd361d27c87112e1ff815ca8a8b"
+      },
+      "started_utc": "2026-10-19T12:53:07.423278Z",
+      "finished_utc": "2026-10-19T12:53:15.275665Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/launch.json",
+        "sha256": "074da5d64734f6080bc22f9e0b420f3eb8442d7543f0409c6f0281db4ddd16c3"
+      },
+      "started_utc": "2026-10-19T12:56:03.610863Z",
+      "finished_utc": "2026-10-19T12:56:28.547149Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/launch.json",
+        "sha256": "f40c6f1e7eb4f462910726a931d75682cc08562e44c244fadbb1f0a965b9eeae"
+      },
+      "started_utc": "2026-10-19T13:03:22.711276Z",
+      "finished_utc": "2026-10-19T13:03:58.692475Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/launch.json",
+        "sha256": "5ace7782d8e8b8b70d6b0ebdd27682a04b6b4e14dc9079bf2db2eb7bf6df9eee"
+      },
+      "started_utc": "2026-10-19T12:53:15.537981Z",
+      "finished_utc": "2026-10-19T12:53:23.414446Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/launch.json",
+        "sha256": "94d2410efe7a62ec4550bf9fa407fde9e34c21d7b41c8fbc95df359b48bab338"
+      },
+      "started_utc": "2026-10-19T12:56:28.800598Z",
+      "finished_utc": "2026-10-19T12:56:53.361939Z",
+      "exit_code": 0
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/launch.json",
+        "sha256": "b969579207c75fa411141177d9f3d0af05cf23e14f40321dc35c22dc0038d193"
+      },
+      "started_utc": "2026-10-19T13:03:59.032868Z",
+      "finished_utc": "2026-10-19T13:04:35.246185Z",
+      "exit_code": 0
+    }
+  ],
+  "historical_references": [
+    {
+      "sha": "8c1b18be8b05bfeaa062a937526fe4d9c2f53414",
+      "role": "pre-task backup/reference identity base; excluded from task commits"
+    },
+    {
+      "sha": "57ae7ac40abde7d24369606c9250d3e06e0f18d6",
+      "role": "pre-task publication reference; excluded from task commits"
+    }
+  ],
+  "gaps": [
+    "No exact actual phase-start or phase-end instant is inferred from a commit timestamp.",
+    "Part2 completion reported only in current working TASKS; exact finish unknown.",
+    "Parts1/3/4/5 have no completed elapsed durations.",
+    "This file captures current evidence through af30bb29; later commits/terminal identity runs require an update."
+  ]
+}

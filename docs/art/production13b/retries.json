@@ -1,0 +1,763 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-19T13:28:17.877697+00:00",
+  "scope": "Bounded audit of named retry targets; not a global execution census. No checks rerun for this ledger.",
+  "rules": {
+    "three_strikes": "GOAL0.5: every execution including debug counts; stop failing target after three.",
+    "admission": "GOAL0.8: >=30min spacing, <=6 slots per item, <=3h total wait. Policy spacing permission does not prove runtime admission.",
+    "count_units": "One invoked check/acquisition run per target; pairs, locales, frames and test cases are not retries. Compile failure counts as failed verification invocation, not executed test suite."
+  },
+  "admission_ledger": {
+    "evidence": {
+      "path": "docs/art/production13b/perf/attempts.json",
+      "sha256": "141a5bdaec1dcc1f465cff519e61a9b567b7a9461c8766b9d2ae2ddfaf831d15",
+      "bytes": 1198
+    },
+    "recorded_wait_seconds": 1800.0,
+    "note": "All three events admitted=true denote policy-spacing slots. W500 second validity payload proves runtime refusal. No admission-limit breach observed in these entries."
+  },
+  "targets": [
+    {
+      "target": "real-input-p13",
+      "status": "PASS",
+      "observed_executed_checks": 2,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "FAIL",
+          "detail": "Baseline fails tooltip_before_delay: expected hover entity absent.",
+          "evidence": [
+            {
+              "path": "docs/art/production13b/gates/p0/test_real_input_p13.log",
+              "sha256": "5bddfe4a309eb0074abf54e5f2b7bc56b665059b68eb44cf5d04237f7d851110",
+              "bytes": 7408
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "Result valid=true, errors=[], all 17 recorded steps passed.",
+          "evidence": [
+            {
+              "path": "docs/art/production13b/gates/p1/real-input-attempt2/result.json",
+              "sha256": "d8c5b8c0e5bb3b035ccf944b661b331db42f3a51f1e7de5d9f93bd90505290d7",
+              "bytes": 9087
+            },
+            {
+              "path": "docs/art/production13b/gates/p1/real-input-attempt2.log",
+              "sha256": "aac7f731c76be63c7bb0b38e3d4fcf063309bbea29ad13da36119488fdbe33c5",
+              "bytes": 9313
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "H10-road-porter",
+      "status": "TERMINAL_FAIL",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "VISUAL_FAIL",
+          "detail": "Tick 122430: runtime exit 0 does not pass target; selected porter glyph covered by foreign mint SitByFire badge in EN/KO.",
+          "evidence": [
+            {
+              "path": "docs/art/production13b/h10/REPORT.md",
+              "sha256": "88d95ab56d8a2f5e03e2a8824682c1e2d7bea23a50fcc18a17127bd27f7b15f2",
+              "bytes": 4268
+            },
+            {
+              "path": "docs/art/production13b/h10/h10-road-attempt1.log",
+              "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
+              "bytes": 329
+            },
+            {
+              "path": "docs/art/production13b/h10/porter_road_z4_en.png",
+              "sha256": "25fddb4c99dd34f7c9ca502fa69c15dafbf793952571f4474d4fd9907cebb3c9",
+              "bytes": 116935
+            },
+            {
+              "path": "docs/art/production13b/h10/porter_road_z4_ko.png",
+              "sha256": "dc6fc4f7af38eebba9b5f4225015ec73cb1a68090829dcb26ae4d626fef8d511",
+              "bytes": 115330
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "FAIL",
+          "detail": "Tick 122450: no candidate satisfies zero later-drawn foreign rectangle intersections.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/h10-road-attempt2/failure.json",
+              "sha256": "929a198d49678ff964a1d9c589322642858d18b4527ea810ecf4cedbf0ebc196",
+              "bytes": 1018618
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "FAIL",
+          "detail": "Tick 122479: still no unobscured eligible porter; target stopped after third execution.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/h10-road-attempt3/failure.json",
+              "sha256": "b2543f4ea72a432ce5b370256fca6a416437c5e75b2f3e96753bd02f1fd75603",
+              "bytes": 944750
+            }
+          ]
+        }
+      ],
+      "stop_required": true
+    },
+    {
+      "target": "H10-relations",
+      "status": "CAPTURE_PASS",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "Actual EN/KO captures; this does not repair road failure.",
+          "evidence": [
+            {
+              "path": "docs/art/production13b/h10/h10-relations-attempt1.log",
+              "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
+              "bytes": 329
+            },
+            {
+              "path": "docs/art/production13b/h10/REPORT.md",
+              "sha256": "88d95ab56d8a2f5e03e2a8824682c1e2d7bea23a50fcc18a17127bd27f7b15f2",
+              "bytes": 4268
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "H10-chronicle",
+      "status": "CAPTURE_PASS",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "Actual EN/KO captures; this does not repair road failure.",
+          "evidence": [
+            {
+              "path": "docs/art/production13b/h10/h10-chronicle-attempt1.log",
+              "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
+              "bytes": 329
+            },
+            {
+              "path": "docs/art/production13b/h10/REPORT.md",
+              "sha256": "88d95ab56d8a2f5e03e2a8824682c1e2d7bea23a50fcc18a17127bd27f7b15f2",
+              "bytes": 4268
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Life-estranged",
+      "status": "CAPTURE_PASS",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "FAIL",
+          "detail": "Seed19414 tick34680: kind19/20 condition absent.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/life-attempt1/estranged/failure.json",
+              "sha256": "3bfda99d2537046731a8215e50e7cd91df2722a51ed4e1e6460c9a1c82fefad4",
+              "bytes": 34653
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "FAIL",
+          "detail": "Tick51840: same condition absent; advance to51840 has not executed event tick51840.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/life-resume-attempt2/estranged/failure.json",
+              "sha256": "5f87215e64d968428d6155346ce2ab90ca3a5333b49a97dced594598b9145f84",
+              "bytes": 34766
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "Tick51870 successful actual capture; fact-reading acceptance remains separate.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/life-estranged-attempt3/reference-data.json",
+              "sha256": "fab34ec990cd7332f24d47663559d83b40db77e134730ae510a1b323d697c7e7",
+              "bytes": 1907671
+            },
+            {
+              "path": "docs/art/production13b/life-capture-report/life-estranged-attempt3.log",
+              "sha256": "e68a826d6e2e8251fdc8bfcd47ab03b98990c64dc69df5f8411af2204b8fa1b7",
+              "bytes": 329
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Stage-B-kind0-supplemental-acquisition",
+      "status": "TERMINAL_SHORTAGE",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "ACQUISITION_FAIL",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt1/launch.json",
+              "sha256": "0e98f947bd52ffa6a42345668e2523badd9956c3ebb4a30fb0345b38e5a7d92e",
+              "bytes": 581
+            }
+          ],
+          "exit_code": 1,
+          "capture_contract_pass": false,
+          "no_arrived_holder": true
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "ACQUISITION_FAIL",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt2/launch.json",
+              "sha256": "c8bdb8d19bf8252fb0f1f386c6d902fa9285ddc934abc9ed01cfc621317aff24",
+              "bytes": 581
+            }
+          ],
+          "exit_code": 1,
+          "capture_contract_pass": false,
+          "no_arrived_holder": true
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind0-attempt3/launch.json",
+              "sha256": "3c3ce3b059f70b0bf9cf3a3188ec97ffa1a3cf16c149839c753a85971daec9cb",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        }
+      ],
+      "eligible_unique_crop_count": 1,
+      "inventory_evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+        "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+        "bytes": 119724
+      },
+      "stop_required": true
+    },
+    {
+      "target": "Stage-B-kind2-supplemental-acquisition",
+      "status": "TERMINAL_SHORTAGE",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "ACQUISITION_FAIL",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt1/launch.json",
+              "sha256": "602f542684abaff0b1ebd71ecb2529b8c4bbad0e8cfe1d336bd12089d8d04811",
+              "bytes": 581
+            }
+          ],
+          "exit_code": 1,
+          "capture_contract_pass": false,
+          "no_arrived_holder": true
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "ACQUISITION_FAIL",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt2/launch.json",
+              "sha256": "ca5c905690f1d5fa3158653bd47658c1856c0b374280de15b53f14e846e1b6d6",
+              "bytes": 581
+            }
+          ],
+          "exit_code": 1,
+          "capture_contract_pass": false,
+          "no_arrived_holder": true
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind2-attempt3/launch.json",
+              "sha256": "813400e18d361dd9cc8d1a5209c83de94696005f0e2da8e218d0ffaa9bb62c62",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        }
+      ],
+      "eligible_unique_crop_count": 1,
+      "inventory_evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+        "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+        "bytes": 119724
+      },
+      "stop_required": true
+    },
+    {
+      "target": "Stage-B-kind4-supplemental-acquisition",
+      "status": "INVENTORY_FILLED",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "ACQUISITION_FAIL",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt1/launch.json",
+              "sha256": "c50010d6e85e4187c4c5288844e4e5b8c1587e63e16962216c5a81d33eaaa182",
+              "bytes": 581
+            }
+          ],
+          "exit_code": 1,
+          "capture_contract_pass": false,
+          "no_arrived_holder": true
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt2/launch.json",
+              "sha256": "ad16e29d28f81ceb9745f47d25cdf6bfdf51dcb3fce9fffc62c230951c5a5f70",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind4-attempt3/launch.json",
+              "sha256": "f31a2d168c06f380bfc332e60393cf0d00a09d80d637110b2fa4370fb56a02f9",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        }
+      ],
+      "eligible_unique_crop_count": 2,
+      "inventory_evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+        "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+        "bytes": 119724
+      },
+      "stop_required": false
+    },
+    {
+      "target": "Stage-B-kind5-supplemental-acquisition",
+      "status": "INVENTORY_FILLED",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt1/launch.json",
+              "sha256": "1fc8fecbe5ca0c2191f03d09437c3121d679abd361d27c87112e1ff815ca8a8b",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt2/launch.json",
+              "sha256": "074da5d64734f6080bc22f9e0b420f3eb8442d7543f0409c6f0281db4ddd16c3",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind5-attempt3/launch.json",
+              "sha256": "f40c6f1e7eb4f462910726a931d75682cc08562e44c244fadbb1f0a965b9eeae",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        }
+      ],
+      "eligible_unique_crop_count": 2,
+      "inventory_evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+        "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+        "bytes": 119724
+      },
+      "stop_required": false
+    },
+    {
+      "target": "Stage-B-kind6-supplemental-acquisition",
+      "status": "INVENTORY_FILLED",
+      "observed_executed_checks": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt1/launch.json",
+              "sha256": "5ace7782d8e8b8b70d6b0ebdd27682a04b6b4e14dc9079bf2db2eb7bf6df9eee",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt2/launch.json",
+              "sha256": "94d2410efe7a62ec4550bf9fa407fde9e34c21d7b41c8fbc95df359b48bab338",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "outcome": "CAPTURE_CONTRACT_PASS",
+          "detail": "Supplemental acquisition; capture contract success is not a two-unique-eligible-crops verdict.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/activity-extra-kind6-attempt3/launch.json",
+              "sha256": "b969579207c75fa411141177d9f3d0af05cf23e14f40321dc35c22dc0038d193",
+              "bytes": 620
+            }
+          ],
+          "exit_code": 0,
+          "capture_contract_pass": true,
+          "no_arrived_holder": false
+        }
+      ],
+      "eligible_unique_crop_count": 2,
+      "inventory_evidence": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/stage-b-terminal-shortage.json",
+        "sha256": "74046747786a87d34bbb1a7305ed5542eec59b874a6c71ee57e6d892fbb5932d",
+        "bytes": 119724
+      },
+      "stop_required": false
+    },
+    {
+      "target": "write-skip-W500",
+      "status": "NOT_VERIFIED",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "COLLECTOR_FAIL",
+          "detail": "Godot executed; unsuccessful collector, validity=false, exit1. No valid timing acceptance.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt1/frames.json.validity.json",
+              "sha256": "c4a2e66eb130a8da62953f56cfedb57b0cc1c101e05b5dacc6410da0bbe89127",
+              "bytes": 178073
+            },
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt1/session.log",
+              "sha256": "5b7cf1f6ce6190400b4d44b440147ac212ec0863e601a21c6eb10a40855b2718",
+              "bytes": 331
+            },
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/write-skip-W500-attempt1.log",
+              "sha256": "a11f71513931f149bbb429f5bac7db610ce9da8dbc50bc67dbd16cfbd7d9eb4a",
+              "bytes": 585
+            }
+          ],
+          "runtime_admitted": true,
+          "policy_spacing_admitted": true
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "outcome": "ADMISSION_REFUSED",
+          "detail": "Before-run load23.0029296875 exceeds load<8.0. session_validity_p13.py condition at149 skips subprocess; exit75. No Godot/check execution.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt2/frames.json.validity.json",
+              "sha256": "8bf3c73c6430dc4be335698e16ee81536c5f7f32aec59d9f73411da16d473e49",
+              "bytes": 188936
+            },
+            {
+              "path": "tools/art_pipeline/session_validity_p13.py",
+              "sha256": "039b46ec8db6d0bc46248417cda182fda8aeeb17b9ddc6b1dd092315e38bc9ce",
+              "bytes": 7839
+            }
+          ],
+          "runtime_admitted": false,
+          "policy_spacing_admitted": true
+        }
+      ],
+      "observed_admission_slots": 2,
+      "observed_refusals": 1
+    },
+    {
+      "target": "write-skip-W200",
+      "status": "VALID_MEASUREMENT_THRESHOLD_FAIL",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "SPEED_FAIL",
+          "detail": "Three alternating pairs within one measurement execution; pooled median ratio0.9986985164993292 exceeds0.97 threshold.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/write-skip/W200-attempt1/frames.json.validity.json",
+              "sha256": "6c9f50df39593e8f1c93bc25281ffaff465b72472a0d40c3dd1e656244593fcf",
+              "bytes": 175210
+            },
+            {
+              "path": "docs/art/production13b/perf/write-skip/W200-attempt1-summary.json",
+              "sha256": "c1f46faf100c7422b90be28c23d70d0facf638897097189543de882ce5e1186f",
+              "bytes": 9849
+            }
+          ],
+          "runtime_admitted": true,
+          "valid_measurement": true,
+          "pairs": 3
+        }
+      ]
+    },
+    {
+      "target": "walker-cargo-tests",
+      "status": "PASS",
+      "observed_executed_checks": 2,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "COMPILE_FAIL",
+          "detail": "Godot binding ParamTuple trait bounds fail; command executed but test cases did not run.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/walker-cargo-test-attempt1.log",
+              "sha256": "a28a758b131381bc398be0a8091b549f73bf95b69da347e76dfc078631d6485e",
+              "bytes": 7671
+            }
+          ],
+          "test_suite_executed": false
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "57 tests passed;0failed.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/walker-cargo-test-attempt2.log",
+              "sha256": "90cd3d5ac6b0efc706c2ae1c20b46e9bbd9b92b049635d6ff86542ad703a333b",
+              "bytes": 6182
+            }
+          ],
+          "test_suite_executed": true
+        }
+      ]
+    },
+    {
+      "target": "walker-bridge",
+      "status": "PASS",
+      "observed_executed_checks": 2,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "COVERAGE_FAIL",
+          "detail": "Actual bridge coverage22/24 then24/24.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/walker-bridge-attempt1.json",
+              "sha256": "3f7a5fb499b752fc77122d7422cf4f7c202ce8e4076550400effb7b1942ed4b2",
+              "bytes": 45882
+            }
+          ],
+          "metrics": {
+            "calls": 12,
+            "comparisons": 24,
+            "nonempty_comparisons": 22,
+            "errors": [
+              "Incomplete or empty real-call differential coverage"
+            ],
+            "valid": false
+          }
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "Actual bridge coverage22/24 then24/24.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/walker-bridge-attempt2.json",
+              "sha256": "8868e5b8c855580a827240bcbb7918b4eca003a727a331b39c52bd6cabe10a36",
+              "bytes": 52787
+            }
+          ],
+          "metrics": {
+            "calls": 12,
+            "comparisons": 24,
+            "nonempty_comparisons": 24,
+            "errors": [],
+            "valid": true
+          }
+        }
+      ]
+    },
+    {
+      "target": "walker-numeric",
+      "status": "PASS",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "560 numeric cases.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/walker-numeric-attempt1.bin.json",
+              "sha256": "7d7b4a4068669e5e93c70942ffb803dc18aaf857218c07738081ce194d5f9f5b",
+              "bytes": 1001
+            }
+          ],
+          "metrics": {
+            "cases": 560,
+            "errors": [],
+            "valid": true
+          }
+        }
+      ]
+    },
+    {
+      "target": "walker-fixture",
+      "status": "PASS",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "PASS",
+          "detail": "4000 fixture records; collection validity only, not final identity acceptance.",
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/walker-fixture-attempt1.bin.json",
+              "sha256": "3ea3e37047caf19e4ac24940f11e58d02e947bb999c6e5205c200bb8512bf428",
+              "bytes": 398862
+            }
+          ],
+          "metrics": {
+            "records": 4000,
+            "errors": [],
+            "valid": true
+          }
+        }
+      ]
+    },
+    {
+      "target": "walker-identity",
+      "status": "COMPLETION_NOT_OBSERVED",
+      "observed_executed_checks": 0,
+      "attempts": [],
+      "observed_executed_checks_lower_bound": null,
+      "location": "/Users/rexxa/work/art-production13b-evidence/walker-identity",
+      "note": "Leader reports active identity work. Only six/ and six-A.log observed during this audit; no terminal verdict inspected. No pass and no invented execution count. Active output is deliberately not hashed."
+    }
+  ],
+  "limitations": [
+    "Stage-B counts cover the 15 explicitly numbered supplements (3 per kind), not a reconstructed per-kind total including initial matrix acquisition. Initial matrix and successful unrelated gate runs are outside this bounded retry count.",
+    "Capture success is separate from blind/fact-reading scores; no reader answers inspected.",
+    "Identity remains pending; update from terminal artifacts before final acceptance.",
+    "No total across heterogeneous targets is asserted. H10 aggregate remains FAIL because road failed3/3."
+  ]
+}

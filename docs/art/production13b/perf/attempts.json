@@ -1,21 +1,35 @@
 {
   "items": {
     "pair-write-skip-W500": [
-      1792413932.041713
+      1792413932.041713,
+      1792415761.682074,
+      1792417584.5169668
     ],
     "pair-write-skip-W200": [
       1792414027.820246
     ]
   },
-  "waiting_seconds": 0.0,
+  "waiting_seconds": 3600.0,
   "wait_intervals": [
     [
       1792413931.0,
       1792413931.0
     ],
     [
-      1792414027.0,
-      1792414027.0
+      1792413950.0,
+      1792415750.0
+    ],
+    [
+      1792415761.0,
+      1792415761.0
+    ],
+    [
+      1792415768.0,
+      1792417568.0
+    ],
+    [
+      1792417584.0,
+      1792417584.0
     ]
   ],
   "events": [
@@ -32,6 +46,20 @@
       "admitted": true,
       "output": "/Users/rexxa/work/art-production13b-evidence/write-skip/W200-attempt1/frames.json.validity.json",
       "completed_epoch": 1792414064.703841
+    },
+    {
+      "epoch": 1792415761.682074,
+      "item": "pair-write-skip-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt2/frames.json.validity.json",
+      "completed_epoch": 1792415767.413203
+    },
+    {
+      "epoch": 1792417584.5169668,
+      "item": "pair-write-skip-W500",
+      "admitted": true,
+      "output": "/Users/rexxa/work/art-production13b-evidence/write-skip/W500-attempt3/frames.json.validity.json",
+      "completed_epoch": 1792417635.145739
     }
   ]
 }

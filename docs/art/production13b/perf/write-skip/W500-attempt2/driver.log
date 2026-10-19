@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_alternating_p13b.py", line 92, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/run_alternating_p13b.py", line 85, in main
+    result = validate(output)
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/validate_alternating_p13.py", line 30, in validate
+    raise perf.EvidenceError("Missing terminal session evidence")
+summarize_perf_p13.EvidenceError: Missing terminal session evidence

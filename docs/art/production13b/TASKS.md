@@ -5,7 +5,7 @@ Part 1 deadline: 17:08Z. Part 4 freeze deadline: 19:08Z. Ten-hour cutoff: 22:08Z
 
 - Part 0 COMPLETE (baseline FAIL retained): original brief byte-verified and committed f962f5cd; backup at 8c1b18be. Calibration started 12:11Z, session 62867; full gate follows calibration because calibration must precede every Godot session.
 - Part 1 IN_PROGRESS: owner feedback/font24/design glyph rule/windowed layout; write-skip identity and valid pairs; optional walker then seats.
-- Part 2 PENDING: UI side branch; real input, stage B and contrast, optional no-legend/village, H10, fact reading.
+- Part 2 COMPLETE WITH LIMITATIONS: 161-image frozen fact reading scored; real input17/17; StageB12/14eligible (diagnostic10/12, fullbarNOT_VERIFIED); nolegend9/12; village2/6NOT_RUN; contrast12/21; H10roadFAIL3/3, relations/peaceENKOverified. UI evidence awaits next source-freeze-end commit/push.
 - Part 3 PENDING: merge UI and full gate; accepted candidate identity.
 - Part 4 PENDING: freeze by 19:08Z; after matrix and running timers; H1-H11.
 - Part 5 PENDING: independent review <=2 rounds, final gate, conditional publication, PR511, cleanup, Korean report.
@@ -60,3 +60,7 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - Optionalwalker source applied but defaultOFF, uncommitted. Numeric560 and actual2000calls/4000records completedvalid. Originalbridge used fororacle; sources/loadedlib hashes verifiedandretained. Rustreplaytest active. Noidentity/speedacceptance.
 - W500write-skipattempt2 admissionDENIED beforeGodot: probe2.782592834s,load1m23.00293,exit75, noframes. Runner validationexception preserved (missingterminalframes afteradmissiondenial). Next attempt>=13:46Z; counts: twoadmissionattempts, onlyoneactualcollectorfailed. First1800s cooldown conservativelybooked asadmissionwait, evenwhileUIworkprogressed.
 - Cargo fmt workspacecheck exposespreexistingformatdifferences throughoutsimulation; art_kernels standaloneformatcheckpasses. No broadformatrewriteallowed.
+
+- 13:24Z walker pure tests57/57 and clippy pass; release built, actual bridge attempt2 passes12calls/24nonempty bit-exact comparisons after recorded startup-coverage failure1. Full six/running identity active session89216 at frozenHEADaf30bb29, releaseSHA30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042. No source/build/HEAD edits until finish; docs only allowed. Speed remainspending; defaultOFF.
+
+- 2026-10-19T13:48:38.995382+00:00: Part2 evidence completewithlimitations and readyforpush. Write-skip never-drop measurement COMPLETE, rejectedoverall/W200fails; W500valid0.9472853932. Walkeridentityattempt1FAILonlyP3controlpauseicon; runningall5exactandA/Ball6exact. P3captureinputisolated/strictpass; completeattempt2next.

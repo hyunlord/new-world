@@ -1,0 +1,247 @@
+{
+  "full_protocol": "NOT_VERIFIED",
+  "actual_count": 12,
+  "required_count": 14,
+  "counts": [
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2
+  ],
+  "scored_at": "2026-10-19T13:07:29.561064+00:00",
+  "readers": {
+    "legend": {
+      "correct": 10,
+      "total": 12,
+      "by_activity": {
+        "TendFire": {
+          "correct": 1,
+          "available": 1,
+          "required": 2
+        },
+        "Craft": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "Repair": {
+          "correct": 0,
+          "available": 1,
+          "required": 2
+        },
+        "HearthCircle": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "Explore": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "Play": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "SitByFire": {
+          "correct": 1,
+          "available": 2,
+          "required": 2
+        }
+      },
+      "rows": [
+        {
+          "crop": "crop_01",
+          "expected": "SitByFire",
+          "answer": "SitByFire",
+          "correct": true
+        },
+        {
+          "crop": "crop_02",
+          "expected": "Repair",
+          "answer": "Play",
+          "correct": false
+        },
+        {
+          "crop": "crop_03",
+          "expected": "Explore",
+          "answer": "Explore",
+          "correct": true
+        },
+        {
+          "crop": "crop_04",
+          "expected": "SitByFire",
+          "answer": "HearthCircle",
+          "correct": false
+        },
+        {
+          "crop": "crop_05",
+          "expected": "HearthCircle",
+          "answer": "HearthCircle",
+          "correct": true
+        },
+        {
+          "crop": "crop_06",
+          "expected": "Craft",
+          "answer": "Craft",
+          "correct": true
+        },
+        {
+          "crop": "crop_07",
+          "expected": "HearthCircle",
+          "answer": "HearthCircle",
+          "correct": true
+        },
+        {
+          "crop": "crop_08",
+          "expected": "TendFire",
+          "answer": "TendFire",
+          "correct": true
+        },
+        {
+          "crop": "crop_09",
+          "expected": "Play",
+          "answer": "Play",
+          "correct": true
+        },
+        {
+          "crop": "crop_10",
+          "expected": "Explore",
+          "answer": "Explore",
+          "correct": true
+        },
+        {
+          "crop": "crop_11",
+          "expected": "Play",
+          "answer": "Play",
+          "correct": true
+        },
+        {
+          "crop": "crop_12",
+          "expected": "Craft",
+          "answer": "Craft",
+          "correct": true
+        }
+      ]
+    },
+    "no_legend": {
+      "correct": 9,
+      "total": 12,
+      "by_activity": {
+        "TendFire": {
+          "correct": 1,
+          "available": 1,
+          "required": 2
+        },
+        "Craft": {
+          "correct": 0,
+          "available": 2,
+          "required": 2
+        },
+        "Repair": {
+          "correct": 0,
+          "available": 1,
+          "required": 2
+        },
+        "HearthCircle": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "Explore": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "Play": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        },
+        "SitByFire": {
+          "correct": 2,
+          "available": 2,
+          "required": 2
+        }
+      },
+      "rows": [
+        {
+          "crop": "crop_01",
+          "expected": "SitByFire",
+          "answer": "SitByFire",
+          "correct": true
+        },
+        {
+          "crop": "crop_02",
+          "expected": "Repair",
+          "answer": "Craft",
+          "correct": false
+        },
+        {
+          "crop": "crop_03",
+          "expected": "Explore",
+          "answer": "Explore",
+          "correct": true
+        },
+        {
+          "crop": "crop_04",
+          "expected": "SitByFire",
+          "answer": "SitByFire",
+          "correct": true
+        },
+        {
+          "crop": "crop_05",
+          "expected": "HearthCircle",
+          "answer": "HearthCircle",
+          "correct": true
+        },
+        {
+          "crop": "crop_06",
+          "expected": "Craft",
+          "answer": "Repair",
+          "correct": false
+        },
+        {
+          "crop": "crop_07",
+          "expected": "HearthCircle",
+          "answer": "HearthCircle",
+          "correct": true
+        },
+        {
+          "crop": "crop_08",
+          "expected": "TendFire",
+          "answer": "TendFire",
+          "correct": true
+        },
+        {
+          "crop": "crop_09",
+          "expected": "Play",
+          "answer": "Play",
+          "correct": true
+        },
+        {
+          "crop": "crop_10",
+          "expected": "Explore",
+          "answer": "Explore",
+          "correct": true
+        },
+        {
+          "crop": "crop_11",
+          "expected": "Play",
+          "answer": "Play",
+          "correct": true
+        },
+        {
+          "crop": "crop_12",
+          "expected": "Craft",
+          "answer": "Repair",
+          "correct": false
+        }
+      ]
+    }
+  }
+}
