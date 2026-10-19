@@ -50,7 +50,7 @@ use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
-use super::art_kernels::{declump_offsets, DeclumpInput};
+use super::art_kernels::{declump_offsets, walker_offsets, DeclumpInput, WalkerInput};
 use super::chronicle::{
     collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
     collect_settlement_chronicle, person_to_dict, rows_to_dict,
@@ -315,6 +315,62 @@ impl WorldSimNode {
             }
             Err(error) => {
                 godot_error!("art_declump: {}", error);
+                output.set("error", error);
+            }
+        }
+        output
+    }
+
+    /// Rendering-only walker relief; all vector and canvas columns retain f32 bits.
+    #[func]
+    #[allow(clippy::too_many_arguments)]
+    fn art_walker_offsets(
+        &self,
+        row_ids: PackedInt64Array,
+        visible: PackedByteArray,
+        walking: PackedByteArray,
+        place_known: PackedByteArray,
+        direction_xy: PackedFloat32Array,
+        position_ids: PackedInt64Array,
+        position_xy: PackedFloat32Array,
+        rect_ids: PackedInt64Array,
+        rect_xywh: PackedFloat32Array,
+        world_size: Vector2i,
+        terrain: PackedByteArray,
+        blocked_xy: PackedInt32Array,
+        canvas: PackedFloat32Array,
+        spatial: bool,
+    ) -> VarDictionary {
+        let input = WalkerInput {
+            geometry: DeclumpInput {
+                row_ids: row_ids.as_slice(),
+                visible: visible.as_slice(),
+                walking: walking.as_slice(),
+                place_known: place_known.as_slice(),
+                target_ids: position_ids.as_slice(),
+                target_xy: position_xy.as_slice(),
+                rect_ids: rect_ids.as_slice(),
+                rect_xywh: rect_xywh.as_slice(),
+                width: i64::from(world_size.x),
+                height: i64::from(world_size.y),
+                terrain: terrain.as_slice(),
+                blocked_xy: blocked_xy.as_slice(),
+                spatial,
+            },
+            direction_xy: direction_xy.as_slice(),
+            canvas: canvas.as_slice(),
+        };
+        let mut output = VarDictionary::new();
+        match walker_offsets(&input) {
+            Ok(result) => {
+                output.set("ids", PackedInt64Array::from(result.ids.as_slice()));
+                output.set(
+                    "offsets",
+                    PackedFloat32Array::from(result.offsets.as_slice()),
+                );
+            }
+            Err(error) => {
+                godot_error!("art_walker_offsets: {}", error);
                 output.set("error", error);
             }
         }

@@ -39,7 +39,7 @@ def provenance(checkout: Path) -> Record:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("checkout", type=Path)
-    parser.add_argument("change", choices=("declump-kernel", "write-skip"))
+    parser.add_argument("change", choices=("declump-kernel", "write-skip", "walker"))
     parser.add_argument("output", type=Path)
     parser.add_argument("world", nargs="?", default="W500", choices=("W0", "W1", "W200", "W500"))
     parser.add_argument("--kernel-state", choices=("on", "off"))
@@ -48,8 +48,12 @@ def main() -> int:
     world = args.world
     if change == "write-skip" and args.kernel_state is None:
         parser.error("write-skip requires --kernel-state on|off")
+    if change == "walker" and (world not in ("W200", "W500") or args.kernel_state == "off"):
+        parser.error("walker requires W200 or W500 with declump kernel on")
     renderer = (checkout / "scripts/ui/agent_renderer.gd").read_text()
     methods = ("set_perf_candidate_p13", "get_perf_candidate_p13", "get_perf_candidate_p12") if change == "write-skip" else ("set_perf_candidate_p12", "get_perf_candidate_p12")
+    if change == "walker":
+        methods = ("set_perf_candidate_p13b", "get_perf_candidate_p13b", "get_perf_candidate_p12", "get_perf_candidate_p13")
     for method in methods:
         if f"func {method}(" not in renderer:
             raise perf.EvidenceError(f"Missing temporary renderer integration {method}; no hold or Godot launch started")
@@ -57,10 +61,12 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=False)
     root = Path(__file__).resolve().parents[2]
     environment = dict(os.environ, P13_VALIDITY_OUT=str(output / "frames.json.validity.json"), P13_PAIR_CHANGE=change, P13_PAIR_WORLD=world,
-                       P13_PAIR_OUT=str(output / "frames.json"), P13_PAIR_HEAD=str(before["head"]))
+                       P13_PAIR_OUT=str(output / "frames.json"), P13_PAIR_HEAD=str(before["head"]), P13B_WALKER_KERNEL="0")
     if change == "write-skip":
         environment.update(P13_PAIR_KERNEL_STATE=args.kernel_state,
                            P12_DECLUMP_KERNEL="1" if args.kernel_state == "on" else "0", P13_WRITE_SKIP="0")
+    if change == "walker":
+        environment.update(P13_PAIR_KERNEL_STATE="on", P12_DECLUMP_KERNEL="1", P13_WRITE_SKIP="0")
     command = ["bash", str(root / "tools/art_pipeline/with_quiet_lock_p13b.sh"), f"pair-{change}-{world}", "3600",
                environment.get("GODOT_BIN", "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot"),
                "--path", str(checkout), "--resolution", "1920x1080", "--script", "res://scripts/test/art/perf_alternating_frames_p13b.gd"]
@@ -68,6 +74,8 @@ def main() -> int:
                       "started": datetime.datetime.now(datetime.timezone.utc).isoformat(), "command": command}
     if change == "write-skip":
         launch["kernel_enabled"] = args.kernel_state == "on"
+    if change == "walker":
+        launch.update(kernel_enabled=True, write_skip_enabled=False)
     (output / "launch.json").write_text(json.dumps(launch, indent=2) + "\n")
     with (output / "session.log").open("w") as stream:
         completed = subprocess.run(command, env=environment, stdout=stream, stderr=subprocess.STDOUT, check=False)

@@ -10,6 +10,7 @@ const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
 const ArtDeclumpP12 = preload("res://scripts/ui/art_declump_p12.gd")
+const ArtWalkerP13B = preload("res://scripts/ui/art_walker_p13b.gd")
 const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
 const HoverMarker = preload("res://scripts/ui/offscreen_marker.gd")
@@ -69,6 +70,8 @@ var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
 var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
 var _declump_fixture_sink_p12: RefCounted
+var _walker_fixture_sink_p13b: RefCounted
+var _walker_kernel_enabled_p13b: bool = OS.get_environment("P13B_WALKER_KERNEL") == "1"
 var _hovered_person_p12: int = -1
 var _hover_owner_p12: int = 0
 var _hover_marker_p12: Dictionary = {}
@@ -91,6 +94,16 @@ var _write_keys_p13: Dictionary = {}
 var _write_hits_p13: int = 0
 var _write_misses_p13: int = 0
 var _write_forced_p13: int = 0
+
+func set_perf_candidate_p13b(change_id: String, enabled: bool) -> bool:
+	if change_id != "walker" or not _declump_kernel_enabled_p12 or _write_skip_enabled_p13:
+		return false
+	_walker_kernel_enabled_p13b = enabled
+	return true
+
+func get_perf_candidate_p13b() -> Dictionary:
+	return {"change_id": "walker", "candidate_enabled": _walker_kernel_enabled_p13b,
+		"kernel_enabled": _declump_kernel_enabled_p12, "write_skip_enabled": _write_skip_enabled_p13}
 
 func set_perf_candidate_p13(change_id: String, enabled: bool) -> bool:
 	if change_id != "write-skip":
@@ -827,7 +840,9 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		var agent_id: int = int(row["id"])
 		rounded[agent_id] = (_sprites[agent_id] as Sprite2D).position
 	var canvas: Transform2D = _objects.get_global_transform_with_canvas() if _objects != null else get_global_transform_with_canvas()
-	var lateral: Dictionary = CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled)
+	if _walker_fixture_sink_p13b != null:
+		_walker_fixture_sink_p13b.call("record", agents, rounded, rects, terrain, blocked, canvas)
+	var lateral: Dictionary = ArtWalkerP13B.walker_offsets(world_sim, agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled) if _walker_kernel_enabled_p13b else CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var sprite: Sprite2D = _sprites[agent_id]

@@ -23,3 +23,8 @@ Preserve the baseline failing attempt. Tooltip and independent input witness now
 - Road attempt2 failed strict zerooverlap. Own startup carrydust lives0.5s and is a sibling decorativeeffect; realotherbodies alsooverlap. Final attempt3 keeps identicalcoverage test, waits36 fixed60fpsframes fornatural dustexpiry while simulationfrozen, tick122479 beforefirstdelivery122480. No effecthiding or worldmovement. Finalsuccessnotassumed.
 - StageB acquisition terminal after3supplements perkind: counts[1,2,1,2,2,2,2]. TendFire/Repairremainoneeach. Full14protocol NOT_VERIFIED; preserve12cropdiagnostic and frozenreaders, nofourthattempt.
 - Village summary has2/6eligiblepairs, NOT_RUN. Contrast12/21actualbackgroundcells, nineNOT_MEASURED.
+
+## Walker wrapper compile boundary
+- First sim-bridge test compilation failed before anytest ran: godot-core0.4.5 implements InParamTuple onlythrough14args (localregistry meta/param_tuple/impls.rs196–209); draft had15. Merge width/height into nativeVector2i world_size, retaining purekernel i64 dimensions and existingpositive-gridvalidation. Actualrenderer width/height64 fitexactly. No dependencyupgrade. Preservefailedlog. Numericandrealcallfixture inputs remainunchanged; bridgeadaptertestwillvalidate corrected14argboundary.
+
+- Walker actual bridge attempt1: all24 comparisons bit-exact, but first frozen-to-running transition had empty output, violating24nonempty coverage. Preserve FAIL; attempt2 adds10running warmupframes before attaching sink, keeping12calls/24nonempty assertions unchanged. This changes only diagnostic setup, never reference or candidate.

@@ -44,7 +44,19 @@ func _run() -> void:
 			push_error("write-skip kernel environment disagrees with required state")
 			quit(2)
 			return
+	if _change == "walker":
+		_setter = "set_perf_candidate_p13b"
+		_getter = "get_perf_candidate_p13b"
+		_kernel_expected = true
+		if OS.get_environment("P12_DECLUMP_KERNEL") != "1" or OS.get_environment("P13_WRITE_SKIP") != "0" or OS.get_environment("P13B_WALKER_KERNEL") != "0":
+			push_error("walker requires declump ON, write skip OFF and initial walker OFF")
+			quit(2)
+			return
 	_world_id = OS.get_environment("P13_PAIR_WORLD")
+	if _change == "walker" and _world_id not in ["W200", "W500"]:
+		push_error("walker pairs require W200 running or W500 frozen")
+		quit(2)
+		return
 	_speed = 2.0 if _world_id == "W200" else 0.0
 	if _change.is_empty() or not Matrix.WORLDS.has(_world_id) or OS.get_environment("P13_PAIR_OUT").is_empty():
 		push_error("Use run_alternating_p13.py with a named candidate and matrix world")
@@ -59,7 +71,7 @@ func _run() -> void:
 	_world = _main.get_node("WorldSim")
 	_camera = _main.get_node("Camera2D") as Camera2D
 	_renderer = _main.get_node("AgentRenderer")
-	if not _renderer.has_method(_setter) or not _renderer.has_method(_getter) or not _renderer.has_method("get_perf_candidate_p12"):
+	if not _renderer.has_method(_setter) or not _renderer.has_method(_getter) or not _renderer.has_method("get_perf_candidate_p12") or (_change == "walker" and not _renderer.has_method("get_perf_candidate_p13")):
 		push_error("Renderer lacks the temporary real control/candidate switch; no measurements collected")
 		_main.free()
 		quit(2)
@@ -121,6 +133,9 @@ func _run() -> void:
 	var output: Dictionary = {"schema_version": 1, "build_profile": OS.get_environment("P13_BUILD_PROFILE"), "release_sha256": FileAccess.get_sha256("res://rust/target/release/libsim_bridge.dylib"), "valid": _errors.is_empty(), "errors": _errors, "world": _world_id, "change_id": _change, "build_commit": OS.get_environment("P13_PAIR_HEAD"), "build_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib"), "initial": _initial, "final": final, "restoration": restored, "blocks": _blocks, "contended": OS.get_environment("P13_CONTENDED") == "1", "metric": "process_ms + render_cpu_ms", "simulation_speed": _speed}
 	if _change == "write-skip":
 		output["kernel_enabled"] = _kernel_expected
+	if _change == "walker":
+		output["kernel_enabled"] = true
+		output["write_skip_enabled"] = false
 	var file := FileAccess.open(OS.get_environment("P13_PAIR_OUT"), FileAccess.WRITE)
 	if file == null:
 		push_error("Cannot write alternating evidence")
@@ -143,16 +158,19 @@ func _block(index: int) -> void:
 		_errors.append("Fresh alternating setup differs from initial state")
 	_world.call("set_sim_speed", _speed)
 	var enabled: bool = index % 2 == 1
-	var switched: bool = _renderer.call("set_perf_candidate_p13", _change, enabled) if _change == "write-skip" else _renderer.call("set_perf_candidate_p12", _change, enabled)
+	var switched: bool = _renderer.call(_setter, _change, enabled)
 	if not switched:
 		_errors.append("Renderer rejected named candidate switch")
 		return
-	var state: Dictionary = _renderer.call("get_perf_candidate_p13") if _change == "write-skip" else _renderer.call("get_perf_candidate_p12")
+	var state: Dictionary = _renderer.call(_getter)
 	if state.get("change_id") != _change or not (state.get("candidate_enabled") is bool) or state.get("candidate_enabled") != enabled:
 		_errors.append("Renderer switch readback does not match requested candidate")
 		return
 	if _change == "write-skip" and not bool(_write_skip_evidence(enabled)["write_skip"]["valid"]):
 		_errors.append("Write-skip initial readback differs from fixed kernel requirement")
+		return
+	if _change == "walker" and not bool(_walker_evidence(enabled)["valid"]):
+		_errors.append("Walker initial readback differs from fixed kernel/write-skip requirement")
 		return
 	var discarded: Array[Dictionary] = []
 	var samples: Array[Dictionary] = []
@@ -164,6 +182,11 @@ func _block(index: int) -> void:
 			sample["perf_candidate_p12"] = evidence["kernel"]
 			if not bool(evidence["write_skip"]["valid"]):
 				_errors.append("Write-skip or fixed kernel changed during frame")
+		if _change == "walker":
+			var evidence: Dictionary = _walker_evidence(enabled)
+			sample["perf_candidate_p13b"] = evidence
+			if not bool(evidence["valid"]):
+				_errors.append("Walker or fixed kernel/write-skip changed during frame")
 		sample["ticks_run"] = int(sample["state"]["tick"]) - _last_tick
 		_last_tick = int(sample["state"]["tick"])
 		var inspector: CanvasItem = _main.get_node("UI/AgentInspectorPanel") as CanvasItem
@@ -180,7 +203,7 @@ func _block(index: int) -> void:
 			discarded.append(sample)
 		else:
 			samples.append(sample)
-	var after: Dictionary = _renderer.call("get_perf_candidate_p13") if _change == "write-skip" else _renderer.call("get_perf_candidate_p12")
+	var after: Dictionary = _renderer.call(_getter)
 	var configuration_before: Dictionary = state.duplicate()
 	var configuration_after: Dictionary = after.duplicate()
 	if _change == "write-skip":
@@ -199,3 +222,10 @@ func _write_skip_evidence(enabled: bool) -> Dictionary:
 	var kernel_valid: bool = kernel_actual.get("change_id") == "declump-kernel" and kernel_actual.get("candidate_enabled") is bool and kernel_actual.get("candidate_enabled") == _kernel_expected
 	var valid: bool = kernel_valid and actual.get("change_id") == "write-skip" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == enabled and actual.get("kernel_enabled") is bool and actual.get("kernel_enabled") == _kernel_expected
 	return {"kernel": {"requested_kernel": _kernel_expected, "method_available": true, "actual": kernel_actual, "valid": kernel_valid}, "write_skip": {"requested_write_skip": enabled, "requested_kernel": _kernel_expected, "method_available": true, "actual": actual, "valid": valid}}
+
+func _walker_evidence(enabled: bool) -> Dictionary:
+	var actual: Dictionary = _renderer.call("get_perf_candidate_p13b")
+	var kernel: Dictionary = _renderer.call("get_perf_candidate_p12")
+	var write_skip: Dictionary = _renderer.call("get_perf_candidate_p13")
+	var valid: bool = actual.get("change_id") == "walker" and actual.get("candidate_enabled") is bool and actual.get("candidate_enabled") == enabled and actual.get("kernel_enabled") == true and actual.get("write_skip_enabled") == false and kernel.get("change_id") == "declump-kernel" and kernel.get("candidate_enabled") == true and write_skip.get("change_id") == "write-skip" and write_skip.get("candidate_enabled") == false and write_skip.get("kernel_enabled") == true
+	return {"requested_walker": enabled, "requested_kernel": true, "requested_write_skip": false, "actual": actual, "kernel": kernel, "write_skip": write_skip, "valid": valid}

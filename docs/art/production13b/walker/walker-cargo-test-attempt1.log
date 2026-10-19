@@ -1,0 +1,104 @@
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+error[E0277]: the trait bound `(..., ..., ..., ..., ..., ..., ..., ..., ..., i64, i64, ..., ..., ..., bool): ParamTuple` is not satisfied
+   --> crates/sim-bridge/src/ffi/world_node.rs:270:1
+    |
+270 | #[godot_api]
+    | ^^^^^^^^^^^^ the trait `ParamTuple` is not implemented for `(..., ..., ..., ..., ..., ..., ..., ..., ..., i64, i64, ..., ..., ..., bool)`
+    |
+    = help: the following other types implement trait `ParamTuple`:
+              ()
+              (P0, P1)
+              (P0, P1, P2)
+              (P0, P1, P2, P3)
+              (P0, P1, P2, P3, P4)
+              (P0, P1, P2, P3, P4, P5)
+              (P0, P1, P2, P3, P4, P5, P6)
+              (P0, P1, P2, P3, P4, P5, P6, P7)
+            and 7 others
+note: required by a bound in `ClassMethodInfo::from_signature`
+   --> /Users/rexxa/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/godot-core-0.4.5/src/registry/method.rs:58:57
+    |
+ 58 |     pub unsafe fn from_signature<C: GodotClass, Params: ParamTuple, Ret: GodotConvert>(
+    |                                                         ^^^^^^^^^^ required by this bound in `ClassMethodInfo::from_signature`
+    = note: the full name for the type has been written to '/Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/sim_bridge.long-type-5445848037523164450.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+    = note: this error originates in the attribute macro `godot_api` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `(..., ..., ..., ..., ..., ..., ..., ..., ..., i64, i64, ..., ..., ..., bool): ParamTuple` is not satisfied
+   --> crates/sim-bridge/src/ffi/world_node.rs:270:1
+    |
+270 | #[godot_api]
+    | ^^^^^^^^^^^^ the trait `ParamTuple` is not implemented for `(..., ..., ..., ..., ..., ..., ..., ..., ..., i64, i64, ..., ..., ..., bool)`
+    |
+    = help: the following other types implement trait `ParamTuple`:
+              ()
+              (P0, P1)
+              (P0, P1, P2)
+              (P0, P1, P2, P3)
+              (P0, P1, P2, P3, P4)
+              (P0, P1, P2, P3, P4, P5)
+              (P0, P1, P2, P3, P4, P5, P6)
+              (P0, P1, P2, P3, P4, P5, P6, P7)
+            and 7 others
+note: required by a bound in `ClassMethodInfo::from_signature`
+   --> /Users/rexxa/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/godot-core-0.4.5/src/registry/method.rs:58:57
+    |
+ 58 |     pub unsafe fn from_signature<C: GodotClass, Params: ParamTuple, Ret: GodotConvert>(
+    |                                                         ^^^^^^^^^^ required by this bound in `ClassMethodInfo::from_signature`
+    = note: the full name for the type has been written to '/Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/sim_bridge-f9fa2e98a909bf72.long-type-15864033347313361742.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+    = note: this error originates in the attribute macro `godot_api` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the function or associated item `in_varcall` exists for struct `Signature<..., ...>`, but its trait bounds were not satisfied
+   --> crates/sim-bridge/src/ffi/world_node.rs:270:1
+    |
+270 | #[godot_api]
+    | ^^^^^^^^^^^^ function or associated item cannot be called on `Signature<..., ...>` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `(PackedArray<i64>, PackedArray<u8>, PackedArray<u8>, PackedArray<u8>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, i64, i64, PackedArray<u8>, PackedArray<i32>, PackedArray<f32>, bool): InParamTuple`
+    = note: the full name for the type has been written to '/Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/sim_bridge.long-type-15392601749668351354.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+    = note: this error originates in the attribute macro `godot_api` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the function or associated item `in_varcall` exists for struct `Signature<..., ...>`, but its trait bounds were not satisfied
+   --> crates/sim-bridge/src/ffi/world_node.rs:270:1
+    |
+270 | #[godot_api]
+    | ^^^^^^^^^^^^ function or associated item cannot be called on `Signature<..., ...>` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `(PackedArray<i64>, PackedArray<u8>, PackedArray<u8>, PackedArray<u8>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, i64, i64, PackedArray<u8>, PackedArray<i32>, PackedArray<f32>, bool): InParamTuple`
+    = note: the full name for the type has been written to '/Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/sim_bridge-f9fa2e98a909bf72.long-type-4138084370960047415.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+    = note: this error originates in the attribute macro `godot_api` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the function or associated item `in_ptrcall` exists for struct `Signature<..., ...>`, but its trait bounds were not satisfied
+   --> crates/sim-bridge/src/ffi/world_node.rs:270:1
+    |
+270 | #[godot_api]
+    | ^^^^^^^^^^^^ function or associated item cannot be called on `Signature<..., ...>` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `(PackedArray<i64>, PackedArray<u8>, PackedArray<u8>, PackedArray<u8>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, i64, i64, PackedArray<u8>, PackedArray<i32>, PackedArray<f32>, bool): InParamTuple`
+    = note: the full name for the type has been written to '/Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/sim_bridge-f9fa2e98a909bf72.long-type-4138084370960047415.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+    = note: this error originates in the attribute macro `godot_api` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the function or associated item `in_ptrcall` exists for struct `Signature<..., ...>`, but its trait bounds were not satisfied
+   --> crates/sim-bridge/src/ffi/world_node.rs:270:1
+    |
+270 | #[godot_api]
+    | ^^^^^^^^^^^^ function or associated item cannot be called on `Signature<..., ...>` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `(PackedArray<i64>, PackedArray<u8>, PackedArray<u8>, PackedArray<u8>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, PackedArray<i64>, PackedArray<f32>, i64, i64, PackedArray<u8>, PackedArray<i32>, PackedArray<f32>, bool): InParamTuple`
+    = note: the full name for the type has been written to '/Users/rexxa/work/new-world-art-prod/rust/target/debug/deps/sim_bridge.long-type-15392601749668351354.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+    = note: this error originates in the attribute macro `godot_api` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `sim-bridge` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `sim-bridge` (lib test) due to 3 previous errors
