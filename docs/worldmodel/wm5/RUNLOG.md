@@ -32,3 +32,7 @@ pauses.
 | 1 (6.2.5) | 02:11:30 | 04:01:45 | val families: 400 recorder calls (c1, c2; replicate 0), linked; test families recording |
 | 1 (6.2.6) | 04:02:12 | 04:02:31 | `describe` (`finals5.sh describe`, train worlds + val families only): IPW ESS 396–445 (7 d) and 127–141 (30 d) per act; DATASET_OBS2.md (train / val parts) |
 | 4.1 | 02:54:47 | 06:15:49 | `ct_v2_s1`: 11,850 / 11,850 steps, α 0.99991 α_max, 12,051 s (GPU shared at times); lowest `val_roll` at step 1,580; test effects by the watcher. The four v2 runs are done; `_cost_m1b_obs2` started |
+| 1 (6.2.5) | 04:01:45 | 08:27:22 | test families: 480 recorder calls (c1, c2; replicates 0, 1), linked; unforked recordings of 3 sampled test worlds |
+| pause | 08:18 | 10:27 | **SSH stall** (Mac ↔ DGX): the connection multiplexer broke ("mux_client_request_session: read from master failed"), every DGX call hung; DGX jobs continued (`m1b_obs2_s0` training). ≈ 2.1 h of wall time without control; recorded as a pause (GOAL.md 0.3.5) |
+| 1 (6.2.5) | 08:28:02 | 10:27:52 | first `fam-check` failed 417 / 880 (a checker bug: the recorder's extra `none` member compared with the observed episode, DECISIONS L1.5); corrected `da300d9c`; re-run: 880 / 880 OK (none_r0 = factual in all 880, pre_r0 = unforked in 3) |
+| 1 (6.2.6) | 10:27:52 | 10:28:40 | full manifest (7,080 episodes, every one sha256-verified); its 1,640 observed entries are identical to the observed-only manifest of `835a8670` |
