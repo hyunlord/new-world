@@ -36,3 +36,5 @@ pauses.
 | pause | 08:18 | 10:27 | **SSH stall** (Mac ↔ DGX): the connection multiplexer broke ("mux_client_request_session: read from master failed"), every DGX call hung; DGX jobs continued (`m1b_obs2_s0` training). ≈ 2.1 h of wall time without control; recorded as a pause (GOAL.md 0.3.5) |
 | 1 (6.2.5) | 08:28:02 | 10:27:52 | first `fam-check` failed 417 / 880 (a checker bug: the recorder's extra `none` member compared with the observed episode, DECISIONS L1.5); corrected `da300d9c`; re-run: 880 / 880 OK (none_r0 = factual in all 880, pre_r0 = unforked in 3) |
 | 1 (6.2.6) | 10:27:52 | 10:28:40 | full manifest (7,080 episodes, every one sha256-verified); its 1,640 observed entries are identical to the observed-only manifest of `835a8670` |
+| 4.1 | 06:40 | 10:29 | `m1b_obs2_s0`: stop `max_steps` (8,000), kept step 7,950 (val T2 24 h 0.0622; not converged by WM-3's definition), 12,992 s; `_cost_crn_obs2` started |
+| 4.2 | 10:29:21 | 10:30:16 | `finals_watch_obs2` (`FINALS_SHA` `f7cf620a`, DECISIONS L4.3): `obs2_base` (val selection `zero` at both lags), `ridge_obs`, `ridge_priv` (DGX nearly idle, load ≈ 2); then the M1 / CRN / CT references on the obs2 test |
