@@ -1,6 +1,6 @@
 {
-  "active_key_count": 5286,
-  "key_count": 5291,
+  "active_key_count": 5287,
+  "key_count": 5292,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -5164,6 +5164,7 @@
     "UI_TIME_AGO_JUST_NOW": 3931,
     "UI_TIME_AGO_MINUTES": 3932,
     "UI_TIME_AGO_YESTERDAY": 3933,
+    "UI_TOOLTIP_PERSON_ACTIVITY_FMT": 5291,
     "UI_TOTAL_CHANGE": 3934,
     "UI_TOTAL_GATHERED": 3935,
     "UI_TOTAL_POP": 3936,
@@ -10585,7 +10586,8 @@
     "CHRON_VILLAGES_RECONCILED_FMT",
     "INSPECTOR_PORTER_BACK_FMT",
     "INSPECTOR_PORTER_OUT_FMT",
-    "UI_RELATION_ESTRANGED"
+    "UI_RELATION_ESTRANGED",
+    "UI_TOOLTIP_PERSON_ACTIVITY_FMT"
   ],
   "removed_key_count": 5,
   "removed_keys": [

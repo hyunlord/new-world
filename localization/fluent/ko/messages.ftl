@@ -5336,3 +5336,5 @@ CHRON_PORTER_GROUP_FAILED_FMT = 짐꾼 %d명 — %s에서 %s까지 가지 못함
 INSPECTOR_PORTER_OUT_FMT = 짐 나르는 중 — %s %d → %s
 INSPECTOR_PORTER_BACK_FMT = 집으로 돌아가는 중 — %s
 UI_RELATION_ESTRANGED = 사이가 틀어짐
+
+UI_TOOLTIP_PERSON_ACTIVITY_FMT = %s — %s

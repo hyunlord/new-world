@@ -3,7 +3,7 @@ extends Node2D
 const Icons = preload("res://scripts/ui/activity_icons_p11.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const FONT = preload("res://assets/fonts/galmuri/Galmuri9.ttf")
-const HEIGHT: float = 34.0
+const HEIGHT: float = 44.0
 const FONT_SIZE: int = 20
 const ICON_SCALE: float = 2.0
 const COUNT_GAP: float = 3.0
@@ -43,6 +43,7 @@ static func collect(activities: Dictionary, agents: Dictionary) -> Dictionary:
 	return result
 
 func display(activities: Array, zoom: float, abandoned: bool) -> void:
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	visible = zoom < 2.0 and not abandoned and not activities.is_empty()
 	if rows == activities:
 		return

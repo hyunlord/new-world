@@ -84,3 +84,11 @@ User explicitly ordered Godot not to open or cover the screen. This overrides un
 ## USER OVERRIDE 2026-10-19T03:46:48.062066+00:00: CLI-Anything headless path verified
 
 User requested CLI-Anything to work without opening Godot. Installed cli-anything-godot1.0.0 via uv fromlocalCLI-Anythingcommit34f519533bc175d2fe287ab8316b0dd99bb9cc43 afterhubinstallfailedmissingpip. Audited script run/validate explicitlyuseheadless=True. Actual installedCLI rendererparse valid and write-skipunitcompleted sentinel failures0 stderr empty. NoGodotprocessremains. Headless CLI checks are now permitted by latestrequest; GUI/windowedlaunchstillforbidden. Never restart14590 or claim headlessperformance/windowedacceptance. See CLI_HEADLESS.md/raw cli-headlessJSON.
+
+## Part2 headless continuation
+
+Part1closedunderuseroverride; commit215bae332d647f38323a29ef00411d24dad3266f pushedandlsremoteconfirmed. KernelONaccepted;write-skipOFFNOT_VERIFIED notcontended. Baselineheadlessprobecompleteall3primaryscenes/7textures, fullsentinel/empty stderr; all7matchingin-viewkinds64px/Craft72px. Sourcebackgroundpatchcontrast recordedwithlimitations. NoGUI.
+
+Activeagentownership: tool_copies implementsbadgeicons in activity_icons_p11, agent_activityiconregion, summary, relatedtests/exports; itownsexclusiveheadlessengine lane. write_skip implementsperson_activity_tooltip_p13 +mainnode+5locale files+headlesstest, NOengineuntilrootreleaseslane. world_contract finishedbaseline. probe finishedofficialheadlessresearch. RootownsDESIGN.md andtools/art_pipeline/blind_activity_p13.py (shuffledsourceiconsat4x,savesprivateanswerkey). Waitingiconexportsicon-0..6.png underexternalactivity-icons/attempt1 beforeStageAfreshreader. Noimagegen used. NoGUIrestartof14590.
+
+HeadlessGPUframebufferimpossibleunderinstalled4.6standardheadless(dummyonly); CPUTextServerglyphatlasretrievalsource-supported, Part3runtimeverificationpending. CLI_HEADLESS.md hasofficiallinks. RemainingStageB/captures/framebudgetcannotbeclaimedfromdummyheadless.

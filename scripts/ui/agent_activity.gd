@@ -187,17 +187,19 @@ static func apply_activity_icon(sprite: Sprite2D, icon: Sprite2D, choice: Dictio
 	icon.visible = false
 	if not sprite.visible or not show_activity_icon(choice, zoom):
 		return false
-	if str(choice["activity_icon"]).begins_with("p11_activity_"):
-		icon.texture = DailyIcons.texture(int(str(choice["activity_icon"]).trim_prefix("p11_activity_")))
+	if str(choice["activity_icon"]) == "U1_04" or str(choice["activity_icon"]).begins_with("p11_activity_"):
+		var kind: int = 1 if str(choice["activity_icon"]) == "U1_04" else int(str(choice["activity_icon"]).trim_prefix("p11_activity_"))
+		icon.texture = DailyIcons.texture(kind)
+		var size: Vector2 = icon.texture.get_size() if icon.texture != null else Vector2.ZERO
 		icon.region_enabled = false
 		icon.centered = false
-		icon.offset = Vector2(-8, -16)
+		icon.offset = Vector2(-size.x * 0.5, -size.y)
 		icon.scale = Vector2.ONE
 		icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		icon.set_meta("sprite_id", str(choice["activity_icon"]))
 		icon.set_meta("frame_id", str(choice["activity_icon"]))
-		icon.set_meta("frame_size", Vector2i(16, 16))
-		icon.set_meta("anchor", Vector2(8, 16))
+		icon.set_meta("frame_size", Vector2i(size))
+		icon.set_meta("anchor", Vector2(size.x * 0.5, size.y))
 		icon.set_meta("drawable", icon.texture != null)
 		icon.visible = icon.texture != null
 	else:

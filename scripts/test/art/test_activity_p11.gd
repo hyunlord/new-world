@@ -37,13 +37,13 @@ func run() -> void:
 	var shapes: Dictionary = {}
 	for kind: int in 7:
 		var texture: Texture2D = Icons.texture(kind)
-		check(texture != null and texture.get_width() >= 12 and texture.get_width() <= 18 and texture.get_height() >= 12 and texture.get_height() <= 18, "each icon has 12-18 source pixels")
-		var image: Image = texture.get_image()
+		check(texture != null and texture.get_width() == (22 if kind == 1 else 20) and texture.get_height() == (22 if kind == 1 else 20), "badge adds two source pixels around 16/18 pictogram")
+		var image: Image = Icons.pictogram_image(kind)
 		var silhouette: String = ""
 		for y: int in image.get_height():
 			for x: int in image.get_width():
 				silhouette += "1" if image.get_pixel(x, y).a > 0.0 else "0"
-		check(not shapes.has(silhouette), "each icon has a distinct alpha silhouette")
+		check(not shapes.has(silhouette), "each pictogram has a distinct alpha silhouette excluding common badge")
 		shapes[silhouette] = true
 		var choice: Dictionary = Activity.with_daily_icon({"sprite_id": "fixture"}, kind)
 		check(choice["activity_icon"] == Icons.icon_id(kind), "all seven use the existing icon path")

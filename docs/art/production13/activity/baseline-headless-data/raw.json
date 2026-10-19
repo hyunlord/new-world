@@ -1,0 +1,1781 @@
+{
+	"bridge_sha256": "23fd558e371b6c52cb590d40ef511da5a996683b6fec68003a544c309850bc48",
+	"cases": [
+		{
+			"clock": {
+				"day_index": 29,
+				"day_of_season": 2,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 41880,
+				"ticks_per_day": 1440,
+				"time_of_day": 10.0,
+				"winter_severity": -1
+			},
+			"rows": [
+				{
+					"activity_kind": 6,
+					"arrived": false,
+					"entity_bits": 4294967305,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 9,
+					"rect": [
+						720.0,
+						560.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967313,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 17,
+					"rect": [
+						672.0,
+						388.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967297,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 1,
+					"rect": [
+						988.0,
+						276.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967301,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 5,
+					"rect": [
+						1052.0,
+						400.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967312,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 16,
+					"rect": [
+						856.0,
+						328.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934598,
+					"icon_id": "p11_activity_5",
+					"in_viewport": true,
+					"person": 33,
+					"rect": [
+						936.0,
+						204.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				}
+			],
+			"seed": 20261010,
+			"tick": 41880,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261010,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"clock": {
+				"day_index": 29,
+				"day_of_season": 2,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 42180,
+				"ticks_per_day": 1440,
+				"time_of_day": 15.0,
+				"winter_severity": -1
+			},
+			"rows": [
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967305,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 9,
+					"rect": [
+						720.0,
+						560.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967313,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 17,
+					"rect": [
+						672.0,
+						392.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": false,
+					"entity_bits": 4294967297,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 1,
+					"rect": [
+						985.0,
+						252.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967301,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 5,
+					"rect": [
+						1052.0,
+						400.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967312,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 16,
+					"rect": [
+						856.0,
+						328.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934598,
+					"icon_id": "p11_activity_5",
+					"in_viewport": true,
+					"person": 33,
+					"rect": [
+						936.0,
+						204.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934599,
+					"icon_id": "p11_activity_5",
+					"in_viewport": true,
+					"person": 35,
+					"rect": [
+						1072.0,
+						152.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934605,
+					"icon_id": "p11_activity_5",
+					"in_viewport": true,
+					"person": 34,
+					"rect": [
+						896.0,
+						344.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967314,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 18,
+					"rect": [
+						1704.0,
+						-324.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967320,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 24,
+					"rect": [
+						1088.0,
+						248.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967319,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 23,
+					"rect": [
+						1048.0,
+						320.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967299,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 3,
+					"rect": [
+						988.0,
+						252.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967318,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 22,
+					"rect": [
+						1692.0,
+						-300.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967325,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 28,
+					"rect": [
+						896.0,
+						756.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": false,
+					"entity_bits": 4294967324,
+					"icon_id": "p11_activity_0",
+					"in_viewport": true,
+					"person": 27,
+					"rect": [
+						1368.0,
+						116.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": true,
+					"entity_bits": 8589934613,
+					"icon_id": "U1_04",
+					"in_viewport": false,
+					"person": 32,
+					"rect": [
+						1240.0,
+						-268.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 2,
+					"arrived": true,
+					"entity_bits": 8589934592,
+					"icon_id": "p11_activity_2",
+					"in_viewport": true,
+					"person": 31,
+					"rect": [
+						1052.0,
+						248.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": true,
+					"entity_bits": 8589934612,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 30,
+					"rect": [
+						1036.0,
+						252.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				}
+			],
+			"seed": 20261010,
+			"tick": 42180,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261010,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		},
+		{
+			"clock": {
+				"day_index": 59,
+				"day_of_season": 4,
+				"days_per_season": 7,
+				"season": 0,
+				"tick": 85080,
+				"ticks_per_day": 1440,
+				"time_of_day": 10.0,
+				"winter_severity": -1
+			},
+			"rows": [
+				{
+					"activity_kind": -1,
+					"arrived": false,
+					"entity_bits": 4294967332,
+					"icon_id": "p11_activity_5",
+					"in_viewport": false,
+					"person": 35,
+					"rect": [
+						-16.0,
+						-808.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": false
+				},
+				{
+					"activity_kind": -1,
+					"arrived": false,
+					"entity_bits": 4294967331,
+					"icon_id": "p11_activity_5",
+					"in_viewport": false,
+					"person": 34,
+					"rect": [
+						-192.0,
+						-616.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": false
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967325,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 28,
+					"rect": [
+						-192.0,
+						-208.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 8589934623,
+					"icon_id": "p11_activity_6",
+					"in_viewport": false,
+					"person": 30,
+					"rect": [
+						-48.0,
+						-704.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": false,
+					"entity_bits": 12884901915,
+					"icon_id": "p11_activity_5",
+					"in_viewport": false,
+					"person": 121,
+					"rect": [
+						1388.0,
+						1688.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934624,
+					"icon_id": "p11_activity_5",
+					"in_viewport": true,
+					"person": 123,
+					"rect": [
+						792.0,
+						208.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934625,
+					"icon_id": "p11_activity_5",
+					"in_viewport": true,
+					"person": 124,
+					"rect": [
+						828.0,
+						204.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 5,
+					"arrived": true,
+					"entity_bits": 8589934629,
+					"icon_id": "p11_activity_5",
+					"in_viewport": false,
+					"person": 120,
+					"rect": [
+						2244.0,
+						1744.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967340,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 43,
+					"rect": [
+						804.0,
+						528.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 8589934639,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 46,
+					"rect": [
+						848.0,
+						312.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967339,
+					"icon_id": "p11_activity_6",
+					"in_viewport": true,
+					"person": 42,
+					"rect": [
+						1052.0,
+						252.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967341,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 44,
+					"rect": [
+						2096.0,
+						1992.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967345,
+					"icon_id": "p11_activity_6",
+					"in_viewport": false,
+					"person": 48,
+					"rect": [
+						2160.0,
+						1924.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 6,
+					"arrived": true,
+					"entity_bits": 4294967326,
+					"icon_id": "p11_activity_6",
+					"in_viewport": false,
+					"person": 29,
+					"rect": [
+						424.0,
+						-440.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967334,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 37,
+					"rect": [
+						1032.0,
+						380.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967338,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 41,
+					"rect": [
+						816.0,
+						452.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": false,
+					"entity_bits": 4294967349,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 65,
+					"rect": [
+						992.0,
+						252.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": false,
+					"entity_bits": 8589934595,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 100,
+					"rect": [
+						1036.0,
+						820.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": false,
+					"entity_bits": 4294967354,
+					"icon_id": "p11_activity_0",
+					"in_viewport": true,
+					"person": 71,
+					"rect": [
+						1040.0,
+						316.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": false,
+					"entity_bits": 8589934615,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 81,
+					"rect": [
+						1120.0,
+						316.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 8589934599,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 118,
+					"rect": [
+						864.0,
+						764.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": false,
+					"entity_bits": 8589934593,
+					"icon_id": "p11_activity_0",
+					"in_viewport": true,
+					"person": 60,
+					"rect": [
+						980.0,
+						444.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": false,
+					"entity_bits": 8589934608,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 119,
+					"rect": [
+						1044.0,
+						556.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": false,
+					"entity_bits": 4294967384,
+					"icon_id": "p11_activity_0",
+					"in_viewport": false,
+					"person": 113,
+					"rect": [
+						2028.0,
+						1788.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967373,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 101,
+					"rect": [
+						2020.0,
+						1728.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": false,
+					"entity_bits": 8589934605,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 52,
+					"rect": [
+						164.0,
+						760.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": false,
+					"entity_bits": 4294967351,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 67,
+					"rect": [
+						724.0,
+						764.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": false,
+					"entity_bits": 8589934610,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 79,
+					"rect": [
+						720.0,
+						624.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967362,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 84,
+					"rect": [
+						1636.0,
+						1592.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": false,
+					"entity_bits": 12884901894,
+					"icon_id": "p11_activity_0",
+					"in_viewport": false,
+					"person": 59,
+					"rect": [
+						1888.0,
+						1600.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 4294967388,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 117,
+					"rect": [
+						1372.0,
+						1792.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 2,
+					"arrived": false,
+					"entity_bits": 4294967382,
+					"icon_id": "p11_activity_2",
+					"in_viewport": false,
+					"person": 110,
+					"rect": [
+						2288.0,
+						1712.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": false,
+					"entity_bits": 8589934594,
+					"icon_id": "p11_activity_4",
+					"in_viewport": false,
+					"person": 97,
+					"rect": [
+						2132.0,
+						1852.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 4294967352,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 68,
+					"rect": [
+						1448.0,
+						952.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 4294967376,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 104,
+					"rect": [
+						1260.0,
+						948.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967366,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 90,
+					"rect": [
+						2156.0,
+						1992.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 8589934597,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 54,
+					"rect": [
+						1684.0,
+						948.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 4294967359,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 76,
+					"rect": [
+						1504.0,
+						948.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 8589934673,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 105,
+					"rect": [
+						2212.0,
+						2000.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 4294967378,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 106,
+					"rect": [
+						1328.0,
+						960.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 4294967372,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 99,
+					"rect": [
+						1900.0,
+						952.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": true,
+					"entity_bits": 4294967368,
+					"icon_id": "p11_activity_0",
+					"in_viewport": false,
+					"person": 92,
+					"rect": [
+						2000.0,
+						1940.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": true,
+					"entity_bits": 4294967370,
+					"icon_id": "p11_activity_0",
+					"in_viewport": false,
+					"person": 95,
+					"rect": [
+						2144.0,
+						1792.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 8589934665,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 93,
+					"rect": [
+						1640.0,
+						952.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 2,
+					"arrived": true,
+					"entity_bits": 8589934613,
+					"icon_id": "p11_activity_2",
+					"in_viewport": false,
+					"person": 88,
+					"rect": [
+						1892.0,
+						1716.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": true,
+					"entity_bits": 8589934616,
+					"icon_id": "p11_activity_0",
+					"in_viewport": false,
+					"person": 57,
+					"rect": [
+						2140.0,
+						1848.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 0,
+					"arrived": true,
+					"entity_bits": 8589934644,
+					"icon_id": "p11_activity_0",
+					"in_viewport": true,
+					"person": 63,
+					"rect": [
+						976.0,
+						328.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 4294967355,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 72,
+					"rect": [
+						1824.0,
+						956.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 1,
+					"arrived": true,
+					"entity_bits": 4294967347,
+					"icon_id": "U1_04",
+					"in_viewport": true,
+					"person": 61,
+					"rect": [
+						1004.0,
+						584.0,
+						72.0,
+						72.0
+					],
+					"texture_size": [
+						2048,
+						2048
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 8589934601,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 62,
+					"rect": [
+						2004.0,
+						1992.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967353,
+					"icon_id": "p11_activity_3",
+					"in_viewport": true,
+					"person": 69,
+					"rect": [
+						1092.0,
+						256.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 4294967357,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 74,
+					"rect": [
+						2204.0,
+						1736.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 8589934592,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 86,
+					"rect": [
+						1772.0,
+						1788.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": false,
+					"entity_bits": 8589934611,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 55,
+					"rect": [
+						2084.0,
+						1776.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 8589934612,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 64,
+					"rect": [
+						1580.0,
+						948.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 3,
+					"arrived": true,
+					"entity_bits": 8589934607,
+					"icon_id": "p11_activity_3",
+					"in_viewport": false,
+					"person": 51,
+					"rect": [
+						2200.0,
+						1916.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				},
+				{
+					"activity_kind": 4,
+					"arrived": true,
+					"entity_bits": 8589934602,
+					"icon_id": "p11_activity_4",
+					"in_viewport": true,
+					"person": 50,
+					"rect": [
+						1168.0,
+						960.0,
+						64.0,
+						64.0
+					],
+					"texture_size": [
+						16,
+						16
+					],
+					"visible_in_tree": true
+				}
+			],
+			"seed": 20261018,
+			"tick": 85080,
+			"world_info": {
+				"clock_offset_ticks": 480,
+				"height": 64,
+				"move_interval_ticks": 8,
+				"seed": 20261018,
+				"ticks_per_day": 1440,
+				"width": 64
+			}
+		}
+	],
+	"complete": true,
+	"display": "headless",
+	"evidence_type": "headless_geometry_not_framebuffer",
+	"icon_source_sha256": "36bb3c70b2c0ab8755056ddf4f89eb730aeb6d7a61b7b21f15301da44781c89d",
+	"textures": [
+		{
+			"dimensions": [
+				16,
+				16
+			],
+			"image_available": true,
+			"kind": 0,
+			"opaque_bounds": [
+				1,
+				0,
+				14,
+				15
+			],
+			"opaque_color_counts": {
+				"211c25": 45,
+				"f39a43": 63,
+				"fff2d4": 9
+			},
+			"texture_available": true
+		},
+		{
+			"dimensions": [
+				18,
+				18
+			],
+			"image_available": true,
+			"kind": 1,
+			"opaque_bounds": [
+				0,
+				0,
+				17,
+				18
+			],
+			"opaque_color_counts": {
+				"030000": 113,
+				"0f0706": 12,
+				"100b03": 1,
+				"230b08": 2,
+				"2f2816": 1,
+				"3a2719": 1,
+				"432a00": 3,
+				"464334": 3,
+				"572411": 1,
+				"585646": 6,
+				"5f391d": 2,
+				"615d47": 1,
+				"766a51": 1,
+				"8d5727": 2,
+				"908369": 4,
+				"a0967e": 2,
+				"a86329": 2,
+				"ad9d7c": 1,
+				"aea973": 1,
+				"c9b896": 5,
+				"cac48d": 2,
+				"d87e33": 12,
+				"f6e6b0": 3,
+				"fbf2d1": 4
+			},
+			"texture_available": true
+		},
+		{
+			"dimensions": [
+				16,
+				16
+			],
+			"image_available": true,
+			"kind": 2,
+			"opaque_bounds": [
+				2,
+				0,
+				12,
+				15
+			],
+			"opaque_color_counts": {
+				"211c25": 42,
+				"91bed9": 56
+			},
+			"texture_available": true
+		},
+		{
+			"dimensions": [
+				16,
+				16
+			],
+			"image_available": true,
+			"kind": 3,
+			"opaque_bounds": [
+				0,
+				0,
+				16,
+				14
+			],
+			"opaque_color_counts": {
+				"211c25": 65,
+				"d6a3e0": 82,
+				"fff2d4": 2
+			},
+			"texture_available": true
+		},
+		{
+			"dimensions": [
+				16,
+				16
+			],
+			"image_available": true,
+			"kind": 4,
+			"opaque_bounds": [
+				0,
+				0,
+				15,
+				14
+			],
+			"opaque_color_counts": {
+				"211c25": 41,
+				"98d47b": 51
+			},
+			"texture_available": true
+		},
+		{
+			"dimensions": [
+				16,
+				16
+			],
+			"image_available": true,
+			"kind": 5,
+			"opaque_bounds": [
+				0,
+				0,
+				16,
+				15
+			],
+			"opaque_color_counts": {
+				"211c25": 42,
+				"f3d86b": 126,
+				"fff2d4": 24
+			},
+			"texture_available": true
+		},
+		{
+			"dimensions": [
+				16,
+				16
+			],
+			"image_available": true,
+			"kind": 6,
+			"opaque_bounds": [
+				0,
+				0,
+				16,
+				16
+			],
+			"opaque_color_counts": {
+				"211c25": 67,
+				"79d5cd": 81,
+				"fff2d4": 7
+			},
+			"texture_available": true
+		}
+	]
+}

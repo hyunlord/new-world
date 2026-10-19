@@ -1,0 +1,131 @@
+{
+  "source_raw_sha256": "99e050cfc9ad28ad1f2bd73946a51ec87ea51f21a35e6057c78cc8f03749f77e",
+  "metrics": [
+    {
+      "kind": 0,
+      "name": "TendFire",
+      "matching_in_view_rows": 4,
+      "headless_screen_dimensions": [
+        [
+          64.0,
+          64.0
+        ]
+      ],
+      "fill": "f39a43",
+      "fill_type": "source designated main fill",
+      "contrast_visible_patches": {
+        "grass": 3.1223827716732777,
+        "dirt": 1.8979932888513367,
+        "shelter_roof": 1.2018669024717537
+      }
+    },
+    {
+      "kind": 1,
+      "name": "Craft",
+      "matching_in_view_rows": 8,
+      "headless_screen_dimensions": [
+        [
+          72.0,
+          72.0
+        ]
+      ],
+      "fill": "d87e33",
+      "fill_type": "representative orange; Craft has no unique main color",
+      "contrast_visible_patches": {
+        "grass": 2.2814873960440507,
+        "dirt": 1.3868407824867512,
+        "shelter_roof": 1.6448429724525528
+      }
+    },
+    {
+      "kind": 2,
+      "name": "Repair",
+      "matching_in_view_rows": 1,
+      "headless_screen_dimensions": [
+        [
+          64.0,
+          64.0
+        ]
+      ],
+      "fill": "91bed9",
+      "fill_type": "source designated main fill",
+      "contrast_visible_patches": {
+        "grass": 3.469287245137746,
+        "dirt": 2.1088650527110953,
+        "shelter_roof": 1.0816886135276276
+      }
+    },
+    {
+      "kind": 3,
+      "name": "HearthCircle",
+      "matching_in_view_rows": 12,
+      "headless_screen_dimensions": [
+        [
+          64.0,
+          64.0
+        ]
+      ],
+      "fill": "d6a3e0",
+      "fill_type": "source designated main fill",
+      "contrast_visible_patches": {
+        "grass": 3.3390611847586684,
+        "dirt": 2.0297049347155105,
+        "shelter_roof": 1.123875335753501
+      }
+    },
+    {
+      "kind": 4,
+      "name": "Explore",
+      "matching_in_view_rows": 11,
+      "headless_screen_dimensions": [
+        [
+          64.0,
+          64.0
+        ]
+      ],
+      "fill": "98d47b",
+      "fill_type": "source designated main fill",
+      "contrast_visible_patches": {
+        "grass": 3.9507947983323213,
+        "dirt": 2.401557579964817,
+        "shelter_roof": 1.052790496113876
+      }
+    },
+    {
+      "kind": 5,
+      "name": "Play",
+      "matching_in_view_rows": 6,
+      "headless_screen_dimensions": [
+        [
+          64.0,
+          64.0
+        ]
+      ],
+      "fill": "f3d86b",
+      "fill_type": "source designated main fill",
+      "contrast_visible_patches": {
+        "grass": 4.872031885249983,
+        "dirt": 2.961547157243217,
+        "shelter_roof": 1.2982777206551106
+      }
+    },
+    {
+      "kind": 6,
+      "name": "SitByFire",
+      "matching_in_view_rows": 9,
+      "headless_screen_dimensions": [
+        [
+          64.0,
+          64.0
+        ]
+      ],
+      "fill": "79d5cd",
+      "fill_type": "source designated main fill",
+      "contrast_visible_patches": {
+        "grass": 4.007819284377998,
+        "dirt": 2.436220880312484,
+        "shelter_roof": 1.0679861314275625
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5286,
+    "active_key_count": 5287,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5291,
+    "key_count": 5292,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -5197,6 +5197,7 @@
     "UI_TIME_AGO_JUST_NOW": "방금",
     "UI_TIME_AGO_MINUTES": "{n}분 전",
     "UI_TIME_AGO_YESTERDAY": "어제",
+    "UI_TOOLTIP_PERSON_ACTIVITY_FMT": "%s — %s",
     "UI_TOTAL_CHANGE": "총 변화",
     "UI_TOTAL_GATHERED": "총 채집",
     "UI_TOTAL_POP": "총 인구",

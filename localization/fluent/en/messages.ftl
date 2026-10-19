@@ -5334,3 +5334,5 @@ CHRON_PORTER_GROUP_FAILED_FMT = Porters (%d) from %s could not reach %s (%s).
 INSPECTOR_PORTER_OUT_FMT = Carrying %s ×%d to %s
 INSPECTOR_PORTER_BACK_FMT = Heading home to %s
 UI_RELATION_ESTRANGED = Estranged
+
+UI_TOOLTIP_PERSON_ACTIVITY_FMT = %s — %s
