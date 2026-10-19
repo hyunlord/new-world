@@ -15,13 +15,13 @@ act per world, and a new sequentially confounded split in which a known policy a
 the trajectory its earlier acts have changed (1,640 worlds, 3,966 acts, every propensity
 recorded). The task is the per-world effect of an act on food, population, deaths and settlements at one week and one
 month, scored against the true branch with a pre-registered rule. We find that (i) the benchmark has room: an effect
-floor from noise replicates lies far below predicting no effect on every split (0.187 vs
+floor from noise replicates lies far below predicting no effect on both splits that have noise replicates (0.187 vs
 0.612 on the interventional split at one week); (ii) two established estimators of
-time-varying treatment effects, CRN and the Causal Transformer, trained on their authors' full optimizer-step schedules
-and read at their last checkpoint, are worse than predicting no effect on both the interventional and the sequentially
-confounded split, at both horizons; (iii) rounding counts at readout does not change this; (iv) a linear map of the
-observable pre-act state reaches only the act's mean effect (the hidden state adds a little more, post hoc), and the
-learned dynamics models reproduce at most a fraction of the delayed sign reversal of food effects at one month. The benchmark, its pre-registered harness
+time-varying treatment effects, CRN and the Causal Transformer, trained for the full optimizer-step schedules of the
+Causal Transformer authors' public implementation (which includes CRN) and read at their last checkpoint, are worse than predicting no effect on both the interventional and the sequentially
+confounded split, at both horizons; (iii) rounding counts at readout does not change this; (iv) on the interventional
+split a linear map of the observable pre-act state reaches only the act's mean effect, and the hidden state adds a little
+more (both post hoc). The benchmark, its pre-registered harness
 and the paper's numbers are traced to committed result files.
 
 ## 1 Introduction
@@ -39,8 +39,9 @@ desired, in post-fork noise). This makes it possible to measure, per world, the 
 population, deaths and settlement splits at one week and one month, and to ask whether a model trained on the world's
 observable history predicts it.
 
-The answer so far has been sobering. Autoregressive world models trained on the factual stream ignore the god's acts;
-training on paired branches teaches the first week's effects only; and two established estimators of time-varying
+The answer in earlier rounds of this benchmark has been sobering (Table 1's M1b rows and `wm3_full`): autoregressive
+world models trained on the factual stream barely respond to the god's acts; training on paired branches teaches the
+first week's effects only; and two established estimators of time-varying
 treatment effects, the Counterfactual Recurrent Network (CRN) [@bica2020crn] and the Causal Transformer (CT)
 [@melnychuk2022ct], did not beat "predict no effect" on either an interventional or a confounded observational split.
 A reviewer could object to the last finding on three grounds: (1) the two methods were not trained as their authors train
@@ -59,21 +60,22 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
    only lacks the post-fork noise) and against direct effect regressions on the observable and on the full (hidden)
    pre-act state. This tells how much room the benchmark leaves and how much of the per-world effect a simple map of the
    observable (or hidden) pre-act state captures.
-3. **A fair rematch of CRN and CT** (Sections 4–5): trained on their authors' optimizer-step budgets with their weight
-   schedules on real progress, evaluated at their last checkpoint, with counts rounded at readout as the world models
+3. **A fair rematch of CRN and CT** (Sections 4–5): trained for the optimizer-step counts of the authors' public
+   implementation with its weight schedules on real progress, evaluated at their last checkpoint, with counts rounded at readout as the world models
    are — beside observational baselines (naive contrast, multi-cast inverse propensity weighting, matching), world
    models trained on factual and on paired data, and the direct regressions. Everything is pre-registered (W1 rule,
    world-level paired bootstrap).
 
 **Findings.** On a split three times larger than before, with 2.42 acts per world and
 inverse-propensity effective sample sizes of 396–445
-per act, CRN and CT trained as their authors train them do not beat "predict no effect" (Section 5.3: every pre-registered
+per act, CRN and CT trained on the authors' implementation's schedule do not beat "predict no effect" (Section 5.3: every pre-registered
 comparison of CRN and CT with `zero` or the analog baseline is NONE), and on the interventional split they are further
 behind than the earlier, budget-capped runs (post hoc). Rounding the earlier runs' counts moves their scores by amounts
 whose intervals all contain zero. The gap between "no effect" and the
-effect floor is large on every split, so the benchmark can separate methods; on the interventional split a linear
-regression on the observable pre-act state reaches the act's mean effect but no further (post hoc), and among the
-learned models compared with it (E2) only the world model trained on paired branches ties or beats it.
+effect floor is large on both splits with noise replicates (v2, obs2), so the benchmark can separate methods; on the
+interventional split a linear regression on the observable pre-act state reaches the act's mean effect but no further
+(post hoc), and on that split, among the learned models compared with it (E2), only the world model trained on paired
+branches ties or beats it.
 
 ## 2 Related work
 
@@ -83,8 +85,7 @@ next observations from past observations and actions and are used for planning a
 engines learn action-conditioned video models of games [@bruce2024genie; @valevski2025gamengen], and graph-network
 simulators learn physical dynamics from particle trajectories [@sanchezgonzalez2020gns]. Their evaluation is mostly
 factual (prediction error or downstream return); counterfactual correctness of the response to an action, measured
-against the true branch, is rarely available. Our benchmark provides it for a social simulation and shows that factual
-accuracy and counterfactual accuracy can diverge sharply.
+against the true branch, is rarely available. Our benchmark provides it for a social simulation.
 
 **Time-varying treatment effects.** Estimating the effect of a sequence of treatments from observational trajectories
 with time-varying confounding is the subject of marginal structural models and inverse probability weighting
@@ -211,10 +212,10 @@ observational baseline of each horizon is chosen on the val families.
 `ridge_obs` fits one ridge regression per cell on the v2 train families (both replicates, every case): the target is the
 true effect divided by the cell's scale, the features are the 37 observable state variables at c, their means over the
 day and the week before c, the 30 calendar features at c, and (obs2 only) the number of earlier acts per kind and the
-days since the last act; the penalty is chosen per cell on the v2 val families. It is applied unchanged to the v2 and
-obs2 tests. `ridge_priv` adds every hidden field at c (winter severity, the hidden latent table, fission pressure and
+days since the last act (constant on v2, so they carry zero weight); the penalty is chosen per cell on the v2 val families. It is applied unchanged to the v2 and
+obs2 tests. `ridge_priv` adds every hidden field at c except the region geometry (winter severity, the hidden latent table, fission pressure and
 threshold, the world's generation parameters); it is a **diagnostic** of how much a linear map of the full pre-act state
-predicts and never enters a method ranking. Both regressions are trained on counterfactual labels of other worlds of the
+predicts and never enters a method ranking. On obs2 both are a **v2→obs2 transfer** (Section 6). Both regressions are trained on counterfactual labels of other worlds of the
 same game, as is the paired world model below.
 
 ### 4.3 World models
@@ -225,16 +226,17 @@ with the act and one without, with counts rounded at readout when validation pre
 factual and arm members (`wm2_m1bact`, three seeds), on obs (`m1b_obs`, two seeds) and on obs2 (`m1b_obs2`, new), and
 `wm3_full`, M1b fine-tuned on v2's paired branches with a paired-difference loss and a hazard head (three seeds).
 
-### 4.4 CRN and CT as their authors train them
+### 4.4 CRN and CT on the authors' implementation's schedule
 
-We use the authors' public implementation of both methods [@melnychuk2022ct] (its plain-PyTorch modules, unchanged) at
+We use the Causal Transformer authors' public implementation [@melnychuk2022ct], which includes CRN (its plain-PyTorch
+modules, unchanged); CRN's schedule is the one that implementation uses, not one taken from Bica et al.'s code. We run it at
 daily resolution: a token per day carries the 37 state variables (predicted as normalized daily changes and fed back),
 the calendar as covariates, and a four-class treatment plus amount. CRN [@bica2020crn] is an LSTM encoder whose
 representation is made treatment-invariant by a gradient-reversal classifier, followed by a decoder initialized from it
 for multi-step prediction; CT [@melnychuk2022ct] is a three-stream transformer trained with counterfactual domain
 confusion and EMA weights. Configurations are those selected by a pre-registered grid on the obs split. In contrast with
-the earlier study, each stage now trains for **the authors' number of optimizer steps** (CRN encoder 15,700, decoder
-53,800; CT 11,850), unless a 300-s cost check on the actual data predicted more than the stage's budget; the balancing
+the earlier study, each stage now trains for **the number of optimizer steps in that implementation** (CRN encoder
+15,700, decoder 53,800; CT 11,850), unless a 300-s cost check on the actual data predicted more than the stage's budget; the balancing
 weight α follows the authors' schedule **on real progress** (so a finished run ends at α = α_max); the **last**
 checkpoint is primary, as in the authors' code (CT's EMA weights), with the lowest-validation-loss checkpoint reported as
 secondary; and **counts are rounded at readout** (food, alive, cumulative deaths), as for M1. All adaptations are listed
@@ -247,7 +249,7 @@ in Appendix A.
 Table 1 lists the 12-cell scaled effect MAE (lower is better) of every method on every split. Multi-seed rows are
 seed-averaged; obs numbers are the earlier study's committed ones. CRN / CT on obs2 and v2 are trained on the authors'
 schedule and read at their last checkpoint with counts rounded (primary). The obs2 columns of the earlier obs-trained runs (M1b-obs, CRN / CT
-time-capped) and of the v2-trained world models are evaluations of those checkpoints on the obs2 test.
+time-capped) and of the v2-trained world models are evaluations of those checkpoints on the obs2 test; the obs2 columns of the two regressions are a v2→obs2 transfer.
 
 | method | trained on | v2 7 d | v2 30 d | obs 7 d | obs 30 d | obs2 7 d | obs2 30 d |
 |---|---|---|---|---|---|---|---|
@@ -256,8 +258,8 @@ time-capped) and of the v2-trained world models are evaluations of those checkpo
 | `ipw` (multi-act on obs2) | obs / obs2 train | — | — | 0.391 | 0.382 | 0.297 | 0.405 |
 | `match5` | obs / obs2 train | — | — | 0.945 | 0.968 | 0.797 | 1.132 |
 | `an5_arm` | v2 train | 0.485 | 0.594 | — | — | — | — |
-| `ridge_obs` | v2 train (counterfactual labels) | 0.480 | 0.602 | — | — | 0.537 | 0.514 |
-| `ridge_priv` (diagnostic) | v2 train, hidden state | 0.434 | 0.590 | — | — | 0.391 | 0.497 |
+| `ridge_obs` (obs2: transfer) | v2 train (counterfactual labels) | 0.480 | 0.602 | — | — | 0.537 | 0.514 |
+| `ridge_priv` (diagnostic; obs2: transfer) | v2 train, hidden state | 0.434 | 0.590 | — | — | 0.391 | 0.497 |
 | M1b (3 seeds) | v2 | 0.592 | 0.501 | 0.216 | 0.174 | 0.221 | 0.199 |
 | `wm3_full`, paired (3 seeds) | v2 | 0.496 | 0.511 | 0.229 | 0.175 | 0.239 | 0.200 |
 | M1b-obs (2 seeds) | obs | — | — | 0.214 | 0.175 | 0.219 | 0.197 |
@@ -290,57 +292,18 @@ multi-seed models; clipped at 3). The v2 counterpart is `figures/cells_v2.png`.*
 
 ### 5.3 Pre-registered verdicts
 
-| rule | model (seed-averaged) | baseline | Δ = model − baseline [95 % CI] | verdict |
-|---|---|---|---|---|
-| R1 obs2 7 d: crn_obs2 vs `zero` (val-chosen) | 0.402 | 0.217 | +0.185 [+0.170, +0.200] | **NONE** |
-| R1 obs2 7 d: ct_obs2 vs `zero` (val-chosen) | 0.311 | 0.217 | +0.093 [+0.077, +0.110] | **NONE** |
-| R1 obs2 7 d: m1b_obs2 vs `zero` (val-chosen) | 0.216 | 0.217 | −0.001 [−0.003, +0.001] | **TIE** |
-| R2 obs2 30 d: crn_obs2 vs `zero` (val-chosen) | 0.780 | 0.188 | +0.591 [+0.548, +0.639] | **NONE** |
-| R2 obs2 30 d: ct_obs2 vs `zero` (val-chosen) | 0.483 | 0.188 | +0.295 [+0.264, +0.328] | **NONE** |
-| R2 obs2 30 d: m1b_obs2 vs `zero` (val-chosen) | 0.194 | 0.188 | +0.005 [+0.004, +0.007] | **NONE** |
-| R3 v2 7 d: crn_v2 vs `zero` | 1.649 | 0.612 | +1.037 [+0.932, +1.142] | **NONE** |
-| R3 v2 7 d: crn_v2 vs `an5_arm` | 1.649 | 0.485 | +1.164 [+1.063, +1.266] | **NONE** |
-| R3 v2 30 d: crn_v2 vs `zero` | 3.645 | 0.487 | +3.158 [+2.967, +3.364] | **NONE** |
-| R3 v2 30 d: crn_v2 vs `an5_arm` | 3.645 | 0.594 | +3.051 [+2.865, +3.253] | **NONE** |
-| R3 v2 7 d: ct_v2 vs `zero` | 1.243 | 0.612 | +0.631 [+0.530, +0.733] | **NONE** |
-| R3 v2 7 d: ct_v2 vs `an5_arm` | 1.243 | 0.485 | +0.758 [+0.662, +0.854] | **NONE** |
-| R3 v2 30 d: ct_v2 vs `zero` | 1.920 | 0.487 | +1.433 [+1.299, +1.565] | **NONE** |
-| R3 v2 30 d: ct_v2 vs `an5_arm` | 1.920 | 0.594 | +1.325 [+1.194, +1.457] | **NONE** |
-| E1 v2 7 d: `ridge_obs` vs `zero` | 0.480 | 0.612 | −0.133 [−0.178, −0.088] | **WEAK** |
-| E1 v2 30 d: `ridge_obs` vs `zero` | 0.602 | 0.487 | +0.115 [+0.073, +0.155] | **NONE** |
-| E1 obs2 7 d: `ridge_obs` vs `zero` | 0.537 | 0.217 | +0.319 [+0.302, +0.335] | **NONE** |
-| E1 obs2 30 d: `ridge_obs` vs `zero` | 0.514 | 0.188 | +0.326 [+0.309, +0.342] | **NONE** |
-| E2 v2 7 d: crn_v2 vs `ridge_obs` | 1.649 | 0.480 | +1.170 [+1.068, +1.273] | **NONE** |
-| E2 v2 7 d: ct_v2 vs `ridge_obs` | 1.243 | 0.480 | +0.763 [+0.666, +0.863] | **NONE** |
-| E2 v2 7 d: wm3_full vs `ridge_obs` | 0.496 | 0.480 | +0.016 [−0.035, +0.081] | **TIE** |
-| E2 v2 30 d: crn_v2 vs `ridge_obs` | 3.645 | 0.602 | +3.044 [+2.859, +3.244] | **NONE** |
-| E2 v2 30 d: ct_v2 vs `ridge_obs` | 1.920 | 0.602 | +1.318 [+1.191, +1.449] | **NONE** |
-| E2 v2 30 d: wm3_full vs `ridge_obs` | 0.511 | 0.602 | −0.091 [−0.133, −0.046] | **WEAK** |
-| E2 obs2 7 d: crn_obs2 vs `ridge_obs` | 0.402 | 0.537 | −0.135 [−0.154, −0.117] | **KEEP** |
-| E2 obs2 7 d: ct_obs2 vs `ridge_obs` | 0.311 | 0.537 | −0.226 [−0.244, −0.208] | **KEEP** |
-| E2 obs2 7 d: m1b_obs2 vs `ridge_obs` | 0.216 | 0.537 | −0.320 [−0.336, −0.303] | **KEEP** |
-| E2 obs2 7 d: wm3_full vs `ridge_obs` | 0.239 | 0.537 | −0.298 [−0.314, −0.282] | **KEEP** |
-| E2 obs2 30 d: crn_obs2 vs `ridge_obs` | 0.780 | 0.514 | +0.265 [+0.222, +0.313] | **NONE** |
-| E2 obs2 30 d: ct_obs2 vs `ridge_obs` | 0.483 | 0.514 | −0.031 [−0.062, +0.001] | **TIE** |
-| E2 obs2 30 d: m1b_obs2 vs `ridge_obs` | 0.194 | 0.514 | −0.321 [−0.337, −0.304] | **KEEP** |
-| E2 obs2 30 d: wm3_full vs `ridge_obs` | 0.200 | 0.514 | −0.315 [−0.332, −0.298] | **KEEP** |
-| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, as kept) | 0.311 | 0.317 | −0.006 [−0.021, +0.009] | **TIE** |
-| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, rounded) | 0.311 | 0.323 | −0.012 [−0.026, +0.004] | **TIE** |
-| D1 obs2 7 d: M1b-obs2 vs M1b-obs | 0.216 | 0.219 | −0.003 [−0.005, −0.001] | **WEAK** |
-| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | 0.483 | 0.378 | +0.105 [+0.076, +0.135] | **NONE** |
-| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | 0.483 | 0.378 | +0.106 [+0.076, +0.137] | **NONE** |
-| D1 obs2 30 d: M1b-obs2 vs M1b-obs | 0.194 | 0.197 | −0.004 [−0.006, −0.001] | **WEAK** |
+Appendix F lists all 38 pre-registered verdicts with their intervals, the training-reached check (R4) and rounding
+alone (D2). In brief: every R1–R3 comparison of CRN and CT with `zero` or `an5_arm` is NONE; M1b-obs2 ties `zero` at 7
+days (TIE) and is NONE at 30 days; E1 is
+WEAK for `ridge_obs` on v2 at 7 days (under the W1 rule a single deterministic run reaches
+WEAK at most, even with a ratio of 0.783) and NONE elsewhere; in E2 on v2 only `wm3_full` ties
+(7 days, TIE) or beats (30 days, WEAK)
+`ridge_obs`. E2 on obs2 compares with a regression that transfers badly from v2 (Section 6), so its KEEP / TIE verdicts
+there say little about the models. R4 holds for all eight CRN / CT runs (Appendix B), and every D2 interval contains
+zero.
 
-E2 on obs2 compares with a regression that transfers badly from v2 (Section 6), so its WEAK / KEEP verdicts there say
-little about the models. Under the W1 rule a single run reaches WEAK at most, so the deterministic `ridge_obs` is WEAK in E1 on v2 at 7 days
-even with a ratio of 0.783.
-
-R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `crn_v2_s1` 1.000 of its planned steps, α = 0.9999 α_max; `ct_v2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `ct_v2_s1` 1.000 of its planned steps, α = 0.9999 α_max; `crn_obs2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `crn_obs2_s1` 1.000 of its planned steps, α = 0.9999 α_max; `ct_obs2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `ct_obs2_s1` 1.000 of its planned steps, α = 0.9999 α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
-
-D2 (rounding alone; the earlier study's runs on their own test splits, seed-averaged, rounded − as committed): crn_obs 7 d +0.001 [−0.007, +0.010]; crn_obs 30 d −0.003 [−0.008, +0.002]; ct_obs 7 d −0.006 [−0.014, +0.003]; ct_obs 30 d −0.004 [−0.010, +0.003]; crn_v2 7 d +0.003 [−0.085, +0.099]; crn_v2 30 d −0.004 [−0.029, +0.021]; ct_v2 7 d +0.018 [−0.060, +0.098]; ct_v2 30 d +0.016 [−0.013, +0.043].
-
-**Q1: trained as their authors train them, CRN and CT still lose to "no effect".** Every primary CRN / CT run
-completed the authors' number of optimizer steps with the balancing weight at its maximum (R4). On obs2 their 12-cell
+**Q1: trained on the authors' implementation's schedule, CRN and CT still lose to "no effect".** Every primary CRN / CT run
+completed that implementation's number of optimizer steps with the balancing weight at its maximum (R4). On obs2 their 12-cell
 errors are 0.402 (CRN) and 0.311 (CT) at 7 days and
 0.780 and 0.483 at 30 days, against
 0.217 and 0.188 for `zero` (the baseline chosen on
@@ -350,13 +313,19 @@ The world model trained on obs2 (M1b-obs2) ties `zero` at 7 days
 (−0.001 [−0.003, +0.001]), as world models did on the earlier splits, because it barely responds to
 the act.
 
-**Q3: more observational data does not help.** M1b-obs2 is marginally better than the earlier M1b-obs on the obs2 test
-(−0.003 [−0.005, −0.001] at 7 days), and CT-obs2 is not better than the earlier,
-budget-capped CT-obs (−0.006 [−0.021, +0.009] at 7 days,
-+0.105 [+0.076, +0.135] at 30 days).
+**Q3: more observational data barely helps.** M1b-obs2 is marginally better than the earlier M1b-obs on the obs2 test
+(WEAK at both lags:
+−0.003 [−0.005, −0.001] at 7 days, −0.004 [−0.006, −0.001]
+at 30 days) but still does not beat `zero`. It did not converge: both seeds stopped at the 8,000-step cap with the kept
+step at 7,950 and the validation loss still falling, and with three times the worlds each
+world is seen less often than in M1b-obs, so this comparison may understate what more data can do. CT-obs2 is not better
+than the earlier, budget-capped CT-obs (−0.006 [−0.021, +0.009] at 7 days,
++0.105 [+0.076, +0.135] at 30 days), but that comparison mixes the data size with
+the schedule and the checkpoint (the authors' schedule and last checkpoint here, a time-capped run's best-validation
+checkpoint there).
 
 **Q4: rounding alone changes little.** Re-scoring the earlier study's runs with rounded counts moves their seed-averaged
-scores by amounts whose intervals all contain zero (D2 above).
+scores by amounts whose intervals all contain zero (D2, Appendix F).
 
 ## 6 Analysis
 
@@ -371,9 +340,9 @@ observable state adds nothing measurable beyond the arm-level mean. Adding the *
 information (`ridge_priv` vs `arm_mean` −0.063 [−0.082, −0.043], post hoc), yet `ridge_priv`
 (0.434) stays far above the floor (0.187): most of
 the headroom is not linear in the state at the act, observable or hidden. At 30 days the regressions do worse than
-`zero` (0.602 vs 0.487), as `arm_mean` does: a
-squared-error fit predicts a mean, while the metric is an absolute error, which rewards a median near zero for these
-skewed, mostly-zero effects.
+`zero` (0.602 vs 0.487), as `arm_mean` does. A likely
+reason (post hoc, not tested) is that a squared-error fit predicts a mean, while the metric is an absolute error, which
+rewards a median near zero for these skewed, mostly-zero effects.
 
 On obs2 the regressions trained on v2 are a test of **transfer**, not of what obs2's state carries: every v2 training
 case of a gift or a rot sits at one cast row (the eve of the first winter) and the spoils at a few rule-fixed rows,
@@ -392,37 +361,52 @@ the observable state, and no method we evaluated closes the gap.
 
 **Confounding, measured.** On obs2 the naive treated-minus-control contrast is far worse than `zero` at 7 days
 (+0.300 [+0.283, +0.316]); the multi-act inverse-propensity contrast removes most of
-that excess (−0.220 [−0.230, −0.209]) and gets the mean effects nearly right — a gift's
+that excess (−0.220 [−0.230, −0.209]) and recovers the mean effects much better than
+`naive` for two of the three acts — a gift's
 7-day food effect +45.6 (naive +128.2, true
 +21.7), a spoil's −76.7 (naive −189.0,
-true −78.0) — but a pooled average cannot beat `zero` on per-world error when effects vary this
-much. At 30 days the post-act survival weights grow (maximum treated weight
-1,388) and `ipw` falls behind `naive`
-(+0.072 [+0.068, +0.076]).
+true −78.0), while a rot's has the wrong sign
+(+4.1; naive −100.2,
+true −4.8). (The estimates pool the train worlds and the truths
+average the test cases, so the two are different populations.) A pooled average cannot beat `zero` on per-world error
+when effects vary this much. At 30 days `ipw` falls behind `naive`
+(+0.072 [+0.068, +0.076]); a likely reason (post hoc) is that the post-act survival
+weights grow (maximum treated weight 1,388).
 
 **Why CRN and CT fail where they fail.** Their two rollouts (with and without the act) respond to the act in the
 confounded direction and too strongly: on obs2 CRN (seed 0) predicts a gift's 7-day food effect of +78.8
 and a spoil's −121.1 against true +21.7 and
 −78.0, between the truth and the naive contrast. On v2, where assignment is unconfounded, the
-deaths cells dominate their error: the two rollouts drift apart by whole deaths over 30 days (v2 30-day deaths cells
-14.51 for CRN, 4.99 for CT
-against 0.58 for `zero`), and rounding the counts does not remove it (D2).
+deaths cells dominate their error: the two rollouts drift apart by whole deaths over 30 days (v2 30-day deaths cells,
+seeds 0 / 1: 14.51 / 10.24 for CRN,
+4.99 / 5.47 for CT, against
+0.58 for `zero`), and rounding the counts does not remove it (D2).
 Trained on the authors' full schedule, both are **worse** than the time-capped runs of the earlier study on v2
 (Table 1; a post hoc comparison, not a pre-registered rule). A plausible reading, not tested here: longer training with
-the full balancing weight lets the two rollouts diverge further, while their validation factual loss is lowest early
-(the lowest-`val_roll` steps in Appendix B). The world models (M1b) instead barely respond to the act:
+the full balancing weight lets the two rollouts diverge further. Their validation factual loss does not track this:
+CT's lowest `val_roll` comes at its first or second evaluation and is otherwise flat within noise, and CRN's decoder's
+lies in the second half of the plan (Appendix B). The world models (M1b) instead barely respond to the act:
 M1b-obs2 (seed 0) predicts a spoil's 7-day food effect of −9.2 against
 −78.0, which places it next to `zero`.
 
-**The 30-day sign reversal.** In the simulator a spoil empties the store for a week and, through an earlier split and a
-second village gathering, leaves more food a month later (−78.0 at 7 days, +32.8
-at 30 on obs2). The simple contrasts and the observable-state regression get the sign of the 30-day mean right
-(`ipw` +63.3, `ridge_obs` +60.9); the learned
-dynamics models get it wrong, flat or small (seed 0 of each: CRN −47.3, M1b-obs2
-−0.5, `wm3_full` −13.7;
-CT, the one exception, has the right sign but a smaller size in both seeds: +12.6 and +23.4). Rolling the
-dynamics forward does not reproduce the delayed mechanism (a split triggered by hidden pressure) that produces the
-reversal.
+**The 30-day sign reversal (post hoc).** On obs2 the mean food effect of a spoil is
+−78.0 at 7 days and +32.8
+at 30, and that of a gift +21.7 and
+−17.3: within a month the sign reverses. We do not analyse why; a
+delayed change in settlement splits is one possible route, not tested here. For spoils the simple contrasts and the
+observable-state regression get the sign of the 30-day mean right (`ipw` +63.3,
+`ridge_obs` +60.9), and the learned dynamics models get it wrong,
+flat or small (CRN seeds 0 / 1 −47.3 /
+−22.0, M1b-obs2 −0.5 /
+−1.4, `wm3_full` seed 0 −13.7),
+except CT, which has the right sign but a smaller size in both seeds (+12.6 /
++23.4). For gifts the picture is mixed: CRN seed 1 predicts
+nearly the whole 30-day mean (−15.9) and seed 0 the wrong sign
+(+12.2); CT seed 0 has the right sign
+(−6.6) and seed 1 the wrong one
+(+5.2). A right mean is not a right per-world prediction:
+CRN seed 1's error in that cell is 0.822 against
+0.279 for `zero`.
 
 
 ## 7 Limitations and broader impact
@@ -434,7 +418,8 @@ other replicate's effect, which over-states the irreducible error by about √2 
 regressions are linear and trained on v2's counterfactual labels (another game split of the same simulator, not
 another simulator); CRN and CT run at daily resolution with one configuration each, chosen on the smaller obs split;
 the world models run at hourly resolution; GPU-level numerical reproducibility of the transformer rollouts is not
-guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method. Claims are limited to
+guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method; M1b-obs2 stopped at
+its 8,000-step cap without converging (kept step in the last 1 % of training). Claims are limited to
 the pre-registered rules; comparisons labelled post hoc are descriptive.
 
 **Broader impact.** The benchmark is built on a toy simulation of a village and makes no claim about real societies or
@@ -451,7 +436,7 @@ hold. We release no personal data; the simulator and its recordings contain none
 
 See `references.bib` (every entry verified; `REFERENCES_CHECK.md`).
 
-## Appendix A. CRN and CT: deviations from the papers (D1–D24)
+## Appendix A. CRN and CT: deviations from the papers (selected; full list D1–D24 in METHODS)
 
 Source: the authors' implementation (`github.com/Valentyn1997/CausalTransformer`, commit `c49a24fa`, MIT licence),
 plain-PyTorch modules vendored unchanged (`VariationalLSTM`, gradient reversal, `BRTreatmentOutcomeHead`,
@@ -486,7 +471,13 @@ lr 1e-3, batch 64; decoder hidden 64 (the encoder's BR), BR 64, FC 32, dropout 0
 reversal α_max 1. CT d_model 128, 2 layers, 4 heads, BR 64, FC 128, dropout 0.1, lr 1e-3, batch 128 (doubled by the
 masked-covariate copy), domain confusion α_max 0.01, EMA β 0.99, relative positions (max 15). Adam, no weight decay,
 no clipping. Budgets: CRN 5,400 s per run (both stages), CT 14,400 s, M1b 16,200 s (8,000 steps); safety cap 1.25 ×
-budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations (1.89 and 1.83 s per step, which would have cut the plan to 7,349 and 7,735 steps); the third, without them, measured 0.91 s per step and kept the authors' plan. CT-v2: 1.00 s per step; CRN-v2: 0.097 / 0.040 s per encoder / decoder step; CRN-obs2: 0.044 / 0.011. No plan was reduced.
+budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations (1.89 and 1.83 s per step, which would have cut the plan to 7,349 and 7,735 steps); the third, without them, measured 0.91 s per step and kept the authors' plan. CT-v2: 1.00 s per step; CRN-v2: 0.097 / 0.040 s per encoder / decoder step; CRN-obs2: 0.044 / 0.011. No plan was reduced. The
+final CT-obs2 runs took 10,665 and 10,047 s for 11,850 steps including
+15 evaluations, which corroborates the third check. M1b-obs2: a cost check of 613 steps
+in 1,431 s including evaluations; both seeds then stopped at the 8,000-step cap
+(12,992 and 11,964 s) with the kept step at
+7,950 and 7,950 and the validation loss still falling (not
+converged).
 
 | run | planned steps | reached | α / α_max at the last step | lowest-`val_roll` step | seconds |
 |---|---|---|---|---|---|
@@ -501,8 +492,8 @@ budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2
 
 ![Figure 4](figures/training_curves.png)
 
-*Figure 4. Validation factual rollout loss (`val_roll`) over optimizer steps: the earlier study's time-capped runs
-(WM-4) and this study's runs on the authors' schedule (WM-5). The lower panels use different validation sets (obs vs
+*Figure 4. Validation factual rollout loss (`val_roll`) over optimizer steps, seed 0 of each method: the earlier
+study's time-capped runs (WM-4) and this study's runs on the authors' schedule (WM-5). The lower panels use different validation sets (obs vs
 obs2), so only their shapes compare.*
 
 ## Appendix C. The observational policies
@@ -534,7 +525,7 @@ error. Created by [AUTHORS]; funding [OWNER].
 39 global and 14 per-settlement columns plus hidden tables (marked) and the list of interventions. Three splits:
 v2 (560 worlds; families of the no-act member and four arms, two replicates each; 5,316 family episodes plus 560
 `game_v16` control episodes and noise-floor families), obs (560 worlds; 2,219 episodes), obs2 (1,640 worlds; round
-episodes of a sequential policy and two families per val / test world). Instances are synthetic worlds; there are no
+episodes of a sequential policy and two families per val / test world; 7,080 episodes in its manifest). Instances are synthetic worlds; there are no
 people, no personal or sensitive data and no labels beyond what the simulator records. Roles (train / val / test) are
 fixed by seed ranges. Hidden columns must not be model inputs; they are kept for diagnostics.
 
@@ -557,3 +548,50 @@ project repository; the episode arrays live outside version control (several GB 
 ## Appendix E. Compute
 
 All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took 40,085 s of wall time at four or eight recorder workers (round 0 3,042 s; rounds 1–5 6,140, 4,619, 2,637, 954, 144 s; val and test families 6,613 and 15,936 s). The trainings of this study took 22.3 GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs.
+
+## Appendix F. All pre-registered verdicts, training reached (R4) and rounding alone (D2)
+
+| rule | model (seed-averaged) | baseline | Δ = model − baseline [95 % CI] | verdict |
+|---|---|---|---|---|
+| R1 obs2 7 d: crn_obs2 vs `zero` (val-chosen) | 0.402 | 0.217 | +0.185 [+0.170, +0.200] | **NONE** |
+| R1 obs2 7 d: ct_obs2 vs `zero` (val-chosen) | 0.311 | 0.217 | +0.093 [+0.077, +0.110] | **NONE** |
+| R1 obs2 7 d: m1b_obs2 vs `zero` (val-chosen) | 0.216 | 0.217 | −0.001 [−0.003, +0.001] | **TIE** |
+| R2 obs2 30 d: crn_obs2 vs `zero` (val-chosen) | 0.780 | 0.188 | +0.591 [+0.548, +0.639] | **NONE** |
+| R2 obs2 30 d: ct_obs2 vs `zero` (val-chosen) | 0.483 | 0.188 | +0.295 [+0.264, +0.328] | **NONE** |
+| R2 obs2 30 d: m1b_obs2 vs `zero` (val-chosen) | 0.194 | 0.188 | +0.005 [+0.004, +0.007] | **NONE** |
+| R3 v2 7 d: crn_v2 vs `zero` | 1.649 | 0.612 | +1.037 [+0.932, +1.142] | **NONE** |
+| R3 v2 7 d: crn_v2 vs `an5_arm` | 1.649 | 0.485 | +1.164 [+1.063, +1.266] | **NONE** |
+| R3 v2 30 d: crn_v2 vs `zero` | 3.645 | 0.487 | +3.158 [+2.967, +3.364] | **NONE** |
+| R3 v2 30 d: crn_v2 vs `an5_arm` | 3.645 | 0.594 | +3.051 [+2.865, +3.253] | **NONE** |
+| R3 v2 7 d: ct_v2 vs `zero` | 1.243 | 0.612 | +0.631 [+0.530, +0.733] | **NONE** |
+| R3 v2 7 d: ct_v2 vs `an5_arm` | 1.243 | 0.485 | +0.758 [+0.662, +0.854] | **NONE** |
+| R3 v2 30 d: ct_v2 vs `zero` | 1.920 | 0.487 | +1.433 [+1.299, +1.565] | **NONE** |
+| R3 v2 30 d: ct_v2 vs `an5_arm` | 1.920 | 0.594 | +1.325 [+1.194, +1.457] | **NONE** |
+| E1 v2 7 d: `ridge_obs` vs `zero` | 0.480 | 0.612 | −0.133 [−0.178, −0.088] | **WEAK** |
+| E1 v2 30 d: `ridge_obs` vs `zero` | 0.602 | 0.487 | +0.115 [+0.073, +0.155] | **NONE** |
+| E1 obs2 7 d: `ridge_obs` (transfer) vs `zero` | 0.537 | 0.217 | +0.319 [+0.302, +0.335] | **NONE** |
+| E1 obs2 30 d: `ridge_obs` (transfer) vs `zero` | 0.514 | 0.188 | +0.326 [+0.309, +0.342] | **NONE** |
+| E2 v2 7 d: crn_v2 vs `ridge_obs` | 1.649 | 0.480 | +1.170 [+1.068, +1.273] | **NONE** |
+| E2 v2 7 d: ct_v2 vs `ridge_obs` | 1.243 | 0.480 | +0.763 [+0.666, +0.863] | **NONE** |
+| E2 v2 7 d: wm3_full vs `ridge_obs` | 0.496 | 0.480 | +0.016 [−0.035, +0.081] | **TIE** |
+| E2 v2 30 d: crn_v2 vs `ridge_obs` | 3.645 | 0.602 | +3.044 [+2.859, +3.244] | **NONE** |
+| E2 v2 30 d: ct_v2 vs `ridge_obs` | 1.920 | 0.602 | +1.318 [+1.191, +1.449] | **NONE** |
+| E2 v2 30 d: wm3_full vs `ridge_obs` | 0.511 | 0.602 | −0.091 [−0.133, −0.046] | **WEAK** |
+| E2 obs2 7 d: crn_obs2 vs `ridge_obs` (transfer) | 0.402 | 0.537 | −0.135 [−0.154, −0.117] | **KEEP** |
+| E2 obs2 7 d: ct_obs2 vs `ridge_obs` (transfer) | 0.311 | 0.537 | −0.226 [−0.244, −0.208] | **KEEP** |
+| E2 obs2 7 d: m1b_obs2 vs `ridge_obs` (transfer) | 0.216 | 0.537 | −0.320 [−0.336, −0.303] | **KEEP** |
+| E2 obs2 7 d: wm3_full vs `ridge_obs` (transfer) | 0.239 | 0.537 | −0.298 [−0.314, −0.282] | **KEEP** |
+| E2 obs2 30 d: crn_obs2 vs `ridge_obs` (transfer) | 0.780 | 0.514 | +0.265 [+0.222, +0.313] | **NONE** |
+| E2 obs2 30 d: ct_obs2 vs `ridge_obs` (transfer) | 0.483 | 0.514 | −0.031 [−0.062, +0.001] | **TIE** |
+| E2 obs2 30 d: m1b_obs2 vs `ridge_obs` (transfer) | 0.194 | 0.514 | −0.321 [−0.337, −0.304] | **KEEP** |
+| E2 obs2 30 d: wm3_full vs `ridge_obs` (transfer) | 0.200 | 0.514 | −0.315 [−0.332, −0.298] | **KEEP** |
+| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, as kept) | 0.311 | 0.317 | −0.006 [−0.021, +0.009] | **TIE** |
+| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, rounded) | 0.311 | 0.323 | −0.012 [−0.026, +0.004] | **TIE** |
+| D1 obs2 7 d: M1b-obs2 vs M1b-obs | 0.216 | 0.219 | −0.003 [−0.005, −0.001] | **WEAK** |
+| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | 0.483 | 0.378 | +0.105 [+0.076, +0.135] | **NONE** |
+| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | 0.483 | 0.378 | +0.106 [+0.076, +0.137] | **NONE** |
+| D1 obs2 30 d: M1b-obs2 vs M1b-obs | 0.194 | 0.197 | −0.004 [−0.006, −0.001] | **WEAK** |
+
+R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `crn_v2_s1` 1.000 of its planned steps, α = 0.9999 α_max; `ct_v2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `ct_v2_s1` 1.000 of its planned steps, α = 0.9999 α_max; `crn_obs2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `crn_obs2_s1` 1.000 of its planned steps, α = 0.9999 α_max; `ct_obs2_s0` 1.000 of its planned steps, α = 0.9999 α_max; `ct_obs2_s1` 1.000 of its planned steps, α = 0.9999 α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
+
+D2 (rounding alone; the earlier study's runs on their own test splits, seed-averaged, rounded − as committed): crn_obs 7 d +0.001 [−0.007, +0.010]; crn_obs 30 d −0.003 [−0.008, +0.002]; ct_obs 7 d −0.006 [−0.014, +0.003]; ct_obs 30 d −0.004 [−0.010, +0.003]; crn_v2 7 d +0.003 [−0.085, +0.099]; crn_v2 30 d −0.004 [−0.029, +0.021]; ct_v2 7 d +0.018 [−0.060, +0.098]; ct_v2 30 d +0.016 [−0.013, +0.043].

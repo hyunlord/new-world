@@ -18,22 +18,22 @@
 | R3 v2 30d: `ct_v2` vs `an5_arm` | 1.920 (1.950, 1.889) | `an5_arm` 0.594 | 3.229 | +1.325 [+1.194, +1.457] | **NONE** |
 | E1 v2 7d: `ridge_obs` vs `zero` | 0.480 (0.480) | `zero` 0.612 | 0.783 | -0.133 [-0.178, -0.088] | **WEAK** |
 | E1 v2 30d: `ridge_obs` vs `zero` | 0.602 (0.602) | `zero` 0.487 | 1.235 | +0.115 [+0.073, +0.155] | **NONE** |
-| E1 obs2 7d: `ridge_obs` vs `zero` | 0.537 (0.537) | `zero` 0.217 | 2.470 | +0.319 [+0.302, +0.335] | **NONE** |
-| E1 obs2 30d: `ridge_obs` vs `zero` | 0.514 (0.514) | `zero` 0.188 | 2.730 | +0.326 [+0.309, +0.342] | **NONE** |
+| E1 obs2 7d: `ridge_obs` (v2→obs2 transfer) vs `zero` | 0.537 (0.537) | `zero` 0.217 | 2.470 | +0.319 [+0.302, +0.335] | **NONE** |
+| E1 obs2 30d: `ridge_obs` (v2→obs2 transfer) vs `zero` | 0.514 (0.514) | `zero` 0.188 | 2.730 | +0.326 [+0.309, +0.342] | **NONE** |
 | E2 v2 7d: `crn_v2` vs `ridge_obs` | 1.649 (1.795, 1.504) | `ridge_obs` 0.480 | 3.439 | +1.170 [+1.068, +1.273] | **NONE** |
 | E2 v2 7d: `ct_v2` vs `ridge_obs` | 1.243 (1.118, 1.368) | `ridge_obs` 0.480 | 2.592 | +0.763 [+0.666, +0.863] | **NONE** |
 | E2 v2 7d: `wm3_full` vs `ridge_obs` | 0.496 (0.532, 0.472, 0.484) | `ridge_obs` 0.480 | 1.034 | +0.016 [-0.035, +0.081] | **TIE** |
 | E2 v2 30d: `crn_v2` vs `ridge_obs` | 3.645 (4.187, 3.104) | `ridge_obs` 0.602 | 6.059 | +3.044 [+2.859, +3.244] | **NONE** |
 | E2 v2 30d: `ct_v2` vs `ridge_obs` | 1.920 (1.950, 1.889) | `ridge_obs` 0.602 | 3.190 | +1.318 [+1.191, +1.449] | **NONE** |
 | E2 v2 30d: `wm3_full` vs `ridge_obs` | 0.511 (0.517, 0.504, 0.512) | `ridge_obs` 0.602 | 0.849 | -0.091 [-0.133, -0.046] | **WEAK** |
-| E2 obs2 7d: `crn_obs2` vs `ridge_obs` | 0.402 (0.403, 0.401) | `ridge_obs` 0.537 | 0.749 | -0.135 [-0.154, -0.117] | **KEEP** |
-| E2 obs2 7d: `ct_obs2` vs `ridge_obs` | 0.311 (0.304, 0.317) | `ridge_obs` 0.537 | 0.579 | -0.226 [-0.244, -0.208] | **KEEP** |
-| E2 obs2 7d: `m1b_obs2` vs `ridge_obs` | 0.216 (0.215, 0.218) | `ridge_obs` 0.537 | 0.403 | -0.320 [-0.336, -0.303] | **KEEP** |
-| E2 obs2 7d: `wm3_full` vs `ridge_obs` | 0.239 (0.218, 0.257, 0.242) | `ridge_obs` 0.537 | 0.445 | -0.298 [-0.314, -0.282] | **KEEP** |
-| E2 obs2 30d: `crn_obs2` vs `ridge_obs` | 0.780 (0.770, 0.790) | `ridge_obs` 0.514 | 1.516 | +0.265 [+0.222, +0.313] | **NONE** |
-| E2 obs2 30d: `ct_obs2` vs `ridge_obs` | 0.483 (0.502, 0.465) | `ridge_obs` 0.514 | 0.940 | -0.031 [-0.062, +0.001] | **TIE** |
-| E2 obs2 30d: `m1b_obs2` vs `ridge_obs` | 0.194 (0.194, 0.194) | `ridge_obs` 0.514 | 0.376 | -0.321 [-0.337, -0.304] | **KEEP** |
-| E2 obs2 30d: `wm3_full` vs `ridge_obs` | 0.200 (0.204, 0.196, 0.199) | `ridge_obs` 0.514 | 0.388 | -0.315 [-0.332, -0.298] | **KEEP** |
+| E2 obs2 7d: `crn_obs2` vs `ridge_obs` (v2→obs2 transfer) | 0.402 (0.403, 0.401) | `ridge_obs` 0.537 | 0.749 | -0.135 [-0.154, -0.117] | **KEEP** |
+| E2 obs2 7d: `ct_obs2` vs `ridge_obs` (v2→obs2 transfer) | 0.311 (0.304, 0.317) | `ridge_obs` 0.537 | 0.579 | -0.226 [-0.244, -0.208] | **KEEP** |
+| E2 obs2 7d: `m1b_obs2` vs `ridge_obs` (v2→obs2 transfer) | 0.216 (0.215, 0.218) | `ridge_obs` 0.537 | 0.403 | -0.320 [-0.336, -0.303] | **KEEP** |
+| E2 obs2 7d: `wm3_full` vs `ridge_obs` (v2→obs2 transfer) | 0.239 (0.218, 0.257, 0.242) | `ridge_obs` 0.537 | 0.445 | -0.298 [-0.314, -0.282] | **KEEP** |
+| E2 obs2 30d: `crn_obs2` vs `ridge_obs` (v2→obs2 transfer) | 0.780 (0.770, 0.790) | `ridge_obs` 0.514 | 1.516 | +0.265 [+0.222, +0.313] | **NONE** |
+| E2 obs2 30d: `ct_obs2` vs `ridge_obs` (v2→obs2 transfer) | 0.483 (0.502, 0.465) | `ridge_obs` 0.514 | 0.940 | -0.031 [-0.062, +0.001] | **TIE** |
+| E2 obs2 30d: `m1b_obs2` vs `ridge_obs` (v2→obs2 transfer) | 0.194 (0.194, 0.194) | `ridge_obs` 0.514 | 0.376 | -0.321 [-0.337, -0.304] | **KEEP** |
+| E2 obs2 30d: `wm3_full` vs `ridge_obs` (v2→obs2 transfer) | 0.200 (0.204, 0.196, 0.199) | `ridge_obs` 0.514 | 0.388 | -0.315 [-0.332, -0.298] | **KEEP** |
 | D1 obs2 7d: ct_obs2_vs_ct_obs_as_kept | 0.311 (0.304, 0.317) | `ct_obs (WM-4, as_kept)` 0.317 | 0.980 | -0.006 [-0.021, +0.009] | **TIE** |
 | D1 obs2 7d: ct_obs2_vs_ct_obs_rounded | 0.311 (0.304, 0.317) | `ct_obs (WM-4, rounded)` 0.323 | 0.963 | -0.012 [-0.026, +0.004] | **TIE** |
 | D1 obs2 7d: m1b_obs2_vs_m1b_obs | 0.216 (0.215, 0.218) | `m1b_obs (WM-4)` 0.219 | 0.986 | -0.003 [-0.005, -0.001] | **WEAK** |
@@ -67,6 +67,29 @@
 |---|---|---|---|---|---|---|---|---|
 | 7d | 0.217 | 0.537 | 0.391 | 0.058 | +0.159 [+0.144, +0.175] | -0.319 [-0.335, -0.302] | +0.146 [+0.131, +0.159] | +0.333 [+0.318, +0.349] |
 | 30d | 0.188 | 0.514 | 0.497 | 0.095 | +0.094 [+0.070, +0.116] | -0.326 [-0.342, -0.309] | +0.017 [-0.011, +0.043] | +0.402 [+0.370, +0.436] |
+
+## Post hoc (descriptive; not a pre-registered rule)
+
+v2 test, direct regressions against the arm-level baselines (12-cell averages; Δ with world-bootstrap 95 % CI; descriptive, no verdict):
+
+| regression | baseline | lag | regression | baseline | Δ [95 % CI] |
+|---|---|---|---|---|---|
+| `ridge_obs` | `arm_mean` | 7d | 0.480 | 0.497 | -0.017 [-0.037, +0.002] |
+| `ridge_obs` | `arm_mean` | 30d | 0.602 | 0.619 | -0.017 [-0.035, +0.001] |
+| `ridge_obs` | `an5_arm` | 7d | 0.480 | 0.485 | -0.006 [-0.037, +0.025] |
+| `ridge_obs` | `an5_arm` | 30d | 0.602 | 0.594 | +0.007 [-0.021, +0.038] |
+| `ridge_priv` | `arm_mean` | 7d | 0.434 | 0.497 | -0.063 [-0.082, -0.043] |
+| `ridge_priv` | `arm_mean` | 30d | 0.590 | 0.619 | -0.029 [-0.053, -0.006] |
+| `ridge_priv` | `an5_arm` | 7d | 0.434 | 0.485 | -0.051 [-0.080, -0.022] |
+| `ridge_priv` | `an5_arm` | 30d | 0.590 | 0.594 | -0.004 [-0.041, +0.030] |
+
+Support of the v2 training cases on the obs2 test (cast rows; the obs2 ladder's ridge rungs and E1 / E2 on obs2 are a v2→obs2 transfer):
+
+| act | v2 train cast rows | obs2 test cases | distinct obs2 rows | share of obs2 cases at a v2 train row |
+|---|---|---|---|---|
+| gf240 | [490] | 480 | 61 | 0.0 % |
+| sp240 | [262, 358, 430, 454, 670, 694, 742, 934, 1342, 1366, 1390] | 480 | 61 | 20.4 % |
+| rw120 | [490] | 480 | 61 | 0.0 % |
 
 WM-2's between-replicate spread (|e0 − e1| / √2 / std, 12-cell average): 7 d 0.132, 30 d 0.189; the floor's MAE is √2 times it.
 

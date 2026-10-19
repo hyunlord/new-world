@@ -233,10 +233,10 @@ def figures(outdir: Path = PAPER / "figures") -> list[str]:
 
     # 4. CRN / CT validation curves: WM-4 (time-capped, nominal epochs) vs WM-5 (step plan)
     fig, axes = plt.subplots(2, 2, figsize=(10, 6.8))
-    for ax, (wm4run, wm5run, title) in zip(axes.ravel(), (("ct_v2_s0", "ct_v2_s0", "CT on v2"),
-                                                          ("crn_v2_s0", "crn_v2_s0", "CRN on v2 (decoder)"),
-                                                          ("ct_obs_s0", "ct_obs2_s0", "CT: WM-4 obs vs WM-5 obs2"),
-                                                          ("crn_obs_s0", "crn_obs2_s0", "CRN: WM-4 obs vs WM-5 obs2 (decoder)"))):
+    for ax, (wm4run, wm5run, title) in zip(axes.ravel(), (("ct_v2_s0", "ct_v2_s0", "CT on v2, seed 0"),
+                                                          ("crn_v2_s0", "crn_v2_s0", "CRN on v2 (decoder), seed 0"),
+                                                          ("ct_obs_s0", "ct_obs2_s0", "CT: WM-4 obs vs WM-5 obs2, seed 0"),
+                                                          ("crn_obs_s0", "crn_obs2_s0", "CRN: WM-4 obs vs WM-5 obs2 (decoder), seed 0"))):
         for root, run, lab in ((REPO / "docs/worldmodel/wm4/runs", wm4run, "WM-4"),
                                (REPO / "docs/worldmodel/wm5/runs", wm5run, "WM-5")):
             p = root / run / "train_log.jsonl"

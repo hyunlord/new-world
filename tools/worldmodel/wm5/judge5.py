@@ -498,13 +498,14 @@ def markdown(j: dict) -> str:
     for key, w in b2["rules"].get("R3", {}).items():
         kind, b, lag = key.split("|")
         L.append(v_row(f"R3 v2 {lag}: `{kind}` vs `{b}`{tag(kind)}", w))
+    transfer = {"v2": "", "obs2": " (v2→obs2 transfer)"}
     for split, blk in (("v2", b2), ("obs2", o)):
         for lag, w in blk.get("rules", {}).get("E1", {}).items():
-            L.append(v_row(f"E1 {split} {lag}: `ridge_obs` vs `zero`", w))
+            L.append(v_row(f"E1 {split} {lag}: `ridge_obs`{transfer[split]} vs `zero`", w))
     for split, blk in (("v2", b2), ("obs2", o)):
         for key, w in blk.get("rules", {}).get("E2", {}).items():
             kind, lag = key.split("|")
-            L.append(v_row(f"E2 {split} {lag}: `{kind}` vs `ridge_obs`", w))
+            L.append(v_row(f"E2 {split} {lag}: `{kind}` vs `ridge_obs`{transfer[split]}", w))
     for key, w in o.get("rules", {}).get("D1", {}).items():
         L.append(v_row(f"D1 obs2 {key.split('|')[1]}: {key.split('|')[0]}", w))
     L += ["", "## R4 — training reached", "", "| run | planned | steps | steps reached (min stage) | α / α_max (min stage) | "
@@ -523,6 +524,21 @@ def markdown(j: dict) -> str:
             L.append(f"| {lag} | {fmt(v.get('zero'))} | {fmt(v.get('ridge_obs'))} | {fmt(v.get('ridge_priv'))} | "
                      f"{fmt(v.get('floor'))} | " + " | ".join(ci_text(node['steps'][f'{a} − {b}']['ci_diff'])
                                                          if f'{a} − {b}' in node['steps'] else '—' for a, b in LADDER) + " |")
+    ph = j.get("posthoc") or {}
+    if ph.get("v2_vs_arm_level"):
+        L += ["", "## Post hoc (descriptive; not a pre-registered rule)", "", "v2 test, direct regressions against the arm-level baselines "
+              "(12-cell averages; Δ with world-bootstrap 95 % CI; descriptive, no verdict):", "",
+              "| regression | baseline | lag | regression | baseline | Δ [95 % CI] |", "|---|---|---|---|---|---|"]
+        for key, w in ph["v2_vs_arm_level"].items():
+            r, b, lag = key.split("|")
+            L.append(f"| `{r}` | `{b}` | {lag} | {fmt(w['model'])} | {fmt(w['baseline'])} | {ci_text(w['ci_diff'])} |")
+    if ph.get("support"):
+        L += ["", "Support of the v2 training cases on the obs2 test (cast rows; the obs2 ladder's ridge rungs and E1 / E2 on "
+              "obs2 are a v2→obs2 transfer):", "", "| act | v2 train cast rows | obs2 test cases | distinct obs2 rows | "
+              "share of obs2 cases at a v2 train row |", "|---|---|---|---|---|"]
+        for a, v in ph["support"].items():
+            L.append(f"| {a} | {v['v2_train_cast_rows']} | {v['obs2_test_cases']} | {v['obs2_test_distinct_rows']} | "
+                     f"{100 * v['share_obs2_cases_at_a_v2_train_row']:.1f} % |")
     if b2.get("spread_wm2"):
         L.append(f"\nWM-2's between-replicate spread (|e0 − e1| / √2 / std, 12-cell average): 7 d {fmt(b2['spread_wm2']['7d'])}, "
                  f"30 d {fmt(b2['spread_wm2']['30d'])}; the floor's MAE is √2 times it.")

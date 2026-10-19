@@ -374,3 +374,408 @@ These come from committed files only, with my local judge5 run. They are incompl
 | N9 | `.omc/` directories never staged. |
 | N10 | The paper is rendered before the gate. |
 | N12 | DATASET_OBS2.md notes the applied amounts. |
+
+## Round 2 (2026-10-19, 21:51–22:09 KST (the reviewer's own header said "about 22:00–23:00"; corrected from the launch time and duration), HEAD `3d27cc07`)
+
+**Reviewer:** a fresh `general-purpose` subagent. The review was read-only: nothing was edited, staged, committed or pushed, and no process was started, stopped or modified on the DGX. Scratch outputs went to the session scratchpad, outside the repository. During the review `git status` started showing `docs/worldmodel/wm5/REPORT.md` and `RUNLOG.md` as modified. The main session made those edits, not this review, and they are not reviewed here.
+
+**State at review time:**
+- All trainings and evaluations have finished.
+- `runs/judge5/`, `paper.md`, `paper_numbers.json` and `figures/` are committed.
+
+**How I checked:**
+- Read GOAL §4, 8, 9, 11 and 12; REVIEW round 1 and its responses; WM5.md, DECISIONS, RUNLOG and DATASET_OBS2.
+- Read the whole of `paper.md`, plus `paper_src.md`, `paper_numbers.json`, `references.bib` and `REFERENCES_CHECK.md`.
+- Read `judge5.py`, `figures.py` and `wm2/effects.py` (`compare`, `cell_errors`, `cell_stat`, `rule`).
+- Recomputed from the committed run files with small Python scripts. On the DGX I used only read-only `stat`, `sha256sum`, `git rev-parse`, `git status` and `cat`.
+
+### 1. Summary
+
+**No BLOCKING finding.** Everything mechanical reproduces exactly:
+- The judge is reproduced byte for byte.
+- `paper.md`, `paper_numbers.json` and all five figure PNGs are reproduced byte for byte.
+- 5 verdicts recomputed independently all match.
+- The new runs reached their plans, with α at 0.99991 α_max at the last step and no run hitting the safety cap.
+- Every new test output comes after METRICS part b and from the commits it claims.
+- Every citation key is in `references.bib` and in `REFERENCES_CHECK.md`.
+
+The problems are in the **paper's and WM5.md's wording beyond the rule table**:
+- Two MAJOR: a post hoc 30-day-reversal claim in the abstract that only half the data supports, and an untested mechanism for that reversal stated as fact. WM-3's review had already required the mechanism to be hedged.
+- Nine MINOR: scope and post hoc labels, overgeneralizations, M1b-obs2 not converged and not disclosed, the M2 follow-up incomplete in `judge.md`, the page count, the CRN attribution, seed labels.
+- Eight NOTEs.
+
+| # | Class | Finding |
+|---|---|---|
+| MJ1 | MAJOR | Abstract (iv) and §6: "the learned dynamics models reproduce at most a fraction of the delayed sign reversal". This is post hoc and not labelled. It is shown only for spoils. For gifts, `crn_obs2_s1` reproduces the 30-day mean reversal almost fully. |
+| MJ2 | MAJOR | Paper §6 states the reversal's mechanism ("through an earlier split and a second village gathering"; "a split triggered by hidden pressure") as fact. Nothing in WM-5 tests it. WM-3's review (item 7) required the cause to be hedged, and WM-3 had proposed a different mechanism. |
+| m1 | MINOR | Scope and post hoc labels in the abstract, introduction and §2: "on every split" (obs has no floor); "reaches only the act's mean effect" (post hoc, v2 only); the E2 sentence's scope; "factual and counterfactual accuracy can diverge sharply" is not shown in the paper. |
+| m2 | MINOR | Q3's headline ("more observational data does not help" / "No.") against D1's WEAK for M1b at both lags. The CT comparison in D1 is confounded with the checkpoint, and the paper's Q3 does not say so. M1b-obs2 did not converge (kept step 7,950 of 8,000, both seeds), and neither WM5.md nor the paper says so. |
+| m3 | MINOR | "Secondary checkpoints are better at 30 d" and "validation loss is lowest early and rises" are overgeneralized. `crn_obs2_s1`'s best checkpoint is worse; CT-obs2's `val_roll` is flat; CRN's best steps are at 47–80 % of the plan. |
+| m4 | MINOR | §6: IPW "gets the mean effects nearly right". The gift estimate is 2.1 × the truth and rot has the wrong sign (rot is not quoted). |
+| m5 | MINOR | The M2 follow-up is incomplete: the `posthoc` block is not rendered in `judge.md`; the E1-obs2 / Table 1 obs2 ridge rows are not labelled as transfer. Paper §4.2 lists act-count features that have zero weight and says "every hidden field" against DECISIONS L2.5. |
+| m6 | MINOR | WM5.md §7: "every obs-trained model … stay at or above `zero`" is literally false (0.215 and 0.216 < 0.217). |
+| m7 | MINOR | The paper's main text is about 10–11 pages against GOAL's ≈ 9; WM5.md claims ≈ 9. |
+| m8 | MINOR | CRN "as its authors train it": the schedule comes from the CT authors' re-implementation, not from Bica et al.'s code. The paper cites `melnychuk2022ct` for "the authors' public implementation of both methods". |
+| m9 | MINOR | Seed-0-only numbers are not labelled as seed 0: paper §6 v2 deaths cells 14.51 / 4.99; the training-curve caption. |
+| N1–N8 | NOTE | §3. |
+
+### 2. Findings
+
+#### MJ1 (MAJOR): the 30-day-reversal claim is post hoc, selective and partly contradicted
+
+**Where.**
+- Abstract (iv): "the learned dynamics models reproduce at most a fraction of the delayed sign reversal of food effects at one month".
+- Paper §6, "The 30-day sign reversal".
+- WM5.md §9: "nothing learns the 30-day reversal in full (CT-obs2 gets its sign at a fraction of its size)".
+
+**Evidence.** Mean predictions on the obs2 test, from `judge.json` `obs2/tables/*/{cell}/mean_pred`. No rule covers these numbers.
+
+| act, horizon | truth | predictions |
+|---|---|---|
+| spoil, 7 d / 30 d | −78.0 / +32.8 | CRN s0 −47.3, s1 −22.0; M1b-obs2 −0.5 / −1.4; `wm3_full` −13.7 / −4.9 / −7.9; CT +12.6 / +23.4 (all at 30 d) |
+| gift, 7 d / 30 d | +21.7 / −17.3 | `crn_obs2_s1` +65.9 → **−15.9** (92 % of the 30-day mean, right sign); WM-4 `ref_crn_obs_s0` +68.9 → **−15.3**; `ct_obs2_s0` +45.5 → −6.6 (right sign); `crn_obs2_s0` +12.2 and `ct_obs2_s1` +5.2 (wrong sign) |
+
+The spoil column supports the claim for every seed. The gift column contradicts "at most a fraction" for one CRN seed. A right mean is also not per-case accuracy: `crn_obs2_s1`'s `gf240|food_stock|30d` MAE is 0.822 against `zero`'s 0.279.
+
+**Why it matters.** GOAL 11.2 says claims are limited to what the rule table supports, and "post hoc" must be said where it applies. This is a headline claim of the abstract, it is not in any rule, and it is not labelled.
+
+**Fix:**
+- Label it post hoc everywhere.
+- Restrict it to spoils, or report both acts and both seeds.
+- Say that a mean prediction can carry the right sign while the per-case error stays far above `zero`.
+- Or drop it from the abstract.
+
+#### MJ2 (MAJOR): an untested mechanism stated as fact
+
+**Where.** Paper §6:
+- "In the simulator a spoil empties the store for a week and, through an earlier split and a second village gathering, leaves more food a month later".
+- "Rolling the dynamics forward does not reproduce the delayed mechanism (a split triggered by hidden pressure) that produces the reversal."
+
+**Evidence:**
+- No WM-5 file analyses the mechanism. `grep` for "second village", "earlier split" and "hidden pressure" finds only `paper_src.md`.
+- WM-3 (WM3.md §2) proposed a *different* cause ("presumably through the agents' foraging … not inspected").
+- WM-3's REVIEW item 7 (MINOR, fixed) required that "the cause of the 30-day reversal" be "hedged as a hypothesis everywhere".
+- The obs2 truths (spoil 30 d: `settlements_alive` +0.12, `alive` +4.10) fit a split story but do not establish it.
+
+**Fix:** state it as a hypothesis ("one possible route, not tested here, is …"), or remove the mechanism from both sentences.
+
+#### m1 (MINOR): scope and post hoc labels in the abstract, introduction and related work
+
+- **Abstract (i) and introduction findings.** "An effect floor … lies far below predicting no effect on every split"; "the gap … is large on every split". The obs split has no replicates and no floor (Table 1: "—"). Say "on both splits with noise replicates (v2, obs2)".
+- **Abstract (iv).** "A linear map of the observable pre-act state reaches only the act's mean effect":
+  - the comparison with `arm_mean` / `an5_arm` is post hoc;
+  - it holds on v2 only, since on obs2 the regression does not transfer;
+  - the "(post hoc)" in the parenthesis attaches only to the hidden-state clause.
+  Write "on the interventional split (post hoc)".
+- **Introduction findings, last sentence.** "Among the learned models compared with it (E2) only the world model trained on paired branches ties or beats it" is true on v2 only. On obs2, E2 gives KEEP for `crn_obs2`, `ct_obs2` and `m1b_obs2`. Add "on v2".
+- **§2.** "Our benchmark … shows that factual accuracy and counterfactual accuracy can diverge sharply." The paper reports no factual-accuracy result; M1b-obs2's factual T2 is in `judge.json` `factual_obs2` but is not quoted. Either add the evidence (traced) or soften the sentence.
+- **§6, two further causal explanations stated without a test.** Ridge loses at 30 d because "a squared-error fit predicts a mean while the metric rewards a median"; and `ipw` falls behind at 30 d because the survival weights grow. Both are plausible. Mark them as explanations ("likely", "post hoc") or test them, for example with an L1 ridge as a post hoc diagnostic.
+
+#### m2 (MINOR): Q3 ("more observational data") is stated more strongly than D1, and M1b-obs2's non-convergence is not disclosed
+
+**Headline against D1.**
+- Paper §5 heading: "Q3: more observational data does not help". WM5.md §7 heading: "**No.**"
+- D1 gives M1b-obs2 vs M1b-obs **WEAK at both lags**: −0.003 [−0.005, −0.001] and −0.004 [−0.006, −0.001]. The paper quotes only the 7-day value.
+- WM5.md §1 says "barely helps", which is the accurate phrasing.
+
+**The CT comparison is confounded.** CT-obs2 (authors' schedule, last checkpoint) is compared with WM-4's CT-obs (early best-val checkpoint), so the CT side of D1 mixes data size with schedule and checkpoint. WM5.md §7 says this; the paper's Q3 does not.
+
+**Non-convergence.** Both M1b-obs2 seeds stopped at `max_steps` with the kept step at 7,950 of 8,000:
+- `config.json` `best_step` 7950, `stop` "max_steps";
+- the val T2 was still falling at the last evaluation;
+- RUNLOG says "not converged by WM-3's definition".
+
+WM-4 disclosed the same condition for `m1b_obs_s1` (WM4.md L98). WM5.md §3 / §7 and the paper do not. With three times the worlds and the same 8,000-step cap, each world is seen less often, which bears directly on Q3.
+
+**Fix:**
+- Use "barely helps (M1b-obs2: WEAK at both lags, ≈ 1.5–2 %)".
+- State the CT confound in the paper.
+- Disclose "not converged (kept step in the last 10 %)" in WM5.md §3 and §7, the paper's Q3 and §7, and appendix B.
+
+#### m3 (MINOR): last vs best, and the validation curves, are overgeneralized
+
+**"Secondary checkpoints are better at 30 days"** (WM5.md §5). This holds for 7 of 8 runs. For `crn_obs2_s1` the best checkpoint is worse: 30 d 1.125 vs last 0.790; 7 d 0.456 vs 0.401 (`judge.json` `obs2/secondary`).
+
+**"Validation factual loss is lowest early and rises as the balancing weight reaches its maximum"** (WM5.md §5; paper §6 "their validation factual loss is lowest early"):
+
+| run | `val_roll` (`train_log.jsonl`) | pattern |
+|---|---|---|
+| `ct_obs2_s0` | 0.546 at step 790, then 0.549–0.715, last 0.616 | flat within noise |
+| `ct_obs2_s1` | 0.527 at step 790, then 0.556–0.761, last 0.563 | flat within noise |
+| CRN decoders | best steps 25,107 / 32,280 (obs2), 32,280 / 43,040 (v2) of 53,800 | 47–80 % of the plan, not "early" |
+| `crn_v2_s0` | 1.54–1.61 throughout | flat |
+
+**Fix:** "for CT the best checkpoint is the first or second evaluation; for CRN it is in the second half of the plan; `crn_obs2_s1`'s secondary checkpoint is worse". Restrict "rises" to CT-v2.
+
+#### m4 (MINOR): IPW "gets the mean effects nearly right" (paper §6)
+
+| act, 7 d | IPW (pooled, train) | truth (obs2 test) |
+|---|---|---|
+| gift | +45.6 | +21.7 (2.1 ×) |
+| spoil | −76.7 | −78.0 |
+| rot (not quoted) | +4.1 | −4.8 (wrong sign; naive −100.2) |
+
+WM5.md's "recovers the mean effects much better than `naive`" is accurate.
+
+**Fix:** use that wording; quote all three acts or say "the spoil's mean". Note also that the pooled train estimate and the test-case mean are different populations.
+
+#### m5 (MINOR): the M2 follow-up is incomplete, and §4.2 describes features inaccurately
+
+**`judge.md`.**
+- `judge.json` has `posthoc.{v2_vs_arm_level, support}`, but `judge.md` renders neither. Round 1's fix asked for the transfer label in `judge.md`, WM5.md and the paper.
+- `judge.md`'s E1 obs2 rows carry no transfer note.
+- WM5.md says "every number below comes from `runs/judge5/judge.md` / `judge.json`", so the post hoc numbers can be found only in the JSON.
+
+**Paper rows.** Table 1's `ridge_obs` / `ridge_priv` obs2 cells and the §5.3 rows E1-obs2 / E2-obs2 are not marked "v2→obs2 transfer". Only the text after the table says so.
+
+**Paper §4.2.**
+- It lists "(obs2 only) the number of earlier acts per kind and the days since the last act" as features. These are constant 0 on v2 training, so their ridge weights are exactly 0 (round 1 §4.4) and they cannot affect any obs2 prediction.
+- It says `ridge_priv` "adds every hidden field". DECISIONS L2.5 says `world_variety.regions` is excluded.
+
+**Fix:**
+- Render the `posthoc` block in `judge.md` with "post hoc" labels.
+- Add "(transfer)" to those table cells or rows.
+- In §4.2: "… are included but are constant on v2, so they carry zero weight"; and "every hidden field except the region geometry".
+
+#### m6 (MINOR): WM5.md §7 is literally false
+
+"Every obs-trained model and WM-2's / WM-3's references stay at or above `zero` on obs2 (M1b-act 0.215–0.225 …)". At 7 days, `m1b_obs2` scores 0.216 (s0 0.215) and `ref_wm2_m1bact_v19_s2` 0.215, against `zero` 0.217.
+
+**Fix:** "none beats `zero` (M1b-obs2: TIE)".
+
+#### m7 (MINOR): the paper is longer than GOAL's ≈ 9 pages
+
+The main text (Abstract to §7) has:
+- about 4,900 words of prose (6,200 including tables);
+- three tables with 64 table lines in total, including a 38-row verdict table, plus the long R4 and D2 paragraphs;
+- three figures, one of them a 2 × 2 panel.
+
+In a NeurIPS-style layout that is about 10–11 pages before references. WM5.md §1 and §11 say "≈ 9 pages of content".
+
+**Fix:**
+- Move the §5.3 verdict table, keeping R1–R3 in the text, and the R4 / D2 lists to an appendix.
+- Or correct the stated length.
+
+#### m8 (MINOR): CRN attribution
+
+The paper says (§4.4): "We use the authors' public implementation of both methods [@melnychuk2022ct]"; the headings and the abstract say "trained on their authors' full optimizer-step schedules". WM-4 METHODS (L5–6) is accurate: the repository is Melnychuk et al.'s CausalTransformer, which "contains both methods". The CRN step counts (15,700 + 53,800) are derived from that repository's CRN configuration, not from Bica et al.'s own code.
+
+**Fix:** "the CT authors' public implementation, which includes CRN; CRN's schedule is the one that implementation uses", in §4.4, Appendix A and WM5.md §3.
+
+#### m9 (MINOR): seed-0 numbers are not labelled
+
+- Paper §6, "v2 30-day deaths cells 14.51 for CRN, 4.99 for CT". These are `crn_v2_s0` and `ct_v2_s0`; s1 gives 10.24 and 5.47. WM5.md gives both seeds.
+- Figure 4 (`training_curves`) plots one run per panel without saying which seed.
+- WM5.md §10, "the CRN-obs2 decoder's last evaluation spiked (1.372 …)", is s0 only; s1's last is 0.787 against a best of 0.769.
+
+**Fix:** label the seed, or seed-average.
+
+### 3. NOTEs
+
+**N1.** The response table says the N2 corroboration was added to L4.4 ("790 steps in 712.6 s"). It is not in DECISIONS L4.4, RUNLOG or WM5.md: `grep 712` finds nothing outside REVIEW.md. The final runs do corroborate the third check: 11,850 steps in 10,665 s and 10,047 s, including 15 evaluations of about 14 s, that is 0.84–0.89 s/step against the measured 0.910. Add one line.
+
+**N2.** WM5.md §1 says "28 verified references". The bib has 28 entries, of which 25 are cited. The three uncited ones (`ha2018recurrent`, `vaswani2017attention`, `hochreiter1997lstm`) are disclosed as uncited in REFERENCES_CHECK.md.
+
+**N3.** DECISIONS headings are out of order:
+- L1.4, L1.5, L0.6, L4.3 and L4.4 sit under "Part 3 / 5";
+- L0.7 sits under "Part 7".
+
+The content is fine; the placement makes entries hard to find.
+
+**N4.** M1b-obs2's cost check (`_cost_m1b_obs2`: 613 steps, `stop` "time", 1,431 s including evaluations) is in `judge.md`'s Runs table. It is missing from WM5.md §3's list of cost checks and from paper Appendix B.
+
+**N5.** The M1 trainer also writes `best_wm12rule.pt`, the WM-1/2 rule checkpoint (m1b_obs2_s1: 19:00:17, against `best.pt` at 21:13:05). Effects and factual T2 use `best.pt` (`metrics.json` `checkpoint`), as WM-4 did. It may be worth one line in METHODS.
+
+**N6.** Appendix A is titled "D1–D24" but lists a subset. It does point to both METHODS files for the full list.
+
+**N7.** Datasheet: v2 and obs give episode counts (5,316 + 560; 2,219); obs2 does not. Add 7,080 manifest episodes plus the round episodes.
+
+**N8.** The introduction's earlier-study claims ("ignore the god's acts"; "teaches the first week's effects only") rest on unpublished earlier studies. Either tie them to Table 1's rows (M1b, `wm3_full`) or describe them as part of this benchmark's history.
+
+### 4. Round-1 follow-ups
+
+| item | claimed | verified |
+|---|---|---|
+| M1 | judge `posthoc/v2_vs_arm_level`; WM5.md and paper §6 wording | **Yes.** `judge.json` `posthoc` holds the ridge_obs / ridge_priv vs arm_mean / an5_arm comparisons with the figures quoted. WM5.md §6 and paper §6 say the observable rung is the arm-level mean, that hidden state adds per-world information, and give the squared-error vs absolute-error reason. Not rendered in `judge.md` (m5). |
+| M2 | `posthoc/support`; E1-obs2 and F2 ridge rungs labelled as transfer | **Yes, partly.** `support`: gf240 / rw120 v2 train rows [490], obs2 61 distinct rows, 0 %; sp240 11 rows, 20.4 %. WM5.md §1, §6 and §10 and paper §6 label it. Not in `judge.md` or the paper's table rows (m5). No feature-level shift statistic, but the cast-row support suffices. |
+| m1 | `ct_v2_s1_effects/effects_best.json` fetched | **Yes.** sha256 `5f18e607…` equals the DGX file; `judge.md` has `ct_v2_s1|best|*`. |
+| m2 | DECISIONS L2.1–L2.5 | **Yes.** Present, with reasons. |
+| m3 | 126–141 in WM5.md and RUNLOG | **Yes.** Also the paper's traced `126` / `141` (`describe/pooled/{sp240,rw120}/30d/ess_treated`). |
+| m4 | §3.4 no longer claims the floor is unbeatable | **Yes.** §3.4 and §7 say ≈ √2, possibly worse than `zero` in sparse count cells, "not a hard ceiling". |
+| m5 | cited in DATASET_OBS2 | **Yes.** L41 cites 419 / 419 and the 24 families / 1,152 truths. |
+| N2 | L4.4 corroboration | **Not present** (N1 above). |
+| N4 | W1 cap noted | **Yes.** WM5.md §6 and paper §5.3. |
+| N5 | curves in the paper; last vs best in WM5.md | **Yes.** Figure 4 and WM5.md §5 / §10 (with m3 and m9's caveats). |
+| N6 | `wm4:` prefixes | **Yes.** WM5.md §8 and §10. |
+| N7 | field renamed | **Yes.** `floor_predictions_all_replicates` (`c5ecf7b7`). |
+| N8 | L2.5 | **Yes.** The paper's wording still says "every hidden field" (m5). |
+| N10 | paper rendered | **Yes.** `test_wm5`: 29 tests, OK, 0 skipped on the Mac. |
+| N12 | applied amounts in the datasheet | **Yes.** DATASET_OBS2 L41. |
+
+The `judge5.py` change after round 1 (`cc3f744c..c5ecf7b7`) only renames one field and adds `posthoc_block`. It does not touch any rule computation.
+
+### 5. Runs finished after round 1
+
+All of `ct_obs2_s0`, `crn_obs2_s1`, `ct_obs2_s1`, `m1b_obs2_s0` and `m1b_obs2_s1` were checked. Sources are `val_metrics.json`, `train_log.jsonl`, `config.json` and `train.{start,end,exit}`.
+
+| run | reached / planned | α at last step / α_max | evals | stop | seconds | budget / safety cap | best (`val_roll`) step |
+|---|---|---|---|---|---|---|---|
+| `ct_obs2_s0` | 11,850 / 11,850 | 0.0099991 / 0.01 | 15 | planned | 10,665 | 14,400 / 18,000 | 790 |
+| `ct_obs2_s1` | 11,850 / 11,850 | 0.0099991 / 0.01 | 15 | planned | 10,047 | 14,400 / 18,000 | 790 |
+| `crn_obs2_s1` | 15,700 + 53,800 | 0.99991 / 1 | 15 + 15 | planned, planned | 1,848 | 5,400 / 6,750 | 32,280 |
+| `m1b_obs2_s0` | 8,000 (max) | — | every 150 | `max_steps` | 12,992 | 16,200 | kept 7,950 |
+| `m1b_obs2_s1` | 8,000 (max) | — | every 150 | `max_steps` | 11,964 | 16,200 | kept 7,950 |
+
+- **α schedule.** Every logged α equals `alpha_at((step − 1) / P)` exactly (maximum deviation 0.0). This is consistent with "set before every step"; against `step / P` the deviation is at most 2.9e-4.
+- **Plans.** `plan.reduced` is false everywhere; `planned_equal_authors` is true.
+- **Safety cap.** No run hit it. **R4 holds** for all eight CRN / CT runs; the judge's R4 table matches.
+- **Last vs best.** `model.pt` and `model_best.pt` differ on the DGX (sha256 prefixes `5b3c…` / `ff95…`, `da84…` / `5e70…`, `2385…` / `f501…`). The judge's last and best rows differ accordingly.
+- **Reproducibility fields.**
+  - CRN / CT configs: `code_commit` 835a8670 (obs2) or 38bea0c5 (v2), `manifest_sha256` beea2130 (observed-only, L1.4) or 4182f75a, seed, hyper, device cuda, torch 2.14.1+cu130, budget, safety cap, plan, `val_episodes` 200 (not sampled; one evaluation takes about 14 s, under 60 s).
+  - M1b-obs2: `code_commit` 835a8670, `manifest_sha256` beea2130, seed, hyper (`max_steps` 8000, `max_seconds` 16200), `train_groups` ["train"], `val_groups` ["val"], device, torch, numpy, python, `stop` "max_steps", `best_step` 7950.
+- **One training at a time.** Each training's start equals the previous one's end. Evaluations overlapped trainings only, which is allowed.
+- **Timestamps and commits** (DGX `stat`, KST):
+  - `ct_obs2_s0_effects` 14:52:24 / 14:53:39; `crn_obs2_s1_effects` 15:21:57 / 15:22:16; `ct_obs2_s1_effects` 18:12:18 / 18:14:18; `m1b_obs2_s0_effects` 11:29:14 with factual T2 at 11:44:52; `m1b_obs2_s1_effects` 21:35:19 with factual T2 at 21:49:53.
+  - All are after part b (`6e9e88ed`, 2026-10-18 21:39:47) and after `f7cf620a` (2026-10-19 10:28:55).
+  - Each effects file has `code_commit` `f7cf620a`; the factual T2 files have `eval_code_commit` `f7cf620a` and training commit 835a8670.
+  - The DGX worktrees `_code/{f7cf620a,835a8670,6e9e88ed}` are at those commits and clean.
+  - `effects5.py`, `causal5.py` and `m1_obs2.py` are unchanged since before part b (`effects5.py` at 21:37:34, the others at 21:29:36). 835a8670 is a descendant of 6e9e88ed.
+  - Committed copies of four effects files have the same sha256 as on the DGX.
+- **L4.4 (CT-obs2 cost check repeated).** The run files' start and end times confirm the stated cause:
+  - check 1 (11:00:51–11:06:51) overlapped `ref_wm3_full_s2_obs2` (11:00:08–11:08:17);
+  - check 2 (11:10:51–11:16:52) overlapped `ref_m1b_obs_s0_obs2`, `ref_crn_obs_s0` and `ref_ct_obs_s0`;
+  - check 3 (11:45:52–11:51:52) started after the last evaluation of ours ended (`crn_obs2_s0` best, 11:45:09).
+  - The final run times corroborate check 3 (N1). The repetition is objective and disclosed, and is acceptable.
+
+### 6. Verdicts
+
+**Judge reproduced.** `python3 tools/worldmodel/wm5/judge5.py --out <scratch>` produces a `judge.md` identical to the committed one (`diff`: none) and a `judge.json` identical byte for byte (`cmp`).
+
+**WM5.md §4 matches the judge.** WM5.md §4's 38-row rule table is identical, line for line, to `judge.md` lines 3–42. Paper §5.3's table and Table 2 have the same values.
+
+**Independent recomputation.** I wrote my own scaled-error computation from `effects_base.json` / `obs2_base.json` (r0 cases, floored scales) and the raw prediction files, with my own world bootstrap (`default_rng(0).integers`, B = 2,000), and also called `wm2.effects.compare`:
+
+| rule | recomputed | judge |
+|---|---|---|
+| R3 v2 30 d `ct_v2` vs `zero` | 1.920 (1.950, 1.889), +1.433 [+1.299, +1.565], NONE | same |
+| R3 v2 7 d `ct_v2` vs `an5_arm` | +0.758 [+0.662, +0.854], NONE | same |
+| E1 obs2 7 d `ridge_obs` vs `zero` | 0.537 vs 0.217, +0.319 [+0.302, +0.335], NONE | same |
+| D1 obs2 30 d `m1b_obs2` vs `m1b_obs` | 0.194 vs 0.197, −0.004 [−0.006, −0.001], WEAK | same |
+| R1 obs2 7 d `ct_obs2` vs `zero` | 0.311 (0.304, 0.317), +0.093 [+0.077, +0.110], NONE | same |
+
+Validation-family selection is `zero` at both lags (val `zero` 0.221 / 0.171).
+
+### 7. The paper
+
+**Rendering and tracing.**
+- `figures.py check` passes: all 432 entries format to their source value.
+- Re-rendering `paper_src.md` into scratch reproduces `paper.md` and `paper_numbers.json` byte for byte. Every quoted text is therefore at its placeholder's position (the `check` test alone only tests that the text occurs somewhere).
+- Re-running `figures` reproduces all five PNGs byte for byte.
+
+**Placeholders spot-checked for the right key and meaning** (all correct):
+- 396 / 445 (`sp240` / `rw120` 7 d ESS); 126 / 141; 44 / 55 (WM-4 judge);
+- 1,388 (largest treated weight: sp240 30 d);
+- +78.8 / −121.1, −9.2, +63.3, +60.9, +12.6 / +23.4, −13.7 (`mean_pred` cells);
+- the cost checks; the appendix B rows (seconds and best steps);
+- 22.3 h, which is the sum of the ten trainings' seconds (80,453 s);
+- 40,085 s, which equals 3,042 + 6,140 + 4,619 + 2,637 + 954 + 144 + 6,613 + 15,936.
+
+**Table 1 seed averages** checked: M1b obs2 0.221, v2 0.592 / 0.501; `wm3_full` obs2 0.239; M1b-obs obs2 0.219; CRN / CT time-capped obs2 0.519 / 0.317.
+
+**Hard-coded numbers (not traced).** All are design constants or earlier studies' dataset facts, as DECISIONS L6.2 states:
+- the splits (560 / 400 / 80 / 80; 1,640 / 1,200 / 200 / 240);
+- fork day 11 (DATASET_V2: tick 14,280 = display day 11, 06:00); 604 and 240 test cases;
+- 2,881 rows, 39 and 14 columns; 5,316 + 560 and 2,219 episodes (WM-2 METRICS / WM-4 WM4.md);
+- policy probabilities and terciles 8.08 / 12.1 / 3.11; the step plans, budgets and hyper-parameters;
+- Appendix E's "20 CPU cores, 119 GiB, load averages 2–36, 29 GiB" (RUNLOG / L0.5).
+
+I found no hard-coded *result*.
+
+**Citations.**
+- 25 keys are cited; all are in `references.bib` and in REFERENCES_CHECK.md.
+- No `[CITATION NEEDED]` is used.
+- Hájek 1971 was dropped as unverifiable, and that is disclosed.
+
+**Placeholders and URLs.**
+- `[AUTHORS]` (title block and datasheet), `[VENUE]`, `[OWNER: release plan]` (release section and datasheet) and `[OWNER]` (funding) are present.
+- No release URL is claimed. The only URL-like reference is the authors' existing repository (`github.com/Valentyn1997/CausalTransformer` at `c49a24fa`), taken from WM-4 METHODS.
+
+**Claims against the rule table.**
+
+Correct:
+- Abstract (ii) and (iii);
+- the introduction's "every pre-registered comparison … is NONE";
+- "further behind … (post hoc)";
+- the Q1 and Q4 texts;
+- §6 ladder and E1 v2 / post hoc text;
+- §5.3 E2-obs2 caveat; R4 and D2 paragraphs; §7 limitations.
+
+Problems: MJ1, MJ2, m1–m5, m8, m9.
+
+**Page count:** about 10–11 pages of main text (m7).
+
+### 8. WM5.md against the judge
+
+More than 25 numbers were checked; all equal the judge. They include:
+- §1:
+  - acts 3,966, 2.42, 3.2 %, 60.0 %, 80.9 %, 72.9 %; ESS 396–445 / 126–141;
+  - Q1's 0.402 / 0.311 / 0.780 / 0.483 / 1.649 / 1.243 / 3.645 / 1.920;
+  - M1b-obs2 −0.001 [−0.003, +0.001] and +0.005; floors 0.187 / 0.267 / 0.058 / 0.095;
+  - D2 range −0.006 … +0.018.
+- §2: 39.9 / 39.9 / 20.1 %; 1,163 / 1,174 / 572; +21.7 / −17.3 / −78.0 / +32.8; std 41.2.
+- §3: the cost checks (0.097 / 0.040 → 3,694 s; 0.998 → 11,998 s; 0.044 / 0.011 → 1,275 s; 0.910 → 11,006 s); all ten table rows (seconds, best steps, kept 7,950 with 0.0622 / 0.0620).
+- §4: the whole table (identical).
+- §5:
+  - +78.8 / −121.1, +128.2 / −189.0;
+  - deaths cells 14.5 / 10.2 / 5.0 / 5.5 vs 0.58; other nine cells 1.33 / 1.19 / 0.82 / 0.82 vs 0.72;
+  - WM-4 1.474 / 1.547 / 1.007 / 1.374; secondary 0.346 / 0.502, 0.709 / 0.770.
+- §6: the ladder (identical); post hoc −0.017 [−0.037, +0.002], −0.006 [−0.037, +0.025], −0.063 [−0.082, −0.043], −0.051 [−0.080, −0.022]; 0.247; λ = 0.01 in exactly four cells (`ridge_obs.json` `lambdas`); 1.535 vs 0.036.
+- §7: D1 values; references 0.215–0.225, 0.218–0.257, 0.218 / 0.221.
+- §8: every D2 interval; 1.409 → 1.549; 4.187 → 4.183.
+- §9: 0.425 / 0.220 / 0.159 / 0.094.
+
+Claims against the rule table are right, apart from m2 (§7 heading), m3 (§5 generalizations), m6 (§7 "at or above"), MJ1 (§9 reversal) and m8.
+
+### 9. Also checked and found correct
+
+- **Unit tests:** `python3 -m unittest tools/worldmodel/wm5/test_wm5.py` gives 29 tests, OK, 0 skipped. The paper-number test now runs.
+- **Paths:** `git diff --name-only 64d633ff..HEAD` lists only `tools/worldmodel/wm5/**`, `docs/worldmodel/wm5/**`, `docs/worldmodel/paper/**` and `docs/worldmodel/wm4/WM4.md`. The WM4.md diff is exactly the GOAL 11.1 line under the title.
+- **Hygiene:** no `.omc` file and no checkpoint is tracked under `runs/`.
+- **Re-scoring commits:** v2 effects have `code_commit` `6e9e88ed`; obs2 effects, references, `obs2_base` and ridge have `f7cf620a`.
+- **RUNLOG and DECISIONS times** match the run files' start / end epochs within seconds. The second pause (L0.7) does not affect any start: the last training started at 18:08:56 on 2026-10-19, before the deadline.
+
+### 10. Recommended before the gate
+
+**Required (MAJOR):**
+1. MJ1 and MJ2: re-word the abstract (iv) and §6's reversal paragraph — post hoc label, both acts and seeds, mechanism hedged or removed.
+
+**Recommended (MINOR):**
+2. Apply m1–m9: mostly wording, plus rendering `posthoc` in `judge.md` and disclosing M1b-obs2's non-convergence.
+3. Then re-render `paper.md`, re-run `figures.py check` and the unit tests, and re-run `judge5.py` if `judge5.py`'s rendering changes.
+
+**Optional:**
+4. N1 (one line in L4.4), N2, N4 and N7.
+
+### Responses to round 2 (DECISIONS L7.2)
+
+| # | response |
+|---|---|
+| MJ1 | Removed from the abstract. Paper §6 and WM5.md §9: labelled post hoc; spoils and gifts, both seeds; "a right mean is not a right per-world prediction" with the 0.822 vs 0.279 cell. |
+| MJ2 | The mechanism is no longer asserted: "We do not analyse why; a delayed change in settlement splits is one possible route, not tested here." |
+| m1 | "Both splits with noise replicates (v2, obs2)"; abstract (iv) "on the interventional split … (both post hoc)"; introduction "on that split"; §2's divergence claim removed; §6's two explanations "likely, post hoc". |
+| m2 | Q3 heading "barely helps" in the paper and WM5.md, WEAK at both lags with both CIs; CT confound stated in the paper; non-convergence disclosed (WM5.md §1, §3, §7; paper Q3, §7, Appendix B). |
+| m3 | WM5.md §5 / §10 and paper §6 state the curves per method and the `crn_obs2_s1` exception (seven of eight secondary checkpoints better at 30 d). |
+| m4 | "Much better than `naive` for two of the three acts"; rot quoted with its wrong sign; populations differ (pooled train vs test cases). |
+| m5 | `judge.md` renders the post hoc block and labels obs2 E1 / E2 as transfer; paper Table 1 and Appendix F rows labelled; §4.2 features corrected. |
+| m6 | WM5.md §7: "none … beats `zero` (M1b-obs2: TIE)". |
+| m7 | Verdict table, R4 and D2 lists moved to Appendix F; main text ≈ 5,200 words of prose, two tables, three figures: ≈ 9–10 pages; WM5.md says so. |
+| m8 | "The CT authors' public implementation, which includes CRN; CRN's schedule is the one that implementation uses" in §4.4, the abstract, the contributions, Q1 and WM5.md §1 / §3 / §5. |
+| m9 | v2 deaths cells for both seeds; Figure 4 titles and caption say seed 0; WM5.md §10's spike is s0 (s1's last 0.787 vs best 0.769). |
+| N1 | Added to L4.4 (0.84–0.89 s/step). |
+| N2 | WM5.md: "28 verified references, 25 of them cited". |
+| N3 | Left in place (append-only log); L7.2 records it. |
+| N4 | WM5.md §3 and paper Appendix B. |
+| N5 | L7.2: `best_wm12rule.pt` is not read. |
+| N6 | Appendix A titled "selected; full list D1–D24 in METHODS". |
+| N7 | Datasheet: 7,080 manifest episodes. |
+| N8 | Introduction ties the earlier findings to Table 1's M1b rows and `wm3_full`. |

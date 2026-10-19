@@ -15,13 +15,13 @@ act per world, and a new sequentially confounded split in which a known policy a
 the trajectory its earlier acts have changed ({{p5:all/worlds#0}} worlds, {{p5:all/casts#0}} acts, every propensity
 recorded). The task is the per-world effect of an act on food, population, deaths and settlements at one week and one
 month, scored against the true branch with a pre-registered rule. We find that (i) the benchmark has room: an effect
-floor from noise replicates lies far below predicting no effect on every split ({{j5:v2/ladder/7d/values/floor#3}} vs
+floor from noise replicates lies far below predicting no effect on both splits that have noise replicates ({{j5:v2/ladder/7d/values/floor#3}} vs
 {{j5:v2/ladder/7d/values/zero#3}} on the interventional split at one week); (ii) two established estimators of
-time-varying treatment effects, CRN and the Causal Transformer, trained on their authors' full optimizer-step schedules
-and read at their last checkpoint, are worse than predicting no effect on both the interventional and the sequentially
-confounded split, at both horizons; (iii) rounding counts at readout does not change this; (iv) a linear map of the
-observable pre-act state reaches only the act's mean effect (the hidden state adds a little more, post hoc), and the
-learned dynamics models reproduce at most a fraction of the delayed sign reversal of food effects at one month. The benchmark, its pre-registered harness
+time-varying treatment effects, CRN and the Causal Transformer, trained for the full optimizer-step schedules of the
+Causal Transformer authors' public implementation (which includes CRN) and read at their last checkpoint, are worse than predicting no effect on both the interventional and the sequentially
+confounded split, at both horizons; (iii) rounding counts at readout does not change this; (iv) on the interventional
+split a linear map of the observable pre-act state reaches only the act's mean effect, and the hidden state adds a little
+more (both post hoc). The benchmark, its pre-registered harness
 and the paper's numbers are traced to committed result files.
 
 ## 1 Introduction
@@ -39,8 +39,9 @@ desired, in post-fork noise). This makes it possible to measure, per world, the 
 population, deaths and settlement splits at one week and one month, and to ask whether a model trained on the world's
 observable history predicts it.
 
-The answer so far has been sobering. Autoregressive world models trained on the factual stream ignore the god's acts;
-training on paired branches teaches the first week's effects only; and two established estimators of time-varying
+The answer in earlier rounds of this benchmark has been sobering (Table 1's M1b rows and `wm3_full`): autoregressive
+world models trained on the factual stream barely respond to the god's acts; training on paired branches teaches the
+first week's effects only; and two established estimators of time-varying
 treatment effects, the Counterfactual Recurrent Network (CRN) [@bica2020crn] and the Causal Transformer (CT)
 [@melnychuk2022ct], did not beat "predict no effect" on either an interventional or a confounded observational split.
 A reviewer could object to the last finding on three grounds: (1) the two methods were not trained as their authors train
@@ -59,21 +60,22 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
    only lacks the post-fork noise) and against direct effect regressions on the observable and on the full (hidden)
    pre-act state. This tells how much room the benchmark leaves and how much of the per-world effect a simple map of the
    observable (or hidden) pre-act state captures.
-3. **A fair rematch of CRN and CT** (Sections 4–5): trained on their authors' optimizer-step budgets with their weight
-   schedules on real progress, evaluated at their last checkpoint, with counts rounded at readout as the world models
+3. **A fair rematch of CRN and CT** (Sections 4–5): trained for the optimizer-step counts of the authors' public
+   implementation with its weight schedules on real progress, evaluated at their last checkpoint, with counts rounded at readout as the world models
    are — beside observational baselines (naive contrast, multi-cast inverse propensity weighting, matching), world
    models trained on factual and on paired data, and the direct regressions. Everything is pre-registered (W1 rule,
    world-level paired bootstrap).
 
 **Findings.** On a split three times larger than before, with {{p5:all/casts_per_world_mean#2}} acts per world and
 inverse-propensity effective sample sizes of {{j5:describe/pooled/sp240/7d/ess_treated#0}}–{{j5:describe/pooled/rw120/7d/ess_treated#0}}
-per act, CRN and CT trained as their authors train them do not beat "predict no effect" (Section 5.3: every pre-registered
+per act, CRN and CT trained on the authors' implementation's schedule do not beat "predict no effect" (Section 5.3: every pre-registered
 comparison of CRN and CT with `zero` or the analog baseline is NONE), and on the interventional split they are further
 behind than the earlier, budget-capped runs (post hoc). Rounding the earlier runs' counts moves their scores by amounts
 whose intervals all contain zero. The gap between "no effect" and the
-effect floor is large on every split, so the benchmark can separate methods; on the interventional split a linear
-regression on the observable pre-act state reaches the act's mean effect but no further (post hoc), and among the
-learned models compared with it (E2) only the world model trained on paired branches ties or beats it.
+effect floor is large on both splits with noise replicates (v2, obs2), so the benchmark can separate methods; on the
+interventional split a linear regression on the observable pre-act state reaches the act's mean effect but no further
+(post hoc), and on that split, among the learned models compared with it (E2), only the world model trained on paired
+branches ties or beats it.
 
 ## 2 Related work
 
@@ -83,8 +85,7 @@ next observations from past observations and actions and are used for planning a
 engines learn action-conditioned video models of games [@bruce2024genie; @valevski2025gamengen], and graph-network
 simulators learn physical dynamics from particle trajectories [@sanchezgonzalez2020gns]. Their evaluation is mostly
 factual (prediction error or downstream return); counterfactual correctness of the response to an action, measured
-against the true branch, is rarely available. Our benchmark provides it for a social simulation and shows that factual
-accuracy and counterfactual accuracy can diverge sharply.
+against the true branch, is rarely available. Our benchmark provides it for a social simulation.
 
 **Time-varying treatment effects.** Estimating the effect of a sequence of treatments from observational trajectories
 with time-varying confounding is the subject of marginal structural models and inverse probability weighting
@@ -211,10 +212,10 @@ observational baseline of each horizon is chosen on the val families.
 `ridge_obs` fits one ridge regression per cell on the v2 train families (both replicates, every case): the target is the
 true effect divided by the cell's scale, the features are the 37 observable state variables at c, their means over the
 day and the week before c, the 30 calendar features at c, and (obs2 only) the number of earlier acts per kind and the
-days since the last act; the penalty is chosen per cell on the v2 val families. It is applied unchanged to the v2 and
-obs2 tests. `ridge_priv` adds every hidden field at c (winter severity, the hidden latent table, fission pressure and
+days since the last act (constant on v2, so they carry zero weight); the penalty is chosen per cell on the v2 val families. It is applied unchanged to the v2 and
+obs2 tests. `ridge_priv` adds every hidden field at c except the region geometry (winter severity, the hidden latent table, fission pressure and
 threshold, the world's generation parameters); it is a **diagnostic** of how much a linear map of the full pre-act state
-predicts and never enters a method ranking. Both regressions are trained on counterfactual labels of other worlds of the
+predicts and never enters a method ranking. On obs2 both are a **v2→obs2 transfer** (Section 6). Both regressions are trained on counterfactual labels of other worlds of the
 same game, as is the paired world model below.
 
 ### 4.3 World models
@@ -225,16 +226,17 @@ with the act and one without, with counts rounded at readout when validation pre
 factual and arm members (`wm2_m1bact`, three seeds), on obs (`m1b_obs`, two seeds) and on obs2 (`m1b_obs2`, new), and
 `wm3_full`, M1b fine-tuned on v2's paired branches with a paired-difference loss and a hazard head (three seeds).
 
-### 4.4 CRN and CT as their authors train them
+### 4.4 CRN and CT on the authors' implementation's schedule
 
-We use the authors' public implementation of both methods [@melnychuk2022ct] (its plain-PyTorch modules, unchanged) at
+We use the Causal Transformer authors' public implementation [@melnychuk2022ct], which includes CRN (its plain-PyTorch
+modules, unchanged); CRN's schedule is the one that implementation uses, not one taken from Bica et al.'s code. We run it at
 daily resolution: a token per day carries the 37 state variables (predicted as normalized daily changes and fed back),
 the calendar as covariates, and a four-class treatment plus amount. CRN [@bica2020crn] is an LSTM encoder whose
 representation is made treatment-invariant by a gradient-reversal classifier, followed by a decoder initialized from it
 for multi-step prediction; CT [@melnychuk2022ct] is a three-stream transformer trained with counterfactual domain
 confusion and EMA weights. Configurations are those selected by a pre-registered grid on the obs split. In contrast with
-the earlier study, each stage now trains for **the authors' number of optimizer steps** (CRN encoder 15,700, decoder
-53,800; CT 11,850), unless a 300-s cost check on the actual data predicted more than the stage's budget; the balancing
+the earlier study, each stage now trains for **the number of optimizer steps in that implementation** (CRN encoder
+15,700, decoder 53,800; CT 11,850), unless a 300-s cost check on the actual data predicted more than the stage's budget; the balancing
 weight α follows the authors' schedule **on real progress** (so a finished run ends at α = α_max); the **last**
 checkpoint is primary, as in the authors' code (CT's EMA weights), with the lowest-validation-loss checkpoint reported as
 secondary; and **counts are rounded at readout** (food, alive, cumulative deaths), as for M1. All adaptations are listed
@@ -247,7 +249,7 @@ in Appendix A.
 Table 1 lists the 12-cell scaled effect MAE (lower is better) of every method on every split. Multi-seed rows are
 seed-averaged; obs numbers are the earlier study's committed ones. CRN / CT on obs2 and v2 are trained on the authors'
 schedule and read at their last checkpoint with counts rounded (primary). The obs2 columns of the earlier obs-trained runs (M1b-obs, CRN / CT
-time-capped) and of the v2-trained world models are evaluations of those checkpoints on the obs2 test.
+time-capped) and of the v2-trained world models are evaluations of those checkpoints on the obs2 test; the obs2 columns of the two regressions are a v2→obs2 transfer.
 
 | method | trained on | v2 7 d | v2 30 d | obs 7 d | obs 30 d | obs2 7 d | obs2 30 d |
 |---|---|---|---|---|---|---|---|
@@ -256,8 +258,8 @@ time-capped) and of the v2-trained world models are evaluations of those checkpo
 | `ipw` (multi-act on obs2) | obs / obs2 train | — | — | {{j5:main_table/ipw/obs/7d#3}} | {{j5:main_table/ipw/obs/30d#3}} | {{j5:main_table/ipw/obs2/7d#3}} | {{j5:main_table/ipw/obs2/30d#3}} |
 | `match5` | obs / obs2 train | — | — | {{j5:main_table/match5/obs/7d#3}} | {{j5:main_table/match5/obs/30d#3}} | {{j5:main_table/match5/obs2/7d#3}} | {{j5:main_table/match5/obs2/30d#3}} |
 | `an5_arm` | v2 train | {{j5:main_table/an5_arm/v2/7d#3}} | {{j5:main_table/an5_arm/v2/30d#3}} | — | — | — | — |
-| `ridge_obs` | v2 train (counterfactual labels) | {{j5:main_table/ridge_obs/v2/7d#3}} | {{j5:main_table/ridge_obs/v2/30d#3}} | — | — | {{j5:main_table/ridge_obs/obs2/7d#3}} | {{j5:main_table/ridge_obs/obs2/30d#3}} |
-| `ridge_priv` (diagnostic) | v2 train, hidden state | {{j5:main_table/ridge_priv/v2/7d#3}} | {{j5:main_table/ridge_priv/v2/30d#3}} | — | — | {{j5:main_table/ridge_priv/obs2/7d#3}} | {{j5:main_table/ridge_priv/obs2/30d#3}} |
+| `ridge_obs` (obs2: transfer) | v2 train (counterfactual labels) | {{j5:main_table/ridge_obs/v2/7d#3}} | {{j5:main_table/ridge_obs/v2/30d#3}} | — | — | {{j5:main_table/ridge_obs/obs2/7d#3}} | {{j5:main_table/ridge_obs/obs2/30d#3}} |
+| `ridge_priv` (diagnostic; obs2: transfer) | v2 train, hidden state | {{j5:main_table/ridge_priv/v2/7d#3}} | {{j5:main_table/ridge_priv/v2/30d#3}} | — | — | {{j5:main_table/ridge_priv/obs2/7d#3}} | {{j5:main_table/ridge_priv/obs2/30d#3}} |
 | M1b (3 seeds) | v2 | {{j5:main_table/m1b_v2/v2/7d#3}} | {{j5:main_table/m1b_v2/v2/30d#3}} | {{j5:main_table/m1b_v2/obs/7d#3}} | {{j5:main_table/m1b_v2/obs/30d#3}} | {{j5:main_table/m1b_v2/obs2/7d#3}} | {{j5:main_table/m1b_v2/obs2/30d#3}} |
 | `wm3_full`, paired (3 seeds) | v2 | {{j5:main_table/wm3_full/v2/7d#3}} | {{j5:main_table/wm3_full/v2/30d#3}} | {{j5:main_table/wm3_full/obs/7d#3}} | {{j5:main_table/wm3_full/obs/30d#3}} | {{j5:main_table/wm3_full/obs2/7d#3}} | {{j5:main_table/wm3_full/obs2/30d#3}} |
 | M1b-obs (2 seeds) | obs | — | — | {{j5:main_table/m1b_obs/obs/7d#3}} | {{j5:main_table/m1b_obs/obs/30d#3}} | {{j5:main_table/m1b_obs/obs2/7d#3}} | {{j5:main_table/m1b_obs/obs2/30d#3}} |
@@ -290,57 +292,18 @@ multi-seed models; clipped at 3). The v2 counterpart is `figures/cells_v2.png`.*
 
 ### 5.3 Pre-registered verdicts
 
-| rule | model (seed-averaged) | baseline | Δ = model − baseline [95 % CI] | verdict |
-|---|---|---|---|---|
-| R1 obs2 7 d: crn_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/crn_obs2/model#3}} | {{j5:obs2/rules/R1/crn_obs2/baseline#3}} | {{j5:obs2/rules/R1/crn_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/crn_obs2/verdict#str}}** |
-| R1 obs2 7 d: ct_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/ct_obs2/model#3}} | {{j5:obs2/rules/R1/ct_obs2/baseline#3}} | {{j5:obs2/rules/R1/ct_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/ct_obs2/verdict#str}}** |
-| R1 obs2 7 d: m1b_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/m1b_obs2/model#3}} | {{j5:obs2/rules/R1/m1b_obs2/baseline#3}} | {{j5:obs2/rules/R1/m1b_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/m1b_obs2/verdict#str}}** |
-| R2 obs2 30 d: crn_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/crn_obs2/model#3}} | {{j5:obs2/rules/R2/crn_obs2/baseline#3}} | {{j5:obs2/rules/R2/crn_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/crn_obs2/verdict#str}}** |
-| R2 obs2 30 d: ct_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/ct_obs2/model#3}} | {{j5:obs2/rules/R2/ct_obs2/baseline#3}} | {{j5:obs2/rules/R2/ct_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/ct_obs2/verdict#str}}** |
-| R2 obs2 30 d: m1b_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/m1b_obs2/model#3}} | {{j5:obs2/rules/R2/m1b_obs2/baseline#3}} | {{j5:obs2/rules/R2/m1b_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/m1b_obs2/verdict#str}}** |
-| R3 v2 7 d: crn_v2 vs `zero` | {{j5:v2/rules/R3/crn_v2|zero|7d/model#3}} | {{j5:v2/rules/R3/crn_v2|zero|7d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|zero|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|zero|7d/verdict#str}}** |
-| R3 v2 7 d: crn_v2 vs `an5_arm` | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/model#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|an5_arm|7d/verdict#str}}** |
-| R3 v2 30 d: crn_v2 vs `zero` | {{j5:v2/rules/R3/crn_v2|zero|30d/model#3}} | {{j5:v2/rules/R3/crn_v2|zero|30d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|zero|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|zero|30d/verdict#str}}** |
-| R3 v2 30 d: crn_v2 vs `an5_arm` | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/model#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|an5_arm|30d/verdict#str}}** |
-| R3 v2 7 d: ct_v2 vs `zero` | {{j5:v2/rules/R3/ct_v2|zero|7d/model#3}} | {{j5:v2/rules/R3/ct_v2|zero|7d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|zero|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|zero|7d/verdict#str}}** |
-| R3 v2 7 d: ct_v2 vs `an5_arm` | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/model#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|an5_arm|7d/verdict#str}}** |
-| R3 v2 30 d: ct_v2 vs `zero` | {{j5:v2/rules/R3/ct_v2|zero|30d/model#3}} | {{j5:v2/rules/R3/ct_v2|zero|30d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|zero|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|zero|30d/verdict#str}}** |
-| R3 v2 30 d: ct_v2 vs `an5_arm` | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/model#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|an5_arm|30d/verdict#str}}** |
-| E1 v2 7 d: `ridge_obs` vs `zero` | {{j5:v2/rules/E1/7d/model#3}} | {{j5:v2/rules/E1/7d/baseline#3}} | {{j5:v2/rules/E1/7d/ci_diff#ci3}} | **{{j5:v2/rules/E1/7d/verdict#str}}** |
-| E1 v2 30 d: `ridge_obs` vs `zero` | {{j5:v2/rules/E1/30d/model#3}} | {{j5:v2/rules/E1/30d/baseline#3}} | {{j5:v2/rules/E1/30d/ci_diff#ci3}} | **{{j5:v2/rules/E1/30d/verdict#str}}** |
-| E1 obs2 7 d: `ridge_obs` vs `zero` | {{j5:obs2/rules/E1/7d/model#3}} | {{j5:obs2/rules/E1/7d/baseline#3}} | {{j5:obs2/rules/E1/7d/ci_diff#ci3}} | **{{j5:obs2/rules/E1/7d/verdict#str}}** |
-| E1 obs2 30 d: `ridge_obs` vs `zero` | {{j5:obs2/rules/E1/30d/model#3}} | {{j5:obs2/rules/E1/30d/baseline#3}} | {{j5:obs2/rules/E1/30d/ci_diff#ci3}} | **{{j5:obs2/rules/E1/30d/verdict#str}}** |
-| E2 v2 7 d: crn_v2 vs `ridge_obs` | {{j5:v2/rules/E2/crn_v2|7d/model#3}} | {{j5:v2/rules/E2/crn_v2|7d/baseline#3}} | {{j5:v2/rules/E2/crn_v2|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/crn_v2|7d/verdict#str}}** |
-| E2 v2 7 d: ct_v2 vs `ridge_obs` | {{j5:v2/rules/E2/ct_v2|7d/model#3}} | {{j5:v2/rules/E2/ct_v2|7d/baseline#3}} | {{j5:v2/rules/E2/ct_v2|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/ct_v2|7d/verdict#str}}** |
-| E2 v2 7 d: wm3_full vs `ridge_obs` | {{j5:v2/rules/E2/wm3_full|7d/model#3}} | {{j5:v2/rules/E2/wm3_full|7d/baseline#3}} | {{j5:v2/rules/E2/wm3_full|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/wm3_full|7d/verdict#str}}** |
-| E2 v2 30 d: crn_v2 vs `ridge_obs` | {{j5:v2/rules/E2/crn_v2|30d/model#3}} | {{j5:v2/rules/E2/crn_v2|30d/baseline#3}} | {{j5:v2/rules/E2/crn_v2|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/crn_v2|30d/verdict#str}}** |
-| E2 v2 30 d: ct_v2 vs `ridge_obs` | {{j5:v2/rules/E2/ct_v2|30d/model#3}} | {{j5:v2/rules/E2/ct_v2|30d/baseline#3}} | {{j5:v2/rules/E2/ct_v2|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/ct_v2|30d/verdict#str}}** |
-| E2 v2 30 d: wm3_full vs `ridge_obs` | {{j5:v2/rules/E2/wm3_full|30d/model#3}} | {{j5:v2/rules/E2/wm3_full|30d/baseline#3}} | {{j5:v2/rules/E2/wm3_full|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/wm3_full|30d/verdict#str}}** |
-| E2 obs2 7 d: crn_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/crn_obs2|7d/model#3}} | {{j5:obs2/rules/E2/crn_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/crn_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/crn_obs2|7d/verdict#str}}** |
-| E2 obs2 7 d: ct_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/ct_obs2|7d/model#3}} | {{j5:obs2/rules/E2/ct_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/ct_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/ct_obs2|7d/verdict#str}}** |
-| E2 obs2 7 d: m1b_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/m1b_obs2|7d/model#3}} | {{j5:obs2/rules/E2/m1b_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/m1b_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/m1b_obs2|7d/verdict#str}}** |
-| E2 obs2 7 d: wm3_full vs `ridge_obs` | {{j5:obs2/rules/E2/wm3_full|7d/model#3}} | {{j5:obs2/rules/E2/wm3_full|7d/baseline#3}} | {{j5:obs2/rules/E2/wm3_full|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/wm3_full|7d/verdict#str}}** |
-| E2 obs2 30 d: crn_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/crn_obs2|30d/model#3}} | {{j5:obs2/rules/E2/crn_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/crn_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/crn_obs2|30d/verdict#str}}** |
-| E2 obs2 30 d: ct_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/ct_obs2|30d/model#3}} | {{j5:obs2/rules/E2/ct_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/ct_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/ct_obs2|30d/verdict#str}}** |
-| E2 obs2 30 d: m1b_obs2 vs `ridge_obs` | {{j5:obs2/rules/E2/m1b_obs2|30d/model#3}} | {{j5:obs2/rules/E2/m1b_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/m1b_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/m1b_obs2|30d/verdict#str}}** |
-| E2 obs2 30 d: wm3_full vs `ridge_obs` | {{j5:obs2/rules/E2/wm3_full|30d/model#3}} | {{j5:obs2/rules/E2/wm3_full|30d/baseline#3}} | {{j5:obs2/rules/E2/wm3_full|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/wm3_full|30d/verdict#str}}** |
-| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/verdict#str}}** |
-| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/verdict#str}}** |
-| D1 obs2 7 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/verdict#str}}** |
-| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/verdict#str}}** |
-| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/verdict#str}}** |
-| D1 obs2 30 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}** |
+Appendix F lists all 38 pre-registered verdicts with their intervals, the training-reached check (R4) and rounding
+alone (D2). In brief: every R1–R3 comparison of CRN and CT with `zero` or `an5_arm` is NONE; M1b-obs2 ties `zero` at 7
+days ({{j5:obs2/rules/R1/m1b_obs2/verdict#str}}) and is {{j5:obs2/rules/R2/m1b_obs2/verdict#str}} at 30 days; E1 is
+{{j5:v2/rules/E1/7d/verdict#str}} for `ridge_obs` on v2 at 7 days (under the W1 rule a single deterministic run reaches
+WEAK at most, even with a ratio of {{j5:v2/rules/E1/7d/ratio#3}}) and NONE elsewhere; in E2 on v2 only `wm3_full` ties
+(7 days, {{j5:v2/rules/E2/wm3_full|7d/verdict#str}}) or beats (30 days, {{j5:v2/rules/E2/wm3_full|30d/verdict#str}})
+`ridge_obs`. E2 on obs2 compares with a regression that transfers badly from v2 (Section 6), so its KEEP / TIE verdicts
+there say little about the models. R4 holds for all eight CRN / CT runs (Appendix B), and every D2 interval contains
+zero.
 
-E2 on obs2 compares with a regression that transfers badly from v2 (Section 6), so its WEAK / KEEP verdicts there say
-little about the models. Under the W1 rule a single run reaches WEAK at most, so the deterministic `ridge_obs` is WEAK in E1 on v2 at 7 days
-even with a ratio of {{j5:v2/rules/E1/7d/ratio#3}}.
-
-R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` {{j5:R4/crn_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} α_max; `crn_v2_s1` {{j5:R4/crn_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} α_max; `ct_v2_s0` {{j5:R4/ct_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} α_max; `ct_v2_s1` {{j5:R4/ct_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} α_max; `crn_obs2_s0` {{j5:R4/crn_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} α_max; `crn_obs2_s1` {{j5:R4/crn_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} α_max; `ct_obs2_s0` {{j5:R4/ct_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} α_max; `ct_obs2_s1` {{j5:R4/ct_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
-
-D2 (rounding alone; the earlier study's runs on their own test splits, seed-averaged, rounded − as committed): crn_obs 7 d {{j5:D2/crn_obs/compare/7d/ci_diff#ci3}}; crn_obs 30 d {{j5:D2/crn_obs/compare/30d/ci_diff#ci3}}; ct_obs 7 d {{j5:D2/ct_obs/compare/7d/ci_diff#ci3}}; ct_obs 30 d {{j5:D2/ct_obs/compare/30d/ci_diff#ci3}}; crn_v2 7 d {{j5:D2/crn_v2/compare/7d/ci_diff#ci3}}; crn_v2 30 d {{j5:D2/crn_v2/compare/30d/ci_diff#ci3}}; ct_v2 7 d {{j5:D2/ct_v2/compare/7d/ci_diff#ci3}}; ct_v2 30 d {{j5:D2/ct_v2/compare/30d/ci_diff#ci3}}.
-
-**Q1: trained as their authors train them, CRN and CT still lose to "no effect".** Every primary CRN / CT run
-completed the authors' number of optimizer steps with the balancing weight at its maximum (R4). On obs2 their 12-cell
+**Q1: trained on the authors' implementation's schedule, CRN and CT still lose to "no effect".** Every primary CRN / CT run
+completed that implementation's number of optimizer steps with the balancing weight at its maximum (R4). On obs2 their 12-cell
 errors are {{j5:obs2/rules/R1/crn_obs2/model#3}} (CRN) and {{j5:obs2/rules/R1/ct_obs2/model#3}} (CT) at 7 days and
 {{j5:obs2/rules/R2/crn_obs2/model#3}} and {{j5:obs2/rules/R2/ct_obs2/model#3}} at 30 days, against
 {{j5:obs2/rules/R1/crn_obs2/baseline#3}} and {{j5:obs2/rules/R2/crn_obs2/baseline#3}} for `zero` (the baseline chosen on
@@ -350,13 +313,19 @@ The world model trained on obs2 (M1b-obs2) ties `zero` at 7 days
 ({{j5:obs2/rules/R1/m1b_obs2/ci_diff#ci3}}), as world models did on the earlier splits, because it barely responds to
 the act.
 
-**Q3: more observational data does not help.** M1b-obs2 is marginally better than the earlier M1b-obs on the obs2 test
-({{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/ci_diff#ci3}} at 7 days), and CT-obs2 is not better than the earlier,
-budget-capped CT-obs ({{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/ci_diff#ci3}} at 7 days,
-{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} at 30 days).
+**Q3: more observational data barely helps.** M1b-obs2 is marginally better than the earlier M1b-obs on the obs2 test
+({{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/verdict#str}} at both lags:
+{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/ci_diff#ci3}} at 7 days, {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}}
+at 30 days) but still does not beat `zero`. It did not converge: both seeds stopped at the 8,000-step cap with the kept
+step at {{j5:runs/m1b_obs2_s0/best_step#0}} and the validation loss still falling, and with three times the worlds each
+world is seen less often than in M1b-obs, so this comparison may understate what more data can do. CT-obs2 is not better
+than the earlier, budget-capped CT-obs ({{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/ci_diff#ci3}} at 7 days,
+{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} at 30 days), but that comparison mixes the data size with
+the schedule and the checkpoint (the authors' schedule and last checkpoint here, a time-capped run's best-validation
+checkpoint there).
 
 **Q4: rounding alone changes little.** Re-scoring the earlier study's runs with rounded counts moves their seed-averaged
-scores by amounts whose intervals all contain zero (D2 above).
+scores by amounts whose intervals all contain zero (D2, Appendix F).
 
 ## 6 Analysis
 
@@ -371,9 +340,9 @@ observable state adds nothing measurable beyond the arm-level mean. Adding the *
 information (`ridge_priv` vs `arm_mean` {{j5:posthoc/v2_vs_arm_level/ridge_priv|arm_mean|7d/ci_diff#ci3}}, post hoc), yet `ridge_priv`
 ({{j5:v2/ladder/7d/values/ridge_priv#3}}) stays far above the floor ({{j5:v2/ladder/7d/values/floor#3}}): most of
 the headroom is not linear in the state at the act, observable or hidden. At 30 days the regressions do worse than
-`zero` ({{j5:v2/ladder/30d/values/ridge_obs#3}} vs {{j5:v2/ladder/30d/values/zero#3}}), as `arm_mean` does: a
-squared-error fit predicts a mean, while the metric is an absolute error, which rewards a median near zero for these
-skewed, mostly-zero effects.
+`zero` ({{j5:v2/ladder/30d/values/ridge_obs#3}} vs {{j5:v2/ladder/30d/values/zero#3}}), as `arm_mean` does. A likely
+reason (post hoc, not tested) is that a squared-error fit predicts a mean, while the metric is an absolute error, which
+rewards a median near zero for these skewed, mostly-zero effects.
 
 On obs2 the regressions trained on v2 are a test of **transfer**, not of what obs2's state carries: every v2 training
 case of a gift or a rot sits at one cast row (the eve of the first winter) and the spoils at a few rule-fixed rows,
@@ -392,37 +361,52 @@ the observable state, and no method we evaluated closes the gap.
 
 **Confounding, measured.** On obs2 the naive treated-minus-control contrast is far worse than `zero` at 7 days
 ({{j5:obs2/confounding/7d/naive_vs_zero/ci_diff#ci3}}); the multi-act inverse-propensity contrast removes most of
-that excess ({{j5:obs2/confounding/7d/ipw_vs_naive/ci_diff#ci3}}) and gets the mean effects nearly right — a gift's
+that excess ({{j5:obs2/confounding/7d/ipw_vs_naive/ci_diff#ci3}}) and recovers the mean effects much better than
+`naive` for two of the three acts — a gift's
 7-day food effect {{j5:obs2/tables/ipw/gf240|food_stock|7d/mean_pred#1s}} (naive {{j5:obs2/tables/naive/gf240|food_stock|7d/mean_pred#1s}}, true
 {{j5:obs2/tables/zero/gf240|food_stock|7d/mean_true#1s}}), a spoil's {{j5:obs2/tables/ipw/sp240|food_stock|7d/mean_pred#1s}} (naive {{j5:obs2/tables/naive/sp240|food_stock|7d/mean_pred#1s}},
-true {{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}) — but a pooled average cannot beat `zero` on per-world error when effects vary this
-much. At 30 days the post-act survival weights grow (maximum treated weight
-{{j5:obs2/estimates/counts/sp240/30d/max_weight_treated#0}}) and `ipw` falls behind `naive`
-({{j5:obs2/confounding/30d/ipw_vs_naive/ci_diff#ci3}}).
+true {{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}), while a rot's has the wrong sign
+({{j5:obs2/tables/ipw/rw120|food_stock|7d/mean_pred#1s}}; naive {{j5:obs2/tables/naive/rw120|food_stock|7d/mean_pred#1s}},
+true {{j5:obs2/tables/zero/rw120|food_stock|7d/mean_true#1s}}). (The estimates pool the train worlds and the truths
+average the test cases, so the two are different populations.) A pooled average cannot beat `zero` on per-world error
+when effects vary this much. At 30 days `ipw` falls behind `naive`
+({{j5:obs2/confounding/30d/ipw_vs_naive/ci_diff#ci3}}); a likely reason (post hoc) is that the post-act survival
+weights grow (maximum treated weight {{j5:obs2/estimates/counts/sp240/30d/max_weight_treated#0}}).
 
 **Why CRN and CT fail where they fail.** Their two rollouts (with and without the act) respond to the act in the
 confounded direction and too strongly: on obs2 CRN (seed 0) predicts a gift's 7-day food effect of {{j5:obs2/tables/crn_obs2_s0/gf240|food_stock|7d/mean_pred#1s}}
 and a spoil's {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|7d/mean_pred#1s}} against true {{j5:obs2/tables/zero/gf240|food_stock|7d/mean_true#1s}} and
 {{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}, between the truth and the naive contrast. On v2, where assignment is unconfounded, the
-deaths cells dominate their error: the two rollouts drift apart by whole deaths over 30 days (v2 30-day deaths cells
-{{j5:v2/deaths_split/crn_v2_s0/30d/deaths#2}} for CRN, {{j5:v2/deaths_split/ct_v2_s0/30d/deaths#2}} for CT
-against {{j5:v2/deaths_split/zero/30d/deaths#2}} for `zero`), and rounding the counts does not remove it (D2).
+deaths cells dominate their error: the two rollouts drift apart by whole deaths over 30 days (v2 30-day deaths cells,
+seeds 0 / 1: {{j5:v2/deaths_split/crn_v2_s0/30d/deaths#2}} / {{j5:v2/deaths_split/crn_v2_s1/30d/deaths#2}} for CRN,
+{{j5:v2/deaths_split/ct_v2_s0/30d/deaths#2}} / {{j5:v2/deaths_split/ct_v2_s1/30d/deaths#2}} for CT, against
+{{j5:v2/deaths_split/zero/30d/deaths#2}} for `zero`), and rounding the counts does not remove it (D2).
 Trained on the authors' full schedule, both are **worse** than the time-capped runs of the earlier study on v2
 (Table 1; a post hoc comparison, not a pre-registered rule). A plausible reading, not tested here: longer training with
-the full balancing weight lets the two rollouts diverge further, while their validation factual loss is lowest early
-(the lowest-`val_roll` steps in Appendix B). The world models (M1b) instead barely respond to the act:
+the full balancing weight lets the two rollouts diverge further. Their validation factual loss does not track this:
+CT's lowest `val_roll` comes at its first or second evaluation and is otherwise flat within noise, and CRN's decoder's
+lies in the second half of the plan (Appendix B). The world models (M1b) instead barely respond to the act:
 M1b-obs2 (seed 0) predicts a spoil's 7-day food effect of {{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|7d/mean_pred#1s}} against
 {{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}, which places it next to `zero`.
 
-**The 30-day sign reversal.** In the simulator a spoil empties the store for a week and, through an earlier split and a
-second village gathering, leaves more food a month later ({{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}} at 7 days, {{j5:obs2/tables/zero/sp240|food_stock|30d/mean_true#1s}}
-at 30 on obs2). The simple contrasts and the observable-state regression get the sign of the 30-day mean right
-(`ipw` {{j5:obs2/tables/ipw/sp240|food_stock|30d/mean_pred#1s}}, `ridge_obs` {{j5:obs2/tables/ridge_obs/sp240|food_stock|30d/mean_pred#1s}}); the learned
-dynamics models get it wrong, flat or small (seed 0 of each: CRN {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, M1b-obs2
-{{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, `wm3_full` {{j5:obs2/tables/ref_wm3_full_s0/sp240|food_stock|30d/mean_pred#1s}};
-CT, the one exception, has the right sign but a smaller size in both seeds: {{j5:obs2/tables/ct_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} and {{j5:obs2/tables/ct_obs2_s1/sp240|food_stock|30d/mean_pred#1s}}). Rolling the
-dynamics forward does not reproduce the delayed mechanism (a split triggered by hidden pressure) that produces the
-reversal.
+**The 30-day sign reversal (post hoc).** On obs2 the mean food effect of a spoil is
+{{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}} at 7 days and {{j5:obs2/tables/zero/sp240|food_stock|30d/mean_true#1s}}
+at 30, and that of a gift {{j5:obs2/tables/zero/gf240|food_stock|7d/mean_true#1s}} and
+{{j5:obs2/tables/zero/gf240|food_stock|30d/mean_true#1s}}: within a month the sign reverses. We do not analyse why; a
+delayed change in settlement splits is one possible route, not tested here. For spoils the simple contrasts and the
+observable-state regression get the sign of the 30-day mean right (`ipw` {{j5:obs2/tables/ipw/sp240|food_stock|30d/mean_pred#1s}},
+`ridge_obs` {{j5:obs2/tables/ridge_obs/sp240|food_stock|30d/mean_pred#1s}}), and the learned dynamics models get it wrong,
+flat or small (CRN seeds 0 / 1 {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} /
+{{j5:obs2/tables/crn_obs2_s1/sp240|food_stock|30d/mean_pred#1s}}, M1b-obs2 {{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} /
+{{j5:obs2/tables/m1b_obs2_s1/sp240|food_stock|30d/mean_pred#1s}}, `wm3_full` seed 0 {{j5:obs2/tables/ref_wm3_full_s0/sp240|food_stock|30d/mean_pred#1s}}),
+except CT, which has the right sign but a smaller size in both seeds ({{j5:obs2/tables/ct_obs2_s0/sp240|food_stock|30d/mean_pred#1s}} /
+{{j5:obs2/tables/ct_obs2_s1/sp240|food_stock|30d/mean_pred#1s}}). For gifts the picture is mixed: CRN seed 1 predicts
+nearly the whole 30-day mean ({{j5:obs2/tables/crn_obs2_s1/gf240|food_stock|30d/mean_pred#1s}}) and seed 0 the wrong sign
+({{j5:obs2/tables/crn_obs2_s0/gf240|food_stock|30d/mean_pred#1s}}); CT seed 0 has the right sign
+({{j5:obs2/tables/ct_obs2_s0/gf240|food_stock|30d/mean_pred#1s}}) and seed 1 the wrong one
+({{j5:obs2/tables/ct_obs2_s1/gf240|food_stock|30d/mean_pred#1s}}). A right mean is not a right per-world prediction:
+CRN seed 1's error in that cell is {{j5:obs2/tables/crn_obs2_s1/gf240|food_stock|30d/mae#3}} against
+{{j5:obs2/tables/zero/gf240|food_stock|30d/mae#3}} for `zero`.
 
 
 ## 7 Limitations and broader impact
@@ -434,7 +418,8 @@ other replicate's effect, which over-states the irreducible error by about √2 
 regressions are linear and trained on v2's counterfactual labels (another game split of the same simulator, not
 another simulator); CRN and CT run at daily resolution with one configuration each, chosen on the smaller obs split;
 the world models run at hourly resolution; GPU-level numerical reproducibility of the transformer rollouts is not
-guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method. Claims are limited to
+guaranteed (one re-scored run differed at the 1e-4 relative level); two seeds per trained method; M1b-obs2 stopped at
+its 8,000-step cap without converging (kept step in the last 1 % of training). Claims are limited to
 the pre-registered rules; comparisons labelled post hoc are descriptive.
 
 **Broader impact.** The benchmark is built on a toy simulation of a village and makes no claim about real societies or
@@ -451,7 +436,7 @@ hold. We release no personal data; the simulator and its recordings contain none
 
 See `references.bib` (every entry verified; `REFERENCES_CHECK.md`).
 
-## Appendix A. CRN and CT: deviations from the papers (D1–D24)
+## Appendix A. CRN and CT: deviations from the papers (selected; full list D1–D24 in METHODS)
 
 Source: the authors' implementation (`github.com/Valentyn1997/CausalTransformer`, commit `c49a24fa`, MIT licence),
 plain-PyTorch modules vendored unchanged (`VariationalLSTM`, gradient reversal, `BRTreatmentOutcomeHead`,
@@ -486,7 +471,13 @@ lr 1e-3, batch 64; decoder hidden 64 (the encoder's BR), BR 64, FC 32, dropout 0
 reversal α_max 1. CT d_model 128, 2 layers, 4 heads, BR 64, FC 128, dropout 0.1, lr 1e-3, batch 128 (doubled by the
 masked-covariate copy), domain confusion α_max 0.01, EMA β 0.99, relative positions (max 15). Adam, no weight decay,
 no clipping. Budgets: CRN 5,400 s per run (both stages), CT 14,400 s, M1b 16,200 s (8,000 steps); safety cap 1.25 ×
-budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations ({{j5:cost_checks/aborted:_cost_ct_obs2_contaminated/stages/ct/s_per_step#2}} and {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated_2/stages/ct/s_per_step#2}} s per step, which would have cut the plan to {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated/plan/planned/ct#0}} and {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated_2/plan/planned/ct#0}} steps); the third, without them, measured {{j5:cost_checks/_cost_ct_obs2/stages/ct/s_per_step#2}} s per step and kept the authors' plan. CT-v2: {{j5:cost_checks/_cost_ct_v2/stages/ct/s_per_step#2}} s per step; CRN-v2: {{j5:cost_checks/_cost_crn_v2/stages/crn_enc/s_per_step#3}} / {{j5:cost_checks/_cost_crn_v2/stages/crn_dec/s_per_step#3}} s per encoder / decoder step; CRN-obs2: {{j5:cost_checks/_cost_crn_obs2/stages/crn_enc/s_per_step#3}} / {{j5:cost_checks/_cost_crn_obs2/stages/crn_dec/s_per_step#3}}. No plan was reduced.
+budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2 check was taken three times because the first two ran beside our own evaluations ({{j5:cost_checks/aborted:_cost_ct_obs2_contaminated/stages/ct/s_per_step#2}} and {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated_2/stages/ct/s_per_step#2}} s per step, which would have cut the plan to {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated/plan/planned/ct#0}} and {{j5:cost_checks/aborted:_cost_ct_obs2_contaminated_2/plan/planned/ct#0}} steps); the third, without them, measured {{j5:cost_checks/_cost_ct_obs2/stages/ct/s_per_step#2}} s per step and kept the authors' plan. CT-v2: {{j5:cost_checks/_cost_ct_v2/stages/ct/s_per_step#2}} s per step; CRN-v2: {{j5:cost_checks/_cost_crn_v2/stages/crn_enc/s_per_step#3}} / {{j5:cost_checks/_cost_crn_v2/stages/crn_dec/s_per_step#3}} s per encoder / decoder step; CRN-obs2: {{j5:cost_checks/_cost_crn_obs2/stages/crn_enc/s_per_step#3}} / {{j5:cost_checks/_cost_crn_obs2/stages/crn_dec/s_per_step#3}}. No plan was reduced. The
+final CT-obs2 runs took {{j5:runs/ct_obs2_s0/seconds#0}} and {{j5:runs/ct_obs2_s1/seconds#0}} s for 11,850 steps including
+15 evaluations, which corroborates the third check. M1b-obs2: a cost check of {{j5:runs/_cost_m1b_obs2/last_step#0}} steps
+in {{j5:runs/_cost_m1b_obs2/seconds#0}} s including evaluations; both seeds then stopped at the 8,000-step cap
+({{j5:runs/m1b_obs2_s0/seconds#0}} and {{j5:runs/m1b_obs2_s1/seconds#0}} s) with the kept step at
+{{j5:runs/m1b_obs2_s0/best_step#0}} and {{j5:runs/m1b_obs2_s1/best_step#0}} and the validation loss still falling (not
+converged).
 
 | run | planned steps | reached | α / α_max at the last step | lowest-`val_roll` step | seconds |
 |---|---|---|---|---|---|
@@ -501,8 +492,8 @@ budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2
 
 ![Figure 4](figures/training_curves.png)
 
-*Figure 4. Validation factual rollout loss (`val_roll`) over optimizer steps: the earlier study's time-capped runs
-(WM-4) and this study's runs on the authors' schedule (WM-5). The lower panels use different validation sets (obs vs
+*Figure 4. Validation factual rollout loss (`val_roll`) over optimizer steps, seed 0 of each method: the earlier
+study's time-capped runs (WM-4) and this study's runs on the authors' schedule (WM-5). The lower panels use different validation sets (obs vs
 obs2), so only their shapes compare.*
 
 ## Appendix C. The observational policies
@@ -534,7 +525,7 @@ error. Created by [AUTHORS]; funding [OWNER].
 39 global and 14 per-settlement columns plus hidden tables (marked) and the list of interventions. Three splits:
 v2 (560 worlds; families of the no-act member and four arms, two replicates each; 5,316 family episodes plus 560
 `game_v16` control episodes and noise-floor families), obs (560 worlds; 2,219 episodes), obs2 (1,640 worlds; round
-episodes of a sequential policy and two families per val / test world). Instances are synthetic worlds; there are no
+episodes of a sequential policy and two families per val / test world; 7,080 episodes in its manifest). Instances are synthetic worlds; there are no
 people, no personal or sensitive data and no labels beyond what the simulator records. Roles (train / val / test) are
 fixed by seed ranges. Hidden columns must not be model inputs; they are kept for diagnostics.
 
@@ -557,3 +548,50 @@ project repository; the episode arrays live outside version control (several GB 
 ## Appendix E. Compute
 
 All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took {{j5:compute/recording_total#0}} s of wall time at four or eight recorder workers (round 0 {{j5:compute/recording/r0#0}} s; rounds 1–5 {{j5:compute/recording/round1_record#0}}, {{j5:compute/recording/round2_record#0}}, {{j5:compute/recording/round3_record#0}}, {{j5:compute/recording/round4_record#0}}, {{j5:compute/recording/round5_record#0}} s; val and test families {{j5:compute/recording/fam_val_record#0}} and {{j5:compute/recording/fam_test_record#0}} s). The trainings of this study took {{j5:compute/training_total_hours#1}} GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs.
+
+## Appendix F. All pre-registered verdicts, training reached (R4) and rounding alone (D2)
+
+| rule | model (seed-averaged) | baseline | Δ = model − baseline [95 % CI] | verdict |
+|---|---|---|---|---|
+| R1 obs2 7 d: crn_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/crn_obs2/model#3}} | {{j5:obs2/rules/R1/crn_obs2/baseline#3}} | {{j5:obs2/rules/R1/crn_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/crn_obs2/verdict#str}}** |
+| R1 obs2 7 d: ct_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/ct_obs2/model#3}} | {{j5:obs2/rules/R1/ct_obs2/baseline#3}} | {{j5:obs2/rules/R1/ct_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/ct_obs2/verdict#str}}** |
+| R1 obs2 7 d: m1b_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R1/m1b_obs2/model#3}} | {{j5:obs2/rules/R1/m1b_obs2/baseline#3}} | {{j5:obs2/rules/R1/m1b_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R1/m1b_obs2/verdict#str}}** |
+| R2 obs2 30 d: crn_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/crn_obs2/model#3}} | {{j5:obs2/rules/R2/crn_obs2/baseline#3}} | {{j5:obs2/rules/R2/crn_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/crn_obs2/verdict#str}}** |
+| R2 obs2 30 d: ct_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/ct_obs2/model#3}} | {{j5:obs2/rules/R2/ct_obs2/baseline#3}} | {{j5:obs2/rules/R2/ct_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/ct_obs2/verdict#str}}** |
+| R2 obs2 30 d: m1b_obs2 vs `zero` (val-chosen) | {{j5:obs2/rules/R2/m1b_obs2/model#3}} | {{j5:obs2/rules/R2/m1b_obs2/baseline#3}} | {{j5:obs2/rules/R2/m1b_obs2/ci_diff#ci3}} | **{{j5:obs2/rules/R2/m1b_obs2/verdict#str}}** |
+| R3 v2 7 d: crn_v2 vs `zero` | {{j5:v2/rules/R3/crn_v2|zero|7d/model#3}} | {{j5:v2/rules/R3/crn_v2|zero|7d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|zero|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|zero|7d/verdict#str}}** |
+| R3 v2 7 d: crn_v2 vs `an5_arm` | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/model#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|an5_arm|7d/verdict#str}}** |
+| R3 v2 30 d: crn_v2 vs `zero` | {{j5:v2/rules/R3/crn_v2|zero|30d/model#3}} | {{j5:v2/rules/R3/crn_v2|zero|30d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|zero|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|zero|30d/verdict#str}}** |
+| R3 v2 30 d: crn_v2 vs `an5_arm` | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/model#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/baseline#3}} | {{j5:v2/rules/R3/crn_v2|an5_arm|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/crn_v2|an5_arm|30d/verdict#str}}** |
+| R3 v2 7 d: ct_v2 vs `zero` | {{j5:v2/rules/R3/ct_v2|zero|7d/model#3}} | {{j5:v2/rules/R3/ct_v2|zero|7d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|zero|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|zero|7d/verdict#str}}** |
+| R3 v2 7 d: ct_v2 vs `an5_arm` | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/model#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|7d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|an5_arm|7d/verdict#str}}** |
+| R3 v2 30 d: ct_v2 vs `zero` | {{j5:v2/rules/R3/ct_v2|zero|30d/model#3}} | {{j5:v2/rules/R3/ct_v2|zero|30d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|zero|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|zero|30d/verdict#str}}** |
+| R3 v2 30 d: ct_v2 vs `an5_arm` | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/model#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/baseline#3}} | {{j5:v2/rules/R3/ct_v2|an5_arm|30d/ci_diff#ci3}} | **{{j5:v2/rules/R3/ct_v2|an5_arm|30d/verdict#str}}** |
+| E1 v2 7 d: `ridge_obs` vs `zero` | {{j5:v2/rules/E1/7d/model#3}} | {{j5:v2/rules/E1/7d/baseline#3}} | {{j5:v2/rules/E1/7d/ci_diff#ci3}} | **{{j5:v2/rules/E1/7d/verdict#str}}** |
+| E1 v2 30 d: `ridge_obs` vs `zero` | {{j5:v2/rules/E1/30d/model#3}} | {{j5:v2/rules/E1/30d/baseline#3}} | {{j5:v2/rules/E1/30d/ci_diff#ci3}} | **{{j5:v2/rules/E1/30d/verdict#str}}** |
+| E1 obs2 7 d: `ridge_obs` (transfer) vs `zero` | {{j5:obs2/rules/E1/7d/model#3}} | {{j5:obs2/rules/E1/7d/baseline#3}} | {{j5:obs2/rules/E1/7d/ci_diff#ci3}} | **{{j5:obs2/rules/E1/7d/verdict#str}}** |
+| E1 obs2 30 d: `ridge_obs` (transfer) vs `zero` | {{j5:obs2/rules/E1/30d/model#3}} | {{j5:obs2/rules/E1/30d/baseline#3}} | {{j5:obs2/rules/E1/30d/ci_diff#ci3}} | **{{j5:obs2/rules/E1/30d/verdict#str}}** |
+| E2 v2 7 d: crn_v2 vs `ridge_obs` | {{j5:v2/rules/E2/crn_v2|7d/model#3}} | {{j5:v2/rules/E2/crn_v2|7d/baseline#3}} | {{j5:v2/rules/E2/crn_v2|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/crn_v2|7d/verdict#str}}** |
+| E2 v2 7 d: ct_v2 vs `ridge_obs` | {{j5:v2/rules/E2/ct_v2|7d/model#3}} | {{j5:v2/rules/E2/ct_v2|7d/baseline#3}} | {{j5:v2/rules/E2/ct_v2|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/ct_v2|7d/verdict#str}}** |
+| E2 v2 7 d: wm3_full vs `ridge_obs` | {{j5:v2/rules/E2/wm3_full|7d/model#3}} | {{j5:v2/rules/E2/wm3_full|7d/baseline#3}} | {{j5:v2/rules/E2/wm3_full|7d/ci_diff#ci3}} | **{{j5:v2/rules/E2/wm3_full|7d/verdict#str}}** |
+| E2 v2 30 d: crn_v2 vs `ridge_obs` | {{j5:v2/rules/E2/crn_v2|30d/model#3}} | {{j5:v2/rules/E2/crn_v2|30d/baseline#3}} | {{j5:v2/rules/E2/crn_v2|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/crn_v2|30d/verdict#str}}** |
+| E2 v2 30 d: ct_v2 vs `ridge_obs` | {{j5:v2/rules/E2/ct_v2|30d/model#3}} | {{j5:v2/rules/E2/ct_v2|30d/baseline#3}} | {{j5:v2/rules/E2/ct_v2|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/ct_v2|30d/verdict#str}}** |
+| E2 v2 30 d: wm3_full vs `ridge_obs` | {{j5:v2/rules/E2/wm3_full|30d/model#3}} | {{j5:v2/rules/E2/wm3_full|30d/baseline#3}} | {{j5:v2/rules/E2/wm3_full|30d/ci_diff#ci3}} | **{{j5:v2/rules/E2/wm3_full|30d/verdict#str}}** |
+| E2 obs2 7 d: crn_obs2 vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/crn_obs2|7d/model#3}} | {{j5:obs2/rules/E2/crn_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/crn_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/crn_obs2|7d/verdict#str}}** |
+| E2 obs2 7 d: ct_obs2 vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/ct_obs2|7d/model#3}} | {{j5:obs2/rules/E2/ct_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/ct_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/ct_obs2|7d/verdict#str}}** |
+| E2 obs2 7 d: m1b_obs2 vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/m1b_obs2|7d/model#3}} | {{j5:obs2/rules/E2/m1b_obs2|7d/baseline#3}} | {{j5:obs2/rules/E2/m1b_obs2|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/m1b_obs2|7d/verdict#str}}** |
+| E2 obs2 7 d: wm3_full vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/wm3_full|7d/model#3}} | {{j5:obs2/rules/E2/wm3_full|7d/baseline#3}} | {{j5:obs2/rules/E2/wm3_full|7d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/wm3_full|7d/verdict#str}}** |
+| E2 obs2 30 d: crn_obs2 vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/crn_obs2|30d/model#3}} | {{j5:obs2/rules/E2/crn_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/crn_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/crn_obs2|30d/verdict#str}}** |
+| E2 obs2 30 d: ct_obs2 vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/ct_obs2|30d/model#3}} | {{j5:obs2/rules/E2/ct_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/ct_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/ct_obs2|30d/verdict#str}}** |
+| E2 obs2 30 d: m1b_obs2 vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/m1b_obs2|30d/model#3}} | {{j5:obs2/rules/E2/m1b_obs2|30d/baseline#3}} | {{j5:obs2/rules/E2/m1b_obs2|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/m1b_obs2|30d/verdict#str}}** |
+| E2 obs2 30 d: wm3_full vs `ridge_obs` (transfer) | {{j5:obs2/rules/E2/wm3_full|30d/model#3}} | {{j5:obs2/rules/E2/wm3_full|30d/baseline#3}} | {{j5:obs2/rules/E2/wm3_full|30d/ci_diff#ci3}} | **{{j5:obs2/rules/E2/wm3_full|30d/verdict#str}}** |
+| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|7d/verdict#str}}** |
+| D1 obs2 7 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|7d/verdict#str}}** |
+| D1 obs2 7 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|7d/verdict#str}}** |
+| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/verdict#str}}** |
+| D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/verdict#str}}** |
+| D1 obs2 30 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}** |
+
+R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` {{j5:R4/crn_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} α_max; `crn_v2_s1` {{j5:R4/crn_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} α_max; `ct_v2_s0` {{j5:R4/ct_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} α_max; `ct_v2_s1` {{j5:R4/ct_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} α_max; `crn_obs2_s0` {{j5:R4/crn_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} α_max; `crn_obs2_s1` {{j5:R4/crn_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} α_max; `ct_obs2_s0` {{j5:R4/ct_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} α_max; `ct_obs2_s1` {{j5:R4/ct_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
+
+D2 (rounding alone; the earlier study's runs on their own test splits, seed-averaged, rounded − as committed): crn_obs 7 d {{j5:D2/crn_obs/compare/7d/ci_diff#ci3}}; crn_obs 30 d {{j5:D2/crn_obs/compare/30d/ci_diff#ci3}}; ct_obs 7 d {{j5:D2/ct_obs/compare/7d/ci_diff#ci3}}; ct_obs 30 d {{j5:D2/ct_obs/compare/30d/ci_diff#ci3}}; crn_v2 7 d {{j5:D2/crn_v2/compare/7d/ci_diff#ci3}}; crn_v2 30 d {{j5:D2/crn_v2/compare/30d/ci_diff#ci3}}; ct_v2 7 d {{j5:D2/ct_v2/compare/7d/ci_diff#ci3}}; ct_v2 30 d {{j5:D2/ct_v2/compare/30d/ci_diff#ci3}}.

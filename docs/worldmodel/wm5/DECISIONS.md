@@ -122,7 +122,8 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   time. All three measurements are reported (`runs/_aborted/`, `runs/_cost_ct_obs2/`).
   *Third measurement (11:45:52–11:51:52, after our evaluations ended; load average 15–21 from other users):*
   0.910 s/step, 14.7-s evaluation → predicted 11,006 s for the authors' 11,850 steps < 14,400 s: plan **not reduced**.
-  `ct_obs2_s0` and `ct_obs2_s1` run on it.
+  `ct_obs2_s0` and `ct_obs2_s1` run on it. *Corroboration (review round 2, N1):* the final runs took 10,665 s and
+  10,047 s for 11,850 steps including 15 evaluations of ≈ 14 s, i.e. 0.84–0.89 s per step against the measured 0.910.
 
 ## Part 7
 - **L7.1 Review round 1 responses** (REVIEW.md): M1 and M2 are interpretive; the judge gains a post hoc block
@@ -136,6 +137,33 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 - **L0.7 Second pause.** The Mac slept (lid closed) 2026-10-19 17:58:33–19:40:59 KST (6,146 s); the DGX continued
   (`ct_obs2_s1` ended and was evaluated, `m1b_obs2_s1` started 18:08:56). Every training had started before the
   deadline, so the pause changes no decision; it is recorded for the time per Part.
+- **L7.2 Review round 2 responses** (REVIEW.md round 2; no BLOCKING, 2 MAJOR, 9 MINOR). Wording only, plus one
+  rendering change; no rule, verdict or number changes (`judge.json` is byte-identical before and after).
+  - MJ1 / MJ2: the 30-day reversal is out of the abstract; in the paper (§6) and WM5.md (§9) it is labelled post hoc,
+    reported for both acts and both seeds (spoils: no dynamics model reproduces it, CT at a fraction of its size; gifts:
+    mixed by seed), with the note that a right mean is not a right per-world prediction; the mechanism is not asserted
+    (one possible route, untested).
+  - m1: scope words ("both splits with noise replicates", "on the interventional split", "on that split"); the §2
+    claim about factual vs counterfactual accuracy removed; the two §6 explanations marked "likely, post hoc".
+  - m2: Q3 is "barely helps" (D1 WEAK at both lags, both values quoted); the CT confound with schedule and checkpoint
+    stated; M1b-obs2's non-convergence (kept step 7,950 of 8,000, validation still falling) disclosed in WM5.md §1 / §3 /
+    §7, the paper's Q3, §7 and Appendix B.
+  - m3: last vs best and the validation curves stated per method (CT lowest at the first or second evaluation; CRN's
+    decoder in the second half; `crn_obs2_s1`'s secondary worse).
+  - m4: IPW "recovers the mean effects much better than `naive` for two of three acts", rot quoted (wrong sign), and
+    the population difference noted.
+  - m5: `judge5.py`'s markdown renders the `posthoc` block and labels the obs2 E1 / E2 rows "(v2→obs2 transfer)"
+    (rendering only; WM5.md §4 re-copied from `judge.md`); the paper's Table 1 and the verdict table mark the transfer
+    rows; §4.2 says the act-count features carry zero weight and that `ridge_priv` excludes the region geometry.
+  - m6: WM5.md §7 says no obs-trained model beats `zero`. m7: the 38-row verdict table and the R4 / D2 lists moved to a
+    new Appendix F (§5.3 keeps a summary); the stated length is now ≈ 9–10 pages of main text. m8: the implementation
+    is named as the CT authors' (which includes CRN) everywhere. m9: seeds labelled (v2 deaths cells both seeds; the
+    training-curve figure titles and caption say seed 0; the CRN-obs2 spike is s0).
+  - N1 (L4.4 corroboration), N2 (25 of 28 references cited), N4 (M1b-obs2 cost check in WM5.md §3 and Appendix B), N6
+    (Appendix A title), N7 (7,080 manifest episodes in the datasheet), N8 (earlier-round claims tied to Table 1 rows).
+    N3: entries stay where they were written (moving them would rewrite history); this index is the map. N5: the M1
+    trainer's `best_wm12rule.pt` is never read in WM-5 — effects and factual T2 use `best.pt` (`metrics.json`
+    `checkpoint`), as in WM-4.
 
 ## Part 6
 - **L6.1 WM4.md pointer.** GOAL.md 11.1's line is inserted directly under WM4.md's title (as WM-4 did for WM3.md);

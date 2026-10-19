@@ -49,4 +49,5 @@ pauses.
 | pause | 17:58:33 | 19:40:59 | **Mac clamshell sleep** (`pmset` "Clamshell Sleep"); DGX jobs continued; 6,146 s recorded as a pause (DECISIONS L0.7) |
 | 4.1 | 18:08:56 | 21:28:57 | `m1b_obs2_s1`: stop `max_steps` (8,000), kept step 7,950 (val T2 24 h 0.0620), 11,964 s; the last training. `_setup/queue.stop` written |
 | 4.2 | 21:30:20 | 21:49:53 | `m1b_obs2_s1` obs2 test effects and factual T2; `finals_watch_obs2` ends (every item done) |
-| 5 / 6 | 21:50 | 22:00 | every run fetched; final `judge5.py`; `figures.py render` (432 traced numbers, check OK) and `figures`; WM5.md, DATASET_OBS2.md; WM4.md pointer line |
+| 5 / 6 | 21:50 | 21:52 | every run fetched; final `judge5.py`; `figures.py render` (432 traced numbers, check OK) and `figures`; WM5.md, DATASET_OBS2.md; WM4.md pointer line |
+| 7 (review 2) | 21:51:10 | 22:08:46 | review round 2 (fresh subagent, read-only, HEAD `3d27cc07`): no BLOCKING, 2 MAJOR, 9 MINOR, 8 NOTE; judge / paper / figures reproduced byte for byte; fixes (wording, Appendix F, `judge.md` post hoc rendering, figure seed labels; DECISIONS L7.2) applied 22:02–22:15; paper re-rendered (463 traced numbers, check OK) |
