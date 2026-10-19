@@ -23,3 +23,6 @@ Retry ledger: no checks yet executed. Every target invocation including debug co
 - Identity bridge actual optimized-dev build started in base worktree, session49711; log builds/base-dev.log in external evidence. Independent of main gate target directory; no performance measurement overlaps either build.
 - Historical H10 seed19603/t122400 reconciliation located and provenance recorded in H10-SOURCES.md; current-build reproduction is still required.
 - Screen-reading protocol preregistered in BLIND-PROTOCOL.md before any new captures/readers.
+- Base optimized-dev bridge build session49711 completed exit0 (4m40s); base import session19212 completed exit0 with no ERROR/SCRIPT ERROR. Copied existing import cache only, then actual base import refreshed it.
+- Release bridge build on measure worktree started session58740; log builds/measure-release.log. Not yet admitted performance evidence.
+- Six-framing reference A launched session34712 using unchanged run_identity_p13.sh, base8c1b18be/kernel1/skip0; external identity/six-A.log and .exit, plus identity/six/A/launches.tsv. Next A-prime and running/pan reference, serial through window lock.
