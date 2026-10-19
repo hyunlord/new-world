@@ -304,7 +304,55 @@ D2 (rounding alone; the earlier study's runs on their own test splits, seed-aver
 
 ## 6 Analysis
 
-{{sec:analysis}}
+**The benchmark discriminates; the methods do not use the room.** On both splits and at both horizons the floor lies
+far below `zero` (Table 2): the per-world effect is mostly determined by the state at the act, and only a small part is
+post-act noise. On v2 at 7 days a linear map of the **observable** pre-act state already beats `zero`
+(`ridge_obs` {{j5:v2/ladder/7d/values/ridge_obs#3}} vs {{j5:v2/ladder/7d/values/zero#3}}, E1
+{{j5:v2/rules/E1/7d/verdict#str}}), and adding the **hidden** state helps a little more
+({{j5:v2/ladder/7d/values/ridge_priv#3}}); yet both stay far above the floor
+({{j5:v2/ladder/7d/values/floor#3}}): most of the headroom is neither linear in the observable state nor in the
+hidden fields at the act. At 30 days the regression trained on v2 does worse than `zero`
+({{j5:v2/ladder/30d/values/ridge_obs#3}} vs {{j5:v2/ladder/30d/values/zero#3}}), and on obs2 the v2-trained
+regressions transfer badly at both horizons ({{j5:obs2/ladder/7d/values/ridge_obs#3}} and
+{{j5:obs2/ladder/30d/values/ridge_obs#3}} vs `zero` {{j5:obs2/ladder/7d/values/zero#3}} and
+{{j5:obs2/ladder/30d/values/zero#3}}): obs2's acts fall at other times of the year and in other states than v2's
+rule-fixed acts, and the hidden state helps there only at 7 days ({{j5:obs2/ladder/7d/values/ridge_priv#3}}). So
+the gap between `zero` and the floor is real, partly reachable from the observable state on the interventional split,
+and not closed by any method we evaluated.
+
+**Confounding, measured.** On obs2 the naive treated-minus-control contrast is far worse than `zero` at 7 days
+({{j5:obs2/confounding/7d/naive_vs_zero/ci_diff#ci3}}); the multi-act inverse-propensity contrast removes most of
+that excess ({{j5:obs2/confounding/7d/ipw_vs_naive/ci_diff#ci3}}) and gets the mean effects nearly right — a gift's
+7-day food effect {{j5:obs2/tables/ipw/gf240|food_stock|7d/mean_pred#1s}} (naive {{j5:obs2/tables/naive/gf240|food_stock|7d/mean_pred#1s}}, true
+{{j5:obs2/tables/zero/gf240|food_stock|7d/mean_true#1s}}), a spoil's {{j5:obs2/tables/ipw/sp240|food_stock|7d/mean_pred#1s}} (naive {{j5:obs2/tables/naive/sp240|food_stock|7d/mean_pred#1s}},
+true {{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}) — but a pooled average cannot beat `zero` on per-world error when effects vary this
+much. At 30 days the post-act survival weights grow (maximum treated weight
+{{j5:obs2/estimates/counts/sp240/30d/max_weight_treated#0}}) and `ipw` falls behind `naive`
+({{j5:obs2/confounding/30d/ipw_vs_naive/ci_diff#ci3}}).
+
+**Why CRN and CT fail where they fail.** Their two rollouts (with and without the act) respond to the act in the
+confounded direction and too strongly: on obs2 CRN (seed 0) predicts a gift's 7-day food effect of {{j5:obs2/tables/crn_obs2_s0/gf240|food_stock|7d/mean_pred#1s}}
+and a spoil's {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|7d/mean_pred#1s}} against true {{j5:obs2/tables/zero/gf240|food_stock|7d/mean_true#1s}} and
+{{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}, between the truth and the naive contrast. On v2, where assignment is unconfounded, the
+deaths cells dominate their error: the two rollouts drift apart by whole deaths over 30 days (v2 30-day deaths cells
+{{j5:v2/deaths_split/crn_v2_s0/30d/deaths#2}} for CRN, {{j5:v2/deaths_split/ct_v2_s0/30d/deaths#2}} for CT
+against {{j5:v2/deaths_split/zero/30d/deaths#2}} for `zero`), and rounding the counts does not remove it (D2).
+Trained on the authors' full schedule, both are **worse** than the time-capped runs of the earlier study on v2
+(Table 1; a post hoc comparison, not a pre-registered rule). A plausible reading, not tested here: longer training with
+the full balancing weight lets the two rollouts diverge further, while their validation factual loss is lowest early
+(the lowest-`val_roll` steps in Appendix B). The world models (M1b) instead barely respond to the act:
+M1b-obs2 (seed 0) predicts a spoil's 7-day food effect of {{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|7d/mean_pred#1s}} against
+{{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}}, which places it next to `zero`.
+
+**The 30-day sign reversal.** In the simulator a spoil empties the store for a week and, through an earlier split and a
+second village gathering, leaves more food a month later ({{j5:obs2/tables/zero/sp240|food_stock|7d/mean_true#1s}} at 7 days, {{j5:obs2/tables/zero/sp240|food_stock|30d/mean_true#1s}}
+at 30 on obs2). The simple contrasts and the observable-state regression get the sign of the 30-day mean right
+(`ipw` {{j5:obs2/tables/ipw/sp240|food_stock|30d/mean_pred#1s}}, `ridge_obs` {{j5:obs2/tables/ridge_obs/sp240|food_stock|30d/mean_pred#1s}}); every learned
+dynamics model gets it wrong or flat (seed 0 of each: CRN {{j5:obs2/tables/crn_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, M1b-obs2
+{{j5:obs2/tables/m1b_obs2_s0/sp240|food_stock|30d/mean_pred#1s}}, `wm3_full` {{j5:obs2/tables/ref_wm3_full_s0/sp240|food_stock|30d/mean_pred#1s}}). Rolling the
+dynamics forward does not reproduce the delayed mechanism (a split triggered by hidden pressure) that produces the
+reversal.
+
 
 ## 7 Limitations and broader impact
 
