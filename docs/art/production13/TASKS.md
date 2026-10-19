@@ -18,3 +18,9 @@ Admission waiting: 0 seconds so far. Image generations: 0/4.
 - GOAL copied unchanged and cmp exit0. OWNER_FEEDBACK.md absent at launch.
 - 01:48:59Z: backup branch created; Pass21 merged cleanly with ort. No manual conflict resolutions.
 - Calibration and copied tooling delegated to independent bounded native agents; neither may start Godot/cargo sessions.
+- Merged optimized-dev bridge build passed (21.44s), log external builds/merged-dev.log. No Godot launched before calibration.
+- 01:53Z: 15-run calibration launched with fixed64-sweep256KiB kernel; reference record written incrementally at perf/calibration.json. Session71735.
+- Prepared base/measure detached worktrees at contract commit while tooling completes; both will advance to tooling commit before building/capturing. APFS clone of existing target caches ongoing session62103.
+- Calibration completed before first Godot session:15/15, R2.0089961669873446s, threshold2.109445975336712s, identical checksums, minimum start spacing22.02379s. Per-run ps/load in perf/calibration.json; readable table perf/calibration.md.
+- Part0 full gate running session90444 (external gate-p0.log), jobs6, dev/test opt-level2.
+- Leader verification:27 p13 Python tests passed; shell syntax, diff-check and GOAL byte comparison passed.

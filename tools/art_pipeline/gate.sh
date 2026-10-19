@@ -29,9 +29,9 @@ else printf 'smoke_errors\t0\t0\n' >> "$out/results.tsv"; fi
 run_check python python3 -m unittest discover -s tools/art_pipeline -p 'test_*.py'
 shopt -s nullglob
 for scene_test in scripts/test/art/test_*.gd; do
- if [[ "$scene_test" == "scripts/test/art/test_real_input_p12.gd" ]]; then
+ if [[ "$scene_test" == "scripts/test/art/test_real_input_p12.gd" || "$scene_test" == "scripts/test/art/test_real_input_p13.gd" ]]; then
   real_input_parent="$(mktemp -d "$(cd "$out" && pwd)/real-input.XXXXXX")"
-  run_check "$(basename "$scene_test" .gd)" env P12_REAL_INPUT_OUT="$real_input_parent/capture" bash tools/art_pipeline/with_window_lock.sh 600 "$GODOT_BIN" --path . --script "res://$scene_test"
+  run_check "$(basename "$scene_test" .gd)" env P12_REAL_INPUT_OUT="$real_input_parent/capture" P13_REAL_INPUT_OUT="$real_input_parent/capture" bash tools/art_pipeline/with_window_lock.sh 600 "$GODOT_BIN" --path . --script "res://$scene_test"
  else
   run_check "$(basename "$scene_test" .gd)" bash tools/art_pipeline/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script "res://$scene_test"
  fi

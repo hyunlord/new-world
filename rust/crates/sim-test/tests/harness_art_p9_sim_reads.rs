@@ -72,7 +72,7 @@ fn safe_counter_dispatch(ts: &[Token]) -> bool {
 fn violations(path: &str, source: &str) -> Vec<String> {
     if path == "scripts/ui/sim_reads.gd" { return Vec::new(); }
     let ts = tokens(source);
-    let safe_counter = matches!(path, "scripts/test/capture_framings.gd" | "scripts/test/capture_framings_p9.gd" | "scripts/test/capture_framings_p10.gd" | "scripts/test/capture_framings_p11.gd" | "scripts/test/art/capture_framings_p12.gd")
+    let safe_counter = matches!(path, "scripts/test/capture_framings.gd" | "scripts/test/capture_framings_p9.gd" | "scripts/test/capture_framings_p10.gd" | "scripts/test/capture_framings_p11.gd" | "scripts/test/art/capture_framings_p12.gd" | "scripts/test/art/capture_framings_p13.gd")
         && safe_counter_dispatch(&ts);
     let mut errors = Vec::new();
     for (i, t) in ts.iter().enumerate() {
