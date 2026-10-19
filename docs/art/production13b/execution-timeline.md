@@ -59,3 +59,21 @@ The JSON now includes all 17 task commits, full SHAs and changed-file manifests 
 Gate3 clean audit: 15:13:04.508215Z, 120/120 and zero log errors. Merged release build exit 0 retains SHA256 `30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042`. Required merged identity: 28 launches 15:13:29Z–15:26:34Z; terminal exit 0 observed 15:26:57.646379Z, comparator PASS (all 6 RGBA/all 5 running exact). Part3 completion is evidenced by this observation; exact process-exit time remains unknown. This required identity repeat is not a speed measurement rerun.
 
 HEAD remains `f5c8951e0a0a5861defe632cbd2a088dac71f692`; the existing 17-commit census is unchanged. Part4/final work remains pending. Earlier in-progress entries are historical.
+
+## Freeze and final-gate update — 2026-10-19T16:14:42.158968+00:00
+
+18th task commit: `40aa7a463d740b776248828211251187319c6af6`, UTC 15:28:46, `art-p13b(p3): freeze only after clean merged gate and exact walker replay` (433changed files; complete manifest in JSON). Source/bridge remain frozen. Final gate root audit 16:11:30.179086Z confirms 120/120 and zero log errors. Part4 remains incomplete: 16 admission slots/4 collectors, only W1/W200 valid; attempt3 after 16:43:12Z planned, not run. Booked wait 5886.583217859268 seconds; future 1800seconds not yet counted. Cross-checkout provenance qualification and stable local snapshots are linked in JSON. No Part4/final completion time inferred.
+
+## Attempt3 terminal / attempt4 waiting — 2026-10-19T16:50:43.689556+00:00
+
+Attempt3 supervisor69016 exited 0; all measurement-local snapshots remain equal. Seven slots produced three actual collectors: W0/W500 **VALID**, W-multi **invalid end load8.11865234375 >8**. Three section timers and ablation were denied before launch. Cumulative Part4: **23 slots,7 collectors,4 valid,3 invalid-end,16 refusals**. W-multi has2 actual failed checks; W0 one failed and one valid. Section timers/ablation have0 actual collectors. No matrix target has reached three failed executions.
+
+Attempt4 is waiting (session26762), earliest **17:18:49Z**, epoch1792430329 after last completion1792428528.382771. No terminal verdict exists. Booked wait is **7686.698958873749seconds**; next interval prospectively adds1800.617229seconds, leaving1312.683812seconds, insufficient for another30-minute cooldown. External control order is sectionsW200, W-multi, W500, ablation, then remaining matrix; sources/flags stay frozen. Earlier attempt3-planned/attempt2-total paragraphs are historical snapshots.
+
+## Part4 terminal audit — 2026-10-19T17:21:02.485487Z
+
+**TERMINAL NOT_VERIFIED: wait budget prevents another retry.** Attempt4 supervisor 26762 and recovery 53175 both exited 0. All local snapshot checks are exact. Final census: **29 file-slots = 7 actual collectors (4 valid, 3 invalid-end) + 21 probe/prelaunch denials + 1 wrong-item policy denial**. W-multi has two actual failed checks, not three; three-strike exhaustion is not the stop reason. W-multi valid measurement, all three section timers and ablation remain NOT_VERIFIED.
+
+External order change leaked exported `P13_ITEM=after-ablation-W200` into matrix execution. W-multi file4 was refused under the wrong policy item **before any probe or Godot**. Fresh-shell recovery explicitly unset `P13_ITEM`/`P13_VALIDITY_OUT`; file5 was the true fourth W-multi admitted opportunity and was denied on start load 17.5810546875. Both artifacts and original ledger history remain; file numbering is not rewritten or treated as five collector runs.
+
+Final booked wait **9487.316187858582 seconds** leaves **1312.6838121414185 seconds < 1800 seconds** mandatory cooldown. Further admission retry is barred. This is terminal execution, not completed acceptance. Source/bridge freeze is unchanged; the forthcoming Part4 documentation commit is not invented. Prior planned/waiting notes above are historical.

@@ -63,3 +63,25 @@ Gate3 is active at `gates/p3-attempt3`; no completed row existed in its results.
 Gate3 is now **CLEAN PASS: 120/120, zero ERROR**, session 30784 terminal 0; root audit 15:13:04.508215Z. Earlier gate1FAIL and gate2log-errorFAIL remain. Cross-gate row census includes all 120 gate3 rows. Real-input-p13 now has 5 completed invocations: baseline failure, targeted pass and three Part3 passes.
 
 Required merged identity repeat is **PASS**, session 53070 terminal 0:28 launches from 15:13:29Z through 15:26:34Z, observed terminal 15:26:57.646379Z. All six RGBA framings and five running worlds are exact. This is an additional required post-merge compound check after historical identity2PASS; **no timing rerun**. Part4 and final gates remain pending. Earlier in-progress prose above is retained as historical snapshot.
+
+## Frozen Part4 snapshot — 2026-10-19T16:14:42.158968+00:00
+
+Final gate is **120/120 CLEAN PASS**, zero errors in root audit 16:11:30Z at 40aa7a46. This adds one executed check per gate target (real-input-p13 now 6 total completed).
+
+Part4 attempts 1/2 contain **16 admission slots, 4 actual collectors, 2 valid sessions, 2 collected-but-invalid sessions and 12 pre-Godot refusals**. W1/W200 attempt1 valid. W-multi attempt1 ran but end load invalid; W0 attempt2 ran but end load and probe invalid. All other slots were denied before Godot. Matrix collector counts: W0=1,W1=1,W200=1,W-multi=1,W500=0; no matrix target has reached three executed checks. Section timers and ablation each have zero actual collectors, despite two admission slots.
+
+Attempt3 after 16:43:12Z is **planned, not run**. Booked cumulative wait is 5886.583217859268 seconds; the next 1800-second union interval is prospective and not added. All failures/raw evidence remain. Full measurement-local manifests are stable across both attempts; cross-checkout full manifests are **not equal**. Qualification establishes tracked runtime sources, imported-resource bytes and loaded bridge equivalence only. Frozen HEAD 40aa7a46 and bridge 30ed9754 remain unchanged.
+
+## Attempt3 terminal / attempt4 waiting — 2026-10-19T16:50:43.689556+00:00
+
+Attempt3 supervisor69016 exited 0; all measurement-local snapshots remain equal. Seven slots produced three actual collectors: W0/W500 **VALID**, W-multi **invalid end load8.11865234375 >8**. Three section timers and ablation were denied before launch. Cumulative Part4: **23 slots,7 collectors,4 valid,3 invalid-end,16 refusals**. W-multi has2 actual failed checks; W0 one failed and one valid. Section timers/ablation have0 actual collectors. No matrix target has reached three failed executions.
+
+Attempt4 is waiting (session26762), earliest **17:18:49Z**, epoch1792430329 after last completion1792428528.382771. No terminal verdict exists. Booked wait is **7686.698958873749seconds**; next interval prospectively adds1800.617229seconds, leaving1312.683812seconds, insufficient for another30-minute cooldown. External control order is sectionsW200, W-multi, W500, ablation, then remaining matrix; sources/flags stay frozen. Earlier attempt3-planned/attempt2-total paragraphs are historical snapshots.
+
+## Part4 terminal audit — 2026-10-19T17:21:02.485487Z
+
+**TERMINAL NOT_VERIFIED: wait budget prevents another retry.** Attempt4 supervisor 26762 and recovery 53175 both exited 0. All local snapshot checks are exact. Final census: **29 file-slots = 7 actual collectors (4 valid, 3 invalid-end) + 21 probe/prelaunch denials + 1 wrong-item policy denial**. W-multi has two actual failed checks, not three; three-strike exhaustion is not the stop reason. W-multi valid measurement, all three section timers and ablation remain NOT_VERIFIED.
+
+External order change leaked exported `P13_ITEM=after-ablation-W200` into matrix execution. W-multi file4 was refused under the wrong policy item **before any probe or Godot**. Fresh-shell recovery explicitly unset `P13_ITEM`/`P13_VALIDITY_OUT`; file5 was the true fourth W-multi admitted opportunity and was denied on start load 17.5810546875. Both artifacts and original ledger history remain; file numbering is not rewritten or treated as five collector runs.
+
+Final booked wait **9487.316187858582 seconds** leaves **1312.6838121414185 seconds < 1800 seconds** mandatory cooldown. Further admission retry is barred. This is terminal execution, not completed acceptance. Source/bridge freeze is unchanged; the forthcoming Part4 documentation commit is not invented. Prior planned/waiting notes above are historical.

@@ -1,0 +1,13 @@
+{
+  "status": "NOT_VERIFIED",
+  "collection_status": "TERMINAL_PARTIAL_WAIT_BUDGET",
+  "files": 280,
+  "copied_files": 269,
+  "external_only_files": 11,
+  "all_source_bytes": 105236154,
+  "copied_bytes": 25898696,
+  "external_only_bytes": 79337458,
+  "verified_all_source_hashes_and_sizes": true,
+  "verified_all_copy_hashes_and_sizes": true,
+  "aggregation": "terminal outputs owner-confirmed complete; copied and verified"
+}

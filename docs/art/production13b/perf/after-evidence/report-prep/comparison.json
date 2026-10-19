@@ -1,0 +1,6435 @@
+{
+  "status": "TERMINAL_NOT_VERIFIED",
+  "sources": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/perf/before-reference.json",
+      "sha256": "9baa9440709d47a083b6ba39d43f4184639898c15bce995dab80ef87294ad322"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/perf/calibration.json",
+      "sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/art/production13b/perf/after.json",
+      "sha256": "98a53545ad1e31efc5ee1dc1fda08f6886af6bb6296570ad759455cd9beb7fcb"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/after-aggregation-helper/aggregate_after.py",
+      "sha256": "52c6ae7e09a2b657f6c820353bf13a9591cea208038b508d8516feafec6a7de5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt3.json",
+      "sha256": "88a259d10b7c0576f59bd2ec8f3a7239e38b0d33f2c86aa42355c4b14fe5c7a2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt3.json",
+      "sha256": "e02790ec306421c6a4a46fd82f73dbc860f0383942b91876d3475be1eaad028b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W1-attempt1.json",
+      "sha256": "4b8d4361f70584625a1cf3849db7e63e62df56299470d8552c5de7c6dce9398b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W200-attempt1.json",
+      "sha256": "8786f46c5f061dff1af94490bbb6cf3cdbd942febf84cc5a123b768304a495af"
+    }
+  ],
+  "historical_R": 2.0089961669873446,
+  "current_R": 2.762010041042231,
+  "calibration_runs": [
+    {
+      "epoch": 1792411868.931956,
+      "wall_seconds": 2.8725179590983316,
+      "load_1m": 17.44970703125,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792411891.880399,
+      "wall_seconds": 2.838410999975167,
+      "load_1m": 18.86865234375,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792411914.773515,
+      "wall_seconds": 3.034052166971378,
+      "load_1m": 14.947265625,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792411937.866375,
+      "wall_seconds": 2.754094292060472,
+      "load_1m": 16.224609375,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792411960.685162,
+      "wall_seconds": 2.9070539579261094,
+      "load_1m": 13.93310546875,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792411983.6479812,
+      "wall_seconds": 3.359423916088417,
+      "load_1m": 11.7978515625,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412007.065152,
+      "wall_seconds": 2.787542709033005,
+      "load_1m": 13.53173828125,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412029.91071,
+      "wall_seconds": 2.8077280829893425,
+      "load_1m": 11.7666015625,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412052.777726,
+      "wall_seconds": 2.7696236670017242,
+      "load_1m": 11.41015625,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412075.610689,
+      "wall_seconds": 2.762029125005938,
+      "load_1m": 12.3466796875,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412098.429874,
+      "wall_seconds": 2.762010041042231,
+      "load_1m": 11.361328125,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412121.2502809,
+      "wall_seconds": 2.7651633749483153,
+      "load_1m": 9.38720703125,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412144.069709,
+      "wall_seconds": 2.790780666982755,
+      "load_1m": 9.09521484375,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412166.91402,
+      "wall_seconds": 2.7614519170019776,
+      "load_1m": 7.78759765625,
+      "checksum": 4216682400
+    },
+    {
+      "epoch": 1792412189.7347069,
+      "wall_seconds": 3.019692290923558,
+      "load_1m": 9.9853515625,
+      "checksum": 4216682400
+    }
+  ],
+  "H1_H11": [
+    {
+      "criterion": "H1",
+      "world": "W0",
+      "condition": "frozen_Z4_0.0x",
+      "metric": "median",
+      "before_value_ms": 2.82349999928474,
+      "bar_ms": 6,
+      "before_bar_result": "PASS",
+      "after_status": "PASS",
+      "after_value": 3.188000002205375,
+      "after_before_ratio": 1.1290950958076755
+    },
+    {
+      "criterion": "H2",
+      "world": "W1",
+      "condition": "running_Z4_2.0x",
+      "metric": "p99",
+      "before_value_ms": 13.9210000072718,
+      "bar_ms": 16.67,
+      "before_bar_result": "PASS",
+      "after_status": "PASS",
+      "after_value": 13.4150000044107,
+      "after_before_ratio": 0.9636520363050941
+    },
+    {
+      "criterion": "H3",
+      "world": "W200",
+      "condition": "running_Z4_2.0x",
+      "metric": "median",
+      "before_value_ms": 26.1450000026822,
+      "bar_ms": 16.67,
+      "before_bar_result": "FAIL",
+      "after_status": "FAIL",
+      "after_value": 17.0394999995828,
+      "after_before_ratio": 0.6517307323708063
+    },
+    {
+      "criterion": "H4",
+      "world": "W200",
+      "condition": "frozen_Z4_0.0x",
+      "metric": "median",
+      "before_value_ms": 16.2574999999404,
+      "bar_ms": 10,
+      "before_bar_result": "FAIL",
+      "after_status": "FAIL",
+      "after_value": 11.2804999961257,
+      "after_before_ratio": 0.6938643700548703
+    },
+    {
+      "criterion": "H5",
+      "world": "W500",
+      "condition": "frozen_Z4_0.0x",
+      "metric": "median",
+      "before_value_ms": 28.4035000009537,
+      "bar_ms": 16.67,
+      "before_bar_result": "FAIL",
+      "after_status": "FAIL",
+      "after_value": 23.324500000715247,
+      "after_before_ratio": 0.8211840090105826
+    },
+    {
+      "criterion": "H6",
+      "before": "W-multi running measured; W500 running excluded population loss",
+      "before_bar_result": "REPORT_ONLY",
+      "after_value": null,
+      "after_before_ratio": null,
+      "after_status": "NOT_VERIFIED_IN_PART4_TABLE"
+    },
+    {
+      "criterion": "H7",
+      "before": "Accepted declump: six exact RGBA captures and2280 byte-identical running/pan frames",
+      "before_bar_result": "CANDIDATE_IDENTITY_PASS_NOT_FINAL_UI",
+      "after_value": null,
+      "after_before_ratio": null,
+      "after_status": "NOT_VERIFIED_IN_PART4_TABLE"
+    },
+    {
+      "criterion": "H8",
+      "before": {
+        "stage_a": "7/7",
+        "stage_b": "NOT_RUN",
+        "framebuffer_contrast": "NOT_MEASURED",
+        "source_pair_min_xor_union": 0.613636,
+        "source_pair_min_hue_degrees": 49.606318,
+        "source_icon_dimensions_px": {
+          "default": [
+            20,
+            20
+          ],
+          "Craft": [
+            22,
+            22
+          ]
+        },
+        "headless_Z4_dimensions_px": {
+          "default": [
+            80,
+            80
+          ],
+          "Craft": [
+            88,
+            88
+          ]
+        },
+        "summary_dimensions_px": {
+          "default": [
+            40,
+            40
+          ],
+          "Craft": [
+            44,
+            44
+          ]
+        },
+        "source_pair_count": 21,
+        "stage_a_repeat": "NOT_RUN; first7/7 retained",
+        "no_legend": "NOT_RUN",
+        "village_summary": "NOT_RUN"
+      },
+      "before_bar_result": "NOT_VERIFIED",
+      "after_value": null,
+      "after_before_ratio": null,
+      "after_status": "NOT_VERIFIED_IN_PART4_TABLE"
+    },
+    {
+      "criterion": "H9",
+      "before": {
+        "actual_font_px": 48,
+        "pair_count": 10442,
+        "glyph_pairs": "PASS historical >=12 actual pixels",
+        "fact_reading": "NOT_RUN",
+        "real_input": "NOT_VERIFIED",
+        "closest_actual_pixel_minima": {
+          "KO_regular": 16,
+          "KO_bold": 32,
+          "Latin_regular": 48,
+          "Latin_bold": 96
+        },
+        "historical_failed_attempts": {
+          "actual24_KO_regular_failed_pairs": 11,
+          "actual24_KO_bold_failed_pairs": 9,
+          "actual36_KO_regular_failed_pairs": 9
+        }
+      },
+      "before_bar_result": "NOT_VERIFIED",
+      "comparability": "13b uses24px and >=1 design pixel; historical12actual-pixel bar is not same criterion.",
+      "after_value": null,
+      "after_before_ratio": null,
+      "after_status": "NOT_VERIFIED_IN_PART4_TABLE"
+    },
+    {
+      "criterion": "H10",
+      "before": "game_v26 init/reset contract verified; final porter/relationship/peace screen evidence NOT_VERIFIED",
+      "before_bar_result": "NOT_VERIFIED",
+      "after_value": null,
+      "after_before_ratio": null,
+      "after_status": "NOT_VERIFIED_IN_PART4_TABLE"
+    },
+    {
+      "criterion": "H11",
+      "before": "New in13b; historical running diagnosis and accepted declump ratios supplied as before reference",
+      "before_bar_result": "REPORT_ONLY",
+      "after_value": null,
+      "after_before_ratio": null,
+      "after_status": "NOT_VERIFIED_IN_PART4_TABLE"
+    }
+  ],
+  "matrix": {
+    "W0": {
+      "kind": "matrix",
+      "coverage": "COMPLETE_RAW_SHAPE",
+      "blocks": [
+        {
+          "label": "frozen_Z4_0",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 29,
+          "population_end": 29,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 3.367500005185605,
+                "p90": 3.67399999809265,
+                "p99": 4.07999999916554,
+                "max": 4.63299999690056,
+                "mean": 3.3505633334771794
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 3.1825,
+                "p90": 3.483,
+                "p99": 3.926,
+                "max": 4.436,
+                "mean": 3.17586
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.173499993979931,
+                "p90": 0.218999996781349,
+                "p99": 0.233999997377396,
+                "max": 0.243000000715256,
+                "mean": 0.1747033334771792
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.008,
+                "p90": 0.011,
+                "p99": 0.014,
+                "max": 0.016,
+                "mean": 0.00818
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 8.014,
+                "p90": 8.626,
+                "p99": 13.591,
+                "max": 18.932,
+                "mean": 6.94433
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40560,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40560,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_1",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 29,
+          "population_end": 29,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 3.10550000739098,
+                "p90": 3.441,
+                "p99": 3.86300000119209,
+                "max": 4.24099999821186,
+                "mean": 3.120949999825557
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 2.954,
+                "p90": 3.263,
+                "p99": 3.708,
+                "max": 4.036,
+                "mean": 2.96334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.15199999511241902,
+                "p90": 0.196999996900558,
+                "p99": 0.217999994754791,
+                "max": 0.225999996066093,
+                "mean": 0.15760999982555707
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.006,
+                "p90": 0.009,
+                "p99": 0.011,
+                "max": 0.012,
+                "mean": 0.005933333333333333
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 8.100000000000001,
+                "p90": 11.95,
+                "p99": 14.871,
+                "max": 16.985,
+                "mean": 7.166496666666666
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40560,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40560,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_2",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 29,
+          "population_end": 29,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 3.089000000536445,
+                "p90": 3.45300000166893,
+                "p99": 3.94699999523163,
+                "max": 4.52299999845028,
+                "mean": 3.123993333692352
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 2.934,
+                "p90": 3.27,
+                "p99": 3.786,
+                "max": 4.362,
+                "mean": 2.9669166666666666
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.14950000494718552,
+                "p90": 0.194999992847443,
+                "p99": 0.232999995350838,
+                "max": 0.245000004768372,
+                "mean": 0.15707666702568532
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.006,
+                "p90": 0.009,
+                "p99": 0.011,
+                "max": 0.011,
+                "mean": 0.0057733333333333334
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 8.0605,
+                "p90": 10.647,
+                "p99": 13.36,
+                "max": 17.044,
+                "mean": 7.100086666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40560,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40560,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_0",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 29,
+          "population_end": 29,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40896,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 299.0,
+            "tick_carrying_frames": 299,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 5.1879999961257,
+                "p90": 5.49200000047684,
+                "p99": 5.72000000596046,
+                "max": 5.77100000190735,
+                "mean": 5.185523333496253
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.0375,
+                "p90": 5.342,
+                "p99": 5.576,
+                "max": 5.623,
+                "mean": 5.03934
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.144999995827675,
+                "p90": 0.158000007271767,
+                "p99": 0.174999997019768,
+                "max": 0.186000004410744,
+                "mean": 0.14618333349625273
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.0085,
+                "p90": 0.011,
+                "p99": 0.013,
+                "max": 0.013,
+                "mean": 0.00845
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.662,
+                "p90": 17.891,
+                "p99": 18.704,
+                "max": 19.563,
+                "mean": 16.666723333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 0.9966666666666667
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 299,
+                "median": 5.18899999916554,
+                "p90": 5.49200000596046,
+                "p99": 5.72799999511242,
+                "max": 5.77100000190735,
+                "mean": 5.188086956697164
+              },
+              "process_ms": {
+                "count": 299,
+                "median": 5.038,
+                "p90": 5.342,
+                "p99": 5.579,
+                "max": 5.623,
+                "mean": 5.04194983277592
+              },
+              "render_cpu_ms": {
+                "count": 299,
+                "median": 0.144999995827675,
+                "p90": 0.158000007271767,
+                "p99": 0.177000001072884,
+                "max": 0.186000004410744,
+                "mean": 0.14613712392124448
+              },
+              "setup_cpu_ms": {
+                "count": 299,
+                "median": 0.008,
+                "p90": 0.011,
+                "p99": 0.013,
+                "max": 0.013,
+                "mean": 0.008444816053511706
+              },
+              "pacing_ms": {
+                "count": 299,
+                "median": 16.664,
+                "p90": 17.892,
+                "p99": 18.805,
+                "max": 19.563,
+                "mean": 16.675903010033444
+              },
+              "ticks_run": {
+                "count": 299,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40598,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40896,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_1",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 29,
+          "population_end": 29,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40896,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 300.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 5.315000002264981,
+                "p90": 5.60300000190735,
+                "p99": 5.84199999988079,
+                "max": 6.10000000393391,
+                "mean": 5.312743333638906
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.170999999999999,
+                "p90": 5.455,
+                "p99": 5.696,
+                "max": 5.951,
+                "mean": 5.166636666666666
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.144999995827675,
+                "p90": 0.159999996423721,
+                "p99": 0.172000005841255,
+                "max": 0.188999995589256,
+                "mean": 0.14610666697223984
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.01,
+                "p90": 0.012,
+                "p99": 0.014,
+                "max": 0.015,
+                "mean": 0.009443333333333333
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.651,
+                "p90": 17.793,
+                "p99": 19.128,
+                "max": 19.318,
+                "mean": 16.666316666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 5.315000002264981,
+                "p90": 5.60300000190735,
+                "p99": 5.84199999988079,
+                "max": 6.10000000393391,
+                "mean": 5.312743333638906
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.170999999999999,
+                "p90": 5.455,
+                "p99": 5.696,
+                "max": 5.951,
+                "mean": 5.166636666666666
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.144999995827675,
+                "p90": 0.159999996423721,
+                "p99": 0.172000005841255,
+                "max": 0.188999995589256,
+                "mean": 0.14610666697223984
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.01,
+                "p90": 0.012,
+                "p99": 0.014,
+                "max": 0.015,
+                "mean": 0.009443333333333333
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.651,
+                "p90": 17.793,
+                "p99": 19.128,
+                "max": 19.318,
+                "mean": 16.666316666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40597,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40896,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_2",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 29,
+          "population_end": 29,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40896,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 300.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 5.309000000834465,
+                "p90": 5.63299999582768,
+                "p99": 5.89999999499321,
+                "max": 6.05600000596046,
+                "mean": 5.3188866670809185
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.159,
+                "p90": 5.476,
+                "p99": 5.739,
+                "max": 5.906,
+                "mean": 5.17117
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.146999999880791,
+                "p90": 0.164000004529953,
+                "p99": 0.178000003099442,
+                "max": 0.187000006437302,
+                "mean": 0.14771666708091896
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.009,
+                "p90": 0.011,
+                "p99": 0.014,
+                "max": 0.017,
+                "mean": 0.00884
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.6565,
+                "p90": 17.804,
+                "p99": 18.879,
+                "max": 19.173,
+                "mean": 16.664556666666666
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 5.309000000834465,
+                "p90": 5.63299999582768,
+                "p99": 5.89999999499321,
+                "max": 6.05600000596046,
+                "mean": 5.3188866670809185
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.159,
+                "p90": 5.476,
+                "p99": 5.739,
+                "max": 5.906,
+                "mean": 5.17117
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.146999999880791,
+                "p90": 0.164000004529953,
+                "p99": 0.178000003099442,
+                "max": 0.187000006437302,
+                "mean": 0.14771666708091896
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.009,
+                "p90": 0.011,
+                "p99": 0.014,
+                "max": 0.017,
+                "mean": 0.00884
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.6565,
+                "p90": 17.804,
+                "p99": 18.879,
+                "max": 19.173,
+                "mean": 16.664556666666666
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40597,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                808.0,
+                356.0
+              ],
+              "population": 29,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 40896,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        }
+      ],
+      "eligible_pooled": {
+        "frozen_Z4_0.0x": {
+          "frames": 900,
+          "ticks_total": 0.0,
+          "tick_carrying_frames": 0,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 3.188000002205375,
+              "p90": 3.55600000166893,
+              "p99": 3.96899999916553,
+              "max": 4.63299999690056,
+              "mean": 3.198502222331696
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 3.023,
+              "p90": 3.36,
+              "p99": 3.818,
+              "max": 4.436,
+              "mean": 3.035372222222222
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.153999999165535,
+              "p90": 0.207000002264977,
+              "p99": 0.232999995350838,
+              "max": 0.245000004768372,
+              "mean": 0.16313000010947384
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.006,
+              "p90": 0.01,
+              "p99": 0.012,
+              "max": 0.016,
+              "mean": 0.006628888888888889
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 8.056999999999999,
+              "p90": 9.807,
+              "p99": 13.591,
+              "max": 18.932,
+              "mean": 7.070304444444444
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 0.0,
+              "p90": 0.0,
+              "p99": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "process_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "render_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "setup_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "pacing_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "ticks_run": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40560,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        },
+        "running_Z4_2.0x": {
+          "frames": 900,
+          "ticks_total": 899.0,
+          "tick_carrying_frames": 899,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 5.261999998450275,
+              "p90": 5.59899999380112,
+              "p99": 5.86199999654293,
+              "max": 6.10000000393391,
+              "mean": 5.272384444738693
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 5.1175,
+              "p90": 5.447,
+              "p99": 5.697,
+              "max": 5.951,
+              "mean": 5.125715555555556
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.145999997854233,
+              "p90": 0.159999996423721,
+              "p99": 0.177000001072884,
+              "max": 0.188999995589256,
+              "mean": 0.14666888918313717
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.009,
+              "p90": 0.011,
+              "p99": 0.013,
+              "max": 0.017,
+              "mean": 0.008911111111111111
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 16.6555,
+              "p90": 17.871,
+              "p99": 18.911,
+              "max": 19.563,
+              "mean": 16.665865555555555
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 1.0,
+              "p90": 1.0,
+              "p99": 1.0,
+              "max": 1.0,
+              "mean": 0.9988888888888889
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 899,
+              "median": 5.26200000107288,
+              "p90": 5.59999999713898,
+              "p99": 5.86299999368191,
+              "max": 6.10000000393391,
+              "mean": 5.273333704414238
+            },
+            "process_ms": {
+              "count": 899,
+              "median": 5.118,
+              "p90": 5.448,
+              "p99": 5.714,
+              "max": 5.951,
+              "mean": 5.126679644048943
+            },
+            "render_cpu_ms": {
+              "count": 899,
+              "median": 0.145999997854233,
+              "p90": 0.159999996423721,
+              "p99": 0.177000001072884,
+              "max": 0.188999995589256,
+              "mean": 0.14665406036529446
+            },
+            "setup_cpu_ms": {
+              "count": 899,
+              "median": 0.009,
+              "p90": 0.011,
+              "p99": 0.013,
+              "max": 0.017,
+              "mean": 0.008909899888765295
+            },
+            "pacing_ms": {
+              "count": 899,
+              "median": 16.656,
+              "p90": 17.882,
+              "p99": 19.041,
+              "max": 19.563,
+              "mean": 16.66891768631813
+            },
+            "ticks_run": {
+              "count": 899,
+              "median": 1.0,
+              "p90": 1.0,
+              "p99": 1.0,
+              "max": 1.0,
+              "mean": 1.0
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40598,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 1,
+            "camera": [
+              808.0,
+              356.0
+            ],
+            "population": 29,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 40896,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        }
+      },
+      "split_fragments": [],
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt3.json",
+        "sha256": "88a259d10b7c0576f59bd2ec8f3a7239e38b0d33f2c86aa42355c4b14fe5c7a2"
+      }
+    },
+    "W500": {
+      "kind": "matrix",
+      "coverage": "COMPLETE_RAW_SHAPE",
+      "blocks": [
+        {
+          "label": "frozen_Z4_0",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 500,
+          "population_end": 500,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 23.18100000083445,
+                "p90": 24.2359999976158,
+                "p99": 24.9469999902248,
+                "max": 25.5709999909401,
+                "mean": 23.272996666279234
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 22.9115,
+                "p90": 23.947,
+                "p99": 24.643,
+                "max": 25.274,
+                "mean": 22.997746666666668
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.273000001907349,
+                "p90": 0.303000003099442,
+                "p99": 0.333000004291534,
+                "max": 0.358000010251999,
+                "mean": 0.27524999961256985
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.066,
+                "p90": 0.079,
+                "p99": 0.09,
+                "max": 0.093,
+                "mean": 0.06800333333333333
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 25.4235,
+                "p90": 26.679,
+                "p99": 27.336,
+                "max": 28.155,
+                "mean": 25.5168
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_1",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 500,
+          "population_end": 500,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 23.2285000013709,
+                "p90": 23.9919999949932,
+                "p99": 24.5460000011921,
+                "max": 25.3869999969006,
+                "mean": 23.25692666689634
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 22.95,
+                "p90": 23.71,
+                "p99": 24.266,
+                "max": 25.065,
+                "mean": 22.98598
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.268999993801117,
+                "p90": 0.298000007867813,
+                "p99": 0.323000013828278,
+                "max": 0.36599999666214,
+                "mean": 0.2709466668963433
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.08,
+                "p90": 0.1,
+                "p99": 0.111,
+                "max": 0.12,
+                "mean": 0.08277333333333334
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 25.5395,
+                "p90": 26.288,
+                "p99": 26.994,
+                "max": 27.773,
+                "mean": 25.540613333333333
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_2",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 500,
+          "population_end": 500,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 23.52850000214575,
+                "p90": 24.459999986887,
+                "p99": 25.3019999938011,
+                "max": 25.7600000033379,
+                "mean": 23.589633333498238
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 23.2605,
+                "p90": 24.183,
+                "p99": 25.033,
+                "max": 25.501,
+                "mean": 23.316316666666665
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.272000014781952,
+                "p90": 0.29899999499321,
+                "p99": 0.333999991416931,
+                "max": 0.360000014305115,
+                "mean": 0.27331666683157285
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.067,
+                "p90": 0.08,
+                "p99": 0.086,
+                "max": 0.091,
+                "mean": 0.06825333333333333
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 25.811999999999998,
+                "p90": 26.794,
+                "p99": 27.638,
+                "max": 28.119,
+                "mean": 25.862156666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_0",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 500,
+          "population_end": 500,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 2324,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 798.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 41.67199999630455,
+                "p90": 43.3880000004768,
+                "p99": 44.969000014782,
+                "max": 46.1889999935627,
+                "mean": 41.708493333329756
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 41.388,
+                "p90": 43.101,
+                "p99": 44.697,
+                "max": 45.876,
+                "mean": 41.42283333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.284000009298325,
+                "p90": 0.319000005722046,
+                "p99": 0.352999985218048,
+                "max": 0.370999991893768,
+                "mean": 0.2856599999964237
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.072,
+                "p90": 0.094,
+                "p99": 0.105,
+                "max": 0.111,
+                "mean": 0.07563666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 44.1445,
+                "p90": 45.867,
+                "p99": 47.58,
+                "max": 48.88,
+                "mean": 44.216026666666664
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 3.0,
+                "p90": 3.0,
+                "p99": 3.0,
+                "max": 5.0,
+                "mean": 2.66
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 41.67199999630455,
+                "p90": 43.3880000004768,
+                "p99": 44.969000014782,
+                "max": 46.1889999935627,
+                "mean": 41.708493333329756
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 41.388,
+                "p90": 43.101,
+                "p99": 44.697,
+                "max": 45.876,
+                "mean": 41.42283333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.284000009298325,
+                "p90": 0.319000005722046,
+                "p99": 0.352999985218048,
+                "max": 0.370999991893768,
+                "mean": 0.2856599999964237
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.072,
+                "p90": 0.094,
+                "p99": 0.105,
+                "max": 0.111,
+                "mean": 0.07563666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 44.1445,
+                "p90": 45.867,
+                "p99": 47.58,
+                "max": 48.88,
+                "mean": 44.216026666666664
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 3.0,
+                "p90": 3.0,
+                "p99": 3.0,
+                "max": 5.0,
+                "mean": 2.66
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1531,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 2324,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_1",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 500,
+          "population_end": 500,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 2318,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 791.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 41.329499998807904,
+                "p90": 43.0719999997616,
+                "p99": 44.7970000126362,
+                "max": 45.9610000004768,
+                "mean": 41.37141666680932
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 41.046,
+                "p90": 42.778,
+                "p99": 44.504,
+                "max": 45.674,
+                "mean": 41.08399333333333
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.28600001335144,
+                "p90": 0.323000013828278,
+                "p99": 0.358999997377396,
+                "max": 0.375,
+                "mean": 0.28742333347598714
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.071,
+                "p90": 0.091,
+                "p99": 0.105,
+                "max": 0.11,
+                "mean": 0.07366666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 43.841,
+                "p90": 45.52,
+                "p99": 47.242,
+                "max": 48.554,
+                "mean": 43.856406666666665
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 3.0,
+                "p90": 3.0,
+                "p99": 3.0,
+                "max": 5.0,
+                "mean": 2.6366666666666667
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 41.329499998807904,
+                "p90": 43.0719999997616,
+                "p99": 44.7970000126362,
+                "max": 45.9610000004768,
+                "mean": 41.37141666680932
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 41.046,
+                "p90": 42.778,
+                "p99": 44.504,
+                "max": 45.674,
+                "mean": 41.08399333333333
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.28600001335144,
+                "p90": 0.323000013828278,
+                "p99": 0.358999997377396,
+                "max": 0.375,
+                "mean": 0.28742333347598714
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.071,
+                "p90": 0.091,
+                "p99": 0.105,
+                "max": 0.11,
+                "mean": 0.07366666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 43.841,
+                "p90": 45.52,
+                "p99": 47.242,
+                "max": 48.554,
+                "mean": 43.856406666666665
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 3.0,
+                "p90": 3.0,
+                "p99": 3.0,
+                "max": 5.0,
+                "mean": 2.6366666666666667
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1532,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 2318,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_2",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 500,
+          "population_end": 500,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 2304,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 780.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 40.704500010252005,
+                "p90": 42.3799999935627,
+                "p99": 43.8500000126362,
+                "max": 44.7710000119209,
+                "mean": 40.782869999910595
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 40.432,
+                "p90": 42.067,
+                "p99": 43.57,
+                "max": 44.471,
+                "mean": 40.504286666666665
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.275999993085861,
+                "p90": 0.310000002384186,
+                "p99": 0.337000012397766,
+                "max": 0.354999989271164,
+                "mean": 0.27858333324392637
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.068,
+                "p90": 0.086,
+                "p99": 0.099,
+                "max": 0.112,
+                "mean": 0.07072666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 43.162499999999994,
+                "p90": 45.035,
+                "p99": 46.572,
+                "max": 47.095,
+                "mean": 43.22376
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 3.0,
+                "p90": 3.0,
+                "p99": 3.0,
+                "max": 4.0,
+                "mean": 2.6
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 40.704500010252005,
+                "p90": 42.3799999935627,
+                "p99": 43.8500000126362,
+                "max": 44.7710000119209,
+                "mean": 40.782869999910595
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 40.432,
+                "p90": 42.067,
+                "p99": 43.57,
+                "max": 44.471,
+                "mean": 40.504286666666665
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.275999993085861,
+                "p90": 0.310000002384186,
+                "p99": 0.337000012397766,
+                "max": 0.354999989271164,
+                "mean": 0.27858333324392637
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.068,
+                "p90": 0.086,
+                "p99": 0.099,
+                "max": 0.112,
+                "mean": 0.07072666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 43.162499999999994,
+                "p90": 45.035,
+                "p99": 46.572,
+                "max": 47.095,
+                "mean": 43.22376
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 3.0,
+                "p90": 3.0,
+                "p99": 3.0,
+                "max": 4.0,
+                "mean": 2.6
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1528,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 500,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 2304,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        }
+      ],
+      "eligible_pooled": {
+        "frozen_Z4_0.0x": {
+          "frames": 900,
+          "ticks_total": 0.0,
+          "tick_carrying_frames": 0,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 23.324500000715247,
+              "p90": 24.2359999976158,
+              "p99": 25.0850000092983,
+              "max": 25.7600000033379,
+              "mean": 23.373185555557935
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 23.049500000000002,
+              "p90": 23.947,
+              "p99": 24.83,
+              "max": 25.501,
+              "mean": 23.100014444444444
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.270999997854233,
+              "p90": 0.29899999499321,
+              "p99": 0.333999991416931,
+              "max": 0.36599999666214,
+              "mean": 0.27317111111349535
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.071,
+              "p90": 0.089,
+              "p99": 0.109,
+              "max": 0.12,
+              "mean": 0.07301
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 25.612499999999997,
+              "p90": 26.617,
+              "p99": 27.548,
+              "max": 28.155,
+              "mean": 25.639856666666667
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 0.0,
+              "p90": 0.0,
+              "p99": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "process_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "render_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "setup_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "pacing_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "ticks_run": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        },
+        "running_Z4_2.0x": {
+          "frames": 900,
+          "ticks_total": 2369.0,
+          "tick_carrying_frames": 900,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 41.2404999933243,
+              "p90": 42.9769999938011,
+              "p99": 44.7710000119209,
+              "max": 46.1889999935627,
+              "mean": 41.28759333334989
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 40.95,
+              "p90": 42.701,
+              "p99": 44.471,
+              "max": 45.876,
+              "mean": 41.003704444444445
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.282000005245209,
+              "p90": 0.317999988794327,
+              "p99": 0.352999985218048,
+              "max": 0.375,
+              "mean": 0.2838888889054457
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.07,
+              "p90": 0.09,
+              "p99": 0.105,
+              "max": 0.112,
+              "mean": 0.07334333333333333
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 43.737,
+              "p90": 45.497,
+              "p99": 47.311,
+              "max": 48.88,
+              "mean": 43.76539777777778
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 3.0,
+              "p90": 3.0,
+              "p99": 3.0,
+              "max": 5.0,
+              "mean": 2.632222222222222
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 41.2404999933243,
+              "p90": 42.9769999938011,
+              "p99": 44.7710000119209,
+              "max": 46.1889999935627,
+              "mean": 41.28759333334989
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 40.95,
+              "p90": 42.701,
+              "p99": 44.471,
+              "max": 45.876,
+              "mean": 41.003704444444445
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.282000005245209,
+              "p90": 0.317999988794327,
+              "p99": 0.352999985218048,
+              "max": 0.375,
+              "mean": 0.2838888889054457
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.07,
+              "p90": 0.09,
+              "p99": 0.105,
+              "max": 0.112,
+              "mean": 0.07334333333333333
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 43.737,
+              "p90": 45.497,
+              "p99": 47.311,
+              "max": 48.88,
+              "mean": 43.76539777777778
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 3.0,
+              "p90": 3.0,
+              "p99": 3.0,
+              "max": 5.0,
+              "mean": 2.632222222222222
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1531,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 500,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 2304,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        }
+      },
+      "split_fragments": [],
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt3.json",
+        "sha256": "e02790ec306421c6a4a46fd82f73dbc860f0383942b91876d3475be1eaad028b"
+      }
+    },
+    "W1": {
+      "kind": "matrix",
+      "coverage": "COMPLETE_RAW_SHAPE",
+      "blocks": [
+        {
+          "label": "frozen_Z4_0",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 71,
+          "population_end": 71,
+          "start_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 6.0434999984502795,
+                "p90": 6.62900000452995,
+                "p99": 10.5869999935627,
+                "max": 11.2769999953508,
+                "mean": 6.139119999734163
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.8740000000000006,
+                "p90": 6.465,
+                "p99": 10.399,
+                "max": 11.095,
+                "mean": 5.97131
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.163000002503395,
+                "p90": 0.195999994874001,
+                "p99": 0.234999999403954,
+                "max": 0.282999992370605,
+                "mean": 0.1678099997341633
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.012,
+                "p90": 0.017,
+                "p99": 0.022,
+                "max": 0.026,
+                "mean": 0.011976666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 8.0835,
+                "p90": 8.678,
+                "p99": 12.466,
+                "max": 13.412,
+                "mean": 8.036973333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 126994,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 126994,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_1",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 71,
+          "population_end": 71,
+          "start_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 6.231499998509885,
+                "p90": 6.69599999690056,
+                "p99": 10.4220000032187,
+                "max": 11.232000005126,
+                "mean": 6.336736667116881
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 6.060499999999999,
+                "p90": 6.499,
+                "p99": 10.266,
+                "max": 11.053,
+                "mean": 6.163573333333333
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.168999999761581,
+                "p90": 0.202000007033348,
+                "p99": 0.24600000679493,
+                "max": 0.263999998569489,
+                "mean": 0.17316333378354706
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.014,
+                "p90": 0.018,
+                "p99": 0.021,
+                "max": 0.028,
+                "mean": 0.013866666666666666
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 8.1695,
+                "p90": 8.686,
+                "p99": 12.494,
+                "max": 14.813,
+                "mean": 8.196083333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 126994,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 126994,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_2",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 71,
+          "population_end": 71,
+          "start_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 6.014000000417235,
+                "p90": 6.53099999368191,
+                "p99": 11.2509999940395,
+                "max": 11.63999999547,
+                "mean": 6.136953333369494
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 5.85,
+                "p90": 6.361,
+                "p99": 11.026,
+                "max": 11.429,
+                "mean": 5.96946
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.162000000476837,
+                "p90": 0.194999992847443,
+                "p99": 0.241999998688698,
+                "max": 0.268999993801117,
+                "mean": 0.16749333336949349
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.011,
+                "p90": 0.016,
+                "p99": 0.024,
+                "max": 0.029,
+                "mean": 0.011783333333333333
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 7.84,
+                "p90": 8.786,
+                "p99": 12.862,
+                "max": 13.25,
+                "mean": 8.023596666666666
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 126994,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 126994,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_0",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 71,
+          "population_end": 71,
+          "start_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 127330,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 300.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 11.8435000022054,
+                "p90": 12.3700000025034,
+                "p99": 12.8870000065565,
+                "max": 14.7229999974966,
+                "mean": 11.843840000280942
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 11.6765,
+                "p90": 12.211,
+                "p99": 12.722,
+                "max": 14.511,
+                "mean": 11.674436666666667
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.165999993681908,
+                "p90": 0.19200000166893,
+                "p99": 0.217999994754791,
+                "max": 0.221000000834465,
+                "mean": 0.16940333361426987
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.014,
+                "p90": 0.017,
+                "p99": 0.022,
+                "max": 0.027,
+                "mean": 0.01438
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.685000000000002,
+                "p90": 17.484,
+                "p99": 18.124,
+                "max": 18.834,
+                "mean": 16.667143333333332
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 11.8435000022054,
+                "p90": 12.3700000025034,
+                "p99": 12.8870000065565,
+                "max": 14.7229999974966,
+                "mean": 11.843840000280942
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 11.6765,
+                "p90": 12.211,
+                "p99": 12.722,
+                "max": 14.511,
+                "mean": 11.674436666666667
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.165999993681908,
+                "p90": 0.19200000166893,
+                "p99": 0.217999994754791,
+                "max": 0.221000000834465,
+                "mean": 0.16940333361426987
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.014,
+                "p90": 0.017,
+                "p99": 0.022,
+                "max": 0.027,
+                "mean": 0.01438
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.685000000000002,
+                "p90": 17.484,
+                "p99": 18.124,
+                "max": 18.834,
+                "mean": 16.667143333333332
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 127031,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 127330,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_1",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 71,
+          "population_end": 71,
+          "start_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 127330,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 300.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 12.35300000035765,
+                "p90": 13.0069999941587,
+                "p99": 13.433999994874,
+                "max": 13.4759999935627,
+                "mean": 12.344539999869273
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 12.176,
+                "p90": 12.834,
+                "p99": 13.238,
+                "max": 13.288,
+                "mean": 12.170413333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.172000005841255,
+                "p90": 0.193000003695488,
+                "p99": 0.210999995470047,
+                "max": 0.216999992728233,
+                "mean": 0.17412666653593384
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.016,
+                "p90": 0.02,
+                "p99": 0.023,
+                "max": 0.032,
+                "mean": 0.01589
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.6345,
+                "p90": 17.486,
+                "p99": 18.158,
+                "max": 18.359,
+                "mean": 16.66795
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 12.35300000035765,
+                "p90": 13.0069999941587,
+                "p99": 13.433999994874,
+                "max": 13.4759999935627,
+                "mean": 12.344539999869273
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 12.176,
+                "p90": 12.834,
+                "p99": 13.238,
+                "max": 13.288,
+                "mean": 12.170413333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.172000005841255,
+                "p90": 0.193000003695488,
+                "p99": 0.210999995470047,
+                "max": 0.216999992728233,
+                "mean": 0.17412666653593384
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.016,
+                "p90": 0.02,
+                "p99": 0.023,
+                "max": 0.032,
+                "mean": 0.01589
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.6345,
+                "p90": 17.486,
+                "p99": 18.158,
+                "max": 18.359,
+                "mean": 16.66795
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 127031,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 127330,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_2",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 71,
+          "population_end": 71,
+          "start_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 127330,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 300.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 12.04150000071525,
+                "p90": 12.6170000050068,
+                "p99": 13.2980000003576,
+                "max": 14.4770000010729,
+                "mean": 12.050670000352072
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 11.8745,
+                "p90": 12.438,
+                "p99": 13.114,
+                "max": 14.3,
+                "mean": 11.88231
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.166999995708466,
+                "p90": 0.184000000357628,
+                "p99": 0.202000007033348,
+                "max": 0.204999998211861,
+                "mean": 0.16836000035206472
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.015,
+                "p90": 0.02,
+                "p99": 0.023,
+                "max": 0.025,
+                "mean": 0.01504
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.682,
+                "p90": 17.459,
+                "p99": 17.977,
+                "max": 18.567,
+                "mean": 16.665213333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 12.04150000071525,
+                "p90": 12.6170000050068,
+                "p99": 13.2980000003576,
+                "max": 14.4770000010729,
+                "mean": 12.050670000352072
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 11.8745,
+                "p90": 12.438,
+                "p99": 13.114,
+                "max": 14.3,
+                "mean": 11.88231
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.166999995708466,
+                "p90": 0.184000000357628,
+                "p99": 0.202000007033348,
+                "max": 0.204999998211861,
+                "mean": 0.16836000035206472
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.015,
+                "p90": 0.02,
+                "p99": 0.023,
+                "max": 0.025,
+                "mean": 0.01504
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 16.682,
+                "p90": 17.459,
+                "p99": 17.977,
+                "max": 18.567,
+                "mean": 16.665213333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 1.0,
+                "p99": 1.0,
+                "max": 1.0,
+                "mean": 1.0
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 127031,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 3,
+              "camera": [
+                808.0,
+                676.0
+              ],
+              "population": 71,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 127330,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        }
+      ],
+      "eligible_pooled": {
+        "frozen_Z4_0.0x": {
+          "frames": 900,
+          "ticks_total": 0.0,
+          "tick_carrying_frames": 0,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 6.106000003516675,
+              "p90": 6.61499999821186,
+              "p99": 10.9590000064373,
+              "max": 11.63999999547,
+              "mean": 6.204270000073513
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 5.936,
+              "p90": 6.439,
+              "p99": 10.772,
+              "max": 11.429,
+              "mean": 6.034781111111111
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.164000004529953,
+              "p90": 0.196999996900558,
+              "p99": 0.241999998688698,
+              "max": 0.282999992370605,
+              "mean": 0.16948888896240127
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.012,
+              "p90": 0.017,
+              "p99": 0.024,
+              "max": 0.029,
+              "mean": 0.012542222222222222
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 8.0485,
+              "p90": 8.713,
+              "p99": 12.786,
+              "max": 14.813,
+              "mean": 8.08555111111111
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 0.0,
+              "p90": 0.0,
+              "p99": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "process_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "render_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "setup_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "pacing_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "ticks_run": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 126994,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        },
+        "running_Z4_2.0x": {
+          "frames": 900,
+          "ticks_total": 900.0,
+          "tick_carrying_frames": 900,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 12.0500000001788,
+              "p90": 12.766999997735,
+              "p99": 13.4150000044107,
+              "max": 14.7229999974966,
+              "mean": 12.079683333500762
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 11.882000000000001,
+              "p90": 12.595,
+              "p99": 13.229,
+              "max": 14.511,
+              "mean": 11.909053333333333
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.168999999761581,
+              "p90": 0.189999997615814,
+              "p99": 0.209000006318092,
+              "max": 0.221000000834465,
+              "mean": 0.1706300001674228
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.015,
+              "p90": 0.019,
+              "p99": 0.023,
+              "max": 0.032,
+              "mean": 0.015103333333333333
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 16.674,
+              "p90": 17.471,
+              "p99": 18.111,
+              "max": 18.834,
+              "mean": 16.66676888888889
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 1.0,
+              "p90": 1.0,
+              "p99": 1.0,
+              "max": 1.0,
+              "mean": 1.0
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 12.0500000001788,
+              "p90": 12.766999997735,
+              "p99": 13.4150000044107,
+              "max": 14.7229999974966,
+              "mean": 12.079683333500762
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 11.882000000000001,
+              "p90": 12.595,
+              "p99": 13.229,
+              "max": 14.511,
+              "mean": 11.909053333333333
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.168999999761581,
+              "p90": 0.189999997615814,
+              "p99": 0.209000006318092,
+              "max": 0.221000000834465,
+              "mean": 0.1706300001674228
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.015,
+              "p90": 0.019,
+              "p99": 0.023,
+              "max": 0.032,
+              "mean": 0.015103333333333333
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 16.674,
+              "p90": 17.471,
+              "p99": 18.111,
+              "max": 18.834,
+              "mean": 16.66676888888889
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 1.0,
+              "p90": 1.0,
+              "p99": 1.0,
+              "max": 1.0,
+              "mean": 1.0
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 127031,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 3,
+            "camera": [
+              808.0,
+              676.0
+            ],
+            "population": 71,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 127330,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        }
+      },
+      "split_fragments": [],
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W1-attempt1.json",
+        "sha256": "4b8d4361f70584625a1cf3849db7e63e62df56299470d8552c5de7c6dce9398b"
+      }
+    },
+    "W200": {
+      "kind": "matrix",
+      "coverage": "COMPLETE_RAW_SHAPE",
+      "blocks": [
+        {
+          "label": "frozen_Z4_0",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 200,
+          "population_end": 200,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 10.97249999785425,
+                "p90": 11.5280000036955,
+                "p99": 12.0470000061989,
+                "max": 12.4370000035763,
+                "mean": 10.969206666456058
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 10.767,
+                "p90": 11.336,
+                "p99": 11.829,
+                "max": 12.222,
+                "mean": 10.768673333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.197999998927116,
+                "p90": 0.218999996781349,
+                "p99": 0.246999993920326,
+                "max": 0.282999992370605,
+                "mean": 0.20053333312273022
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.027,
+                "p90": 0.034,
+                "p99": 0.042,
+                "max": 0.048,
+                "mean": 0.02775
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 12.5815,
+                "p90": 13.188,
+                "p99": 13.879,
+                "max": 14.098,
+                "mean": 12.566613333333333
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_1",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 200,
+          "population_end": 200,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 11.14950000602005,
+                "p90": 11.5850000048876,
+                "p99": 12.1429999946356,
+                "max": 12.3269999927282,
+                "mean": 11.0957999999841
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 10.9455,
+                "p90": 11.362,
+                "p99": 11.903,
+                "max": 12.11,
+                "mean": 10.89245
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.20100000500679,
+                "p90": 0.219999998807907,
+                "p99": 0.254000008106232,
+                "max": 0.287000000476837,
+                "mean": 0.20334999998410547
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.033,
+                "p90": 0.042,
+                "p99": 0.054,
+                "max": 0.056,
+                "mean": 0.03358
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 12.73,
+                "p90": 13.315,
+                "p99": 13.882,
+                "max": 14.011,
+                "mean": 12.698916666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "frozen_Z4_2",
+          "condition": "frozen",
+          "population_flagged": false,
+          "population_start": 200,
+          "population_end": 200,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 0.0,
+            "tick_carrying_frames": 0,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 12.024499999880799,
+                "p90": 12.7349999986887,
+                "p99": 13.103000014782,
+                "max": 13.3419999941587,
+                "mean": 11.971006666148895
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 11.805,
+                "p90": 12.507,
+                "p99": 12.836,
+                "max": 13.139,
+                "mean": 11.748786666666666
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.218999996781349,
+                "p90": 0.24600000679493,
+                "p99": 0.280000001192093,
+                "max": 0.296000003814697,
+                "mean": 0.22221999948223434
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.029,
+                "p90": 0.035,
+                "p99": 0.039,
+                "max": 0.057,
+                "mean": 0.02942
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 13.6345,
+                "p90": 14.359,
+                "p99": 14.929,
+                "max": 15.048,
+                "mean": 13.602676666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 0.0,
+                "p90": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "process_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "render_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "setup_cpu_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "pacing_ms": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "ticks_run": {
+                "count": 0,
+                "median": null,
+                "p90": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1440,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_0",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 200,
+          "population_end": 200,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1832,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 346.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 17.20400000321865,
+                "p90": 19.2180000042915,
+                "p99": 19.8669999974966,
+                "max": 60.3539999983311,
+                "mean": 17.658213332873977
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 17.0105,
+                "p90": 19.009,
+                "p99": 19.655,
+                "max": 60.171,
+                "mean": 17.453023333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.199500001966953,
+                "p90": 0.23199999332428,
+                "p99": 0.289000004529953,
+                "max": 0.294999986886978,
+                "mean": 0.2051899995406469
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.031,
+                "p90": 0.039,
+                "p99": 0.047,
+                "max": 0.077,
+                "mean": 0.03177666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 18.802500000000002,
+                "p90": 20.844,
+                "p99": 21.923,
+                "max": 62.299,
+                "mean": 19.239606666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 2.0,
+                "p99": 2.0,
+                "max": 3.0,
+                "mean": 1.1533333333333333
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 17.20400000321865,
+                "p90": 19.2180000042915,
+                "p99": 19.8669999974966,
+                "max": 60.3539999983311,
+                "mean": 17.658213332873977
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 17.0105,
+                "p90": 19.009,
+                "p99": 19.655,
+                "max": 60.171,
+                "mean": 17.453023333333334
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.199500001966953,
+                "p90": 0.23199999332428,
+                "p99": 0.289000004529953,
+                "max": 0.294999986886978,
+                "mean": 0.2051899995406469
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.031,
+                "p90": 0.039,
+                "p99": 0.047,
+                "max": 0.077,
+                "mean": 0.03177666666666667
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 18.802500000000002,
+                "p90": 20.844,
+                "p99": 21.923,
+                "max": 62.299,
+                "mean": 19.239606666666667
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 2.0,
+                "p99": 2.0,
+                "max": 3.0,
+                "mean": 1.1533333333333333
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1487,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1832,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_1",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 200,
+          "population_end": 200,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1822,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 338.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 17.0919999985695,
+                "p90": 17.8320000003576,
+                "p99": 18.5419999928474,
+                "max": 54.8570000044107,
+                "mean": 17.225806666407582
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 16.888,
+                "p90": 17.648,
+                "p99": 18.347,
+                "max": 54.671,
+                "mean": 17.02716
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.196999996900558,
+                "p90": 0.215000003576279,
+                "p99": 0.234999999403954,
+                "max": 0.244000002741814,
+                "mean": 0.19864666640758516
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.031,
+                "p90": 0.036,
+                "p99": 0.044,
+                "max": 0.051,
+                "mean": 0.030896666666666666
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 18.609,
+                "p90": 19.495,
+                "p99": 20.199,
+                "max": 56.626,
+                "mean": 18.796506666666666
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 2.0,
+                "p99": 2.0,
+                "max": 3.0,
+                "mean": 1.1266666666666667
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 17.0919999985695,
+                "p90": 17.8320000003576,
+                "p99": 18.5419999928474,
+                "max": 54.8570000044107,
+                "mean": 17.225806666407582
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 16.888,
+                "p90": 17.648,
+                "p99": 18.347,
+                "max": 54.671,
+                "mean": 17.02716
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.196999996900558,
+                "p90": 0.215000003576279,
+                "p99": 0.234999999403954,
+                "max": 0.244000002741814,
+                "mean": 0.19864666640758516
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.031,
+                "p90": 0.036,
+                "p99": 0.044,
+                "max": 0.051,
+                "mean": 0.030896666666666666
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 18.609,
+                "p90": 19.495,
+                "p99": 20.199,
+                "max": 56.626,
+                "mean": 18.796506666666666
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 2.0,
+                "p99": 2.0,
+                "max": 3.0,
+                "mean": 1.1266666666666667
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1485,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1822,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        },
+        {
+          "label": "running_2x_2",
+          "condition": "running",
+          "population_flagged": false,
+          "population_start": 200,
+          "population_end": 200,
+          "start_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "end_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1818,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "discarded_frames": 30,
+          "statistics": {
+            "frames": 300,
+            "ticks_total": 335.0,
+            "tick_carrying_frames": 300,
+            "metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 16.9150000009537,
+                "p90": 17.4769999963045,
+                "p99": 17.7970000050068,
+                "max": 53.78499999547,
+                "mean": 17.006333333329753
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 16.7225,
+                "p90": 17.274,
+                "p99": 17.597,
+                "max": 53.574,
+                "mean": 16.80859
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.194999992847443,
+                "p90": 0.215000003576279,
+                "p99": 0.239999994635582,
+                "max": 0.254999995231628,
+                "mean": 0.19774333332975705
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.03,
+                "p90": 0.036,
+                "p99": 0.044,
+                "max": 0.045,
+                "mean": 0.030036666666666666
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 18.459,
+                "p90": 19.178,
+                "p99": 19.542,
+                "max": 55.697,
+                "mean": 18.582343333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 2.0,
+                "p99": 2.0,
+                "max": 3.0,
+                "mean": 1.1166666666666667
+              }
+            },
+            "tick_carrying_metrics": {
+              "primary_cpu_ms": {
+                "count": 300,
+                "median": 16.9150000009537,
+                "p90": 17.4769999963045,
+                "p99": 17.7970000050068,
+                "max": 53.78499999547,
+                "mean": 17.006333333329753
+              },
+              "process_ms": {
+                "count": 300,
+                "median": 16.7225,
+                "p90": 17.274,
+                "p99": 17.597,
+                "max": 53.574,
+                "mean": 16.80859
+              },
+              "render_cpu_ms": {
+                "count": 300,
+                "median": 0.194999992847443,
+                "p90": 0.215000003576279,
+                "p99": 0.239999994635582,
+                "max": 0.254999995231628,
+                "mean": 0.19774333332975705
+              },
+              "setup_cpu_ms": {
+                "count": 300,
+                "median": 0.03,
+                "p90": 0.036,
+                "p99": 0.044,
+                "max": 0.045,
+                "mean": 0.030036666666666666
+              },
+              "pacing_ms": {
+                "count": 300,
+                "median": 18.459,
+                "p90": 19.178,
+                "p99": 19.542,
+                "max": 55.697,
+                "mean": 18.582343333333334
+              },
+              "ticks_run": {
+                "count": 300,
+                "median": 1.0,
+                "p90": 2.0,
+                "p99": 2.0,
+                "max": 3.0,
+                "mean": 1.1166666666666667
+              }
+            },
+            "counted_first_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1484,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "counted_last_state": {
+              "alive_settlements": 1,
+              "camera": [
+                1016.0,
+                500.0
+              ],
+              "population": 200,
+              "selected_id": -1,
+              "simulation_frozen": false,
+              "tick": 1818,
+              "zoom": [
+                4.0,
+                4.0
+              ]
+            },
+            "gpu_statuses": [
+              "unavailable"
+            ]
+          }
+        }
+      ],
+      "eligible_pooled": {
+        "frozen_Z4_0.0x": {
+          "frames": 900,
+          "ticks_total": 0.0,
+          "tick_carrying_frames": 0,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 11.2804999961257,
+              "p90": 12.3250000054836,
+              "p99": 12.9709999967813,
+              "max": 13.3419999941587,
+              "mean": 11.345337777529684
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 11.068,
+              "p90": 12.093,
+              "p99": 12.752,
+              "max": 13.139,
+              "mean": 11.136636666666666
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.204999998211861,
+              "p90": 0.234999999403954,
+              "p99": 0.273000001907349,
+              "max": 0.296000003814697,
+              "mean": 0.20870111086302334
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.029,
+              "p90": 0.037,
+              "p99": 0.05,
+              "max": 0.057,
+              "mean": 0.03025
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 12.8945,
+              "p90": 14.004,
+              "p99": 14.648,
+              "max": 15.048,
+              "mean": 12.95606888888889
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 0.0,
+              "p90": 0.0,
+              "p99": 0.0,
+              "max": 0.0,
+              "mean": 0.0
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "process_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "render_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "setup_cpu_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "pacing_ms": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            },
+            "ticks_run": {
+              "count": 0,
+              "median": null,
+              "p90": null,
+              "p99": null,
+              "max": null,
+              "mean": null
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1440,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        },
+        "running_Z4_2.0x": {
+          "frames": 900,
+          "ticks_total": 1019.0,
+          "tick_carrying_frames": 900,
+          "metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 17.0394999995828,
+              "p90": 18.2100000069141,
+              "p99": 19.7849999945164,
+              "max": 60.3539999983311,
+              "mean": 17.29678444420377
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 16.837,
+              "p90": 17.993,
+              "p99": 19.523,
+              "max": 60.171,
+              "mean": 17.09625777777778
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.196999996900558,
+              "p90": 0.219999998807907,
+              "p99": 0.264999985694885,
+              "max": 0.294999986886978,
+              "mean": 0.20052666642599637
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.03,
+              "p90": 0.037,
+              "p99": 0.045,
+              "max": 0.077,
+              "mean": 0.030903333333333335
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 18.6,
+              "p90": 19.835,
+              "p99": 21.453,
+              "max": 62.299,
+              "mean": 18.87281888888889
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 1.0,
+              "p90": 2.0,
+              "p99": 2.0,
+              "max": 3.0,
+              "mean": 1.1322222222222222
+            }
+          },
+          "tick_carrying_metrics": {
+            "primary_cpu_ms": {
+              "count": 900,
+              "median": 17.0394999995828,
+              "p90": 18.2100000069141,
+              "p99": 19.7849999945164,
+              "max": 60.3539999983311,
+              "mean": 17.29678444420377
+            },
+            "process_ms": {
+              "count": 900,
+              "median": 16.837,
+              "p90": 17.993,
+              "p99": 19.523,
+              "max": 60.171,
+              "mean": 17.09625777777778
+            },
+            "render_cpu_ms": {
+              "count": 900,
+              "median": 0.196999996900558,
+              "p90": 0.219999998807907,
+              "p99": 0.264999985694885,
+              "max": 0.294999986886978,
+              "mean": 0.20052666642599637
+            },
+            "setup_cpu_ms": {
+              "count": 900,
+              "median": 0.03,
+              "p90": 0.037,
+              "p99": 0.045,
+              "max": 0.077,
+              "mean": 0.030903333333333335
+            },
+            "pacing_ms": {
+              "count": 900,
+              "median": 18.6,
+              "p90": 19.835,
+              "p99": 21.453,
+              "max": 62.299,
+              "mean": 18.87281888888889
+            },
+            "ticks_run": {
+              "count": 900,
+              "median": 1.0,
+              "p90": 2.0,
+              "p99": 2.0,
+              "max": 3.0,
+              "mean": 1.1322222222222222
+            }
+          },
+          "counted_first_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1487,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "counted_last_state": {
+            "alive_settlements": 1,
+            "camera": [
+              1016.0,
+              500.0
+            ],
+            "population": 200,
+            "selected_id": -1,
+            "simulation_frozen": false,
+            "tick": 1818,
+            "zoom": [
+              4.0,
+              4.0
+            ]
+          },
+          "gpu_statuses": [
+            "unavailable"
+          ]
+        }
+      },
+      "split_fragments": [],
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W200-attempt1.json",
+        "sha256": "8786f46c5f061dff1af94490bbb6cf3cdbd942febf84cc5a123b768304a495af"
+      }
+    }
+  },
+  "sections": {},
+  "ablation": [],
+  "measurement_probes": [
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt1.json.validity.json",
+        "sha256": "ec6c18920102c26f5c79d4db031679171786c87c3a3c7df9e1694ec2de9234c3"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792424248.818003,
+        "wall_seconds": 2.0424122089752927,
+        "load_1m": 17.2421875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424250.899751,
+        "wall_seconds": 2.043478582985699,
+        "load_1m": 17.2421875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt2.json.validity.json",
+        "sha256": "ddc7f1d494ef765b672749a02596a175ab4c12b7b27ba251b4d1f6ee5d7be417"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426387.1454709,
+        "wall_seconds": 2.5450988749507815,
+        "load_1m": 38.0810546875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426389.732281,
+        "wall_seconds": 2.1508032500278205,
+        "load_1m": 35.912109375,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt3.json.validity.json",
+        "sha256": "41ce70ca799faf82ab309aff6aedb70ca26fa0eed560bcd6ada1e20e18da2441"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428524.357377,
+        "wall_seconds": 1.993954541045241,
+        "load_1m": 8.12255859375,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428526.384531,
+        "wall_seconds": 1.9969077910063788,
+        "load_1m": 8.0322265625,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt4.json.validity.json",
+        "sha256": "d412bfca9752d40d171907d0ba26ce4ba34f84ca61a6a51849d87430d511ef7e"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792430349.1283898,
+        "wall_seconds": 2.070060541969724,
+        "load_1m": 10.63671875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792430351.250296,
+        "wall_seconds": 2.1146300000837073,
+        "load_1m": 10.63671875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt1.json.validity.json",
+        "sha256": "32e56832bdc83ea98f203c1e01759c5b850a172c11abc27456b1ceea1495cf53"
+      },
+      "raw_exists": true,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792424053.589557,
+        "wall_seconds": 1.996134917018935,
+        "load_1m": 4.9443359375,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424225.865098,
+        "wall_seconds": 2.0218232090119272,
+        "load_1m": 17.36376953125,
+        "checksum": 4216682400
+      },
+      "classification": "COLLECTED_INVALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt2.json.validity.json",
+        "sha256": "013186ec59e3aee220a2ed8fe714a1c31c82545581012463ad53494e168af22c"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426360.378506,
+        "wall_seconds": 2.370870958082378,
+        "load_1m": 36.236328125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426362.794157,
+        "wall_seconds": 2.536675291019492,
+        "load_1m": 36.236328125,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt3.json.validity.json",
+        "sha256": "e9263f98afa0476d839ffce606a8d7ee72f7cb371888220ceb863a082222f253"
+      },
+      "raw_exists": true,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428334.324141,
+        "wall_seconds": 2.077279124991037,
+        "load_1m": 5.88916015625,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428502.194582,
+        "wall_seconds": 2.0972419580211863,
+        "load_1m": 8.11865234375,
+        "checksum": 4216682400
+      },
+      "classification": "COLLECTED_INVALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt5.json.validity.json",
+        "sha256": "ef29da33c781ac4b213470088d5bfad7bed11f3fb7a7620bc74b93137e12098a"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792430417.62,
+        "wall_seconds": 2.0881396669428796,
+        "load_1m": 17.5810546875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792430419.741977,
+        "wall_seconds": 2.128351124934852,
+        "load_1m": 17.5810546875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt1.json.validity.json",
+        "sha256": "e703a3748adc316e84f3ae27a39f0ae979e11b4bfb9d1e3e3bf757d3fc10c3ea"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792423762.297963,
+        "wall_seconds": 2.0783221250167117,
+        "load_1m": 8.83251953125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792423764.416926,
+        "wall_seconds": 1.9986704170005396,
+        "load_1m": 8.765625,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt2.json.validity.json",
+        "sha256": "24017e5cc702d152b875fa14f6fa607779be881f570602e2dee0fe5494888f09"
+      },
+      "raw_exists": true,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426291.31126,
+        "wall_seconds": 1.9984747080598027,
+        "load_1m": 7.8330078125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426346.963676,
+        "wall_seconds": 3.663989166961983,
+        "load_1m": 30.97119140625,
+        "checksum": 4216682400
+      },
+      "classification": "COLLECTED_INVALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt3.json.validity.json",
+        "sha256": "48f39c35dbd65939f353d8f2b0dd0a154fcd9fa42536b52483acefbfbd5d1924"
+      },
+      "raw_exists": true,
+      "valid": true,
+      "verdict": "VALID",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428193.178432,
+        "wall_seconds": 2.0207529170438647,
+        "load_1m": 4.92529296875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428249.9881651,
+        "wall_seconds": 2.036457416950725,
+        "load_1m": 4.4921875,
+        "checksum": 4216682400
+      },
+      "classification": "VALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W1-attempt1.json.validity.json",
+        "sha256": "76c434f32759f5974d646b3f9a789deecc85865b1472935ea369010cf3f06d68"
+      },
+      "raw_exists": true,
+      "valid": true,
+      "verdict": "VALID",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792423773.305216,
+        "wall_seconds": 2.0040063749765977,
+        "load_1m": 7.958984375,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424008.888269,
+        "wall_seconds": 2.047847916954197,
+        "load_1m": 4.751953125,
+        "checksum": 4216682400
+      },
+      "classification": "VALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W200-attempt1.json.validity.json",
+        "sha256": "02ab88a94168468fb937a3601260951094a89de58f766cc8892d286c4ba7926c"
+      },
+      "raw_exists": true,
+      "valid": true,
+      "verdict": "VALID",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792424012.5219982,
+        "wall_seconds": 2.116670334013179,
+        "load_1m": 4.751953125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424049.916903,
+        "wall_seconds": 2.0974191669374704,
+        "load_1m": 4.6787109375,
+        "checksum": 4216682400
+      },
+      "classification": "VALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt1.json.validity.json",
+        "sha256": "e4fbcbfce6d3283ecb5b28d7d18bfb19a3cae5b8eeba05d293b86a0649649894"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792423767.840144,
+        "wall_seconds": 1.9752058750018477,
+        "load_1m": 8.765625,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792423769.851563,
+        "wall_seconds": 2.0059507919941097,
+        "load_1m": 8.3037109375,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt2.json.validity.json",
+        "sha256": "46f9eaad2dd62a0c377b0e15e7ec4617a1cb3d8aed3be064d331b0cbc1fb0848"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426352.327185,
+        "wall_seconds": 2.613776292069815,
+        "load_1m": 32.01416015625,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426354.988595,
+        "wall_seconds": 3.265273208031431,
+        "load_1m": 34.2548828125,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt3.json.validity.json",
+        "sha256": "9fc6ab1e0aeeebd6b189887736462a36d03eee445957f82e7a676a1bdb9e18dd"
+      },
+      "raw_exists": true,
+      "valid": true,
+      "verdict": "VALID",
+      "exit_code": 0,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428253.580991,
+        "wall_seconds": 2.0768032500054687,
+        "load_1m": 4.21240234375,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428330.402663,
+        "wall_seconds": 2.1021817500004545,
+        "load_1m": 6.31494140625,
+        "checksum": 4216682400
+      },
+      "classification": "VALID"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt1/frames.json.validity.json",
+        "sha256": "fb8301d0e84797e4444899f68e4a804b3ca813eb7c8fe24ed786fc68df0025e0"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792424236.660984,
+        "wall_seconds": 2.0292082079686224,
+        "load_1m": 16.21826171875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424238.729481,
+        "wall_seconds": 2.00958766695112,
+        "load_1m": 17.72216796875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt2/frames.json.validity.json",
+        "sha256": "d9ac20b0a71d824ffa2acb80c34a883839b7be614487cb4c5957ca2d7b157795"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426374.255716,
+        "wall_seconds": 2.142576500074938,
+        "load_1m": 38.15966796875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426376.441707,
+        "wall_seconds": 2.179716166923754,
+        "load_1m": 37.986328125,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt3/frames.json.validity.json",
+        "sha256": "29d0dbbde2954a9fe60d5c71961060fd73e96cd383a5c513252495e64312a952"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428512.4621508,
+        "wall_seconds": 2.0056214159121737,
+        "load_1m": 8.4140625,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428514.502516,
+        "wall_seconds": 2.0299411669839174,
+        "load_1m": 8.4140625,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt4/frames.json.validity.json",
+        "sha256": "d211f2d8bc5e173b1ffd661956acc14f1ac637166f0aa171953910321b4600f3"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792430336.591997,
+        "wall_seconds": 2.0853448329726234,
+        "load_1m": 11.7587890625,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792430338.7130291,
+        "wall_seconds": 2.14754425000865,
+        "load_1m": 11.37744140625,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt1/frames.json.validity.json",
+        "sha256": "a3cd15918ee67256d7b8749c780fe1f5c04afd61543618648c40a6574c2ded4a"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792424230.2481658,
+        "wall_seconds": 2.1967883749166504,
+        "load_1m": 16.93408203125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424232.48596,
+        "wall_seconds": 2.179264000034891,
+        "load_1m": 16.93408203125,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt2/frames.json.validity.json",
+        "sha256": "dd2d5483c2e2034cdffe59d3d6d694750ac092632634db3d0e31a07ae3450bda"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426367.8455832,
+        "wall_seconds": 2.2404428330482915,
+        "load_1m": 37.73876953125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426370.1291,
+        "wall_seconds": 2.137166333035566,
+        "load_1m": 38.15966796875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt3/frames.json.validity.json",
+        "sha256": "4d23c8f4422b84ac74fb612ace7efb1bcb07e72aa9d6635df786c2f7c481f946"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428506.5656161,
+        "wall_seconds": 1.9865784160792828,
+        "load_1m": 8.18896484375,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428508.585305,
+        "wall_seconds": 2.0046513330889866,
+        "load_1m": 8.18896484375,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt4/frames.json.validity.json",
+        "sha256": "a83a1d7e042a25de0dbe0a9b928d2201cb575b0614bf4ef3e11efea5ddc8a408"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792430330.300117,
+        "wall_seconds": 2.110640041064471,
+        "load_1m": 12.4345703125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792430332.4461598,
+        "wall_seconds": 2.1339136250317097,
+        "load_1m": 11.7587890625,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt1/frames.json.validity.json",
+        "sha256": "dae1f51cd6ef7fa0810c4f51a9be8853fed89827e3ee043d74aec1028298293e"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792424242.735175,
+        "wall_seconds": 2.0215846670325845,
+        "load_1m": 17.72216796875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792424244.7952309,
+        "wall_seconds": 2.0347752498928457,
+        "load_1m": 17.263671875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt2/frames.json.validity.json",
+        "sha256": "8427119a3e64ee799df720d4ba1abfe867d40b9e68b6b23937772c774e67a99d"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792426380.668743,
+        "wall_seconds": 2.191086082952097,
+        "load_1m": 37.8271484375,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792426382.899449,
+        "wall_seconds": 2.203790667001158,
+        "load_1m": 37.8271484375,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt3/frames.json.validity.json",
+        "sha256": "8289f65c8974461d3d3456eaefda4dda9ebbbf3292a9e7cab2affa6292f1c051"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792428518.451936,
+        "wall_seconds": 2.002092625014484,
+        "load_1m": 8.220703125,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792428520.4914591,
+        "wall_seconds": 1.988937458023429,
+        "load_1m": 8.220703125,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    },
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt4/frames.json.validity.json",
+        "sha256": "3f33e3911b11349557bd553996a2f95721fa245ea7a5014026f086807bf2a0dd"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "NOT_VERIFIED (contended or unsuccessful)",
+      "exit_code": 75,
+      "reference_seconds": 2.762010041042231,
+      "reference_sha256": "e240ebf3592bd25d70f673350dc0f990295b8a413cfbcc0d2e819153033520b4",
+      "start": {
+        "epoch": 1792430342.818322,
+        "wall_seconds": 2.1483573329169303,
+        "load_1m": 10.86669921875,
+        "checksum": 4216682400
+      },
+      "end": {
+        "epoch": 1792430345.002483,
+        "wall_seconds": 2.147741875029169,
+        "load_1m": 10.86669921875,
+        "checksum": 4216682400
+      },
+      "classification": "PRELAUNCH_REFUSAL"
+    }
+  ],
+  "ablation_status": "NOT_VERIFIED_NO_COLLECTOR_LAUNCHED",
+  "policy_denials_without_probes": [
+    {
+      "source": {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt4.json.validity.json",
+        "sha256": "290d33a597f5614e6bb195ed3840e65e9003d0fc4a13af52ece45d81b60f2cda"
+      },
+      "raw_exists": false,
+      "valid": false,
+      "verdict": "RETRY_NOT_ADMITTED",
+      "exit_code": null,
+      "reference_seconds": null,
+      "reference_sha256": null,
+      "start": {},
+      "end": {},
+      "classification": "POLICY_REFUSAL_WRONG_INHERITED_ITEM"
+    }
+  ],
+  "terminal_audit": {
+    "path": "/Users/rexxa/work/art-production13b-evidence/part4-terminal-audit.json",
+    "sha256": "482eed0b64109115923bf2ce9b4ce1a98a98daa7458fc9986d007c2e518c9f69",
+    "checked_at": "2026-10-19T17:21:02.485487+00:00",
+    "supervisor_attempt4_exit": 0,
+    "supervisor_attempt4_recovery_exit": 0,
+    "status": "TERMINAL_PARTIAL_WAIT_BUDGET",
+    "counts": {
+      "COLLECTED_INVALID": 3,
+      "PRELAUNCH_REFUSAL": 21,
+      "VALID": 4,
+      "POLICY_REFUSAL_WRONG_INHERITED_ITEM": 1
+    },
+    "slots": 29,
+    "frozen_snapshot_checks": {
+      "terminal-manifest-attempt4.json": true,
+      "terminal-manifest-attempt4-recovery.json": true
+    },
+    "waiting_seconds": 9487.316187858582,
+    "remaining_wait_seconds": 1312.6838121414185,
+    "minimum_next_cooldown_seconds": 1800,
+    "reason_no_next_attempt": "Remaining union wait budget is less than mandatory 1800-second cooldown; preserve missing targets NOT_VERIFIED.",
+    "orchestration_fault": "External attempt4 reorder left exported P13_ITEM=after-ablation-W200 for matrix. File-slot4 W-multi denied as wrong ablation item before probes/Godot. Preserved; fresh shell explicitly unsets P13_ITEM/P13_VALIDITY_OUT, file-slot5 true W-multi fourth admitted opportunity denied by start load17.5810546875. No admission ledger history rewritten."
+  },
+  "unverified_matrix": [
+    "W-multi"
+  ],
+  "unverified_sections": [
+    "W200",
+    "W-multi",
+    "W500"
+  ]
+}

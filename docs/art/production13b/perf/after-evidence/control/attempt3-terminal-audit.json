@@ -1,0 +1,131 @@
+{
+  "attempt": 3,
+  "supervisor_exit": 0,
+  "measurement_local_snapshot_equal": true,
+  "rows": [
+    {
+      "path": "ablation-W200-attempt3.json.validity.json",
+      "valid": false,
+      "exit_code": 75,
+      "start": {
+        "epoch": 1792428524.357377,
+        "wall_seconds": 1.993954541045241,
+        "load_1m": 8.12255859375,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428526.384531,
+        "wall_seconds": 1.9969077910063788,
+        "load_1m": 8.0322265625,
+        "valid": null
+      }
+    },
+    {
+      "path": "after-W-multi-attempt3.json.validity.json",
+      "valid": false,
+      "exit_code": 0,
+      "start": {
+        "epoch": 1792428334.324141,
+        "wall_seconds": 2.077279124991037,
+        "load_1m": 5.88916015625,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428502.194582,
+        "wall_seconds": 2.0972419580211863,
+        "load_1m": 8.11865234375,
+        "valid": null
+      }
+    },
+    {
+      "path": "after-W0-attempt3.json.validity.json",
+      "valid": true,
+      "exit_code": 0,
+      "start": {
+        "epoch": 1792428193.178432,
+        "wall_seconds": 2.0207529170438647,
+        "load_1m": 4.92529296875,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428249.9881651,
+        "wall_seconds": 2.036457416950725,
+        "load_1m": 4.4921875,
+        "valid": null
+      }
+    },
+    {
+      "path": "after-W500-attempt3.json.validity.json",
+      "valid": true,
+      "exit_code": 0,
+      "start": {
+        "epoch": 1792428253.580991,
+        "wall_seconds": 2.0768032500054687,
+        "load_1m": 4.21240234375,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428330.402663,
+        "wall_seconds": 2.1021817500004545,
+        "load_1m": 6.31494140625,
+        "valid": null
+      }
+    },
+    {
+      "path": "sections-W-multi-attempt3/frames.json.validity.json",
+      "valid": false,
+      "exit_code": 75,
+      "start": {
+        "epoch": 1792428512.4621508,
+        "wall_seconds": 2.0056214159121737,
+        "load_1m": 8.4140625,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428514.502516,
+        "wall_seconds": 2.0299411669839174,
+        "load_1m": 8.4140625,
+        "valid": null
+      }
+    },
+    {
+      "path": "sections-W200-attempt3/frames.json.validity.json",
+      "valid": false,
+      "exit_code": 75,
+      "start": {
+        "epoch": 1792428506.5656161,
+        "wall_seconds": 1.9865784160792828,
+        "load_1m": 8.18896484375,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428508.585305,
+        "wall_seconds": 2.0046513330889866,
+        "load_1m": 8.18896484375,
+        "valid": null
+      }
+    },
+    {
+      "path": "sections-W500-attempt3/frames.json.validity.json",
+      "valid": false,
+      "exit_code": 75,
+      "start": {
+        "epoch": 1792428518.451936,
+        "wall_seconds": 2.002092625014484,
+        "load_1m": 8.220703125,
+        "valid": null
+      },
+      "end": {
+        "epoch": 1792428520.4914591,
+        "wall_seconds": 1.988937458023429,
+        "load_1m": 8.220703125,
+        "valid": null
+      }
+    }
+  ],
+  "waiting_seconds": 7686.698958873749,
+  "last_completion": 1792428528.382771,
+  "next_admission_not_before": 1792430329,
+  "next_admission_utc": "2026-10-19T17:18:49+00:00",
+  "wait_budget_after_next": 1312.6838121414185
+}

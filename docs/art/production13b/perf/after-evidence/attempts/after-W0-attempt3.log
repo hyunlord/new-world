@@ -1,0 +1,12 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards balanced)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+P13_BLOCK frozen_Z4_0 median=3.3675000051856
+P13_BLOCK frozen_Z4_1 median=3.10550000739098
+P13_BLOCK frozen_Z4_2 median=3.08900000053644
+P13_BLOCK running_2x_0 median=5.1879999961257
+P13_BLOCK running_2x_1 median=5.31500000226498
+P13_BLOCK running_2x_2 median=5.30900000083447

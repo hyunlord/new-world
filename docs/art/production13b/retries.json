@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "observed_at_utc": "2026-10-19T15:28:15.298609+00:00",
+  "observed_at_utc": "2026-10-19T17:22:01.293761+00:00",
   "scope": "Expanded evidence census at snapshot time, retaining prior bounded snapshot. Pending final runs prevent closed global compliance certification.",
   "rules": {
     "three_strikes": "GOAL0.5: every execution including debug counts; stop failing target after three.",
@@ -10,18 +10,28 @@
   "admission_ledger": {
     "evidence": {
       "path": "docs/art/production13b/perf/attempts.json",
-      "sha256": "6a74b477fbcd05943eb62c75db859194cda4f1238670ea67adb8ef3f706c4bda",
-      "bytes": 2359
+      "sha256": "a5d32428a909d3f50063a4445848f633078b511d926b45f9db48809ccfe2e3ab",
+      "bytes": 12234
     },
-    "recorded_wait_seconds": 3600.0,
+    "recorded_wait_seconds": 9487.316187858582,
     "slot_counts": {
       "pair-write-skip-W500": 3,
       "pair-write-skip-W200": 1,
       "pair-walker-W200": 1,
-      "pair-walker-W500": 1
+      "pair-walker-W500": 1,
+      "after-W0": 3,
+      "after-W500": 3,
+      "after-W1": 1,
+      "after-W200": 1,
+      "after-W-multi": 4,
+      "after-sections-W200": 4,
+      "after-sections-W-multi": 4,
+      "after-sections-W500": 4,
+      "after-ablation-W200": 4
     },
-    "runtime_denials": 1,
-    "note": "Six policy slots across four items; W500slot2 denied before Godot. Five actual measurement launches. No global retry compliance conclusion follows from admission counts."
+    "note": "29Part4file-slots includes1wrong-item policy refusal with no probes;21other prelaunch refusals and7collectors. Remaining1312.683812<1800 bars further retry. No history rewritten.",
+    "remaining_wait_seconds": 1312.6838121414185,
+    "minimum_next_cooldown_seconds": 1800
   },
   "targets": [
     {
@@ -1399,6 +1409,788 @@
                 "bytes": 495
               },
               "completed_launches": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Part4-ablation-W200",
+      "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+      "observed_executed_checks": 0,
+      "admission_slots": 4,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.0424122089752927,
+            "load_1m": 17.2421875
+          },
+          "probe_end": {
+            "wall_seconds": 2.043478582985699,
+            "load_1m": 17.2421875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt1.json.validity.json",
+              "sha256": "ec6c18920102c26f5c79d4db031679171786c87c3a3c7df9e1694ec2de9234c3",
+              "bytes": 155730
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.5450988749507815,
+            "load_1m": 38.0810546875
+          },
+          "probe_end": {
+            "wall_seconds": 2.1508032500278205,
+            "load_1m": 35.912109375
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt2.json.validity.json",
+              "sha256": "ddc7f1d494ef765b672749a02596a175ab4c12b7b27ba251b4d1f6ee5d7be417",
+              "bytes": 154780
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 1.993954541045241,
+            "load_1m": 8.12255859375
+          },
+          "probe_end": {
+            "wall_seconds": 1.9969077910063788,
+            "load_1m": 8.0322265625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt3.json.validity.json",
+              "sha256": "41ce70ca799faf82ab309aff6aedb70ca26fa0eed560bcd6ada1e20e18da2441",
+              "bytes": 149785
+            }
+          ]
+        },
+        {
+          "attempt": 4,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "PRELAUNCH_REFUSAL",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "epoch": 1792430349.1283898,
+            "wall_seconds": 2.070060541969724,
+            "load_1m": 10.63671875
+          },
+          "probe_end": {
+            "epoch": 1792430351.250296,
+            "wall_seconds": 2.1146300000837073,
+            "load_1m": 10.63671875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/ablation-W200-attempt4.json.validity.json",
+              "sha256": "d412bfca9752d40d171907d0ba26ce4ba34f84ca61a6a51849d87430d511ef7e",
+              "bytes": 159252
+            }
+          ],
+          "detail": "Prelaunch refusal; no collector executed."
+        }
+      ]
+    },
+    {
+      "target": "Part4-after-W-multi",
+      "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+      "observed_executed_checks": 2,
+      "admission_slots": 5,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "COLLECTED_INVALID_END_PROBE",
+          "exit_code": 0,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 1.996134917018935,
+            "load_1m": 4.9443359375
+          },
+          "probe_end": {
+            "wall_seconds": 2.0218232090119272,
+            "load_1m": 17.36376953125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt1.json.validity.json",
+              "sha256": "32e56832bdc83ea98f203c1e01759c5b850a172c11abc27456b1ceea1495cf53",
+              "bytes": 153785
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.370870958082378,
+            "load_1m": 36.236328125
+          },
+          "probe_end": {
+            "wall_seconds": 2.536675291019492,
+            "load_1m": 36.236328125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt2.json.validity.json",
+              "sha256": "013186ec59e3aee220a2ed8fe714a1c31c82545581012463ad53494e168af22c",
+              "bytes": 154057
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "COLLECTED_INVALID_END_PROBE",
+          "exit_code": 0,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.077279124991037,
+            "load_1m": 5.88916015625
+          },
+          "probe_end": {
+            "wall_seconds": 2.0972419580211863,
+            "load_1m": 8.11865234375
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt3.json.validity.json",
+              "sha256": "e9263f98afa0476d839ffce606a8d7ee72f7cb371888220ceb863a082222f253",
+              "bytes": 152965
+            }
+          ]
+        },
+        {
+          "attempt": 4,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "POLICY_REFUSAL_WRONG_INHERITED_ITEM",
+          "exit_code": null,
+          "valid": false,
+          "probe_start": {
+            "epoch": null,
+            "wall_seconds": null,
+            "load_1m": null
+          },
+          "probe_end": {
+            "epoch": null,
+            "wall_seconds": null,
+            "load_1m": null
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt4.json.validity.json",
+              "sha256": "290d33a597f5614e6bb195ed3840e65e9003d0fc4a13af52ece45d81b60f2cda",
+              "bytes": 87
+            }
+          ],
+          "detail": "External attempt4 reorder left exported P13_ITEM=after-ablation-W200 for matrix. File-slot4 W-multi denied as wrong ablation item before probes/Godot. Preserved; fresh shell explicitly unsets P13_ITEM/P13_VALIDITY_OUT, file-slot5 true W-multi fourth admitted opportunity denied by start load17.5810546875. No admission ledger history rewritten."
+        },
+        {
+          "attempt": 5,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "PRELAUNCH_REFUSAL",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "epoch": 1792430417.62,
+            "wall_seconds": 2.0881396669428796,
+            "load_1m": 17.5810546875
+          },
+          "probe_end": {
+            "epoch": 1792430419.741977,
+            "wall_seconds": 2.128351124934852,
+            "load_1m": 17.5810546875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W-multi-attempt5.json.validity.json",
+              "sha256": "ef29da33c781ac4b213470088d5bfad7bed11f3fb7a7620bc74b93137e12098a",
+              "bytes": 152612
+            }
+          ],
+          "detail": "External attempt4 reorder left exported P13_ITEM=after-ablation-W200 for matrix. File-slot4 W-multi denied as wrong ablation item before probes/Godot. Preserved; fresh shell explicitly unsets P13_ITEM/P13_VALIDITY_OUT, file-slot5 true W-multi fourth admitted opportunity denied by start load17.5810546875. No admission ledger history rewritten."
+        }
+      ]
+    },
+    {
+      "target": "Part4-after-W0",
+      "status": "VALID_AVAILABLE",
+      "observed_executed_checks": 2,
+      "admission_slots": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.0783221250167117,
+            "load_1m": 8.83251953125
+          },
+          "probe_end": {
+            "wall_seconds": 1.9986704170005396,
+            "load_1m": 8.765625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt1.json.validity.json",
+              "sha256": "e703a3748adc316e84f3ae27a39f0ae979e11b4bfb9d1e3e3bf757d3fc10c3ea",
+              "bytes": 157926
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "COLLECTED_INVALID_END_PROBE",
+          "exit_code": 0,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 1.9984747080598027,
+            "load_1m": 7.8330078125
+          },
+          "probe_end": {
+            "wall_seconds": 3.663989166961983,
+            "load_1m": 30.97119140625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt2.json.validity.json",
+              "sha256": "24017e5cc702d152b875fa14f6fa607779be881f570602e2dee0fe5494888f09",
+              "bytes": 150849
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "VALID",
+          "exit_code": 0,
+          "valid": true,
+          "probe_start": {
+            "wall_seconds": 2.0207529170438647,
+            "load_1m": 4.92529296875
+          },
+          "probe_end": {
+            "wall_seconds": 2.036457416950725,
+            "load_1m": 4.4921875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W0-attempt3.json.validity.json",
+              "sha256": "48f39c35dbd65939f353d8f2b0dd0a154fcd9fa42536b52483acefbfbd5d1924",
+              "bytes": 152518
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Part4-after-W1",
+      "status": "VALID_AVAILABLE",
+      "observed_executed_checks": 1,
+      "admission_slots": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "VALID",
+          "exit_code": 0,
+          "valid": true,
+          "probe_start": {
+            "wall_seconds": 2.0040063749765977,
+            "load_1m": 7.958984375
+          },
+          "probe_end": {
+            "wall_seconds": 2.047847916954197,
+            "load_1m": 4.751953125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W1-attempt1.json.validity.json",
+              "sha256": "76c434f32759f5974d646b3f9a789deecc85865b1472935ea369010cf3f06d68",
+              "bytes": 155507
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Part4-after-W200",
+      "status": "VALID_AVAILABLE",
+      "observed_executed_checks": 1,
+      "admission_slots": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "VALID",
+          "exit_code": 0,
+          "valid": true,
+          "probe_start": {
+            "wall_seconds": 2.116670334013179,
+            "load_1m": 4.751953125
+          },
+          "probe_end": {
+            "wall_seconds": 2.0974191669374704,
+            "load_1m": 4.6787109375
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W200-attempt1.json.validity.json",
+              "sha256": "02ab88a94168468fb937a3601260951094a89de58f766cc8892d286c4ba7926c",
+              "bytes": 151897
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Part4-after-W500",
+      "status": "VALID_AVAILABLE",
+      "observed_executed_checks": 1,
+      "admission_slots": 3,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 1.9752058750018477,
+            "load_1m": 8.765625
+          },
+          "probe_end": {
+            "wall_seconds": 2.0059507919941097,
+            "load_1m": 8.3037109375
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt1.json.validity.json",
+              "sha256": "e4fbcbfce6d3283ecb5b28d7d18bfb19a3cae5b8eeba05d293b86a0649649894",
+              "bytes": 158491
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.613776292069815,
+            "load_1m": 32.01416015625
+          },
+          "probe_end": {
+            "wall_seconds": 3.265273208031431,
+            "load_1m": 34.2548828125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt2.json.validity.json",
+              "sha256": "46f9eaad2dd62a0c377b0e15e7ec4617a1cb3d8aed3be064d331b0cbc1fb0848",
+              "bytes": 155895
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": true,
+          "execution_kind": "runtime_measurement",
+          "outcome": "VALID",
+          "exit_code": 0,
+          "valid": true,
+          "probe_start": {
+            "wall_seconds": 2.0768032500054687,
+            "load_1m": 4.21240234375
+          },
+          "probe_end": {
+            "wall_seconds": 2.1021817500004545,
+            "load_1m": 6.31494140625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/after-W500-attempt3.json.validity.json",
+              "sha256": "9fc6ab1e0aeeebd6b189887736462a36d03eee445957f82e7a676a1bdb9e18dd",
+              "bytes": 153705
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "target": "Part4-sections-W-multi",
+      "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+      "observed_executed_checks": 0,
+      "admission_slots": 4,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.0292082079686224,
+            "load_1m": 16.21826171875
+          },
+          "probe_end": {
+            "wall_seconds": 2.00958766695112,
+            "load_1m": 17.72216796875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt1/frames.json.validity.json",
+              "sha256": "fb8301d0e84797e4444899f68e4a804b3ca813eb7c8fe24ed786fc68df0025e0",
+              "bytes": 156335
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.142576500074938,
+            "load_1m": 38.15966796875
+          },
+          "probe_end": {
+            "wall_seconds": 2.179716166923754,
+            "load_1m": 37.986328125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt2/frames.json.validity.json",
+              "sha256": "d9ac20b0a71d824ffa2acb80c34a883839b7be614487cb4c5957ca2d7b157795",
+              "bytes": 155361
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.0056214159121737,
+            "load_1m": 8.4140625
+          },
+          "probe_end": {
+            "wall_seconds": 2.0299411669839174,
+            "load_1m": 8.4140625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt3/frames.json.validity.json",
+              "sha256": "29d0dbbde2954a9fe60d5c71961060fd73e96cd383a5c513252495e64312a952",
+              "bytes": 150138
+            }
+          ]
+        },
+        {
+          "attempt": 4,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "PRELAUNCH_REFUSAL",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "epoch": 1792430336.591997,
+            "wall_seconds": 2.0853448329726234,
+            "load_1m": 11.7587890625
+          },
+          "probe_end": {
+            "epoch": 1792430338.7130291,
+            "wall_seconds": 2.14754425000865,
+            "load_1m": 11.37744140625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W-multi-attempt4/frames.json.validity.json",
+              "sha256": "d211f2d8bc5e173b1ffd661956acc14f1ac637166f0aa171953910321b4600f3",
+              "bytes": 152362
+            }
+          ],
+          "detail": "Prelaunch refusal; no collector executed."
+        }
+      ]
+    },
+    {
+      "target": "Part4-sections-W200",
+      "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+      "observed_executed_checks": 0,
+      "admission_slots": 4,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.1967883749166504,
+            "load_1m": 16.93408203125
+          },
+          "probe_end": {
+            "wall_seconds": 2.179264000034891,
+            "load_1m": 16.93408203125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt1/frames.json.validity.json",
+              "sha256": "a3cd15918ee67256d7b8749c780fe1f5c04afd61543618648c40a6574c2ded4a",
+              "bytes": 155330
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.2404428330482915,
+            "load_1m": 37.73876953125
+          },
+          "probe_end": {
+            "wall_seconds": 2.137166333035566,
+            "load_1m": 38.15966796875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt2/frames.json.validity.json",
+              "sha256": "dd2d5483c2e2034cdffe59d3d6d694750ac092632634db3d0e31a07ae3450bda",
+              "bytes": 155547
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 1.9865784160792828,
+            "load_1m": 8.18896484375
+          },
+          "probe_end": {
+            "wall_seconds": 2.0046513330889866,
+            "load_1m": 8.18896484375
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt3/frames.json.validity.json",
+              "sha256": "4d23c8f4422b84ac74fb612ace7efb1bcb07e72aa9d6635df786c2f7c481f946",
+              "bytes": 149727
+            }
+          ]
+        },
+        {
+          "attempt": 4,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "PRELAUNCH_REFUSAL",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "epoch": 1792430330.300117,
+            "wall_seconds": 2.110640041064471,
+            "load_1m": 12.4345703125
+          },
+          "probe_end": {
+            "epoch": 1792430332.4461598,
+            "wall_seconds": 2.1339136250317097,
+            "load_1m": 11.7587890625
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W200-attempt4/frames.json.validity.json",
+              "sha256": "a83a1d7e042a25de0dbe0a9b928d2201cb575b0614bf4ef3e11efea5ddc8a408",
+              "bytes": 152767
+            }
+          ],
+          "detail": "Prelaunch refusal; no collector executed."
+        }
+      ]
+    },
+    {
+      "target": "Part4-sections-W500",
+      "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+      "observed_executed_checks": 0,
+      "admission_slots": 4,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.0215846670325845,
+            "load_1m": 17.72216796875
+          },
+          "probe_end": {
+            "wall_seconds": 2.0347752498928457,
+            "load_1m": 17.263671875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt1/frames.json.validity.json",
+              "sha256": "dae1f51cd6ef7fa0810c4f51a9be8853fed89827e3ee043d74aec1028298293e",
+              "bytes": 156200
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.191086082952097,
+            "load_1m": 37.8271484375
+          },
+          "probe_end": {
+            "wall_seconds": 2.203790667001158,
+            "load_1m": 37.8271484375
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt2/frames.json.validity.json",
+              "sha256": "8427119a3e64ee799df720d4ba1abfe867d40b9e68b6b23937772c774e67a99d",
+              "bytes": 155706
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "ADMISSION_REFUSED",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "wall_seconds": 2.002092625014484,
+            "load_1m": 8.220703125
+          },
+          "probe_end": {
+            "wall_seconds": 1.988937458023429,
+            "load_1m": 8.220703125
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt3/frames.json.validity.json",
+              "sha256": "8289f65c8974461d3d3456eaefda4dda9ebbbf3292a9e7cab2affa6292f1c051",
+              "bytes": 150191
+            }
+          ]
+        },
+        {
+          "attempt": 4,
+          "check_executed": false,
+          "execution_kind": "admission_only",
+          "outcome": "PRELAUNCH_REFUSAL",
+          "exit_code": 75,
+          "valid": false,
+          "probe_start": {
+            "epoch": 1792430342.818322,
+            "wall_seconds": 2.1483573329169303,
+            "load_1m": 10.86669921875
+          },
+          "probe_end": {
+            "epoch": 1792430345.002483,
+            "wall_seconds": 2.147741875029169,
+            "load_1m": 10.86669921875
+          },
+          "evidence": [
+            {
+              "path": "/Users/rexxa/work/art-production13b-evidence/after/sections-W500-attempt4/frames.json.validity.json",
+              "sha256": "3f33e3911b11349557bd553996a2f95721fa245ea7a5014026f086807bf2a0dd",
+              "bytes": 157271
+            }
+          ],
+          "detail": "Prelaunch refusal; no collector executed."
+        }
+      ]
+    },
+    {
+      "target": "final-full-gate",
+      "status": "CLEAN_PASS",
+      "observed_executed_checks": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "check_executed": true,
+          "outcome": "CLEAN_PASS",
+          "detail": "120/120 zero ERROR root audit16:11:30Z; process handle unavailable, supervisor terminal output/process absence retained by audit.",
+          "evidence": [
+            {
+              "path": "docs/art/production13b/gates/final/root-audit.json",
+              "sha256": "74d625ea5cbc4f637807102df504ca86b6c234edc8b112cb4eb2e8c99fb7233d",
+              "bytes": 285
+            },
+            {
+              "path": "docs/art/production13b/gates/final/results.tsv",
+              "sha256": "36d1c4e715c08c99c31ad05804f01c066ec6e05b5fae4e696076eddb0b54e29b",
+              "bytes": 3076
             }
           ]
         }
@@ -14708,6 +15500,623 @@
         "sha256": "e287d8ddc7982dc4cc0c43edb593fd3d3aa7af764fc99d72edef77e70122aeb4",
         "bytes": 312
       }
+    },
+    "final": {
+      "evidence": {
+        "path": "docs/art/production13b/gates/final/results.tsv",
+        "sha256": "36d1c4e715c08c99c31ad05804f01c066ec6e05b5fae4e696076eddb0b54e29b",
+        "bytes": 3076
+      },
+      "completed_rows": 120,
+      "exit_code_pass_rows": 120,
+      "rows": [
+        {
+          "target": "cargo_test",
+          "exit_code": 0,
+          "seconds": 929.0
+        },
+        {
+          "target": "clippy",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "strict",
+          "exit_code": 0,
+          "seconds": 13.0
+        },
+        {
+          "target": "bridge",
+          "exit_code": 0,
+          "seconds": 3.0
+        },
+        {
+          "target": "smoke",
+          "exit_code": 0,
+          "seconds": 7.0
+        },
+        {
+          "target": "smoke_errors",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "python",
+          "exit_code": 0,
+          "seconds": 32.0
+        },
+        {
+          "target": "test_abandoned_village",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_activity_icons_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_activity_installed_p10",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_activity_p11",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_agent_activity",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_agent_click_drawn",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_agent_derived_cache_p9",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_agent_drawn_positions",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_agent_frame_choices_p10",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_agent_native_size",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_agent_selection_index_p10",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_art_hash",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_building_derived_cache_p9",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_camp_seat_cache_p10",
+          "exit_code": 0,
+          "seconds": 2.0
+        },
+        {
+          "target": "test_camp_seats",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_canopy_fade",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_capture_cold_trace_p6",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_capture_event_trace_p8",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_capture_metadata",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_capture_pair_p8",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_capture_plans_p6",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_capture_society_trace",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_capture_sprite_order_p11",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_carry_load_layer",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_causal_batch_p9",
+          "exit_code": 0,
+          "seconds": 6.0
+        },
+        {
+          "target": "test_chronicle_layout_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_chronicle_layout_p13",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_chronicle_panel_p11",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_chronicle_text_p11",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_cold_hearth",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_cold_presentation",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_crowds_p12",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_crowds_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_death_exposure",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_declump",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_declump_adapter_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_declump_adapter_p13",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_effect_lifecycle",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_elder_variant",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_every_hearth",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_feed_casts",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_feed_priority",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_feed_wording",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_fixed_delta_p9",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_founding_group",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_frame_measure",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_glyph_distinct_p13",
+          "exit_code": 0,
+          "seconds": 2.0
+        },
+        {
+          "target": "test_god_hand",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_hud_old_age",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_hud_season_label",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_hud_wood",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_idle_camp_pose",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_idle_facing",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_inspector_activity_p10",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_inspector_age",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_inspector_cold",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_inspector_life_p11",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_inspector_personal_p10",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_inspector_porter_p12",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_inspector_porter_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_inspector_wood",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_intervention_world_effects",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_interventions_real_p6",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_life_layout_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_life_layout_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_link_hover_p12",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_link_hover_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_meal_pose",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_meal_ring",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_morning_chill",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_morning_chill_v2",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_name_presentation_p12",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_name_presentation_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_nature_clearance",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_nature_density",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_nature_derived_cache_p9",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_need_warning",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_offscreen_marker",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_person_activity_tooltip_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_person_names_p11",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_porter_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_porter_p13",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_porter_renderer_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_porter_renderer_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_pose_reuse_p10",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_real_input_p12",
+          "exit_code": 0,
+          "seconds": 21.0
+        },
+        {
+          "target": "test_real_input_p13",
+          "exit_code": 0,
+          "seconds": 27.0
+        },
+        {
+          "target": "test_relations_chronicle_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_relations_chronicle_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_restless_meter",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_season_tint",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_settlement_labels",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_settlement_relations_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_settlement_relations_p13",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_settlement_select",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_shelter_cold",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_sim_reads_consumers_p9",
+          "exit_code": 0,
+          "seconds": 26.0
+        },
+        {
+          "target": "test_sim_reads_equivalence_p9",
+          "exit_code": 0,
+          "seconds": 7.0
+        },
+        {
+          "target": "test_sim_reads_p9",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_sim_reads_relations_p12",
+          "exit_code": 0,
+          "seconds": 21.0
+        },
+        {
+          "target": "test_sim_reads_relations_p13",
+          "exit_code": 0,
+          "seconds": 21.0
+        },
+        {
+          "target": "test_society_snapshot_p7",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_spatial_hash_p10",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_stockpile_locale_p12",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_stockpile_locale_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_structure_states",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_terrain_layers",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_variant_codes",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_variant_regions_p10",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_village_layers",
+          "exit_code": 0,
+          "seconds": 0.0
+        },
+        {
+          "target": "test_write_skip_p13",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_ysort_props",
+          "exit_code": 0,
+          "seconds": 1.0
+        },
+        {
+          "target": "test_zoom_ladder",
+          "exit_code": 0,
+          "seconds": 3.0
+        }
+      ],
+      "active_snapshot": false,
+      "clean_log_audit": {
+        "path": "docs/art/production13b/gates/final/root-audit.json",
+        "sha256": "74d625ea5cbc4f637807102df504ca86b6c234edc8b112cb4eb2e8c99fb7233d",
+        "bytes": 285
+      }
     }
   },
   "cross_gate_target_counts": {
@@ -14727,6 +16136,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "clippy": [
@@ -14744,6 +16157,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14763,6 +16180,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "bridge": [
@@ -14780,6 +16201,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14799,6 +16224,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "smoke_errors": [
@@ -14816,6 +16245,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14835,6 +16268,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_abandoned_village": [
@@ -14852,6 +16289,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14871,6 +16312,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_activity_installed_p10": [
@@ -14888,6 +16333,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14907,6 +16356,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_agent_activity": [
@@ -14924,6 +16377,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14943,6 +16400,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_agent_derived_cache_p9": [
@@ -14960,6 +16421,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -14979,6 +16444,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_agent_frame_choices_p10": [
@@ -14996,6 +16465,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15015,6 +16488,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_agent_selection_index_p10": [
@@ -15032,6 +16509,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15051,6 +16532,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_building_derived_cache_p9": [
@@ -15068,6 +16553,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15087,6 +16576,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_camp_seats": [
@@ -15104,6 +16597,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15123,6 +16620,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_capture_cold_trace_p6": [
@@ -15140,6 +16641,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15159,6 +16664,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_capture_metadata": [
@@ -15176,6 +16685,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15195,6 +16708,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_capture_plans_p6": [
@@ -15212,6 +16729,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15231,6 +16752,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_capture_sprite_order_p11": [
@@ -15248,6 +16773,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15267,6 +16796,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_causal_batch_p9": [
@@ -15284,6 +16817,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15303,6 +16840,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_chronicle_layout_p13": [
@@ -15320,6 +16861,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15339,6 +16884,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_chronicle_text_p11": [
@@ -15356,6 +16905,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15375,6 +16928,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_cold_presentation": [
@@ -15392,6 +16949,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15411,6 +16972,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_crowds_p13": [
@@ -15428,6 +16993,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15447,6 +17016,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_declump": [
@@ -15464,6 +17037,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15483,6 +17060,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_declump_adapter_p13": [
@@ -15500,6 +17081,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15519,6 +17104,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_elder_variant": [
@@ -15536,6 +17125,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15555,6 +17148,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_feed_casts": [
@@ -15572,6 +17169,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15591,6 +17192,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_feed_wording": [
@@ -15608,6 +17213,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15627,6 +17236,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_founding_group": [
@@ -15644,6 +17257,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15663,6 +17280,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_glyph_distinct_p13": [
@@ -15680,6 +17301,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15699,6 +17324,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_hud_old_age": [
@@ -15716,6 +17345,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15735,6 +17368,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_hud_wood": [
@@ -15752,6 +17389,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15771,6 +17412,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_idle_facing": [
@@ -15788,6 +17433,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15807,6 +17456,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_inspector_age": [
@@ -15824,6 +17477,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15843,6 +17500,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_inspector_life_p11": [
@@ -15860,6 +17521,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15879,6 +17544,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_inspector_porter_p12": [
@@ -15896,6 +17565,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15915,6 +17588,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_inspector_wood": [
@@ -15932,6 +17609,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15951,6 +17632,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_interventions_real_p6": [
@@ -15968,6 +17653,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -15987,6 +17676,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_life_layout_p13": [
@@ -16004,6 +17697,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16023,6 +17720,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_link_hover_p13": [
@@ -16040,6 +17741,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16059,6 +17764,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_meal_ring": [
@@ -16076,6 +17785,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16095,6 +17808,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_morning_chill_v2": [
@@ -16112,6 +17829,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16131,6 +17852,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_name_presentation_p13": [
@@ -16148,6 +17873,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16167,6 +17896,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_nature_density": [
@@ -16184,6 +17917,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16203,6 +17940,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_need_warning": [
@@ -16220,6 +17961,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16239,6 +17984,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_person_activity_tooltip_p13": [
@@ -16256,6 +18005,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16275,6 +18028,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_porter_p12": [
@@ -16292,6 +18049,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16311,6 +18072,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_porter_renderer_p12": [
@@ -16328,6 +18093,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16347,6 +18116,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_pose_reuse_p10": [
@@ -16364,6 +18137,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16383,6 +18160,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_real_input_p13": [
@@ -16400,6 +18181,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16419,6 +18204,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_relations_chronicle_p13": [
@@ -16436,6 +18225,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16455,6 +18248,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_season_tint": [
@@ -16472,6 +18269,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16491,6 +18292,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_settlement_relations_p12": [
@@ -16508,6 +18313,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16527,6 +18336,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_settlement_select": [
@@ -16544,6 +18357,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16563,6 +18380,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_sim_reads_consumers_p9": [
@@ -16580,6 +18401,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16599,6 +18424,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_sim_reads_p9": [
@@ -16616,6 +18445,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16635,6 +18468,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_sim_reads_relations_p13": [
@@ -16652,6 +18489,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16671,6 +18512,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_spatial_hash_p10": [
@@ -16688,6 +18533,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16707,6 +18556,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_stockpile_locale_p13": [
@@ -16724,6 +18577,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16743,6 +18600,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_terrain_layers": [
@@ -16760,6 +18621,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16779,6 +18644,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_variant_regions_p10": [
@@ -16796,6 +18665,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16815,6 +18688,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_write_skip_p13": [
@@ -16832,6 +18709,10 @@
       },
       {
         "gate": "p3-attempt3",
+        "exit_code": 0
+      },
+      {
+        "gate": "final",
         "exit_code": 0
       }
     ],
@@ -16851,6 +18732,10 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ],
     "test_zoom_ladder": [
@@ -16869,17 +18754,94 @@
       {
         "gate": "p3-attempt3",
         "exit_code": 0
+      },
+      {
+        "gate": "final",
+        "exit_code": 0
       }
     ]
   },
-  "count_reconciliation": "Gate campaign rows and cross_gate_target_counts describe the same test executions; do not sum them. Real-input-p13 now5 completed invocations: baselineFAIL, targetedPASS and3Part3PASS. Missing-bridge fixtures have2error-producing Part3invocations,1targeted clean retest and1clean gate3 repeat. Required merged identity is1additional compound comparison after historical candidateFAIL/PASS, with28runtime capture subprocesses; it is not a timing rerun.",
+  "count_reconciliation": "Gate campaign rows and cross_gate_target_counts describe the same test executions; do not sum them. Real-input-p13 now5 completed invocations: baselineFAIL, targetedPASS and3Part3PASS. Missing-bridge fixtures have2error-producing Part3invocations,1targeted clean retest and1clean gate3 repeat. Required merged identity is1additional compound comparison after historical candidateFAIL/PASS, with28runtime capture subprocesses; it is not a timing rerun. Final gate adds1invocation per120targets; real-input-p13 total6completed (1baseline failure+5passes). Part4 admission/collector counts separately enumerated.",
   "pending_work": [
-    "Part4 matrix/timers/freeze completion",
-    "Final gate and publication review"
+    "Final review/publication decision; Part4 missing targets terminal NOT_VERIFIED, no further admission retry"
   ],
   "task_ledger_latest": {
     "path": "docs/art/production13b/TASKS.md",
     "sha256": "9658fbf4b7613af4395a1e2587080de32c126e14adb68d89c4300b99e2f50b2d",
     "bytes": 12727
+  },
+  "part4_snapshot": {
+    "admission_slots": 29,
+    "actual_collectors": 7,
+    "valid_collectors": 4,
+    "invalid_end_collectors": 3,
+    "pre_godot_refusals": 22,
+    "planned_attempt3_not_before_utc": "2026-10-19T16:43:12Z",
+    "attempt3_executed": true,
+    "three_strike_note": "W-multi2actual invalid checks, not3. Stop is insufficient remaining wait budget, not three strikes.",
+    "frozen_head": "40aa7a463d740b776248828211251187319c6af6",
+    "bridge_sha256": "30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042",
+    "provenance": [
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/frozen-manifest.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/terminal-manifest.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/retry2-initial-manifest.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/terminal-manifest-attempt2.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/identity-source-equivalence.md",
+        "sha256": "75009b37c21ea7f9c7cbddaa935f7c53134d56aa16ce453042fb35931d2ce9e2",
+        "bytes": 1211
+      }
+    ],
+    "qualification": "Measurement-local full snapshots stable across both attempts. Cross-checkout complete manifests differ; only tracked runtime sources, imported-resource bytes and loaded bridge equivalence established. See qualification, do not claim full manifest equality.",
+    "attempt3_terminal_evidence": {
+      "path": "/Users/rexxa/work/art-production13b-evidence/attempt3-terminal-audit.json",
+      "sha256": "53addc69e90d050b9a20a1eb901574fdf86f5fbeac9dab407977ed698552ea40",
+      "bytes": 3386
+    },
+    "attempt4": {
+      "status": "TERMINAL",
+      "supervisor_session": 26762,
+      "supervisor_exit": 0,
+      "recovery_session": 53175,
+      "recovery_exit": 0,
+      "snapshot_checks": {
+        "terminal-manifest-attempt4.json": true,
+        "terminal-manifest-attempt4-recovery.json": true
+      }
+    },
+    "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+    "probe_prelaunch_refusals": 21,
+    "wrong_item_policy_refusals": 1,
+    "terminal_audit": {
+      "path": "/Users/rexxa/work/art-production13b-evidence/part4-terminal-audit.json",
+      "sha256": "482eed0b64109115923bf2ce9b4ce1a98a98daa7458fc9986d007c2e518c9f69",
+      "bytes": 15291
+    },
+    "terminal_observed_at": "2026-10-19T17:21:02.485487+00:00",
+    "stop_reason": "Remaining union wait budget is less than mandatory 1800-second cooldown; preserve missing targets NOT_VERIFIED.",
+    "missing": [
+      "W-multi valid after",
+      "sections W200",
+      "sections W-multi",
+      "sections W500",
+      "ablation W200"
+    ],
+    "orchestration_fault": "External attempt4 reorder left exported P13_ITEM=after-ablation-W200 for matrix. File-slot4 W-multi denied as wrong ablation item before probes/Godot. Preserved; fresh shell explicitly unsets P13_ITEM/P13_VALIDITY_OUT, file-slot5 true W-multi fourth admitted opportunity denied by start load17.5810546875. No admission ledger history rewritten."
   }
 }

@@ -48,3 +48,27 @@ Preserve the baseline failing attempt. Tooltip and independent input witness now
 - Complete result aggregation corrected Part3 attempt1 to118/120: test_meal_ring also failed because its isolated renderer had no WorldSim bridge. Supply a real WorldSimNode for pure art wrappers, preserving defaultON and every existing geometry assertion; free it after the renderer. Do not turn the kernel off or weaken the fractional-offset assertion to pass.
 
 - 2026-10-19T14:52:21.587959+00:00: Treat exit0 with missingbridgeerrors as incomplete verification. Supply actualWorldSimNode to test_agent_drawn_positions and test_cold_presentation exactlyas meal_ring, keep allassertions and defaultON. Both correctedfixtures passed withoutERROR. Retain secondfullgate120/120 plus errorlogs; require thirdfullgate clean ratherthan hideerrors or weakenchecks.
+
+## Part4 wait overlap: final independent review round
+
+The frozen source and completed Parts0–3 evidence are ready for read-only review while W0/W500 obey their mandatory30-minute admission cooldown. Start round2 code/evidence lanes without builds, tests, probes or Godot. The evidence lane remains PENDING until all Part4 terminal measurements and provenance are supplied, then closes the same round. This does not add a third review round or waive final gate/publication checks.
+
+## Use enforced measurement cooldown for the final technical gate
+
+At Part4 attempt1 termination, only W1 and W200 are valid. W0/W500/three section sessions/W200 ablation were denied before Godot; W-multi completed but its end load exceeded8. Preserve all artifacts and keep the measure checkout/library frozen. Run the mandatory final technical gate on the unchanged root source during this enforced cooldown, with no measurement running. Do not start another performance session until gate termination and the relevant30-minute intervals have elapsed. Final publication still requires completed evidence review and a green gate bound to the published source/commit; this scheduling does not waive either.
+
+## Part4 attempt3 terminal and attempt4 ordering — 2026-10-19T16:51Z
+
+Attempt3 obtained valid W0 and W500 sessions. W-multi completed its collector but end load 8.11865234375 exceeded the unchanged <=8 admission limit; its raw frames remain invalid. All three section timers and W200 ablation were refused before Godot. Full measurement-local frozen/terminal manifests remained byte-identical. No runtime source or build changed.
+
+A fourth spaced admission is scheduled no earlier than 2026-10-19T17:18:49Z, 1800.617229 seconds after the last completed attempt3 item. Current booked union wait is 7686.698958873749 seconds; this planned interval leaves 1312.6838121414185 seconds of the 10800-second cap. That remainder cannot fund another mandatory 30-minute cooldown. The interval is prospective until actually elapsed and recorded by the supervisor.
+
+Only the external orchestration order changes: W200/W-multi/W500 section timers, then W200 ablation, then remaining matrix sessions. This gives never-executed collectors their admission opportunities before the longer W-multi matrix session. It does not alter collectors, thresholds, flags, build, or valid-result selection. W1/W200/W0/W500 valid matrix evidence is reused. W-multi has two collected-but-invalid sessions, so at most one further actual failing execution is allowed. No success is inferred from scheduling.
+
+## Part4 terminal disposition — 2026-10-19T17:21:02Z
+
+Attempt4 section timers and ablation were refused before Godot by load 10.6367–12.4346 (>8). The external reorder exposed an orchestration error: exported `P13_ITEM=after-ablation-W200` survived into the matrix command, so W-multi filename slot4 was rejected as a too-soon ablation retry before any probe or collector. That sidecar and ledger event remain unchanged. A fresh recovery shell explicitly unset `P13_ITEM` and `P13_VALIDITY_OUT`; W-multi filename slot5 was its fourth correctly identified admission opportunity, after the required interval, and was refused by start load17.5810546875. This is not a third collected W-multi failure and not an accepted measurement.
+
+Both supervisors exited0, while their per-target refusals remain recorded. Both final full source snapshots exactly match the frozen measurement snapshot. No source, build, calibration or acceptance threshold changed.
+
+Final Part4 accounting:29 filename slots,7 actual collectors,4 valid sessions,3 collected-but-invalid sessions,21 probe-level prelaunch refusals,1 wrong-item policy refusal. Valid matrix worlds are W0/W1/W200/W500. W-multi, all three section timers and W200 ablation remain NOT_VERIFIED. Cumulative recorded union wait is9487.316187858582 seconds, leaving1312.6838121414185 of10800. Since every remaining target requires another1800-second cooldown, no further retry is allowed by the carried-over wait cap. Part4 therefore ends with a terminal partial result; no missing result is replaced by invalid raw data or a timing estimate. Part5 proceeds under GOAL §8.2's separate clean technical gate.

@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "snapshot_at_utc": "2026-10-19T15:28:15.298609+00:00",
+  "snapshot_at_utc": "2026-10-19T17:22:01.293761+00:00",
   "scope": {
     "first_task_commit": "f962f5cd6e671c6b000ca6e0734b904449360650",
-    "last_task_commit": "f5c8951e0a0a5861defe632cbd2a088dac71f692",
-    "observed_head": "f5c8951e0a0a5861defe632cbd2a088dac71f692",
+    "last_task_commit": "40aa7a463d740b776248828211251187319c6af6",
+    "observed_head": "40aa7a463d740b776248828211251187319c6af6",
     "source_freeze": "No source/HEAD changes made; docs-only snapshot.",
-    "commit_selection": "Inclusive f962f5cd^..f5c8951e; historical references excluded"
+    "commit_selection": "Inclusive f962f5cd^..40aa7a46 (18task commits)"
   },
   "anchors": {
     "deadline_anchor_utc": "2026-10-19T12:08:00Z",
@@ -95,15 +95,20 @@
     },
     {
       "part": 4,
-      "status": "PENDING_IN_TASKS",
+      "status": "TERMINAL_PARTIAL_NOT_VERIFIED",
       "actual_start_utc": null,
-      "actual_end_utc": null
+      "actual_end_utc": null,
+      "freeze_commit": "40aa7a463d740b776248828211251187319c6af6",
+      "freeze_commit_utc": "2026-10-19T15:28:46Z",
+      "note": "Execution terminated, acceptance incomplete.29slots7collectors4valid3invalid21probe denials1wrong-item policy denial. Further cooldown exceeds remaining wait budget.",
+      "terminal_observed_utc": "2026-10-19T17:21:02.485487+00:00"
     },
     {
       "part": 5,
-      "status": "PENDING_IN_TASKS",
+      "status": "FINAL_GATE_PASS_OTHER_COMPLETION_PENDING",
       "actual_start_utc": null,
-      "actual_end_utc": null
+      "actual_end_utc": null,
+      "final_gate_audit_utc": "2026-10-19T16:11:30.179086Z"
     }
   ],
   "overlap": {
@@ -123,11 +128,11 @@
     ]
   },
   "admission_wait": {
-    "seconds": 3600.0,
+    "seconds": 9487.316187858582,
     "source": {
       "path": "docs/art/production13b/perf/attempts.json",
-      "sha256": "6a74b477fbcd05943eb62c75db859194cda4f1238670ea67adb8ef3f706c4bda",
-      "bytes": 2359
+      "sha256": "a5d32428a909d3f50063a4445848f633078b511d926b45f9db48809ccfe2e3ab",
+      "bytes": 12234
     },
     "intervals": [
       {
@@ -164,9 +169,135 @@
         "start_epoch": 1792417811.0,
         "end_epoch": 1792417811.0,
         "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792423762.0,
+        "end_epoch": 1792423762.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792423766.4167821,
+        "end_epoch": 1792426053.0,
+        "seconds": 2286.583217859268
+      },
+      {
+        "start_epoch": 1792426291.0,
+        "end_epoch": 1792426291.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426351.0,
+        "end_epoch": 1792426351.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426352.0,
+        "end_epoch": 1792426352.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426360.0,
+        "end_epoch": 1792426360.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426367.0,
+        "end_epoch": 1792426367.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426374.0,
+        "end_epoch": 1792426374.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426380.0,
+        "end_epoch": 1792426380.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426386.0,
+        "end_epoch": 1792426386.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792426391.884259,
+        "end_epoch": 1792428192.0,
+        "seconds": 1800.1157410144806
+      },
+      {
+        "start_epoch": 1792428193.0,
+        "end_epoch": 1792428193.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428253.0,
+        "end_epoch": 1792428253.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428334.0,
+        "end_epoch": 1792428334.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428506.0,
+        "end_epoch": 1792428506.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428512.0,
+        "end_epoch": 1792428512.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428518.0,
+        "end_epoch": 1792428518.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428524.0,
+        "end_epoch": 1792428524.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792428528.382771,
+        "end_epoch": 1792430329.0,
+        "seconds": 1800.6172289848328
+      },
+      {
+        "start_epoch": 1792430330.0,
+        "end_epoch": 1792430330.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792430336.0,
+        "end_epoch": 1792430336.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792430342.0,
+        "end_epoch": 1792430342.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792430348.0,
+        "end_epoch": 1792430348.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792430355.0,
+        "end_epoch": 1792430355.0,
+        "seconds": 0.0
+      },
+      {
+        "start_epoch": 1792430417.0,
+        "end_epoch": 1792430417.0,
+        "seconds": 0.0
       }
     ],
-    "note": "3600 seconds booked separately; earlier1800 snapshot retained. Includes overlap with UI work, not extra elapsed phase time."
+    "note": "Final booked9487.316187858582seconds;1312.683812remaining below mandatory1800. No further retry admitted.",
+    "remaining_seconds": 1312.6838121414185
   },
   "commits": [
     {
@@ -5091,6 +5222,1749 @@
         }
       ],
       "changed_file_count": 159
+    },
+    {
+      "sha": "40aa7a463d740b776248828211251187319c6af6",
+      "author_time": "2026-10-20T00:28:46+09:00",
+      "committer_time": "2026-10-20T00:28:46+09:00",
+      "committer_time_utc": "2026-10-19T15:28:46+00:00",
+      "subject": "art-p13b(p3): freeze only after clean merged gate and exact walker replay",
+      "part_label": "p3",
+      "changed_files": [
+        {
+          "status": "M",
+          "path": "docs/art/production13b/TASKS.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/execution-timeline.json"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/execution-timeline.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/bridge.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/cargo_test.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/clippy.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/merged-release.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/merged-release.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/python.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/raw-log-whitespace-warnings.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/00_fixed_world.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_0.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/03_dead_parent_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/04_wheel_end_last_line.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/05_escape_record.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/06_chronicle_open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/07_chronicle_name_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/08_chronicle_close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/09_language_korean.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/10_language_english.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/11_tooltip_before_delay.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/12_tooltip_after_delay.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/13_tooltip_mouse_out.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/14_tooltip_no_activity.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/00_fixed_world.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_0.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/03_dead_parent_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/04_wheel_end_last_line.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/05_escape_record.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/06_chronicle_open.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/07_chronicle_name_link.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/08_chronicle_close.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/09_language_korean.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/10_language_english.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/result.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/results.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/root-audit.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/smoke.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/smoke_errors.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/strict.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_abandoned_village.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_activity_icons_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_activity_installed_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_activity_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_activity.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_click_drawn.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_derived_cache_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_drawn_positions.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_frame_choices_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_native_size.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_agent_selection_index_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_art_hash.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_building_derived_cache_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_camp_seat_cache_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_camp_seats.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_canopy_fade.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_cold_trace_p6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_event_trace_p8.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_metadata.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_pair_p8.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_plans_p6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_society_trace.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_capture_sprite_order_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_carry_load_layer.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_causal_batch_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_chronicle_layout_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_chronicle_layout_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_chronicle_panel_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_chronicle_text_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_cold_hearth.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_cold_presentation.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_crowds_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_crowds_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_death_exposure.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_declump.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_declump_adapter_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_declump_adapter_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_effect_lifecycle.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_elder_variant.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_every_hearth.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_feed_casts.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_feed_priority.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_feed_wording.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_fixed_delta_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_founding_group.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_frame_measure.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_glyph_distinct_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_god_hand.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_hud_old_age.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_hud_season_label.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_hud_wood.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_idle_camp_pose.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_idle_facing.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_activity_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_age.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_cold.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_life_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_personal_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_porter_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_porter_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_inspector_wood.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_intervention_world_effects.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_interventions_real_p6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_life_layout_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_life_layout_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_link_hover_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_link_hover_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_meal_pose.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_meal_ring.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_morning_chill.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_morning_chill_v2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_name_presentation_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_name_presentation_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_nature_clearance.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_nature_density.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_nature_derived_cache_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_need_warning.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_offscreen_marker.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_person_activity_tooltip_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_person_names_p11.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_porter_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_porter_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_porter_renderer_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_porter_renderer_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_pose_reuse_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_real_input_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_real_input_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_relations_chronicle_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_relations_chronicle_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_restless_meter.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_season_tint.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_settlement_labels.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_settlement_relations_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_settlement_relations_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_settlement_select.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_shelter_cold.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_sim_reads_consumers_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_sim_reads_equivalence_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_sim_reads_p9.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_sim_reads_relations_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_sim_reads_relations_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_society_snapshot_p7.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_spatial_hash_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_stockpile_locale_p12.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_stockpile_locale_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_structure_states.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_terrain_layers.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_variant_codes.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_variant_regions_p10.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_village_layers.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_write_skip_p13.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_ysort_props.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/gates/p3-attempt3/test_zoom_ladder.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/perf/before-after-comparison-caveats.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/retries.json"
+        },
+        {
+          "status": "M",
+          "path": "docs/art/production13b/retries.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/ROOT-VERIFICATION.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/SHA256-MANIFEST.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/TERMINAL-SESSION.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P1-candidate-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P1-control-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P2-candidate-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P2-control-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P3-candidate-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P3-control-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P4-candidate-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P4-control-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P5-candidate-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P5-control-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P6-candidate-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P6-control-diff.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/comparison.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/comparison.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-A.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-Aprime.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-B.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-candidate-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-control-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-A.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-Aprime.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-B.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-candidate-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-control-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-A.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-Aprime.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-B.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-candidate-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-control-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-A.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-Aprime.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-B.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-candidate-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-control-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-A.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-Aprime.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-B.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-candidate-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-control-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-A.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-Aprime.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-B.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-candidate-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-control-diff-x16.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/running-reference.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/comparison-attempt1/walker-identity.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/W-multi.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/W0.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/W200.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/W500_2X.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/W500_FROZEN.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/launches.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W-multi.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W-multi.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W0.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W0.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W200.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W200.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W500_2X.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W500_2X.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W500_FROZEN.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/logs/W500_FROZEN.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W-multi.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W-multi.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W-multi.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W0.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W0.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W0.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W200.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W200.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W200.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_2X.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_2X.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_2X.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_FROZEN.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_FROZEN.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_FROZEN.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/provenance/initial.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-off/runner.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/W-multi.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/W0.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/W200.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/W500_2X.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/W500_FROZEN.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/launches.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W-multi.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W-multi.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W0.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W0.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W200.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W200.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W500_2X.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W500_2X.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W500_FROZEN.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/logs/W500_FROZEN.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W-multi.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W-multi.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W-multi.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W0.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W0.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W0.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W200.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W200.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W200.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_2X.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_2X.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_2X.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_FROZEN.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_FROZEN.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_FROZEN.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/provenance/initial.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/running-on/runner.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six-A.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six-Aprime.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six-B.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P1.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P2.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P3.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P4.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P4.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P5.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P5.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P6.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/P6.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/launches.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P2.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P3.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P3.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P4.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P4.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P5.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P5.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P6.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/logs/P6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/p3-plan.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P1.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P2.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P3.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P4.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P5.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P5.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P5.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P6.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P6.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/P6.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/provenance/initial.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/runner.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/soc_d33_0949_FV_all.entities.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/A/soc_d33_0949_FV_all.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P1.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P2.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P3.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P4.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P4.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P5.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P5.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P6.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/P6.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/launches.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P2.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P3.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P3.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P4.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P4.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P5.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P5.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P6.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/p3-plan.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P1.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P2.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P3.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P4.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P5.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P5.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P5.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P6.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P6.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P6.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/initial.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/runner.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/soc_d33_0949_FV_all.entities.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/Aprime/soc_d33_0949_FV_all.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P1.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P1.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P2.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P2.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P3.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P3.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P4.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P4.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P5.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P5.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P6.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/P6.png"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/launches.tsv"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P1.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P1.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P2.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P2.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P3.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P3.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P4.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P4.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P5.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P5.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P6.exit"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/logs/P6.log"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/p3-plan.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P1.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P1.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P1.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P2.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P2.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P2.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P3.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P3.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P3.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P4.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P4.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P4.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P5.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P5.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P5.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P6.after.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P6.before.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/P6.inside.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/provenance/initial.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/runner.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/soc_d33_0949_FV_all.entities.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/art/production13b/walker/identity-merged/six/B/soc_d33_0949_FV_all.png"
+        }
+      ],
+      "changed_file_count": 433
     }
   ],
   "unique_changed_paths": [
@@ -5518,6 +7392,163 @@
     "docs/art/production13b/gates/p3-attempt2/test_write_skip_p13.log",
     "docs/art/production13b/gates/p3-attempt2/test_ysort_props.log",
     "docs/art/production13b/gates/p3-attempt2/test_zoom_ladder.log",
+    "docs/art/production13b/gates/p3-attempt3/bridge.log",
+    "docs/art/production13b/gates/p3-attempt3/cargo_test.log",
+    "docs/art/production13b/gates/p3-attempt3/clippy.log",
+    "docs/art/production13b/gates/p3-attempt3/merged-release.json",
+    "docs/art/production13b/gates/p3-attempt3/merged-release.log",
+    "docs/art/production13b/gates/p3-attempt3/python.log",
+    "docs/art/production13b/gates/p3-attempt3/raw-log-whitespace-warnings.txt",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/00_fixed_world.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_0.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_1.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_2.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/02_click_3.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/03_dead_parent_link.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/04_wheel_end_last_line.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/05_escape_record.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/06_chronicle_open.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/07_chronicle_name_link.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/08_chronicle_close.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/09_language_korean.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/10_language_english.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/11_tooltip_before_delay.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/12_tooltip_after_delay.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/13_tooltip_mouse_out.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/14_tooltip_no_activity.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.J6t6BN/capture/result.json",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/00_fixed_world.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_0.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_1.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_2.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/02_click_3.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/03_dead_parent_link.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/04_wheel_end_last_line.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/05_escape_record.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/06_chronicle_open.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/07_chronicle_name_link.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/08_chronicle_close.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/09_language_korean.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/10_language_english.png",
+    "docs/art/production13b/gates/p3-attempt3/real-input.L60Tq7/capture/result.json",
+    "docs/art/production13b/gates/p3-attempt3/results.tsv",
+    "docs/art/production13b/gates/p3-attempt3/root-audit.json",
+    "docs/art/production13b/gates/p3-attempt3/smoke.log",
+    "docs/art/production13b/gates/p3-attempt3/smoke_errors.log",
+    "docs/art/production13b/gates/p3-attempt3/strict.log",
+    "docs/art/production13b/gates/p3-attempt3/test_abandoned_village.log",
+    "docs/art/production13b/gates/p3-attempt3/test_activity_icons_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_activity_installed_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_activity_p11.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_activity.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_click_drawn.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_derived_cache_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_drawn_positions.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_frame_choices_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_native_size.log",
+    "docs/art/production13b/gates/p3-attempt3/test_agent_selection_index_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_art_hash.log",
+    "docs/art/production13b/gates/p3-attempt3/test_building_derived_cache_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_camp_seat_cache_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_camp_seats.log",
+    "docs/art/production13b/gates/p3-attempt3/test_canopy_fade.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_cold_trace_p6.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_event_trace_p8.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_metadata.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_pair_p8.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_plans_p6.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_society_trace.log",
+    "docs/art/production13b/gates/p3-attempt3/test_capture_sprite_order_p11.log",
+    "docs/art/production13b/gates/p3-attempt3/test_carry_load_layer.log",
+    "docs/art/production13b/gates/p3-attempt3/test_causal_batch_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_chronicle_layout_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_chronicle_layout_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_chronicle_panel_p11.log",
+    "docs/art/production13b/gates/p3-attempt3/test_chronicle_text_p11.log",
+    "docs/art/production13b/gates/p3-attempt3/test_cold_hearth.log",
+    "docs/art/production13b/gates/p3-attempt3/test_cold_presentation.log",
+    "docs/art/production13b/gates/p3-attempt3/test_crowds_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_crowds_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_death_exposure.log",
+    "docs/art/production13b/gates/p3-attempt3/test_declump.log",
+    "docs/art/production13b/gates/p3-attempt3/test_declump_adapter_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_declump_adapter_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_effect_lifecycle.log",
+    "docs/art/production13b/gates/p3-attempt3/test_elder_variant.log",
+    "docs/art/production13b/gates/p3-attempt3/test_every_hearth.log",
+    "docs/art/production13b/gates/p3-attempt3/test_feed_casts.log",
+    "docs/art/production13b/gates/p3-attempt3/test_feed_priority.log",
+    "docs/art/production13b/gates/p3-attempt3/test_feed_wording.log",
+    "docs/art/production13b/gates/p3-attempt3/test_fixed_delta_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_founding_group.log",
+    "docs/art/production13b/gates/p3-attempt3/test_frame_measure.log",
+    "docs/art/production13b/gates/p3-attempt3/test_glyph_distinct_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_god_hand.log",
+    "docs/art/production13b/gates/p3-attempt3/test_hud_old_age.log",
+    "docs/art/production13b/gates/p3-attempt3/test_hud_season_label.log",
+    "docs/art/production13b/gates/p3-attempt3/test_hud_wood.log",
+    "docs/art/production13b/gates/p3-attempt3/test_idle_camp_pose.log",
+    "docs/art/production13b/gates/p3-attempt3/test_idle_facing.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_activity_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_age.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_cold.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_life_p11.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_personal_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_porter_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_porter_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_inspector_wood.log",
+    "docs/art/production13b/gates/p3-attempt3/test_intervention_world_effects.log",
+    "docs/art/production13b/gates/p3-attempt3/test_interventions_real_p6.log",
+    "docs/art/production13b/gates/p3-attempt3/test_life_layout_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_life_layout_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_link_hover_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_link_hover_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_meal_pose.log",
+    "docs/art/production13b/gates/p3-attempt3/test_meal_ring.log",
+    "docs/art/production13b/gates/p3-attempt3/test_morning_chill.log",
+    "docs/art/production13b/gates/p3-attempt3/test_morning_chill_v2.log",
+    "docs/art/production13b/gates/p3-attempt3/test_name_presentation_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_name_presentation_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_nature_clearance.log",
+    "docs/art/production13b/gates/p3-attempt3/test_nature_density.log",
+    "docs/art/production13b/gates/p3-attempt3/test_nature_derived_cache_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_need_warning.log",
+    "docs/art/production13b/gates/p3-attempt3/test_offscreen_marker.log",
+    "docs/art/production13b/gates/p3-attempt3/test_person_activity_tooltip_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_person_names_p11.log",
+    "docs/art/production13b/gates/p3-attempt3/test_porter_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_porter_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_porter_renderer_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_porter_renderer_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_pose_reuse_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_real_input_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_real_input_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_relations_chronicle_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_relations_chronicle_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_restless_meter.log",
+    "docs/art/production13b/gates/p3-attempt3/test_season_tint.log",
+    "docs/art/production13b/gates/p3-attempt3/test_settlement_labels.log",
+    "docs/art/production13b/gates/p3-attempt3/test_settlement_relations_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_settlement_relations_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_settlement_select.log",
+    "docs/art/production13b/gates/p3-attempt3/test_shelter_cold.log",
+    "docs/art/production13b/gates/p3-attempt3/test_sim_reads_consumers_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_sim_reads_equivalence_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_sim_reads_p9.log",
+    "docs/art/production13b/gates/p3-attempt3/test_sim_reads_relations_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_sim_reads_relations_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_society_snapshot_p7.log",
+    "docs/art/production13b/gates/p3-attempt3/test_spatial_hash_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_stockpile_locale_p12.log",
+    "docs/art/production13b/gates/p3-attempt3/test_stockpile_locale_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_structure_states.log",
+    "docs/art/production13b/gates/p3-attempt3/test_terrain_layers.log",
+    "docs/art/production13b/gates/p3-attempt3/test_variant_codes.log",
+    "docs/art/production13b/gates/p3-attempt3/test_variant_regions_p10.log",
+    "docs/art/production13b/gates/p3-attempt3/test_village_layers.log",
+    "docs/art/production13b/gates/p3-attempt3/test_write_skip_p13.log",
+    "docs/art/production13b/gates/p3-attempt3/test_ysort_props.log",
+    "docs/art/production13b/gates/p3-attempt3/test_zoom_ladder.log",
     "docs/art/production13b/gates/p3-fixes/p3-dispatch-strict.log",
     "docs/art/production13b/gates/p3-fixes/p3-dispatch-targeted.log",
     "docs/art/production13b/gates/p3-fixes/p3-meal-ring-attempt2.log",
@@ -5725,6 +7756,7 @@
     "docs/art/production13b/life-capture-report/life-resume-attempt2.log",
     "docs/art/production13b/life-capture-report/raw-manifest.json",
     "docs/art/production13b/perf/attempts.json",
+    "docs/art/production13b/perf/before-after-comparison-caveats.md",
     "docs/art/production13b/perf/before-reference.json",
     "docs/art/production13b/perf/before-reference.md",
     "docs/art/production13b/perf/calibration.json",
@@ -6159,6 +8191,276 @@
     "docs/art/production13b/walker/identity-attempt2/six/B/runner.txt",
     "docs/art/production13b/walker/identity-attempt2/six/B/soc_d33_0949_FV_all.entities.json",
     "docs/art/production13b/walker/identity-attempt2/six/B/soc_d33_0949_FV_all.png",
+    "docs/art/production13b/walker/identity-merged/README.md",
+    "docs/art/production13b/walker/identity-merged/ROOT-VERIFICATION.json",
+    "docs/art/production13b/walker/identity-merged/SHA256-MANIFEST.json",
+    "docs/art/production13b/walker/identity-merged/TERMINAL-SESSION.txt",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1.exit",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1.log",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P1-candidate-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P1-control-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P2-candidate-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P2-control-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P3-candidate-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P3-control-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P4-candidate-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P4-control-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P5-candidate-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P5-control-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P6-candidate-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/P6-control-diff.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/comparison.json",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/comparison.md",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-A.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-Aprime.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-B.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-candidate-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P1-control-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-A.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-Aprime.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-B.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-candidate-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P2-control-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-A.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-Aprime.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-B.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-candidate-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P3-control-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-A.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-Aprime.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-B.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-candidate-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P4-control-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-A.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-Aprime.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-B.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-candidate-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P5-control-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-A.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-Aprime.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-B.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-candidate-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/rgba-reference/previews/P6-control-diff-x16.png",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/running-reference.json",
+    "docs/art/production13b/walker/identity-merged/comparison-attempt1/walker-identity.json",
+    "docs/art/production13b/walker/identity-merged/running-off.log",
+    "docs/art/production13b/walker/identity-merged/running-off/W-multi.json",
+    "docs/art/production13b/walker/identity-merged/running-off/W0.json",
+    "docs/art/production13b/walker/identity-merged/running-off/W200.json",
+    "docs/art/production13b/walker/identity-merged/running-off/W500_2X.json",
+    "docs/art/production13b/walker/identity-merged/running-off/W500_FROZEN.json",
+    "docs/art/production13b/walker/identity-merged/running-off/launches.tsv",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W-multi.exit",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W-multi.log",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W0.exit",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W0.log",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W200.exit",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W200.log",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W500_2X.exit",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W500_2X.log",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W500_FROZEN.exit",
+    "docs/art/production13b/walker/identity-merged/running-off/logs/W500_FROZEN.log",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W-multi.after.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W-multi.before.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W-multi.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W0.after.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W0.before.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W0.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W200.after.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W200.before.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W200.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_2X.after.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_2X.before.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_2X.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_FROZEN.after.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_FROZEN.before.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/W500_FROZEN.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-off/provenance/initial.json",
+    "docs/art/production13b/walker/identity-merged/running-off/runner.txt",
+    "docs/art/production13b/walker/identity-merged/running-on.log",
+    "docs/art/production13b/walker/identity-merged/running-on/W-multi.json",
+    "docs/art/production13b/walker/identity-merged/running-on/W0.json",
+    "docs/art/production13b/walker/identity-merged/running-on/W200.json",
+    "docs/art/production13b/walker/identity-merged/running-on/W500_2X.json",
+    "docs/art/production13b/walker/identity-merged/running-on/W500_FROZEN.json",
+    "docs/art/production13b/walker/identity-merged/running-on/launches.tsv",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W-multi.exit",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W-multi.log",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W0.exit",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W0.log",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W200.exit",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W200.log",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W500_2X.exit",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W500_2X.log",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W500_FROZEN.exit",
+    "docs/art/production13b/walker/identity-merged/running-on/logs/W500_FROZEN.log",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W-multi.after.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W-multi.before.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W-multi.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W0.after.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W0.before.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W0.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W200.after.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W200.before.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W200.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_2X.after.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_2X.before.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_2X.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_FROZEN.after.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_FROZEN.before.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/W500_FROZEN.inside.json",
+    "docs/art/production13b/walker/identity-merged/running-on/provenance/initial.json",
+    "docs/art/production13b/walker/identity-merged/running-on/runner.txt",
+    "docs/art/production13b/walker/identity-merged/six-A.log",
+    "docs/art/production13b/walker/identity-merged/six-Aprime.log",
+    "docs/art/production13b/walker/identity-merged/six-B.log",
+    "docs/art/production13b/walker/identity-merged/six/A/P1.json",
+    "docs/art/production13b/walker/identity-merged/six/A/P1.png",
+    "docs/art/production13b/walker/identity-merged/six/A/P2.json",
+    "docs/art/production13b/walker/identity-merged/six/A/P2.png",
+    "docs/art/production13b/walker/identity-merged/six/A/P3.json",
+    "docs/art/production13b/walker/identity-merged/six/A/P3.png",
+    "docs/art/production13b/walker/identity-merged/six/A/P4.json",
+    "docs/art/production13b/walker/identity-merged/six/A/P4.png",
+    "docs/art/production13b/walker/identity-merged/six/A/P5.json",
+    "docs/art/production13b/walker/identity-merged/six/A/P5.png",
+    "docs/art/production13b/walker/identity-merged/six/A/P6.json",
+    "docs/art/production13b/walker/identity-merged/six/A/P6.png",
+    "docs/art/production13b/walker/identity-merged/six/A/launches.tsv",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P1.exit",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P1.log",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P2.exit",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P2.log",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P3.exit",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P3.log",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P4.exit",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P4.log",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P5.exit",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P5.log",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P6.exit",
+    "docs/art/production13b/walker/identity-merged/six/A/logs/P6.log",
+    "docs/art/production13b/walker/identity-merged/six/A/manifest.json",
+    "docs/art/production13b/walker/identity-merged/six/A/p3-plan.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P1.after.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P1.before.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P1.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P2.after.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P2.before.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P2.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P3.after.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P3.before.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P3.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P4.after.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P4.before.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P4.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P5.after.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P5.before.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P5.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P6.after.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P6.before.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/P6.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/A/provenance/initial.json",
+    "docs/art/production13b/walker/identity-merged/six/A/runner.txt",
+    "docs/art/production13b/walker/identity-merged/six/A/soc_d33_0949_FV_all.entities.json",
+    "docs/art/production13b/walker/identity-merged/six/A/soc_d33_0949_FV_all.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P1.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P1.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P2.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P2.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P3.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P3.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P4.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P4.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P5.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P5.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P6.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/P6.png",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/launches.tsv",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P1.exit",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P1.log",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P2.exit",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P2.log",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P3.exit",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P3.log",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P4.exit",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P4.log",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P5.exit",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P5.log",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P6.exit",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/logs/P6.log",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/manifest.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/p3-plan.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P1.after.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P1.before.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P1.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P2.after.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P2.before.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P2.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P3.after.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P3.before.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P3.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P4.after.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P4.before.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P4.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P5.after.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P5.before.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P5.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P6.after.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P6.before.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/P6.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/provenance/initial.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/runner.txt",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/soc_d33_0949_FV_all.entities.json",
+    "docs/art/production13b/walker/identity-merged/six/Aprime/soc_d33_0949_FV_all.png",
+    "docs/art/production13b/walker/identity-merged/six/B/P1.json",
+    "docs/art/production13b/walker/identity-merged/six/B/P1.png",
+    "docs/art/production13b/walker/identity-merged/six/B/P2.json",
+    "docs/art/production13b/walker/identity-merged/six/B/P2.png",
+    "docs/art/production13b/walker/identity-merged/six/B/P3.json",
+    "docs/art/production13b/walker/identity-merged/six/B/P3.png",
+    "docs/art/production13b/walker/identity-merged/six/B/P4.json",
+    "docs/art/production13b/walker/identity-merged/six/B/P4.png",
+    "docs/art/production13b/walker/identity-merged/six/B/P5.json",
+    "docs/art/production13b/walker/identity-merged/six/B/P5.png",
+    "docs/art/production13b/walker/identity-merged/six/B/P6.json",
+    "docs/art/production13b/walker/identity-merged/six/B/P6.png",
+    "docs/art/production13b/walker/identity-merged/six/B/launches.tsv",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P1.exit",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P1.log",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P2.exit",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P2.log",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P3.exit",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P3.log",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P4.exit",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P4.log",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P5.exit",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P5.log",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P6.exit",
+    "docs/art/production13b/walker/identity-merged/six/B/logs/P6.log",
+    "docs/art/production13b/walker/identity-merged/six/B/manifest.json",
+    "docs/art/production13b/walker/identity-merged/six/B/p3-plan.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P1.after.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P1.before.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P1.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P2.after.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P2.before.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P2.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P3.after.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P3.before.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P3.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P4.after.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P4.before.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P4.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P5.after.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P5.before.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P5.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P6.after.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P6.before.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/P6.inside.json",
+    "docs/art/production13b/walker/identity-merged/six/B/provenance/initial.json",
+    "docs/art/production13b/walker/identity-merged/six/B/runner.txt",
+    "docs/art/production13b/walker/identity-merged/six/B/soc_d33_0949_FV_all.entities.json",
+    "docs/art/production13b/walker/identity-merged/six/B/soc_d33_0949_FV_all.png",
     "docs/art/production13b/walker/performance/README.md",
     "docs/art/production13b/walker/performance/SHA256-MANIFEST.json",
     "docs/art/production13b/walker/performance/W200/frames.json.validity.json",
@@ -6441,9 +8743,8 @@
     }
   ],
   "gaps": [
-    "Part4/5 start/end and final acceptance remain unobserved.",
-    "Part3 terminal observation is15:26:57.646379Z; exact final process-exit instant not independently timestamped.",
-    "Commit census still endsf5c8951e; no forthcoming commit fabricated."
+    "Part4 terminal partial acceptance: W-multi/3sections/ablation NOT_VERIFIED.",
+    "Final review/publication decision and future Part4documentation commit not yet recorded."
   ],
   "snapshot_history": [
     {
@@ -6648,5 +8949,84 @@
       },
       "completed_launches": 6
     }
-  ]
+  ],
+  "part4_evidence": {
+    "admission_slots": 29,
+    "actual_collectors": 7,
+    "valid_collectors": 4,
+    "invalid_end_collectors": 3,
+    "pre_godot_refusals": 22,
+    "planned_attempt3_not_before_utc": "2026-10-19T16:43:12Z",
+    "attempt3_executed": true,
+    "three_strike_note": "W-multi2actual invalid checks, not3. Stop is insufficient remaining wait budget, not three strikes.",
+    "frozen_head": "40aa7a463d740b776248828211251187319c6af6",
+    "bridge_sha256": "30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042",
+    "provenance": [
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/frozen-manifest.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/terminal-manifest.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/retry2-initial-manifest.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/terminal-manifest-attempt2.json",
+        "sha256": "50fd6f796cc58b92c067533515c528debfe86dfaeaafe167b491f61c73f8ac57",
+        "bytes": 335607
+      },
+      {
+        "path": "/Users/rexxa/work/art-production13b-evidence/after/identity-source-equivalence.md",
+        "sha256": "75009b37c21ea7f9c7cbddaa935f7c53134d56aa16ce453042fb35931d2ce9e2",
+        "bytes": 1211
+      }
+    ],
+    "qualification": "Measurement-local full snapshots stable across both attempts. Cross-checkout complete manifests differ; only tracked runtime sources, imported-resource bytes and loaded bridge equivalence established. See qualification, do not claim full manifest equality.",
+    "attempt3_terminal_evidence": {
+      "path": "/Users/rexxa/work/art-production13b-evidence/attempt3-terminal-audit.json",
+      "sha256": "53addc69e90d050b9a20a1eb901574fdf86f5fbeac9dab407977ed698552ea40",
+      "bytes": 3386
+    },
+    "attempt4": {
+      "status": "TERMINAL",
+      "supervisor_session": 26762,
+      "supervisor_exit": 0,
+      "recovery_session": 53175,
+      "recovery_exit": 0,
+      "snapshot_checks": {
+        "terminal-manifest-attempt4.json": true,
+        "terminal-manifest-attempt4-recovery.json": true
+      }
+    },
+    "status": "TERMINAL_NOT_VERIFIED_WAIT_BUDGET",
+    "probe_prelaunch_refusals": 21,
+    "wrong_item_policy_refusals": 1,
+    "terminal_audit": {
+      "path": "/Users/rexxa/work/art-production13b-evidence/part4-terminal-audit.json",
+      "sha256": "482eed0b64109115923bf2ce9b4ce1a98a98daa7458fc9986d007c2e518c9f69",
+      "bytes": 15291
+    },
+    "terminal_observed_at": "2026-10-19T17:21:02.485487+00:00",
+    "stop_reason": "Remaining union wait budget is less than mandatory 1800-second cooldown; preserve missing targets NOT_VERIFIED.",
+    "missing": [
+      "W-multi valid after",
+      "sections W200",
+      "sections W-multi",
+      "sections W500",
+      "ablation W200"
+    ],
+    "orchestration_fault": "External attempt4 reorder left exported P13_ITEM=after-ablation-W200 for matrix. File-slot4 W-multi denied as wrong ablation item before probes/Godot. Preserved; fresh shell explicitly unsets P13_ITEM/P13_VALIDITY_OUT, file-slot5 true W-multi fourth admitted opportunity denied by start load17.5810546875. No admission ledger history rewritten."
+  },
+  "final_gate_audit": {
+    "path": "docs/art/production13b/gates/final/root-audit.json",
+    "sha256": "74d625ea5cbc4f637807102df504ca86b6c234edc8b112cb4eb2e8c99fb7233d",
+    "bytes": 285
+  }
 }

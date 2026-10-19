@@ -1,0 +1,23 @@
+{
+  "status": "DRAFT_VERIFIED_ATTEMPT3_TERMINAL",
+  "admitted_matrix": [
+    "W0",
+    "W500",
+    "W1",
+    "W200"
+  ],
+  "official_statistic_checks": 192,
+  "calibration_rows": 15,
+  "measurement_attempts": 23,
+  "endpoint_rows": 46,
+  "invalid_raw_in_after_values": false,
+  "pending_matrix": [
+    "W-multi"
+  ],
+  "pending_sections": [
+    "W200",
+    "W-multi",
+    "W500"
+  ],
+  "ablation_status": "PENDING"
+}

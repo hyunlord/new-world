@@ -7,7 +7,7 @@ Part 1 deadline: 17:08Z. Part 4 freeze deadline: 19:08Z. Ten-hour cutoff: 22:08Z
 - Part 1 COMPLETE: font24/design glyph/layout/input verified; write-skip measured and rejected; walker identity and speed passed/defaultON; seats deferred.
 - Part 2 COMPLETE WITH LIMITATIONS: 161-image frozen fact reading scored; real input17/17; StageB12/14eligible (diagnostic10/12, fullbarNOT_VERIFIED); nolegend9/12; village2/6NOT_RUN; contrast12/21; H10roadFAIL3/3, relations/peaceENKOverified. UI evidence pushed at c1827b3b.
 - Part 3 COMPLETE: merged UI; full gate attempt3 120/120 with zero log errors; merged walker identity PASS (six exact RGBA framings and five exact running/pan conditions).
-- Part 4 PENDING: freeze by 19:08Z; after matrix and running timers; H1-H11.
+- Part 4 IN_PROGRESS: frozen pushed40aa7a463d740b776248828211251187319c6af6 at15:29:20Z, before19:08Z deadline; after matrix, sections and W200 ablation session56732.
 - Part 5 PENDING: independent review <=2 rounds, final gate, conditional publication, PR511, cleanup, Korean report.
 
 Admission waiting: 0 seconds so far. Calibration spacing is calibration, not admission waiting.
@@ -78,3 +78,26 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - 2026-10-19T15:13:31.125797+00:00: Part3 gate attempt3 session30784 terminal0,120/120 and zeroERROR/SCRIPT ERROR across all logs; root-audit.json retained. Release rebuild exit0, release/debug SHA30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042. Merged walker identity session53070 active at frozenf5c8951e; all28 captures and compound validator required before Part3 completion. No source/HEAD/build changes until terminal.
 
 - 2026-10-19T15:27:24.218793+00:00: Merged identity session53070 terminal0; all28 launches complete, compound passed=true/errors=[] on f5c8951e/release30ed9754. Root visually inspected full B/P3.png. Part3 evidence archive and push next, then freeze measure checkout for Part4; final publication still pending Part5.
+
+- 2026-10-19T15:29:20.921086Z: Part4 freeze manifest external/part4-freeze.json; measure checkout40aa7a46, release/debug SHA30ed9754, resource import0/noERROR/cleanworktree. First matrix+3section+ablation acquisition sequence56732 active, explicitwalker1/declump1/skip0. All performance sessions use fresh calibration and serialized quiet/window locks; no concurrent builds or Godot.
+
+- 2026-10-19T15:38:37.887729+00:00: Part4 attempt1 supervisor56732 terminal0 but subresults incomplete: W1/W200 valid; W0/W500 denied prelaunch; W-multi terminal0 but endload17.36 invalid; all3sections andablation deniedprelaunch. Frozen/terminalmanifest byteequal. Earliest retries W0/W50015:59:32Z, remaining targets after16:07:33Z conservatively. No retries yet. Use cooldown for mandatory finalgate on unchangedroot40aa source; measurebuild remains frozen.
+
+- 2026-10-19T16:11:50.147116+00:00: Continuation reread original attachment. Finalgate6436 handle gone/process absent; supervisor terminalresults and120rows all0/zeroERROR verified root-audit.json. Part4attempt2 active79005 at16:11:30Z, alltargets cooldownelapsed; priorvalidW1/W200 reused. Conservativelybooked overlappingcooldownunion15:29:26..16:07:33, cumulative5886.58s below10800. Measurefullsnapshot mustremain frozen; no rootbuild/otherGodot overlaps.
+
+- 2026-10-19T16:14:11.099257+00:00: Part4attempt2 session79005 terminal0 supervisor, still onlyW1/W200valid. W0collectedbutendload30.97/probe3.664invalid;W500/Wmulti/3sections/ablationdeniedprelaunchload32–38. Fullmeasurementmanifeststable. Attempt3scheduled by livewaitsession69016 until16:43:12Z, then existingrunner withfreshattempt3paths, noearlieradmission. Deferredcooldownrecord1800.116seconds atlaunch (currentledger5886.58). Never kill foreignPythonworkers from recordedprocesssnapshot.
+
+### Part4 attempt3 terminal — 2026-10-19T16:51Z
+
+- Supervisor69016 exited0; frozen/terminal manifests exactly equal.
+- W0/W500 attempt3 valid; W1/W200 attempt1 retained. W-multi attempt3 collector0 invalid end load8.11865234375>8.
+- Section timers W200/W-multi/W500 and ablationW200 attempt3 denied before Godot75.
+- Attempt4 supervisor26762 scheduled17:18:49Z with sections-first ordering; pending, not executed at this record. Remaining mandatory work and final publication remain open.
+
+### Part4 terminal partial result — 2026-10-19T17:21:02Z
+
+- Attempt4 supervisor26762 and recovery53175 exited0; local full manifests match the frozen snapshot.
+- Four valid matrix worlds retained. W-multi and all section/ablation targets are NOT_VERIFIED after admission refusals; total wait cap prevents another mandatory30-minute cooldown.
+- External launch-order bug retained: W-multi slot4 inherited ablation item, rejected before probe; corrected fresh-shell slot5 denied by actual start load17.5810546875. No history rewritten and no collector executed by either invocation.
+- Final census29slots/7collectors/4valid/3invalid/21probe refusals/1policy refusal. Wait9487.316187858582seconds.
+- Part5 active: finish same-round independent evidence review, archive and report; push Part4 then publish only with clean final technical gate. Performance/visual failures remain failures.
