@@ -95,3 +95,9 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   ≈ 100 steps, no evaluation read), both directories were moved to `_aborted/` (`runs/_aborted/`, disclosed), and a
   queue line `_wait_evals` holds the queue until the reference evaluations and `m1b_obs2_s0`'s evaluations end; then the
   cost check runs again, unchanged, and its plan is used whatever it gives. No rule, budget or configuration changed.
+  *Second attempt (same cause).* The first wait line (`bash -c '…'`) failed at once (exit 2: `queue.sh` word-splits its
+  command, so the quoted script broke), and the repeated check (11:10:51–11:16:52) again ran beside our evaluations:
+  1.83 s/step (its evaluation took a normal 14.7 s; CT's per-epoch tokenization is CPU-bound and the load average was
+  23 on 20 cores) → plan 7,735. `ct_obs2_s0` was stopped again after 1 min (exit 143) and moved to `_aborted/`; the
+  hold is now a script (`_setup/wait_evals.sh`, line `_wait_evals2`), after which the unchanged cost check runs a third
+  time. All three measurements are reported (`runs/_aborted/`, `runs/_cost_ct_obs2/`).
