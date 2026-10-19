@@ -56,6 +56,8 @@ func run() -> void:
 	Cold.apply(sprite, false, false, 0, 0.0)
 	check(not puff.visible and sprite.get_meta("puff_alpha") == 0.0, "warm removes puff and metadata")
 	var renderer: Node2D = Renderer.new()
+	var bridge := ClassDB.instantiate("WorldSimNode") as WorldSimNode
+	renderer.world_sim = bridge
 	renderer._sprites[0] = sprite
 	var rows: Array[Dictionary] = [{"id": 0, "ipos": Vector2(200, 200), "tile": Vector2i(0, 0), "visible": true, "moving": false, "stationary_seconds": 1.0, "pose": "crossed", "meal": false}]
 	for step: int in 60:
@@ -64,6 +66,7 @@ func run() -> void:
 		check(renderer.get_drawn_position(0) == sprite.position, "cold picking follows shiver")
 		check(sprite.position.x == 200.0 + Cold.shiver(true, false, 0, float(step) / 60.0), "shiver never feeds back into smoothed target")
 	renderer.free()
+	bridge.free()
 	sprite.free()
 	print("COLD_PRESENTATION failures=", failures)
 	quit(1 if failures else 0)

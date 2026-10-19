@@ -9,6 +9,8 @@ func check(ok: bool, message: String) -> void:
 
 func _initialize() -> void:
 	var renderer = Renderer.new()
+	var bridge := ClassDB.instantiate("WorldSimNode") as WorldSimNode
+	renderer.world_sim = bridge
 	var sprite := Sprite2D.new()
 	renderer._sprites[1] = sprite
 	var rows: Array[Dictionary] = [{"id": 1, "ipos": Vector2(500, 200), "tile": Vector2i(3, 10), "visible": true, "moving": true, "stationary_seconds": 0.0, "pose": "walk", "meal": false}]
@@ -37,5 +39,6 @@ func _initialize() -> void:
 	check(sprite.has_meta("seat") and sprite.get_meta("seat") == sprite.get_meta("drawn_target"), "capture records the persistent seat coordinate")
 	sprite.free()
 	renderer.free()
+	bridge.free()
 	print("agent drawn positions: %d failures" % failures)
 	quit(1 if failures else 0)
