@@ -17,3 +17,9 @@ Preserve the baseline failing attempt. Tooltip and independent input witness now
 - Life estranged attempt1 failed at seed19414/t34680. Historical v26 source `/Users/rexxa/work/p21-data/p2/C/chronicle_game_v26/chronicle_19414.json`, SHA70727508335abfd2c969d3367a457012bbe4eb5040f824a0bb6d6e46fc25c8f9, first kind19 at31769 and first kind20 at51840. Copy collector to p13b and change only that case tick to51840. Resume runner captures estranged/crowds only; previous valid live/multi images retained and will join final anonymous bundle by explicit map. Current reproduction pending.
 - StageB preparer copy changes only inherited stale report bar10/14 to12/14. Geometry/eligibility unchanged.
 - Strict parser/warnings and FFI checks passed both repaired capture scripts; windowed/visual verification follows.
+
+## Final bounded capture trials
+- Estranged attempt2 failed: step51840 executes systemticks0..51839. Historical event at51840 is not yet executed. Code evidence world_node advance_engine_ticks and sim-engine tick_inner increments aftersystems. Final attempt3 uses51870 and retains complete references onfailure. Previous twofailures retained.
+- Road attempt2 failed strict zerooverlap. Own startup carrydust lives0.5s and is a sibling decorativeeffect; realotherbodies alsooverlap. Final attempt3 keeps identicalcoverage test, waits36 fixed60fpsframes fornatural dustexpiry while simulationfrozen, tick122479 beforefirstdelivery122480. No effecthiding or worldmovement. Finalsuccessnotassumed.
+- StageB acquisition terminal after3supplements perkind: counts[1,2,1,2,2,2,2]. TendFire/Repairremainoneeach. Full14protocol NOT_VERIFIED; preserve12cropdiagnostic and frozenreaders, nofourthattempt.
+- Village summary has2/6eligiblepairs, NOT_RUN. Contrast12/21actualbackgroundcells, nineNOT_MEASURED.

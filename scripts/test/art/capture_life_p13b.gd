@@ -16,7 +16,7 @@ var _chronicle: Array[Dictionary] = []
 var _page_context: Dictionary = {}
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
-const CASES: Dictionary = {"live": [20261010, 85080], "multi": [19400, 121080], "estranged": [19414, 51840], "crowd1": [20261010, 41880], "crowd2": [20261018, 85080], "crowd3": [20261010, 42180]}
+const CASES: Dictionary = {"live": [20261010, 85080], "multi": [19400, 121080], "estranged": [19414, 51870], "crowd1": [20261010, 41880], "crowd2": [20261018, 85080], "crowd3": [20261010, 42180]}
 const SpriteOrder = preload("res://scripts/test/art/capture_sprite_order_p13.gd")
 
 func _init() -> void:
@@ -467,6 +467,6 @@ func _fail(message: String) -> void:
 	if not _out.is_empty() and DirAccess.dir_exists_absolute(_out):
 		var file: FileAccess = FileAccess.open(_out.path_join("failure.json"), FileAccess.WRITE)
 		if file != null:
-			file.store_string(JSON.stringify({"complete": false, "error": message, "provenance": _provenance, "images": _images}))
+			file.store_string(JSON.stringify(_json_ready({"complete": false, "error": message, "provenance": _provenance, "images": _images, "reference_worlds": _references, "chronicle": _chronicle, "captures": _captured, "expected_tick": _expected_tick})))
 			file.close()
 	quit(1)

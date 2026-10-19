@@ -47,7 +47,7 @@ func _run() -> void:
 	_camera.position_smoothing_enabled = false
 	_camera.process_mode = Node.PROCESS_MODE_DISABLED
 	var seed: int = 19603
-	_expected_tick = int(OS.get_environment("P13B_H10_TICK")) if OS.has_environment("P13B_H10_TICK") else (122450 if _case == "road" else 122430)
+	_expected_tick = int(OS.get_environment("P13B_H10_TICK")) if OS.has_environment("P13B_H10_TICK") else (122479 if _case == "road" else 122430)
 	if _expected_tick <= 0 or _expected_tick >= 172320:
 		_fail("capture must be within displayed day120")
 		return
@@ -105,6 +105,9 @@ func _run() -> void:
 	quit(0)
 
 func _road() -> bool:
+	# Let normal startup carry dust expire while the simulation remains frozen.
+	for settle_frame: int in range(36):
+		await process_frame
 	var porters: Dictionary = ReadRoute.read(_world, "get_porter_snapshot")
 	var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
 	var settlements: Dictionary = ReadRoute.read(_world, "get_settlement_snapshot")
