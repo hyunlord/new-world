@@ -1,0 +1,71 @@
+2026-10-18_21:40:45 /home/hyunlord/work/wm1-runs/wm5/rescored_crn_obs_s0/rescored_rounded.json exit=0 attempt=1 load=11.29 13.79 14.03
+2026-10-18_21:40:48 /home/hyunlord/work/wm1-runs/wm5/rescored_crn_obs_s1/rescored_rounded.json exit=0 attempt=1 load=11.35 13.76 14.01
+2026-10-18_21:41:03 /home/hyunlord/work/wm1-runs/wm5/rescored_ct_obs_s0/rescored_rounded.json exit=0 attempt=1 load=11.58 13.69 13.99
+2026-10-18_21:41:17 /home/hyunlord/work/wm1-runs/wm5/rescored_ct_obs_s1/rescored_rounded.json exit=0 attempt=1 load=11.59 13.59 13.95
+2026-10-18_21:41:23 /home/hyunlord/work/wm1-runs/wm5/rescored_crn_v2_s0/rescored_rounded.json exit=0 attempt=1 load=11.55 13.55 13.93
+2026-10-18_21:41:27 /home/hyunlord/work/wm1-runs/wm5/rescored_crn_v2_s1/rescored_rounded.json exit=0 attempt=1 load=11.58 13.52 13.92
+2026-10-18_21:41:50 /home/hyunlord/work/wm1-runs/wm5/rescored_ct_v2_s0/rescored_rounded.json exit=0 attempt=1 load=11.50 13.37 13.86
+2026-10-18_21:42:23 /home/hyunlord/work/wm1-runs/wm5/rescored_ct_v2_s1/rescored_rounded.json exit=0 attempt=1 load=11.71 13.22 13.79
+2026-10-18_22:20:36 watch: start causal:crn_v2_s0 (FINALS_SHA=prereg)
+2026-10-18_22:20:47 /home/hyunlord/work/wm1-runs/wm5/crn_v2_s0_effects/effects_last.json exit=0 attempt=1 load=19.31 22.29 16.94
+2026-10-18_22:20:54 /home/hyunlord/work/wm1-runs/wm5/crn_v2_s0_effects/effects_best.json exit=0 attempt=1 load=18.65 22.10 16.91
+2026-10-19_02:06:55 watch: start causal:ct_v2_s0 (FINALS_SHA=prereg)
+2026-10-19_02:07:55 /home/hyunlord/work/wm1-runs/wm5/ct_v2_s0_effects/effects_last.json exit=0 attempt=1 load=18.57 18.29 16.70
+2026-10-19_02:08:50 /home/hyunlord/work/wm1-runs/wm5/ct_v2_s0_effects/effects_best.json exit=0 attempt=1 load=18.28 18.24 16.78
+2026-10-19_02:54:50 watch: start causal:crn_v2_s1 (FINALS_SHA=prereg)
+2026-10-19_02:54:56 /home/hyunlord/work/wm1-runs/wm5/crn_v2_s1_effects/effects_last.json exit=0 attempt=1 load=14.01 14.93 17.36
+2026-10-19_02:54:59 /home/hyunlord/work/wm1-runs/wm5/crn_v2_s1_effects/effects_best.json exit=0 attempt=1 load=13.85 14.88 17.33
+2026-10-19_04:02:21 /home/hyunlord/work/wm1-runs/wm5/describe/describe.json exit=0 attempt=1 load=14.60 16.66 20.20
+2026-10-19_06:17:00 watch: start causal:ct_v2_s1 (FINALS_SHA=prereg)
+2026-10-19_06:17:47 /home/hyunlord/work/wm1-runs/wm5/ct_v2_s1_effects/effects_last.json exit=0 attempt=1 load=11.49 11.99 12.66
+2026-10-19_06:18:29 /home/hyunlord/work/wm1-runs/wm5/ct_v2_s1_effects/effects_best.json exit=0 attempt=1 load=12.32 12.13 12.68
+2026-10-19_06:18:29 watch: all items done (causal:crn_v2_s0 causal:ct_v2_s0 causal:crn_v2_s1 causal:ct_v2_s1)
+2026-10-19_10:29:21 watch: start base: (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:29:44 /home/hyunlord/work/wm1-runs/wm5/obs2_base/obs2_base.json exit=0 attempt=1 load=2.17 1.50 1.23
+2026-10-19_10:29:44 watch: start ridge: (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:30:01 /home/hyunlord/work/wm1-runs/wm5/ridge_obs/ridge_obs.json exit=0 attempt=1 load=3.59 1.86 1.35
+2026-10-19_10:30:01 watch: start ridge:priv (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:30:16 /home/hyunlord/work/wm1-runs/wm5/ridge_priv/ridge_priv.json exit=0 attempt=1 load=5.93 2.48 1.57
+2026-10-19_10:30:16 watch: start ref:/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:36:17 /home/hyunlord/work/wm1-runs/wm5/ref_wm2_m1bact_v19_s0_obs2/effects.json exit=0 attempt=1 load=4.02 3.69 2.42
+2026-10-19_10:36:17 watch: start ref:/home/hyunlord/work/wm1-runs/wm3/wm3_full_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:42:12 /home/hyunlord/work/wm1-runs/wm5/ref_wm3_full_s0_obs2/effects.json exit=0 attempt=1 load=10.51 5.54 3.44
+2026-10-19_10:42:12 watch: start ref:/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:47:54 /home/hyunlord/work/wm1-runs/wm5/ref_wm2_m1bact_v19_s1_obs2/effects.json exit=0 attempt=1 load=17.25 12.52 6.99
+2026-10-19_10:47:54 watch: start ref:/home/hyunlord/work/wm1-runs/wm3/wm3_full_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_10:53:52 /home/hyunlord/work/wm1-runs/wm5/ref_wm3_full_s1_obs2/effects.json exit=0 attempt=1 load=5.95 11.03 8.52
+2026-10-19_10:53:52 watch: start ref:/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s2 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:00:08 /home/hyunlord/work/wm1-runs/wm5/ref_wm2_m1bact_v19_s2_obs2/effects.json exit=0 attempt=1 load=4.89 13.91 11.49
+2026-10-19_11:00:08 watch: start ref:/home/hyunlord/work/wm1-runs/wm3/wm3_full_s2 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:08:17 /home/hyunlord/work/wm1-runs/wm5/ref_wm3_full_s2_obs2/effects.json exit=0 attempt=1 load=6.58 24.30 19.98
+2026-10-19_11:08:17 watch: start ref:/home/hyunlord/work/wm1-runs/wm4/m1b_obs_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:15:57 /home/hyunlord/work/wm1-runs/wm5/ref_m1b_obs_s0_obs2/effects.json exit=0 attempt=1 load=8.36 20.33 20.39
+2026-10-19_11:15:57 watch: start causalref:crn_obs_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:16:16 /home/hyunlord/work/wm1-runs/wm5/ref_crn_obs_s0_obs2/effects_last.json exit=0 attempt=1 load=7.35 19.32 20.06
+2026-10-19_11:16:16 watch: start causalref:ct_obs_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:17:23 /home/hyunlord/work/wm1-runs/wm5/ref_ct_obs_s0_obs2/effects_last.json exit=0 attempt=1 load=23.62 20.50 20.34
+2026-10-19_11:17:23 watch: start ref:/home/hyunlord/work/wm1-runs/wm4/m1b_obs_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:22:45 /home/hyunlord/work/wm1-runs/wm5/ref_m1b_obs_s1_obs2/effects.json exit=0 attempt=1 load=27.29 34.23 27.27
+2026-10-19_11:22:45 watch: start causalref:crn_obs_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:22:54 /home/hyunlord/work/wm1-runs/wm5/ref_crn_obs_s1_obs2/effects_last.json exit=0 attempt=1 load=25.18 33.68 27.13
+2026-10-19_11:22:54 watch: start causalref:ct_obs_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:23:55 /home/hyunlord/work/wm1-runs/wm5/ref_ct_obs_s1_obs2/effects_last.json exit=0 attempt=1 load=10.11 27.80 25.52
+2026-10-19_11:23:55 watch: start m1obs2:m1b_obs2_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:29:15 /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s0_effects/effects.json exit=0 attempt=1 load=28.08 24.23 24.02
+2026-10-19_11:44:53 /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s0_fact/metrics.json exit=0 attempt=1 load=20.86 18.11 20.10
+2026-10-19_11:44:53 watch: start causal:crn_obs2_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_11:45:01 /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s0_effects/effects_last.json exit=0 attempt=1 load=21.71 18.39 20.17
+2026-10-19_11:45:09 /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s0_effects/effects_best.json exit=0 attempt=1 load=21.33 18.36 20.15
+2026-10-19_14:51:10 watch: start causal:ct_obs2_s0 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_14:52:25 /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s0_effects/effects_last.json exit=0 attempt=1 load=7.20 17.40 19.95
+2026-10-19_14:53:40 /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s0_effects/effects_best.json exit=0 attempt=1 load=3.79 14.07 18.58
+2026-10-19_15:21:40 watch: start causal:crn_obs2_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_15:21:59 /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s1_effects/effects_last.json exit=0 attempt=1 load=5.00 8.10 10.87
+2026-10-19_15:22:18 /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s1_effects/effects_best.json exit=0 attempt=1 load=4.77 7.90 10.76
+2026-10-19_18:10:18 watch: start causal:ct_obs2_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_18:12:19 /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s1_effects/effects_last.json exit=0 attempt=1 load=2.99 3.28 4.33
+2026-10-19_18:14:19 /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s1_effects/effects_best.json exit=0 attempt=1 load=2.20 2.87 4.05
+2026-10-19_21:30:20 watch: start m1obs2:m1b_obs2_s1 (FINALS_SHA=f7cf620a640fa4f0c7b66972194d13501f325a11)
+2026-10-19_21:35:20 /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s1_effects/effects.json exit=0 attempt=1 load=4.15 3.92 3.73
+2026-10-19_21:49:53 /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s1_fact/metrics.json exit=0 attempt=1 load=2.86 6.58 5.65
+2026-10-19_21:49:53 watch: all items done (base: ridge: ridge:priv ref:/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s0 ref:/home/hyunlord/work/wm1-runs/wm3/wm3_full_s0 ref:/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s1 ref:/home/hyunlord/work/wm1-runs/wm3/wm3_full_s1 ref:/home/hyunlord/work/wm1-runs/wm2/wm2_m1bact_v19_s2 ref:/home/hyunlord/work/wm1-runs/wm3/wm3_full_s2 ref:/home/hyunlord/work/wm1-runs/wm4/m1b_obs_s0 causalref:crn_obs_s0 causalref:ct_obs_s0 ref:/home/hyunlord/work/wm1-runs/wm4/m1b_obs_s1 causalref:crn_obs_s1 causalref:ct_obs_s1 m1obs2:m1b_obs2_s0 causal:crn_obs2_s0 causal:ct_obs2_s0 m1obs2:m1b_obs2_s1 causal:crn_obs2_s1 causal:ct_obs2_s1)

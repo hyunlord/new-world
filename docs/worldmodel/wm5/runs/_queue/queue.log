@@ -1,0 +1,43 @@
+2026-10-18_21:29:44 _cost_crn_v2 start code=38bea0c5773edb631646dcd82991ebb4b93ae559 max_seconds=1800 load=26.84 22.24 13.70 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py cost --method crn --dataset v2_v19 --seconds 300 --budget 5400 --out /home/hyunlord/work/wm1-runs/wm5/_cost_crn_v2
+2026-10-18_21:35:44 _cost_crn_v2 end exit=0
+2026-10-18_21:35:44 crn_v2_s0 start code=38bea0c5773edb631646dcd82991ebb4b93ae559 max_seconds=5400 load=12.66 18.50 15.18 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method crn --dataset v2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_crn_v2/cost.json --budget 5400 --max-seconds 5400 --out /home/hyunlord/work/wm1-runs/wm5/crn_v2_s0
+2026-10-18_22:19:44 crn_v2_s0 end exit=0
+2026-10-18_22:19:44 _cost_ct_v2 start code=38bea0c5773edb631646dcd82991ebb4b93ae559 max_seconds=1800 load=36.28 24.88 17.31 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py cost --method ct --dataset v2_v19 --seconds 300 --budget 14400 --out /home/hyunlord/work/wm1-runs/wm5/_cost_ct_v2
+2026-10-18_22:26:44 _cost_ct_v2 end exit=0
+2026-10-18_22:26:44 ct_v2_s0 start code=38bea0c5773edb631646dcd82991ebb4b93ae559 max_seconds=14400 load=32.33 28.96 21.47 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset v2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_v2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_v2_s0
+2026-10-19_02:05:46 ct_v2_s0 end exit=0
+2026-10-19_02:05:46 crn_v2_s1 start code=38bea0c5773edb631646dcd82991ebb4b93ae559 max_seconds=5400 load=19.00 17.86 16.33 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method crn --dataset v2_v19 --seed 1 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_crn_v2/cost.json --budget 5400 --max-seconds 5400 --out /home/hyunlord/work/wm1-runs/wm5/crn_v2_s1
+2026-10-19_02:54:47 crn_v2_s1 end exit=0
+2026-10-19_02:54:47 ct_v2_s1 start code=38bea0c5773edb631646dcd82991ebb4b93ae559 max_seconds=14400 load=13.65 14.89 17.37 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset v2_v19 --seed 1 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_v2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_v2_s1
+2026-10-19_06:15:49 ct_v2_s1 end exit=0
+2026-10-19_06:15:49 _cost_m1b_obs2 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=1800 load=11.74 12.22 12.82 cmd: bash tools/worldmodel/wm4/launch/cost4.sh /home/hyunlord/work/wm1-runs/wm5/_cost_m1b_obs2 /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/m1_obs2.py train --out /home/hyunlord/work/wm1-runs/wm5/_cost_m1b_obs2 --seed 0 --max-steps 8000 --max-seconds 300
+2026-10-19_06:39:49 _cost_m1b_obs2 end exit=0
+2026-10-19_06:39:49 m1b_obs2_s0 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=16200 load=12.75 13.31 13.77 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/m1_obs2.py train --out /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s0 --seed 0 --max-steps 8000 --max-seconds 16200
+2026-10-19_10:16:51 m1b_obs2_s0 end exit=0
+2026-10-19_10:16:51 _cost_crn_obs2 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=1800 load=0.79 1.07 1.08 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py cost --method crn --dataset obs2_v19 --seconds 300 --budget 5400 --out /home/hyunlord/work/wm1-runs/wm5/_cost_crn_obs2
+2026-10-19_10:22:51 _cost_crn_obs2 end exit=0
+2026-10-19_10:22:51 crn_obs2_s0 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=5400 load=0.44 0.92 1.03 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method crn --dataset obs2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_crn_obs2/cost.json --budget 5400 --max-seconds 5400 --out /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s0
+2026-10-19_11:00:51 crn_obs2_s0 end exit=0
+2026-10-19_11:00:51 _cost_ct_obs2 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=1800 load=24.75 17.34 12.73 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py cost --method ct --dataset obs2_v19 --seconds 300 --budget 14400 --out /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2
+2026-10-19_11:06:51 _cost_ct_obs2 end exit=0
+2026-10-19_11:06:51 ct_obs2_s0 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=14400 load=20.60 31.60 21.70 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset obs2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s0
+2026-10-19_11:09:51 ct_obs2_s0 end exit=143
+2026-10-19_11:09:51 _wait_evals start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=3600 load=20.79 23.75 20.16 cmd: bash -c 'until [ -e /home/hyunlord/work/wm1-runs/wm5/ref_ct_obs_s1_obs2/effects_last.exit ] && [ -e /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s0_fact/metrics.exit ] && [ -e /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s0_effects/effects_best.exit ]; do date +%s >> /home/hyunlord/work/wm1-runs/wm5/_wait_evals/train_log.jsonl; sleep 60; done; date +%s >> /home/hyunlord/work/wm1-runs/wm5/_wait_evals/train_log.jsonl'
+2026-10-19_11:10:51 _wait_evals end exit=2
+2026-10-19_11:10:51 _cost_ct_obs2 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=1800 load=23.11 23.91 20.45 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py cost --method ct --dataset obs2_v19 --seconds 300 --budget 14400 --out /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2
+2026-10-19_11:16:52 _cost_ct_obs2 end exit=0
+2026-10-19_11:16:52 ct_obs2_s0 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=14400 load=4.77 17.34 19.37 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset obs2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s0
+2026-10-19_11:17:52 ct_obs2_s0 end exit=143
+2026-10-19_11:17:52 _wait_evals2 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=3600 load=43.69 25.70 22.08 cmd: bash /home/hyunlord/work/wm1-runs/wm5/_setup/wait_evals.sh /home/hyunlord/work/wm1-runs/wm5/_wait_evals2
+2026-10-19_11:45:52 _wait_evals2 end exit=0
+2026-10-19_11:45:52 _cost_ct_obs2 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=1800 load=20.75 18.58 20.14 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py cost --method ct --dataset obs2_v19 --seconds 300 --budget 14400 --out /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2
+2026-10-19_11:51:52 _cost_ct_obs2 end exit=0
+2026-10-19_11:51:52 ct_obs2_s0 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=14400 load=15.77 15.29 18.21 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset obs2_v19 --seed 0 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s0
+2026-10-19_14:49:54 ct_obs2_s0 end exit=0
+2026-10-19_14:49:54 crn_obs2_s1 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=5400 load=27.38 22.87 21.72 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method crn --dataset obs2_v19 --seed 1 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_crn_obs2/cost.json --budget 5400 --max-seconds 5400 --out /home/hyunlord/work/wm1-runs/wm5/crn_obs2_s1
+2026-10-19_15:20:54 crn_obs2_s1 end exit=0
+2026-10-19_15:20:54 ct_obs2_s1 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=14400 load=5.33 8.92 11.31 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/causal5.py train --method ct --dataset obs2_v19 --seed 1 --cost /home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2/cost.json --budget 14400 --max-seconds 14400 --out /home/hyunlord/work/wm1-runs/wm5/ct_obs2_s1
+2026-10-19_18:08:56 ct_obs2_s1 end exit=0
+2026-10-19_18:08:56 m1b_obs2_s1 start code=835a8670aa8f83473712722f057ea7a72309dd50 max_seconds=16200 load=1.68 2.98 4.51 cmd: /home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm5/m1_obs2.py train --out /home/hyunlord/work/wm1-runs/wm5/m1b_obs2_s1 --seed 1 --max-steps 8000 --max-seconds 16200
+2026-10-19_21:28:57 m1b_obs2_s1 end exit=0
+2026-10-19_21:44:57 queue done

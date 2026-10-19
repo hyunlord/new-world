@@ -9,7 +9,28 @@ Run of `docs/worldmodel/wm5/GOAL.md` on `codex/worldmodel-2026-10-wip` (base `64
 
 ## 1. Summary
 
-{{SUMMARY}}
+- **The obs2 split exists and is what was planned.** 1,640 worlds (1,200 / 200 / 240), recorded in rounds so that each
+  act reads the trajectory the earlier acts changed; 3,966 acts (2.42 per world, 3.2 % of worlds never acted, 60.0 % of
+  acts with an earlier act in the history); WM-4's confounding (low-food tercile 80.9 % gifts, high-food 72.9 % spoils);
+  every round's prefix check, the policy replay (1,640 / 1,640) and the family check (880 / 880) pass. IPW effective
+  sample sizes 396–445 per act at 7 days (WM-4: 44–55).
+- **Q1 (primary): no.** CRN and CT trained as their authors train them (every run 100 % of the authors' optimizer steps,
+  α = 0.9999 α_max, last checkpoint, counts rounded) are **NONE** in every R1–R3 comparison: obs2 7 d CRN 0.402 and CT
+  0.311 vs `zero` 0.217 (the val-chosen baseline); 30 d 0.780 and 0.483 vs 0.188; v2 7 d 1.649 and 1.243 vs `zero` 0.612
+  and `an5_arm` 0.485; 30 d 3.645 and 1.920 vs 0.487 and 0.594. On v2 they are further behind than WM-4's time-capped
+  runs (post hoc). M1b-obs2 ties `zero` at 7 d (−0.001 [−0.003, +0.001]) and is NONE at 30 d (+0.005).
+- **Q2: the benchmark has room; nothing reaches it.** The noise floor lies far below `zero` on both splits (v2 0.187 vs
+  0.612 at 7 d, 0.267 vs 0.487 at 30 d; obs2 0.058 vs 0.217, 0.095 vs 0.188). On v2 at 7 d `ridge_obs` beats `zero`
+  (E1 WEAK, 0.480 vs 0.612) but only up to the act's mean effect (post hoc: TIE with `arm_mean` and `an5_arm`); the hidden
+  state adds per-world information (`ridge_priv` 0.434, post hoc WEAK vs `arm_mean`) yet stays far from the floor. On
+  obs2 the v2-trained regressions do not transfer (no gift / rot case at a v2 training row), so F2's ridge rungs are a
+  transfer test.
+- **Q3: more observational data barely helps.** M1b-obs2 vs WM-4's M1b-obs: WEAK at both lags (−0.003, −0.004; ≈ 1.5–2 %
+  of the score); CT-obs2 vs WM-4's CT-obs: TIE at 7 d, NONE (worse) at 30 d.
+- **Q4: rounding alone changes almost nothing.** WM-4's CRN / CT re-scored with rounding: every seed-averaged difference
+  has an interval containing 0 (−0.006 … +0.018).
+- **The paper draft** is `docs/worldmodel/paper/paper.md` (≈ 9 pages of content plus appendix; every quoted result
+  traced to a judge file; 28 verified references).
 
 ## 2. The obs2 split (Part 1)
 
@@ -53,13 +74,65 @@ the actual data) never reduced a plan: CRN-v2 0.097 / 0.040 s per encoder / deco
 0.998 s (11,998 s), CRN-obs2 0.044 / 0.011 s (1,275 s), CT-obs2 0.910 s (11,006 s; measured a third time, DECISIONS
 L4.4: the first two ran beside our own evaluations).
 
-{{RUNS_TABLE}}
+| run | data | planned steps | reached | stop | α / α_max at the last step | lowest-`val_roll` step | seconds |
+|---|---|---|---|---|---|---|---|
+| `crn_v2_s0` | v2_v19 | 15,700 + 53,800 | 15,700 + 53,800 | planned / planned | 0.99991 | 32,280 | 2,618 |
+| `crn_v2_s1` | v2_v19 | 15,700 + 53,800 | 15,700 + 53,800 | planned / planned | 0.99991 | 43,040 | 2,905 |
+| `ct_v2_s0` | v2_v19 | 11,850 | 11,850 | planned | 0.99991 | 790 | 13,114 |
+| `ct_v2_s1` | v2_v19 | 11,850 | 11,850 | planned | 0.99991 | 1,580 | 12,051 |
+| `crn_obs2_s0` | obs2_v19 | 15,700 + 53,800 | 15,700 + 53,800 | planned / planned | 0.99991 | 25,107 | 2,249 |
+| `crn_obs2_s1` | obs2_v19 | 15,700 + 53,800 | 15,700 + 53,800 | planned / planned | 0.99991 | 32,280 | 1,848 |
+| `ct_obs2_s0` | obs2_v19 | 11,850 | 11,850 | planned | 0.99991 | 790 | 10,665 |
+| `ct_obs2_s1` | obs2_v19 | 11,850 | 11,850 | planned | 0.99991 | 790 | 10,047 |
+| `m1b_obs2_s0` | obs2_v19 | 8,000 (max) | 8000 | max_steps | — | kept 7950 (val T2 24 h 0.0622) | 12,992 |
+| `m1b_obs2_s1` | obs2_v19 | 8,000 (max) | 8000 | max_steps | — | kept 7950 (val T2 24 h 0.0620) | 11,964 |
 
 **R4 holds for every run**: every stage reached 100 % of its planned steps and α = 0.9999 α_max at the last step.
 
 ## 4. Verdicts (pre-registered; `runs/judge5/judge.md`)
 
-{{RULE_TABLE}}
+| rule | model (seeds) | baseline | ratio | Δ = model − baseline [95 % CI] | verdict |
+|---|---|---|---|---|---|
+| R1 obs2 7 d: `crn_obs2` | 0.402 (0.403, 0.401) | `zero` 0.217 | 1.851 | +0.185 [+0.170, +0.200] | **NONE** |
+| R1 obs2 7 d: `ct_obs2` | 0.311 (0.304, 0.317) | `zero` 0.217 | 1.430 | +0.093 [+0.077, +0.110] | **NONE** |
+| R1 obs2 7 d: `m1b_obs2` | 0.216 (0.215, 0.218) | `zero` 0.217 | 0.996 | -0.001 [-0.003, +0.001] | **TIE** |
+| R2 obs2 30 d: `crn_obs2` | 0.780 (0.770, 0.790) | `zero` 0.188 | 4.138 | +0.591 [+0.548, +0.639] | **NONE** |
+| R2 obs2 30 d: `ct_obs2` | 0.483 (0.502, 0.465) | `zero` 0.188 | 2.565 | +0.295 [+0.264, +0.328] | **NONE** |
+| R2 obs2 30 d: `m1b_obs2` | 0.194 (0.194, 0.194) | `zero` 0.188 | 1.027 | +0.005 [+0.004, +0.007] | **NONE** |
+| R3 v2 7d: `crn_v2` vs `zero` | 1.649 (1.795, 1.504) | `zero` 0.612 | 2.694 | +1.037 [+0.932, +1.142] | **NONE** |
+| R3 v2 7d: `crn_v2` vs `an5_arm` | 1.649 (1.795, 1.504) | `an5_arm` 0.485 | 3.400 | +1.164 [+1.063, +1.266] | **NONE** |
+| R3 v2 30d: `crn_v2` vs `zero` | 3.645 (4.187, 3.104) | `zero` 0.487 | 7.485 | +3.158 [+2.967, +3.364] | **NONE** |
+| R3 v2 30d: `crn_v2` vs `an5_arm` | 3.645 (4.187, 3.104) | `an5_arm` 0.594 | 6.133 | +3.051 [+2.865, +3.253] | **NONE** |
+| R3 v2 7d: `ct_v2` vs `zero` | 1.243 (1.118, 1.368) | `zero` 0.612 | 2.031 | +0.631 [+0.530, +0.733] | **NONE** |
+| R3 v2 7d: `ct_v2` vs `an5_arm` | 1.243 (1.118, 1.368) | `an5_arm` 0.485 | 2.562 | +0.758 [+0.662, +0.854] | **NONE** |
+| R3 v2 30d: `ct_v2` vs `zero` | 1.920 (1.950, 1.889) | `zero` 0.487 | 3.942 | +1.433 [+1.299, +1.565] | **NONE** |
+| R3 v2 30d: `ct_v2` vs `an5_arm` | 1.920 (1.950, 1.889) | `an5_arm` 0.594 | 3.229 | +1.325 [+1.194, +1.457] | **NONE** |
+| E1 v2 7d: `ridge_obs` vs `zero` | 0.480 (0.480) | `zero` 0.612 | 0.783 | -0.133 [-0.178, -0.088] | **WEAK** |
+| E1 v2 30d: `ridge_obs` vs `zero` | 0.602 (0.602) | `zero` 0.487 | 1.235 | +0.115 [+0.073, +0.155] | **NONE** |
+| E1 obs2 7d: `ridge_obs` vs `zero` | 0.537 (0.537) | `zero` 0.217 | 2.470 | +0.319 [+0.302, +0.335] | **NONE** |
+| E1 obs2 30d: `ridge_obs` vs `zero` | 0.514 (0.514) | `zero` 0.188 | 2.730 | +0.326 [+0.309, +0.342] | **NONE** |
+| E2 v2 7d: `crn_v2` vs `ridge_obs` | 1.649 (1.795, 1.504) | `ridge_obs` 0.480 | 3.439 | +1.170 [+1.068, +1.273] | **NONE** |
+| E2 v2 7d: `ct_v2` vs `ridge_obs` | 1.243 (1.118, 1.368) | `ridge_obs` 0.480 | 2.592 | +0.763 [+0.666, +0.863] | **NONE** |
+| E2 v2 7d: `wm3_full` vs `ridge_obs` | 0.496 (0.532, 0.472, 0.484) | `ridge_obs` 0.480 | 1.034 | +0.016 [-0.035, +0.081] | **TIE** |
+| E2 v2 30d: `crn_v2` vs `ridge_obs` | 3.645 (4.187, 3.104) | `ridge_obs` 0.602 | 6.059 | +3.044 [+2.859, +3.244] | **NONE** |
+| E2 v2 30d: `ct_v2` vs `ridge_obs` | 1.920 (1.950, 1.889) | `ridge_obs` 0.602 | 3.190 | +1.318 [+1.191, +1.449] | **NONE** |
+| E2 v2 30d: `wm3_full` vs `ridge_obs` | 0.511 (0.517, 0.504, 0.512) | `ridge_obs` 0.602 | 0.849 | -0.091 [-0.133, -0.046] | **WEAK** |
+| E2 obs2 7d: `crn_obs2` vs `ridge_obs` | 0.402 (0.403, 0.401) | `ridge_obs` 0.537 | 0.749 | -0.135 [-0.154, -0.117] | **KEEP** |
+| E2 obs2 7d: `ct_obs2` vs `ridge_obs` | 0.311 (0.304, 0.317) | `ridge_obs` 0.537 | 0.579 | -0.226 [-0.244, -0.208] | **KEEP** |
+| E2 obs2 7d: `m1b_obs2` vs `ridge_obs` | 0.216 (0.215, 0.218) | `ridge_obs` 0.537 | 0.403 | -0.320 [-0.336, -0.303] | **KEEP** |
+| E2 obs2 7d: `wm3_full` vs `ridge_obs` | 0.239 (0.218, 0.257, 0.242) | `ridge_obs` 0.537 | 0.445 | -0.298 [-0.314, -0.282] | **KEEP** |
+| E2 obs2 30d: `crn_obs2` vs `ridge_obs` | 0.780 (0.770, 0.790) | `ridge_obs` 0.514 | 1.516 | +0.265 [+0.222, +0.313] | **NONE** |
+| E2 obs2 30d: `ct_obs2` vs `ridge_obs` | 0.483 (0.502, 0.465) | `ridge_obs` 0.514 | 0.940 | -0.031 [-0.062, +0.001] | **TIE** |
+| E2 obs2 30d: `m1b_obs2` vs `ridge_obs` | 0.194 (0.194, 0.194) | `ridge_obs` 0.514 | 0.376 | -0.321 [-0.337, -0.304] | **KEEP** |
+| E2 obs2 30d: `wm3_full` vs `ridge_obs` | 0.200 (0.204, 0.196, 0.199) | `ridge_obs` 0.514 | 0.388 | -0.315 [-0.332, -0.298] | **KEEP** |
+| D1 obs2 7d: ct_obs2_vs_ct_obs_as_kept | 0.311 (0.304, 0.317) | `ct_obs (WM-4, as_kept)` 0.317 | 0.980 | -0.006 [-0.021, +0.009] | **TIE** |
+| D1 obs2 7d: ct_obs2_vs_ct_obs_rounded | 0.311 (0.304, 0.317) | `ct_obs (WM-4, rounded)` 0.323 | 0.963 | -0.012 [-0.026, +0.004] | **TIE** |
+| D1 obs2 7d: m1b_obs2_vs_m1b_obs | 0.216 (0.215, 0.218) | `m1b_obs (WM-4)` 0.219 | 0.986 | -0.003 [-0.005, -0.001] | **WEAK** |
+| D1 obs2 30d: ct_obs2_vs_ct_obs_as_kept | 0.483 (0.502, 0.465) | `ct_obs (WM-4, as_kept)` 0.378 | 1.278 | +0.105 [+0.076, +0.135] | **NONE** |
+| D1 obs2 30d: ct_obs2_vs_ct_obs_rounded | 0.483 (0.502, 0.465) | `ct_obs (WM-4, rounded)` 0.378 | 1.280 | +0.106 [+0.076, +0.137] | **NONE** |
+| D1 obs2 30d: m1b_obs2_vs_m1b_obs | 0.194 (0.194, 0.194) | `m1b_obs (WM-4)` 0.197 | 0.981 | -0.004 [-0.006, -0.001] | **WEAK** |
+
+CI = world-level paired bootstrap 95 % (B = 2,000, `default_rng(0)`); the W1 rule as WM-3/4 (KEEP: seed mean ≤ 0.8 × baseline, every seed below it, CI upper < 0; one run reaches WEAK at most). obs2: 240 test worlds, 1,440 cases (replicate 0), WM-4's floored scales; v2: 80 worlds, 604 cases, WM-2's scales. E2 on obs2 compares with a regression that does not transfer from v2 (§6).
 
 ## 5. Q1 — trained as their authors train them, do CRN and CT beat "no effect"?
 
@@ -75,7 +148,7 @@ both splits and at both horizons — every R1–R3 comparison is **NONE** (§4):
 | CT, authors' schedule (2) | 0.311 (0.304, 0.317) | 0.483 (0.502, 0.465) | 1.243 (1.118, 1.368) | 1.920 (1.950, 1.889) |
 | CRN, WM-4 (time-capped; obs2 = its references) | 0.519 | 0.925 | 1.474 | 1.547 |
 | CT, WM-4 (time-capped) | 0.317 | 0.378 | 1.007 | 1.374 |
-| M1b-obs2 (2) | {{M1B_R1}} | {{M1B_R2}} | — | — |
+| M1b-obs2 (2) | 0.216 (0.215, 0.218) | 0.194 (0.194, 0.194) | — | — |
 
 - **Where they fail.** On obs2 they respond to the act in the confounded direction and too strongly (CRN seed 0: a
   gift's 7-day food effect +78.8, a spoil's −121.1 against true +21.7 and −78.0; `naive` says +128.2 / −189.0). On v2
@@ -123,7 +196,7 @@ both splits and at both horizons — every R1–R3 comparison is **NONE** (§4):
   observable vs hidden state on obs2.
 - **E2.** Every primary CRN / CT model is NONE against `ridge_obs` on v2; on obs2 the comparison is against a regression
   that transfers badly, so the obs2 E2 WEAK / KEEP verdicts of the M1 models mostly reflect `ridge_obs`'s failure there.
-  `wm3_full` ties `ridge_obs` on v2 at 7 d (+0.016 [−0.035, +0.081]) and beats it at 30 d (WEAK). {{E2_PENDING}}
+  `wm3_full` ties `ridge_obs` on v2 at 7 d (+0.016 [−0.035, +0.081]) and beats it at 30 d (WEAK). M1b-obs2 is KEEP against `ridge_obs` on obs2 at both lags, which again says more about the regression's transfer than about M1b-obs2 (R1 TIE with `zero`).
 
 
 ## 7. Q3 — does more observational data help? (D1)
@@ -133,7 +206,7 @@ models better in a way that matters:
 - CT-obs2 vs WM-4's CT-obs: 7 d −0.006 [−0.021, +0.009] (TIE, as kept) / −0.012 [−0.026, +0.004] (TIE, CT-obs
   re-scored rounded); 30 d +0.105 [+0.076, +0.135] (**NONE**: worse). CT-obs2's errors are the authors' schedule plus
   more data; WM-4's CT-obs was an early checkpoint, which on these data is the better one at 30 days.
-- M1b-obs2 vs WM-4's M1b-obs: {{M1B_D1}}
+- M1b-obs2 vs WM-4's M1b-obs: 7 d −0.003 [−0.005, −0.001], 30 d −0.004 [−0.006, −0.001] (**WEAK** at both lags): a real but tiny gain (≈ 1.5–2 % of the score), still at `zero` (R1 TIE, R2 NONE by +0.005).
 - Every obs-trained model and WM-2's / WM-3's references stay at or above `zero` on obs2 (M1b-act 0.215–0.225 at 7 d,
   `wm3_full` 0.218–0.257, M1b-obs 0.218 / 0.221; `zero` 0.217).
 

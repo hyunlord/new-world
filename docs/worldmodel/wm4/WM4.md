@@ -1,4 +1,5 @@
 # WM-4: the benchmark as a paper needs it — a confounded observational split, CRN and the Causal Transformer, and WM-3's open ablations
+Followed by docs/worldmodel/wm5/WM5.md (authors' training schedule for CRN/CT, multi-cast observational split obs2, headroom ladder) and the paper draft docs/worldmodel/paper/.
 
 Run of `docs/worldmodel/wm4/GOAL.md` on `codex/worldmodel-2026-10-wip` (base `1bfb6ae0`, WM-3 final). Pre-registration:
 `METRICS.md` part a (`bfa36208`, 2026-10-16 23:57:56 KST, before any treated episode of the observational split) and

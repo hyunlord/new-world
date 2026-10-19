@@ -136,3 +136,12 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 - **L0.7 Second pause.** The Mac slept (lid closed) 2026-10-19 17:58:33–19:40:59 KST (6,146 s); the DGX continued
   (`ct_obs2_s1` ended and was evaluated, `m1b_obs2_s1` started 18:08:56). Every training had started before the
   deadline, so the pause changes no decision; it is recorded for the time per Part.
+
+## Part 6
+- **L6.1 WM4.md pointer.** GOAL.md 11.1's line is inserted directly under WM4.md's title (as WM-4 did for WM3.md);
+  nothing else in WM-4 changes.
+- **L6.2 Paper numbers.** Every quoted result of `paper.md` is a placeholder in `paper_src.md` resolved by
+  `figures.py render` from a committed judge file (WM-5's `judge5/judge.json`, which also carries WM-4's obs numbers in
+  `main_table`, the cost checks, the compute times and the obs2 policy summary; WM-4's `judge4/judge.json` for its ESS);
+  design constants of the benchmark (probabilities, seeds, day ranges, budgets) are quoted from METRICS.md / GOAL.md and
+  are not placeholders. The unit test `TestPaperNumbers` checks every entry of `paper_numbers.json`.

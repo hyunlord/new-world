@@ -270,6 +270,17 @@ time-capped) and of the v2-trained world models are evaluations of those checkpo
 
 ### 5.2 The headroom ladder (F1, F2)
 
+![Figure 1](figures/ladder.png)
+
+*Figure 1. The headroom ladder and every method, per split and horizon (12-cell scaled effect MAE; lower is better).
+Grey: the floor and `ridge_priv` (a diagnostic that reads hidden state); blue: `ridge_obs` and `zero` (dashed line).*
+
+![Figure 2](figures/cells_obs2.png)
+
+*Figure 2. Per-cell scaled effect MAE on the obs2 test (rows: act × outcome × horizon; columns: methods, seed 0 of
+multi-seed models; clipped at 3). The v2 counterpart is `figures/cells_v2.png`.*
+
+
 | split | lag | floor | `ridge_priv` | `ridge_obs` | `zero` | `zero` − floor [95 % CI] | `zero` − `ridge_obs` | `ridge_obs` − `ridge_priv` | `ridge_priv` − floor |
 |---|---|---|---|---|---|---|---|---|---|
 | v2 | 7 d | {{j5:v2/ladder/7d/values/floor#3}} | {{j5:v2/ladder/7d/values/ridge_priv#3}} | {{j5:v2/ladder/7d/values/ridge_obs#3}} | {{j5:v2/ladder/7d/values/zero#3}} | {{j5:v2/ladder/7d/steps/zero − floor/ci_diff#ci3}} | {{j5:v2/ladder/7d/steps/zero − ridge_obs/ci_diff#ci3}} | {{j5:v2/ladder/7d/steps/ridge_obs − ridge_priv/ci_diff#ci3}} | {{j5:v2/ladder/7d/steps/ridge_priv − floor/ci_diff#ci3}} |
@@ -374,6 +385,10 @@ regressions do far worse than `zero` ({{j5:obs2/ladder/7d/values/ridge_obs#3}} a
 {{j5:obs2/ladder/30d/values/zero#3}}), and F2's ridge rungs say nothing about observable versus hidden state on obs2.
 So the gap between `zero` and the floor is real on both splits; on v2 a linear map reaches only the arm-level mean from
 the observable state, and no method we evaluated closes the gap.
+
+![Figure 3](figures/obs2_confounding.png)
+
+*Figure 3. obs2: shares of the three acts among the acts taken in each food-per-person tercile of the decision row.*
 
 **Confounding, measured.** On obs2 the naive treated-minus-control contrast is far worse than `zero` at 7 days
 ({{j5:obs2/confounding/7d/naive_vs_zero/ci_diff#ci3}}); the multi-act inverse-propensity contrast removes most of
@@ -483,6 +498,12 @@ budget. Cost checks (300 s on the actual data) are in the run files; the CT-obs2
 | `crn_obs2_s1` | {{j5:runs/crn_obs2_s1/plan/planned/crn_enc#0}} + {{j5:runs/crn_obs2_s1/plan/planned/crn_dec#0}} | {{j5:runs/crn_obs2_s1/stages/encoder/steps#0}} + {{j5:runs/crn_obs2_s1/stages/decoder/steps#0}} | {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} | {{j5:runs/crn_obs2_s1/stages/decoder/best_step#0}} | {{j5:runs/crn_obs2_s1/seconds#0}} |
 | `ct_obs2_s0` | {{j5:runs/ct_obs2_s0/plan/planned/ct#0}} | {{j5:runs/ct_obs2_s0/stages/ct/steps#0}} | {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} | {{j5:runs/ct_obs2_s0/stages/ct/best_step#0}} | {{j5:runs/ct_obs2_s0/seconds#0}} |
 | `ct_obs2_s1` | {{j5:runs/ct_obs2_s1/plan/planned/ct#0}} | {{j5:runs/ct_obs2_s1/stages/ct/steps#0}} | {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} | {{j5:runs/ct_obs2_s1/stages/ct/best_step#0}} | {{j5:runs/ct_obs2_s1/seconds#0}} |
+
+![Figure 4](figures/training_curves.png)
+
+*Figure 4. Validation factual rollout loss (`val_roll`) over optimizer steps: the earlier study's time-capped runs
+(WM-4) and this study's runs on the authors' schedule (WM-5). The lower panels use different validation sets (obs vs
+obs2), so only their shapes compare.*
 
 ## Appendix C. The observational policies
 
