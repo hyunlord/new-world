@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-10-19T04:07:20.339370+00:00",
+  "runtime_frozen_at": "9050fa0b348dcc9b76eb50a5de138e9c3eaf0d42",
+  "current_head": "d3c18a1cffd1c57c85238f7a97bf8bfeb96ba7f1",
+  "runtime_diff_to_head": "",
+  "tracked_runtime_worktree_diff": "",
+  "worktrees": "worktree /Users/rexxa/work/new-world-art-prod\nHEAD d3c18a1cffd1c57c85238f7a97bf8bfeb96ba7f1\nbranch refs/heads/codex/art-production-2026-10-wip\n\nworktree /Users/rexxa/work/art-production-audit\nHEAD a4c168fb684bd17e743d03bb152acfa71b8c558f\ndetached",
+  "removed_owned_worktrees": [
+    "/Users/rexxa/work/art-p13-base",
+    "/Users/rexxa/work/art-p13-measure"
+  ],
+  "final_after_measurement": "NOT_MEASURED_user_GUI_prohibition",
+  "gate_status": "RUNNING_session12206",
+  "gate_GODOT_BIN": "/Users/rexxa/work/art-production13-evidence/headless-gate/godot-no-window.sh",
+  "gate_gui_refusal_exit": 75
+}

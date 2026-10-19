@@ -9,9 +9,9 @@ Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live author
 | 0 | Preserve original; merge Pass21; unchanged packed contract; tooling; 15-probe calibration; full gate; exact-clock references; release matrix and running diagnosis; commit/push | completed |
 | 1 | Kernel accepted and default ON; write-skip stays OFF, NOT_VERIFIED after user window prohibition; evidence retained | closed with verification gap |
 | 2 | Badge icons, tooltip, source-sheet blind 7/7; actual framebuffer, Stage B and real input unavailable under user GUI prohibition | implementation checked; display acceptance NOT_VERIFIED |
-| 3 | All reachable name syllable glyph masks; fact/name split; input QA and capture-backed text fixes; commit/push | in progress, CPU TextServer headless |
-| 4 | Freeze by hour9; complete release after matrix/timers; H1-H10 evidence verdicts; commit/push | pending |
-| 5 | Fresh independent review max2; final gate; FF art branch, PR511 report, cleanup worktrees; Korean full report | pending |
+| 3 | Actual Life48px both weights10442 glyph pairs pass;24/36 failures retained; fact/name screen reading unavailable | implementation checked; display acceptance NOT_VERIFIED |
+| 4 | Runtime frozen9050fa0b; baseline and kernel pair evidence audited separately; final matrix/timers prohibited by GUI override | evidence recorded; final-after NOT_MEASURED |
+| 5 | Review round1 complete; final gate repeat96797 optimized2/headless-only; report draft; both owned worktrees removed | in progress; green FF prohibited without full gate |
 
 ## Events
 - Launch: working WIP/origin and art/origin all equal required 57ae7ac4. Existing local .gitignore modification and untracked .ignore preserved.
@@ -38,3 +38,6 @@ Admission waiting: 1243.6406910419464 seconds recorded as of 03:02Z; live author
 - 2026-10-19T03:47:44.550253+00:00: Part1 closed under newer user no-window constraint. Kernel accepted with complete original acceptance; write-skip NOT_VERIFIED due interrupted identity/no speed, remains opt-in OFF. Candidate(c) has no eligible >=1ms outside presentation target in baseline diagnosis. No new admission waiting. Part2 begins with baseline source/retained-image/headless data; missing display evidence remains explicit.
 
 - Part2 headless checks: ACTIVITY_P11 failures=0; ACTIVITY_ICONS_P13 failures=0; PERSON_ACTIVITY_TOOLTIP_P13 boundary_failures=0 real_input=NOT_VERIFIED. All 21 mask/hue pairs meet thresholds. Fresh source-sheet reader 7/7, Craft low confidence retained. Python suite 480 tests passed in 28.540s. Stage B, no-legend world crops, summary reading and actual displayed dimensions remain unavailable; no GUI launched. Part3 CPU glyph work begins without changing this acceptance boundary.
+
+- Part3 actual48px normal/bold10442 pairs pass;24px and36px failures retained. Runtime frozen at9050fa0b, pushed04:02:25Z. H matrix distinguishes baseline and kernel A/B from absent final after. Both owned temporary worktrees removed and git worktree list verified04:07Z; unrelated audit checkout untouched.
+- Final gate attempt1 preserved under gates/final-attempt1. Cargo static scanner found3 unresolved renderer dispatch calls; fixed with explicit method names, existing boundary executable4/4 pass. Full attempt1 and supplemental cargo repeat deliberately stopped130 after discovering missing required opt-level2 environment. No green claim. Fresh final gate96797 uses CARGO_PROFILE_DEV_OPT_LEVEL=2/CARGO_PROFILE_TEST_OPT_LEVEL=2, jobs6, and GUI-refusing wrapper. Do not duplicate it.

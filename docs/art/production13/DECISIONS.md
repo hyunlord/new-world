@@ -34,3 +34,12 @@ Original §5.1 met: all6exactRGBA, all2280running/panframesexactwithoff/onstamps
 ## 2026-10-19T03:47:44.550253+00:00 Windowless execution override
 
 User prohibited Godot windows, then requested CLI-Anything. The audited installed headless CLI is permitted; GUI runners stay stopped. Kernel acceptance remains valid historical measurement. Write-skip stays default OFF and is NOT_VERIFIED (user-interrupted, not contended); no automatic windowed retry. End Part1 and proceed with non-windowed Parts2–3 implementation and honest evidence gaps. Do not label headless timers, geometry, or raster approximations as display-performance/screenshot acceptance.
+
+## Windowless Parts2–5 decisions
+
+- Source-sheet reader7/7 does not satisfy missing in-world Stage B or framebuffer dimensions; no synthetic terrain substitution. Keep Craft low confidence despite numerical success.
+- CPU TextServer glyph rasterization works without a GPU window. Both font outline grids are12px;24 and36px Hangul fail,48px passes. Override Life normal/bold only, preserving global theme/title sizes. Actual layout and reader acceptance remain unverified.
+- Runtime frozen9050fa0b; final display matrix and running timers remain NOT_MEASURED under the newer user prohibition. Do not run artificial admission retries for a session that is not authorized to launch.
+- Final gate uses an external GODOT_BIN wrapper refusing any invocation without explicit --headless. Existing real-input cases are not silently skipped or counted as passing. No production branch fast-forward without the original full green gate.
+- Round1 found a standalone glyph output-directory prerequisite; gate now provides a unique default. First final cargo check found unresolved dynamic renderer calls; replace them with literal calls, preserving the scanner and all readback checks.
+- First final gate accidentally used default opt levels; preserve its logs and interrupted130 result. Restart with explicit dev/test opt-level2, not a retrospective passing label. Only owned jobs were interrupted.
