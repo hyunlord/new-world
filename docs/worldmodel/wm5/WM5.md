@@ -67,7 +67,37 @@ L4.4: the first two ran beside our own evaluations).
 
 ## 6. Q2 — is the benchmark discriminative? The headroom ladder (F1, F2, E1, E2)
 
-{{Q2}}
+**Yes, the benchmark has room; the methods do not reach it.** The ladder (12-cell scaled MAE; Δ with world-bootstrap
+95 % CI):
+
+| split | lag | floor | `ridge_priv` (diagnostic) | `ridge_obs` | `zero` | `zero` − floor | `zero` − `ridge_obs` | `ridge_obs` − `ridge_priv` | `ridge_priv` − floor |
+|---|---|---|---|---|---|---|---|---|---|
+| v2 | 7 d | 0.187 | 0.434 | 0.480 | 0.612 | +0.425 [+0.374, +0.483] | +0.133 [+0.088, +0.178] | +0.045 [+0.028, +0.063] | +0.247 [+0.213, +0.282] |
+| v2 | 30 d | 0.267 | 0.590 | 0.602 | 0.487 | +0.220 [+0.114, +0.327] | −0.115 [−0.155, −0.073] | +0.012 [−0.005, +0.031] | +0.323 [+0.227, +0.411] |
+| obs2 | 7 d | 0.058 | 0.391 | 0.537 | 0.217 | +0.159 [+0.144, +0.175] | −0.319 [−0.335, −0.302] | +0.146 [+0.131, +0.159] | +0.333 [+0.318, +0.349] |
+| obs2 | 30 d | 0.095 | 0.497 | 0.514 | 0.188 | +0.094 [+0.070, +0.116] | −0.326 [−0.342, −0.309] | +0.017 [−0.011, +0.043] | +0.402 [+0.370, +0.436] |
+
+- **The floor is far below `zero` on both splits and at both lags** (F1, F2): the per-world effect is mostly fixed by the
+  state at the act; post-fork noise is a small part. On v2 the floor equals √2 × WM-2's between-replicate spread exactly
+  (0.187 = √2 × 0.132; 0.267 = √2 × 0.189). It is a reference point, not a hard ceiling: for continuous symmetric noise
+  it over-states the noise-limited error by ≈ √2, and in sparse count cells (deaths at 30 d) it can be worse than `zero`
+  (review round 1, m4).
+- **E1 v2 7 d: `ridge_obs` beats `zero` (WEAK, ratio 0.783; a deterministic one-run side is capped at WEAK by the W1
+  rule).** Post hoc (review M1) it only ties the act's mean effect — vs `arm_mean` −0.017 [−0.037, +0.002], vs `an5_arm`
+  −0.006 [−0.037, +0.025] — so linearly the observable state adds nothing measurable beyond the arm-level mean. The
+  hidden state does add per-world information (`ridge_priv` vs `arm_mean` −0.063 [−0.082, −0.043], vs `an5_arm` −0.051
+  [−0.080, −0.022], post hoc), but `ridge_priv` stays 0.247 above the floor: most of the headroom is not linear in the
+  state at the act, observable or hidden. At 30 d (E1 NONE) the regressions lose to `zero`, as `arm_mean` does: they fit
+  squared error (a mean) while the metric rewards a median near zero for these skewed, mostly-zero effects.
+- **E1 obs2 (NONE at both lags) measures v2→obs2 transfer, not what obs2's state carries** (review M2): every v2
+  training case of a gift or a rot sits at one cast row (490), obs2's test cases at 61 rows, and no obs2 gift or rot case
+  falls on a v2 training row (spoils 20.4 %). Four cells chose λ = 0.01 on v2 val (same rows as train), and the
+  unregularized fits extrapolate badly (`rw120|alive|7d` 1.535 vs `zero` 0.036). F2's ridge rungs say nothing about
+  observable vs hidden state on obs2.
+- **E2.** Every primary CRN / CT model is NONE against `ridge_obs` on v2; on obs2 the comparison is against a regression
+  that transfers badly, so the obs2 E2 WEAK / KEEP verdicts of the M1 models mostly reflect `ridge_obs`'s failure there.
+  `wm3_full` ties `ridge_obs` on v2 at 7 d (+0.016 [−0.035, +0.081]) and beats it at 30 d (WEAK). {{E2_PENDING}}
+
 
 ## 7. Q3 — does more observational data help? (D1)
 
@@ -89,7 +119,24 @@ unrounded readout for seven runs; `ct_obs_s1` differs at the 1e-4 relative level
 
 ## 10. Design caveats
 
-{{CAVEATS}}
+- **One simulator, one scene, three acts at one amount.** obs2's policy is synthetic: known propensities, a refractory
+  week and a cap a real decision-maker would not have.
+- **obs2 cases inherit the policy's timing** (c1 / c2 are the policy's act rows or fixed fallbacks), as WM-4's obs cases
+  did; the v2 and obs2 tests ask different questions and are not pooled.
+- **The direct regressions are linear and trained on v2's counterfactual labels**; on obs2 they extrapolate outside
+  v2's cast-row support (§6), so they bound nothing there.
+- **The floor is a reference, not a ceiling** (§6).
+- **CRN / CT at daily resolution, one configuration each** (chosen on WM-4's smaller obs split), two seeds; M1 at hourly
+  resolution. CRN / CT's primary checkpoint is the last step (the authors' practice), which on these data is not their
+  best factual checkpoint: `val_roll` is lowest early (CT-v2 at steps 790 / 1,580 of 11,850) and the CRN-obs2 decoder's
+  last evaluation spiked (1.372 vs 0.63–0.73 before) — the secondary checkpoints are reported beside the primary ones.
+- **CT-obs2's cost check was measured three times** (DECISIONS L4.4); the plan used is the third, clean measurement's.
+- **obs2 trainings used an observed-only manifest** (DECISIONS L1.4), identical in its observed entries to the final one.
+- **GPU nondeterminism**: one WM-4 CT run re-scored to 1e-4 relative differences (DECISIONS L4.2); GPU reproducibility was
+  not measured.
+- **An SSH stall** (2.1 h) is recorded as a pause; DGX jobs ran on.
+- **WM-4 run names collide with WM-5's** (`crn_v2_s0` …); `wm4:` prefixes mark WM-4's runs here.
+
 
 ## 11. The paper
 

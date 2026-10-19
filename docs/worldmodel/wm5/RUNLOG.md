@@ -42,3 +42,5 @@ pauses.
 | 4 (cost) | 11:00:51 | 11:09:51 | `_cost_ct_obs2` measured beside our own evaluations (1.89 s/step → plan cut to 7,349); `ct_obs2_s0` stopped after 3 min and both moved to `_aborted/`; `_wait_evals` holds the queue until the evaluations end (DECISIONS L4.4) |
 | 4.2 | 10:30 | 11:45 | obs2 references (WM-2 M1b-act × 3, WM-3 `wm3_full` × 3, WM-4 `m1b_obs` × 2 at ≈ 7 min each; WM-4 CRN / CT obs × 4 in seconds), `m1b_obs2_s0` effects and factual T2, `crn_obs2_s0` effects (last, best) |
 | 4 (cost) | 11:45:52 | 11:51:52 | `_cost_ct_obs2` third measurement (no evaluation of ours running): 0.910 s/step → full plan; `ct_obs2_s0` started 11:51:52 |
+| 7 (review 1) | 11:55 | 12:25 | review round 1 (fresh subagent, read-only, HEAD `cc3f744c`): no BLOCKING, 2 MAJOR, 5 MINOR, 12 NOTE; fixes `c5ecf7b7` (judge post hoc block, wording, DECISIONS L2.1–L2.5 / L7.1, missing file) |
+| 4.1 | 11:51:52 | 14:49:54 | `ct_obs2_s0`: 11,850 / 11,850 steps, α 0.99991 α_max, 10,665 s; lowest `val_roll` at step 790; test effects 14:5x; `crn_obs2_s1` started |
