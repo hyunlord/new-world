@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm6/effects6.py train --model seq --feat priv --n 400 --seed 0 --config-from /home/hyunlord/work/wm1-runs/wm6/grid_choice/choice.json --prep /home/hyunlord/work/wm1-runs/wm6/_prep --base /home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json --max-seconds 3600 --out /home/hyunlord/work/wm1-runs/wm6/seq_priv_n400_s0

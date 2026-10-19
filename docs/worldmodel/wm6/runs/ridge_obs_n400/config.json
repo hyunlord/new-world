@@ -1,0 +1,37 @@
+{
+ "argv": [
+  "tools/worldmodel/wm6/effects6.py",
+  "ridge",
+  "--feat",
+  "obs",
+  "--n",
+  "400",
+  "--prep",
+  "/home/hyunlord/work/wm1-runs/wm6/_prep",
+  "--base",
+  "/home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm6/ridge_obs_n400"
+ ],
+ "base_sha256": "6240d0660723f7f8ce26c07b1ef670647d05c5040419ec1a2eb06f9bc526949d",
+ "code_commit": "b5e31658",
+ "diagnostic": false,
+ "feat": "obs",
+ "host": "aitopatom-d6bb",
+ "lambdas_grid": [
+  0.01,
+  0.1,
+  1.0,
+  10.0,
+  100.0,
+  1000.0
+ ],
+ "model": "ridge",
+ "n": 400,
+ "name": "ridge_obs",
+ "numpy": "2.5.2",
+ "prep_sha256": {
+  "v2.json": "8ee7547645d5a48408b6f30e0121efa4ee02b3d10074d906062ff9cbd044247f"
+ },
+ "repro": false
+}

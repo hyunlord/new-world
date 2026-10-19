@@ -87,3 +87,18 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   ridge reproduction tolerance is 1e-6). The first queue run (`ridge_obs_repro`, started 01:18:45 on `dd988bf7`, which
   also rebuilt its row index per case) and the first DGX unit-test run were stopped and restarted on the fixed commit;
   the stopped run directory is kept under `_aborted/` (it had produced nothing).
+
+## Part 4
+- **L4.1 Two queues for 2.7 minutes (incident).** The 01:30 restart (L2.9) killed the first queue's `launch.sh`
+  wrapper, not its `queue.sh` child (pid 1342590), so from 01:30:14 to 01:32:54 two queues took lines in turn and ran
+  pairs of trainings at once (each ≈ 20 s: the reproductions, the N = 400 ridges, the 8 grid runs, `grid_choice`,
+  `mlp_obs_n400_s0`/`s1`, `mlp_priv_n400_s0`) — a breach of "one training job at a time" (GOAL.md 0.3.7). Every run is
+  independent and seeded, so no result depends on it; the orphaned queue was killed at 01:33, its last run
+  (`mlp_obs_n400_s2`, left without `train.exit`) was moved to `_aborted/` and re-run by the remaining queue. Two
+  checks: `ridge_obs_repro`'s files come from one process (the first queue's attempt was killed; its late `train.exit`
+  line in the queue log, "seconds=2", is the killed process's), and `grid_choice` — which started 2 s before the last
+  grid run's queue line ended — was recomputed from the eight finished grid runs: identical (`choice.json`). Later
+  restarts kill the whole process group (`kill -- -<pgid>`; `launch.sh` starts every job with `setsid`).
+- **L4.2 The grid** (N = 400, seed 0, v2 val 24-cell average): `mlp_obs` width 512 / dropout 0.3 (0.456; the others
+  0.462, 0.462, 0.464), `mlp_priv` width 256 / dropout 0.3 (0.415; 0.424, 0.430, 0.425); frozen for every N and for the
+  GRU heads. At N = 400 `ridge_obs` scores 0.547 and `ridge_priv` 0.526 on the same val statistic.

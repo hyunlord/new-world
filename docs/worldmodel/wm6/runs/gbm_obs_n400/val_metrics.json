@@ -1,0 +1,134 @@
+{
+ "info": {
+  "gf240E|alive|30d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|alive|7d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|deaths|30d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|deaths|7d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|food_stock|30d": {
+   "best_iteration": 30,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|food_stock|7d": {
+   "best_iteration": 52,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|settlements_alive|30d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "gf240E|settlements_alive|7d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|alive|30d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|alive|7d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|deaths|30d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|deaths|7d": {
+   "best_iteration": 32,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|food_stock|30d": {
+   "best_iteration": 90,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|food_stock|7d": {
+   "best_iteration": 58,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|settlements_alive|30d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "rw120E|settlements_alive|7d": {
+   "best_iteration": 1,
+   "n_train": 400,
+   "n_val": 160
+  },
+  "sp240L|alive|30d": {
+   "best_iteration": 19,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|alive|7d": {
+   "best_iteration": 187,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|deaths|30d": {
+   "best_iteration": 1,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|deaths|7d": {
+   "best_iteration": 1,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|food_stock|30d": {
+   "best_iteration": 408,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|food_stock|7d": {
+   "best_iteration": 139,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|settlements_alive|30d": {
+   "best_iteration": 1,
+   "n_train": 345,
+   "n_val": 146
+  },
+  "sp240L|settlements_alive|7d": {
+   "best_iteration": 7,
+   "n_train": 345,
+   "n_val": 146
+  }
+ },
+ "lightgbm": "4.7.0",
+ "n": 400,
+ "name": "gbm_obs",
+ "seconds": 2.7555387020111084,
+ "stop": "early_stopping_per_cell",
+ "val": {
+  "30d": 0.4833313790333447,
+  "7d": 0.4209444534754585,
+  "both": 0.4521379162544016
+ }
+}

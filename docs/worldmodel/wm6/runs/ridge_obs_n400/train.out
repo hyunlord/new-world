@@ -1,0 +1,1 @@
+{"name": "ridge_obs", "feat": "obs", "n": 400, "repro": false, "diagnostic": false, "n_train_cases": 1490, "n_train_worlds": 400, "train_reps": [0], "val": {"7d": 0.48071446138595486, "30d": 0.6133082813008189, "both": 0.5470113713433868}, "seconds": 0.17277884483337402}

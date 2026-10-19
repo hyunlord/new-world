@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm6/effects6.py ridge --feat priv --n 400 --prep /home/hyunlord/work/wm1-runs/wm6/_prep --base /home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json --out /home/hyunlord/work/wm1-runs/wm6/ridge_priv_n400

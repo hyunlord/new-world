@@ -13,3 +13,8 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 3 | 00:59:27 | 00:59:27 | METRICS.md committed and pushed (`f1777fb5`) before any training; `_setup/prereg_sha` written |
 | 1 | 00:59:02 | | `probe_50000` done in 885 s (DETERMINISM PASS; load average 55–61 from other users' node test jobs); `probe_50100` started at 8 workers |
 | 4 | 01:00 | | training queue started (N = 400: ridge reproduction, ridge, the grid, choice, MLP / GRU × 3 seeds, GBM); it waits for the 8-worker probe chunk (DECISIONS L1.3) |
+| 1 | 00:59:02 | 01:18:45 | `probe_50100` at 8 workers (1,183 s, DETERMINISM PASS); from `probe_50200` the chunks run at 4 workers (a training is queued) |
+| 2 | 01:00 | 01:30 | first DGX unit-test run hung in the WM-5 reproduction: multi-threaded OpenBLAS stalls under the DGX load (DECISIONS L2.9); fix `b5e31658` (one BLAS thread); the first queue run `ridge_obs_repro` (on `dd988bf7`) stopped and moved to `_aborted/`, queue restarted 01:30 |
+| 2 | 01:30:10 | 01:30:41 | DGX unit tests on `b5e31658`: 10 OK, 0 skipped (31 s), WM-5 reproduction included |
+| 4 | 01:30:14 | 01:30:36 | `ridge_obs_repro`, `ridge_priv_repro` (20 s each): λ equal to WM-5's in all 24 cells, val predictions equal to WM-5's committed ones within 2.1e-12 / 7.5e-13 |
+| 4 | 01:30:14 | 01:33 | N = 400 ridges (20 s each) and the 8 grid runs (20 s each including start-up; ≈ 3 s of training); grid choice `mlp_obs` 512 / 0.3, `mlp_priv` 256 / 0.3; a second, orphaned queue ran beside the first until 01:33 (DECISIONS L4.1) |

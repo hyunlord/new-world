@@ -1,0 +1,44 @@
+{
+ "argv": [
+  "tools/worldmodel/wm6/effects6.py",
+  "gbm",
+  "--feat",
+  "priv",
+  "--n",
+  "400",
+  "--prep",
+  "/home/hyunlord/work/wm1-runs/wm6/_prep",
+  "--base",
+  "/home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm6/gbm_priv_n400"
+ ],
+ "base_sha256": "6240d0660723f7f8ce26c07b1ef670647d05c5040419ec1a2eb06f9bc526949d",
+ "code_commit": "b5e31658",
+ "diagnostic": true,
+ "early_stopping_rounds": 50,
+ "feat": "priv",
+ "host": "aitopatom-d6bb",
+ "lightgbm": "4.7.0",
+ "model": "gbm",
+ "n": 400,
+ "n_train_cases": 1145,
+ "name": "gbm_priv",
+ "numpy": "2.5.2",
+ "params": {
+  "deterministic": true,
+  "force_row_wise": true,
+  "learning_rate": 0.05,
+  "min_data_in_leaf": 20,
+  "num_leaves": 31,
+  "num_threads": 4,
+  "objective": "l1",
+  "seed": 0,
+  "verbose": -1
+ },
+ "prep_sha256": {
+  "v2.json": "8ee7547645d5a48408b6f30e0121efa4ee02b3d10074d906062ff9cbd044247f"
+ },
+ "python": "/home/hyunlord/work/wm6-gbm-venv/bin/python",
+ "rounds": 500
+}

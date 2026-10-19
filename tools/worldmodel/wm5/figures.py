@@ -6,6 +6,7 @@ WM-5 only.
     {{j5:v2/cell_averages/zero/7d#3}}      a value of WM-5's judge.json, 3 decimals
     {{j5:obs2/rules/R1/ct_obs2/ci_diff#ci3}}   a CI: "+0.123 [+0.100, +0.150]" (three numbers)
     {{j4:…}} {{j3:…}} {{j2:…}}             WM-4 / WM-3 / WM-2's judge.json
+    {{j6:…}} {{d6:…}}                      WM-6's judge.json / the v2x description (added by WM-6, GOAL.md 2)
     {{p5:summary/all/casts#0}}             obs2's policy summary (judge.json `describe`)
 
 Format suffixes: `#str` (a string as is, e.g. a verdict), `#3` (decimals), `#3s` (signed), `#0` (integer with thousands separators), `#pct1` (a share as a
@@ -36,8 +37,10 @@ SOURCES = {
     "j4": "docs/worldmodel/wm4/runs/judge4/judge.json",
     "j3": "docs/worldmodel/wm3/runs/judge3/judge.json",
     "j2": "docs/worldmodel/wm2/runs/judge_wm2/judge.json",
+    "j6": "docs/worldmodel/wm6/runs/judge6/judge.json",
+    "d6": "docs/worldmodel/wm6/runs/describe/describe.json",
 }
-PLACEHOLDER = re.compile(r"\{\{(j5|j4|j3|j2|p5):([^#}]+)#([a-z0-9]+)\}\}")
+PLACEHOLDER = re.compile(r"\{\{(j6|d6|j5|j4|j3|j2|p5):([^#}]+)#([a-z0-9]+)\}\}")
 MINUS = "−"
 
 
