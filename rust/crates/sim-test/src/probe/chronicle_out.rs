@@ -73,12 +73,28 @@ pub fn document(chronicle: &Chronicle, scene: &str, seed: u64, ticks: u64, git_s
     })
 }
 
-/// Write `chronicle_<seed>.json` into `dir`.
+/// Write `chronicle_<seed>.json` into `dir`. Pass 21: under a relations rule
+/// also `relations_<seed>.json` — the measurement-only log of disputes and
+/// quarrels per (display day, village pair) as rows `[day, a, b, disputes,
+/// quarrels]` (a separate file: the chronicle file is unchanged).
 pub fn write(dir: &Path, engine: &SimEngine, scene: &str, seed: u64, git_sha: &str) -> Result<(), String> {
     std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
     let doc = document(&engine.resources.chronicle, scene, seed, engine.current_tick(), git_sha);
     let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
-    std::fs::write(dir.join(format!("chronicle_{seed}.json")), text).map_err(|e| e.to_string())
+    std::fs::write(dir.join(format!("chronicle_{seed}.json")), text).map_err(|e| e.to_string())?;
+    if engine.resources.rules.society.relations.is_some() {
+        let rows: Vec<Value> = engine
+            .resources
+            .settlement_relations
+            .dispute_days
+            .iter()
+            .map(|((day, a, b), (disputes, quarrels))| json!([day, a, b, disputes, quarrels]))
+            .collect();
+        let doc = json!({"scene": scene, "seed": seed, "fields": ["day", "a", "b", "disputes", "quarrels"], "dispute_days": rows});
+        let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
+        std::fs::write(dir.join(format!("relations_{seed}.json")), text).map_err(|e| e.to_string())?;
+    }
+    Ok(())
 }
 
 /// Twin check after a tick: same length, the entries appended since `seen`

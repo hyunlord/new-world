@@ -274,6 +274,19 @@ pub fn game_v25_scene(seed: u64) -> SimEngine {
     engine
 }
 
+/// Pass 21 fixture: `game_v25` with feuds that end and help that arrives
+/// (`V26_RELATIONS`: the avoid filter at every food-target selector, daily
+/// caps per village pair, exchange before aid, a lower aid keep line).
+pub fn game_v26_scene(seed: u64) -> SimEngine {
+    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v26(seed),
+        sim_core::rules::WorldRules::game_v26(seed),
+    );
+    engine.resources.world_variety = Some(variety);
+    engine
+}
+
 /// Pass 16 placebo: world `seed` under `game_v20_inert` (temperament drawn
 /// and stored, no lean acts — the same world as `game_v19`).
 pub fn game_v20_inert_scene(seed: u64) -> SimEngine {

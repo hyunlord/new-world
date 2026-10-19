@@ -97,6 +97,16 @@ pub struct SettlementRelations {
     pub dispute_day: u64,
     /// Forager pairs (lower id first) already evaluated on `dispute_day`.
     pub disputed: BTreeSet<(AgentId, AgentId)>,
+    /// Pass 21 (daily caps): per village pair (lower id first), the disputes
+    /// that cost `dispute_loss` and the quarrels on `dispute_day`; cleared
+    /// with `disputed`. Written only under a cap (`dispute_cap_per_pair_day`
+    /// or `quarrel_cap_per_pair_day` > 0), so empty in `game_v25`.
+    #[serde(default)]
+    pub day_counts: BTreeMap<(SettlementId, SettlementId), (u32, u32)>,
+    /// Pass 21 (measurement only, every relations rule; never read by the
+    /// simulation): disputes and quarrels per (display day, pair).
+    #[serde(default)]
+    pub dispute_days: BTreeMap<(u64, SettlementId, SettlementId), (u32, u32)>,
     /// Ended trips in end order (measurement only).
     pub trips: Vec<TripRecord>,
     /// Every ordered pair at every decision minute (measurement only).

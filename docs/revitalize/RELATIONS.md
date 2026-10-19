@@ -67,3 +67,52 @@ Before the decision loop each tick, the system notes every forager at a bush (pi
 
 
 See METRICS.md `## Pass 20` (rules), [diag](probe/p20-2_diag/diag.md) (7.1), [tuning](probe/p20-2_diag/tuning.md) (7.3), [eval](probe/p20-2_eval/eval.md) (T1–T4, T7) and [t6](perf/p20-2/t6.md) (performance).
+
+
+## Pass 21 — feuds that end and help that arrives (`game_v26`)
+
+Pass 20's mechanics were exact but its balance was wrong: estranged villages never separated (the opportunistic Gather arm ignored the border, so 426 of 511 quarrels came after estrangement), a pair could lose hundreds of points a day and recover at 1 % a day (no reconciliation in 32 worlds), and aid was rare (most qualifying pair-days fell between estranged villages; exchange could not happen). `game_v26` = `game_v25` with `V26_RELATIONS`; no new mechanic, no new kind, component, target or RNG stream. `game_v25` and every older scene are unchanged (identity I1–I9 and all pins). The live game starts in `game_v26`.
+
+### What changed, and why each number
+
+| field | v25 | v26 | why |
+|---|---|---|---|
+| `avoid_gather` | false | **true** | the Gather arm's food-tile choice (`nearest_gather_tile`), its existence check (`gather_tile_exists`, the routine's exit predicate) and both post-pass re-resolutions skip a tile nearer to an estranged village's hearth than to the own one — the same border test as the forage bush choice. With it every selector that can give a forager a food target respects estrangement. The exit predicate's memo now keys the avoid list's owner (the member's village), so two members of different villages on one tile cannot share an answer |
+| `dispute_cap_per_pair_day` | 0 (none) | **3** | a village pair pays `dispute_loss` for at most 3 disputes a display day; further disputes are still counted. A pair whose foragers meet six times a day (measured) no longer loses 60+ points a day from disputes |
+| `quarrel_cap_per_pair_day` | 0 (none) | **1** | at most one quarrel per pair and day: once reached, a dispute draws no quarrel and the pickup proceeds (the keyed draw is skipped; it consumes no state) |
+| `exchange_first` | false | **true** | the pair's exchange is tried before either village's aid (in whichever orientation meets the exchange condition); with aid first, the tuned aid thresholds shadowed the exchange completely |
+| `dispute_loss` | 10 | **5** | with the caps a bad day costs at most 3 × 5 + 1 × 40 = 55 |
+| `quarrel_loss` | 100 | **40** | the grid (below) |
+| `relation_drift_permille` | 10 | **30** | 3 % of the gap a day: from −300 to −150 toward a parent base of 300 in 10–12 days (10 from exactly −300, 12 from −330), from −1,000 in 36 days. Integer truncation stops the drift within 33 of the base (33 × 30 < 1,000) |
+| `aid_giver_days_permille` | 3,000 | **2,500** | the grid (below) |
+| `aid_keep_days_permille` | 3,000 | **2,000** | below the giver line, so a giver always has at least half a day's need above its keep line (in v25 the keep line equalled the giver line and the surplus was often 0–10 units) |
+| `aid_receiver_days_permille` | 2,000 | 2,000 | the grid kept it |
+
+Ledgers: `SettlementRelations::day_counts` (per pair: costed disputes and quarrels today, cleared with the once-per-day forager set when the display day changes) and the measurement-only `dispute_days` (disputes and quarrels per display day and pair, written under every relations rule, never read by the simulation; `--chronicle-out` writes it as `relations_<seed>.json`). New tallies: `disputes_uncosted`, `quarrels_capped`, `quarrels_while_estranged`.
+
+### The grid
+
+Quarrel loss, drift and the two aid thresholds were not guessed: twelve configurations were pre-registered in the brief and run on 19500–19515 for 120 days ([grid](probe/p21-2_grid/grid.md)). The rule: among configurations with ≤ 0.25 of pairs estranged at day 120, quarrels in ≥ 0.15 of multi-village worlds and (with ≥ 3 estrangements) ≥ 0.5 reconciled, the highest share of multi-village worlds with a delivery, ties to the earlier. Eight qualified; six reached the top share (5 of 7 worlds); the earliest, **G2** (quarrel loss 40, drift 30 ‰, giver 2,500 ‰, receiver 2,000 ‰), was frozen. Slower drift (20 ‰) failed the reconciliation bar; a larger quarrel loss (60) estranged more pairs without reaching more worlds.
+
+### The measured λ against the planner's model
+
+The planner modelled a pair with λ disputes a day (0.5–2), a 0.28 quarrel share and 5 % contact while estranged. The diagnostic ([diag](probe/p21-2_diag/diag.md), 19500–19515) measured per pair and day from the dispute log: **λ is bimodal** — 16 of 20 pairs have λ = 0 before estrangement (19514's pair disputed twice, on days without a decision); the disputing pairs are camp–daughter pairs whose catchments overlap, at 0.35, 1.5, 6.0 and 6.1 disputes per pair-day (on the evaluation seeds the pooled λ before estrangement is 1.45). Contact while estranged: **3.4×** the earlier rate under `game_v25` (the leak), **0.135×** under `game_v26` (0.20× on the evaluation seeds), not 5 %. The quarrel share of disputes is 0.29 without the cap (as modelled) and 0.11 with it. Replayed with each pair's measured λ and contact, the model predicts 0.23 estrangements per pair against 0.21 measured, and the heavy pairs cycle between feud and reconciliation as it predicted (19509: estranged on days 62, 83, 108, reconciled on days 73, 95, 119). The mechanism holds; the assumed inputs did not.
+
+### What the player sees now
+
+- Two villages that fall out keep apart: foragers no longer cross to the other side of the line between the hearths, whether foraging on purpose or picking up food on the way. Quarrels between estranged villages fall from 81–89 % of all quarrels (`game_v25`, diagnostic and evaluation seeds) to 10–16 %.
+- Feuds end: in the evaluation 8 of 21 estrangements were reconciled within the 120 days (13 of 22 on Pass 20's seeds); of these 21 reconciliations on both seed sets, 19 came 10–15 days after the estrangement (the other two after 29 and 39 days). Pairs estranged at day 120 are mostly in the recovery band (between −300 and −150) — 7 of the 13.
+- Porters are more frequent and carry more: 13 of 19 multi-village worlds saw a delivery (`game_v25` 11), 89 delivered trips (170 porters, 1,510 food and 157 wood), none turned back.
+- Exchange still never happened. Its condition needs a food sender (≥ 3,000 ‰ food days, < 2 wood nights) beside a wood sender that is itself short of food (≥ 4 wood nights, < 2,000 ‰ food days). Over the 3,550 in-reach ordered pair-days of the evaluation the food-sender side held on 1,072 and the wood-sender side on only 15, never together: villages rich in wood are almost never short of food.
+- The chronicle now contains `VillagesReconciled` entries ([CHRONICLE.md](CHRONICLE.md)).
+
+### Measured (Pass 21)
+
+`game_v26` against `game_v25` and `game_v24`, seeds 19600–19631, 120 days (19 multi-village worlds), registered rules in METRICS.md `## Pass 21` ([eval](probe/p21-2_eval/eval.md), [u6](perf/p21-2/u6.md), [comparison on 19400–19431](probe/p21-2_compare/compare.md)):
+
+- **U1 aid: PASS** — 13 of 19 multi-village worlds deliver (0.684); failed share 0 of 170 porters.
+- **U2 exchange: FAIL** — 0 exchange trips; the exchange condition held on 0 pair-days.
+- **U3 conflict that heals: FAIL** — disputes in 0.579 and quarrels in 0.526 of multi-village worlds, quarrels while estranged 51 of 322 (0.158) pass; estranged at day 120 13 of 45 pairs (0.289 > 0.25) and reconciled 8 of 21 (0.381 < 0.5) miss.
+- **U4 health: FAIL** on one bar — every Pass 17 R2 rule and F1 / F5 pass; daughter non-old-age deaths per multi-village world `game_v26` − `game_v24` +0.158 [−0.158, 0.474] (12 vs 9; > 0, miss) and − `game_v25` −0.105 [−0.737, 0.368] (12 vs 14, pass); daughters alive at day 118 30 vs 29 (pass).
+- **U6 performance: FAIL** on one bar — stress mean +2.2 %, p99.9 +3.6 %, slope 0.986, natural mean ×1.074 pass; natural p99.9 ×1.400 > 1.35 (the statistic is dominated by single 20–174 ms ticks in every rule; per-repeat ratios ×1.02, ×1.49, ×0.52).
+- **U5 identity and U7 accounting**: see the report.

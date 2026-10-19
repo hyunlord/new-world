@@ -169,6 +169,15 @@ pub struct Tallies {
     pub villages_estranged: u64,
     /// Pass 20: pairs that reconciled (one `VillagesReconciled` each).
     pub villages_reconciled: u64,
+    /// Pass 21 (`game_v26`): disputes past the pair's daily dispute cap
+    /// (counted in `forage_disputes`, no `dispute_loss`).
+    pub disputes_uncosted: u64,
+    /// Pass 21: disputes that would have drawn for a quarrel but met the
+    /// pair's daily quarrel cap (no draw; the pickup proceeds).
+    pub quarrels_capped: u64,
+    /// Pass 21: quarrels between villages already estranged (counted under
+    /// every relations rule; a subset of `quarrels`).
+    pub quarrels_while_estranged: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).

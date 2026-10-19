@@ -13,7 +13,8 @@
 //! `reconcile_at`). Then every ordered pair (sender g, receiver r) of
 //! non-estranged villages within a porter's reach ([`in_reach`]) is taken in
 //! id order — first kin aid (food, else wood), then exchange (food for wood,
-//! both trips or none) — at most one trip per ordered pair per day and at most
+//! both trips or none; Pass 21 `exchange_first`: the pair's exchange before
+//! either aid) — at most one trip per ordered pair per day and at most
 //! `porter_max` porters per sender per day. The conditions read each village's
 //! measures taken once at the decision ([`food_days_permille`],
 //! [`wood_nights`]); the amounts read the store as debited by earlier
@@ -488,7 +489,8 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
             });
         }
     }
-    // The trips: ordered pairs in id order, aid first, then exchange.
+    // The trips: ordered pairs in id order, aid first, then exchange
+    // (Pass 21 `exchange_first`: the pair's exchange first, then aid).
     let mut used: BTreeSet<(SettlementId, SettlementId)> = BTreeSet::new();
     let mut porters_used: BTreeMap<SettlementId, u32> = BTreeMap::new();
     let mut entries: Vec<ChronicleEntry> = Vec::new();
@@ -497,6 +499,26 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
         let (g, r) = (row.from, row.to);
         if row.estranged || !row.in_reach || used.contains(&(g, r)) {
             continue;
+        }
+        // Pass 21: the exchange of the unordered pair {g, r} before either
+        // village's aid to the other. Its food sender is the village whose
+        // row meets the exchange condition (at most one of the two rows can:
+        // one needs food days ≥ the surplus line, the other below the short
+        // line, which is lower). When both legs depart, (g, r) and (r, g)
+        // are used for the day, so neither sends aid.
+        if rule.exchange_first && !used.contains(&(r, g)) {
+            let food_sender = if row.exchange {
+                Some((g, r))
+            } else if rows.get(&(r, g)).is_some_and(|back| back.exchange) {
+                Some((r, g))
+            } else {
+                None
+            };
+            if let Some((f, w)) = food_sender {
+                if exchange(world, resources, rule, tick, (f, w), &measures, &mut candidates, &mut porters_used, &mut used, &mut rows, &mut entries) {
+                    continue;
+                }
+            }
         }
         // a. Kin aid: food, else wood.
         let aid = if row.aid_food {
@@ -518,29 +540,50 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
             }
         }
         // b. Exchange: g's food for r's wood, both trips or none.
-        if row.exchange && !used.contains(&(r, g)) {
-            let food = trip_amount(resources, rule, &measures, &candidates, &porters_used, g, PorterKind::Food);
-            let wood = trip_amount(resources, rule, &measures, &candidates, &porters_used, r, PorterKind::Wood);
-            if food > 0 && wood > 0 {
-                used.insert((g, r));
-                used.insert((r, g));
-                let food_leg = Departure { from: g, to: r, kind: PorterKind::Food, amount: food, cause: CAUSE_EXCHANGE_FOOD };
-                let food = depart(world, resources, tick, food_leg, &mut candidates, &mut porters_used, &mut entries);
-                let wood_leg = Departure { from: r, to: g, kind: PorterKind::Wood, amount: wood, cause: CAUSE_EXCHANGE_WOOD };
-                let wood = depart(world, resources, tick, wood_leg, &mut candidates, &mut porters_used, &mut entries);
-                if let Some(day) = rows.get_mut(&(g, r)) {
-                    day.sent = Some((PorterKind::Food, food));
-                }
-                if let Some(day) = rows.get_mut(&(r, g)) {
-                    day.sent = Some((PorterKind::Wood, wood));
-                }
-            }
+        if !rule.exchange_first && row.exchange && !used.contains(&(r, g)) {
+            exchange(world, resources, rule, tick, (g, r), &measures, &mut candidates, &mut porters_used, &mut used, &mut rows, &mut entries);
         }
     }
     resources.settlement_relations.days.extend(rows.into_values());
     for entry in entries {
         crate::runtime::chronicle_log::record(world, resources, entry);
     }
+}
+
+/// The exchange of `f`'s food for `w`'s wood: both legs depart (and both
+/// ordered pairs are used for the day) or neither; returns whether they did.
+#[allow(clippy::too_many_arguments, reason = "the day's shared trip state, as in `decide`")]
+fn exchange(
+    world: &mut World,
+    resources: &mut SimResources,
+    rule: &RelationsRule,
+    tick: u64,
+    (f, w): (SettlementId, SettlementId),
+    measures: &BTreeMap<SettlementId, Measure>,
+    candidates: &mut BTreeMap<SettlementId, Vec<(AgentId, Entity)>>,
+    porters_used: &mut BTreeMap<SettlementId, u32>,
+    used: &mut BTreeSet<(SettlementId, SettlementId)>,
+    rows: &mut BTreeMap<(SettlementId, SettlementId), PairDay>,
+    entries: &mut Vec<ChronicleEntry>,
+) -> bool {
+    let food = trip_amount(resources, rule, measures, candidates, porters_used, f, PorterKind::Food);
+    let wood = trip_amount(resources, rule, measures, candidates, porters_used, w, PorterKind::Wood);
+    if food == 0 || wood == 0 {
+        return false;
+    }
+    used.insert((f, w));
+    used.insert((w, f));
+    let food_leg = Departure { from: f, to: w, kind: PorterKind::Food, amount: food, cause: CAUSE_EXCHANGE_FOOD };
+    let food = depart(world, resources, tick, food_leg, candidates, porters_used, entries);
+    let wood_leg = Departure { from: w, to: f, kind: PorterKind::Wood, amount: wood, cause: CAUSE_EXCHANGE_WOOD };
+    let wood = depart(world, resources, tick, wood_leg, candidates, porters_used, entries);
+    if let Some(day) = rows.get_mut(&(f, w)) {
+        day.sent = Some((PorterKind::Food, food));
+    }
+    if let Some(day) = rows.get_mut(&(w, f)) {
+        day.sent = Some((PorterKind::Wood, wood));
+    }
+    true
 }
 
 /// Members able to carry, per village: adults (no `Child`, no `Elder`)

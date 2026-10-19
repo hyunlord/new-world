@@ -201,3 +201,17 @@ To see where a tick's time goes, build `worldsim_perf` with `--features subprofi
 **T6: PASS** — stress mean +2.65 %, p99.9 +2.05 %, 0.378 ms ≤ 4.0, decision slope 0.979 (v24 0.983); natural mean ×1.045 (repeats ×1.050 / ×1.045 / ×1.048), p99.9 ×1.037. `RelationsSystem` itself is 0.02–0.03 % of the natural tick; the rest of the +4.5 % was not attributed (candidates: the decision system's per-tick dispute snapshot, one extra query over the agents, and the changed behaviour — porters walking, foragers re-choosing bushes; 19401, where no relation acted, has an identical fingerprint in both rules). `quick`: base 0.3032 ms, final 0.3071 ms, same fingerprint.
 
 **For later passes:** compare against `game_v24` (or the newest scene before yours) on the same build in the same hold, five stress repeats and the natural multi-village set; pick the natural seeds from your own evaluation run before measuring.
+
+## Pass 21 — feuds that end (`game_v26`), against `game_v24` (new references)
+
+Same baseline (`game_v24`), bars and procedure as Pass 20, with `game_v25` measured beside in the same hold (five interleaved stress repeats v24 / v25 / v26; natural `--days 120` on the four lowest evaluation seeds with ≥ 2 villages at day 60 in `game_v26` — 19600, 19603, 19605, 19606 — three interleaved repeats). One quiet hold, 00:56:57–01:25:56 KST on 2026-10-19 (1,739 s, uncontended), Part 2 build `8f681805` ([u6](perf/p21-2/u6.md)).
+
+| rules (build `8f681805`) | stress mean (median of 5) | stress p99.9 | natural mean tick (median of 3) | natural p99.9 (median of 3) | ms / agent-tick |
+|---|---:|---:|---:|---:|---:|
+| `game_v24` | 0.3768 ms | 0.789 ms | 0.2636 ms | 1.428 ms | 0.003411 |
+| `game_v25` | 0.3855 ms | 0.801 ms | 0.2761 ms | 1.116 ms | 0.003575 |
+| `game_v26` | 0.3853 ms | 0.817 ms | 0.2832 ms | 1.999 ms | 0.003685 |
+
+**U6: stress PASS, natural mean PASS, natural p99.9 MISS.** Stress mean +2.24 %, p99.9 +3.55 %, 0.385 ms ≤ 4.0, decision slope 0.986 (v24 0.984); natural mean ×1.074 ≤ 1.15; natural p99.9 ×1.400 > 1.35. The natural p99.9 of these worlds is dominated by single slow ticks (every rule has ticks of 20–174 ms; `game_v24`'s own repeat values are 0.965, 1.428 and 3.876 ms, against 0.468 ms on Pass 20's natural seeds), and the per-repeat ratios v26/v24 are ×1.023, ×1.490 and ×0.516 — the bar is reported as missed as registered; it is not evidence of a systematic tail cost. The mean tick rises 7 % (8 % per agent-tick): `RelationsSystem` is 0.02–0.05 % of the tick; the rest follows the worlds (more porters walking, different populations). Exchange first, the caps and the gather avoid add no measurable stress cost (no relations in the stress world: +2.2 % for both `game_v25` and `game_v26`).
+
+**For later passes:** keep the five-repeat stress and the natural set, but the natural p99.9 needs more than three repeats (or a trimmed statistic registered in advance) before it can separate a 35 % tail change from the machine's single-tick spikes.

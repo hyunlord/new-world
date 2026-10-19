@@ -154,8 +154,13 @@ fn bush_exists(
 type TripMemo<K> = BTreeMap<K, (u64, u64, bool)>;
 
 /// Pass 18: per-tick `gather_tile_exists` answers by (tile, catchment) with
-/// the food-tiles version they were computed from.
-type GatherMemo = BTreeMap<((u32, u32), Option<((u32, u32), u32)>), (u64, bool)>;
+/// the food-tiles version they were computed from. Pass 21: the key also
+/// names whose avoid list was applied (the member's settlement id under
+/// `RelationsRule::avoid_gather`, else `None` for the empty list).
+type GatherMemo = BTreeMap<GatherKey, (u64, bool)>;
+
+/// Pass 21: a [`GatherMemo`] key — (tile, catchment, avoid-list owner).
+type GatherKey = ((u32, u32), Option<((u32, u32), u32)>, Option<SettlementId>);
 
 /// Per-settlement firewood inputs computed once per decision tick (Pass 5).
 #[derive(Debug, Clone)]
@@ -638,14 +643,28 @@ pub fn nearest_food_tile_in_radius(
         })
 }
 
+/// Pass 21 (`RelationsRule::avoid_gather`): whether `tile` lies on the own
+/// side of every avoided hearth — its Chebyshev distance to each hearth in
+/// `avoid` is at least its distance to `home` (a tie keeps it). The same test
+/// as [`bush_eligible`]'s; always true for an empty list.
+fn own_side(tile: (u32, u32), home: (u32, u32), avoid: &[(u32, u32)]) -> bool {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    avoid.iter().all(|hearth| chebyshev(tile, *hearth) >= chebyshev(tile, home))
+}
+
 /// Pass 12 (`local_food_availability`): [`nearest_food_tile_in_radius`] for
 /// the Gather arm, restricted for a settlement member (`local` = its formation
 /// tile and catchment radius) to tiles inside its catchment; `None` = as v17.
+/// Pass 21: a member also skips tiles nearer (Chebyshev) to a hearth in
+/// `avoid` (the villages estranged from its own) than to its own hearth;
+/// `avoid` is empty unless `RelationsRule::avoid_gather` is set, and is not
+/// read without `local` (a non-member has no hearth to compare).
 pub fn nearest_gather_tile(
     pos: &Position,
     tiles: &std::collections::HashMap<(u32, u32), u8>,
     radius: u32,
     local: Option<((u32, u32), u32)>,
+    avoid: &[(u32, u32)],
 ) -> Option<(u32, u32)> {
     let Some((home, catchment)) = local else {
         return nearest_food_tile_in_radius(pos, tiles, radius);
@@ -656,24 +675,27 @@ pub fn nearest_gather_tile(
             **v > 0
                 && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
                 && tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+                && own_side((*tx, *ty), home, avoid)
         })
         .map(|(k, _)| *k)
         .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
 }
 
 /// Pass 18: whether [`nearest_gather_tile`] returns `Some` (the same filters,
-/// without choosing the nearest).
+/// without choosing the nearest). Pass 21: with the same `avoid` filter.
 fn gather_tile_exists(
     pos: &Position,
     tiles: &std::collections::HashMap<(u32, u32), u8>,
     radius: u32,
     local: Option<((u32, u32), u32)>,
+    avoid: &[(u32, u32)],
 ) -> bool {
     tiles.iter().any(|((tx, ty), v)| {
         *v > 0
             && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
             && local.is_none_or(|(home, catchment)| {
                 tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+                    && own_side((*tx, *ty), home, avoid)
             })
     })
 }
@@ -1042,10 +1064,23 @@ impl RuntimeSystem for AgentDecisionSystem {
             if resources.settlement_relations.dispute_day != day {
                 resources.settlement_relations.dispute_day = day;
                 resources.settlement_relations.disputed.clear();
+                resources.settlement_relations.day_counts.clear();
             }
         }
         let no_avoid: Vec<(u32, u32)> = Vec::new();
         let avoid_for = |sid: &SettlementId| avoid_of.get(sid).unwrap_or(&no_avoid).as_slice();
+        // Pass 21 (`avoid_gather`): the avoid list of a member's Gather-arm
+        // selectors (`nearest_gather_tile`, `gather_tile_exists`) and its
+        // owner (the memo key); the empty list and `None` for a person
+        // without a catchment home (a non-member, a founder or porter on its
+        // walk) or without the flag.
+        let avoid_gather = relations_rule.is_some_and(|rule| rule.avoid_gather);
+        let gather_avoid = |id: &AgentId| -> (&[(u32, u32)], Option<SettlementId>) {
+            match member_of.get(id) {
+                Some(sid) if avoid_gather && local_home.contains_key(id) => (avoid_for(sid), Some(*sid)),
+                _ => (no_avoid.as_slice(), None),
+            }
+        };
         // Pass 20: foragers whose rival quarrelled at their bush this tick
         // (their pickup is a no-op), and the quarrels to chronicle.
         let mut quarrelled: BTreeSet<AgentId> = BTreeSet::new();
@@ -1482,7 +1517,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 && !no_trips
                                 && {
                                     let local = local_home.get(&agent.id).map(|home| (*home, catchment));
-                                    let key = ((pos.x, pos.y), local);
+                                    let (avoid, owner) = gather_avoid(&agent.id);
+                                    let key = ((pos.x, pos.y), local, owner);
                                     match gather_memo.get(&key) {
                                         Some(&(version, exists)) if version == food_version => exists,
                                         _ => {
@@ -1491,6 +1527,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                 &resources.food_tiles,
                                                 GATHER_SCAN_RADIUS,
                                                 local,
+                                                avoid,
                                             );
                                             gather_memo.insert(key, (food_version, exists));
                                             exists
@@ -2155,6 +2192,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     &resources.food_tiles,
                                     GATHER_SCAN_RADIUS,
                                     local_home.get(&agent.id).map(|home| (*home, catchment)),
+                                    gather_avoid(&agent.id).0,
                                 )
                             } else {
                                 None
@@ -2778,6 +2816,19 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         let relations = &mut resources.settlement_relations;
                                         if relations.pairs.contains_key(&pair) && relations.disputed.insert(foragers) {
                                             resources.tallies.forage_disputes += 1;
+                                            // Pass 21: the pair's daily caps (0 = no cap; the
+                                            // ledger is kept only under a cap). A dispute past
+                                            // the dispute cap costs nothing; past the quarrel
+                                            // cap no draw is made (a keyed draw consumes no
+                                            // state, so skipping it is deterministic).
+                                            let capped = rule.dispute_cap_per_pair_day > 0 || rule.quarrel_cap_per_pair_day > 0;
+                                            let (costed_today, quarrels_today) = if capped {
+                                                relations.day_counts.get(&pair).copied().unwrap_or((0, 0))
+                                            } else {
+                                                (0, 0)
+                                            };
+                                            let costed = rule.dispute_cap_per_pair_day == 0 || costed_today < rule.dispute_cap_per_pair_day;
+                                            let may_quarrel = rule.quarrel_cap_per_pair_day == 0 || quarrels_today < rule.quarrel_cap_per_pair_day;
                                             let (ns, ha) = temperament.map_or((500, 500), |t| (t.ns, t.ha));
                                             let p = ((i64::from(ns) + i64::from(rival_ns) - i64::from(ha) - i64::from(rival_ha) + 1000) / 4)
                                                 .clamp(0, 500);
@@ -2786,18 +2837,39 @@ impl RuntimeSystem for AgentDecisionSystem {
                                             } else {
                                                 rival_key
                                             };
-                                            let draw = keyed_below(resources.world_seed, STREAM_RELATIONS, subject, tick, 0, replicate, 1000);
-                                            let quarrel = (draw as i64) < p;
+                                            let quarrel = may_quarrel && {
+                                                let draw = keyed_below(resources.world_seed, STREAM_RELATIONS, subject, tick, 0, replicate, 1000);
+                                                (draw as i64) < p
+                                            };
+                                            if !costed {
+                                                resources.tallies.disputes_uncosted += 1;
+                                            }
+                                            if !may_quarrel {
+                                                resources.tallies.quarrels_capped += 1;
+                                            }
+                                            if capped {
+                                                let counts = relations.day_counts.entry(pair).or_insert((0, 0));
+                                                counts.0 += u32::from(costed);
+                                                counts.1 += u32::from(quarrel);
+                                            }
+                                            let logged = relations.dispute_days.entry((relations.dispute_day, pair.0, pair.1)).or_insert((0, 0));
+                                            logged.0 += 1;
+                                            logged.1 += u32::from(quarrel);
                                             let mut after = 0;
+                                            let mut estranged = false;
                                             if let Some(relation) = relations.pairs.get_mut(&pair) {
-                                                relation.add(-rule.dispute_loss);
+                                                if costed {
+                                                    relation.add(-rule.dispute_loss);
+                                                }
                                                 if quarrel {
                                                     relation.add(-rule.quarrel_loss);
                                                 }
                                                 after = relation.value;
+                                                estranged = relation.estranged;
                                             }
                                             if quarrel {
                                                 resources.tallies.quarrels += 1;
+                                                resources.tallies.quarrels_while_estranged += u64::from(estranged);
                                                 quarrelled.insert(rival_id);
                                                 quarrel_entries.push(
                                                     ChronicleEntry::new(tick, ChronicleKind::Quarrel)
@@ -3077,7 +3149,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             None
                         }
                     } else {
-                        let chosen = nearest_gather_tile(pos, &resources.food_tiles, GATHER_SCAN_RADIUS, local_home.get(&agent.id).map(|home| (*home, catchment)));
+                        let chosen = nearest_gather_tile(pos, &resources.food_tiles, GATHER_SCAN_RADIUS, local_home.get(&agent.id).map(|home| (*home, catchment)), gather_avoid(&agent.id).0);
                         match chosen {
                             Some(tile) => seek_set.push((e, tile)),
                             // The tile its Gather arm picked was emptied later in
@@ -3164,6 +3236,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 &resources.food_tiles,
                                 GATHER_SCAN_RADIUS,
                                 local_home.get(&agent.id).map(|home| (*home, catchment)),
+                                gather_avoid(&agent.id).0,
                             ),
                             // Pass 12 (`local_food_availability`): a member eats
                             // at the nearest food tile with food in its catchment.
@@ -3446,6 +3519,49 @@ mod tests {
         only_theirs.insert((26, 30), 3u8);
         assert!(bush_exists(&rule, home, &only_theirs, &claims, &[]));
         assert!(!bush_exists(&rule, home, &only_theirs, &claims, &[other]));
+    }
+
+    #[test]
+    fn gather_selectors_skip_tiles_on_an_avoided_side() {
+        // Pass 21 (`avoid_gather`): `nearest_gather_tile` and
+        // `gather_tile_exists` apply `bush_eligible`'s side test to a member
+        // (`local` = home and catchment); an empty list changes nothing, and a
+        // person without `local` (a non-member) is not filtered.
+        let home = (40, 30);
+        let other = (14, 30);
+        let local = Some((home, 16));
+        let pos = Position::new(30, 30);
+        let mut tiles = HashMap::new();
+        tiles.insert((26, 30), 3u8); // 14 from home, 12 from the other: its side, nearest
+        tiles.insert((27, 30), 3u8); // 13 / 13: a tie stays
+        tiles.insert((36, 30), 3u8); // own side
+        assert_eq!(nearest_gather_tile(&pos, &tiles, 8, local, &[]), Some((27, 30)));
+        tiles.remove(&(27, 30));
+        assert_eq!(nearest_gather_tile(&pos, &tiles, 8, local, &[]), Some((26, 30)));
+        assert_eq!(nearest_gather_tile(&pos, &tiles, 8, local, &[other]), Some((36, 30)));
+        assert_eq!(nearest_gather_tile(&pos, &tiles, 8, None, &[other]), Some((26, 30)), "non-member: unfiltered");
+        assert!(gather_tile_exists(&pos, &tiles, 8, local, &[other]));
+        tiles.remove(&(36, 30));
+        assert_eq!(nearest_gather_tile(&pos, &tiles, 8, local, &[other]), None);
+        assert!(!gather_tile_exists(&pos, &tiles, 8, local, &[other]));
+        assert!(gather_tile_exists(&pos, &tiles, 8, local, &[]));
+        assert!(gather_tile_exists(&pos, &tiles, 8, None, &[other]));
+        // Several avoided hearths: every one must be at least as far.
+        tiles.insert((36, 30), 3u8);
+        assert_eq!(nearest_gather_tile(&pos, &tiles, 8, local, &[(90, 90), (34, 30)]), None);
+        assert!(!gather_tile_exists(&pos, &tiles, 8, local, &[(90, 90), (34, 30)]));
+        // The side test is `bush_eligible`'s.
+        for tile in [(26, 30), (27, 30), (36, 30), (50, 30)] {
+            let rule = ForageRule {
+                start_minute: 360, end_minute: 1080, forage_radius: 16,
+                haul_threshold: 4, max_foragers_per_bush: 2,
+            };
+            assert_eq!(
+                own_side(tile, home, &[other]),
+                bush_eligible(&rule, home, &BTreeMap::new(), None, &[other], tile, 3),
+                "{tile:?}"
+            );
+        }
     }
 
     #[test]

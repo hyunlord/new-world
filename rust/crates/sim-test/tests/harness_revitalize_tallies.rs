@@ -99,6 +99,9 @@ mod tests {
             quarrels: 0,
             villages_estranged: 0,
             villages_reconciled: 0,
+            disputes_uncosted: 0,
+            quarrels_capped: 0,
+            quarrels_while_estranged: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

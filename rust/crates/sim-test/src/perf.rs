@@ -118,6 +118,7 @@ pub fn stress_rules(label: &str, seed: u64) -> WorldRules {
         "stress_v23" => WorldRules::game_v23(seed),
         "stress_v24" => WorldRules::game_v24(seed),
         "stress_v25" => WorldRules::game_v25(seed),
+        "stress_v26" => WorldRules::game_v26(seed),
         "stress_v20_inert" => WorldRules::game_v20_inert(seed),
         _ => WorldRules::game_v19(seed),
     }
@@ -133,6 +134,7 @@ pub fn stress_label(rules: &str) -> &'static str {
         "game_v23" => "stress_v23",
         "game_v24" => "stress_v24",
         "game_v25" => "stress_v25",
+        "game_v26" => "stress_v26",
         "game_v20_inert" => "stress_v20_inert",
         _ => "stress_v19",
     }
@@ -692,7 +694,7 @@ pub struct PerfArgs {
 }
 
 /// The usage line.
-pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25] --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
+pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26] --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
 
 impl PerfArgs {
     /// Parse `args` (without the program name).
@@ -718,8 +720,8 @@ impl PerfArgs {
             match args[i].as_str() {
                 "--scene" => parsed.scene = value.clone(),
                 "--rules" => {
-                    if !matches!(value.as_str(), "game_v19" | "game_v20" | "game_v20_inert" | "game_v21" | "game_v22" | "game_v23" | "game_v24" | "game_v25") {
-                        return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25, not {value}"));
+                    if !matches!(value.as_str(), "game_v19" | "game_v20" | "game_v20_inert" | "game_v21" | "game_v22" | "game_v23" | "game_v24" | "game_v25" | "game_v26") {
+                        return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26, not {value}"));
                     }
                     rules = Some(value.clone());
                 }
@@ -979,7 +981,7 @@ mod tests {
     fn rules_flag_picks_the_stress_rules_and_label() {
         // Pass 16 8.5: --rules (default game_v19, today's behaviour; --scene stays ignored by stress).
         let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
-        for (flag, label) in [("", "stress_v19"), ("--rules game_v19", "stress_v19"), ("--rules game_v20", "stress_v20"), ("--rules game_v20_inert", "stress_v20_inert"), ("--rules game_v21", "stress_v21"), ("--rules game_v22", "stress_v22"), ("--rules game_v23", "stress_v23"), ("--rules game_v24", "stress_v24"), ("--rules game_v25", "stress_v25")] {
+        for (flag, label) in [("", "stress_v19"), ("--rules game_v19", "stress_v19"), ("--rules game_v20", "stress_v20"), ("--rules game_v20_inert", "stress_v20_inert"), ("--rules game_v21", "stress_v21"), ("--rules game_v22", "stress_v22"), ("--rules game_v23", "stress_v23"), ("--rules game_v24", "stress_v24"), ("--rules game_v25", "stress_v25"), ("--rules game_v26", "stress_v26")] {
             let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x"))).expect("stress");
             assert_eq!(stress_label(&p.scene), label, "{flag}");
         }
@@ -990,15 +992,18 @@ mod tests {
         // (an unknown label would silently fall back to game_v19).
         assert_eq!(stress_rules(stress_label("game_v24"), 4), WorldRules::game_v24(4));
         assert_ne!(stress_rules(stress_label("game_v24"), 4), WorldRules::game_v23(4));
-        // Pass 20: game_v25 maps to stress_v25 and WorldRules::game_v25; the
-        // next version is still rejected.
-        assert!(PerfArgs::parse(&a("stress --rules game_v26 --out x")).is_err());
+        // Pass 20: game_v25 maps to stress_v25 and WorldRules::game_v25.
         assert_eq!(stress_rules(stress_label("game_v25"), 4), WorldRules::game_v25(4));
         assert_ne!(stress_rules(stress_label("game_v25"), 4), WorldRules::game_v24(4));
+        // Pass 21: game_v26 maps to stress_v26 and WorldRules::game_v26; the
+        // next version is still rejected.
+        assert!(PerfArgs::parse(&a("stress --rules game_v27 --out x")).is_err());
+        assert_eq!(stress_rules(stress_label("game_v26"), 4), WorldRules::game_v26(4));
+        assert_ne!(stress_rules(stress_label("game_v26"), 4), WorldRules::game_v25(4));
         assert!(PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err());
         let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
         assert_eq!(stress_label(&q.scene), "stress_v19");
-        for (label, rules) in [("stress_v19", WorldRules::game_v19(9)), ("stress_v20", WorldRules::game_v20(9)), ("stress_v20_inert", WorldRules::game_v20_inert(9)), ("stress_v21", WorldRules::game_v21(9)), ("stress_v22", WorldRules::game_v22(9)), ("stress_v23", WorldRules::game_v23(9)), ("stress_v24", WorldRules::game_v24(9)), ("stress_v25", WorldRules::game_v25(9))] {
+        for (label, rules) in [("stress_v19", WorldRules::game_v19(9)), ("stress_v20", WorldRules::game_v20(9)), ("stress_v20_inert", WorldRules::game_v20_inert(9)), ("stress_v21", WorldRules::game_v21(9)), ("stress_v22", WorldRules::game_v22(9)), ("stress_v23", WorldRules::game_v23(9)), ("stress_v24", WorldRules::game_v24(9)), ("stress_v25", WorldRules::game_v25(9)), ("stress_v26", WorldRules::game_v26(9))] {
             let spec = RunSpec { mode: "stress".into(), scene: label.into(), seed: 9, agents: Some(30), side: 64, feed: Feed::Fed, ticks: 1 };
             assert_eq!(build_engine(&spec).expect("engine").resources.rules, rules);
             assert!(spec.stem(30).starts_with(&format!("stress_{label}_s9_n30")));

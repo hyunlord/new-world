@@ -299,8 +299,8 @@ fn harness_local_gather_stays_in_the_catchment() {
     tiles.insert((30, 24), 2); // inside
     let pos = Position::new(35, 20);
     assert_eq!(nearest_food_tile_in_radius(&pos, &tiles, 8), Some((37, 20)));
-    assert_eq!(nearest_gather_tile(&pos, &tiles, 8, None), Some((37, 20)), "None = v17");
-    assert_eq!(nearest_gather_tile(&pos, &tiles, 8, Some(((20, 20), 16))), Some((30, 24)));
+    assert_eq!(nearest_gather_tile(&pos, &tiles, 8, None, &[]), Some((37, 20)), "None = v17");
+    assert_eq!(nearest_gather_tile(&pos, &tiles, 8, Some(((20, 20), 16)), &[]), Some((30, 24)));
     tiles.remove(&(30, 24));
-    assert_eq!(nearest_gather_tile(&pos, &tiles, 8, Some(((20, 20), 16))), None);
+    assert_eq!(nearest_gather_tile(&pos, &tiles, 8, Some(((20, 20), 16)), &[]), None);
 }
