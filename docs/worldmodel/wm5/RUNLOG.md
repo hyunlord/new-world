@@ -47,3 +47,6 @@ pauses.
 | 4.1 | 14:49:54 | 15:20:54 | `crn_obs2_s1`: planned steps reached, α 0.9999 α_max; test effects by the watcher; `ct_obs2_s1` started 15:20:54 |
 | 4.1 | 15:20:54 | 18:08:56 | `ct_obs2_s1`: 11,850 / 11,850 steps, α 0.99991 α_max; test effects by the watcher; `m1b_obs2_s1` started 18:08:56 (the last training; before the deadline) |
 | pause | 17:58:33 | 19:40:59 | **Mac clamshell sleep** (`pmset` "Clamshell Sleep"); DGX jobs continued; 6,146 s recorded as a pause (DECISIONS L0.7) |
+| 4.1 | 18:08:56 | 21:28:57 | `m1b_obs2_s1`: stop `max_steps` (8,000), kept step 7,950 (val T2 24 h 0.0620), 11,964 s; the last training. `_setup/queue.stop` written |
+| 4.2 | 21:30:20 | 21:49:53 | `m1b_obs2_s1` obs2 test effects and factual T2; `finals_watch_obs2` ends (every item done) |
+| 5 / 6 | 21:50 | 22:00 | every run fetched; final `judge5.py`; `figures.py render` (432 traced numbers, check OK) and `figures`; WM5.md, DATASET_OBS2.md; WM4.md pointer line |
