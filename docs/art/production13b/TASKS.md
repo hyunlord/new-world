@@ -4,7 +4,7 @@ Timing anchor: 2026-10-19T12:08Z (conservative deadline anchor, not an observed 
 Part 1 deadline: 17:08Z. Part 4 freeze deadline: 19:08Z. Ten-hour cutoff: 22:08Z.
 
 - Part 0 COMPLETE (baseline FAIL retained): original brief byte-verified and committed f962f5cd; backup at 8c1b18be. Calibration started 12:11Z, session 62867; full gate follows calibration because calibration must precede every Godot session.
-- Part 1 PENDING: owner feedback/font24/design glyph rule/windowed layout; write-skip identity and valid pairs; optional walker then seats.
+- Part 1 IN_PROGRESS: owner feedback/font24/design glyph rule/windowed layout; write-skip identity and valid pairs; optional walker then seats.
 - Part 2 PENDING: UI side branch; real input, stage B and contrast, optional no-legend/village, H10, fact reading.
 - Part 3 PENDING: merge UI and full gate; accepted candidate identity.
 - Part 4 PENDING: freeze by 19:08Z; after matrix and running timers; H1-H11.
@@ -34,3 +34,6 @@ Retry ledger: test_real_input_p13 failed once in baseline; other targets have no
 - At12:32Z the only running task for Part0 is full gate session38045, Rust later suites still progressing. Do not re-run the gate or its already executed target checks.
 
 - Part0 gate session38045 terminated exit1: 119/120 passed. Sole failure test_real_input_p13 step11; injected point(960,540), viewport mouse(-3874,-398), actual hover -1. P12 real input passed all13 steps. Baseline failure retained as mandatory Part1 fix; no publication.
+
+- Part1 font24 implemented; glyph attempt1 exit0,10442 pairs, minimum KO regular1 design pixel. Real input attempt2 all17 steps passed at24px; windowed Life layoutP12/P13 and tooltip boundary tests all exit0. Screenshots visually inspected, fresh fact reading still pending. Strict check passed.
+- Write-skip six-frame candidate B launched session83203 on unchanged Part0 base with skip1. Must finish all6 and compare before claiming identity.

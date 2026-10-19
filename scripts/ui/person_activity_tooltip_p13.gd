@@ -9,6 +9,7 @@ var _label: Label
 var _hovered: int = -1
 var _elapsed: float = 0.0
 var _pointer_inside: bool = false
+var _pointer_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -27,6 +28,7 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
+		_pointer_position = event.position
 		_pointer_inside = true
 
 func _notification(what: int) -> void:
@@ -47,7 +49,7 @@ func _process(delta: float) -> void:
 	if not _pointer_inside:
 		_clear_hover()
 		return
-	_update_hover(delta, get_viewport().get_mouse_position(), get_viewport().gui_get_hovered_control() != null)
+	_update_hover(delta, _pointer_position, get_viewport().gui_get_hovered_control() != null)
 
 func _update_hover(delta: float, screen: Vector2, blocked: bool) -> void:
 	if blocked or not (get_parent() as CanvasLayer).visible or not is_visible_in_tree() or not _agents.is_visible_in_tree() or not get_viewport_rect().has_point(screen):

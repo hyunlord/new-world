@@ -8,3 +8,6 @@
 - Existing gate uses windowed real-input checks and headless unit checks. Preserve original unit coverage; separately rerun requested Life layout/scroll checks windowed. Do not treat headless as screen evidence.
 - Planning skill consulted; supplied six-Part execution contract is already decision-complete and explicitly requires unattended execution, so no planning approval handoff.
 - Four copied measurement tools change only wrapper/output routing; copied wrapper also defaults its attempt ledger to production13b so an omitted environment variable cannot mutate old evidence. Existing collectors, validators and CPU probe remain unchanged. Shell syntax and Python byte-compilation passed; exact source diff inspected.
+
+## Input coordinate repair (Part1)
+Preserve the baseline failing attempt. Tooltip and independent input witness now consume delivered motion coordinates, since required Input.parse_input_event does not move the OS cursor. No cursor warping, handler invocation or weaker visibility/text/delay/selection assertions. Gate entry forwards to p13b test copy. Windowed attempt2 passed17/17.

@@ -163,8 +163,8 @@ func _ready() -> void:
 	_life_heading.theme_type_variation = &"Heading"
 	_life_text = RichTextLabel.new()
 	Names.prepare_rich_text(_life_text)
-	_life_text.add_theme_font_size_override("normal_font_size", 48)
-	_life_text.add_theme_font_size_override("bold_font_size", 48)
+	_life_text.add_theme_font_size_override("normal_font_size", 24)
+	_life_text.add_theme_font_size_override("bold_font_size", 24)
 	_life_text.bbcode_enabled = true
 	_life_text.fit_content = true
 	_life_text.scroll_active = false
