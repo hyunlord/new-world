@@ -57,8 +57,8 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
 2. **A measured headroom** (Section 5.2): for every split and horizon we place "predict no effect" against an effect
    floor (the other noise replicate's effect, i.e. the error of a predictor that knows the full state at the act and
    only lacks the post-fork noise) and against direct effect regressions on the observable and on the full (hidden)
-   pre-act state. This tells how far from the ceiling the field's methods are, and how much of the per-world effect the
-   observable state carries.
+   pre-act state. This tells how much room the benchmark leaves and how much of the per-world effect a simple map of the
+   observable (or hidden) pre-act state captures.
 3. **A fair rematch of CRN and CT** (Sections 4–5): trained on their authors' optimizer-step budgets with their weight
    schedules on real progress, evaluated at their last checkpoint, with counts rounded at readout as the world models
    are — beside observational baselines (naive contrast, multi-cast inverse propensity weighting, matching), world
@@ -67,9 +67,10 @@ nothing can beat "no effect", i.e. the benchmark may not discriminate between me
 
 **Findings.** On a split three times larger than before, with {{p5:all/casts_per_world_mean#2}} acts per world and
 inverse-propensity effective sample sizes of {{j5:describe/pooled/sp240/7d/ess_treated#0}}–{{j5:describe/pooled/rw120/7d/ess_treated#0}}
-per act, CRN and CT trained as their authors train them do not beat "predict no effect" (Section 5.3: every comparison
-NONE), and on the interventional split they are further behind than the earlier, budget-capped runs. Rounding their
-counts changes the earlier study's numbers by less than its confidence intervals. The gap between "no effect" and the
+per act, CRN and CT trained as their authors train them do not beat "predict no effect" (Section 5.3: every pre-registered
+comparison of CRN and CT with `zero` or the analog baseline is NONE), and on the interventional split they are further
+behind than the earlier, budget-capped runs (post hoc). Rounding the earlier runs' counts moves their scores by amounts
+whose intervals all contain zero. The gap between "no effect" and the
 effect floor is large on every split, so the benchmark can separate methods; on the interventional split a linear
 regression on the observable pre-act state reaches the act's mean effect but no further (post hoc), and among the
 learned models compared with it (E2) only the world model trained on paired branches ties or beats it.
@@ -245,7 +246,8 @@ in Appendix A.
 
 Table 1 lists the 12-cell scaled effect MAE (lower is better) of every method on every split. Multi-seed rows are
 seed-averaged; obs numbers are the earlier study's committed ones. CRN / CT on obs2 and v2 are trained on the authors'
-schedule and read at their last checkpoint with counts rounded (primary).
+schedule and read at their last checkpoint with counts rounded (primary). The obs2 columns of the earlier obs-trained runs (M1b-obs, CRN / CT
+time-capped) and of the v2-trained world models are evaluations of those checkpoints on the obs2 test.
 
 | method | trained on | v2 7 d | v2 30 d | obs 7 d | obs 30 d | obs2 7 d | obs2 30 d |
 |---|---|---|---|---|---|---|---|
@@ -317,6 +319,10 @@ schedule and read at their last checkpoint with counts rounded (primary).
 | D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, as kept) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_as_kept|30d/verdict#str}}** |
 | D1 obs2 30 d: CT-obs2 vs CT-obs (earlier, rounded) | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/model#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/baseline#3}} | {{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/ct_obs2_vs_ct_obs_rounded|30d/verdict#str}}** |
 | D1 obs2 30 d: M1b-obs2 vs M1b-obs | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/model#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/baseline#3}} | {{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/ci_diff#ci3}} | **{{j5:obs2/rules/D1/m1b_obs2_vs_m1b_obs|30d/verdict#str}}** |
+
+E2 on obs2 compares with a regression that transfers badly from v2 (Section 6), so its WEAK / KEEP verdicts there say
+little about the models. A deterministic one-run side (`ridge_obs`) or a two-seed model with ratio ≤ 0.8 is capped by the
+W1 rule as written (one seed reaches WEAK at most).
 
 R4 (training reached): every primary CRN / CT run completed its plan — `crn_v2_s0` {{j5:R4/crn_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s0/alpha_fraction_min#4}} α_max; `crn_v2_s1` {{j5:R4/crn_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_v2_s1/alpha_fraction_min#4}} α_max; `ct_v2_s0` {{j5:R4/ct_v2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s0/alpha_fraction_min#4}} α_max; `ct_v2_s1` {{j5:R4/ct_v2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_v2_s1/alpha_fraction_min#4}} α_max; `crn_obs2_s0` {{j5:R4/crn_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s0/alpha_fraction_min#4}} α_max; `crn_obs2_s1` {{j5:R4/crn_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/crn_obs2_s1/alpha_fraction_min#4}} α_max; `ct_obs2_s0` {{j5:R4/ct_obs2_s0/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s0/alpha_fraction_min#4}} α_max; `ct_obs2_s1` {{j5:R4/ct_obs2_s1/steps_fraction_min#3}} of its planned steps, α = {{j5:R4/ct_obs2_s1/alpha_fraction_min#4}} α_max. The planned steps equal the authors' for every run (the CT-obs2 cost check was repeated without our own concurrent evaluations; Appendix B).
 

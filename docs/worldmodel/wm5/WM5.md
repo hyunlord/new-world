@@ -63,7 +63,34 @@ L4.4: the first two ran beside our own evaluations).
 
 ## 5. Q1 — trained as their authors train them, do CRN and CT beat "no effect"?
 
-{{Q1}}
+**No.** Trained on the authors' full schedule (R4 holds for every run: 100 % of the planned steps, α = 0.9999 α_max at
+the last step) and read at the last checkpoint with counts rounded, CRN and CT are worse than "predict no effect" on
+both splits and at both horizons — every R1–R3 comparison is **NONE** (§4):
+
+| method (seeds) | obs2 7 d | obs2 30 d | v2 7 d | v2 30 d |
+|---|---|---|---|---|
+| `zero` | 0.217 | 0.188 | 0.612 | 0.487 |
+| `an5_arm` (v2) | — | — | 0.485 | 0.594 |
+| CRN, authors' schedule (2) | 0.402 (0.403, 0.401) | 0.780 (0.770, 0.790) | 1.649 (1.795, 1.504) | 3.645 (4.187, 3.104) |
+| CT, authors' schedule (2) | 0.311 (0.304, 0.317) | 0.483 (0.502, 0.465) | 1.243 (1.118, 1.368) | 1.920 (1.950, 1.889) |
+| CRN, WM-4 (time-capped; obs2 = its references) | 0.519 | 0.925 | 1.474 | 1.547 |
+| CT, WM-4 (time-capped) | 0.317 | 0.378 | 1.007 | 1.374 |
+| M1b-obs2 (2) | {{M1B_R1}} | {{M1B_R2}} | — | — |
+
+- **Where they fail.** On obs2 they respond to the act in the confounded direction and too strongly (CRN seed 0: a
+  gift's 7-day food effect +78.8, a spoil's −121.1 against true +21.7 and −78.0; `naive` says +128.2 / −189.0). On v2
+  (unconfounded) the deaths cells dominate: the arm and no-act rollouts drift apart by whole deaths over 30 days
+  (30-day deaths cells 14.5 / 10.2 for CRN, 5.0 / 5.5 for CT, against 0.58 for `zero`; the other nine cells are also
+  behind `zero` at 7 days: CRN 1.33 / 1.19, CT 0.82 / 0.82 vs 0.72).
+- **Trained longer, they are worse on v2 than WM-4's time-capped runs** (post hoc: CRN 1.649 vs 1.474 at 7 d and 3.645
+  vs 1.547 at 30 d; CT 1.243 vs 1.007 and 1.920 vs 1.374). Their validation factual loss is lowest early (CT: steps 790 /
+  1,580 of 11,850 on v2, 790 on obs2) and rises as the balancing weight reaches its maximum; the **secondary**
+  (lowest-`val_roll`) checkpoints are better at 30 days (e.g. CT-obs2 s0 0.346 vs 0.502 primary, CRN-obs2 s0 0.709 vs
+  0.770) but still far behind `zero`.
+- **E2:** against `ridge_obs` every CRN / CT model is NONE on v2; on obs2 the WEAK / KEEP verdicts against `ridge_obs`
+  reflect `ridge_obs`'s failure to transfer (§6), not a gain.
+- **R4.** All eight primary runs completed their plans; no plan was reduced; no run hit the safety cap.
+
 
 ## 6. Q2 — is the benchmark discriminative? The headroom ladder (F1, F2, E1, E2)
 
@@ -101,7 +128,15 @@ L4.4: the first two ran beside our own evaluations).
 
 ## 7. Q3 — does more observational data help? (D1)
 
-{{Q3}}
+**No.** On the obs2 test, three times more observational data and several acts per world do not make the obs-trained
+models better in a way that matters:
+- CT-obs2 vs WM-4's CT-obs: 7 d −0.006 [−0.021, +0.009] (TIE, as kept) / −0.012 [−0.026, +0.004] (TIE, CT-obs
+  re-scored rounded); 30 d +0.105 [+0.076, +0.135] (**NONE**: worse). CT-obs2's errors are the authors' schedule plus
+  more data; WM-4's CT-obs was an early checkpoint, which on these data is the better one at 30 days.
+- M1b-obs2 vs WM-4's M1b-obs: {{M1B_D1}}
+- Every obs-trained model and WM-2's / WM-3's references stay at or above `zero` on obs2 (M1b-act 0.215–0.225 at 7 d,
+  `wm3_full` 0.218–0.257, M1b-obs 0.218 / 0.221; `zero` 0.217).
+
 
 ## 8. Q4 — how much of WM-4's CRN / CT deficit was rounding? (D2)
 
@@ -115,7 +150,21 @@ unrounded readout for seven runs; `ct_obs_s1` differs at the 1e-4 relative level
 
 ## 9. What changed relative to WM-4's conclusions
 
-{{CHANGED}}
+- **"CRN and CT were not trained properly" — answered: it was not the training.** WM-4's conclusion (they do not beat
+  `zero` on either split) stands with the authors' full schedule, the last checkpoint and rounding; on v2 the fully
+  trained runs are further behind (post hoc).
+- **Rounding was not the cause** (D2: every interval contains 0).
+- **"The split was too small for balancing" — answered: not the size.** obs2's IPW effective sample sizes at 7 days are
+  396–445 per act against WM-4's 44–55; IPW recovers the mean effects much better than `naive`, yet CRN and CT still over-react in the
+  confounded direction and lose to `zero`.
+- **"Nothing can beat zero" — partly withdrawn.** The floor lies far below `zero` on every split (headroom 0.425 / 0.220
+  on v2, 0.159 / 0.094 on obs2), so the benchmark has room; on v2 at 7 days a ridge regression beats `zero`, but only up
+  to the act's mean effect (as `arm_mean` / `an5_arm` do); hidden state adds a little (post hoc). WM-4's statement "no
+  model trained on any data beats `zero`" remains true of the learned models on the observational splits.
+- **Unchanged:** world models barely respond to the act; `wm3_full` (paired branches) is the best learned model on v2 at
+  7 days and ties `ridge_obs` there; nothing learns the 30-day reversal in full (CT-obs2 gets its sign at a fraction of
+  its size).
+
 
 ## 10. Design caveats
 
