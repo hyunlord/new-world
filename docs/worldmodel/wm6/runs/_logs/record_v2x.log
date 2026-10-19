@@ -1,0 +1,61 @@
+2026-10-20_00:44:18 start probe_50000 seeds 50000..50100 workers 8 (load 6.54 22.66 16.70)
+2026-10-20_00:59:02 end probe_50000 exit 0 DETERMINISM PASS
+2026-10-20_00:59:02 start probe_50100 seeds 50100..50200 workers 8 (load 61.40 56.24 42.71)
+2026-10-20_01:18:45 end probe_50100 exit 0 DETERMINISM PASS
+2026-10-20_01:18:45 start probe_50200 seeds 50200..50300 workers 4 (load 41.73 53.36 56.90)
+2026-10-20_01:42:06 end probe_50200 exit 0 DETERMINISM PASS
+2026-10-20_01:42:06 start probe_50300 seeds 50300..50400 workers 8 (load 14.01 18.99 33.54)
+2026-10-20_01:52:22 end probe_50300 exit 0 DETERMINISM PASS
+2026-10-20_01:52:22 start probe_50400 seeds 50400..50500 workers 8 (load 11.69 16.16 25.55)
+2026-10-20_02:06:12 end probe_50400 exit 0 DETERMINISM PASS
+2026-10-20_02:06:12 start probe_50500 seeds 50500..50600 workers 8 (load 31.81 38.42 34.90)
+2026-10-20_02:19:03 end probe_50500 exit 0 DETERMINISM PASS
+2026-10-20_02:19:03 start probe_50600 seeds 50600..50700 workers 8 (load 13.94 26.52 32.39)
+2026-10-20_02:28:28 end probe_50600 exit 0 DETERMINISM PASS
+2026-10-20_02:28:28 start probe_50700 seeds 50700..50800 workers 8 (load 10.97 15.85 24.26)
+2026-10-20_02:38:24 end probe_50700 exit 0 DETERMINISM PASS
+2026-10-20_02:38:24 start probe_50800 seeds 50800..50900 workers 8 (load 12.24 14.87 19.87)
+2026-10-20_02:48:23 end probe_50800 exit 0 DETERMINISM PASS
+2026-10-20_02:48:23 start probe_50900 seeds 50900..51000 workers 8 (load 10.69 13.51 16.99)
+2026-10-20_02:58:36 end probe_50900 exit 0 DETERMINISM PASS
+2026-10-20_02:58:36 start probe_51000 seeds 51000..51100 workers 8 (load 10.64 13.59 15.77)
+2026-10-20_03:08:12 end probe_51000 exit 0 DETERMINISM PASS
+2026-10-20_03:08:12 start probe_51100 seeds 51100..51200 workers 8 (load 12.33 14.09 15.19)
+2026-10-20_03:18:48 end probe_51100 exit 0 DETERMINISM PASS
+2026-10-20_03:18:48 start probe_51200 seeds 51200..51300 workers 8 (load 9.95 13.31 14.62)
+2026-10-20_03:29:28 end probe_51200 exit 0 DETERMINISM PASS
+2026-10-20_03:29:28 start probe_51300 seeds 51300..51400 workers 8 (load 10.45 13.28 14.22)
+2026-10-20_03:39:42 end probe_51300 exit 0 DETERMINISM PASS
+2026-10-20_03:39:42 start probe_51400 seeds 51400..51500 workers 8 (load 11.70 13.90 14.28)
+2026-10-20_03:51:37 end probe_51400 exit 0 DETERMINISM PASS
+2026-10-20_03:51:37 start probe_51500 seeds 51500..51600 workers 8 (load 25.05 29.10 23.44)
+2026-10-20_04:01:21 end probe_51500 exit 0 DETERMINISM PASS
+2026-10-20_04:01:21 start merge (load 13.56 17.17 19.87)
+2026-10-20_04:01:22 end merge exit 0
+2026-10-20_04:01:22 start timeline_out (load 13.56 17.17 19.87)
+2026-10-20_04:01:22 end timeline_out exit 0
+2026-10-20_04:01:22 start schedules (load 13.56 17.17 19.87)
+2026-10-20_04:01:23 end schedules exit 0
+2026-10-20_04:01:23 start families (load 15.03 17.41 19.93)
+2026-10-20_04:01:23 families: launched s50000 (cap 8, load 15.03 17.41 19.93)
+2026-10-20_04:15:16 families: launched s50100 (cap 8, load 16.31 15.96 17.57)
+2026-10-20_04:28:56 families: launched s50200 (cap 8, load 16.74 15.83 16.48)
+2026-10-20_04:43:40 families: launched s50300 (cap 8, load 15.31 15.25 15.60)
+2026-10-20_04:58:05 families: launched s50400 (cap 8, load 15.34 15.14 15.15)
+2026-10-20_05:13:01 families: launched s50500 (cap 8, load 14.92 14.91 14.95)
+2026-10-20_05:27:17 families: launched s50600 (cap 8, load 17.39 15.86 15.43)
+2026-10-20_05:41:37 families: launched s50700 (cap 8, load 14.32 14.35 14.94)
+2026-10-20_05:56:39 families: launched s50800 (cap 8, load 14.51 14.83 14.92)
+2026-10-20_06:10:46 families: launched s50900 (cap 8, load 13.82 14.11 14.50)
+2026-10-20_06:24:46 families: launched s51000 (cap 8, load 22.41 19.93 16.96)
+2026-10-20_06:39:30 families: launched s51100 (cap 8, load 14.92 16.08 16.68)
+2026-10-20_06:54:21 families: launched s51200 (cap 8, load 8.07 9.97 12.95)
+2026-10-20_07:08:25 families: launched s51300 (cap 8, load 7.85 8.06 9.95)
+2026-10-20_07:23:01 families: launched s51400 (cap 8, load 7.99 8.05 8.78)
+2026-10-20_07:38:14 families: launched s51500 (cap 8, load 24.79 23.83 17.49)
+2026-10-20_07:53:13 end families: 7576 episodes
+2026-10-20_07:53:13 start link (load 4.72 8.76 12.38)
+2026-10-20_07:53:13 end link exit 0
+2026-10-20_07:53:13 start check (load 4.72 8.76 12.38)
+2026-10-20_07:53:17 end check exit 0
+2026-10-20_07:53:17 record_v2x done

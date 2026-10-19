@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm6-gbm-venv/bin/python tools/worldmodel/wm6/effects6.py gbm --feat priv --n 2000 --prep /home/hyunlord/work/wm1-runs/wm6/_prep --base /home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json --out /home/hyunlord/work/wm1-runs/wm6/gbm_priv_n2000

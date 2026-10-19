@@ -28,3 +28,6 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 1 | 04:01:23 | 07:53:13 | families: 1,600 per-world calls (8 in parallel; 13,910 s; 7,576 episodes, ≈ 1.8 s per episode; 0 failed; load average 4–25) |
 | 1 | 07:53:13 | 07:53:17 | link (1,600 worlds) and prefix check: 1,600 / 1,600 families OK (7,576 members); `record_v2x` done; data 6.7 GB episodes + 18 GB timeline |
 | 1 | 07:53:55 | 07:54:16 | `post_v2x.sh` (code `b7fad5bc`): manifest (7,576 episodes verified, sha256 `34ddda51…`), v2x features (2,988 rows of 5,976 cases, 14 s), describe (40 KS tests, smallest p 0.066, largest D 0.078); 48 queue lines appended |
+| 4 | 07:54:16 | 08:14:19 | N = 800 / 1,600 / 2,000 trainings (48 runs, one at a time, code `b7fad5bc`): every neural run stopped by patience (52–159 epochs; ≤ 27 s each), GBM by per-cell early stopping, ridges closed form |
+| 4 | 08:14:30 | 08:16 | `finals6.sh` (code `b7fad5bc`): 48 v2 test evaluations and 6 obs2 transfer evaluations (`mlp_obs` / `seq_obs` at N = 2,000), all exit 0 |
+| 5 | 08:17 | 08:19 | every run's small files fetched (`runs/`), `judge6.py`: largest N 2,000; reading "learnable from observables" (second clause) |

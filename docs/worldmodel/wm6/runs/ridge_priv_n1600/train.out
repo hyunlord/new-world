@@ -1,0 +1,1 @@
+{"name": "ridge_priv", "feat": "priv", "n": 1600, "repro": false, "diagnostic": true, "n_train_cases": 5958, "n_train_worlds": 1600, "train_reps": [0], "val": {"7d": 0.409699723455885, "30d": 0.6045196054526787, "both": 0.5071096644542818}, "seconds": 0.4831118583679199}

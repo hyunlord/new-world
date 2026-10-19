@@ -1,0 +1,40 @@
+{
+ "argv": [
+  "tools/worldmodel/wm6/effects6.py",
+  "ridge",
+  "--feat",
+  "priv",
+  "--n",
+  "800",
+  "--prep",
+  "/home/hyunlord/work/wm1-runs/wm6/_prep",
+  "--base",
+  "/home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm6/ridge_priv_n800"
+ ],
+ "base_sha256": "6240d0660723f7f8ce26c07b1ef670647d05c5040419ec1a2eb06f9bc526949d",
+ "code_commit": "b7fad5bc",
+ "diagnostic": true,
+ "feat": "priv",
+ "host": "aitopatom-d6bb",
+ "lambdas_grid": [
+  0.01,
+  0.1,
+  1.0,
+  10.0,
+  100.0,
+  1000.0
+ ],
+ "model": "ridge",
+ "n": 800,
+ "name": "ridge_priv",
+ "numpy": "2.5.2",
+ "prep_sha256": {
+  "test.json": "adb41298676512a28b47279d7d53d1c669b8cf1801301f93ea2578a334d4536d",
+  "v2.json": "8ee7547645d5a48408b6f30e0121efa4ee02b3d10074d906062ff9cbd044247f",
+  "v2x.json": "c508ea16d2ae1c887459402a26e0d2bf35ea564429e1321c1f6e4df53e43441b"
+ },
+ "repro": false,
+ "v2x_manifest_sha256": "34ddda513c7b70bf203523f50b279e0fdfcf4a773bdb09d93e2d7ad15fed90b5"
+}
