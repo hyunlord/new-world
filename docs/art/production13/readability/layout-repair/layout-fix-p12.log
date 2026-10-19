@@ -1,0 +1,9 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Could not preload resource script "res://scripts/ui/panels/agent_inspector_panel.gd".
+          at: GDScript::reload (res://scripts/test/art/test_life_layout_p12.gd:2)
+SCRIPT ERROR: Parse Error: Could not resolve script "res://scripts/ui/panels/agent_inspector_panel.gd".
+          at: GDScript::reload (res://scripts/test/art/test_life_layout_p12.gd:2)
+ERROR: Failed to load script "res://scripts/test/art/test_life_layout_p12.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
