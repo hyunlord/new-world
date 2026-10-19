@@ -1,0 +1,5 @@
+step 150 k 17 loss -0.4876 val 0.0995 best 0.0995@150 33s
+step 300 k 34 loss -0.7429 val 0.1465 best 0.0995@150 74s
+step 450 k 51 loss -0.9551 val 0.0989 best 0.0989@450 175s
+step 600 k 67 loss -0.9925 val 0.0908 best 0.0908@600 284s
+done: best 0.0908 at 600, stop time, round True, 1431s

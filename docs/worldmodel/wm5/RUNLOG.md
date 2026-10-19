@@ -40,3 +40,5 @@ pauses.
 | 4.2 | 10:29:21 | 10:30:16 | `finals_watch_obs2` (`FINALS_SHA` `f7cf620a`, DECISIONS L4.3): `obs2_base` (val selection `zero` at both lags), `ridge_obs`, `ridge_priv` (DGX nearly idle, load ≈ 2); then the M1 / CRN / CT references on the obs2 test |
 | 4.1 | 10:22:51 | 11:00:51 | `crn_obs2_s0`: planned steps reached, α 0.9999 α_max, 2,249 s (beside the M1 reference evaluations) |
 | 4 (cost) | 11:00:51 | 11:09:51 | `_cost_ct_obs2` measured beside our own evaluations (1.89 s/step → plan cut to 7,349); `ct_obs2_s0` stopped after 3 min and both moved to `_aborted/`; `_wait_evals` holds the queue until the evaluations end (DECISIONS L4.4) |
+| 4.2 | 10:30 | 11:45 | obs2 references (WM-2 M1b-act × 3, WM-3 `wm3_full` × 3, WM-4 `m1b_obs` × 2 at ≈ 7 min each; WM-4 CRN / CT obs × 4 in seconds), `m1b_obs2_s0` effects and factual T2, `crn_obs2_s0` effects (last, best) |
+| 4 (cost) | 11:45:52 | 11:51:52 | `_cost_ct_obs2` third measurement (no evaluation of ours running): 0.910 s/step → full plan; `ct_obs2_s0` started 11:51:52 |

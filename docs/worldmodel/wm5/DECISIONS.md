@@ -101,3 +101,6 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   23 on 20 cores) → plan 7,735. `ct_obs2_s0` was stopped again after 1 min (exit 143) and moved to `_aborted/`; the
   hold is now a script (`_setup/wait_evals.sh`, line `_wait_evals2`), after which the unchanged cost check runs a third
   time. All three measurements are reported (`runs/_aborted/`, `runs/_cost_ct_obs2/`).
+  *Third measurement (11:45:52–11:51:52, after our evaluations ended; load average 15–21 from other users):*
+  0.910 s/step, 14.7-s evaluation → predicted 11,006 s for the authors' 11,850 steps < 14,400 s: plan **not reduced**.
+  `ct_obs2_s0` and `ct_obs2_s1` run on it.
