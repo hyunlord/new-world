@@ -86,3 +86,12 @@ Autonomous decisions of the WM-5 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
   `obs2_v19` test group for the drift statistic), which the pre-registration commit does not contain; every obs2 test
   evaluation therefore runs from `f7cf620a` (`FINALS_SHA`), which changes no rule (it adds the manifest, the record
   files, the dataset note and the `fam-check` correction). Each output records its `code_commit`.
+- **L4.4 CT-obs2's cost check repeated.** `_cost_ct_obs2` (11:00:51–11:06:51) ran while our own M1 reference
+  evaluations (`ref_wm3_full_s2` etc., `finals_watch_obs2`) shared the GPU (load average 17–32): it measured 1.89 s per
+  CT step and a 32-s evaluation (the v2 check, GPU shared only with another user, measured 1.00 s and 12 s), so the cost
+  rule cut CT-obs2's plan to 7,349 of the authors' 11,850 steps. The reduction measured our own concurrent jobs, not the
+  training's conditions (the queue runs one training at a time; GOAL.md 9.1's check is "on the actual dataset" before
+  the first run of its kind). `ct_obs2_s0`, started 11:06:51 on the reduced plan, was stopped at 11:09:51 (exit 143,
+  ≈ 100 steps, no evaluation read), both directories were moved to `_aborted/` (`runs/_aborted/`, disclosed), and a
+  queue line `_wait_evals` holds the queue until the reference evaluations and `m1b_obs2_s0`'s evaluations end; then the
+  cost check runs again, unchanged, and its plan is used whatever it gives. No rule, budget or configuration changed.
