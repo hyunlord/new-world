@@ -3,7 +3,6 @@ extends Node2D
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const MorningChill = preload("res://scripts/ui/morning_chill.gd")
-const FoundingGroups = preload("res://scripts/ui/founding_group_renderer.gd")
 const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
 const Porter = preload("res://scripts/ui/porter_presentation_p12.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
@@ -33,7 +32,6 @@ var _objects: Node2D
 var _shadow_layer: Node2D
 var _sprites: Dictionary = {}
 var _activity_icons: Dictionary = {}
-var _porter_lines: Node2D
 var _shadows: Dictionary = {}
 var _cues: Dictionary = {}
 var _sprite_pool: Array[Sprite2D] = []
@@ -161,16 +159,9 @@ func _ready() -> void:
 	var locale: Node = get_node_or_null("/root/Locale")
 	if locale != null:
 		locale.connect("language_changed", _on_write_locale_changed_p13)
-	_porter_lines = Porter.new()
-	_porter_lines.name = "PorterRoutes"
-	_porter_lines.z_index = 2
-	add_child(_porter_lines)
 	set_perf_candidate_p10("allocation-cache", _allocation_candidate)
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
 	_shadow_layer = SpriteLibrary.shared_layer(self, "Shadows", 3)
-	var founding_layer := FoundingGroups.new()
-	founding_layer.name = "FoundingGroups"
-	add_child(founding_layer)
 	world_sim = get_node_or_null("../WorldSim") as WorldSimNode
 	if world_sim != null:
 		world_sim.connect("world_reset", _on_world_reset)
@@ -186,11 +177,8 @@ func _process(delta: float) -> void:
 	_clear_expired_combating()
 	var snap: Dictionary = SimReads.read(world_sim, "get_agent_snapshot")
 	var porter_rows: Dictionary = Porter.rows(SimReads.read(world_sim, "get_porter_snapshot")) if world_sim.has_method("get_porter_snapshot") else {}
-	var porter_settlements: Dictionary = SimReads.read(world_sim, "get_settlement_snapshot") if not porter_rows.is_empty() else {}
-	_porter_lines.routes.clear()
 	var porter_camera: Camera2D = get_node_or_null("../Camera2D") as Camera2D
-	_porter_lines.zoom = porter_camera.zoom.x if porter_camera != null else 1.0
-	_porter_lines.queue_redraw()
+	var porter_zoom: float = porter_camera.zoom.x if porter_camera != null else 1.0
 	var society: Dictionary = SimReads.read(world_sim, "get_society_snapshot")
 	var founders: PackedInt64Array = society.get("founder_agent_ids", PackedInt64Array())
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
@@ -330,7 +318,7 @@ func _process(delta: float) -> void:
 				(sprite.get_parent() as CanvasItem).is_visible_in_tree(),
 				pose if not porter.is_empty() else activity, sprite.z_index,
 				founders.has(agent_id), carried, wood, str(choice.get("activity_icon", "")),
-				_porter_lines.zoom, not porter.is_empty(), int(porter.get("kind", -1)),
+				porter_zoom, not porter.is_empty(), int(porter.get("kind", -1)),
 				int(porter.get("stage", -1)), _write_children_p13(agent_id, sprite)]
 			var forced_p13: bool = int(ids[i]) == selected_bits_p13 or not _write_keys_p13.has(agent_id)
 			skip_writes_p13 = not forced_p13 and _write_keys_p13[agent_id] == write_key_p13
@@ -372,7 +360,6 @@ func _process(delta: float) -> void:
 			sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 			CarryLoad.apply(sprite, pose if not porter.is_empty() else activity)
 			CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
-			_update_activity_icon(agent_id, sprite, choice, porter)
 			if _write_skip_enabled_p13:
 				# Writes can create children; retain their resulting identities, not the pre-write set.
 				write_key_p13[-1] = _write_children_p13(agent_id, sprite)
@@ -385,10 +372,6 @@ func _process(delta: float) -> void:
 				"parent_visible_in_tree": (sprite.get_parent() as CanvasItem).is_visible_in_tree()})
 		if _selection_lookup_enabled:
 			_selection_index.observe(int(ids[i]), agent_id)
-		if not porter.is_empty():
-			var destination: Vector2i = Porter.destination(porter, porter_settlements)
-			if destination.x >= 0:
-				_porter_lines.routes.append({"body": sprite, "end": Vector2(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y) + Vector2(destination) * TILE_SIZE + Vector2(8,8), "kind": int(porter["kind"])})
 		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"]), "walking_direction": _walking_directions.get(agent_id, Vector2.ZERO), "activity_place_known": arrived})
 	_apply_drawn_positions(draw_agents, context, delta)
 	for row: Dictionary in draw_agents:
@@ -512,9 +495,6 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 
 func _on_world_reset() -> void:
 	_invalidate_write_keys_p13()
-	if is_instance_valid(_porter_lines):
-		_porter_lines.routes.clear()
-		_porter_lines.queue_redraw()
 	clear_hovered_person_p12(_hover_owner_p12)
 	_frame_choices_ready = false
 	_pose_output.clear()
@@ -664,30 +644,6 @@ func frame_choice(body: String, activity: String, facing: String, phase: float) 
 
 func _animation_frame(body: String, activity: String, facing: String, phase: float, _agent_id: int) -> String:
 	return str(frame_choice(body, activity, facing, phase).get("sprite_id", ""))
-
-func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary, porter: Dictionary = {}) -> void:
-	if _activity_icons.has(agent_id) and not is_instance_valid(_activity_icons[agent_id]):
-		_activity_icons.erase(agent_id)
-	var camera: Camera2D = get_node_or_null("../Camera2D") as Camera2D
-	var zoom: float = camera.zoom.x if camera != null else 1.0
-	var show_icon: bool = (not porter.is_empty() or Activity.show_activity_icon(choice, zoom)) and sprite.visible
-	if not show_icon:
-		if _activity_icons.has(agent_id):
-			(_activity_icons[agent_id] as Sprite2D).visible = false
-		return
-	if not _activity_icons.has(agent_id):
-		var icon: Sprite2D = Sprite2D.new()
-		sprite.add_child(icon)
-		icon.set_meta("art_kind", "activity_icon")
-		icon.set_meta("art_id", agent_id)
-		_activity_icons[agent_id] = icon
-	var icon: Sprite2D = _activity_icons[agent_id]
-	if not porter.is_empty():
-		Porter.apply_icon(sprite, icon, porter, zoom)
-		return
-	icon.modulate = Color.WHITE
-	icon.scale = Vector2.ONE
-	Activity.apply_activity_icon(sprite, icon, choice, zoom)
 
 func _activity_context() -> Dictionary:
 	var context: Dictionary = {"shelters": {}, "hearths": [], "stockpiles": [], "sites": {}, "food": {}, "wood": {}, "water": {}, "seat_blocked": {}}
