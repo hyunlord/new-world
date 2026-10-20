@@ -379,3 +379,33 @@ Raw data lives in `/Users/rexxa/work/m1-data/` ($DATA), outside the repository.
   dated records of what held then; ARCHITECTURE §2 is the current answer. `docs/VISION.md` is the owner's
   verbatim direction (its "64×64" and "2배속 12 %" lines are V7 facts); changing it is the owner's call.
 - Evidence: `$DATA/logs/docs_q3_q7_round2.md`; `check_docs.sh` PASS. Two rounds used; no third.
+
+## D29 — Code review round 1: what was fixed and what was recorded
+
+- Context: 11.4. A fresh code reviewer (brief, diff `24e16677..3b9d4520`, test and evaluation outputs)
+  reported 1 high, 2 medium and 7 low findings (`$DATA/review/code_review_round1.md`). It found no ledger
+  hole beyond L2, no reservation leak, no non-determinism and no baseline leak.
+- Fixed:
+  - **H1** (verified by the reviewer's probe: an agent frozen in a site-less `Seeking { ConstructionSite }`
+    after a cancel died of thirst 27 game hours later). In the colony, `ConstructionSystem` resets such a
+    seeker to `Idle` when no site stands on its tile (cancel and completion, both entrances). The fix is
+    outside `decision/system.rs` and gated on `rules.colony`. Test `a_cancelled_site_frees_its_v7_seeker`.
+  - **M1** the goal-13 test: `colony_invariants_hold_over_8_seeds_x_10_days` (U-script, every tick
+    checked, ≥ 15 trees felled and the hut built on each seed). Gate step 17 runs it (its file `colony_world` is listed there).
+  - **L1** a finished builder whose state the decision already changed ends its job with
+    `jobs::cancel::finish_in_place` (counted done; state and `SeekTarget` untouched).
+  - **L2** `put_items` debug-asserts that nothing is left over.
+- Recorded, not changed:
+  - **M2** the D20 line (`decision/system.rs` ~L1453, `rules.colony.is_none()`) is outside 4.3's two
+    allowed purposes. With H1's general reset it could probably go, but removing it changes every colony
+    trajectory late in the pass. It stays and is listed under "오너 결정 필요" (M2 can remove it).
+  - **L3** unassigned sleepers may use a hut's sleep tile beyond 4 (the same as V7 shelters, D12).
+  - **L4** a hut finished while no settlement exists gets no owner and no beds; never happens with
+    founders (M2).
+  - **L5** non-job builders on ready sites (D11, as designed).
+  - **L6** probe details: no false pass.
+  - **L7** the colony perf runs are labelled `side64` (a default leaking into the label; the scene is
+    192 × 192). Cosmetic.
+- L1 changes colony trajectories (every finished hut), so the evaluation was rerun on the final code
+  (`$DATA/eval2/`); M1_EVALUATION.md reports that run. Baseline identity is unaffected (every change is
+  gated on `rules.colony`).

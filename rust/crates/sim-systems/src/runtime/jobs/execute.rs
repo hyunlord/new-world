@@ -11,7 +11,8 @@
 //! - a worker whose state is no longer its job's (`Seeking`/`Consuming
 //!   { Job }`, a builder's `Consuming { ConstructionSite }`) was moved by
 //!   another system (a finished site, combat, fission): a builder whose site
-//!   is gone has finished; anyone else is released (`Interrupted`);
+//!   is gone has finished (counted done; its new state and target stand);
+//!   anyone else is released (`Interrupted`);
 //! - a vanished target (tree felled, stack taken, cell unzoned, site
 //!   cancelled) cancels the job (`TargetGone`);
 //! - arrival: a tree counts as reached on it or 8-adjacent; a stack, cell or
@@ -28,7 +29,7 @@ use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget, Tar
 use sim_core::rules::ColonyRule;
 use sim_engine::{RuntimeSystem, SimResources};
 
-use super::cancel::{cancel, finish, release_job};
+use super::cancel::{cancel, finish, finish_in_place, release_job};
 use super::items::{chebyshev, colony_sites, put_items, take_items};
 
 /// Priority of [`JobExecuteSystem`].
@@ -124,7 +125,7 @@ fn step(
         let built =
             matches!(job.kind, JobKind::Build { site } if site_needs(world, site).is_none());
         if built && matches!(job.stage, JobStage::Working { .. }) {
-            finish(world, res, entity);
+            finish_in_place(world, res, entity);
         } else {
             release_job(world, res, entity, CancelReason::Interrupted);
         }

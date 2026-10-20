@@ -79,6 +79,18 @@ pub fn finish(world: &mut World, res: &mut SimResources, entity: Entity) {
     let _ = world.remove_one::<SeekTarget>(entity);
 }
 
+/// A job ended as planned while the worker's state already moved on (a
+/// finished hut's builder that the decision sent elsewhere): release, remove
+/// `Job`, count it done, and leave the state and `SeekTarget` alone.
+pub fn finish_in_place(world: &mut World, res: &mut SimResources, entity: Entity) {
+    if let Some(id) = agent_id(world, entity) {
+        release_all(res, id);
+    }
+    if world.remove_one::<Job>(entity).is_ok() {
+        res.colony.tallies.jobs_done += 1;
+    }
+}
+
 /// The despawn path (7.5, "the agent died"): drop the load where the worker
 /// fell and release its reservations. Call before the entity is despawned.
 pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {

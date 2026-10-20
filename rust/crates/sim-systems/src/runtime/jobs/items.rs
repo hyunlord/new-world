@@ -105,6 +105,10 @@ pub fn put_items(
         }
         ring += 1;
     }
+    debug_assert_eq!(
+        left, 0,
+        "put_items: no room left on the map for {left} items"
+    );
     if !filled.is_empty() {
         res.colony.touch(false);
     }

@@ -439,3 +439,73 @@ fn replay_of_the_command_log_reproduces_the_run() {
     }
     assert_ne!(digest(&idle), digest(&original));
 }
+
+/// Review H1 (M1 Part 6): an idle adult on a waiting hut's centre enters the
+/// V7 `Seeking { ConstructionSite }`; cancelling the site in that window used
+/// to leave it frozen there until it died of thirst (about 27 game hours). The
+/// colony's `ConstructionSystem` now resets a seeker whose site is gone.
+#[test]
+fn a_cancelled_site_frees_its_v7_seeker() {
+    use sim_core::components::{Agent, AgentState, Child, Elder, Position, TargetKind};
+    let seeking = AgentState::Seeking {
+        target: TargetKind::ConstructionSite,
+    };
+    let mut engine = sim_test::colony_engine(3);
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+    let spot = (3..24)
+        .flat_map(|dy| (0..10).map(move |dx| (hearth.0 + dx, hearth.1 + dy)))
+        .find(|&(x, y)| {
+            sim_systems::commands::check_blueprint(&engine.resources, BlueprintKind::Hut, x, y)
+                .is_ok()
+        })
+        .expect("a hut spot near the hearth");
+    for _ in 0..400 {
+        engine.tick();
+    }
+    assert!(submit(&mut engine, hut(spot.0, spot.1)).accepted);
+    let centre = (spot.0 + 1, spot.1 + 1);
+    let mut adults: Vec<(u64, hecs::Entity)> = engine
+        .world
+        .query::<&Agent>()
+        .without::<&Child>()
+        .without::<&Elder>()
+        .iter()
+        .map(|(e, a)| (a.id, e))
+        .collect();
+    adults.sort();
+    let adult = adults[0].1;
+    // Hold the adult on the centre until the cascade sends it to the site.
+    let mut entered = false;
+    for _ in 0..200 {
+        if let Ok(mut p) = engine.world.get::<&mut Position>(adult) {
+            p.x = centre.0;
+            p.y = centre.1;
+        }
+        engine.tick();
+        if state_of(&engine, adult) == seeking && tile_of(&engine, adult) == centre {
+            entered = true;
+            break;
+        }
+    }
+    assert!(
+        entered,
+        "the adult never entered Seeking {{ ConstructionSite }} on the centre"
+    );
+    let cancel = Command::CancelArea {
+        x0: spot.0,
+        y0: spot.1,
+        x1: spot.0 + 2,
+        y1: spot.1 + 2,
+    };
+    assert!(submit(&mut engine, cancel).accepted);
+    engine.tick();
+    assert_ne!(
+        state_of(&engine, adult),
+        seeking,
+        "the seeker of a cancelled site must be freed in the next tick"
+    );
+    for _ in 0..1_440 {
+        engine.tick();
+    }
+    assert_eq!(engine.resources.tallies.deaths_dehydration, 0);
+}

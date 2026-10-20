@@ -121,6 +121,42 @@ pub fn u_script(engine: &SimEngine) -> Vec<Command> {
     sim_test::probe::colony::u_script_commands(engine)
 }
 
+/// Goal 13: the 7.6 ledger, reservation and stack invariants over 8 seeds ×
+/// 10 days, with the U-script's orders given at 06:00 of day 0. Logs must
+/// actually move (trees felled, logs created) so the check is not vacuous.
+#[test]
+fn colony_invariants_hold_over_8_seeds_x_10_days() {
+    for seed in 0u64..8 {
+        let mut engine = sim_test::colony_engine(seed);
+        for tick in 0..10 * 1_440u64 {
+            if tick == 360 {
+                for cmd in u_script(&engine) {
+                    assert!(
+                        sim_systems::commands::submit(&mut engine, cmd).accepted,
+                        "seed {seed}: a U-script order was rejected"
+                    );
+                }
+            }
+            tick_checked(&mut engine);
+        }
+        let colony = &engine.resources.colony;
+        assert!(
+            colony.tallies.trees_felled >= 15,
+            "seed {seed}: only {} trees felled",
+            colony.tallies.trees_felled
+        );
+        assert_eq!(
+            colony.tallies.huts_built, 1,
+            "seed {seed}: the hut was not built"
+        );
+        assert_eq!(
+            deaths(&engine),
+            0,
+            "seed {seed}: deaths in 10 days with the script"
+        );
+    }
+}
+
 #[test]
 fn colony_determinism_with_the_u_script() {
     let run = |seed: u64| {

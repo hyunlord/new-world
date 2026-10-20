@@ -150,9 +150,30 @@ impl RuntimeSystem for ConstructionSystem {
         //     is emitted for the already-complete site.
         let mut absent_resets: Vec<Entity> = Vec::new();
         let mut progress_ops: Vec<Entity> = Vec::new();
+        let colony = resources.rules.colony.is_some();
         {
             let mut q = world.query::<(&Position, &AgentState)>();
             for (agent_entity, (pos, state)) in q.iter() {
+                // M1 (colony only): the colony has no shelter planning, so a
+                // `Seeking { ConstructionSite }` agent is one the Idle cascade
+                // sent to the site it stands on. If that site is gone
+                // (cancelled, or completed by another builder) nothing else
+                // ever moves the agent out of Seeking: reset it to Idle.
+                if colony
+                    && matches!(
+                        *state,
+                        AgentState::Seeking {
+                            target: TargetKind::ConstructionSite
+                        }
+                    )
+                {
+                    let key = (pos.x, pos.y);
+                    if !sites_by_pos.contains_key(&key) && !complete_sites_by_pos.contains_key(&key)
+                    {
+                        absent_resets.push(agent_entity);
+                    }
+                    continue;
+                }
                 if !matches!(
                     *state,
                     AgentState::Consuming {
