@@ -150,7 +150,9 @@ impl RuntimeSystem for ConstructionSystem {
         //     is emitted for the already-complete site.
         let mut absent_resets: Vec<Entity> = Vec::new();
         let mut progress_ops: Vec<Entity> = Vec::new();
-        let colony = resources.rules.colony.is_some();
+        // The reset below assumes the colony plans no shelters (review round 2, L-b).
+        let colony =
+            resources.rules.colony.is_some() && resources.rules.society.shelter_planning.is_none();
         {
             let mut q = world.query::<(&Position, &AgentState)>();
             for (agent_entity, (pos, state)) in q.iter() {

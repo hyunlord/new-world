@@ -504,8 +504,138 @@ fn a_cancelled_site_frees_its_v7_seeker() {
         seeking,
         "the seeker of a cancelled site must be freed in the next tick"
     );
-    for _ in 0..1_440 {
+    // Round 1's frozen agent died about 1,618 ticks after the cancel.
+    for _ in 0..2_000 {
         engine.tick();
     }
-    assert_eq!(engine.resources.tallies.deaths_dehydration, 0);
+    assert!(
+        engine.world.contains(adult),
+        "the freed adult must still be alive"
+    );
+}
+
+/// Review round 2 (M-A): the completion entrance of the same trap. Adult B
+/// enters `Seeking { ConstructionSite }` at 125 in the tick in which builder A
+/// completes the hut at 133; the next tick must free B. A reaching
+/// `Consuming` on the ready site pins the guard that keeps a seeker of a
+/// standing site.
+#[test]
+fn a_completed_site_frees_its_v7_seeker() {
+    use hecs::Entity;
+    use sim_core::colony::Job;
+    use sim_core::components::{
+        Agent, AgentState, Child, Elder, Hunger, Position, SeekTarget, Sleep, TargetKind, Thirst,
+    };
+    let seek = AgentState::Seeking {
+        target: TargetKind::ConstructionSite,
+    };
+    let build = AgentState::Consuming {
+        target: TargetKind::ConstructionSite,
+    };
+    let calm = |engine: &mut SimEngine, e: Entity| {
+        if let Ok(mut h) = engine.world.get::<&mut Hunger>(e) {
+            h.value = 0.0;
+        }
+        if let Ok(mut t) = engine.world.get::<&mut Thirst>(e) {
+            t.value = 0.0;
+        }
+        if let Ok(mut s) = engine.world.get::<&mut Sleep>(e) {
+            s.fatigue = 0.0;
+        }
+    };
+    let put = |engine: &mut SimEngine, e: Entity, tile: (u32, u32)| {
+        if let Ok(mut p) = engine.world.get::<&mut Position>(e) {
+            p.x = tile.0;
+            p.y = tile.1;
+        }
+    };
+    for seed in [3u64, 0] {
+        let mut engine = sim_test::colony_engine(seed);
+        let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+        let spot = (3..24)
+            .flat_map(|dy| (0..10).map(move |dx| (hearth.0 + dx, hearth.1 + dy)))
+            .find(|&(x, y)| {
+                sim_systems::commands::check_blueprint(&engine.resources, BlueprintKind::Hut, x, y)
+                    .is_ok()
+            })
+            .expect("a hut spot near the hearth");
+        for _ in 0..400 {
+            engine.tick();
+        }
+        assert!(submit(&mut engine, hut(spot.0, spot.1)).accepted);
+        let centre = (spot.0 + 1, spot.1 + 1);
+        let site = engine
+            .world
+            .query::<&ConstructionSite>()
+            .iter()
+            .find(|(_, s)| (s.position.x, s.position.y) == centre)
+            .map(|(e, _)| e)
+            .expect("the site");
+        // Deliver the logs by hand (and credit the ledger) so the site is ready.
+        let needed = engine.world.get::<&MaterialNeeds>(site).unwrap().needed;
+        engine
+            .resources
+            .colony
+            .item_ledger
+            .create(ItemKind::Log, u64::from(needed));
+        engine
+            .world
+            .get::<&mut MaterialNeeds>(site)
+            .unwrap()
+            .delivered = needed;
+        let mut adults: Vec<(u64, Entity)> = engine
+            .world
+            .query::<&Agent>()
+            .without::<&Child>()
+            .without::<&Elder>()
+            .without::<&Job>()
+            .iter()
+            .map(|(e, a)| (a.id, e))
+            .collect();
+        adults.sort();
+        let (a, b) = (adults[0].1, adults[1].1);
+        // A becomes a non-job builder on the ready site (Seeking, then Consuming).
+        let mut building = false;
+        for _ in 0..200 {
+            put(&mut engine, a, centre);
+            calm(&mut engine, a);
+            engine.tick();
+            if state_of(&engine, a) == build && tile_of(&engine, a) == centre {
+                building = true;
+                break;
+            }
+        }
+        assert!(
+            building,
+            "seed {seed}: A never started building the ready site"
+        );
+        // The completion tick: the site is one step short, B idle on the centre.
+        {
+            let mut s = engine.world.get::<&mut ConstructionSite>(site).unwrap();
+            s.progress = s.blueprint.required_progress - 1;
+        }
+        put(&mut engine, b, centre);
+        calm(&mut engine, a);
+        calm(&mut engine, b);
+        *engine.world.get::<&mut AgentState>(b).unwrap() = AgentState::Idle;
+        let _ = engine.world.remove_one::<SeekTarget>(b);
+        let huts = engine.resources.colony.tallies.huts_built;
+        engine.tick();
+        assert_eq!(
+            engine.resources.colony.tallies.huts_built,
+            huts + 1,
+            "seed {seed}"
+        );
+        assert_eq!(
+            state_of(&engine, b),
+            seek,
+            "seed {seed}: B must enter Seeking in the completion tick (the entrance)"
+        );
+        engine.tick();
+        assert_ne!(
+            state_of(&engine, b),
+            seek,
+            "seed {seed}: the seeker of a completed site must be freed in the next tick"
+        );
+    }
 }

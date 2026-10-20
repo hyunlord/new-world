@@ -409,3 +409,29 @@ Raw data lives in `/Users/rexxa/work/m1-data/` ($DATA), outside the repository.
 - L1 changes colony trajectories (every finished hut), so the evaluation was rerun on the final code
   (`$DATA/eval2/`); M1_EVALUATION.md reports that run. Baseline identity is unaffected (every change is
   gated on `rules.colony`).
+
+## D30 — Code review round 2 (the last round)
+
+- Context: 11.4. A fresh reviewer checked the two fix commits (`8626fdc9`, `f742c552`) and D29
+  (`$DATA/review/code_review_round2.md`): no high finding; H1 closes both entrances, no baseline leak, no
+  reset loop, `finish_in_place` clean, GDScript writes no simulation state and does not double count.
+- Fixed:
+  - **M-A** test `a_completed_site_frees_its_v7_seeker` (completion entrance, seeds 3 and 0). It asserts that
+    the entrance happens and that the seeker is freed the next tick; it fails with the reset disabled.
+  - **L-a** the same test asserts that builder A reaches `Consuming` on the ready site, which pins the guard
+    that keeps a seeker of a standing site. The cancel test now asserts that the freed adult is alive 2,000
+    ticks later (round 1's agent died at about 1,618).
+  - **L-b** the reset is gated on `rules.colony` and on `shelter_planning` being off (a planned builder
+    legitimately seeks a site it does not stand on).
+- Recorded, not changed:
+  - **L-c** removing the D20 line would turn the memory arm into an Idle/Seeking livelock (not lethal).
+    This is added to the M2 note in "오너 결정 필요".
+  - **L-d** the 8 × 10 test exercises jobs only in about the first 1.2 days, and only `Needs` cancels
+    occur. The other cancel paths are covered by the `job_world` tests. A second order wave is for M2.
+  - **L-e** the L2 assert is debug-only; the remainder is not returned (no room is unreachable: about
+    37k tiles × 25).
+  - **L-f** no change needed: `SimReads` caches `get_colony_overlay` once per frame, so the second read is
+    a cache hit.
+  - **L-g** the idle hint is not re-localized on `L` (the same as the buttons).
+  - Info: the top bar's 통나무 counts ground stacks only; player items #8 (toast near the cursor) and #11
+    (zoom anchor) are partial.
