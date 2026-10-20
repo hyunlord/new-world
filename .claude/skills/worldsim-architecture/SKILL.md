@@ -15,14 +15,14 @@ bridge changes. The generated map of systems lives in `docs/ARCHITECTURE.md`
 
 | crate | owns | depends on |
 |---|---|---|
-| `rust/crates/sim-core` | ECS components (`src/components/`), `WorldRules` (`src/rules/`: `mod.rs` = `WorldRules`, one file per sub-rule struct, `baseline.rs` = `WorldRules::baseline(seed)`), keyed RNG (`src/rng.rs`), causal ring (`src/causal/`), chronicle (`src/chronicle.rs`), influence grid (`src/influence/`), tile grid (`src/tile/`), materials (`src/material/`), world variety draws (`src/variety.rs`) | hecs, serde, ron, ahash, glam, … |
+| `rust/crates/sim-core` | ECS components (`src/components/`), `WorldRules` (`src/rules/`: `mod.rs` = `WorldRules`, one file per sub-rule struct, `baseline.rs` = `WorldRules::baseline(seed)`), keyed RNG (`src/rng.rs`), causal ring (`src/causal/`), chronicle (`src/chronicle.rs`), influence grid (`src/influence/`), tile grid (`src/tile/`), materials (`src/material/`), world variety draws (`src/variety.rs`), the M1 colony model (`src/colony/`: items and `ItemLedger`, trees, designations, zones, blueprints, reservations, `Command`, `Job`) | hecs, serde, ron, ahash, glam, … |
 | `rust/crates/sim-engine` | `RuntimeSystem` trait, `SimResources` (all non-ECS world state), `SimEngine` (system list, tick loop, clock) | sim-core |
-| `rust/crates/sim-systems` | every `impl RuntimeSystem` under `src/runtime/<domain>/`, `register_default_runtime_systems` (`src/lib.rs`), worldgen (`src/worldgen/`, `WorldGenConfig::baseline(seed)`, `build_world_with`) | sim-core, sim-engine |
+| `rust/crates/sim-systems` | every `impl RuntimeSystem` under `src/runtime/<domain>/`, `register_default_runtime_systems` (`src/lib.rs`), commands (`src/commands.rs`: `apply_command`, `submit`), the job layer (`src/runtime/jobs/`), worldgen (`src/worldgen/`, `WorldGenConfig::baseline(seed)`, `WorldGenConfig::colony(seed)`, `build_world_with`) | sim-core, sim-engine |
 | `rust/crates/sim-bridge` | GDExtension cdylib: one Godot class `WorldSimNode` under `src/ffi/`, pure `collect_*` functions behind thin `#[func]` methods, `build_game_engine(seed)` | the three above + `godot` |
 | `rust/crates/sim-test` | `sim_test::baseline_engine(seed)`, scenes, probe (`worldsim_probe`), perf (`worldsim_perf`), domain integration tests in `tests/` | all four |
 
-The tick: `WorldSimNode::process(delta)` runs `engine.tick()` on a fixed 1/30 s
-accumulator (at most 5 ticks per frame). `SimEngine::tick` sets
+The tick: `WorldSimNode::process(delta)` runs `engine.tick()` on a fixed 1/12 s
+accumulator at 1× (`TICKS_PER_SECOND_AT_1X`, at most 8 ticks per frame, M1). `SimEngine::tick` sets
 `resources.current_tick`, runs every system whose `tick_interval` divides the
 tick in ascending `priority` (stable sort, so equal priorities keep
 registration order), then advances the clock. 1,440 ticks = 1 game day
@@ -35,7 +35,7 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Don't** use `godot` types outside `rust/crates/sim-bridge`. *Reason:* sim-core/engine/systems must build and test without an engine; today `use godot` appears only in sim-bridge.
 - **Don't** put an `impl RuntimeSystem` in sim-bridge or simulation logic in a `#[func]` body. *Reason:* `#[func]` methods only forward to a pure Rust function and marshal; logic behind `#[func]` cannot be tested headless.
 - **Do** let systems talk only through `World` components and `SimResources` fields (queues such as `building_event_queue`). *Reason:* there is no event bus; systems never call each other, and priorities serialise access on one thread.
-- **Don't** let GDScript write simulation state; mutations go through the few bridge commands (`SimReads.MUTATORS`: `advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`; plus `set_sim_speed`). *Reason:* GDScript has no access to the ECS and must never become a second simulation.
+- **Don't** let GDScript write simulation state; mutations go through the few bridge commands (`SimReads.MUTATORS`: the M1 orders `cmd_*`, `advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`; plus `set_sim_speed`). *Reason:* GDScript has no access to the ECS and must never become a second simulation.
 - **Do** put tunables in `WorldRules` sub-rule fields (baseline value in `rules/baseline.rs`) and fixed constants as module-local `pub const`. *Reason:* there is no `config.rs`; the baseline is the one live rule set, and a field is visible in the rules dump test.
 - **Don't** let a system read measurement-only state (`worldgen_report`, probe-only logs). *Reason:* measurement must not change behaviour or identity.
 
@@ -58,6 +58,13 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Do** add `#[serde(default)]` to every new rule field. *Reason:* older serialized rules must still deserialize.
 - **Do** list every exhaustive `match` and every counter/tally consumer (with file:line) before adding an enum variant, and pin its encoding with a test. *Reason:* new variants touch `as_u8`, despawn, probe census, FFI tallies and GDScript mappings.
 - **Do** run `cargo clippy --workspace --all-targets -- -D warnings` (not only scoped clippy); fix lints, never suppress them. *Reason:* `--all-targets` findings slipped into commits when only scoped clippy ran.
+
+### Colony world (M1; ADR 0012–0014)
+- **Do** gate every colony behaviour on `resources.rules.colony` (`ColonyRule`, set by `WorldRules::colony(seed)`; `None` in baseline) and return at once when it is `None`. *Reason:* `baseline` is frozen and proven by identity; a colony change that runs in baseline fails the gate (ADR 0014).
+- **Do** change colony state from the player only through a `Command` applied by `commands::apply_command` (via `submit`, which logs it with the next tick in `colony.command_log`). *Reason:* the log is the replay (ADR 0012); a write that bypasses it cannot be replayed and breaks the replay gate step.
+- **Do** keep every created log in exactly one place (ground `ItemStack`, `Carry`, a site's delivered count, consumed) and move it with the helpers in `runtime/jobs/items.rs` and `cancel.rs` (`put_items`, `take_items`, `drop_carry`), updating `colony.item_ledger` when logs are created or consumed. *Reason:* `jobs::invariants::check` asserts created = ground + carried + delivered + consumed every tick in debug builds; a hand-rolled move is a ledger hole.
+- **Do** release reservations through `jobs::cancel::{cancel, finish, release_job, on_death}`, never by removing a `Job` component directly. *Reason:* a removed job with live `colony.reservations` blocks that tree, stack, cell or site forever (a reservation leak).
+- **Don't** add job logic to `decision/system.rs`. Only the seam calls go there (`jobs::holders` ~L833, `hold_for_decision` ~L1127, `settle_after_decision` ~L2661) plus compile-forced `TargetKind::Job` arms. *Reason:* ADR 0013 caps the decision change (+26 −1 lines in M1); the job layer must stay readable in `runtime/jobs/`.
 
 ### Headers and size
 - **Do** start every `.rs` under `src/` with a `//!` header giving its purpose. Systems also give priority, interval, `Reads:`, `Writes:` and events (template in Procedure A). *Reason:* `tools/v8/system_table.py` reads `Reads:`/`Writes:` from the leading `//!` block into `docs/ARCHITECTURE.md`.
@@ -105,6 +112,21 @@ Full step lists with code skeletons: `references/procedures.md`.
 2. Put the list in the pass report as a table (path, lines). Not a failure.
 3. Check headers: `git ls-files 'rust/crates/*/src/*.rs' | while read -r f; do head -1 "$f" | grep -q '^//!' || echo "$f"; done` must print nothing (git pathspec `*` also matches `/`).
 
+### D. Add a command (a player order)
+1. Add the variant to `Command` in `rust/crates/sim-core/src/colony/command.rs` (plain integers and tiles, serde) and, if it can fail in a new way, a `RejectReason`.
+2. Handle it in `apply_command` (`rust/crates/sim-systems/src/commands.rs`): check first (colony on, in map, not water, not blocked), then apply in tile order; return `CommandResult { accepted, count, reason }`; bump `trees_version` / `overlay_version` when the reads must refresh. Never touch jobs except through `jobs::cancel::cancel(…, CancelReason::Command)`.
+3. Bridge: a `#[func] cmd_<name>` in `ffi/node.rs` that builds the `Command` and calls the `ffi/colony.rs` helper, which calls `commands::submit` and turns the result into `{accepted, count, reason}`. Add it to the bridge API list (Procedure B step 10).
+4. Probe: if scripts should use it, add it to the probe's command file parser (`rust/crates/sim-test/src/probe/colony.rs`); the replay test then covers it.
+5. Tests in `rust/crates/sim-test/tests/colony_commands.rs`: accepted case with the exact count, each reject reason, and that the log entry carries the next tick.
+
+### E. Add a job type
+1. Add a `JobKind` variant (`rust/crates/sim-core/src/colony/job.rs`) and, if needed, a `WorkType`; give it `keys()` per stage (what it reserves while walking to the source and to the destination).
+2. Assign: a branch in `pick` (`runtime/jobs/assign.rs`) in the right priority order (today Build/Deliver > Chop > Haul), choosing the nearest target by `(distance, tile)` among unreserved ones; reserve every key with `cancel::reserve`.
+3. Execute: arms in `target_exists`, `step` and `arrive` (`runtime/jobs/execute.rs`), and the `expected_state` it walks or works in. Items move only through `put_items` / `take_items`; finishing goes through `cancel::finish`.
+4. The seam needs no change if the job is walked as `Seeking { Job }` / worked as `Consuming { Job }`.
+5. Ledger: if the job produces or consumes items, update `item_ledger` in the same function and extend `jobs::invariants::check`.
+6. Tests in `rust/crates/sim-test/tests/colony_jobs.rs`: the job completes, the ledger holds every tick, reservations are empty after a cancel by each `CancelReason`, a twin run stays identical.
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |
@@ -136,3 +158,6 @@ Full step lists with code skeletons: `references/procedures.md`.
 | 2026-10-12 | UI work needed sim data that had no getter | the FFI exposed no intervention log or settlement lineage | add only read-only `#[func]` getters (pure collector, columns, unit test) and document the contract | `v7-final-art:docs/art/production6/REPORT.md` L142; `v7-final-art:docs/art/production7/REPORT.md` L84 |
 | 2026-10-16 | a harness assumed `advance_ticks` returns a delta, and a capture at an event's tick missed the event | `advance_ticks` returns the final absolute tick; stepping to tick T runs systems 0..T-1 | compare against the expected absolute tick; read an event booked at T after tick T has run | `v7-final-art:docs/art/production11/DECISIONS.md` L13; `v7-final-art:docs/art/production13b/DECISIONS.md` L22 |
 | 2026-04-26 | 10 of 11 features labelled "missing" were 85–100 % implemented and were re-implemented | memory and roadmap notes were treated as truth | grep the feature's symbols and check its wiring (registered system, bridge getter) before implementing | `v7-final-art:CLAUDE.md` "5. Memory Axiom < Code Reality" |
+| 2026-10-20 | colony calibration round 0: one dehydration death per seed (8 of 8 seeds) with no hut and no thirst problem in V7 | with `shelter_planning: None` the memory "bias-only Construction" arm of the decision system still fired and set `Seeking { ConstructionSite }` with no site to reach, forever | gate that arm on `rules.colony.is_none()`; when a rule is switched off, grep every arm that assumes its data exists; count deaths per cause on the first calibration round | `docs/v8/m1/M1_DECISIONS.md` D20; `rust/crates/sim-systems/src/runtime/decision/system.rs` |
+| 2026-10-20 | adding `TargetKind::Job` failed the build in the decision system, the bridge snapshot, the probe census and the test lock lists | exhaustive matches over `TargetKind` across four crates | list consumers first (`git grep -n "TargetKind::"`), then add the arm everywhere with its encoding (target code 9) and a test | `docs/v8/m1/M1_DECISIONS.md` D10, D15; `rust/crates/sim-bridge/src/ffi/snapshot.rs` |
+| 2026-10-20 | a new chronicle kind (`HutBuilt` 22) failed identity on the chronicle files although no baseline event changed | each chronicle file carries the full kinds vocabulary, which grew | compare chronicles by content with the base kinds list as a prefix (`tools/v8/compare_chronicles.py`) | `docs/v8/m1/M1_DECISIONS.md` D21; `tools/v8/compare_chronicles.py` |

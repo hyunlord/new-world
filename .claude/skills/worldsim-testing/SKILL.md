@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 16-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 20-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -65,7 +65,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0.
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1).
 
 | # | step | checks |
 |---|---|---|
@@ -85,6 +85,10 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 14 | `docs` | `tools/v8/check_docs.sh` |
 | 15 | `inventory_closure` | `tools/v8/inventory.py check` |
 | 16 | `python_unittest` | `python3 -m unittest discover -s tools/v8 -p 'test_*.py'` |
+| 17 | `m1_tests` | the M1 tests by name (`colony_commands`, `colony_jobs`, `colony_world`, `engine_colony_ffi`, `probe::colony`, `jobs::`, `colony::`) + `tools/v8/test_locale_trf.gd` |
+| 18 | `colony_determinism` | colony probe, seeds 0..4, 10 days, `tools/v8/u_script.json`, `--check-determinism` |
+| 19 | `replay` | a scripted colony run's recorded command log replays to a byte-identical summary |
+| 20 | `uid_check` | `tools/v8/check_docs_helpers.py uid` (every Godot source has its committed `.uid`) |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -97,6 +101,13 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 3. `python3 tools/v8/perf_summary.py --compare <base>/perf/perf_summary.json <out_dir>/perf_summary.json` — WARN when a mean rises > 10 %. V8-0 base: natural mean median 0.2773 ms (`docs/v8/V8_0_BASE_NUMBERS.md`, contended Mac).
 4. Report the mean; list p99 / p99.9 per repeat labelled as noise; state the start/end load and whether the run was contended.
 5. A perf claim (faster/slower) needs an admitted quiet session (calibrated probe, attempts ≥ 30 min apart) or it is reported as contended.
+
+### F. Colony tests: ledger, reservations, replay (M1 patterns)
+1. Start colony tests from `sim_test::colony_engine(seed)` (or `scenes::colony_scene`) and helpers in `rust/crates/sim-test/tests/colony_support/mod.rs`; give orders with `sim_systems::commands::submit`, never by writing `SimResources.colony` directly.
+2. **Ledger:** after every tick of a test run, check `sim_systems::runtime::jobs::invariants::check(&world, &resources)` (log conservation: created = on the ground + carried + delivered to sites + consumed, from `invariants::log_ledger`; reservations; stacks). Assert that logs moved at all (`trees_felled > 0`, a stack exists) so the check cannot pass on an idle world.
+3. **Reservations:** cancel by each `CancelReason` (a command, a death, a need, the target gone) and assert `colony.reservations` holds no key of the cancelled agent afterwards; tick once more when a release happens on the next stage.
+4. **Replay:** run with a command script (`worldsim_probe --scene colony --commands <file> --commands-out <dir>`), then replay the written log with `--commands <dir>/…` and compare `summary.json` byte for byte (timings live in `timing.json`, outside the comparison). The unit test in `rust/crates/sim-test/src/probe/colony.rs` and gate step 19 do this.
+5. **Twins:** two colony engines with the same seed and the same commands, ticked in lockstep, compared with `probe::colony::colony_fingerprint` (it covers the colony state, jobs and carries, not only the V7 fingerprint).
 
 ### E. Test layout
 - Integration tests: `rust/crates/sim-test/tests/` by domain — `agents_*.rs`, `settlement_*.rs`, `family_*.rs`, `relations_*.rs`, `chronicle_*.rs`, `engine_*.rs` (engine and bridge), `determinism.rs`. Add to the matching file; a new file only for a new domain.
@@ -139,3 +150,5 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 2026-10-10 | probe runs picked up later edits; an in-place gate had to be stopped | the probe rebuilt from a working tree that kept changing | freeze probe binaries; run base probes and gates from a detached worktree of the committed head | `v7-final-art:docs/revitalize/DECISIONS.md` L296, L358, L1031 |
 | 2026-10-12 | a green gate did not test any single commit | debug tests ran on one tree, release on another, later steps on the moving working tree | run the final gate on the report commit with nothing edited or committed while it runs | `v7-final-art:docs/revitalize/DECISIONS.md` L622, L1143; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 2 MAJOR B |
 | 2026-10-11 | empty Python test discovery exited 5 and broke the gate | `unittest discover` with no tests exits 5 | keep at least one test (or an explicit skip) in `tools/v8/test_*.py` | `v7-final-art:docs/revitalize/DECISIONS.md` L458 |
+| 2026-10-20 | M1 hut test failed: a site reservation was still held one tick after the hut finished | the finishing builder releases its `Site` key in the job stage after the site's last progress tick; a haul in flight may hold a `Cell` legitimately | assert reservation release after one more tick, and check per agent and per key kind, not "reservations empty" | `rust/crates/sim-test/tests/colony_jobs.rs` |
+| 2026-10-20 | the colony world test expected 18 wild regions and saw 11–14 | regions must lie within `region_water_max` of water; the 192 × 192 map cannot always fit 18 | assert the measured floor (≥ 10, observed 11–14 on seeds 0–7) and record the rule, not the request | `rust/crates/sim-test/tests/colony_world.rs`; `docs/v8/m1/M1_DECISIONS.md` D17 |

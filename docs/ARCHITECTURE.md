@@ -113,11 +113,12 @@ order tool (scripts/world/colony/order_tool.gd) ──► WorldSimNode.cmd_*(…
          jobs / carry_kinds / carry_counts columns ──► scripts/world/colony/*.gd
 ```
 
-- Every log exists in exactly one place: on a tree as uncut wood, in a
-  ground `ItemStack`, in a `Carry`, in a site's delivered count, or consumed
-  by a finished hut. `ItemLedger` (`SimResources.colony.item_ledger`) counts
-  produced, consumed and lost logs; `jobs::invariants::check` asserts the
-  sum each tick in debug builds and the colony tests check it.
+- A felled tree creates logs; from then on every log is in exactly one
+  place: a ground `ItemStack`, a `Carry`, a site's delivered count, or
+  consumed by a finished hut. `ItemLedger` (`SimResources.colony.item_ledger`)
+  counts created and consumed logs, and `jobs::invariants::check` asserts
+  created = ground + carried + delivered + consumed (with the reservation and
+  stack invariants) every tick in debug builds; the colony tests check it too.
 - All of it is gated on `rules.colony` (`ColonyRule`, `WorldRules::colony`):
   in the baseline world every job system returns at once, so the frozen
   baseline stays identical (ADR 0014).

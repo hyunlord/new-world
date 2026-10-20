@@ -19,15 +19,17 @@ So for M1: budget the **renderer**, keep per-agent GDScript loops short, and rea
 
 ## Tiles: `TileMapLayer`
 
-- Godot 4.3+ uses one `TileMapLayer` node per layer (the old multi-layer `TileMap` is deprecated). WorldSim's
-  `scripts/world/terrain_renderer.gd` already builds `TileSet` + `TileSetAtlasSource` + `TileMapLayer` in code and
-  fills cells with `set_cell(Vector2i(x, y), source_id, atlas_coords)`.
+- Godot 4.3+ uses one `TileMapLayer` node per layer (the old multi-layer `TileMap` is deprecated). M1's
+  `scripts/world/colony/view.gd` builds one `TileSet` + `TileSetAtlasSource` from `assets/v8/temp/tiles.png` and
+  `tiles.json` (name → rect) and returns the name → atlas-coords map; `terrain_layer.gd` and `tree_layer.gd` fill
+  cells with `set_cell(Vector2i(x, y), 0, coords[name])`. The 192 × 192 terrain is filled once per world (and
+  again only while the hearth is unknown); trees refill when `get_colony_versions` reports a new trees version.
 - Fill on world reset or when the terrain snapshot changes, not every frame (terrain is cached per world in
   `SimReads`). `set_cell` on an unchanged cell still costs; diff before writing.
 - A `TileMapLayer` batches its cells into quadrants; many layers × full-map redraws are what cost. Keep the layer
   count small and fixed.
 - Nearest filtering is the project default (`rendering/textures/canvas_textures/default_texture_filter=0`); keep
-  1 texel = 1 world pixel and integer camera zoom (ladder 1/2/3/4/6/8) so tiles never shimmer
+  1 texel = 1 world pixel and integer camera zoom (M1: 1/2/3/4) so tiles never shimmer
   (`docs/art/production/BRIEF.md` L88, L93).
 
 ## Many sprites: three options

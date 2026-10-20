@@ -30,7 +30,7 @@ smoke are this repo's validators).
 
 ### Bridge and simulation state
 - **Do** read argument-less bridge getters through `SimReads.read(world, "get_x")` (or the `SimReads` helpers). `SimReads` is `scripts/core/sim_reads.gd` (`class_name SimReads`, node `Main/SimReads`); `read` serves only names in `GETTERS`, cached and frozen once per frame; names also in `TICK_GETTERS` (today `get_porter_snapshot`, `get_settlement_relations`) are cached once per simulation tick; terrain until a reset. *Reason:* 15 independent `get_agent_snapshot` callers cost a 10.2 ms frame (3.97 ms after).
-- **Don't** write simulation state from GDScript. The only calls with an effect are the tooling/lifecycle `MUTATORS` in `sim_reads.gd` (`advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`) and the speed control `set_sim_speed`. *Reason:* Rust owns the state; identity and determinism are measured there, never in the live game.
+- **Don't** write simulation state from GDScript. The only calls with an effect are the `MUTATORS` in `sim_reads.gd` (the M1 orders `cmd_*`, which become recorded commands; tooling/lifecycle `advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`) and the speed control `set_sim_speed`. *Reason:* Rust owns the state; identity and determinism are measured there, never in the live game.
 - **Don't** invent render-only objects (buildings, ids) the snapshot does not contain. *Reason:* V7 boot code drew fake buildings the sim never owned.
 - **Do** call a getter that takes arguments (e.g. `get_agent_detail(entity_bits)`) directly — `world_sim.get_x(args)` or `_world_sim.call("get_x", args)` — never per node per frame, and name it in the file's header comment. Such getters are not in `GETTERS`. `get_tile_causal_events` has its own helper `SimReads.causal_events(...)`. *Reason:* O(N) getters polled per frame break the frame before the sim does.
 - **Do** prefer `world_sim.X(` / `_world_sim.X(` over `call("X")` for a bridge call. *Reason:* the strict check (exit 3) compares those calls and the names passed to `SimReads.read/mutate` with the `#[func]` names in the Rust source (`tools/v8/bridge_api.py`, no build needed); a `call("name")` string is not checked and only the smoke exercises it.
@@ -60,7 +60,7 @@ smoke are this repo's validators).
 - **Do** keep `INTEGER_DIVISION`, unused parameters/variables/signals at zero (prefix unused parameters with `_`; `@warning_ignore("integer_division")` only where an exact integer quotient is meant). *Reason:* the strict check promotes these warnings to errors.
 
 ### Drawing and UI
-- **Do** keep nearest filtering, 1 texel = 1 world pixel, sprite scale 1 and the integer zoom ladder 1/2/3/4/6/8. *Reason:* fractional scale and a 1.25× wheel step made villagers squashed and blurry.
+- **Do** keep nearest filtering, 1 texel = 1 world pixel, sprite scale 1 and integer zoom only (M1 camera: 1/2/3/4, default 2; `scripts/world/camera_controller.gd`). *Reason:* fractional scale and a 1.25× wheel step made villagers squashed and blurry.
 - **Do** capture per-instance tint in `vertex()` in `canvas_item` shaders. *Reason:* in 4.6 `COLOR` at `fragment()` is already multiplied by `TEXTURE`; capturing it there turned every agent green.
 - **Do** size pixel text in design pixels on the font's grid: Galmuri11 is a 12-px grid, so 12/24/36/48 px. *Reason:* a rule stated in screen pixels failed at 24/36 px and pushed Life text to 48 px, breaking layout.
 - **Do** derive visual variation from integer hashes of stable ids or tiles; no `randf()` in renderers. *Reason:* looks changed from run to run.
@@ -123,6 +123,13 @@ smoke are this repo's validators).
 3. State legibility rules in design pixels (e.g. "glyph pairs differ by ≥ 1 design pixel"), never in screen pixels.
 4. Set both `normal_font_size` and `bold_font_size` when overriding a `RichTextLabel`; read the effective size from the live control, not from source (theme inheritance decides it).
 
+### 9. Drive the game with synthetic input (GUI tests)
+1. Windowed only (`--rendering-driver opengl3 --resolution 1920x1080`): `Input.parse_input_event` reaches `_unhandled_input` and GUI buttons as a real click does; `tools/v8/m1_gui_test.gd` is the model.
+2. Convert a tile to a screen point with `root.get_canvas_transform() * (Vector2(tile) * 16 + Vector2(8, 8))`.
+3. A click is motion to the point, then press, then release, each followed by `await process_frame`; a drag adds motion events between press and release. Keys send press and release with both `keycode` and `physical_keycode`.
+4. After each step assert the effect through the bridge reads (`get_colony_overlay`, `get_trees`), never through the order tool's own state; pause with `P` while ordering so the clock does not move between steps.
+5. Save shots with the viewport texture after a frame (`await process_frame`), and print one PASS/FAIL sentinel line.
+
 ### 8. Write a headless tool or test script
 1. `extends SceneTree`; parse arguments after `--` with `OS.get_cmdline_user_args()`; `call_deferred("_run")` from `_init()` (see `tools/v8/smoke.gd`).
 2. Load `res://scenes/main.tscn` with a real `WorldSimNode`; await `process_frame` or real signals (`Tween.finished`), never wall-clock timers.
@@ -181,3 +188,6 @@ smoke are this repo's validators).
 | 2026-10-17 | User-entered names could inject BBCode in the inspector | BBCode is assembled from strings; safe only because names are generated | escape user-provided text before inserting it into `RichTextLabel` BBCode | `v7-final-art:docs/art/production11/reviews/security-round1.md` |
 | 2026-10-20 | Renaming an atlas PNG: `git mv` refused its `.png.import` ("not under version control") | every `*.import` except the Galmuri fonts is gitignored, so the import file is checkout-local | `git mv` the asset, plain `mv` its `.import`, fix `source_file` / `path` inside it, re-import headless; the old `.ctex` stays in `.godot/imported` until deleted | `docs/v8/V8_0_DECISIONS.md` D24; commit `4c30013a` |
 | 2026-10-20 | A windowed capture run (`tools/v8/capture.gd`) hung until its 600 s limit with no frame saved, right after `CameraController ready` | the display was idle-asleep; `caffeinate -i` keeps the system awake but not the display, and the window got no frames | run windowed captures under `caffeinate -u -d -t <secs>` (or with the display awake); a timeout with zero files means no frames, not a script bug | `docs/v8/V8_0_DECISIONS.md` D33 |
+| 2026-10-20 | The strict check failed three M1 scripts with `Identifier not found: Locale` although the game ran them fine | the strict check parses scripts without the project's autoloads, so the autoload name is not an identifier there | reach the autoload through the tree (`get_node("/root/Locale")`) as the other panels do, and use `preload("res://scripts/core/locale.gd")` for static helpers | `docs/v8/m1/M1_DECISIONS.md` D27; `scripts/world/colony/order_tool.gd` |
+| 2026-10-20 | The colony terrain showed no camp clearing on the first frame | the terrain layer drew in its first `_process`, before the first simulation tick; buildings (the hearth) are registered on tick 1, so the hearth read was empty | keep the layer pending and redraw until the snapshot it depends on is complete (`_pending = hearth.x < 0`) | `scripts/world/colony/terrain_layer.gd` |
+| 2026-10-20 | U7 FPS read 119.99 at 2× zoom and 119.94 at 1× | the window is capped at the display refresh (120 Hz); the editor-path run loads `rust/target/debug/libsim_bridge.dylib` | report a capped FPS as "≥ bar, headroom unmeasured"; for a release measurement copy the release library to the debug path (check the SHA, restore after) | `docs/v8/m1/M1_EVALUATION.md` U7 |
