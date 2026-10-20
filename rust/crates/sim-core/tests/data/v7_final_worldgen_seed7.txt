@@ -1,0 +1,22 @@
+WorldGenConfig {
+    seed: 7,
+    width: 64,
+    height: 64,
+    starting_agents: 20,
+    berry_bushes: 14,
+    berry_capacity: 5,
+    forest_coverage: 0.335,
+    hill_coverage: 0.1,
+    mountain_coverage: 0.04,
+    deadwood_spots: 22,
+    deadwood_capacity: 7,
+    deadwood_min_radius: 5,
+    deadwood_max_radius: 18,
+    wild_regions: 1,
+    region_bushes: 10,
+    region_deadwood: 17,
+    region_fill: true,
+    region_water_max: Some(
+        12,
+    ),
+}

@@ -1,0 +1,339 @@
+WorldRules {
+    agent: AgentRules {
+        move_interval_ticks: 8,
+        idle_pause_chance: 0.4,
+        idle_tether_radius: Some(
+            8,
+        ),
+        social_seek: Some(
+            SocialSeekRule {
+                max_chase_ticks: 240,
+                retry_cooldown_ticks: 480,
+            },
+        ),
+        need_fallthrough: true,
+        critical_preemption: Some(
+            75.0,
+        ),
+        strict_consume: true,
+        night_rest: Some(
+            NightRestRule {
+                start_minute: 1260,
+                end_minute: 360,
+                fatigue_threshold: 0.0,
+                recovery_per_tick: 0.12,
+                wake_preempt: 75.0,
+            },
+        ),
+        evening_gather: Some(
+            EveningGatherRule {
+                start_minute: 1080,
+                end_minute: 1260,
+                tether_radius: 3,
+            },
+        ),
+        forage: Some(
+            ForageRule {
+                start_minute: 360,
+                end_minute: 1080,
+                forage_radius: 16,
+                haul_threshold: 4,
+                max_foragers_per_bush: 2,
+            },
+        ),
+        preempt_gathering: true,
+        keyed_draws: true,
+        local_food_availability: true,
+        temperament: Some(
+            TemperamentRule {
+                effects: true,
+                ns_tether_span: 4,
+                ha_bedtime_span_minutes: 60,
+                rd_social_rate_span_permille: 500,
+                p_food_haul_span: 3,
+                p_wood_haul_span: 2,
+                ns_departure_weight: 1000,
+            },
+        ),
+        routine: Some(
+            RoutineRule {
+                day_start_minute: 420,
+                day_end_minute: 1080,
+                base_duration_minutes: 90,
+                duration_span_minutes: 60,
+                min_duration_minutes: 20,
+                walk_timeout_minutes: 150,
+                rest_minutes_min: 20,
+                rest_minutes_max: 60,
+                adult_weights: [
+                    180,
+                    180,
+                    140,
+                    200,
+                    120,
+                ],
+                elder_weights: [
+                    500,
+                    500,
+                ],
+                end_stagger: Some(
+                    EndStagger {
+                        base_minute: 1065,
+                        key_span: 30,
+                        p_span_minutes: 45,
+                    },
+                ),
+            },
+        ),
+    },
+    society: SocietyRules {
+        family: Some(
+            FamilyRule {
+                min_familiarity_permille: 200,
+                pair_minute: 1200,
+                elder_partner_follows: true,
+            },
+        ),
+        birth: Provisioned {
+            cooldown_ticks: 720,
+            food_cost: 10,
+            max_mean_hunger: 60.0,
+            max_mean_thirst: 60.0,
+            sustain: Some(
+                SustainRule {
+                    utilization: 0.78,
+                    reserve_days: 0.5,
+                    forage_radius: 16,
+                    capacity_weighted: true,
+                },
+            ),
+        },
+        shelter_planning: Some(
+            ShelterPlanningRule {
+                residents_per_shelter: 8,
+                max_shelters: 12,
+                plan_interval_ticks: 60,
+                ring_min: 2,
+                ring_max: 5,
+                required_progress: 240,
+                max_builders_per_site: 4,
+                housing: Owned,
+                planning_headroom: 2,
+            },
+        ),
+        settlement_anchor: Hearth,
+        relief_radius: Some(
+            8,
+        ),
+        life_stage: Some(
+            LifeStageRule {
+                child_ticks: 5760,
+                hunger_rate: 0.03,
+                thirst_rate: 0.048,
+                sleep_rate: 0.03,
+                tether_radius: 3,
+            },
+        ),
+        stock_target: Some(
+            StockTargetRule {
+                base_days: 2.5,
+                winter_prep: true,
+                hoard_cap_factor: 1.5,
+            },
+        ),
+        aging: Some(
+            AgingRule {
+                elder_age_ticks: 66240,
+                lifespan_mean_ticks: 83520,
+                lifespan_spread_ticks: 11520,
+                founder_age_min_ticks: 8640,
+                founder_age_max_ticks: 57600,
+                founder_min_remaining_ticks: 4320,
+                elder_tether_radius: 4,
+                elder_evening_tether: true,
+            },
+        ),
+        meals: Some(
+            MealRule {
+                breakfast_start: 360,
+                breakfast_end: 480,
+                dinner_start: 1080,
+                dinner_end: 1200,
+                meal_hunger: 30.0,
+                camp_radius: 8,
+            },
+        ),
+        firewood: Some(
+            FirewoodRule {
+                gather_start_minute: 600,
+                gather_end_minute: 1020,
+                wood_radius: 18,
+                haul_threshold: 2,
+                max_gatherers_per_spot: 1,
+                regen_permille: 500,
+                base_days: 1.5,
+                winter_prep: true,
+                burn_start_minute: 1080,
+                burn_end_minute: 420,
+                burn_per_hour: [
+                    2,
+                    1,
+                    2,
+                    3,
+                ],
+                cold_start_minute: 1320,
+                cold_end_minute: 360,
+                cold_hunger_permille: 1500,
+                winter_prep_days: Some(
+                    4.0,
+                ),
+                winter_prep_in_summer: false,
+                winter_base_days: Some(
+                    4.0,
+                ),
+                winter_regen_units_per_day: Some(
+                    6,
+                ),
+                winter_deadwood_cap: Some(
+                    1,
+                ),
+                night_season_from_evening: true,
+                urgent_start_minute: Some(
+                    540,
+                ),
+                winter_severity_permille: Some(
+                    [
+                        200,
+                        400,
+                        400,
+                    ],
+                ),
+                winter_severity_burn_per_hour: [
+                    2,
+                    3,
+                    4,
+                ],
+                winter_severity_regen_units_per_day: [
+                    8,
+                    6,
+                    4,
+                ],
+                claims_bounded_by_amount: true,
+                winter_night_burn_permille: Some(
+                    [
+                        250,
+                        500,
+                        250,
+                    ],
+                ),
+                winter_night_burn_step: 2,
+                winter_fall_spread: 2,
+                windfall_over_snow: true,
+                rain_soak_permille: 300,
+                regional_wood: true,
+                area_fall_floor_permille: 1000,
+                rain_wet_burn: true,
+                floor_separate: true,
+            },
+        ),
+        exposure: Some(
+            ExposureRule {
+                damage_per_cold_hour: [
+                    7.5,
+                    5.0,
+                    5.0,
+                ],
+                heal_block_hours: 2,
+                hunger_weight: 0.5,
+                use_hardiness: true,
+            },
+        ),
+        fission: Some(
+            FissionRule {
+                min_members: 28,
+                crowding: 1.0,
+                group_share: 0.35,
+                group_min: 6,
+                group_max: 14,
+                min_adults: 4,
+                cooldown_days: 28,
+                min_age_days: 10,
+                site_clearance: 16,
+                stock_share: true,
+                max_settlements: 4,
+                settle_timeout_days: 2,
+                remnant_members: 2,
+                allowed_seasons: [
+                    true,
+                    true,
+                    true,
+                    false,
+                ],
+                hazard: Some(
+                    FissionHazard {
+                        size_lo: 24,
+                        size_hi: 44,
+                        crowd_lo_permille: 850,
+                        crowd_hi_permille: 1050,
+                        scarcity_days: 4,
+                        weight_crowd_permille: 0,
+                        weight_scarcity_permille: 1000,
+                        max_daily_permille: 300,
+                    },
+                ),
+                pressure: Some(
+                    FissionPressure {
+                        threshold_table: Exponential {
+                            mean_permille: 1200,
+                        },
+                        decay_permille: 10,
+                        reset_on_split: true,
+                    },
+                ),
+            },
+        ),
+        relations: Some(
+            RelationsRule {
+                decision_minute: 480,
+                latest_arrival_minute: 900,
+                porter_max: 2,
+                aid_giver_days_permille: 2500,
+                aid_keep_days_permille: 2000,
+                aid_receiver_days_permille: 2000,
+                wood_giver_nights: 3,
+                wood_keep_nights: 2,
+                wood_receiver_nights: 1,
+                trade_food_surplus_days_permille: 3000,
+                trade_food_short_days_permille: 2000,
+                trade_wood_surplus_nights: 4,
+                trade_wood_short_nights: 2,
+                relation_kin_parent: 300,
+                relation_kin_sibling: 150,
+                relation_other: 0,
+                relation_drift_permille: 30,
+                delivery_gain: 40,
+                dispute_loss: 5,
+                quarrel_loss: 40,
+                estrange_at: -300,
+                reconcile_at: -150,
+                porter_hunger_max: 30,
+                avoid_gather: true,
+                dispute_cap_per_pair_day: 3,
+                quarrel_cap_per_pair_day: 1,
+                exchange_first: true,
+            },
+        ),
+    },
+    clock_offset_ticks: 480,
+    seasons: Some(
+        SeasonRule {
+            days_per_season: 7,
+            regen_permille: [
+                861,
+                1435,
+                1148,
+                574,
+            ],
+        },
+    ),
+}
