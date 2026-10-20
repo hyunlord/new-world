@@ -29,16 +29,17 @@ smoke are this repo's validators).
 ## Rules
 
 ### Bridge and simulation state
-- **Do** read bridge snapshots through `SimReads.read(world, "get_x")` (or the `SimReads` helpers). *Reason:* it reads each getter once per frame and freezes the result; 15 independent `get_agent_snapshot` callers cost a 10.2 ms frame (3.97 ms after).
+- **Do** read argument-less bridge getters through `SimReads.read(world, "get_x")` (or the `SimReads` helpers). `SimReads` is `scripts/core/sim_reads.gd` (`class_name SimReads`, node `Main/SimReads`); `read` serves only names in `GETTERS`, cached and frozen once per frame; names also in `TICK_GETTERS` (today `get_porter_snapshot`, `get_settlement_relations`) are cached once per simulation tick; terrain until a reset. *Reason:* 15 independent `get_agent_snapshot` callers cost a 10.2 ms frame (3.97 ms after).
 - **Don't** write simulation state from GDScript. The only calls with an effect are the tooling/lifecycle `MUTATORS` in `sim_reads.gd` (`advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`) and the speed control `set_sim_speed`. *Reason:* Rust owns the state; identity and determinism are measured there, never in the live game.
 - **Don't** invent render-only objects (buildings, ids) the snapshot does not contain. *Reason:* V7 boot code drew fake buildings the sim never owned.
-- **Do** call `world.call("get_...")` directly only for read getters `SimReads` does not list (e.g. `get_agent_detail`), and never per node per frame. *Reason:* O(N) getters polled per frame break the frame before the sim does.
+- **Do** call a getter that takes arguments (e.g. `get_agent_detail(entity_bits)`) directly — `world_sim.get_x(args)` or `_world_sim.call("get_x", args)` — never per node per frame, and name it in the file's header comment. Such getters are not in `GETTERS`. `get_tile_causal_events` has its own helper `SimReads.causal_events(...)`. *Reason:* O(N) getters polled per frame break the frame before the sim does.
+- **Do** prefer `world_sim.X(` / `_world_sim.X(` over `call("X")` for a bridge call. *Reason:* the strict check (exit 3) compares those calls and the names passed to `SimReads.read/mutate` with the `#[func]` names in the Rust source (`tools/v8/bridge_api.py`, no build needed); a `call("name")` string is not checked and only the smoke exercises it.
 - **Don't** mutate a returned snapshot; `duplicate()` first. *Reason:* `make_read_only()` does not protect packed arrays — `var xs: PackedInt32Array = snap["xs"]; xs[0] = 9` changed the cached dictionary.
 - **Do** feature-detect keys (`snap.has(k)` and the packed type) and clamp/ignore unknown enum codes; add an explicit mapping plus en/ko keys for every new code. *Reason:* new FFI codes were drawn as the wrong thing (exposure as combat, unknown states as Idle).
 - **Do** join people by `AgentId` and porters/activities by signed entity bits, never by snapshot row. *Reason:* three id spaces cross the bridge.
 - **Do** expect `world_reset` to arrive deferred; evict caches immediately inside the reset call (as `SimReads.mutate_raw` does). *Reason:* same-frame reads after a reset returned the old world's terrain.
 - **Do** keep a `#[func]` at ≤ 14 parameters (pack into `Vector2i`/`PackedInt32Array`). *Reason:* godot-core 0.4.5 implements `#[func]` argument tuples only up to 14.
-- **Do** run `cargo build -p sim-bridge` before any Godot run. *Reason:* `cargo test` does not rebuild the cdylib Godot loads; new methods are "not found" and renamed ones run the old body.
+- **Do** run `cd rust && cargo build -p sim-bridge` before any Godot run; adding a `#[func]` to an already imported checkout needs no re-import. *Reason:* Godot loads `rust/target/debug/libsim_bridge.dylib`, which `cargo test` does not rebuild; new methods are "not found" and renamed ones run the old body.
 
 ### Headless runs and tools
 - **Do** import before any headless check, smoke or capture — twice on a fresh checkout. *Reason:* without `.godot/` the class `WorldSimNode` is unresolved; the first import of a fresh tree logs font-import errors.

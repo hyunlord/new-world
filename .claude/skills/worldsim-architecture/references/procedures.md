@@ -117,6 +117,11 @@ Call it from `register_default_runtime_systems` (`rust/crates/sim-systems/src/li
 
 ## B. Add a bridge read
 
+### B0. Before writing code
+- Check the getter does not exist: `docs/ARCHITECTURE.md` section 4 and `GETTERS` in `scripts/core/sim_reads.gd`.
+- Pick the file in `rust/crates/sim-bridge/src/ffi/` by concern: `node.rs` (the class, process loop, speed and every `#[func]`), `snapshot.rs` (per-frame arrays: agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (agent detail, temperament, relationships), `reads_settlement.rs` (settlement and society), `causal.rs`, `chronicle.rs`, `family.rs`, `relations.rs` (village relations, porters), `activity.rs`, `engine_build.rs` (engine construction), `art_kernels.rs` (render kernels), `mod.rs`.
+- A new concern gets a new `<concern>.rs`: a `//!` header, `pub mod <concern>;` in `ffi/mod.rs`, and a `pub use` of the collector.
+
 ### B1. Collector (`rust/crates/sim-bridge/src/ffi/<concern>.rs`)
 ```rust
 /// One row of [`collect_<thing>`]. Ids: `agent` is an `AgentId`
@@ -142,16 +147,13 @@ pub fn collect_<thing>(world: &hecs::World, resources: &SimResources) -> Vec<<Th
 ```
 - For a per-entity read, return `Option<Row>` and give the dictionary a `found` flag; do not use a sentinel that lies inside the valid range (founders have negative `born_tick`).
 - No O(N) whole-world scan for something the UI polls every frame; index or cache it.
-- Re-export from `rust/crates/sim-bridge/src/ffi/mod.rs`.
+- Re-export from `rust/crates/sim-bridge/src/ffi/mod.rs`: `pub use <concern>::collect_<thing>;`. sim-bridge is built as `cdylib` (Godot loads it) and `rlib` (sim-test links it; `crate-type` in `rust/crates/sim-bridge/Cargo.toml`), so the re-export is what sim-test calls.
 
-### B2. `#[func]` and marshaller
+### B2. Marshaller (collector's file) and `#[func]` (`node.rs`)
+In `<concern>.rs`, beside the collector:
 ```rust
-#[func]
-fn get_<thing>(&self) -> VarDictionary {
-    <thing>_to_dict(collect_<thing>(&self.engine.world, &self.engine.resources))
-}
-
-fn <thing>_to_dict(rows: Vec<<Thing>Row>) -> VarDictionary {
+/// Columns of [`collect_<thing>`] for Godot: one entry per row.
+pub(super) fn <thing>_to_dict(rows: Vec<<Thing>Row>) -> VarDictionary {
     let signed = |id: AgentId| i64::from_ne_bytes(id.to_ne_bytes());
     let agents: Vec<i64> = rows.iter().map(|r| signed(r.agent)).collect();
     let values: Vec<i32> = rows.iter().map(|r| r.value as i32).collect();
@@ -161,17 +163,34 @@ fn <thing>_to_dict(rows: Vec<<Thing>Row>) -> VarDictionary {
     dict
 }
 ```
+In `node.rs`, inside the one `#[godot_api] impl WorldSimNode` block:
+```rust
+use super::<concern>::{collect_<thing>, <thing>_to_dict};
+
+#[func]
+fn get_<thing>(&self) -> VarDictionary {
+    <thing>_to_dict(collect_<thing>(&self.engine.world, &self.engine.resources))
+}
+```
+- Existing examples: `agent_family_to_dict` (`family.rs`), `rows_to_dict` (`chronicle.rs`), `porter_rows_to_dict` (`relations.rs`).
 - Columns are parallel `Packed*Array`s of equal length; ids cross as signed i64.
+- Return `VarDictionary` unless a single scalar is the whole answer (existing exceptions: `get_agent_id -> i64`, `get_tile_causal_history -> VarArray`).
 - At most 14 `#[func]` parameters.
 - Add a dictionary key only with a matching GDScript reader; old readers must ignore unknown keys and unknown codes.
 
 ### B3. GDScript side
-- Add `"get_<thing>"` to `SimReads.GETTERS` in `scripts/core/sim_reads.gd` (and `TICK_GETTERS` if it may be cached per sim tick).
-- Read with `SimReads.read(world, "get_<thing>")`, a literal method name (the boundary scanner cannot follow dynamic `call()`).
+- `SimReads` is `scripts/core/sim_reads.gd` (`class_name SimReads`, node `Main/SimReads`). Its static `SimReads.read(world, "get_x")` serves only argument-less getters listed in `GETTERS`, cached once per frame; those also in `TICK_GETTERS` are cached once per simulation tick (today `get_porter_snapshot`, `get_settlement_relations`); terrain is cached until a reset.
+- Argument-less getter: add `"get_<thing>"` to `GETTERS` (and `TICK_GETTERS` if it changes only when a tick runs) and read it with `SimReads.read(world, "get_<thing>")`, a literal method name.
+- Getter with arguments (for example `get_agent_detail(entity_bits)`): not in `GETTERS`. Call it directly (`world_sim.get_<thing>(args)` or `_world_sim.call("get_<thing>", args)`), never per node per frame. The strict check sees `world_sim.X(` / `_world_sim.X(`; a `call("…")` string is only exercised by the smoke. `get_tile_causal_events` has its own helper `SimReads.causal_events(...)`.
+- Name the method in the calling `.gd` file's header comment ("Bridge methods: …").
 - Feature-detect new keys (`snap.has("values")`) and `duplicate()` a packed array before writing to it: a local packed array obtained from a cached dictionary aliases the cache.
 - Map every new code to a localization key through `Locale`; never show raw codes.
 
 ### B4. Checks
-1. A Rust test of `sim_bridge::ffi::collect_<thing>` on `baseline_engine` (values and order, not only presence).
-2. `python3 tools/v8/bridge_api.py .` lists the export. Then write the new full list with `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt` (for example `docs/m1/bridge_api_m1.txt`), change gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), and name the added or removed method in CHANGELOG — all in the same commit. The V8-0 lists (`docs/v8/bridge_api_v7_final.txt`, `docs/v8/bridge_api_removed.txt`) stay as V8-0's record.
-3. `cargo build -p sim-bridge`, then `bash tools/v8/gdscript_strict_check.sh` and `bash tools/v8/smoke.sh <log_dir>`.
+1. A Rust test in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`: `sim_bridge::ffi::collect_<thing>` on `baseline_engine` (values and order, not only presence). Unit tests inside sim-bridge (`cargo test -p sim-bridge`) only for pure marshalling helpers.
+2. `cd rust && cargo build -p sim-bridge` (Godot loads `rust/target/debug/libsim_bridge.dylib`; `cargo test` does not rebuild it).
+3. Headless import only on a fresh checkout or worktree (twice, judge the second) or after adding or moving assets, scenes, scripts or a `class_name`; adding a `#[func]` to an already imported checkout needs no import.
+4. `bash tools/v8/gdscript_strict_check.sh`. Exit 3 compares GDScript `world_sim.X(` / `_world_sim.X(` calls and `SimReads.read/mutate` names with the `#[func]` names in the Rust source (`tools/v8/bridge_api.py` scans `rust/crates/sim-bridge/src`), so it does not depend on the build.
+5. `bash tools/v8/smoke.sh <log_dir>`.
+6. `bash tools/v8/identity.sh` must still pass: a pure read changes no simulation state; a failure means it is not pure (a bug).
+7. `python3 tools/v8/bridge_api.py .` lists the export. Write the new full list with `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt` (`<line>` = docs folder of the pass's line, `v8` for V8 passes; `<pass>` = pass name; M1 writes `docs/v8/bridge_api_m1.txt`), change gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), and add a CHANGELOG line naming the added or removed method — all in the same commit. An ADR only if the read encodes a design decision. The V8-0 lists (`docs/v8/bridge_api_v7_final.txt`, `docs/v8/bridge_api_removed.txt`) stay as V8-0's record.

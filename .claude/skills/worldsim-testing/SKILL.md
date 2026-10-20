@@ -99,11 +99,11 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 5. A perf claim (faster/slower) needs an admitted quiet session (calibrated probe, attempts ≥ 30 min apart) or it is reported as contended.
 
 ### E. Test layout
-- Integration tests: `rust/crates/sim-test/tests/` by domain — `agents_*.rs`, `settlement_*.rs`, `family_*.rs`, `relations_*.rs`, `chronicle_*.rs`, `engine_*.rs`, `determinism.rs`. Add to the matching file; a new file only for a new domain.
+- Integration tests: `rust/crates/sim-test/tests/` by domain — `agents_*.rs`, `settlement_*.rs`, `family_*.rs`, `relations_*.rs`, `chronicle_*.rs`, `engine_*.rs` (engine and bridge), `determinism.rs`. Add to the matching file; a new file only for a new domain.
 - Unit tests: `#[cfg(test)] mod tests` inside the module, for pure logic and truncation edges.
 - Start live-rule tests from `sim_test::baseline_engine(seed)` (the live world: `WorldRules::baseline(seed)` + `WorldGenConfig::baseline(seed)`). Use `SimEngine::new` + `WorldRules::default()` only for rule-independent mechanics, and never to cover a rules-gated system.
-- Advance with `engine.tick()`; 1,440 ticks = 1 game day. Read state from the pub fields `engine.world` and `engine.resources`.
-- Bridge data: test the pure collectors headless (`sim_bridge::ffi::collect_*`). GDScript parse and FFI binding are covered by gate steps 8–9, not by sim-test.
+- Advance with `engine.tick()`; 1 tick = 1 simulated minute, 1,440 ticks = 1 simulated day. Read state from the pub fields `engine.world` and `engine.resources`.
+- Bridge data: test the pure collectors headless (`sim_bridge::ffi::collect_<thing>` on a built engine) in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`. sim-test links sim-bridge as an `rlib`. Unit tests inside sim-bridge (`cargo test -p sim-bridge`) are for pure marshalling helpers only. GDScript parse and FFI binding are covered by gate steps 8–9, not by sim-test.
 - Name tests by what they assert (`settlement_fire_keeps_winter_hearths_lit`), not by pass or phase.
 
 ## Lessons

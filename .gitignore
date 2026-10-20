@@ -9,7 +9,8 @@ error.log
 # Evidence images stay out of docs/ except the curated docs/images/ set (M1 5.3)
 docs/**/*.png
 docs/**/*.jpg
-!docs/images/**
+!docs/images/**/*.png
+!docs/images/**/*.jpg
 
 # OMC
 .omc/

@@ -50,23 +50,43 @@ GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scr
                  ──► Dictionary of Packed*Array columns (one row per agent / building / …)
 ```
 
-- The simulation runs at a fixed 30 ticks per second of game time; rendering
-  runs at the display rate. `set_sim_speed` scales only the time fed to the
-  accumulator (0–4×), never the tick length.
+- The simulation runs at a fixed 30 ticks per second of real time at 1×;
+  rendering runs at the display rate. Each frame `WorldSimNode::process`
+  (`rust/crates/sim-bridge/src/ffi/node.rs`) adds `delta × sim_speed` to an
+  accumulator and runs `engine.tick()` while it holds ≥ 1/30 s, at most 5
+  ticks per frame. If more than 5 ticks' worth is left after a frame, the
+  surplus is dropped (the accumulator is reset to one step): the game then
+  runs slower than the chosen speed and never catches up later. Speed s
+  needs at least 6 × s frames per second (4×: 24 fps).
+- Speed (current build): in `scripts/world/camera_controller.gd` the keys
+  `1`/`2`/`3`/`4` set 0.25×/0.5×/1×/2× = 7.5/15/30/60 ticks per real
+  second, so a simulated day lasts 192/96/48/24 s; `P` pauses by disabling
+  the WorldSim node's processing. `set_sim_speed` scales only the time fed
+  to the accumulator and clamps to 0–4× (0 also stops the clock); it never
+  changes the tick length.
 - GDScript never writes simulation state. The only writes from Godot are
   bridge commands: `on_building_placed`, `reset_world`, `reset_world_stress`,
   `set_sim_speed` and the tooling `advance_ticks` (`SimReads.MUTATORS` holds
   all but `set_sim_speed`, which `scripts/world/camera_controller.gd` calls directly on the number keys).
-- Time scale now (V7 calendar, unchanged by V8-0): one tick is 1 simulated
-  minute, a day is 1,440 ticks = 48 s of real time at 1× (30 ticks per
-  second), a season is 7 days and a year 4 seasons = 28 days. The V8 target
-  (ADR 0004: about 2 minutes per day at 1×, 6-day seasons, 24-day year)
-  comes in a later pass; no milestone in `docs/ROADMAP.md` schedules it yet,
-  and its tick definition (ticks per day, ticks per second) is not decided —
-  that pass decides it in an ADR. A current year is 40,320 ticks ≈ 22.4
-  minutes at 1×. At most 5 ticks run per frame, so 4× (120 ticks/s) is
-  reached only at ≥ 24 frames per second; below that the game runs slower
-  than the chosen speed.
+- Calendar now (V7 calendar, unchanged by V8-0): one tick is one simulated
+  minute; a day is 1,440 ticks (48 s of real time at 1×); a season is 7
+  days (10,080 ticks); a year is 4 seasons = 28 days (40,320 ticks ≈ 22.4
+  minutes at 1×).
+- The displayed day, season and time of day count from the display clock
+  `current_tick + clock_offset_ticks` (480: tick 0 is 08:00 of day 1).
+  `get_time_snapshot` gives `day_index = (tick + 480) / 1440`,
+  `season = (day_index / days_per_season) % 4` and
+  `day_of_season = day_index % days_per_season + 1`. Systems run on the raw
+  tick (`current_tick % interval == 0`, no offset), so a daily (1,440-tick)
+  system runs at 08:00 display time.
+- Ages are in simulated days today (`AgingRule`, `LifeStageRule` in
+  `rust/crates/sim-core/src/rules/baseline.rs`): a child is adult after
+  5,760 ticks (4 days), lifespans average about 58 days, founders start
+  6–40 days old.
+- The V8 target calendar (`docs/decisions/0004-compressed-year.md`: about 2
+  minutes per day at 1×, 6-day seasons, a 24-day year, ages in years) is
+  not implemented. The calendar is open; it will be rescaled together with
+  ages.
 
 ## 3. Live systems
 
@@ -163,11 +183,16 @@ Short form; the full rules and their history are in
 
 The full procedure with code skeletons is `.claude/skills/worldsim-architecture/SKILL.md` ("B. Add a bridge read") and its `references/procedures.md`; the steps:
 
-1. Write a pure `collect_…(&World, &SimResources) -> Row/Vec<Row>` in the matching file of `rust/crates/sim-bridge/src/ffi/` (no Godot types; rows sorted by id; say which id space each field uses), re-export it from `rust/crates/sim-bridge/src/ffi/mod.rs`, and test it in Rust on `sim_test::baseline_engine(seed)` (no Godot needed).
-2. Add a `#[func] fn get_…(&self) -> VarDictionary` to the one `#[godot_api] impl WorldSimNode` block in `rust/crates/sim-bridge/src/ffi/node.rs` (every `#[func]` lives there). It only calls the collector and a `…_to_dict` marshaller in the collector's file (columns as `Packed*Array`, ids as i64); read-only, at most 14 parameters.
-3. Add the name to `GETTERS` in `scripts/core/sim_reads.gd` (also `TICK_GETTERS` if it may be cached per sim tick), read it with `SimReads.read(world_sim, "get_…")`, and add the method to the calling `.gd` file's header comment ("Bridge methods: …").
-4. Rebuild the library Godot loads (`cd rust && cargo build -p sim-bridge`), run the headless import (`bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit`, twice on a fresh checkout), then `bash tools/v8/gdscript_strict_check.sh` (it diffs GDScript calls against the exports) and `bash tools/v8/smoke.sh <log_dir>`.
-5. Record the API change. Gate step 13 checks that the set of exported names (`class`, `func`, `signal` lines; order and signatures are not compared) equals an expected list — at V8-0, the V7 base list (`docs/v8/bridge_api_v7_final.txt`) minus `docs/v8/bridge_api_removed.txt`. A pass that adds or removes a `#[func]` writes one list for the pass, `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt` (rewritten by every later commit of the same pass that changes the API), changes gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), updates the check command and the method table in section 4 of this file, and names the added or removed method in CHANGELOG — all in the same commit. The V8-0 lists stay as V8-0's record.
+1. Check first that the getter does not exist (section 4, `GETTERS` in `scripts/core/sim_reads.gd`).
+2. Pick the file of `rust/crates/sim-bridge/src/ffi/` for the concern: `node.rs` (the class, process loop, speed and every `#[func]`), `snapshot.rs` (per-frame arrays: agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (agent detail, temperament, relationships), `reads_settlement.rs` (settlement and society), `causal.rs`, `chronicle.rs`, `family.rs`, `relations.rs` (village relations, porters), `activity.rs`, `engine_build.rs` (engine construction), `art_kernels.rs` (render kernels), `mod.rs`. A new concern gets a new file `<concern>.rs` with a `//!` header, a `pub mod <concern>;` line in `ffi/mod.rs` and a `pub use` of the collector.
+3. In that file write a pure `pub fn collect_<thing>(&World, &SimResources, …) -> Row/Vec<Row>` (no Godot types; rows sorted by id; say which id space each field uses) and re-export it from `rust/crates/sim-bridge/src/ffi/mod.rs` (`pub use <concern>::collect_<thing>;`). sim-bridge is built as both `cdylib` (what Godot loads) and `rlib` (what sim-test links; `crate-type` in `rust/crates/sim-bridge/Cargo.toml`), so sim-test can call the collector without Godot.
+4. In the same file write the marshaller `pub(super) fn <thing>_to_dict(...) -> VarDictionary` (columns as `Packed*Array`, ids as signed i64), as `agent_family_to_dict` in `family.rs`, `rows_to_dict` in `chronicle.rs`, `porter_rows_to_dict` in `relations.rs`.
+5. Add a `#[func] fn get_<thing>(&self, …) -> VarDictionary` to the one `#[godot_api] impl WorldSimNode` block in `rust/crates/sim-bridge/src/ffi/node.rs`, importing both with `use super::<concern>::{collect_<thing>, <thing>_to_dict};`. Its body only calls the collector and the marshaller; read-only, at most 14 parameters. `VarDictionary` is the rule; a few getters return a scalar or an array (`get_agent_id -> i64`, `get_tile_causal_history -> VarArray`). A new read returns `VarDictionary` unless a single scalar is the whole answer.
+6. Test the collector in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`: call `sim_bridge::ffi::collect_<thing>` on `sim_test::baseline_engine(seed)` and assert content and order. Unit tests inside sim-bridge (`cargo test -p sim-bridge`) are for pure marshalling helpers only.
+7. GDScript side. `SimReads` (`scripts/core/sim_reads.gd`, `class_name SimReads`, node `Main/SimReads`) serves only argument-less getters listed in `GETTERS`: add the name there and read it with `SimReads.read(world_sim, "get_<thing>")` (a literal name). `GETTERS` are cached once per frame; those also in `TICK_GETTERS` (today `get_porter_snapshot`, `get_settlement_relations`) once per simulation tick; terrain until a reset. A getter that takes arguments (for example `get_agent_detail(entity_bits)`) is not in `GETTERS`: call it directly (`world_sim.get_<thing>(args)` or `_world_sim.call("get_<thing>", args)`), never per node per frame. `get_tile_causal_events` has its own helper `SimReads.causal_events(...)`. Name the method in the calling `.gd` file's header comment ("Bridge methods: …").
+8. Run, in order: `cd rust && cargo build -p sim-bridge` (Godot loads the debug library this builds; `cargo test` does not rebuild it); the headless import (`bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit`) only on a fresh checkout or worktree (twice, judge the second) or after adding or moving assets, scenes, scripts or a `class_name` (adding a `#[func]` to an already imported checkout needs no import); `bash tools/v8/gdscript_strict_check.sh`; `bash tools/v8/smoke.sh <log_dir>`. The strict check's exit 3 compares GDScript calls `world_sim.X(` / `_world_sim.X(` and the names passed to `SimReads.read/mutate` with the `#[func]` names in the Rust source (`tools/v8/bridge_api.py` scans `rust/crates/sim-bridge/src`), so it does not need the build; dynamic `call("name")` strings are not checked by it, only exercised by the smoke.
+9. A pure read changes no simulation state, so `bash tools/v8/identity.sh` must still pass. If it fails, the read is not pure: that is a bug.
+10. Record the API change. Gate step 13 checks that the set of exported names (`class`, `func`, `signal` lines; order and signatures are not compared) equals an expected list — at V8-0, the V7 base list (`docs/v8/bridge_api_v7_final.txt`) minus `docs/v8/bridge_api_removed.txt`. A pass that adds or removes a `#[func]` writes one list for the pass, `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt`, where `<line>` is the docs folder of the pass's line (`v8` for V8 passes) and `<pass>` the pass name (`m1`), so M1's list is docs/v8/bridge_api_m1.txt. Every later commit of the same pass that changes the API rewrites it. In the same commit, change gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), update the check command and the method table in section 4 of this file, and add a CHANGELOG line naming the added or removed method. An ADR is needed only if the read encodes a design decision. The V8-0 lists stay as V8-0's record.
 
 ## 7. GDScript layout and localization
 

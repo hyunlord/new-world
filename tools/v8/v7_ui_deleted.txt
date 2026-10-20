@@ -1,0 +1,20 @@
+# V7 UI scripts and scenes that V8-0 deleted (docs/v8/V8_0_INVENTORY.md verdict table, DELETE rows under scripts/ and scenes/, test code excluded).
+# Read by tools/v8/verify_v8_0.gd: S1 = paths containing god_hand, S2 = the rest.
+scenes/ui/god_hand_panel.tscn
+scripts/rendering/art/god_hand_effects.gd
+scripts/ui/activity_trail_renderer.gd
+scripts/ui/death_viz_renderer.gd
+scripts/ui/founding_group_renderer.gd
+scripts/ui/need_bar_renderer.gd
+scripts/ui/panels/feed_food_ledger.gd
+scripts/ui/panels/god_hand_panel.gd
+scripts/ui/panels/hud_status_panel.gd
+scripts/ui/person_activity_tooltip_p13.gd
+scripts/ui/restless_meter.gd
+scripts/ui/seek_viz_renderer.gd
+scripts/ui/settlement_labels.gd
+scripts/ui/settlement_overview_renderer.gd
+scripts/ui/settlement_relations_p12.gd
+scripts/ui/village_activity_summary_p11.gd
+scripts/ui/world_effects.gd
+scripts/ui/zoom_lod_controller.gd
