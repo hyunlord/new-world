@@ -1,3 +1,6 @@
+# art_ui.gd: static UI builders shared by the HUD and panels: themed PanelContainer, 32 px U1 atlas icon and
+#   icon+label pair rows.
+# Bridge methods: none.
 extends RefCounted
 
 const Library = preload("res://scripts/world/art_sprite_library.gd")

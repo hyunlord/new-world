@@ -1,3 +1,6 @@
+# wood_visuals.gd: per-settlement fire/wood state lookup and wood-related frame choices (hearth, cold ash, glow,
+#   woodpile and deadwood stages); used by building_renderer.gd and daylight_controller.gd.
+# Bridge methods: none (callers pass in the settlement snapshot).
 extends RefCounted
 
 const ART = preload("res://scripts/world/art_sprite_library.gd")

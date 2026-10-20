@@ -1,3 +1,6 @@
+# nature_canopy.gd: buckets villager head positions and fades tree sprites that would hide a villager behind them;
+#   used by nature_renderer.gd.
+# Bridge methods: none.
 extends RefCounted
 
 static func buckets(objects: Node2D) -> Dictionary:

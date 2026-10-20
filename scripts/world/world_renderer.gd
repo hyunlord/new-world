@@ -1,6 +1,10 @@
+# world_renderer.gd (WorldRenderer in scenes/main.tscn): Space cycles the influence overlay; left click selects the
+#   villager under the cursor (cycling stacked hits) for AgentInspectorPanel, else sends tile causal history to CausalPanel.
+# Influence overlay and click inspection only. All visible world objects come from snapshots.
+# Bridge methods: get_influence_overlay, get_agent_detail, get_tile_causal_history (direct); via SimReads
+#   get_agent_snapshot; signal world_reset.
 extends Node2D
 
-# Influence overlay and click inspection only. All visible world objects come from snapshots.
 const TILE_SIZE: int = 16
 const GRID_W: int = 64
 const GRID_H: int = 64

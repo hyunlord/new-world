@@ -1,3 +1,8 @@
+# settlement_selection.gd: static, presentation-only settlement identity: village numbers, names, colours, parentage,
+#   agent homes, selection and restlessness stages, plus the "art_society_layers" visibility toggle.
+# observe() ingests society/settlement snapshot dictionaries handed in by a caller (no kept script calls it today);
+#   used by agent_renderer.gd, agent_inspector_panel.gd and chronicle_text.gd.
+# Bridge methods: none.
 extends RefCounted
 ## Presentation identity persists through dissolution and is cleared only on world reset.
 const PALETTE: Array[Color] = [Color("E0B060"), Color("7FB0D8"), Color("B88AD0"), Color("8CC07A")]

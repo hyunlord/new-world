@@ -1,3 +1,6 @@
+# agent_selection_index.gd: per-frame map from snapshot entity bits to agent ids so agent_renderer.gd finds the
+#   selected villager's sprite without scanning every sprite.
+# Bridge methods: none.
 extends RefCounted
 ## Snapshot ECS entity bits map to agent IDs; the renderer owns the sprite map.
 var _agents_by_entity: Dictionary = {}

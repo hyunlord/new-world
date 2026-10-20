@@ -1,3 +1,6 @@
+# nature_layout.gd: deterministic hash noise for groves, forest trees, clearings around camps and resources,
+#   ranked patches and rock placement; used by nature_renderer.gd and terrain_renderer.gd.
+# Bridge methods: none (callers pass in snapshot data).
 extends RefCounted
 const HASH = preload("res://scripts/world/art_hash.gd")
 const GROVE_BASE: float = 0.05

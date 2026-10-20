@@ -1,3 +1,6 @@
+# cold_effects.gd: cold presentation for villagers: crossed-arms pose, shiver offset, breath puff, and the
+#   cold_audit.json frame rejection check; used by agent_renderer.gd, agent_activity.gd and morning_chill.gd.
+# Bridge methods: none.
 extends RefCounted
 
 static var _texture: ImageTexture

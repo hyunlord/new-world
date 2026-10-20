@@ -1,3 +1,6 @@
+# activity_icons.gd: builds and caches the daily-activity badge textures (pictogram masks, recoloured Craft icon)
+#   and maps activity kinds to icon ids; used by agent_activity.gd.
+# Bridge methods: none.
 extends RefCounted
 ## Two-tone pictograms on shared pixel-grid badges; original Craft art stays immutable.
 const CRAFT = preload("res://assets/art/production/U1/04.png")

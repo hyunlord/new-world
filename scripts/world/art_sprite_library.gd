@@ -1,3 +1,6 @@
+# ArtSpriteLibrary: loads the world atlas manifest and applies frames (region, anchor, metadata) and villager
+#   colour-variant materials to Sprite2D nodes; also creates the shared WorldObjects/Shadows layers.
+# Bridge methods: none.
 class_name ArtSpriteLibrary
 extends RefCounted
 

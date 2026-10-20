@@ -1,3 +1,6 @@
+# AgentActivity: static rules mapping an agent snapshot row to a drawn activity, facing, camp pose, frame group
+#   and activity icon (atlas frame selection, daily-activity poses); used by agent_renderer.gd and agent_frame_choices.gd.
+# Bridge methods: none (reads columns of snapshots its callers pass in).
 class_name AgentActivity
 extends RefCounted
 

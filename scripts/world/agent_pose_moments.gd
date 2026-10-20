@@ -1,3 +1,6 @@
+# AgentPoseMoments: per-agent short presentation moments derived from snapshot changes: a wood pickup pose and a
+#   meal pose near a hearth; used by agent_renderer.gd.
+# Bridge methods: none.
 class_name AgentPoseMoments
 extends RefCounted
 

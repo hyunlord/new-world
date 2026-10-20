@@ -1,3 +1,9 @@
+# SimReads (node "SimReads" beside WorldSim in scenes/main.tscn): the read layer; every snapshot read (GETTERS) and
+#   mutation (MUTATORS) goes through it, frozen and cached per frame (porter/relations per tick, terrain until reset).
+# Bridge methods: get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot, get_building_snapshot,
+#   get_resource_snapshot, get_time_snapshot, get_tallies, get_recent_deaths, get_society_snapshot, get_world_info,
+#   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations (GETTERS);
+#   get_tile_causal_events; advance_ticks, reset_world, reset_world_stress, on_building_placed (MUTATORS); signal world_reset.
 class_name SimReads
 extends Node
 

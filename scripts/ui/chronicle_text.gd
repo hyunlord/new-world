@@ -1,3 +1,6 @@
+# chronicle_text.gd: static helpers that turn packed chronicle columns into rows and localized BBCode lines
+#   (day prefix, person/village links, death and porter wording); used by chronicle_panel.gd and agent_inspector_panel.gd.
+# Bridge methods: none (formats chronicle rows and world info its callers read).
 extends RefCounted
 const Names = preload("res://scripts/ui/person_names.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")

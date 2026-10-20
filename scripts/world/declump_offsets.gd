@@ -1,3 +1,6 @@
+# declump_offsets.gd: packs agent rows, targets, rects and terrain into packed arrays for the Rust declump kernel
+#   and unpacks its per-agent offsets; used by agent_renderer.gd and walker_offsets.gd.
+# Bridge methods: art_declump.
 extends RefCounted
 
 const Seats = preload("res://scripts/world/camp_seats.gd")

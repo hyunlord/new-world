@@ -1,3 +1,7 @@
+# camera_controller.gd (Camera2D in scenes/main.tscn): stepped integer zoom (wheel, pinch, pan gesture), P pause by
+#   disabling the WorldSim node's processing, T swarm auto-track, keys 1-4 sim speed, centring on the largest village.
+# Bridge methods: set_sim_speed (direct); via SimReads get_agent_snapshot, get_settlement_snapshot, get_world_info;
+#   signal world_reset.
 extends Camera2D
 
 # Integer ladder preserves native texels throughout camera transitions.

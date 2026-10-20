@@ -1,3 +1,6 @@
+# PersonNames: deterministic syllable names (ko/en) from agent ids with a blocklist, word-joiner helpers, and
+#   RichTextLabel setup (clean copy, person-link hover that calls AgentRenderer set_hovered_person/clear_hovered_person).
+# Bridge methods: none.
 class_name PersonNames
 extends RefCounted
 

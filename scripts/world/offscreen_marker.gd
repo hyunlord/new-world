@@ -1,3 +1,6 @@
+# offscreen_marker.gd: screen-space edge marker geometry, drawing and hit-testing for off-screen targets, the
+#   playable rect left free by UI panels, and camera panning; used by agent_renderer.gd for the link hover marker.
+# Bridge methods: none.
 extends RefCounted
 ## Screen-space geometry shared by founding destinations and selected hearths.
 const SIZE_PX := 9.0

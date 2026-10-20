@@ -1,3 +1,7 @@
+# terrain_renderer.gd (TerrainRenderer in scenes/main.tscn): builds TileMapLayers from the terrain manifest
+#   (water, grass, forest floor, camp earth, hill, rock), ground decals and the season tint.
+# Bridge methods: via SimReads get_terrain_snapshot, get_building_snapshot, get_resource_snapshot,
+#   get_construction_snapshot, get_settlement_snapshot, get_time_snapshot; signal world_reset.
 extends Node2D
 
 const TILE_SIZE: int = 16

@@ -1,3 +1,6 @@
+# porter_presentation.gd: porter trip rows from the porter snapshot, porter activity and destination, pack icon
+#   texture, and (as a Node2D) dashed route drawing; rows() is used by agent_renderer.gd and agent_inspector_panel.gd.
+# Bridge methods: none (callers pass in the porter snapshot).
 extends Node2D
 ## Presentation only: packed entity identities and authoritative carried loads.
 const FOOD := Color("e9a34f")

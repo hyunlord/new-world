@@ -1,3 +1,6 @@
+# daylight_controller.gd (DaylightController in scenes/main.tscn): day/night CanvasModulate tint, hearth glows lit by
+#   settlement fire state, and shelter doorway glows at night (asks AgentRenderer for sheltered sleepers).
+# Bridge methods: via SimReads get_time_snapshot, get_settlement_snapshot, get_building_snapshot; signal world_reset.
 extends Node2D
 
 const WOOD = preload("res://scripts/world/wood_visuals.gd")

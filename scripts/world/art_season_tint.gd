@@ -1,3 +1,6 @@
+# art_season_tint.gd: season colour tint from a time snapshot, blended over the first morning of a season;
+#   used by terrain_renderer.gd and nature_renderer.gd.
+# Bridge methods: none (callers pass in the time snapshot).
 extends RefCounted
 const TINTS: Array[Color] = [Color(0.97,1.0,0.95), Color.WHITE, Color(1.0,0.93,0.80), Color(0.86,0.90,1.0)]
 

@@ -1,7 +1,5 @@
-extends Node
-
-signal language_changed(language: String)
-
+# locale.gd: the `Locale` autoload (project.godot); loads the localized string table and serves ltr() to the
+#   HUD, panels and renderers; set_language() reloads and emits language_changed.
 # Locale autoload — compiled JSON loader (en+ko)
 # V7 Phase 3-γ (γ-2-α): first autoload, consumed by causal_panel.gd
 # Primary source: localization/compiled/{lang}.json (output of
@@ -13,6 +11,10 @@ signal language_changed(language: String)
 #                      itself if missing (visibility fallback during dev).
 #   set_language(lang) reloads strings for the new language.
 #   key_count()        returns the number of loaded keys.
+# Bridge methods: none.
+extends Node
+
+signal language_changed(language: String)
 
 var _strings: Dictionary = {}
 var _current_lang: String = "ko"

@@ -1,3 +1,6 @@
+# morning_chill.gd: tracks when each villager stops being cold and draws a fading chill outline and breath for
+#   WINDOW_MINUTES (90) ticks afterwards; used by agent_renderer.gd.
+# Bridge methods: none (reads the agent snapshot agent_renderer.gd passes in).
 extends RefCounted
 
 const OUTLINE = preload("res://shaders/settlement_outline.gdshader")

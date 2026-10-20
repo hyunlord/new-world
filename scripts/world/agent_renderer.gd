@@ -1,3 +1,10 @@
+# agent_renderer.gd (AgentRenderer in scenes/main.tscn): draws every villager sprite and shadow from snapshots:
+#   interpolation, activity/pose/frame choice, cold and chill effects, carried loads, porters, camp seats, declump and
+#   walker offsets, selection ring, settlement outline, link hover marker, recall/combat cues, click hit-testing.
+# Bridge methods: art_declump, art_walker_offsets (via declump_offsets.gd / walker_offsets.gd); via SimReads
+#   get_world_info, get_agent_snapshot, get_porter_snapshot, get_society_snapshot, get_activity_snapshot,
+#   get_time_snapshot, get_building_snapshot, get_construction_snapshot, get_resource_snapshot, get_terrain_snapshot,
+#   get_tile_causal_events; signal world_reset.
 extends Node2D
 
 const ArtHashScript = preload("res://scripts/world/art_hash.gd")

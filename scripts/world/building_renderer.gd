@@ -1,3 +1,8 @@
+# building_renderer.gd (BuildingRenderer in scenes/main.tscn): draws buildings, construction sites, berry bushes,
+#   deadwood, stockpile food/wood labels, camp props, hearth fire/ash, cairns, shelter frost and the night chill tint.
+# Bridge methods: via SimReads get_time_snapshot, get_building_snapshot, get_settlement_snapshot,
+#   get_construction_snapshot, get_resource_snapshot, get_recent_deaths, get_world_info, get_agent_snapshot;
+#   signal world_reset.
 extends Node2D
 
 const TILE_SIZE: int = 16

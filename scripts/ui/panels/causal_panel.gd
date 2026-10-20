@@ -1,5 +1,5 @@
-extends Control
-
+# causal_panel.gd (UI/CausalPanel in scenes/main.tscn): Q-toggled "why?" panel listing a tile's causal events;
+#   world_renderer.gd pushes the history in through display_history() after a tile click.
 # CausalPanel — "왜?" UI panel (V7 Phase 3-γ, γ-2-α scaffold).
 # γ-2-α scope: empty panel scaffold + Q-key toggle.
 # γ-2-β (separate land) will wire SimBridge.get_tile_causal_history /
@@ -7,6 +7,8 @@ extends Control
 #
 # Mount: scenes/main.tscn → UI (CanvasLayer) → CausalPanel (Control + this script).
 # Default visibility: hidden. Q toggles via _unhandled_input.
+# Bridge methods: none (world_renderer.gd reads the tile history and passes it in).
+extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 

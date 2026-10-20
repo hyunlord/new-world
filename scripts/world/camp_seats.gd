@@ -1,3 +1,6 @@
+# CampSeats: render-only seat assignment around hearths for idle villagers, same-tile spread offsets, and the
+#   GDScript declump/walker-offset fallbacks used when the bridge kernels are disabled; used by agent_renderer.gd.
+# Bridge methods: none.
 class_name CampSeats
 extends RefCounted
 

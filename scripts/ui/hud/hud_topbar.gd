@@ -1,6 +1,9 @@
-extends Control
-
+# hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with clock, season, population, villages, shelters,
+#   sites, food/wood stocks, berries, births, deaths, cold count, pause and display speed; L toggles ko/en.
 # Read-only, localized counters from authoritative simulation snapshots.
+# Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
+#   get_building_snapshot, get_time_snapshot, get_resource_snapshot, get_tallies.
+extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 

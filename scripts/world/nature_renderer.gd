@@ -1,3 +1,7 @@
+# nature_renderer.gd (NatureRenderer in scenes/main.tscn): places trees, shrubs, understory, rocks and reeds from the
+#   terrain away from clearings, with contact shadows, season tint and canopy fading over villagers.
+# Bridge methods: via SimReads get_terrain_snapshot, get_building_snapshot, get_construction_snapshot,
+#   get_resource_snapshot, get_settlement_snapshot, get_time_snapshot; signal world_reset.
 extends Node2D
 
 const ART = preload("res://scripts/world/art_sprite_library.gd")

@@ -1,3 +1,6 @@
+# carry_load_layer.gd: carried-load overlay for villager sprites (carry atlas food load, baked wood carry) and the
+#   founder bundle prop; used by agent_renderer.gd.
+# Bridge methods: none.
 extends RefCounted
 
 const Library = preload("res://scripts/world/art_sprite_library.gd")

@@ -1,3 +1,6 @@
+# shelter_cold.gd: counts cold sleepers per shelter and draws shelter frost, doorway breath and the chill tint
+#   easing; used by building_renderer.gd.
+# Bridge methods: none (reads agent/building snapshots building_renderer.gd passes in).
 extends RefCounted
 
 const FROST: Color = Color("D8E8F0")

@@ -1,5 +1,5 @@
-extends Control
-
+# agent_inspector_panel.gd (UI/AgentInspectorPanel in scenes/main.tscn): selected-person panel with live needs,
+#   activity, porter trip, temperament, family links and life chronicle; shows dead people as records.
 # V7 Phase 14-γ — Agent click inspector panel.
 #
 # Right-anchored 280 px wide Control. Hidden by default until
@@ -13,6 +13,10 @@ extends Control
 #
 # Temperament and family use separate selected-agent getters.
 # The nine-key detail schema remains unchanged.
+# Bridge methods: get_agent_detail (direct); via SimReads get_agent_snapshot, get_porter_snapshot, get_world_info,
+#   get_activity_snapshot; via person_read_cache.gd get_person, get_person_chronicle, get_agent_family,
+#   get_agent_temperament; signal world_reset.
+extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Library = preload("res://scripts/world/art_sprite_library.gd")

@@ -1,3 +1,6 @@
+# walker_offsets.gd: packs walking agents' rows, positions, directions and canvas transform for the Rust walker
+#   kernel and unpacks its lateral offsets; used by agent_renderer.gd.
+# Bridge methods: art_walker_offsets.
 extends RefCounted
 
 const Declump = preload("res://scripts/world/declump_offsets.gd")

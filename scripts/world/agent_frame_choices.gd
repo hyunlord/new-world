@@ -1,3 +1,6 @@
+# agent_frame_choices.gd: cached equivalent of AgentActivity.choose_frame/daily_pose used by agent_renderer.gd
+#   when the allocation cache is on; configure() rebuilds it from the frame groups.
+# Bridge methods: none.
 extends RefCounted
 ## Prepared atlas choices; animation time and returned metadata remain per-frame.
 const Activity = preload("res://scripts/world/agent_activity.gd")

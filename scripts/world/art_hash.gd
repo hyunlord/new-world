@@ -1,3 +1,5 @@
+# ArtHash: overflow-safe integer hash and per-agent visual look (jitter, body, tone, hair, phase) for presentation.
+# Bridge methods: none.
 class_name ArtHash
 extends RefCounted
 
