@@ -4,7 +4,7 @@
 extends Node2D
 
 const WOOD = preload("res://scripts/world/wood_visuals.gd")
-const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
+const SPRITE_ORIGIN: Vector2 = Vector2(8, 8) # M1: the centre of tile (0, 0) in the colony view
 const TILE_SIZE: int = 16
 const NIGHT_TINT: Color = Color(0.42, 0.48, 0.68)
 const DUSK_TINT: Color = Color(0.90, 0.72, 0.60)

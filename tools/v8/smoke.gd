@@ -1,12 +1,13 @@
 # tools/v8/smoke.gd — headless label scan for the V8 smoke (tools/v8/smoke.sh).
 # Purpose: boot res://scenes/main.tscn, run --frames N frames (default 900),
 #   open the panels a player opens (a click on the first agent through
-#   WorldRenderer's click handler -> inspector; a click on an empty tile ->
+#   OrderTool.click_world -> inspector; a click on an empty tile ->
 #   causal "why?" panel; the chronicle toggled as the C key does), then walk
 #   every Label / RichTextLabel / Button and report texts that are
 #   raw localization keys (Locale.ltr returns the key itself when it is missing
 #   and logs nothing, so a missing key only shows as key-shaped text).
-# Bridge methods called: get_agent_snapshot (to find an agent to click).
+# Bridge methods called: get_agent_snapshot (to find an agent to click); OrderTool's click path
+#   (get_agent_detail, get_tile_causal_history, can_place_blueprint).
 # Output: one "SMOKE_RAW_KEY <node path> <text>" line per hit, then
 #   "SMOKE_DONE frames=N labels=L raw_keys=K".
 extends SceneTree
@@ -59,17 +60,22 @@ func _run() -> void:
 
 func _open_panels(main: Node) -> void:
 	var world: Node = main.get_node_or_null("WorldSim")
-	var renderer: Node = main.get_node_or_null("WorldRenderer")
-	var origin: Vector2 = Vector2(448, 28)
-	if world != null and renderer != null and renderer.has_method("_handle_tile_click"):
+	var tool: Node = main.get_node_or_null("ColonyView/OrderTool")
+	if world != null and tool != null and tool.has_method("click_world"):
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 		if not xs.is_empty():
-			renderer.call("_handle_tile_click", origin + Vector2(xs[0], ys[0]) * 16.0 + Vector2(8, 4))
+			var tile: Vector2i = Vector2i(xs[0], ys[0])
+			tool.call("click_world", Vector2(tile) * 16.0 + Vector2(8, 8), tile)
 			for _i: int in 10:
 				await process_frame
-		renderer.call("_handle_tile_click", origin + Vector2(2, 2) * 16.0 + Vector2(8, 8))
+		tool.call("click_world", Vector2(2, 2) * 16.0 + Vector2(8, 8), Vector2i(2, 2))
+	# M1: show the order bar's hints and toast texts too (raw-key scan).
+	var bar: Node = main.get_node_or_null("UI/OrderBar")
+	if bar != null and bar.has_method("select_mode"):
+		bar.call("select_mode", 3)
+		bar.call("show_toast", "x")
 	var chronicle: Node = main.get_node_or_null("UI/ChroniclePanel")
 	if chronicle != null and chronicle.has_method("toggle_visible"):
 		chronicle.call("toggle_visible")

@@ -73,7 +73,7 @@ func _ingest_row(row: Dictionary) -> void:
 	var kind: int = int(row["kind"])
 	if kind != 18:
 		_pending_porter = {}
-		if kind >= 22:
+		if kind >= 23:
 			_unknown_kinds += 1
 		elif kind in NOTABLE:
 			_entries.append(row)

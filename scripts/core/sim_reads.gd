@@ -2,8 +2,10 @@
 #   mutation (MUTATORS) goes through it, frozen and cached per frame (porter/relations per tick, terrain until reset).
 # Bridge methods: get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot, get_building_snapshot,
 #   get_resource_snapshot, get_time_snapshot, get_tallies, get_recent_deaths, get_society_snapshot, get_world_info,
-#   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations (GETTERS);
-#   get_tile_causal_events; advance_ticks, reset_world, reset_world_stress, on_building_placed (MUTATORS); signal world_reset.
+#   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
+#   get_trees, get_colony_overlay (GETTERS); get_tile_causal_events; advance_ticks, reset_world, reset_world_stress,
+#   on_building_placed, cmd_designate_chop, cmd_designate_chop_tiles, cmd_cancel_area, cmd_add_stockpile,
+#   cmd_remove_zone_area, cmd_place_blueprint (MUTATORS); signal world_reset.
 class_name SimReads
 extends Node
 
@@ -13,11 +15,15 @@ const GETTERS: Array[String] = [
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
 	"get_world_info", "get_terrain_snapshot",
 	"get_activity_snapshot", "get_porter_snapshot", "get_settlement_relations",
+	"get_colony_versions", "get_trees", "get_colony_overlay",
 ]
 const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations"]
 const MUTATORS: Array[String] = [
 	"advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",
+	# M1 orders (ADR 0012): each returns {accepted, count, reason}.
+	"cmd_designate_chop", "cmd_designate_chop_tiles", "cmd_cancel_area",
+	"cmd_add_stockpile", "cmd_remove_zone_area", "cmd_place_blueprint",
 ]
 var _world: Node
 var _cache: Dictionary = {}

@@ -11,6 +11,7 @@
 #                      itself if missing (visibility fallback during dev).
 #   set_language(lang) reloads strings for the new language.
 #   key_count()        returns the number of loaded keys.
+#   trf(key, params)   ltr(key) with "{name}" placeholders replaced (M1).
 # Bridge methods: none.
 extends Node
 
@@ -81,6 +82,18 @@ func _merge_dict(dict: Dictionary) -> void:
 
 func ltr(key: String) -> String:
 	return _strings.get(key, key)
+
+## ltr(key) with every "{name}" placeholder replaced by str(params[name]) (M1).
+## Placeholders without a parameter stay as they are; extra parameters are ignored.
+func trf(key: String, params: Dictionary) -> String:
+	return format_text(ltr(key), params)
+
+## The placeholder substitution behind trf(), on any text (pure; unit-tested).
+static func format_text(text: String, params: Dictionary) -> String:
+	var out: String = text
+	for name: Variant in params.keys():
+		out = out.replace("{%s}" % str(name), str(params[name]))
+	return out
 
 func set_language(lang: String) -> void:
 	_current_lang = lang

@@ -2,6 +2,7 @@
 #   (day prefix, person/village links, death and porter wording); used by chronicle_panel.gd and agent_inspector_panel.gd.
 # Bridge methods: none (formats chronicle rows and world info its callers read).
 extends RefCounted
+const LocaleScript = preload("res://scripts/core/locale.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value"]
@@ -61,6 +62,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 			0: return loc(locale, "CHRON_CHILD_BORN_FMT") % person(subject, locale)
 			2: return loc(locale, "CHRON_PAIRED_FMT") % person(subject, locale)
 			19: return loc(locale, "CHRON_QUARREL_FMT") % [person(subject, locale), village(int(row.get("settlement", -1)), locale)]
+			22: return hut_built(row, locale)
 			_: return ""
 	var place: int = int(row.get("settlement", -1))
 	var parent: int = int(row.get("settlement2", -1))
@@ -101,7 +103,13 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		19: return loc(locale, "CHRON_QUARREL_FMT") % [person(other, locale), village(parent, locale)]
 		20: return loc(locale, "CHRON_VILLAGES_ESTRANGED_FMT") % [village(place, locale), village(parent, locale)]
 		21: return loc(locale, "CHRON_VILLAGES_RECONCILED_FMT") % [village(place, locale), village(parent, locale)]
+		22: return hut_built(row, locale)
 	return ""
+
+
+## M1 kind 22 (HutBuilt): "A hut was finished in {settlement}".
+static func hut_built(row: Dictionary, locale: Node) -> String:
+	return LocaleScript.format_text(loc(locale, "CHRONICLE_HUT_BUILT"), {"settlement": village(int(row.get("settlement", -1)), locale)})
 
 static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, world_feed: bool = false) -> String:
 	var text: String = sentence(row, viewed, locale, info)

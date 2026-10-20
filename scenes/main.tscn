@@ -1,68 +1,69 @@
-[gd_scene load_steps=13 format=3 uid="uid://v7init"]
+[gd_scene load_steps=17 format=3 uid="uid://v7init"]
 
-[ext_resource type="Script" path="res://scripts/world/world_renderer.gd" id="1_renderer"]
-[ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
-[ext_resource type="Script" path="res://scripts/world/agent_renderer.gd" id="3_agents"]
-[ext_resource type="Script" path="res://scripts/world/camera_controller.gd" id="4_camera"]
-[ext_resource type="Script" path="res://scripts/ui/hud/hud_topbar.gd" id="5_hud"]
-[ext_resource type="Script" path="res://scripts/ui/panels/agent_inspector_panel.gd" id="6_inspector"]
-[ext_resource type="Script" path="res://scripts/world/terrain_renderer.gd" id="14_terrain"]
-[ext_resource type="Script" path="res://scripts/world/building_renderer.gd" id="15_buildings"]
-[ext_resource type="Script" path="res://scripts/world/daylight_controller.gd" id="16_daylight"]
-[ext_resource type="Script" path="res://scripts/world/nature_renderer.gd" id="17_nature"]
-[ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="21_sim_reads"]
-
-[ext_resource type="Script" path="res://scripts/ui/panels/chronicle_panel.gd" id="22_chronicle"]
+[ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
+[ext_resource type="Script" path="res://scripts/world/colony/terrain_layer.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scripts/world/colony/tree_layer.gd" id="3_trees"]
+[ext_resource type="Script" path="res://scripts/world/colony/building_layer.gd" id="4_buildings"]
+[ext_resource type="Script" path="res://scripts/world/colony/overlay_layer.gd" id="5_overlay"]
+[ext_resource type="Script" path="res://scripts/world/colony/agent_layer.gd" id="6_agents"]
+[ext_resource type="Script" path="res://scripts/world/colony/order_tool.gd" id="7_order_tool"]
+[ext_resource type="Script" path="res://scripts/world/daylight_controller.gd" id="8_daylight"]
+[ext_resource type="Script" path="res://scripts/world/camera_controller.gd" id="9_camera"]
+[ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="10_causal"]
+[ext_resource type="Script" path="res://scripts/ui/panels/chronicle_panel.gd" id="11_chronicle"]
+[ext_resource type="Script" path="res://scripts/ui/hud/hud_topbar.gd" id="12_hud"]
+[ext_resource type="Script" path="res://scripts/ui/panels/agent_inspector_panel.gd" id="13_inspector"]
+[ext_resource type="Script" path="res://scripts/ui/hud/order_bar.gd" id="14_order_bar"]
 
 [node name="Main" type="Node2D"]
 
 [node name="WorldSim" type="WorldSimNode" parent="."]
 
 [node name="SimReads" type="Node" parent="."]
-script = ExtResource("21_sim_reads")
+script = ExtResource("1_sim_reads")
 
-[node name="Shadows" type="Node2D" parent="."]
-z_index = 3
+[node name="ColonyView" type="Node2D" parent="."]
 
-[node name="WorldObjects" type="Node2D" parent="."]
-z_index = 4
-y_sort_enabled = true
+[node name="TerrainLayer" type="TileMapLayer" parent="ColonyView"]
+script = ExtResource("2_terrain")
 
-[node name="TerrainRenderer" type="Node2D" parent="."]
-script = ExtResource("14_terrain")
+[node name="TreeLayer" type="TileMapLayer" parent="ColonyView"]
+script = ExtResource("3_trees")
 
-[node name="BuildingRenderer" type="Node2D" parent="."]
-script = ExtResource("15_buildings")
+[node name="BuildingLayer" type="Node2D" parent="ColonyView"]
+script = ExtResource("4_buildings")
 
-[node name="NatureRenderer" type="Node2D" parent="."]
-script = ExtResource("17_nature")
+[node name="OverlayLayer" type="Node2D" parent="ColonyView"]
+script = ExtResource("5_overlay")
+
+[node name="AgentLayer" type="Node2D" parent="ColonyView"]
+script = ExtResource("6_agents")
+
+[node name="OrderTool" type="Node2D" parent="ColonyView"]
+script = ExtResource("7_order_tool")
 
 [node name="DaylightController" type="Node2D" parent="."]
-script = ExtResource("16_daylight")
+script = ExtResource("8_daylight")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="DaylightController"]
 
-[node name="WorldRenderer" type="Node2D" parent="."]
-script = ExtResource("1_renderer")
-
-[node name="AgentRenderer" type="Node2D" parent="."]
-script = ExtResource("3_agents")
-
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(960, 540)
 zoom = Vector2(2, 2)
-script = ExtResource("4_camera")
+script = ExtResource("9_camera")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="CausalPanel" type="Control" parent="UI"]
-script = ExtResource("2_causal")
+script = ExtResource("10_causal")
 
 [node name="ChroniclePanel" type="Control" parent="UI"]
-script = ExtResource("22_chronicle")
+script = ExtResource("11_chronicle")
 
 [node name="HudTopbar" type="Control" parent="UI"]
-script = ExtResource("5_hud")
+script = ExtResource("12_hud")
 
 [node name="AgentInspectorPanel" type="Control" parent="UI"]
-script = ExtResource("6_inspector")
+script = ExtResource("13_inspector")
+
+[node name="OrderBar" type="Control" parent="UI"]
+script = ExtResource("14_order_bar")

@@ -67,6 +67,8 @@ const TARGET_LABELS: Array = [
 	"INSPECTOR_TARGET_FOOD",
 	"INSPECTOR_TARGET_WOOD",
 	"INSPECTOR_TARGET_ACTIVITY_PLACE_FMT",
+	# 9 = TargetKind::Job (M1): the job line says which job.
+	"UI_INSPECT_NOW",
 ]
 
 const ACTIVITY_LABELS: Array[String] = ["UI_ACTIVITY_TEND_FIRE", "UI_ACTIVITY_CRAFT", "UI_ACTIVITY_REPAIR", "UI_ACTIVITY_HEARTH_CIRCLE", "UI_ACTIVITY_EXPLORE", "UI_ACTIVITY_PLAY", "UI_ACTIVITY_SIT_BY_FIRE"]
@@ -88,8 +90,14 @@ var _hunger_bar: ProgressBar
 var _thirst_bar: ProgressBar
 var _sleep_bar: ProgressBar
 var _portrait: Sprite2D
+# M1: the colony view's person layers (skin, hair, tunic) copied at 6× (no V7 sprite in the colony view).
+var _portrait_box: Control
+var _portrait_layers: Array[Sprite2D] = []
 var _cold_label: Label
 var _carried_label: Label
+# M1 (9.6): the job line ("지금: …") from the snapshot's `jobs` column.
+var _job_label: Label
+const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD"]
 const TEMPERAMENT_FIELDS: Array[String] = ["ns", "ha", "rd", "p"]
 const TEMPERAMENT_LABELS: Array[String] = ["UI_TEMPERAMENT_NS", "UI_TEMPERAMENT_HA", "UI_TEMPERAMENT_RD", "UI_TEMPERAMENT_P"]
 const FAMILY_LABELS: Array[String] = ["PANEL_FAMILY_SPOUSE", "UI_MOTHER", "UI_FATHER"]
@@ -145,6 +153,7 @@ func _ready() -> void:
 	_portrait = Sprite2D.new()
 	_portrait.position = Vector2(164, 120)
 	portrait_box.add_child(_portrait)
+	_portrait_box = portrait_box
 	_label_age = _make_label("")
 	_label_age.visible = false
 	_village_label = _make_label("")
@@ -154,6 +163,7 @@ func _ready() -> void:
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
 	_thirst_bar = _make_bar(_loc("NEED_THIRST"))
 	_sleep_bar = _make_bar(_loc("NEED_SLEEP"))
+	_job_label = _make_label("")
 	_carried_label = _make_label("")
 	_cold_label = _make_label("")
 	_cold_label.hide()
@@ -319,6 +329,10 @@ func display_agent(detail: Dictionary) -> void:
 	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
 	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
 	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _target_text(target_kind, activity)
+	if target_kind == 9:
+		# M1: a colony job's target is the job itself.
+		var job_code: int = clampi(_carried_amount_byte(agent_id, "jobs"), 0, JOB_KEYS.size() - 1)
+		_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _loc(JOB_KEYS[job_code])
 	_refresh_porter_status()
 	_hunger_bar.value = hunger
 	_thirst_bar.value = thirst
@@ -332,6 +346,11 @@ func display_agent(detail: Dictionary) -> void:
 	_update_portrait(agent_id)
 	var carried_wood: int = _carried_amount(agent_id, "carried_woods")
 	_carried_label.text = (_loc("INSPECTOR_CARRYING_WOOD_FMT") % carried_wood) if carried_wood > 0 else (_loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id))
+	var job: int = clampi(_carried_amount_byte(agent_id, "jobs"), 0, JOB_KEYS.size() - 1)
+	_job_label.text = "%s: %s" % [_loc("UI_INSPECT_NOW"), _loc(JOB_KEYS[job])]
+	var logs: int = _carried_amount(agent_id, "carry_counts")
+	if logs > 0:
+		_carried_label.text = "%s: %s %d" % [_loc("UI_INSPECT_CARRYING"), _loc("ITEM_LOG"), logs]
 	_cold_label.text = _loc("INSPECTOR_COLD")
 	_cold_label.visible = _is_cold(agent_id)
 	visible = true
@@ -405,6 +424,7 @@ func _process(_delta: float) -> void:
 func _update_portrait(agent_id: int) -> void:
 	var objects: Node = get_node_or_null("/root/Main/WorldObjects")
 	if objects == null:
+		_colony_portrait()
 		return
 	for child: Node in objects.get_children():
 		if child is Sprite2D and str(child.get_meta("art_kind", "")) == "agent" and int(child.get_meta("art_id", -1)) == agent_id:
@@ -414,6 +434,34 @@ func _update_portrait(agent_id: int) -> void:
 			_portrait.flip_h = sprite.flip_h
 			_portrait.scale = Vector2(4, 4)
 			return
+
+
+func _colony_portrait() -> void:
+	var layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
+	var person: Node = null
+	if layer != null:
+		for child: Node in layer.get_children():
+			if int(child.get("bits")) == _selected_entity_bits:
+				person = child
+	if person == null:
+		return
+	var sources: Array = [person.get("skin"), person.get("hair"), person.get("tunic")]
+	while _portrait_layers.size() < sources.size():
+		var sprite: Sprite2D = Sprite2D.new()
+		sprite.centered = true
+		sprite.region_enabled = true
+		sprite.scale = Vector2(6, 6)
+		sprite.position = Vector2(164, 64)
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		_portrait_box.add_child(sprite)
+		_portrait_layers.append(sprite)
+	for i: int in sources.size():
+		var src: Sprite2D = sources[i] as Sprite2D
+		if src == null:
+			continue
+		_portrait_layers[i].texture = src.texture
+		_portrait_layers[i].region_rect = src.region_rect
+		_portrait_layers[i].modulate = src.modulate
 
 
 func _carried_food(agent_id: int) -> int:
@@ -433,6 +481,20 @@ func _carried_amount(agent_id: int, key: String) -> int:
 		for index: int in mini(ids.size(), carried.size()):
 			if ids[index] == agent_id:
 				return int(carried[index])
+	return 0
+
+
+## A PackedByteArray column of the agent snapshot for `agent_id` (0 when absent).
+func _carried_amount_byte(agent_id: int, key: String) -> int:
+	if _world_sim == null:
+		return 0
+	var data: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+	var ids: Variant = data.get("agent_ids", null)
+	var column: Variant = data.get(key, null)
+	if ids is PackedInt64Array and column is PackedByteArray:
+		for index: int in mini(ids.size(), column.size()):
+			if ids[index] == agent_id:
+				return int(column[index])
 	return 0
 
 

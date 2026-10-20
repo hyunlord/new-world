@@ -297,3 +297,64 @@ Raw data lives in `/Users/rexxa/work/m1-data/` ($DATA), outside the repository.
 
   No calibration value changed. Two rounds of the allowed six were used. All seeds have 19 births and
   29 people at day 10 (the V7 provisioned births at full food; recorded for M1.5).
+
+## D24 — Keys: 1–4 set the speed, F1–F5 choose the order mode
+
+- Context: 9.6 says keys `1`–`5` select an order mode. The owner's in-game check (14.2) says "1~4 키로 속도가
+  바뀐다", and V8-0 already used 1–4 for speed. Both cannot hold.
+- Choice: `1`–`4` keep the speed (1×–4×, the owner's check and habit). The order modes take `F1`–`F5`; the
+  bar shows the key on each button ("F1 베기" …).
+- Reason: the owner checks speed by pressing 1–4; the bar's buttons are the main way to choose a mode.
+- Evidence: `scripts/world/camera_controller.gd`, `scripts/ui/hud/order_bar.gd`. Listed in the report under
+  "오너 결정 필요".
+
+## D25 — The colony view's structure
+
+- World coordinates: tile (x, y) covers world pixels [16x, 16x+16) × [16y, 16y+16). The V7 offset (448, 28) is
+  gone (`scripts/world/colony/view.gd`).
+- Nodes under `Main/ColonyView`:
+  - TerrainLayer (TileMapLayer, z 0);
+  - TreeLayer (TileMapLayer, z 2, with a child drawing bushes and deadwood);
+  - BuildingLayer (z 3);
+  - OverlayLayer (z 4: zones, stacks, chop marks, ghosts over the canopies);
+  - AgentLayer (z 5, y-sorted pooled people);
+  - OrderTool (z 6).
+
+  Above them sit the UI panels and `UI/OrderBar`. `DaylightController` stays (its glow origin moved to the
+  new coordinates). The camera clamps to the map plus 4 tiles and snaps to whole screen pixels.
+- Layers redraw only on change: `get_colony_versions` for trees and the overlay, a hash of the building
+  snapshot, and a hash of the resource amounts for bushes.
+- `OrderTool` also takes over V8-0's no-mode clicks (person → inspector, tile → causal panel). It replaces
+  `world_renderer.gd`; that file's Space-cycled influence overlay was a V7 debug view and is gone.
+- The inspector's portrait copies the colony person's three layers at 6×. The V7 portrait read
+  `Main/WorldObjects`, which no longer exists.
+- `SettlementSelection.observe` moved from the deleted agent renderer to `AgentLayer` (V8-0 D31: it must keep
+  a caller).
+
+## D26 — What Part 4 deleted and what it kept
+
+- Deleted:
+  - 21 V7 renderer and helper scripts (with their `.uid`), found unreachable with `tools/v8/gd_reach.py` after
+    the scene swap: terrain, nature, nature layout and canopy, building, agent and world renderers; activity
+    icons, agent activity, frame choices, pose moments, selection index, season tint, camp seats, carry layer,
+    cold effects, declump and walker offsets, morning chill, offscreen marker, shelter cold;
+  - `scripts/world/cold_audit.json`;
+  - `shaders/settlement_outline.gdshader`;
+  - the bridge render kernels `art_declump` / `art_walker_offsets` with `ffi/art_kernels.rs`, which nothing
+    calls any more (API list rewritten).
+- Kept:
+  - `art_sprite_library.gd` (UI icons), `art_hash.gd` (names), `porter_presentation.gd` (inspector) and
+    `wood_visuals.gd` (daylight), which kept panels still use;
+  - `shaders/palette_swap.gdshader`, a V8-0 ASK item: the owner decides what VISION §5 means;
+  - the V7 sprite and atlas assets that are now unreachable (`assets/sprites/**`, `assets/art/atlas/carry_*`,
+    `assets/art/terrain/*`, `assets/art/production/U1/04.png`): V8-0 left sprites as ASK. Listed in
+    "오너 결정 필요".
+
+## D27 — UI scripts reach `Locale` through `/root/Locale`
+
+- Context: the strict check parses each script alone, without autoloads, so a bare `Locale.trf(...)` fails
+  with "Identifier not found: Locale". The kept panels already use `get_node_or_null("/root/Locale")`.
+- Choice: `Locale.trf` / `Locale.format_text` live on the autoload script. New scripts call them through the
+  node, or through `preload("res://scripts/core/locale.gd").format_text` for pure text
+  (`chronicle_text.gd`). `tools/v8/test_locale_trf.gd` tests both paths.
+- Evidence: strict check 25 files clean; `TRF_TEST_PASS`. Lesson added to `worldsim-godot` in Part 6.

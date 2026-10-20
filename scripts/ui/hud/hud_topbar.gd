@@ -211,9 +211,13 @@ func _refresh() -> void:
 	var values: Array[int] = [food, berries, int(tallies.get("births", 0)), deaths]
 	for index: int in 4:
 		_resource_labels[index].text = _loc(keys[index]) + " %d" % values[index]
-	_speed_label.text = _loc("HUD_SPEED_FMT") % str(_display_speed)
+	# M1: the camera owns the speed (keys 1–4 = 1×–4×, 12–48 ticks per second) and the pause (P).
 	var camera: Node = get_node_or_null("/root/Main/Camera2D")
-	_pause_icon.modulate.a = 1.0 if camera != null and bool(camera.get("_paused")) else 0.35
+	var paused: bool = camera != null and camera.has_method("is_paused") and bool(camera.call("is_paused"))
+	if camera != null and camera.has_method("get_speed"):
+		_display_speed = float(camera.call("get_speed"))
+	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
+	_pause_icon.modulate.a = 1.0 if paused else 0.35
 	ArtUI.Library.apply(_clock_icon, "U1_10" if hour >= 21 or hour < 5 else "U1_09")
 	_clock_icon.offset = Vector2.ZERO
 	_clock_icon.scale = Vector2(2, 2)
@@ -230,9 +234,7 @@ func _loc(key: String) -> String:
 	return _locale.ltr(key) if _locale != null else key
 
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
-		_display_speed = {KEY_1: 0.25, KEY_2: 0.5, KEY_3: 1.0, KEY_4: 2.0}[event.keycode]
+
 
 
 func _season_label(clock: Dictionary) -> String:
