@@ -1,1 +1,0 @@
-2026-10-15T09:47:54.232342+00:00 Part4 focused checks complete; every launch guard returned immediately, no quiet hold or foreign-lock wait occurred. wait_mac_p17.sh writes no file when there is no wait; evidence assembly handled that absent optional file.

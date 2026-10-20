@@ -1,8 +1,0 @@
-{
-  "suites": 123,
-  "passed": 1912,
-  "failed": 0,
-  "godot_passed": 27,
-  "python_passed": 239,
-  "mutation_killed": 60
-}

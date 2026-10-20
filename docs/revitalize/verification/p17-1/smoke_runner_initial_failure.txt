@@ -1,1 +1,0 @@
-No probe launched: macOS Bash empty array expansion under set -u failed at flags[@]. Rerun uses a nonempty common flag array and fresh part1-smoke-r2 output.

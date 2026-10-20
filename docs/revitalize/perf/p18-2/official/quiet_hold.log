@@ -1,5 +1,0 @@
-2026-10-16 03:33:05 KST request: p18 official: final attribution, R5 (a), F8 (b), G6 (c)
-2026-10-16 03:33:06 KST WAIT start: p18 official: final attribution, R5 (a), F8 (b), G6 (c)
-2026-10-16 03:38:06 KST WAIT end: p18 official: final attribution, R5 (a), F8 (b), G6 (c); waited=300.0s
-2026-10-16 03:38:06 KST HOLD start: p18 official: final attribution, R5 (a), F8 (b), G6 (c); load=2.65; contended=0; waited=0.1s
-2026-10-16 03:38:57 KST HOLD end: p18 official: final attribution, R5 (a), F8 (b), G6 (c); exit=0; held=51.0s

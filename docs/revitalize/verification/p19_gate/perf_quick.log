@@ -1,6 +1,0 @@
-   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-bridge)
-   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-test)
-    Finished `release` profile [optimized] target(s) in 6.07s
-quick_stress_v19_s15100_n500_side64_fed: mean 0.3011 ms p99.9 0.569 ms max 0.783 ms alive 500 wall 0.4 s
-worldsim_perf: 1 run(s) written
-quick mean_ms 0.30110289855072464 p999_ms 0.569 max_ms 0.783

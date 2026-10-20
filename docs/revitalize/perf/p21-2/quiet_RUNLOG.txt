@@ -1,6 +1,0 @@
-2026-10-19 00:50:24 KST request: Pass 21 U6 perf
-2026-10-19 00:50:24 KST PAUSE own watched groups: ['53521', '55050', '55073', '60525']; settle up to 600s
-2026-10-19 00:56:57 KST settled: load=3.34; busy=[]; after 393s
-2026-10-19 00:56:57 KST HOLD start: Pass 21 U6 perf; load=3.34; contended=0; waited=393.4s
-2026-10-19 01:25:56 KST PAUSE released
-2026-10-19 01:25:56 KST HOLD end: Pass 21 U6 perf; exit=0; held=1738.7s

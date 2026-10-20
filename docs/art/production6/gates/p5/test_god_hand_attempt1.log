@@ -1,7 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-
-SCRIPT ERROR: Parse Error: The member "Panel" shadows a native class.
-          at: GDScript::reload (res://scripts/test/art/test_god_hand.gd:2)
-ERROR: Failed to load script "res://scripts/test/art/test_god_hand.gd" with error "Parse error".
-   at: load (modules/gdscript/gdscript.cpp:2907)

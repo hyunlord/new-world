@@ -1,6 +1,0 @@
-{
-  "observer_id": "blind_observer_two",
-  "4x": {"1":"sit","2":"gather","3":"build","4":"walk","5":"gather","6":"drink","7":"eat","8":"walk","9":"build","10":"child","11":"child","12":"child","13":"drink","14":"build","15":"carry","16":"talk","17":"walk","18":"carry","19":"gather","20":"sit","21":"eat","22":"walk","23":"talk","24":"drink"},
-  "2x": {"1":"sit","2":"gather","3":"build","4":"walk","5":"gather","6":"drink","7":"eat","8":"walk","9":"build","10":"child","11":"child","12":"child","13":"drink","14":"build","15":"carry","16":"talk","17":"walk","18":"carry","19":"gather","20":"sit","21":"eat","22":"walk","23":"talk","24":"drink"},
-  "notes": "Visible pixels only. Eat versus drink is ambiguous for the red objects at chest or mouth height; 6, 13, and 24 were judged drink, 7 and 21 eat. Large rounded containers in 15 and 18 suggest carry, though hand placement could suggest eating. Standing poses 4, 8, 17, and 22 provide weak motion evidence. Lower scale makes these distinctions less certain."
-}

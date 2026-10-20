@@ -1,6 +1,0 @@
-game_v21_trace: routine loader PASS worlds=2 days=3
-game_v22_trace: routine loader PASS worlds=2 days=3
-family seed=42 people=24 hours=72 births=5 fissions=0 day60=False
-family seed=43 people=29 hours=72 births=5 fissions=0 day60=False
-game_v22_day60: routine loader PASS worlds=1 days=60
-family seed=42 people=76 hours=1440 births=57 fissions=1 day60=True

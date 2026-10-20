@@ -1,7 +1,0 @@
-{
-  "source": "/Users/rexxa/work/p17-data/b-r1-bin",
-  "destination": "/Users/rexxa/work/p17-data/b-final-bin",
-  "producer": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
-  "sha256_manifest": "2bd672960600f60a58114849037a55fb74be96fefa278e77186dd849996b4ec0  worldsim_probe\nef87df3104109484e61befb20f3c3e4b7ae2e6732cade4e40d18f3f4fbedceb6  worldsim_wm\n89b2fb39321423c5db5990823e187859a3e3e8b0f12b6ca62f214cd03106813f  worldsim_perf\ne2e5ee5adf2844dae9ed1794de0b42e5454b36184103b25b5fb6258626c0d6f9  v19_pins\nbb523f82e37a5b48b97b6064b429969faf6805ee3c44243ae9b2abca37f888d5  v20_pins\n",
-  "all_five_hashes_identical": true
-}

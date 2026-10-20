@@ -1,9 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-
-ERROR: Attempt to open script 'res://scripts/test/art/test_activity_frames.gd' resulted in error 'File not found'.
-   at: load_source_code (modules/gdscript/gdscript.cpp:1127)
-ERROR: Failed loading resource: res://scripts/test/art/test_activity_frames.gd.
-   at: _load (core/io/resource_loader.cpp:343)
-ERROR: Can't load script: scripts/test/art/test_activity_frames.gd
-   at: start (main/main.cpp:4238)

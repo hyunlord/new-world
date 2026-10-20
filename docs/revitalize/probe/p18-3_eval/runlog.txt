@@ -1,4 +1,0 @@
-2026-10-15T17:40:41Z game_v23 start
-2026-10-15T17:58:43Z game_v23 end
-2026-10-15T17:58:43Z game_v22 start
-2026-10-15T18:16:03Z game_v22 end

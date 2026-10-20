@@ -1,6 +1,0 @@
-world	started_utc	finished_utc	exit_code	artifacts	log_errors	provenance
-W0	2026-10-19T13:40:03Z	2026-10-19T13:40:30Z	0	present	none	unchanged
-W200	2026-10-19T13:40:42Z	2026-10-19T13:41:09Z	0	present	none	unchanged
-W-multi	2026-10-19T13:41:21Z	2026-10-19T13:42:12Z	0	present	none	unchanged
-W500_FROZEN	2026-10-19T13:42:24Z	2026-10-19T13:42:44Z	0	present	none	unchanged
-W500_2X	2026-10-19T13:42:56Z	2026-10-19T13:43:23Z	0	present	none	unchanged

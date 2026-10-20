@@ -1,7 +1,0 @@
-checkout=/Users/rexxa/work/new-world-art-prod
-head=af30bb29b01c88b6c3f6475e7cf179dc8232bb45
-debug_sha256=30ed97544d8fab39146c612c0cf87cd4b59245f427bfba5896fe188e9c6ad042
-fixed_fps=60
-resolution=1920x1080
-limit_seconds=1800
-quiet_lock=/Users/rexxa/work/.mac_quiet.lock

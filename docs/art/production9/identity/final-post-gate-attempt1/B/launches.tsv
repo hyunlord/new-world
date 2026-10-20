@@ -1,7 +1,0 @@
-framing	started_utc	finished_utc	exit_code	artifacts	log_errors
-P1	2026-10-15T06:09:12Z	2026-10-15T06:09:52Z	0	present	none
-P2	2026-10-15T06:09:52Z	2026-10-15T06:10:21Z	0	present	none
-P3	2026-10-15T06:10:21Z	2026-10-15T06:11:30Z	0	present	none
-P4	2026-10-15T06:11:30Z	2026-10-15T06:15:38Z	0	present	none
-P5	2026-10-15T06:15:38Z	2026-10-15T06:15:55Z	0	present	none
-P6	2026-10-15T06:15:55Z	2026-10-15T06:16:35Z	0	present	none

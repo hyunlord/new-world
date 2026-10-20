@@ -1,5 +1,0 @@
-   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-bridge)
-   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-test)
-    Finished `release` profile [optimized] target(s) in 5.69s
-  Executable tests/harness_revitalize_pass16_frozen.rs (target/release/deps/harness_revitalize_pass16_frozen-1fffdfe5c9642a54)
-  Executable tests/harness_revitalize_pass17_frozen.rs (target/release/deps/harness_revitalize_pass17_frozen-8fa9661c2e922f8b)

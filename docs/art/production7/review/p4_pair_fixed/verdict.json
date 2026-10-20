@@ -1,9 +1,0 @@
-{
-  "part": 4,
-  "target": "single-village HUD pair followup",
-  "round": 2,
-  "verdict": "ACCEPT",
-  "screenshot": "/Users/rexxa/work/art-production7-evidence/p4_pair_fixed/shots/art_society/soc_d2_1200_F2_orig.1920.png",
-  "sha256": "0512f95d36b7df42e0a465705eab10c47ed58849c9cbc2578864659368863b75",
-  "finding": "Clock, population27, shelter4, construction0 restored visibly; village icon and count absent with one village. Failed first followup retained."
-}

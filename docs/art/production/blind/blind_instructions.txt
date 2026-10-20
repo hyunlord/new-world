@@ -1,3 +1,0 @@
-Label each number at both zooms using: walk, carry, gather, build, drink, talk, sit_or_idle, sleep, child.
-Save JSON {"4x":{"1":"label",...},"2x":{"1":"label",...}} before grading.
-Answers are stored separately and must remain unopened until labels are saved.

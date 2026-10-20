@@ -1,7 +1,0 @@
-{
-  "reviewer": "prod_agents",
-  "rounds": 1,
-  "findings": [],
-  "contract": "one-based day; zero-based season",
-  "verification": "before-failure and after-pass logs, all22headless checks pass, day2HUD observed"
-}

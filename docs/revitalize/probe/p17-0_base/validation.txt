@@ -1,4 +1,0 @@
-i1_v19: 32 seeds 0..31, 120 daily records each, determinism PASS
-i3_v16: 32 seeds 0..31, 120 daily records each, determinism PASS
-i4_v20: 32 seeds 0..31, 120 daily records each, determinism PASS
-i2: two 120-day episodes, 2881 rows each, all 20 arrays/interventions hashes match Pass 16 baseline

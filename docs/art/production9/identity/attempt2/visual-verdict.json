@@ -1,8 +1,0 @@
-{
-  "score": 100,
-  "verdict": "pass",
-  "category_match": true,
-  "differences": [],
-  "suggestions": [],
-  "reasoning": "All six original-resolution RGBA controls and candidates are exactly identical. Two independent visual reviewers opened P1/P4 and P2/P5/P6 pairs; leader additionally opened P3. This accepts captured identity only, not unmeasured performance or uncaptured runtime states."
-}

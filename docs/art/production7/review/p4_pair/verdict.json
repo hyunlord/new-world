@@ -1,9 +1,0 @@
-{
-  "part": 4,
-  "target": "single-village HUD pair followup",
-  "round": 1,
-  "verdict": "NEEDS WORK",
-  "screenshot": "/Users/rexxa/work/art-production7-evidence/p4_pair/shots/art_society/soc_d2_1200_F2_orig.1920.png",
-  "sha256": "98f0233f180d8b656212b81a477e97602dbdaa699dec6a8170aabf9051532703",
-  "finding": "Hiding label parent hides entire shared first HUD row, including clock/population/construction. Keep failed artifact unchanged; hide only the village pair."
-}

@@ -1,9 +1,0 @@
-{
-  "gate": "PASS",
-  "code_head": "49f9a00cd9439741eb901e084152766c52012676",
-  "checks": 37,
-  "rust_tests": 1941,
-  "python_tests": 275,
-  "godot_tests": 30,
-  "note": "Capture publication helper was corrected during gate; final publication exact-HEAD gate is recorded externally. Runtime art sources unchanged."
-}

@@ -1,6 +1,0 @@
-Release build producer: 8de4073adbd152ecdf91ab28a1a348085e87a20f
-Stage A frozen revision: 9a0bd85470f4ddbe26d51b8c5062107bf5c1f371
-Command: git diff --exit-code 8de4073adbd152ecdf91ab28a1a348085e87a20f 9a0bd85470f4ddbe26d51b8c5062107bf5c1f371 -- rust
-Exit: 0
-Rust diff: empty
-Retained binaries match the verified Part 1 release hashes. Runtime provenance uses the frozen revision.

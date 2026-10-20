@@ -1,6 +1,0 @@
-2026-10-18 12:13:48 KST request: T6 game_v25 vs game_v24 (stress x5, quick, slopes, natural x3)
-2026-10-18 12:13:48 KST PAUSE own watched groups: ['21979', '44082']; settle up to 600s
-2026-10-18 12:15:33 KST settled: load=3.48; busy=[]; after 106s
-2026-10-18 12:15:33 KST HOLD start: T6 game_v25 vs game_v24 (stress x5, quick, slopes, natural x3); load=3.48; contended=0; waited=105.7s
-2026-10-18 12:31:05 KST PAUSE released
-2026-10-18 12:31:05 KST HOLD end: T6 game_v25 vs game_v24 (stress x5, quick, slopes, natural x3); exit=0; held=932.0s

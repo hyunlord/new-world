@@ -1,3 +1,0 @@
-Label each number at both zooms using: walk, carry, gather, build, eat, drink, sit, talk, child.
-Save JSON {"observer_id":"unique independent observer session", "4x":{"1":"label",...},"2x":{"1":"label",...}} before grading.
-Answers are stored separately and must remain unopened until labels are saved.

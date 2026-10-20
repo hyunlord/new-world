@@ -1,3 +1,0 @@
-shared simulation values: 155815
-differences: 1
-  scene: reference='game_v19' candidate='game_v20_inert'

@@ -1,8 +1,0 @@
-{
-  "gate_input_head": "7afa014dbca504f965c63d5581cd6220200615c6",
-  "capture_head": "44011f92347dc4176cc115195b1cc55a16ff93ae",
-  "changed_source_fingerprint": "c312857d6112240ee42ffb4a8d6033ffa6d956e32874af9c261d5a32faed56e5",
-  "command": "CARGO_BUILD_JOBS=6 GATE_OUTPUT_DIR=docs/art/production6/gates/final bash tools/art_pipeline/gate.sh final",
-  "attempt": 3,
-  "runtime_delta_since_capture": []
-}

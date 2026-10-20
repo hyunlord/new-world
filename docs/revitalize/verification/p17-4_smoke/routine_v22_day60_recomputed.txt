@@ -1,1 +1,0 @@
-PASS seed=42 people=76 adults=72 offset=480 completed=5651 invalid_360_rejections=1152 discrepancies=0 misses=0

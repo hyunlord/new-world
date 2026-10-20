@@ -1,1 +1,0 @@
-Original answer bytes and SHA are retained. Before the first grading, numeric parent village strings such as "1" were represented as integer 1 as required by the frozen schema; no village number, choice, or uncertainty changed. This is serialization normalization, not a second answer or edited verdict.

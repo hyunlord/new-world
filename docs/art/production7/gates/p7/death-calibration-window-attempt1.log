@@ -1,9 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Max
-
-SCRIPT ERROR: Invalid call. Nonexistent function 'set_locale (via call)' in base 'Node (locale.gd)'.
-          at: _run (res://scripts/test/art/capture_deaths_p7.gd:54)
-          GDScript backtrace (most recent call first):
-              [0] _run (res://scripts/test/art/capture_deaths_p7.gd:54)
-command exceeded 90 s

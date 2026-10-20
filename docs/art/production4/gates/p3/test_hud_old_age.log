@@ -1,7 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-
-SCRIPT ERROR: Parse Error: The signal "world_reset" is declared but never explicitly used in the class. (Warning treated as error.)
-          at: GDScript::reload (res://scripts/test/art/test_hud_old_age.gd:8)
-ERROR: Failed to load script "res://scripts/test/art/test_hud_old_age.gd" with error "Parse error".
-   at: load (modules/gdscript/gdscript.cpp:2907)

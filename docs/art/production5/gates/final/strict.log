@@ -1,3 +1,0 @@
-[gdcheck] parse + warnings: 30 file(s) clean ✓
-[gdcheck] FFI bindings: 15 GDScript call(s) all match Rust #[func] exports ✓
-[gdcheck] ALL CHECKS PASS

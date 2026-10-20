@@ -1,9 +1,0 @@
-{
-  "checked_at": "2026-10-19T16:11:30.179086+00:00",
-  "head": "40aa7a463d740b776248828211251187319c6af6",
-  "checks": 120,
-  "nonzero": [],
-  "log_errors": [],
-  "process_handle": "6436 no longer available; process absent; supervisor printed terminal full results",
-  "pass": true
-}

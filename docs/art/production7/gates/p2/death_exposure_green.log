@@ -1,7 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-
-DeathViz: unknown death reason -1 rendered grey
-DeathViz: unknown death reason 5 rendered grey
-DeathViz: unknown death reason 99 rendered grey
-DEATH EXPOSURE PASS: five totals/keys/colors, four visible, durable exact ticks, duplicate-person rows, repeat dedup, grey unknowns, reset, minute rounding

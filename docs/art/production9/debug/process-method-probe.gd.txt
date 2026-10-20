@@ -1,6 +1,0 @@
-extends SceneTree
-func _initialize() -> void:
-	for node: Node in [Node.new(), Node2D.new(), Sprite2D.new(), Control.new()]:
-		print("P9_PROCESS_METHOD ", node.get_class(), " ", node.has_method("_process"))
-		node.free()
-	quit()

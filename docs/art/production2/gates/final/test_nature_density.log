@@ -1,9 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-
-WorldRenderer ready (T7.9.B render mechanism)
-CameraController ready (default zoom 4.0×)
-test_nature_density: PASS 326/1190 = 0.27394957983193
-WorldRenderer ready (T7.9.B render mechanism)
-CameraController ready (default zoom 4.0×)
-test_nature_density reload: PASS

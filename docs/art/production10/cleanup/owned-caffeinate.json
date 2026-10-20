@@ -1,6 +1,0 @@
-{
-  "utc": "2026-10-16T03:37:31.017051+00:00",
-  "pid": 58923,
-  "observed_command": "caffeinate -i -s -t 7200",
-  "terminated": true
-}

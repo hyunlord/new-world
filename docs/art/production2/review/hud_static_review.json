@@ -1,8 +1,0 @@
-{
-  "part": 6,
-  "rounds": 1,
-  "reviewer": "prod_static",
-  "findings": [],
-  "scope": "HUD death tally, four causes, tuple deduplication, 120-tick retention, rollback/reset, optional season keys, exact localization",
-  "limitations": "Tests inspected by reviewer; parent executed both Godot tests and strict check. Live compatibility deferred to Part 7."
-}

@@ -1,2 +1,0 @@
-cargo build --release -p sim-test --bins --message-format=json 
-cargo test --release -p sim-test --test harness_revitalize_pass16_frozen --test harness_revitalize_pass17_frozen --no-run --message-format=json 

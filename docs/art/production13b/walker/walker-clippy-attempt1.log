@@ -1,5 +1,0 @@
-    Checking sim-core v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-core)
-    Checking sim-engine v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-engine)
-    Checking sim-systems v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-systems)
-    Checking sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
-    Finished `dev` profile [optimized + debuginfo] target(s) in 6.43s

@@ -1,9 +1,0 @@
-   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.43s
-     Running tests/harness_p11_alpha_agent_renderer.rs (target/debug/deps/harness_p11_alpha_agent_renderer-1f731eba2408ef11)
-
-running 1 test
-test harness_p11_alpha_agent_renderer_enables_use_colors ... ok
-
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.00s
-

@@ -1,8 +1,0 @@
-{
-  "evidence.md": "6363b474bbe098a938025d5af9ecb080fba9179f051914ea455f7ccb1fcce7a4",
-  "code.md": "a396c8ec02bb5031b161b104aa32b79994ea45f148bea3cf3585c611e9ef882d",
-  "identity-malformed-remediation/before.json": "846e1e1d3c76c6800c9b7b6b212d46c68843ea1b32088e0b393dfba945d5a379",
-  "identity-malformed-remediation/check.py": "ba342ec27f4568eb80a56e88a1b5336d069415eae1caefa4884bfd47a07d443d",
-  "identity-malformed-remediation/REMEDIATION.md": "d69928d7502666b4abf12f6e92bbc94e6178055413a07ed59a764d2ef0b97461",
-  "identity-malformed-remediation/after.json": "fbe74a2b70b1cf4a0aab8349b9d039fd9b074b1ca4f659d3d9146639987cf188"
-}

@@ -1,8 +1,0 @@
-
-running 3 tests
-test harness_game_v19_rules_pinned_field_by_field ... ok
-test harness_v19_nofission_fingerprints_unchanged ... ok
-test harness_v19_fingerprints_unchanged ... ok
-
-test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.59s
-

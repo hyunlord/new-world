@@ -1,7 +1,0 @@
-Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
-Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
-
-P9_PROCESS_METHOD Node false
-P9_PROCESS_METHOD Node2D false
-P9_PROCESS_METHOD Sprite2D false
-P9_PROCESS_METHOD Control false
