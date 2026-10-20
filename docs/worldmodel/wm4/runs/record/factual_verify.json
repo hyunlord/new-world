@@ -1,0 +1,11 @@
+{
+ "all_ok": true,
+ "bad": [],
+ "dir": "/home/hyunlord/work/worldsim-wm-data/obs/factual",
+ "episodes": 560,
+ "expected": 560,
+ "rows": [
+  2881
+ ],
+ "seconds": 0.6701259613037109
+}

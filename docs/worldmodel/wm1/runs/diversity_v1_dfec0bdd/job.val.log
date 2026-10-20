@@ -1,0 +1,8 @@
+A_train 96 4s
+A_val 16 4s
+A_test 16 4s
+B_test 8 4s
+OOD_v13 32 4s
+OOD_long 16 4s
+selection {'T1': ('an5_off', 'apfit_year'), 'T2_24_every_hour': ('an5', 'apfit_year'), 'T2_24_0600': ('an5', 'apfit_year'), 'T2_168_every_hour': ('an5', 'apfit_year'), 'T2_168_0600': ('an5', 'apfit_year')}
+done 13s -> /home/hyunlord/work/wm1-runs/diversity_v1_dfec0bdd/diversity_v1_val.json

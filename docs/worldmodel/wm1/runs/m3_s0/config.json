@@ -1,0 +1,30 @@
+{
+ "base": "/home/hyunlord/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+ "code_commit": "0a54e03b75b986cb7af2842d93ad15ece9199ba4",
+ "device": "cpu",
+ "epoch_fraction": 0.3865546218487395,
+ "example": [
+  "{\"day\":2,\"season\":0,\"food\":59,\"wood\":16,\"fire\":1,\"cold\":0,\"alive\":25,\"dead\":115,\"bush\":31,\"work\":0,\"iv\":[]}",
+  "{\"day\":3,\"season\":0,\"food\":81,\"wood\":30,\"fire\":1,\"cold\":0,\"alive\":27,\"dead\":115,\"bush\":34,\"work\":0,\"iv\":[]}"
+ ],
+ "hyper": {
+  "alpha": 32,
+  "batch": 16,
+  "epochs": 1,
+  "lr": 0.0002,
+  "max_new_tokens": 96,
+  "max_seconds": 7200,
+  "rank": 16,
+  "threads": 4
+ },
+ "manifest_sha256": "003ce64a41f3e31289e5753672c9cbcc4e5cb955a761e17a5f92e7b1861802d5",
+ "model": "m3_text",
+ "samples_seen": 4416,
+ "seed": 0,
+ "steps_done": 276,
+ "steps_per_epoch": 714,
+ "stop": "time",
+ "torch": "2.14.1+cu130",
+ "train_samples": 11424,
+ "train_seconds": 7214.452144861221
+}

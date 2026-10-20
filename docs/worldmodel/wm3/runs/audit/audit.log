@@ -1,0 +1,7 @@
+cases 3592 17s
+members 4552 28s
+A1 structural 0 behaviour outside 4 30s
+wm2_m1bact_v19_s0: A2 46s; A3 violations 0 / 306 worst 0.00607
+wm2_m1bact_v19_s1: A2 51s; A3 violations 0 / 306 worst 0.0052
+wm2_m1bact_v19_s2: A2 55s; A3 violations 0 / 306 worst 0.00607
+{"structural_mismatches": 0, "a3_violations": 0, "behaviour_outside_share": 0.0011135857461024498, "verdict": "clean", "seconds": 55.06395936012268}

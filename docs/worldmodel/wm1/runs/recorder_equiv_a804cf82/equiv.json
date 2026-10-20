@@ -1,0 +1,68 @@
+{
+ "episodes": [
+  {
+   "compared": 62,
+   "differ": [],
+   "episode": "game_v16_s20000_none",
+   "only_new": [
+    "global.npy:settlements_alive",
+    "global.npy:fissions_total",
+    "settlements.npy:parent_slot",
+    "settlements.npy:founded_tick"
+   ],
+   "only_old": [],
+   "schema_new": 5,
+   "schema_old": 4
+  },
+  {
+   "compared": 62,
+   "differ": [],
+   "episode": "game_v16_s20001_none",
+   "only_new": [
+    "global.npy:settlements_alive",
+    "global.npy:fissions_total",
+    "settlements.npy:parent_slot",
+    "settlements.npy:founded_tick"
+   ],
+   "only_old": [],
+   "schema_new": 5,
+   "schema_old": 4
+  },
+  {
+   "compared": 62,
+   "differ": [],
+   "episode": "game_v16_s20002_none",
+   "only_new": [
+    "global.npy:settlements_alive",
+    "global.npy:fissions_total",
+    "settlements.npy:parent_slot",
+    "settlements.npy:founded_tick"
+   ],
+   "only_old": [],
+   "schema_new": 5,
+   "schema_old": 4
+  },
+  {
+   "compared": 62,
+   "differ": [],
+   "episode": "game_v16_s20003_none",
+   "only_new": [
+    "global.npy:settlements_alive",
+    "global.npy:fissions_total",
+    "settlements.npy:parent_slot",
+    "settlements.npy:founded_tick"
+   ],
+   "only_old": [],
+   "schema_new": 5,
+   "schema_old": 4
+  }
+ ],
+ "identical": true,
+ "only_new": [
+  "global.npy:fissions_total",
+  "global.npy:settlements_alive",
+  "settlements.npy:founded_tick",
+  "settlements.npy:parent_slot"
+ ],
+ "only_old": []
+}

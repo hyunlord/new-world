@@ -1,0 +1,1 @@
+seq_obs n2000 s0: stop patience best epoch 26 val 0.4541 20s

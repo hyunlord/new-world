@@ -1,0 +1,5 @@
+step 1000 ep 1 loss 3.0955 val score 1.3693 st 0.8640 pos 2.3430 263s
+step 2000 ep 2 loss 2.7948 val score 1.2854 st 0.8846 pos 2.2832 302s
+step 3000 ep 3 loss 2.8328 val score 1.2285 st 0.8938 pos 2.2155 339s
+step 3696 ep 3 loss 2.7854 val score 1.2223 st 0.8944 pos 2.2119 373s
+done val score 1.2223 397s

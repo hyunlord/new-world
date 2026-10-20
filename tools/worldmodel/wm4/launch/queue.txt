@@ -1,0 +1,2 @@
+# RUN SHA BUDGET CMD...  (GOAL.md 9.1; @OUT@ run dir, @MAXS@ max seconds, @R@ wm1-runs). Drop order: GOAL.md 0.3.6.
+# 9.3 ablation seeds: WM-3's exact recipe (wm3/launch/queue.sh + queue.txt: ctrl = 32 plain, os = 16 + 16 cast, no partners)

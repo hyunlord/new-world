@@ -1,0 +1,8274 @@
+{
+ "all_ok": true,
+ "fam": "/home/hyunlord/work/worldsim-wm-data/v2/v19/fam",
+ "families": 560,
+ "families_per_arm": {
+  "gf240E": 560,
+  "rw120E": 560,
+  "sp120L": 489,
+  "sp240L": 489
+ },
+ "members": 5316,
+ "ok": 560,
+ "rows": [
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40000
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40001
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40002
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40003
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40004
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40005
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40006
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40007
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40008
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40009
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40010
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40011
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40012
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40013
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40014
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40015
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40016
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40017
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40018
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40019
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40020
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40021
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40022
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40023
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40024
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40025
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40026
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40027
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40028
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40029
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40030
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40031
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40032
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40033
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40034
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40035
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40036
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40037
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40038
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40039
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40040
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40041
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40042
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40043
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40044
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40045
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40046
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40047
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40048
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40049
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40050
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40051
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40052
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40053
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40054
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40055
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40056
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40057
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40058
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40059
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40060
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40061
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40062
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40063
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40064
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40065
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40066
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40067
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40068
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40069
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40070
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40071
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40072
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40073
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40074
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40075
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40076
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40077
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40078
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40079
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40080
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40081
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40082
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40083
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40084
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40085
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40086
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40087
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40088
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40089
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40090
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40091
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40092
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40093
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40094
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40095
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40096
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40097
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40098
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40099
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40100
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40101
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40102
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40103
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40104
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40105
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40106
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40107
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40108
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40109
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40110
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40111
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40112
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40113
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40114
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40115
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40116
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40117
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40118
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40119
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40120
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40121
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40122
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40123
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40124
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40125
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40126
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40127
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40128
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40129
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40130
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40131
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40132
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40133
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40134
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40135
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40136
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40137
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40138
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40139
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40140
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40141
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40142
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40143
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40144
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40145
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40146
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40147
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40148
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40149
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40150
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40151
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40152
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40153
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40154
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40155
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40156
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40157
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40158
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40159
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40160
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40161
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40162
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40163
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40164
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40165
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40166
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40167
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40168
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40169
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40170
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40171
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40172
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40173
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40174
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40175
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40176
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40177
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40178
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40179
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40180
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40181
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40182
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40183
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40184
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40185
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40186
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40187
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40188
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40189
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40190
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40191
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40192
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40193
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40194
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40195
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40196
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40197
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40198
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40199
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40200
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40201
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40202
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40203
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40204
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40205
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40206
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40207
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40208
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40209
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40210
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40211
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40212
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40213
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40214
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40215
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40216
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40217
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40218
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40219
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40220
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40221
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40222
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40223
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40224
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40225
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40226
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40227
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40228
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40229
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40230
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40231
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40232
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40233
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40234
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40235
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40236
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40237
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40238
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40239
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40240
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40241
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40242
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40243
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40244
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40245
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40246
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40247
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40248
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40249
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40250
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40251
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40252
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40253
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40254
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40255
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40256
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40257
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40258
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40259
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40260
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40261
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40262
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40263
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40264
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40265
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40266
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40267
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40268
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40269
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40270
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40271
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40272
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40273
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40274
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40275
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40276
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40277
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40278
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40279
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40280
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40281
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40282
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40283
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40284
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40285
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40286
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40287
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40288
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40289
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40290
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40291
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40292
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40293
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40294
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40295
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40296
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40297
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40298
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40299
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40300
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40301
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40302
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40303
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40304
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40305
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40306
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40307
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40308
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40309
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40310
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40311
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40312
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40313
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40314
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40315
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40316
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40317
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40318
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40319
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40320
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40321
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40322
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40323
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40324
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40325
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40326
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40327
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40328
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40329
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40330
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40331
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40332
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40333
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40334
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40335
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40336
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40337
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40338
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40339
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40340
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40341
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40342
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40343
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40344
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40345
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40346
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40347
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40348
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40349
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40350
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40351
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40352
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40353
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40354
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40355
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40356
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40357
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40358
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40359
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40360
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40361
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40362
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40363
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40364
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40365
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40366
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40367
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40368
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40369
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40370
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40371
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40372
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40373
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40374
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40375
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40376
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40377
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40378
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40379
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40380
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40381
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40382
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40383
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40384
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40385
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40386
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40387
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40388
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40389
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40390
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40391
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40392
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40393
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40394
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40395
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40396
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40397
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40398
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40399
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40400
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40401
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40402
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40403
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40404
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40405
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40406
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40407
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40408
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40409
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40410
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40411
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40412
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40413
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40414
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40415
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40416
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40417
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40418
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40419
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40420
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40421
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40422
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40423
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40424
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40425
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40426
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40427
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40428
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40429
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40430
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40431
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40432
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40433
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40434
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40435
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40436
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40437
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40438
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40439
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40440
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40441
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40442
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40443
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40444
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40445
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40446
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40447
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40448
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40449
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40450
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40451
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40452
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40453
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40454
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40455
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40456
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40457
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40458
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40459
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40460
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40461
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40462
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40463
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40464
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40465
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40466
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40467
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40468
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40469
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40470
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40471
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40472
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40473
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40474
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40475
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40476
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40477
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40478
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40479
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40480
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40481
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40482
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40483
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40484
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40485
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40486
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40487
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40488
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40489
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40490
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40491
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40492
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40493
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40494
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40495
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40496
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40497
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40498
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40499
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40500
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40501
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40502
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40503
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40504
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40505
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40506
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40507
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40508
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40509
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40510
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40511
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40512
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40513
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40514
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40515
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40516
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40517
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40518
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40519
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40520
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40521
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40522
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40523
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40524
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40525
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40526
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40527
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40528
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40529
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40530
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40531
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40532
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40533
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40534
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40535
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40536
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40537
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40538
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40539
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40540
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40541
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40542
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40543
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40544
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40545
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40546
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40547
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40548
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40549
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40550
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40551
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40552
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40553
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40554
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40555
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40556
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40557
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 6,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40558
+  },
+  {
+   "arms": [
+    "gf240E",
+    "rw120E",
+    "sp120L",
+    "sp240L"
+   ],
+   "diffs": [],
+   "fork_tick": 14280,
+   "members": 10,
+   "ok": true,
+   "replicates": 2,
+   "scene": "game_v19",
+   "seed": 40559
+  }
+ ],
+ "seconds": 3.0290160179138184
+}

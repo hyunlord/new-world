@@ -1,0 +1,634 @@
+{
+ "after_differs": 39,
+ "all_ok": true,
+ "bad": [],
+ "round": 5,
+ "rows": [
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47183,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47270,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    25,
+    16
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47275,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    186,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47353,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    153,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47374,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47384,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    24,
+    120,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47455,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47516,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47527,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    11,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47549,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    237,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47590,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    120
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47634,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47719,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    32,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47753,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    38,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47759,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    47,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47839,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47978,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    26,
+    240,
+    240,
+    240,
+    44
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 47983,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48011,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48080,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    23,
+    17,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48086,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48139,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    120,
+    240,
+    14,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48153,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    120,
+    240,
+    240,
+    27
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48170,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    120,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48215,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48220,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    120,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48254,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    0,
+    28,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48326,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    10,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48401,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48403,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    33,
+    120,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48450,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    120,
+    66,
+    240,
+    120,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48513,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    70,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48532,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    120
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48534,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    0,
+    21,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48545,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48576,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    222
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48577,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    120,
+    240
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48596,
+   "verify": true
+  },
+  {
+   "after_differs": true,
+   "applied": [
+    240,
+    240,
+    240,
+    240,
+    120
+   ],
+   "casts_ok": true,
+   "diffs": [],
+   "ok": true,
+   "prefix_ok": true,
+   "seed": 48603,
+   "verify": true
+  }
+ ],
+ "seconds": 0.35589170455932617,
+ "worlds": 39
+}

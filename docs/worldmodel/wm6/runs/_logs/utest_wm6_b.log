@@ -1,0 +1,10 @@
+test_ks_statistic_and_p (tools.worldmodel.wm6.test_wm6.TestKS.test_ks_statistic_and_p) ... ok
+test_hidden_rows_and_observable_features_on_a_recorded_member (tools.worldmodel.wm6.test_wm6.TestLeakage.test_hidden_rows_and_observable_features_on_a_recorded_member) ... ok
+test_observable_inputs_are_wm2_lists (tools.worldmodel.wm6.test_wm6.TestLeakage.test_observable_inputs_are_wm2_lists) ... ok
+test_observable_models_read_only_observable_arrays (tools.worldmodel.wm6.test_wm6.TestLeakage.test_observable_models_read_only_observable_arrays) ... ok
+test_nested_sets (tools.worldmodel.wm6.test_wm6.TestNested.test_nested_sets) ... ok
+test_gru_recovers_a_planted_sequence_effect (tools.worldmodel.wm6.test_wm6.TestPlanted.test_gru_recovers_a_planted_sequence_effect) ... ok
+test_mlp_recovers_a_planted_nonlinear_effect (tools.worldmodel.wm6.test_wm6.TestPlanted.test_mlp_recovers_a_planted_nonlinear_effect) ... ok
+test_training_cases_are_replicate_0_and_val_unchanged (tools.worldmodel.wm6.test_wm6.TestReplicateZero.test_training_cases_are_replicate_0_and_val_unchanged) ... ok
+test_merge_concatenates_runs_in_seed_order (tools.worldmodel.wm6.test_wm6.TestTimelineMerge.test_merge_concatenates_runs_in_seed_order) ... ok
+test_ridge_reproduces_wm5 (tools.worldmodel.wm6.test_wm6.TestWM5Reproduction.test_ridge_reproduces_wm5) ... 

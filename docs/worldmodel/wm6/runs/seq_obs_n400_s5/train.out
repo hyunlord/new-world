@@ -1,0 +1,1 @@
+seq_obs n400 s5: stop patience best epoch 32 val 0.4620 6s

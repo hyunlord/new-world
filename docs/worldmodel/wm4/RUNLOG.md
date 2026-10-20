@@ -1,0 +1,49 @@
+# WM-4 — run log
+
+Times are KST (Mac clock). The 40-hour training deadline (GOAL.md 0.3.5) is 2026-10-18 15:13:31 KST plus recorded pauses.
+
+| Part | Start | End | Notes |
+|---|---|---|---|
+| start | 2026-10-16 23:13:31 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX (23:13:59): Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0, `nproc` 20; `nvidia-smi`: only Xorg (125 MiB) and gnome-shell (21 MiB), 0 % util; RAM 119 GiB, 107 GiB available; swap 15 of 15 GiB used (other users' services); disk 3.7 T, 1.3 T free; load average 2.28 / 2.68 / 4.94. No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. Base `1bfb6ae0` = both WM branches on origin; DGX code clone detached at `1bfb6ae0`, clean |
+| 0 | 23:14 | | sha256 on the DGX equal to their recorded values (DECISIONS L0.3); WM-3 checkpoints recorded; seeds 46000–46559 unused (L0.4); `wm4/_setup/deadline_epoch` = 1792304011 |
+| 4 (9.3) | 23:16:15 | | `wm4/_setup/queue.sh` (code `97c6391f`, detached, `_logs/queue`): `wm3_ctrl_s1` started (`--max-seconds 14400`, load average 2.7); step 0 `val_t2` 0.0603 = init 0.0603, `val_eff` 0.5489 (= WM-3 `wm3_full_s1`'s step 0); ≈ 1.7 s/step |
+| 1 (6.2.1) | 23:20:02 | 23:57:05 | factual `--seeds 46000..46560 --days 120 --every 60`, 4 workers (beside the training), nice 10 → `obs/factual/` 560 episodes, all verified (`wm_data.verify_episode`), 2,881 rows; ≈ 2,220 s (load average 4–27 from other users' jobs) |
+| 4 (9.4) | 23:28 | 23:32 | `recal.sh` (code `6149d1ed`): Platt fits of `wm3_full_s{0,1,2}` on 745 train-family `none_r0` W3 cast rows (≈ 80 s each, beside the training; train and val data only): all three kept (val Brier 0.576 / 0.444 / 0.357 → 0.247 / 0.242 / 0.237; DECISIONS L4.2) |
+| 1 (6.2.2) | 23:57:05 | 23:57:56 | terciles from the train factual episodes (q_f1 8.0792, q_f2 12.1, q_w2 3.1119; 21,200 decision rows) → METRICS.md part a committed and pushed `bfa36208` at 23:57:56, before any treated episode |
+| 1 (6.2.3) | 23:58:18 | 23:58:20 | policy on every world (`obs/policy/policy.json`, 459 schedule files): never cast 101 / 560 (18.0 %); casts 183 gift / 186 spoil / 90 rot (39.9 / 40.5 / 19.6 %) |
+| 1 (6.2.4) | 23:58:20 | 01:06:41 | observed episodes (`--schedule-dir obs/schedules/obs --include-factual`, 4 workers, load average 9–30) → `obs/observed/` 1,019 episodes (560 `_none` + 459 `_obs`), 4,099 s; `observed_check`: every `_none` equals `obs/factual` array for array, every `_obs` equals its factual episode on rows ≤ the cast row, one record with the policy's kind / amount / tick; 456 of 459 differ after the cast (the 3 others: `rw120` with 0 wood applied); applied amount below the request in 43 `rw120` and 4 `sp240` casts (the store held less) |
+| 4 (9.3) | 00:29:16 | | `wm3_ctrl_s1` ended (`patience`, kept step 1,000, `val_eff` 0.5456, 4,339 s); `wm3_ctrl_s2` started |
+| 4 | 00:36 | | a 1-minute synthetic speed test of CRN / CT beside the training failed to create a CUDA context (`CUDA_ERROR_OUT_OF_MEMORY` in `cuDevicePrimaryCtxRetain`; free memory 2.3 GiB, 46 GiB in caches, swap full, other users' jobs); dropped, the queue's cost checks replace it (DECISIONS L4.3) |
+| 1 (6.2.5) | 01:06:41 | | family schedules: the first attempt's summary write failed (`fam-schedules` wrote over its own directory; the 160 schedule directories were written); fixed `dd7f51e8`, families restarted 01:09:05 (one recorder call per world, ≈ 14 s each) |
+| 1 (6.2.5) | 01:09:05 | 01:50:08 | 160 families (val + test, one call per world, 4 workers; ≈ 14 s each, load average 6–37) → `obs/families/{val,test}/`; `families_v2.link`; `fam-check` all 160 OK (prefix per member, fork at c_w with R = 1, records, `none_r0` = factual, observed `_obs` = its family member) |
+| 1 (6.2.6) | 01:50 | 01:56 | `post_families.sh` (`446d11e6`): `obs_manifest.json` 1,200 episodes verified (2 s, page cache), `describe` (train + val only); DATASET_OBS.md, manifest and checks committed `7b5a380c` |
+| 4 (9.3) | 01:52:17 | | `wm3_ctrl_s2` ended (`patience`, kept step 1,500, `val_eff` 0.5337, 4,930 s); `wm3_os_s1` started |
+| 2 (dry) | 01:58 | 02:20 | `dryrun.sh` (train / val only, beside the training): `effects4.py m1 --role val` on `wm2_m1bact_v19_s0` 248 s; CRN / CT 120-s trainings and their obs-val (5 s / 63 s) and v2-val (CT, 119 s) effects; a 3-step M1b-obs training — every path exit 0. CT beside a training: ≈ 1.9 s/step and ≈ 40 s per validation (14 starts) → evaluations time-gated and 5 starts per episode (`039e480c`) |
+| 3 | 02:16:31 | 02:16:31 | METRICS.md part b committed and pushed (`956c8a05`); at that time no `effects.json` / `split.json` / `metrics.json` / `calib_test.json` / `obs_base.json` under `wm1-runs/wm4/` outside the code worktrees (`find`: 0; the 616 inside `_code/` are WM-2 / WM-3 committed files); `_setup/prereg_sha` = `956c8a05` |
+| 4.2 | 02:16:50 | | `finals_a` (from `956c8a05`, beside `wm3_os_s1`): `obs_base` (5 s: selection 7 d `zero`, 30 d `zero`), then the six references on the obs test, the three `wm4_haz` evaluations, `wm3_ctrl_s1` / `_s2` finals |
+| 4 | 02:17 | | queue lines appended (from `956c8a05`): cost checks, `m1b_obs_s0`, `crn_obs_s0` (grid), `ct_obs_s0` (grid), `m1b_obs_s1`, `crn_obs_s1`, `ct_obs_s1`, `crn_v2_s{0,1}`, `ct_v2_s{0,1}` |
+| 4.2 | 02:16:50 | 03:56:31 | `finals_a` from `956c8a05` (beside `wm3_os_s1`; load average 10–56): 6 M1 references on the obs test (≈ 4 min each), `wm4_haz_s{0,1,2}` test effects (≈ 10 min each), split timing, test calibration of the recalibrated and original heads, `wm3_ctrl_s1` / `_s2` finals (effects, split, factual T2); every exit 0 |
+| 4 (9.3) | 03:17:17 | | `wm3_os_s1` ended (`patience`, kept the **init** (step 0, `val_eff` 0.5489: no eligible step improved on it), 5,058 s; ≈ 3 s/step beside the finals); `wm3_os_s2` started |
+| 4.2 | 03:58 | 05:38:28 | `finals_b` (`wm3_os_s1`: effects, split, factual; 04:06–04:17), `finals_c` (`wm3_os_s2` after its training: effects 05:38:04, split 05:38:28, factual running) |
+| 4 (9.3) | 05:27:19 | | `wm3_os_s2` ended (`patience`, kept step 2,000, `val_eff` 0.5146, 7,759 s; ≈ 2–3.7 s/step, load average 12–56). The four ablation seeds are trained |
+| 4 (cost) | 05:27:19 | 05:39:19 | `_cost_m1b` (M1b-obs, 100 steps, eval at 100): steps 1–100 in 14 s (rollout horizon k ≤ 12 at step 100), peak GPU 4,775 MiB, the end-of-run val evaluation and rounding choice ≈ 10 min; step-100 val T2 24 h 0.1143 |
+| 4.1 | 05:39:19 | | `m1b_obs_s0` started (`--max-seconds 16200`, 8,000 steps) |
+| 4.1 | 05:39:19 | 08:17:20 | `m1b_obs_s0`: stop `patience` at step 6,450, kept step 4,650 (val T2 24 h 0.0571), 9,449 s (≈ 1.5 s/step at k = 168, load average 5–46) |
+| 4 (cost) | 08:17:20 | 08:23 | `_cost_crn` (300 s, beside the `m1b_obs_s0` finals): encoder ≈ 69 ms/step, decoder ≈ 29 ms/step (validation ≈ 0.05 s), peak GPU 477 MiB |
+| 4.2 | 08:17 | 08:26:53 | `finals_watch`: `m1b_obs_s0` obs test effects (08:20:47) and factual T2 on obs test (08:26:53) |
+| 4.1 | 08:23 | 09:43:21 | `crn_obs_s0` = the CRN grid (4 × ≤ 1,200 s, seed 0): val_roll 0.592 / 0.425 / 0.523 / **0.413** → configuration 3 (encoder BR 64, FC 128, dropout 0.1; decoder BR 64, FC 32) |
+| 4.2 | 09:43:21 | 09:43:59 | `crn_obs_s0` obs test effects |
+| 4 (cost) | 09:43:21 | 09:49 | `_cost_ct` (300 s, GPU otherwise idle, load average 0.8): ≈ 0.83 s/step (batch 128 doubled by the masked-covariate copy, 120 tokens), validation 5.3 s, peak GPU 14,343 MiB. Within 1,200 s a CT run reaches ≈ 1,400 optimizer steps, ≈ 12 % of the authors' 11,850 (DECISIONS L4.4) |
+| 4.1 | 09:49 | | `ct_obs_s0` = the CT grid started |
+| 4.1 | 09:49:21 | 11:10:22 | `ct_obs_s0` = the CT grid (4 × ≈ 1,206 s, ≈ 1,440 steps each): val_roll 1.181 / 0.310 / **0.273** / 0.285 → configuration 2 (lr 1e-3, BR 64, FC 128); its obs test effects followed (finals_watch) |
+| 7 (review 1) | 11:28 | 11:44 | review round 1 (fresh subagent, read-only, HEAD `e59227e4`, interim verdicts): no BLOCKING, 2 MAJOR, 4 MINOR, 7 NOTE; the reply was cut by an API error near its end (the items received are in REVIEW.md); fixes `135f20a0`, `…` (documentation only) |
+| 4.1 | 11:10:22 | 14:18:23 | `m1b_obs_s1`: stop `max_steps` (8,000), kept step 7,800 (val T2 24 h 0.0573) → not converged by WM-3's definition (kept step in the last 10 %); 11,261 s (≈ 0.9–1.6 s/step, load average 1–35) |
+| 4.1 | 14:18:23 | | `crn_obs_s1` started (chosen configuration 3, seed 1, 1,200 s) |
+| 4.1 | 14:18:23 | 15:00:24 | `crn_obs_s1` (1,200 s, val_roll 0.389), `ct_obs_s1` (1,206 s, 0.277); their obs test effects (finals_watch) |
+| 4.1 | 15:00:24 | 17:28:25 | `crn_v2_s0` (2,350 s, all epochs, val_roll 1.561), `ct_v2_s0` (2,419 s, time, 1.484), `crn_v2_s1` (1,517 s, all epochs, 1.542), `ct_v2_s1` (2,416 s, time, 1.490); v2 test effects after each (last 17:29:16). No run was dropped |
+| 4 | 17:30:25 | | `_setup/queue.stop`; queue done (exit 0). DGX GPU training time used: ≈ 18 h of the 40-hour window |
+| 5 | 17:30 | 17:31 | every run fetched; `judge4.py` (judge.md / judge.json) |
+| 6 | 17:31 | 17:32 | WM4.md (drafted from 08:30 on, completed); WM3.md pointer line; DECISIONS L5.1, L6.1 |
+| 7 (review 2) | 17:38 | 17:46 | review round 2 (fresh subagent, read-only, HEAD `96efb337`, every run finished): no BLOCKING, 2 MAJOR, 5 MINOR, 5 NOTE; `judge4.py` re-run reproduced the committed judge exactly; fixes `c3b6025e` (documentation and the judge's runs table; verdicts unchanged) |
+| gate | 17:51:50 | 17:54:15 | `c3b6025e`: Mac 204 OK / 27 skipped; DGX 204 OK / 0 skipped (`wm4/gate_c3b6025e`, 145 s); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `1bfb6ae0..c3b6025e`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6231993032 |
+| 7 | 17:56 | | REPORT.md (Korean, section 13 format); this docs-only commit; the gate re-run on it and the green branch moved to it. No pause in the run (the Mac did not sleep); wall time ≈ 18.8 h of the 40-hour window |

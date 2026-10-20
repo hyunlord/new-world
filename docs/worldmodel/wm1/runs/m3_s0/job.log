@@ -1,0 +1,59 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:  51%|█████▏    | 149/290 [00:00<00:00, 1461.79it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 1662.15it/s]
+step 0/714 loss 0.8031 33s
+step 5/714 loss 0.4216 190s
+step 10/714 loss 0.3275 326s
+step 15/714 loss 0.3333 445s
+step 20/714 loss 0.3494 566s
+step 25/714 loss 0.2972 686s
+step 30/714 loss 0.2544 836s
+step 35/714 loss 0.2910 967s
+step 40/714 loss 0.2754 1092s
+step 45/714 loss 0.2860 1217s
+step 50/714 loss 0.2351 1322s
+step 55/714 loss 0.2712 1442s
+step 60/714 loss 0.2669 1531s
+step 65/714 loss 0.2679 1616s
+step 70/714 loss 0.2516 1704s
+step 75/714 loss 0.2755 1789s
+step 80/714 loss 0.2219 1880s
+step 85/714 loss 0.2375 1966s
+step 90/714 loss 0.2273 2057s
+step 95/714 loss 0.2169 2147s
+step 100/714 loss 0.2586 2234s
+step 105/714 loss 0.2060 2300s
+step 110/714 loss 0.2214 2351s
+step 115/714 loss 0.2200 2406s
+step 120/714 loss 0.2218 2460s
+step 125/714 loss 0.2318 2518s
+step 130/714 loss 0.2404 2580s
+step 135/714 loss 0.2233 2670s
+step 140/714 loss 0.2094 2761s
+step 145/714 loss 0.2134 2851s
+step 150/714 loss 0.2092 2944s
+step 155/714 loss 0.1763 3033s
+step 160/714 loss 0.1871 3125s
+step 165/714 loss 0.2237 3272s
+step 170/714 loss 0.2019 3464s
+step 175/714 loss 0.1779 3756s
+step 180/714 loss 0.2042 4057s
+step 185/714 loss 0.2081 4379s
+step 190/714 loss 0.1810 4701s
+step 195/714 loss 0.2445 4923s
+step 200/714 loss 0.1756 5047s
+step 205/714 loss 0.2020 5231s
+step 210/714 loss 0.1607 5545s
+step 215/714 loss 0.2004 5764s
+step 220/714 loss 0.1834 5905s
+step 225/714 loss 0.2138 6039s
+step 230/714 loss 0.1879 6171s
+step 235/714 loss 0.1962 6289s
+step 240/714 loss 0.2329 6408s
+step 245/714 loss 0.1829 6528s
+step 250/714 loss 0.1967 6645s
+step 255/714 loss 0.1752 6766s
+step 260/714 loss 0.1722 6887s
+step 265/714 loss 0.1676 7011s
+step 270/714 loss 0.1908 7113s
+step 275/714 loss 0.1763 7214s
+done 276/714 steps, stop time

@@ -1,0 +1,13 @@
+{
+ "best_epoch": 44,
+ "best_val_both": 0.33996302588638805,
+ "epochs": 75,
+ "model_sha256": "dc93ed0acfb23feb3ac7ec2f2bbc76019d2b82aeb7da5f7c89c487ded938d0a7",
+ "seconds": 25.922643899917603,
+ "stop": "patience",
+ "val": {
+  "30d": 0.4023305977547437,
+  "7d": 0.27759545401803243,
+  "both": 0.33996302588638805
+ }
+}

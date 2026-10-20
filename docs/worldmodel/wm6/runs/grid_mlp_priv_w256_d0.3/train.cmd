@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm6/effects6.py train --model mlp --feat priv --n 400 --seed 0 --width 256 --dropout 0.3 --prep /home/hyunlord/work/wm1-runs/wm6/_prep --base /home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json --max-seconds 3600 --out /home/hyunlord/work/wm1-runs/wm6/grid_mlp_priv_w256_d0.3

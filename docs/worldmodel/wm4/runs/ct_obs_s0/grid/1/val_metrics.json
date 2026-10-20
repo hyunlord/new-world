@@ -1,0 +1,8 @@
+{
+ "best_epoch": 316,
+ "epochs": 3950,
+ "epochs_run": 481,
+ "seconds": 1207.4509506225586,
+ "stop": "time",
+ "val_roll": 0.3098246955158079
+}

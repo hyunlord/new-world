@@ -1,0 +1,1 @@
+seq_obs n400 s3: stop patience best epoch 27 val 0.4637 6s

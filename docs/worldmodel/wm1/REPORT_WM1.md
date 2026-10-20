@@ -1,0 +1,176 @@
+## 구현 완료 보고
+
+### 구현 의도
+Pass 7이 만든 데이터셋 v0와 WM-Bench v0 위에서 "학습된 월드 모델이 단순 기준선보다 이 세계를 더 잘 아는가"를 처음으로 숫자로 답하기 위해(문제), 벤치 정의를 그대로 재현하는 단일 평가 하네스 위에 정착지 단위 GRU(M1)·인과 트랜스포머(M1b)·에이전트 모델(M2)·텍스트 모델(M3)을 DGX Spark에서 학습·평가했다(해결 방향).
+
+### 구현 내용
+- **Part 0** — `GOAL.md`를 그대로 커밋, DGX 환경(venv + torch 2.14.1+cu130), 데이터셋 해시 검증(에피소드별 한 개씩 60/60 OK, 파일 4,660개, 1,368.3 MiB), `NOTES.md`·`DECISIONS.md`·`RUNLOG.md`.
+- **Part 1** — `tools/worldmodel/wm1/data.py`(정착지 단위 행 특징, 변형별 입력 목록, 학습 통계로만 정규화, 윈도 샘플러), `evaluate.py`(모든 예측기에 공통인 하네스: T1, T2, T2-any, T3, T3b, T4), `agents.py`(T5와 기준선), `repro_bench.py`(W1 재현), `common.py`. 벤치 기준선 재현표 `W1_REPRO.md`.
+- **Part 2** — `m1_gru.py`(입력 사영 → 2층 GRU 256 → 가우시안 평균·로그분산 + 불 로짓, 교사 강요 + k-스텝 롤아웃 손실, 조기 종료, 예측기, `final` 시험 평가). 레시피 r1 → r2 → r3, 변형 4종(sev-blind/on × action-aware/blind), 주 설정 3시드, 동일 시드 재실행.
+- **Part 3** — `m1_tf.py`(4층 d256 4헤드 인과 트랜스포머, KV 캐시로 롤아웃 1스텝 = 토큰 1개). 주 설정 1시드 `m1tf_main_r3_s0`.
+- **Part 4** — `m2_agents.py`(에이전트 특징 + 최근접 8 이웃 평균·최대 + 정착지 행 + 달력 + 행동; MLP와 세트 트랜스포머를 검증으로 선택).
+- **Part 5** — `m3_text.py`(하루 06:00 행 = JSON 한 줄, 다음 날 줄을 생성; Qwen2.5-0.5B-Instruct에 LoRA r16).
+- **Part 6** — `ANALYSIS.md`, `RESULTS.md`(`report.py`가 생성), `METRICS.md`(사전 등록 + 실행표 + 재학습 명령), 반사실 그림 `fig_cf_rain.svg`(`plot_cf.py`), 분석용 직접 일 단위 릿지 `direct_ridge.py`.
+- **Part 7** — 독립 리뷰(`REVIEW.md`), 게이트, 그린 브랜치 이동, 드래프트 PR, 이 보고서.
+
+### 구현 방법
+- **데이터 파이프라인.** `global.npy`의 허용 열(누적 집계는 시간당 차분), `settlements.npy`를 벤치처럼 축약(재고 합, 불 = 최대, 형성 좌표 제외, NaN → 0 + 존재 플래그), 달력(시 원-핫, 계절 원-핫(−1 포함), 계절 내 일), 행동(종류별 요청량, 벤치 인코딩, 격자 최대값으로 나눔). 목표: 연속 특징의 다음 행 변화(학습 변화 표준편차로 정규화) + 다음 `fire_lit`(이진). 개입은 t행의 특징이고 t+1행에 처음 나타난다(단위 테스트).
+- **숨은 필드·누설 방지.** `lifespan_days`와 `latent.npy`는 어떤 변형의 입력도 아니고, `winter_severity`(원-핫)와 `wood_target`은 sev-on 변형에만 들어간다. 변형별 입력 목록 전체를 단위 테스트가 문자열 그대로 확인한다. 정규화 통계는 train 역할에서만(검증 에피소드를 넣으면 예외), 하이퍼파라미터·반올림·조기 종료·주 레시피 선택은 val(A val + B val)로만, 시험 역할·OOD·C_cf test는 사전 등록된 설정마다 `final` 한 번씩만.
+- **하네스와 W1.** 예측기는 `step(history, ctx)` 또는 배치 `rollout(ep, starts, horizon, actions)`를 구현하고 시작 행 이후의 실제 행을 읽지 않는다(테스트). 지표·분모·시작 행·T3 저녁·C_cf 목표는 `bench_v0`에서 가져온다. 지속·일 단위 나이브·릿지·행동 릿지를 예측기로 감싸 T1/T2, 규칙·로지스틱을 T3, 0 효과·val 평균 효과를 T4로 돌려 `bench_v0.json`과 비교: 최대 차이 3.5e-10(허용 1e-3).
+- **M1 학습.** AdamW(lr 3e-4, wd 1e-4), 배치 64. r1 = GOAL 그대로(윈도 168, k 1→24). r2 = 윈도 336, k 1→168을 168행 문맥 뒤에서 시작, 평균의 L1 추가, 음수 불가 특징 0에서 자름, 4,000 스텝. r3(주) = r2 + V 8개 변수 가중 5배. 조기 종료는 val T2-24(벤치 시작) patience 5, 한 실행 최대 2시간. 예측은 평균(결정적), 불은 0.5 임계, 정수 변수 반올림은 val로 선택.
+- **M1b.** 같은 입력·헤드·r3 레시피(메모리 때문에 배치 32, 롤아웃 시작 1개, 3,000 스텝), 위치 인코딩 없이 달력 원-핫 사영(= 학습되는 시·계절 임베딩), 168행으로 잘리는 KV 캐시.
+- **M2.** A_obs 에이전트 에피소드 0–31로 학습, 96–99로 구조 선택(세트 트랜스포머 1.109 < MLP 1.222), 112–119와 B 1056–1063 시험. 헤드: 상태 태그, 목표 종류, dx·dy(−3…+3 클래스), 욕구 변화.
+- **M3.** A train 일 쌍 11,424개, LoRA r16(q/k/v/o), lr 2e-4, 배치 16, CPU, 2시간 상한에 276/714 스텝(에폭의 39 %).
+- **반사실 롤아웃.** C_cf test 시드마다 사실 에피소드의 개입 틱 행에서(그 행까지는 변형과 사실이 같음을 하네스가 확인) 개입 있음/없음 두 갈래를 같은 상태로부터 day 29 07:00까지 굴리고, 개입 틱까지의 사실 행 + 그 뒤 예측 행에 `bench_v0.c_cf_targets`를 적용해 효과 = 있음 − 없음. 변형·목표마다 MAE, 부호 정확도, 정규화 MAE(= MAE / 시험 시드의 평균 |실제 효과|).
+
+### 기능 설명
+- 같은 정의로 기준선과 모델을 비교하는 하네스가 생겼다. 새 예측기는 `rollout`만 구현하면 T1·T2·T2-any·T3·T3b·T4가 한 번에 나온다.
+- **인과 트랜스포머 M1b가 한 시간·하루·일주일 모두에서 모든 기준선을 이긴다**(1시드): T1 0.068(릿지 0.100), T2 24h 0.076(0.138), T2 168h 0.122 / 0.124 / 0.120(혹독함을 입력에서 뺀 릿지 0.223 / 0.227 / 0.241). WM-2의 "멀리 있는 정착지의 대리 모델(aggregate surrogate)"로 쓸 만한 수준이다. 주 설정인 GRU(M1)는 벤치 원래 기준선(0.541)보다는 낫지만(0.275), 기준선을 바로잡으면(Pass 8 지적: 벤치 릿지가 시작 행의 혹독함을 롤아웃 내내 고정) 168h에서도 진다.
+- 어떤 모델도 **신의 개입에 대한 반사실(예: "오늘 밤 비를 내리면?")에는 답하지 못한다**(T4 ≈ 0 효과 기준선). 게임 안 예견(foresight)까지는 아직 멀다. 데이터에 개입이 너무 드물다(학습 행의 0.09 %).
+- M2는 에이전트 다음 시간 상태를 지속보다 크게 잘 맞춘다(상태 태그 0.902 vs 0.723). M3는 하루 단위 전이를 거의 표처럼 외운다(24h 0.056).
+
+### 변경된 파일 목록
+커밋별 목록은 아래 "커밋" 표(최종 메시지와 같음). 모든 변경은 `tools/worldmodel/wm1/**`와 `docs/worldmodel/wm1/**` 안에 있다(`git diff --name-only ce7acb25..HEAD`가 이 두 경로만 나열).
+
+아래 표는 게이트를 돌린 헤드 `9f0ac8bf`까지의 커밋이다. 이 보고서를 넣는 마지막 커밋은 최종 메시지에 적는다.
+
+| # | Commit | Part | Subject | Files |
+|---:|---|---|---|---|
+| 1 | `9b55abeb` | 0 | add the WM-1 goal document unchanged | docs/GOAL.md  |
+| 2 | `251f2b12` | 0 | notes, decisions and run log; DGX environment and dataset verified | docs/DECISIONS.md docs/NOTES.md docs/RUNLOG.md  |
+| 3 | `832eaa2c` | 1 | data pipeline, evaluation harness and the W1 reproduction script | wm1/__init__.py wm1/common.py wm1/data.py wm1/evaluate.py wm1/repro_bench.py wm1/test_data.py wm1/test_evaluate.py  |
+| 4 | `3cd4cf25` | 2 | M1 GRU model, training loop and predictor; T5 agent harness and baselines | wm1/agents.py wm1/data.py wm1/m1_gru.py wm1/test_m1.py  |
+| 5 | `5d736cea` | 2 | scalar loss parts via item() | wm1/m1_gru.py  |
+| 6 | `ebeb37b0` | 1 | list the test-evaluated configurations before any test number; Part 1 decisions | docs/DECISIONS.md docs/METRICS.md  |
+| 7 | `f1ddf082` | 4 | M2 agent model (MLP or set transformer) with T5 tests | wm1/m2_agents.py wm1/test_m2.py  |
+| 8 | `6e9c4d34` | 3 | M1b causal transformer with a key/value cache; shared M1 training loop | wm1/m1_gru.py wm1/m1_tf.py wm1/test_m1.py  |
+| 9 | `899824df` | 1 | W1 passes — bench baselines reproduced through the harness to 3.5e-10; new-task baselines | docs/RUNLOG.md docs/runs/w1_repro_832eaa2c/… docs/W1_REPRO.md wm1/common.py  |
+| 10 | `f985cbd5` | 5 | M3 text world model (LoRA on Qwen2.5-0.5B-Instruct) and the results report builder | wm1/m3_text.py wm1/report.py wm1/test_m3.py  |
+| 11 | `2647dc31` | 2 | recipe r2 (168-step rollout curriculum from full context, L1 on the mean, non-negative clamp); list r2 configurations | docs/DECISIONS.md docs/METRICS.md wm1/m1_gru.py wm1/m1_tf.py wm1/test_m1.py  |
+| 12 | `e078f620` | 6 | counterfactual trajectory dump and SVG renderer for ANALYSIS.md | wm1/plot_cf.py  |
+| 13 | `1a23e851` | 2 | r2 step budget (5000 steps, eval every 250) so runs end before the time cap | docs/DECISIONS.md docs/RUNLOG.md wm1/m1_gru.py  |
+| 14 | `9ab05dd0` | 2 | M1 recipe r1 main seed 0 — config, training log, val and test metrics | docs/runs/m1gru_main_s0_final/… docs/runs/m1gru_main_s0/…  |
+| 15 | `28b4a7a1` | 2 | r2 budget 4000 steps / eval every 200 to stay inside the 2-hour cap | docs/DECISIONS.md wm1/m1_gru.py  |
+| 16 | `0a54e03b` | 4 | M2 trained in both architectures; the set transformer is chosen on val; C_cf true effects | docs/DECISIONS.md docs/METRICS.md docs/runs/cf_truth/… docs/runs/m2_mlp_s0/… docs/runs/m2_set_s0/…  |
+| 17 | `f8cb3b11` | 4 | M2 test metrics (T5 A/B test, aggregate adults_working) | docs/runs/m2_set_s0_final/… docs/runs/m2_set_s0/…  |
+| 18 | `db72b271` | 2 | M1 recipe r1 sev-on seed 0 — config, logs, val and test metrics | docs/runs/m1gru_sevon_aa_s0_final/… docs/runs/m1gru_sevon_aa_s0/…  |
+| 19 | `2d97b706` | 2 | recipe r3 (V-weighted losses); r2 validation results; list r3 configurations | docs/DECISIONS.md docs/METRICS.md docs/runs/m1gru_main_r2_s0_rerun/… docs/runs/m1gru_main_r2_s0/… docs/runs/m1gru_sevon_ab_r2_s0/… wm1/m1_gru.py wm1/test_m1.py  |
+| 20 | `2d61b589` | 2 | r2 main seed 0 test metrics; r2 seed 1 and sev-on validation | docs/runs/m1gru_main_r2_s0_final/… docs/runs/m1gru_main_r2_s0/… docs/runs/m1gru_main_r2_s1/… docs/runs/m1gru_sevon_aa_r2_s0/…  |
+| 21 | `937862c1` | 2 | r2 same-seed rerun reproduces all 3,765 test numbers exactly; r2 sev-on action-blind test | docs/runs/m1gru_main_r2_s0_rerun_final/… docs/runs/m1gru_main_r2_s0_rerun/… docs/runs/m1gru_sevon_ab_r2_s0_final/… docs/runs/m1gru_sevon_ab_r2_s0/…  |
+| 22 | `a826fa3e` | 2 | run log through the r3 launch | docs/RUNLOG.md  |
+| 23 | `f3331a75` | 3 | drop M1b (transformer) — CPU-only step cost makes the 2-hour cap meaningless | docs/DECISIONS.md  |
+| 24 | `d451103c` | 2 | r2 seed 1 and sev-on test metrics | docs/runs/m1gru_main_r2_s1_final/… docs/runs/m1gru_main_r2_s1/… docs/runs/m1gru_sevon_aa_r2_s0_final/… docs/runs/m1gru_sevon_aa_r2_s0/…  |
+| 25 | `b3b51b18` | 5 | M3 eval — serialize numpy day numbers as int | wm1/m3_text.py wm1/test_m3.py  |
+| 26 | `118e7309` | 5 | M3 decisions (base model, budget, eval rerun after the crash) | docs/DECISIONS.md  |
+| 27 | `77884d3b` | 2 | r2 seed 2 and sev-blind action-blind test metrics | docs/runs/m1gru_blind_ab_r2_s0_final/… docs/runs/m1gru_blind_ab_r2_s0/… docs/runs/m1gru_main_r2_s2_final/… docs/runs/m1gru_main_r2_s2/…  |
+| 28 | `0608fb84` | 2 | r3 validation for all runs, r3 seed 2 / sev-on test metrics, counterfactual figure, report tables for T5 and M3 | docs/fig_cf_rain.svg docs/runs/fig/… docs/runs/m1gru_main_r3_s0_rerun/… docs/runs/m1gru_main_r3_s0/… docs/runs/m1gru_main_r3_s1/… docs/runs/m1gru_main_r3_s2_final/… docs/runs/m1gru_main_r3_s2/… docs/runs/m1gru_sevon_aa_r3_s0_final/…  |
+| 29 | `4666e687` | 3 | the GPU was in use (correct D0.3); reinstate M1b on the GPU with a memory-fitting r3 recipe | docs/DECISIONS.md docs/METRICS.md  |
+| 30 | `a0270f0c` | 3 | V-weighted losses in M1b (recipe r3) | wm1/m1_tf.py wm1/test_m1.py  |
+| 31 | `492bd979` | 6 | ANALYSIS, RESULTS and the METRICS run table; M3 and r3 action-blind test metrics; direct daily ridge reference | docs/ANALYSIS.md docs/METRICS.md docs/RESULTS.md docs/runs/analysis/… docs/runs/m1gru_blind_ab_r3_s0_final/… docs/runs/m1gru_blind_ab_r3_s0/… docs/runs/m3_s0_final/… docs/runs/m3_s0/…  |
+| 32 | `c4c2501d` | 6 | action-blind comparison with r3 test numbers | docs/ANALYSIS.md  |
+| 33 | `37583731` | 6 | correct the action-blind fire explanation (T3 is on A test) | docs/ANALYSIS.md  |
+| 34 | `7e2a578d` | 2 | r3 main seeds 0 and 1 and the rerun — test metrics files | docs/RUNLOG.md docs/runs/m1gru_main_r3_s0_final/… docs/runs/m1gru_main_r3_s0_rerun_final/… docs/runs/m1gru_main_r3_s0_rerun/… docs/runs/m1gru_main_r3_s0/… docs/runs/m1gru_main_r3_s1_final/… docs/runs/m1gru_main_r3_s1/…  |
+| 35 | `9fc52162` | 7 | independent review round 1 (W8 confirmed) and its fixes | docs/ANALYSIS.md docs/DECISIONS.md docs/METRICS.md docs/RESULTS.md docs/REVIEW.md docs/runs/gate_7e2a578d/… wm1/m1_gru.py wm1/m2_agents.py  |
+| 36 | `9e0f7b3b` | 1 | severity-free and true-severity (reference) ridge baselines in the harness | wm1/evaluate.py wm1/ridge_variants.py wm1/test_evaluate.py  |
+| 37 | `15b80a18` | 7 | severity-free / true-severity ridge results, W2 against the best of all baselines, ANALYSIS rewritten; fix the m1_tf kind lookup in final | docs/ANALYSIS.md docs/DECISIONS.md docs/RESULTS.md docs/runs/ridge_variants_9e0f7b3b/… wm1/m1_gru.py wm1/report.py  |
+| 38 | `ac55dd69` | 3 | M1b test metrics; ANALYSIS, RESULTS and METRICS with M1b and the corrected baselines | docs/ANALYSIS.md docs/DECISIONS.md docs/METRICS.md docs/RESULTS.md docs/RUNLOG.md docs/runs/m1tf_main_r3_s0_final/… docs/runs/m1tf_main_r3_s0/… wm1/report.py  |
+| 39 | `9f0ac8bf` | 7 | independent review round 2 (no blocking findings, W8 confirmed) and its fixes; report draft | docs/ANALYSIS.md docs/DECISIONS.md docs/METRICS.md docs/REPORT_WM1.md docs/RESULTS.md docs/REVIEW.md wm1/report.py wm1/test_evaluate.py  |
+
+### 측정 결과
+| # | 목표 | 기준선 | 모델 | 결과 |
+|---|---|---|---|---|
+| W1 | 하네스 재현: 벤치 기준선 T1–T4 전 분할 1e-3 이내 | `bench_v0.json` | 최대 차이 3.5e-10 (58행) | **PASS** |
+| W2 | M1 main(sev-blind, action-aware)이 T2 168h에서 A test·B test·OOD_long 모두 최고 기준선보다 10 % 이상 낮고, T1은 5 % 이내 | 모든 기준선 최고(혹독함 없는 릿지) 0.223 / 0.227 / 0.241 → 목표 ≤ 0.2007 / 0.2039 / 0.2170. 원래 벤치 최고 0.541 / 0.549 / 0.528 → ≤ 0.4867 / 0.4938 / 0.4756. T1 0.100 / 0.102 / 0.100 / 0.099 | 168h 0.275 [0.243, 0.327] / 0.272 [0.241, 0.327] / 0.277 [0.248, 0.329]; T1 0.123 / 0.127 / 0.126 / 0.126 | **FAIL**(보정 기준선 대비 168h 실패, T1 실패). 원래 벤치 기준선만 쓰면 168h 조항은 통과 |
+| W2b | (보충) 같은 검사를 M1b(트랜스포머, 1시드)에 적용 | 위와 같음 | 168h 0.122 / 0.124 / 0.120; T1 0.068 / 0.068 / 0.070 / 0.068 | 통과에 해당(1시드, W2 자체는 M1 기준) |
+| W3 | T4: 어두운 밤·추운 인원·시간 각각 변형 4개 중 3개 이상에서 정규화 MAE가 최고 기준선보다 낮고 부호 정확도 ≥ 0.75 | 어두운 밤 0.79 / 0.79 / 1.00 / 1.00, 추운 인원·시간 0.72 / 0.69 / 1.00 / 0.89(gift / rot / rain / cold snap) | 어두운 밤 0/4(부호 0.48), 추운 인원·시간 1/4(부호 0.37). M1b도 어두운 밤 0/4 | **FAIL** |
+| W4 | T3b(A test): M1 main MAE < 릿지; 오라클과의 차이 보고 | 릿지 0.130, 혹독함 오라클 0.134 | 0.568 [0.438, 0.766](오라클 대비 +0.434). 참고: M1b 0.203 | **FAIL** |
+| W5 | 혹독함 제거 실험: T2 겨울 행, T3b, T4, 주 설정 3시드 범위 | — | T3b blind 0.568 [0.438, 0.766] vs on 0.203; 겨울 목표 168h 0.321 [0.273, 0.417] vs 0.544; 겨울 목표 24h 0.172 [0.171, 0.174] vs 0.187; T4 어두운 밤 1.06 [1.00, 1.16] vs 1.03 | **보고함** |
+| W6 | M2: T5 A test 상태 태그 정확도 ≥ 지속 + 5점, 위치 오차 < 지속 | 지속 0.723, 체비셰프 2.543 | 0.902, 2.038 | **PASS** |
+| W7 | M1 main 동일 시드 재실행이 시험 수치를 1e-6까지 재현 | — | r3 seed 0: 3,765개 최대 차이 0(r2도 0) | **PASS** |
+| W8 | 독립 리뷰어의 누설 감사(4.2) | — | general-purpose 서브에이전트 2회 검토 | **CONFIRMED** |
+
+**과제·분할별 주요 수치(시험, nMAE; M1은 주 설정 3시드 평균).** "최고 기준선"은 원래 벤치 기준선과 새로 추가한 혹독함 없는 릿지·실제 혹독함 릿지(오라클 참고)를 모두 포함한 최솟값이다. 괄호 안은 원래 벤치만의 최고값.
+
+| 과제 | 분할 | 최고 기준선 | M1 main (GRU, r3) | M1b (트랜스포머, r3, 1시드) |
+|---|---|---:|---:|---:|
+| T1 | A / B / OOD_v12 / OOD_long | 0.100 / 0.102 / 0.100 / 0.099 | 0.123 / 0.127 / 0.126 / 0.126 | **0.068 / 0.068 / 0.070 / 0.068** |
+| T2 24h (06:00) | A / B / OOD_v12 / OOD_long | 0.138 / 0.137 / 0.132 / 0.135 | 0.131 / 0.135 / 0.128 / 0.131 | **0.076 / 0.086 / 0.080 / 0.077** |
+| T2 168h (06:00) | A / B / OOD_v12 / OOD_long | 0.223 / 0.227 / 0.220 / 0.241 (원래 0.541 / 0.549 / 0.419 / 0.528) | 0.275 / 0.272 / 0.269 / 0.277 | **0.122 / 0.124 / 0.116 / 0.120** |
+| T2-any 24h | A / B / OOD_v12 / OOD_long | 0.185 / 0.189 / 0.176 / 0.184 | 0.188 / 0.196 / 0.194 / 0.186 | **0.129 / 0.136 / 0.130 / 0.127** |
+| T2-any 168h | A / B / OOD_v12 / OOD_long | 0.238 / 0.244 / 0.227 / 0.246 (원래 0.596 / 0.609 / 0.459 / 0.580) | 0.340 / 0.348 / 0.343 / 0.332 | **0.171 / 0.176 / 0.163 / 0.164** |
+| T3 (Brier / AUC) | A | 0.0015 / 1.000 | 0.009–0.021 / 1.000 | 0.0055 / 1.000 |
+| T3b (MAE) | A | 릿지 0.130, 오라클 0.134 | 0.568 [0.438, 0.766] | 0.203 |
+| T4 정규화 MAE(어두운 밤) | C_cf test, 변형 4개 | 0.79 / 0.79 / 1.00 / 1.00 | 1.00 / 1.00 / 1.12 / 1.12 | 0.89 / 1.11 / 1.00 / 1.00 |
+
+- **기준선 보정(계획자 요청, D7.2).** 벤치의 168h 릿지는 시작 행의 혹독함을 롤아웃 내내 고정해, 계절 경계를 넘으면 겨울 행에 "겨울 아님"을 넣었다. 같은 릿지 레시피에서 혹독함 입력만 빼면 168h가 0.541 → 0.223(A)으로 바뀐다. 실제 혹독함을 각 행에 넣는 릿지(미래 정보를 쓰는 오라클 참고)는 0.233이다. W2는 이 모든 기준선 중 최고값으로 판정했고, 원래 판정은 옆에 남겼다.
+- **변수별(A test).** GRU seed 0의 168h(혹독함 없는 릿지 대비): 식량 0.166(0.233), 덤불 식량 0.346(0.482), 불 0.000(0.050), 추운 인원 0.000(0.258), 일하는 성인 0.039(0.228)에서 이기고, 나무 재고 0.590(0.235), 장작더미 0.407(0.119), 생존 인원 0.482(0.179)에서 크게 진다. T1의 격차는 거의 전부 `adults_working` 0.577(릿지 0.396)과 덤불 식량 0.258(0.177)에서 나온다. M1b는 바로 이 두 변수를 고친다(0.310, 0.129). 168h에서도 나무 0.126, 장작더미 0.125, 생존 0.163이다.
+- **계절별(T2-any 168h, 봄/여름/가을/겨울).** GRU 0.211 / 0.364 / 0.408 / 0.274, 혹독함 없는 릿지 0.203 / 0.225 / 0.247 / 0.278, M1b 0.138 / 0.172 / 0.158 / 0.216. 벤치 릿지(0.964 / 0.228 / 0.249 / 0.942) 대비 GRU의 "봄·겨울 승리"는 벤치 릿지의 혹독함 처리 문제 때문이었다.
+- **sev-on vs sev-blind(W5).** T3b: blind 0.568 [0.438, 0.766] vs sev-on 0.203(r1 sev-on 0.047). 168h 겨울 목표 행: blind 0.321 [0.273, 0.417] vs sev-on 0.544, 168h 전체: 0.275 vs 0.398. 벤치 규칙대로 혹독함을 시작 행 값으로 고정하면 가을에 시작한 롤아웃이 겨울 안으로 "겨울 아님(−1)"을 들고 들어가, 라벨이 있는 모델이 오히려 진다. T4 어두운 밤 정규화 MAE(변형 평균): blind 1.06 [1.00, 1.16] vs sev-on 1.03. 라벨 없이도 트랜스포머 M1b는 T3b 0.203으로 sev-on GRU와 같아서, 구조가 라벨보다 중요했다.
+- **행동 인지 vs 무시.** r3 action-blind 시험 T2-168 0.283(A), B test T1 0.131 / T2-24 0.142 / T2-168 0.281은 action-aware 세 시드 범위(0.125–0.131 / 0.129–0.146 / 0.241–0.327) 안. T4에서 action-aware는 추운 인원·시간에서 0 효과와 0.01 이내, 어두운 밤·식량에서 0.0–0.38 위라 action-blind(정의상 0 효과)보다 낫지 않다.
+- **M2(T5, A test).** 상태 태그 0.902(지속 0.723, 24h 전 0.750), 목표 종류 0.885(0.700), 위치 체비셰프 2.04칸(2.54), 욕구 nMAE 0.12(0.44). B test 0.899 / 2.02.
+- **M3(A test 06:00 시작, 24h).** JSON 파싱률 1.00, nMAE 0.056(일 단위 나이브 0.139, 같은 입력의 직접 릿지 0.155, M1 24스텝 0.125).
+- **재현성(W7).** r2·r3 주 설정 seed 0의 동일 시드 재실행이 시험 수치 3,765개(T4 예측 효과 포함)를 각각 모두 정확히 재현(최대 차이 0, cuda).
+
+### 환경
+- **DGX.** GB10(Grace-Blackwell, aarch64, 통합 메모리 128 GB), 드라이버 580.126.09, CUDA 13.0. 파이썬 3.12.3, venv `/home/hyunlord/work/wm1-venv`: torch 2.14.1+cu130, numpy 2.5.2(M3만 transformers·peft·accelerate·safetensors).
+- **CPU / GPU.** 17:57에 CUDA 컨텍스트 생성이 OOM으로 실패해 CPU로 기록했으나 일시적이었다. 18:11부터 M1 GRU의 모든 학습·평가와 M1b는 **cuda**에서 돌았다(각 `config.json`에 기록, DECISIONS D0.3a). M2와 M3는 CPU(Grace)에서 돌았다.
+- **GPU 공유.** 다른 사용자 프로세스가 GPU를 180 MiB 점유하고 있었다. GRU 한 작업의 메모리는 수 GB이고 M1b는 19 GB로 32 GB 아래로 맞췄다. 다른 사용자의 CPU 부하가 높아(load 10–40, 20코어) 작업당 속도가 크게 변했다.
+- **학습 시간.** GRU r1 32분(12,000 스텝), r2/r3 58분–2시간(4,000 스텝, 2시간 상한 안), M2 MLP 6분 / 세트 25분, M3 2시간(상한), M1b 55분(3,000 스텝, GPU). 시험 평가 한 번에 4–30분(부하에 따라).
+
+### 독립 리뷰
+두 번 검토했다(GOAL 14.1, 매번 새 컨텍스트의 built-in `general-purpose` 서브에이전트, 읽기 전용; 전문과 처리 결과는 `REVIEW.md`).
+- **1차(22:28–22:37, `ce7acb25..7e2a578d`).** 누설 없음 → **W8 CONFIRMED**. W 판정은 모두 지표 파일과 일치했다. 지적 15건(차단 0, 경미 8, 참고 7)을 처리했다. ANALYSIS 문장 오류 4건(행동 무시 모델이 관측하는 것, T4 비교, 비 예시의 시각 23:00, r2 T3b), W7 비교에 T4 효과 포함·누락 키 검사, `final`에 argv·forced 기록, 사후 참고 기준선(직접 릿지) 등록, report.py 버그 2건, W1 출처 설명.
+- **2차(`7e2a578d..ac55dd69`: 1차 수정, 새 릿지 기준선, W2 논리, M1b).** 차단 지적 없음, **W8 CONFIRMED**, RESULTS.md는 바이트 단위로 같게 재생성되었다. 처리한 것: W2·W2b를 오라클이 아닌 최고 기준선으로 판정하고 오라클은 참고로만 표시(판정 변화 없음), "true" 모드 테스트 강화, seed 0 표기와 과장 표현 수정, 시각 정정, DECISIONS의 Part 배치 수정. 2회가 상한이라 3차는 하지 않았다.
+
+### 자율 결정 목록
+DECISIONS.md 요약:
+- D0.3/0.3a: torch cu130 venv. CUDA OOM은 일시적이어서 M1은 GPU, M2·M3는 CPU에서 학습.
+- D1.1–1.9: 배치 예측기 인터페이스, 행동 스케일(격자 최대값), 불 = 0.5 임계, T2-any·T3b·T4 프로토콜 세부, T5 채점 행(t−23, t, t+1 모두 생존).
+- D2.2: r1 → r2. r1은 168h에서 발산(val 0.84). 롤아웃 커리큘럼을 168로, 평균 L1, 음수 클램프.
+- D2.3–2.4: r2 스텝 예산(4,000, 평가 200마다). 2시간 상한이 부하에 따라 멈춤 지점을 바꾸지 않게 해서 W7 결정성을 지켰다(r2 결과가 나오기 전에 정함).
+- D2.5: r2 → r3(V 가중 5). r2는 T1·T2-24에서 졌다. 세 번째 스트라이크 이후 최선(r3) 유지.
+- D3.1 → D3.2 / D3.3: M1b를 CPU 시간 측정으로 한때 제외했다가, GPU 사용이 확인되어 메모리에 맞춘 r3(배치 32, 롤아웃 시작 1개)로 복귀. V 가중이 빠진 첫 실행은 멈췄고, `final`의 종류 조회 오류를 고친 뒤 한 번 평가했다.
+- D4.1–4.2: M2 구조는 val로 세트 트랜스포머 선택, "일하는 성인" 정의의 한계.
+- D5.1–5.2: M3 기반 모델(Qwen2.5-0.5B-Instruct, DGX 캐시), 2시간 상한(에폭의 39 %), 평가 첫 샘플에서의 int64 직렬화 오류 수정 후 같은 어댑터로 단 한 번 평가.
+- D7.1: 1차 독립 리뷰 지적 15건을 처리했다(ANALYSIS 문장, W7 비교 방식, `final` 출처 기록, 사후 참고 기준선 등록).
+- D7.2(계획자 요청): 혹독함 없는 릿지와 실제 혹독함 릿지(오라클 참고)를 하네스에 추가했고, W2를 모든 기준선 중 최고값으로 판정(원래 판정 병기).
+- 주 레시피는 val T2-168(seed 0)로 고름(r3 0.268 < r2 0.487 < r1 0.833). 정수 반올림 여부도 val로 고름.
+
+### 실행 기록
+| Part | 시작 | 종료 | 소요 | 내용 |
+|---|---|---|---|---|
+| 0 | 17:54 | 17:59 | 5분 | GOAL 커밋, DGX venv, 데이터 검증 |
+| 1 | 18:00 | 18:31 | 31분(+ 23:00–23:10 기준선 추가) | 데이터·하네스·W1(1,226초) |
+| 2 | 18:13 | 22:12 | 약 4시간 | r1(18:13–18:45), r2(19:05–21:40 시험 포함, 그 전 두 번의 시작은 시간 상한 문제로 중단), r3(20:06–22:07), 시험 평가 |
+| 3 | 22:16 | 23:18 | 62분 | M1b 학습 55분 + 시험 6분(18:2x 코드, CPU 측정 후 한때 제외, GPU 확인 후 복귀) |
+| 4 | 18:28 | 19:20 | 52분 | M2 MLP·세트 트랜스포머, 시험 |
+| 5 | 19:12 | 22:18 | 3시간 6분 | M3 학습 2시간(상한) + 평가(직렬화 오류 후 재실행) |
+| 6 | 22:05 | 23:25 | 약 1시간 20분 | ANALYSIS·RESULTS·METRICS, 그림, 직접 릿지 |
+| 7 | 22:28 | 23:33 | 약 1시간 20분 | 리뷰 1차(22:28–22:37), 기준선 보정(23:00–23:10), 리뷰 2차, 게이트, PR, 보고서 |
+
+- 멈춘 구간 없음(작업은 계속 진행). 다른 사용자 부하로 CPU가 과부하일 때 r2 첫 시작 두 번과 M3 첫 시작 두 번을 멈추고 다시 시작했다(DECISIONS D2.3–D2.4).
+- 컨텍스트 압축은 일어나지 않았다. GOAL.md는 시작할 때 전부 읽었고 이후 Part마다 해당 절(8, 9, 10, 11, 12, 14, 16)을 다시 확인했다.
+- 작업 시간: 17:54 시작, 23:33 종료(약 5.7시간). 12시간 한도(05:54)를 넘기지 않았다.
+- DGX 작업 목록(`/home/hyunlord/work/wm1-runs/`): `w1_repro_832eaa2c`, `m1gru_main_s0`, `m1gru_sevon_aa_s0`, `m1gru_main_r2_s{0,1,2}`, `m1gru_main_r2_s0_rerun`, `m1gru_sevon_aa_r2_s0`, `m1gru_blind_ab_r2_s0`, `m1gru_sevon_ab_r2_s0`, `m1gru_main_r3_s{0,1,2}`, `m1gru_main_r3_s0_rerun`, `m1gru_sevon_aa_r3_s0`, `m1gru_blind_ab_r3_s0`, `m1gru_sevon_ab_r3_s0`, `m1tf_main_r3_s0`, `m2_mlp_s0`, `m2_set_s0`, `m3_s0`, `ridge_variants_9e0f7b3b`, 각 `*_final`(시험 평가), `gate_*`, 중단된 시작들은 `_aborted/`(평가 안 함).
+
+### 확인된 제한사항
+- W2(T1 조항), W3, W4 실패. 레시피 세 번(스트라이크 3)을 쓴 뒤 최선을 유지했다.
+- 행동 효과 미학습: 개입은 B_act 행의 0.28 %, 전체 학습 행의 0.09 %이다. T4는 사실상 0 효과다.
+- 조기 종료(val T2-24)가 어디서 멈추느냐에 따라 168h 성능의 시드 편차가 크다(r3 0.24–0.33).
+- sev-on 비교는 벤치의 "혹독함 고정" 규칙의 영향을 받는다(계절 경계를 넘는 롤아웃에서 sev-on이 불리).
+- M3는 에폭의 39 %만 학습했고, 24h 하루 단위 한 지평만 평가했다(행동·이력 없음).
+- M1b는 메모리 때문에 배치 32, 롤아웃 시작 1개로 줄였고 1시드뿐이라 시드 편차를 모른다.
+- 데이터: 정착지 1개, 에이전트 약 40명, 겨울이 라벨 하나로 결정됨, 개입이 사망을 바꾸지 않음.
+
+### 게이트 결과
+WIP 헤드 `9f0ac8bf`에서 실행했다(GOAL 4.4).
+- **맥:** `python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'`의 결과는 **47개 실행, OK, 3개 건너뜀**이다. WM-1 테스트 28개가 모두 포함되어 `wm1/__init__.py` 덕분에 탐색이 `wm1/`로 들어간다. 건너뛴 3개는 Pass 7의 기록기 내보내기 테스트로, Rust 릴리스 바이너리가 필요하다(맥에서는 무거운 빌드를 하지 않는다). 맥의 python에도 torch가 있어 WM-1의 torch 테스트는 작은 배열로 실행되었다.
+- **DGX:** 학습 venv(torch 2.14.1+cu130)에서 같은 탐색을 하되, `WM_BIN`은 별도 클론에서 빌드한 기록기를 가리켰다. 결과는 **47개 실행, OK, 건너뜀 0개**다(`runs/gate_9f0ac8bf/job.log`).
+- **허용 경로:** `git diff --name-only ce7acb25..HEAD`의 241개 파일이 모두 `tools/worldmodel/wm1/**` 또는 `docs/worldmodel/wm1/**` 아래에 있고, 그 밖의 변경은 없다. `.claude/settings.json`은 건드리지 않았다(`S` 플래그 유지).
+- 게이트가 녹색이어서 `codex/worldmodel-2026-10`를 이 보고서 커밋까지 fast-forward했다(최종 메시지의 ls-remote 참조).
+
+### 정직한 판단
+**트랜스포머 M1b는 이 세계의 동역학을 기준선보다 확실히 잘 안다. 주 설정 GRU는 그렇지 못하다. 그리고 어떤 모델도 이 세계의 인과(개입의 효과)는 모른다.**
+M1b는 다음 한 시간(0.068 vs 릿지 0.100), 하루(0.076 vs 0.138), 일주일(0.122 vs 혹독함 없는 릿지 0.223) 모두에서 보정된 기준선까지 크게 이긴다. 다른 규칙(OOD_v12 0.116)과 긴 에피소드(OOD_long 0.120)에서도 유지된다. 혹독함 라벨 없이 관측한 땔감 소모로 겨울을 상당 부분 추론한다(T3b 0.203). 이 차이는 어텐션이 "하루 전 같은 시간"과 "지난 밤들"을 직접 읽을 수 있다는 데서 온다. GRU는 같은 정보를 256차원 상태에 실어 날라야 하고, 그래서 다음 시간의 일하는 성인 수와 덤불 식량(T1 0.123), 겨울 추론(T3b 0.568), 일주일 앞 나무·장작더미·인구에서 선형 릿지에 진다. GRU가 원래 벤치 기준선을 절반으로 줄였던 것(0.275 vs 0.541)은 그 기준선의 혹독함 처리 결함 때문이었다(혹독함을 빼면 같은 릿지가 0.223).
+반대로 신의 개입을 넣어도 어떤 모델의 궤적도 제대로 바뀌지 않는다(T4 ≈ 0 효과 기준선; 비 예시에서 실제로는 불이 꺼지지만 모델에서는 계속 탄다). 하루 단위로 직접 예측하는 작은 언어 모델(M3, 0.056)이 24스텝 GRU(0.131)보다 나은 것은, v0의 하루 전이가 거의 표처럼 결정적이라는 뜻이다.
+v0 데이터의 한계는 분명하다. 개입이 너무 드물다(0.09 %). 겨울이 라벨 하나로 정해진다(관측 두 밤이면 드러나고, 라벨을 주면 T3b 0.05). 벤치 규칙이 혹독함을 시작 행 값으로 고정해 기준선과 sev-on 모델을 모두 망가뜨린다. 06:00 시작은 지속을 유리하게 하고, 정착지는 하나뿐이다. v1에 필요한 것: 개입을 10배 이상(용량 격자, 모든 계절, C_cf ≥ 96 시드), 밤마다 바뀌는 날씨 과정, 파생 필드를 통한 혹독함 누설 차단, 혹독함 없는 릿지를 기본 기준선으로 두고 미래 혹독함 오라클 또는 예보를 쓰는 공정한 프로토콜, 모든 시간 시작, 여러 정착지(ANALYSIS.md §10).

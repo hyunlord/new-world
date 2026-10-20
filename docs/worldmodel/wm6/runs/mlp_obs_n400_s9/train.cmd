@@ -1,0 +1,1 @@
+/home/hyunlord/work/wm1-venv/bin/python tools/worldmodel/wm6/effects6.py train --model mlp --feat obs --n 400 --seed 9 --config-from /home/hyunlord/work/wm1-runs/wm6/grid_choice/choice.json --prep /home/hyunlord/work/wm1-runs/wm6/_prep --base /home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json --max-seconds 3600 --out /home/hyunlord/work/wm1-runs/wm6/mlp_obs_n400_s9

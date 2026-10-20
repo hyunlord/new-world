@@ -1,0 +1,50 @@
+{
+ "argv": [
+  "tools/worldmodel/wm5/causal5.py",
+  "cost",
+  "--method",
+  "ct",
+  "--dataset",
+  "obs2_v19",
+  "--seconds",
+  "300",
+  "--budget",
+  "14400",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm5/_cost_ct_obs2"
+ ],
+ "budget": 14400.0,
+ "code_commit": "835a8670aa8f83473712722f057ea7a72309dd50",
+ "dataset": "obs2_v19",
+ "device": "cuda",
+ "load_seconds": 5.791598558425903,
+ "method": "ct",
+ "peak_gpu_mib": 13013.0078125,
+ "plan": {
+  "allowance": 221.08015894889832,
+  "factor": 0.6528066484553272,
+  "planned": {
+   "ct": 7735
+  },
+  "predicted_seconds": 21941.018022022596,
+  "reduced": true
+ },
+ "seconds": 300.0,
+ "stages": {
+  "ct": {
+   "eval_seconds": 14.738677263259888,
+   "evals": 1,
+   "s_per_step": 1.8329061487825906,
+   "seconds": 300.59660840034485,
+   "steps": 164
+  }
+ },
+ "train_episodes": 1200,
+ "val": {
+  "episodes": 200,
+  "jobs": 1000,
+  "sampled": false
+ },
+ "val_episodes": 200,
+ "wall_seconds": 321.1352035999298
+}

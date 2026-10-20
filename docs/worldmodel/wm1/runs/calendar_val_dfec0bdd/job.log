@@ -1,0 +1,16 @@
+cal_abs 4s
+cal_year 4s
+ap1_abs 4s
+ap1_year 4s
+apfit_abs 4s
+apfit_year 4s
+an1 7s
+an5 11s
+an5_off 14s
+T1 an5_off 0.0671 apfit_year 0.0763
+T2_24 an5_off 0.0602 apfit_year 0.0754
+T2_168 an5 0.0778 apfit_year 0.1354
+T2any_24 an5 0.1132 apfit_year 0.1279
+T2any_168 an5 0.1352 apfit_year 0.1958
+T3 an5 0.0048 cal_year 0.0686
+T3b an5 0.3516 cal_year 0.7109

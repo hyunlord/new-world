@@ -1,0 +1,42 @@
+{
+ "decoder": {
+  "alpha_best": 0.995053836683979,
+  "alpha_last": 0.9999091873852619,
+  "alpha_max": 1.0,
+  "best_step": 32280,
+  "best_val_roll": 0.7688618795800763,
+  "epochs": 513,
+  "evals": 15,
+  "planned": 53800,
+  "steps": 53800,
+  "stop": "planned",
+  "val_roll_last": 0.7867225225760857
+ },
+ "encoder": {
+  "alpha_last": 0.9999091464151215,
+  "alpha_max": 1.0,
+  "best_one_step": 0.2784383296966553,
+  "best_one_step_step": 10467,
+  "epochs": 873,
+  "evals": 15,
+  "planned": 15700,
+  "steps": 15700,
+  "stop": "planned"
+ },
+ "reached": {
+  "alpha_fraction_min": 0.9999091464151215,
+  "planned_equal_authors": true,
+  "steps_fraction_min": 1.0,
+  "stop": [
+   "planned",
+   "planned"
+  ]
+ },
+ "seconds": 1848.0156457424164,
+ "val": {
+  "episodes": 200,
+  "jobs": 1000,
+  "sampled": false
+ },
+ "val_roll": 0.7867225225760857
+}

@@ -1,0 +1,530 @@
+{
+ "argv": [
+  "tools/worldmodel/wm4/effects4.py",
+  "describe",
+  "--base",
+  "/home/hyunlord/work/wm1-runs/wm2/effects_base/effects_base.json",
+  "--policy",
+  "/home/hyunlord/work/worldsim-wm-data/obs/policy/policy.json",
+  "--out",
+  "/home/hyunlord/work/wm1-runs/wm4/describe"
+ ],
+ "code_commit": "446d11e6739666c3a6a33801bc117358de852e85",
+ "distribution_val": {
+  "gf240": {
+   "alive|30d": {
+    "mean": -2.9375,
+    "median": 0.0,
+    "n": 80,
+    "p10": -0.09999999999999964,
+    "p90": 0.0,
+    "share_nonzero": 0.1125,
+    "std": 9.780521138978228
+   },
+   "alive|7d": {
+    "mean": -0.1875,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0625,
+    "std": 0.8380595145930867
+   },
+   "cast_day": {
+    "mean": 29.6375,
+    "median": 29.5,
+    "n": 80,
+    "p10": 10.0,
+    "p90": 50.0,
+    "share_nonzero": 1.0,
+    "std": 14.297065914025858
+   },
+   "censored_arm": 0.4875,
+   "censored_factual": 0.475,
+   "deaths|30d": {
+    "mean": -0.0375,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0625,
+    "std": 0.5348773223833667
+   },
+   "deaths|7d": {
+    "mean": 0.0125,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0125,
+    "std": 0.11110243021644485
+   },
+   "food_stock|30d": {
+    "mean": -15.925,
+    "median": -0.5,
+    "n": 80,
+    "p10": -25.5,
+    "p90": 12.0,
+    "share_nonzero": 0.975,
+    "std": 61.02904533908424
+   },
+   "food_stock|7d": {
+    "mean": 32.0,
+    "median": 27.0,
+    "n": 80,
+    "p10": -6.1,
+    "p90": 79.90000000000008,
+    "share_nonzero": 0.9875,
+    "std": 37.92591462311753
+   },
+   "no_30d": 0,
+   "settlements_alive|30d": {
+    "mean": -0.0875,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0875,
+    "std": 0.2825663638864329
+   },
+   "settlements_alive|7d": {
+    "mean": -0.05,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.05,
+    "std": 0.21794494717703364
+   },
+   "shift": {
+    "mean": 4.9,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 25.0,
+    "share_nonzero": 0.375,
+    "std": 9.396275858019495
+   }
+  },
+  "rw120": {
+   "alive|30d": {
+    "mean": 0.7875,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0625,
+    "std": 4.400834437921972
+   },
+   "alive|7d": {
+    "mean": -0.05,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.025,
+    "std": 0.3122498999199199
+   },
+   "cast_day": {
+    "mean": 29.6375,
+    "median": 29.5,
+    "n": 80,
+    "p10": 10.0,
+    "p90": 50.0,
+    "share_nonzero": 1.0,
+    "std": 14.297065914025858
+   },
+   "censored_arm": 0.4625,
+   "censored_factual": 0.475,
+   "deaths|30d": {
+    "mean": 0.275,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 1.0,
+    "share_nonzero": 0.175,
+    "std": 0.9350802104632523
+   },
+   "deaths|7d": {
+    "mean": 0.175,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0875,
+    "std": 0.7545694136393285
+   },
+   "food_stock|30d": {
+    "mean": 2.9875,
+    "median": 0.0,
+    "n": 80,
+    "p10": -23.0,
+    "p90": 22.10000000000001,
+    "share_nonzero": 0.95,
+    "std": 36.95520726162958
+   },
+   "food_stock|7d": {
+    "mean": -8.0,
+    "median": -3.0,
+    "n": 80,
+    "p10": -46.0,
+    "p90": 8.0,
+    "share_nonzero": 0.925,
+    "std": 22.047108653970934
+   },
+   "no_30d": 0,
+   "settlements_alive|30d": {
+    "mean": 0.0375,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0375,
+    "std": 0.18998355191963334
+   },
+   "settlements_alive|7d": {
+    "mean": 0.0,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0,
+    "std": 0.0
+   },
+   "shift": {
+    "mean": -0.5125,
+    "median": 0.0,
+    "n": 80,
+    "p10": -1.0999999999999996,
+    "p90": 1.0,
+    "share_nonzero": 0.2875,
+    "std": 5.184095268221833
+   }
+  },
+  "sp240": {
+   "alive|30d": {
+    "mean": 4.3875,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 22.70000000000006,
+    "share_nonzero": 0.2375,
+    "std": 10.350717064532292
+   },
+   "alive|7d": {
+    "mean": 1.15,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 5.1000000000000085,
+    "share_nonzero": 0.175,
+    "std": 3.640398329853479
+   },
+   "cast_day": {
+    "mean": 29.6375,
+    "median": 29.5,
+    "n": 80,
+    "p10": 10.0,
+    "p90": 50.0,
+    "share_nonzero": 1.0,
+    "std": 14.297065914025858
+   },
+   "censored_arm": 0.45,
+   "censored_factual": 0.475,
+   "deaths|30d": {
+    "mean": 0.2125,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.10000000000000853,
+    "share_nonzero": 0.125,
+    "std": 1.2216152217453742
+   },
+   "deaths|7d": {
+    "mean": 0.0125,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.0,
+    "share_nonzero": 0.0125,
+    "std": 0.11110243021644486
+   },
+   "food_stock|30d": {
+    "mean": 36.1625,
+    "median": 3.0,
+    "n": 80,
+    "p10": -24.0,
+    "p90": 205.60000000000005,
+    "share_nonzero": 0.9875,
+    "std": 92.99911877942715
+   },
+   "food_stock|7d": {
+    "mean": -73.8,
+    "median": -70.0,
+    "n": 80,
+    "p10": -170.1,
+    "p90": -4.799999999999983,
+    "share_nonzero": 1.0,
+    "std": 70.09429363364752
+   },
+   "no_30d": 0,
+   "settlements_alive|30d": {
+    "mean": 0.125,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 1.0,
+    "share_nonzero": 0.125,
+    "std": 0.33071891388307384
+   },
+   "settlements_alive|7d": {
+    "mean": 0.1,
+    "median": 0.0,
+    "n": 80,
+    "p10": 0.0,
+    "p90": 0.10000000000000853,
+    "share_nonzero": 0.1,
+    "std": 0.30000000000000004
+   },
+   "shift": {
+    "mean": -7.275,
+    "median": 0.0,
+    "n": 80,
+    "p10": -28.0,
+    "p90": 0.0,
+    "share_nonzero": 0.475,
+    "std": 13.728596978569952
+   }
+  }
+ },
+ "policy_summary": {
+  "all": {
+   "arm_counts": {
+    "gf240": 183,
+    "rw120": 90,
+    "sp240": 186
+   },
+   "arm_shares": {
+    "gf240": 0.39869281045751637,
+    "rw120": 0.19607843137254902,
+    "sp240": 0.40522875816993464
+   },
+   "casts": 459,
+   "never": 101,
+   "never_share": 0.18035714285714285,
+   "worlds": 560
+  },
+  "by_f_tercile": {
+   "0": {
+    "arm_counts": {
+     "gf240": 127,
+     "rw120": 16,
+     "sp240": 5
+    },
+    "arm_shares": {
+     "gf240": 0.8581081081081081,
+     "rw120": 0.10810810810810811,
+     "sp240": 0.033783783783783786
+    },
+    "cast_rate": 0.03216692023473158,
+    "casts": 148,
+    "decision_rows": 4601
+   },
+   "1": {
+    "arm_counts": {
+     "gf240": 42,
+     "rw120": 34,
+     "sp240": 33
+    },
+    "arm_shares": {
+     "gf240": 0.3853211009174312,
+     "rw120": 0.3119266055045872,
+     "sp240": 0.30275229357798167
+    },
+    "cast_rate": 0.02204246713852376,
+    "casts": 109,
+    "decision_rows": 4945
+   },
+   "2": {
+    "arm_counts": {
+     "gf240": 14,
+     "rw120": 40,
+     "sp240": 148
+    },
+    "arm_shares": {
+     "gf240": 0.06930693069306931,
+     "rw120": 0.19801980198019803,
+     "sp240": 0.7326732673267327
+    },
+    "cast_rate": 0.03920807453416149,
+    "casts": 202,
+    "decision_rows": 5152
+   }
+  },
+  "non_decision_rows": 0,
+  "test": {
+   "arm_counts": {
+    "gf240": 24,
+    "rw120": 11,
+    "sp240": 28
+   },
+   "arm_shares": {
+    "gf240": 0.38095238095238093,
+    "rw120": 0.1746031746031746,
+    "sp240": 0.4444444444444444
+   },
+   "casts": 63,
+   "never": 17,
+   "never_share": 0.2125,
+   "worlds": 80
+  },
+  "train": {
+   "arm_counts": {
+    "gf240": 129,
+    "rw120": 59,
+    "sp240": 132
+   },
+   "arm_shares": {
+    "gf240": 0.403125,
+    "rw120": 0.184375,
+    "sp240": 0.4125
+   },
+   "casts": 320,
+   "never": 80,
+   "never_share": 0.2,
+   "worlds": 400
+  },
+  "val": {
+   "arm_counts": {
+    "gf240": 30,
+    "rw120": 20,
+    "sp240": 26
+   },
+   "arm_shares": {
+    "gf240": 0.39473684210526316,
+    "rw120": 0.2631578947368421,
+    "sp240": 0.34210526315789475
+   },
+   "casts": 76,
+   "never": 4,
+   "never_share": 0.05,
+   "worlds": 80
+  }
+ },
+ "pooled": {
+  "gf240": {
+   "30d": {
+    "controls": 5018,
+    "ess_controls": 4673.066161825702,
+    "ess_treated": 44.26305015353122,
+    "max_weight_controls": 3.2110133851248173,
+    "max_weight_treated": 500.0,
+    "treated": 129
+   },
+   "7d": {
+    "controls": 8441,
+    "ess_controls": 8419.322509658647,
+    "ess_treated": 44.26305015353122,
+    "max_weight_controls": 1.3702340456843791,
+    "max_weight_treated": 500.0,
+    "treated": 129
+   }
+  },
+  "rw120": {
+   "30d": {
+    "controls": 5018,
+    "ess_controls": 4673.066161825702,
+    "ess_treated": 46.7314487632509,
+    "max_weight_controls": 3.2110133851248173,
+    "max_weight_treated": 250.0,
+    "treated": 59
+   },
+   "7d": {
+    "controls": 8441,
+    "ess_controls": 8419.322509658647,
+    "ess_treated": 46.7314487632509,
+    "max_weight_controls": 1.3702340456843791,
+    "max_weight_treated": 250.0,
+    "treated": 59
+   }
+  },
+  "sp240": {
+   "30d": {
+    "controls": 5018,
+    "ess_controls": 4673.066161825702,
+    "ess_treated": 54.94799405646359,
+    "max_weight_controls": 3.2110133851248173,
+    "max_weight_treated": 500.0,
+    "treated": 132
+   },
+   "7d": {
+    "controls": 8441,
+    "ess_controls": 8419.322509658647,
+    "ess_treated": 54.94799405646359,
+    "max_weight_controls": 1.3702340456843791,
+    "max_weight_treated": 500.0,
+    "treated": 132
+   }
+  }
+ },
+ "scales": {
+  "gf240|alive|30d": 11.222402983493835,
+  "gf240|alive|7d": 4.046006984021603,
+  "gf240|deaths|30d": 1.569675988217354,
+  "gf240|deaths|7d": 1.0620691921316971,
+  "gf240|food_stock|30d": 106.28223492924764,
+  "gf240|food_stock|7d": 72.85830303063324,
+  "gf240|settlements_alive|30d": 0.35213656108185687,
+  "gf240|settlements_alive|7d": 0.3087459870195856,
+  "rw120|alive|30d": 11.222402983493835,
+  "rw120|alive|7d": 4.046006984021603,
+  "rw120|deaths|30d": 2.2480376859608024,
+  "rw120|deaths|7d": 1.7419237748822423,
+  "rw120|food_stock|30d": 106.28223492924764,
+  "rw120|food_stock|7d": 72.85830303063324,
+  "rw120|settlements_alive|30d": 0.35213656108185687,
+  "rw120|settlements_alive|7d": 0.3087459870195856,
+  "sp240|alive|30d": 13.157043774426215,
+  "sp240|alive|7d": 6.204135898529868,
+  "sp240|deaths|30d": 1.569675988217354,
+  "sp240|deaths|7d": 1.0620691921316971,
+  "sp240|food_stock|30d": 131.73907415378017,
+  "sp240|food_stock|7d": 77.33793036822223,
+  "sp240|settlements_alive|30d": 0.4466966668818099,
+  "sp240|settlements_alive|7d": 0.46314496177608094
+ },
+ "scales_unfloored": {
+  "gf240|alive|30d": 9.074434469293388,
+  "gf240|alive|7d": 0.08645808232895293,
+  "gf240|deaths|30d": 0.1620136954087524,
+  "gf240|deaths|7d": 0.07053367989832944,
+  "gf240|food_stock|30d": 85.41690764092024,
+  "gf240|food_stock|7d": 25.9489303428388,
+  "gf240|settlements_alive|30d": 0.2732186624299299,
+  "gf240|settlements_alive|7d": 0.3087459870195856,
+  "rw120|alive|30d": 7.571304275849703,
+  "rw120|alive|7d": 1.1434596626029272,
+  "rw120|deaths|30d": 2.2480376859608024,
+  "rw120|deaths|7d": 1.7419237748822423,
+  "rw120|food_stock|30d": 71.25215864054576,
+  "rw120|food_stock|7d": 20.851407476475057,
+  "rw120|settlements_alive|30d": 0.22767507000108733,
+  "rw120|settlements_alive|7d": 0.3087459870195856,
+  "sp240|alive|30d": 13.157043774426215,
+  "sp240|alive|7d": 6.204135898529868,
+  "sp240|deaths|30d": 1.1186866305439152,
+  "sp240|deaths|7d": 1.0620691921316971,
+  "sp240|food_stock|30d": 131.73907415378017,
+  "sp240|food_stock|7d": 77.33793036822223,
+  "sp240|settlements_alive|30d": 0.4466966668818099,
+  "sp240|settlements_alive|7d": 0.46314496177608094
+ },
+ "seconds": 2.5416152477264404,
+ "terciles": {
+  "q_f1": 8.079227234753551,
+  "q_f2": 12.1,
+  "q_w2": 3.111944444444449,
+  "rows": 21200
+ },
+ "val_cases": 240
+}
