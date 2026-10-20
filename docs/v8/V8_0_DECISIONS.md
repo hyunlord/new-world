@@ -146,3 +146,78 @@ Analysis of all 208 rule fields (27 types): `docs/v8/p3/8_3_candidates.md`. Remo
 - `RelationsRule.avoid_gather` = true — `agent_decision.rs`: the avoid list applies whenever a relations rule is present (`is_some_and(avoid_gather)` → `is_some()`); a test assert dropped.
 - `RelationsRule.exchange_first` = true — `relations.rs`: the aid-before-exchange arm ("b. Exchange" after aid) deleted and the exchange-first block made unconditional; a test assert dropped.
 - Kept although dead in the baseline, because the probe prints them (removal would change the summary): `ExposureRule.use_hardiness`, `FissionRule.stock_share`, `FirewoodRule.{winter_night_burn_permille, windfall_over_snow, regional_wood, rain_soak_permille}`, `FissionRule.crowding` (with `hazard`). Kept because a test literal sets the other value (strictly condition 2 fails, although those tests never reach the branch): `FamilyRule.elder_partner_follows`, `AgingRule.elder_evening_tether`, `FirewoodRule.{claims_bounded_by_amount, winter_regen_units_per_day, winter_deadwood_cap, floor_separate}`. Not touched: zero-sentinel arms of numeric fields (`quarrel_cap_per_pair_day == 0`, …) — the fields are live values. All are listed in the candidates file for the next probe-schema revision.
+
+## D26 — 8.4: tests by domain
+- The 108 kept `rust/crates/sim-test/tests/harness_*.rs` files became 68 domain files (`agents_*`, `settlement_*`, `family_*`, `relations_*`, `chronicle_*`, `engine_*`, `determinism.rs`). A file with one source is a `git mv`; a merged file holds each source verbatim as `mod <name> { … }`, so helpers stay private to their source and no test body changed (test paths gain the module prefix). Support modules: `pass17_family_support/` → `family_support/`, `pass17_routine_support/` → `routine_support/`, declared once at the top of the merged file.
+- Domains: social interaction and the relations rule are `relations_*`; memory, combat, needs, death and routine are agent behaviour (`agents_*`); construction, resources, stockpiles, food, seasons, firewood and fission are `settlement_*`; influence, the causal log, the bridge surface, keyed draws, worldgen and tallies are `engine_*`; the three determinism suites are `determinism.rs`.
+- `sim_test::baseline_engine(seed)` already existed (8.1a). New test: `determinism.rs` `baseline::baseline_runs_are_identical_tick_for_tick_and_seeds_differ` (two baseline engines per seed 0 and 1, fingerprints equal every hour for a day, the fingerprint changes in ≥ 18 of the 24 hours, seeds 0 and 1 differ).
+- Coverage (6.5 table, inventory §3.2): every live system still has a kept test after 8.1b — the two R3 ports the table flagged (`children_grow_up` for MaturationSystem, `old_age_death_and_replacement` for AgingSystem) were ported, so no other minimal test was needed.
+- Mapping (new ← old, `harness_` dropped):
+  - `engine_influence` ← phase2
+  - `engine_influence_pipeline` ← phase2_substantial
+  - `engine_influence_channels` ← t7_10_a_warmth_wiring, t7_10_b_light_shadowcast_wiring, t7_10_b1_light_viz_toggle, t7_10_c_noise_linear_wiring, t7_10_d_danger_linear_wiring, t7_10_e_spiritual_bfs_wiring, t7_10_f_beauty_bfs_wiring
+  - `engine_bridge_ffi` ← phase2_ffi
+  - `engine_bridge_postverify` ← next_a_postverify
+  - `engine_tick_scaffold` ← t7_9_a_scaffold
+  - `engine_causal_events` ← p3_alpha_event_recording
+  - `engine_causal_chain` ← p3_beta_causal_chain
+  - `engine_causal_ffi` ← p3_gamma_1_ffi
+  - `engine_rng` ← revitalize_pass9_rng
+  - `engine_worldgen` ← revitalize_worldgen, revitalize_pass10_variety, revitalize_pass12_world
+  - `engine_tallies` ← revitalize_tallies
+  - `determinism` ← phase2_determinism, a15_controlled_determinism, fix_d_memory_arm
+  - `agents_core` ← p4_alpha_agent_core, revitalize_pass16_temperament
+  - `agents_movement` ← p4_beta_movement, s16_beta_movement
+  - `agents_snapshot` ← p4_gamma_rendering, p11_alpha_agent_renderer, carry_viz_2_5b
+  - `agents_viz` ← s16_epsilon_state_viz, show_agent_needs_bars, s16_gamma_visual
+  - `agents_inspector` ← p14_gamma_click_inspector
+  - `agents_needs` ← p5_alpha_agent_id_hunger, s16_delta_need_stagger
+  - `agents_decision` ← p5_beta_decision
+  - `agents_seek` ← s16_alpha_seektarget
+  - `agents_sleep` ← p5_gamma_sleep_daynight_chronicle
+  - `agents_preemption` ← revitalize_survival_fix, revitalize_pass5_preempt
+  - `agents_rhythm` ← revitalize_pass3_rhythm
+  - `agents_aging` ← revitalize_pass4_aging, revitalize_pass6_elders
+  - `agents_exposure` ← revitalize_pass10_exposure, revitalize_pass11_exposure
+  - `agents_newborn` ← newborn_mobile
+  - `agents_starvation` ← starvation_death
+  - `agents_death_viz` ← show_death_visual
+  - `agents_memory_components` ← p8_alpha_memory_components
+  - `agents_memory_system` ← p8_beta_memory_system
+  - `agents_memory_ui` ← p8_delta_memory_ui
+  - `agents_body_health` ← p9_alpha_body_health
+  - `agents_combat` ← p9_beta_combat_system
+  - `agents_combat_ui` ← p9_delta_combat_ui
+  - `agents_routine` ← revitalize_pass17_routine, revitalize_pass17_routine_edges, revitalize_pass17_routine_invitations
+  - `relations_social_components` ← p7_alpha_social_components
+  - `relations_social_system` ← p7_beta_social_system
+  - `relations_social_ui` ← p7_delta_social_ui
+  - `relations_social_freeze_fix` ← s16_zeta_social_freeze_fix
+  - `relations_rule` ← revitalize_pass20_relations
+  - `relations_caps` ← revitalize_pass21_relations
+  - `family_households` ← revitalize_pass17_family, revitalize_pass17_family_beds, revitalize_pass17_family_births, revitalize_pass17_family_fission
+  - `settlement_data` ← p10_alpha_settlement
+  - `settlement_system` ← p10_beta_settlement_system
+  - `settlement_migration` ← p10_gamma_settlement_migration, settlement_migration_unfreeze
+  - `settlement_membership` ← membership_belonging
+  - `settlement_hud_regressions` ← settlement_marker_fixed, settlements_zero_regression
+  - `settlement_construction_components` ← p6_alpha_construction_components
+  - `settlement_construction` ← p6_beta_construction_system
+  - `settlement_construction_render` ← p12_beta2_construction_sites, p12_gamma_settlement_furniture
+  - `settlement_village` ← revitalize_pass3_village, revitalize_loop
+  - `settlement_resource_substrate` ← s16_alpha0_resource_substrate
+  - `settlement_resource_scarcity` ← resource_scarcity
+  - `settlement_resource_depletion` ← show_resource_depletion
+  - `settlement_gather` ← resource_gather_pickup
+  - `settlement_inventory` ← inventory_2_1_data
+  - `settlement_stockpile` ← resource_deposit_to_stockpile, stockpile_consume, settlement_food_stock
+  - `settlement_food` ← revitalize_pass3_food, revitalize_pass4_forage, revitalize_pass5_meals
+  - `settlement_seasons` ← revitalize_pass4_seasons, revitalize_pass6_winter, revitalize_pass7_winter, revitalize_pass8_winter
+  - `settlement_firewood` ← revitalize_pass5_firewood, revitalize_pass6_urgent
+  - `settlement_fission` ← revitalize_pass11_fission, revitalize_pass12_fission, revitalize_pass13_fission
+  - `chronicle_construction` ← p6_gamma_construction_chronicle
+  - `chronicle_social` ← p7_gamma_social_chronicle
+  - `chronicle_memory` ← p8_gamma_memory_chronicle
+  - `chronicle_combat` ← p9_gamma_combat_chronicle
+  - `chronicle_settlement` ← p10_gamma_settlement_chronicle
+  - `chronicle_rebuild` ← revitalize_pass19_chronicle, revitalize_pass19_chronicle_events
