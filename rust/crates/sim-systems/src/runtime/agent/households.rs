@@ -1,3 +1,5 @@
+//! Household helpers (not a system): partition living settlement members into households
+//! (mutual partners with their children) and choose family-aware fission departure groups.
 use hecs::World;
 use sim_core::chronicle::DepartCause;
 use sim_core::components::{Agent, AgentId, BodyHealth, Child, Kin};

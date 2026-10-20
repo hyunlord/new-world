@@ -1,3 +1,10 @@
+//! ResourceRegenSystem: refills finite resource tiles toward their caps; StaleSeekTargetSystem: re-targets or idles agents whose seek tile is gone.
+//!
+//! Priority: ResourceRegenSystem 140, StaleSeekTargetSystem 126 · Interval: ResourceRegenSystem 120 ticks, StaleSeekTargetSystem 1 tick · Gate: none
+//! Reads: ResourceRegenSystem — `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules`; StaleSeekTargetSystem — `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps
+//! Writes: ResourceRegenSystem — `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies`; StaleSeekTargetSystem — `SeekTarget` (insert/remove), `AgentState`
+//! Events: ResourceRegenSystem — tallies `regen_lost_at_cap`, `winter_wood_lost*`, `area_floor_*`; StaleSeekTargetSystem — none
+//!
 //! V7 feature `add-resource-scarcity-regen` — resource regeneration subsystem.
 //!
 //! Hosts [`ResourceRegenSystem`] (priority **140**, interval

@@ -1,3 +1,10 @@
+//! SleepDecaySystem: advances every agent's sleep need.
+//!
+//! Priority: 132 · Interval: 1 tick · Gate: none
+//! Reads: `Sleep`
+//! Writes: `Sleep`
+//! Events: none
+//!
 //! V7 Phase 5-γ — `SleepDecaySystem` (priority 132, every tick).
 //!
 //! Mirrors [`HungerDecaySystem`](super::HungerDecaySystem) and

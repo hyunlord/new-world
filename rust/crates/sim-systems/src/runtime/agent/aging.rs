@@ -1,3 +1,10 @@
+//! AgingSystem: makes residents elders at the elder age and lets them die of old age at the end of their lifespan.
+//!
+//! Priority: 146 · Interval: 60 ticks · Gate: `WorldRules.society.aging`
+//! Reads: `Agent`, `Life`, `Position`, `Elder`
+//! Writes: `Elder` (inserted); `SimResources.chronicle`; deaths via `despawn_agent`
+//! Events: chronicle `BecameElder`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_old_age`
+//!
 //! Rules-gated aging: deterministic lifespans, the elder stage and old-age death.
 //!
 //! Every resident's lifespan comes from its own salted splitmix64 stream keyed

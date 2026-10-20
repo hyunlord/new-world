@@ -1,3 +1,10 @@
+//! RelationsSystem: keeps the village relation map and runs the daily porter exchange and kin-aid trips between villages.
+//!
+//! Priority: 149 · Interval: 1 tick (decides daily at `decision_minute`) · Gate: `WorldRules.society.relations`
+//! Reads: `Agent`, `Position`, `AgentState`, `Hunger`, `Temperament`, `Child`, `Elder`, `Founding`; `SimResources.settlements`, `rules`
+//! Writes: `PorterTrip`, `Inventory`, `AgentState`, `SeekTarget`; `SimResources.settlement_relations`, `settlements` (stockpiles), `chronicle`, `tallies`
+//! Events: chronicle `PorterDeparted`, `PorterDelivered`, `VillagesEstranged`, `VillagesReconciled`; tallies `porter_*`, `villages_estranged`, `villages_reconciled`
+//!
 //! Pass 20 (`game_v25`) — `RelationsSystem` (priority 149, every tick):
 //! villages that help and villages that quarrel.
 //!

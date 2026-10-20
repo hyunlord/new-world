@@ -1,3 +1,10 @@
+//! FissionSystem: splits a crowded settlement into a group that founds a daughter settlement, and dissolves remnants.
+//!
+//! Priority: 148 · Interval: 1 tick (acts hourly and at 06:00) · Gate: `WorldRules.society.fission`
+//! Reads: `Agent`, `Position`, `Child`, `Elder`, `Lineage`, `Kin`, `Temperament`, `PorterTrip`, `AgentState`; `SimResources.settlements`, `wild_regions`, `tile_grid`, `rules`
+//! Writes: `Founding`, `AgentState`, `SeekTarget`; `SimResources.settlements`, `building_kinds`, `building_event_queue`, `retired_hearths`, `fission_log`, `fission_checks`, `dissolutions`, `chronicle`
+//! Events: `CausalEvent::SettlementDissolved`; `FamilyEvent::Departed`; chronicle fission, departure and dissolution entries; tallies `fissions`, `fissions_cancelled`, `remnant_merges`
+//!
 //! Revitalize Pass 11 — `FissionSystem` (priority 148, every tick; real work
 //! hourly and at 06:00).
 //!

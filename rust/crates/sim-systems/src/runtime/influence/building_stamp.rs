@@ -1,3 +1,10 @@
+//! BuildingStampSystem: drains queued building placements into influence dirty regions.
+//!
+//! Priority: 90 · Interval: 1 tick · Gate: none
+//! Reads: `SimResources.building_event_queue`, `influence_grid` (dimensions), `current_tick`
+//! Writes: `SimResources.building_event_queue` (drained), `influence_grid.dirty_regions`, `building_registry`, `causal_log`
+//! Events: `CausalEvent::BuildingPlaced`, `CausalEvent::StampDirty` (one per stamped channel)
+//!
 //! `BuildingStampSystem` — priority 90, every tick.
 //!
 //! Phase 0 Section 2.5.1 base. T7.7.B land (R1 event_queue):

@@ -1,3 +1,5 @@
+//! Family probe: turns each observed `FamilyEvent` into a family-trace row and joins fission
+//! departures with the engine's `FissionRecord`s. Read-only.
 use super::family_trace::{FamilyTracer, Person};
 use serde_json::{json, Value};
 use sim_core::components::{Agent, AgentId, Elder, FamilyEvent};

@@ -1,3 +1,10 @@
+//! SocialInteractionSystem: advances mutual agent-to-agent interactions and completes them.
+//!
+//! Priority: 134 · Interval: 1 tick · Gate: none
+//! Reads: `Agent`, `Position`, `AgentState`; `SimResources.causal_log` (`SocialInteractionStarted`), `interaction_progress`
+//! Writes: `AgentState`, `Social`; `SimResources.interaction_progress`, `relationships` (familiarity), `causal_log`, `tallies`
+//! Events: `CausalEvent::SocialInteractionCompleted`; tally `social_completed`
+//!
 //! `SocialInteractionSystem` at priority 134 — the runtime tick of the
 //! Phase 7-β agent-to-agent interaction loop (V7 Phase 7-β / P7β-1).
 //!

@@ -1,3 +1,10 @@
+//! AgentInfluenceSampleSystem: copies the Warmth and Danger influence at each agent's tile into its debug sample.
+//!
+//! Priority: 110 · Interval: 1 tick · Gate: none
+//! Reads: `Position`; `SimResources.influence_grid` (current buffer)
+//! Writes: `InfluenceSample`
+//! Events: none
+//!
 //! `AgentInfluenceSampleSystem` — priority 110, every tick.
 //!
 //! Phase 0 Section 2.5.4 base. Reads the **current-side** influence buffer

@@ -1,3 +1,10 @@
+//! InfluenceUpdateSystem: propagates each channel's dirty regions into the pending buffer and swaps the influence buffers.
+//!
+//! Priority: 100 · Interval: 1 tick · Gate: none
+//! Reads: `SimResources.influence_grid` (`current`, `dirty_regions`), `tile_grid`, `material_blocking_cache`, `causal_log` (latest `StampDirty`)
+//! Writes: `SimResources.influence_grid` (`pending`, drained `dirty_regions`, buffer swap), `causal_log`
+//! Events: `CausalEvent::InfluenceChanged` (one per propagated region)
+//!
 //! `InfluenceUpdateSystem` — priority 100, every tick.
 //!
 //! Phase 0 Section 2.6 budget: Hot tier ≤ 0.5 ms @ 1K agents.

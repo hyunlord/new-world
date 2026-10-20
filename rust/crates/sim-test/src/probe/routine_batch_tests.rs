@@ -1,3 +1,4 @@
+//! Unit tests of routine observation batches (compiled as the `batch_tests` module of `routine_trace.rs`).
 use super::*;
 use sim_core::components::{ActivityKind, RoutineOutcome, TargetKind};
 use sim_core::material::MaterialRegistry;

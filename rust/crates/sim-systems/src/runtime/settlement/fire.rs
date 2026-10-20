@@ -1,3 +1,10 @@
+//! FireSystem: burns stockpile wood in each hearth at night and marks members `Cold` (with exposure damage) when the fire is out on a winter night.
+//!
+//! Priority: 147 · Interval: 60 ticks · Gate: `WorldRules.society.firewood`
+//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`; `SimResources.settlements`, `rules`
+//! Writes: `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`; deaths via `despawn_agent`
+//! Events: tally `cold_member_hours`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_exposure`
+//!
 //! Revitalize Pass 5 — `FireSystem` (priority 147, every 60 ticks).
 //!
 //! The hearth burns wood from the settlement stockpile through the night and
@@ -51,7 +58,7 @@ use sim_core::components::{
 use sim_core::rules::ExposureRule;
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
-use crate::runtime::decision::agent_decision::clock_in_window;
+use crate::runtime::decision::clock_in_window;
 use crate::runtime::settlement::firewood::{night_rate, night_season};
 use crate::runtime::survival::despawn_agent;
 

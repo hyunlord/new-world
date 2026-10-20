@@ -1,3 +1,4 @@
+//! Unit tests of routine accounting (compiled as the `tests` module of `routine_trace.rs`).
 use super::super::routine_accounting::Observation;
 use super::*;
 use sim_core::components::{ActivityKind, RoutineOutcome, TargetKind};

@@ -1,3 +1,5 @@
+//! Unit tests: routine accounting survives same-tick old-age deaths (compiled as the
+//! `death_tests` module of `routine_trace.rs`).
 use super::*;
 use hecs::{Entity, World};
 use sim_core::components::{ActivityKind, Life, RoutineOutcome, TargetKind};

@@ -1,3 +1,10 @@
+//! ThirstDecaySystem: advances every agent's thirst.
+//!
+//! Priority: 131 · Interval: 1 tick · Gate: none
+//! Reads: `Thirst`
+//! Writes: `Thirst`
+//! Events: none
+//!
 //! V7 Phase 5-β — `ThirstDecaySystem` (priority 131, every tick).
 //!
 //! Mirrors [`HungerDecaySystem`](super::HungerDecaySystem) for the

@@ -5,7 +5,7 @@ use sim_core::components::{
 };
 use sim_engine::SimEngine;
 use sim_systems::runtime::agent::hauls_home;
-use sim_systems::runtime::decision::agent_decision::clock_in_window;
+use sim_systems::runtime::decision::clock_in_window;
 use sim_systems::runtime::resource_regen::season_at;
 use sim_systems::runtime::settlement::firewood::in_gather_window;
 use sim_systems::runtime::settlement::food_economy::{stock_in_hand, stock_target, WINTER};

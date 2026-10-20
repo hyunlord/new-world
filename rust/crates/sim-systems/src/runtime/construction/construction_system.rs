@@ -1,3 +1,10 @@
+//! ConstructionSystem: advances construction sites worked by co-located agents and turns finished sites into buildings.
+//!
+//! Priority: 133 · Interval: 1 tick · Gate: none
+//! Reads: `Position`, `AgentState`, `ConstructionSite`; `SimResources.tile_grid`, `causal_log` (`ConstructionStarted`), `site_owner`, `rules`
+//! Writes: `ConstructionSite` (progress, despawn), `AgentState`; `SimResources.causal_log`, `building_registry`, `building_kinds`, `building_owner`, `site_owner`, sleep tiles
+//! Events: `CausalEvent::ConstructionCompleted`, `CausalEvent::BuildingPlaced`
+//!
 //! `ConstructionSystem` at priority 133 — the runtime tick of the
 //! Phase 6 agent-driven construction loop (V7 Phase 6-β / P6β-1).
 //!

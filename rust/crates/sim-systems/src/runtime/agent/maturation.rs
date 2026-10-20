@@ -1,3 +1,10 @@
+//! MaturationSystem: ends childhood for children older than the life-stage child age.
+//!
+//! Priority: 144 · Interval: 60 ticks · Gate: `WorldRules.society.life_stage`
+//! Reads: `Agent`, `Child`; `SimResources.current_tick`
+//! Writes: `Child` (removed), `Hunger`, `Thirst`, `Sleep` (adult growth rates); `SimResources.chronicle`
+//! Events: chronicle `CameOfAge`
+//!
 //! Rules-gated childhood completion without perturbing resident RNG streams.
 use hecs::World;
 use sim_core::components::{Agent, Child, Hunger, Sleep, Thirst};

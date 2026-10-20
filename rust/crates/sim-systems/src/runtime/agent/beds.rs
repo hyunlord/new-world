@@ -1,3 +1,10 @@
+//! BedAssignmentSystem: assigns live settlement members to beds in owned shelters, at 20:00 or when the shelters change.
+//!
+//! Priority: 145 · Interval: 1 tick · Gate: `WorldRules.agent.night_rest` and `WorldRules.society.shelter_planning`
+//! Reads: `Agent`, `Kin`, `Child`, `BodyHealth` (households); `SimResources.building_owner`, `building_kinds`, `settlements`, `rules.society.family`
+//! Writes: `SimResources.bed_of`
+//! Events: none
+//!
 //! Stable assignments of live settlement members to owned shelter beds.
 use hecs::World;
 use sim_core::components::{Agent, BuildingKind, SettlementId};

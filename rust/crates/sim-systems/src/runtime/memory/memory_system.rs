@@ -1,3 +1,10 @@
+//! MemorySystem: decays, encodes and reinforces agent memories from this tick's causal events.
+//!
+//! Priority: 136 · Interval: 1 tick · Gate: none
+//! Reads: `Agent`; `SimResources.causal_log` (this tick's events, `MemoryRecalled`)
+//! Writes: `Memory`
+//! Events: none
+//!
 //! V7 Phase 8-γ — MemorySystem (priority 136).
 //!
 //! Four-phase tick:

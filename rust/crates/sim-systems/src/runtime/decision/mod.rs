@@ -12,12 +12,26 @@
 //! `social_decision`, etc. — all priority 12x slots share the
 //! "decision tier" of the schedule.
 
-pub mod agent_decision;
+mod forage;
+mod memory_bias;
+mod needs;
 mod routine;
+mod system;
+mod targets;
+mod wood;
 
-pub use agent_decision::{
-    arm_priority_index, cascade_arm_memory_tag, nearest_resource_tile, AgentDecisionSystem,
-    CascadeArm, BIAS_FLIP_THRESHOLD, FAMILIARITY_BUMP, FATIGUE_CONSUME_AMOUNT, FATIGUE_THRESHOLD,
-    GATHER_SCAN_RADIUS, HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD, REQUIRED_INTERACTION_PROGRESS,
-    SOCIAL_CONSUME_AMOUNT, SOCIAL_THRESHOLD, THIRST_CONSUME_AMOUNT, THIRST_THRESHOLD,
+pub use memory_bias::{
+    arm_priority_index, cascade_arm_memory_tag, CascadeArm, BIAS_FLIP_THRESHOLD,
+};
+pub use needs::{
+    actionable_need, actionable_need_with_fatigue_threshold, clock_in_window, fatigue_threshold_at,
+    minute_in_window, person_night_rest, NeedAvailability, CRITICAL_NEED, FAMILIARITY_BUMP,
+    FATIGUE_CONSUME_AMOUNT, FATIGUE_THRESHOLD, HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD,
+    REQUIRED_INTERACTION_PROGRESS, SOCIAL_CONSUME_AMOUNT, SOCIAL_THRESHOLD, THIRST_CONSUME_AMOUNT,
+    THIRST_THRESHOLD,
+};
+pub use system::AgentDecisionSystem;
+pub use targets::{
+    nearest_food_tile_in_radius, nearest_gather_tile, nearest_local_food, nearest_resource_tile,
+    GATHER_SCAN_RADIUS,
 };

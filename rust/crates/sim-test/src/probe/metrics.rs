@@ -6,7 +6,7 @@ use sim_core::components::{
     SettlementMigrant, Sleep, Social, TargetKind, Thirst,
 };
 use sim_engine::{SimEngine, RESOURCE_SOURCE_INFINITE};
-use sim_systems::runtime::decision::agent_decision::{
+use sim_systems::runtime::decision::{
     actionable_need_with_fatigue_threshold, fatigue_threshold_at, NeedAvailability,
 };
 use std::collections::{BTreeMap, BTreeSet};

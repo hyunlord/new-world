@@ -1,3 +1,10 @@
+//! StarvationSystem: damages agents whose hunger or thirst is saturated, heals fed ones, kills at 0 hp; the file also hosts `despawn_agent`.
+//!
+//! Priority: 139 · Interval: 1 tick · Gate: none
+//! Reads: `Agent`, `Position`, `Hunger`, `Thirst`, `Cold`, `ExposureClock`; `SimResources.rules.society.exposure`
+//! Writes: `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`)
+//! Events: `CausalEvent::AgentDied`; chronicle `Died`, `Widowed`; tallies `deaths_starvation`, `deaths_dehydration`
+//!
 //! V7 feature `add-starvation-death` — survival / death subsystem.
 //!
 //! Hosts:

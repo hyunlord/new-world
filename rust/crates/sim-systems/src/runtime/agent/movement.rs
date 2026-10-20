@@ -1,3 +1,10 @@
+//! AgentMovementSystem: moves agents one tile per move interval (seek step, haul home, play, tethered idle walk).
+//!
+//! Priority: 120 · Interval: 1 tick (acts every `rules.agent.move_interval_ticks`) · Gate: none
+//! Reads: `AgentState`, `SeekTarget`, `Agent`, `Child`, `Elder`, `Inventory`, `Lineage`, `Founding`, `Temperament`, `PorterTrip`, `Activity`; `SimResources.settlements`, `tile_grid`, `rules`
+//! Writes: `Position`, `MovementRng`; `SimResources.haulers`
+//! Events: none
+//!
 //! V7 Phase 4-β / Section 16-β — `AgentMovementSystem` (priority 120, every tick).
 //!
 //! Per-tick motion with three state-keyed branches:
@@ -48,7 +55,7 @@ use sim_core::rng::{
 };
 use std::collections::BTreeMap;
 
-use crate::runtime::decision::agent_decision::clock_in_window;
+use crate::runtime::decision::clock_in_window;
 use hecs::World;
 use sim_core::components::{
     Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory,

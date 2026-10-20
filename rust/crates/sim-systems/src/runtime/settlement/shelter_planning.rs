@@ -1,3 +1,10 @@
+//! ShelterPlanningSystem: plans one shelter construction site for each settlement whose housing is full.
+//!
+//! Priority: 143 · Interval: 1 tick (acts every `plan_interval_ticks`) · Gate: `WorldRules.society.shelter_planning`
+//! Reads: `ConstructionSite`; `SimResources.settlements`, `building_registry`, `building_kinds`, `building_owner`, `tile_grid`, resource tile maps
+//! Writes: spawns `ConstructionSite`; `SimResources.site_owner`, `shelter_plan_skips`
+//! Events: counter `SimResources.shelter_plan_skips`
+//!
 //! Deterministic settlement-owned shelter planning, disabled by legacy rules.
 
 use hecs::World;

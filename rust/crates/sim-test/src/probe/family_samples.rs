@@ -1,3 +1,5 @@
+//! Family probe: captures a snapshot of every person's settlement, life stage, partner, household
+//! and bed for the family trace. Read-only.
 use super::family_trace::Person;
 use serde_json::{json, Value};
 use sim_core::components::{Agent, AgentId, Child, Elder, Kin};

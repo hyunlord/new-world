@@ -1,3 +1,10 @@
+//! SocialDecaySystem: advances every agent's loneliness.
+//!
+//! Priority: 135 · Interval: 1 tick · Gate: none
+//! Reads: `Social`
+//! Writes: `Social`
+//! Events: none
+//!
 //! V7 Phase 7-β (re-plan, Option A) — `SocialDecaySystem` (priority 135, every tick).
 //!
 //! Mirrors [`HungerDecaySystem`](super::HungerDecaySystem),

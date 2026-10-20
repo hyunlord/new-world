@@ -1,3 +1,6 @@
+//! Probe-only system `ProbeRoutineObserver` (priority 136, every tick, installed only under the
+//! routine rule): snapshots each agent's stage, state, activity and routine observations for the
+//! routine trace. Read-only.
 use super::routine_accounting::Observation;
 use hecs::World;
 use sim_core::components::{

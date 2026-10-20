@@ -1,3 +1,10 @@
+//! SettlementSystem: forms, syncs, grows (births) and dissolves settlements.
+//!
+//! Priority: 138 · Interval: 1 tick · Gate: none
+//! Reads: `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules`
+//! Writes: `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`; spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick`
+//! Events: `CausalEvent::SettlementFormed`/`AgentBorn`/`SettlementDissolved`; chronicle formation, membership, `Born` and dissolution entries; `FamilyEvent::Born`; tallies `births`, `exclusivity_moves`
+//!
 //! V7 Phase 10-β — `SettlementSystem` (priority 138, every tick).
 //!
 //! Sole runtime owner of [`Settlement`] formation, sync, growth, and

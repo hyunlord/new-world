@@ -1,3 +1,10 @@
+//! CombatSystem: advances active combat pairs, applies damage and resolves deaths.
+//!
+//! Priority: 137 · Interval: 1 tick · Gate: none
+//! Reads: `Agent`, `Position`, `BodyHealth`; `SimResources.combat_pairs`, `causal_log` (`CombatStarted`), `settlements`
+//! Writes: `BodyHealth`, `AgentState`, `Memory`; `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`; deaths via `despawn_agent`
+//! Events: `CausalEvent::CombatCompleted`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_combat`
+//!
 //! `CombatSystem` (priority 137) — Phase 9-β runtime combat resolution.
 //!
 //! Responsibility: advance `combat_progress` for every active pair in

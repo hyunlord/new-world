@@ -1,3 +1,10 @@
+//! StockpileDepositSystem: moves the carried food (and wood under the firewood rule) of members near home into the settlement stockpile.
+//!
+//! Priority: 141 · Interval: 10 ticks · Gate: none
+//! Reads: `Agent`, `Position`, `PorterTrip`; `SimResources.settlements` (rosters, formation tile), `rules`
+//! Writes: `Inventory`; `SimResources.settlements` (stockpile), `haulers`, `tallies`
+//! Events: tally `haul_deposits`
+//!
 //! Direction-2 slice 2-3a — `StockpileDepositSystem` (priority 141, warm tier).
 //!
 //! Passive Inventory→stockpile transfer. When a settlement member happens to be

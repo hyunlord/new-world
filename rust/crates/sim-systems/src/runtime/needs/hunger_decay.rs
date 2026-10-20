@@ -1,3 +1,10 @@
+//! HungerDecaySystem: advances every agent's hunger (faster while `Cold` under the firewood rule).
+//!
+//! Priority: 130 · Interval: 1 tick · Gate: none
+//! Reads: `Hunger`, `Cold`; `SimResources.rules.society.firewood`
+//! Writes: `Hunger`
+//! Events: none
+//!
 //! V7 Phase 5-α — `HungerDecaySystem` (priority 130, every tick).
 //!
 //! Walks every entity carrying [`Hunger`] and calls

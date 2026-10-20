@@ -1,3 +1,5 @@
+//! Family probe tracer: follows people, family events, daily births and fissions and assembles
+//! the family trace files. Read-only.
 use super::{family_events, family_samples};
 use serde_json::{json, Value};
 use sim_core::components::{

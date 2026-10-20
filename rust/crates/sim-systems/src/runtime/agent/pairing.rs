@@ -1,3 +1,11 @@
+//! PairingSystem: pairs unpartnered adult women and men of each settlement at the family rule's minute.
+//!
+//! Priority: 144 · Interval: 1 tick (acts daily at `pair_minute`) · Gate: `WorldRules.society.family`
+//! Reads: `Agent`, `Kin`, `Sex`, `Child`, `Elder`, `BodyHealth`; `SimResources.relationships` (familiarity), `settlements`
+//! Writes: `Kin` (partner), `FamilyObservations`; `SimResources.chronicle`
+//! Events: `FamilyEvent::Paired`; chronicle `Paired`
+//!
+//! Also hosts `record_family_event` and `birth_parents`, shared with `SettlementSystem` and `FissionSystem`.
 use hecs::{Entity, World};
 use sim_core::components::{
     close_kin, Agent, AgentId, BodyHealth, Child, Elder, FamilyEvent, FamilyObservations, Kin, Sex,

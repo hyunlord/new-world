@@ -1,3 +1,10 @@
+//! InfluenceVisualizationSystem: captures a coarse digest (Warmth total, Danger peak) of the influence grid for the HUD and tests.
+//!
+//! Priority: 1000 · Interval: 6 ticks · Gate: none
+//! Reads: `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick`
+//! Writes: its own `VisualizationDigest` (no world or resource state)
+//! Events: none
+//!
 //! `InfluenceVisualizationSystem` — priority 1000, every 6 ticks.
 //!
 //! Phase 0 Section 2.8 base. Captures a coarse digest of the current

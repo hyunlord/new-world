@@ -1,3 +1,4 @@
+//! Unit tests of the family tracer (compiled as the `tests` module of `family_trace.rs`).
 use super::super::agent_trace::AgentTracer;
 use super::*;
 use sim_core::components::{Child, Elder, Settlement};

@@ -1,3 +1,10 @@
+//! StockpileConsumeSystem: feeds hungry members near home from the settlement food stockpile.
+//!
+//! Priority: 142 · Interval: 5 ticks · Gate: none
+//! Reads: `Agent`, `Position`, `AgentState`, `Founding`, `Hunger`; `SimResources.settlements`, `rules.society` (`meals`, `relief_radius`)
+//! Writes: `Hunger`; `SimResources.settlements` (stockpile food), `tallies`
+//! Events: tallies `meals_eaten`, `meals_from_store`
+//!
 //! Direction-2 slice 2-4 — `StockpileConsumeSystem` (priority 142, warm tier).
 //!
 //! Famine-fallback consumption of the communal [`Settlement::stockpile`]. Slice
@@ -35,7 +42,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 
 // The relief amount mirrors the ground-tile eat amount; imported (not
 // redefined) from the decision module per the slice-2-4 zero-sim-core rule.
-use crate::runtime::decision::agent_decision::clock_in_window;
+use crate::runtime::decision::clock_in_window;
 use crate::runtime::decision::{HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD};
 
 /// Famine level at/above which a settlement member draws on the communal
