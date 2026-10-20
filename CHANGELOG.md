@@ -5,6 +5,43 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M1 — 2026-10-20
+
+The first colony the player commands (`docs/v8/m1/M1_GOAL.md`, report `docs/v8/m1/M1_REPORT.md`). The game now runs the **colony** world (192 × 192, 10 founders); the frozen **baseline** world stays the V7 game and still passes identity (ADR 0014). Orders are recorded commands (ADR 0012); people carry them out as jobs that give way to every survival need (ADR 0013).
+
+### Added
+- Simulation (all gated by `rules.colony`, `None` in baseline):
+  - `sim-core/src/colony/`: items (`ItemKind::Log`, `ItemStack`, `Carry`, the `ItemLedger`), trees, chop designations, stockpile zones, hut blueprints (`ColonySite`, `MaterialNeeds`), reservations, `Command` / `CommandResult` / `CommandRecord`, `Job` / `JobKind` / `JobStage`; `ColonyRule` and `WorldRules::colony`; `SimResources::colony`.
+  - `sim-systems/src/commands.rs` (`apply_command`, `submit`) and `runtime/jobs/`: `JobAssignSystem` (124), `JobExecuteSystem` (127), the decision seam, cancel and release, merge and spill, invariants.
+  - `BuildingKind::Hut`, `TargetKind::Job`, chronicle kind `HutBuilt` (22).
+  - Colony worldgen (`WorldGenConfig::colony`, `worldgen/colony.rs`): area-scaled bushes and deadwood, 18 wild regions asked, about 10,000 trees, the founder adult check. New keyed streams `STREAM_TREE_LOGS`, `STREAM_COLONY_BUSH`, `STREAM_COLONY_WOOD`, `STREAM_COLONY_FOUNDER_FIX`.
+- Bridge methods: `cmd_designate_chop`, `cmd_designate_chop_tiles`, `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint`, `can_place_blueprint`, `get_trees`, `get_colony_overlay`, `get_colony_versions`. The agent snapshot gains the `jobs`, `carry_kinds` and `carry_counts` columns. API list `docs/v8/bridge_api_m1.txt`.
+- GDScript:
+  - the colony view `scripts/world/colony/`: terrain, trees, buildings, order overlay, people, order tool;
+  - `scripts/ui/hud/order_bar.gd`;
+  - `Locale.trf`;
+  - 24 localization keys plus `BUILDING_HUT`.
+- Tooling:
+  - `worldsim_probe --scene colony [--commands FILE] [--commands-out DIR]`, `worldsim_perf natural --scene colony [--commands FILE]`, `tools/v8/u_script.json`;
+  - `tools/v8/verify_v8_0.gd`, `gen_temp_tiles.py` → `assets/v8/temp/tiles.{png,json}`, `m1_gui_test.gd`, `test_locale_trf.gd`, `compare_chronicles.py`;
+  - gate steps 17–20 (`m1_tests`, `colony_determinism`, `replay`, `uid_check`).
+- Tests: `colony_commands.rs`, `colony_jobs.rs`, `colony_world.rs`, `engine_colony_ffi.rs`, probe and unit tests; `test_gen_temp_tiles.py`, `test_compare_chronicles.py`.
+- Docs: ADRs 0012–0014; `docs/v8/m1/` (DECISIONS, base numbers, V8-0 screen check, evaluation, report); the target image `docs/images/v8_target_view_b.png`.
+
+### Changed
+- The live game: `build_game_engine` builds the colony world. The bridge feeds 12 ticks per second at 1× (a day in 120 s), at most 8 per frame. Keys 1–4 set 1×–4× (12–48 ticks/s), F1–F5 choose the order mode (ADR 0004 gains the tick definition).
+- `decision/system.rs`: +26 −1 lines (the job seam; the memory bias-only Construction arm is off in the colony, D20).
+- `ConstructionSystem`: colony sites wait for their logs; finished huts are registered through `register_dwelling`, the path planned shelters use. `BedAssignmentSystem` uses per-dwelling capacity (huts sleep 4). `despawn_agent` drops a worker's load.
+- `camp::regions` checks "within `region_water_max` of water" with a precomputed grid (same predicate).
+- Identity compares chronicle files with `compare_chronicles.py`: the kinds vocabulary may grow at its end.
+- `.uid` files are committed (check 8 of `check_docs.sh`). `.gitignore` ignores evidence images under `docs/` except `docs/images/`.
+- Baseline dumps gained `colony: None` (rules and worldgen).
+
+### Removed
+- V7 renderers and helpers (21 scripts: terrain, nature, building, agent and world renderers and their helpers), `scripts/world/cold_audit.json`, `shaders/settlement_outline.gdshader`.
+- Bridge methods `art_declump`, `art_walker_offsets` (`ffi/art_kernels.rs`).
+- The influence overlay cycled with Space (part of the deleted `world_renderer.gd`).
+
 ## V8-0 — 2026-10-20
 
 The clean slate for the V8 settlement sim. The simulation is unchanged

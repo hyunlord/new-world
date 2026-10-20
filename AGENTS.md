@@ -47,13 +47,14 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 ## The gate
 
 ```bash
-bash tools/v8/gate.sh <log_dir>        # 16 steps; every step must pass
+bash tools/v8/gate.sh <log_dir>        # 20 steps; every step except perf must pass
 ```
 
 Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
 (all targets), forbidden-math grep, GDScript strict check, headless smoke,
 identity, determinism, perf (report only), bridge API, docs check,
-inventory closure, Python unit tests. Rebuild the bridge (`cargo build -p
+inventory closure, Python unit tests, M1 tests, colony determinism,
+command replay, `.uid` check. Rebuild the bridge (`cargo build -p
 sim-bridge`) before any Godot run — `cargo test` does not refresh the library
 Godot loads.
 
@@ -73,6 +74,6 @@ Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.
 
 - Owner-facing (Korean): `README.md`, `docs/VISION.md`, `docs/ROADMAP.md`, `docs/HISTORY.md`.
 - Agent-facing (English): `docs/ARCHITECTURE.md`, `docs/decisions/`, `CHANGELOG.md`, this file, `.claude/skills/`.
-- Pass goals and their records: `docs/<line>/` (V8-0: `docs/v8/`).
+- Pass goals and their records: `docs/<line>/` (V8-0: `docs/v8/`; M1: `docs/v8/m1/`).
 - Deleted material and where it lives: `docs/archive/INDEX.md`.
 - Tooling: `tools/v8/` (gate, identity, perf, smoke, capture, inventory, docs checks).

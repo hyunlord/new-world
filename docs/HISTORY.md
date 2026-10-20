@@ -83,3 +83,12 @@
 - 지움 (모두 `v7-final-art`에 있음; 목록 [archive/INDEX.md](archive/INDEX.md)): 문서 17,280개(2.36 GiB) → 27개, `tools/` 895 → 25개, `scripts/test` 222개, V7 화면 오버레이·패널(`scripts/ui` 53 → 8개, 나머지 31개는 `scripts/core`·`scripts/world`로 이동), 신의 손(패널·브리지 메서드 2개·개입 코드), 에셋 888 → 198개, 현지화 키 5,287 → 156개, `sim-test`의 연구·패스 전용 코드(202 → 110개 파일). 저장소 트리 20,299개 2,533 MiB → 714개 18.5 MiB.
 - 구조: `game_v9…v26` 규칙 사슬 → `WorldRules::baseline` / `WorldGenConfig::baseline` 하나; 시뮬레이션 출력은 그대로(32세계 × 120일 요약·연대기 동일).
 - 문서·스킬: 이 문서와 README, VISION, ARCHITECTURE, ROADMAP, ADR 11개, CHANGELOG, 스킬 일곱 개(`.claude/skills/`: WorldSim 전용 다섯 개와 일반 스킬 `systematic-debugging`, `verification-before-completion`).
+
+## M1 첫 정착지 (2026-10-20)
+
+- 플레이어가 지시를 내린다: 베기, 비축 구역, 오두막 청사진, 구역 지우기, 취소. 지시는 기록되는 명령이라 재생하면 똑같이 되풀이된다(ADR 0012).
+- 통나무가 실제 물건이 됐다: 나무를 베면 땅에 쌓이고, 사람이 들어 나르고, 비축 구역에 쌓이고, 오두막에 들어가 소모된다. 장부가 매 틱 맞는다.
+- 일감은 여가와 빈 시간만 대신하고 생존은 건드리지 않는다(ADR 0013). 결정 시스템에는 26줄만 늘었다.
+- 두 세계: `baseline`은 V7 그대로 고정(identity 통과), 게임은 192×192 `colony`, 창설자 10명(ADR 0014). 1배속 하루 2분(초당 12틱).
+- 새 화면: 어두운 흙빛 탑다운, 사람 하나가 타일 한 칸, 임시 타일셋(코드로 그림). V7 렌더러 21개 삭제.
+- 평가(새 시드 100–131): U1–U9 모두 통과. 보고서 `docs/v8/m1/M1_REPORT.md`.

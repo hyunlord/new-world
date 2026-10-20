@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
-# V8 gate (goal 11.1). Sixteen steps, each logged to <log_dir>/<step>.log
+# V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20). Twenty steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -22,6 +22,11 @@
 #   14 docs              tools/v8/check_docs.sh
 #   15 inventory_closure tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 #   16 python_unittest   python3 -m unittest discover -s tools/v8 -p 'test_*.py'
+#   17 m1_tests          the M1 Part 1-3 tests by name (colony_commands, colony_jobs, colony_world,
+#                        engine_colony_ffi, probe::colony, jobs::, colony::) + tools/v8/test_locale_trf.gd
+#   18 colony_determinism  colony probe, seeds 0..4, 10 days, U-script, --check-determinism
+#   19 replay            a scripted colony run's recorded log replays to a byte-identical summary
+#   20 uid_check         tools/v8/check_docs_helpers.py uid (committed Godot UIDs, M1 5.3)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -67,6 +72,14 @@ step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m
 step 14 docs bash tools/v8/check_docs.sh
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'
+# M1 (goal 11.3): the Part 1-3 tests by name, the Locale.trf test, colony
+# determinism with the U-script, replay of a recorded command log, the UID check.
+step 17 m1_tests bash -c 'cd rust && cargo test --release -p sim-test --test colony_commands --test colony_jobs --test colony_world --test engine_colony_ffi -- --test-threads=8 && cargo test --release -p sim-test --lib probe::colony && cargo test --release -p sim-systems --lib jobs:: && cargo test --release -p sim-core --lib colony:: && cd .. && bash tools/v8/run_bounded.sh 120 "$GODOT_BIN" --headless --path . --script res://tools/v8/test_locale_trf.gd 2>&1 | tee /dev/stderr | grep -q "^TRF_TEST_PASS"'
+grep -E '^test result' "$LOG/m1_tests.log" | awk '{p+=$4; f+=$6} END {print "   m1_tests passed", p, "failed", f}' >> "$SUMMARY"
+step 18 colony_determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene colony --seeds 0..4 --days 10 --workers 4 --commands ../tools/v8/u_script.json --check-determinism --out "$0/colony_determinism"' "$LOG"
+grep -q 'DETERMINISM PASS' "$LOG/colony_determinism.log" || { echo "   colony_determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
+step 19 replay bash -c 'p=rust/target/release/worldsim_probe; $p --scene colony --seeds 5..7 --days 3 --workers 2 --commands tools/v8/u_script.json --out "$0/replay/first" --commands-out "$0/replay/log" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands "$0/replay/log/colony_s5_commands.json" --out "$0/replay/s5" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands tools/v8/u_script.json --out "$0/replay/s5_script" && cmp "$0/replay/s5/summary.json" "$0/replay/s5_script/summary.json" && echo "replay: the recorded log reproduces the scripted run byte for byte"' "$LOG"
+step 20 uid_check bash -c 'out=$(python3 tools/v8/check_docs_helpers.py uid); [[ -z "$out" ]] || { echo "$out"; exit 1; }; echo "every Godot source has its committed .uid"'
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

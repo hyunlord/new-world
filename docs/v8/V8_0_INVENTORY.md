@@ -571,7 +571,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `CLAUDE.md` | KEEP | rewritten as @AGENTS.md + Claude notes (10.5) | goal 10.5 |
 | `README.md` | KEEP | rewritten in Korean + English (9.1) | goal 9.1 |
 | `addons/` | DELETE | harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it | grep editor_plugins project.godot → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 27 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
+| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 29 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
 | `assets/art/` | MIXED | files inside: 646 DELETE, 19 KEEP; see the file/exception rows. Directory rule: runtime art root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/` | MIXED | files inside: 1 DELETE, 9 KEEP; see the file/exception rows. Directory rule: runtime atlas pages + region maps loaded by art_sprite_library.gd / carry_load_layer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/region_atlas.json` | DELETE | atlas pipeline metadata; nothing at runtime reads it | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -655,7 +655,9 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `assets/sprites/wildlife/` | DELETE | unreferenced pre-art-line sprites (walls/floors are to be redrawn per VISION §6.3) | VISION §6.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/tilesets/` | DELETE | unreferenced V7 TileSet | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/ui/` | KEEP | worldsim_theme.tres: project theme (project.godot gui/theme/custom) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `docs/` | MIXED | files inside: 17280 DELETE, 27 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
+| `assets/v8/` | KEEP | M1 temporary tileset drawn by tools/v8/gen_temp_tiles.py | M1 goal 9.2 |
+| `assets/v8/temp/` | KEEP | M1 temporary tileset drawn by tools/v8/gen_temp_tiles.py | M1 goal 9.2 |
+| `docs/` | MIXED | files inside: 17280 DELETE, 39 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
 | `docs/.gitkeep` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/ARCHITECTURE.md` | KEEP | new (9.5) | goal 9.5 |
 | `docs/CHANGELOG.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
@@ -687,6 +689,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `docs/decisions/` | KEEP | ADRs (9.6) | goal 9.6 |
 | `docs/design/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/guides/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
+| `docs/images/` | KEEP | at most 12 curated images (11.1 step 14) | goal 11.1 |
 | `docs/llm-setup.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/localization/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/plans/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
@@ -699,6 +702,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `docs/sprite_session_handoff_wildlife_a4.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/traits/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/v8/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/m1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/p3/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/worldmodel/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/worldmodel/sample/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
@@ -713,11 +717,12 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `localization/key_owners.json` | DELETE | duplicate-key owner policy; the generator treats a missing file as no policy, and the pruned category JSONs carry no duplicates | tools/localization_compile.py _load_key_owners; scratch dry run (Part 1) |
 | `localization/ko/` | KEEP | runtime pipeline: manifest.json, compiled/*.json, category JSONs (keys pruned to the kept UI, 7.4) | scripts/core/locale.gd; tools/v8/locale_keys.py |
 | `project.godot` | KEEP | Godot project root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 368 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 70 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
+| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 390 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 70 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/activity.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/causal.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/chronicle.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/colony.rs` | KEEP | M1 bridge orders and colony reads | M1 goal 6.5 |
 | `rust/crates/sim-bridge/src/ffi/engine_build.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/family.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/mod.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
@@ -740,6 +745,11 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/causal/ring_buffer.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/causal/storage.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/chronicle.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
+| `rust/crates/sim-core/src/colony/command.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/items.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/job.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/orders.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/components/activity.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/components/agent.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/components/agent_state.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
@@ -792,6 +802,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/rng.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rules.rs` | MOVE→rust/crates/sim-core/src/rules/mod.rs (+ baseline.rs, one file per sub-rule struct) | 8.1 | goal 8.1 |
 | `rust/crates/sim-core/src/rules/baseline.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
+| `rust/crates/sim-core/src/rules/colony.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/rules/mod.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rules/routine.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/tile/grid.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
@@ -799,6 +810,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/variety.rs` | KEEP | live: WorldVariety::draw_v18 feeds game_v26 rules/worldgen | rules.rs game_v20; worldgen game_v18 |
 | `rust/crates/sim-engine/src/intervention.rs` | DELETE | god hand (7.2) | goal 7.2 |
 | `rust/crates/sim-engine/src/lib.rs` | KEEP | tick loop, resources, RuntimeSystem trait | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/commands.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/lib.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/runtime/agent/aging.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/agent/beds.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -829,6 +841,13 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/influence/update.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/intervention.rs` | DELETE | god hand (7.2) | goal 7.2 |
+| `rust/crates/sim-systems/src/runtime/jobs/assign.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/cancel.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/execute.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/invariants.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/items.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/mod.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/seam.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/memory/memory_system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/memory/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -854,6 +873,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/survival/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/subprofile.rs` | KEEP | feature-gated timing scopes used by worldsim_perf --features subprofile | rust/crates/sim-test/Cargo.toml [features] |
 | `rust/crates/sim-systems/src/worldgen/camp.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
+| `rust/crates/sim-systems/src/worldgen/colony.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/worldgen/mod.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/noise.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/terrain.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
@@ -870,6 +890,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/src/probe/area_floor.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/args.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/chronicle_out.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/colony.rs` | KEEP | M1 colony probe (commands, U-bars, replay) | M1 goal 6.4, 10 |
 | `rust/crates/sim-test/src/probe/deaths.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/deaths_observer.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/exposure_health.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
@@ -951,12 +972,16 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/chronicle_rebuild.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/chronicle_settlement.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/chronicle_social.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/colony_commands.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
+| `rust/crates/sim-test/tests/colony_jobs.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
+| `rust/crates/sim-test/tests/colony_world.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/determinism.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_bridge_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_bridge_postverify.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_causal_chain.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_causal_events.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_causal_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_colony_ffi.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/engine_influence.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_influence_channels.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_influence_pipeline.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
@@ -1147,10 +1172,13 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scenes/main.tscn` | KEEP | main scene; deleted UI nodes removed (7.3) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scenes/test/art_calibration.tscn` | DELETE | art calibration scene / Godot test code (6.3) | goal 6.3 |
 | `scenes/ui/god_hand_panel.tscn` | DELETE | god-hand panel scene (7.2) | goal 7.2 |
-| `scripts/` | MIXED | files inside: 239 DELETE, 69 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
+| `scripts/` | MIXED | files inside: 239 DELETE, 80 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
 | `scripts/core/locale.gd` | KEEP | Locale autoload (7.3 keep set) | goal 7.3; project.godot [autoload] |
+| `scripts/core/locale.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/core/settlement_selection.gd` | KEEP | dependency of kept renderers/panels (selected village state); M1 replaces | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/core/settlement_selection.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/core/sim_reads.gd` | KEEP | SimReads: every bridge read (moved from scripts/ui/ in 8.7) | goal 8.7 |
+| `scripts/core/sim_reads.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/rendering/art/god_hand_effects.gd` | DELETE | god-hand effects renderer (7.2/7.3) | goal 7.2 |
 | `scripts/test/art/agent_pose_moments_reference_p10.gd` | DELETE | Godot test code (6.3); the V8 smoke is written fresh in tools/v8 | goal 6.3 |
 | `scripts/test/art/agent_section_clock_p10.gd` | DELETE | Godot test code (6.3); the V8 smoke is written fresh in tools/v8 | goal 6.3 |
@@ -1391,12 +1419,16 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/camp_seats.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/carry_load_layer.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/chronicle_text.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/chronicle_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/cold_audit.json` | KEEP | data read by cold_effects.gd (dependency); moved to scripts/world/ in 8.7 | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/cold_effects.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/daylight_controller.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/death_viz_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/founding_group_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/hud/hud_topbar.gd` | KEEP | hud_topbar.gd (7.3 keep set; moved from scripts/ui/panels/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/ui/hud/hud_topbar.gd.uid` | KEEP | hud_topbar.gd (7.3 keep set; moved from scripts/ui/panels/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/ui/hud/order_bar.gd` | KEEP | M1 order bar | M1 goal 9.6 |
+| `scripts/ui/hud/order_bar.gd.uid` | KEEP | M1 order bar UID | M1 5.3 |
 | `scripts/ui/morning_chill.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/nature_canopy.gd` | KEEP | live (main.tscn NatureRenderer: trees, berry bushes, deadwood); moved to scripts/world/ in 8.7; the M1 tile layer replaces it | scenes/main.tscn; DECISIONS D11, D31 |
 | `scripts/ui/nature_layout.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1404,16 +1436,22 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/need_bar_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/offscreen_marker.gd` | KEEP | dependency of agent_renderer.gd / agent_activity.gd that cannot be cut without rewriting the renderer; listed under 'M1 replaces' | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/agent_inspector_panel.gd` | KEEP | 7.3 keep set | goal 7.3 |
+| `scripts/ui/panels/agent_inspector_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/art_ui.gd` | KEEP | shared panel styling used by every kept panel (dependency) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/art_ui.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/causal_panel.gd` | KEEP | 7.3 keep set | goal 7.3 |
+| `scripts/ui/panels/causal_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/chronicle_panel.gd` | KEEP | 7.3 keep set | goal 7.3 |
+| `scripts/ui/panels/chronicle_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/feed_food_ledger.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/god_hand_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/hud_status_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/hud_topbar.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/person_activity_tooltip_p13.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/person_names.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/person_names.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/person_read_cache.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/person_read_cache.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/porter_presentation_p12.gd` | KEEP | dependency of agent_renderer.gd / agent_activity.gd that cannot be cut without rewriting the renderer; listed under 'M1 replaces' | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/restless_meter.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/seek_viz_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1428,49 +1466,50 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/world_effects.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/world_renderer.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/zoom_lod_controller.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/activity_icons.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/agent_activity.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/agent_frame_choices.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/agent_pose_moments.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/agent_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
-| `scripts/world/agent_selection_index.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art_hash.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art_season_tint.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/art_hash.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art_sprite_library.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/building_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/world/art_sprite_library.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/camera_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
-| `scripts/world/camp_seats.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/carry_load_layer.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/cold_audit.json` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/cold_effects.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/camera_controller.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/colony/agent_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/agent_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/building_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/building_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/order_tool.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/order_tool.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/overlay_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/overlay_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/terrain_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/terrain_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/tree_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/tree_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/view.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/view.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/daylight_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
-| `scripts/world/declump_offsets.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/morning_chill.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/nature_canopy.gd` | KEEP | live: main.tscn NatureRenderer draws the world's trees, berry bushes and deadwood; the M1 tile layer replaces it (ROADMAP M1) | scenes/main.tscn; diff review round 1; DECISIONS D11, D31 |
-| `scripts/world/nature_layout.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/nature_renderer.gd` | KEEP | live: main.tscn NatureRenderer draws the world's trees, berry bushes and deadwood; the M1 tile layer replaces it (ROADMAP M1) | scenes/main.tscn; diff review round 1; DECISIONS D11, D31 |
-| `scripts/world/offscreen_marker.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/daylight_controller.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/porter_presentation.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/shelter_cold.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/terrain_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
-| `scripts/world/walker_offsets.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/porter_presentation.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/wood_visuals.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/world_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
-| `shaders/` | MIXED | files inside: 1 ASK, 8 DELETE, 2 KEEP; see the file/exception rows. Directory rule: not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/wood_visuals.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/` | MIXED | files inside: 1 ASK, 10 DELETE, 2 KEEP; see the file/exception rows. Directory rule: not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/abandoned_building.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/agent_alive.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/band_territory.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/edge_awareness.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/heatmap_overlay.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/palette_swap.gdshader` | ASK | unreferenced V7 MultiMesh palette-swap shader; VISION §5 keeps a palette-swap shader for clothing colours | VISION §5; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/palette_swap.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/settlement_outline.gdshader` | KEEP | used by agent_renderer.gd (selection outline) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/shimmer.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/stress_phase.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/terrain_desaturate.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/villager_ramp.gdshader` | KEEP | palette-ramp shader used by art_sprite_library.gd (people colours; VISION §5 keeps palette swap) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/villager_ramp.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension` | KEEP | GDExtension manifest loading libsim_bridge | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `sim_bridge.gdextension.uid` | KEEP | the extension's committed Godot UID (M1 5.3) | M1 DECISIONS D3 |
 | `stats/` | DELETE | pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it | grep -rn 'stats/' rust scripts → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `tools/` | MIXED | files inside: 891 DELETE, 25 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
+| `tools/` | MIXED | files inside: 891 DELETE, 34 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
 | `tools/.gdignore` | KEEP | keeps Godot from importing tools/ | git ls-files at b1ca032f |
 | `tools/art/gen_terrain_atlas.py` | DELETE | one-off art script (6.3) | goal 6.3 |
 | `tools/art_pipeline/README.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
@@ -2358,16 +2397,19 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/check_docs.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/check_docs_helpers.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/compare_summaries.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gate.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gdscript_strict_check.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/gen_temp_tiles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/godot_bin.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity_removed_keys.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/inventory.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/locale_keys.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/locale_prune.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m1_gui_test.gd` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/perf.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/perf_summary.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/run_bounded.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -2376,7 +2418,13 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/smoke_base_counts.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/system_table.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_bridge_api.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/test_gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_gen_temp_tiles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_locale_trf.gd` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/u_script.json` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/v7_ui_deleted.txt` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/verify_v8_0.gd` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/worldmodel/bench_v0.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/bench_v1.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/check_z6.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |

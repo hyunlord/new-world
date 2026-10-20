@@ -35,6 +35,19 @@ E_GIT = "git ls-files at b1ca032f"
 
 # (pattern, verdict, reason, evidence). First match wins.
 RULES = [
+    # ---- M1 additions (docs/v8/m1/M1_GOAL.md) -------------------------------------------
+    ("sim_bridge.gdextension.uid", "KEEP", "the extension's committed Godot UID (M1 5.3)", "M1 DECISIONS D3"),
+    ("scripts/world/colony/", "KEEP", "M1 colony view: terrain, trees, buildings, order overlay, people, order tool", "M1 goal 9.4; DECISIONS D25"),
+    ("scripts/ui/hud/order_bar.gd", "KEEP", "M1 order bar", "M1 goal 9.6"),
+    ("scripts/ui/hud/order_bar.gd.uid", "KEEP", "M1 order bar UID", "M1 5.3"),
+    ("assets/v8/", "KEEP", "M1 temporary tileset drawn by tools/v8/gen_temp_tiles.py", "M1 goal 9.2"),
+    ("re:^tools/v8/(verify_v8_0\\.gd|v7_ui_deleted\\.txt|compare_chronicles\\.py|test_compare_chronicles\\.py|gen_temp_tiles\\.py|test_gen_temp_tiles\\.py|m1_gui_test\\.gd|test_locale_trf\\.gd|u_script\\.json)$", "KEEP", "M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script)", "M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21"),
+    ("re:^rust/crates/sim-core/src/(colony/.*|rules/colony)\\.rs$", "KEEP", "M1 colony data: items, orders, commands, jobs, the colony rule", "M1 goal 6.1; DECISIONS D8"),
+    ("re:^rust/crates/sim-systems/src/(commands|worldgen/colony|runtime/jobs/.*)\\.rs$", "KEEP", "M1 commands, colony worldgen and the job layer", "M1 goal 6.3, 7, 8.1; ADR 0012, 0013"),
+    ("rust/crates/sim-bridge/src/ffi/colony.rs", "KEEP", "M1 bridge orders and colony reads", "M1 goal 6.5"),
+    ("rust/crates/sim-test/src/probe/colony.rs", "KEEP", "M1 colony probe (commands, U-bars, replay)", "M1 goal 6.4, 10"),
+    ("re:^rust/crates/sim-test/tests/(colony_.*|engine_colony_ffi)\\.rs$", "KEEP", "M1 tests (Parts 1-3)", "M1 goal 6.6, 7.8, 8.5"),
+    ("rust/crates/sim-test/tests/colony_support/", "KEEP", "M1 test fixtures", "M1 goal 7.8"),
     # ---- top-level files and dot-dirs -------------------------------------------------
     (".claude/settings.json", "KEEP", "local file neutralized ({}); committed blob replaced by it (7.6)", "goal 0.1, 7.6"),
     (".claude/agents/", "DELETE", "V7 harness pipeline agents (drafter/challenger/evaluator…); pipeline retired", "goal 6.3"),

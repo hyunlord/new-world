@@ -320,8 +320,9 @@ pub fn run_scripted(
         let tick = engine.current_tick();
         let mut avoid = Vec::new();
         while next_command < script.len() && script[next_command].tick == tick {
-            for cmd in crate::probe::colony::resolve(&engine, &script[next_command].spec, &mut avoid)
-                .unwrap_or_default()
+            for cmd in
+                crate::probe::colony::resolve(&engine, &script[next_command].spec, &mut avoid)
+                    .unwrap_or_default()
             {
                 sim_systems::commands::submit(&mut engine, cmd);
             }
