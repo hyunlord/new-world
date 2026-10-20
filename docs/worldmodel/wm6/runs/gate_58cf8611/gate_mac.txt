@@ -1,0 +1,19 @@
+..................sssssssssssss.......sssssssssss............................................../Users/rexxa/work/new-world-wm1/tools/worldmodel/wm1/test_m1.py:39: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)
+  self.assertTrue(np.isfinite(float(tf)) and np.isfinite(float(roll)))
+...............................................ss.........../Users/rexxa/work/new-world-wm1/tools/worldmodel/wm2/floor.py:75: RuntimeWarning: Mean of empty slice
+  "per_var": np.nanmean(corr, axis=(0, 1)).tolist(),
+..........step 2 k 6 loss 2.6990 val 0.9741 best 0.9741@2 0s
+step 4 k 6 loss 2.6385 val 0.9760 best 0.9741@2 0s
+done: best 0.9741 at 2, stop patience, round False, 1s
+step 2 k 6 loss 3.4194 val 1.0805 best 1.0805@2 0s
+step 4 k 6 loss 3.3447 val 1.0558 best 1.0558@4 0s
+..............s......................................................s.......s
+----------------------------------------------------------------------
+Ran 243 tests in 78.018s
+
+OK (skipped=29)
+done: best 1.0558 at 4, stop max_steps, round False, 1s
+seq_obs n400 s0: stop max_seconds best epoch 48 val 0.0543 60s
+mlp_obs n400 s0: stop max_epochs best epoch 392 val 0.1989 5s
+python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'  84.79s user 7.72s system 116% cpu 1:19.30 total

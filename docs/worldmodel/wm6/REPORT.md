@@ -13,7 +13,7 @@ WM-6은 이 질문에 학습 곡선으로 답한다. 반사실 학습 세계를 
 
 (Part별 파일과 핵심 구조)
 
-- **Part 0 — 설정**: `docs/worldmodel/wm6/GOAL.md`(무변경), `DECISIONS.md`(L0.1–L6.3, L7.x), `RUNLOG.md`. 레코더·v2
+- **Part 0 — 설정**: `docs/worldmodel/wm6/GOAL.md`(무변경), `DECISIONS.md`(L0.1–L7.4), `RUNLOG.md`. 레코더·v2
   매니페스트·`effects_base.json` sha256 확인, 시드 50000–51599 미사용 확인.
 - **Part 1 — 데이터 v2x**: `tools/worldmodel/wm6/launch/record_v2x.sh`(타임라인 16청크, 세계당 레코더 호출 1회,
   학습 마커에 따른 8/4 워커), `wm6/data6.py`(`merge-timeline`, `manifest`, `describe`/KS, `dataset_md`),
@@ -97,7 +97,23 @@ WM-6은 이 질문에 학습 곡선으로 답한다. 반사실 학습 세계를 
 
 (커밋별 — 최종 목록은 아래 "실행 기록"과 최종 메시지)
 
-[PART7_COMMITS]
+| Part | 커밋 | 시각 | 주요 파일 |
+|---|---|---|---|
+| 0 | `42d6231d` | 00:38 | `docs/worldmodel/wm6/GOAL.md`(무변경), `DECISIONS.md`, `RUNLOG.md` |
+| 1 | `3d76189e` | 00:44 | `tools/worldmodel/wm6/__init__.py`, `data6.py`, `launch/{code,launch,record_v2x}.sh` |
+| 2 | `dd988bf7` | 00:57 | `wm6/effects6.py`, `wm6/test_wm6.py`, `launch/{queue,gate}.sh` |
+| 3 | `f1777fb5` | 00:59 | `docs/worldmodel/wm6/METRICS.md`(사전 등록) |
+| 2 | `55682a18` | 01:13 | `effects6.py`(행 색인), `data6.py`(describe/KS), `test_wm6.py`, DECISIONS L1.1–L3.1 |
+| 2 | `b5e31658` | 01:29 | BLAS 1 스레드(`effects6.py`, `data6.py`, 런처), `judge6.py`, `launch/{finals6,fetch6}.sh`, L2.9 |
+| 4 | `af77f469` | 01:38 | N = 400 실행·평가 파일(`docs/worldmodel/wm6/runs/`), `figures6.py`, `wm5/figures.py`(수치 지도), L4.1–L4.2 |
+| 6 | `6f0c7331` | 02:01 | `references.bib`, `REFERENCES_CHECK.md`, `READINESS.md` 초안 |
+| 2 | `b7fad5bc` | 04:13 | `launch/post_v2x.sh`, `effects6.py`(매니페스트 sha), 논문 §4.5 초안 |
+| 1 | `21943f11` | 08:03 | `v2x_manifest.json`, `DATASET_V2X.md`, `runs/record/`, `runs/describe/`, `WM5.md` 한 줄, 데이터시트 |
+| 4·5 | `dfe8348c` | 08:18 | N = 800–2,000 실행·평가, obs2 전이, `runs/judge6/`, `learning_curve.{png,pdf}` |
+| 6 | `008c8f90` | 08:23 | `WM6.md`, `paper_src.md`/`paper.md`/`paper_numbers.json`, `READINESS.md`, L5.1, L6.1–L6.3 |
+| 7 | `8532576a` | 08:44 | 리뷰 1차와 응답: `judge6.py`(사후 블록, C1/C2 선택), 논문·문서 수정, `REVIEW.md`, `REPORT.md` 초안, L7.1–L7.3 |
+| 7 | `58cf8611` | 09:22 | 리뷰 2차와 응답: 불편 세계+시드 구간, 사후 시드 3–9 실행·평가, 문구 수정, L7.4 (**게이트 통과, `codex/worldmodel-2026-10` 빨리감기 대상**) |
+| 7 | (이 커밋) | | `REPORT.md` 최종, 게이트 파일 `runs/gate_58cf8611/`, `RUNLOG.md` 마지막 줄 |
 
 ### 측정 결과
 
@@ -178,11 +194,27 @@ WM-6은 이 질문에 학습 곡선으로 답한다. 반사실 학습 세계를 
 
 ### 독립 리뷰
 
-[REVIEW_SUMMARY]
+두 차례, 매번 새 `general-purpose` 하위 에이전트가 읽기 전용으로 수행했다(`REVIEW.md`).
+
+- **1차**(HEAD `008c8f90`): BLOCKING 0, MAJOR 2, MINOR 7, NOTE 6.
+  - 데이터 KS, 중첩·복제 0, 누출 없음, WM-5 재현(≈ 1e-12), 사전 등록 순서(첫 테스트 산출 01:37:18 > METRICS
+    00:59:27), judge 바이트 재현, C1·닫힘 독립 재계산을 모두 확인했다.
+  - M1: 결정 기울기 구간이 시드 변동을 빠뜨린다.
+  - M2: 과장된 주장 4개.
+  - m3: C1/C2 선택이 METRICS 문구(예측 평균)와 다르게 코딩됐다 → 문구대로 고쳤고 C2는 `seq_obs`가 됐다(여전히 KEEP).
+  - 그 밖에 문구와 기록 오류.
+  - 모두 반영했다(L7.1–L7.3).
+- **2차**(HEAD `8532576a`): BLOCKING 0, MAJOR 1, MINOR 3, NOTE 5.
+  - M1: 1차에서 더한 3시드 복원 추출 부트스트랩이 시드 분산을 2/3로 줄인다. 불편 분산으로는 `mlp_obs` 기울기 구간이 0을
+    포함한다(−0.0080 [−0.0170, +0.0011]).
+  - 조치: 수용하고 문구를 고쳤다. 사후로 시드 3–9를 더해 10시드 기울기 −0.0083 [−0.0133, −0.0034], 닫힘 0.452를
+    얻었다. 이 확장은 리뷰 2회 제한 때문에 독립 리뷰를 거치지 않았고, 사전 등록 수치는 바꾸지 않았다(L7.4).
+  - 그 밖의 문구 수정과 개수 갱신도 반영했다.
+- **최종 판단(리뷰어 2차)**: 게이트와 빨리감기를 막는 것은 없음. M1 문구를 고친 뒤 진행해도 된다고 봤다.
 
 ### 자율 결정 목록
 
-`DECISIONS.md`의 L0.1–L0.6, L1.1–L1.3, L2.1–L2.9, L3.1, L4.1–L4.2, L5.1, L6.1–L6.3, [L7.x]. 주요 결정은 다음과 같다.
+`DECISIONS.md`의 L0.1–L0.6, L1.1–L1.3, L2.1–L2.9, L3.1, L4.1–L4.2, L5.1, L6.1–L6.3, L7.1–L7.4. 주요 결정은 다음과 같다.
 - 세계당 녹화 호출로 워커 규칙을 지킴(L1.1). 타임라인을 청크로 나누고 병합(L1.2). 녹화-학습 핸드셰이크(L1.3).
 - 채점 셀이 있는 W3 팔만 신경망·GBM 학습에 사용(L2.1). ridge는 WM-5 코드 그대로(L2.2).
 - 학습 행에서 상수인 특징은 0으로 둠(L2.3). obs2 창 패딩(L2.4). 선택 통계는 val 24셀 평균(L2.5).
@@ -202,7 +234,8 @@ WM-6은 이 질문에 학습 곡선으로 답한다. 반사실 학습 세계를 
 - Part 4: N = 400 01:30–01:37, 평가 01:37. N ≥ 800 07:54–08:14, 평가 08:14–08:16.
 - Part 5: 08:17–08:19.
 - Part 6: 01:45–08:40(참고문헌 01:45–01:55, 원고 08:20–08:40).
-- Part 7: [PART7_TIMES].
+- Part 7: 리뷰 1차 08:25–08:41, 응답 08:42–08:44, 리뷰 2차 08:44–08:54, 사후 시드 08:55–09:18, 게이트 09:22–09:25,
+빨리감기·PR 댓글 09:26–09:28, 보고서 09:28–09:35.
 
 일시 정지는 없었다(맥 수면·SSH 정지 없음). 30시간 규칙의 마감은 2026-10-21 06:36:48이었고, 모든 학습이 그보다
 훨씬 전에 끝났다. 탈락 순서에 따라 뺀 항목은 없다(GBM, 세 번째 시드, N = 800, obs2 전이 모두 수행).
@@ -222,7 +255,16 @@ WM-6은 이 질문에 학습 곡선으로 답한다. 반사실 학습 세계를 
 
 ### 게이트 결과
 
-[GATE]
+- **Mac** (`58cf8611`): `python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'` → **243 OK, 29 skipped**.
+  건너뛴 것은 레코더/DGX 데이터 의존 테스트이며, WM-6의 데이터 테스트 2개가 포함된다. 78 s
+  (`runs/gate_58cf8611/gate_mac.txt`).
+- **DGX** (`58cf8611`, `wm6/gate_58cf8611/`): **243 OK, 0 skipped**, 166 s.
+- **경로**: `git diff --name-only 0f5ee066..HEAD`는 `tools/worldmodel/wm6/**`, `docs/worldmodel/wm6/**`,
+  `docs/worldmodel/paper/**`만 바꿨다. 허용된 예외는 둘이다: `tools/worldmodel/wm5/figures.py`(수치 지도에
+  `j6`/`d6`만), `docs/worldmodel/wm5/WM5.md`(맨 위 한 줄).
+- **논문 수치**: `figures.py check` OK(674개 추적 수치).
+- **브랜치**: `codex/worldmodel-2026-10`을 `7405a470..58cf8611`로 빨리감기했다(강제 푸시 없음).
+- **PR #512**: 초안 유지. 댓글 https://github.com/hyunlord/new-world/pull/512#issuecomment-6280375500
 
 ### 정직한 판단
 

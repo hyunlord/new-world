@@ -1,0 +1,268 @@
+test_action_window_sums_the_last_24_rows (test_bench_v0.MetricTests.test_action_window_sums_the_last_24_rows) ... ok
+test_auc_is_the_rank_statistic_with_ties (test_bench_v0.MetricTests.test_auc_is_the_rank_statistic_with_ties) ... ok
+test_c_cf_effects_compare_each_variant_with_its_factual (test_bench_v0.MetricTests.test_c_cf_effects_compare_each_variant_with_its_factual) ... ok
+test_nmae_divides_by_the_test_std (test_bench_v0.MetricTests.test_nmae_divides_by_the_test_std) ... ok
+test_ridge_recovers_a_linear_map_and_lambda_shrinks (test_bench_v0.MetricTests.test_ridge_recovers_a_linear_map_and_lambda_shrinks) ... ok
+test_rollout_feeds_predictions_back (test_bench_v0.MetricTests.test_rollout_feeds_predictions_back) ... ok
+test_t1_ridge_beats_persistence_on_a_learnable_series (test_bench_v0.MetricTests.test_t1_ridge_beats_persistence_on_a_learnable_series) ... ok
+test_winter_evenings_and_the_logistic_baseline (test_bench_v0.MetricTests.test_winter_evenings_and_the_logistic_baseline) ... ok
+test_b_act_schedules_are_seeded_sorted_and_on_the_grids (test_bench_v0.ScheduleTests.test_b_act_schedules_are_seeded_sorted_and_on_the_grids) ... ok
+test_splits_do_not_share_seeds_and_agent_runs_cover_their_seeds (test_bench_v0.ScheduleTests.test_splits_do_not_share_seeds_and_agent_runs_cover_their_seeds) ... ok
+test_ticks_of_the_named_moments (test_bench_v0.ScheduleTests.test_ticks_of_the_named_moments) ... ok
+test_inputs_are_observable_fields_only (test_bench_v1.BenchV1Tests.test_inputs_are_observable_fields_only) ... ok
+test_rollout_batch_matches_a_constant_model (test_bench_v1.BenchV1Tests.test_rollout_batch_matches_a_constant_model) ... ok
+test_rollout_oracle_reads_each_rows_severity (test_bench_v1.BenchV1Tests.test_rollout_oracle_reads_each_rows_severity) ... ok
+test_t2_starts_every_hour_of_the_start_days (test_bench_v1.BenchV1Tests.test_t2_starts_every_hour_of_the_start_days) ... ok
+test_t3b_counts_dark_nights_among_the_five_remaining (test_bench_v1.BenchV1Tests.test_t3b_counts_dark_nights_among_the_five_remaining) ... ok
+test_t4_is_normalized_per_target_and_never_mixes_units (test_bench_v1.BenchV1Tests.test_t4_is_normalized_per_target_and_never_mixes_units) ... ok
+test_t5_metrics_on_constructed_agents (test_bench_v1.BenchV1Tests.test_t5_metrics_on_constructed_agents) ... ok
+test_resume_keeps_verified_episodes (test_export_determinism.ExportDeterminismTests.test_resume_keeps_verified_episodes) ... ok
+test_runs_and_worker_counts_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_runs_and_worker_counts_are_byte_identical) ... ok
+test_schedule_episodes_share_the_factual_prefix (test_export_determinism.ExportDeterminismTests.test_schedule_episodes_share_the_factual_prefix) ... ok
+test_v14_runs_and_worker_counts_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_v14_runs_and_worker_counts_are_byte_identical) ... ok
+test_v15_fork_families_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_v15_fork_families_are_byte_identical) ... ok
+test_v16_fork_families_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_v16_fork_families_are_byte_identical) ... ok
+test_v17_fork_families_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_v17_fork_families_are_byte_identical) ... ok
+test_v18_fork_families_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_v18_fork_families_are_byte_identical) ... ok
+test_v19_fork_families_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_v19_fork_families_are_byte_identical) ... ok
+test_load_family_by_replicate_and_shared_prefix (test_families.FamilyTests.test_load_family_by_replicate_and_shared_prefix) ... ok
+test_manifest_lists_families_with_splits_per_root_seed (test_families.FamilyTests.test_manifest_lists_families_with_splits_per_root_seed) ... ok
+test_splits_must_cover_every_seed_once (test_families.FamilyTests.test_splits_must_cover_every_seed_once) ... ok
+test_hidden_columns_equal_the_probe_keys (test_hidden_columns.HiddenColumnTests.test_hidden_columns_equal_the_probe_keys) ... ok
+test_a_damaged_file_fails_verification (test_wm_data.LoaderTests.test_a_damaged_file_fails_verification) ... ok
+test_columns_by_name_and_simulation_invariants (test_wm_data.LoaderTests.test_columns_by_name_and_simulation_invariants) ... ok
+test_every_meta_field_is_documented (test_wm_data.LoaderTests.test_every_meta_field_is_documented) ... ok
+test_numpy_loads_every_file_and_meta_matches (test_wm_data.LoaderTests.test_numpy_loads_every_file_and_meta_matches) ... ok
+test_sample_exists (test_wm_data.LoaderTests.test_sample_exists) ... ok
+test_schema_one_sample_has_observable_columns (test_wm_data.LoaderTests.test_schema_one_sample_has_observable_columns) ... ok
+test_schema_two_meta_drops_hidden_columns (test_wm_data.LoaderTests.test_schema_two_meta_drops_hidden_columns) ... ok
+test_game_v16_world_variety_is_hidden_meta (test_wm_data.SchemaThreeTests.test_game_v16_world_variety_is_hidden_meta) ... ok
+test_recorded_schema_three_episode_loads (test_wm_data.SchemaThreeTests.test_recorded_schema_three_episode_loads) ... ok
+test_recorded_schema_two_episode_loads (test_wm_data.SchemaThreeTests.test_recorded_schema_two_episode_loads) ... ok
+test_schema_five_appends_fission_columns_and_hidden_hardiness (test_wm_data.SchemaThreeTests.test_schema_five_appends_fission_columns_and_hidden_hardiness) ... ok
+test_schema_five_layout_still_loads (test_wm_data.SchemaThreeTests.test_schema_five_layout_still_loads) ... ok
+test_schema_four_appends_exposure_columns_and_hp (test_wm_data.SchemaThreeTests.test_schema_four_appends_exposure_columns_and_hp) ... ok
+test_schema_four_layout_still_loads (test_wm_data.SchemaThreeTests.test_schema_four_layout_still_loads) ... ok
+test_schema_six_appends_hidden_pressure_and_depart_tick (test_wm_data.SchemaThreeTests.test_schema_six_appends_hidden_pressure_and_depart_tick) ... ok
+test_schema_three_carries_lineage_keys_as_identity (test_wm_data.SchemaThreeTests.test_schema_three_carries_lineage_keys_as_identity) ... ok
+test_schema_three_layout_still_loads (test_wm_data.SchemaThreeTests.test_schema_three_layout_still_loads) ... ok
+test_schema_two_layout_still_loads (test_wm_data.SchemaThreeTests.test_schema_two_layout_still_loads) ... ok
+test_alpha_recovers_an_ar1_coefficient (wm1.test_climatology.CalendarRuleTests.test_alpha_recovers_an_ar1_coefficient) ... ok
+test_wrap_rule_and_analog_shift (wm1.test_climatology.CalendarRuleTests.test_wrap_rule_and_analog_shift) ... ok
+test_year_position_and_tick_convention (wm1.test_climatology.CalendarRuleTests.test_year_position_and_tick_convention) ... ok
+test_analog_finds_the_copied_episode (wm1.test_climatology.PredictorTests.test_analog_finds_the_copied_episode) ... ok
+test_analog_shift_past_the_library (wm1.test_climatology.PredictorTests.test_analog_shift_past_the_library) ... ok
+test_definitions (wm1.test_climatology.PredictorTests.test_definitions) ... ok
+test_fit_refuses_non_train_episodes (wm1.test_climatology.PredictorTests.test_fit_refuses_non_train_episodes) ... ok
+test_members_never_read_future_rows_actions_or_severity (wm1.test_climatology.PredictorTests.test_members_never_read_future_rows_actions_or_severity) ... ok
+test_selection_uses_val_scores_and_fair_subset (wm1.test_climatology.PredictorTests.test_selection_uses_val_scores_and_fair_subset) ... ok
+test_action_alignment (wm1.test_data.FeatureTests.test_action_alignment)
+An intervention of tick t is a feature of row t and first shows in row t+1 (its change target). ... ok
+test_shapes_and_bench_consistency (wm1.test_data.FeatureTests.test_shapes_and_bench_consistency) ... ok
+test_input_fields_of_each_variant (wm1.test_data.InputFieldTests.test_input_fields_of_each_variant) ... ok
+test_no_variant_reads_hidden_or_severity_revealing_fields (wm1.test_data.InputFieldTests.test_no_variant_reads_hidden_or_severity_revealing_fields) ... ok
+test_severity_blind_state_has_no_wood_target_column (wm1.test_data.InputFieldTests.test_severity_blind_state_has_no_wood_target_column) ... ok
+test_statistics_come_from_train_rows_only (wm1.test_data.NormalizationTests.test_statistics_come_from_train_rows_only) ... ok
+test_windows_are_contiguous_train_rows (wm1.test_data.NormalizationTests.test_windows_are_contiguous_train_rows) ... ok
+test_calcore_loads_by_file_path (wm1.test_diversity.DiversityTests.test_calcore_loads_by_file_path)
+The v1 entry point loads calcore by path (diversity_v1.py is never imported from a unittest process). ... ok
+test_divergence_day_of_a_pair (wm1.test_diversity.DiversityTests.test_divergence_day_of_a_pair) ... ok
+test_eta2_for_independent_noise_around_a_constant (wm1.test_diversity.DiversityTests.test_eta2_for_independent_noise_around_a_constant) ... ok
+test_eta2_is_zero_for_identical_episodes (wm1.test_diversity.DiversityTests.test_eta2_is_zero_for_identical_episodes) ... ok
+test_eta2_within_equal_severity_groups (wm1.test_diversity.DiversityTests.test_eta2_within_equal_severity_groups) ... ok
+test_r2_of_the_reference_itself_is_one (wm1.test_diversity.DiversityTests.test_r2_of_the_reference_itself_is_one) ... ok
+test_any_hour_starts_cover_every_hour_of_the_start_days (wm1.test_evaluate.BaselineFidelityTests.test_any_hour_starts_cover_every_hour_of_the_start_days) ... ok
+test_rollouts_never_read_the_future (wm1.test_evaluate.BaselineFidelityTests.test_rollouts_never_read_the_future) ... ok
+test_severity_modes_of_the_ridge (wm1.test_evaluate.BaselineFidelityTests.test_severity_modes_of_the_ridge)
+hold = the bench's rollout; none = fit and rolled out without severity; true = each row's own severity. ... ok
+test_step_rollout_equals_vectorized_daily_naive (wm1.test_evaluate.BaselineFidelityTests.test_step_rollout_equals_vectorized_daily_naive) ... ok
+test_t1_matches_bench (wm1.test_evaluate.BaselineFidelityTests.test_t1_matches_bench) ... ok
+test_t2_matches_bench (wm1.test_evaluate.BaselineFidelityTests.test_t2_matches_bench) ... ok
+test_cases_count_dark_nights_from_the_third_winter_day (wm1.test_evaluate.T3bTests.test_cases_count_dark_nights_from_the_third_winter_day) ... ok
+test_model_count_uses_the_fire_at_the_five_02h_rows (wm1.test_evaluate.T3bTests.test_model_count_uses_the_fire_at_the_five_02h_rows) ... ok
+test_a_prefix_mismatch_is_refused (wm1.test_evaluate.T4Tests.test_a_prefix_mismatch_is_refused) ... ok
+test_oracle_branches_reproduce_the_true_effects (wm1.test_evaluate.T4Tests.test_oracle_branches_reproduce_the_true_effects) ... ok
+test_c_cf_window_equals_bench_v1 (wm1.test_family_eval.FamilyEvalTests.test_c_cf_window_equals_bench_v1) ... ok
+test_family_shape_and_home_slot (wm1.test_family_eval.FamilyEvalTests.test_family_shape_and_home_slot) ... ok
+test_prefix_mismatch_is_refused (wm1.test_family_eval.FamilyEvalTests.test_prefix_mismatch_is_refused) ... ok
+test_scores_mae_sign_and_coverage (wm1.test_family_eval.FamilyEvalTests.test_scores_mae_sign_and_coverage) ... ok
+test_true_effects_read_the_home_slot_and_pair_replicates (wm1.test_family_eval.FamilyEvalTests.test_true_effects_read_the_home_slot_and_pair_replicates) ... ok
+test_ridge_and_calendar_numbers_equal_the_merge_commit (wm1.test_golden_v0.GoldenV0Tests.test_ridge_and_calendar_numbers_equal_the_merge_commit) ... ok
+test_v0_sample_is_bit_identical_to_the_golden_values (wm1.test_golden_v0.GoldenV0Tests.test_v0_sample_is_bit_identical_to_the_golden_values) ... ok
+test_keep_weak_none (wm1.test_judge_1_1.VerdictTests.test_keep_weak_none) ... ok
+test_skill (wm1.test_judge_1_1.VerdictTests.test_skill) ... ok
+test_keep_on_raw_and_none_on_bias_removed (wm1.test_judge_1_2.ZTests.test_keep_on_raw_and_none_on_bias_removed) ... ok
+test_weak_and_missing_seed (wm1.test_judge_1_2.ZTests.test_weak_and_missing_seed) ... ok
+test_verdicts_and_y3_on_synthetic_files (wm1.test_judge_1_3.JudgeTests.test_verdicts_and_y3_on_synthetic_files) ... ok
+test_actions_change_the_rollout_only_from_their_row (wm1.test_m1.M1Tests.test_actions_change_the_rollout_only_from_their_row) ... ok
+test_layerwise_states_continue_the_sequence (wm1.test_m1.M1Tests.test_layerwise_states_continue_the_sequence)
+The per-position states of `run` resume a sequence exactly as one pass would. ... ok
+test_one_training_step_runs_and_lowers_nothing_to_nan (wm1.test_m1.M1Tests.test_one_training_step_runs_and_lowers_nothing_to_nan) ... /home/hyunlord/work/wm1-runs/wm6/_code/58cf8611/tools/worldmodel/wm1/test_m1.py:39: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  self.assertTrue(np.isfinite(float(tf)) and np.isfinite(float(roll)))
+ok
+test_predictor_rollout_shapes_and_no_future_reads (wm1.test_m1.M1Tests.test_predictor_rollout_shapes_and_no_future_reads) ... ok
+test_cached_decoding_equals_a_full_pass (wm1.test_m1.M1bTests.test_cached_decoding_equals_a_full_pass) ... ok
+test_training_step_and_predictor (wm1.test_m1.M1bTests.test_training_step_and_predictor) ... ok
+test_features_shapes_and_alignment (wm1.test_m2.M2FeatureTests.test_features_shapes_and_alignment) ... ok
+test_nearest_neighbours_on_a_line (wm1.test_m2.M2FeatureTests.test_nearest_neighbours_on_a_line) ... ok
+test_hidden_lifespan_is_never_loaded (wm1.test_m2.T5Tests.test_hidden_lifespan_is_never_loaded) ... ok
+test_scored_rows_and_baselines (wm1.test_m2.T5Tests.test_scored_rows_and_baselines) ... ok
+test_day_lines_round_trip_and_cover_the_episode (wm1.test_m3.M3SerializationTests.test_day_lines_round_trip_and_cover_the_episode) ... ok
+test_no_day_line_has_day_of_season_not_day (wm1.test_m3.M3SerializationTests.test_no_day_line_has_day_of_season_not_day) ... ok
+test_final_reads_the_dataset_from_config (wm1.test_pilot_harness.FinalPlanTests.test_final_reads_the_dataset_from_config) ... ok
+test_bias_removed_score_removes_a_per_episode_constant_only (wm1.test_pilot_harness.HarnessTests.test_bias_removed_score_removes_a_per_episode_constant_only) ... ok
+test_calendar_selection_on_bias_removed_tasks (wm1.test_pilot_harness.HarnessTests.test_calendar_selection_on_bias_removed_tasks) ... ok
+test_evaluate_end_to_end_on_schema_4 (wm1.test_pilot_harness.HarnessTests.test_evaluate_end_to_end_on_schema_4) ... ok
+test_persistence_vectorized_equals_its_step (wm1.test_pilot_harness.HarnessTests.test_persistence_vectorized_equals_its_step) ... ok
+test_start_sets_equal_bench_v1 (wm1.test_pilot_harness.HarnessTests.test_start_sets_equal_bench_v1) ... ok
+test_input_fields_per_dataset (wm1.test_pilot_harness.InputListTests.test_input_fields_per_dataset) ... ok
+test_severity_inputs_are_refused_on_schema_4 (wm1.test_pilot_harness.InputListTests.test_severity_inputs_are_refused_on_schema_4) ... ok
+test_a_hidden_column_is_refused_as_an_input (wm1.test_pilot_harness.ObservableTableTests.test_a_hidden_column_is_refused_as_an_input) ... ok
+test_table_is_the_observable_list_without_hidden_values (wm1.test_pilot_harness.ObservableTableTests.test_table_is_the_observable_list_without_hidden_values) ... ok
+test_v0_layout_deaths_unchanged (wm1.test_pilot_harness.ObservableTableTests.test_v0_layout_deaths_unchanged) ... ok
+test_hidden_is_the_state_the_heads_read (wm1.test_probe.ProbeTests.test_hidden_is_the_state_the_heads_read) ... ok
+test_probe_row_is_0600_of_day_8 (wm1.test_probe.ProbeTests.test_probe_row_is_0600_of_day_8) ... ok
+test_ridge_probe_recovers_a_linear_parameter_and_a_category (wm1.test_probe.ProbeTests.test_ridge_probe_recovers_a_linear_parameter_and_a_category) ... ok
+test_appended_columns_are_listed_and_the_rest_is_identical (wm1.test_recorder_equiv.EquivalenceTests.test_appended_columns_are_listed_and_the_rest_is_identical) ... ok
+test_columns_are_matched_by_name_not_position (wm1.test_recorder_equiv.EquivalenceTests.test_columns_are_matched_by_name_not_position) ... ok
+test_dtype_change_and_signed_zero_differ (wm1.test_recorder_equiv.EquivalenceTests.test_dtype_change_and_signed_zero_differ) ... ok
+test_one_bit_of_difference_is_found (wm1.test_recorder_equiv.EquivalenceTests.test_one_bit_of_difference_is_found) ... ok
+test_pilot_roles_and_scenes (wm1.test_registry.RegistryTests.test_pilot_roles_and_scenes) ... ok
+test_unknown_dataset_is_refused (wm1.test_registry.RegistryTests.test_unknown_dataset_is_refused) ... ok
+test_v0_entry_equals_the_hard_coded_constants (wm1.test_registry.RegistryTests.test_v0_entry_equals_the_hard_coded_constants) ... ok
+test_constant_shift_is_a_degenerate_interval_at_the_shift (wm1.test_w13.BootstrapTests.test_constant_shift_is_a_degenerate_interval_at_the_shift) ... ok
+test_interval_by_hand (wm1.test_w13.BootstrapTests.test_interval_by_hand) ... ok
+test_verdicts (wm1.test_w13.BootstrapTests.test_verdicts) ... ok
+test_world_scores_need_equal_start_counts (wm1.test_w13.BootstrapTests.test_world_scores_need_equal_start_counts) ... ok
+test_checkpoint_rounding (wm1.test_w13.CrossDatasetTests.test_checkpoint_rounding) ... ok
+test_input_list_must_match (wm1.test_w13.CrossDatasetTests.test_input_list_must_match) ... ok
+test_long_run_ramp_equals_r3_for_the_first_3000_steps (wm1.test_w13.CurriculumTests.test_long_run_ramp_equals_r3_for_the_first_3000_steps) ... ok
+test_parser_accepts_ramp_steps (wm1.test_w13.CurriculumTests.test_parser_accepts_ramp_steps) ... ok
+test_ramp_steps_0_reproduces_the_old_ramp_and_patience_start (wm1.test_w13.CurriculumTests.test_ramp_steps_0_reproduces_the_old_ramp_and_patience_start) ... ok
+test_game_v16_arm_is_wm12s_65_names_and_game_v17_adds_two_state_columns (wm1.test_w13.InputListTests.test_game_v16_arm_is_wm12s_65_names_and_game_v17_adds_two_state_columns) ... ok
+test_schema_5_table_per_dataset (wm1.test_w13.InputListTests.test_schema_5_table_per_dataset) ... ok
+test_mean_of_world_means_is_the_pooled_mean (wm1.test_w13.PerWorldTests.test_mean_of_world_means_is_the_pooled_mean) ... ok
+test_off_by_default (wm1.test_w13.PerWorldTests.test_off_by_default) ... ok
+test_first_fission_day_inside_the_train_range (wm1.test_w13.ProbeObservableTests.test_first_fission_day_inside_the_train_range) ... ok
+test_manifest_roles_and_nested_seeds (wm1.test_w13.RegistryTests.test_manifest_roles_and_nested_seeds) ... ok
+test_nested_training_sets (wm1.test_w13.RegistryTests.test_nested_training_sets) ... ok
+test_identical_feature_tables (wm1.test_w13.Schema5TwinTests.test_identical_feature_tables) ... ok
+test_an5_every_hour_168_on_p10_v16 (wm1.test_w13.WM12NumberTests.test_an5_every_hour_168_on_p10_v16) ... ok
+test_cap_at_3000_and_inactive_off_grid (wm1.test_w13.Wm12RuleTests.test_cap_at_3000_and_inactive_off_grid) ... ok
+test_patience_counts_from_step_1500 (wm1.test_w13.Wm12RuleTests.test_patience_counts_from_step_1500) ... ok
+test_run_ending_first_is_recorded (wm1.test_w13.Wm12RuleTests.test_run_ending_first_is_recorded) ... ok
+test_batched_validation_equals_the_per_episode_path (wm2.test_wm2.BatchedValidationTests.test_batched_validation_equals_the_per_episode_path) ... ok
+test_full_burn_in_states_equal_the_sequential_teacher_forced_states (wm2.test_wm2.BurnInTests.test_full_burn_in_states_equal_the_sequential_teacher_forced_states) ... ok
+test_full_predictor_is_the_warm_up_from_row_0 (wm2.test_wm2.BurnInTests.test_full_predictor_is_the_warm_up_from_row_0) ... ok
+test_window_batch_is_wm13s_batch_bit_for_bit (wm2.test_wm2.BurnInTests.test_window_batch_is_wm13s_batch_bit_for_bit) ... ok
+test_an5_arm_takes_one_case_per_world (wm2.test_wm2.EffectTests.test_an5_arm_takes_one_case_per_world) ... ok
+test_rule_and_paired_bootstrap (wm2.test_wm2.EffectTests.test_rule_and_paired_bootstrap) ... ok
+test_true_effects_alignment_and_censoring (wm2.test_wm2.EffectTests.test_true_effects_alignment_and_censoring) ... ok
+test_truth_predictor_scores_zero_and_zero_predictor_scores_mean_abs_over_std (wm2.test_wm2.EffectTests.test_truth_predictor_scores_zero_and_zero_predictor_scores_mean_abs_over_std) ... ok
+test_gaussian_noise_gives_sigma_sqrt_2_over_pi (wm2.test_wm2.FloorTests.test_gaussian_noise_gives_sigma_sqrt_2_over_pi) ... /home/hyunlord/work/wm1-runs/wm6/_code/58cf8611/tools/worldmodel/wm2/floor.py:75: RuntimeWarning: Mean of empty slice
+  "per_var": np.nanmean(corr, axis=(0, 1)).tolist(),
+ok
+test_identical_replicates_give_zero (wm2.test_wm2.FloorTests.test_identical_replicates_give_zero) ... ok
+test_matched_score_of_the_truth_is_zero (wm2.test_wm2.FloorTests.test_matched_score_of_the_truth_is_zero) ... ok
+test_schema_6_table_has_no_hidden_or_settlement_slot_field (wm2.test_wm2.InputListTests.test_schema_6_table_has_no_hidden_or_settlement_slot_field) ... ok
+test_v2_input_lists (wm2.test_wm2.InputListTests.test_v2_input_lists) ... ok
+test_manifest_roles_splits_and_casts (wm2.test_wm2.RegistryTests.test_manifest_roles_splits_and_casts) ... ok
+test_v2_groups (wm2.test_wm2.RegistryTests.test_v2_groups) ... ok
+test_jobs_reproduce_the_predictor_rollouts_and_add_the_two_columns (wm2.test_wm2.RolloutExtTests.test_jobs_reproduce_the_predictor_rollouts_and_add_the_two_columns) ... ok
+test_baselines_on_synthetic_worlds (wm2.test_wm2.SplitDayTests.test_baselines_on_synthetic_worlds) ... ok
+test_split_event_and_restricted_day (wm2.test_wm2.SplitEventTests.test_split_event_and_restricted_day) ... ok
+test_train_writes_val_metrics_for_both_kinds (wm2.test_wm2.TrainEndToEndTests.test_train_writes_val_metrics_for_both_kinds) ... families: 2 families, 12 members
+step 2 k 6 loss 2.6990 val 0.9741 best 0.9741@2 0s
+step 4 k 6 loss 2.6385 val 0.9760 best 0.9741@2 0s
+done: best 0.9741 at 2, stop patience, round False, 2s
+step 2 k 6 loss 3.4194 val 1.0805 best 1.0805@2 0s
+step 4 k 6 loss 3.3447 val 1.0558 best 1.0558@4 0s
+ok
+test_fixed_subsample_of_validation_starts (wm2.test_wm2.ValSubsampleTests.test_fixed_subsample_of_validation_starts) ... ok
+test_structural_checks_pass_and_the_ratio_reads_the_jump_at_c_plus_1 (wm3.test_wm3.AuditA1Tests.test_structural_checks_pass_and_the_ratio_reads_the_jump_at_c_plus_1) ... ok
+test_certain_split_at_step_5 (wm3.test_wm3.ExpectedDayTests.test_certain_split_at_step_5) ... ok
+test_constant_hazard_is_the_geometric_expectation (wm3.test_wm3.ExpectedDayTests.test_constant_hazard_is_the_geometric_expectation) ... ok
+test_the_harness_returns_the_stubs_jump_at_lag_1 (wm3.test_wm3.HarnessLag1Tests.test_the_harness_returns_the_stubs_jump_at_lag_1) ... ok
+test_hazard_rollout_reproduces_rollout_jobs (wm3.test_wm3.HazardRolloutTests.test_hazard_rollout_reproduces_rollout_jobs) ... ok
+test_input_list_is_wm2s_and_has_no_hidden_field (wm3.test_wm3.InputListTests.test_input_list_is_wm2s_and_has_no_hidden_field) ... ok
+test_v3_per_world_score_and_the_untrained_head_cap (wm3.test_wm3.JudgeTests.test_v3_per_world_score_and_the_untrained_head_cap) ... ok
+test_hazard_target (wm3.test_wm3.LossTests.test_hazard_target) ... ok
+test_no_cast_windows_equals_losses_tf (wm3.test_wm3.LossTests.test_no_cast_windows_equals_losses_tf) ... ok
+test_pair_and_hazard_terms (wm3.test_wm3.LossTests.test_pair_and_hazard_terms) ... ok
+test_run_directory_round_trips_through_load_predictor (wm3.test_wm3.ModelTests.test_run_directory_round_trips_through_load_predictor) ... ok
+test_wm2_state_dict_gives_bit_identical_heads (wm3.test_wm3.ModelTests.test_wm2_state_dict_gives_bit_identical_heads) ... ok
+test_predictions_reproduce_model_predictions_on_two_val_families (wm3.test_wm3.PredictionsEqualTests.test_predictions_reproduce_model_predictions_on_two_val_families) ... ok
+test_cases_and_cast_windows (wm3.test_wm3.SamplerTests.test_cases_and_cast_windows) ... ok
+test_seven_day_validation_choice (wm3.test_wm3.V2BaselineTests.test_seven_day_validation_choice) ... ok
+test_confounded_policy_naive_biased_ipw_unbiased (wm4.test_wm4.BaselineTests.test_confounded_policy_naive_biased_ipw_unbiased) ... ok
+test_match5_and_zero_and_selection (wm4.test_wm4.BaselineTests.test_match5_and_zero_and_selection) ... ok
+test_randomized_policy_no_bias (wm4.test_wm4.BaselineTests.test_randomized_policy_no_bias) ... ok
+test_weights_by_hand (wm4.test_wm4.BaselineTests.test_weights_by_hand) ... ok
+test_forward_shapes_and_causality (wm4.test_wm4.CausalTests.test_forward_shapes_and_causality) ... ok
+test_grad_reverse_sign (wm4.test_wm4.CausalTests.test_grad_reverse_sign) ... ok
+test_head_reversal_reaches_the_representation (wm4.test_wm4.CausalTests.test_head_reversal_reaches_the_representation) ... ok
+test_prediction_contract (wm4.test_wm4.CausalTests.test_prediction_contract)
+effect = arm rollout − none rollout from the same history at the cast token, read at tokens + 7 / + 30; ... ok
+test_dead_world_is_not_a_decision (wm4.test_wm4.PolicyTests.test_dead_world_is_not_a_decision) ... ok
+test_decision_rows_and_ticks (wm4.test_wm4.PolicyTests.test_decision_rows_and_ticks) ... ok
+test_probabilities_per_tercile_and_overlap (wm4.test_wm4.PolicyTests.test_probabilities_per_tercile_and_overlap) ... ok
+test_schedule_rows (wm4.test_wm4.PolicyTests.test_schedule_rows) ... ok
+test_single_cast_determinism_and_the_draw (wm4.test_wm4.PolicyTests.test_single_cast_determinism_and_the_draw) ... ok
+test_terciles (wm4.test_wm4.PolicyTests.test_terciles) ... ok
+test_observed_equals_factual_through_the_cast_row (wm4.test_wm4.PrefixTests.test_observed_equals_factual_through_the_cast_row) ... ok
+test_head_rewrite_equals_platt (wm4.test_wm4.RecalTests.test_head_rewrite_equals_platt) ... ok
+test_p30_and_fit (wm4.test_wm4.RecalTests.test_p30_and_fit) ... ok
+test_obs_dataset (wm4.test_wm4.RegistryTests.test_obs_dataset) ... ok
+test_floor_is_the_pooled_std (wm4.test_wm4.ScaleTests.test_floor_is_the_pooled_std) ... ok
+test_cast_token_and_phase (wm4.test_wm4.TokenTests.test_cast_token_and_phase) ... ok
+test_daily_tallies_and_levels (wm4.test_wm4.TokenTests.test_daily_tallies_and_levels) ... ok
+test_inputs_are_wm2s_list_without_hidden_fields (wm4.test_wm4.TokenTests.test_inputs_are_wm2s_list_without_hidden_fields) ... ok
+test_dropping_the_survival_factor_biases_ipw (wm5.test_wm5.TestBaselines5.test_dropping_the_survival_factor_biases_ipw) ... ok
+test_ipw_unbiased_naive_biased (wm5.test_wm5.TestBaselines5.test_ipw_unbiased_naive_biased) ... ok
+test_weights_by_hand (wm5.test_wm5.TestBaselines5.test_weights_by_hand) ... ok
+test_check_casts (wm5.test_wm5.TestCastsCheck.test_check_casts) ... ok
+test_alpha_schedule_reaches_max (wm5.test_wm5.TestCausal5.test_alpha_schedule_reaches_max) ... ok
+test_crn_planned_run_reaches_alpha_max_and_keeps_last_and_best (wm5.test_wm5.TestCausal5.test_crn_planned_run_reaches_alpha_max_and_keeps_last_and_best) ... ok
+test_ct_planned_run_reaches_alpha_max_and_keeps_last_and_best (wm5.test_wm5.TestCausal5.test_ct_planned_run_reaches_alpha_max_and_keeps_last_and_best) ... ok
+test_eval_points_at_most_fifteen (wm5.test_wm5.TestCausal5.test_eval_points_at_most_fifteen) ... ok
+test_plan_reduced_only_when_cost_exceeds_budget (wm5.test_wm5.TestCausal5.test_plan_reduced_only_when_cost_exceeds_budget) ... ok
+test_time_cap_is_reported (wm5.test_wm5.TestCausal5.test_time_cap_is_reported) ... ok
+test_other_replicate_truth (wm5.test_wm5.TestFloor.test_other_replicate_truth) ... ok
+test_every_quoted_number_of_the_paper_is_in_its_source (wm5.test_wm5.TestPaperNumbers.test_every_quoted_number_of_the_paper_is_in_its_source) ... ok
+test_formats (wm5.test_wm5.TestPaperNumbers.test_formats) ... ok
+test_render_and_check_on_a_synthetic_source (wm5.test_wm5.TestPaperNumbers.test_render_and_check_on_a_synthetic_source) ... ok
+test_determinism (wm5.test_wm5.TestPolicy2.test_determinism) ... ok
+test_expected_casts_per_world (wm5.test_wm5.TestPolicy2.test_expected_casts_per_world) ... ok
+test_frozen_terciles_are_wm4s (wm5.test_wm5.TestPolicy2.test_frozen_terciles_are_wm4s) ... ok
+test_no_second_cast_within_seven_days_and_at_most_five (wm5.test_wm5.TestPolicy2.test_no_second_cast_within_seven_days_and_at_most_five) ... ok
+test_overlap_every_arm_positive_on_decision_rows (wm5.test_wm5.TestPolicy2.test_overlap_every_arm_positive_on_decision_rows) ... ok
+test_probabilities_are_wm4_doubled (wm5.test_wm5.TestPolicy2.test_probabilities_are_wm4_doubled) ... ok
+test_ref_rows_and_family_schedules (wm5.test_wm5.TestPolicy2.test_ref_rows_and_family_schedules) ... ok
+test_refractory_and_cap (wm5.test_wm5.TestPolicy2.test_refractory_and_cap) ... ok
+test_round_schedules_keep_every_earlier_cast (wm5.test_wm5.TestPolicy2.test_round_schedules_keep_every_earlier_cast) ... ok
+test_rounds_equal_replay_on_final_episode (wm5.test_wm5.TestPolicy2.test_rounds_equal_replay_on_final_episode)
+The casts of the rounds (each reading the episode with the casts so far) equal the replay on the final ... ok
+test_stream_distinct_from_wm4 (wm5.test_wm5.TestPolicy2.test_stream_distinct_from_wm4) ... ok
+test_lambda_chosen_on_val (wm5.test_wm5.TestRidge.test_lambda_chosen_on_val) ... ok
+test_observable_features_have_no_hidden_field (wm5.test_wm5.TestRidge.test_observable_features_have_no_hidden_field) ... ok
+test_recovers_a_planted_linear_effect (wm5.test_wm5.TestRidge.test_recovers_a_planted_linear_effect) ... ok
+test_readout_rounds_food_alive_deaths_not_settlements (wm5.test_wm5.TestRounding.test_readout_rounds_food_alive_deaths_not_settlements) ... ok
+test_ks_statistic_and_p (wm6.test_wm6.TestKS.test_ks_statistic_and_p) ... ok
+test_hidden_rows_and_observable_features_on_a_recorded_member (wm6.test_wm6.TestLeakage.test_hidden_rows_and_observable_features_on_a_recorded_member) ... ok
+test_observable_inputs_are_wm2_lists (wm6.test_wm6.TestLeakage.test_observable_inputs_are_wm2_lists) ... ok
+test_observable_models_read_only_observable_arrays (wm6.test_wm6.TestLeakage.test_observable_models_read_only_observable_arrays) ... ok
+test_nested_sets (wm6.test_wm6.TestNested.test_nested_sets) ... ok
+test_gru_recovers_a_planted_sequence_effect (wm6.test_wm6.TestPlanted.test_gru_recovers_a_planted_sequence_effect) ... ok
+test_mlp_recovers_a_planted_nonlinear_effect (wm6.test_wm6.TestPlanted.test_mlp_recovers_a_planted_nonlinear_effect) ... ok
+test_training_cases_are_replicate_0_and_val_unchanged (wm6.test_wm6.TestReplicateZero.test_training_cases_are_replicate_0_and_val_unchanged) ... ok
+test_merge_concatenates_runs_in_seed_order (wm6.test_wm6.TestTimelineMerge.test_merge_concatenates_runs_in_seed_order) ... ok
+test_ridge_reproduces_wm5 (wm6.test_wm6.TestWM5Reproduction.test_ridge_reproduces_wm5) ... ok
+
+----------------------------------------------------------------------
+Ran 243 tests in 164.533s
+
+OK
+done: best 1.0558 at 4, stop max_steps, round False, 1s
+seq_obs n400 s0: stop patience best epoch 179 val 0.0268 27s
+mlp_obs n400 s0: stop patience best epoch 230 val 0.2136 3s

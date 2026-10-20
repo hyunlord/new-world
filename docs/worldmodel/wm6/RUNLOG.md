@@ -35,3 +35,6 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 7 (pre-gate) | 08:26 | 08:31 | preliminary gate on `008c8f90`: Mac 243 OK (29 skipped), DGX 243 OK (0 skipped) |
 | 7 (review 2) | 08:44 | 08:54 | review round 2 (fresh subagent, read-only, HEAD `8532576a`): no BLOCKING, 1 MAJOR, 3 MINOR, 5 NOTE; judge and paper reproduced byte for byte |
 | 7 (post hoc) | 08:55 | 09:18 | seeds 3–9 of `mlp_obs` / `seq_obs` at every N (56 runs, ≤ 40 s each in the queue) and their v2 test evaluations (DECISIONS L7.4) |
+| 7 (gate) | 09:22 | 09:25 | gate on `58cf8611`: Mac 243 OK (29 skipped, 78 s); DGX 243 OK, 0 skipped (`wm6/gate_58cf8611/`, 166 s); path check clean (only the two permitted exceptions); `figures.py check` OK (674 traced numbers) |
+| 7 (publish) | 09:26 | 09:28 | `codex/worldmodel-2026-10` fast-forwarded `7405a470..58cf8611` (`git ls-remote` confirmed); PR #512 comment (issuecomment-6280375500), PR stays draft |
+| 7 (report) | 09:28 | 09:35 | REPORT.md final (Korean, section 12 format); no pause during the run; deadline 2026-10-21 06:36:48 never approached; nothing dropped |
