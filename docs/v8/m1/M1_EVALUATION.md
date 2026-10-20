@@ -2,8 +2,8 @@
 
 Fresh seeds **100–131** (never used for calibration: calibration used 0–7, D23). Nothing measured here fed back into
 any value. **Official run (Part 6):** binaries frozen in `$DATA/eval2/` at `8626fdc9`, whose simulation code is the
-final M1 code (the Part 6 review fixes, D29, changed colony trajectories: L1 ends a finished builder's job one tick
-differently). The first run (Part 5, `$DATA/eval/`, simulation code of `7e712860`) passed the same bars with the
+final M1 code: `659191e5` later adds only a guard that is always true in the colony (D30). The Part 6
+review fixes (D29) changed colony trajectories, because L1 ends a finished builder's job one tick differently. The first run (Part 5, `$DATA/eval/`, simulation code of `7e712860`) passed the same bars with the
 same counts; the hut ticks are the same on every seed, and 20 of 32 seeds differ only slightly in jobs taken
 or finished. Raw outputs: `/Users/rexxa/work/m1-data/eval2/` (and `eval/`), outside the repository.
 
@@ -33,9 +33,9 @@ All three orders were accepted on all 32 seeds (`commands_accepted` = 3, `trees_
 | U4 | log ledger exact at every tick | 32 / 32 | **32 / 32**; 0 violating ticks in 460,800 checked ticks | **PASS** |
 | U5 | reservation invariants at every tick; 0 stuck cancels on ≥ 30 / 32 | 32 / 32 invariants | **32 / 32** invariants (0 violating ticks); **32 / 32** with 0 stuck cancels | **PASS** |
 | U6 | no death from hunger, thirst or cold in 10 days, with and without the script | 32 / 32 and 32 / 32 | **32 / 32** with the script, **32 / 32** without (0 deaths of any kind) | **PASS** |
-| U7 | colony tick mean ≤ 0.6 ms and p99 ≤ 4 ms (perf.sh method, seeds 100–103, 10 days, script); Godot ≥ 60 FPS at 2× zoom, 120 s at 4× (1× zoom: report) | ms bars pass; FPS at 2× passes | mean **0.0727 ms**, p99 **0.107 ms** (medians of 3 repeats); FPS **119.99** at 2× zoom, **119.94** at 1× zoom (Part 5 view; rechecked in Part 6, see U7 details) | **PASS** |
+| U7 | colony tick mean ≤ 0.6 ms and p99 ≤ 4 ms (perf.sh method, seeds 100–103, 10 days, script); Godot ≥ 60 FPS at 2× zoom, 120 s at 4× (1× zoom: report) | ms bars pass; FPS at 2× passes | mean **0.0727 ms**, p99 **0.107 ms** (medians of 3 repeats); FPS **120.00** at 2× zoom, **119.92** at 1× zoom (final view and code; Part 5: 119.99 / 119.94) | **PASS** |
 | U8 | baseline identity unchanged | pass | PASS at every Part that touched `rust/**` (`$DATA/identity/p1_try1`, `p1_try2`, `p5`, `p6` at `8626fdc9`); final gate step 10 | **PASS** (final: see the report's gate section) |
-| U9 | GUI test (9.8) end to end | pass | `tools/v8/m1_gui_test.gd` 15 / 15 checks; shots in `$DATA/gui/eval/` | **PASS** |
+| U9 | GUI test (9.8) end to end | pass | `tools/v8/m1_gui_test.gd` 15 / 15 checks on the final code (`fda64089` view, `8626fdc9` simulation; hut built at tick 718); shots in `$DATA/gui/final/` (Part 5: 15 / 15, `$DATA/gui/eval/`) | **PASS** |
 
 Determinism: both evaluation runs ran with `--check-determinism` (a lockstep twin compared every 240 ticks,
 including the command results): `DETERMINISM PASS` on all 32 seeds, with and without the script.
@@ -47,8 +47,8 @@ including the command results): `DETERMINISM PASS` on all 32 seeds, with and wit
   p99.9 ms): 0.0722 / 0.106 / 0.141; 0.0727 / 0.107 / 0.149; 0.0730 / 0.109 / 0.155. The 1-minute load was
   5.1–6.0, so the run counts as contended. (Part 5 run: 0.0723 / 0.108 median.) The colony holds 10–29 people, against 18–40 in the baseline
   natural worlds (0.251 ms, `M1_BASE_NUMBERS.md`).
-- Godot: the release bridge library was copied to the debug path (SHA checked; restored after) and the GUI
-  test's FPS phase ran 120 s per zoom at 4× (48 ticks per second, 5,760 ticks each). 120 FPS is the display's
+- Godot: the release bridge library was copied to the debug path (SHA checked; restored after: debug `6dfb2b88`,
+  release `2353991a`) and the GUI test's FPS phase ran 120 s per zoom at 4× (48 ticks per second, 5,760 ticks each). 120 FPS is the display's
   refresh cap, so the bar is met with headroom that this method cannot measure. The 9.5 tree impostor was not
   needed.
 
