@@ -190,7 +190,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn baseline_world_reports_zero_pass5_tallies_at_tick_zero() {
+    fn baseline_world_reports_zero_meal_and_firewood_tallies_at_tick_zero() {
         let engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
         for key in [
@@ -220,7 +220,7 @@ mod tests {
         // Tick 0: every placed deadwood spot (camp ring and wild regions) holds
         // the world's drawn `deadwood_capacity`.
         let report = &engine.resources.worldgen_report;
-        let capacity = sim_core::variety::WorldVariety::draw_v18(3).deadwood_capacity;
+        let capacity = sim_core::variety::WorldVariety::draw(3).deadwood_capacity;
         let spots = report.deadwood_spots_placed + report.region_deadwood_placed;
         assert!(
             spots >= report.deadwood_spots_requested / 2,

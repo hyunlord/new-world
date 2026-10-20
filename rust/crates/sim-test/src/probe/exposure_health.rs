@@ -69,7 +69,7 @@ pub(super) fn seed_info(engine: &SimEngine) -> Value {
     // Pass 11: per-seed v17 facts, present only in worlds that have them so
     // earlier outputs are unchanged.
     if let Some(object) = info.as_object_mut() {
-        if let Some(regions) = super::pass11::regions_json(engine) {
+        if let Some(regions) = super::fission_settlements::regions_json(engine) {
             object.insert("wild_regions".into(), regions);
         }
         if let Some(e) = r
@@ -200,7 +200,7 @@ mod tests {
     #[test]
     fn baseline_world_reports_full_health_and_its_variety() {
         let engine = crate::scenes::baseline_scene(3);
-        let variety = sim_core::variety::WorldVariety::draw_v18(3);
+        let variety = sim_core::variety::WorldVariety::draw(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 3);
         // Tick 0: nobody has been exposed yet.

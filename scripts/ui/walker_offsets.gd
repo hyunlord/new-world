@@ -1,6 +1,6 @@
 extends RefCounted
 
-const Declump = preload("res://scripts/ui/art_declump_p12.gd")
+const Declump = preload("res://scripts/ui/declump_offsets.gd")
 
 static func pack_inputs(rows: Array[Dictionary], positions: Dictionary, rects: Dictionary, terrain: Dictionary, blocked: Dictionary, canvas: Transform2D) -> Dictionary:
 	var inputs: Dictionary = Declump.pack_inputs(rows, positions, terrain, blocked, rects)
@@ -16,25 +16,25 @@ static func pack_inputs(rows: Array[Dictionary], positions: Dictionary, rects: D
 
 static func walker_offsets(bridge: Node, rows: Array[Dictionary], positions: Dictionary, rects: Dictionary, terrain: Dictionary, blocked: Dictionary, canvas: Transform2D, spatial: bool = true) -> Dictionary:
 	if bridge == null or not bridge.has_method("art_walker_offsets"):
-		push_error("P13b walker candidate requires actual art_walker_offsets bridge")
+		push_error("walker offsets require actual art_walker_offsets bridge")
 		return {}
 	var inputs: Dictionary = pack_inputs(rows, positions, rects, terrain, blocked, canvas)
 	var packed: Dictionary = bridge.call("art_walker_offsets", inputs["row_ids"], inputs["visible"], inputs["walking"], inputs["place_known"], inputs["direction_xy"], inputs["target_ids"], inputs["target_xy"], inputs["rect_ids"], inputs["rect_xywh"], Vector2i(inputs["width"], inputs["height"]), inputs["terrain"], inputs["blocked_xy"], inputs["canvas"], spatial)
 	if packed.has("error"):
-		push_error("P13b walker bridge error: " + str(packed["error"]))
+		push_error("walker offsets bridge error: " + str(packed["error"]))
 		return {}
 	if typeof(packed.get("ids")) != TYPE_PACKED_INT64_ARRAY or typeof(packed.get("offsets")) != TYPE_PACKED_FLOAT32_ARRAY:
-		push_error("P13b walker bridge returned malformed packed output")
+		push_error("walker offsets bridge returned malformed packed output")
 		return {}
 	var ids: PackedInt64Array = packed["ids"]
 	var offsets: PackedFloat32Array = packed["offsets"]
 	if offsets.size() != ids.size() * 2:
-		push_error("P13b walker bridge returned mismatched output columns")
+		push_error("walker offsets bridge returned mismatched output columns")
 		return {}
 	var result: Dictionary = {}
 	for index: int in ids.size():
 		if result.has(ids[index]):
-			push_error("P13b walker bridge returned duplicate output ids")
+			push_error("walker offsets bridge returned duplicate output ids")
 			return {}
 		result[ids[index]] = Vector2(offsets[index * 2], offsets[index * 2 + 1])
 	return result

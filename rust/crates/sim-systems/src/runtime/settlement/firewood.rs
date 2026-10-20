@@ -513,7 +513,7 @@ mod tests {
     }
 
     #[test]
-    fn winter_burn_reads_the_severity_and_matches_pass6_without_weights() {
+    fn winter_burn_reads_the_severity_and_matches_the_unweighted_burn() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
         resources.rules = WorldRules::baseline(0);
         let mut r = resources.rules.society.firewood.expect("baseline firewood");

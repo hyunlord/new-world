@@ -2,7 +2,7 @@
 //!
 //! V8-0: rebased from `game_v10` (fixed regrowth [750, 1250, 1000, 500]) on
 //! the baseline, whose regrowth is that table scaled by the world's food-regen
-//! draw (`WorldVariety::draw_v18`), so the expected values come from the rule.
+//! draw (`WorldVariety::draw`), so the expected values come from the rule.
 use sim_core::components::{Agent, Hunger, Settlement};
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;

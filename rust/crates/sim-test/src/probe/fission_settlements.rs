@@ -5,7 +5,7 @@ use sim_core::components::{Agent, Founding, SettlementId};
 use sim_engine::{FissionRecord, SimEngine};
 use std::collections::BTreeMap;
 
-use super::pass10::WINTER_FIRST_DAYS;
+use super::exposure_health::WINTER_FIRST_DAYS;
 
 /// Display days at which each settlement's members are reported.
 pub(super) const MEMBER_DAYS: [u64; 4] = [30, 60, 90, 118];

@@ -10,7 +10,7 @@ use sim_engine::SimEngine;
 /// `WorldRules::baseline` (= `game_v26` at `v7-final-art`), with the world's
 /// hidden parameters stored in `resources.world_variety` for measurement.
 pub fn baseline_scene(seed: u64) -> SimEngine {
-    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let variety = sim_core::variety::WorldVariety::draw(seed);
     let mut engine = sim_systems::worldgen::build_world_with(
         &sim_systems::worldgen::WorldGenConfig::baseline(seed),
         sim_core::rules::WorldRules::baseline(seed),
@@ -28,7 +28,7 @@ mod tests {
         assert_eq!(engine.resources.world_seed, 7);
         assert_eq!(
             engine.resources.world_variety,
-            Some(sim_core::variety::WorldVariety::draw_v18(7))
+            Some(sim_core::variety::WorldVariety::draw(7))
         );
     }
 }

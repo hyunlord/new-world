@@ -34,7 +34,8 @@ pub struct VarietyRanges {
     pub region_deadwood: (u32, u32),
 }
 
-/// The ranges `game_v16` draws from.
+/// The ranges a world's hidden parameters are drawn from (the live game's;
+/// V8-0 merged the old `RANGES` and `RANGES`: these are `RANGES`).
 pub const RANGES: VarietyRanges = VarietyRanges {
     starting_agents: (18, 30),
     berry_bushes: (9, 15),
@@ -44,20 +45,8 @@ pub const RANGES: VarietyRanges = VarietyRanges {
     forest_permille: (220, 380),
     food_regen_permille: (850, 1150),
     wild_regions: (1, 3),
-    // Part 3 round 2: 5..=9 -> 7..=11 (+2 at both ends).
-    region_bushes: (7, 11),
-    // Part 3 round 3: 6..=12 -> 8..=14 (+2 at both ends).
-    region_deadwood: (8, 14),
-};
-
-/// The ranges `game_v18` draws from (Pass 12): `RANGES` with the wild-region
-/// slots of Pass 12 section 7.3 (b); the other slots are `RANGES`', so a
-/// seed's other parameters are identical across v17 and v18.
-pub const RANGES_V18: VarietyRanges = VarietyRanges {
-    // Section 7.3 (b) start values (DAUGHTER_DIAGNOSIS.md (a) and (d)).
     region_bushes: (8, 12),
     region_deadwood: (12, 18),
-    ..RANGES
 };
 
 /// Climate weights in thousandths: mild-leaning, neutral, harsh-leaning.
@@ -109,30 +98,9 @@ pub struct WorldVariety {
 }
 
 impl WorldVariety {
-    /// The v15 world: every parameter at its Pass 9 value.
-    pub const NEUTRAL: Self = Self {
-        starting_agents: 24,
-        berry_bushes: 12,
-        berry_capacity: 4,
-        deadwood_spots: 20,
-        deadwood_capacity: 6,
-        forest_permille: 300,
-        climate: 1,
-        food_regen_permille: 1000,
-        wild_regions: 0,
-        region_bushes: 0,
-        region_deadwood: 0,
-    };
-
     /// The hidden parameters of world `seed` (never reads a replicate).
     pub const fn draw(seed: u64) -> Self {
         Self::draw_with(seed, &RANGES, &CLIMATE_PERMILLE)
-    }
-
-    /// The hidden parameters of world `seed` under `RANGES_V18` (Pass 12,
-    /// `game_v18`; never reads a replicate).
-    pub const fn draw_v18(seed: u64) -> Self {
-        Self::draw_with(seed, &RANGES_V18, &CLIMATE_PERMILLE)
     }
 
     /// [`Self::draw`] with explicit ranges and climate weights.
@@ -160,17 +128,6 @@ impl WorldVariety {
         }
     }
 
-    /// This world's parameters without wild regions: what `game_v16` uses
-    /// and records (slots 0..7 only), so v16 outputs stay unchanged.
-    pub const fn without_regions(&self) -> Self {
-        Self {
-            wild_regions: 0,
-            region_bushes: 0,
-            region_deadwood: 0,
-            ..*self
-        }
-    }
-
     /// The winter severity weights of this world's climate.
     pub const fn winter_severity_permille(&self) -> [u16; 3] {
         CLIMATE_SEVERITY_PERMILLE[self.climate as usize]
@@ -194,47 +151,32 @@ mod tests {
     use super::*;
 
     #[test]
-    fn neutral_is_the_v15_world_and_scales_nothing() {
-        let n = WorldVariety::NEUTRAL;
-        assert_eq!(n.winter_severity_permille(), [350, 400, 250]);
+    fn scale_regen_scales_by_the_food_regen_draw_and_rounds_down() {
+        let neutral = WorldVariety {
+            food_regen_permille: 1000,
+            ..WorldVariety::draw(0)
+        };
         assert_eq!(
-            n.scale_regen([750, 1250, 1000, 500]),
+            neutral.scale_regen([750, 1250, 1000, 500]),
             [750, 1250, 1000, 500]
         );
         let low = WorldVariety {
             food_regen_permille: 850,
-            ..n
+            ..neutral
         };
         // 1250 x 850 / 1000 = 1062.5, rounded down.
         assert_eq!(
             low.scale_regen([750, 1250, 1000, 500]),
             [637, 1062, 850, 425]
         );
-    }
-
-    #[test]
-    fn v18_draws_share_every_slot_but_the_region_sizes() {
-        for seed in 0..500 {
-            let (a, b) = (WorldVariety::draw(seed), WorldVariety::draw_v18(seed));
-            assert_eq!(
-                WorldVariety {
-                    region_bushes: 0,
-                    region_deadwood: 0,
-                    ..a
-                },
-                WorldVariety {
-                    region_bushes: 0,
-                    region_deadwood: 0,
-                    ..b
-                }
-            );
-            assert!((RANGES_V18.region_bushes.0..=RANGES_V18.region_bushes.1)
-                .contains(&b.region_bushes));
-            assert!(
-                (RANGES_V18.region_deadwood.0..=RANGES_V18.region_deadwood.1)
-                    .contains(&b.region_deadwood)
-            );
-        }
+        assert_eq!(
+            WorldVariety {
+                climate: 1,
+                ..neutral
+            }
+            .winter_severity_permille(),
+            [350, 400, 250]
+        );
     }
 
     #[test]
@@ -245,8 +187,8 @@ mod tests {
             assert!((3..=5).contains(&v.berry_capacity));
             assert!(v.climate < 3);
             assert!((1..=3).contains(&v.wild_regions));
-            assert!((7..=11).contains(&v.region_bushes));
-            assert!((8..=14).contains(&v.region_deadwood));
+            assert!((8..=12).contains(&v.region_bushes));
+            assert!((12..=18).contains(&v.region_deadwood));
             assert_eq!(v, WorldVariety::draw(seed));
         }
     }

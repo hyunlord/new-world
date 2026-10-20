@@ -1,6 +1,6 @@
 //! Additive per-seed block (Pass 20, `game_v25` and later relations scenes;
 //! absent in every other scene, so no earlier summary gains a key). Pass 21
-//! adds a `pass21` key only under a dispute cap (`super::pass21`).
+//! adds a `pass21` key only under a dispute cap (`super::relation_caps`).
 //!
 //! `tallies`: the Pass 20 counters. `pairs_end`: every living pair at the end
 //! as `[a, b, value, estranged 0/1, base]`. `trips`: every porter trip, ended
@@ -110,7 +110,9 @@ pub(super) fn seed_block(engine: &SimEngine) -> Option<Value> {
         "days": days,
     });
     // Pass 21: the capped rule's keys (`game_v26`; absent in `game_v25`).
-    if let (Some(extra), Some(object)) = (super::pass21::block(engine), block.as_object_mut()) {
+    if let (Some(extra), Some(object)) =
+        (super::relation_caps::block(engine), block.as_object_mut())
+    {
         object.insert("pass21".into(), extra);
     }
     Some(block)

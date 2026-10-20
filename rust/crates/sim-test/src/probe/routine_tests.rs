@@ -1,4 +1,4 @@
-use super::super::pass17_activity::Observation;
+use super::super::routine_accounting::Observation;
 use super::*;
 use sim_core::components::{ActivityKind, RoutineOutcome, TargetKind};
 use sim_core::material::MaterialRegistry;

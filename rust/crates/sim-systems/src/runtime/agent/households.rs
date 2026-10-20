@@ -323,7 +323,7 @@ mod tests {
     }
 
     #[test]
-    fn no_couples_select_exactly_as_pass17() {
+    fn no_couples_select_exactly_as_the_size_only_rule() {
         let households = vec![
             vec![1, 50],
             vec![2, 100],
@@ -404,7 +404,7 @@ mod tests {
     /// mutual partner of one of its ranked members; households without a ranked
     /// member stay behind whole. Kept elders count toward every size limit but
     /// never toward `min_adults`. Without it this is Pass 17's selection.
-    fn select_departure_p18(
+    fn select_departure_reference(
         ranked: &[(u64, AgentId, bool)],
         households: &[Vec<AgentId>],
         rule: &FissionRule,
@@ -559,7 +559,7 @@ mod tests {
     }
 
     #[test]
-    fn explained_selection_chooses_exactly_pass18s_set() {
+    fn explained_selection_chooses_exactly_the_reference_set() {
         let mut stream = Stream(0x5EED_0019_0000_0001);
         let base = rule();
         let mut chosen = 0;
@@ -576,7 +576,7 @@ mod tests {
                 1 => Some(&[][..]),
                 _ => Some(couples.as_slice()),
             };
-            let frozen = select_departure_p18(&rows, &households, &rule, k, partners);
+            let frozen = select_departure_reference(&rows, &households, &rule, k, partners);
             let explained =
                 super::select_departure_explained(&rows, &households, &rule, k, partners);
             assert_eq!(

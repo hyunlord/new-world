@@ -77,10 +77,10 @@ fn harness_aging_founders() {
             .iter()
             .map(|(_, (_, l, lineage))| (*l, lineage.key))
             .collect();
-        // Baseline founder counts are the world's draw (`WorldVariety::draw_v18`),
+        // Baseline founder counts are the world's draw (`WorldVariety::draw`),
         // no longer a fixed 24.
         let founders = WorldGenConfig::baseline(seed).starting_agents as usize;
-        let (min, max) = sim_core::variety::RANGES_V18.starting_agents;
+        let (min, max) = sim_core::variety::RANGES.starting_agents;
         assert!(
             (min as usize..=max as usize).contains(&founders),
             "seed {seed}: {founders} founders"

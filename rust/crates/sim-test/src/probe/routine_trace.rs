@@ -1,5 +1,5 @@
 //! Pass 17 trace-only routine, life-stage and noon-store observations.
-use super::pass17_activity::{Counts, Observation, Person, KINDS};
+use super::routine_accounting::{Counts, Observation, Person, KINDS};
 use serde_json::{json, Value};
 use sim_core::components::{
     Activity, ActivityRest, Agent, AgentId, AgentState, Child, Elder, ResourceKind,
@@ -198,13 +198,13 @@ impl RoutineTracer {
 }
 
 #[cfg(test)]
-#[path = "pass17_tests.rs"]
+#[path = "routine_tests.rs"]
 mod tests;
 
 #[cfg(test)]
-#[path = "pass17_batch_tests.rs"]
+#[path = "routine_batch_tests.rs"]
 mod batch_tests;
 
 #[cfg(test)]
-#[path = "pass17_death_tests.rs"]
+#[path = "routine_death_tests.rs"]
 mod death_tests;

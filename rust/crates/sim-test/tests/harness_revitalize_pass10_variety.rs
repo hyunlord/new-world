@@ -1,13 +1,11 @@
-//! Pass 10 Part 2: hidden world variety (`WorldVariety::draw_v18`, the
+//! Pass 10 Part 2: hidden world variety (`WorldVariety::draw`, the
 //! draw the live baseline world is built from).
 use std::collections::BTreeMap;
 
 use sim_core::components::Agent;
 use sim_core::rng::{keyed_u64, STREAMS, STREAM_WORLD_VARIETY};
 use sim_core::rules::WorldRules;
-use sim_core::variety::{
-    WorldVariety, CLIMATE_PERMILLE, CLIMATE_SEVERITY_PERMILLE, RANGES_V18 as RANGES,
-};
+use sim_core::variety::{WorldVariety, CLIMATE_PERMILLE, CLIMATE_SEVERITY_PERMILLE, RANGES};
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 use sim_test::baseline_engine;
 use sim_test::probe::fingerprint;
@@ -25,7 +23,7 @@ fn harness_variety_ranges() {
     let mut seen: BTreeMap<&str, BTreeMap<u32, u64>> = BTreeMap::new();
     let mut climates = [0u64; 3];
     for seed in 0..n {
-        let v = WorldVariety::draw_v18(seed);
+        let v = WorldVariety::draw(seed);
         for (name, value, (lo, hi)) in [
             ("starting_agents", v.starting_agents, RANGES.starting_agents),
             ("berry_bushes", v.berry_bushes, RANGES.berry_bushes),
@@ -102,7 +100,7 @@ fn harness_variety_ranges() {
     // replicate-3 key would have given other raw values.
     assert!(STREAMS.contains(&STREAM_WORLD_VARIETY));
     for seed in [77u64, 1_234, 99_999] {
-        let v = WorldVariety::draw_v18(seed);
+        let v = WorldVariety::draw(seed);
         let raw = |slot: u32| keyed_u64(seed, STREAM_WORLD_VARIETY, 0, 0, slot, 0);
         let pick = |slot: u32, (lo, hi): (u32, u32)| {
             lo as u64 + sim_core::rng::below(raw(slot), u64::from(hi - lo + 1))
@@ -158,7 +156,7 @@ fn harness_variety_independent_of_replicate() {
         assert_eq!(forked.resources.noise_replicate_for(0), 3);
         assert_eq!(
             plain.resources.world_variety,
-            Some(WorldVariety::draw_v18(seed))
+            Some(WorldVariety::draw(seed))
         );
         assert_eq!(
             forked.resources.world_variety,
@@ -171,10 +169,10 @@ fn harness_variety_independent_of_replicate() {
         );
         // The world is built from `WorldGenConfig::baseline` /
         // `WorldRules::baseline`, whose only input is the seed
-        // (`WorldVariety::draw_v18` takes no replicate).
+        // (`WorldVariety::draw` takes no replicate).
         let mut rebuilt =
             build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed));
-        rebuilt.resources.world_variety = Some(WorldVariety::draw_v18(seed));
+        rebuilt.resources.world_variety = Some(WorldVariety::draw(seed));
         assert_eq!(fingerprint(&rebuilt), fingerprint(&plain));
     }
 }
@@ -182,9 +180,9 @@ fn harness_variety_independent_of_replicate() {
 #[test]
 fn harness_variety_deterministic() {
     for seed in [1, 6, 31_000] {
-        assert_eq!(WorldVariety::draw_v18(seed), WorldVariety::draw_v18(seed));
+        assert_eq!(WorldVariety::draw(seed), WorldVariety::draw(seed));
         let a = baseline_engine(seed);
-        let v = WorldVariety::draw_v18(seed);
+        let v = WorldVariety::draw(seed);
         let report = a.resources.worldgen_report;
         assert_eq!(
             a.world.query::<&Agent>().iter().count(),
@@ -234,7 +232,7 @@ fn harness_variety_deterministic() {
         );
     }
     // Different seeds give different worlds (not one fixed recipe).
-    let distinct: std::collections::BTreeSet<_> = (0..64u64).map(WorldVariety::draw_v18).collect();
+    let distinct: std::collections::BTreeSet<_> = (0..64u64).map(WorldVariety::draw).collect();
     assert!(distinct.len() > 60);
 }
 
@@ -255,7 +253,7 @@ fn harness_variety_worldgen_accepts_every_drawn_world() {
     let (mut wood_requested, mut wood_placed) = (0u64, 0u64);
     let failures: Vec<u64> = (0..400u64)
         .filter(|&seed| {
-            let v = WorldVariety::draw_v18(seed);
+            let v = WorldVariety::draw(seed);
             let engine = std::panic::catch_unwind(|| baseline_engine(seed));
             match engine {
                 Ok(e) => {

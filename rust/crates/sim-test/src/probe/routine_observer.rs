@@ -1,4 +1,4 @@
-use super::pass17_activity::Observation;
+use super::routine_accounting::Observation;
 use hecs::World;
 use sim_core::components::{
     Activity, Agent, AgentId, AgentState, Child, Elder, RoutineObservation, RoutineObservationBatch,

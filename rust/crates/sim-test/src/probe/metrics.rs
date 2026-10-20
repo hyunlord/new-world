@@ -178,15 +178,15 @@ pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
     let fixed_supply = economy["food_supply_per_day"].as_f64().unwrap_or(0.0);
     for extra in [
         economy,
-        super::pass4::metrics(engine, fixed_supply),
-        super::pass5::metrics(engine),
-        super::pass6::metrics(engine),
-        super::pass7::metrics(engine),
-        super::pass8::metrics(engine),
-        super::pass10::metrics(engine),
-        super::pass11::metrics(engine),
-        super::pass12::metrics(engine),
-        super::pass13::metrics(engine),
+        super::seasons_forage::metrics(engine, fixed_supply),
+        super::meals_firewood::metrics(engine),
+        super::wood_work::metrics(engine),
+        super::winter_severity::metrics(engine),
+        super::night_burn::metrics(engine),
+        super::exposure_health::metrics(engine),
+        super::fission_settlements::metrics(engine),
+        super::adult_work::metrics(engine),
+        super::area_floor::metrics(engine),
     ] {
         if let (Some(base), Some(extra)) = (row.as_object_mut(), extra.as_object()) {
             base.extend(

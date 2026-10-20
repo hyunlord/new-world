@@ -54,9 +54,9 @@ impl WorldGenConfig {
     /// `rust/crates/sim-core/tests/data/v7_final_worldgen_seed*.txt`
     /// (`tests/baseline_worldgen_matches_v7_final.rs`). Founders, bushes,
     /// deadwood, forest and wild regions are the world's hidden parameters
-    /// (`WorldVariety::draw_v18`); everything else is fixed.
+    /// (`WorldVariety::draw`); everything else is fixed.
     pub const fn baseline(seed: u64) -> Self {
-        let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+        let variety = sim_core::variety::WorldVariety::draw(seed);
         Self {
             seed,
             width: 64,

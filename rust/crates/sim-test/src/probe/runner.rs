@@ -56,13 +56,13 @@ pub(super) struct RunResult {
     /// Ticks per day and clock offset of the run (Pass 10 seed-winter windows).
     pub(super) clock: (u64, u64),
     /// Per-seed schema-eleven block (Pass 11, `pass11::seed_block`).
-    pub(super) pass11: Value,
+    pub(super) fission_block: Value,
     /// Per-seed schema-twelve block (Pass 12, `pass12::seed_block`).
-    pub(super) pass12: Value,
+    pub(super) adult_work_block: Value,
     /// Per-seed schema-thirteen block (Pass 13, `pass13::seed_block`).
-    pub(super) pass13: Value,
+    pub(super) area_floor_block: Value,
     /// Per-seed relations block (Pass 20, `pass20::seed_block`; `game_v25` only).
-    pub(super) pass20: Option<Value>,
+    pub(super) relations_block: Option<Value>,
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -212,12 +212,13 @@ fn run_seed(
         None
     };
     let initial_shelters = shelter_count(&engine);
-    let seed_info = super::pass10::seed_info(&engine);
+    let seed_info = super::exposure_health::seed_info(&engine);
     let mut exposure_death_ticks = Vec::new();
     // Pass 11: exposure deaths with stage and settlement; settlements and
     // elders at every day checkpoint.
-    let mut exposure_deaths: Vec<super::pass11::ExposureDeath> = Vec::new();
-    let mut settlement_days: BTreeMap<u64, super::pass11::SettlementDay> = BTreeMap::new();
+    let mut exposure_deaths: Vec<super::fission_settlements::ExposureDeath> = Vec::new();
+    let mut settlement_days: BTreeMap<u64, super::fission_settlements::SettlementDay> =
+        BTreeMap::new();
     let mut elders_by_day: BTreeMap<u64, u64> = BTreeMap::new();
     // Pass 11 J2: consecutive hours each settlement has had 1–2 members.
     let mut remnant_hours: BTreeMap<u32, u64> = BTreeMap::new();
@@ -275,7 +276,7 @@ fn run_seed(
     let mut tick_seconds = 0.0;
     let (mut agent_samples, mut breaches, mut actionable, mut unavailable) =
         (0u64, 0u64, 0u64, 0u64);
-    let winter_starts: BTreeMap<u64, u64> = super::pass10::WINTER_FIRST_DAYS
+    let winter_starts: BTreeMap<u64, u64> = super::exposure_health::WINTER_FIRST_DAYS
         .iter()
         .filter_map(|d| {
             clock_tick(
@@ -289,7 +290,7 @@ fn run_seed(
         .collect();
     for tick in 0..=total_ticks {
         if let Some(day) = winter_starts.get(&tick) {
-            winter_members.insert(*day, super::pass12::members_now(&engine));
+            winter_members.insert(*day, super::adult_work::members_now(&engine));
         }
         let regular = tick.is_multiple_of(args.sample_every);
         let checkpoint = tick > 0 && tick.is_multiple_of(ticks_per_day);
@@ -361,7 +362,7 @@ fn run_seed(
                 checkpoints.insert(tick / ticks_per_day, row);
                 settlement_days.insert(
                     tick / ticks_per_day,
-                    super::pass11::settlements_now(&engine),
+                    super::fission_settlements::settlements_now(&engine),
                 );
                 elders_by_day.insert(
                     tick / ticks_per_day,
@@ -452,7 +453,7 @@ fn run_seed(
                     || super::fingerprint::fingerprint(&engine)
                         != super::fingerprint::fingerprint(twin)
                     || (engine.resources.rules.agent.routine.is_some()
-                        && !super::pass17::twins_match(&engine, twin))
+                        && !super::routine_trace::twins_match(&engine, twin))
                     || (engine.resources.rules.society.family.is_some()
                         && !super::family_trace::twins_match(&engine, twin))
                     || !super::chronicle_out::twins_match(&engine, twin, &mut chronicle_seen)
@@ -486,23 +487,23 @@ fn run_seed(
         "PROBE seed={seed} shelter_plan_skips={}",
         engine.resources.shelter_plan_skips
     );
-    let pass13 = super::pass13::seed_block(&engine);
-    let pass20 = super::pass20::seed_block(&engine);
-    let pass12 = super::pass12::seed_block(
+    let area_floor_block = super::area_floor::seed_block(&engine);
+    let relations_block = super::relations_block::seed_block(&engine);
+    let adult_work_block = super::adult_work::seed_block(
         &engine,
         &winter_members,
         &formed_members,
         &exposure_deaths,
         args.days,
     );
-    let mut pass11 = super::pass11::seed_block(
+    let mut fission_block = super::fission_settlements::seed_block(
         &engine,
         &settlement_days,
         &exposure_deaths,
         &elders_by_day,
         args.days,
     );
-    if let Some(object) = pass11.as_object_mut() {
+    if let Some(object) = fission_block.as_object_mut() {
         object.insert(
             "max_hours_with_1_to_2_members".into(),
             serde_json::json!(max_remnant_hours),
@@ -510,10 +511,10 @@ fn run_seed(
     }
     Ok(RunResult {
         seed,
-        pass11,
-        pass12,
-        pass13,
-        pass20,
+        fission_block,
+        adult_work_block,
+        area_floor_block,
+        relations_block,
         checkpoints,
         census: deaths.census,
         agent_days,

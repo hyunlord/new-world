@@ -39,7 +39,7 @@ pub(super) const ACTIVITIES: [&str; 10] = [
 /// Schema-twelve row keys (see the module docs).
 pub(super) fn metrics(engine: &SimEngine) -> Value {
     let r = &engine.resources;
-    let homes = super::pass5::member_homes(engine);
+    let homes = super::meals_firewood::member_homes(engine);
     let forage = r
         .rules
         .agent
@@ -164,7 +164,7 @@ pub(super) fn seed_block(
     engine: &SimEngine,
     winter_members: &BTreeMap<u64, BTreeMap<SettlementId, u32>>,
     formed_members: &BTreeMap<SettlementId, u32>,
-    exposure: &[super::pass11::ExposureDeath],
+    exposure: &[super::fission_settlements::ExposureDeath],
     run_days: u64,
 ) -> Value {
     let r = &engine.resources;
@@ -200,7 +200,7 @@ pub(super) fn seed_block(
         .filter_map(|f| Some((f.daughter?, (f.founded_tick?, f.members.len()))))
         .collect();
     let mut winters = Vec::new();
-    for d in super::pass10::WINTER_FIRST_DAYS {
+    for d in super::exposure_health::WINTER_FIRST_DAYS {
         let (Some(start), Some(end)) = (
             super::args::clock_tick(d, 1080, tpd, offset),
             super::args::clock_tick(d + 7, 420, tpd, offset),
@@ -282,7 +282,7 @@ mod tests {
             .sum();
         // Adult members on a routine activity (`TargetKind::Activity`) are in
         // `adult_act_total` but in none of the ten classes.
-        let homes = crate::probe::pass5::member_homes(&engine);
+        let homes = crate::probe::meals_firewood::member_homes(&engine);
         let on_activity = engine
             .world
             .query::<(&Agent, Option<&AgentState>, Option<&Child>, Option<&Elder>)>()
@@ -300,7 +300,7 @@ mod tests {
             + get("adult_act_build")
             + get("adult_act_haul");
         let share = all["adult_work_share"].as_f64().expect("share");
-        let founders = u64::from(sim_core::variety::WorldVariety::draw_v18(3).starting_agents);
+        let founders = u64::from(sim_core::variety::WorldVariety::draw(3).starting_agents);
         assert!(
             total * 2 >= founders,
             "{total} adult members of {founders} founders"

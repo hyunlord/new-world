@@ -229,13 +229,13 @@ fn family_system_registration_follows_maturation_before_beds_once() {
 #[test]
 fn founders_receive_keyed_sex_and_empty_kin_only_with_family_enabled() {
     // R3: the baseline world (family rule on). Seed 7 draws its founder count
-    // from `WorldVariety::draw_v18(7)`; every founder gets a keyed sex and an
+    // from `WorldVariety::draw(7)`; every founder gets a keyed sex and an
     // empty Kin, and no family event exists at tick zero.
     let new = sim_test::baseline_engine(7);
     let people = new.world.query::<&Agent>().iter().count();
     assert_eq!(
         people as u32,
-        sim_core::variety::WorldVariety::draw_v18(7).starting_agents
+        sim_core::variety::WorldVariety::draw(7).starting_agents
     );
     assert_eq!(new.world.query::<&Sex>().iter().count(), people);
     assert_eq!(new.world.query::<&Kin>().iter().count(), people);

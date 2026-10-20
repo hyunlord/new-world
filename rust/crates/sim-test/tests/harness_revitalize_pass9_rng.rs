@@ -48,7 +48,7 @@ fn harness_lineage_founder_keys_follow_seed_and_spawn_index() {
         founders.sort_by_key(|row| row.0);
         assert_eq!(
             founders.len(),
-            WorldVariety::draw_v18(seed).starting_agents as usize
+            WorldVariety::draw(seed).starting_agents as usize
         );
         for (index, (_, lineage)) in founders.iter().enumerate() {
             assert_eq!(
@@ -84,7 +84,7 @@ fn harness_newborns_carry_their_first_parents_key() {
     // birth count, never from the settlement/tick fallback (review round 1, M1).
     let seed = 1;
     let mut engine = baseline_engine(seed);
-    let founders = WorldVariety::draw_v18(seed).starting_agents;
+    let founders = WorldVariety::draw(seed).starting_agents;
     for _ in 0..40_320 {
         engine.tick();
     }

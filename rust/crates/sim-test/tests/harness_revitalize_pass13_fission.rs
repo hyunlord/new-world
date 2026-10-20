@@ -220,7 +220,7 @@ fn harness_threshold_is_world_draw() {
 
 #[test]
 fn harness_threshold_table() {
-    // The table is the generator's output (tools/revitalize/exp_table_p13.py):
+    // The table is the generator's output (tools/revitalize/exp_table_p13.py at tag v7-final-sim):
     // E(i/1024) in thousandths, the top entry ln 2048.
     assert_eq!(EXP_TABLE.len(), 1025);
     for (i, want) in [

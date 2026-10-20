@@ -379,7 +379,7 @@ mod tests {
         // Tick 0: every founder (the world's drawn `starting_agents`) is an adult.
         assert_eq!(
             row["adults"],
-            sim_core::variety::WorldVariety::draw_v18(0).starting_agents
+            sim_core::variety::WorldVariety::draw(0).starting_agents
         );
         assert_eq!(row["children"], 0);
         for key in [

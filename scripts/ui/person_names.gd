@@ -77,13 +77,13 @@ static func _hover_person(meta: Variant, label: RichTextLabel) -> void:
 	if not str(meta).begins_with("person:"):
 		return
 	var renderer: Node = label.get_node_or_null("/root/Main/AgentRenderer")
-	if renderer != null and renderer.has_method("set_hovered_person_p12"):
-		renderer.call("set_hovered_person_p12", int(str(meta).get_slice(":", 1)), label.get_instance_id())
+	if renderer != null and renderer.has_method("set_hovered_person"):
+		renderer.call("set_hovered_person", int(str(meta).get_slice(":", 1)), label.get_instance_id())
 
 static func _leave_person(_meta: Variant, label: RichTextLabel) -> void:
 	var renderer: Node = label.get_node_or_null("/root/Main/AgentRenderer")
-	if renderer != null and renderer.has_method("clear_hovered_person_p12"):
-		renderer.call("clear_hovered_person_p12", label.get_instance_id())
+	if renderer != null and renderer.has_method("clear_hovered_person"):
+		renderer.call("clear_hovered_person", label.get_instance_id())
 
 static func _hide_hover(label: RichTextLabel) -> void:
 	if not label.is_visible_in_tree():

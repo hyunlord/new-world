@@ -287,7 +287,7 @@ mod tests {
     use sim_core::rng::{keyed_u64, STREAM_ROUTINE_PLACE};
 
     /// Pass 17's `choose`, kept to prove the short-circuit equal to it.
-    fn choose_p17(
+    fn choose_reference(
         candidates: &[Tile],
         occupancy: &Occupancy,
         seed: u64,
@@ -310,7 +310,7 @@ mod tests {
     }
 
     #[test]
-    fn short_circuit_choice_equals_the_pass17_minimum() {
+    fn short_circuit_choice_equals_the_reference_minimum() {
         let candidates: Vec<Tile> = (0..6).flat_map(|y| (0..6).map(move |x| (x, y))).collect();
         for pattern in 0_u64..2_000 {
             let mut occupancy = Occupancy::new();
@@ -325,7 +325,7 @@ mod tests {
             for key in [0, 7, u64::MAX] {
                 assert_eq!(
                     choose(&candidates, &occupancy),
-                    choose_p17(&candidates, &occupancy, 3, key, pattern)
+                    choose_reference(&candidates, &occupancy, 3, key, pattern)
                 );
             }
         }

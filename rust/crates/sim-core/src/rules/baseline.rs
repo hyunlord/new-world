@@ -5,7 +5,7 @@
 //! against the dumps in `rust/crates/sim-core/tests/data/v7_final_rules_seed*.txt`
 //! (`tests/baseline_matches_v7_final.rs`). Only the values drawn per world stay
 //! calls: the winter severity of the world's climate and the seasonal regrowth
-//! scaled by its food-regen draw (`WorldVariety::draw_v18`).
+//! scaled by its food-regen draw (`WorldVariety::draw`).
 
 use super::*;
 use crate::variety::WorldVariety;
@@ -17,7 +17,7 @@ const BASE_REGEN_PERMILLE: [u16; 4] = [750, 1250, 1000, 500];
 impl WorldRules {
     /// The live game's rules for world `seed`.
     pub const fn baseline(seed: u64) -> Self {
-        let variety = WorldVariety::draw_v18(seed);
+        let variety = WorldVariety::draw(seed);
         Self {
             agent: AgentRules {
                 move_interval_ticks: 8,

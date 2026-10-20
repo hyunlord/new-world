@@ -3,7 +3,7 @@ extends RefCounted
 
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const DAILY_NAMES: Array[String] = ["tend_fire", "craft", "repair", "hearth_circle", "explore", "play", "sit_by_fire"]
-const DailyIcons = preload("res://scripts/ui/activity_icons_p11.gd")
+const DailyIcons = preload("res://scripts/ui/activity_icons.gd")
 static var _explore_icon: ImageTexture
 
 static func snapshot_target(snapshot: Dictionary, index: int) -> int:

@@ -44,22 +44,22 @@ static func pack_inputs(rows: Array[Dictionary], targets: Dictionary, terrain: D
 
 static func declump(bridge: Node, rows: Array[Dictionary], targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary, spatial: bool = true) -> Dictionary:
 	if bridge == null or not bridge.has_method("art_declump"):
-		push_error("P12 declump candidate requires actual art_declump bridge")
+		push_error("declump requires actual art_declump bridge")
 		return {}
 	var inputs: Dictionary = pack_inputs(rows, targets, terrain, blocked, rects)
 	var packed: Dictionary = bridge.call("art_declump", inputs["row_ids"], inputs["visible"], inputs["walking"], inputs["place_known"], inputs["target_ids"], inputs["target_xy"], inputs["rect_ids"], inputs["rect_xywh"], inputs["width"], inputs["height"], inputs["terrain"], inputs["blocked_xy"], spatial)
 	if typeof(packed.get("ids")) != TYPE_PACKED_INT64_ARRAY or typeof(packed.get("offsets")) != TYPE_PACKED_FLOAT32_ARRAY:
-		push_error("P12 declump bridge returned malformed packed output")
+		push_error("declump bridge returned malformed packed output")
 		return {}
 	var ids: PackedInt64Array = packed["ids"]
 	var offsets: PackedFloat32Array = packed["offsets"]
 	if offsets.size() != ids.size() * 2:
-		push_error("P12 declump bridge returned mismatched output columns")
+		push_error("declump bridge returned mismatched output columns")
 		return {}
 	var result: Dictionary = {}
 	for index: int in ids.size():
 		if result.has(ids[index]):
-			push_error("P12 declump bridge returned duplicate output ids")
+			push_error("declump bridge returned duplicate output ids")
 			return {}
 		result[ids[index]] = Vector2(offsets[index * 2], offsets[index * 2 + 1])
 	return result

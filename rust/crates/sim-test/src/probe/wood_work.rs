@@ -69,7 +69,7 @@ mod tests {
     use sim_core::rules::WorldRules;
 
     #[test]
-    fn baseline_world_reports_zero_pass6_values_at_tick_zero() {
+    fn baseline_world_reports_zero_wood_work_values_at_tick_zero() {
         // Tick 0 (08:00, spring): nobody gathers wood and no elder exists yet.
         let engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);

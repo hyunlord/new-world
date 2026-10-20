@@ -111,7 +111,7 @@ pub(crate) struct AgentTracer {
     born_event_misses: u64,
     /// People whose computed temperament differs from their component.
     component_mismatches: u64,
-    routine: super::pass17::RoutineTracer,
+    routine: super::routine_trace::RoutineTracer,
     family: Option<super::family_trace::FamilyTracer>,
 }
 
@@ -144,7 +144,7 @@ impl AgentTracer {
     pub(crate) fn start(engine: &SimEngine) -> Self {
         let mut tracer = Self {
             seed: engine.resources.world_seed,
-            routine: super::pass17::RoutineTracer::start(engine),
+            routine: super::routine_trace::RoutineTracer::start(engine),
             family: super::family_trace::FamilyTracer::start(engine),
             ..Self::default()
         };

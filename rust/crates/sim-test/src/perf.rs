@@ -64,9 +64,8 @@ impl Feed {
 pub struct RunSpec {
     /// `natural`, `stress`, `map` or `quick`.
     pub mode: String,
-    /// The probe scene name, or the stress world's label: `stress_v19`
-    /// (`game_v19` rules), `stress_v20` or `stress_v20_inert` (Pass 16
-    /// `--rules`; the same world under `game_v20` / `game_v20_inert` rules).
+    /// The probe scene name (`baseline`), or the stress world's label
+    /// (`stress_baseline`: the stress world under the baseline rules).
     pub scene: String,
     /// World seed.
     pub seed: u64,

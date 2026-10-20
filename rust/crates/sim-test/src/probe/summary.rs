@@ -56,20 +56,20 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
             "deaths_exposure":r.checkpoints.values().last().map_or(json!(0), |row| row["deaths_exposure"].clone()),
             "seed_info":r.seed_info,
             "exposure_death_ticks":r.exposure_death_ticks,
-            "seed_winters":super::pass10::seed_winters(&r.clock_rows, &r.exposure_death_ticks, args.days, r.clock.0, r.clock.1),
-            "dawn_health":super::pass10::dawn_health(&r.clock_rows),
+            "seed_winters":super::exposure_health::seed_winters(&r.clock_rows, &r.exposure_death_ticks, args.days, r.clock.0, r.clock.1),
+            "dawn_health":super::exposure_health::dawn_health(&r.clock_rows),
             "alive_daily":r.checkpoints.values().map(|row| row["alive"].clone()).collect::<Vec<_>>(),
             "settlements_daily":r.checkpoints.values().map(|row| row["settlements"].clone()).collect::<Vec<_>>(),
             // Pass 11 (schema 11): fission, settlements alive and exposure by
             // stage and settlement-hour, per seed.
             "settlements_alive_daily":r.checkpoints.values().map(|row| row["settlements_alive"].clone()).collect::<Vec<_>>(),
-            "pass11":r.pass11,
+            "pass11":r.fission_block,
             // Pass 12 (schema 12): hazard checks, settlement-winters, fill counts.
-            "pass12":r.pass12,
+            "pass12":r.adult_work_block,
             // Pass 13 (schema 13): pressure checks, half-threshold days, splits.
-            "pass13":r.pass13});
+            "pass13":r.area_floor_block});
         // Pass 20: the relations block, only under the relations rule.
-        if let (Some(block), Some(object)) = (&r.pass20, seed_row.as_object_mut()) {
+        if let (Some(block), Some(object)) = (&r.relations_block, seed_row.as_object_mut()) {
             object.insert("pass20".into(), block.clone());
         }
         seed_row
@@ -176,9 +176,9 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
         )
     })
     .collect();
-    markdown.push_str(&pass4_sections(args, runs));
-    markdown.push_str(&pass5_sections(args, runs));
-    let rules = super::pass8::rules_block(
+    markdown.push_str(&seasons_forage_sections(args, runs));
+    markdown.push_str(&meals_firewood_sections(args, runs));
+    let rules = super::night_burn::rules_block(
         &super::runner::scene_engine(&args.scene, args.seeds.start).resources,
     );
     let report = json!({"schema_version":13,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
@@ -203,7 +203,7 @@ fn daily(run: &RunResult, day: u64, key: &str) -> Option<f64> {
 }
 
 /// Pass 4 Seasons, Demography and Foraging sections.
-fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
+fn seasons_forage_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
     const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
     let mut out = String::from("\n## Seasons\n\nEach elapsed day (checkpoint d−1 to d) is attributed to the season of its opening checkpoint; with the 480-tick clock offset that is the display day whose 08:00 starts the window, which holds 16 of its 24 hours. Day 1 opens at tick 0 (spring). Without seasons every day is spring. Supply is the current-season nominal union-catchment supply; harvest, regrowth lost at the cap and forage trips are per-day counter differences; stock is the checkpoint stockpile. Values are medians over every seed-day in the season.\n\n| Season | Seed-days | Supply/day | Harvest/day | Need/day | Stock | Regrowth lost at cap/day | Forage trips/day |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
     for (index, name) in SEASONS.iter().enumerate() {
@@ -316,7 +316,7 @@ fn opening_season(run: &RunResult, day: u64) -> Option<u64> {
 }
 
 /// Pass 5 Meals, Fire and wood, and Work by hour sections.
-fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
+fn meals_firewood_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
     const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
     let mut out = String::from("\n## Meals\n\nStore meals are units served from a settlement store (any scene); ground meals are resolved `Consuming { Food }` meals at a food tile. Per-day counter differences attributed to the season of the opening checkpoint, as in Seasons; the share is store / (store + ground) per seed-day (days with no meal skipped). Medians over seed-days; days 1–2 are excluded from the share column.\n\n| Season | Seed-days | Store meals/day | Ground meals/day | Store share (day ≥ 3) |\n|---|---:|---:|---:|---:|\n");
     let mut fire = String::from("\n## Fire and wood\n\nWood stock and target are checkpoint values (08:00); burn/day is wood gathered minus the change in wood in hand (stockpile plus carried by members), since wood only leaves hands by burning; lit share is the share of 02:00 clock samples (days ≥ 3) with every settlement's fire lit; cold member-hours/day is the per-day difference of the hourly cold tally. Medians over seed-days.\n\n| Season | Seed-days | Wood stock | Wood target | Burn/day | Lit at 02:00 | Cold member-hours/day | Wood trips/day | Wood gathered/day |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n");

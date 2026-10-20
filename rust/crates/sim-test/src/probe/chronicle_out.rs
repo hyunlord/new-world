@@ -166,7 +166,7 @@ mod tests {
         }
         assert_eq!(seen, a.resources.chronicle.len());
         // Every founder (the world's drawn `starting_agents`) is recorded at worldgen.
-        let founders = sim_core::variety::WorldVariety::draw_v18(1).starting_agents as usize;
+        let founders = sim_core::variety::WorldVariety::draw(1).starting_agents as usize;
         assert!(
             a.resources.chronicle.person_count() >= founders,
             "founders recorded at worldgen"

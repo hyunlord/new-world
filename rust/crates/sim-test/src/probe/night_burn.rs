@@ -59,7 +59,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn baseline_world_reports_pass8_values_outside_winter() {
+    fn baseline_world_reports_night_burn_values_outside_winter() {
         let mut engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 2);

@@ -4113,7 +4113,7 @@ mod society_snapshot_tests {
 }
 
 #[cfg(test)]
-mod pass3_agent_snapshot_tests {
+mod agent_snapshot_tests {
     use super::*;
 
     #[test]

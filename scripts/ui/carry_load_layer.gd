@@ -8,7 +8,7 @@ static var _props: Texture2D
 static func _load() -> void:
 	if not _manifest.is_empty():
 		return
-	_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/atlas/carry_p6.json"))
+	_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/atlas/carry_atlas.json"))
 	_body = load(str(_manifest["body_page"])) as Texture2D
 	_props = load(str(_manifest["prop_page"])) as Texture2D
 	_body.take_over_path(str(_manifest["body_page"]))

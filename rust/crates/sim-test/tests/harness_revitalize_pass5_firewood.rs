@@ -116,7 +116,7 @@ fn harness_deadwood_placement() {
     for seed in 0..4u64 {
         let engine = baseline_engine(seed);
         let r = &engine.resources;
-        let variety = WorldVariety::draw_v18(seed);
+        let variety = WorldVariety::draw(seed);
         let center = hearth(&engine);
         assert_eq!(r.wood_tiles, r.wood_source_max, "every spot starts full");
         // The camp's spots are area 0 (`wood_spot_area`); the wild regions'

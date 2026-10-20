@@ -4,12 +4,12 @@ const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const MorningChill = preload("res://scripts/ui/morning_chill.gd")
 const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
-const Porter = preload("res://scripts/ui/porter_presentation_p12.gd")
+const Porter = preload("res://scripts/ui/porter_presentation.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
-const ArtDeclumpP12 = preload("res://scripts/ui/art_declump_p12.gd")
-const ArtWalkerP13B = preload("res://scripts/ui/art_walker_p13b.gd")
+const DeclumpOffsets = preload("res://scripts/ui/declump_offsets.gd")
+const WalkerOffsets = preload("res://scripts/ui/walker_offsets.gd")
 const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
 const HoverMarker = preload("res://scripts/ui/offscreen_marker.gd")
@@ -66,62 +66,62 @@ var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
 var _spatial_hash_enabled: bool = true
-var _declump_kernel_enabled_p12: bool = OS.get_environment("P12_DECLUMP_KERNEL") != "0"
-var _declump_fixture_sink_p12: RefCounted
-var _walker_fixture_sink_p13b: RefCounted
-var _walker_kernel_enabled_p13b: bool = OS.get_environment("P13B_WALKER_KERNEL") != "0"
-var _hovered_person_p12: int = -1
-var _hover_owner_p12: int = 0
-var _hover_marker_p12: Dictionary = {}
-var _raised_sprite_p12: Sprite2D
-var _raised_icon_p12: Sprite2D
-var _raised_sprite_z_p12: int = 0
-var _raised_icon_z_p12: int = 0
-var _activity_oracle_enabled: bool = not OS.get_environment("P10_ACTIVITY_OUT").is_empty()
+var _declump_kernel_enabled: bool = OS.get_environment("WORLDSIM_DECLUMP_KERNEL") != "0"
+var _declump_fixture_sink: RefCounted
+var _walker_fixture_sink: RefCounted
+var _walker_kernel_enabled: bool = OS.get_environment("WORLDSIM_WALKER_KERNEL") != "0"
+var _hovered_person: int = -1
+var _hover_owner: int = 0
+var _hover_marker: Dictionary = {}
+var _raised_sprite: Sprite2D
+var _raised_icon: Sprite2D
+var _raised_sprite_z: int = 0
+var _raised_icon_z: int = 0
+var _activity_oracle_enabled: bool = not OS.get_environment("WORLDSIM_ACTIVITY_OUT").is_empty()
 
-const SelectionIndex = preload("res://scripts/ui/agent_selection_index_p10.gd")
+const SelectionIndex = preload("res://scripts/ui/agent_selection_index.gd")
 var _selection_index = SelectionIndex.new()
 var _selection_lookup_enabled: bool = true
-const FrameChoices = preload("res://scripts/ui/agent_frame_choices_p10.gd")
+const FrameChoices = preload("res://scripts/ui/agent_frame_choices.gd")
 var _frame_choices = FrameChoices.new()
 var _frame_choices_ready: bool = false
 var _allocation_candidate: bool = true
 var _pose_output: Dictionary = {}
-var _write_skip_enabled_p13: bool = OS.get_environment("P13_WRITE_SKIP") == "1"
-var _write_keys_p13: Dictionary = {}
-var _write_hits_p13: int = 0
-var _write_misses_p13: int = 0
-var _write_forced_p13: int = 0
+var _write_skip_enabled: bool = OS.get_environment("WORLDSIM_WRITE_SKIP") == "1"
+var _write_keys: Dictionary = {}
+var _write_hits: int = 0
+var _write_misses: int = 0
+var _write_forced: int = 0
 
-func set_perf_candidate_p13b(change_id: String, enabled: bool) -> bool:
-	if change_id != "walker" or not _declump_kernel_enabled_p12 or _write_skip_enabled_p13:
+func set_walker_kernel(change_id: String, enabled: bool) -> bool:
+	if change_id != "walker" or not _declump_kernel_enabled or _write_skip_enabled:
 		return false
-	_walker_kernel_enabled_p13b = enabled
+	_walker_kernel_enabled = enabled
 	return true
 
-func get_perf_candidate_p13b() -> Dictionary:
-	return {"change_id": "walker", "candidate_enabled": _walker_kernel_enabled_p13b,
-		"kernel_enabled": _declump_kernel_enabled_p12, "write_skip_enabled": _write_skip_enabled_p13}
+func get_walker_kernel() -> Dictionary:
+	return {"change_id": "walker", "candidate_enabled": _walker_kernel_enabled,
+		"kernel_enabled": _declump_kernel_enabled, "write_skip_enabled": _write_skip_enabled}
 
-func set_perf_candidate_p13(change_id: String, enabled: bool) -> bool:
+func set_write_skip(change_id: String, enabled: bool) -> bool:
 	if change_id != "write-skip":
 		return false
-	_write_skip_enabled_p13 = enabled
-	_invalidate_write_keys_p13()
+	_write_skip_enabled = enabled
+	_invalidate_write_keys()
 	return true
 
-func get_perf_candidate_p13() -> Dictionary:
-	return {"change_id": "write-skip", "candidate_enabled": _write_skip_enabled_p13,
-		"kernel_enabled": _declump_kernel_enabled_p12, "hits": _write_hits_p13,
-		"misses": _write_misses_p13, "forced": _write_forced_p13}
+func get_write_skip() -> Dictionary:
+	return {"change_id": "write-skip", "candidate_enabled": _write_skip_enabled,
+		"kernel_enabled": _declump_kernel_enabled, "hits": _write_hits,
+		"misses": _write_misses, "forced": _write_forced}
 
-func _invalidate_write_keys_p13() -> void:
-	_write_keys_p13.clear()
+func _invalidate_write_keys() -> void:
+	_write_keys.clear()
 
-func _on_write_locale_changed_p13(_language: String) -> void:
-	_invalidate_write_keys_p13()
+func _on_write_locale_changed(_language: String) -> void:
+	_invalidate_write_keys()
 
-func _write_children_p13(agent_id: int, sprite: Sprite2D) -> Array:
+func _write_children(agent_id: int, sprite: Sprite2D) -> Array:
 	var carry: Node = sprite.get_node_or_null("CarryLoad")
 	var founder: Node = sprite.get_node_or_null("FounderBundle")
 	var icon: Variant = _activity_icons.get(agent_id)
@@ -130,19 +130,19 @@ func _write_children_p13(agent_id: int, sprite: Sprite2D) -> Array:
 		icon.get_instance_id() if is_instance_valid(icon) else 0]
 
 
-func set_perf_candidate_p12(change_id: String, enabled: bool) -> bool:
+func set_declump_kernel(change_id: String, enabled: bool) -> bool:
 	if change_id != "declump-kernel":
 		return false
-	_declump_kernel_enabled_p12 = enabled
+	_declump_kernel_enabled = enabled
 	return true
 
-func get_perf_candidate_p12() -> Dictionary:
-	return {"change_id": "declump-kernel", "candidate_enabled": _declump_kernel_enabled_p12}
+func get_declump_kernel() -> Dictionary:
+	return {"change_id": "declump-kernel", "candidate_enabled": _declump_kernel_enabled}
 
-func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
+func set_allocation_cache(change_id: String, enabled: bool) -> bool:
 	if change_id != "allocation-cache":
 		return false
-	_invalidate_write_keys_p13()
+	_invalidate_write_keys()
 	_camp_seats.set_input_cache_enabled(true)
 	_spatial_hash_enabled = true
 	_allocation_candidate = enabled
@@ -152,14 +152,14 @@ func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
 	SpriteLibrary.set_variant_regions_cache_enabled(enabled)
 	return true
 
-func get_perf_candidate_p10() -> Dictionary:
+func get_allocation_cache() -> Dictionary:
 	return {"change_id": "allocation-cache", "candidate_enabled": _allocation_candidate}
 
 func _ready() -> void:
 	var locale: Node = get_node_or_null("/root/Locale")
 	if locale != null:
-		locale.connect("language_changed", _on_write_locale_changed_p13)
-	set_perf_candidate_p10("allocation-cache", _allocation_candidate)
+		locale.connect("language_changed", _on_write_locale_changed)
+	set_allocation_cache("allocation-cache", _allocation_candidate)
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
 	_shadow_layer = SpriteLibrary.shared_layer(self, "Shadows", 3)
 	world_sim = get_node_or_null("../WorldSim") as WorldSimNode
@@ -221,11 +221,11 @@ func _process(delta: float) -> void:
 	var tick: int = int(time.get("tick", 0))
 	ingest_chill_snapshot(snap, tick)
 	var hour: float = float(time.get("time_of_day", 12.0))
-	var selected_bits_p13: int = -1
-	if _write_skip_enabled_p13:
-		var inspector_p13: Node = get_node_or_null("../UI/AgentInspectorPanel")
-		if inspector_p13 != null:
-			selected_bits_p13 = int(inspector_p13.call("get_selected_entity_bits"))
+	var selected_bits: int = -1
+	if _write_skip_enabled:
+		var inspector_node: Node = get_node_or_null("../UI/AgentInspectorPanel")
+		if inspector_node != null:
+			selected_bits = int(inspector_node.call("get_selected_entity_bits"))
 	var draw_agents: Array[Dictionary] = []
 	for i in n:
 		var agent_id: int = int(agent_ids[i])
@@ -304,11 +304,11 @@ func _process(delta: float) -> void:
 			choice = _frame_choices.with_daily_icon(choice, daily_kind) if _allocation_candidate else Activity.with_daily_icon(choice, daily_kind)
 		var sprite_id: String = str(choice.get("sprite_id", ""))
 		var sheltered_sleep: bool = Activity.hidden(activity, has_targets, tile)
-		var write_key_p13: Array = []
-		var skip_writes_p13: bool = false
-		if _write_skip_enabled_p13:
+		var write_key: Array = []
+		var skip_writes: bool = false
+		if _write_skip_enabled:
 			# Only resolved property inputs are owned here; timers and borrowed decision rows stay live.
-			write_key_p13 = [agent_id, int(ids[i]), sprite.get_instance_id(), sprite_id,
+			write_key = [agent_id, int(ids[i]), sprite.get_instance_id(), sprite_id,
 				str(choice.get("view", "")), str(choice.get("activity", "")),
 				str(choice.get("activity", pose)), str(choice.get("fallback_kind", "")),
 				str(choice.get("qa_status", "unavailable")), look["tone"], look["hair"], body,
@@ -319,16 +319,16 @@ func _process(delta: float) -> void:
 				pose if not porter.is_empty() else activity, sprite.z_index,
 				founders.has(agent_id), carried, wood, str(choice.get("activity_icon", "")),
 				porter_zoom, not porter.is_empty(), int(porter.get("kind", -1)),
-				int(porter.get("stage", -1)), _write_children_p13(agent_id, sprite)]
-			var forced_p13: bool = int(ids[i]) == selected_bits_p13 or not _write_keys_p13.has(agent_id)
-			skip_writes_p13 = not forced_p13 and _write_keys_p13[agent_id] == write_key_p13
-			if skip_writes_p13:
-				_write_hits_p13 += 1
+				int(porter.get("stage", -1)), _write_children(agent_id, sprite)]
+			var forced_write: bool = int(ids[i]) == selected_bits or not _write_keys.has(agent_id)
+			skip_writes = not forced_write and _write_keys[agent_id] == write_key
+			if skip_writes:
+				_write_hits += 1
 			else:
-				_write_misses_p13 += 1
-				if forced_p13:
-					_write_forced_p13 += 1
-		if not skip_writes_p13:
+				_write_misses += 1
+				if forced_write:
+					_write_forced += 1
+		if not skip_writes:
 			if sprite_id.is_empty():
 				sprite.texture = null
 				sprite.set_meta("sprite_id", "")
@@ -360,10 +360,10 @@ func _process(delta: float) -> void:
 			sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 			CarryLoad.apply(sprite, pose if not porter.is_empty() else activity)
 			CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
-			if _write_skip_enabled_p13:
+			if _write_skip_enabled:
 				# Writes can create children; retain their resulting identities, not the pre-write set.
-				write_key_p13[-1] = _write_children_p13(agent_id, sprite)
-				_write_keys_p13[agent_id] = write_key_p13
+				write_key[-1] = _write_children(agent_id, sprite)
+				_write_keys[agent_id] = write_key
 		if _activity_oracle_enabled:
 			sprite.set_meta("activity_oracle_inputs", {"schema": 1,
 				"animation_seconds": _animation_time, "previous_facing": previous_facing,
@@ -380,20 +380,20 @@ func _process(delta: float) -> void:
 		Cold.apply(sprite, bool(row.get("cold", false)), bool(row["moving"]), agent_id, _animation_time)
 		_morning_chill.apply(sprite, agent_id, tick, _animation_time)
 		sprite.set_meta("drawn_position", sprite.position)
-		_apply_settlement_outline(sprite, agent_id, agent_id == _hovered_person_p12)
+		_apply_settlement_outline(sprite, agent_id, agent_id == _hovered_person)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
 		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))
 	_retire_missing(live)
 	_update_selection_ring()
-	_update_link_hover_p12()
+	_update_link_hover()
 	_ingest_causal_events(tick, xs, ys)
 
 func _ensure_agent(agent_id: int) -> Sprite2D:
 	if _sprites.has(agent_id):
 		return _sprites[agent_id] as Sprite2D
-	_write_keys_p13.erase(agent_id)
+	_write_keys.erase(agent_id)
 	var sprite: Sprite2D = _sprite_pool.pop_back() if not _sprite_pool.is_empty() else Sprite2D.new()
 	if sprite.get_parent() == null:
 		_objects.add_child(sprite)
@@ -441,7 +441,7 @@ func _retire_missing(live: Dictionary) -> void:
 		sprite.visible = false
 		_sprite_pool.append(sprite)
 		_sprites.erase(agent_id)
-		_write_keys_p13.erase(agent_id)
+		_write_keys.erase(agent_id)
 		if _activity_icons.has(agent_id):
 			(_activity_icons[agent_id] as Sprite2D).queue_free()
 			_activity_icons.erase(agent_id)
@@ -462,7 +462,7 @@ func _retire_missing(live: Dictionary) -> void:
 
 func set_capture_visible(shown: bool) -> void:
 	if shown != _capture_visible:
-		_invalidate_write_keys_p13()
+		_invalidate_write_keys()
 	_capture_visible = shown
 	_process(0.0)
 
@@ -484,7 +484,7 @@ func ingest_chill_snapshot(snapshot: Dictionary, tick: int) -> void:
 
 
 func refresh_snapshot() -> void:
-	_invalidate_write_keys_p13()
+	_invalidate_write_keys()
 	_prev_positions.clear()
 	_curr_positions.clear()
 	_snapshot_checksum = -1
@@ -494,8 +494,8 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
-	_invalidate_write_keys_p13()
-	clear_hovered_person_p12(_hover_owner_p12)
+	_invalidate_write_keys()
+	clear_hovered_person(_hover_owner)
 	_frame_choices_ready = false
 	_pose_output.clear()
 	_selection_index.begin_frame()
@@ -630,7 +630,7 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 
 func _prepare_frame_choices() -> void:
 	if _frame_groups.is_empty():
-		_invalidate_write_keys_p13()
+		_invalidate_write_keys()
 		_frame_groups = Activity.build_frame_groups(SpriteLibrary.entries())
 	if _allocation_candidate and not _frame_choices_ready:
 		_frame_choices.configure(_frame_groups, SpriteLibrary.entries())
@@ -768,9 +768,9 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 			load_rect.position += load_layer.position
 			footprint = footprint.merge(load_rect)
 		rects[agent_id] = footprint
-	if _declump_fixture_sink_p12 != null:
-		_declump_fixture_sink_p12.call("record", agents, targets, terrain, blocked, rects)
-	var declump: Dictionary = ArtDeclumpP12.declump(world_sim, agents, targets, terrain, blocked, rects, _spatial_hash_enabled) if _declump_kernel_enabled_p12 else CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
+	if _declump_fixture_sink != null:
+		_declump_fixture_sink.call("record", agents, targets, terrain, blocked, rects)
+	var declump: Dictionary = DeclumpOffsets.declump(world_sim, agents, targets, terrain, blocked, rects, _spatial_hash_enabled) if _declump_kernel_enabled else CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var target: Vector2 = Vector2(targets[agent_id]) + Vector2(declump.get(agent_id, Vector2.ZERO))
@@ -782,7 +782,7 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		var sprite: Sprite2D = _sprites[agent_id]
 		sprite.position = drawn.round()
 		sprite.set_meta("drawn_position", sprite.position)
-		_apply_settlement_outline(sprite, agent_id, agent_id == _hovered_person_p12)
+		_apply_settlement_outline(sprite, agent_id, agent_id == _hovered_person)
 		sprite.set_meta("seated", seats.has(agent_id))
 		if seats.has(agent_id):
 			sprite.set_meta("seat", seats[agent_id])
@@ -796,9 +796,9 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		var agent_id: int = int(row["id"])
 		rounded[agent_id] = (_sprites[agent_id] as Sprite2D).position
 	var canvas: Transform2D = _objects.get_global_transform_with_canvas() if _objects != null else get_global_transform_with_canvas()
-	if _walker_fixture_sink_p13b != null:
-		_walker_fixture_sink_p13b.call("record", agents, rounded, rects, terrain, blocked, canvas)
-	var lateral: Dictionary = ArtWalkerP13B.walker_offsets(world_sim, agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled) if _walker_kernel_enabled_p13b else CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled)
+	if _walker_fixture_sink != null:
+		_walker_fixture_sink.call("record", agents, rounded, rects, terrain, blocked, canvas)
+	var lateral: Dictionary = WalkerOffsets.walker_offsets(world_sim, agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled) if _walker_kernel_enabled else CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var sprite: Sprite2D = _sprites[agent_id]
@@ -850,24 +850,24 @@ func drawn_entities_at(world_position: Vector2) -> PackedInt64Array:
 			entities.append(int(hit["entity"]))
 	return entities
 
-func _raise_selected_draw_order_p12(selected: Sprite2D) -> void:
-	if _raised_sprite_p12 != selected:
-		if is_instance_valid(_raised_sprite_p12):
-			_raised_sprite_p12.z_index = _raised_sprite_z_p12
-		_raised_sprite_p12 = selected
+func _raise_selected_draw_order(selected: Sprite2D) -> void:
+	if _raised_sprite != selected:
+		if is_instance_valid(_raised_sprite):
+			_raised_sprite.z_index = _raised_sprite_z
+		_raised_sprite = selected
 		if is_instance_valid(selected):
-			_raised_sprite_z_p12 = selected.z_index
-			selected.z_index = _raised_sprite_z_p12 + 1
+			_raised_sprite_z = selected.z_index
+			selected.z_index = _raised_sprite_z + 1
 	var icon: Sprite2D
 	if is_instance_valid(selected):
 		icon = _activity_icons.get(int(selected.get_meta("art_id", -1))) as Sprite2D
-	if _raised_icon_p12 != icon:
-		if is_instance_valid(_raised_icon_p12):
-			_raised_icon_p12.z_index = _raised_icon_z_p12
-		_raised_icon_p12 = icon
+	if _raised_icon != icon:
+		if is_instance_valid(_raised_icon):
+			_raised_icon.z_index = _raised_icon_z
+		_raised_icon = icon
 		if is_instance_valid(icon):
-			_raised_icon_z_p12 = icon.z_index
-			icon.z_index = _raised_icon_z_p12 + 1
+			_raised_icon_z = icon.z_index
+			icon.z_index = _raised_icon_z + 1
 
 func _update_selection_ring() -> void:
 	if _selection_ring == null:
@@ -882,7 +882,7 @@ func _update_selection_ring() -> void:
 	_selection_ring.width = 2.0 if camera == null or camera.zoom.x <= 2.0 else 1.5
 	var inspector: Node = get_node_or_null("../UI/AgentInspectorPanel")
 	if inspector == null or not _capture_visible:
-		_raise_selected_draw_order_p12(null)
+		_raise_selected_draw_order(null)
 		return
 	var selected: int = int(inspector.call("get_selected_entity_bits"))
 	var selected_sprite: Sprite2D
@@ -893,7 +893,7 @@ func _update_selection_ring() -> void:
 			if int(candidate.get_meta("entity_bits", -1)) == selected and candidate.visible:
 				selected_sprite = candidate
 				break
-	_raise_selected_draw_order_p12(selected_sprite)
+	_raise_selected_draw_order(selected_sprite)
 	if selected_sprite == null:
 		return
 	var sprite: Sprite2D = selected_sprite
@@ -981,28 +981,28 @@ func _daily_facing(kind: int, daily: Dictionary, agent_id: int, context: Diction
 	return Activity.facing(-toward if kind == 4 else toward, previous)
 
 
-func set_hovered_person_p12(agent_id: int, owner: int) -> void:
-	var previous: int = _hovered_person_p12
-	_hovered_person_p12 = agent_id if _sprites.has(agent_id) else -1
-	_hover_owner_p12 = owner
-	for id: int in [previous, _hovered_person_p12]:
+func set_hovered_person(agent_id: int, owner: int) -> void:
+	var previous: int = _hovered_person
+	_hovered_person = agent_id if _sprites.has(agent_id) else -1
+	_hover_owner = owner
+	for id: int in [previous, _hovered_person]:
 		if _sprites.has(id):
-			_apply_settlement_outline(_sprites[id], id, id == _hovered_person_p12)
-	_update_link_hover_p12()
+			_apply_settlement_outline(_sprites[id], id, id == _hovered_person)
+	_update_link_hover()
 
-func clear_hovered_person_p12(owner: int) -> void:
-	if owner == _hover_owner_p12:
-		set_hovered_person_p12(-1, 0)
+func clear_hovered_person(owner: int) -> void:
+	if owner == _hover_owner:
+		set_hovered_person(-1, 0)
 
-func _update_link_hover_p12() -> void:
-	if _hovered_person_p12 < 0 and _hover_marker_p12.is_empty():
+func _update_link_hover() -> void:
+	if _hovered_person < 0 and _hover_marker.is_empty():
 		return
-	_hover_marker_p12.clear()
-	var sprite: Sprite2D = _sprites.get(_hovered_person_p12) as Sprite2D
+	_hover_marker.clear()
+	var sprite: Sprite2D = _sprites.get(_hovered_person) as Sprite2D
 	if is_instance_valid(sprite) and sprite.visible and _capture_visible:
-		_hover_marker_p12 = HoverMarker.geometry(sprite.get_global_transform_with_canvas().origin, get_viewport_rect(), HoverMarker.playable_rect(self))
+		_hover_marker = HoverMarker.geometry(sprite.get_global_transform_with_canvas().origin, get_viewport_rect(), HoverMarker.playable_rect(self))
 	queue_redraw()
 
 func _draw() -> void:
-	if not _hover_marker_p12.is_empty():
-		HoverMarker.draw_marker(self, _hover_marker_p12, RING_COLOR)
+	if not _hover_marker.is_empty():
+		HoverMarker.draw_marker(self, _hover_marker, RING_COLOR)

@@ -1,6 +1,6 @@
 {
-  "body_page": "res://assets/art/atlas/carry_p6_body.png",
-  "prop_page": "res://assets/art/atlas/carry_p6_props.png",
+  "body_page": "res://assets/art/atlas/carry_body.png",
+  "prop_page": "res://assets/art/atlas/carry_props.png",
   "sprites": {
     "V_a2_01": {
       "kind": "food",
