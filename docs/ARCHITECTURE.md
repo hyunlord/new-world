@@ -64,6 +64,7 @@ GDScript layers / panels  ──► SimReads.read(world_sim, "get_…")   (scrip
   set 1×/2×/3×/4× = 12/24/36/48 ticks per real second, so a simulated day
   lasts 120/60/40/30 s (`seconds_per_day`); `P` pauses by disabling the
   WorldSim node's processing; the top bar shows the speed and the pause.
+  `Home`/`H` centres the camera on the camp's hearth.
   `set_sim_speed` scales only the time fed to the accumulator and clamps to
   0–4× (0 also stops the clock); it never changes the tick length.
 - GDScript never writes simulation state. The only writes from Godot are

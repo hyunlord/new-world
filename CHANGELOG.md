@@ -36,6 +36,17 @@ The first colony the player commands (`docs/v8/m1/M1_GOAL.md`, report `docs/v8/m
 - Identity compares chronicle files with `compare_chronicles.py`: the kinds vocabulary may grow at its end.
 - `.uid` files are committed (check 8 of `check_docs.sh`). `.gitignore` ignores evidence images under `docs/` except `docs/images/`.
 - Baseline dumps gained `colony: None` (rules and worldgen).
+- Part 6 review fixes:
+  - in the colony, `ConstructionSystem` frees a `Seeking { ConstructionSite }` agent whose site is gone (cancelled or completed); before, it froze until it died;
+  - a finished builder whose state already moved on ends its job with `jobs::cancel::finish_in_place`;
+  - `put_items` debug-asserts that no item is left over.
+- Part 6 view fixes:
+  - the top bar counts huts as shelters and blueprints as sites, adds the log count, and renames 식량 → 비축 식량 and 열매 → 야생 열매;
+  - the carried log is a light bundle above the head, tunics are brighter, the child's eyes sit above a skin row, elder hair is white;
+  - blueprint progress bars sit under a "통나무 d/n · 작업 p%" label, and order toasts name what was ordered;
+  - the clock shows 저녁 from 17:00 to 21:00;
+  - `Home`/`H` centres the camera on the camp;
+  - deadwood is quieter.
 
 ### Removed
 - V7 renderers and helpers (21 scripts: terrain, nature, building, agent and world renderers and their helpers), `scripts/world/cold_audit.json`, `shaders/settlement_outline.gdshader`.
