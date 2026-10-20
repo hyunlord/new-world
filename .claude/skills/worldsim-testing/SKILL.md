@@ -1,0 +1,141 @@
+---
+name: worldsim-testing
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 16-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+---
+
+# WorldSim testing
+
+What proves what. A green test proves only what its assertion can catch;
+identity proves "no behaviour change"; the gate proves a commit is fit to
+fast-forward `v8/main`. Code rules live in `worldsim-architecture`; Godot
+headless specifics in `worldsim-godot`.
+
+## Rules
+
+### Claims
+- **Do** run identity (`tools/v8/identity.sh <base_data_dir>`) before claiming "no behaviour change" (refactor, rename, move, deletion). *Reason:* only full summaries + raw samples + chronicle by content + determinism show that nothing moved; a green test suite does not.
+- **Don't** explain an identity mismatch away. The failing commit is not pushed until it is fixed or reverted, and the cause goes in DECISIONS. *Reason:* every "harmless" difference is unproven until the identical run exists.
+- **Don't** add a key to `tools/v8/identity_removed_keys.txt` to make a mismatch pass. A key goes there only when a commit removed it on purpose, with that commit area as the reason; `identity.sh` drops it from the base side only where the base value is zero/false/null/empty and fails on any non-zero value. *Reason:* the allowlist exists for removed dead fields, not for changed values.
+- **Do** write a claim only after its artefact exists (log, summary, commit); mark it PENDING until then. *Reason:* V7 records repeatedly cited checks before they ran.
+- **Don't** take a green structural test suite as proof that the game works. *Reason:* tests that read source text, run on `WorldRules::default()` (which switches 8 of the 28 systems off), or set the fixture value themselves stay green while the live loop is broken.
+
+### Gate and determinism
+- **Do** run the gate (`tools/v8/gate.sh <log_dir>`) on one committed head with nothing edited, built or committed while it runs. *Reason:* a gate whose steps saw different trees tested no commit.
+- **Do** keep raw probe and gate data outside the repository (identity refuses an output dir inside it). *Reason:* raw outputs are gigabytes; commit summaries only.
+- **Do** check determinism with the probe's `--check-determinism` and with in-test twins (two engines, same seed, lockstep, compare `sim_test::probe::fingerprint`). Extend the twin when you add state. *Reason:* twins only cover the state they compare.
+- **Do** treat probe seed ranges as half-open (`--seeds 0..32` = seeds 0–31). *Reason:* `rust/crates/sim-test/src/probe/args.rs` parses `a..b` half-open; `a..b` with b inclusive silently drops a seed.
+- **Don't** run Godot steps (import, strict check, smoke) concurrently with each other or with Godot tests. *Reason:* the strict check temporarily edits `project.godot`, and parallel runs see the edit.
+
+### Perf
+- **Do** compare perf only against base numbers measured the same way: same machine, same build profile (release), same procedure (`tools/v8/perf.sh`), same duration. *Reason:* cost per tick changes with run length, world and host load.
+- **Do** treat a natural mean more than +10 % over base as a WARN to investigate, and report it; perf is report-only in the gate. *Reason:* mean tick is the stable statistic; the step never blocks, so the report must say it.
+- **Don't** judge a change on p99 / p99.9 from three repeats. *Reason:* tails of a few runs are single-tick machine spikes (Pass 21 U6: per-repeat ratios ×1.023 / ×1.490 / ×0.516); report them as noise.
+- **Don't** compare timings taken under different host load, and never call a contended number a result. *Reason:* on the shared Mac one layer "cost" +62 % because the host load fell 176 → 36 between samples.
+- **Don't** use debug builds, debug dylibs or headless dummy-renderer timings as performance evidence. *Reason:* debug W500 was 51 ms against 29 ms release; the dummy renderer draws nothing.
+
+### Assertions
+- **Do** assert a threshold on a measured invariant, with the observed value and margin in a comment. *Reason:* `> 0` passes when a value collapses from 368 to 1.
+- **Do** ask of every test "which bug still passes?", and make it fail once (break the code or revert the fix) before trusting it. *Reason:* V7 had tests that passed with the feature deleted.
+- **Do** require that the checked event actually happened (count > 0) before asserting about it, and fail on missing inputs. *Reason:* "every cancel has one entry" passed with 0 cancels.
+- **Do** account for censoring in duration and time-to-event metrics: count the runs that end before the event and report them, or measure only events with enough remaining window. *Reason:* Pass 21 U3 counted late reconciliations that the 120-day run could never see as failures.
+- **Do** tune on some seeds and assert on held-out seeds picked (and grepped for earlier use) before measuring. *Reason:* a threshold tuned on its own seed tests the tuning, not the mechanism.
+- **Do** compute expected literals independently of the code under test (by hand, a Python re-implementation, or the rule's own fields), never by printing the function's output. *Reason:* a literal produced by the code under test proves nothing.
+- **Don't** write tests that read source text (`.gd`, `.tscn`, `.rs`, localization JSON). *Reason:* every renderer rewrite broke hundreds of them while proving no behaviour; V8-0 deleted them.
+- **Don't** re-pin, `#[ignore]`, weaken or delete a failing assertion to turn the gate green. *Reason:* the failure is the information; fix the code or keep the work local.
+
+## Procedures
+
+Longer versions (assertion recipes, perf and contention protocol):
+`references/assertions.md`, `references/perf.md`.
+
+### A. Identity
+1. Base data exists once per base commit (V8-0's is `/Users/rexxa/work/v8-0-data/base`, captured at `b1ca032f`). To capture a new base: build the release probe at that commit (a detached worktree), then `bash tools/v8/identity.sh --capture <bin_dir> <out_dir>` with `<out_dir>` outside the repo.
+2. Candidate: `bash tools/v8/identity.sh <base_data_dir> [<candidate_out_dir>]`. It builds `worldsim_probe` (release) from the working tree, runs scene `game_v26` (the probe's alias of `baseline`), seeds 0..32, 120 days, clock samples 02:00…19:30, `--sample-every 120`, `--chronicle-out`, then `--check-determinism` on seeds 0..4.
+3. It prints four lines; all must be PASS:
+   - `summary`: `compare_summaries.py` — every simulation value equal, timing keys (`wall_seconds`, `ms_per_agent_tick`, `timing`) and `git_sha` excluded, 0 differences and 0 one-sided paths;
+   - `chronicle`: every JSON in the chronicle dir (`chronicle_N.json`, `relations_N.json`) equal by content except `git_sha`;
+   - `raw samples`: sha256 of every per-seed `*.jsonl` with `git_sha` removed;
+   - `determinism`: `DETERMINISM PASS`.
+4. Any FAIL: stop. Do not push the commit; find the cause (bisect the commit's hunks), fix or revert, rerun. Record the cause in DECISIONS.
+5. Intended behaviour change: identity fails by design. Say so in the commit and CHANGELOG, show which values moved and why, and capture a new base at that commit for later refactors.
+
+### B. Determinism
+1. Probe: `cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out <dir>` → `DETERMINISM PASS`.
+2. In tests: build two `baseline_engine(seed)` engines, tick both in lockstep, compare `sim_test::probe::fingerprint(&engine)` at checkpoints and at the end; put twins in `rust/crates/sim-test/tests/determinism.rs`.
+3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
+
+### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0.
+
+| # | step | checks |
+|---|---|---|
+| 1 | `fmt` | `cargo fmt --all -- --check` |
+| 2 | `bridge_build` | `cargo build -p sim-bridge` (the dylib Godot loads) |
+| 3 | `godot_import` | bounded headless `--import --editor --quit`, twice (a fresh import logs font errors) |
+| 4 | `test_debug` | `cargo test --workspace --no-fail-fast -- --test-threads=8` |
+| 5 | `test_release` | the same in `--release` |
+| 6 | `clippy` | `cargo clippy --workspace --all-targets -- -D warnings` |
+| 7 | `forbidden_math` | float transcendental grep over sim-core, sim-systems, sim-engine `src` |
+| 8 | `gdscript_strict` | `tools/v8/gdscript_strict_check.sh` (parse, warnings as errors, FFI names) |
+| 9 | `smoke` | `tools/v8/smoke.sh`: 900 headless frames; `SCRIPT ERROR`, `ERROR:`, `Locale:` and raw-key counts ≤ base |
+| 10 | `identity` | `tools/v8/identity.sh <base data>` |
+| 11 | `determinism` | probe `--check-determinism`, seeds 0..4 |
+| 12 | `perf` | `tools/v8/perf.sh` + `perf_summary.py --compare`; report only, > +10 % mean = WARN |
+| 13 | `bridge_api` | `tools/v8/bridge_api.py --check` against the expected list |
+| 14 | `docs` | `tools/v8/check_docs.sh` |
+| 15 | `inventory_closure` | `tools/v8/inventory.py check` |
+| 16 | `python_unittest` | `python3 -m unittest discover -s tools/v8 -p 'test_*.py'` |
+
+1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
+2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
+3. A red step: read its log, fix the cause, commit, rerun the whole gate. A stopped or partial gate is not evidence.
+4. Bound every long command with `tools/v8/run_bounded.sh <seconds> <cmd…>` (exit 124 on timeout).
+
+### D. Perf comparison (summary; full protocol in `references/perf.md`)
+1. Release build: `cd rust && cargo build --release -p sim-test`.
+2. `bash tools/v8/perf.sh rust/target/release <out_dir> candidate` — natural `worldsim_perf natural --scene game_v26 --days 120` on seeds 19600, 19603, 19605, 19606, three repeats (each repeat runs the four seeds in turn), then `quick` (500 founders, 64×64, fed, 1 day). It logs host load per repeat in `RUNLOG.txt`.
+3. `python3 tools/v8/perf_summary.py --compare <base>/perf/perf_summary.json <out_dir>/perf_summary.json` — WARN when a mean rises > 10 %. V8-0 base: natural mean median 0.2773 ms (`docs/v8/V8_0_BASE_NUMBERS.md`, contended Mac).
+4. Report the mean; list p99 / p99.9 per repeat labelled as noise; state the start/end load and whether the run was contended.
+5. A perf claim (faster/slower) needs an admitted quiet session (calibrated probe, attempts ≥ 30 min apart) or it is reported as contended.
+
+### E. Test layout
+- Integration tests: `rust/crates/sim-test/tests/` by domain — `agents_*.rs`, `settlement_*.rs`, `family_*.rs`, `relations_*.rs`, `chronicle_*.rs`, `engine_*.rs`, `determinism.rs`. Add to the matching file; a new file only for a new domain.
+- Unit tests: `#[cfg(test)] mod tests` inside the module, for pure logic and truncation edges.
+- Start live-rule tests from `sim_test::baseline_engine(seed)` (the live world: `WorldRules::baseline(seed)` + `WorldGenConfig::baseline(seed)`). Use `SimEngine::new` + `WorldRules::default()` only for rule-independent mechanics, and never to cover a rules-gated system.
+- Advance with `engine.tick()`; 1,440 ticks = 1 game day. Read state from the pub fields `engine.world` and `engine.resources`.
+- Bridge data: test the pure collectors headless (`sim_bridge::ffi::collect_*`). GDScript parse and FFI binding are covered by gate steps 8–9, not by sim-test.
+- Name tests by what they assert (`settlement_fire_keeps_winter_hearths_lit`), not by pass or phase.
+
+## Lessons
+
+| date | symptom | root cause | fix | source |
+|---|---|---|---|---|
+| 2026-10-15 | claims of "no behaviour change" needed proof; shared-key comparisons could miss added or dropped keys | — | identity before claiming no behaviour change: full summaries minus timing including key sets, raw sample hashes, chronicle by content, determinism twins, on the exact final build | `v7-final-art:docs/revitalize/DECISIONS.md` L870, L1202, L846; `v7-final-art:docs/revitalize/REVIEW_PASS21.md` Round 1 M2 |
+| 2026-10-18 | the identity validator passed a corrupted chronicle with exit 0 | a review fix put `2>&1` on its own line after the heredoc inside `$( … )`: an empty command | redirect on the command itself; add a negative test (one changed value must FAIL); show every comparator can fail | `0ade8ffd`; `v7-final-art:docs/revitalize/DECISIONS.md` L1204; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 2 MAJOR A |
+| 2026-10-18 | chronicle files were never byte-identical across builds | each file carries the `git_sha` label and a `kinds` vocabulary that grew 17 → 22 | compare by content; require the base kind list to be a prefix of the candidate's; say "identical in content" | `v7-final-art:docs/revitalize/DECISIONS.md` L1202; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 1 N1 |
+| 2026-05-25 | 8 runtime errors (FFI calls to missing `#[func]`, parse errors, warnings) appeared only in a windowed run, after 32+ approved pipeline runs | static review and Rust tests never exercise GDScript parsing or the runtime FFI binding | gate the strict check (parse + warnings as errors + FFI name diff) and a headless boot smoke | `0238aef2`; `v7-final-art:CLAUDE.md` "Pipeline GDScript Strict Check" |
+| 2026-10-20 | the V7 test suite was green, yet none of its default-rule tests exercised 8 of the 28 live systems with their logic on | V7-era tests ran on `WorldRules::default()`, where every `SocietyRules` option is `None` and those systems return at once | test live behaviour on the baseline rules (`baseline_engine`); count a system as covered only when it ticks with its rule present | `83a4f2dd:docs/v8/harvest/test_triage.md` §1, §3; `v7-final-art:rust/crates/sim-core/src/rules.rs` |
+| 2026-10-11 | metadata tests passed while the renderer never wrote the field; a tint test passed before the change it guarded | the fixture set the metadata itself; the assertion was vacuous | drive the real code path; confirm each new test fails first | `v7-final-art:docs/art/production5/runtime_review.md` L7; `v7-final-art:docs/art/production3/DECISIONS.md` L20 |
+| 2026-10-10 | each renderer rewrite broke hundreds of Rust tests that read GDScript text | tests pinned implementation literals with `src.contains(…)`, hashes and line counts | prefer behavioural tests; re-pin only to an equivalent invariant or retire with a reason | `v7-final-art:docs/art/TEST_LEDGER.md`; `v7-final-art:docs/art/production/BRIEF.md` L122-127 |
+| 2026-10-12 | checks passed with nothing checked (0 cancels; a missing run skipped; a scene missing from an allow-list skipped determinism) | absence treated as success | require expected counts > 0, fail on missing inputs, one shared list for both call sites, reject unknown labels | `v7-final-art:docs/revitalize/REVIEW_PASS19.md` Round 1 finding 1; `v7-final-art:docs/revitalize/DECISIONS.md` L572, L579, L601 |
+| 2026-10-12 | tests could not fail as described (a CLI test accepting either exit code; a twin on a seed with no second village) | assertions weaker than their names | ask "which bug still passes?"; assert exact values, ids, exit codes; pick seeds that exercise the path | `v7-final-art:docs/revitalize/DECISIONS.md` L566, L636, L638; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 1 m6 |
+| 2026-10-11 | test literals computed by the code under test proved nothing | — | compute expected literals independently (Python re-implementation; frozen copy of the old function plus a property test) | `v7-final-art:docs/revitalize/DECISIONS.md` L462, L1121 |
+| 2026-10-10 | the required 3-day survival test failed (11 dehydration deaths vs 0) and tuning could not make it green | a real behaviour defect | keep the failing assertion; never re-pin, ignore or delete it to make a gate green | `v7-final-art:docs/revitalize/DECISIONS.md` L28, L101–115 |
+| 2026-10-16 | rule paths that never occurred in play (fission cancel, remnant merge, porter loss) were claimed verified | evaluation worlds never produced those events | synthetic tests that force each write path; say "verified only synthetically" | `v7-final-art:docs/revitalize/REVIEW_PASS19.md` Round 1 finding 1, Round 2 finding 3; `v7-final-art:docs/revitalize/REPORT_PASS20.md` |
+| 2026-10-16 | determinism twins did not cover new state | twins compared only older state | extend the twin to every new resource (relations and chronicles each tick and at the end) | `v7-final-art:docs/revitalize/DECISIONS.md` L1122, L1200 |
+| 2026-10-12 | measurement-only state risked entering behaviour or identity | new measurement fields live in engine resources | never read them in systems; keep them out of digests and compared outputs | `v7-final-art:docs/revitalize/DECISIONS.md` L599, L704, L1255 |
+| 2026-10-19 | Pass 21 U3 failed its reconciliation bar (8 of 21 reconciled by day 120; 7 still recovering) | censoring: a "by day 120" metric cannot count events after the run ends; late estrangements need 10–15 days | report censored counts; measure time-to-event only with enough remaining window, or use survival statistics registered in advance | `v7-final-art:docs/revitalize/METRICS.md` L3212; `v7-final-art:docs/revitalize/REPORT_PASS21.md`; `v7-final-art:docs/revitalize/DAUGHTER_DIAGNOSIS.md` |
+| 2026-10-19 | Pass 21 U6 natural p99.9 ×1.400 > 1.35 (MISS); Pass 18's p99.9 PASS rested on one repeat's hiccup | tail percentiles from 3 repeats are noise: single 20–174 ms ticks, per-repeat ratios ×1.023 / ×1.490 / ×0.516 | report as noise; use ≥ 5 interleaved repeats or a trimmed statistic registered in advance; list every repeat | `v7-final-art:docs/revitalize/PERF_BUDGET.md` L215–217, L158; `v7-final-art:docs/revitalize/REVIEW_PASS21.md` Round 1 N7 |
+| 2026-10-15 | successive builds moved the mean ratio 1.166 → 1.150 → 1.167 while the code got cheaper | hold-to-hold noise (±2 points) as large as the improvement | declare one official run on the final build; report development runs beside it; never select favourable repeats | `v7-final-art:docs/revitalize/DECISIONS.md` L932, L1048–1049; `v7-final-art:docs/revitalize/REVIEW_PASS18.md` Round 1 D5 |
+| 2026-10-10 | per-agent-tick cost differed between 10- and 120-day runs of the same rules | cost grows with run length; the stress world is one camp | compare against the same-host, same-duration, same-build baseline, interleaved; use a natural seed set picked before measuring | `v7-final-art:docs/revitalize/DECISIONS.md` L326; `v7-final-art:docs/revitalize/PERF_BUDGET.md` §1.3 |
+| 2026-10-15 | timed sweeps ran under contention while their JSON said `contended: false` | the load gate was checked once per batch; foreign and own load rose during the run | gate every sweep, record start loads, no subagents during holds, rerun contended measurements | `v7-final-art:docs/revitalize/DECISIONS.md` L786, L793, L1071; `v7-final-art:docs/revitalize/REVIEW_PASS15.md` Round 1 M1 |
+| 2026-10-13 | Art 7 layer cost read +62 % (9.77 → 15.83 ms) and could not be attributed | host 1-minute load fell 176.7 → 36.2 between the two samples | never compare timings taken under different load; use admission control | `v7-final-art:docs/art/production7/DECISIONS.md` L25 |
+| 2026-10-18 | Art 12 measured nothing: 21+21 admission holds refused, three attempts burned within seconds | a "no foreign process above 50 % CPU" rule was too strict for a 14-core Mac; retries had no spacing | replace process-list rules with a measured interference probe | `v7-final-art:docs/art/production12/REPORT.md` L79-81; `v7-final-art:docs/art/production12/DECISIONS.md` L7 |
+| 2026-10-19 | needed a reproducible "is the Mac quiet enough" test | a busy core, not foreign processes, competes with a single-threaded loop | calibrated admission probe (Art 13): ~2 s fixed single-thread work; R = median of the 5 fastest of 15; valid iff probe before and after ≤ 1.05 R and 1-min load < 8; retry ≥ 30 min after the last attempt ended, ≤ 6 attempts, ≤ 3 h | `v7-final-art:docs/art/production13/GOAL.md` L59-78; `v7-final-art:docs/art/production13/DECISIONS.md` L10-11 |
+| 2026-10-20 | an earlier run's calibration would have admitted the wrong sessions | Art 13b's R was 2.762 s against Art 13's 2.009 s; quiet-machine speed drifts | recalibrate in every run; never normalise timings by R | `v7-final-art:docs/art/production13b/REPORT.md` L223, L301-303 |
+| 2026-10-17 | debug numbers were reported as performance (W500 51 ms debug vs 29 ms release) | Godot loads the debug-path dylib and the gate rebuilds it | measure release builds only; debug captures are never perf evidence | `v7-final-art:docs/art/production11/REPORT.md` L17, L235 |
+| 2026-10-14 | `cargo test --workspace` exceeded the 1,800 s gate bound (one fission test 764 s) | the test profile was unoptimised | `CARGO_PROFILE_TEST_OPT_LEVEL=1` or `2`, keeping debug assertions and overflow checks on | `v7-final-art:docs/art/production8/DECISIONS.md` L10-12 |
+| 2026-10-14 | CPU stayed busy after a gate timeout and contaminated later measurements | the bounded runner killed `cargo` but left the test binary orphaned | kill the whole owned process group on timeout; check for owned orphans before measuring | `v7-final-art:docs/art/production8/DECISIONS.md` L10; `v7-final-art:docs/art/production9/DECISIONS.md` L18 |
+| 2026-10-10 | probe runs picked up later edits; an in-place gate had to be stopped | the probe rebuilt from a working tree that kept changing | freeze probe binaries; run base probes and gates from a detached worktree of the committed head | `v7-final-art:docs/revitalize/DECISIONS.md` L296, L358, L1031 |
+| 2026-10-12 | a green gate did not test any single commit | debug tests ran on one tree, release on another, later steps on the moving working tree | run the final gate on the report commit with nothing edited or committed while it runs | `v7-final-art:docs/revitalize/DECISIONS.md` L622, L1143; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 2 MAJOR B |
+| 2026-10-11 | empty Python test discovery exited 5 and broke the gate | `unittest discover` with no tests exits 5 | keep at least one test (or an explicit skip) in `tools/v8/test_*.py` | `v7-final-art:docs/revitalize/DECISIONS.md` L458 |

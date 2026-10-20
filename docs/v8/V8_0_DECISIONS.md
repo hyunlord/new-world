@@ -80,12 +80,12 @@ context, choice, reason, evidence. Raw data paths are under
 - Context: the test triage found that 51 KEEP files and most adapted fixtures run on `WorldRules::default()`, which takes the non-baseline side of many flags (`strict_consume=false`, `keyed_draws=false`, `night_rest=None`, `BirthRule::Legacy`, every `SocietyRules` option `None`, …). 8.3 removes a field only when "no kept test sets it to the other value".
 - Choice: the literal reading — a kept test that runs on `default()` does reach the other side, so those branches stay. 8.3 then applies only to fields whose other side no kept test reaches (checked per field when 8.3 runs).
 - Reason: deleting a branch that kept tests execute would turn rule-independent tests into tests of nothing; 8.3 is the most droppable restructure step.
-- Evidence: `docs/v8/harvest/test_triage.md` §1 "A ruling DECISIONS needs".
+- Evidence: `83a4f2dd:docs/v8/harvest/test_triage.md` §1 "A ruling DECISIONS needs".
 
 ## D16 — `game_v8`, `game_default`, `game_scene` and `build_world` go with the chain
 - Context: the chain's root (`WorldRules::game_v8`, `WorldGenConfig::game_default`, `scenes::game_scene`, `worldgen::build_world`) is not named in 8.1 but nothing live uses it.
 - Choice: delete them in 8.1 with the chain; tests that used them are adapted to the baseline (triage recipe R1/R3) or deleted. The bridge's pure helpers used by kept tests (`init_production_engine`, `bootstrap_spawn_agents`, `seed_finite_resource_scarcity`) stay.
-- Evidence: `docs/v8/harvest/test_triage.md` §1.
+- Evidence: `83a4f2dd:docs/v8/harvest/test_triage.md` §1.
 
 ## D17 — 7.6: `--cacheinfo` cleared skip-worktree; restored at once
 - Context: the goal's 7.6 commands (`git hash-object -w` + `git update-index --cacheinfo 100644,<sha>,.claude/settings.json`) re-create the index entry, which drops the skip-worktree bit: after the commit `git ls-files -v .claude/settings.json` showed `H`.

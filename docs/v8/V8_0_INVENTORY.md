@@ -395,6 +395,8 @@ Abbreviations:
 
 ### 3.2 Coverage: live system → kept tests
 
+> File names below are the V7 names. V8-0 8.4 renamed and merged them by domain; the old → new map is DECISIONS D26 (for example `harness_revitalize_pass20_relations` → `relations_rule`). Every system below still has its tests after the rename.
+
 
 "Run" means the system ticks with its rule present, either directly
 (`System::new().tick(…)`) or through a registry plus `engine.tick()`, and the test
@@ -519,7 +521,7 @@ are KEEP.
 
 | path | verdict | reason | evidence |
 |---|---|---|---|
-| `.agents/` | MIXED | files inside: 1 DELETE, 1 KEEP, 11 MOVE→.claude/skills/systematic-debugging/, 1 MOVE→.claude/skills/verification-before-completion/, 12 MOVE→.claude/skills/worldsim-godot/; see the file/exception rows. Directory rule: Codex skill links (symlinks to .claude/skills, 10.1) | goal 10.1 |
+| `.agents/` | MIXED | files inside: 1 DELETE, 6 KEEP, 12 MOVE→.claude/skills/systematic-debugging/, 2 MOVE→.claude/skills/verification-before-completion/, 12 MOVE→.claude/skills/worldsim-godot/; see the file/exception rows. Directory rule: Codex skill links (symlinks to .claude/skills, 10.1) | goal 10.1 |
 | `.agents/skills/godot/SKILL.md` | MOVE→.claude/skills/worldsim-godot/ | absorbed into worldsim-godot; generic references kept under references/ (10.2) | goal 10.2 |
 | `.agents/skills/godot/assets/templates/attribute_template.gd` | MOVE→.claude/skills/worldsim-godot/ | absorbed into worldsim-godot; generic references kept under references/ (10.2) | goal 10.2 |
 | `.agents/skills/godot/assets/templates/component_template.gd` | MOVE→.claude/skills/worldsim-godot/ | absorbed into worldsim-godot; generic references kept under references/ (10.2) | goal 10.2 |
@@ -532,6 +534,7 @@ are KEEP.
 | `.agents/skills/godot/references/godot4-physics-api.md` | MOVE→.claude/skills/worldsim-godot/ | absorbed into worldsim-godot; generic references kept under references/ (10.2) | goal 10.2 |
 | `.agents/skills/godot/scripts/validate_tres.py` | MOVE→.claude/skills/worldsim-godot/ | absorbed into worldsim-godot; generic references kept under references/ (10.2) | goal 10.2 |
 | `.agents/skills/godot/scripts/validate_tscn.py` | MOVE→.claude/skills/worldsim-godot/ | absorbed into worldsim-godot; generic references kept under references/ (10.2) | goal 10.2 |
+| `.agents/skills/systematic-debugging` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/systematic-debugging/CREATION-LOG.md` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/systematic-debugging/SKILL.md` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/systematic-debugging/condition-based-waiting-example.ts` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
@@ -543,9 +546,10 @@ are KEEP.
 | `.agents/skills/systematic-debugging/test-pressure-1.md` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/systematic-debugging/test-pressure-2.md` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/systematic-debugging/test-pressure-3.md` | MOVE→.claude/skills/systematic-debugging/ | generic skill; canonical copy moves, .agents keeps a symlink (10.1) | goal 6.3, 10.1 |
+| `.agents/skills/verification-before-completion` | MOVE→.claude/skills/verification-before-completion/ | generic skill; moved with a symlink back (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/verification-before-completion/SKILL.md` | MOVE→.claude/skills/verification-before-completion/ | generic skill; moved with a symlink back (10.1) | goal 6.3, 10.1 |
 | `.agents/skills/worldsim-code/SKILL.md` | DELETE | absorbed into worldsim-architecture (10.2) | goal 10.2 |
-| `.claude/` | MIXED | files inside: 12 DELETE, 1 KEEP; see the file/exception rows. Directory rule: agent configuration; canonical skills location (10.1) | goal 10.1 |
+| `.claude/` | MIXED | files inside: 12 DELETE, 25 KEEP; see the file/exception rows. Directory rule: agent configuration; canonical skills location (10.1) | goal 10.1 |
 | `.claude/agents/harness-challenger.md` | DELETE | V7 harness pipeline agents (drafter/challenger/evaluator…); pipeline retired | goal 6.3 |
 | `.claude/agents/harness-codex-evaluator.md` | DELETE | V7 harness pipeline agents (drafter/challenger/evaluator…); pipeline retired | goal 6.3 |
 | `.claude/agents/harness-drafter.md` | DELETE | V7 harness pipeline agents (drafter/challenger/evaluator…); pipeline retired | goal 6.3 |
@@ -564,12 +568,14 @@ are KEEP.
 | `.gitignore` | KEEP | not changed by this pass (proposals in the report) | goal section 2 |
 | `.harness/` | DELETE | V7 harness pipeline state (plans, prompts, audit, baselines); pipeline retired | goal 6.3; harvested in removed_index.md |
 | `AGENTS.md` | KEEP | rewritten for V8 (10.5) | goal 10.5 |
+| `CHANGELOG.md` | KEEP | new in V8-0 (9.7) | goal 9.7 |
 | `CLAUDE.md` | KEEP | rewritten as @AGENTS.md + Claude notes (10.5) | goal 10.5 |
 | `README.md` | KEEP | rewritten in Korean + English (9.1) | goal 9.1 |
 | `addons/` | DELETE | harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it | grep editor_plugins project.godot → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/` | MIXED | files inside: 174 ASK, 688 DELETE, 26 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
-| `assets/art/` | MIXED | files inside: 644 DELETE, 18 KEEP; see the file/exception rows. Directory rule: runtime art root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/art/atlas/` | KEEP | runtime atlas pages + region maps loaded by art_sprite_library.gd / carry_load_layer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 27 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
+| `assets/art/` | MIXED | files inside: 646 DELETE, 19 KEEP; see the file/exception rows. Directory rule: runtime art root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `assets/art/atlas/` | MIXED | files inside: 1 DELETE, 9 KEEP; see the file/exception rows. Directory rule: runtime atlas pages + region maps loaded by art_sprite_library.gd / carry_load_layer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `assets/art/atlas/region_atlas.json` | DELETE | atlas pipeline metadata; nothing at runtime reads it | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/direction/` | DELETE | V7 art direction references | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/manifest.json` | DELETE | art pipeline manifest; not read at runtime | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/production/` | MIXED | files inside: 627 DELETE, 1 KEEP; see the file/exception rows. Directory rule: atlas source PNGs (packed into assets/art/atlas); art pipeline retired | tools/v8/gd_reach.py (keep-set closure, Part 1); atlas source_path fields |
@@ -611,7 +617,8 @@ are KEEP.
 | `assets/art/production/V_c1/` | DELETE | atlas source PNGs (packed into assets/art/atlas); art pipeline retired | tools/v8/gd_reach.py (keep-set closure, Part 1); atlas source_path fields |
 | `assets/art/production/V_c2/` | DELETE | atlas source PNGs (packed into assets/art/atlas); art pipeline retired | tools/v8/gd_reach.py (keep-set closure, Part 1); atlas source_path fields |
 | `assets/art/production/W1/` | DELETE | atlas source PNGs (packed into assets/art/atlas); art pipeline retired | tools/v8/gd_reach.py (keep-set closure, Part 1); atlas source_path fields |
-| `assets/art/terrain/` | KEEP | terrain sheets + terrain_manifest.json loaded by terrain_renderer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `assets/art/terrain/` | MIXED | files inside: 1 DELETE, 7 KEEP; see the file/exception rows. Directory rule: terrain sheets + terrain_manifest.json loaded by terrain_renderer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `assets/art/terrain/provenance.json` | DELETE | terrain pipeline provenance; nothing at runtime reads it | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/audio/` | DELETE | unreferenced ambience loops | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/fonts/` | KEEP | Galmuri pixel fonts (7.5 keeps assets/fonts/galmuri/**) | goal 7.5; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/fonts/galmuri/` | KEEP | Galmuri pixel fonts (7.5 keeps assets/fonts/galmuri/**) | goal 7.5; tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -649,11 +656,16 @@ are KEEP.
 | `assets/sprites/wildlife/` | DELETE | unreferenced pre-art-line sprites (walls/floors are to be redrawn per VISION §6.3) | VISION §6.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/tilesets/` | DELETE | unreferenced V7 TileSet | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/ui/` | KEEP | worldsim_theme.tres: project theme (project.godot gui/theme/custom) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `docs/` | MIXED | files inside: 17280 DELETE, 5 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
+| `docs/` | MIXED | files inside: 17280 DELETE, 27 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
 | `docs/.gitkeep` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
+| `docs/ARCHITECTURE.md` | KEEP | new (9.5) | goal 9.5 |
 | `docs/CHANGELOG.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
+| `docs/HISTORY.md` | KEEP | new (9.4) | goal 9.4 |
+| `docs/ROADMAP.md` | KEEP | new (9.3) | goal 9.3 |
+| `docs/VISION.md` | KEEP | new (9.2) | goal 9.2 |
 | `docs/analysis/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/architecture/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
+| `docs/archive/` | KEEP | INDEX.md: permanent index of deleted docs (7.1) | goal 7.1 |
 | `docs/art/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/art/D1/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/art/D2/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
@@ -673,6 +685,7 @@ are KEEP.
 | `docs/art/production7/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/art/production8/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/art/production9/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
+| `docs/decisions/` | KEEP | ADRs (9.6) | goal 9.6 |
 | `docs/design/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/guides/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/llm-setup.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
@@ -687,6 +700,7 @@ are KEEP.
 | `docs/sprite_session_handoff_wildlife_a4.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/traits/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/v8/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/p3/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/worldmodel/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/worldmodel/sample/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `hooks/` | DELETE | V7 git pre-commit harness hook | goal 6.3 |
@@ -700,13 +714,19 @@ are KEEP.
 | `localization/key_owners.json` | DELETE | duplicate-key owner policy; the generator treats a missing file as no policy, and the pruned category JSONs carry no duplicates | tools/localization_compile.py _load_key_owners; scratch dry run (Part 1) |
 | `localization/ko/` | KEEP | runtime pipeline: manifest.json, compiled/*.json, category JSONs (keys pruned to the kept UI, 7.4) | scripts/core/locale.gd; tools/v8/locale_keys.py |
 | `project.godot` | KEEP | Godot project root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `rust/` | MIXED | files inside: 2 ASK, 61 DELETE, 336 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
+| `rust/` | MIXED | files inside: 2 ASK, 61 DELETE, 369 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 70 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/activity.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/causal.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/chronicle.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/engine_build.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/family.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/mod.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/node.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/reads_agent.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/reads_settlement.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/relations.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/snapshot.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/world_node.rs` | KEEP | WorldSimNode (#[func] API); intervention methods removed (7.2); split by concern (8.5) | goal 7.2, 8.5 |
 | `rust/crates/sim-bridge/src/lib.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/tests/fixtures/art_p12/declump_v1.bin` | DELETE | art_p12/art_p13b numeric fixtures written by deleted scripts/test/art capture tools | fixture json provenance → scripts/test/art/* |
@@ -772,6 +792,8 @@ are KEEP.
 | `rust/crates/sim-core/src/material/terrain.rs` | KEEP | material data model (not live; kept for M2) | goal 6.3 |
 | `rust/crates/sim-core/src/rng.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rules.rs` | MOVE→rust/crates/sim-core/src/rules/mod.rs (+ baseline.rs, one file per sub-rule struct) | 8.1 | goal 8.1 |
+| `rust/crates/sim-core/src/rules/baseline.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
+| `rust/crates/sim-core/src/rules/mod.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rules/routine.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/tile/grid.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/tile/mod.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
@@ -792,10 +814,16 @@ are KEEP.
 | `rust/crates/sim-systems/src/runtime/construction/construction_system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/construction/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/agent_decision.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/decision/forage.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/decision/memory_bias.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/decision/needs.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/routine/lifecycle.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/routine/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/routine/places.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/decision/system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/decision/targets.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/decision/wood.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/agent_sample.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/building_stamp.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -832,23 +860,30 @@ are KEEP.
 | `rust/crates/sim-systems/src/worldgen/terrain.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-test/src/bin/worldsim_perf.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_probe.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/bin/worldsim_systems.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_wm.rs` | DELETE | world-model recorder binary | goal 3.2 |
 | `rust/crates/sim-test/src/lib.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/perf.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/ablation.rs` | DELETE | ablation/bisection scenes of past passes | goal 6.3 |
+| `rust/crates/sim-test/src/probe/adult_work.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/agent_trace.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/area_floor.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/args.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/chronicle_out.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/deaths.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/deaths_observer.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/exposure_health.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/family_events.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/family_samples.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/family_trace.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/family_trace_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/fingerprint.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/fission_settlements.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/long_run.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/meals_firewood.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/metrics.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/mod.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/night_burn.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/pass10.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
 | `rust/crates/sim-test/src/probe/pass11.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
 | `rust/crates/sim-test/src/probe/pass12.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
@@ -865,9 +900,19 @@ are KEEP.
 | `rust/crates/sim-test/src/probe/pass6.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
 | `rust/crates/sim-test/src/probe/pass7.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
 | `rust/crates/sim-test/src/probe/pass8.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
+| `rust/crates/sim-test/src/probe/relation_caps.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/relations_block.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/routine_accounting.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/routine_batch_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/routine_death_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/routine_observer.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/routine_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/routine_trace.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/runner.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/seasons_forage.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/summary.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/winter_severity.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/wood_work.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/scenes.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/subprofile_report.rs` | KEEP | worldsim_perf --features subprofile report (perf tooling, not pass-only) | src/perf.rs:306 |
 | `rust/crates/sim-test/src/worldmodel/digest.rs` | DELETE | world-model research (lives on codex/worldmodel-2026-10) | goal 3.2 |
@@ -877,6 +922,50 @@ are KEEP.
 | `rust/crates/sim-test/src/worldmodel/schedule.rs` | DELETE | world-model research (lives on codex/worldmodel-2026-10) | goal 3.2 |
 | `rust/crates/sim-test/src/worldmodel/schema.rs` | DELETE | world-model research (lives on codex/worldmodel-2026-10) | goal 3.2 |
 | `rust/crates/sim-test/src/worldmodel/sha256.rs` | DELETE | world-model research (lives on codex/worldmodel-2026-10) | goal 3.2 |
+| `rust/crates/sim-test/tests/agents_aging.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_body_health.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_combat.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_combat_ui.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_core.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_death_viz.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_decision.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_exposure.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_inspector.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_memory_components.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_memory_system.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_memory_ui.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_movement.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_needs.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_newborn.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_preemption.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_rhythm.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_routine.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_seek.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_sleep.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_snapshot.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_starvation.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/agents_viz.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/chronicle_combat.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/chronicle_construction.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/chronicle_memory.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/chronicle_rebuild.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/chronicle_settlement.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/chronicle_social.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/determinism.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_bridge_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_bridge_postverify.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_causal_chain.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_causal_events.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_causal_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_influence.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_influence_channels.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_influence_pipeline.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_rng.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_tallies.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_tick_scaffold.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_worldgen.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/family_households.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/family_support/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/harness_a15_controlled_determinism.rs` | KEEP-TRIM | engine determinism on default rules; one fn reads `.harness/` | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_art_p9_sim_reads.rs` | DELETE | UI source text; references deleted bridge funcs | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_b1_zoom_default_raise.rs` | DELETE | UI source text | V8_0_INVENTORY.md section 3.1 (test triage) |
@@ -1028,13 +1117,40 @@ are KEEP.
 | `rust/crates/sim-test/tests/harness_t7_10_f_beauty_bfs_wiring.rs` | KEEP | engine behaviour | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_t7_9_a_scaffold.rs` | KEEP-TRIM | engine behaviour | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_t7_9_b_render_mechanism.rs` | DELETE | source text only | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/relations_caps.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/relations_rule.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/relations_social_components.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/relations_social_freeze_fix.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/relations_social_system.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/relations_social_ui.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/routine_support/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_construction.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_construction_components.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_construction_render.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_data.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_firewood.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_fission.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_food.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_gather.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_hud_regressions.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_inventory.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_membership.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_migration.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_resource_depletion.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_resource_scarcity.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_resource_substrate.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_seasons.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_stockpile.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_system.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/settlement_village.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `scenes/` | MIXED | files inside: 2 DELETE, 1 KEEP; see the file/exception rows. Directory rule: scene root | git ls-files at b1ca032f |
 | `scenes/main.tscn` | KEEP | main scene; deleted UI nodes removed (7.3) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scenes/test/art_calibration.tscn` | DELETE | art calibration scene / Godot test code (6.3) | goal 6.3 |
 | `scenes/ui/god_hand_panel.tscn` | DELETE | god-hand panel scene (7.2) | goal 7.2 |
-| `scripts/` | MIXED | files inside: 2 ASK, 239 DELETE, 37 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
+| `scripts/` | MIXED | files inside: 4 ASK, 239 DELETE, 65 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
 | `scripts/core/locale.gd` | KEEP | Locale autoload (7.3 keep set) | goal 7.3; project.godot [autoload] |
 | `scripts/core/settlement_selection.gd` | KEEP | dependency of kept renderers/panels (selected village state); M1 replaces | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/core/sim_reads.gd` | KEEP | SimReads: every bridge read (moved from scripts/ui/ in 8.7) | goal 8.7 |
 | `scripts/rendering/art/god_hand_effects.gd` | DELETE | god-hand effects renderer (7.2/7.3) | goal 7.2 |
 | `scripts/test/art/agent_pose_moments_reference_p10.gd` | DELETE | Godot test code (6.3); the V8 smoke is written fresh in tools/v8 | goal 6.3 |
 | `scripts/test/art/agent_section_clock_p10.gd` | DELETE | Godot test code (6.3); the V8 smoke is written fresh in tools/v8 | goal 6.3 |
@@ -1275,11 +1391,12 @@ are KEEP.
 | `scripts/ui/camp_seats.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/carry_load_layer.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/chronicle_text.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/ui/cold_audit.json` | KEEP | data read by cold_effects.gd (dependency) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/cold_audit.json` | KEEP | data read by cold_effects.gd (dependency); moved to scripts/world/ in 8.7 | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/cold_effects.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/daylight_controller.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/death_viz_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/founding_group_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/hud/hud_topbar.gd` | KEEP | hud_topbar.gd (7.3 keep set; moved from scripts/ui/panels/ in 8.7) | goal 7.3, 8.7 |
 | `scripts/ui/morning_chill.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/nature_canopy.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
 | `scripts/ui/nature_layout.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1311,6 +1428,34 @@ are KEEP.
 | `scripts/ui/world_effects.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/world_renderer.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/zoom_lod_controller.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/activity_icons.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/agent_activity.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/agent_frame_choices.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/agent_pose_moments.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/agent_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/world/agent_selection_index.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/art_hash.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/art_season_tint.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/art_sprite_library.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/building_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/world/camera_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/world/camp_seats.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/carry_load_layer.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/cold_audit.json` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/cold_effects.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/daylight_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/world/declump_offsets.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/morning_chill.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/nature_canopy.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
+| `scripts/world/nature_layout.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/nature_renderer.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
+| `scripts/world/offscreen_marker.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/porter_presentation.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/shelter_cold.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/terrain_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
+| `scripts/world/walker_offsets.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/wood_visuals.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/world/world_renderer.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
 | `shaders/` | MIXED | files inside: 1 ASK, 8 DELETE, 2 KEEP; see the file/exception rows. Directory rule: not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/abandoned_building.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/agent_alive.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1325,7 +1470,7 @@ are KEEP.
 | `shaders/villager_ramp.gdshader` | KEEP | palette-ramp shader used by art_sprite_library.gd (people colours; VISION §5 keeps palette swap) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension` | KEEP | GDExtension manifest loading libsim_bridge | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `stats/` | DELETE | pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it | grep -rn 'stats/' rust scripts → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `tools/` | MIXED | files inside: 891 DELETE, 12 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
+| `tools/` | MIXED | files inside: 891 DELETE, 23 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
 | `tools/.gdignore` | KEEP | keeps Godot from importing tools/ | git ls-files at b1ca032f |
 | `tools/art/gen_terrain_atlas.py` | DELETE | one-off art script (6.3) | goal 6.3 |
 | `tools/art_pipeline/README.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
@@ -2211,14 +2356,25 @@ are KEEP.
 | `tools/trait_migration.py` | DELETE | one-off migration script (6.3) | goal 6.3 |
 | `tools/v8/bridge_api.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/check_docs.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/check_docs_helpers.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/compare_summaries.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/gdscript_strict_check.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/godot_bin.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/identity_removed_keys.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/inventory.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/locale_keys.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/locale_prune.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/perf.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/perf_summary.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/run_bounded.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/smoke.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/smoke.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/smoke_base_counts.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/system_table.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/worldmodel/bench_v0.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/bench_v1.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/check_z6.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |

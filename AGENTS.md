@@ -1,108 +1,78 @@
-# WorldSim Codex Agent Instructions (v3.1)
+# AGENTS.md — WorldSim
 
-## Pre-flight (MANDATORY — every task)
+WorldSim is a Dwarf Fortress–style stone-age settlement sim: a deterministic
+Rust simulation (hecs ECS) behind a Godot 4.6 GDExtension bridge, with
+GDScript only for drawing, input and UI. Direction: [docs/VISION.md](docs/VISION.md).
+Structure: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). This file is canonical
+for every coding agent; `CLAUDE.md` imports it.
 
-모든 작업 시작 전 반드시 실행. 예외 없음.
+## Branches and pushing
+
+- Work and commit on **`v8/wip`**. Push with an explicit target: `git push origin v8/wip`, then check `git ls-remote origin v8/wip` equals local HEAD.
+- **`v8/main`** moves only by fast-forward to a commit whose full gate is green.
+- Never push `lead/main`, `main` or any `codex/*` branch. Never force-push, rewrite pushed history, or delete or move a remote branch or tag.
+- Never discard work with a hard reset; inspect with `git status` / `git diff` and fix forward.
+- The V7 lines and research are pinned: tags `v7-final-sim`, `v7-final-art`; world-model work lives on `codex/worldmodel-2026-10`.
+
+## Staging and the working tree
+
+- Stage explicit paths only (`git add path …`), never `git add -A` / `git add .`.
+- Never stage `.gitignore`, `.ignore` or local tool state (`graft/`, `.omc/`); never touch the local `.claude/settings.json` or its skip-worktree flag.
+- Raw measurement data (probe runs, captures, logs) lives outside the repository.
+
+## Code rules
+
+- Integers and permille only in `sim-core`, `sim-systems`, `sim-engine` — no `exp/ln/powf/sin/…` (the gate greps).
+- Iterate maps in key order: `BTreeMap`/`BTreeSet` or sort first. Never insert or remove hecs components while iterating a hash collection.
+- Keyed draws consume no stream state (`sim-core/src/rng.rs`); a skipped keyed draw changes nothing else.
+- GDScript never writes simulation state; it reads the bridge (`SimReads`) and sends commands.
+- No `.unwrap()` in production Rust you touch; return `Result`/`Option` or use a safe default.
+- Every `src/**/*.rs` starts with a `//!` header (systems: priority, interval, reads, writes, events); every `.gd` starts with a comment block (purpose, bridge methods called).
+- A change that is meant to keep behaviour must pass `tools/v8/identity.sh` before it is called behaviour-preserving.
+
+## Skills (read before working in the area)
+
+| skill | read when | path |
+|---|---|---|
+| worldsim-architecture | any Rust change; adding a system or a bridge read; crate boundaries, determinism, integer math | `.claude/skills/worldsim-architecture/SKILL.md` |
+| worldsim-godot | any GDScript, scene, shader, import, capture or gdext/FFI work | `.claude/skills/worldsim-godot/SKILL.md` |
+| worldsim-testing | writing tests, identity, determinism, the gate, perf comparisons | `.claude/skills/worldsim-testing/SKILL.md` |
+| worldsim-pitfalls | before any non-trivial change: the log of problems that bit us | `.claude/skills/worldsim-pitfalls/SKILL.md` |
+| worldsim-docs-upkeep | at the end of every pass | `.claude/skills/worldsim-docs-upkeep/SKILL.md` |
+| systematic-debugging | a bug, failing test or unexpected behaviour | `.claude/skills/systematic-debugging/SKILL.md` |
+| verification-before-completion | before claiming anything is done or fixed | `.claude/skills/verification-before-completion/SKILL.md` |
+
+Codex reads the same skills through `.agents/skills/<name>` (symlinks).
+
+## The gate
+
 ```bash
-# 1. Sync with remote
-git fetch origin
-git checkout lead/main
-git reset --hard origin/lead/main
-
-# 2. Verify clean state
-git status
-# EXPECTED: "nothing to commit, working tree clean"
-# If dirty: git reset --hard origin/lead/main
-
-# 3. Gate check
-cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
-# If fails: STOP and report. Do not start work on broken baseline.
+bash tools/v8/gate.sh <log_dir>        # 16 steps; every step must pass
 ```
 
-### Post-work (MANDATORY — after every task)
-```bash
-# 1. Gate must pass
-cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
+Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
+(all targets), forbidden-math grep, GDScript strict check, headless smoke,
+identity, determinism, perf (report only), bridge API, docs check,
+inventory closure, Python unit tests. Rebuild the bridge (`cargo build -p
+sim-bridge`) before any Godot run — `cargo test` does not refresh the library
+Godot loads.
 
-# 2. Commit to lead/main directly
-git add -A
-git commit -m "[t-000] <description>"
-git push origin lead/main
+## End-of-pass checklist
 
-# 3. Create PR: lead/main → main, merge immediately
-# Do NOT create separate worktrees or branches unless explicitly asked.
-```
+1. `CHANGELOG.md` entry (Added / Changed / Removed).
+2. `docs/ROADMAP.md` row status.
+3. `docs/HISTORY.md` line when a milestone ends or something is deleted.
+4. An ADR in `docs/decisions/` for each design decision.
+5. `docs/ARCHITECTURE.md`: regenerate the system table (`python3 tools/v8/system_table.py --write`), update maps if structure changed.
+6. Skills: add a lesson when a problem needed more than one attempt, a better method was found, or Godot/gdext surprised you — in the same pass.
+7. `bash tools/v8/check_docs.sh` green.
 
-### Rules
-- Always work directly on lead/main branch
-- Always reset to origin/lead/main before starting
-- Never leave uncommitted changes
-- Never create worktrees unless the prompt explicitly requests it
-- PR target is always lead/main → main
+Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.
 
-## Project Overview
-WorldSim: god simulation where autonomous agents form civilizations from the Stone Age.
-Rust (hecs ECS, rayon) + Godot 4 (render only). 1-person dev. Data-driven via RON.
+## Where things are
 
-## Architecture Rules (MUST follow)
-
-### 14 Day-1 Decisions
-1. LOD 4-Tier (LodTier component)
-2. System frequency tiering (Hot/Warm/Cold)
-3. Influence Grid (8-12 typed channels, no direct entity refs)
-4. Sparse social relations (cap 100, BTreeMap)
-5. serde on all components
-6. Data-Driven ("Build like a mod" -- all content in RON)
-7. Causal tracking (per-entity 32-event ring buffer)
-8. Double-buffer + damping + Sigmoid saturation
-9. Sim 20-30 TPS + render 60 FPS (Gaffer accumulator)
-10. Reactive ECS (ChangeTracker)
-11. Building 2-layer model (structural grid + furniture ECS)
-12. Tag+threshold recipes (no ID references)
-13. TCI temperament 4-axis (gene -> temperament -> HEXACO pipeline)
-14. World Rules 5-Slot (resource/space/agent/society/global)
-
-### Critical Rules for Code Generation
-- ALL simulation logic in Rust. GDScript is UI rendering ONLY.
-- NEVER hardcode simulation parameters. Use RON data files.
-- NEVER reference material IDs in recipes. Use tags + thresholds.
-- NEVER make walls into ECS entities. Walls = tile grid data.
-- NEVER update structural building data per tick. Building state changes are event-driven.
-- NEVER poll for World Rules changes. Use Settings -> Compile -> Runtime and on_action events.
-- NEVER put oracle/LLM interpretation logic in GDScript. UI sends text and commands only.
-- ALL new content = new `.ron` file. Zero `.rs` changes when the schema already supports it.
-- ALL f64 for simulation math (determinism).
-- ALL shared components derive `Serialize` + `Deserialize`.
-- Influence Grid is the sole ambient interaction medium. Do not wire direct entity references where typed channels suffice.
-- Temperament is gene -> TCI -> HEXACO bias. Do not hardcode role/personality outcomes.
-
-### Crate Structure
-- sim-core: components, Influence Grid, Effect Primitives, CausalLog, TileGrid, Room, Temperament
-- sim-data: RON loaders (`MaterialDef`, `RecipeDef`, `StructureDef`, `WorldRuleset`, `TemperamentRules`)
-- sim-systems: RuntimeSystems (Hot/Warm/Cold), GOAP, recipe resolution, temperament
-- sim-engine: tick loop, scheduling, double-buffer, World Rules lifecycle
-- sim-bridge: Rust<->Godot FFI, snapshots, MultiMesh buffers, Oracle pipeline boundary
-- sim-test: headless tests
-
-### Key Formulas
-- weapon_damage = material.hardness * 1.2
-- weapon_speed = 5.0 / material.density
-- weapon_durability = material.hardness * material.density * 10
-- temperament = sigma(W_PRS_4x38 * genes_38D + epsilon)
-- hexaco_init = base_distribution + temperament_bias_matrix_4x24 * temperament
-- wall_insulation = material.density * 0.15 (stone ~0.9, wood ~0.5)
-
-### Current Phase: A-1 through A-10 (Prerequisites)
-A-1: RON loader | A-2: Influence Grid | A-3: Effect Primitives | A-4: CausalLog
-A-5: Frequency tiering | A-6: Tile grid + BFS room | A-7: Tag recipes
-A-8: Temperament (TCI) | A-9: World Rules slot | A-10: serde/BTreeMap/misc
-
-### Gate Command (mandatory before commit)
-```bash
-cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
-```
-
-### Unwrap Audit
-```bash
-grep -rn '\.unwrap()' <new_files> | grep -v test  # expect 0 hits
-```
+- Owner-facing (Korean): `README.md`, `docs/VISION.md`, `docs/ROADMAP.md`, `docs/HISTORY.md`.
+- Agent-facing (English): `docs/ARCHITECTURE.md`, `docs/decisions/`, `CHANGELOG.md`, this file, `.claude/skills/`.
+- Pass goals and their records: `docs/<line>/` (V8-0: `docs/v8/`).
+- Deleted material and where it lives: `docs/archive/INDEX.md`.
+- Tooling: `tools/v8/` (gate, identity, perf, smoke, capture, inventory, docs checks).
