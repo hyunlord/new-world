@@ -209,7 +209,8 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v23" => crate::scenes::game_v23_scene(seed),
         "game_v24" => crate::scenes::game_v24_scene(seed),
         "game_v25" => crate::scenes::game_v25_scene(seed),
-        "game_v26" => crate::scenes::game_v26_scene(seed),
+        // V8-0: `game_v26` is an alias of `baseline` (the same world and rules).
+        "baseline" | "game_v26" => crate::scenes::baseline_scene(seed),
         _ => crate::scenes::legacy_scene(),
     }
 }
@@ -596,6 +597,7 @@ fn twin_checked(scene: &str) -> bool {
             | "game_v24"
             | "game_v25"
             | "game_v26"
+            | "baseline"
     )
 }
 

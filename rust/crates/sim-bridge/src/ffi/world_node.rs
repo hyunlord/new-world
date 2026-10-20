@@ -185,27 +185,23 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
     speed.clamp(0.0, 4.0)
 }
 
-/// Revitalize Pass 15 — the stress world of `seed` with `agents` founders on
-/// the game's 64 × 64 map under the `game_v19` rules
-/// (`WorldGenConfig::stress_v19`). Pure (no Godot) so the harness can check
-/// it directly. Benchmark only — lets the art line measure frame times on a
-/// crowded world; never called by the game's UI.
+/// The stress world of `seed` with `agents` founders on the game's 64 × 64
+/// map under the baseline rules (`WorldGenConfig::stress`; V8-0 moved it from
+/// the `game_v19` rules to the baseline, DECISIONS D10). Pure (no Godot).
+/// Benchmark only — never called by the game's UI.
 pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(
-        &WorldGenConfig::stress_v19(seed, agents, 64),
-        WorldRules::game_v19(seed),
+        &WorldGenConfig::stress(seed, agents, 64),
+        WorldRules::baseline(seed),
     )
 }
 
-/// Revitalize Pass 21 — the live game's world of `seed`: `game_v26`, with
-/// temperament, routines (each person ending their day at their own time),
-/// families (elder partners follow on a split) and village relations
-/// (porters, forage disputes, estrangement that ends: Pass 21's daily caps,
-/// avoid filter and exchange first). Pure (no Godot) so the harness
-/// can check it; `WorldSimNode::init` and `reset_world` call it, while
-/// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
+/// The live game's world of `seed`: `WorldGenConfig::baseline` under
+/// `WorldRules::baseline` (= `game_v26` at `v7-final-art`: temperament,
+/// routines, families and village relations). Pure (no Godot) so tests can
+/// check it; `WorldSimNode::init` and `reset_world` call it.
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::game_v26(seed), WorldRules::game_v26(seed))
+    build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed))
 }
 
 /// Revitalize Pass 16 — the temperament of the agent whose
@@ -3412,26 +3408,25 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
-    fn live_game_is_game_v26() {
-        // Pass 21 6.1: init and reset_world build game_v26; the stress world stays v19.
+    fn live_game_is_the_baseline() {
+        // init and reset_world build the baseline; since V8-0 the stress world
+        // runs the baseline rules too (DECISIONS D10).
         let engine = super::build_game_engine(20_261_010);
         assert_eq!(
             engine.resources.rules,
-            sim_core::rules::WorldRules::game_v26(20_261_010)
+            sim_core::rules::WorldRules::baseline(20_261_010)
         );
-        assert!(super::build_stress_engine(1, 30)
-            .resources
-            .rules
-            .society
-            .relations
-            .is_none());
+        assert_eq!(
+            super::build_stress_engine(1, 30).resources.rules,
+            sim_core::rules::WorldRules::baseline(1)
+        );
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
     }
 
     #[test]
     fn collect_agent_temperament_reads_the_component() {
-        // Live v22 retains founder temperament; stale bits and v19 agents give None.
+        // Live founders carry temperament; stale bits give None.
         let engine = super::build_game_engine(7);
         let mut seen = 0;
         for (entity, t) in engine
@@ -3458,20 +3453,12 @@ mod revitalize_tooling_tests {
             super::collect_agent_temperament(&engine.world, u64::MAX),
             None
         );
-        let v19 = super::build_stress_engine(7, 3);
-        for (entity, _) in v19.world.query::<&sim_core::components::Agent>().iter() {
-            assert_eq!(
-                super::collect_agent_temperament(&v19.world, entity.to_bits().get()),
-                None
-            );
-        }
     }
 
     #[test]
-    fn live_founders_have_family_while_stress_founders_do_not() {
-        // Given the live v22 and stress v19 builders used by init and resets.
+    fn live_founders_have_sex_and_empty_family_links() {
+        // Given the live builder used by init and resets.
         let live = super::build_game_engine(7);
-        let stress = super::build_stress_engine(7, 3);
         let mut seen = 0;
         // When reading every live founder's family through entity bits.
         for (entity, _) in live.world.query::<&sim_core::components::Agent>().iter() {
@@ -3492,12 +3479,6 @@ mod revitalize_tooling_tests {
             seen += 1;
         }
         assert!(seen > 0);
-        for (entity, _) in stress.world.query::<&sim_core::components::Agent>().iter() {
-            assert_eq!(
-                super::collect_agent_family(&stress.world, entity.to_bits().get()),
-                None
-            );
-        }
     }
 
     #[test]
@@ -3518,7 +3499,7 @@ mod revitalize_tooling_tests {
         );
         assert_eq!(
             engine.resources.rules,
-            sim_core::rules::WorldRules::game_v19(15100)
+            sim_core::rules::WorldRules::baseline(15100)
         );
     }
 

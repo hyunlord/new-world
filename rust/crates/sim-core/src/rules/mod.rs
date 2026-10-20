@@ -1,6 +1,7 @@
 //! Opt-in rules for generated worlds; defaults preserve the legacy fixture.
 use serde::{Deserialize, Serialize};
 
+mod baseline;
 mod routine;
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 

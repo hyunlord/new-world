@@ -49,6 +49,49 @@ pub struct WorldGenConfig {
     pub region_water_max: Option<u32>,
 }
 impl WorldGenConfig {
+    /// The live game's generator inputs for world `seed`: one flat literal
+    /// equal to `game_v26` at `v7-final-art` (ADR 0011), checked against
+    /// `rust/crates/sim-core/tests/data/v7_final_worldgen_seed*.txt`
+    /// (`tests/baseline_worldgen_matches_v7_final.rs`). Founders, bushes,
+    /// deadwood, forest and wild regions are the world's hidden parameters
+    /// (`WorldVariety::draw_v18`); everything else is fixed.
+    pub const fn baseline(seed: u64) -> Self {
+        let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+        Self {
+            seed,
+            width: 64,
+            height: 64,
+            starting_agents: variety.starting_agents,
+            berry_bushes: variety.berry_bushes,
+            berry_capacity: variety.berry_capacity,
+            forest_coverage: variety.forest_permille as f64 / 1000.0,
+            hill_coverage: 0.1,
+            mountain_coverage: 0.04,
+            deadwood_spots: variety.deadwood_spots,
+            deadwood_capacity: variety.deadwood_capacity,
+            deadwood_min_radius: 5,
+            deadwood_max_radius: 18,
+            wild_regions: variety.wild_regions as u32,
+            region_bushes: variety.region_bushes,
+            region_deadwood: variety.region_deadwood,
+            region_fill: true,
+            region_water_max: Some(12),
+        }
+    }
+
+    /// The benchmark stress world: [`Self::baseline`]`(seed)` with `agents`
+    /// founders on a `side × side` map (run it under `WorldRules::baseline`).
+    /// Used by `worldsim_perf` (`quick`, `stress`) and the bridge's
+    /// `reset_world_stress`; never a game scene.
+    pub const fn stress(seed: u64, agents: u32, side: u32) -> Self {
+        Self {
+            starting_agents: agents,
+            width: side,
+            height: side,
+            ..Self::baseline(seed)
+        }
+    }
+
     /// Pass 10 generator inputs of world `seed`: v15's recipe with the
     /// founders, bushes, deadwood and forest of its hidden parameters
     /// (`WorldVariety::draw`). Never redrawn; worldgen accepts every range.

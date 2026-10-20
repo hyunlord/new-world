@@ -315,6 +315,19 @@ pub fn game_v20_inert_scene_with(
     engine
 }
 
+/// The live game's world `seed`: `WorldGenConfig::baseline` under
+/// `WorldRules::baseline` (= `game_v26` at `v7-final-art`), with the world's
+/// hidden parameters stored in `resources.world_variety` for measurement.
+pub fn baseline_scene(seed: u64) -> SimEngine {
+    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::baseline(seed),
+        sim_core::rules::WorldRules::baseline(seed),
+    );
+    engine.resources.world_variety = Some(variety);
+    engine
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

@@ -93,6 +93,7 @@ impl ProbeArgs {
                 | "game_v24"
                 | "game_v25"
                 | "game_v26"
+                | "baseline"
         ) {
             return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission, game_v17, game_v18_nofission, game_v18, game_v19_nofission, game_v19, game_v20_inert, game_v20, game_v21, game_v22, game_v23, game_v24, game_v25, game_v26".into());
         }
@@ -191,6 +192,7 @@ mod tests {
         assert!(unknown.contains("game_v24, game_v25"), "{unknown}");
         // Pass 21: game_v26 is accepted (it was rejected through Pass 20).
         assert!(parse(&["--scene", "game_v26"]).is_ok());
+        assert!(parse(&["--scene", "baseline"]).is_ok());
         assert!(usage.contains("game_v25|game_v26"), "{usage}");
         assert!(unknown.contains("game_v25, game_v26"), "{unknown}");
         assert!(parse(&["--scene", "game_v27"]).is_err());

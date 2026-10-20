@@ -103,7 +103,7 @@ pub fn build_engine(spec: &RunSpec) -> Result<SimEngine, String> {
     let (seed, agents, side) = (spec.seed, spec.agents, spec.side);
     std::panic::catch_unwind(move || match agents {
         Some(n) => build_world_with(
-            &WorldGenConfig::stress_v19(seed, n, side),
+            &WorldGenConfig::stress(seed, n, side),
             stress_rules(&scene, seed),
         ),
         None => crate::probe::scene_engine(&scene, seed),
@@ -123,6 +123,7 @@ pub fn stress_rules(label: &str, seed: u64) -> WorldRules {
         "stress_v25" => WorldRules::game_v25(seed),
         "stress_v26" => WorldRules::game_v26(seed),
         "stress_v20_inert" => WorldRules::game_v20_inert(seed),
+        "stress_baseline" => WorldRules::baseline(seed),
         _ => WorldRules::game_v19(seed),
     }
 }
@@ -137,8 +138,8 @@ pub fn stress_label(rules: &str) -> &'static str {
         "game_v23" => "stress_v23",
         "game_v24" => "stress_v24",
         "game_v25" => "stress_v25",
-        "game_v26" => "stress_v26",
         "game_v20_inert" => "stress_v20_inert",
+        "baseline" | "game_v26" => "stress_baseline",
         _ => "stress_v19",
     }
 }
@@ -860,7 +861,7 @@ impl PerfArgs {
         let mode = args.first().cloned().ok_or(USAGE)?;
         let mut parsed = PerfArgs {
             mode: mode.clone(),
-            scene: "game_v19".into(),
+            scene: "baseline".into(),
             seeds: 15100..15101,
             agents: vec![500],
             sides: vec![64],
@@ -874,7 +875,7 @@ impl PerfArgs {
                 .map(|x| x.trim().parse::<u32>().map_err(|e| format!("{v}: {e}")))
                 .collect::<Result<Vec<_>, _>>()
         };
-        // Pass 16: `--rules` picks the stress world's rules (default game_v19).
+        // Pass 16: `--rules` picks the stress world's rules (V8-0: default baseline).
         let mut rules: Option<String> = None;
         let mut i = 1;
         while i < args.len() {
@@ -895,6 +896,7 @@ impl PerfArgs {
                             | "game_v24"
                             | "game_v25"
                             | "game_v26"
+                            | "baseline"
                     ) {
                         return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26, not {value}"));
                     }
@@ -953,14 +955,16 @@ impl PerfArgs {
         // kept in `scene` for them, and only for them.
         match (mode.as_str(), rules) {
             ("stress" | "quick" | "map", rules) => {
-                parsed.scene = rules.unwrap_or_else(|| "game_v19".into())
+                parsed.scene = rules.unwrap_or_else(|| "baseline".into())
             }
             (_, Some(_)) => {
                 return Err(format!("--rules applies to stress, quick and map\n{USAGE}"))
             }
             (_, None) => {}
         }
-        if matches!(mode.as_str(), "natural" | "overhead") && !parsed.scene.starts_with("game") {
+        if matches!(mode.as_str(), "natural" | "overhead")
+            && !(parsed.scene.starts_with("game") || parsed.scene == "baseline")
+        {
             return Err(format!(
                 "--scene must be a game scene, not {}",
                 parsed.scene
@@ -1323,7 +1327,8 @@ mod tests {
         // Pass 16 8.5: --rules (default game_v19, today's behaviour; --scene stays ignored by stress).
         let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
         for (flag, label) in [
-            ("", "stress_v19"),
+            ("", "stress_baseline"),
+            ("--rules baseline", "stress_baseline"),
             ("--rules game_v19", "stress_v19"),
             ("--rules game_v20", "stress_v20"),
             ("--rules game_v20_inert", "stress_v20_inert"),
@@ -1332,7 +1337,7 @@ mod tests {
             ("--rules game_v23", "stress_v23"),
             ("--rules game_v24", "stress_v24"),
             ("--rules game_v25", "stress_v25"),
-            ("--rules game_v26", "stress_v26"),
+            ("--rules game_v26", "stress_baseline"),
         ] {
             let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x")))
                 .expect("stress");
@@ -1340,7 +1345,7 @@ mod tests {
         }
         let ignored =
             PerfArgs::parse(&a("stress --scene game_v16 --seeds 1..2 --out x")).expect("stress");
-        assert_eq!(stress_label(&ignored.scene), "stress_v19");
+        assert_eq!(stress_label(&ignored.scene), "stress_baseline");
         assert!(PerfArgs::parse(&a("stress --rules game_v18 --out x")).is_err());
         // Pass 19 7.6: game_v24 maps to stress_v24 and WorldRules::game_v24
         // (an unknown label would silently fall back to game_v19).
@@ -1376,7 +1381,7 @@ mod tests {
             PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err()
         );
         let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
-        assert_eq!(stress_label(&q.scene), "stress_v19");
+        assert_eq!(stress_label(&q.scene), "stress_baseline");
         for (label, rules) in [
             ("stress_v19", WorldRules::game_v19(9)),
             ("stress_v20", WorldRules::game_v20(9)),

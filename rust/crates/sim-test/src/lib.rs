@@ -11,6 +11,12 @@ pub mod perf;
 pub mod probe;
 /// Shared production-scene fixtures.
 pub mod scenes;
+
+/// The live game's engine for world `seed` (`scenes::baseline_scene`): the
+/// starting point of every test that runs the game's rules.
+pub fn baseline_engine(seed: u64) -> sim_engine::SimEngine {
+    scenes::baseline_scene(seed)
+}
 /// Pass 18: `worldsim_perf`'s `subprofile` block (feature `subprofile` only).
 #[cfg(feature = "subprofile")]
 pub mod subprofile_report;

@@ -28,6 +28,7 @@ pub use world_node::clamp_sim_speed;
 pub use world_node::enqueue_building_placed;
 pub use world_node::WorldSimNode;
 pub use world_node::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
+pub use world_node::{build_game_engine, build_stress_engine};
 pub use world_node::{collect_agent_detail, AgentDetailRow, AGENT_DETAIL_DICT_KEYS};
 pub use world_node::{collect_construction_snapshot, ConstructionSnapshotRow};
 pub use world_node::{
