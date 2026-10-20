@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# tools/harness/gdscript_strict_check.sh — strict GDScript verification.
+# tools/v8/gdscript_strict_check.sh — strict GDScript verification (gate step 8).
+# Moved from tools/harness/ in V8-0; the FFI export list now comes from
+# tools/v8/bridge_api.py (every #[func] in rust/crates/sim-bridge/src), and
+# bridge methods named as strings in SimReads.read/mutate calls are checked too.
 #
 # Catches three error classes that the Codex-based pipeline cannot:
 #   1. GDScript parse errors
@@ -18,8 +21,8 @@
 #     matching Rust export is an FFI mismatch.
 #
 # Usage:
-#   bash tools/harness/gdscript_strict_check.sh                # check all .gd in scripts/
-#   bash tools/harness/gdscript_strict_check.sh path1.gd path2.gd  # check specific files
+#   bash tools/v8/gdscript_strict_check.sh                # check all .gd in scripts/
+#   bash tools/v8/gdscript_strict_check.sh path1.gd path2.gd  # check specific files
 #
 # Exit codes:
 #   0  — all checks pass
@@ -30,9 +33,9 @@
 set -uo pipefail
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-GODOT_BIN="${GODOT_BIN:-/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot}"
+source "$PROJECT_ROOT/tools/v8/godot_bin.sh"
 PROJECT_GODOT="$PROJECT_ROOT/project.godot"
-FFI_FILE="$PROJECT_ROOT/rust/crates/sim-bridge/src/ffi/world_node.rs"
+FFI_DIR="$PROJECT_ROOT/rust/crates/sim-bridge/src"
 
 if [[ ! -x "$GODOT_BIN" ]]; then
     echo "[gdcheck] ERROR: Godot binary not found at $GODOT_BIN" >&2
@@ -111,20 +114,25 @@ if [[ $PARSE_ERRORS -eq 0 ]]; then
 fi
 
 # ── 2. FFI binding check ───────────────────────────────────────────────
-if [[ -f "$FFI_FILE" ]]; then
+if [[ -d "$FFI_DIR" ]]; then
     CALLED_FILE="$(mktemp)"
     EXPORTED_FILE="$(mktemp)"
     cleanup_ffi() { rm -f "$CALLED_FILE" "$EXPORTED_FILE"; }
 
-    # GDScript calls of the form `world_sim.METHOD(` / `_world_sim.METHOD(`.
-    grep -rhEo '(world_sim|_world_sim)\.[a-z_][a-z_0-9]*\(' scripts/ 2>/dev/null \
-        | sed -E 's/.*\.([a-z_][a-z_0-9]*)\(/\1/' \
-        | sort -u > "$CALLED_FILE"
+    # GDScript calls of the form `world_sim.METHOD(` / `_world_sim.METHOD(`,
+    # plus bridge methods named as strings: SimReads.read(world, "get_x"),
+    # SimReads.mutate(world, "advance_ticks", …), read_raw("get_x"),
+    # mutate_raw("x", …).
+    {
+        grep -rhEo '(world_sim|_world_sim)\.[a-z_][a-z_0-9]*\(' scripts/ 2>/dev/null \
+            | sed -E 's/.*\.([a-z_][a-z_0-9]*)\(/\1/'
+        grep -rhEo '(read|mutate)(_raw)?\(([a-z_]+, *)?"[a-z_][a-z_0-9]*" *[,)]' scripts/ 2>/dev/null \
+            | sed -E 's/.*"([a-z_][a-z_0-9]*)".*/\1/'
+    } | sort -u > "$CALLED_FILE"
 
-    # Rust #[func] fn declarations in sim-bridge.
-    grep -A 1 '^    #\[func\]' "$FFI_FILE" \
-        | grep -E '^\s+(pub )?fn ' \
-        | sed -E 's/.*fn ([a-z_][a-z_0-9]*).*/\1/' \
+    # Every #[func] the bridge exports (tools/v8/bridge_api.py).
+    python3 "$PROJECT_ROOT/tools/v8/bridge_api.py" "$PROJECT_ROOT" \
+        | sed -nE 's/^func [A-Za-z]+\.([a-z_][a-z_0-9]*)$/\1/p' \
         | sort -u > "$EXPORTED_FILE"
 
     NUM_CALLED=$(wc -l < "$CALLED_FILE" | tr -d ' ')
@@ -149,7 +157,7 @@ if [[ -f "$FFI_FILE" ]]; then
     fi
     cleanup_ffi
 else
-    echo "[gdcheck] WARN: $FFI_FILE not found — skipping FFI check" >&2
+    echo "[gdcheck] WARN: $FFI_DIR not found — skipping FFI check" >&2
 fi
 
 # ── Summary ────────────────────────────────────────────────────────────
