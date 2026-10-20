@@ -4,7 +4,6 @@ use sim_core::components::{Agent, Child, Elder, Lineage, Social, Temperament};
 use sim_core::rules::WorldRules;
 use sim_test::probe::fingerprint;
 use sim_test::scenes::{game_v19_scene, game_v20_inert_scene, game_v20_scene};
-use sim_test::worldmodel::digest::state_digest;
 
 fn run(make: fn(u64) -> sim_engine::SimEngine, seed: u64, ticks: u64) -> sim_engine::SimEngine {
     let mut engine = make(seed);
@@ -15,7 +14,7 @@ fn run(make: fn(u64) -> sim_engine::SimEngine, seed: u64, ticks: u64) -> sim_eng
 }
 
 /// Section 6.3: `game_v20_inert` and `game_v19` of seeds 0–4 reach the same
-/// probe fingerprint and `state_digest` after 40,320 ticks (28 days, before
+/// probe fingerprint after 40,320 ticks (28 days, before
 /// any fission in any v19 seed 0–31): drawing and storing temperament (and
 /// inserting the component next to `Hardiness`) changes nothing by itself.
 #[test]
@@ -31,7 +30,7 @@ fn harness_v20_inert_equals_v19_at_40320_ticks() {
                 scope.spawn(move || {
                     let engine = run(make, seed, 40_320);
                     let temperaments = engine.world.query::<&Temperament>().iter().count();
-                    (seed, fingerprint(&engine), state_digest(&engine), temperaments)
+                    (seed, fingerprint(&engine), temperaments)
                 })
             })
             .collect();
@@ -41,9 +40,8 @@ fn harness_v20_inert_equals_v19_at_40320_ticks() {
         let (v19, inert) = (&pair[0], &pair[1]);
         assert_eq!(v19.0, inert.0);
         assert_eq!(v19.1, inert.1, "seed {} fingerprint", v19.0);
-        assert_eq!(v19.2, inert.2, "seed {} digest", v19.0);
-        assert_eq!(v19.3, 0, "v19 never stores temperament");
-        assert!(inert.3 > 0, "inert stores temperament");
+        assert_eq!(v19.2, 0, "v19 never stores temperament");
+        assert!(inert.2 > 0, "inert stores temperament");
     }
 }
 

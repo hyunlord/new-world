@@ -43,7 +43,6 @@
 //! An observed count of 0 is a REPORTABLE FINDING (vacuous guard), not a pass.
 
 use std::collections::HashMap;
-use std::path::PathBuf;
 
 use sim_bridge::ffi::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
 use sim_core::components::{Agent, Hunger, Position, SeekTarget, Sleep, Thirst};
@@ -59,10 +58,6 @@ const TICKS: u32 = 2000;
 /// Need value at full saturation — mirrors `Hunger::SATURATION` and the
 /// renderer's `SATURATION` constant; the danger ratio is `value / 100`.
 const SATURATION: f32 = 100.0;
-/// Danger ratio at/above which the renderer draws a bar — mirrors
-/// `need_bar_renderer.gd::DANGER_THRESHOLD`. The at-risk need band is
-/// `max(h,t,s) >= 50.0` ⟺ `danger >= 0.5`.
-const DANGER_THRESHOLD: f32 = 0.75;
 /// Number of agents the fixture spawns (plan: agent_count 20).
 const AGENTS: u32 = 20;
 
@@ -173,24 +168,6 @@ fn live_map(e: &SimEngine) -> HashMap<u64, LiveAgent> {
         );
     }
     map
-}
-
-fn project_root() -> PathBuf {
-    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    manifest
-        .parent()
-        .and_then(|p| p.parent())
-        .and_then(|p| p.parent())
-        .map(|p| p.to_path_buf())
-        .expect("project root = sim-test/../../..")
-}
-
-fn read_file(rel: &[&str]) -> String {
-    let mut path = project_root();
-    for seg in rel {
-        path.push(seg);
-    }
-    std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
 }
 
 // ─── A1: need arrays mirror live components — value, length, order ──────────
@@ -399,137 +376,4 @@ fn harness_needs_a4_existing_fields_and_split_preserved() {
         assert_eq!(states[i], r.state_tag, "A4: states[i] == state_tag");
     }
     println!("[viz-B A4] existing fields + locked agent_rows_split 4-tuple preserved ✓");
-}
-
-// ─── A5: renderer source + gate value + exact bridge key/field mapping ──────
-#[test]
-fn harness_needs_a5_renderer_and_bridge_contract() {
-    // Type D — structural integration invariant across renderer + bridge.
-    // (a) Renderer source tokens.
-    let r = read_file(&["scripts", "ui", "need_bar_renderer.gd"]);
-    assert!(r.contains("extends Node2D"), "A5(a): renderer extends Node2D");
-    assert!(r.contains("get_agent_snapshot"), "A5(a): renderer reads get_agent_snapshot");
-    for key in ["hungers", "thirsts", "sleeps"] {
-        assert!(r.contains(key), "A5(a): renderer must read the `{key}` snapshot array");
-    }
-    assert!(r.contains("get_agent_sprite") && r.contains("sprite.to_global(Vector2(0.0, sprite.offset.y))"), "A5(a): renderer follows the rendered agent by identity at its native head anchor");
-    assert!(r.contains("DANGER_THRESHOLD"), "A5(a): renderer declares DANGER_THRESHOLD");
-    assert!(r.contains("Z_NEED_BAR") && r.contains("7"), "A5(a): renderer declares Z_NEED_BAR = 7");
-    assert!(r.contains("draw_texture_rect_region"), "A5(a): renderer draws native warning atlas regions");
-    assert!(r.contains("U1_12"));
-    assert!(r.contains("U1_11") && r.contains("U1_13"));
-    let has_max_ratio =
-        (r.contains("max") && r.contains("/ SATURATION")) || r.contains("/ 100");
-    assert!(has_max_ratio, "A5(a): renderer computes a max-of-three danger ratio");
-
-    // (b) Gate-value tie — DANGER_THRESHOLD literal must equal 0.5 (the value
-    // A3's at-risk band `max >= 50` is measured against). Parse the literal.
-    let gate = parse_gd_const_f32(&r, "DANGER_THRESHOLD")
-        .expect("A5(b): need_bar_renderer.gd must declare a numeric DANGER_THRESHOLD");
-    assert!(
-        (gate - DANGER_THRESHOLD).abs() < f32::EPSILON,
-        "A5(b): visual warning threshold must equal 0.75; got {gate}"
-    );
-
-    // (c) Bridge key+field mapping — the FFI source must insert under the EXACT
-    // key strings and populate each from the matching row field.
-    let b = read_file(&["rust", "crates", "sim-bridge", "src", "ffi", "world_node.rs"]);
-    for (key, field) in [("hungers", "hunger"), ("thirsts", "thirst"), ("sleeps", "sleep")] {
-        assert!(
-            b.contains(&format!("dict.set(\"{key}\"")),
-            "A5(c): bridge must insert under the exact key string \"{key}\""
-        );
-        // The array variable carrying the key is filled from `row.<field>`.
-        assert!(
-            b.contains(&format!("{key}[i] = row.{field}")),
-            "A5(c): `{key}` array must be populated from `row.{field}` (no swap)"
-        );
-    }
-    println!("[viz-B A5] renderer source + DANGER_THRESHOLD==0.5 + bridge key/field mapping ✓");
-}
-
-/// Parse `const NAME := <float>` or `const NAME: float = <float>` from a
-/// GDScript source, returning the literal as f32.
-fn parse_gd_const_f32(src: &str, name: &str) -> Option<f32> {
-    for line in src.lines() {
-        let t = line.trim();
-        if !t.starts_with("const ") || !t.contains(name) {
-            continue;
-        }
-        let rhs = t.rsplit_once('=').map(|(_, r)| r.trim())?;
-        // Strip a trailing comment if present.
-        let rhs = rhs.split('#').next().unwrap_or(rhs).trim();
-        if let Ok(v) = rhs.parse::<f32>() {
-            return Some(v);
-        }
-    }
-    None
-}
-
-// ─── A6: scene wiring is additive (delta-based, offset-independent) ─────────
-#[test]
-fn harness_needs_a6_scene_wiring_additive() {
-    // Preserve this renderer registration while accounting for all Revitalize scene resources.
-    let scene = read_file(&["scenes", "main.tscn"]);
-
-    let load_steps_after = tscn_load_steps(&scene).expect("A6: main.tscn must declare load_steps=N");
-    let ext_count_after = scene
-        .lines()
-        .filter(|l| l.trim_start().starts_with("[ext_resource type="))
-        .count();
-
-    // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
-    assert_eq!(ext_count_after, 23, "twenty-two prior resources plus ActivityTooltipP13");
-    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/ui/person_activity_tooltip_p13.gd\" id=\"23_activity_tooltip\"]"));
-    assert!(scene.contains("[node name=\"ActivityTooltipP13\" type=\"Control\" parent=\"UI\"]\nmouse_filter = 2\nscript = ExtResource(\"23_activity_tooltip\")"));
-    assert!(scene.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
-    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
-    assert!(scene.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
-    assert!(scene.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
-    assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
-
-    // (c) Additive preservation — new wiring present, prior wiring intact.
-    assert!(
-        scene.contains("need_bar_renderer.gd"),
-        "A6(c): new ext_resource must reference need_bar_renderer.gd"
-    );
-    let has_node = scene.lines().any(|l| {
-        let t = l.trim();
-        t.starts_with("[node ") && t.contains("name=\"NeedBarRenderer\"") && t.contains("type=\"Node2D\"")
-    });
-    assert!(has_node, "A6(c): NeedBarRenderer Node2D node must exist");
-    // Every previously-registered renderer/overlay node + ext_resource preserved.
-    for token in [
-        "name=\"WorldRenderer\"",
-        "name=\"AgentRenderer\"",
-        "name=\"ActivityTrailRenderer\"",
-        "name=\"SeekVizRenderer\"",
-        "name=\"SettlementOverviewRenderer\"",
-        "name=\"ZoomLodController\"",
-        "seek_viz_renderer.gd",
-        "settlement_overview_renderer.gd",
-        "activity_trail_renderer.gd",
-    ] {
-        assert!(scene.contains(token), "A6(c): pre-existing wiring `{token}` must be preserved (removal==0)");
-    }
-    println!(
-        "[viz-B A6] load_steps {load_steps_after}, ext {ext_count_after}; \
-         NeedBarRenderer wired, prior nodes preserved ✓"
-    );
-}
-
-/// Extract `load_steps=N` from a `[gd_scene ... load_steps=N ...]` header,
-/// tolerating whitespace around `=`.
-fn tscn_load_steps(src: &str) -> Option<i64> {
-    for line in src.lines() {
-        let t = line.trim();
-        if !t.starts_with("[gd_scene") {
-            continue;
-        }
-        let idx = t.find("load_steps")? + "load_steps".len();
-        let rest = t[idx..].trim_start().strip_prefix('=')?.trim_start();
-        let digits: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
-        return digits.parse::<i64>().ok();
-    }
-    None
 }

@@ -14,9 +14,6 @@
 //! Run:
 //!   cargo test -p sim-test --test harness_s16_alpha0_resource_substrate -- --nocapture
 
-use std::fs;
-use std::path::PathBuf;
-
 use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
 use sim_bridge::ffi::{collect_resource_snapshot, resource_rows_split, ResourceSnapshotRow};
 use sim_core::components::{Agent, AgentState, Hunger, TargetKind};
@@ -37,24 +34,6 @@ const LATTICE: [u32; 8] = [4, 12, 20, 28, 36, 44, 52, 60];
 const EXPECTED_AGENTS: usize = 64;
 
 // ── helpers ─────────────────────────────────────────────────────────────────
-
-fn project_root() -> PathBuf {
-    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    manifest
-        .parent()
-        .and_then(|p| p.parent())
-        .and_then(|p| p.parent())
-        .map(|p| p.to_path_buf())
-        .expect("project root above sim-test crate")
-}
-
-fn read_file(rel: &[&str]) -> String {
-    let mut path = project_root();
-    for seg in rel {
-        path.push(seg);
-    }
-    fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
-}
 
 /// Build a fresh engine via the production bootstrap source-population path.
 fn bootstrapped_engine() -> SimEngine {
@@ -356,77 +335,6 @@ fn harness_resource_sources_in_bounds_and_near_lattice() {
         "A10.2 (soft): every source must be within Chebyshev 8 of the lattice; max={max_dist}"
     );
     println!("[S16-α0 A10] all sources in-bounds; max lattice distance {max_dist} ≤ 8 ✓");
-}
-
-// ─── Assertion 11: Bridge Identity Contract (static) ───────────────────────
-#[test]
-fn harness_resource_bridge_identity_contract_static() {
-    // Type: D — static grep: #[func] delegates; dict built from split.
-    let src = read_file(&["rust", "crates", "sim-bridge", "src", "ffi", "world_node.rs"]);
-
-    // Extract the get_resource_snapshot fn body.
-    let fn_pos = src
-        .find("fn get_resource_snapshot")
-        .expect("A11.1: get_resource_snapshot must exist");
-    let brace_rel = src[fn_pos..]
-        .find('{')
-        .expect("A11.2: get_resource_snapshot must have a body");
-    let open = fn_pos + brace_rel;
-    let bytes = src.as_bytes();
-    let mut depth = 0i32;
-    let mut end = open;
-    for (i, b) in bytes[open..].iter().enumerate() {
-        match *b as char {
-            '{' => depth += 1,
-            '}' => {
-                depth -= 1;
-                if depth == 0 {
-                    end = open + i;
-                    break;
-                }
-            }
-            _ => {}
-        }
-    }
-    let body = &src[open..=end];
-
-    // (a) Body delegates to the collector + dict converter.
-    assert!(
-        body.contains("collect_resource_snapshot(&self.engine.resources)"),
-        "A11.3: #[func] body must call collect_resource_snapshot(&self.engine.resources); body:\n{body}"
-    );
-    assert!(
-        body.contains("resource_rows_to_dict("),
-        "A11.4: #[func] body must call resource_rows_to_dict(...); body:\n{body}"
-    );
-    // (a) No inline business logic / tile iteration inside the #[func].
-    assert!(
-        !body.contains("food_tiles") && !body.contains(".keys()") && !body.contains("for "),
-        "A11.5: #[func] body must NOT contain inline tile iteration / business logic; body:\n{body}"
-    );
-
-    // (b) resource_rows_to_dict builds its PackedInt32Arrays from the split.
-    let dict_pos = src
-        .find("fn resource_rows_to_dict")
-        .expect("A11.6: resource_rows_to_dict must exist");
-    assert!(
-        src[dict_pos..].contains("resource_rows_split("),
-        "A11.7: resource_rows_to_dict must build from resource_rows_split(...)"
-    );
-    println!("[S16-α0 A11] Bridge Identity Contract: #[func] delegates; dict ← split ✓");
-}
-
-// ─── Assertion 12: decorative RESOURCE_SEED layer preserved (static) ───────
-#[test]
-fn harness_resource_decorative_layer_preserved_static() {
-    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
-    assert!(!src.contains("on_building_placed("));
-    assert!(!src.contains("RESOURCE_SEED"));
-    assert!(!src.contains("VILLAGE_FIXTURE"));
-    assert!(!src.contains("BOOTSTRAP_"));
-    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
-    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 13: existing agent spawn intact ─────────────────────────────

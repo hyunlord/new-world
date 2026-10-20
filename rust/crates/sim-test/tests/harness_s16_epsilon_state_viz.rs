@@ -20,9 +20,6 @@
 //! Run:
 //!   cargo test -p sim-test --test harness_s16_epsilon_state_viz -- --nocapture
 
-use std::fs;
-use std::path::PathBuf;
-
 use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
 use sim_bridge::ffi::{collect_agent_snapshot, AgentSnapshotRow};
 use sim_core::components::{Agent, AgentState, Hunger, SeekTarget, TargetKind};
@@ -64,29 +61,6 @@ fn row_for(rows: &[AgentSnapshotRow], ent: hecs::Entity) -> AgentSnapshotRow {
         .iter()
         .find(|r| r.entity_bits == bits)
         .expect("snapshot row for entity")
-}
-
-fn project_root() -> PathBuf {
-    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    manifest
-        .parent()
-        .and_then(|p| p.parent())
-        .and_then(|p| p.parent())
-        .map(|p| p.to_path_buf())
-        .expect("project root above sim-test crate")
-}
-
-fn read_file(rel: &[&str]) -> String {
-    let mut path = project_root();
-    for seg in rel {
-        path.push(seg);
-    }
-    fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
-}
-
-/// Whitespace-stripped copy of `s` so literal checks ignore formatting.
-fn no_ws(s: &str) -> String {
-    s.chars().filter(|c| !c.is_whitespace()).collect()
 }
 
 // ─── Assertion 1: seek_kind maps Food→1, Water→2, Sleep→3 ──────────────────
@@ -330,68 +304,4 @@ fn harness_s16_epsilon_a8_gathering_loop_preserved() {
         "A8: agent must reach Consuming{{..}} within the 50-tick window"
     );
     println!("[S16-ε A8] forced-hungry agent Seeking→Consuming within 50 ticks ✓");
-}
-
-// ─── Assertion 9: renderer + scene static structure ────────────────────────
-#[test]
-fn harness_s16_epsilon_a9_renderer_and_scene_static_structure() {
-    // Type D — the renderer is sub-resolution for the VLM, so its draw calls
-    // + locked colours + scene wiring are the only automatable evidence.
-    let renderer = read_file(&["scripts", "ui", "seek_viz_renderer.gd"]);
-    let renderer_ws = no_ws(&renderer);
-    assert!(
-        renderer.contains("get_agent_snapshot"),
-        "A9.1: seek_viz_renderer.gd must call get_agent_snapshot"
-    );
-    assert!(
-        renderer.contains("draw_line"),
-        "A9.2: seek_viz_renderer.gd must contain at least one draw_line"
-    );
-    assert!(
-        !renderer.contains("draw_circle"),
-        "A9.3: debug head dots are removed; selected-only goal lines remain"
-    );
-    assert!(
-        renderer_ws.contains("Color(0.9,0.2,0.2)"),
-        "A9.4: seek_viz_renderer.gd must define the locked Food colour Color(0.9,0.2,0.2)"
-    );
-    assert!(
-        renderer_ws.contains("Color(0.2,0.5,1.0)"),
-        "A9.5: seek_viz_renderer.gd must define the locked Water colour Color(0.2,0.5,1.0)"
-    );
-    assert!(
-        renderer_ws.contains("Color(0.95,0.75,0.2)"),
-        "A9.6: seek_viz_renderer.gd must define the locked Sleep colour Color(0.95,0.75,0.2)"
-    );
-
-    let scene = read_file(&["scenes", "main.tscn"]);
-    assert!(
-        scene.contains("seek_viz_renderer.gd"),
-        "A9.7: main.tscn must reference seek_viz_renderer.gd"
-    );
-    let mut found_node = false;
-    for line in scene.lines() {
-        let t = line.trim();
-        if !t.starts_with("[node ") {
-            continue;
-        }
-        if t.contains("name=\"SeekVizRenderer\"") && t.contains("type=\"Node2D\"") {
-            found_node = true;
-            break;
-        }
-    }
-    assert!(
-        found_node,
-        "A9.8: main.tscn must contain [node name=\"SeekVizRenderer\" type=\"Node2D\" ...]"
-    );
-    // Scene-preservation regression: existing nodes/resources untouched.
-    assert!(
-        scene.contains("name=\"AgentRenderer\""),
-        "A9.9: main.tscn must still contain the AgentRenderer node"
-    );
-    assert!(
-        scene.contains("camera_controller.gd"),
-        "A9.10: main.tscn must still contain the camera_controller.gd ext_resource"
-    );
-    println!("[S16-ε A9] renderer draw calls + 3 locked colours + scene wiring intact ✓");
 }

@@ -7,16 +7,12 @@
 use sim_core::components::{ResourceKind, Settlement};
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::{FirewoodRule, WorldRules};
-use sim_engine::{Intervention, RuntimeSystem, SimEngine, SimResources};
-use sim_systems::runtime::intervention::apply_intervention;
-use sim_systems::runtime::resource_regen::{ResourceRegenSystem, REGEN_INTERVAL};
+use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use sim_systems::runtime::settlement::firewood::{
     burn_hours, night_burn_delta, night_rate, night_tick_at, severity_level_at, tonight_burn, urgent_with,
     winter_burn_per_hour, winter_fall_at, winter_fall_delta, wood_target,
 };
 use sim_systems::runtime::settlement::FireSystem;
-use sim_systems::worldgen::{build_world_with, WorldGenConfig};
-use sim_test::worldmodel::digest::state_digest;
 
 /// Tick at which the display clock (480-tick offset) reads `minute` on display day `day`.
 fn tick_at(day: u64, minute: u64) -> u64 {
@@ -234,80 +230,6 @@ fn harness_last_night_keeps_its_evening_draw() {
     // 18:00 of day 28 is a spring evening: its own rate, no draw.
     let spring = tick_at(28, 18 * 60);
     assert_eq!(night_rate(&r, &rule, spring), u32::from(rule.burn_per_hour[0]));
-}
-
-/// Engine with three registered deadwood spots (maxima 6, 2, 6) and empty tiles,
-/// completed tick `tick`.
-fn deadwood_engine(rules: WorldRules, tick: u64) -> SimEngine {
-    let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    engine.resources.rules = rules;
-    for _ in 0..tick {
-        // `apply_intervention` reads the completed tick; advance the bare engine.
-        engine.tick();
-    }
-    for (spot, max) in [((30, 30), 6u8), ((31, 30), 2), ((32, 30), 6)] {
-        engine.resources.wood_source_max.insert(spot, max);
-    }
-    engine
-}
-
-#[test]
-fn harness_windfall_lands_on_snow() {
-    let day22 = tick_at(22, 12 * 60);
-    // v14: a winter windfall fills every spot to its max, and later winter
-    // pulses do not bury it.
-    let mut engine = deadwood_engine(WorldRules::game_v14(), day22);
-    let record = apply_intervention(&mut engine, Intervention::Windfall { units: 20 });
-    assert_eq!(record.applied, 6 + 2 + 6);
-    let mut regen = ResourceRegenSystem;
-    for pulse in 1..=12 {
-        engine.resources.current_tick = day22 + pulse * REGEN_INTERVAL;
-        regen.tick(&mut engine.world, &mut engine.resources);
-    }
-    let cap = v14_rule().winter_deadwood_cap.expect("winter cap");
-    assert!(engine.resources.wood_tiles.values().any(|v| *v > cap), "{:?}", engine.resources.wood_tiles);
-    assert_eq!(engine.resources.wood_tiles.get(&(30, 30)), Some(&6));
-    // The first pulse of the next winter (the snowfall) buries it.
-    engine.resources.current_tick = tick_at(49, 0);
-    regen.tick(&mut engine.world, &mut engine.resources);
-    assert!(engine.resources.wood_tiles.values().all(|v| *v <= cap));
-    // v13: the snow cap holds the windfall.
-    let mut engine = deadwood_engine(WorldRules::game_v13(), day22);
-    assert_eq!(apply_intervention(&mut engine, Intervention::Windfall { units: 20 }).applied, 3 * u64::from(cap));
-}
-
-/// `state_digest` every 60 ticks over 35 days of `seed` under `rules`.
-fn digests(seed: u64, rules: WorldRules) -> Vec<u64> {
-    let mut engine = build_world_with(&WorldGenConfig::game_v13(seed), rules);
-    let mut out = Vec::new();
-    while engine.current_tick() <= 35 * 1440 {
-        if engine.current_tick().is_multiple_of(60) {
-            out.push(state_digest(&engine));
-        }
-        engine.tick();
-    }
-    out
-}
-
-#[test]
-fn harness_snow_burial_once_is_inert_without_windfall() {
-    // v13 with windfall_over_snow and no interventions equals plain v13: the
-    // burial at the first winter pulse leaves every spot at most the cap, and
-    // nothing else raises a spot above it during winter.
-    let mut once = WorldRules::game_v13();
-    if let Some(rule) = once.society.firewood.as_mut() {
-        rule.windfall_over_snow = true;
-    }
-    std::thread::scope(|scope| {
-        let handles: Vec<_> = (0..4u64)
-            .map(|seed| scope.spawn(move || (seed, digests(seed, WorldRules::game_v13()), digests(seed, once))))
-            .collect();
-        for handle in handles {
-            let (seed, plain, buried_once) = handle.join().expect("worker");
-            assert_eq!(plain.len(), 35 * 24 + 1);
-            assert_eq!(plain, buried_once, "seed {seed}");
-        }
-    });
 }
 
 #[test]

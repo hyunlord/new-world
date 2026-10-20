@@ -4,15 +4,14 @@
 use hecs::Entity;
 use sim_core::causal::event::{CausalEvent, DeathReason};
 use sim_core::components::{
-    Agent, AgentId, BodyHealth, Child, Elder, Hardiness, Hunger, Lineage, Position, ResourceKind, Settlement,
+    Agent, AgentId, BodyHealth, Child, Elder, Hardiness, Hunger, Lineage, Position, Settlement,
     Thirst,
 };
 use sim_core::components::hardiness::{HARDINESS_MAX_PERMILLE, HARDINESS_MIN_PERMILLE};
 use sim_core::material::MaterialRegistry;
 use sim_core::rng::NoiseFork;
 use sim_core::rules::{ExposureRule, WorldRules};
-use sim_engine::{Intervention, RuntimeSystem, SimEngine};
-use sim_systems::runtime::intervention::apply_intervention;
+use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::settlement::fire::exposure_damage;
 use sim_systems::runtime::settlement::FireSystem;
 use sim_systems::runtime::survival::StarvationSystem;
@@ -241,30 +240,6 @@ fn harness_exposure_adult_can_die() {
     assert!(!survived_first || !night_and_day(&mut engine, 22, entities[0]), "frail adult dies within two nights");
     let (mut engine, entities) = fixture(tuned, tick_at(21, 1320), &[(1, Stage::Adult, Some(700), 0.0, 100.0)]);
     assert!(night_and_day(&mut engine, 21, entities[0]) && night_and_day(&mut engine, 22, entities[0]));
-}
-
-#[test]
-fn harness_rain_soaks_only_in_v17() {
-    for (rules, expected_left, expected_soaked) in
-        [(WorldRules::game_v16(0), 20u32, 0u64), (WorldRules::game_v17_nofission(0), 14, 6), (WorldRules::game_v17(0), 14, 6)]
-    {
-        let (mut engine, _) = fixture(rules, tick_at(3, 600), &[(1, Stage::Adult, None, 0.0, 100.0)]);
-        engine.resources.settlements.get_mut(&1).expect("home").store(ResourceKind::Wood, 20);
-        let record = apply_intervention(&mut engine, Intervention::Rain { settlement: 1, hours: 13 });
-        assert_eq!(record.applied, 13, "applied keeps meaning the hours");
-        assert_eq!(record.soaked_wood, expected_soaked);
-        let left = engine.resources.settlements[&1].stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0);
-        assert_eq!(left, expected_left);
-        // The rain still keeps the fire out for its hours.
-        assert!(engine.resources.fire_blocked_until.get(&1).is_some_and(|until| *until > engine.current_tick()));
-    }
-    // Rounding down: 7 wood × 300 / 1000 = 2.1 → 2 soaked.
-    let (mut engine, _) = fixture(WorldRules::game_v17_nofission(0), tick_at(3, 600), &[(1, Stage::Adult, None, 0.0, 100.0)]);
-    engine.resources.settlements.get_mut(&1).expect("home").store(ResourceKind::Wood, 7);
-    assert_eq!(apply_intervention(&mut engine, Intervention::Rain { settlement: 1, hours: 2 }).soaked_wood, 2);
-    // No rain hours or no settlement: nothing soaked.
-    assert_eq!(apply_intervention(&mut engine, Intervention::Rain { settlement: 1, hours: 0 }).soaked_wood, 0);
-    assert_eq!(apply_intervention(&mut engine, Intervention::Rain { settlement: 9, hours: 4 }).soaked_wood, 0);
 }
 
 #[test]

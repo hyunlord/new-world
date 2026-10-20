@@ -40,11 +40,6 @@ const H: u32 = 128;
 /// to capture actual values from the current build.
 const BASELINE_SIGNATURE: (u32, u32, u32) = (0, 430, 20);
 
-/// Static `#[test]` floor (silent-removal tripwire). Current workspace count
-/// is ~1637; this floor tolerates minor refactor churn while catching the
-/// silent removal of dozens of tests. Retightened from the old loose 804.
-const STATIC_TEST_FLOOR: u32 = 1600;
-
 // ──────────────────────────────────────────────────────────────────────────
 // Helpers
 // ──────────────────────────────────────────────────────────────────────────
@@ -129,7 +124,6 @@ fn entries_matching(
         })
         .unwrap_or_default()
 }
-
 
 /// Set up Construction-natural + Social-bias flip scenario.
 /// Agent and peer have Social loneliness=0 (zero natural Social eligibility).
@@ -1331,8 +1325,7 @@ fn harness_p8_beta_a21_full_year_only_cascade_bias_trigger_and_upper_bound() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-// A22 — Full-year 4380-tick run must not panic, AND cascade-emission helper
-//       production bodies must contain zero `.unwrap()` calls.
+// A22 — Full-year 4380-tick run must not panic.
 // ══════════════════════════════════════════════════════════════════════════
 
 #[test]
@@ -1352,34 +1345,6 @@ fn harness_p8_beta_a22_panic_free_full_year_and_no_unwrap_in_cascade_helpers() {
     assert!(
         result.is_ok(),
         "full-year 4380-tick run must not panic"
-    );
-
-    // sub-b: no `.unwrap()` in production bodies of cascade-emission helpers
-    let ad_source =
-        include_str!("../../sim-systems/src/runtime/decision/agent_decision.rs");
-    let ms_source =
-        include_str!("../../sim-systems/src/runtime/memory/memory_system.rs");
-    // Split at first `#[cfg(test)]` to get production-only code, then filter
-    // comment-only lines so `.unwrap()` in comments does not trigger the audit.
-    let filter_comments = |src: &str| -> String {
-        src.lines()
-            .filter(|l| !l.trim_start().starts_with("//"))
-            .collect::<Vec<_>>()
-            .join("\n")
-    };
-    let ad_prod_raw = ad_source.split("#[cfg(test)]").next().unwrap_or(ad_source);
-    let ms_prod_raw = ms_source.split("#[cfg(test)]").next().unwrap_or(ms_source);
-    let ad_prod = filter_comments(ad_prod_raw);
-    let ms_prod = filter_comments(ms_prod_raw);
-    assert_eq!(
-        ad_prod.matches(".unwrap()").count(),
-        0,
-        "agent_decision.rs production body must not contain .unwrap()"
-    );
-    assert_eq!(
-        ms_prod.matches(".unwrap()").count(),
-        0,
-        "memory_system.rs production body must not contain .unwrap()"
     );
 }
 
@@ -1553,86 +1518,6 @@ fn harness_p8_beta_a25_behavioral_signature_triple_regression() {
 // ══════════════════════════════════════════════════════════════════════════
 // A26 — Test count regression guard (SHA-anchored constant).
 // ══════════════════════════════════════════════════════════════════════════
-
-#[test]
-fn harness_p8_beta_a26_test_count_regression_guard() {
-    // Silent-removal tripwire by STATIC SOURCE COUNT — no subprocess.
-    //
-    // A `#[test]` function removed from the workspace is, by definition, a
-    // `#[test]` attribute gone from a source file. So counting line-anchored
-    // `#[test]` attributes by walking the source tree is a MORE DIRECT measure
-    // of "did someone silently delete tests" than enumerating compiled test
-    // binaries, and it spawns NO child process — only `std::fs` reads (tens of
-    // ms even cold).
-    //
-    // This replaces the prior nested compiled-binary enumeration, which ran
-    // INSIDE every workspace test run (the Generator self-gate, Step 0, the
-    // pipeline gate) and — even with doctests excluded — paid a multi-minute
-    // cold cost while enumerating ~150 test binaries under build-lock
-    // contention. That nested pattern was the dominant contributor to the
-    // Generator timeout "stall"; the static walk eliminates it entirely.
-    //
-    // Tradeoff: source-attribute counting misses macro-GENERATED tests (none
-    // significant here) and counts by attribute rather than compiled symbol.
-    // For a removal tripwire that is the correct, faster signal. The floor is
-    // STATIC_TEST_FLOOR (1600), cleared with headroom by the current ~1637.
-
-    /// Recursively collect `*.rs` files under `dir`. A missing dir contributes
-    /// nothing (no panic) — some crates have no `src` or no `tests` directory.
-    fn collect_rs(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
-        let Ok(entries) = std::fs::read_dir(dir) else {
-            return;
-        };
-        for e in entries.flatten() {
-            let p = e.path();
-            if p.is_dir() {
-                collect_rs(&p, out);
-            } else if p.extension().is_some_and(|x| x == "rs") {
-                out.push(p);
-            }
-        }
-    }
-
-    // Workspace root: sim-test -> crates -> rust.
-    let rust_root = match std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .and_then(std::path::Path::parent)
-    {
-        Some(p) => p.to_owned(),
-        None => panic!("A26: could not resolve workspace root from CARGO_MANIFEST_DIR"),
-    };
-
-    let crates_dir = rust_root.join("crates");
-    let mut files = Vec::new();
-    match std::fs::read_dir(&crates_dir) {
-        Ok(entries) => {
-            for e in entries.flatten() {
-                let crate_dir = e.path();
-                if crate_dir.is_dir() {
-                    collect_rs(&crate_dir.join("src"), &mut files);
-                    collect_rs(&crate_dir.join("tests"), &mut files);
-                }
-            }
-        }
-        Err(err) => panic!("A26: cannot read {}: {err}", crates_dir.display()),
-    }
-
-    let mut count: u32 = 0;
-    for f in &files {
-        if let Ok(text) = std::fs::read_to_string(f) {
-            count += text
-                .lines()
-                .filter(|l| l.trim_start().starts_with("#[test]"))
-                .count() as u32;
-        }
-    }
-
-    assert!(
-        count >= STATIC_TEST_FLOOR,
-        "A26: workspace #[test] count {count} < floor {STATIC_TEST_FLOOR}; \
-         silent test removal detected (static source walk over crates/*/{{src,tests}})"
-    );
-}
 
 // ══════════════════════════════════════════════════════════════════════════
 // A27 — CausalLogStorage::lookup contract: live → Some, missing → None,

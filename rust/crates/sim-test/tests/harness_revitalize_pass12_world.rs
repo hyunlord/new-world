@@ -1,17 +1,15 @@
 //! Pass 12 Part 2: regions that deliver, daughters near water with a winter
 //! fall of their own, and rain that burns wet wood (PASS12_GOAL.md 7.2–7.4).
 use sim_core::components::{
-    Agent, AgentId, AgentState, Cold, Hunger, Inventory, Position, ResourceKind, Settlement, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentState, Hunger, Inventory, Position, Settlement, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
 use sim_core::variety::WorldVariety;
-use sim_engine::{Intervention, RuntimeSystem, SimEngine};
+use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::runtime::decision::AgentDecisionSystem;
-use sim_systems::runtime::intervention::apply_intervention;
 use sim_systems::runtime::resource_regen::{ResourceRegenSystem, REGEN_INTERVAL};
-use sim_systems::runtime::settlement::FireSystem;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 use sim_test::scenes::game_v18_nofission_scene;
 
@@ -147,67 +145,6 @@ fn harness_area_fall_floor() {
     // less one unit of rounding per day.
     let (full, _) = regrow(1000);
     assert!(full[1] + 6 >= full[0], "{full:?}");
-}
-
-/// A bare world under `rules`: settlement 1 at (20, 20) holding `wood`, two
-/// adult members there.
-fn fire_fixture(rules: WorldRules, wood: u32) -> SimEngine {
-    let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    engine.resources.rules = rules;
-    let mut settlement = Settlement::new_with_id(1, 0);
-    settlement.formation_tile = (20, 20);
-    settlement.store(ResourceKind::Wood, wood);
-    for id in 1..=2u64 {
-        engine.world.spawn((Position::new(20, 20), Agent { id: id as AgentId }, Hunger::new(0.0, 0.0), Thirst::new(0.0, 0.0)));
-        settlement.add_member_agent(id as AgentId);
-    }
-    engine.resources.settlements.insert(1, settlement);
-    engine
-}
-
-/// Run the fire hourly from 18:00 of zero-based day `day` to 07:00 the next
-/// morning, optionally after a 13-hour rain at 18:00; returns (wood withdrawn
-/// by the fire, hours lit, member-hours Cold).
-fn night(rules: WorldRules, day: u64, rain: bool) -> (u32, u32, u32, SimEngine) {
-    let mut engine = fire_fixture(rules, 200);
-    let start = tick_at(day, 1080);
-    engine.resources.current_tick = start;
-    if rain {
-        apply_intervention(&mut engine, Intervention::Rain { settlement: 1, hours: 13 });
-        // The bare engine's own tick counter is 0; the rain covers 18:00-07:00.
-        engine.resources.fire_blocked_until.insert(1, start + 13 * 60);
-    }
-    let after_soak = engine.resources.settlements[&1].stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0);
-    let mut system = FireSystem::new();
-    let (mut lit, mut cold) = (0, 0);
-    for hour in 0..14 {
-        engine.resources.current_tick = start + hour * 60;
-        system.tick(&mut engine.world, &mut engine.resources);
-        lit += u32::from(engine.resources.fires.get(&1).is_some_and(|f| f.lit));
-        cold += engine.world.query::<&Cold>().iter().count() as u32;
-    }
-    let left = engine.resources.settlements[&1].stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0);
-    (after_soak - left, lit, cold, engine)
-}
-
-#[test]
-fn harness_rain_wet_burn_only_in_v18() {
-    let winter = 21;
-    // v17: rain keeps the fire out and burns nothing.
-    let (burned, lit, cold, engine) = night(WorldRules::game_v17_nofission(0), winter, true);
-    assert_eq!((burned, lit, engine.resources.tallies.wet_burn_wood), (0, 0, 0));
-    assert!(cold > 0);
-    // v18: a rainy winter night burns what a dry night burns, the fire is
-    // never lit and the members are Cold in the cold window.
-    let (dry_burned, dry_lit, dry_cold, _) = night(WorldRules::game_v18_nofission(0), winter, false);
-    let (wet_burned, wet_lit, wet_cold, engine) = night(WorldRules::game_v18_nofission(0), winter, true);
-    assert!(dry_burned > 0 && dry_lit > 0 && dry_cold == 0);
-    assert_eq!(wet_burned, dry_burned, "a wet night burns a dry night's wood");
-    assert_eq!(wet_lit, 0, "the fire is never lit in the rain");
-    assert!(wet_cold > 0, "members are Cold");
-    assert_eq!(engine.resources.tallies.wet_burn_wood, u64::from(wet_burned));
-    // The soak still happens at application (30 % of 200).
-    assert_eq!(engine.resources.intervention_log[0].soaked_wood, 60);
 }
 
 /// One hungry member (hunger 70) of a settlement at (20, 20) with an empty

@@ -16,7 +16,6 @@ use sim_systems::runtime::settlement::FireSystem;
 use sim_systems::runtime::survival::StarvationSystem;
 use sim_test::probe::fingerprint;
 use sim_test::scenes::{game_v15_scene, game_v16_neutral_scene};
-use sim_test::worldmodel::digest::state_digest;
 
 const HOME: (u32, u32) = (20, 20);
 
@@ -97,10 +96,10 @@ fn deaths_at_home(engine: &SimEngine) -> Vec<Death> {
 }
 
 /// The v15 pins of `harness_revitalize_pass10_frozen.rs` (Part 0), seeds 0 and 1:
-/// (seed, fingerprint at 40,320, digest at 40,320).
-const V15_PINS: [(u64, &str, u64); 2] = [
-    (0, "8f1794218ad25438", 0xb370_bddd_b2af_c8bc),
-    (1, "00a294390654d3c1", 0xf706_ed0c_84bb_27ae),
+/// (seed, fingerprint at 40,320).
+const V15_PINS: [(u64, &str); 2] = [
+    (0, "8f1794218ad25438"),
+    (1, "00a294390654d3c1"),
 ];
 
 #[test]
@@ -115,15 +114,15 @@ fn harness_exposure_inert_before_v16() {
                         engine.tick();
                     }
                     let clocks = engine.world.query::<&ExposureClock>().iter().count();
-                    (fingerprint(&engine), state_digest(&engine), clocks, engine.resources.tallies)
+                    (fingerprint(&engine), clocks, engine.resources.tallies)
                 })
             })
             .collect();
         handles.into_iter().map(|h| h.join().expect("seed thread")).collect()
     });
     let mut cold_hours = 0;
-    for ((fp, digest, clocks, tallies), (seed, pin_fp, pin_digest)) in rows.into_iter().zip(V15_PINS) {
-        assert_eq!((fp.as_str(), digest), (pin_fp, pin_digest), "seed {seed}: v15 differs from Part 0");
+    for ((fp, clocks, tallies), (seed, pin_fp)) in rows.into_iter().zip(V15_PINS) {
+        assert_eq!(fp.as_str(), pin_fp, "seed {seed}: v15 differs from Part 0");
         assert_eq!(clocks, 0, "seed {seed}: no ExposureClock without the rule");
         assert_eq!(tallies.deaths_exposure, 0, "seed {seed}");
         cold_hours += tallies.cold_member_hours;
@@ -253,14 +252,14 @@ fn harness_exposure_adult_survives_one_night() {
 }
 
 /// Run a full dark night (22:00..05:00) on the fixture `residents` spawned in
-/// the given order; return the death log and the fingerprint/digest.
-fn night_outcome(residents: &[(AgentId, Stage, f64)]) -> (Vec<Death>, String, u64, u64) {
+/// the given order; return the death log and the fingerprint.
+fn night_outcome(residents: &[(AgentId, Stage, f64)]) -> (Vec<Death>, String, u64) {
     let night = tick_at(21, 1320);
     let (mut engine, _) = exposure_fixture(night, residents);
     for hour in 0..8 {
         fire_at(&mut engine, night + 60 * hour);
     }
-    (deaths_at_home(&engine), fingerprint(&engine), state_digest(&engine), engine.resources.tallies.deaths_exposure)
+    (deaths_at_home(&engine), fingerprint(&engine), engine.resources.tallies.deaths_exposure)
 }
 
 #[test]

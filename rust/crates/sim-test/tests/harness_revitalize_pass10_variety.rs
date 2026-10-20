@@ -8,13 +8,12 @@ use sim_core::variety::{WorldVariety, CLIMATE_PERMILLE, CLIMATE_SEVERITY_PERMILL
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 use sim_test::probe::fingerprint;
 use sim_test::scenes::{game_v16_neutral_scene, game_v16_scene, game_v16_scene_with};
-use sim_test::worldmodel::digest::state_digest;
 
-fn run(mut engine: sim_engine::SimEngine, ticks: u64) -> (String, u64) {
+fn run(mut engine: sim_engine::SimEngine, ticks: u64) -> String {
     for _ in 0..ticks {
         engine.tick();
     }
-    (fingerprint(&engine), state_digest(&engine))
+    fingerprint(&engine)
 }
 
 #[test]
@@ -32,9 +31,7 @@ fn harness_variety_neutral_equals_v16_neutral() {
     for seed in [0, 6] {
         let neutral = game_v16_scene_with(seed, &WorldVariety::NEUTRAL);
         assert_eq!(neutral.resources.world_variety, Some(WorldVariety::NEUTRAL));
-        let (fp_a, dg_a) = run(neutral, 40_320);
-        let (fp_b, dg_b) = run(game_v16_neutral_scene(seed), 40_320);
-        assert_eq!((fp_a, dg_a), (fp_b, dg_b), "seed {seed}");
+        assert_eq!(run(neutral, 40_320), run(game_v16_neutral_scene(seed), 40_320), "seed {seed}");
     }
 }
 
@@ -121,13 +118,13 @@ fn harness_variety_independent_of_replicate() {
         // Pass 11: v16 records slots 0..7 only (its world has no wild regions).
         assert_eq!(plain.resources.world_variety, Some(WorldVariety::draw(seed).without_regions()));
         assert_eq!(forked.resources.world_variety, plain.resources.world_variety);
-        assert_eq!(state_digest(&forked), state_digest(&plain));
+        assert_eq!(fingerprint(&forked), fingerprint(&plain));
         assert_eq!(forked.resources.worldgen_report, plain.resources.worldgen_report);
         // The world is built from `WorldGenConfig::game_v16` / `WorldRules::game_v16`,
         // whose only input is the seed (`WorldVariety::draw` takes no replicate).
         let mut rebuilt = build_world_with(&WorldGenConfig::game_v16(seed), WorldRules::game_v16(seed));
         rebuilt.resources.world_variety = Some(WorldVariety::draw(seed).without_regions());
-        assert_eq!(state_digest(&rebuilt), state_digest(&plain));
+        assert_eq!(fingerprint(&rebuilt), fingerprint(&plain));
     }
 }
 

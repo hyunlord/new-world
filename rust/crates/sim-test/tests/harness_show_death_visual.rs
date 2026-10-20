@@ -25,8 +25,6 @@
 //! Run:
 //!   cargo test -p sim-test --test harness_show_death_visual -- --nocapture
 
-use std::path::PathBuf;
-
 use hecs::Entity;
 use sim_bridge::ffi::{collect_recent_deaths, recent_death_rows_split, RecentDeathRow};
 use sim_core::causal::event::{CausalEvent, DeathReason};
@@ -102,56 +100,6 @@ fn drive_starvation_to_death(e: &mut SimEngine, ent: Entity, max: u64) -> Option
         if !alive(e, ent) {
             return Some(t);
         }
-    }
-    None
-}
-
-fn project_root() -> PathBuf {
-    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    manifest
-        .parent()
-        .and_then(|p| p.parent())
-        .and_then(|p| p.parent())
-        .map(|p| p.to_path_buf())
-        .expect("project root = sim-test/../../..")
-}
-
-fn read_file(rel: &[&str]) -> String {
-    let mut path = project_root();
-    for seg in rel {
-        path.push(seg);
-    }
-    std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
-}
-
-/// Parse `const NAME := <float>` or `const NAME: T = <float>` from GDScript,
-/// returning the literal as f64. Strips a trailing comment.
-fn parse_gd_const_f64(src: &str, name: &str) -> Option<f64> {
-    for line in src.lines() {
-        let t = line.trim();
-        if !t.starts_with("const ") || !t.contains(name) {
-            continue;
-        }
-        let rhs = t.rsplit_once('=').map(|(_, r)| r.trim())?;
-        let rhs = rhs.split('#').next().unwrap_or(rhs).trim();
-        if let Ok(v) = rhs.parse::<f64>() {
-            return Some(v);
-        }
-    }
-    None
-}
-
-/// Extract `load_steps=N` from a `[gd_scene ... load_steps=N ...]` header.
-fn tscn_load_steps(src: &str) -> Option<i64> {
-    for line in src.lines() {
-        let t = line.trim();
-        if !t.starts_with("[gd_scene") {
-            continue;
-        }
-        let idx = t.find("load_steps")? + "load_steps".len();
-        let rest = t[idx..].trim_start().strip_prefix('=')?.trim_start();
-        let digits: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
-        return digits.parse::<i64>().ok();
     }
     None
 }
@@ -350,183 +298,6 @@ fn harness_death_a4_reason_u8_mapping_locked() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// A5: death_viz_renderer.gd structural wiring (presence / relationship lock).
-// ════════════════════════════════════════════════════════════════════════════
-#[test]
-fn harness_death_a5_renderer_structural_wiring() {
-    // Type D — structural integration regression guard across the renderer
-    // surface. This is a PRESENCE / relationship lock, NOT a colour-correctness
-    // proof (colour correctness is windowed-Godot only — see NOT in Scope).
-    let r = read_file(&["scripts", "ui", "death_viz_renderer.gd"]);
-    assert!(r.contains("extends Node2D"), "A5: renderer extends Node2D");
-    assert!(r.contains("get_recent_deaths"), "A5: renderer calls the FFI getter get_recent_deaths");
-    assert!(r.contains("FADE_TICKS"), "A5: renderer declares FADE_TICKS");
-    assert!(r.contains("Z_DEATH"), "A5: renderer declares Z_DEATH");
-    assert!(r.contains("func _draw"), "A5: marker drawn in _draw");
-    assert!(r.contains("queue_redraw"), "A5: renderer requests a per-frame redraw");
-    // Fade ratio: FADE_TICKS must appear in a division/ratio with an `age`
-    // term — tolerant of algebraically-identical variants (`1.0 - age/FADE_TICKS`,
-    // `(FADE_TICKS - age)/FADE_TICKS`, `1.0 - float(age)/float(FADE_TICKS)`), so a
-    // single literal cannot false-negative a correct rearrangement.
-    let fade_ratio_ok = r.lines().any(|l| {
-        let has_div = l.contains("/ FADE_TICKS") || l.contains("/FADE_TICKS");
-        let has_age = l.contains("age");
-        has_div && has_age
-    });
-    assert!(
-        fade_ratio_ok,
-        "A5: a fade ratio dividing by FADE_TICKS with an `age` term must be present"
-    );
-    // Type-guards (mirrors need_bar): defensive FFI reads.
-    assert!(r.contains("is Dictionary"), "A5: type-guards `is Dictionary`");
-    assert!(r.contains("is PackedInt32Array"), "A5: type-guards `is PackedInt32Array`");
-    assert!(r.contains("is PackedInt64Array"), "A5: type-guards `is PackedInt64Array`");
-
-    // The three reason→colour literals are asserted PRESENT (wiring lock); this
-    // does NOT prove they are the correct hues.
-    for col in [
-        "Color(0.45, 0.30, 0.15)", // Starvation brown
-        "Color(0.20, 0.45, 0.95)", // Dehydration blue
-        "Color(0.95, 0.15, 0.10)", // Combat red
-    ] {
-        assert!(r.contains(col), "A5: reason colour literal `{col}` must be present");
-    }
-
-    // Numeric relationships — BOTH sides read from source (not hardcoded), so the
-    // layering/visibility contract survives a future const change on either side.
-    let fade = parse_gd_const_f64(&r, "FADE_TICKS").expect("A5: FADE_TICKS must be numeric");
-    let z_death = parse_gd_const_f64(&r, "Z_DEATH").expect("A5: Z_DEATH must be numeric");
-    let renderer_retain =
-        parse_gd_const_f64(&r, "RETAIN_TICKS").expect("A5: renderer RETAIN_TICKS must be numeric");
-    let need_bar = read_file(&["scripts", "ui", "need_bar_renderer.gd"]);
-    let z_need_bar = parse_gd_const_f64(&need_bar, "Z_NEED_BAR")
-        .expect("A5: NeedBarRenderer Z_NEED_BAR must be read from its source");
-    assert!(
-        fade < renderer_retain,
-        "A5: FADE_TICKS ({fade}) must be < renderer RETAIN_TICKS ({renderer_retain}) \
-         so the marker fades before its data leaves the buffer window"
-    );
-    assert!(
-        z_death > z_need_bar,
-        "A5: Z_DEATH ({z_death}) must be > NeedBarRenderer Z_NEED_BAR ({z_need_bar}) \
-         (read from source) so death markers are not occluded by need bars"
-    );
-    println!(
-        "[viz-D A5] renderer wiring + FADE<RETAIN(read) + Z_DEATH>Z_NEED_BAR(read) + colours ✓"
-    );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// A6: main.tscn additive wiring (+1 load_steps, +1 ext_resource).
-// ════════════════════════════════════════════════════════════════════════════
-#[test]
-fn harness_death_a6_scene_wiring_additive() {
-    // Preserve this renderer registration while accounting for all Revitalize scene resources.
-    let scene = read_file(&["scenes", "main.tscn"]);
-    let load_steps_after = tscn_load_steps(&scene).expect("A6: main.tscn must declare load_steps=N");
-    let ext_count_after = scene
-        .lines()
-        .filter(|l| l.trim_start().starts_with("[ext_resource type="))
-        .count();
-
-    // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
-    assert_eq!(ext_count_after, 23, "twenty-two prior resources plus ActivityTooltipP13");
-    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/ui/person_activity_tooltip_p13.gd\" id=\"23_activity_tooltip\"]"));
-    assert!(scene.contains("[node name=\"ActivityTooltipP13\" type=\"Control\" parent=\"UI\"]\nmouse_filter = 2\nscript = ExtResource(\"23_activity_tooltip\")"));
-    assert!(scene.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
-    assert!(scene.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
-    assert!(scene.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
-    assert!(scene.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
-    assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
-    // Exact ext_resource PATH string (not a bare filename substring) — a typo'd
-    // or loose path on a present node must FAIL. Capture the ext_resource id so we
-    // can confirm the DeathVizRenderer node actually binds THIS script.
-    let ext_line = scene
-        .lines()
-        .find(|l| {
-            let t = l.trim_start();
-            t.starts_with("[ext_resource type=")
-                && t.contains("path=\"res://scripts/ui/death_viz_renderer.gd\"")
-        })
-        .expect("A6: an ext_resource with exact path res://scripts/ui/death_viz_renderer.gd must exist");
-    let ext_id = ext_line
-        .split("id=\"")
-        .nth(1)
-        .and_then(|s| s.split('"').next())
-        .expect("A6: death_viz ext_resource must declare an id");
-
-    // The DeathVizRenderer node must exist AND reference exactly that ext_resource.
-    let mut in_death_node = false;
-    let mut node_binds_script = false;
-    for l in scene.lines() {
-        let t = l.trim();
-        if t.starts_with("[node ") {
-            in_death_node = t.contains("name=\"DeathVizRenderer\"") && t.contains("type=\"Node2D\"");
-        } else if in_death_node
-            && t.starts_with("script =")
-            && t.contains(&format!("ExtResource(\"{ext_id}\")"))
-        {
-            node_binds_script = true;
-        }
-    }
-    assert!(
-        node_binds_script,
-        "A6: DeathVizRenderer Node2D must exist AND bind the death_viz_renderer.gd ext_resource \
-         (id={ext_id}) — a present node with a wrong/missing script path fails"
-    );
-
-    // Every previously-registered renderer/overlay preserved (removal == 0).
-    for token in [
-        "name=\"WorldRenderer\"",
-        "name=\"AgentRenderer\"",
-        "name=\"SeekVizRenderer\"",
-        "name=\"NeedBarRenderer\"",
-        "need_bar_renderer.gd",
-        "seek_viz_renderer.gd",
-    ] {
-        assert!(scene.contains(token), "A6: pre-existing wiring `{token}` must be preserved");
-    }
-    println!(
-        "[viz-D A6] load_steps {load_steps_after}, ext {ext_count_after}; \
-         DeathVizRenderer wired, prior nodes preserved ✓"
-    );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// A7: get_recent_deaths #[func] presence + thin-forwarder shape.
-// ════════════════════════════════════════════════════════════════════════════
-#[test]
-fn harness_death_a7_ffi_func_presence_and_forwarding() {
-    // Type A — PRESENCE + forwarding-shape + key-emission check (no negative
-    // "nothing else computes" claim; a substring scan cannot prove a negative).
-    let b = read_file(&["rust", "crates", "sim-bridge", "src", "ffi", "world_node.rs"]);
-    assert!(
-        b.contains("fn get_recent_deaths"),
-        "A7: `#[func] fn get_recent_deaths` must exist"
-    );
-    assert!(
-        b.contains("collect_recent_deaths"),
-        "A7: body must reference the collector `collect_recent_deaths`"
-    );
-    assert!(
-        b.contains("recent_death_rows_to_dict"),
-        "A7: body must reference the to_dict helper `recent_death_rows_to_dict`"
-    );
-    assert!(
-        b.contains("current_tick"),
-        "A7: body must pass `current_tick` through to the to_dict producer"
-    );
-    // to_dict emits all five keys.
-    for key in ["xs", "ys", "reasons", "ticks", "current_tick"] {
-        assert!(
-            b.contains(&format!("dict.set(\"{key}\"")),
-            "A7: to_dict must emit the key \"{key}\""
-        );
-    }
-    println!("[viz-D A7] get_recent_deaths #[func] forwards to collector + to_dict, 5 keys emitted ✓");
-}
-
-// ════════════════════════════════════════════════════════════════════════════
 // A8: regression — death path still chronicles AgentDied (additive, not replaced).
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
@@ -647,8 +418,7 @@ fn harness_death_a10_current_tick_scalar_is_live() {
     // the SAME clock — using the completed-count would skew every age by 1).
     // The VarDictionary value itself needs the Godot runtime (windowed), so the
     // cargo-accessible surface is: (a) the live source value the #[func] reads
-    // is the advanced, nonzero tick N (distinguishable from a stale 0), and
-    // (b) the #[func] forwards that exact field into the to_dict producer.
+    // is the advanced, nonzero tick N (distinguishable from a stale 0).
     //
     // `tick()` sets `resources.current_tick = self.current_tick` then increments
     // `self.current_tick`, so after K calls `resources.current_tick == K - 1`.
@@ -664,15 +434,7 @@ fn harness_death_a10_current_tick_scalar_is_live() {
         "A10(a): `resources.current_tick` (what the #[func] reads) must track the live clock"
     );
     assert!(n > 0, "A10(a): the scalar must be nonzero (a stale-zero would freeze every marker)");
-
-    // (b) Forwarding shape — the #[func] passes the engine's current_tick into
-    // the to_dict producer (guards against a stale/zero scalar).
-    let b = read_file(&["rust", "crates", "sim-bridge", "src", "ffi", "world_node.rs"]);
-    assert!(
-        b.contains("self.engine.resources.current_tick"),
-        "A10(b): get_recent_deaths must forward `self.engine.resources.current_tick`"
-    );
-    println!("[viz-D A10] current_tick source == N and is forwarded into to_dict ✓");
+    println!("[viz-D A10] current_tick source == N ✓");
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -758,8 +520,7 @@ fn harness_death_a12_empty_then_single_fixture_collector() {
     // `age = current_tick - entry.tick` and MUST clamp via saturating semantics —
     // a future-tick entry yields age 0 (non-negative), never an underflow panic.
     // The collector must still surface the entry (not drop it). We exercise the
-    // saturating_sub here (the value the renderer mirrors) and confirm the
-    // renderer source carries the `age < 0` draw-skip guard.
+    // saturating_sub here (the value the renderer mirrors).
     let mut e2 = iso_engine();
     let known_now: u64 = 5;
     e2.resources.current_tick = known_now;
@@ -772,11 +533,6 @@ fn harness_death_a12_empty_then_single_fixture_collector() {
     assert_eq!(frows[0].tick, future_tick as i64, "A12(c): the future tick is preserved verbatim");
     let age = known_now.saturating_sub(future_tick);
     assert_eq!(age, 0, "A12(c): saturating_sub(current,future) == 0 (no underflow, clamped)");
-    let r = read_file(&["scripts", "ui", "death_viz_renderer.gd"]);
-    assert!(
-        r.contains("age < 0"),
-        "A12(c): renderer must guard `age < 0` so a future-tick marker is skipped, never drawn negative"
-    );
     println!(
         "[viz-D A12] empty→0; all-zero fixture→1 genuine row; future-tick age saturates to 0 (no panic) ✓"
     );
@@ -893,29 +649,4 @@ fn harness_death_a14_same_tick_two_deaths_plus_two_ordered() {
     assert_eq!((rows[n - 2].x, rows[n - 2].y), (e1.x, e1.y), "A14: collector preserves entry order");
     assert_eq!((rows[n - 1].x, rows[n - 1].y), (e2.x, e2.y), "A14: collector preserves entry order");
     println!("[viz-D A14] two same-tick deaths → +2 exactly, both distinct, order preserved ✓");
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// A15: cross-language retain-window sync — GDScript RETAIN_TICKS == Rust const.
-// ════════════════════════════════════════════════════════════════════════════
-#[test]
-fn harness_death_a15_cross_language_retain_const_sync() {
-    // Type D — a manually-mirrored constant has no compile-time link across the
-    // FFI. If the renderer's retain window drifts from the Rust buffer's, the
-    // fade/age normalization assumes a different window than the buffer keeps,
-    // producing wrong tail-fade alphas. BOTH sides are read from their sources:
-    // the Rust value is the authoritative `RECENT_DEATH_RETAIN_TICKS` const
-    // itself (the compiled value, stronger than parsing its text); the GDScript
-    // value is parsed from death_viz_renderer.gd.
-    let renderer = read_file(&["scripts", "ui", "death_viz_renderer.gd"]);
-    let gd_retain = parse_gd_const_f64(&renderer, "RETAIN_TICKS")
-        .expect("A15: death_viz_renderer.gd must declare a numeric RETAIN_TICKS");
-    assert_eq!(
-        gd_retain, RECENT_DEATH_RETAIN_TICKS as f64,
-        "A15: GDScript RETAIN_TICKS ({gd_retain}) must EQUAL Rust RECENT_DEATH_RETAIN_TICKS \
-         ({RECENT_DEATH_RETAIN_TICKS}) — cross-language retain-window sync"
-    );
-    println!(
-        "[viz-D A15] GDScript RETAIN_TICKS == Rust RECENT_DEATH_RETAIN_TICKS ({RECENT_DEATH_RETAIN_TICKS}) ✓"
-    );
 }

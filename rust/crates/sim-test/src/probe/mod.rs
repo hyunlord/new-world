@@ -1,5 +1,4 @@
 //! Deterministic headless instrumentation; none of these measurements feeds simulation.
-pub mod ablation;
 mod agent_trace;
 mod args;
 pub mod chronicle_out;

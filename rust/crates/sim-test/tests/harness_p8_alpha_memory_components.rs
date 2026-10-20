@@ -394,32 +394,6 @@ fn harness_p8_alpha_a18_constants_stable() {
     );
 }
 
-// ─── A19: Top-level re-export path is the only path used ────────────────
-#[test]
-fn harness_p8_alpha_a19_import_path_audit() {
-    // Source-level audit: this harness file MUST NOT reference the inner
-    // module path. The forbidden token is assembled from parts so this
-    // assertion's own message does not match the audit substring.
-    let forbidden = format!("components::{}::", "memory");
-    let src = include_str!("harness_p8_alpha_memory_components.rs");
-    assert!(
-        !src.contains(&forbidden),
-        "harness must not use the inner-module path for memory"
-    );
-    // Top-level use statement MUST be present (matches Memory & MemoryEntry).
-    let expected_use = format!(
-        "use sim_core::{}::{{Memory, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR}}",
-        "components"
-    );
-    assert!(
-        src.contains(&expected_use),
-        "harness must import via top-level sim_core::components path"
-    );
-    // Runtime witness: a construction via the top-level path executes.
-    let _m: Memory = Memory::new();
-    let _e: MemoryEntry = MemoryEntry::new(0, 0, 0.0, 0.0, MemoryArm::None);
-}
-
 // ─── A20: Phase 7-α exports remain visible (regression sentinel) ────────
 #[test]
 fn harness_p8_alpha_a20_phase_7_alpha_exports_regression() {

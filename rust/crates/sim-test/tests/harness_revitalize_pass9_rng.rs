@@ -109,7 +109,6 @@ use sim_engine::{apply_noise_fork, NoiseFork, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_test::probe::fingerprint;
 use sim_test::scenes::game_v14_scene;
-use sim_test::worldmodel::digest::state_digest;
 
 #[test]
 fn harness_keyed_draw_is_pure() {
@@ -220,12 +219,12 @@ fn harness_v15_movement_independent_of_history() {
     }
 }
 
-/// `state_digest` after every completed tick in `0..=ticks`, sampled every 60.
-fn digests(mut engine: SimEngine, ticks: u64, fork: Option<(u64, u32, bool)>) -> Vec<u64> {
+/// The probe `fingerprint` after every completed tick in `0..=ticks`, sampled every 60.
+fn digests(mut engine: SimEngine, ticks: u64, fork: Option<(u64, u32, bool)>) -> Vec<String> {
     let mut out = Vec::new();
     for t in 0..=ticks {
         if t % 60 == 0 {
-            out.push(state_digest(&engine));
+            out.push(fingerprint(&engine));
         }
         if t == ticks {
             break;

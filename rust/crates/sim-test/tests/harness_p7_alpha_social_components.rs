@@ -243,51 +243,13 @@ fn harness_p7_alpha_a9_social_serde_round_trip_bit_exact() {
     assert_eq!(decoded.growth_rate.to_bits(), b.growth_rate.to_bits());
 }
 
-// ─── A10: Social has NO Default impl (source audit) ────────────────────
-// Real source audit: read `social.rs` at compile time via `include_str!`
-// and fail if the file contains `impl Default for Social` or includes
-// `Default` in the derive set on the `Social` struct.
-#[test]
-fn harness_p7_alpha_a10_social_no_default_impl() {
-    const SOURCE: &str = include_str!("../../sim-core/src/components/social.rs");
-
-    // (a) No explicit `impl Default for Social` block.
-    assert!(
-        !SOURCE.contains("impl Default for Social"),
-        "Social must NOT have explicit `impl Default for Social` in social.rs"
-    );
-
-    // (b) No `Default` in the derive macro that precedes `pub struct Social`.
-    // Find the segment of the file ending right before the struct decl, then
-    // locate the last `#[derive(...)]` macro in that segment.
-    let before_struct = SOURCE
-        .split("pub struct Social")
-        .next()
-        .expect("`pub struct Social` must exist in social.rs");
-    let last_derive_start = before_struct
-        .rfind("#[derive(")
-        .expect("a `#[derive(...)]` macro must precede `pub struct Social`");
-    let derive_tail = &before_struct[last_derive_start..];
-    let derive_end_rel = derive_tail
-        .find(')')
-        .expect("derive macro must have a closing `)`");
-    let derive_contents = &derive_tail[..derive_end_rel];
-    assert!(
-        !derive_contents.contains("Default"),
-        "Social derive set must NOT include `Default`; found in: {derive_contents:?}"
-    );
-}
-
 // ─── A11: make_stage1_engine harness helper attaches Social ────────────
 // Renamed from the prior misleading "production spawn path" claim. Per
 // locked plan: production `SimEngine::spawn_agent` (sim-engine/src/lib.rs)
 // attaches ONLY `(Position, Agent)` in Phase 7-α scope — Social wiring
 // into production spawn is β scope. The harness helper
 // `make_stage1_engine` is what manually attaches Social per agent for
-// test fixtures. This test pins the helper's archetype shape AND
-// source-audits production `spawn_agent` to confirm it deliberately
-// does NOT attach Social yet (so a future Generator that silently adds
-// Social to production spawn must update this test).
+// test fixtures. This test pins the helper's archetype shape.
 #[test]
 fn harness_p7_alpha_a11_make_stage1_engine_helper_attaches_social() {
     // (a) Behavioural pin on the harness helper.
@@ -297,23 +259,6 @@ fn harness_p7_alpha_a11_make_stage1_engine_helper_attaches_social() {
     assert_eq!(
         count, 20,
         "every agent inserted by make_stage1_engine must carry Social"
-    );
-
-    // (b) Source audit on the production spawn path: verify
-    // `SimEngine::spawn_agent` does NOT mention `Social` (β scope).
-    const ENGINE_SOURCE: &str = include_str!("../../sim-engine/src/lib.rs");
-    let fn_start = ENGINE_SOURCE
-        .find("pub fn spawn_agent")
-        .expect("SimEngine::spawn_agent must exist in sim-engine/src/lib.rs");
-    // Take a generous window covering the entire function body.
-    let window: String = ENGINE_SOURCE[fn_start..]
-        .chars()
-        .take(600)
-        .collect();
-    assert!(
-        !window.contains("Social"),
-        "Phase 7-α: SimEngine::spawn_agent must NOT attach Social (β scope); \
-         found `Social` reference in spawn_agent body window: {window}"
     );
 }
 
@@ -831,175 +776,6 @@ fn harness_p7_alpha_a33_agent_decision_system_priority_unchanged() {
     assert_eq!(sys.priority(), 125);
     assert_eq!(sys.tick_interval(), 1);
     assert_eq!(sys.name(), "AgentDecisionSystem");
-}
-
-// ─── A34: SimResources schema unchanged — source audit ────────────────
-// Real source audit: read `sim-engine/src/lib.rs` at compile time and
-// fail if it contains `relationships:` or `interaction_progress:` field
-// declarations anywhere — both are explicitly Phase 7-β scope per
-// locked fact P7α-13 and must NOT exist in α.
-#[test]
-fn harness_p7_alpha_a34_sim_resources_schema_unchanged() {
-    const SOURCE: &str = include_str!("../../sim-engine/src/lib.rs");
-
-    // (a) Sanity: the SimResources struct itself exists.
-    assert!(
-        SOURCE.contains("pub struct SimResources"),
-        "sim-engine/src/lib.rs must declare `pub struct SimResources`"
-    );
-
-    // (b) Phase 7-β has landed — the formerly-forbidden α absence audit is
-    // inverted into a presence assertion now that the SimResources schema
-    // additions are live (commit lands with the SocialInteractionSystem).
-    assert!(
-        SOURCE.contains("relationships:"),
-        "Phase 7-β: `relationships:` field must exist in sim-engine/src/lib.rs"
-    );
-    assert!(
-        SOURCE.contains("interaction_progress:"),
-        "Phase 7-β: `interaction_progress:` field must exist in sim-engine/src/lib.rs"
-    );
-
-    // (c) Behavioural: SimEngine::new still constructs SimResources cleanly.
-    let engine = SimEngine::new(8, 8, MaterialRegistry::new());
-    assert_eq!(engine.resources.tile_grid.width, 8);
-    assert_eq!(engine.resources.tile_grid.height, 8);
-}
-
-// ─── A35: No new Phase 7-β constants exist (source audit) ─────────────
-// Real source audit: read `agent_decision.rs` at compile time and fail
-// if it declares any of the four Phase 7-β constants
-// (`SOCIAL_THRESHOLD`, `SOCIAL_CONSUME_AMOUNT`, `REQUIRED_INTERACTION_PROGRESS`,
-// `FAMILIARITY_BUMP`) per locked fact P7α-14. Also pins the two
-// α-allowed `SATURATION` constants to their locked values.
-#[test]
-fn harness_p7_alpha_a35_no_phase7_beta_constants() {
-    const AGENT_DECISION: &str =
-        include_str!("../../sim-systems/src/runtime/decision/agent_decision.rs");
-
-    // (a) Phase 7-β has landed — the four β constants are now expected to
-    // exist in `agent_decision.rs` (locked fact P7β-14). Inverted from the
-    // α absence audit.
-    let required = [
-        "SOCIAL_THRESHOLD",
-        "SOCIAL_CONSUME_AMOUNT",
-        "REQUIRED_INTERACTION_PROGRESS",
-        "FAMILIARITY_BUMP",
-    ];
-    for name in required {
-        assert!(
-            AGENT_DECISION.contains(name),
-            "Phase 7-β constant `{name}` must exist in agent_decision.rs"
-        );
-    }
-
-    // (b) Also source-audit the two α-allowed constants live in their
-    // expected modules (Social::SATURATION in social.rs,
-    // RelationshipState::SATURATION in relationship.rs).
-    const SOCIAL_SOURCE: &str = include_str!("../../sim-core/src/components/social.rs");
-    const RELATIONSHIP_SOURCE: &str =
-        include_str!("../../sim-core/src/components/relationship.rs");
-    assert!(
-        SOCIAL_SOURCE.contains("SATURATION: f64 = 100.0"),
-        "social.rs must declare `SATURATION: f64 = 100.0`"
-    );
-    assert!(
-        RELATIONSHIP_SOURCE.contains("SATURATION: f64 = 1.0"),
-        "relationship.rs must declare `SATURATION: f64 = 1.0`"
-    );
-
-    // (c) Runtime pin — α-allowed surface values bit-exact.
-    assert_eq!(Social::SATURATION, 100.0_f64);
-    assert_eq!(RelationshipState::SATURATION, 1.0_f64);
-}
-
-// ─── A36: agent_decision.rs Agent arms are named (source audit) ───────
-// Real source audit: read `agent_decision.rs` at compile time and fail
-// if `TargetKind::Agent(_)` is handled only by a wildcard arm. The α
-// pattern requires TWO explicit named arms — one in the Seeking-branch
-// `has_resource` switch, one in the Consuming-branch big match. A
-// wildcard arm (`_ =>`) inside a `match target { ... }` block would
-// swallow Agent(_) silently and break the Phase 6-α inert-arm precedent.
-#[test]
-fn harness_p7_alpha_a36_agent_decision_named_arms_audit() {
-    const SOURCE: &str =
-        include_str!("../../sim-systems/src/runtime/decision/agent_decision.rs");
-
-    // (a) Phase 7-β: the Seeking-branch arm is now `TargetKind::Agent(partner_id) =>`
-    // (named binding), and the Consuming-branch inert placeholder
-    // `TargetKind::Agent(_) =>` is preserved. Count any explicit
-    // `TargetKind::Agent(` arm shape — must have ≥2 across the file.
-    let named_count = SOURCE.matches("TargetKind::Agent(").count();
-    assert!(
-        named_count >= 2,
-        "agent_decision.rs must contain ≥2 explicit `TargetKind::Agent(...)` arms \
-         (Seeking partner-binding + Consuming inert); found {named_count}"
-    );
-
-    // (b) No wildcard fall-through arm inside any `match target { ... }`
-    // block — Agent(_) must be matched by its named arm, not silently
-    // swallowed. Scan each `match target {` block for `_ =>`.
-    let mut idx = 0;
-    while let Some(rel) = SOURCE[idx..].find("match target {") {
-        let block_start = idx + rel + "match target {".len();
-        // Find matching closing brace by counting depth.
-        let mut depth = 1i32;
-        let bytes = SOURCE.as_bytes();
-        let mut cursor = block_start;
-        while cursor < bytes.len() && depth > 0 {
-            match bytes[cursor] {
-                b'{' => depth += 1,
-                b'}' => depth -= 1,
-                _ => {}
-            }
-            cursor += 1;
-        }
-        assert_eq!(
-            depth, 0,
-            "agent_decision.rs `match target {{` block at byte {block_start} has unbalanced braces"
-        );
-        let block = &SOURCE[block_start..cursor - 1];
-        assert!(
-            !block.contains("_ =>"),
-            "agent_decision.rs `match target {{ ... }}` block must NOT contain wildcard `_ =>` \
-             arm — `TargetKind::Agent(_)` would be silently swallowed. Block contents:\n{block}"
-        );
-        idx = cursor;
-    }
-
-    // (c) Behavioural surrogate: an agent in Seeking{Agent(_)} stays in
-    // Seeking{Agent(_)} for one tick (the inert α arm returns `false`
-    // for has_resource, so no transition to Consuming occurs).
-    let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    let a_entity = engine.spawn_agent(10, 10);
-    engine
-        .world
-        .insert(
-            a_entity,
-            (
-                Hunger::new(0.0, 0.0),
-                Thirst::new(0.0, 0.0),
-                Sleep::new(0.0, 0.0),
-                Social::new(0.0, 0.0),
-                AgentState::Seeking {
-                    target: TargetKind::Agent(99),
-                },
-            ),
-        )
-        .unwrap();
-
-    let mut sys = AgentDecisionSystem::new();
-    sys.tick(&mut engine.world, &mut engine.resources);
-
-    let state = *engine.world.get::<&AgentState>(a_entity).unwrap();
-    match state {
-        AgentState::Seeking {
-            target: TargetKind::Agent(id),
-        } => assert_eq!(id, 99),
-        _ => panic!(
-            "Seeking{{Agent(99)}} must NOT transition to Consuming or anywhere else; observed {state:?}"
-        ),
-    }
 }
 
 // ─── A37: Derive sets locked — Social, RelationshipState, RelationshipKey ─

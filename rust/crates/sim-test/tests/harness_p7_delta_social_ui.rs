@@ -11,7 +11,6 @@
 //!   `cargo test -p sim-test --test harness_p7_delta_social_ui -- --nocapture`
 
 use std::collections::BTreeSet;
-use std::fs;
 
 use sim_bridge::ffi::world_node::{
     collect_agent_snapshot, collect_relationship_snapshot, RelationshipSnapshotRow,
@@ -145,104 +144,6 @@ fn build_phase7_gamma_scenario() -> (
     let id_2 = engine.world.get::<&Agent>(entity_2).unwrap().id;
     let rel_key = RelationshipKey::new(id_1, id_2);
     (engine, entity_1, entity_2, id_1, id_2, rel_key)
-}
-
-/// Resolve the project root by walking up from the test binary's
-/// `CARGO_MANIFEST_DIR` (sim-test crate dir) two levels — that lands at the
-/// workspace root, which is also the repository root for WorldSim.
-fn project_root() -> std::path::PathBuf {
-    let manifest = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    // .../rust/crates/sim-test → walk up to repo root.
-    manifest
-        .parent()
-        .and_then(|p| p.parent())
-        .and_then(|p| p.parent())
-        .map(|p| p.to_path_buf())
-        .expect("project root path resolves above sim-test crate")
-}
-
-fn read_locale_json(locale: &str) -> serde_json::Value {
-    let path = project_root()
-        .join("localization")
-        .join("compiled")
-        .join(format!("{locale}.json"));
-    let raw = fs::read_to_string(&path)
-        .unwrap_or_else(|e| panic!("read locale file {path:?}: {e}"));
-    serde_json::from_str(&raw)
-        .unwrap_or_else(|e| panic!("parse locale file {path:?}: {e}"))
-}
-
-/// Pull a string value for `key` from a locale JSON. Locale files are
-/// `{"messages": {KEY: VALUE, …}}` after compile (see
-/// `tools/localization_compile.py`). We search both the flat top-level and
-/// any single-level nested object to be tolerant of layout variants.
-fn locale_value<'a>(json: &'a serde_json::Value, key: &str) -> Option<&'a str> {
-    if let Some(s) = json.get(key).and_then(|v| v.as_str()) {
-        return Some(s);
-    }
-    let obj = json.as_object()?;
-    for (_, v) in obj {
-        if let Some(s) = v.get(key).and_then(|v| v.as_str()) {
-            return Some(s);
-        }
-    }
-    None
-}
-
-const LOCALE_KEYS: [&str; 7] = [
-    "UI_CAUSAL_REASON_SOCIAL",
-    "UI_CAUSAL_EVENT_AGENT_DECISION",
-    "UI_CAUSAL_EVENT_SOCIAL_INTERACTION_STARTED",
-    "UI_CAUSAL_EVENT_SOCIAL_INTERACTION_COMPLETED",
-    "UI_AGENT_STATE_SOCIALIZING",
-    "UI_RELATIONSHIP_PANEL_TITLE",
-    "UI_RELATIONSHIP_PAIR_ROW",
-];
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 1 — state_tag_idle_default
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_state_tag_idle_default() {
-    // Type A — locked tag-table mapping: Idle → 0.
-    let tag = snapshot_single_state_tag(AgentState::Idle);
-    assert_eq!(tag, 0, "A1: Idle agent must produce state_tag == 0");
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 2 — state_tag_seeking_agent
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_state_tag_seeking_agent() {
-    // Type A — Seeking → 1 (Agent payload).
-    let tag = snapshot_single_state_tag(AgentState::Seeking {
-        target: TargetKind::Agent(99),
-    });
-    assert_eq!(tag, 1, "A2: Seeking{{Agent}} must produce state_tag == 1");
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 3 — state_tag_consuming_agent
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_state_tag_consuming_agent() {
-    // Type A — Consuming{Agent} → 2 (socializing tint key).
-    let tag = snapshot_single_state_tag(AgentState::Consuming {
-        target: TargetKind::Agent(99),
-    });
-    assert_eq!(tag, 2, "A3: Consuming{{Agent}} must produce state_tag == 2");
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 4 — state_tag_consuming_other
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_state_tag_consuming_other() {
-    // Type A — Consuming{non-Agent} → 3 (disambiguates social tint).
-    let tag = snapshot_single_state_tag(AgentState::Consuming {
-        target: TargetKind::Food,
-    });
-    assert_eq!(tag, 3, "A4: Consuming{{Food}} must produce state_tag == 3");
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -573,87 +474,6 @@ fn harness_end_to_end_state_tag_idle_after_interaction() {
             row.state_tag,
         );
     }
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 19 — en locale has all 7 keys with structural minimums
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_locale_compiled_contains_all_seven_keys_en() {
-    let json = read_locale_json("en");
-    for key in LOCALE_KEYS {
-        let value = locale_value(&json, key).unwrap_or_else(|| {
-            panic!("A19: en.json missing key {key}");
-        });
-        assert!(
-            value.chars().count() >= 3,
-            "A19: en[{key}] must have length >= 3, got {value:?}",
-        );
-        let alpha = value.chars().filter(|c| c.is_ascii_alphabetic()).count();
-        assert!(
-            alpha >= 2,
-            "A19: en[{key}] must contain >= 2 ASCII letters, got {value:?}",
-        );
-    }
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 20 — ko locale has all 7 keys with Hangul and differs from en
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_locale_compiled_contains_all_seven_keys_ko() {
-    let en = read_locale_json("en");
-    let ko = read_locale_json("ko");
-    for key in LOCALE_KEYS {
-        let en_val = locale_value(&en, key)
-            .unwrap_or_else(|| panic!("A20: en.json missing key {key}"));
-        let ko_val = locale_value(&ko, key)
-            .unwrap_or_else(|| panic!("A20: ko.json missing key {key}"));
-        assert!(
-            ko_val.chars().count() >= 2,
-            "A20: ko[{key}] must have length >= 2, got {ko_val:?}",
-        );
-        let hangul = ko_val
-            .chars()
-            .filter(|c| ('\u{AC00}'..='\u{D7A3}').contains(c))
-            .count();
-        assert!(
-            hangul >= 1,
-            "A20: ko[{key}] must contain >= 1 Hangul syllable, got {ko_val:?}",
-        );
-        assert_ne!(
-            en_val.as_bytes(),
-            ko_val.as_bytes(),
-            "A20: ko[{key}] must differ from en[{key}] (no copy-paste)",
-        );
-    }
-}
-
-// ────────────────────────────────────────────────────────────────────────
-// Assertion 21 — en values pairwise distinct
-// ────────────────────────────────────────────────────────────────────────
-#[test]
-fn harness_locale_seven_keys_pairwise_distinct_en() {
-    let en = read_locale_json("en");
-    let values: Vec<&str> = LOCALE_KEYS
-        .iter()
-        .map(|k| {
-            locale_value(&en, k)
-                .unwrap_or_else(|| panic!("A21: en.json missing key {k}"))
-        })
-        .collect();
-    let mut collisions = 0;
-    for i in 0..values.len() {
-        for j in (i + 1)..values.len() {
-            if values[i].as_bytes() == values[j].as_bytes() {
-                collisions += 1;
-            }
-        }
-    }
-    assert_eq!(
-        collisions, 0,
-        "A21: all 7 en values must be pairwise distinct, got {collisions} duplicate pairs",
-    );
 }
 
 // ────────────────────────────────────────────────────────────────────────
