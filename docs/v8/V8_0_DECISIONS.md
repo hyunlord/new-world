@@ -41,3 +41,18 @@ context, choice, reason, evidence. Raw data paths are under
 - Context: goal 5.3 asks for the counts of `SCRIPT ERROR`, `ERROR:` and missing-locale warnings in a 900-frame headless smoke at base.
 - Choice: counted after two headless imports (the first import of a fresh worktree logs font-import errors before the fonts are imported; the gate also imports twice). `Locale.ltr` returns the key itself for a missing key and logs nothing; the only locale warnings `locale.gd` can print start with `Locale:`, so that prefix is what is counted.
 - Evidence: `$DATA/base/smoke.log` (5 lines: 0 / 0 / 0), `$DATA/base/import.log` (13 font-import errors, first import), `$DATA/base/import2.log` (0).
+
+## D8 — The V8 smoke also scans labels for raw keys
+- Context: `Locale.ltr` returns the key itself for a missing key and logs nothing (`scripts/core/locale.gd`), so a `Locale:` warning count cannot catch a key pruned by mistake (7.4).
+- Choice: `tools/v8/smoke.sh` runs the plain 900-frame boot and `tools/v8/smoke.gd`, which boots the main scene for 900 frames and counts Label/RichTextLabel/Button texts that are key-shaped (`^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$`). Base counts were recorded with the same scripts in the base worktree: 0 script errors, 0 errors, 0 locale warnings, 0 raw keys (75 labels).
+- Evidence: `tools/v8/smoke_base_counts.txt`, `$DATA/base/smoke_v8/`.
+
+## D9 — `probe/pass*.rs` are kept (and renamed), not deleted
+- Context: goal 6.3 lists `src/probe/pass*.rs` for deletion, but those modules compute blocks of the probe's `summary.json` and raw rows (`probe/runner.rs` calls `pass10::seed_info`, `pass11::seed_block`, `pass12::seed_block`, `pass13::seed_block`, `pass20::seed_block`, …; `summary.rs` calls `pass4_sections`, `pass5_sections`, `pass8::rules_block`). Deleting them would change the summary that identity (4.1) requires to be identical.
+- Choice: keep them as "probe modules the kept binaries need" (7.7) and rename them by content in 8.2.
+- Evidence: `rust/crates/sim-test/src/probe/{runner,summary}.rs`.
+
+## D10 — `reset_world_stress` stays in the bridge API, re-pointed to the baseline
+- Context: 8.1 deletes `reset_world_stress` constructors that nothing kept uses; 4.2 requires the final bridge API to equal the base list minus the intervention methods only. The bridge method `reset_world_stress` builds `WorldGenConfig::stress_v19` under `WorldRules::game_v19`.
+- Choice: keep the `#[func]` name; in 8.1 it builds the same stress world under the baseline rules (the world generator inputs of `stress_v19` equal the baseline's apart from founders and size). Benchmark-only, never called by the kept UI.
+- Evidence: `docs/v8/bridge_api_v7_final.txt`; `sim-bridge/src/ffi/world_node.rs` `build_stress_engine`.

@@ -1,0 +1,5 @@
+# V8 smoke base counts, captured at v7-final-art (b1ca032f) with tools/v8/smoke.sh --record
+script_errors 0
+errors 0
+locale_warnings 0
+raw_keys 0
