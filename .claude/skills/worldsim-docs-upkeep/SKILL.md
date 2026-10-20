@@ -46,9 +46,9 @@ next free four-digit number; slug = short kebab-case title.
 ### Writing a CHANGELOG entry
 
 ```
-## M1 — 2026-11-02
+## M1 — 2026-10-20
 ### Added
-- Chop orders: … (`rust/crates/sim-systems/src/runtime/orders/`).
+- Chop orders: … (`rust/crates/sim-systems/src/runtime/jobs/`).
 ### Changed
 - …
 ### Removed

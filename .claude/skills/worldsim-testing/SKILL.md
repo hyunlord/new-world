@@ -17,7 +17,7 @@ headless specifics in `worldsim-godot`.
 - **Don't** explain an identity mismatch away. The failing commit is not pushed until it is fixed or reverted, and the cause goes in DECISIONS. *Reason:* every "harmless" difference is unproven until the identical run exists.
 - **Don't** add a key to `tools/v8/identity_removed_keys.txt` to make a mismatch pass. A key goes there only when a commit removed it on purpose, with that commit area as the reason; `identity.sh` drops it from the base side only where the base value is zero/false/null/empty and fails on any non-zero value. *Reason:* the allowlist exists for removed dead fields, not for changed values.
 - **Do** write a claim only after its artefact exists (log, summary, commit); mark it PENDING until then. *Reason:* V7 records repeatedly cited checks before they ran.
-- **Don't** take a green structural test suite as proof that the game works. *Reason:* tests that read source text, run on `WorldRules::default()` (which switches 8 of the 28 systems off), or set the fixture value themselves stay green while the live loop is broken.
+- **Don't** take a green structural test suite as proof that the game works. *Reason:* tests that read source text, run on `WorldRules::default()` (which switched 8 of V7's 28 systems off), or set the fixture value themselves stay green while the live loop is broken.
 
 ### Gate and determinism
 - **Do** run the gate (`tools/v8/gate.sh <log_dir>`) on one committed head with nothing edited, built or committed while it runs. *Reason:* a gate whose steps saw different trees tested no commit.
@@ -102,20 +102,20 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 4. Report the mean; list p99 / p99.9 per repeat labelled as noise; state the start/end load and whether the run was contended.
 5. A perf claim (faster/slower) needs an admitted quiet session (calibrated probe, attempts ≥ 30 min apart) or it is reported as contended.
 
+### E. Test layout
+- Integration tests: `rust/crates/sim-test/tests/` by domain — `agents_*.rs`, `settlement_*.rs`, `family_*.rs`, `relations_*.rs`, `chronicle_*.rs`, `engine_*.rs` (engine and bridge), `determinism.rs`. Add to the matching file; a new file only for a new domain.
+- Unit tests: `#[cfg(test)] mod tests` inside the module, for pure logic and truncation edges.
+- Start V7-system tests from `sim_test::baseline_engine(seed)` (the frozen identity world: `WorldRules::baseline(seed)` + `WorldGenConfig::baseline(seed)`) and colony tests from `sim_test::colony_engine(seed)` (the game since M1, ADR 0014; Procedure F). Use `SimEngine::new` + `WorldRules::default()` only for rule-independent mechanics, and never to cover a rules-gated system.
+- Advance with `engine.tick()`; 1 tick = 1 simulated minute, 1,440 ticks = 1 simulated day. Read state from the pub fields `engine.world` and `engine.resources`.
+- Bridge data: test the pure collectors headless (`sim_bridge::ffi::collect_<thing>` on a built engine) in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`. sim-test links sim-bridge as an `rlib`. Unit tests inside sim-bridge (`cargo test -p sim-bridge`) are for pure marshalling helpers only. GDScript parse and FFI binding are covered by gate steps 8–9, not by sim-test.
+- Name tests by what they assert (`settlement_fire_keeps_winter_hearths_lit`), not by pass or phase.
+
 ### F. Colony tests: ledger, reservations, replay (M1 patterns)
 1. Start colony tests from `sim_test::colony_engine(seed)` (or `scenes::colony_scene`) and helpers in `rust/crates/sim-test/tests/colony_support/mod.rs`; give orders with `sim_systems::commands::submit`, never by writing `SimResources.colony` directly.
 2. **Ledger:** after every tick of a test run, check `sim_systems::runtime::jobs::invariants::check(&world, &resources)` (log conservation: created = on the ground + carried + delivered to sites + consumed, from `invariants::log_ledger`; reservations; stacks). Assert that logs moved at all (`trees_felled > 0`, a stack exists) so the check cannot pass on an idle world.
 3. **Reservations:** cancel by each `CancelReason` (a command, a death, a need, the target gone) and assert `colony.reservations` holds no key of the cancelled agent afterwards; tick once more when a release happens on the next stage.
 4. **Replay:** run with a command script (`worldsim_probe --scene colony --commands <file> --commands-out <dir>`), then replay the written log with `--commands <dir>/…` and compare `summary.json` byte for byte (timings live in `timing.json`, outside the comparison). The unit test in `rust/crates/sim-test/src/probe/colony.rs` and gate step 19 do this.
 5. **Twins:** two colony engines with the same seed and the same commands, ticked in lockstep, compared with `probe::colony::colony_fingerprint` (it covers the colony state, jobs and carries, not only the V7 fingerprint).
-
-### E. Test layout
-- Integration tests: `rust/crates/sim-test/tests/` by domain — `agents_*.rs`, `settlement_*.rs`, `family_*.rs`, `relations_*.rs`, `chronicle_*.rs`, `engine_*.rs` (engine and bridge), `determinism.rs`. Add to the matching file; a new file only for a new domain.
-- Unit tests: `#[cfg(test)] mod tests` inside the module, for pure logic and truncation edges.
-- Start live-rule tests from `sim_test::baseline_engine(seed)` (the live world: `WorldRules::baseline(seed)` + `WorldGenConfig::baseline(seed)`). Use `SimEngine::new` + `WorldRules::default()` only for rule-independent mechanics, and never to cover a rules-gated system.
-- Advance with `engine.tick()`; 1 tick = 1 simulated minute, 1,440 ticks = 1 simulated day. Read state from the pub fields `engine.world` and `engine.resources`.
-- Bridge data: test the pure collectors headless (`sim_bridge::ffi::collect_<thing>` on a built engine) in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`. sim-test links sim-bridge as an `rlib`. Unit tests inside sim-bridge (`cargo test -p sim-bridge`) are for pure marshalling helpers only. GDScript parse and FFI binding are covered by gate steps 8–9, not by sim-test.
-- Name tests by what they assert (`settlement_fire_keeps_winter_hearths_lit`), not by pass or phase.
 
 ## Lessons
 

@@ -6,7 +6,7 @@ sprites). Sources are paths at tag `v7-final-art` unless a commit is named.
 ## Where the time went
 
 - **The simulation was cheap; drawing was not.** At 2,000 people in one camp the sim's mean tick is ≈ 1.98 ms;
-  at 2× speed (60 ticks/s) that is 12 % of one core, ≈ 2 ms of a 16.7 ms frame
+  at V7's 2× speed (60 ticks/s; M1's 2× is 24 ticks/s) that is 12 % of one core, ≈ 2 ms of a 16.7 ms frame
   (`docs/revitalize/SCALE.md` L18, L51). At 500 agents `AgentRenderer` alone cost 24.8 ms per frame in release
   (46 ms in debug) and failed every 500-agent frame bar — the cost was per-agent GDScript work (seat
   assignment 16 ms, declump 12 ms, O(n²) geometry), then pose/frame choice, metadata and child nodes

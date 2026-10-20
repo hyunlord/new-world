@@ -17,7 +17,7 @@ GDScript draws, takes input and shows UI. The simulation is Rust (`rust/crates/`
 | text | autoload `Locale` (`scripts/core/locale.gd`); sources `localization/{ko,en}/{ui,buildings}.json`, compiled to `localization/compiled/{ko,en}.json` |
 | theme / fonts | `assets/ui/worldsim_theme.tres`: Galmuri11 24 px default and headings, Galmuri9 20 px `SmallNumber` |
 | render settings | `project.godot`: nearest texture filter, 2D transform + vertex pixel snap, 1920×1080 `canvas_items` stretch |
-| tools | `tools/v8/gdscript_strict_check.sh`, `smoke.sh` + `smoke.gd`, `capture.gd`, `run_bounded.sh`; gate steps 2, 3, 8, 9 in `tools/v8/gate.sh` |
+| tools | `tools/v8/gdscript_strict_check.sh`, `smoke.sh` + `smoke.gd`, `capture.gd`, `run_bounded.sh`; gate steps 2, 3, 8, 9, 17 (`test_locale_trf.gd`) and 20 (`uid_check`) in `tools/v8/gate.sh` |
 
 References: [file formats](references/file-formats.md) · [general Godot pitfalls](references/common-pitfalls.md) ·
 [UI-side patterns](references/architecture-patterns.md) · [rendering notes for M1](references/rendering-m1.md).
@@ -51,7 +51,7 @@ smoke are this repo's validators).
 - **Do** put tooling GDScript under `tools/v8/` and run it with `--script res://tools/v8/x.gd`. *Reason:* `tools/` has a `.gdignore` (not imported, not in the game) but `--script` still runs it; a resource placed there is never imported.
 
 ### Files, names, imports
-- **Do** move a script's `.uid` with it in the working tree, then re-import. *Reason:* `.gitignore` has `*.uid`, so UIDs are checkout-local; a stale UID left `main.tscn` pointing at the wrong BuildingRenderer.
+- **Do** move a script's `.uid` with it in the working tree, then re-import. *Reason:* since M1 the `.uid` files are committed (gate step 20 checks every Godot source has one); a moved script without its `.uid` gets a new UID, and a stale UID once left `main.tscn` pointing at the wrong BuildingRenderer.
 - **Don't** reuse or drop a `class_name` in copies or helpers. *Reason:* the registry is global; a duplicate made a test copy time out.
 - **Do** name sprite variants `1.png … N.png` with no gap. *Reason:* the variant loader counts from 1 and stops at the first gap; a missing variant is cached as `null`.
 - **Do** load textures with `load("res://…") as Texture2D`, not `Image.load_from_file`. *Reason:* raw image loads on `res://` warn on export and bypass import settings.
@@ -102,7 +102,7 @@ smoke are this repo's validators).
 
 ### 5. Move or rename a script (with its `.uid`)
 1. `git mv scripts/ui/old.gd scripts/ui/new.gd`
-2. `mv scripts/ui/old.gd.uid scripts/ui/new.gd.uid` (untracked file; plain `mv`).
+2. `git mv scripts/ui/old.gd.uid scripts/ui/new.gd.uid` (tracked since M1).
 3. Update every `res://scripts/ui/old.gd` reference: `grep -rn "old.gd" scenes scripts tools assets project.godot`; fix `ext_resource` paths, `preload`/`load` strings, and any `uid="uid://…"` attribute pointing at it.
 4. If the script has a `class_name`, keep it (or grep and update every user).
 5. Re-import (procedure 1 step 3), then run the strict check and the smoke. No `invalid UID` warnings may remain in the import log.
@@ -115,7 +115,7 @@ smoke are this repo's validators).
 5. Text: `Locale.ltr("KEY")`; add the key to `localization/ko/ui.json` and `localization/en/ui.json` (or `buildings.json`), then `python3 tools/localization_compile.py --project-root .` (updates `localization/compiled/*.json`).
 6. Add the node under `UI` in `scenes/main.tscn` (one `ext_resource` + one `[node]` section) or instantiate it from an existing panel.
 7. If the panel keeps state, clear it on `world_reset`.
-8. Strict check → import → smoke (`raw_keys 0`) → one windowed capture to look at it.
+8. `cargo build -p sim-bridge` → import (only on a fresh tree or after adding/moving scripts, assets or a `class_name`) → strict check → smoke (`raw_keys 0`) → one windowed capture to look at it.
 
 ### 7. Size pixel text
 1. Find the font's design grid: Galmuri11 has `unitsPerEm` 1200 and outline coordinates on multiples of 100 → 12-px grid ("11" is only the family name). For another face compute `unitsPerEm / gcd(outline coordinates)` the same way.
@@ -178,7 +178,7 @@ smoke are this repo's validators).
 | 2026-10-11 | New FFI codes rendered wrongly or silently (life stage, exposure deaths, state 4) | sim-side enum additions without a matching GDScript mapping | list GDScript consumers of every new code; explicit mapping and localization keys; unknown codes clamped or ignored | `v7-final-art:docs/revitalize/DECISIONS.md` L388 |
 | 2026-10-11 | UI broke or showed wrong data when the sim added snapshot keys | keys arrive asynchronously across branches; types differ (`hungers` is `PackedFloat32Array`) | feature-detect with `snap.has` and the packed type; keep the old behaviour when absent | `v7-final-art:docs/art/production4/DECISIONS.md` L18, L33 |
 | 2026-10-14 | UI reads would break the frame before the sim (19 + 2T getter calls per frame, more on the art branch) | each panel called the same getters and rebuilt dictionaries | read each snapshot once per frame and share it; time frames with `reset_world_stress(seed, 500)` | `v7-final-art:docs/revitalize/DECISIONS.md` L778; `v7-final-art:docs/revitalize/PERF_BUDGET.md` §1.5 |
-| 2026-10-16 | The live game is not tick-exact | fixed 1/30 s step, at most 5 ticks per frame, ticks per frame decided by wall time | measure determinism and identity with the probe, never the live game | `v7-final-art:docs/revitalize/SCALE.md` L51 |
+| 2026-10-16 | The live game is not tick-exact | fixed step (V7: 1/30 s and at most 5 per frame; since M1: 1/12 s and at most 8), ticks per frame decided by wall time | measure determinism and identity with the probe, never the live game | `v7-final-art:docs/revitalize/SCALE.md` L51 |
 | 2026-10-11 | Captures showed villagers absent from the snapshot | a capture-only `show_agents` flag forced visibility over the renderer's rules | capture tools delegate visibility to the renderer, backed by a regression test | `f2f93835`; `v7-final-art:docs/art/production3/DECISIONS.md` L63-65 |
 | 2026-10-11 | Smoothing moved sprites away from their click target | the sim position and the drawn position were one value | keep `ipos`; add a separate `drawn` position eased over 0.08 s; hit-test the drawn rect | `97bf6497`; `v7-final-art:docs/art/production4/REPORT.md` L26 |
 | 2026-10-17 | Debug frame numbers were reported as performance (W500 51 ms debug vs 29 ms release) | Godot loads the debug-path dylib and the gate rebuilds debug | measure with a release library at the debug path (SHA parity checked); debug captures are never perf evidence | `v7-final-art:docs/art/production11/REPORT.md` L17 |

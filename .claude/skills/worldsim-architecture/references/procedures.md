@@ -119,7 +119,7 @@ Call it from `register_default_runtime_systems` (`rust/crates/sim-systems/src/li
 
 ### B0. Before writing code
 - Check the getter does not exist: `docs/ARCHITECTURE.md` section 4 and `GETTERS` in `scripts/core/sim_reads.gd`.
-- Pick the file in `rust/crates/sim-bridge/src/ffi/` by concern: `node.rs` (the class, process loop, speed and every `#[func]`), `snapshot.rs` (per-frame arrays: agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (agent detail, temperament, relationships), `reads_settlement.rs` (settlement and society), `causal.rs`, `chronicle.rs`, `family.rs`, `relations.rs` (village relations, porters), `activity.rs`, `engine_build.rs` (engine construction), `art_kernels.rs` (render kernels), `mod.rs`.
+- Pick the file in `rust/crates/sim-bridge/src/ffi/` by concern: `node.rs` (the class, process loop, speed and every `#[func]`), `snapshot.rs` (per-frame arrays: agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (agent detail, temperament, relationships), `reads_settlement.rs` (settlement and society), `causal.rs`, `chronicle.rs`, `family.rs`, `relations.rs` (village relations, porters), `activity.rs`, `engine_build.rs` (engine construction), `colony.rs` (M1 orders and colony reads), `mod.rs`.
 - A new concern gets a new `<concern>.rs`: a `//!` header, `pub mod <concern>;` in `ffi/mod.rs`, and a `pub use` of the collector.
 
 ### B1. Collector (`rust/crates/sim-bridge/src/ffi/<concern>.rs`)
@@ -187,7 +187,7 @@ fn get_<thing>(&self) -> VarDictionary {
 - Map every new code to a localization key through `Locale`; never show raw codes.
 
 ### B4. Checks
-1. A Rust test in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`: `sim_bridge::ffi::collect_<thing>` on `baseline_engine` (values and order, not only presence). Unit tests inside sim-bridge (`cargo test -p sim-bridge`) only for pure marshalling helpers.
+1. A Rust test in `rust/crates/sim-test/tests/engine_bridge_ffi.rs` (the bridge-surface domain file) or a new `engine_<concern>_ffi.rs`: `sim_bridge::ffi::collect_<thing>` on `baseline_engine` (a read of colony state: `sim_test::colony_engine(seed)` — baseline has no colony; add a new test file's name to gate step 17 `m1_tests` in `tools/v8/gate.sh` if it covers M1 colony code) (values and order, not only presence). Unit tests inside sim-bridge (`cargo test -p sim-bridge`) only for pure marshalling helpers.
 2. `cd rust && cargo build -p sim-bridge` (Godot loads `rust/target/debug/libsim_bridge.dylib`; `cargo test` does not rebuild it).
 3. Headless import only on a fresh checkout or worktree (twice, judge the second) or after adding or moving assets, scenes, scripts or a `class_name`; adding a `#[func]` to an already imported checkout needs no import.
 4. `bash tools/v8/gdscript_strict_check.sh`. Exit 3 compares GDScript `world_sim.X(` / `_world_sim.X(` calls and `SimReads.read/mutate` names with the `#[func]` names in the Rust source (`tools/v8/bridge_api.py` scans `rust/crates/sim-bridge/src`), so it does not depend on the build.

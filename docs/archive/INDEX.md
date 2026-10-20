@@ -40,3 +40,15 @@ Read a file with `git show v7-final-art:<path>`; list a directory with
 | `assets/art/production/`, `assets/art/direction/`, `assets/audio/`, `assets/tilesets/`, unused `assets/sprites/*` | atlas source PNGs, direction references, ambience loops, V7 tileset, pre-art-line sprites | ~690 files | `v7-final-art` |
 | unused `shaders/*.gdshader` | V7 overlay shaders | 8 files | `v7-final-art`, `v7-final-sim` |
 | `rust/**/CLAUDE.md`, `scripts/**/CLAUDE.md` | V7 per-directory agent notes (superseded by docs/ARCHITECTURE.md and skills) | — | `v7-final-art`, `v7-final-sim` |
+
+## M1 (2026-10-20)
+
+Deleted by M1 (goal 9.7). Every path is available at `24e16677` (`v8/main` before M1, V8-0) and at
+`v7-final-art`. Read a file with `git show 24e16677:<path>`.
+
+| path | what it was | files | available at |
+|---|---|---|---|
+| `scripts/world/{world_renderer,terrain_renderer,nature_renderer,nature_canopy,nature_layout,building_renderer,agent_renderer,agent_activity,agent_frame_choices,agent_pose_moments,agent_selection_index,activity_icons,art_season_tint,camp_seats,carry_load_layer,cold_effects,declump_offsets,morning_chill,offscreen_marker,shelter_cold,walker_offsets}.gd` | the V7 world renderers and their helpers (replaced by `scripts/world/colony/`) | 21 | `24e16677`, `v7-final-art` |
+| `scripts/world/cold_audit.json`, `shaders/settlement_outline.gdshader` | data and shader used only by those renderers | 2 | `24e16677`, `v7-final-art` |
+| `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | the bridge methods `art_declump`, `art_walker_offsets` (render kernels of the V7 agent renderer) | 1 | `24e16677`, `v7-final-art` |
+

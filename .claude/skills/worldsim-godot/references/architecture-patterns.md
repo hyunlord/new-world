@@ -11,7 +11,7 @@
 ## Principles (presentation side)
 
 1. **Small components.** One renderer or panel per concern, each a `Node2D`/`Control` child of `Main` (see the
-   node list in `scenes/main.tscn`): `TerrainRenderer`, `BuildingRenderer`, `AgentRenderer`, `HudTopbar`, …
+   node list in `scenes/main.tscn`): the `ColonyView` layers (`scripts/world/colony/`), `HudTopbar`, `OrderBar`, …
    Small files are easier to review and to check with the strict check.
 2. **Signals for UI events.** UI-originated events (selection, panel open/close, camera) are Godot signals.
    Simulation events never originate in GDScript; they arrive through bridge snapshots (and `world_reset`).
@@ -23,7 +23,7 @@
 Main (Node2D)
 ├─ WorldSim (WorldSimNode, Rust)        ← owns all simulation state
 ├─ SimReads (Node, sim_reads.gd)        ← one cached read layer per frame
-├─ TerrainRenderer / BuildingRenderer / AgentRenderer … (Node2D)
+├─ ColonyView (Node2D, view.gd) ─ Terrain / Tree / Building / Overlay / Agent layers, OrderTool
 ├─ Camera2D
 └─ UI (CanvasLayer)
    ├─ HudTopbar (Control)

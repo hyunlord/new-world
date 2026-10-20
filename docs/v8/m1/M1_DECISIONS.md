@@ -358,3 +358,24 @@ Raw data lives in `/Users/rexxa/work/m1-data/` ($DATA), outside the repository.
   node, or through `preload("res://scripts/core/locale.gd").format_text` for pure text
   (`chronicle_text.gd`). `tools/v8/test_locale_trf.gd` tests both paths.
 - Evidence: strict check 25 files clean; `TRF_TEST_PASS`. Lesson added to `worldsim-godot` in Part 6.
+
+## D28 — Docs round 2 for Q3 and Q7 (the last round)
+
+- Context: 5.2 / 11.1. After Part 3 changed the time scale, a fresh reader (README, AGENTS, docs/** without
+  docs/v8/m1/, skills) answered Q3 and Q7 correctly and listed 31 gaps (`$DATA/logs/docs_q3_q7_round2.md`).
+- Choice: fixed in Part 6:
+  - Q3: the stale `art_kernels.rs` in the ffi file list; `colony_engine` for colony reads and step 17's name
+    list; "live world" wording; the API-list name for M1.5 (`bridge_api_m1_5.txt`, in `docs/v8/`); the
+    ARCHITECTURE §4 update; the check order; running one test file; the whole gate at the end; colony
+    getters' empty form in baseline.
+  - Q7: start speed and pause behaviour; the dropped backlog keeps one step; season lengths in real time at
+    every speed; the `SeasonRule.days_per_season` path; season numbering and the time snapshot's fields;
+    walking speed (one step per 3 ticks in the colony); age display in days; what M1.5 still decides; the
+    stale 1/30 s and 60 ticks/s lines in skills.
+  - Other: `.uid` files are tracked (four places still said ignored); the `main.tscn` node diagram; the
+    source-text test advice; the ROADMAP M1 row; an M1 section in `docs/archive/INDEX.md`; the docs-upkeep
+    example; the testing skill's section order.
+- Not changed, on purpose: the V8-0 records (`docs/v8/V8_0_REPORT.md`, `docs/v8/V8_0_DECISIONS.md`) are
+  dated records of what held then; ARCHITECTURE §2 is the current answer. `docs/VISION.md` is the owner's
+  verbatim direction (its "64×64" and "2배속 12 %" lines are V7 facts); changing it is the owner's call.
+- Evidence: `$DATA/logs/docs_q3_q7_round2.md`; `check_docs.sh` PASS. Two rounds used; no third.
