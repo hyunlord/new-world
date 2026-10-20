@@ -3,12 +3,13 @@
 /android/
 *.import
 *.translation
-*.uid
-!scripts/ui/panels/oracle_panel.gd.uid
-!scripts/ui/panels/band_detail_panel.gd.uid
-!scripts/ui/panels/civilization_detail_panel.gd.uid
 export_presets.cfg
 error.log
+
+# Evidence images stay out of docs/ except the curated docs/images/ set (M1 5.3)
+docs/**/*.png
+docs/**/*.jpg
+!docs/images/**
 
 # OMC
 .omc/

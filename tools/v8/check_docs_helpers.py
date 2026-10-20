@@ -4,8 +4,13 @@ mis-parses inside command substitutions when they contain backticks).
 
 usage: check_docs_helpers.py arch-paths          paths named in docs/ARCHITECTURE.md that do not exist
        check_docs_helpers.py lessons SKILL...   per-skill lesson counts and unsourced rows
+       check_docs_helpers.py uid                 Godot UID problems (M1 5.3): a tracked .gd/.gdshader
+                                                 outside a .gdignore'd folder without its tracked .uid,
+                                                 a tracked .uid without a tracked source, a tracked
+                                                 .tscn whose header has no uid
 """
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -39,10 +44,34 @@ def lessons(argv):
     print("\n".join(out))
 
 
+def uid(argv):
+    tracked = set(subprocess.run(["git", "ls-files", "-z"], capture_output=True, check=True).stdout.decode().split("\0"))
+    tracked.discard("")
+
+    def ignored_by_godot(path):
+        parent = Path(path).parent
+        while str(parent) not in ("", "."):
+            if (parent / ".gdignore").exists():
+                return True
+            parent = parent.parent
+        return False
+
+    bad = []
+    for path in sorted(tracked):
+        if path.endswith((".gd", ".gdshader")) and not ignored_by_godot(path) and path + ".uid" not in tracked:
+            bad.append(f"{path}: no tracked .uid")
+        elif path.endswith(".uid") and path[: -len(".uid")] not in tracked:
+            bad.append(f"{path}: source is not tracked")
+        elif path.endswith(".tscn") and "uid=" not in Path(path).read_text().split("\n", 1)[0]:
+            bad.append(f"{path}: header has no uid")
+    print("\n".join(bad))
+
+
 def main(argv):
-    if not argv or argv[0] not in ("arch-paths", "lessons"):
+    commands = {"arch-paths": arch_paths, "lessons": lessons, "uid": uid}
+    if not argv or argv[0] not in commands:
         sys.exit(__doc__)
-    (arch_paths if argv[0] == "arch-paths" else lessons)(argv[1:])
+    commands[argv[0]](argv[1:])
 
 
 if __name__ == "__main__":

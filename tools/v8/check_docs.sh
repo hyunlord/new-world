@@ -14,6 +14,8 @@
 #   6. AGENTS.md ≤ 150 lines, no `reset --hard`, no instruction to push
 #      lead/main or main; CLAUDE.md is `@AGENTS.md` plus ≤ 30 lines
 #   7. no tracked file > 5 MB (except assets/fonts/galmuri/, D27); no binary under docs/ except ≤ 12 images in docs/images/
+#   8. Godot UIDs are committed (M1 5.3): every tracked .gd/.gdshader outside a .gdignore'd
+#      folder has its tracked .uid, every tracked .uid has its source, every .tscn header has a uid
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -79,6 +81,9 @@ outside=$(printf '%s\n' "$bins" | grep -v '^docs/images/' | grep -v '^$' || true
 images=$(printf '%s\n' "$bins" | grep -c '^docs/images/' || true)
 [[ -z "$outside" ]] || fail "binary files under docs/: $(echo "$outside" | head -5 | tr '\n' ' ')"
 (( images <= 12 )) && ok "$images images in docs/images" || fail "$images images in docs/images (limit 12)"
+
+uids=$(python3 tools/v8/check_docs_helpers.py uid)
+[[ -z "$uids" ]] && ok "every Godot source has its committed .uid" || fail "UID problems: $(echo "$uids" | head -5 | tr '\n' ' ')"
 
 if (( status == 0 )); then echo "docs: PASS"; else echo "docs: FAIL"; fi
 exit "$status"
