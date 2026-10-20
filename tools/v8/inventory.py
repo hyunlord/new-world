@@ -73,6 +73,8 @@ RULES = [
     ("scenes/", "KEEP", "scene root", E_GIT),
     ("assets/fonts/", "KEEP", "Galmuri pixel fonts (7.5 keeps assets/fonts/galmuri/**)", "goal 7.5; " + E_REACH),
     ("assets/ui/", "KEEP", "worldsim_theme.tres: project theme (project.godot gui/theme/custom)", E_REACH),
+    ("assets/art/atlas/region_atlas.json", "DELETE", "atlas pipeline metadata; nothing at runtime reads it", E_REACH),
+    ("assets/art/terrain/provenance.json", "DELETE", "terrain pipeline provenance; nothing at runtime reads it", E_REACH),
     ("assets/art/atlas/", "KEEP", "runtime atlas pages + region maps loaded by art_sprite_library.gd / carry_load_layer.gd", E_REACH),
     ("assets/art/terrain/", "KEEP", "terrain sheets + terrain_manifest.json loaded by terrain_renderer.gd", E_REACH),
     ("assets/art/contact_shadow.png", "KEEP", "loaded by agent_renderer.gd / building_renderer.gd", E_REACH),
