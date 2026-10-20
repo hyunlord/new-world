@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 
-use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
+use sim_bridge::ffi::bootstrap_spawn_agents;
 use sim_core::components::{
     Agent, AgentState, Hunger, Position, SeekTarget, Sleep, TargetKind, Thirst,
 };

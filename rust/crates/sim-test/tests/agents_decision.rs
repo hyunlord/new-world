@@ -14,7 +14,7 @@
 //! Run:
 //!   `cargo test -p sim-test --test harness_p5_beta_decision -- --nocapture`
 
-use sim_bridge::ffi::world_node::CausalEventView;
+use sim_bridge::ffi::CausalEventView;
 use sim_core::causal::{CausalEvent, DecisionReason};
 use sim_core::components::{Agent, AgentId, AgentState, Hunger, Position, TargetKind, Thirst};
 use sim_core::influence::InfluenceChannel;

@@ -34,7 +34,7 @@
 //!
 //! Run: `cargo test -p sim-test --test harness_show_resource_depletion -- --nocapture`
 
-use sim_bridge::ffi::world_node::init_production_engine;
+use sim_bridge::ffi::init_production_engine;
 use sim_bridge::ffi::{collect_resource_snapshot, resource_rows_amounts, resource_rows_split};
 use sim_core::material::MaterialRegistry;
 use sim_engine::{SimResources, RESOURCE_SOURCE_INFINITE};

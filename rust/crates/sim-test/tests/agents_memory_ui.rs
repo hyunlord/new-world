@@ -41,7 +41,7 @@
 //! Run:
 //!   `cargo test -p sim-test --test harness_p8_delta_memory_ui -- --nocapture`
 
-use sim_bridge::ffi::world_node::{
+use sim_bridge::ffi::{
     collect_agent_snapshot, event_view_to_owned_dict, CausalEventView, FfiFieldValue,
 };
 use sim_core::causal::{CausalEvent, DecisionReason, MemoryRecallTrigger};

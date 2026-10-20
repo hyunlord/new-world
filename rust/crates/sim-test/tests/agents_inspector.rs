@@ -16,7 +16,7 @@
 //!     Phase 14-α, Phase 14-β invariants preserved.
 
 use sim_bridge::ffi::collect_agent_snapshot;
-use sim_bridge::ffi::world_node::{collect_agent_detail, AGENT_DETAIL_DICT_KEYS};
+use sim_bridge::ffi::{collect_agent_detail, AGENT_DETAIL_DICT_KEYS};
 use sim_core::components::{AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
 use sim_core::material::MaterialRegistry;
 use sim_engine::SimEngine;
@@ -165,7 +165,7 @@ fn harness_p14_gamma_a5_detail_position_matches_snapshot_typed() {
     #[allow(dead_code)]
     fn _type_equality() {
         let _snap_x: i32 = 0_u32 as i32; // snapshot xs[i] (i32 from u32)
-        let _detail_x: i32 = sim_bridge::ffi::world_node::AgentDetailRow::default().x;
+        let _detail_x: i32 = sim_bridge::ffi::AgentDetailRow::default().x;
         let _check: fn(i32) = |_| {};
         _check(_snap_x);
         _check(_detail_x);

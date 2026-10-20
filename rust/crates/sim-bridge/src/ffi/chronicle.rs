@@ -1,7 +1,7 @@
 //! Pass 19: read-only chronicle lookups for the art line's chronicle and
 //! "why?" UI. Pure collectors over `SimResources::chronicle` (and the world
 //! for entity-bit resolution and liveness); the `#[func]` wrappers in
-//! `world_node.rs` only marshal. Every id is an i64 (AgentId bits as the
+//! `node.rs` only marshal. Every id is an i64 (AgentId bits as the
 //! snapshot's `agent_ids`); `None` is -1.
 
 use godot::prelude::*;

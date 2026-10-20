@@ -41,7 +41,7 @@ mod pathing {
     use std::collections::{HashMap, HashSet};
 
     use hecs::Entity;
-    use sim_bridge::ffi::world_node::{
+    use sim_bridge::ffi::{
         bootstrap_spawn_agents, collect_agent_snapshot, enqueue_building_placed, AgentSnapshotRow,
     };
     use sim_core::components::{
@@ -1887,7 +1887,7 @@ mod unfreeze {
     use std::collections::{HashMap, HashSet};
 
     use hecs::Entity;
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
     use sim_core::causal::event::{CausalEvent, DecisionReason};
     use sim_core::components::{
         Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, SettlementMigrant, Sleep,

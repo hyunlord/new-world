@@ -449,7 +449,7 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         "chronicle_entries_end": engine.resources.chronicle.len(),
         "chronicle_people_end": engine.resources.chronicle.person_count(),
         "chronicle_approx_bytes_end": engine.resources.chronicle.approx_bytes(),
-        "buildings_end": sim_bridge::ffi::world_node::collect_building_snapshot(&engine.resources).len(),
+        "buildings_end": sim_bridge::ffi::collect_building_snapshot(&engine.resources).len(),
         "mean_alive_0600": mean_of(|s| s.0),
         "mean_settlements_0600": mean_of(|s| s.1),
         "gifts": gifts,
@@ -485,7 +485,7 @@ fn time_collector<T>(mut f: impl FnMut() -> T) -> (f64, f64) {
 /// are not timed), [`SNAPSHOT_REPEATS`] calls each: median and p90 in µs, and
 /// the row count where the getter returns rows.
 pub fn snapshot_timings(engine: &SimEngine) -> Value {
-    use sim_bridge::ffi::world_node as wn;
+    use sim_bridge::ffi as wn;
     let world = &engine.world;
     let r = &engine.resources;
     let rows = |n: usize| json!(n);

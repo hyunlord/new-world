@@ -33,7 +33,7 @@ mod marker_fixed {
 
     use std::collections::HashMap;
 
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
     use sim_bridge::ffi::{collect_settlement_snapshot, SettlementSnapshotRow};
     use sim_core::components::{Agent, Position, SettlementId, SETTLEMENT_PROXIMITY_RADIUS};
     use sim_core::material::MaterialRegistry;
@@ -466,7 +466,7 @@ mod settlements_zero {
 
     use std::collections::HashMap;
 
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
     use sim_bridge::ffi::{collect_settlement_snapshot, SettlementSnapshotRow};
     use sim_core::components::{Agent, Position, Settlement, SettlementId};
     use sim_core::material::MaterialRegistry;

@@ -22,7 +22,7 @@
 use std::collections::BTreeSet;
 
 use hecs::Entity;
-use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
+use sim_bridge::ffi::bootstrap_spawn_agents;
 use sim_core::causal::event::{CausalEvent, DeathReason};
 use sim_core::components::{
     Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, Settlement, SettlementId, Sleep,

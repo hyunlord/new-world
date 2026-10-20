@@ -203,7 +203,7 @@ mod contracts {
 
     #[test]
     fn harness_building_snapshot_matches_registry() {
-        use sim_bridge::ffi::world_node::collect_building_snapshot;
+        use sim_bridge::ffi::collect_building_snapshot;
         let mut engine = sim_test::baseline_engine(1);
         assert!(engine.resources.building_registry.is_empty());
         assert!(collect_building_snapshot(&engine.resources).is_empty());

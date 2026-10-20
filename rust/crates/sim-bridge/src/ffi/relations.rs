@@ -1,6 +1,6 @@
 //! Pass 20 (`game_v25`): read-only village relations and porters for the art
 //! line. Pure collectors over `SimResources::settlement_relations` and the
-//! world's `PorterTrip` markers; the `#[func]` wrappers in `world_node.rs`
+//! world's `PorterTrip` markers; the `#[func]` wrappers in `node.rs`
 //! only marshal. Both are empty in every scene without the relations rule.
 //! (Until the art line reads `get_porter_snapshot`, a porter appears in the
 //! existing snapshots as `Seeking { Agent(itself) }`.)

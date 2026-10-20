@@ -12,7 +12,7 @@
 
 use std::collections::BTreeSet;
 
-use sim_bridge::ffi::world_node::{
+use sim_bridge::ffi::{
     collect_agent_snapshot, collect_relationship_snapshot, RelationshipSnapshotRow,
 };
 use sim_core::components::{

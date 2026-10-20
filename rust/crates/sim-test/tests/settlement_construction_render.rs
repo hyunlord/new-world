@@ -8,7 +8,7 @@ mod sites {
     //!
     //! Static-inspection + smoke-test harness verifying the Phase 12-β.2 A3
     //! implementation:
-    //!   - `rust/crates/sim-bridge/src/ffi/world_node.rs` — adds
+    //!   - `rust/crates/sim-bridge/src/ffi/world_node.rs` (now `ffi/snapshot.rs`) — adds
     //!     `ConstructionSnapshotRow`, `collect_construction_snapshot`,
     //!     `construction_rows_to_dict`, and a `#[func] get_construction_snapshot`
     //!     method on `WorldSimNode`.
@@ -87,7 +87,7 @@ mod furniture {
     //! V7 Phase 12-γ — Settlement Centroid Furniture Placeholder harness.
     //!
     //! Static-inspection + smoke-test harness for Phase 12-γ:
-    //!   - `rust/crates/sim-bridge/src/ffi/world_node.rs` — adds
+    //!   - `rust/crates/sim-bridge/src/ffi/world_node.rs` (now `ffi/snapshot.rs`) — adds
     //!     `SettlementSnapshotRow`, `collect_settlement_snapshot`,
     //!     `settlement_rows_to_dict`, and a `#[func] get_settlement_snapshot`
     //!     method on `WorldSimNode`.

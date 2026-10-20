@@ -55,7 +55,7 @@
 use std::collections::{BTreeSet, HashMap};
 use std::hash::BuildHasher;
 
-use sim_bridge::ffi::world_node::{
+use sim_bridge::ffi::{
     bootstrap_spawn_agents, init_production_engine, seed_finite_resource_scarcity, INITIAL_FOOD,
     INITIAL_SLEEP, INITIAL_WATER, SOURCE_FOOD, SOURCE_SLEEP, SOURCE_WATER,
 };

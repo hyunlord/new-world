@@ -649,7 +649,7 @@ mod controlled_divergence {
 
     use std::collections::BTreeSet;
 
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, seed_finite_resource_scarcity};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, seed_finite_resource_scarcity};
     use sim_core::causal::event::{CausalEvent, DeathReason};
     use sim_core::components::{
         Agent, AgentId, AgentState, BodyHealth, Hunger, Position, Sleep, Thirst,
@@ -1205,7 +1205,7 @@ mod memory_arm {
     use std::collections::BTreeSet;
     use std::hash::BuildHasher;
 
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, seed_finite_resource_scarcity};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, seed_finite_resource_scarcity};
     use sim_core::causal::event::{CausalEvent, DeathReason, DecisionReason, EventId};
     use sim_core::components::{
         Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryArm, MemoryEntry, Position,

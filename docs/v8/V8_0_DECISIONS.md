@@ -221,3 +221,13 @@ Analysis of all 208 rule fields (27 types): `docs/v8/p3/8_3_candidates.md`. Remo
   - `chronicle_combat` ← p9_gamma_combat_chronicle
   - `chronicle_settlement` ← p10_gamma_settlement_chronicle
   - `chronicle_rebuild` ← revitalize_pass19_chronicle, revitalize_pass19_chronicle_events
+
+## D27 — The Galmuri fonts are the only exception to "no tracked file > 5 MB"
+- Context: gate step 14 fails on any tracked file over 5 MB; goal 7.5 keeps `assets/fonts/galmuri/**`, and `Galmuri11.ttf` is 5,376,428 bytes (the theme's pixel font).
+- Choice: `tools/v8/check_docs.sh` exempts exactly `assets/fonts/galmuri/`; every other tracked file must stay under 5 MB. Subsetting the font was rejected: it would change which glyphs (Korean UI text) render, a visible change outside this pass's scope.
+- Also: the Python parts of `check_docs.sh` moved to `tools/v8/check_docs_helpers.py`, because bash 3.2 mis-parses a heredoc containing backticks inside `$( )`.
+
+## D28 — 8.5: the bridge split
+- `rust/crates/sim-bridge/src/ffi/world_node.rs` (4,364 lines) → `node.rs` (721: `WorldSimNode`, `init`/`process`, speed, the one `#[godot_api]` block with every `#[func]` and the signal, `enqueue_building_placed`), `engine_build.rs` (537: `build_game_engine`, `build_stress_engine`, the V7 lattice fixture `init_production_engine` with `bootstrap_spawn_agents` / `seed_finite_resource_scarcity`, `advance_engine_ticks`), `snapshot.rs` (1,415: per-frame arrays — agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (311: agent detail, temperament, relationships), `reads_settlement.rs` (597: settlement and society snapshots, wood targets), `causal.rs` (880: `CausalEventView`, tile history / event chain collectors, influence-channel helpers). `activity.rs`, `art_kernels.rs`, `chronicle.rs`, `family.rs`, `relations.rs` keep their code (import paths only).
+- All `#[func]` stay in one `#[godot_api] impl` in `node.rs` (godot-rust registers one primary block; `secondary` blocks were not tried), so "add a bridge read" still edits `node.rs` for the forwarder and a reads file for the collector.
+- Pure moves: the same 169 items before and after; the only text changes are `use` lines, `pub(crate)` on helpers now used across files, rustfmt reflow of those signatures, `#[cfg(test)]` on test-only imports, the test module `art_p9_causal_batch_tests` → `causal_batch_tests`, and a `//!` header per new file. `sim_bridge::ffi::<item>` re-exports cover what sim-test used through `ffi::world_node::<item>`.

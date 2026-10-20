@@ -14,7 +14,7 @@
 //!   A8 — combat_panel_no_hardcoded_english
 //!   A9 — phase8_delta_recall_cue_regression
 
-use sim_bridge::ffi::world_node::{event_view_to_owned_dict, CausalEventView, FfiFieldValue};
+use sim_bridge::ffi::{event_view_to_owned_dict, CausalEventView, FfiFieldValue};
 use sim_core::causal::{CausalEvent, DecisionReason};
 use sim_core::components::AgentId;
 

@@ -70,7 +70,7 @@ const H: u32 = 128;
 
 /// Production-equivalent engine factory (P7-β scope): registers every
 /// canonical runtime system via the SAME helper used by the live FFI path
-/// in `sim-bridge::ffi::world_node::WorldSimNode::init`. This is the
+/// in `sim-bridge::ffi::node::WorldSimNode::init`. This is the
 /// production system list — A1b verifies registration here.
 fn make_stage1_engine(seed: u64, agent_count: u32) -> SimEngine {
     let mut engine = SimEngine::new(W, H, MaterialRegistry::new());

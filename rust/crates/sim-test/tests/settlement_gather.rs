@@ -42,7 +42,7 @@
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 
-use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
 use sim_core::components::{
     Agent, AgentId, AgentState, BodyHealth, Hunger, Inventory, Memory, Position, ResourceKind,
     SeekTarget, Sleep, Social, TargetKind, Thirst, INVENTORY_CAPACITY, SETTLEMENT_PROXIMITY_RADIUS,

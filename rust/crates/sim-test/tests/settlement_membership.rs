@@ -35,7 +35,7 @@
 //!   cargo test -p sim-test --test harness_membership_belonging -- --nocapture
 
 use hecs::Entity;
-use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
 use sim_core::components::{
     Agent, AgentId, AgentState, Hunger, Memory, Position, SettlementId, Sleep, Social, Thirst,
     SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,

@@ -30,7 +30,7 @@ mod deposit {
 
     use std::collections::HashSet;
 
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
     use sim_core::components::{
         Agent, AgentId, AgentState, Inventory, ResourceKind, SeekTarget, Settlement, SettlementId,
         INVENTORY_CAPACITY,
@@ -614,7 +614,7 @@ mod consume {
 
     use std::collections::BTreeSet;
 
-    use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+    use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
     use sim_core::causal::event::{CausalEvent, DeathReason};
     use sim_core::components::{
         Agent, AgentId, AgentState, BodyHealth, Hunger, ResourceKind, Settlement, SettlementId,
@@ -1156,7 +1156,7 @@ mod food_stock {
     //!
     //! The ONLY headless-testable surface in this slice is the pure-Rust collector
     //! `collect_settlement_snapshot(world, settlements) -> Vec<SettlementSnapshotRow>`
-    //! (sim-bridge `ffi::world_node`). The new `food_stock` field reads exactly
+    //! (sim-bridge `ffi::reads_settlement`). The new `food_stock` field reads exactly
     //! `stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) as i32`. The FFI
     //! `Dictionary` build (`settlement_rows_to_dict`, `food_stocks` key) and the
     //! GDScript `Label` require a Godot runtime and are OUT of cargo scope — covered
@@ -1176,8 +1176,8 @@ mod food_stock {
 
     use std::collections::HashMap;
 
+    use sim_bridge::ffi::bootstrap_spawn_agents;
     use sim_bridge::ffi::collect_settlement_snapshot;
-    use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
     use sim_core::components::{Agent, ResourceKind, Settlement, SettlementId};
     use sim_core::material::MaterialRegistry;
     use sim_engine::SimEngine;

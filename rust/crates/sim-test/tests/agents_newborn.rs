@@ -10,7 +10,7 @@
 //! Stage-1 probe then measured 3/6 newborns frozen.
 //!
 //! The fix gives newborns the SAME movement/needs component set bootstrap gives
-//! every agent (`bootstrap_spawn_agents` in `world_node.rs`): a `MovementRng`
+//! every agent (`bootstrap_spawn_agents` in `ffi/engine_build.rs`): a `MovementRng`
 //! seeded deterministically from the unique `new_agent_id`, plus nonzero growth
 //! rates mirroring the bootstrap values (Hunger 0.05 / Thirst 0.08 / Sleep 0.03
 //! / Social 0.04). Initial need VALUES stay 0.0.
@@ -33,7 +33,7 @@ use std::any::TypeId;
 use std::collections::{HashMap, HashSet};
 
 use hecs::Entity;
-use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
+use sim_bridge::ffi::{bootstrap_spawn_agents, enqueue_building_placed};
 use sim_core::causal::event::CausalEvent;
 use sim_core::components::{
     Agent, AgentId, AgentState, Hunger, Position, SeekTarget, Sleep, Social, TargetKind, Thirst,

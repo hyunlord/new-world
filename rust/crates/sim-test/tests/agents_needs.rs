@@ -443,7 +443,7 @@ mod stagger {
     use std::collections::{HashMap, HashSet};
 
     use hecs::Entity;
-    use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
+    use sim_bridge::ffi::bootstrap_spawn_agents;
     use sim_core::components::{Agent, AgentState, Hunger, Sleep, TargetKind, Thirst};
     use sim_core::material::MaterialRegistry;
     use sim_engine::SimEngine;
@@ -451,7 +451,7 @@ mod stagger {
 
     // ── constants mirrored from the production bootstrap / locked spec ──────────
 
-    /// Map extent — mirrors `world_node::DEFAULT_W` / `DEFAULT_H` (private).
+    /// Map extent — mirrors `ffi::engine_build::DEFAULT_W` / `DEFAULT_H` (private).
     const DEFAULT_W: u32 = 64;
     const DEFAULT_H: u32 = 64;
 

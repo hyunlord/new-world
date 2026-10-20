@@ -7,7 +7,7 @@
 //! Assertion 3: resources.current_tick propagated by tick() matches engine.current_tick()
 //!              (verifies SimEngine.tick() correctly propagates to SimResources before
 //!               systems run — required for all Phase 2 systems that branch on current_tick)
-//! Assertion 4 (NON-CIRCULAR): world_node.rs SOURCE contains process() with the sole
+//! Assertion 4 (NON-CIRCULAR): the bridge node source (now `ffi/node.rs`) contains process() with the sole
 //!              body `self.engine.tick();` — fails if the method is removed or changed.
 //! Assertion 5 (NON-CIRCULAR): scenes/main.tscn SOURCE contains T7.9.A required scaffold
 //!              entries: uid, WorldSimNode, Camera2D, renderer ext_resource.
@@ -23,7 +23,7 @@
 //! content is absent.
 //!
 //! WorldSimNode cannot be instantiated in sim-test (requires Godot runtime).
-//! engine.tick() is the exact call made by `INode::process` in world_node.rs.
+//! engine.tick() is the exact call made by `INode::process` in `ffi/node.rs`.
 //! The Bridge Identity Contract and 21 FFI assertions from T7.7.B are unchanged.
 //!
 //! Run: `cargo test -p sim-test --test harness_t7_9_a_scaffold -- --nocapture`

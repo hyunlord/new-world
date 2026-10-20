@@ -26,7 +26,7 @@ mod state_markers {
     //! Run:
     //!   cargo test -p sim-test --test harness_s16_epsilon_state_viz -- --nocapture
 
-    use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
+    use sim_bridge::ffi::bootstrap_spawn_agents;
     use sim_bridge::ffi::{collect_agent_snapshot, AgentSnapshotRow};
     use sim_core::components::{Agent, AgentState, Hunger, SeekTarget, TargetKind};
     use sim_core::material::MaterialRegistry;
@@ -854,8 +854,8 @@ mod resource_markers {
     //! Run:
     //!   cargo test -p sim-test --test harness_s16_gamma_visual -- --nocapture
 
+    use sim_bridge::ffi::bootstrap_spawn_agents;
     use sim_bridge::ffi::clamp_sim_speed;
-    use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
     use sim_core::components::{AgentState, Hunger, TargetKind};
     use sim_core::material::MaterialRegistry;
     use sim_engine::{RuntimeSystem, SimEngine};

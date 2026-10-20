@@ -14,7 +14,7 @@
 //! Run:
 //!   cargo test -p sim-test --test harness_s16_alpha0_resource_substrate -- --nocapture
 
-use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
+use sim_bridge::ffi::bootstrap_spawn_agents;
 use sim_bridge::ffi::{collect_resource_snapshot, resource_rows_split, ResourceSnapshotRow};
 use sim_core::components::{Agent, AgentState, Hunger, TargetKind};
 use sim_core::material::MaterialRegistry;
@@ -23,7 +23,7 @@ use sim_systems::runtime::decision::{AgentDecisionSystem, HUNGER_CONSUME_AMOUNT}
 
 // ── constants mirrored from the production bootstrap (read-only) ────────────
 
-/// Map extent — mirrors `world_node::DEFAULT_W` / `DEFAULT_H` (private).
+/// Map extent — mirrors `ffi::engine_build::DEFAULT_W` / `DEFAULT_H` (private).
 const DEFAULT_W: u32 = 64;
 const DEFAULT_H: u32 = 64;
 
