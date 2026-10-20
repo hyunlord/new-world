@@ -19,11 +19,11 @@ sim-core  ←  sim-engine  ←  sim-systems  ←  sim-bridge  (GDExtension cdyli
 
 | crate | path | role |
 |---|---|---|
-| sim-core | `rust/crates/sim-core/src/` | data only: ECS components (`components/`), rules (`rules/`: `WorldRules`, one file per sub-rule group, `baseline.rs`), keyed RNG (`rng.rs`), per-world hidden parameters (`variety.rs`), causal log (`causal/`), chronicle (`chronicle.rs`), influence grid (`influence/`), tile grid (`tile/`), material model (`material/`, data for M2) |
+| sim-core | `rust/crates/sim-core/src/` | data only: ECS components (`components/`), rules (`rules/`: `WorldRules`, one file per sub-rule group, `baseline.rs`), keyed RNG (`rng.rs`), per-world hidden parameters (`variety.rs`), causal log (`causal/`), chronicle (`chronicle.rs`), influence grid (`influence/`), tile grid (`tile/`), material model (`material/`, data for M2), the M1 colony model (`colony/`: items and the log ledger, trees, designations, zones, blueprints, reservations, commands, jobs) |
 | sim-engine | `rust/crates/sim-engine/src/lib.rs` | `SimEngine` (hecs `World` + `SimResources` + the priority-sorted system list), the `RuntimeSystem` trait, `Tallies`, the tick loop and its profiler |
-| sim-systems | `rust/crates/sim-systems/src/` | every system (`runtime/<domain>/`), their registration (`lib.rs` `register_default_runtime_systems`) and world generation (`worldgen/`: `WorldGenConfig::baseline`, `build_world_with`) |
-| sim-bridge | `rust/crates/sim-bridge/src/ffi/` | the Godot class `WorldSimNode` (`#[func]` methods), pure `collect_*` readers behind them, the live engine builder (`build_game_engine`) |
-| sim-test | `rust/crates/sim-test/` | `worldsim_probe` (headless measurement, identity), `worldsim_perf` (tick timing), `worldsim_systems` (the live system list), integration tests in `tests/` |
+| sim-systems | `rust/crates/sim-systems/src/` | every system (`runtime/<domain>/`), their registration (`lib.rs` `register_default_runtime_systems`), the command entry point (`commands.rs`: `apply_command`, `submit`), the job layer (`runtime/jobs/`) and world generation (`worldgen/`: `WorldGenConfig::baseline`, `WorldGenConfig::colony` with `worldgen/colony.rs`, `build_world_with`) |
+| sim-bridge | `rust/crates/sim-bridge/src/ffi/` | the Godot class `WorldSimNode` (`#[func]` methods), pure `collect_*` readers behind them, the live engine builder (`build_game_engine`, the colony world), M1 orders and colony reads (`colony.rs`) |
+| sim-test | `rust/crates/sim-test/` | `worldsim_probe` (headless measurement, identity; `--scene colony` with `--commands` for scripted orders and replay), `worldsim_perf` (tick timing), `worldsim_systems` (the live system list), integration tests in `tests/` |
 
 Other folders: `scenes/main.tscn` (the only scene), `scripts/` (GDScript,
 section 6), `assets/` (fonts, theme, atlas, terrain sheets), `shaders/`,
@@ -35,7 +35,7 @@ capture, inventory, docs checks), `docs/` (this file and the owner docs).
 ```
 Godot frame ──► WorldSimNode::process(delta)            (rust/crates/sim-bridge/src/ffi/node.rs)
                  accumulator += delta × sim_speed
-                 while accumulator ≥ 1/30 s (max 5 per frame): engine.tick()
+                 while accumulator ≥ 1/12 s (max 8 per frame): engine.tick()
                       │
                       ▼
                SimEngine::tick()                          (rust/crates/sim-engine/src/lib.rs)
@@ -45,7 +45,7 @@ Godot frame ──► WorldSimNode::process(delta)            (rust/crates/sim-b
                  then advance tick and day clock
                       │
                       ▼
-GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scripts/core/sim_reads.gd)
+GDScript layers / panels  ──► SimReads.read(world_sim, "get_…")   (scripts/core/sim_reads.gd)
                  ──► #[func] get_…  ──► pure collect_…(&World, &SimResources)
                  ──► Dictionary of Packed*Array columns (one row per agent / building / …)
 ```
@@ -67,9 +67,10 @@ GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scr
   `set_sim_speed` scales only the time fed to the accumulator and clamps to
   0–4× (0 also stops the clock); it never changes the tick length.
 - GDScript never writes simulation state. The only writes from Godot are
-  bridge commands: `on_building_placed`, `reset_world`, `reset_world_stress`,
-  `set_sim_speed` and the tooling `advance_ticks` (`SimReads.MUTATORS` holds
-  all but `set_sim_speed`, which `scripts/world/camera_controller.gd` calls directly on the number keys).
+  bridge commands: the M1 orders (`cmd_*`, below), `on_building_placed`,
+  `reset_world`, `reset_world_stress`, `set_sim_speed` and the tooling
+  `advance_ticks` (`SimReads.MUTATORS` holds all but `set_sim_speed`, which
+  `scripts/world/camera_controller.gd` calls directly on the number keys).
 - Calendar now (V7 calendar, unchanged by M1): one tick is one simulated
   minute; a day is 1,440 ticks (120 s of real time at 1×); a season is 7
   days (10,080 ticks); a year is 4 seasons = 28 days (40,320 ticks ≈ 56
@@ -91,6 +92,40 @@ GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scr
   ages in years, aging and fertility recalibrated) is milestone M1.5 in
   `docs/ROADMAP.md`; until then the V7 calendar above holds.
 
+### Orders, jobs and items (M1, colony world only)
+
+```
+order tool (scripts/world/colony/order_tool.gd) ──► WorldSimNode.cmd_*(…)       (ffi/node.rs → ffi/colony.rs)
+   ──► commands::submit(engine, Command)        (sim-systems/src/commands.rs)
+         apply_command checks and applies it at once: designations, zones, blueprint sites,
+         cancels; returns {accepted, count, reason}; appends CommandRecord{tick = next tick}
+         to SimResources.colony.command_log (the replay log, ADR 0012)
+   ──► JobAssignSystem 124                       (runtime/jobs/assign.rs)
+         idle or leisured adults, AgentId order: Build (deliver, then build) > Chop > Haul;
+         each job reserves its tree / stack / cell / site (SimResources.colony.reservations)
+   ──► AgentDecisionSystem 125 + jobs::seam      (runtime/decision/system.rs, runtime/jobs/seam.rs)
+         a job holder keeps its job unless the decision picks a survival or social choice;
+         then the job is cancelled (CancelReason::Needs) and its reservations released
+   ──► JobExecuteSystem 127                      (runtime/jobs/execute.rs)
+         walk, chop (logs drop as an ItemStack), pick up into Carry, put down (merge, spill),
+         deliver into the site's MaterialNeeds; ConstructionSystem 133 finishes the hut
+   ──► reads: get_trees, get_colony_overlay, get_colony_versions, the agent snapshot's
+         jobs / carry_kinds / carry_counts columns ──► scripts/world/colony/*.gd
+```
+
+- Every log exists in exactly one place: on a tree as uncut wood, in a
+  ground `ItemStack`, in a `Carry`, in a site's delivered count, or consumed
+  by a finished hut. `ItemLedger` (`SimResources.colony.item_ledger`) counts
+  produced, consumed and lost logs; `jobs::invariants::check` asserts the
+  sum each tick in debug builds and the colony tests check it.
+- All of it is gated on `rules.colony` (`ColonyRule`, `WorldRules::colony`):
+  in the baseline world every job system returns at once, so the frozen
+  baseline stays identical (ADR 0014).
+- The decision system gains only the seam: about 25 lines that call
+  `jobs::seam::{holders, hold_for_decision, settle_after_decision}` and the
+  compile-forced `TargetKind::Job` arms; the memory "bias-only Construction"
+  arm is off in the colony (M1 D20).
+
 ## 3. Live systems
 
 The live engine is `build_game_engine(seed)` = `build_world_with(&WorldGenConfig::colony(seed), WorldRules::colony(seed))` since M1 (ADR 0014; the frozen identity world is the same call with `baseline`),
@@ -106,30 +141,32 @@ Reads/writes come from each file's `//!` header.
 | 2 | `InfluenceUpdateSystem` | 100 | 1 | `rust/crates/sim-systems/src/runtime/influence/update.rs` | `SimResources.influence_grid` (`current`, `dirty_regions`), `tile_grid`, `material_blocking_cache`, `causal_log` (latest `StampDirty`) | `SimResources.influence_grid` (`pending`, drained `dirty_regions`, buffer swap), `causal_log` |
 | 3 | `AgentInfluenceSampleSystem` | 110 | 1 | `rust/crates/sim-systems/src/runtime/influence/agent_sample.rs` | `Position`; `SimResources.influence_grid` (current buffer) | `InfluenceSample` |
 | 4 | `AgentMovementSystem` | 120 | 1 | `rust/crates/sim-systems/src/runtime/agent/movement.rs` | `AgentState`, `SeekTarget`, `Agent`, `Child`, `Elder`, `Inventory`, `Lineage`, `Founding`, `Temperament`, `PorterTrip`, `Activity`; `SimResources.settlements`, `tile_grid`, `rules` | `Position`, `MovementRng`; `SimResources.haulers` |
-| 5 | `AgentDecisionSystem` | 125 | 1 | `rust/crates/sim-systems/src/runtime/decision/system.rs` | `Agent`, `Position`, `AgentState`, `SeekTarget`, `Hunger`, `Thirst`, `Sleep`, `Social`, `Inventory`, `Memory`, `Temperament`, `Lineage`, `Founding`, `Child`, `Elder`, `SettlementMigrant`, `PorterTrip`, `ConstructionSite`; `SimResources.rules`, `tile_grid`, `food_tiles`, `water_tiles`, `sleep_tiles`, `wood_tiles`, `settlements`, `settlement_relations`, `site_owner`, `social_retry_after`, `causal_log` | `AgentState`, `Hunger`, `Thirst`, `Sleep`, `Inventory`, `SeekTarget`, `SettlementMigrant`, routine `Activity`/`ActivityRest`/`RoutineObservationBatch`; `SimResources.food_tiles`, `water_tiles`, `sleep_tiles`, `wood_tiles`, `tallies`, `causal_log`, `chronicle`, `combat_pairs`, `social_chase_since`, `social_retry_after`, `settlement_relations` |
-| 6 | `StaleSeekTargetSystem` | 126 | 1 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps | `SeekTarget` (insert/remove), `AgentState` |
-| 7 | `HungerDecaySystem` | 130 | 1 | `rust/crates/sim-systems/src/runtime/needs/hunger_decay.rs` | `Hunger`, `Cold`; `SimResources.rules.society.firewood` | `Hunger` |
-| 8 | `ThirstDecaySystem` | 131 | 1 | `rust/crates/sim-systems/src/runtime/needs/thirst_decay.rs` | `Thirst` | `Thirst` |
-| 9 | `SleepDecaySystem` | 132 | 1 | `rust/crates/sim-systems/src/runtime/needs/sleep_decay.rs` | `Sleep` | `Sleep` |
-| 10 | `ConstructionSystem` | 133 | 1 | `rust/crates/sim-systems/src/runtime/construction/construction_system.rs` | `Position`, `AgentState`, `ConstructionSite`; `SimResources.tile_grid`, `causal_log` (`ConstructionStarted`), `site_owner`, `rules` | `ConstructionSite` (progress, despawn), `AgentState`; `SimResources.causal_log`, `building_registry`, `building_kinds`, `building_owner`, `site_owner`, sleep tiles |
-| 11 | `SocialInteractionSystem` | 134 | 1 | `rust/crates/sim-systems/src/runtime/social/social_interaction_system.rs` | `Agent`, `Position`, `AgentState`; `SimResources.causal_log` (`SocialInteractionStarted`), `interaction_progress` | `AgentState`, `Social`; `SimResources.interaction_progress`, `relationships` (familiarity), `causal_log`, `tallies` |
-| 12 | `SocialDecaySystem` | 135 | 1 | `rust/crates/sim-systems/src/runtime/needs/social_decay.rs` | `Social` | `Social` |
-| 13 | `MemorySystem` | 136 | 1 | `rust/crates/sim-systems/src/runtime/memory/memory_system.rs` | `Agent`; `SimResources.causal_log` (this tick's events, `MemoryRecalled`) | `Memory` |
-| 14 | `CombatSystem` | 137 | 1 | `rust/crates/sim-systems/src/runtime/combat/combat_system.rs` | `Agent`, `Position`, `BodyHealth`; `SimResources.combat_pairs`, `causal_log` (`CombatStarted`), `settlements` | `BodyHealth`, `AgentState`, `Memory`; `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`; deaths via `despawn_agent` |
-| 15 | `SettlementSystem` | 138 | 1 | `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules` | `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`; spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick` |
-| 16 | `StarvationSystem` | 139 | 1 | `rust/crates/sim-systems/src/runtime/survival/mod.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Cold`, `ExposureClock`; `SimResources.rules.society.exposure` | `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`) |
-| 17 | `ResourceRegenSystem` | 140 | 120 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules` | `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies` |
-| 18 | `StockpileDepositSystem` | 141 | 10 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_deposit.rs` | `Agent`, `Position`, `PorterTrip`; `SimResources.settlements` (rosters, formation tile), `rules` | `Inventory`; `SimResources.settlements` (stockpile), `haulers`, `tallies` |
-| 19 | `StockpileConsumeSystem` | 142 | 5 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_consume.rs` | `Agent`, `Position`, `AgentState`, `Founding`, `Hunger`; `SimResources.settlements`, `rules.society` (`meals`, `relief_radius`) | `Hunger`; `SimResources.settlements` (stockpile food), `tallies` |
-| 20 | `ShelterPlanningSystem` | 143 | 1 | `rust/crates/sim-systems/src/runtime/settlement/shelter_planning.rs` | `ConstructionSite`; `SimResources.settlements`, `building_registry`, `building_kinds`, `building_owner`, `tile_grid`, resource tile maps | spawns `ConstructionSite`; `SimResources.site_owner`, `shelter_plan_skips` |
-| 21 | `MaturationSystem` | 144 | 60 | `rust/crates/sim-systems/src/runtime/agent/maturation.rs` | `Agent`, `Child`; `SimResources.current_tick` | `Child` (removed), `Hunger`, `Thirst`, `Sleep` (adult growth rates); `SimResources.chronicle` |
-| 22 | `PairingSystem` | 144 | 1 | `rust/crates/sim-systems/src/runtime/agent/pairing.rs` | `Agent`, `Kin`, `Sex`, `Child`, `Elder`, `BodyHealth`; `SimResources.relationships` (familiarity), `settlements` | `Kin` (partner), `FamilyObservations`; `SimResources.chronicle` |
-| 23 | `BedAssignmentSystem` | 145 | 1 | `rust/crates/sim-systems/src/runtime/agent/beds.rs` | `Agent`, `Kin`, `Child`, `BodyHealth` (households); `SimResources.building_owner`, `building_kinds`, `settlements`, `rules.society.family` | `SimResources.bed_of` |
-| 24 | `AgingSystem` | 146 | 60 | `rust/crates/sim-systems/src/runtime/agent/aging.rs` | `Agent`, `Life`, `Position`, `Elder` | `Elder` (inserted); `SimResources.chronicle`; deaths via `despawn_agent` |
-| 25 | `FireSystem` | 147 | 60 | `rust/crates/sim-systems/src/runtime/settlement/fire.rs` | `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`; `SimResources.settlements`, `rules` | `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`; deaths via `despawn_agent` |
-| 26 | `FissionSystem` | 148 | 1 | `rust/crates/sim-systems/src/runtime/settlement/fission.rs` | `Agent`, `Position`, `Child`, `Elder`, `Lineage`, `Kin`, `Temperament`, `PorterTrip`, `AgentState`; `SimResources.settlements`, `wild_regions`, `tile_grid`, `rules` | `Founding`, `AgentState`, `SeekTarget`; `SimResources.settlements`, `building_kinds`, `building_event_queue`, `retired_hearths`, `fission_log`, `fission_checks`, `dissolutions`, `chronicle` |
-| 27 | `RelationsSystem` | 149 | 1 | `rust/crates/sim-systems/src/runtime/settlement/relations.rs` | `Agent`, `Position`, `AgentState`, `Hunger`, `Temperament`, `Child`, `Elder`, `Founding`; `SimResources.settlements`, `rules` | `PorterTrip`, `Inventory`, `AgentState`, `SeekTarget`; `SimResources.settlement_relations`, `settlements` (stockpiles), `chronicle`, `tallies` |
-| 28 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
+| 5 | `JobAssignSystem` | 124 | 1 | `rust/crates/sim-systems/src/runtime/jobs/assign.rs` | `Agent`, `Position`, `AgentState`, `Job`, `Child`, `PorterTrip`; `SimResources.colony` (trees, designations, ground items, zones, reservations, footprints), `combat_pairs`, `rules.colony`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`) | `Job`, `SeekTarget`, `AgentState` (`Seeking { Job }`); `SimResources.colony.reservations`, `colony.tallies` |
+| 6 | `AgentDecisionSystem` | 125 | 1 | `rust/crates/sim-systems/src/runtime/decision/system.rs` | `Agent`, `Position`, `AgentState`, `SeekTarget`, `Hunger`, `Thirst`, `Sleep`, `Social`, `Inventory`, `Memory`, `Temperament`, `Lineage`, `Founding`, `Child`, `Elder`, `SettlementMigrant`, `PorterTrip`, `ConstructionSite`; `SimResources.rules`, `tile_grid`, `food_tiles`, `water_tiles`, `sleep_tiles`, `wood_tiles`, `settlements`, `settlement_relations`, `site_owner`, `social_retry_after`, `causal_log` | `AgentState`, `Hunger`, `Thirst`, `Sleep`, `Inventory`, `SeekTarget`, `SettlementMigrant`, routine `Activity`/`ActivityRest`/`RoutineObservationBatch`; `SimResources.food_tiles`, `water_tiles`, `sleep_tiles`, `wood_tiles`, `tallies`, `causal_log`, `chronicle`, `combat_pairs`, `social_chase_since`, `social_retry_after`, `settlement_relations` |
+| 7 | `StaleSeekTargetSystem` | 126 | 1 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps | `SeekTarget` (insert/remove), `AgentState` |
+| 8 | `JobExecuteSystem` | 127 | 1 | `rust/crates/sim-systems/src/runtime/jobs/execute.rs` | `Agent`, `Job`, `AgentState`, `Position`, `Carry`; `SimResources.colony` (trees, designations, ground items, zones), `rules.colony`, `current_tick`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`) | `Job`, `Carry`, `AgentState`, `SeekTarget`, `MaterialNeeds` (delivered); `SimResources.colony` (trees, trees_version, designations, ground items, reservations, item_ledger, overlay_version, tallies) |
+| 9 | `HungerDecaySystem` | 130 | 1 | `rust/crates/sim-systems/src/runtime/needs/hunger_decay.rs` | `Hunger`, `Cold`; `SimResources.rules.society.firewood` | `Hunger` |
+| 10 | `ThirstDecaySystem` | 131 | 1 | `rust/crates/sim-systems/src/runtime/needs/thirst_decay.rs` | `Thirst` | `Thirst` |
+| 11 | `SleepDecaySystem` | 132 | 1 | `rust/crates/sim-systems/src/runtime/needs/sleep_decay.rs` | `Sleep` | `Sleep` |
+| 12 | `ConstructionSystem` | 133 | 1 | `rust/crates/sim-systems/src/runtime/construction/construction_system.rs` | `Position`, `AgentState`, `ConstructionSite`, `MaterialNeeds`, `ColonySite`; `SimResources.tile_grid`, `causal_log` (`ConstructionStarted`), `site_owner`, `settlements`, `rules` | `ConstructionSite` (progress, despawn), `AgentState`; `SimResources.causal_log`, `building_registry`, `building_kinds`, `building_owner`, `site_owner`, sleep tiles, `colony` (footprints, item ledger, tallies) |
+| 13 | `SocialInteractionSystem` | 134 | 1 | `rust/crates/sim-systems/src/runtime/social/social_interaction_system.rs` | `Agent`, `Position`, `AgentState`; `SimResources.causal_log` (`SocialInteractionStarted`), `interaction_progress` | `AgentState`, `Social`; `SimResources.interaction_progress`, `relationships` (familiarity), `causal_log`, `tallies` |
+| 14 | `SocialDecaySystem` | 135 | 1 | `rust/crates/sim-systems/src/runtime/needs/social_decay.rs` | `Social` | `Social` |
+| 15 | `MemorySystem` | 136 | 1 | `rust/crates/sim-systems/src/runtime/memory/memory_system.rs` | `Agent`; `SimResources.causal_log` (this tick's events, `MemoryRecalled`) | `Memory` |
+| 16 | `CombatSystem` | 137 | 1 | `rust/crates/sim-systems/src/runtime/combat/combat_system.rs` | `Agent`, `Position`, `BodyHealth`; `SimResources.combat_pairs`, `causal_log` (`CombatStarted`), `settlements` | `BodyHealth`, `AgentState`, `Memory`; `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`; deaths via `despawn_agent` |
+| 17 | `SettlementSystem` | 138 | 1 | `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules` | `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`; spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick` |
+| 18 | `StarvationSystem` | 139 | 1 | `rust/crates/sim-systems/src/runtime/survival/mod.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Cold`, `ExposureClock`; `SimResources.rules.society.exposure` | `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`; M1: a worker's load and reservations in `colony`) |
+| 19 | `ResourceRegenSystem` | 140 | 120 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules` | `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies` |
+| 20 | `StockpileDepositSystem` | 141 | 10 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_deposit.rs` | `Agent`, `Position`, `PorterTrip`; `SimResources.settlements` (rosters, formation tile), `rules` | `Inventory`; `SimResources.settlements` (stockpile), `haulers`, `tallies` |
+| 21 | `StockpileConsumeSystem` | 142 | 5 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_consume.rs` | `Agent`, `Position`, `AgentState`, `Founding`, `Hunger`; `SimResources.settlements`, `rules.society` (`meals`, `relief_radius`) | `Hunger`; `SimResources.settlements` (stockpile food), `tallies` |
+| 22 | `ShelterPlanningSystem` | 143 | 1 | `rust/crates/sim-systems/src/runtime/settlement/shelter_planning.rs` | `ConstructionSite`; `SimResources.settlements`, `building_registry`, `building_kinds`, `building_owner`, `tile_grid`, resource tile maps | spawns `ConstructionSite`; `SimResources.site_owner`, `shelter_plan_skips` |
+| 23 | `MaturationSystem` | 144 | 60 | `rust/crates/sim-systems/src/runtime/agent/maturation.rs` | `Agent`, `Child`; `SimResources.current_tick` | `Child` (removed), `Hunger`, `Thirst`, `Sleep` (adult growth rates); `SimResources.chronicle` |
+| 24 | `PairingSystem` | 144 | 1 | `rust/crates/sim-systems/src/runtime/agent/pairing.rs` | `Agent`, `Kin`, `Sex`, `Child`, `Elder`, `BodyHealth`; `SimResources.relationships` (familiarity), `settlements` | `Kin` (partner), `FamilyObservations`; `SimResources.chronicle` |
+| 25 | `BedAssignmentSystem` | 145 | 1 | `rust/crates/sim-systems/src/runtime/agent/beds.rs` | `Agent`, `Kin`, `Child`, `BodyHealth` (households); `SimResources.building_owner`, `building_kinds`, `settlements`, `rules.society.family`, `rules.colony` | `SimResources.bed_of` |
+| 26 | `AgingSystem` | 146 | 60 | `rust/crates/sim-systems/src/runtime/agent/aging.rs` | `Agent`, `Life`, `Position`, `Elder` | `Elder` (inserted); `SimResources.chronicle`; deaths via `despawn_agent` |
+| 27 | `FireSystem` | 147 | 60 | `rust/crates/sim-systems/src/runtime/settlement/fire.rs` | `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`; `SimResources.settlements`, `rules` | `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`; deaths via `despawn_agent` |
+| 28 | `FissionSystem` | 148 | 1 | `rust/crates/sim-systems/src/runtime/settlement/fission.rs` | `Agent`, `Position`, `Child`, `Elder`, `Lineage`, `Kin`, `Temperament`, `PorterTrip`, `AgentState`; `SimResources.settlements`, `wild_regions`, `tile_grid`, `rules` | `Founding`, `AgentState`, `SeekTarget`; `SimResources.settlements`, `building_kinds`, `building_event_queue`, `retired_hearths`, `fission_log`, `fission_checks`, `dissolutions`, `chronicle` |
+| 29 | `RelationsSystem` | 149 | 1 | `rust/crates/sim-systems/src/runtime/settlement/relations.rs` | `Agent`, `Position`, `AgentState`, `Hunger`, `Temperament`, `Child`, `Elder`, `Founding`; `SimResources.settlements`, `rules` | `PorterTrip`, `Inventory`, `AgentState`, `SeekTarget`; `SimResources.settlement_relations`, `settlements` (stockpiles), `chronicle`, `tallies` |
+| 30 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
 
 <!-- system-table:end -->
 
@@ -150,10 +187,10 @@ after a reset). The exact exported list is checked by gate step 13, currently
 | causal "why?" | `get_tile_causal_history`, `get_tile_causal_events`, `get_event_chain`, `get_tile_detail`, `get_influence_overlay` |
 | commands | `on_building_placed`; M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`, `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (each returns `{accepted, count, reason}` and is logged with the next tick, ADR 0012) |
 | colony reads (M1) | `can_place_blueprint`, `get_colony_versions` (poll), `get_trees`, `get_colony_overlay`; the agent snapshot's `jobs`, `carry_kinds`, `carry_counts` columns |
-| render kernels | `art_declump`, `art_walker_offsets` (pure layout maths for the agent renderer; no simulation state) |
 
 The god-hand methods `apply_intervention` and `get_intervention_state` were
-removed in V8-0 (ADR 0010).
+removed in V8-0 (ADR 0010); the render kernels `art_declump` and
+`art_walker_offsets` were removed in M1 with the V7 agent renderer.
 
 ## 5. Determinism and integer math
 
@@ -188,7 +225,7 @@ Short form; the full rules and their history are in
 The full procedure with code skeletons is `.claude/skills/worldsim-architecture/SKILL.md` ("B. Add a bridge read") and its `references/procedures.md`; the steps:
 
 1. Check first that the getter does not exist (section 4, `GETTERS` in `scripts/core/sim_reads.gd`).
-2. Pick the file of `rust/crates/sim-bridge/src/ffi/` for the concern: `node.rs` (the class, process loop, speed and every `#[func]`), `snapshot.rs` (per-frame arrays: agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (agent detail, temperament, relationships), `reads_settlement.rs` (settlement and society), `causal.rs`, `chronicle.rs`, `family.rs`, `relations.rs` (village relations, porters), `activity.rs`, `engine_build.rs` (engine construction), `art_kernels.rs` (render kernels), `mod.rs`. A new concern gets a new file `<concern>.rs` with a `//!` header, a `pub mod <concern>;` line in `ffi/mod.rs` and a `pub use` of the collector.
+2. Pick the file of `rust/crates/sim-bridge/src/ffi/` for the concern: `node.rs` (the class, process loop, speed and every `#[func]`), `snapshot.rs` (per-frame arrays: agents, construction, resources, recent deaths, clock, tallies, world info, terrain, buildings), `reads_agent.rs` (agent detail, temperament, relationships), `reads_settlement.rs` (settlement and society), `causal.rs`, `chronicle.rs`, `family.rs`, `relations.rs` (village relations, porters), `activity.rs`, `engine_build.rs` (engine construction), `colony.rs` (M1 orders and colony reads), `mod.rs`. A new concern gets a new file `<concern>.rs` with a `//!` header, a `pub mod <concern>;` line in `ffi/mod.rs` and a `pub use` of the collector.
 3. In that file write a pure `pub fn collect_<thing>(&World, &SimResources, …) -> Row/Vec<Row>` (no Godot types; rows sorted by id; say which id space each field uses) and re-export it from `rust/crates/sim-bridge/src/ffi/mod.rs` (`pub use <concern>::collect_<thing>;`). sim-bridge is built as both `cdylib` (what Godot loads) and `rlib` (what sim-test links; `crate-type` in `rust/crates/sim-bridge/Cargo.toml`), so sim-test can call the collector without Godot.
 4. In the same file write the marshaller `pub(super) fn <thing>_to_dict(...) -> VarDictionary` (columns as `Packed*Array`, ids as signed i64), as `agent_family_to_dict` in `family.rs`, `rows_to_dict` in `chronicle.rs`, `porter_rows_to_dict` in `relations.rs`.
 5. Add a `#[func] fn get_<thing>(&self, …) -> VarDictionary` to the one `#[godot_api] impl WorldSimNode` block in `rust/crates/sim-bridge/src/ffi/node.rs`, importing both with `use super::<concern>::{collect_<thing>, <thing>_to_dict};`. Its body only calls the collector and the marshaller; read-only, at most 14 parameters. `VarDictionary` is the rule; a few getters return a scalar or an array (`get_agent_id -> i64`, `get_tile_causal_history -> VarArray`). A new read returns `VarDictionary` unless a single scalar is the whole answer.
@@ -203,8 +240,9 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | folder | contents |
 |---|---|
 | `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village) |
-| `scripts/world/` | renderers and their helpers: `world_renderer.gd` (input, overlays, click dispatch), `terrain_renderer.gd`, `nature_renderer.gd`, `building_renderer.gd`, `agent_renderer.gd`, `camera_controller.gd`, `daylight_controller.gd`, art helpers |
-| `scripts/ui/hud/` | `hud_topbar.gd` |
+| `scripts/world/colony/` | the M1 view (node `ColonyView` in `scenes/main.tscn`): `view.gd` (shared tile-set builder from `assets/v8/temp/tiles.png` + `tiles.json`, tile hash, click dispatch), `terrain_layer.gd`, `tree_layer.gd`, `building_layer.gd`, `overlay_layer.gd` (designations, zones, blueprints, stacks), `agent_layer.gd` (people, carried logs, hit test), `order_tool.gd` (F1–F5 modes, drag rectangles, the `cmd_*` calls) |
+| `scripts/world/` | `camera_controller.gd` (zoom 1–4, pan, speed keys 1–4, pause), `daylight_controller.gd` (+ `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd`, `porter_presentation.gd`) |
+| `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd`, `art_ui.gd` (shared panel style) |
 | `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
 
