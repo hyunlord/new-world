@@ -35,6 +35,6 @@ are gone from the bridge.
 - V7 overlays and panels outside the kept UI (activity badges and tooltips, village activity summary, settlement relation lines, seek/death/need-bar/activity-trail overlays, restless meter, founding-group renderer, feed ledger, status panel, zoom LOD controller): `scripts/ui` 53 → 8 files (plus 31 moved to `scripts/core`, `scripts/world`, `scripts/ui/hud`); `scripts/test` 222 files (33,947 lines) deleted.
 - `docs/`: 17,280 files (2.36 GiB of pass records, evidence and boards) → 27 files (the new docs and the V8-0 records); the index of what was deleted and where it lives is `docs/archive/INDEX.md`.
 - `tools/`: 895 → 25 files (V7 harness, revitalize, art pipeline, world-model tooling).
-- `sim-test`: 202 → 111 files (world-model recorder, ablation scenes, pass scaffolding, version-delta tests); `sim-bridge` test fixtures of 135 MB (art kernels).
+- `sim-test`: 202 → 110 files (world-model recorder, ablation scenes, pass scaffolding, version-delta tests); `sim-bridge` test fixtures of 135 MB (art kernels).
 - Assets: 888 → 198 files (15.0 → 12.9 MiB); shaders 11 → 3; scenes 3 → 1; localization 47 → 8 files and 5,287 → 156 keys (the Fluent sources and the key-owner policy).
-- Whole tree: 20,299 files / 2,533 MiB → 715 files / 18.5 MiB (at the gate commit). Everything removed is at tag `v7-final-art`.
+- Whole tree: 20,299 files / 2,533 MiB → 714 files / 18.5 MiB (at the gate commit `672fffef`). Everything removed is at tag `v7-final-art`.

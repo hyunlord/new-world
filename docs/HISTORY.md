@@ -80,6 +80,6 @@
 ## V8-0 정리 패스 (2026-10-20)
 
 - 연구 고정: 태그 `v7-final-sim` → `354e4a13`, `v7-final-art` → `b1ca032f`. 세계 모델은 `codex/worldmodel-2026-10`.
-- 지움 (모두 `v7-final-art`에 있음; 목록 [archive/INDEX.md](archive/INDEX.md)): 문서 17,280개(2.36 GiB) → 27개, `tools/` 895 → 25개, `scripts/test` 222개, V7 화면 오버레이·패널(`scripts/ui` 53 → 8개, 나머지 31개는 `scripts/core`·`scripts/world`로 이동), 신의 손(패널·브리지 메서드 2개·개입 코드), 에셋 888 → 198개, 현지화 키 5,287 → 156개, `sim-test`의 연구·패스 전용 코드(202 → 111개 파일). 저장소 트리 20,299개 2,533 MiB → 715개 18.5 MiB.
+- 지움 (모두 `v7-final-art`에 있음; 목록 [archive/INDEX.md](archive/INDEX.md)): 문서 17,280개(2.36 GiB) → 27개, `tools/` 895 → 25개, `scripts/test` 222개, V7 화면 오버레이·패널(`scripts/ui` 53 → 8개, 나머지 31개는 `scripts/core`·`scripts/world`로 이동), 신의 손(패널·브리지 메서드 2개·개입 코드), 에셋 888 → 198개, 현지화 키 5,287 → 156개, `sim-test`의 연구·패스 전용 코드(202 → 110개 파일). 저장소 트리 20,299개 2,533 MiB → 714개 18.5 MiB.
 - 구조: `game_v9…v26` 규칙 사슬 → `WorldRules::baseline` / `WorldGenConfig::baseline` 하나; 시뮬레이션 출력은 그대로(32세계 × 120일 요약·연대기 동일).
 - 문서·스킬: 이 문서와 README, VISION, ARCHITECTURE, ROADMAP, ADR 11개, CHANGELOG, 스킬 일곱 개(`.claude/skills/`: WorldSim 전용 다섯 개와 일반 스킬 `systematic-debugging`, `verification-before-completion`).
