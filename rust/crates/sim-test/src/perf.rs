@@ -290,7 +290,18 @@ fn settlement_sizes(engine: &SimEngine) -> Vec<usize> {
 }
 
 /// Run `spec` on `engine` (built by [`build_engine`]) for `spec.ticks` ticks.
-pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
+pub fn run(spec: &RunSpec, engine: SimEngine) -> RunOutput {
+    run_scripted(spec, engine, &[])
+}
+
+/// [`run`] that applies a colony command script (`probe::colony` form) before
+/// each scripted tick's systems; command time is outside the tick timings.
+pub fn run_scripted(
+    spec: &RunSpec,
+    mut engine: SimEngine,
+    script: &[crate::probe::colony::ScriptEntry],
+) -> RunOutput {
+    let mut next_command = 0usize;
     let started = Instant::now();
     let founders = alive(&engine);
     let offset = engine.resources.rules.clock_offset_ticks;
@@ -307,6 +318,15 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
     let mut subprofile = crate::subprofile_report::SubprofileLog::new();
     for _ in 0..spec.ticks {
         let tick = engine.current_tick();
+        let mut avoid = Vec::new();
+        while next_command < script.len() && script[next_command].tick == tick {
+            for cmd in crate::probe::colony::resolve(&engine, &script[next_command].spec, &mut avoid)
+                .unwrap_or_default()
+            {
+                sim_systems::commands::submit(&mut engine, cmd);
+            }
+            next_command += 1;
+        }
         engine.tick_profiled(&mut profile);
         let us = *profile.tick_us.last().unwrap_or(&0);
         #[cfg(feature = "subprofile")]
@@ -692,6 +712,16 @@ pub fn index_entry(stem: &str, output: &RunOutput) -> Value {
 /// entry (a worldgen failure is recorded as `status: worldgen_failed`, a
 /// panic during the run as `status: run_failed`).
 pub fn run_and_write(dir: &Path, spec: &RunSpec) -> Result<Value, String> {
+    run_and_write_scripted(dir, spec, &[])
+}
+
+/// [`run_and_write`] with a colony command script (M1, `--commands`).
+pub fn run_and_write_scripted(
+    dir: &Path,
+    spec: &RunSpec,
+    script: &[crate::probe::colony::ScriptEntry],
+) -> Result<Value, String> {
+    let script = script.to_vec();
     let engine = match build_engine(spec) {
         Ok(engine) => engine,
         Err(error) => {
@@ -706,7 +736,7 @@ pub fn run_and_write(dir: &Path, spec: &RunSpec) -> Result<Value, String> {
     let stem = spec.stem(alive(&engine));
     let spec_copy = spec.clone();
     let output = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
-        run(&spec_copy, engine)
+        run_scripted(&spec_copy, engine, &script)
     })) {
         Ok(output) => output,
         Err(payload) => {
@@ -803,6 +833,8 @@ pub struct PerfArgs {
     pub repeats: u32,
     /// Output directory.
     pub out: PathBuf,
+    /// M1: a colony command script for `natural --scene colony` (`--commands`).
+    pub commands: Option<PathBuf>,
 }
 
 /// Benchmark-only daily food gift of the fed stress world: store `amount`
@@ -833,7 +865,7 @@ fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u
 }
 
 /// The usage line.
-pub const USAGE: &str = "usage: worldsim_perf natural --scene baseline --seeds A..B --days D --out DIR
+pub const USAGE: &str = "usage: worldsim_perf natural --scene baseline|colony --seeds A..B --days D --out DIR [--commands FILE]
        worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules baseline] --out DIR
        worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR
        worldsim_perf overhead --seed S --days D --repeats 3 --out DIR
@@ -853,6 +885,7 @@ impl PerfArgs {
             feed: Feed::Fed,
             repeats: 3,
             out: PathBuf::new(),
+            commands: None,
         };
         let list = |v: &str| {
             v.split(',')
@@ -905,6 +938,7 @@ impl PerfArgs {
                     }
                 }
                 "--out" => parsed.out = PathBuf::from(value),
+                "--commands" => parsed.commands = Some(PathBuf::from(value)),
                 other => return Err(format!("unknown flag {other}\n{USAGE}")),
             }
             i += 2;
@@ -937,7 +971,7 @@ impl PerfArgs {
             (_, None) => {}
         }
         if matches!(mode.as_str(), "natural" | "overhead")
-            && !matches!(parsed.scene.as_str(), "baseline" | "game_v26")
+            && !matches!(parsed.scene.as_str(), "baseline" | "game_v26" | "colony")
         {
             return Err(format!(
                 "--scene must be a game scene, not {}",
@@ -980,6 +1014,10 @@ impl PerfArgs {
                 return Ok(1);
             }
             "natural" => {
+                let script = match &self.commands {
+                    Some(path) => crate::probe::colony::load_script(path)?,
+                    None => Vec::new(),
+                };
                 for seed in self.seeds.clone() {
                     let spec = RunSpec {
                         mode: "natural".into(),
@@ -990,7 +1028,7 @@ impl PerfArgs {
                         feed: Feed::None,
                         ticks,
                     };
-                    record(run_and_write(dir, &spec)?)?;
+                    record(run_and_write_scripted(dir, &spec, &script)?)?;
                 }
             }
             "stress" | "quick" => {

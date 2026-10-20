@@ -50,27 +50,29 @@ GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scr
                  ──► Dictionary of Packed*Array columns (one row per agent / building / …)
 ```
 
-- The simulation runs at a fixed 30 ticks per second of real time at 1×;
-  rendering runs at the display rate. Each frame `WorldSimNode::process`
+- The simulation runs at a fixed 12 ticks per second of real time at 1×
+  (M1, ADR 0004: `TICKS_PER_SECOND_AT_1X`); rendering runs at the display
+  rate. Each frame `WorldSimNode::process`
   (`rust/crates/sim-bridge/src/ffi/node.rs`) adds `delta × sim_speed` to an
-  accumulator and runs `engine.tick()` while it holds ≥ 1/30 s, at most 5
-  ticks per frame. If more than 5 ticks' worth is left after a frame, the
-  surplus is dropped (the accumulator is reset to one step): the game then
-  runs slower than the chosen speed and never catches up later. Speed s
-  needs at least 6 × s frames per second (4×: 24 fps).
-- Speed (current build): in `scripts/world/camera_controller.gd` the keys
-  `1`/`2`/`3`/`4` set 0.25×/0.5×/1×/2× = 7.5/15/30/60 ticks per real
-  second, so a simulated day lasts 192/96/48/24 s; `P` pauses by disabling
-  the WorldSim node's processing. `set_sim_speed` scales only the time fed
-  to the accumulator and clamps to 0–4× (0 also stops the clock); it never
-  changes the tick length.
+  accumulator and runs `engine.tick()` while it holds ≥ 1/12 s, at most 8
+  ticks per frame (`MAX_TICKS_PER_FRAME`). If more than 8 ticks' worth is
+  left after a frame, the surplus is dropped (the accumulator is reset to
+  one step): the game then runs slower than the chosen speed and never
+  catches up later. Speed s needs at least 1.5 × s frames per second
+  (4×: 6 fps).
+- Speed: in `scripts/world/camera_controller.gd` the keys `1`/`2`/`3`/`4`
+  set 1×/2×/3×/4× = 12/24/36/48 ticks per real second, so a simulated day
+  lasts 120/60/40/30 s (`seconds_per_day`); `P` pauses by disabling the
+  WorldSim node's processing; the top bar shows the speed and the pause.
+  `set_sim_speed` scales only the time fed to the accumulator and clamps to
+  0–4× (0 also stops the clock); it never changes the tick length.
 - GDScript never writes simulation state. The only writes from Godot are
   bridge commands: `on_building_placed`, `reset_world`, `reset_world_stress`,
   `set_sim_speed` and the tooling `advance_ticks` (`SimReads.MUTATORS` holds
   all but `set_sim_speed`, which `scripts/world/camera_controller.gd` calls directly on the number keys).
-- Calendar now (V7 calendar, unchanged by V8-0): one tick is one simulated
-  minute; a day is 1,440 ticks (48 s of real time at 1×); a season is 7
-  days (10,080 ticks); a year is 4 seasons = 28 days (40,320 ticks ≈ 22.4
+- Calendar now (V7 calendar, unchanged by M1): one tick is one simulated
+  minute; a day is 1,440 ticks (120 s of real time at 1×); a season is 7
+  days (10,080 ticks); a year is 4 seasons = 28 days (40,320 ticks ≈ 56
   minutes at 1×).
 - The displayed day, season and time of day count from the display clock
   `current_tick + clock_offset_ticks` (480: tick 0 is 08:00 of day 1).
@@ -83,14 +85,15 @@ GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scr
   `rust/crates/sim-core/src/rules/baseline.rs`): a child is adult after
   5,760 ticks (4 days), lifespans average about 58 days, founders start
   6–40 days old.
-- The V8 target calendar (`docs/decisions/0004-compressed-year.md`: about 2
-  minutes per day at 1×, 6-day seasons, a 24-day year, ages in years) is
-  not implemented. The calendar is open; it will be rescaled together with
-  ages.
+- ADR 0004 (`docs/decisions/0004-compressed-year.md`): the tick half is
+  decided and live since M1 (one tick = one minute, 12 ticks per second at
+  1×, a 2-minute day). The calendar half (6-day seasons, a 24-day year,
+  ages in years, aging and fertility recalibrated) is milestone M1.5 in
+  `docs/ROADMAP.md`; until then the V7 calendar above holds.
 
 ## 3. Live systems
 
-The live engine is `build_game_engine(seed)` = `build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed))`,
+The live engine is `build_game_engine(seed)` = `build_world_with(&WorldGenConfig::colony(seed), WorldRules::colony(seed))` since M1 (ADR 0014; the frozen identity world is the same call with `baseline`),
 which registers every system below (`register_default_runtime_systems`). Lower
 priority runs first; a system runs on ticks where `tick % interval == 0`.
 Reads/writes come from each file's `//!` header.

@@ -186,12 +186,17 @@ fn check_sample(first: &Value, second: &Value, seed: u64) -> Result<(), String> 
 /// The probe's world for `scene` and `seed`: the baseline world. `game_v26`
 /// is accepted as an alias of `baseline` (the same rules and world; V8-0 kept
 /// it so identity runs use one command at the v7-final base and on V8).
-/// `ProbeArgs::parse` rejects every other scene name.
+/// `ProbeArgs::parse` rejects every other scene name. `colony` (M1) is the
+/// colony world, used by `worldsim_perf natural --scene colony` (the colony
+/// probe has its own runner, `probe::colony`).
 pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
     debug_assert!(
-        matches!(scene, "baseline" | "game_v26"),
+        matches!(scene, "baseline" | "game_v26" | "colony"),
         "unknown probe scene {scene}"
     );
+    if scene == "colony" {
+        return crate::scenes::colony_scene(seed);
+    }
     crate::scenes::baseline_scene(seed)
 }
 
