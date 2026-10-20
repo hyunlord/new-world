@@ -1,7 +1,8 @@
 # order_bar.gd (UI/OrderBar in scenes/main.tscn): the M1 order bar at the bottom of the screen.
 # Five modes — 베기 / 비축 구역 / 오두막 / 구역 지우기 / 취소 — chosen by a click or F1–F5 (the number keys
-#   1–4 set the speed; M1 DECISIONS D24); Esc or a right click leaves the mode. Shows the mode's hint and a
-#   short toast with each order's result (count or reject reason).
+#   1–4 set the speed; M1 DECISIONS D24); Esc or a right click leaves the mode. Shows the mode's hint (with no
+#   mode: the order keys and Home/H = centre on the camp, camera_controller.gd) and, on a backing panel above the
+#   bar, a short toast with each order's result (count with its noun, or the reject reason).
 # Bridge methods: none (OrderTool sends the commands).
 extends Control
 
@@ -19,6 +20,7 @@ var _tool: Node = null
 var _buttons: Array[Button] = []
 var _hint: Label
 var _toast: Label
+var _toast_panel: PanelContainer
 var _toast_left: float = 0.0
 var _locale: Node = null
 
@@ -48,12 +50,14 @@ func _ready() -> void:
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hint.add_theme_color_override("font_color", Color("c8b89a"))
 	row.add_child(_hint)
+	_hint.text = _loc("UI_ORDER_HINT_IDLE")
+	# The toast sits on its own panel just above the bar; the panel shrinks to the text on every show.
+	_toast_panel = ArtUI.panel(self, Rect2(12, 1080 - 76 - 8 - 48, 0, 0))
 	_toast = Label.new()
 	_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_toast.position = Vector2(24, 1080 - 124)
 	_toast.add_theme_color_override("font_color", Color("f2e6c8"))
-	_toast.visible = false
-	add_child(_toast)
+	_toast_panel.add_child(_toast)
+	_toast_panel.visible = false
 	_tool = get_node_or_null("/root/Main/ColonyView/OrderTool")
 	if _tool != null:
 		_tool.connect("mode_changed", _on_mode_changed)
@@ -77,7 +81,7 @@ func current_mode() -> int:
 func _on_mode_changed(mode: int) -> void:
 	for i: int in _buttons.size():
 		_buttons[i].set_pressed_no_signal(int(MODES[i]["mode"]) == mode)
-	_hint.text = ""
+	_hint.text = _loc("UI_ORDER_HINT_IDLE") if mode == 0 else ""
 	for entry: Dictionary in MODES:
 		if int(entry["mode"]) == mode:
 			_hint.text = _loc(str(entry["hint"]))
@@ -86,7 +90,8 @@ func _on_mode_changed(mode: int) -> void:
 ## Show `text` above the bar for a short while.
 func show_toast(text: String) -> void:
 	_toast.text = text
-	_toast.visible = true
+	_toast_panel.visible = true
+	_toast_panel.size = Vector2.ZERO
 	_toast_left = TOAST_SECONDS
 
 
@@ -94,7 +99,7 @@ func _process(delta: float) -> void:
 	if _toast_left > 0.0:
 		_toast_left -= delta
 		if _toast_left <= 0.0:
-			_toast.visible = false
+			_toast_panel.visible = false
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -1,6 +1,7 @@
 # overlay_layer.gd (ColonyView/OverlayLayer in scenes/main.tscn): what the player ordered and what lies on the
-#   ground — stockpile zone tint and edges, chop marks, log stacks (three sizes) and hut blueprints (a ghost
-#   with "통나무 delivered/needed" and a work bar).
+#   ground — stockpile zone tint and edges, chop marks, log stacks (three sizes) and hut blueprints (a ghost;
+#   above it a 7-px backing with a 2-px logs bar and a 2-px work bar, and the label
+#   "통나무 delivered/needed · 작업 n%").
 # Redrawn only when the colony overlay version changes (`get_colony_versions` is polled every frame).
 # Bridge methods: via SimReads get_colony_versions, get_colony_overlay; signal world_reset.
 extends Node2D
@@ -12,6 +13,7 @@ const GHOST_COLOR: Color = Color(0.82, 0.9, 1.0, 0.9)
 const BAR_BACK: Color = Color(0.1, 0.08, 0.06, 0.85)
 const BAR_LOGS: Color = Color(0.85, 0.62, 0.3, 1.0)
 const BAR_WORK: Color = Color(0.55, 0.85, 0.45, 1.0)
+const BAR_HEIGHT: int = 7
 
 var _world_sim: Node = null
 var _version: int = -1
@@ -101,14 +103,19 @@ func _draw() -> void:
 			break
 		var rect: Rect2 = Rect2(View.tile_to_world(Vector2i(sxs[i], sys[i])), Vector2(sws[i], shs[i]) * View.TILE)
 		draw_texture_rect_region(texture, rect, View.rect("hut_ghost"), GHOST_COLOR)
-		var bar: Rect2 = Rect2(rect.position + Vector2(2, rect.size.y - 5), Vector2(rect.size.x - 4, 3))
+		# Above the ghost, under the label: a backing with two 2-px bars (logs delivered, then work done), so
+		# the bars never read as part of the wall.
+		var bar: Rect2 = Rect2(rect.position + Vector2(0, -BAR_HEIGHT - 1), Vector2(rect.size.x, BAR_HEIGHT))
 		draw_rect(bar, BAR_BACK)
-		var logs_done: float = float(delivered[i]) / maxf(1.0, float(needed[i]))
-		var work_done: float = float(progress[i]) / maxf(1.0, float(required[i]))
-		draw_rect(Rect2(bar.position, Vector2(bar.size.x * logs_done, 1)), BAR_LOGS)
-		draw_rect(Rect2(bar.position + Vector2(0, 2), Vector2(bar.size.x * work_done, 1)), BAR_WORK)
+		var inner: Vector2 = Vector2(bar.size.x - 2, 2)
+		var logs_done: float = clampf(float(delivered[i]) / maxf(1.0, float(needed[i])), 0.0, 1.0)
+		var work_done: float = clampf(float(progress[i]) / maxf(1.0, float(required[i])), 0.0, 1.0)
+		draw_rect(Rect2(bar.position + Vector2(1, 1), Vector2(inner.x * logs_done, inner.y)), BAR_LOGS)
+		draw_rect(Rect2(bar.position + Vector2(1, 4), Vector2(inner.x * work_done, inner.y)), BAR_WORK)
 		if _font != null:
 			var locale: Node = get_node_or_null("/root/Locale")
 			var params: Dictionary = {"delivered": delivered[i], "needed": needed[i]}
-			var text: String = str(locale.call("trf", "UI_BLUEPRINT_LOGS", params)) if locale != null else "%d/%d" % [delivered[i], needed[i]]
-			draw_string(_font, rect.position + Vector2(1, -2), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.92, 0.84))
+			var logs_text: String = str(locale.call("trf", "UI_BLUEPRINT_LOGS", params)) if locale != null else "%d/%d" % [delivered[i], needed[i]]
+			var percent: int = floori(work_done * 100.0)
+			var text: String = str(locale.call("trf", "UI_BLUEPRINT_PROGRESS_FMT", {"logs": logs_text, "percent": percent})) if locale != null else "%s %d%%" % [logs_text, percent]
+			draw_string(_font, bar.position + Vector2(1, -2), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.96, 0.92, 0.84))

@@ -1,8 +1,10 @@
-# hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with clock, season, population, villages, shelters,
-#   sites, food/wood stocks, berries, births, deaths, cold count, pause and display speed; L toggles ko/en.
+# hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with clock (dawn/day/evening/night, aligned with the
+#   daylight tint), season, population, villages, shelters (V7 shelters + M1 huts), sites (V7 construction sites +
+#   M1 hut blueprints), stored food and firewood stocks, logs lying in stacks (M1 items), wild berries on the whole
+#   map, births, deaths, cold count, pause and display speed; L toggles ko/en.
 # Read-only, localized counters from authoritative simulation snapshots.
 # Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
-#   get_building_snapshot, get_time_snapshot, get_resource_snapshot, get_tallies.
+#   get_building_snapshot, get_time_snapshot, get_resource_snapshot, get_tallies, get_colony_overlay.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -23,6 +25,7 @@ var _cold_icon: TextureRect
 var _winter_label: Label
 var _wood_label: Label
 var _wood_row: HBoxContainer
+var _logs_label: Label
 var _speed_label: Label
 var _display_speed: float = 1.0
 var _clock_icon: Sprite2D
@@ -70,6 +73,18 @@ func _ready() -> void:
 			_wood_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			_wood_row.add_child(_wood_label)
 			_wood_row.hide()
+			var logs_gap: Control = Control.new()
+			logs_gap.custom_minimum_size.x = 8
+			logs_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			lower.add_child(logs_gap)
+			_logs_label = Label.new()
+			_logs_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			lower.add_child(_logs_label)
+			_logs_label.hide()
+			var cold_gap: Control = Control.new()
+			cold_gap.custom_minimum_size.x = 8
+			cold_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			lower.add_child(cold_gap)
 			_cold_label = Label.new()
 			_cold_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			lower.add_child(_cold_label)
@@ -137,6 +152,11 @@ func _refresh() -> void:
 			if cids is PackedInt64Array:
 				var cids_arr: PackedInt64Array = cids
 				site_n = cids_arr.size()
+		# M1 hut blueprints are ConstructionSite entities without a separate Position component, so the V7
+		# construction snapshot (which joins ConstructionSite with Position) never lists them; count them here.
+		var blueprint_xs: Variant = _snapshot("get_colony_overlay").get("site_xs", null)
+		if blueprint_xs is PackedInt32Array:
+			site_n += (blueprint_xs as PackedInt32Array).size()
 
 		var building_snap: Variant = SimReads.read(_world_sim, "get_building_snapshot")
 		if building_snap is Dictionary:
@@ -144,8 +164,9 @@ func _refresh() -> void:
 			var kinds: Variant = building_dict.get("kinds", null)
 			if kinds is PackedByteArray:
 				var kind_array: PackedByteArray = kinds
+				# BuildingKind codes: 1 V7 shelter, 3 M1 hut (both are places to sleep).
 				for kind: int in kind_array:
-					if kind == 1:
+					if kind == 1 or kind == 3:
 						shelter_n += 1
 
 	if _shelters_label != null:
@@ -162,7 +183,7 @@ func _refresh() -> void:
 	var clock: Dictionary = _snapshot("get_time_snapshot")
 	var minutes: int = clampi(roundi(float(clock.get("time_of_day", 0.0)) * 60.0), 0, 1439)
 	var hour: int = int(minutes / 60.0)
-	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
+	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc(phase_key(hour))
 	_clock_label.text += _season_label(clock)
 	var severity: int = int(clock.get("winter_severity", -1))
 	_winter_label.visible = severity >= 0 and severity <= 2
@@ -181,6 +202,17 @@ func _refresh() -> void:
 		for amount: int in wood_stocks:
 			wood += amount
 		_wood_label.text = _loc("HUD_STOCKPILE_WOOD") + " %d" % wood
+	# M1 logs (ItemKind 0) lying in stacks anywhere on the map, to compare with a blueprint's "통나무 n/12".
+	var logs: int = 0
+	var overlay: Dictionary = _snapshot("get_colony_overlay")
+	var item_kinds: Variant = overlay.get("item_kinds", null)
+	var item_counts: Variant = overlay.get("item_counts", null)
+	_logs_label.visible = item_counts is PackedInt32Array
+	if item_kinds is PackedInt32Array and item_counts is PackedInt32Array:
+		for index: int in mini(item_kinds.size(), item_counts.size()):
+			if item_kinds[index] == 0:
+				logs += item_counts[index]
+	_logs_label.text = _loc("HUD_LOGS") + " %d" % logs
 	var cold_count: int = 0
 	var colds: Variant = _snapshot("get_agent_snapshot").get("colds")
 	if colds is PackedByteArray:
@@ -221,6 +253,18 @@ func _refresh() -> void:
 	ArtUI.Library.apply(_clock_icon, "U1_10" if hour >= 21 or hour < 5 else "U1_09")
 	_clock_icon.offset = Vector2.ZERO
 	_clock_icon.scale = Vector2(2, 2)
+
+
+## The clock word for `hour`, aligned with daylight_controller.gd's tint: dawn 5–7, day 7–17, evening 17–21
+## (the tint turns towards dusk from 17 and reaches night at 21), night 21–5.
+static func phase_key(hour: int) -> String:
+	if hour >= 21 or hour < 5:
+		return "HUD_PHASE_NIGHT"
+	if hour < 7:
+		return "HUD_PHASE_DAWN"
+	if hour >= 17:
+		return "HUD_PHASE_EVENING"
+	return "HUD_PHASE_DAY"
 
 
 func _snapshot(method: String) -> Dictionary:

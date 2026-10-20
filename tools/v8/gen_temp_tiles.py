@@ -24,6 +24,8 @@ JSON schema (tiles.json)
     start on the grid too. `shadow` is 16x5 at the top of its own grid cell.
 
 Tile notes for the renderer
+    deadwood: a thin, dark grey twig with a soft outline, quieter than the
+        log items so it does not read as a log waiting to be hauled.
     terrain (16x16, fully opaque): grass_0..3, grass_dark_0/1, dirt_0/1, water_0/1,
         shallow, hill, mountain, forest_floor_0/1. No edge tiles.
     nature / items / hearth / shelter: transparent background, drawn to fill the cell.
@@ -35,14 +37,17 @@ Tile notes for the renderer
         draw them in that order at the person's cell with `modulate` = skin, hair,
         tunic colour. Outlines and eyes are near-black so they stay dark after
         modulation. child_* layers: same idea, 12x12 content centred in the cell
-        (content box x 2..13, y 2..13).
+        (content box x 2..13, y 2..13); the child head is as wide as the adult's
+        (x 4..11) with the eyes two rows above the chin outline and no side locks,
+        so the eyes never merge with the outline.
     shadow (16x5): soft dark ellipse, alpha <= 110. Draw it under the person with
         its top at cell y + 11 (adults) or y + 10 (children).
     icons: tool_axe, tool_hammer are drawn in the TOP-RIGHT QUARTER of the cell
         (x 8..15, y 0..7) so they can be drawn at the person's cell unmoved.
-        carry_log is drawn in person-cell coordinates as a log held across the
-        chest (rows 7..10), so it too goes at the person's cell unmoved, after
-        the person layers.
+        carry_log is a bundle of two light, outlined logs in rows 0..6 of its
+        tile; the renderer draws it after the person layers, 4 px (adults) or
+        3 px (children) above the person's cell, so it rides on the head and
+        covers only the hair, never the eyes.
     overlays: mark_chop (yellow X, opaque, with a 1-px dark outline of alpha 230);
         zone_tint (flat white, alpha 89 = 0.35; modulate for the zone colour);
         zone_edge (1-px white border, alpha 255, transparent inside; modulate);
@@ -72,6 +77,8 @@ FOREST_FLOOR = (46, 52, 36)
 OUTLINE = (20, 18, 16)
 LOG = (120, 82, 50)
 LOG_END = (176, 136, 96)
+CARRY = (216, 170, 110)  # a carried log: much lighter than the log items, tunics and ground
+CARRY_END = (246, 226, 182)
 TRANSPARENT = (0, 0, 0, 0)
 
 
@@ -191,13 +198,16 @@ def bush(berries, rr):
 
 
 def deadwood(rr):
+    """A thin, weathered grey twig: 1-px wood inside a soft dark rim (not near-black), so it
+    stays quieter than the log items and does not read as a dropped log."""
     im, d = new()
-    c = (104, 88, 70)
-    d.line([(2, 12), (13, 5)], fill=OUTLINE, width=4)
-    d.line([(2, 12), (13, 5)], fill=c, width=2)
-    d.line([(7, 9), (6, 4)], fill=OUTLINE, width=3)
-    d.line([(7, 9), (6, 5)], fill=shade(c, 0.85))
-    d.point((13, 5), fill=(150, 130, 104))
+    c = (86, 82, 74)
+    rim = (46, 44, 40)
+    d.line([(3, 12), (12, 6)], fill=rim, width=3)
+    d.line([(7, 9), (6, 5)], fill=rim, width=3)
+    d.line([(3, 12), (12, 6)], fill=c)
+    d.line([(7, 9), (6, 5)], fill=shade(c, 0.9))
+    d.point((12, 6), fill=(100, 96, 88))
     return im
 
 
@@ -321,21 +331,26 @@ def person_layers(child):
         legs = [(5, 6), (9, 10)]
         ly0, ly1 = 12, 14
     else:
-        hx0, hx1, top = 5, 10, 2
+        # As wide as the adult head (the eyes need a skin pixel on both sides), but shorter.
+        hx0, hx1, top = 4, 11, 2
         tx0, tx1, ty0, ty1 = 4, 11, 7, 10
         legs = [(5, 6), (9, 10)]
         ly0, ly1 = 11, 13
     # skin: head with outline + eyes, legs
     ds.rectangle([hx0, top, hx1, top + (5 if not child else 4)], fill=grey(232), outline=G_OUT)
-    eye_y = top + 3
+    # Child eyes one row higher than before: a skin row separates them from the chin outline (they merged
+    # into a dark "beard" bar on the last face row; player review round 1, #6).
+    eye_y = top + (3 if not child else 2)
     ds.point((hx0 + 2, eye_y), fill=G_OUT)
     ds.point((hx1 - 2, eye_y), fill=G_OUT)
     for lx0, lx1 in legs:
         ds.rectangle([lx0, ly0, lx1, ly1], fill=grey(190))
-    # hair: top of the head inside the outline, plus side locks
+    # hair: top of the head inside the outline, plus side locks (adults only: on the child they would sit
+    # beside the eyes)
     dh.line([(hx0 + 1, top + 1), (hx1 - 1, top + 1)], fill=grey(235))
-    dh.point((hx0 + 1, top + 2), fill=grey(215))
-    dh.point((hx1 - 1, top + 2), fill=grey(215))
+    if not child:
+        dh.point((hx0 + 1, top + 2), fill=grey(215))
+        dh.point((hx1 - 1, top + 2), fill=grey(215))
     dh.line([(hx0 + 1, top), (hx1 - 1, top)], fill=grey(200))  # hair covers the top outline
     # tunic: outlined body with a lit shoulder line
     dt.rectangle([tx0, ty0, tx1, ty1], fill=grey(212), outline=G_OUT)
@@ -353,12 +368,14 @@ def shadow():
 
 # ------------------------------------------------------------------ icons
 def carry_log():
-    """A log held across the chest, in person-cell coordinates."""
+    """A bundle of two light logs with a dark outline in rows 0..6, carried on the head
+    (the renderer draws it a few px above the person's cell)."""
     im, d = new()
-    d.rectangle([1, 7, 14, 10], fill=LOG, outline=OUTLINE)
-    d.line([(2, 8), (12, 8)], fill=shade(LOG, 1.25))
-    d.rectangle([12, 7, 14, 10], fill=LOG_END, outline=OUTLINE)
-    d.point((13, 8), fill=shade(LOG_END, 0.75))
+    for x0, x1, y in ((1, 13, 0), (3, 15, 3)):  # upper log, lower log (they share an outline row)
+        d.rectangle([x0, y, x1, y + 3], fill=CARRY, outline=OUTLINE)
+        d.line([(x0 + 1, y + 1), (x1 - 3, y + 1)], fill=shade(CARRY, 1.12))
+        d.rectangle([x1 - 2, y, x1, y + 3], fill=CARRY_END, outline=OUTLINE)
+        d.point((x1 - 1, y + 2), fill=shade(CARRY_END, 0.8))
     return im
 
 

@@ -1,6 +1,7 @@
 # camera_controller.gd (Camera2D in scenes/main.tscn): the M1 colony camera and the simulation speed keys.
 # Integer zoom only (1×/2×/3×/4×, default 2×) with the wheel, `-` and `=`; pan with WASD / arrows and a
-#   middle-button drag; starts centred on the camp hearth; bounds = the map plus a 4-tile margin. Keys 1–4 set
+#   middle-button drag; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
+#   order_bar.gd shows the hint); bounds = the map plus a 4-tile margin. Keys 1–4 set
 #   the speed 1×–4× (12/24/36/48 ticks per second, ADR 0004); P pauses by disabling the WorldSim node.
 # Bridge methods: set_sim_speed (direct); via SimReads get_world_info, get_building_snapshot; signal world_reset.
 extends Camera2D
@@ -11,6 +12,8 @@ const ZOOM_DEFAULT: float = 2.0
 const PAN_PIXELS_PER_SECOND: float = 900.0
 const MARGIN_TILES: int = 4
 const SPEED_KEYS: Dictionary = {KEY_1: 1.0, KEY_2: 2.0, KEY_3: 3.0, KEY_4: 4.0}
+# Centre on the camp: Home, or H for keyboards without a Home key (C opens the chronicle).
+const HOME_KEYS: Array[Key] = [KEY_HOME, KEY_H]
 const TICKS_PER_SECOND_AT_1X: int = 12
 
 var _world_sim: Node = null
@@ -73,6 +76,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif key.keycode in [KEY_EQUAL, KEY_KP_ADD]:
 			step_zoom(1)
 			get_viewport().set_input_as_handled()
+		elif key.keycode in HOME_KEYS:
+			center_on_camp()
+			get_viewport().set_input_as_handled()
 		elif SPEED_KEYS.has(key.keycode):
 			set_speed(float(SPEED_KEYS[key.keycode]))
 			get_viewport().set_input_as_handled()
@@ -134,7 +140,12 @@ func _clamp_position() -> void:
 	position = (position * zoom.x).round() / zoom.x
 
 
-## Centre on the camp hearth (building kind 0), else the map centre.
+## Centre on the camp hearth now (the Home/H key; also used by tools).
+func center_on_camp() -> void:
+	_center_on_camp()
+
+
+## Centre on the camp hearth (building kind 0); stays pending until the hearth exists.
 func _center_on_camp() -> void:
 	if _world_sim == null:
 		return

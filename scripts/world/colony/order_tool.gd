@@ -1,8 +1,8 @@
 # order_tool.gd (ColonyView/OrderTool in scenes/main.tscn): turns mouse input into M1 orders and clicks.
 # In an area mode (chop, stockpile, remove zone, cancel) a left drag shows the rectangle and its release sends
 #   the command; in the hut mode a 3×3 ghost follows the cursor, green or red by `can_place_blueprint`, and a
-#   click places it. Right click or Esc leaves the mode. A short toast shows the result count or the reject
-#   reason. With no mode, a click keeps V8-0's behaviour: a person opens the inspector, an empty tile the
+#   click places it. Right click or Esc leaves the mode. A short toast shows the result count with the order's
+#   noun ("나무 16그루 베기 표시") or the reject reason. With no mode, a click keeps V8-0's behaviour: a person opens the inspector, an empty tile the
 #   causal "why?" panel.
 # Bridge methods: can_place_blueprint, get_agent_detail, get_tile_causal_history (direct); via SimReads.mutate
 #   cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint.
@@ -31,6 +31,14 @@ const REASON_KEYS: Dictionary = {
 	"nothing": "UI_REJECT_NOTHING",
 	"no_colony": "UI_REJECT_NOTHING",
 	"not_yet": "UI_REJECT_NOTHING",
+}
+# The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
+const TOAST_KEYS: Dictionary = {
+	"cmd_designate_chop": "UI_ORDER_TOAST_CHOP",
+	"cmd_add_stockpile": "UI_ORDER_TOAST_STOCKPILE",
+	"cmd_place_blueprint": "UI_ORDER_TOAST_HUT",
+	"cmd_remove_zone_area": "UI_ORDER_TOAST_REMOVE_ZONE",
+	"cmd_cancel_area": "UI_ORDER_TOAST_CANCEL",
 }
 const GHOST_OK: Color = Color(0.45, 0.95, 0.45, 0.85)
 const GHOST_BAD: Color = Color(0.95, 0.35, 0.3, 0.85)
@@ -132,18 +140,20 @@ func _send(command: String, arguments: Array) -> void:
 	order_sent.emit(command, _last_result)
 	var toast: Node = get_node_or_null("/root/Main/UI/OrderBar")
 	if toast != null and toast.has_method("show_toast"):
-		toast.call("show_toast", toast_text(_last_result, get_node_or_null("/root/Locale")))
+		toast.call("show_toast", toast_text(_last_result, get_node_or_null("/root/Locale"), command))
 	if mode == Mode.HUT:
 		_ghost_ok = bool(_world_sim.call("can_place_blueprint", "hut", _hover.x - 1, _hover.y - 1))
 		queue_redraw()
 
 
-## The toast for a result: the count, or the reject reason (`locale` = the Locale autoload).
-static func toast_text(result: Dictionary, locale: Node) -> String:
+## The toast for a result of `command`: the count with the order's noun (e.g. "나무 16그루 베기 표시"), or the
+## reject reason (`locale` = the Locale autoload). An unknown command falls back to the bare count.
+static func toast_text(result: Dictionary, locale: Node, command: String = "") -> String:
 	if locale == null:
 		return str(result)
 	if bool(result.get("accepted", false)):
-		return str(locale.call("trf", "UI_ORDER_RESULT_COUNT", {"count": int(result.get("count", 0))}))
+		var key: String = str(TOAST_KEYS.get(command, "UI_ORDER_RESULT_COUNT"))
+		return str(locale.call("trf", key, {"count": int(result.get("count", 0))}))
 	return str(locale.call("ltr", str(REASON_KEYS.get(str(result.get("reason", "nothing")), "UI_REJECT_NOTHING"))))
 
 

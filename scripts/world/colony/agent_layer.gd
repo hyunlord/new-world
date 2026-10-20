@@ -1,7 +1,8 @@
 # agent_layer.gd (ColonyView/AgentLayer in scenes/main.tscn): the people of the M1 colony view, one per tile.
 # Each person is a pooled Node2D: a ground shadow, then greyscale skin, hair and tunic layers coloured with
 #   `modulate` (tunic by household id mod 6, hair by agent id mod 4, grey for elders; children use the 12×12
-#   layers), a carried-log icon and a tool icon for the job (axe for chop, hammer for build), and a selection
+#   layers), a carried-log bundle (light, outlined, drawn 4 px above an adult's cell, 3 px above a child's, so it sits on the head), a tool
+#   icon for the job (axe for chop, hammer for build), and a selection
 #   outline for the inspector's person. Positions tween from the previous tile to the current one over
 #   `move_interval_ticks` at the current speed; the drawn rect is what clicks hit (`entity_at`).
 # Also feeds SettlementSelection.observe every frame (the inspector's village row; V8-0 DECISIONS D31).
@@ -14,6 +15,8 @@ const SettlementSelection = preload("res://scripts/core/settlement_selection.gd"
 const FAMILY_REFRESH_FRAMES: int = 120
 # Snapshot job codes (sim-core JobKind::code): 0 none, 1 chop, 2 haul, 3 deliver, 4 build.
 const TOOL_FOR_JOB: Dictionary = {1: "tool_axe", 4: "tool_hammer"}
+const CARRY_Y_ADULT: int = -4
+const CARRY_Y_CHILD: int = -3
 
 var _world_sim: Node = null
 var _persons: Dictionary = {}
@@ -96,6 +99,9 @@ func _set_stage(person: Person, stage: int) -> void:
 	person.hair.region_rect = View.rect(prefix + "hair")
 	person.tunic.region_rect = View.rect(prefix + "tunic")
 	person.shadow.position = Vector2(0, 10 if stage == 1 else 11)
+	# The carried bundle (rows 0..6 of its tile) rides on the head: it covers the hair, the eyes stay visible
+	# (adult: head top row 0, eyes row 3; child: head top row 2, eyes row 4).
+	person.carry.position = Vector2(0, CARRY_Y_CHILD if stage == 1 else CARRY_Y_ADULT)
 
 
 func _process(delta: float) -> void:

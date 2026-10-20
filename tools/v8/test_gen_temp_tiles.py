@@ -147,6 +147,38 @@ class GenTempTilesTest(unittest.TestCase):
                 peak = max(luminance(p) for p in visible(self.tile(name)))
                 self.assertGreater(peak, brightest_ground + 80)
 
+    def test_carried_log_is_light_and_outlined(self):
+        # player review round 1 #2: the carried log must stand apart from the ground and the log items
+        brightest_ground = max(luminance(p) for n in TERRAIN for p in visible(self.tile(n)))
+        carry = sorted(luminance(p) for p in visible(self.tile("carry_log")))
+        logs = sorted(luminance(p) for p in visible(self.tile("logs_s")))
+        self.assertGreater(carry[len(carry) * 3 // 4], brightest_ground + 60)
+        self.assertGreater(carry[len(carry) * 3 // 4], logs[len(logs) * 3 // 4] + 40)
+        self.assertLess(carry[0], 40, "needs a dark outline")
+        x0, y0, x1, y1 = self.tile("carry_log").getbbox()
+        self.assertTrue(y0 == 0 and y1 <= 7, (x0, y0, x1, y1))
+
+    def test_child_eyes_sit_above_a_skin_row(self):
+        # player review round 1 #6: the eyes must not touch the chin outline
+        skin = self.tile("child_skin")
+        hx0, top, hx1, chin = 4, 2, 11, 6  # the child head box (outline included)
+        eyes = [(x, y) for y in range(top + 1, chin) for x in range(hx0 + 1, hx1)
+                if skin.getpixel((x, y))[0] < 60]
+        self.assertEqual(len(eyes), 2, eyes)
+        self.assertGreaterEqual(abs(eyes[0][0] - eyes[1][0]), 2, "eyes must not touch each other")
+        for x, y in eyes:
+            self.assertLessEqual(y, chin - 2)
+            self.assertGreater(skin.getpixel((x, y + 1))[0], 200)
+            self.assertGreater(skin.getpixel((x - 1, y))[0], 200)
+            self.assertGreater(skin.getpixel((x + 1, y))[0], 200)
+
+    def test_deadwood_is_quieter_than_log_items(self):
+        # player review round 1 #13: twigs must not read as dropped logs
+        dead = [luminance(p) for p in visible(self.tile("deadwood"))]
+        logs = [luminance(p) for p in visible(self.tile("logs_s"))]
+        self.assertLess(max(dead), max(logs) - 40)
+        self.assertGreater(min(dead), 30, "no near-black outline")
+
     def test_variants_differ(self):
         for group in (["grass_0", "grass_1", "grass_2", "grass_3"], ["water_0", "water_1"],
                       ["tree_0", "tree_1", "tree_2"], ["logs_s", "logs_m", "logs_l"]):

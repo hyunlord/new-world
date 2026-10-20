@@ -9,10 +9,14 @@ extends RefCounted
 const TILE: int = 16
 const ATLAS_PNG: String = "res://assets/v8/temp/tiles.png"
 const ATLAS_JSON: String = "res://assets/v8/temp/tiles.json"
-# Household tunic colours (household id mod 6) and hair colours (agent id mod 4).
-const TUNICS: Array[Color] = [Color("8a5a3c"), Color("4f6f8f"), Color("7a8a46"), Color("9a4a4a"), Color("6a5a8a"), Color("a08040")]
+# Household tunic colours (household id mod 6) and hair colours (agent id mod 4). Tunics are light or saturated
+#   (cream, sky blue, brick red, teal, violet, rose) so people stand out from the dark earth and grass; no
+#   dirt-brown or grass-olive (player review round 1, #3) and no yellow (the order marks and the stockpile edge
+#   are yellow). The tunic layer's base grey is 212, so the drawn colour is about 0.83 × these.
+const TUNICS: Array[Color] = [Color("efe2c0"), Color("6fb0e8"), Color("e0604c"), Color("50c0a8"), Color("b088e0"), Color("e888b0")]
 const HAIRS: Array[Color] = [Color("2a1e16"), Color("5a3a22"), Color("8a6a3a"), Color("3a2a1e")]
-const ELDER_HAIR: Color = Color("c8c4bc")
+# Elders: near-white, clearly lighter than the skin (the old c8c4bc was as light as the skin and did not show).
+const ELDER_HAIR: Color = Color("ffffff")
 const SKIN: Color = Color("c89a78")
 
 static var _rects: Dictionary = {}
