@@ -1,6 +1,6 @@
 extends RefCounted
 
-const Library = preload("res://scripts/ui/art_sprite_library.gd")
+const Library = preload("res://scripts/world/art_sprite_library.gd")
 static var _manifest: Dictionary = {}
 static var _body: Texture2D
 static var _props: Texture2D

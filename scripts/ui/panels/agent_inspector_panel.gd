@@ -15,10 +15,10 @@ extends Control
 # The nine-key detail schema remains unchanged.
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
-const Library = preload("res://scripts/ui/art_sprite_library.gd")
+const Library = preload("res://scripts/world/art_sprite_library.gd")
 const PANEL_WIDTH := 360.0
 const Names = preload("res://scripts/ui/person_names.gd")
-const Porter = preload("res://scripts/ui/porter_presentation.gd")
+const Porter = preload("res://scripts/world/porter_presentation.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const ReadCache = preload("res://scripts/ui/person_read_cache.gd")
 var _person_cache := ReadCache.new()

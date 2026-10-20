@@ -1,10 +1,10 @@
 extends Node2D
 
-const ART = preload("res://scripts/ui/art_sprite_library.gd")
-const HASH = preload("res://scripts/ui/art_hash.gd")
-const LAYOUT = preload("res://scripts/ui/nature_layout.gd")
-const CANOPY = preload("res://scripts/ui/nature_canopy.gd")
-const SEASON = preload("res://scripts/ui/art_season_tint.gd")
+const ART = preload("res://scripts/world/art_sprite_library.gd")
+const HASH = preload("res://scripts/world/art_hash.gd")
+const LAYOUT = preload("res://scripts/world/nature_layout.gd")
+const CANOPY = preload("res://scripts/world/nature_canopy.gd")
+const SEASON = preload("res://scripts/world/art_season_tint.gd")
 const ORIGIN: Vector2 = Vector2(448, 28)
 var _world_sim: WorldSimNode
 var _objects: Node2D

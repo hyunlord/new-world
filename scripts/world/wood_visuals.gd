@@ -1,6 +1,6 @@
 extends RefCounted
 
-const ART = preload("res://scripts/ui/art_sprite_library.gd")
+const ART = preload("res://scripts/world/art_sprite_library.gd")
 
 ## Optional bridge columns are accepted only with their declared packed type and row.
 static func settlement(snapshot: Dictionary, tile: Vector2i) -> Dictionary:

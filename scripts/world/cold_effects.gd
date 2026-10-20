@@ -19,7 +19,7 @@ static func breath(cold: bool, agent_id: int, seconds: float) -> Dictionary:
 
 static func audit_rejected(sprite_id: String, rgba_sha256: String) -> bool:
 	if _audit.is_empty():
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://scripts/ui/cold_audit.json"))
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://scripts/world/cold_audit.json"))
 		if parsed is Dictionary:
 			_audit = parsed
 	return _audit.has(sprite_id) and str(_audit[sprite_id]) == rgba_sha256

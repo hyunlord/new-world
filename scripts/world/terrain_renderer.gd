@@ -2,11 +2,11 @@ extends Node2D
 
 const TILE_SIZE: int = 16
 const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
-const ART = preload("res://scripts/ui/art_sprite_library.gd")
+const ART = preload("res://scripts/world/art_sprite_library.gd")
 const MANIFEST: String = "res://assets/art/terrain/terrain_manifest.json"
 const LAYERS: Array[String] = ["water", "grass", "forest_floor", "camp_earth", "hill", "rock"]
-const SEASON = preload("res://scripts/ui/art_season_tint.gd")
-const LAYOUT = preload("res://scripts/ui/nature_layout.gd")
+const SEASON = preload("res://scripts/world/art_season_tint.gd")
+const LAYOUT = preload("res://scripts/world/nature_layout.gd")
 const RIVER: int = 4
 var _world_sim: WorldSimNode
 var _layers: Dictionary = {}

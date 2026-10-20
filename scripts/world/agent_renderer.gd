@@ -1,18 +1,18 @@
 extends Node2D
 
-const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
-const Cold = preload("res://scripts/ui/cold_effects.gd")
-const MorningChill = preload("res://scripts/ui/morning_chill.gd")
-const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
-const Porter = preload("res://scripts/ui/porter_presentation.gd")
-const Activity = preload("res://scripts/ui/agent_activity.gd")
-const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
-const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
-const DeclumpOffsets = preload("res://scripts/ui/declump_offsets.gd")
-const WalkerOffsets = preload("res://scripts/ui/walker_offsets.gd")
-const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
+const ArtHashScript = preload("res://scripts/world/art_hash.gd")
+const Cold = preload("res://scripts/world/cold_effects.gd")
+const MorningChill = preload("res://scripts/world/morning_chill.gd")
+const CarryLoad = preload("res://scripts/world/carry_load_layer.gd")
+const Porter = preload("res://scripts/world/porter_presentation.gd")
+const Activity = preload("res://scripts/world/agent_activity.gd")
+const SpriteLibrary = preload("res://scripts/world/art_sprite_library.gd")
+const CampSeatsScript = preload("res://scripts/world/camp_seats.gd")
+const DeclumpOffsets = preload("res://scripts/world/declump_offsets.gd")
+const WalkerOffsets = preload("res://scripts/world/walker_offsets.gd")
+const PoseMoments = preload("res://scripts/world/agent_pose_moments.gd")
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
-const HoverMarker = preload("res://scripts/ui/offscreen_marker.gd")
+const HoverMarker = preload("res://scripts/world/offscreen_marker.gd")
 const RING_COLOR := Color("D7BD77")
 const SETTLEMENT_OUTLINE = preload("res://shaders/settlement_outline.gdshader")
 const TILE_SIZE := 16
@@ -79,10 +79,10 @@ var _raised_sprite_z: int = 0
 var _raised_icon_z: int = 0
 var _activity_oracle_enabled: bool = not OS.get_environment("WORLDSIM_ACTIVITY_OUT").is_empty()
 
-const SelectionIndex = preload("res://scripts/ui/agent_selection_index.gd")
+const SelectionIndex = preload("res://scripts/world/agent_selection_index.gd")
 var _selection_index = SelectionIndex.new()
 var _selection_lookup_enabled: bool = true
-const FrameChoices = preload("res://scripts/ui/agent_frame_choices.gd")
+const FrameChoices = preload("res://scripts/world/agent_frame_choices.gd")
 var _frame_choices = FrameChoices.new()
 var _frame_choices_ready: bool = false
 var _allocation_candidate: bool = true

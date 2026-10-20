@@ -1,7 +1,7 @@
 class_name PersonNames
 extends RefCounted
 
-const Hash = preload("res://scripts/ui/art_hash.gd")
+const Hash = preload("res://scripts/world/art_hash.gd")
 const EN: Array[String] = ["a", "i", "o", "e", "ka", "ki", "ku", "ko", "ta", "ti", "tu", "to", "na", "ni", "nu", "no", "ma", "mi", "mu", "mo", "ra", "ri", "ru", "ro", "sa", "si", "su", "so", "ha", "hi", "hu", "ho", "ya", "yu", "yo", "wa", "ba", "bi", "bo", "bu", "da", "do", "ga", "go", "de", "ge"]
 const KO: Array[String] = ["아", "이", "오", "에", "카", "키", "쿠", "코", "타", "티", "투", "토", "나", "니", "누", "노", "마", "미", "무", "모", "라", "리", "루", "로", "사", "시", "수", "소", "하", "히", "후", "호", "야", "유", "요", "와", "바", "비", "보", "부", "다", "도", "가", "고", "데", "게"]
 const BLOCK_EN: Array[String] = ["nig", "kak", "baka"]

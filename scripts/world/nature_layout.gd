@@ -1,5 +1,5 @@
 extends RefCounted
-const HASH = preload("res://scripts/ui/art_hash.gd")
+const HASH = preload("res://scripts/world/art_hash.gd")
 const GROVE_BASE: float = 0.05
 const GROVE_GAIN: float = 0.65
 

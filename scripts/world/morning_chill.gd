@@ -1,7 +1,7 @@
 extends RefCounted
 
 const OUTLINE = preload("res://shaders/settlement_outline.gdshader")
-const Cold = preload("res://scripts/ui/cold_effects.gd")
+const Cold = preload("res://scripts/world/cold_effects.gd")
 const WINDOW_MINUTES: int = 90
 const FADE_MINUTES: int = 30
 var _last_cold: Dictionary = {}

@@ -5,10 +5,10 @@ const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const RECONCILE_FRAMES: int = 30
 const WOOD_SHORT_TINT: Color = Color(0.96, 0.62, 0.32)
 const STOCKPILE_FOOD_KEY: String = "HUD_STOCKPILE_FOOD"
-const SHELTER_COLD = preload("res://scripts/ui/shelter_cold.gd")
-const WOOD = preload("res://scripts/ui/wood_visuals.gd")
-const HASH = preload("res://scripts/ui/art_hash.gd")
-const ART = preload("res://scripts/ui/art_sprite_library.gd")
+const SHELTER_COLD = preload("res://scripts/world/shelter_cold.gd")
+const WOOD = preload("res://scripts/world/wood_visuals.gd")
+const HASH = preload("res://scripts/world/art_hash.gd")
+const ART = preload("res://scripts/world/art_sprite_library.gd")
 const BUILDING_IDS: Array[String] = [
 	"direction_01_campfire", "direction_02_lean_to", "direction_03_storage_pit",
 ]

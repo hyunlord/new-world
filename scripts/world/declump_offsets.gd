@@ -1,6 +1,6 @@
 extends RefCounted
 
-const Seats = preload("res://scripts/ui/camp_seats.gd")
+const Seats = preload("res://scripts/world/camp_seats.gd")
 
 static func pack_inputs(rows: Array[Dictionary], targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary) -> Dictionary:
 	var row_ids := PackedInt64Array()

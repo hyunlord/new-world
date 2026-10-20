@@ -1,6 +1,6 @@
 extends RefCounted
 
-const Declump = preload("res://scripts/ui/declump_offsets.gd")
+const Declump = preload("res://scripts/world/declump_offsets.gd")
 
 static func pack_inputs(rows: Array[Dictionary], positions: Dictionary, rects: Dictionary, terrain: Dictionary, blocked: Dictionary, canvas: Transform2D) -> Dictionary:
 	var inputs: Dictionary = Declump.pack_inputs(rows, positions, terrain, blocked, rects)

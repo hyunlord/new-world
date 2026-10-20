@@ -1,6 +1,6 @@
 extends RefCounted
 
-const Library = preload("res://scripts/ui/art_sprite_library.gd")
+const Library = preload("res://scripts/world/art_sprite_library.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 
 static func panel(owner: Control, rect: Rect2) -> PanelContainer:

@@ -17,7 +17,7 @@ within one path segment: each `%s`/`%d` becomes `*`, and a literal ending in
 `/` or followed by `+` gets a trailing `*`. Every file matching the glob is
 reachable, and the family is reported.
 
-Derived names (one rule, from `scripts/ui/art_sprite_library.gd`
+Derived names (one rule, from `scripts/world/art_sprite_library.gd`
 `_regions_for_page`): a reachable `X.png` also reaches `X_regions.png`.
 
 A reachable file's `.uid` / `.import` companions are reachable too.

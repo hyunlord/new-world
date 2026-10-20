@@ -1,6 +1,6 @@
 extends RefCounted
 ## Prepared atlas choices; animation time and returned metadata remain per-frame.
-const Activity = preload("res://scripts/ui/agent_activity.gd")
+const Activity = preload("res://scripts/world/agent_activity.gd")
 var _groups: Dictionary = {}
 var _choices: Dictionary = {}
 var _wood_icon: String = ""
