@@ -60,3 +60,12 @@ not imported yet); the second import logs none (`import.log`, `import2.log`).
 
 `$DATA/base/shots/near_t1440.png` (first village, zoom 4) and
 `far_t1440.png` (map centre, zoom 1), from `tools/v8/capture.gd`.
+
+## Test suite at base
+
+`cargo test --workspace --no-fail-fast -- --test-threads=8` (debug) in the base
+worktree was stopped after 26 minutes, when the remaining long scene tests
+(`harness_revitalize_pass12/13_fission`, debug build) competed with this pass's
+own runs: **1,839 passed, 0 failed** up to that point (`$DATA/base/test_debug.log`).
+The art line's own gate at this commit recorded the full suite green
+(`v7-final-art:docs/art/production13b/REPORT.md`, gate 120/120).

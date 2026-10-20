@@ -1,55 +1,57 @@
-# WorldSim V7
+# WorldSim
 
-> Bottom-up emergent civilization simulation
-> Reset: 2026-05-03
-> Reference: project knowledge `WORLDSIM_V7_MASTER_DIRECTION.md`
+석기시대의 작은 무리를 이끌어, 사람 하나하나의 손기술과 관계가 쌓여 마을이 되고, 기술이 사람 사이로 퍼지면서 시대가 저절로 넘어가는 **드워프 포트리스식 정착지 시뮬레이션**이다.
 
-## Vision (Section 1)
+- 10명 안팎으로 시작해 출생과 이주로 30~200명까지 자란다. 구조는 수천 명까지 늘릴 수 있게 만든다.
+- 플레이어는 파기·베기·짓기·구역·작업 우선순위·제작 주문을 내리고, 사람들은 숙련과 기질에 따라 스스로 일을 고른다. 위협이 오면 림월드식으로 사람을 소집할 수 있다.
+- 기술은 사람이 가지고, 사람 사이로 퍼지고, 마지막 전승자가 죽으면 사라진다. 시대는 표지 기술이 얼마나 퍼졌는지로 관측된다.
+- 하루는 1배속에서 약 2분, 1년은 계절 6일 × 4 = 24일이다. 화면은 어두운 흙빛 정면 탑다운, 사람 하나가 타일 한 칸이다.
 
-DF/RimWorld/Songs of Syx 디테일 + worldbox 시뮬레이션 + Black & White 신 개입 + Civilization 시대 발전.
+자세한 방향은 [docs/VISION.md](docs/VISION.md), 진행 상황은 [docs/ROADMAP.md](docs/ROADMAP.md).
 
-## 자랑 모먼트 (Section 2)
+> 지금(V8-0)의 게임은 V7 시뮬레이션을 그대로 돌리는 화면 골격이다: 세계, 사람, 건물, 상단 막대, 연대기 패널, 사람을 클릭하면 상세 정보와 '왜?' 패널. 새 플레이는 M1부터 들어간다.
 
-1. **공간 정의** — 림월드형 가구→방 자동 인식
-2. **사람 같은 판단** — LLM 기반 cognition
-3. **의미있는 기록** — 자동 선별 chronicle
+## 빌드와 실행
 
-## 핵심 Axiom (Section 3)
+필요한 것: Rust 1.93 (`rust/rust-toolchain.toml`), Godot 4.6 (macOS 기본 경로 `/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot`, 다른 곳이면 `GODOT_BIN`을 지정).
 
-"여기서 일어나는 모든 사건과 행동은 원인과 결과가 확실해야 한다"
+```bash
+cd rust && cargo build -p sim-bridge && cd ..                 # Godot이 읽는 libsim_bridge 빌드
+"$GODOT_BIN" --headless --path . --import --editor --quit     # 처음 한 번(또는 에셋이 바뀐 뒤) 가져오기
+"$GODOT_BIN" --path .                                         # 게임 실행
+```
 
-## V7 Hard Gates
+Rust를 고친 뒤에는 Godot을 띄우기 전에 반드시 `cargo build -p sim-bridge`를 다시 한다 (`cargo test`는 Godot이 읽는 라이브러리를 다시 만들지 않는다).
 
-매 시스템 다음 5개 gate 충족 의무:
+## 게이트
 
-1. Cause-Effect Harness 5+ per system
-2. Visual 사용자 confirm
-3. Deep Schema (DF/RimWorld+ 급)
-4. 사용자 Axiom 100%
-5. Solo Dev Mental Model 단순화
+```bash
+bash tools/v8/gate.sh /path/to/log_dir      # 16단계: fmt, 빌드, 가져오기, 테스트, clippy, 결정론, identity, 문서 …
+```
 
-## 12주 우선순위
+`v8/main`은 게이트가 모두 통과한 커밋으로만 옮긴다. 각 단계는 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)와 `.claude/skills/worldsim-testing/SKILL.md`에 있다.
 
-- Week 1~2: Material System Deep
-- Week 3~4: Tile Grid + Influence
-- Week 5~6: Cause-Effect Tracking + "왜?" UI
-- Week 7~8: Agent Core
-- Week 9~10: Daily Routine
-- Week 11~12: Building System
+## 문서 지도
 
-## 작업 원칙
+| 문서 | 내용 |
+|---|---|
+| [docs/VISION.md](docs/VISION.md) | 게임의 목적과 방향 (오너 결정 사항) |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | M0~M6 단계와 현재 상태 |
+| [docs/HISTORY.md](docs/HISTORY.md) | V7 이전부터 V8까지의 역사, 지운 것의 기록 |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 크레이트·폴더 지도, 데이터 흐름, 시스템 표, 브리지 API (영문) |
+| [docs/decisions/](docs/decisions/) | 설계 결정 기록 ADR (영문) |
+| [docs/archive/INDEX.md](docs/archive/INDEX.md) | 지운 문서·코드가 어느 태그에 있는지 |
+| [CHANGELOG.md](CHANGELOG.md) | 패스별 변경 (영문) |
+| [AGENTS.md](AGENTS.md) | 코딩 에이전트 지침 (영문); `CLAUDE.md`는 이것을 가리킨다 |
+| `.claude/skills/` | 작업 요령과 교훈: 구조, Godot, 함정, 테스트, 문서 갱신 |
+| `docs/v8/` | V8-0 패스의 목표, 방향 원본, 결정, 인벤토리, 보고서 |
 
-매 작업 전:
-1. project_knowledge_search 우선
-2. V7 Master Direction 문서 참조
-3. 메모리 #28~30 참조 (vision/Q1~10/learning)
-4. grep/cat/cargo test 검증
-5. 사용자 명시 결정 우선
+## 브랜치 규칙
 
-## 보존 자산
+1. 작업은 `v8/wip`에 커밋한다. `v8/main`은 게이트가 통과한 커밋으로 fast-forward만 한다.
+2. `lead/main`, `main`, `codex/*`에는 푸시하지 않는다. force-push, 이력 재작성, 원격 브랜치·태그 삭제는 하지 않는다.
+3. V7 줄기와 연구는 태그 `v7-final-sim`, `v7-final-art`와 `codex/worldmodel-2026-10`에 고정되어 있다.
 
-- assets/sprites/ (~250, DGX VLM 검증)
-- .harness/ (governance v3.2.1)
-- tools/harness/ (정책 인프라)
-- localization/ (i18n)
-- CLAUDE.md, AGENTS.md (정책)
+---
+
+**English.** WorldSim is a Dwarf Fortress–style stone-age settlement sim: about ten founders grow into a village of 30–200 people; the player gives orders (dig, chop, build, zones, work priorities, craft orders) and people choose their own work; technology is owned by individuals, spreads between them and is lost when its last bearer dies, and eras are observed from how widely marker technologies have spread. The simulation is Rust (hecs ECS, deterministic, integer math) behind a Godot 4.6 GDExtension bridge; GDScript only draws and reads. Build the bridge with `cd rust && cargo build -p sim-bridge`, import once with `Godot --headless --path . --import --editor --quit`, run with `Godot --path .`, and check a change with `bash tools/v8/gate.sh <log_dir>`. Agents start at [AGENTS.md](AGENTS.md); the structure is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
