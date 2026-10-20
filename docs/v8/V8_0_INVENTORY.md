@@ -1470,7 +1470,7 @@ are KEEP.
 | `shaders/villager_ramp.gdshader` | KEEP | palette-ramp shader used by art_sprite_library.gd (people colours; VISION §5 keeps palette swap) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension` | KEEP | GDExtension manifest loading libsim_bridge | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `stats/` | DELETE | pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it | grep -rn 'stats/' rust scripts → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `tools/` | MIXED | files inside: 891 DELETE, 23 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
+| `tools/` | MIXED | files inside: 891 DELETE, 25 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
 | `tools/.gdignore` | KEEP | keeps Godot from importing tools/ | git ls-files at b1ca032f |
 | `tools/art/gen_terrain_atlas.py` | DELETE | one-off art script (6.3) | goal 6.3 |
 | `tools/art_pipeline/README.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
@@ -2359,6 +2359,7 @@ are KEEP.
 | `tools/v8/check_docs.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/check_docs_helpers.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/compare_summaries.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/gate.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gdscript_strict_check.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/godot_bin.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -2374,6 +2375,7 @@ are KEEP.
 | `tools/v8/smoke.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/smoke_base_counts.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/system_table.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_bridge_api.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/worldmodel/bench_v0.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/bench_v1.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |

@@ -33,8 +33,8 @@ are gone from the bridge.
 ### Removed
 - The god hand: GDScript panel and scene, bridge methods `apply_intervention` and `get_intervention_state`, `sim-engine/src/intervention.rs`, `sim-systems/src/runtime/intervention.rs` and intervention-only fields (ADR 0010).
 - V7 overlays and panels outside the kept UI (activity badges and tooltips, village activity summary, settlement relation lines, seek/death/need-bar/activity-trail overlays, restless meter, founding-group renderer, feed ledger, status panel, zoom LOD controller): `scripts/ui` 53 → 8 files (plus 31 moved to `scripts/core`, `scripts/world`, `scripts/ui/hud`); `scripts/test` 222 files (33,947 lines) deleted.
-- `docs/`: 17,280 files (2.36 GiB of pass records, evidence and boards) → 17 files; the index of what was deleted and where it lives is `docs/archive/INDEX.md`.
-- `tools/`: 895 → 20 files (V7 harness, revitalize, art pipeline, world-model tooling).
+- `docs/`: 17,280 files (2.36 GiB of pass records, evidence and boards) → 27 files (the new docs and the V8-0 records); the index of what was deleted and where it lives is `docs/archive/INDEX.md`.
+- `tools/`: 895 → 25 files (V7 harness, revitalize, art pipeline, world-model tooling).
 - `sim-test`: 202 → 111 files (world-model recorder, ablation scenes, pass scaffolding, version-delta tests); `sim-bridge` test fixtures of 135 MB (art kernels).
 - Assets: 888 → 198 files (15.0 → 12.9 MiB); shaders 11 → 3; scenes 3 → 1; localization 47 → 8 files and 5,287 → 156 keys (the Fluent sources and the key-owner policy).
-- Whole tree: 20,299 files / 2,533 MiB → 698 files / 18.8 MiB. Everything removed is at tag `v7-final-art`.
+- Whole tree: 20,299 files / 2,533 MiB → 715 files / 18.5 MiB (at the gate commit). Everything removed is at tag `v7-final-art`.
