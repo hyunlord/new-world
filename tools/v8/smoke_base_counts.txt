@@ -1,4 +1,6 @@
 # V8 smoke base counts, captured at v7-final-art (b1ca032f) with tools/v8/smoke.sh --record
+# (re-recorded after smoke.gd learned to open the inspector, causal and chronicle
+# panels before scanning: 77 labels scanned at base, still 0 raw keys)
 script_errors 0
 errors 0
 locale_warnings 0
