@@ -240,7 +240,10 @@ mod tests {
 
     #[test]
     fn adult_weights_follow_each_axis_at_extremes_and_midpoint() {
-        let rule = WorldRules::V21_ROUTINE;
+        let rule = WorldRules::baseline(0)
+            .agent
+            .routine
+            .expect("baseline routine");
         for (axis, expected) in [
             (0, [90, 90, 70, 100, 0, 0, 0]),
             (500, [180, 180, 140, 200, 120, 0, 0]),
@@ -272,7 +275,10 @@ mod tests {
 
     #[test]
     fn stage_limits_children_to_play_and_elders_to_hearth_activities() {
-        let rule = WorldRules::V21_ROUTINE;
+        let rule = WorldRules::baseline(0)
+            .agent
+            .routine
+            .expect("baseline routine");
         for (rd, hearth) in [(0, 250), (500, 500), (1000, 750)] {
             let temperament = Temperament::from_axes([rd; 4]);
             assert_eq!(
@@ -288,7 +294,10 @@ mod tests {
 
     #[test]
     fn duration_uses_signed_integer_truncation_and_floor() {
-        let rule = WorldRules::V21_ROUTINE;
+        let rule = WorldRules::baseline(0)
+            .agent
+            .routine
+            .expect("baseline routine");
         for (p, minutes) in [
             (0, 30),
             (375, 75),
@@ -316,8 +325,14 @@ mod tests {
 
     #[test]
     fn end_minute_is_the_shared_end_without_a_stagger_and_spans_17_to_19_with_one() {
-        let shared = WorldRules::V21_ROUTINE;
-        assert_eq!(shared.end_stagger, None);
+        let staggered = WorldRules::baseline(0)
+            .agent
+            .routine
+            .expect("baseline routine");
+        let shared = RoutineRule {
+            end_stagger: None,
+            ..staggered
+        };
         for key in [0, 59, 60, 1_799, u64::MAX] {
             for p in [0, 500, 1000] {
                 let t = Temperament::from_axes([p; 4]);
@@ -325,7 +340,6 @@ mod tests {
             }
             assert_eq!(shared.end_minute(key, None), 1080);
         }
-        let staggered = WorldRules::V24_ROUTINE;
         assert_eq!(
             staggered.end_stagger,
             Some(EndStagger {
@@ -358,7 +372,10 @@ mod tests {
 
     #[test]
     fn start_stagger_and_rest_draw_have_exact_clock_and_key_boundaries() {
-        let rule = WorldRules::V21_ROUTINE;
+        let rule = WorldRules::baseline(0)
+            .agent
+            .routine
+            .expect("baseline routine");
         for (key, minute) in [(0, 420), (59, 479), (60, 420), (119, 479)] {
             assert_eq!(rule.start_minute(key), minute);
         }
@@ -374,15 +391,5 @@ mod tests {
         }
         assert_eq!(observed.first(), Some(&20));
         assert_eq!(observed.last(), Some(&60));
-    }
-
-    #[test]
-    fn v21_changes_only_the_optional_routine_rule() {
-        for seed in 0..5 {
-            let mut v21 = WorldRules::game_v21(seed);
-            assert_eq!(v21.agent.routine, Some(WorldRules::V21_ROUTINE));
-            v21.agent.routine = None;
-            assert_eq!(v21, WorldRules::game_v20(seed));
-        }
     }
 }

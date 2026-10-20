@@ -22,8 +22,10 @@ fn birth_world() -> (SimEngine, SettlementSystem, [Entity; 6]) {
     pair(&mut e, people[1], people[0]);
     pair(&mut e, people[3], people[2]);
     e.resources.settlements.clear();
-    e.resources.rules.society.shelter_planning = WorldRules::game_v20(7).society.shelter_planning;
-    e.resources.rules.society.life_stage = WorldRules::game_v20(7).society.life_stage;
+    // R1 exact: shelter_planning and life_stage are unchanged from v20 to the baseline.
+    let live = WorldRules::baseline(7);
+    e.resources.rules.society.shelter_planning = live.society.shelter_planning;
+    e.resources.rules.society.life_stage = live.society.life_stage;
     e.resources.rules.society.birth = BirthRule::Provisioned {
         cooldown_ticks: 10,
         food_cost: 5,

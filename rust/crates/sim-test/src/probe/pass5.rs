@@ -190,26 +190,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn v10_world_reports_neutral_pass5_values() {
-        let engine = crate::scenes::game_v10_scene(3);
+    fn baseline_world_reports_zero_pass5_tallies_at_tick_zero() {
+        let engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
         for key in [
             "meals_from_store_total",
             "ground_meals_total",
-            "wood_stock",
-            "wood_in_hand",
-            "fire_lit",
-            "cold_members",
             "cold_member_hours_total",
             "wood_trips_total",
             "wood_gathered_total",
-            "deadwood_total",
             "gather_preempted_total",
-            "gather_seekers_critical",
         ] {
             assert_eq!(row[key], 0, "{key}");
         }
-        assert_eq!(row["wood_target"], 0.0);
         // Tick zero: nobody belongs to a settlement yet and everybody is idle.
         assert_eq!(row["adult_work_share"], 0.0);
         assert_eq!(row["idle_share"], 1.0);
@@ -221,9 +214,21 @@ mod tests {
     }
 
     #[test]
-    fn v11_world_reports_its_deadwood() {
-        let engine = crate::scenes::game_v11_scene(3);
+    fn baseline_world_reports_its_deadwood() {
+        let engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
-        assert_eq!(row["deadwood_total"], 20 * 6);
+        // Tick 0: every placed deadwood spot (camp ring and wild regions) holds
+        // the world's drawn `deadwood_capacity`.
+        let report = &engine.resources.worldgen_report;
+        let capacity = sim_core::variety::WorldVariety::draw_v18(3).deadwood_capacity;
+        let spots = report.deadwood_spots_placed + report.region_deadwood_placed;
+        assert!(
+            spots >= report.deadwood_spots_requested / 2,
+            "{spots} spots"
+        );
+        assert_eq!(
+            row["deadwood_total"],
+            u64::from(spots) * u64::from(capacity)
+        );
     }
 }

@@ -1366,7 +1366,7 @@ mod tests {
         for generated in [false, true] {
             let mut resources = SimResources::new(64, 64, sim_core::MaterialRegistry::new());
             if generated {
-                resources.rules = sim_core::rules::WorldRules::game_v8();
+                resources.rules = sim_core::rules::WorldRules::baseline(0);
             }
             resources
                 .building_kinds
@@ -1440,11 +1440,10 @@ mod tests {
         use sim_core::rules::WorldRules;
         for children in [false, true] {
             let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-            engine.resources.rules = if children {
-                WorldRules::game_v9()
-            } else {
-                WorldRules::game_v8()
-            };
+            engine.resources.rules = WorldRules::baseline(0);
+            if !children {
+                engine.resources.rules.society.life_stage = None;
+            }
             if let BirthRule::Provisioned { cooldown_ticks, .. } =
                 &mut engine.resources.rules.society.birth
             {

@@ -287,7 +287,8 @@ mod tests {
     #[test]
     fn no_rule_is_a_no_op() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
-        resources.rules = WorldRules::game_v10();
+        resources.rules = WorldRules::baseline(0);
+        resources.rules.society.firewood = None;
         let mut settlement = Settlement::new_with_id(1, 0);
         settlement.store(ResourceKind::Wood, 10);
         resources.settlements.insert(1, settlement);

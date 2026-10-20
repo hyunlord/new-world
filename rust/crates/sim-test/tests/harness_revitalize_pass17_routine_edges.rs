@@ -7,6 +7,8 @@ use sim_core::components::{
 use sim_core::material::TerrainType;
 use sim_core::rng::{keyed_below, STREAM_ROUTINE};
 use sim_core::rules::WorldRules;
+use sim_engine::RuntimeSystem;
+use sim_systems::runtime::settlement::ShelterPlanningSystem;
 
 #[test]
 fn no_place_rest_prevents_per_tick_retries() {
@@ -85,7 +87,9 @@ fn missing_stockpile_redraws_once_into_a_kind_with_a_place() {
 fn unavailable_foraging_does_not_interrupt_until_claims_allow_a_real_tile() {
     // Given a below-target store but every forage bush already has its full claims.
     let mut engine = fixture();
-    let rules = WorldRules::game_v20(7);
+    // R1: the live forage and store-target rules (forage is exact since v11;
+    // `max_foragers_per_bush` is 2 and read from the rule below).
+    let rules = WorldRules::baseline(7);
     engine.resources.rules.agent.forage = rules.agent.forage;
     engine.resources.rules.society.stock_target = rules.society.stock_target;
     let entity = resident(&mut engine, 2);
@@ -160,8 +164,9 @@ fn builders_are_recruited_from_activities_and_respond_in_the_same_tick() {
     let mut engine = fixture();
     let entity = resident(&mut engine, 3);
     activity(&mut engine, entity, ActivityKind::Repair, true);
+    // R1 exact: the live shelter-planning rule (unchanged from v20).
     engine.resources.rules.society.shelter_planning =
-        WorldRules::game_v20(7).society.shelter_planning;
+        WorldRules::baseline(7).society.shelter_planning;
     engine.world.spawn((ConstructionSite::new(
         shelter_blueprint(240),
         Position::new(26, 24),
@@ -207,6 +212,11 @@ fn membership_change_aborts_and_day_end_completes_only_arrived_activities() {
         .get::<&mut Activity>(changed)
         .expect("activity")
         .settlement = 2;
+    // Under the live routine's `end_stagger`, keys 4–6 (key / 60 = 0) with
+    // P 500 end their day at 1065 + 0 + 0 = 17:45, so 18:00 is past every end.
+    let rule = engine.resources.rules.agent.routine.expect("live routine");
+    assert!(rule.end_stagger.is_some());
+    assert!((4..=6).all(|key| rule.end_minute(key, None) <= 1080));
     engine.resources.current_tick = 1080;
     // When the day closes.
     decide(&mut engine);
@@ -223,4 +233,52 @@ fn membership_change_aborts_and_day_end_completes_only_arrived_activities() {
             RoutineOutcome::Ended { completed }
         );
     }
+}
+
+#[test]
+fn planned_shelter_is_built_by_a_worker_recruited_from_an_activity() {
+    // Given one resident on an activity in a settlement that owns no housing,
+    // under the live shelter-planning rule (one pending site per settlement,
+    // headroom 2, rings 2–5, every 60 ticks).
+    let mut engine = fixture();
+    let rule = WorldRules::baseline(7)
+        .society
+        .shelter_planning
+        .expect("live planning");
+    engine.resources.rules.society.shelter_planning = Some(rule);
+    let entity = resident(&mut engine, 3);
+    activity(&mut engine, entity, ActivityKind::Repair, true);
+    // When the planner runs on a planning tick (600 is a multiple of 60) and
+    // again an interval later.
+    let mut planner = ShelterPlanningSystem::default();
+    planner.tick(&mut engine.world, &mut engine.resources);
+    engine.resources.current_tick += rule.plan_interval_ticks;
+    planner.tick(&mut engine.world, &mut engine.resources);
+    // Then exactly one site exists (1 member + headroom 2 >= capacity 0 plans
+    // one; a pending site blocks a second), owned by the settlement, on the
+    // innermost ring around the hearth.
+    let sites: Vec<_> = engine
+        .world
+        .query::<&ConstructionSite>()
+        .iter()
+        .map(|(_, site)| (site.position.x, site.position.y))
+        .collect();
+    assert_eq!(sites.len(), 1, "sites {sites:?}");
+    let tile = sites[0];
+    assert_eq!(engine.resources.site_owner.get(&tile), Some(&1));
+    assert_eq!(tile.0.abs_diff(24).max(tile.1.abs_diff(24)), rule.ring_min);
+    assert_eq!(planner.skipped_no_tile, 0);
+    // And the decision cascade recruits the active worker straight to it.
+    decide(&mut engine);
+    assert!(engine.world.get::<&Activity>(entity).is_err());
+    assert_eq!(
+        *engine.world.get::<&AgentState>(entity).expect("state"),
+        AgentState::Seeking {
+            target: TargetKind::ConstructionSite
+        }
+    );
+    assert_eq!(
+        engine.world.get::<&SeekTarget>(entity).expect("site").tile,
+        tile
+    );
 }

@@ -197,7 +197,9 @@ fn full_haul_blocks_routine_entry_until_deposit() {
     // Given a loaded resident.
     let mut engine = fixture();
     let loaded = resident(&mut engine, 8);
-    engine.resources.rules.society.firewood = WorldRules::game_v20(7).society.firewood;
+    // R1: the haul-block check reads the firewood rule's gather window and
+    // haul threshold, unchanged from v20 to the baseline.
+    engine.resources.rules.society.firewood = WorldRules::baseline(7).society.firewood;
     engine
         .world
         .get::<&mut Inventory>(loaded)

@@ -155,8 +155,8 @@ mod tests {
 
     #[test]
     fn twins_compare_new_entries_and_people() {
-        let mut a = crate::scenes::game_v23_scene(1);
-        let mut b = crate::scenes::game_v23_scene(1);
+        let mut a = crate::scenes::baseline_scene(1);
+        let mut b = crate::scenes::baseline_scene(1);
         let mut seen = 0;
         assert!(twins_match(&a, &b, &mut seen));
         for _ in 0..60 {
@@ -165,15 +165,17 @@ mod tests {
             assert!(twins_match(&a, &b, &mut seen));
         }
         assert_eq!(seen, a.resources.chronicle.len());
+        // Every founder (the world's drawn `starting_agents`) is recorded at worldgen.
+        let founders = sim_core::variety::WorldVariety::draw_v18(1).starting_agents as usize;
         assert!(
-            a.resources.chronicle.person_count() >= 20,
+            a.resources.chronicle.person_count() >= founders,
             "founders recorded at worldgen"
         );
         b.resources
             .chronicle
             .push(ChronicleEntry::new(0, ChronicleKind::CameOfAge).subject(1));
         assert!(!twins_match(&a, &b, &mut seen));
-        let doc = document(&a.resources.chronicle, "game_v23", 1, a.current_tick(), "x");
+        let doc = document(&a.resources.chronicle, "baseline", 1, a.current_tick(), "x");
         assert_eq!(doc["entry_count"], a.resources.chronicle.len());
         assert_eq!(doc["kinds"][16], "settlement_dissolved");
     }

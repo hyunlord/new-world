@@ -66,10 +66,17 @@ pub(super) fn block(engine: &SimEngine) -> Option<Value> {
 mod tests {
     #[test]
     fn only_capped_rules_have_the_keys() {
-        assert!(super::block(&crate::scenes::game_v25_scene(3)).is_none());
-        assert!(super::block(&crate::scenes::game_v24_scene(3)).is_none());
-        let block = super::block(&crate::scenes::game_v26_scene(3)).expect("v26 keys");
+        let mut engine = crate::scenes::baseline_scene(3);
+        let block = super::block(&engine).expect("baseline keys");
         assert_eq!(block["tallies"]["disputes_uncosted"], 0);
         assert!(block["pairs"].as_array().is_some_and(Vec::is_empty));
+        // Relations without a dispute cap (the removed `game_v25`'s rule) and
+        // no relations rule at all have no keys.
+        let mut uncapped = engine.resources.rules.society.relations.expect("relations");
+        uncapped.dispute_cap_per_pair_day = 0;
+        engine.resources.rules.society.relations = Some(uncapped);
+        assert!(super::block(&engine).is_none());
+        engine.resources.rules.society.relations = None;
+        assert!(super::block(&engine).is_none());
     }
 }

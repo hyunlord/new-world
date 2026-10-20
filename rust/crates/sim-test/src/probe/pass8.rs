@@ -59,57 +59,77 @@ mod tests {
     use super::*;
 
     #[test]
-    fn v13_world_reports_neutral_pass8_values_outside_winter() {
-        let mut engine = crate::scenes::game_v13_scene(3);
+    fn baseline_world_reports_pass8_values_outside_winter() {
+        let mut engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 2);
         // Tick 0 is 08:00 of the first spring day: outside the burn window.
         assert_eq!(row["night_burn_per_hour"], 0);
         assert_eq!(row["winter_fall_today"], -1);
-        // 20:00 of day one: spring burns 2 an hour.
+        // 20:00 of day one: the rule's spring burn per hour.
         for _ in 0..(12 * 60 + 1) {
             engine.tick();
         }
-        assert_eq!(metrics(&engine)["night_burn_per_hour"], 2);
-        let legacy = crate::scenes::legacy_scene();
+        let rule = engine.resources.rules.society.firewood.expect("firewood");
+        let spring = sim_systems::runtime::settlement::firewood::night_rate(
+            &engine.resources,
+            &rule,
+            engine.resources.current_tick - engine.resources.current_tick % 60,
+        );
+        assert_eq!(spring, u32::from(rule.burn_per_hour[0])); // 2 per hour in spring.
+        assert_eq!(metrics(&engine)["night_burn_per_hour"], spring);
+        // Without the firewood rule both keys are neutral.
+        let bare = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
         assert_eq!(
-            metrics(&legacy),
+            metrics(&bare),
             json!({"night_burn_per_hour": 0, "winter_fall_today": -1})
         );
     }
 
     #[test]
     fn winter_fall_and_rules_block_read_the_rule() {
-        let mut engine = crate::scenes::game_v13_scene(0);
-        // 12:00 of display day 21, the first winter day (tick = 21 x 1440 + 720 - 480).
-        engine.resources.current_tick = 21 * 1440 + 240;
+        let mut engine = crate::scenes::baseline_scene(0);
+        let days = engine
+            .resources
+            .rules
+            .seasons
+            .expect("seasons")
+            .days_per_season;
+        // 12:00 of the first winter day (display day 3 x days_per_season; tick =
+        // day x 1440 + 720 - 480).
+        engine.resources.current_tick = u64::from(3 * days) * 1440 + 240;
         let level = sim_systems::runtime::settlement::firewood::winter_severity_at(
             &engine.resources,
             engine.resources.current_tick,
         );
-        let rule = WorldRules::game_v13()
+        let rule = WorldRules::baseline(0)
             .society
             .firewood
-            .expect("v13 firewood");
+            .expect("baseline firewood");
         let want =
             rule.winter_severity_regen_units_per_day[usize::try_from(level).expect("winter")];
         assert_eq!(metrics(&engine)["winter_fall_today"], want);
-        let block = rules_block(&crate::scenes::game_v13_scene(0).resources);
+        let block = rules_block(&crate::scenes::baseline_scene(0).resources);
         assert_eq!(
             block["firewood"]["winter_severity_permille"],
-            json!([520, 280, 200])
+            json!(rule.winter_severity_permille)
         );
-        assert_eq!(block["firewood"]["winter_night_burn_permille"], Value::Null);
-        assert_eq!(block["firewood"]["burn_hours"], 13);
-        assert_eq!(block["keyed_draws"], 0);
-        let legacy = crate::scenes::legacy_scene();
         assert_eq!(
-            rules_block(&legacy.resources),
+            block["firewood"]["winter_night_burn_permille"],
+            json!(rule.winter_night_burn_permille)
+        );
+        assert_eq!(
+            block["firewood"]["burn_hours"],
+            sim_systems::runtime::settlement::firewood::burn_hours(&rule)
+        );
+        assert_eq!(block["keyed_draws"], 1);
+        assert_eq!(block["noise_replicate"], 0);
+        let bare = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
+        assert_eq!(
+            rules_block(&bare.resources),
             json!({"keyed_draws": 0, "noise_replicate": 0, "firewood": null})
         );
-        let mut v15 = crate::scenes::game_v15_scene(0);
-        assert_eq!(rules_block(&v15.resources)["keyed_draws"], 1);
-        v15.apply_noise_fork(3);
-        assert_eq!(rules_block(&v15.resources)["noise_replicate"], 3);
+        engine.apply_noise_fork(3);
+        assert_eq!(rules_block(&engine.resources)["noise_replicate"], 3);
     }
 }

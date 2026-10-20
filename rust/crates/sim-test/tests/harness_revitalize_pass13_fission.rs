@@ -1,5 +1,6 @@
 //! Pass 13 Part 2: fission by accumulated pressure against a hidden threshold
-//! (`game_v19`, PASS13_GOAL.md 7.1).
+//! (PASS13_GOAL.md 7.1), under the live rules (`WorldRules::baseline`; the
+//! fission rule of `game_v19` is the baseline's, unchanged by v20–v26).
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, Lineage, Position, ResourceKind, Settlement,
 };
@@ -13,8 +14,8 @@ use sim_engine::{RuntimeSystem, SimEngine, WildRegion};
 use sim_systems::runtime::settlement::fission::{hazard_terms, sustain_capacity};
 use sim_systems::runtime::settlement::food_economy::adult_need_per_day;
 use sim_systems::runtime::settlement::FissionSystem;
+use sim_test::baseline_engine;
 use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v17_scene, game_v18_scene, game_v19_scene};
 
 const HOME: (u32, u32) = (20, 20);
 const SITE: (u32, u32) = (46, 20);
@@ -40,9 +41,10 @@ const START_PRESSURE: FissionPressure = FissionPressure {
     reset_on_split: true,
 };
 
-/// `game_v19(seed)` with the start hazard and pressure (7.1's start values).
+/// `WorldRules::baseline(seed)` with the start hazard and pressure (7.1's
+/// start values; numeric parameters only) and the start `min_members` 32.
 fn start_rules(seed: u64) -> WorldRules {
-    let mut rules = WorldRules::game_v19(seed);
+    let mut rules = WorldRules::baseline(seed);
     if let Some(fission) = rules.society.fission.as_mut() {
         fission.hazard = Some(START_HAZARD);
         fission.pressure = Some(START_PRESSURE);
@@ -125,67 +127,20 @@ fn run(engine: &mut SimEngine, system: &mut FissionSystem, from: u64, to: u64) {
 }
 
 #[test]
-fn harness_pressure_inert_before_v19() {
-    // v8–v18: no pressure rule.
-    for rules in [
-        WorldRules::game_v17(1),
-        WorldRules::game_v18(1),
-        WorldRules::game_v18_nofission(1),
-    ] {
-        assert!(rules.society.fission.is_none_or(|f| f.pressure.is_none()));
-        assert!(rules.society.firewood.is_some_and(|f| !f.floor_separate));
-    }
-    // A whole v18 world: every check draws, no settlement ever holds P or θ.
-    let mut engine = game_v18_scene(7);
-    for _ in 0..90 * 1440 {
-        engine.tick();
-    }
-    assert!(
-        !engine.resources.fission_checks.is_empty(),
-        "v18 world reaches the draw"
-    );
-    for c in &engine.resources.fission_checks {
-        assert_eq!((c.pressure, c.threshold), (0, 0));
-    }
-    for s in engine.resources.settlements.values() {
-        assert_eq!((s.fission_pressure, s.fission_threshold), (0, 0));
-    }
-    for f in &engine.resources.fission_log {
-        assert_eq!((f.pressure_at_split, f.threshold_at_split), (0, 0));
-    }
-    assert_eq!(
-        (
-            engine.resources.tallies.area_floor_placed,
-            engine.resources.tallies.area_floor_lost_at_max
-        ),
-        (0, 0)
-    );
-    // v17 never checks under a hazard.
-    let mut engine = game_v17_scene(1);
-    for _ in 0..30 * 1440 {
-        engine.tick();
-    }
-    assert!(engine
-        .resources
-        .settlements
-        .values()
-        .all(|s| s.fission_threshold == 0));
-}
-
-#[test]
 fn harness_threshold_is_world_draw() {
-    // The law `game_v19` uses (whatever Part 3's tuning set).
-    let law = WorldRules::game_v19(7)
+    // The law the live rules use (whatever Part 3's tuning set).
+    let law = WorldRules::baseline(7)
         .society
         .fission
         .and_then(|f| f.pressure)
-        .expect("v19 pressure")
+        .expect("baseline pressure")
         .threshold_table;
     // The key never contains the replicate: replicate 0 and replicate 3 of a
-    // world forked at tick 1 carry the same θ for every (settlement, splits so
-    // far) both reach.
+    // far) both reach. V8-0: 14 days instead of 120 — baseline world 7 passes
+    // every gate from display day 11 (10 days old, 28+ members), so each
+    // replicate logs four checks of the camp before the first winter.
     let seed = 7;
-    let (mut a, mut b) = (game_v19_scene(seed), game_v19_scene(seed));
+    let (mut a, mut b) = (baseline_engine(seed), baseline_engine(seed));
     a.resources.noise_fork = Some(NoiseFork {
         tick: 1,
         replicate: 0,
@@ -194,10 +149,16 @@ fn harness_threshold_is_world_draw() {
         tick: 1,
         replicate: 3,
     });
-    for _ in 0..120 * 1440 {
+    for _ in 0..14 * 1440 {
         a.tick();
         b.tick();
     }
+    assert!(
+        a.resources.fission_checks.len() >= 3 && b.resources.fission_checks.len() >= 3,
+        "{} and {} checks",
+        a.resources.fission_checks.len(),
+        b.resources.fission_checks.len()
+    );
     let thetas = |e: &SimEngine| -> std::collections::BTreeMap<(u32, u32), u64> {
         let mut k: std::collections::BTreeMap<u32, u32> = std::collections::BTreeMap::new();
         let mut seen = std::collections::BTreeMap::new();
@@ -247,8 +208,8 @@ fn harness_threshold_is_world_draw() {
     let camp: std::collections::BTreeSet<u64> =
         (0..8).map(|s| fission_threshold(law, s, 1, 0)).collect();
     assert!(camp.len() >= 7, "{camp:?}");
-    // The camp of a whole v19 world draws θ when it forms (k = 0).
-    let mut engine = game_v19_scene(3);
+    // The camp of a whole world draws θ when it forms (k = 0).
+    let mut engine = baseline_engine(3);
     for _ in 0..1440 {
         engine.tick();
     }
@@ -517,51 +478,19 @@ fn harness_pressure_order_independent() {
         )
     };
     assert_eq!(two(false), two(true));
-    // A whole v19 world: θ of every check is its keyed draw, and a twin run
-    // gives the same checks, splits and fingerprint.
+    // A whole world: a twin run gives the same checks, splits and
+    // fingerprint. V8-0: 14 days instead of 120 (world 9 logs its first
+    // check on display day 11).
     let run_world = || {
-        let mut engine = game_v19_scene(9);
-        for _ in 0..120 * 1440 {
+        let mut engine = baseline_engine(9);
+        for _ in 0..14 * 1440 {
             engine.tick();
         }
         engine
     };
     let (a, b) = (run_world(), run_world());
+    assert!(a.resources.fission_checks.len() >= 3);
     assert_eq!(a.resources.fission_checks, b.resources.fission_checks);
     assert_eq!(a.resources.fission_log, b.resources.fission_log);
     assert_eq!(fingerprint(&a), fingerprint(&b));
-}
-
-#[test]
-fn harness_v18_hazard_unchanged() {
-    let v18 = WorldRules::game_v18(0)
-        .society
-        .fission
-        .expect("v18 fission");
-    assert_eq!(v18.hazard, Some(WorldRules::V18_HAZARD));
-    assert_eq!(v18.pressure, None);
-    assert_eq!(
-        WorldRules::V18_HAZARD,
-        FissionHazard {
-            size_lo: 28,
-            size_hi: 48,
-            crowd_lo_permille: 850,
-            crowd_hi_permille: 1050,
-            scarcity_days: 2,
-            weight_crowd_permille: 500,
-            weight_scarcity_permille: 500,
-            max_daily_permille: 120,
-        }
-    );
-    // v19 keeps the v18 gates and adds the pressure.
-    let v19 = WorldRules::game_v19(0)
-        .society
-        .fission
-        .expect("v19 fission");
-    assert!(v19.pressure.is_some() && v19.hazard.is_some());
-    assert!(v19.hazard.expect("hazard").is_valid());
-    assert_eq!(
-        (v19.allowed_seasons, v19.max_settlements, v19.group_share),
-        (v18.allowed_seasons, v18.max_settlements, v18.group_share)
-    );
 }

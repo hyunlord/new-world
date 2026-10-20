@@ -262,27 +262,49 @@ pub(super) fn seed_block(
 
 #[cfg(test)]
 mod tests {
+    use sim_core::components::{Agent, AgentState, Child, Elder, TargetKind};
+
     #[test]
     fn work_classes_add_up_to_the_work_share_numerator() {
-        let mut engine = crate::scenes::game_v16_scene(3);
+        // 15:00 of display day 1: the adults forage, gather, build, haul or
+        // follow the baseline's daily routine.
+        let mut engine = crate::scenes::baseline_scene(3);
         for _ in 0..(1440 + 420) {
             engine.tick();
         }
         let row = super::metrics(&engine);
-        let all = crate::probe::metrics::sample(&engine, "game_v16", 3, 0);
+        let all = crate::probe::metrics::sample(&engine, "baseline", 3, 0);
         let get = |k: &str| row[k].as_u64().expect(k);
         let total = get("adult_act_total");
         let classes: u64 = super::ACTIVITIES
             .iter()
             .map(|a| get(&format!("adult_act_{a}")))
             .sum();
-        assert_eq!(classes, total);
+        // Adult members on a routine activity (`TargetKind::Activity`) are in
+        // `adult_act_total` but in none of the ten classes.
+        let homes = crate::probe::pass5::member_homes(&engine);
+        let on_activity = engine
+            .world
+            .query::<(&Agent, Option<&AgentState>, Option<&Child>, Option<&Elder>)>()
+            .iter()
+            .filter(|(_, (a, state, child, elder))| {
+                homes.contains_key(&a.id)
+                    && child.is_none()
+                    && elder.is_none()
+                    && state.and_then(|s| s.target()) == Some(TargetKind::Activity)
+            })
+            .count() as u64;
+        assert_eq!(classes + on_activity, total);
         let work = get("adult_act_forage")
             + get("adult_act_wood")
             + get("adult_act_build")
             + get("adult_act_haul");
         let share = all["adult_work_share"].as_f64().expect("share");
-        assert!(total > 0);
+        let founders = u64::from(sim_core::variety::WorldVariety::draw_v18(3).starting_agents);
+        assert!(
+            total * 2 >= founders,
+            "{total} adult members of {founders} founders"
+        );
         assert!(
             (share - work as f64 / total as f64).abs() < 1e-12,
             "{share} vs {work}/{total}"

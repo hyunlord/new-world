@@ -1,9 +1,14 @@
-//! Pass 21 (`game_v26`): unit and integration tests of the revised relations
-//! rule — the rule values, the avoid filter at the Gather arm's selectors
+//! Pass 21: unit and integration tests of the relations rule of the live
+//! rules (`WorldRules::baseline`, = Pass 21's `game_v26`) — the rule values, the avoid filter at the Gather arm's selectors
 //! (trigger, post-pass, exit predicate and its memo key), the per-village-pair
 //! daily caps on disputes and quarrels and their ledger, exchange before aid,
 //! the aid keep line, the 30 ‰ drift and its integer stall, the integration
 //! case of brief 6.7 and the invariants of brief 9.
+//!
+//! V8-0: the Pass 20 (`game_v25`) contrast arms are gone (they set
+//! `avoid_gather`, `exchange_first` false and the caps to 0); where a
+//! contrast carries the test, it is made inside the baseline (estranged or
+//! not, a carrier or none).
 //!
 //! The fixtures follow Pass 20's (`harness_revitalize_pass20_relations.rs`):
 //! two bare villages on a 96 × 64 map, the camp (settlement 1) at `CAMP` and
@@ -27,8 +32,12 @@ use sim_systems::runtime::settlement::relations::{burn_night, RelationsSystem};
 const SEED: u64 = 20;
 const CAMP: (u32, u32) = (20, 30);
 const DAUGHTER: (u32, u32) = (46, 30);
-const V25: RelationsRule = WorldRules::V25_RELATIONS;
-const V26: RelationsRule = WorldRules::V26_RELATIONS;
+/// The live relations rule (`WorldRules::baseline`; = Pass 21's
+/// `RULE_RELATIONS`, the grid's configuration G2).
+const RULE: RelationsRule = match WorldRules::baseline(SEED).society.relations {
+    Some(rule) => rule,
+    None => panic!("the baseline has a relations rule"),
+};
 
 /// The tick of display day `day`, minute `minute` (clock offset 480).
 fn tick_at(day: u64, minute: u64) -> u64 {
@@ -97,12 +106,8 @@ fn villages(
     (engine, entities)
 }
 
-fn v25() -> WorldRules {
-    WorldRules::game_v25(SEED)
-}
-
-fn v26() -> WorldRules {
-    WorldRules::game_v26(SEED)
+fn rules() -> WorldRules {
+    WorldRules::baseline(SEED)
 }
 
 /// Four adults per village (RD 500 except where given), ids 1–4 and 11–14.
@@ -181,51 +186,9 @@ fn set_pair(engine: &mut SimEngine, value: i32, estranged: bool) {
 // ---------------------------------------------------------------- the rule
 
 #[test]
-fn harness_p21_game_v26_is_game_v25_with_the_v26_relations() {
-    for seed in [0, 7, 19600] {
-        let mut rules = WorldRules::game_v26(seed);
-        assert_eq!(rules.society.relations, Some(V26));
-        rules.society.relations = Some(V25);
-        assert_eq!(rules, WorldRules::game_v25(seed), "seed {seed}");
-    }
-    // The v25 values of the new fields reproduce Pass 20.
-    const { assert!(!V25.avoid_gather && !V25.exchange_first) };
-    assert_eq!(
-        (V25.dispute_cap_per_pair_day, V25.quarrel_cap_per_pair_day),
-        (0, 0)
-    );
-    // V26: the flags, the caps and the grid's configuration; the rest is V25.
-    const { assert!(V26.avoid_gather && V26.exchange_first) };
-    assert_eq!(
-        (V26.dispute_cap_per_pair_day, V26.quarrel_cap_per_pair_day),
-        (3, 1)
-    );
-    const {
-        assert!(
-            V26.aid_keep_days_permille < V26.aid_giver_days_permille,
-            "a giver always has a surplus"
-        )
-    };
-    let tuned = RelationsRule {
-        dispute_loss: V25.dispute_loss,
-        quarrel_loss: V25.quarrel_loss,
-        relation_drift_permille: V25.relation_drift_permille,
-        aid_giver_days_permille: V25.aid_giver_days_permille,
-        aid_keep_days_permille: V25.aid_keep_days_permille,
-        aid_receiver_days_permille: V25.aid_receiver_days_permille,
-        avoid_gather: false,
-        dispute_cap_per_pair_day: 0,
-        quarrel_cap_per_pair_day: 0,
-        exchange_first: false,
-        ..V26
-    };
-    assert_eq!(tuned, V25, "only the brief's fields differ");
-}
-
-#[test]
 fn harness_p21_v26_relations_frozen_at_grid_g2() {
     // Pass 21 7.2: the grid's selected configuration G2, frozen; every field.
-    let r = V26;
+    let r = RULE;
     assert_eq!(r.decision_minute, 480);
     assert_eq!(r.latest_arrival_minute, 900);
     assert_eq!(r.porter_max, 2);
@@ -253,19 +216,6 @@ fn harness_p21_v26_relations_frozen_at_grid_g2() {
     assert_eq!(r.dispute_cap_per_pair_day, 3);
     assert_eq!(r.quarrel_cap_per_pair_day, 1);
     assert!(r.exchange_first);
-}
-
-#[test]
-fn harness_p21_relations_only_in_v25_and_v26() {
-    for seed in [0, 19600] {
-        assert!(WorldRules::game_v24(seed).society.relations.is_none());
-        assert!(WorldRules::game_v25(seed).society.relations.is_some());
-        assert!(WorldRules::game_v26(seed).society.relations.is_some());
-    }
-    assert_eq!(
-        sim_test::scenes::game_v26_scene(3).resources.rules,
-        WorldRules::game_v26(3)
-    );
 }
 
 // ------------------------------------------------- 6.2 the gather avoid
@@ -299,48 +249,51 @@ fn harness_p21_gather_arm_and_post_pass_skip_the_estranged_side() {
     // camp's side, 5 from the forager. (40, 30): own side, 4 away... nearer;
     // so use (41, 30) (5 away, own side) to make the avoided tile the nearer.
     let tiles = [(31, 30), (42, 30)];
-    for (rules, expected) in [(v25(), (31, 30)), (v26(), (42, 30))] {
-        let avoid = rules.society.relations.expect("rule").avoid_gather;
-        let (mut engine, forager) = gather_world(rules, &tiles);
-        decide_at(&mut engine, tick_at(3, 600));
-        assert_eq!(
-            state(&engine, forager),
-            AgentState::Seeking {
-                target: TargetKind::GatherFood
-            },
-            "avoid {avoid}"
-        );
-        // The post-pass attached the tile the arm chose (one selector).
-        assert_eq!(target(&engine, forager), Some(expected), "avoid {avoid}");
-        assert_eq!(
-            engine.resources.tallies.forage_trips, 0,
-            "the Gather arm, not the Forage arm"
-        );
-    }
-    // Only the avoided tile: v25 takes it, v26 finds nothing.
-    for (rules, gathers) in [(v25(), true), (v26(), false)] {
-        let (mut engine, forager) = gather_world(rules, &[(31, 30)]);
+    // Estranged: the forager passes the nearer tile on the camp's side.
+    let (mut engine, forager) = gather_world(rules(), &tiles);
+    decide_at(&mut engine, tick_at(3, 600));
+    assert_eq!(
+        state(&engine, forager),
+        AgentState::Seeking {
+            target: TargetKind::GatherFood
+        }
+    );
+    // The post-pass attached the tile the arm chose (one selector).
+    assert_eq!(target(&engine, forager), Some((42, 30)));
+    assert_eq!(
+        engine.resources.tallies.forage_trips, 0,
+        "the Gather arm, not the Forage arm"
+    );
+    // Not estranged: it takes the nearer tile on the camp's side.
+    let (mut engine, forager) = gather_world(rules(), &tiles);
+    set_pair(&mut engine, -100, false);
+    decide_at(&mut engine, tick_at(3, 600));
+    assert_eq!(target(&engine, forager), Some((31, 30)));
+    // Only the avoided tile: estranged finds nothing, not estranged gathers.
+    for (estranged, gathers) in [(true, false), (false, true)] {
+        let (mut engine, forager) = gather_world(rules(), &[(31, 30)]);
+        if !estranged {
+            set_pair(&mut engine, -100, false);
+        }
         decide_at(&mut engine, tick_at(3, 600));
         let seeking = state(&engine, forager)
             == AgentState::Seeking {
                 target: TargetKind::GatherFood,
             };
-        assert_eq!(seeking, gathers);
+        assert_eq!(seeking, gathers, "estranged {estranged}");
     }
-    // Not estranged: v26 takes the nearer tile on the camp's side too.
-    let (mut engine, forager) = gather_world(v26(), &tiles);
-    set_pair(&mut engine, -100, false);
-    decide_at(&mut engine, tick_at(3, 600));
-    assert_eq!(target(&engine, forager), Some((31, 30)));
 }
 
 #[test]
 fn harness_p21_post_pass_without_a_target_skips_the_estranged_side() {
     // A gatherer without a target (its arm's tile emptied, the post-pass
-    // re-resolves it with the arm's selector): v25 heads to the avoided
-    // tile, v26 goes Idle rather than crossing over.
-    for (rules, expected) in [(v25(), Some((31, 30))), (v26(), None)] {
-        let (mut engine, forager) = gather_world(rules, &[(31, 30)]);
+    // re-resolves it with the arm's selector): estranged, it goes Idle
+    // rather than crossing over; not estranged, it heads to the tile.
+    for (estranged, expected) in [(true, None), (false, Some((31, 30)))] {
+        let (mut engine, forager) = gather_world(rules(), &[(31, 30)]);
+        if !estranged {
+            set_pair(&mut engine, -100, false);
+        }
         engine
             .world
             .insert_one(
@@ -366,7 +319,7 @@ fn harness_p21_gather_memo_keys_the_avoid_list_owner() {
     // camp's side. The member of 3 (lower id, asked first) gets yes and
     // leaves its activity; the member of 2 gets no and stays — a memo keyed
     // only by (tile, catchment) would hand it 3's answer.
-    let (mut engine, _) = villages(v26(), [(0, 0), (0, 0)], &[]);
+    let (mut engine, _) = villages(rules(), [(0, 0), (0, 0)], &[]);
     let mut third = Settlement::new_with_id(3, 0);
     third.formation_tile = DAUGHTER;
     engine.resources.settlements.insert(3, third);
@@ -453,7 +406,7 @@ fn harness_p21_gather_memo_keys_the_avoid_list_owner() {
 /// The camp forager `a` (id 1) picking up at a bush and a daughter forager
 /// (id 11) heading there, under `rule`.
 fn dispute_world(rule: RelationsRule, ns: u16, ha: u16) -> (SimEngine, Entity, Entity) {
-    let mut rules = v26();
+    let mut rules = rules();
     rules.society.relations = Some(rule);
     let (mut engine, entities) = villages(rules, [(0, 0), (0, 0)], &[(1, 1, 500), (11, 2, 500)]);
     for entity in &entities {
@@ -530,7 +483,7 @@ fn ticks_where(engine: &SimEngine, a: Entity, below: bool, p: u64) -> Vec<u64> {
 fn harness_p21_dispute_cap_stops_the_loss_not_the_count() {
     // NS 0, HA 1000: p = 0, never a quarrel. Five disputes in one day: three
     // cost `dispute_loss`, two are counted uncosted.
-    let (mut engine, a, b) = dispute_world(V26, 0, 1000);
+    let (mut engine, a, b) = dispute_world(RULE, 0, 1000);
     let start = tick_at(3, 600);
     for n in 0..5 {
         rearm(&mut engine, a, b);
@@ -549,7 +502,7 @@ fn harness_p21_dispute_cap_stops_the_loss_not_the_count() {
     );
     assert_eq!(
         engine.resources.settlement_relations.pairs[&(1, 2)].value,
-        300 - 3 * V26.dispute_loss
+        300 - 3 * RULE.dispute_loss
     );
     assert_eq!(
         engine.resources.settlement_relations.day_counts[&(1, 2)],
@@ -570,30 +523,7 @@ fn harness_p21_dispute_cap_stops_the_loss_not_the_count() {
     );
     assert_eq!(
         engine.resources.settlement_relations.pairs[&(1, 2)].value,
-        300 - 4 * V26.dispute_loss
-    );
-    // Without a cap (v25) every dispute costs and no ledger is kept.
-    let (mut engine, a, b) = dispute_world(V25, 0, 1000);
-    for n in 0..5 {
-        rearm(&mut engine, a, b);
-        new_forager_pair(&mut engine);
-        decide_at(&mut engine, start + n * 10);
-    }
-    assert_eq!(engine.resources.tallies.disputes_uncosted, 0);
-    assert_eq!(
-        engine.resources.settlement_relations.pairs[&(1, 2)].value,
-        300 - 5 * V25.dispute_loss
-    );
-    assert!(engine.resources.settlement_relations.day_counts.is_empty());
-    assert_eq!(
-        engine
-            .resources
-            .settlement_relations
-            .dispute_days
-            .values()
-            .copied()
-            .collect::<Vec<_>>(),
-        vec![(5, 0)]
+        300 - 4 * RULE.dispute_loss
     );
 }
 
@@ -602,7 +532,7 @@ fn harness_p21_quarrel_cap_skips_the_draw_and_the_pickup_proceeds() {
     // NS 1000, HA 0: p = 500. Two disputes at ticks whose draw is below p:
     // the first quarrels; the second meets the cap — no draw, the pickup
     // happens, `quarrels_capped` counts it.
-    let (mut engine, a, b) = dispute_world(V26, 1000, 0);
+    let (mut engine, a, b) = dispute_world(RULE, 1000, 0);
     let hot = ticks_where(&engine, a, true, 500);
     rearm(&mut engine, a, b);
     decide_at(&mut engine, hot[0]);
@@ -635,7 +565,7 @@ fn harness_p21_quarrel_cap_skips_the_draw_and_the_pickup_proceeds() {
     );
     assert_eq!(
         engine.resources.settlement_relations.pairs[&(1, 2)].value,
-        300 - 2 * V26.dispute_loss - V26.quarrel_loss
+        300 - 2 * RULE.dispute_loss - RULE.quarrel_loss
     );
     assert_eq!(of_kind(&engine, ChronicleKind::Quarrel).len(), 1);
     assert_eq!(
@@ -648,26 +578,12 @@ fn harness_p21_quarrel_cap_skips_the_draw_and_the_pickup_proceeds() {
             .collect::<Vec<_>>(),
         vec![(2, 1)]
     );
-    // v25 at the same ticks: both quarrel.
-    let (mut engine, a, b) = dispute_world(V25, 1000, 0);
-    rearm(&mut engine, a, b);
-    decide_at(&mut engine, hot[0]);
-    rearm(&mut engine, a, b);
-    new_forager_pair(&mut engine);
-    decide_at(&mut engine, hot[1]);
-    assert_eq!(
-        (
-            engine.resources.tallies.quarrels,
-            engine.resources.tallies.quarrels_capped
-        ),
-        (2, 0)
-    );
 }
 
 #[test]
 fn harness_p21_quarrels_while_estranged_are_counted() {
     for estranged in [false, true] {
-        let (mut engine, a, b) = dispute_world(V26, 1000, 0);
+        let (mut engine, a, b) = dispute_world(RULE, 1000, 0);
         set_pair(&mut engine, if estranged { -400 } else { 300 }, estranged);
         let hot = ticks_where(&engine, a, true, 500);
         rearm(&mut engine, a, b);
@@ -685,26 +601,16 @@ fn harness_p21_quarrels_while_estranged_are_counted() {
 #[test]
 fn harness_p21_exchange_first_takes_the_exchange_over_the_aid() {
     // Camp food 3.3 days and 1 wood night; daughter food 1.6 days and 6 wood
-    // nights: both the kin-aid food condition and the exchange hold. v25
-    // sends aid (3 food above its 3-day keep line); v26 exchanges (12 food
-    // above its 2-day keep line for the daughter's wood above 2 nights).
-    let burn = burn_night(&villages(v26(), [(0, 0), (0, 0)], &residents()).0.resources);
+    // nights: both the kin-aid food condition and the exchange hold. The
+    // pair exchanges (12 food above the 2-day keep line for the daughter's
+    // wood above 2 nights) instead of sending aid.
+    let burn = burn_night(
+        &villages(rules(), [(0, 0), (0, 0)], &residents())
+            .0
+            .resources,
+    );
     let stores = [(32, burn), (16, 6 * burn)];
-    let (mut engine, _) = villages(v25(), stores, &residents());
-    relations_at(&mut engine, decision(1));
-    let rows = porters(&engine);
-    assert_eq!(
-        rows.iter()
-            .map(|r| (r.1.from, r.1.kind, r.1.amount))
-            .collect::<Vec<_>>(),
-        vec![(1, PorterKind::Food, 3)]
-    );
-    assert_eq!(
-        of_kind(&engine, ChronicleKind::PorterDeparted)[0].cause,
-        0,
-        "v25: aid"
-    );
-    let (mut engine, _) = villages(v26(), stores, &residents());
+    let (mut engine, _) = villages(rules(), stores, &residents());
     relations_at(&mut engine, decision(1));
     let rows = porters(&engine);
     let food_leg: u32 = rows
@@ -741,20 +647,16 @@ fn harness_p21_exchange_first_takes_the_exchange_over_the_aid() {
 #[test]
 fn harness_p21_exchange_first_when_the_higher_id_sends_food() {
     // Mirror: the daughter (2) has the food, the camp (1) the wood and the
-    // daughter no wood at all. v25 processes (1, 2) first and sends wood aid
-    // 1 → 2, then food aid 2 → 1 — two aid trips, no exchange. v26 takes
-    // the pair's exchange at (1, 2) already: food 2 → 1 for wood 1 → 2.
-    let burn = burn_night(&villages(v26(), [(0, 0), (0, 0)], &residents()).0.resources);
+    // daughter no wood at all. Both aid conditions hold (wood aid 1 → 2 is
+    // checked first for the pair (1, 2)), but the pair's exchange is taken
+    // at (1, 2) already: food 2 → 1 for wood 1 → 2, no aid trip.
+    let burn = burn_night(
+        &villages(rules(), [(0, 0), (0, 0)], &residents())
+            .0
+            .resources,
+    );
     let stores = [(16, 6 * burn), (32, 0)];
-    let (mut engine, _) = villages(v25(), stores, &residents());
-    relations_at(&mut engine, decision(1));
-    let mut causes: Vec<u8> = of_kind(&engine, ChronicleKind::PorterDeparted)
-        .iter()
-        .map(|e| e.cause)
-        .collect();
-    causes.dedup();
-    assert_eq!(causes, vec![1, 0], "v25: wood aid, then food aid");
-    let (mut engine, _) = villages(v26(), stores, &residents());
+    let (mut engine, _) = villages(rules(), stores, &residents());
     relations_at(&mut engine, decision(1));
     let rows = porters(&engine);
     assert!(rows.iter().all(|r| match r.1.kind {
@@ -767,15 +669,19 @@ fn harness_p21_exchange_first_when_the_higher_id_sends_food() {
         .collect();
     causes.sort_unstable();
     causes.dedup();
-    assert_eq!(causes, vec![2, 3], "v26: the exchange");
+    assert_eq!(causes, vec![2, 3], "the exchange");
 }
 
 #[test]
 fn harness_p21_exchange_first_falls_back_to_aid_when_a_leg_cannot_depart() {
-    // The daughter has nobody able to carry: no exchange, so v26 sends the
-    // camp's food aid as v25 would (with v26's keep line: 12).
-    let burn = burn_night(&villages(v26(), [(0, 0), (0, 0)], &residents()).0.resources);
-    let (mut engine, entities) = villages(v26(), [(32, burn), (16, 6 * burn)], &residents());
+    // The daughter has nobody able to carry: no exchange, so the camp sends
+    // its food aid (down to the 2-day keep line: 12).
+    let burn = burn_night(
+        &villages(rules(), [(0, 0), (0, 0)], &residents())
+            .0
+            .resources,
+    );
+    let (mut engine, entities) = villages(rules(), [(32, burn), (16, 6 * burn)], &residents());
     for entity in &entities[4..] {
         engine
             .world
@@ -801,18 +707,22 @@ fn harness_p21_exchange_first_falls_back_to_aid_when_a_leg_cannot_depart() {
 
 #[test]
 fn harness_p21_keep_line_below_the_giver_threshold_leaves_a_surplus() {
-    // Camp 29 food (3,020 ‰ of a day ≥ the 3,000 ‰ giver line), daughter
-    // 10: v25 keeps 3 days (29) and sends nothing; v26 keeps 2 days (20)
-    // and sends 9.
-    for (rules, sent) in [(v25(), 0), (v26(), 9)] {
-        let (mut engine, _) = villages(rules, [(29, 0), (10, 0)], &residents());
+    // Camp 29 food (3,020 ‰ of a day ≥ the 2,500 ‰ giver line), daughter
+    // 10: the camp keeps 2 days (20) and sends 9 (Pass 20's keep line of 3
+    // days would have kept all 29). Camp 23 food (2,395 ‰, below the giver
+    // line): no aid.
+    for (camp, aid, sent) in [(29, true, 9), (23, false, 0)] {
+        let (mut engine, _) = villages(rules(), [(camp, 0), (10, 0)], &residents());
         relations_at(&mut engine, decision(1));
-        assert!(engine.resources.settlement_relations.days[0].aid_food);
+        assert_eq!(
+            engine.resources.settlement_relations.days[0].aid_food, aid,
+            "camp {camp}"
+        );
         assert_eq!(
             porters(&engine).iter().map(|r| r.1.amount).sum::<u32>(),
             sent
         );
-        assert_eq!(food(&engine, 1), 29 - sent);
+        assert_eq!(food(&engine, 1), camp - sent);
     }
 }
 
@@ -831,7 +741,7 @@ fn harness_p21_drift_is_thirty_permille_with_an_integer_stall() {
         (330, 330),
         (334, 333),
     ] {
-        let (mut engine, _) = villages(v26(), [(0, 0), (0, 0)], &residents());
+        let (mut engine, _) = villages(rules(), [(0, 0), (0, 0)], &residents());
         relations_at(&mut engine, 1);
         set_pair(&mut engine, value, value <= -300);
         relations_at(&mut engine, decision(1));
@@ -913,64 +823,48 @@ fn contact_day(engine: &mut SimEngine, day: u64, camp: Entity, daughter: Entity)
 fn harness_p21_integration_contact_falls_under_avoid_and_the_pair_reconciles() {
     // Brief 6.7: relation −290 with daily contact at a bush on the camp's
     // side. A forced quarrel takes it below −300 (estranged at the next
-    // decision). v25: the Gather arm keeps sending the daughter's forager
-    // over, the disputes go on, and the pair stays below −300. v26: the
-    // contact stops under the avoid filter and the pair reconciles (≥ −150)
-    // within 40 days.
-    for (rules, reconciles) in [(v25(), false), (v26(), true)] {
-        let rule = rules.society.relations.expect("rule");
-        let (mut engine, entities) =
-            villages(rules, [(0, 0), (0, 0)], &[(1, 1, 500), (11, 2, 500)]);
-        let (camp, daughter) = (entities[0], entities[1]);
-        for entity in &entities {
-            engine
-                .world
-                .insert_one(
-                    *entity,
-                    Temperament {
-                        ns: 1000,
-                        ha: 0,
-                        rd: 500,
-                        p: 500,
-                    },
-                )
-                .expect("bold");
+    // decision). The contact stops under the avoid filter and the pair
+    // reconciles (≥ −150) within 40 days (Pass 20's rule, without the
+    // filter, kept the forager crossing over and never reconciled).
+    let rules = rules();
+    let rule = rules.society.relations.expect("rule");
+    let (mut engine, entities) = villages(rules, [(0, 0), (0, 0)], &[(1, 1, 500), (11, 2, 500)]);
+    let (camp, daughter) = (entities[0], entities[1]);
+    for entity in &entities {
+        engine
+            .world
+            .insert_one(
+                *entity,
+                Temperament {
+                    ns: 1000,
+                    ha: 0,
+                    rd: 500,
+                    p: 500,
+                },
+            )
+            .expect("bold");
+    }
+    relations_at(&mut engine, 1);
+    set_pair(&mut engine, -290, false);
+    // The forced quarrel: a dispute's and a quarrel's loss.
+    state_add(&mut engine, -(rule.quarrel_loss + rule.dispute_loss));
+    let mut estranged_on = None;
+    let mut contacts_after = 0;
+    for day in 3..45 {
+        let took = contact_day(&mut engine, day, camp, daughter);
+        let state = engine.resources.settlement_relations.pairs[&(1, 2)];
+        if state.estranged && estranged_on.is_none() {
+            estranged_on = Some(day);
         }
-        relations_at(&mut engine, 1);
-        set_pair(&mut engine, -290, false);
-        // The forced quarrel: a dispute's and a quarrel's loss.
-        state_add(&mut engine, -(rule.quarrel_loss + rule.dispute_loss));
-        let mut estranged_on = None;
-        let mut contacts_after = 0;
-        for day in 3..45 {
-            let took = contact_day(&mut engine, day, camp, daughter);
-            let state = engine.resources.settlement_relations.pairs[&(1, 2)];
-            if state.estranged && estranged_on.is_none() {
-                estranged_on = Some(day);
-            }
-            if estranged_on.is_some_and(|d| day > d) {
-                contacts_after += u32::from(took);
-            }
-        }
-        let first = estranged_on.expect("estranged after the forced quarrel");
-        let final_state = engine.resources.settlement_relations.pairs[&(1, 2)];
-        let reconciled = of_kind(&engine, ChronicleKind::VillagesReconciled);
-        if reconciles {
-            assert_eq!(contacts_after, 0, "v26: no contact while estranged");
-            let at = reconciled.first().expect("v26 reconciles").tick;
-            assert!(at <= decision(first) + 40 * 1440, "within 40 days: {at}");
-        } else {
-            assert!(
-                contacts_after > 20,
-                "v25: contact goes on ({contacts_after})"
-            );
-            assert!(reconciled.is_empty(), "v25 never reconciles");
-            assert!(
-                final_state.estranged && final_state.value < -300,
-                "{final_state:?}"
-            );
+        if estranged_on.is_some_and(|d| day > d) {
+            contacts_after += u32::from(took);
         }
     }
+    let first = estranged_on.expect("estranged after the forced quarrel");
+    assert_eq!(contacts_after, 0, "no contact while estranged");
+    let reconciled = of_kind(&engine, ChronicleKind::VillagesReconciled);
+    let at = reconciled.first().expect("the pair reconciles").tick;
+    assert!(at <= decision(first) + 40 * 1440, "within 40 days: {at}");
 }
 
 fn state_add(engine: &mut SimEngine, delta: i32) {
@@ -982,16 +876,23 @@ fn state_add(engine: &mut SimEngine, delta: i32) {
 // ------------------------------------------------- 9 the invariants
 
 #[test]
-fn harness_p21_game_v26_invariants_and_twin() {
-    // Two engines of one seed under game_v26 for 60 days: identical at every
+fn harness_p21_baseline_invariants_and_twin() {
+    // Two engines of one baseline world for `DAYS` days: identical at every
     // day; at every tick the ledger respects the caps, the relations exist
     // exactly for living pairs and stay in range; at the end every ended trip
     // balances (withdrawn = delivered + returned + lost) and the tallies
     // match the chronicle.
-    let mut a = sim_test::scenes::game_v26_scene(0);
-    let mut b = sim_test::scenes::game_v26_scene(0);
-    let rule = V26;
-    for day in 1..=60 {
+    //
+    // V8-0: world 32 for 36 days instead of `game_v26` world 0 for 60 (15–30
+    // CPU-minutes in a debug build). World 32 splits on display day 28 and
+    // founds its daughter on day 29 (the earliest split in a scan of seeds
+    // 0..48), so the relations rule works on a live village pair for a week.
+    const WORLD: u64 = 32;
+    const DAYS: u64 = 36;
+    let mut a = sim_test::baseline_engine(WORLD);
+    let mut b = sim_test::baseline_engine(WORLD);
+    let rule = RULE;
+    for day in 1..=DAYS {
         for _ in 0..1440 {
             a.tick();
             b.tick();
@@ -1048,8 +949,20 @@ fn harness_p21_game_v26_invariants_and_twin() {
         of_kind(&a, ChronicleKind::VillagesReconciled).len()
     );
     assert!(t.quarrels_while_estranged <= t.quarrels && t.disputes_uncosted <= t.forage_disputes);
+    // The rule acted on the pair (world 32 at day 36, re-measured: 14 daily
+    // decision records, 2 porter trips each delivering 10, 27 forage
+    // disputes of which 13 uncosted by the daily cap, 3 quarrels and 13
+    // capped, the relation at 159 from its base 300).
+    assert!(r.days.len() >= 7, "{} decisions", r.days.len());
+    assert!(t.porters_departed >= 1 && r.trips.iter().map(|x| x.delivered).sum::<u32>() >= 10);
+    assert!(t.forage_disputes >= 10, "{} disputes", t.forage_disputes);
     assert!(
-        a.resources.tallies.fissions >= 1,
-        "seed 0 splits before day 60"
+        t.disputes_uncosted >= 1 && t.quarrels_capped >= 1,
+        "the caps bind"
     );
+    assert!(
+        r.pairs[&(1, 2)].value < r.pairs[&(1, 2)].base,
+        "losses applied"
+    );
+    assert!(a.resources.tallies.fissions >= 1, "world {WORLD} splits");
 }

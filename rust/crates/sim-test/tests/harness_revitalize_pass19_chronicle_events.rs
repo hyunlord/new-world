@@ -25,13 +25,19 @@ fn tick_at(day: u64, minute: u64) -> u64 {
 
 type Resident = (AgentId, u8, u64);
 
-/// Pass 11's bare `game_v17(seed)` world (one settlement at `HOME`).
+/// Pass 11's bare world under `WorldRules::baseline(seed)` (one settlement
+/// at `HOME`). The live fission rule splits by accumulated pressure against
+/// a hidden threshold; the settlement's threshold is set to 1 so the first
+/// eligible 06:00 check with a positive hazard (32 members > `size_lo` 24,
+/// 100 food < 4 days of their need) splits, as the crowding gate did in
+/// Pass 11's `game_v17` fixture.
 fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v17(seed);
+    engine.resources.rules = WorldRules::baseline(seed);
     engine.resources.world_seed = seed;
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.formation_tile = HOME;
+    settlement.fission_threshold = 1;
     settlement.store(ResourceKind::Food, 100);
     settlement.store(ResourceKind::Wood, 30);
     for i in 0..bushes {
@@ -129,8 +135,7 @@ fn harness_chronicle_records_a_cancelled_fission_and_skips_the_dead() {
         ids
     };
     assert!(group.len() >= 6, "{group:?}");
-    // The split: FissionStarted, then every member in AgentId order, labelled
-    // Ranked (no family rule in game_v17).
+    // The split: FissionStarted, then every member in AgentId order.
     let fission_id = engine.resources.fission_log[0].fission_id;
     let started = of_kind(&engine, ChronicleKind::FissionStarted);
     assert_eq!(started.len(), 1);
@@ -146,9 +151,19 @@ fn harness_chronicle_records_a_cancelled_fission_and_skips_the_dead() {
             .collect::<Vec<_>>(),
         group
     );
-    assert!(departed
-        .iter()
-        .all(|e| e.cause == DepartCause::Ranked.as_u8() && e.other == started[0].other));
+    // The live family rule labels each member with why the household
+    // selection took them (V8-0 re-measure, seed 11: 4 `Seed` adults — the
+    // rule's `min_adults` — and 7 `Household`); never `Ranked`, which only the
+    // no-family path writes.
+    let cause_count =
+        |cause: DepartCause| departed.iter().filter(|e| e.cause == cause.as_u8()).count();
+    assert_eq!(cause_count(DepartCause::Ranked), 0);
+    assert_eq!(cause_count(DepartCause::Seed), 4);
+    assert_eq!(
+        cause_count(DepartCause::Seed) + cause_count(DepartCause::Household),
+        group.len()
+    );
+    assert!(departed.iter().all(|e| e.other == started[0].other));
     // One member dies on the way (the highest id; not the leader).
     let dead = *group.last().expect("group");
     let entity = entities[usize::try_from(dead - 1).expect("id")];

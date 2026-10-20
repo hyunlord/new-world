@@ -8,7 +8,7 @@ use sim_engine::FissionRecord;
 fn engine() -> SimEngine {
     let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
     engine.resources.world_seed = 42;
-    engine.resources.rules = WorldRules::game_v22(42);
+    engine.resources.rules = WorldRules::baseline(42);
     engine
 }
 

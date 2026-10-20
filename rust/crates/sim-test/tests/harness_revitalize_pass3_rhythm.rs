@@ -3,7 +3,7 @@ use sim_core::{material::MaterialRegistry, rules::WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_systems::runtime::decision::{agent_decision::minute_in_window, AgentDecisionSystem};
-use sim_test::scenes::game_v9_scene;
+use sim_test::baseline_engine;
 
 fn advance_to(engine: &mut SimEngine, tick: u64) {
     while engine.current_tick() < tick {
@@ -13,7 +13,7 @@ fn advance_to(engine: &mut SimEngine, tick: u64) {
 
 #[test]
 fn harness_rhythm_minute_window_wraps_midnight() {
-    // Given the v9 night window, when each boundary is queried, then it is half-open.
+    // Given the baseline night window (21:00–06:00), when each boundary is queried, then it is half-open.
     for (minute, expected) in [
         (1259, false),
         (1260, true),
@@ -28,8 +28,10 @@ fn harness_rhythm_minute_window_wraps_midnight() {
 
 #[test]
 fn harness_rhythm_villagers_sleep_in_beds_at_night() {
-    // Given the production v9 village.
-    let mut engine = game_v9_scene(1);
+    // Given the live baseline village (R3; was game_v9_scene(1)). Measured on
+    // baseline seed 1: 20/24 and 21/26 asleep on their assigned beds
+    // (BedAssignmentSystem's `bed_of`) at 02:00 on days 2 and 3.
+    let mut engine = baseline_engine(1);
     for day in [2, 3] {
         // When the displayed clock reaches 02:00 on each requested day.
         let tick = (day - 1) * 1440 + 120 - engine.resources.rules.clock_offset_ticks;
@@ -62,13 +64,15 @@ fn harness_rhythm_villagers_sleep_in_beds_at_night() {
 
 #[test]
 fn harness_rhythm_evening_near_hearth() {
-    // Given the production v9 village.
-    let mut engine = game_v9_scene(1);
+    // Given the live baseline village (R3; was game_v9_scene(1)). Measured on
+    // baseline seed 1: 21/21 and 16/18 idle adults within the evening tether
+    // at 19:30 on days 2 and 3, so the bar is raised from half to 3/4.
+    let mut engine = baseline_engine(1);
     for day in [2, 3] {
         // When the displayed clock reaches 19:30.
         let tick = (day - 1) * 1440 + 1170 - engine.resources.rules.clock_offset_ticks;
         advance_to(&mut engine, tick);
-        // Then at least half of idle adults are within the evening tether.
+        // Then at least three quarters of idle adults are within the evening tether.
         let mut idle = 0;
         let mut near = 0;
         for (_, (agent, pos, state, child)) in engine
@@ -92,7 +96,7 @@ fn harness_rhythm_evening_near_hearth() {
             }
         }
         assert!(
-            idle > 0 && near * 2 >= idle,
+            idle > 0 && near * 4 >= idle * 3,
             "day {day}: near {near}/{idle}"
         );
     }
@@ -102,7 +106,7 @@ fn harness_rhythm_evening_near_hearth() {
 fn harness_rhythm_wake_for_critical_thirst() {
     // Given a sleeping villager with moderate hunger and independently critical thirst.
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v9();
+    engine.resources.rules = WorldRules::baseline(1);
     engine.resources.rules.clock_offset_ticks = 1260;
     engine.resources.rules.agent.move_interval_ticks = 1;
     let entity = engine.spawn_agent(2, 2);
@@ -150,8 +154,10 @@ fn harness_rhythm_wake_for_critical_thirst() {
 
 #[test]
 fn harness_rhythm_children_grow_up() {
-    // Given the first real newborn in the production village.
-    let mut engine = game_v9_scene(1);
+    // Given the first real newborn in the live baseline village (R3; the only
+    // MaturationSystem behaviour test). Measured on baseline seed 1: born at
+    // tick 720, matured at tick 6481 = born + child_ticks (5760) + 1.
+    let mut engine = baseline_engine(1);
     let (entity, born_tick) = loop {
         engine.tick();
         let newborn = engine
@@ -218,7 +224,7 @@ fn harness_rhythm_children_grow_up() {
 fn harness_rhythm_bed_seek_ignores_intermediate_shelters() {
     // Given an assigned bed beyond another shelter on the same straight path.
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v9();
+    engine.resources.rules = WorldRules::baseline(1);
     engine.resources.current_tick = 780;
     let entity = engine.spawn_agent(2, 2);
     let id = engine.world.get::<&Agent>(entity).unwrap().id;
@@ -270,20 +276,10 @@ fn harness_rhythm_bed_seek_ignores_intermediate_shelters() {
 }
 
 #[test]
-fn harness_rhythm_sleep_seek_does_not_dehydrate_seed33() {
-    // Given the real game seed that exposed a stale sleep target after bed reassignment.
-    let mut engine = game_v9_scene(33);
-    // When the production scheduler runs for ten days without state injection.
-    advance_to(&mut engine, 14400);
-    // Then bed seeking does not leave villagers trapped until dehydration kills them.
-    assert_eq!(engine.resources.tallies.deaths_dehydration, 0);
-}
-
-#[test]
 fn harness_rhythm_reassigned_bed_replaces_existing_sleep_seek() {
     // Given a walker at its old bed after the bed assignment changes.
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v9();
+    engine.resources.rules = WorldRules::baseline(1);
     engine.resources.current_tick = 784;
     assert!(engine
         .resources

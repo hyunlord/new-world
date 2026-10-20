@@ -8,7 +8,8 @@ use sim_systems::runtime::decision::AgentDecisionSystem;
 use sim_systems::runtime::settlement::housing_capacity;
 
 fn shelters(e: &mut SimEngine, count: u32, capacity: u32) {
-    let rules = WorldRules::game_v20(7);
+    // R1 exact: night_rest and shelter_planning are unchanged from v20 to the baseline.
+    let rules = WorldRules::baseline(7);
     e.resources.rules.agent.night_rest = rules.agent.night_rest;
     e.resources.rules.society.shelter_planning = rules.society.shelter_planning;
     e.resources

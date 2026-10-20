@@ -116,11 +116,20 @@ fn pairing_excludes_close_kin_children_elders_and_below_threshold() {
         .insert_one(candidates[3], Child { born_tick: 0 })
         .expect("child");
     e.world.insert_one(candidates[4], Elder).expect("elder");
+    // The live rule pairs at familiarity >= 0.200 (baseline `V23` family);
+    // the last candidate sits just below it.
+    let threshold = e
+        .resources
+        .rules
+        .society
+        .family
+        .expect("live family rule")
+        .familiarity_threshold();
     for (index, other) in ids.iter().enumerate() {
         e.resources.relationships.insert(
             RelationshipKey::new(mother_id, *other),
             RelationshipState {
-                familiarity: if index == 5 { 0.299 } else { 1.0 },
+                familiarity: if index == 5 { threshold - 0.001 } else { 1.0 },
                 hostility: 0.0,
             },
         );
@@ -134,6 +143,21 @@ fn pairing_excludes_close_kin_children_elders_and_below_threshold() {
         .query::<&Kin>()
         .iter()
         .all(|(_, kin)| kin.partner.is_none()));
+    // Control: at exactly the threshold the last candidate does pair, so the
+    // exclusions above are not an inert matcher.
+    e.resources.relationships.insert(
+        RelationshipKey::new(mother_id, ids[5]),
+        RelationshipState {
+            familiarity: threshold,
+            hostility: 0.0,
+        },
+    );
+    e.resources.current_tick = 1200 + e.resources.ticks_per_day;
+    PairingSystem.tick(&mut e.world, &mut e.resources);
+    assert_eq!(
+        e.world.get::<&Kin>(mother).expect("kin").partner,
+        Some(ids[5])
+    );
 }
 
 #[test]
@@ -204,16 +228,24 @@ fn family_system_registration_follows_maturation_before_beds_once() {
 
 #[test]
 fn founders_receive_keyed_sex_and_empty_kin_only_with_family_enabled() {
-    let old = sim_test::scenes::game_v21_scene(7);
-    assert_eq!(old.world.query::<&Sex>().iter().count(), 0);
-    assert_eq!(old.world.query::<&Kin>().iter().count(), 0);
-    let new = sim_test::scenes::game_v22_scene(7);
+    // R3: the baseline world (family rule on). Seed 7 draws its founder count
+    // from `WorldVariety::draw_v18(7)`; every founder gets a keyed sex and an
+    // empty Kin, and no family event exists at tick zero.
+    let new = sim_test::baseline_engine(7);
     let people = new.world.query::<&Agent>().iter().count();
-    assert!(people > 0);
+    assert_eq!(
+        people as u32,
+        sim_core::variety::WorldVariety::draw_v18(7).starting_agents
+    );
     assert_eq!(new.world.query::<&Sex>().iter().count(), people);
+    assert_eq!(new.world.query::<&Kin>().iter().count(), people);
+    let mut women = 0;
     for (_, (lineage, sex, kin)) in new.world.query::<(&Lineage, &Sex, &Kin)>().iter() {
         assert_eq!(*sex, Sex::from_lineage(7, lineage.key));
         assert_eq!(*kin, Kin::default());
+        women += usize::from(sex.female);
     }
+    // Both sexes are present among the founders (the keyed draw is not constant).
+    assert!(women > 0 && women < people, "women {women} of {people}");
     assert_eq!(new.world.query::<&FamilyObservations>().iter().count(), 0);
 }

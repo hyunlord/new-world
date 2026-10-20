@@ -62,11 +62,13 @@ mod tests {
             resources.building_kinds.insert(tile, BuildingKind::Shelter);
             resources.building_owner.insert(tile, 1);
         }
-        let mut rule = WorldRules::game_v8()
+        let mut rule = WorldRules::baseline(0)
             .society
             .shelter_planning
             .expect("planning");
         rule.residents_per_shelter = 8;
+        // Count every shelter near the formation first (the baseline counts owned ones).
+        rule.housing = HousingCount::NearFormation;
         assert_eq!(housing_capacity(&resources, 1, &rule), 32);
         assert_eq!(housing_capacity(&resources, 2, &rule), 32);
         rule.housing = HousingCount::Owned;

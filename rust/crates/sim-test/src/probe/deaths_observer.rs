@@ -166,8 +166,8 @@ pub(super) fn install(engine: &mut SimEngine) -> SharedObservations {
 mod tests {
     #[test]
     fn observation_does_not_change_fingerprint() {
-        let mut observed = crate::scenes::legacy_scene();
-        let mut plain = crate::scenes::legacy_scene();
+        let mut observed = crate::scenes::baseline_scene(0);
+        let mut plain = crate::scenes::baseline_scene(0);
         let shared = super::install(&mut observed);
         for _ in 0..4 {
             observed.tick();

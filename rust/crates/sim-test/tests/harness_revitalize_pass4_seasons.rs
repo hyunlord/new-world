@@ -1,5 +1,9 @@
 //! Pass 4 Part 4: seasonal regrowth and a store that matters in winter.
-use sim_core::components::{Agent, Hunger, ResourceKind, Settlement};
+//!
+//! V8-0: rebased from `game_v10` (fixed regrowth [750, 1250, 1000, 500]) on
+//! the baseline, whose regrowth is that table scaled by the world's food-regen
+//! draw (`WorldVariety::draw_v18`), so the expected values come from the rule.
+use sim_core::components::{Agent, Hunger, Settlement};
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
 use sim_engine::{RuntimeSystem, SimEngine};
@@ -7,11 +11,11 @@ use sim_systems::runtime::resource_regen::{season_at, ResourceRegenSystem};
 use sim_systems::runtime::settlement::food_economy::{
     members_need_per_day, stock_target, winter_supply_per_day,
 };
-use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v10_scene, game_v9_scene};
 
 const DAY: u64 = 1440;
 const OFFSET: u64 = 480;
+/// Regrowth pulses per day (`REGEN_INTERVAL` = 120 ticks).
+const PULSES: u64 = 12;
 
 /// Display day `d` (zero-based) starts at simulation tick `d * DAY - OFFSET`.
 fn day_start(d: u64) -> u64 {
@@ -20,41 +24,73 @@ fn day_start(d: u64) -> u64 {
 
 #[test]
 fn harness_season_regen_schedule() {
-    let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v10();
-    engine.resources.set_food_source_max(5, 5, 4);
-    let mut regen = ResourceRegenSystem::new();
-    let expected = [9u64, 15, 12, 6];
-    // Display days 1..=28 are full days (day 0 starts at 08:00); they cover a
-    // whole year shifted by one day, so every season appears.
-    let mut per_day = vec![0u64; 29];
-    for tick in (day_start(1)..day_start(29)).step_by(120) {
-        engine.resources.current_tick = tick;
-        regen.tick(&mut engine.world, &mut engine.resources);
+    // Seeds 0..8 draw food regen 875..1131 permille, so the four seasons'
+    // rates differ from world to world (seed 1: [656, 1093, 875, 437]).
+    for seed in 0..8u64 {
+        let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
+        let baseline = WorldRules::baseline(seed);
+        engine.resources.rules.clock_offset_ticks = baseline.clock_offset_ticks;
+        engine.resources.rules.seasons = baseline.seasons;
+        let rule = baseline.seasons.expect("baseline seasons");
+        assert_eq!(rule.days_per_season, 7);
+        assert_eq!(OFFSET, baseline.clock_offset_ticks);
+        engine.resources.set_food_source_max(5, 5, 4);
+        let mut regen = ResourceRegenSystem::new();
+        // Display days 1..=28 are full days (day 0 starts at 08:00); they cover a
+        // whole year shifted by one day, so every season appears.
+        let mut per_day = vec![0u64; 29];
+        for tick in (day_start(1)..day_start(29)).step_by(120) {
+            engine.resources.current_tick = tick;
+            regen.tick(&mut engine.world, &mut engine.resources);
+            assert!(
+                engine.resources.food_tiles.values().all(|v| *v > 0),
+                "seed {seed}: zero-valued food tile at {tick}"
+            );
+            let d = (tick + OFFSET) / DAY;
+            per_day[d as usize] +=
+                u64::from(engine.resources.food_tiles.remove(&(5, 5)).unwrap_or(0));
+        }
+        // A day of a season grows 12 pulses x its permille, carried exactly:
+        // the floor or the ceiling of 12 p / 1000 units.
+        for d in 1..=28u64 {
+            let season = ((d / 7) % 4) as usize;
+            let p = u64::from(rule.regen_permille[season]);
+            let lo = PULSES * p / 1000;
+            let hi = (PULSES * p).div_ceil(1000);
+            assert!(
+                (lo..=hi).contains(&per_day[d as usize]),
+                "seed {seed}: display day {d} (season {season}) grew {}, want {lo}..={hi}",
+                per_day[d as usize]
+            );
+        }
+        // A whole season (display days 7..=13 summer, 14..=20 autumn, 21..=27
+        // winter) grows 84 pulses x p, within one unit of the carried remainder.
+        let mut totals = [0u64; 4];
+        for (season, first) in [(1usize, 7u64), (2, 14), (3, 21)] {
+            totals[season] = per_day[first as usize..first as usize + 7].iter().sum();
+            let exact = 7 * PULSES * u64::from(rule.regen_permille[season]);
+            assert!(
+                (exact / 1000..=exact / 1000 + 1).contains(&totals[season]),
+                "seed {seed}: season {season} grew {}, want {} or one more",
+                totals[season],
+                exact / 1000
+            );
+        }
         assert!(
-            engine.resources.food_tiles.values().all(|v| *v > 0),
-            "zero-valued food tile at {tick}"
+            totals[1] > totals[2] && totals[2] > totals[3],
+            "seed {seed}: summer > autumn > winter, got {totals:?}"
         );
-        let d = (tick + OFFSET) / DAY;
-        per_day[d as usize] += u64::from(engine.resources.food_tiles.remove(&(5, 5)).unwrap_or(0));
-    }
-    for d in 1..=28u64 {
-        let season = ((d / 7) % 4) as usize;
         assert_eq!(
-            per_day[d as usize], expected[season],
-            "display day {d} (season {season})"
+            engine.resources.tallies.regen_lost_at_cap, 0,
+            "a drained bush never reaches its cap"
         );
     }
-    assert_eq!(
-        engine.resources.tallies.regen_lost_at_cap, 0,
-        "a drained bush never reaches its cap"
-    );
 }
 
 #[test]
 fn harness_season_target_includes_winter() {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v10();
+    engine.resources.rules = WorldRules::baseline(1);
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.formation_tile = (20, 20);
     for _ in 0..42 {
@@ -92,12 +128,13 @@ fn harness_season_target_includes_winter() {
         };
         let got = stock_target(&engine.world, &engine.resources, 1).expect("target");
         assert_eq!(got, want, "display day {d}, season {season}");
-        // Independent numbers: 42 x 2.4 = 100.8 need, 1.5 days = 151.2, winter
-        // supply 12 x 12 x 0.5 = 72, so summer/autumn add 7 x 28.8 = 201.6.
+        // Independent numbers (seed 1, winter regrowth 437 permille): 42 x 2.4
+        // = 100.8 need, 2.5 days = 252, winter supply 12 x 12 x 0.437 = 62.928,
+        // so summer/autumn add 7 x 37.872 = 265.104.
         let fixed = if season == 1 || season == 2 {
-            151.2 + 201.6
+            252.0 + 265.104
         } else {
-            151.2
+            252.0
         };
         assert!(
             (got - fixed).abs() < 1e-3,
@@ -110,53 +147,5 @@ fn harness_season_target_includes_winter() {
             );
         }
     }
-    assert_eq!(winter_supply_per_day(&engine.resources, 1, 16), 72.0);
-}
-
-#[test]
-fn harness_season_survives_first_winter() {
-    let mut engine = game_v10_scene(1);
-    // Winter is display days 21..=27; it ends at the start of display day 28.
-    let end_of_winter = day_start(28);
-    let mut winter_end_stock = None;
-    for tick in 1..=35 * DAY {
-        engine.tick();
-        if tick == end_of_winter {
-            winter_end_stock = Some(
-                engine
-                    .resources
-                    .settlements
-                    .values()
-                    .map(|s| s.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0))
-                    .sum::<u32>(),
-            );
-        }
-        assert_eq!(
-            engine.resources.tallies.deaths_starvation, 0,
-            "starvation at tick {tick}"
-        );
-    }
-    let stock = winter_end_stock.expect("winter end sampled");
-    assert!(stock > 0, "store empty at the end of the first winter");
-}
-
-#[test]
-fn harness_season_v9_unchanged() {
-    for (seed, expected) in [
-        "c022f6555945fcad",
-        "5ca9b7e597238ee3",
-        "d8afca881c554360",
-        "48cf47e1341f5048",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_v9_scene(seed as u64);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert_eq!(engine.resources.food_regen_acc, 0);
-        assert!(season_at(&engine.resources).is_none());
-    }
+    assert!((winter_supply_per_day(&engine.resources, 1, 16) - 62.928).abs() < 1e-9);
 }

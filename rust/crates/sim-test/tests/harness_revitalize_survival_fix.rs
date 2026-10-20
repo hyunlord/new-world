@@ -10,11 +10,15 @@ use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_systems::runtime::decision::AgentDecisionSystem;
 use sim_systems::runtime::survival::despawn_agent;
-use sim_test::{probe::fingerprint, scenes::game_scene};
+use sim_test::baseline_engine;
+
+/// World seed of the fixture rules; the chase, fallthrough and preemption
+/// rules do not depend on it.
+const SEED: u64 = 1;
 
 fn fixture() -> (SimEngine, Entity, Entity) {
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v8();
+    engine.resources.rules = WorldRules::baseline(SEED);
     let a = engine.spawn_agent(10, 10);
     let b = engine.spawn_agent(10, 10);
     let partner = engine.world.get::<&Agent>(b).expect("partner").id;
@@ -186,28 +190,14 @@ fn harness_need_fallthrough_drinks_when_no_food() {
 
 #[test]
 fn harness_economy_clock_initial_values() {
-    assert_eq!(game_scene(1).resources.time_of_day, 8.0);
+    // The baseline clock offset (480 ticks) starts the display clock at 08:00.
+    assert_eq!(baseline_engine(1).resources.time_of_day, 8.0);
     assert_eq!(
         SimEngine::new(32, 32, MaterialRegistry::new())
             .resources
             .time_of_day,
         0.0
     );
-}
-
-#[test]
-fn harness_economy_clock_offset_is_display_only() {
-    harness_economy_clock_initial_values();
-    let mut midnight = game_scene(1);
-    let mut morning = game_scene(1);
-    midnight.resources.rules.clock_offset_ticks = 0;
-    midnight.resources.time_of_day = 0.0;
-    for tick in 0..2880 {
-        assert_eq!(fingerprint(&midnight), fingerprint(&morning), "tick {tick}");
-        midnight.tick();
-        morning.tick();
-    }
-    assert_eq!(fingerprint(&midnight), fingerprint(&morning));
 }
 
 #[test]

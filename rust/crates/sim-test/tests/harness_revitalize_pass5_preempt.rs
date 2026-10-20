@@ -9,12 +9,14 @@ use sim_core::rules::WorldRules;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::runtime::decision::AgentDecisionSystem;
-use sim_test::probe::fingerprint;
-use sim_test::scenes::game_v10_scene;
+
+/// World seed of the fixture rules; preemption does not depend on it.
+const SEED: u64 = 1;
 
 /// One member of a settlement at (20, 20) standing 15 tiles out at (35, 20),
-/// already seeking `target` at `spot`; water on the river bank at (35, 30);
-/// clock at 12:00 on display day 1 (inside the forage and firewood windows).
+/// already seeking `target` at `spot`; a bush at (36, 22), water on the river
+/// bank at (35, 30); clock at 12:00 on display day 1 (inside the forage and
+/// firewood windows).
 fn seeker(
     rules: WorldRules,
     target: TargetKind,
@@ -49,8 +51,11 @@ fn seeker(
     engine.resources.settlements.insert(1, settlement);
     engine.resources.wood_tiles.insert((38, 20), 6);
     engine.resources.wood_source_max.insert((38, 20), 6);
-    engine.resources.set_food_tile(38, 22, 4);
-    engine.resources.set_food_source_max(38, 22, 4);
+    // Baseline food availability is local (`local_food_availability`): the
+    // bush lies on the catchment edge (Chebyshev 16 from the hearth); v11's
+    // (38, 22) lies outside it, where no member forages.
+    engine.resources.set_food_tile(36, 22, 4);
+    engine.resources.set_food_source_max(36, 22, 4);
     engine.resources.set_water_tile(35, 30, 255);
     (engine, entity)
 }
@@ -62,7 +67,7 @@ fn state(engine: &SimEngine, entity: Entity) -> AgentState {
 #[test]
 fn harness_gather_preempted_by_thirst() {
     let (mut engine, gatherer) = seeker(
-        WorldRules::game_v11(),
+        WorldRules::baseline(SEED),
         TargetKind::GatherWood,
         (38, 20),
         0.0,
@@ -95,9 +100,9 @@ fn harness_gather_preempted_by_thirst() {
 
     // A forager is interrupted by critical hunger the same way (75 inclusive).
     let (mut engine, forager) = seeker(
-        WorldRules::game_v11(),
+        WorldRules::baseline(SEED),
         TargetKind::GatherFood,
-        (38, 22),
+        (36, 22),
         75.0,
         0.0,
     );
@@ -115,7 +120,7 @@ fn harness_gather_preempted_by_thirst() {
 
     // Below the critical level the trip continues.
     let (mut engine, gatherer) = seeker(
-        WorldRules::game_v11(),
+        WorldRules::baseline(SEED),
         TargetKind::GatherWood,
         (38, 20),
         60.0,
@@ -142,7 +147,7 @@ fn harness_preempted_gatherer_is_not_sent_out_again() {
     // Review fix: every bush empty (no reachable food need) and wood below
     // target; after the preemption the critical member starts no new trip.
     let (mut engine, gatherer) = seeker(
-        WorldRules::game_v11(),
+        WorldRules::baseline(SEED),
         TargetKind::GatherWood,
         (38, 20),
         80.0,
@@ -160,40 +165,4 @@ fn harness_preempted_gatherer_is_not_sent_out_again() {
         "preempted once, never re-sent"
     );
     assert_eq!(engine.resources.tallies.wood_trips, 0);
-}
-
-#[test]
-fn harness_preempt_v10_unchanged() {
-    // Under v10 a thirsty forager keeps walking (Pass 4 behaviour).
-    let (mut engine, forager) = seeker(
-        WorldRules::game_v10(),
-        TargetKind::GatherFood,
-        (38, 22),
-        0.0,
-        80.0,
-    );
-    AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(
-        state(&engine, forager),
-        AgentState::Seeking {
-            target: TargetKind::GatherFood
-        }
-    );
-    assert_eq!(engine.resources.tallies.gather_preempted, 0);
-    for (seed, expected) in [
-        "0e38264bd3abe6ba",
-        "3b0590ec71558a58",
-        "d265695444b8b314",
-        "48120c365d543729",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_v10_scene(seed as u64);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert_eq!(engine.resources.tallies.gather_preempted, 0);
-    }
 }

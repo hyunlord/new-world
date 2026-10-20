@@ -1,7 +1,8 @@
 //! Pass 19 Part 1: the chronicle is complete enough to rebuild every living
 //! person's roster from its membership entries (formation, joins, leaves,
 //! births, settling, deaths), names only people with a record, and closes
-//! every death; in fission and non-fission scenes.
+//! every death; through a fission of the baseline world (V8-0: the
+//! no-fission and legacy scenes are gone).
 use sim_core::chronicle::{Chronicle, ChronicleKind};
 use sim_core::components::{Agent, AgentId, SettlementId};
 use sim_engine::SimEngine;
@@ -105,9 +106,13 @@ fn count(chronicle: &Chronicle, kind: ChronicleKind) -> usize {
 }
 
 #[test]
-fn harness_chronicle_rebuilds_rosters_through_a_fission_game_v23() {
-    // Seed 0 completes its first fission before day 60 (Pass 19 pins).
-    let engine = run(sim_test::scenes::game_v23_scene(0), "game_v23", 60);
+fn harness_chronicle_rebuilds_rosters_through_a_fission() {
+    // Baseline world 8 splits at 06:00 of display day 28 and founds its
+    // daughter on day 29 (V8-0 re-measure; the earliest split in a scan of
+    // seeds 0..48), so 32 days cover the whole fission.
+    let start = sim_test::baseline_engine(8);
+    let founders = start.world.query::<&Agent>().iter().count();
+    let engine = run(start, "baseline", 32);
     let chronicle = &engine.resources.chronicle;
     assert_eq!(engine.resources.tallies.fissions, 1);
     assert_eq!(count(chronicle, ChronicleKind::DaughterFounded), 1);
@@ -115,9 +120,15 @@ fn harness_chronicle_rebuilds_rosters_through_a_fission_game_v23() {
         count(chronicle, ChronicleKind::Born) as u64,
         engine.resources.tallies.births
     );
-    assert!(count(chronicle, ChronicleKind::Paired) > 0);
-    assert!(count(chronicle, ChronicleKind::Departed) >= 6);
-    assert!(count(chronicle, ChronicleKind::FoundingMember) >= 20);
+    // Measured on world 8 at day 32: 20 pairings, a group of 14 departing,
+    // 23 founding members (every founder), 39 births, 7 deaths.
+    assert!(count(chronicle, ChronicleKind::Paired) >= 10);
+    assert_eq!(
+        count(chronicle, ChronicleKind::Departed),
+        engine.resources.fission_log[0].members.len()
+    );
+    assert!(count(chronicle, ChronicleKind::Departed) >= 6, "group_min");
+    assert_eq!(count(chronicle, ChronicleKind::FoundingMember), founders);
     let deaths = engine.resources.tallies;
     let died = deaths.deaths_starvation
         + deaths.deaths_dehydration
@@ -125,28 +136,5 @@ fn harness_chronicle_rebuilds_rosters_through_a_fission_game_v23() {
         + deaths.deaths_old_age
         + deaths.deaths_exposure;
     assert_eq!(count(chronicle, ChronicleKind::Died) as u64, died);
-}
-
-#[test]
-fn harness_chronicle_rebuilds_rosters_without_fission_and_stays_bounded() {
-    // `game_v16` has no fission rule: the proximity sync re-admits members of
-    // overlapping rosters every tick and exclusivity drops them again; the
-    // chronicle must record only net changes.
-    let engine = run(sim_test::scenes::game_v16_scene(3), "game_v16", 10);
-    let chronicle = &engine.resources.chronicle;
-    let people = chronicle.person_count() as u64;
-    assert!(
-        (chronicle.len() as u64) < people * 10 + 200,
-        "{} entries for {people} people in 10 days",
-        chronicle.len()
-    );
-}
-
-#[test]
-fn harness_chronicle_rebuilds_rosters_in_the_legacy_scene() {
-    let mut engine = sim_test::scenes::legacy_scene();
-    for _ in 0..3_000 {
-        engine.tick();
-    }
-    check(&engine, "legacy");
+    assert!(died >= 3, "the run closes deaths too ({died})");
 }

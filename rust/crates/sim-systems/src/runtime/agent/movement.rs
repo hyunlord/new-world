@@ -504,8 +504,8 @@ mod tests {
     #[test]
     fn hauls_home_generalises_haul_due_to_wood() {
         use sim_core::rules::WorldRules;
-        let forage = WorldRules::game_v11().agent.forage.expect("forage");
-        let wood = WorldRules::game_v11().society.firewood.expect("firewood");
+        let forage = WorldRules::baseline(0).agent.forage.expect("forage");
+        let wood = WorldRules::baseline(0).society.firewood.expect("firewood");
         let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
         // Without the firewood rule: exactly haul_due, wood ignored.
         for (food, window) in [(0, true), (1, true), (4, true), (1, false), (0, false)] {

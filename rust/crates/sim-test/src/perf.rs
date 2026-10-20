@@ -111,37 +111,18 @@ pub fn build_engine(spec: &RunSpec) -> Result<SimEngine, String> {
     .map_err(|payload| panic_text(payload.as_ref()))
 }
 
-/// Pass 16: the rules of a stress world by its label (`stress_v20`,
-/// `stress_v20_inert`; anything else is today's `game_v19`).
-pub fn stress_rules(label: &str, seed: u64) -> WorldRules {
-    match label {
-        "stress_v20" => WorldRules::game_v20(seed),
-        "stress_v21" => WorldRules::game_v21(seed),
-        "stress_v22" => WorldRules::game_v22(seed),
-        "stress_v23" => WorldRules::game_v23(seed),
-        "stress_v24" => WorldRules::game_v24(seed),
-        "stress_v25" => WorldRules::game_v25(seed),
-        "stress_v26" => WorldRules::game_v26(seed),
-        "stress_v20_inert" => WorldRules::game_v20_inert(seed),
-        "stress_baseline" => WorldRules::baseline(seed),
-        _ => WorldRules::game_v19(seed),
-    }
+/// The rules of a stress world by its label: every label runs the baseline
+/// rules since V8-0 (the per-version labels `stress_v19 … stress_v26` were
+/// removed with the `game_vNN` chain, ADR 0011).
+pub fn stress_rules(_label: &str, seed: u64) -> WorldRules {
+    WorldRules::baseline(seed)
 }
 
-/// Pass 16: the stress label of the `--rules` choice stored in
-/// `PerfArgs::scene` for `stress` / `quick` / `map`.
-pub fn stress_label(rules: &str) -> &'static str {
-    match rules {
-        "game_v20" => "stress_v20",
-        "game_v21" => "stress_v21",
-        "game_v22" => "stress_v22",
-        "game_v23" => "stress_v23",
-        "game_v24" => "stress_v24",
-        "game_v25" => "stress_v25",
-        "game_v20_inert" => "stress_v20_inert",
-        "baseline" | "game_v26" => "stress_baseline",
-        _ => "stress_v19",
-    }
+/// The stress label of the `--rules` choice stored in `PerfArgs::scene` for
+/// `stress` / `quick` / `map`: always `stress_baseline` (output files are named
+/// `<mode>_stress_baseline_s<seed>_n<agents>_side<side>_<feed>`).
+pub fn stress_label(_rules: &str) -> &'static str {
+    "stress_baseline"
 }
 
 fn panic_text(payload: &(dyn std::any::Any + Send)) -> String {
@@ -853,7 +834,11 @@ fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u
 }
 
 /// The usage line.
-pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26] --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
+pub const USAGE: &str = "usage: worldsim_perf natural --scene baseline --seeds A..B --days D --out DIR
+       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules baseline] --out DIR
+       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR
+       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR
+       worldsim_perf quick --out DIR";
 
 impl PerfArgs {
     /// Parse `args` (without the program name).
@@ -885,20 +870,10 @@ impl PerfArgs {
             match args[i].as_str() {
                 "--scene" => parsed.scene = value.clone(),
                 "--rules" => {
-                    if !matches!(
-                        value.as_str(),
-                        "game_v19"
-                            | "game_v20"
-                            | "game_v20_inert"
-                            | "game_v21"
-                            | "game_v22"
-                            | "game_v23"
-                            | "game_v24"
-                            | "game_v25"
-                            | "game_v26"
-                            | "baseline"
-                    ) {
-                        return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26, not {value}"));
+                    if !matches!(value.as_str(), "baseline" | "game_v26") {
+                        return Err(format!(
+                            "--rules baseline (game_v26 is its alias), not {value}"
+                        ));
                     }
                     rules = Some(value.clone());
                 }
@@ -963,7 +938,7 @@ impl PerfArgs {
             (_, None) => {}
         }
         if matches!(mode.as_str(), "natural" | "overhead")
-            && !(parsed.scene.starts_with("game") || parsed.scene == "baseline")
+            && !matches!(parsed.scene.as_str(), "baseline" | "game_v26")
         {
             return Err(format!(
                 "--scene must be a game scene, not {}",
@@ -1050,7 +1025,7 @@ impl PerfArgs {
             "map" => {
                 for &side in &self.sides {
                     for seed in self.seeds.clone() {
-                        let founders = WorldGenConfig::game_v19(seed).starting_agents;
+                        let founders = WorldGenConfig::baseline(seed).starting_agents;
                         let spec = RunSpec {
                             mode: "map".into(),
                             scene: stress_label(&self.scene).into(),
@@ -1075,10 +1050,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn profiled_and_plain_game_v19_reach_the_same_fingerprint() {
+    fn profiled_and_plain_baseline_reach_the_same_fingerprint() {
         // Pass 15 6.1 equivalence: seed 7, 3,000 ticks.
-        let mut plain = crate::scenes::game_v19_scene(7);
-        let mut profiled = crate::scenes::game_v19_scene(7);
+        let mut plain = crate::scenes::baseline_scene(7);
+        let mut profiled = crate::scenes::baseline_scene(7);
         let mut profile = profiled.new_tick_profile();
         for _ in 0..3_000 {
             plain.tick();
@@ -1165,7 +1140,7 @@ mod tests {
     fn a_short_fed_stress_run_reports_consistent_numbers() {
         let spec = RunSpec {
             mode: "stress".into(),
-            scene: "stress_v19".into(),
+            scene: "stress_baseline".into(),
             seed: 15100,
             agents: Some(40),
             side: 64,
@@ -1254,7 +1229,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
         let spec = RunSpec {
             mode: "map".into(),
-            scene: "stress_v19".into(),
+            scene: "stress_baseline".into(),
             seed: 3,
             agents: Some(24),
             side: 64,
@@ -1263,15 +1238,15 @@ mod tests {
         };
         let entry = run_and_write(&dir, &spec).expect("run");
         assert_eq!(entry["status"], "ok");
-        assert_eq!(entry["file"], "map_stress_v19_s3_n24_side64_fed.json");
+        assert_eq!(entry["file"], "map_stress_baseline_s3_n24_side64_fed.json");
         update_index(&dir, std::slice::from_ref(&entry)).expect("index");
         update_index(&dir, &[entry]).expect("index");
         let index: Value =
             serde_json::from_str(&std::fs::read_to_string(dir.join("runs.json")).expect("read"))
                 .expect("json");
         assert_eq!(index["runs"].as_array().map(Vec::len), Some(1));
-        let bin =
-            std::fs::read(dir.join("map_stress_v19_s3_n24_side64_fed.tick_us.bin")).expect("bin");
+        let bin = std::fs::read(dir.join("map_stress_baseline_s3_n24_side64_fed.tick_us.bin"))
+            .expect("bin");
         assert_eq!(bin.len(), 70 * 4);
         let _ = std::fs::remove_dir_all(&dir);
     }
@@ -1280,7 +1255,7 @@ mod tests {
     fn natural_spec_names_the_scene_founders() {
         let spec = RunSpec {
             mode: "natural".into(),
-            scene: "game_v19".into(),
+            scene: "baseline".into(),
             seed: 15000,
             agents: None,
             side: 64,
@@ -1289,9 +1264,10 @@ mod tests {
         };
         let engine = build_engine(&spec).expect("scene");
         assert!(engine.resources.world_variety.is_some());
+        assert_eq!(engine.resources.rules, WorldRules::baseline(15000));
         assert_eq!(
             spec.stem(alive(&engine)),
-            format!("natural_game_v19_s15000_n{}_side64_none", alive(&engine))
+            format!("natural_baseline_s15000_n{}_side64_none", alive(&engine))
         );
     }
 
@@ -1324,86 +1300,53 @@ mod tests {
 
     #[test]
     fn rules_flag_picks_the_stress_rules_and_label() {
-        // Pass 16 8.5: --rules (default game_v19, today's behaviour; --scene stays ignored by stress).
+        // Pass 16 8.5 / V8-0: `--rules` accepts only `baseline` (and its alias
+        // `game_v26`); the label is always `stress_baseline` and `--scene`
+        // stays ignored by stress.
         let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
-        for (flag, label) in [
-            ("", "stress_baseline"),
-            ("--rules baseline", "stress_baseline"),
-            ("--rules game_v19", "stress_v19"),
-            ("--rules game_v20", "stress_v20"),
-            ("--rules game_v20_inert", "stress_v20_inert"),
-            ("--rules game_v21", "stress_v21"),
-            ("--rules game_v22", "stress_v22"),
-            ("--rules game_v23", "stress_v23"),
-            ("--rules game_v24", "stress_v24"),
-            ("--rules game_v25", "stress_v25"),
-            ("--rules game_v26", "stress_baseline"),
-        ] {
+        for flag in ["", "--rules baseline", "--rules game_v26"] {
             let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x")))
                 .expect("stress");
-            assert_eq!(stress_label(&p.scene), label, "{flag}");
+            assert_eq!(stress_label(&p.scene), "stress_baseline", "{flag}");
         }
         let ignored =
             PerfArgs::parse(&a("stress --scene game_v16 --seeds 1..2 --out x")).expect("stress");
         assert_eq!(stress_label(&ignored.scene), "stress_baseline");
-        assert!(PerfArgs::parse(&a("stress --rules game_v18 --out x")).is_err());
-        // Pass 19 7.6: game_v24 maps to stress_v24 and WorldRules::game_v24
-        // (an unknown label would silently fall back to game_v19).
-        assert_eq!(
-            stress_rules(stress_label("game_v24"), 4),
-            WorldRules::game_v24(4)
-        );
-        assert_ne!(
-            stress_rules(stress_label("game_v24"), 4),
-            WorldRules::game_v23(4)
-        );
-        // Pass 20: game_v25 maps to stress_v25 and WorldRules::game_v25.
-        assert_eq!(
-            stress_rules(stress_label("game_v25"), 4),
-            WorldRules::game_v25(4)
-        );
-        assert_ne!(
-            stress_rules(stress_label("game_v25"), 4),
-            WorldRules::game_v24(4)
-        );
-        // Pass 21: game_v26 maps to stress_v26 and WorldRules::game_v26; the
-        // next version is still rejected.
-        assert!(PerfArgs::parse(&a("stress --rules game_v27 --out x")).is_err());
-        assert_eq!(
-            stress_rules(stress_label("game_v26"), 4),
-            WorldRules::game_v26(4)
-        );
-        assert_ne!(
-            stress_rules(stress_label("game_v26"), 4),
-            WorldRules::game_v25(4)
-        );
+        // The removed per-version rules and the next version are rejected.
+        for old in [
+            "game_v18",
+            "game_v19",
+            "game_v20_inert",
+            "game_v25",
+            "game_v27",
+        ] {
+            assert!(
+                PerfArgs::parse(&a(&format!("stress --rules {old} --out x"))).is_err(),
+                "{old}"
+            );
+        }
         assert!(
-            PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err()
+            PerfArgs::parse(&a("natural --rules baseline --seeds 0..1 --days 1 --out z")).is_err()
         );
         let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
         assert_eq!(stress_label(&q.scene), "stress_baseline");
-        for (label, rules) in [
-            ("stress_v19", WorldRules::game_v19(9)),
-            ("stress_v20", WorldRules::game_v20(9)),
-            ("stress_v20_inert", WorldRules::game_v20_inert(9)),
-            ("stress_v21", WorldRules::game_v21(9)),
-            ("stress_v22", WorldRules::game_v22(9)),
-            ("stress_v23", WorldRules::game_v23(9)),
-            ("stress_v24", WorldRules::game_v24(9)),
-            ("stress_v25", WorldRules::game_v25(9)),
-            ("stress_v26", WorldRules::game_v26(9)),
-        ] {
-            let spec = RunSpec {
-                mode: "stress".into(),
-                scene: label.into(),
-                seed: 9,
-                agents: Some(30),
-                side: 64,
-                feed: Feed::Fed,
-                ticks: 1,
-            };
-            assert_eq!(build_engine(&spec).expect("engine").resources.rules, rules);
-            assert!(spec.stem(30).starts_with(&format!("stress_{label}_s9_n30")));
-        }
+        // The stress world runs the baseline rules of its own seed, not the
+        // default (all opt-in rules off) rules.
+        assert_eq!(stress_rules("stress_baseline", 4), WorldRules::baseline(4));
+        assert_ne!(stress_rules("stress_baseline", 4), WorldRules::default());
+        let spec = RunSpec {
+            mode: "stress".into(),
+            scene: stress_label("baseline").into(),
+            seed: 9,
+            agents: Some(30),
+            side: 64,
+            feed: Feed::Fed,
+            ticks: 1,
+        };
+        assert_eq!(
+            build_engine(&spec).expect("engine").resources.rules,
+            WorldRules::baseline(9)
+        );
+        assert!(spec.stem(30).starts_with("stress_stress_baseline_s9_n30"));
     }
 }

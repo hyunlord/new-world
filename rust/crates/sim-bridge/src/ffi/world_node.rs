@@ -2537,7 +2537,7 @@ mod depleted_food_snapshot_tests {
     #[test]
     fn game_snapshot_keeps_depleted_bush_and_sorts_without_duplicates() {
         let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
-        engine.resources.rules = sim_core::rules::WorldRules::game_v8();
+        engine.resources.rules = sim_core::rules::WorldRules::baseline(0);
         engine.resources.set_food_source_max(8, 4, 6);
         engine.resources.set_food_source_max(2, 3, 6);
         engine.resources.set_food_tile(8, 4, 3);
@@ -3518,7 +3518,7 @@ mod revitalize_tooling_tests {
     #[test]
     fn harness_economy_clock_snapshot_rolls_day_at_offset_midnight() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
-        engine.resources.rules = sim_core::rules::WorldRules::game_v8();
+        engine.resources.rules = sim_core::rules::WorldRules::baseline(0);
         engine.resources.time_of_day = 8.0;
         assert_eq!(
             super::collect_world_info(&engine.resources).clock_offset_ticks,
@@ -3544,7 +3544,7 @@ mod revitalize_tooling_tests {
     #[test]
     fn time_snapshot_reports_seasons_from_the_display_day() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
-        engine.resources.rules = sim_core::rules::WorldRules::game_v10();
+        engine.resources.rules = sim_core::rules::WorldRules::baseline(0);
         let first = collect_time_snapshot(&engine);
         assert_eq!(
             (first.season, first.day_of_season, first.days_per_season),
@@ -3557,15 +3557,19 @@ mod revitalize_tooling_tests {
             (summer.day_index, summer.season, summer.day_of_season),
             (9, 1, 3)
         );
-        engine.resources.rules = sim_core::rules::WorldRules::game_v9();
+        // Without the seasons rule there are no seasons.
+        engine.resources.rules.seasons = None;
         assert_eq!(collect_time_snapshot(&engine).days_per_season, 0);
     }
 
     #[test]
     fn time_snapshot_reports_winter_severity_with_night_booking() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
-        engine.resources.rules = sim_core::rules::WorldRules::game_v12();
-        // v12 has no severity weights: -1 everywhere, winter included.
+        engine.resources.rules = sim_core::rules::WorldRules::baseline(0);
+        // Without severity weights: -1 everywhere, winter included.
+        if let Some(rule) = engine.resources.rules.society.firewood.as_mut() {
+            rule.winter_severity_permille = None;
+        }
         advance_engine_ticks(&mut engine, (21 * 1440) as i64);
         assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
         if let Some(rule) = engine.resources.rules.society.firewood.as_mut() {
@@ -3900,8 +3904,13 @@ mod society_snapshot_tests {
     #[test]
     fn society_joins_built_world_agents_and_preserves_order_filter_and_history() {
         let seed = 20_261_013;
-        let mut engine =
-            build_world_with(&WorldGenConfig::game_v17(seed), WorldRules::game_v17(seed));
+        // Without fission pressure the pressure and threshold columns read 0.
+        let mut rules = WorldRules::baseline(seed);
+        if let Some(mut fission) = rules.society.fission {
+            fission.pressure = None;
+            rules.society.fission = Some(fission);
+        }
+        let mut engine = build_world_with(&WorldGenConfig::baseline(seed), rules);
         advance_engine_ticks(&mut engine, 1_440);
         let agent_rows = collect_agent_snapshot(&engine.world);
         let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
@@ -4057,7 +4066,7 @@ mod society_snapshot_tests {
     fn society_pressure_columns_read_v19_values_and_saturate_without_mutation() {
         let seed = 20_261_010;
         let mut engine =
-            build_world_with(&WorldGenConfig::game_v19(seed), WorldRules::game_v19(seed));
+            build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed));
         advance_engine_ticks(&mut engine, 1_440);
         let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
         assert!(!snapshot.settlement_ids.is_empty());
@@ -4287,14 +4296,53 @@ mod pass3_agent_snapshot_tests {
             collect_settlement_wood_targets(&rows, &resources),
             vec![0, 0]
         );
-        // v11 without seasons: 1.5 x 26 = 39; summer of a seasonal world 1.5 x 13 + 7 x 39 = 292.5 -> 292.
-        resources.rules = WorldRules::game_v11();
+        // The v11 firewood rule (a test-local copy, triage recipe R2) without
+        // seasons: 1.5 x 26 = 39; summer of a seasonal world 1.5 x 13 + 7 x 39 = 292.5 -> 292.
+        let v11_firewood = sim_core::rules::FirewoodRule {
+            gather_start_minute: 600,
+            gather_end_minute: 1020,
+            wood_radius: 18,
+            haul_threshold: 2,
+            max_gatherers_per_spot: 1,
+            regen_permille: 500,
+            base_days: 1.5,
+            winter_prep: true,
+            burn_start_minute: 1080,
+            burn_end_minute: 420,
+            burn_per_hour: [2, 1, 2, 3],
+            cold_start_minute: 1320,
+            cold_end_minute: 360,
+            cold_hunger_permille: 1500,
+            winter_prep_days: None,
+            winter_prep_in_summer: true,
+            winter_base_days: None,
+            winter_regen_units_per_day: None,
+            winter_deadwood_cap: None,
+            night_season_from_evening: false,
+            urgent_start_minute: None,
+            winter_severity_permille: None,
+            winter_severity_burn_per_hour: [3, 3, 3],
+            winter_severity_regen_units_per_day: [6, 6, 6],
+            claims_bounded_by_amount: false,
+            winter_night_burn_permille: None,
+            winter_night_burn_step: 0,
+            winter_fall_spread: 0,
+            windfall_over_snow: false,
+            rain_soak_permille: 0,
+            regional_wood: false,
+            area_fall_floor_permille: 0,
+            rain_wet_burn: false,
+            floor_separate: false,
+        };
+        resources.rules = WorldRules::baseline(0);
+        resources.rules.society.firewood = Some(v11_firewood);
         resources.rules.seasons = None;
         assert_eq!(
             collect_settlement_wood_targets(&rows, &resources),
             vec![39, 39]
         );
-        resources.rules = WorldRules::game_v11();
+        resources.rules = WorldRules::baseline(0);
+        resources.rules.society.firewood = Some(v11_firewood);
         resources.current_tick = 7 * 1_440;
         assert_eq!(
             collect_settlement_wood_targets(&rows, &resources),

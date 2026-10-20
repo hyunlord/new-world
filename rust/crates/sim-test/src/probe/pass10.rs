@@ -198,19 +198,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn v15_world_reports_full_health_and_no_variety() {
-        let engine = crate::scenes::game_v15_scene(3);
+    fn baseline_world_reports_full_health_and_its_variety() {
+        let engine = crate::scenes::baseline_scene(3);
+        let variety = sim_core::variety::WorldVariety::draw_v18(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 3);
+        // Tick 0: nobody has been exposed yet.
         assert_eq!(row["deaths_exposure"], 0);
         assert_eq!(row["min_hp"], 100.0);
         assert_eq!(row["injured_members"], 0);
         let info = seed_info(&engine);
-        assert_eq!(info["world_variety"], Value::Null);
-        assert_eq!(info["exposure"], Value::Null);
-        assert_eq!(info["starting_agents"], 24);
-        assert_eq!(info["winter_severity_permille"], json!([350, 400, 250]));
-        assert_eq!(info["deadwood_spots_requested"], 20);
+        assert_eq!(info["world_variety"], variety_json(&variety));
+        let exposure = engine.resources.rules.society.exposure.expect("exposure");
+        assert_eq!(
+            info["exposure"],
+            json!({"damage_per_cold_hour": exposure.damage_per_cold_hour,
+                "heal_block_hours": exposure.heal_block_hours})
+        );
+        assert_eq!(info["starting_agents"], variety.starting_agents);
+        let firewood = engine.resources.rules.society.firewood.expect("firewood");
+        assert_eq!(
+            info["winter_severity_permille"],
+            json!(firewood.winter_severity_permille)
+        );
+        assert_eq!(info["deadwood_spots_requested"], variety.deadwood_spots);
     }
 
     #[test]

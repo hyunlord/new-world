@@ -134,16 +134,16 @@ mod tests {
     use super::*;
     #[test]
     fn river_and_exact_coverage() {
-        let cfg = WorldGenConfig::game_default(1);
+        let cfg = WorldGenConfig::baseline(1);
         let mut grid = TileGrid::new(64, 64);
         generate(&cfg, &mut grid);
         for row in grid.terrain_type.chunks(64) {
             assert_eq!(row.iter().filter(|&&t| t == TerrainType::River).count(), 2);
         }
         for (kind, fraction) in [
-            (TerrainType::Mountain, 0.04),
-            (TerrainType::Hill, 0.10),
-            (TerrainType::Forest, 0.30),
+            (TerrainType::Mountain, cfg.mountain_coverage),
+            (TerrainType::Hill, cfg.hill_coverage),
+            (TerrainType::Forest, cfg.forest_coverage),
         ] {
             assert_eq!(
                 grid.terrain_type.iter().filter(|&&t| t == kind).count(),

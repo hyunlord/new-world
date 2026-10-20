@@ -24,7 +24,16 @@ pub mod subprofile_report;
 #[cfg(test)]
 mod tests {
     #[test]
-    fn shared_scene_starts_at_tick_zero() {
-        assert_eq!(super::scenes::legacy_scene().current_tick(), 0);
+    fn baseline_engine_is_the_baseline_scene_at_tick_zero() {
+        let engine = super::baseline_engine(3);
+        assert_eq!(engine.current_tick(), 0);
+        assert_eq!(
+            engine.resources.rules,
+            sim_core::rules::WorldRules::baseline(3)
+        );
+        assert_eq!(
+            super::probe::fingerprint(&engine),
+            super::probe::fingerprint(&super::scenes::baseline_scene(3))
+        );
     }
 }

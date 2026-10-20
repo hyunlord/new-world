@@ -69,8 +69,9 @@ mod tests {
     use sim_core::rules::WorldRules;
 
     #[test]
-    fn v11_world_reports_neutral_pass6_values() {
-        let engine = crate::scenes::game_v11_scene(3);
+    fn baseline_world_reports_zero_pass6_values_at_tick_zero() {
+        // Tick 0 (08:00, spring): nobody gathers wood and no elder exists yet.
+        let engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 6);
         for key in [
@@ -88,7 +89,7 @@ mod tests {
     #[test]
     fn gatherers_elders_and_urgent_have_exact_values() {
         let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-        engine.resources.rules = WorldRules::game_v11();
+        engine.resources.rules = WorldRules::baseline(0);
         if let Some(rule) = engine.resources.rules.society.firewood.as_mut() {
             rule.urgent_start_minute = Some(420);
         }

@@ -238,7 +238,10 @@ mod tests {
     use std::collections::{BTreeMap, BTreeSet};
 
     fn rule() -> FissionRule {
-        WorldRules::game_v22(0).society.fission.expect("v22 splits")
+        WorldRules::baseline(0)
+            .society
+            .fission
+            .expect("baseline splits")
     }
 
     /// Ranked rows (rank, id, adult) in order; ids >= 100 are children.

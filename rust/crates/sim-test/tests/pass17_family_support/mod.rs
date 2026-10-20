@@ -8,9 +8,12 @@ use sim_engine::SimEngine;
 pub fn fixture() -> SimEngine {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.world_seed = 7;
-    engine.resources.rules.society.family = Some(WorldRules::V22_FAMILY);
+    // The live family and temperament rules (R1): `baseline` carries the
+    // Pass 18 family rule (pair at familiarity 0.200, elder partners follow).
+    let live = WorldRules::baseline(7);
+    engine.resources.rules.society.family = live.society.family;
     engine.resources.rules.agent.keyed_draws = true;
-    engine.resources.rules.agent.temperament = WorldRules::game_v20(7).agent.temperament;
+    engine.resources.rules.agent.temperament = live.agent.temperament;
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.formation_tile = (20, 20);
     engine.resources.settlements.insert(1, settlement);

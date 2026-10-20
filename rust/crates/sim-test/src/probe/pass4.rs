@@ -108,14 +108,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn v9_world_reports_neutral_pass4_values() {
-        let engine = crate::scenes::game_v9_scene(3);
+    fn baseline_world_reports_its_seasons_at_tick_zero() {
+        let engine = crate::scenes::baseline_scene(3);
+        let seasons = engine.resources.rules.seasons.expect("baseline seasons");
         let row = metrics(&engine, 120.0);
+        // Tick 0 is 08:00 of the first spring day; nothing has happened yet.
+        assert_eq!(row["season"], 0);
+        assert_eq!(row["day_of_season"], 1); // one-based
+        assert_eq!(row["days_per_season"], seasons.days_per_season);
         for key in [
-            "season",
-            "day_of_season",
-            "days_per_season",
-            "elders",
             "foraging_now",
             "hauling_now",
             "deaths_old_age",
@@ -124,14 +125,24 @@ mod tests {
         ] {
             assert_eq!(row[key], 0, "{key}");
         }
-        assert_eq!(row["stock_target"], 0.0);
-        assert_eq!(row["mean_age_days"], 0.0);
-        assert_eq!(row["food_supply_season_per_day"], 120.0);
-        assert_eq!(row["food_supply_winter_per_day"], 120.0);
+        // The fixed supply scaled by the world's spring and winter regrowth.
+        let scaled = |season: usize| 120.0 * (f64::from(seasons.regen_permille[season]) / 1000.0);
+        assert_eq!(row["food_supply_season_per_day"], scaled(0));
+        assert_eq!(row["food_supply_winter_per_day"], scaled(WINTER));
         assert!(row
             .as_object()
             .expect("object")
             .values()
             .all(|v| !v.is_null()));
+    }
+
+    #[test]
+    fn without_seasons_the_supply_is_unscaled() {
+        let mut engine = crate::scenes::baseline_scene(3);
+        engine.resources.rules.seasons = None;
+        let row = metrics(&engine, 120.0);
+        assert_eq!(row["days_per_season"], 0);
+        assert_eq!(row["food_supply_season_per_day"], 120.0);
+        assert_eq!(row["food_supply_winter_per_day"], 120.0);
     }
 }

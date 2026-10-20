@@ -26,7 +26,7 @@ impl ProbeArgs {
     /// Parse argv excluding the executable; reject empty ranges and unsafe worker counts.
     pub fn parse(args: impl IntoIterator<Item = String>) -> Result<Self, String> {
         let mut parsed = Self {
-            scene: "legacy".into(),
+            scene: "baseline".into(),
             seeds: 0..1,
             days: 10,
             sample_every: 120,
@@ -42,7 +42,7 @@ impl ProbeArgs {
                 continue;
             }
             if flag == "--help" {
-                return Err("usage: worldsim_probe --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|game_v18_nofission|game_v18|game_v19_nofission|game_v19|game_v20_inert|game_v20|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
+                return Err("usage: worldsim_probe --scene baseline|game_v26 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
             }
             let value = args
                 .next()
@@ -66,36 +66,8 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if !matches!(
-            parsed.scene.as_str(),
-            "legacy"
-                | "game"
-                | "game_v9"
-                | "game_v10"
-                | "game_v11"
-                | "game_v12"
-                | "game_v13"
-                | "game_v14"
-                | "game_v15"
-                | "game_v16_neutral"
-                | "game_v16"
-                | "game_v17_nofission"
-                | "game_v17"
-                | "game_v18_nofission"
-                | "game_v18"
-                | "game_v19_nofission"
-                | "game_v19"
-                | "game_v20_inert"
-                | "game_v20"
-                | "game_v21"
-                | "game_v22"
-                | "game_v23"
-                | "game_v24"
-                | "game_v25"
-                | "game_v26"
-                | "baseline"
-        ) {
-            return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission, game_v17, game_v18_nofission, game_v18, game_v19_nofission, game_v19, game_v20_inert, game_v20, game_v21, game_v22, game_v23, game_v24, game_v25, game_v26".into());
+        if !matches!(parsed.scene.as_str(), "baseline" | "game_v26") {
+            return Err("scene must be baseline (game_v26 is accepted as its alias)".into());
         }
         if parsed.seeds.is_empty() {
             return Err("seeds must be a nonempty half-open range".into());
@@ -159,50 +131,34 @@ mod tests {
         assert_eq!(super::clock_tick(1, 120, 1440, 480), None);
         assert_eq!(super::clock_tick(2, 120, 1440, 480), Some(1080));
         assert_eq!(super::clock_tick(1, 720, 1440, 480), Some(240));
-        assert!(parse(&["--days", "120", "--scene", "game_v9"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v10"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v11"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v12"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v13"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v14"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v15"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v16_neutral"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v16"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v17_nofission"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v17"]).is_ok());
-        // Pass 12: game_v18 is accepted (it was rejected through Pass 11).
-        assert!(parse(&["--days", "150", "--scene", "game_v18_nofission"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v18"]).is_ok());
-        // Pass 13: game_v19 is accepted (it was rejected through Pass 12).
-        assert!(parse(&["--days", "150", "--scene", "game_v19_nofission"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v19"]).is_ok());
-        // Pass 16: game_v20 and its placebo are accepted (game_v20 was rejected through Pass 15).
-        assert!(parse(&["--days", "150", "--scene", "game_v20_inert"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v20"]).is_ok());
-        assert!(parse(&["--scene", "game_v21"]).is_ok());
-        assert!(parse(&["--scene", "game_v22"]).is_ok());
-        assert!(parse(&["--scene", "game_v23"]).is_ok());
-        // Pass 19: game_v24 is accepted (it was rejected through Pass 18).
-        assert!(parse(&["--scene", "game_v24"]).is_ok());
-        // Pass 20: game_v25 is accepted, and the usage lines name both.
-        assert!(parse(&["--scene", "game_v25"]).is_ok());
-        let usage = parse(&["--help"]).expect_err("usage");
-        assert!(usage.contains("game_v24|game_v25"), "{usage}");
-        let unknown = parse(&["--scene", "game_v99"]).expect_err("unknown scene");
-        assert!(unknown.contains("game_v24, game_v25"), "{unknown}");
-        // Pass 21: game_v26 is accepted (it was rejected through Pass 20).
+        // V8-0: only the baseline scene (and its alias game_v26) is accepted;
+        // the removed per-version scenes are rejected, and the messages name
+        // the baseline.
+        assert!(parse(&["--days", "150", "--scene", "baseline"]).is_ok());
         assert!(parse(&["--scene", "game_v26"]).is_ok());
-        assert!(parse(&["--scene", "baseline"]).is_ok());
-        assert!(usage.contains("game_v25|game_v26"), "{usage}");
-        assert!(unknown.contains("game_v25, game_v26"), "{unknown}");
-        assert!(parse(&["--scene", "game_v27"]).is_err());
+        assert_eq!(parse(&[]).expect("default").scene, "baseline");
+        for old in [
+            "game",
+            "legacy",
+            "game_v9",
+            "game_v19",
+            "game_v20_inert",
+            "game_v25",
+            "game_v27",
+        ] {
+            assert!(parse(&["--scene", old]).is_err(), "{old}");
+        }
+        let usage = parse(&["--help"]).expect_err("usage");
+        assert!(usage.contains("--scene baseline|game_v26"), "{usage}");
+        let unknown = parse(&["--scene", "game_v99"]).expect_err("unknown scene");
+        assert!(unknown.contains("baseline"), "{unknown}");
         assert!(parse(&["--days", "151"]).is_err());
     }
     #[test]
     fn validates_half_open_range_and_hard_worker_limit() {
         let args = parse(&["--seeds", "2..5", "--workers", "8"]).expect("valid");
         assert_eq!(args.seeds.collect::<Vec<_>>(), [2, 3, 4]);
-        assert!(parse(&["--scene", "game"]).is_ok());
+        assert!(parse(&["--scene", "baseline"]).is_ok());
         for args in [
             &["--workers", "9"][..],
             &["--workers", "0"],

@@ -2,7 +2,7 @@
 fn main() -> std::process::ExitCode {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args.iter().any(|arg| arg == "--help" || arg == "-h") {
-        println!("usage: worldsim_probe --scene legacy|game --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,...] [--agent-trace] [--chronicle-out DIR]");
+        println!("usage: worldsim_probe --scene baseline --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,...] [--agent-trace] [--chronicle-out DIR]");
         return std::process::ExitCode::SUCCESS;
     }
     // Pass 16: `--agent-trace` is split off before `ProbeArgs::parse`.

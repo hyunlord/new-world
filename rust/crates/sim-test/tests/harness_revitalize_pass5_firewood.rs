@@ -1,31 +1,32 @@
 //! Pass 5 Part 3: deadwood, firewood trips, the hearth fire and cold nights.
 use hecs::Entity;
-use sim_bridge::ffi::collect_resource_snapshot;
 use sim_core::components::{
     Agent, AgentState, Cold, Hunger, Inventory, Position, ResourceKind, SeekTarget, Settlement,
     Sleep, Social, TargetKind, Thirst, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
+use sim_core::variety::WorldVariety;
 use sim_core::TerrainType;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_systems::runtime::decision::AgentDecisionSystem;
 use sim_systems::runtime::needs::HungerDecaySystem;
 use sim_systems::runtime::resource_regen::ResourceRegenSystem;
-use sim_systems::runtime::settlement::firewood::{wood_in_hand, wood_target};
+use sim_systems::runtime::settlement::firewood::{tonight_burn, wood_in_hand, wood_target};
 use sim_systems::runtime::settlement::{FireSystem, StockpileDepositSystem};
-use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v10_scene, game_v11_scene};
+use sim_test::baseline_engine;
 
 const HOME: (u32, u32) = (20, 20);
+/// World seed of the fixture rules (`WorldRules::baseline`).
+const SEED: u64 = 1;
 
 /// Tick at which the display clock (480-tick offset) reads `minute` on display day `day`.
 fn tick_at(day: u64, minute: u64) -> u64 {
     day * 1440 + minute - 480
 }
 
-/// Bare v11 world: one settlement at `HOME` holding `wood` in store, `adults`
+/// Bare baseline world: one settlement at `HOME` holding `wood` in store, `adults`
 /// idle satisfied members on the formation tile, and full deadwood spots.
 fn wood_fixture(
     adults: usize,
@@ -35,7 +36,7 @@ fn wood_fixture(
     wood: u32,
 ) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    let mut rules = WorldRules::game_v11();
+    let mut rules = WorldRules::baseline(SEED);
     if let Some(firewood) = rules.society.firewood.as_mut() {
         firewood.max_gatherers_per_spot = per_spot;
     }
@@ -113,18 +114,36 @@ fn hearth(engine: &SimEngine) -> (u32, u32) {
 fn harness_deadwood_placement() {
     let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     for seed in 0..4u64 {
-        let v11 = game_v11_scene(seed);
-        let r = &v11.resources;
-        let center = hearth(&v11);
-        assert_eq!(r.wood_source_max.len(), 20, "seed {seed}");
+        let engine = baseline_engine(seed);
+        let r = &engine.resources;
+        let variety = WorldVariety::draw_v18(seed);
+        let center = hearth(&engine);
         assert_eq!(r.wood_tiles, r.wood_source_max, "every spot starts full");
-        let spots: Vec<_> = r.wood_source_max.keys().copied().collect();
-        for (i, &spot) in spots.iter().enumerate() {
+        // The camp's spots are area 0 (`wood_spot_area`); the wild regions'
+        // spots lie 22-28 tiles out. Seeds 0..4 draw 14..23 camp spots of
+        // capacity 5..7 and place every one of them.
+        let camp: Vec<_> = r
+            .wood_spot_area
+            .iter()
+            .filter(|(_, area)| **area == 0)
+            .map(|(spot, _)| *spot)
+            .collect();
+        assert_eq!(camp.len(), variety.deadwood_spots as usize, "seed {seed}");
+        assert!(camp.len() >= 14, "seed {seed}: {} camp spots", camp.len());
+        for &spot in &camp {
             assert!(
                 (5..=18).contains(&chebyshev(spot, center)),
                 "seed {seed} spot {spot:?}"
             );
-            assert_eq!(r.wood_source_max[&spot], 6);
+            assert_eq!(r.wood_source_max[&spot], variety.deadwood_capacity);
+        }
+        let spots: Vec<_> = r.wood_source_max.keys().copied().collect();
+        assert_eq!(
+            spots.len(),
+            r.wood_spot_area.len(),
+            "every spot has an area"
+        );
+        for (i, &spot) in spots.iter().enumerate() {
             let terrain = r.tile_grid.terrain_type[r.tile_grid.idx(spot.0, spot.1)];
             assert!(
                 matches!(terrain, TerrainType::Forest | TerrainType::Plain),
@@ -139,24 +158,13 @@ fn harness_deadwood_placement() {
         }
         // Deterministic per seed; a different seed places differently.
         assert_eq!(
-            game_v11_scene(seed).resources.wood_source_max,
+            baseline_engine(seed).resources.wood_source_max,
             r.wood_source_max
         );
-        // The v10 part of the world is untouched.
-        let v10 = game_v10_scene(seed);
-        assert_eq!(v10.resources.food_tiles, r.food_tiles);
-        assert_eq!(v10.resources.food_source_max, r.food_source_max);
-        assert_eq!(v10.resources.water_tiles, r.water_tiles);
-        assert_eq!(v10.resources.building_kinds, r.building_kinds);
-        assert_eq!(
-            v10.resources.tile_grid.terrain_type,
-            r.tile_grid.terrain_type
-        );
-        assert!(v10.resources.wood_tiles.is_empty() && v10.resources.wood_source_max.is_empty());
     }
     assert_ne!(
-        game_v11_scene(0).resources.wood_source_max,
-        game_v11_scene(1).resources.wood_source_max
+        baseline_engine(0).resources.wood_source_max,
+        baseline_engine(1).resources.wood_source_max
     );
 }
 
@@ -188,13 +196,6 @@ fn harness_wood_regen_schedule() {
         6,
         "a full spot stays at its ceiling"
     );
-    // Without the firewood rule the wood channel never moves.
-    engine.resources.rules = WorldRules::game_v10();
-    engine.resources.wood_tiles.clear();
-    for _ in 0..4 {
-        regen.tick(&mut engine.world, &mut engine.resources);
-    }
-    assert!(engine.resources.wood_tiles.is_empty());
 }
 
 #[test]
@@ -261,7 +262,7 @@ fn harness_firewood_trip_and_deposit() {
 
 #[test]
 fn harness_firewood_stops_at_target() {
-    let mut engine = game_v11_scene(2);
+    let mut engine = baseline_engine(2);
     while engine.resources.settlements.is_empty() {
         engine.tick();
     }
@@ -270,7 +271,7 @@ fn harness_firewood_stops_at_target() {
         engine.tick();
     }
     let sid = *engine.resources.settlements.keys().next().expect("village");
-    let target = wood_target(&engine.resources).expect("v11 wood target");
+    let target = wood_target(&engine.resources).expect("baseline wood target");
     assert!(target > 0.0);
     let surplus = target.ceil() as u32 + 30;
     engine
@@ -331,16 +332,36 @@ fn harness_firewood_stops_at_target() {
         .withdraw(ResourceKind::Wood, 1);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![Some((26, 20))]);
-    // Outside the window (09:00) nobody goes.
-    let (mut engine, entities) = wood_fixture(1, &[(26, 20)], 1, tick_at(1, 540), 0);
+    // Outside the window nobody goes, even with no wood at all: 08:59 is
+    // before the baseline's urgent start (09:00) and the normal start (10:00).
+    let urgent = engine
+        .resources
+        .rules
+        .society
+        .firewood
+        .and_then(|rule| rule.urgent_start_minute)
+        .expect("baseline urgent start");
+    assert_eq!(urgent, 540);
+    let (mut engine, entities) = wood_fixture(1, &[(26, 20)], 1, tick_at(1, 539), 0);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![None]);
+}
+
+/// Wood for tonight's burn (spring: 2 an hour x 13 hours = 26): enough to keep
+/// the settlement out of urgent mode (which doubles the cap), still below the
+/// 1.5-day target, so the arm fires at the rule's own cap.
+fn tonight(tick: u64) -> u32 {
+    let (engine, _) = wood_fixture(0, &[], 1, tick, 0);
+    let rule = engine.resources.rules.society.firewood.expect("firewood");
+    tonight_burn(&engine.resources, &rule).ceil() as u32
 }
 
 #[test]
 fn harness_firewood_claims_cap() {
     let spots = [(30, 20), (20, 31)];
-    let (mut engine, entities) = wood_fixture(3, &spots, 1, tick_at(1, 600), 0);
+    let wood = tonight(tick_at(1, 600));
+    assert_eq!(wood, 26);
+    let (mut engine, entities) = wood_fixture(3, &spots, 1, tick_at(1, 600), wood);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     let chosen = wood_targets(&engine, &entities);
     assert_eq!(
@@ -357,7 +378,7 @@ fn harness_firewood_claims_cap() {
     }
     assert_eq!(engine.resources.tallies.wood_trips, 2);
 
-    let (mut engine, entities) = wood_fixture(4, &spots, 2, tick_at(1, 600), 0);
+    let (mut engine, entities) = wood_fixture(4, &spots, 2, tick_at(1, 600), wood);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     let chosen = wood_targets(&engine, &entities);
     for spot in spots {
@@ -508,41 +529,4 @@ fn harness_fire_cold_raises_hunger() {
     let (mut engine, entities) = wood_fixture(1, &[], 1, tick_at(1, 1380), 0);
     FireSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert!(engine.world.get::<&Cold>(entities[0]).is_err());
-}
-
-#[test]
-fn harness_firewood_ffi_rows() {
-    let engine = game_v11_scene(1);
-    let deadwood: Vec<_> = collect_resource_snapshot(&engine.resources)
-        .into_iter()
-        .filter(|r| r.kind == 3)
-        .collect();
-    assert_eq!(deadwood.len(), 20);
-    assert!(deadwood.iter().all(|r| r.amount == 6 && r.max == 6));
-    let v10 = game_v10_scene(1);
-    assert!(collect_resource_snapshot(&v10.resources)
-        .iter()
-        .all(|r| r.kind != 3));
-}
-
-#[test]
-fn harness_firewood_v10_unchanged() {
-    for (seed, expected) in [
-        "0e38264bd3abe6ba",
-        "3b0590ec71558a58",
-        "d265695444b8b314",
-        "48120c365d543729",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_v10_scene(seed as u64);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert_eq!(engine.resources.tallies.wood_trips, 0);
-        assert!(engine.resources.fires.is_empty());
-        assert_eq!(engine.world.query::<&Cold>().iter().count(), 0);
-    }
 }

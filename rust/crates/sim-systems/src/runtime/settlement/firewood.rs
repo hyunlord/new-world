@@ -413,7 +413,7 @@ mod tests {
     fn target_adds_a_winter_of_burn_in_summer_and_autumn_only() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
         assert_eq!(wood_target(&resources), None);
-        resources.rules = WorldRules::game_v10();
+        resources.rules = WorldRules::baseline(0);
         resources.rules.society.firewood = Some(rule());
         resources.rules.seasons = Some(SeasonRule {
             days_per_season: 7,
@@ -436,7 +436,7 @@ mod tests {
     #[test]
     fn night_season_belongs_to_the_evening_only_when_enabled() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
-        resources.rules = WorldRules::game_v10();
+        resources.rules = WorldRules::baseline(0);
         resources.rules.seasons = Some(SeasonRule {
             days_per_season: 7,
             regen_permille: [750, 1250, 1000, 500],
@@ -461,7 +461,8 @@ mod tests {
     #[test]
     fn urgent_needs_the_rule_and_less_than_tonights_burn() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
-        resources.rules = WorldRules::game_v10();
+        resources.rules = WorldRules::baseline(0);
+        resources.rules.society.firewood = None;
         assert!(!urgent_with(&resources, 0));
         let mut r = rule();
         resources.rules.society.firewood = Some(r);
@@ -487,12 +488,16 @@ mod tests {
     fn severity_is_minus_one_without_weights_and_booked_by_evening() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
         assert_eq!(winter_severity_at(&resources, 0), -1);
-        resources.rules = WorldRules::game_v12();
-        // v12: no weights, so no severity anywhere.
+        resources.rules = WorldRules::baseline(0);
+        // The baseline without severity weights: no severity anywhere.
+        if let Some(mut fw) = resources.rules.society.firewood {
+            fw.winter_severity_permille = None;
+            resources.rules.society.firewood = Some(fw);
+        }
         for day in [0u64, 21, 27, 28] {
             assert_eq!(winter_severity_at(&resources, day * 1440), -1);
         }
-        let mut rule = resources.rules.society.firewood.expect("v12 firewood");
+        let mut rule = resources.rules.society.firewood.expect("baseline firewood");
         rule.winter_severity_permille = Some([0, 0, 1000]);
         resources.rules.society.firewood = Some(rule);
         // Display day 21 is the first winter day; 08:00 = day x 1440.
@@ -510,8 +515,11 @@ mod tests {
     #[test]
     fn winter_burn_reads_the_severity_and_matches_pass6_without_weights() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
-        resources.rules = WorldRules::game_v12();
-        let mut r = resources.rules.society.firewood.expect("v12 firewood");
+        resources.rules = WorldRules::baseline(0);
+        let mut r = resources.rules.society.firewood.expect("baseline firewood");
+        // Without severity weights the night burns the season's plain rate.
+        r.winter_severity_permille = None;
+        resources.rules.society.firewood = Some(r);
         // 22:00 of winter day 22 and 02:00 after it: Pass 6 rates without weights.
         let evening = 22 * 1440 + 1320 - 480;
         for tick in [evening, evening + 240, 14 * 1440] {

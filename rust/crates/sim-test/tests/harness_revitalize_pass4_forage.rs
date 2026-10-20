@@ -10,17 +10,7 @@ use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_systems::runtime::decision::AgentDecisionSystem;
 use sim_systems::runtime::settlement::food_economy::{stock_in_hand, stock_target};
-use sim_systems::worldgen::{build_world_with, WorldGenConfig};
-use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v10_scene, game_v9_scene};
-
-/// v9 plus only the Part 2 rules of v10 (forage and stock target).
-fn v9_with_forage() -> WorldRules {
-    let mut rules = WorldRules::game_v9();
-    rules.agent.forage = WorldRules::game_v10().agent.forage;
-    rules.society.stock_target = WorldRules::game_v10().society.stock_target;
-    rules
-}
+use sim_test::baseline_engine;
 
 fn food_stock(engine: &SimEngine) -> u32 {
     engine
@@ -44,9 +34,11 @@ fn is_gathering(state: AgentState) -> bool {
 
 /// Bare world: one settlement at (20, 20) whose idle, satisfied members stand on
 /// the formation tile, and stocked bushes; clock at 08:00 inside the forage window.
+/// Rules: `WorldRules::baseline` (R1) with `max_foragers_per_bush` set to
+/// `per_bush` (R2, numeric: baseline is 2, v10 was 1).
 fn forage_fixture(adults: usize, bushes: &[(u32, u32)], per_bush: u32) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    let mut rules = WorldRules::game_v10();
+    let mut rules = WorldRules::baseline(7);
     if let Some(forage) = rules.agent.forage.as_mut() {
         forage.max_foragers_per_bush = per_bush;
     }
@@ -101,28 +93,8 @@ fn targets(engine: &SimEngine, entities: &[Entity]) -> Vec<Option<(u32, u32)>> {
 }
 
 #[test]
-fn harness_forage_seed8_no_longer_stagnates() {
-    // The exact seed-8 map that stagnated for 45 days in Pass 3.
-    let mut engine = build_world_with(&WorldGenConfig::game_v9(8), v9_with_forage());
-    let (mut max_stock, mut first_birth) = (0, None);
-    for tick in 1..=4 * 1440u64 {
-        engine.tick();
-        if tick <= 3 * 1440 {
-            max_stock = max_stock.max(food_stock(&engine));
-        }
-        if first_birth.is_none() && engine.resources.tallies.births > 0 {
-            first_birth = Some(tick);
-        }
-    }
-    assert!(max_stock >= 39, "stock reached only {max_stock} by day 3");
-    assert!(first_birth.is_some(), "no birth by day 4");
-    assert!(engine.resources.tallies.forage_trips > 0);
-    assert!(engine.resources.tallies.haul_deposits > 0);
-}
-
-#[test]
 fn harness_forage_stops_at_target() {
-    let mut engine = game_v10_scene(2);
+    let mut engine = baseline_engine(2);
     while engine.resources.settlements.is_empty() {
         engine.tick();
     }
@@ -180,7 +152,7 @@ fn harness_forage_stops_at_target() {
 
 #[test]
 fn harness_haul_home_deposits() {
-    let mut engine = game_v10_scene(4);
+    let mut engine = baseline_engine(4);
     while engine.resources.settlements.is_empty() {
         engine.tick();
     }
@@ -252,7 +224,15 @@ fn harness_haul_home_deposits() {
         "stock {} did not gain the load over {before}",
         food_stock(&engine)
     );
-    assert_eq!(engine.resources.tallies.haul_deposits, deposits + 1);
+    // Baseline: other villagers haul in the same window (measured 5 deposits
+    // on seed 4 instead of v10's 1), so the tally only bounds from below; the
+    // hauler's own deposit is its load emptying inside the deposit radius.
+    assert!(engine.resources.tallies.haul_deposits > deposits);
+    let pos = *engine.world.get::<&Position>(entity).expect("pos");
+    assert!(
+        pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= SETTLEMENT_PROXIMITY_RADIUS,
+        "load emptied away from home at {pos:?}"
+    );
     assert!(engine.resources.settlements.contains_key(&sid));
 }
 
@@ -383,9 +363,11 @@ fn harness_forage_gatherer_whose_tile_vanished_idles_instead_of_freezing() {
 #[test]
 fn harness_haul_home_after_the_forage_window() {
     // Outside the window even one carried unit is hauled home and deposited.
-    let mut engine = game_v10_scene(4);
+    let mut engine = baseline_engine(4);
     let end = u64::from(
-        WorldRules::game_v10()
+        engine
+            .resources
+            .rules
             .agent
             .forage
             .expect("forage")
@@ -452,26 +434,12 @@ fn harness_haul_home_after_the_forage_window() {
         0
     );
     assert!(food_stock(&engine) > before);
-    assert_eq!(engine.resources.tallies.haul_deposits, deposits + 1);
-}
-
-#[test]
-fn harness_forage_v9_unchanged() {
-    for (seed, expected) in [
-        "c022f6555945fcad",
-        "5ca9b7e597238ee3",
-        "d8afca881c554360",
-        "48cf47e1341f5048",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_v9_scene(seed as u64);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert_eq!(engine.resources.tallies.forage_trips, 0);
-        assert_eq!(engine.resources.tallies.haul_deposits, 0);
-    }
+    // Other villagers also deposit (measured 36 vs 35 on baseline seed 4), so
+    // the hauler's own deposit is its load emptying inside the deposit radius.
+    assert!(engine.resources.tallies.haul_deposits > deposits);
+    let pos = *engine.world.get::<&Position>(entity).expect("pos");
+    assert!(
+        pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= SETTLEMENT_PROXIMITY_RADIUS,
+        "load emptied away from home at {pos:?}"
+    );
 }

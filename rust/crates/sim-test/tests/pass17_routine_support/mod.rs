@@ -11,7 +11,9 @@ use sim_systems::runtime::decision::AgentDecisionSystem;
 
 pub fn fixture() -> SimEngine {
     let mut engine = SimEngine::new(48, 48, MaterialRegistry::new());
-    engine.resources.rules.agent.routine = WorldRules::game_v21(7).agent.routine;
+    // The live routine (R1): `baseline` carries the Pass 19 routine, with each
+    // person's own day end (`end_stagger`).
+    engine.resources.rules.agent.routine = WorldRules::baseline(7).agent.routine;
     engine.resources.rules.agent.keyed_draws = true;
     engine.resources.current_tick = 600;
     engine.resources.world_seed = 7;

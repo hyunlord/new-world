@@ -145,7 +145,7 @@ struct Harness {
 impl Harness {
     fn new(case: Case, lifespan: u64) -> Self {
         let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());
-        engine.resources.rules = WorldRules::game_v21(7);
+        engine.resources.rules = WorldRules::baseline(7);
         let entity = engine.spawn_agent(1, 1);
         let id = engine.world.get::<&Agent>(entity).expect("agent").id;
         engine
@@ -331,7 +331,7 @@ fn observer_is_absent_from_old_worlds_and_checks_tick_and_single_drain() {
     let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());
     assert!(super::super::routine_observer::install(&mut engine).is_none());
     assert_eq!(engine.system_count(), 0);
-    engine.resources.rules.agent.routine = WorldRules::game_v21(7).agent.routine;
+    engine.resources.rules.agent.routine = WorldRules::baseline(7).agent.routine;
     let observed = super::super::routine_observer::install(&mut engine).expect("enabled");
     engine.tick();
     assert!(super::super::routine_observer::take(&observed, 1).is_err());

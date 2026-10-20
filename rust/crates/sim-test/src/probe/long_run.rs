@@ -290,7 +290,12 @@ mod tests {
             rules::WorldRules,
         };
         let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-        engine.resources.rules = WorldRules::game_v8();
+        // Only the baseline's shelter rule (8 per shelter); no sustain rule
+        // (reporting falls back to 0.85 utilization, radius 16), no seasons and
+        // no life-stage rule (the child below matures at tick 0).
+        engine.resources.rules = WorldRules::default();
+        engine.resources.rules.society.shelter_planning =
+            WorldRules::baseline(0).society.shelter_planning;
         let adult = engine.spawn_agent(10, 10);
         let child = engine.spawn_agent(11, 10);
         engine
@@ -363,7 +368,7 @@ mod tests {
 
     #[test]
     fn reporting_is_additive_finite_and_partitions_population() {
-        let engine = crate::scenes::game_scene(0);
+        let engine = crate::scenes::baseline_scene(0);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 15);
         assert!(row
@@ -371,7 +376,11 @@ mod tests {
             .expect("object")
             .values()
             .all(|v| !v.is_null()));
-        assert_eq!(row["adults"], 24);
+        // Tick 0: every founder (the world's drawn `starting_agents`) is an adult.
+        assert_eq!(
+            row["adults"],
+            sim_core::variety::WorldVariety::draw_v18(0).starting_agents
+        );
         assert_eq!(row["children"], 0);
         for key in [
             "housing_capacity_owned",
@@ -391,6 +400,6 @@ mod tests {
         assert_eq!(row["sample_kind"], "periodic");
         assert_eq!(row["minute_of_day"], 480);
         assert!(check_maturation(&engine).is_ok());
-        assert_eq!(trace(&engine), trace(&crate::scenes::game_scene(0)));
+        assert_eq!(trace(&engine), trace(&crate::scenes::baseline_scene(0)));
     }
 }

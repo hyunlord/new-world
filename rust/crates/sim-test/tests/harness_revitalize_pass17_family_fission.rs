@@ -9,8 +9,12 @@ use sim_systems::runtime::settlement::FissionSystem;
 
 fn departure_world(count: usize, min: u32, max: u32, adults: u32) -> (SimEngine, Vec<Entity>) {
     let mut e = fixture();
-    e.resources.rules = WorldRules::game_v17(7);
-    e.resources.rules.society.family = Some(WorldRules::V22_FAMILY);
+    // R1: the live fission and family rules (`baseline`: pressure trigger,
+    // hazard on, elder partners follow). The gates below are numeric test
+    // values (R2) so a handful of residents may split; the split itself is
+    // driven through the live pressure law (see the pressure preset below).
+    e.resources.rules = WorldRules::baseline(7);
+    // 1320 + the 480-tick clock offset = 06:00 of day 1, the daily check (spring).
     e.resources.current_tick = 1320;
     let rule = e.resources.rules.society.fission.as_mut().expect("fission");
     rule.min_age_days = 0;
@@ -40,6 +44,15 @@ fn departure_world(count: usize, min: u32, max: u32, adults: u32) -> (SimEngine,
         .get_mut(&1)
         .expect("settlement")
         .store(ResourceKind::Food, 100);
+    // A settlement this small has hazard h = 0 (members <= size_lo 24), so
+    // the day's check only decays its pressure by `decay_permille`; a preset
+    // pressure far above any drawn threshold (exponential, mean 1.2) still
+    // meets it after the decay, which is the live split condition P >= theta.
+    e.resources
+        .settlements
+        .get_mut(&1)
+        .expect("settlement")
+        .fission_pressure = 1_000_000;
     (e, people)
 }
 
@@ -103,6 +116,12 @@ fn household_seed_can_exceed_target_k_while_original_stock_share_is_preserved() 
     assert_eq!(e.resources.fission_log[0].members, members);
     assert_eq!(e.resources.fission_log[0].fission_id, fission_id);
     assert_eq!(e.resources.fission_log[0].food_taken, 50);
+    // The split came through the live pressure law: a drawn threshold (> 0)
+    // met by the pressure after the day's decay (1_000_000 - 10).
+    let record = &e.resources.fission_log[0];
+    assert!(record.threshold_at_split > 0);
+    assert_eq!(record.pressure_at_split, 999_990);
+    assert!(record.pressure_at_split >= record.threshold_at_split);
     assert_eq!((couples_total, couples_split, households_split), (1, 0, 0));
     assert_eq!(couples.len(), 1);
     assert_eq!(households.iter().map(Vec::len).sum::<usize>(), 6);

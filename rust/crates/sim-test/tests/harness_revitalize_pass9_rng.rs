@@ -1,8 +1,10 @@
-//! Pass 9: keyed draws, lineage keys and noise forks (sections 6.3 and 7.4).
+//! Pass 9: keyed draws, lineage keys and noise forks (sections 6.3 and 7.4),
+//! on the baseline world (keyed draws on).
 use std::collections::BTreeSet;
 
 use sim_core::components::{Agent, Lineage};
-use sim_test::scenes::game_v15_scene;
+use sim_core::variety::WorldVariety;
+use sim_test::baseline_engine;
 
 #[test]
 fn harness_lineage_keys_stable_under_birth_shift() {
@@ -36,7 +38,7 @@ fn harness_lineage_keys_stable_under_birth_shift() {
 #[test]
 fn harness_lineage_founder_keys_follow_seed_and_spawn_index() {
     for seed in [0u64, 7, 12_031] {
-        let engine = game_v15_scene(seed);
+        let engine = baseline_engine(seed);
         let mut founders: Vec<(u64, Lineage)> = engine
             .world
             .query::<(&Agent, &Lineage)>()
@@ -44,7 +46,10 @@ fn harness_lineage_founder_keys_follow_seed_and_spawn_index() {
             .map(|(_, (a, l))| (a.id, *l))
             .collect();
         founders.sort_by_key(|row| row.0);
-        assert_eq!(founders.len(), 24);
+        assert_eq!(
+            founders.len(),
+            WorldVariety::draw_v18(seed).starting_agents as usize
+        );
         for (index, (_, lineage)) in founders.iter().enumerate() {
             assert_eq!(
                 *lineage,
@@ -72,13 +77,14 @@ fn harness_lineage_keys_do_not_collide() {
 }
 
 #[test]
-fn harness_v15_newborns_carry_their_first_parents_key() {
-    // Every resident of a 28-day v15 run carries a lineage, keys are distinct,
+fn harness_newborns_carry_their_first_parents_key() {
+    // Every resident of a 28-day baseline run carries a lineage, keys are distinct,
     // and every newborn's key lies in the child closure of the founders' keys
     // (founder -> child -> grandchild), i.e. it came from a first parent and its
     // birth count, never from the settlement/tick fallback (review round 1, M1).
     let seed = 1;
-    let mut engine = game_v15_scene(seed);
+    let mut engine = baseline_engine(seed);
+    let founders = WorldVariety::draw_v18(seed).starting_agents;
     for _ in 0..40_320 {
         engine.tick();
     }
@@ -92,11 +98,13 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
     assert_eq!(keys.len(), rows.len());
     let alive = engine.world.query::<&Agent>().iter().count();
     assert_eq!(rows.len(), alive, "every resident carries a lineage");
-    assert!(engine.resources.tallies.births > 0);
+    let births = engine.resources.tallies.births;
+    // V8-0 re-measure (baseline seed 1): 23 founders, 15 births, 32 alive.
+    assert!(births >= 8, "seed {seed}: {births} births in 28 days");
     let mut closure = BTreeSet::new();
-    let mut generation: Vec<Lineage> = (0..24).map(|i| Lineage::founder(seed, i)).collect();
+    let mut generation: Vec<Lineage> = (0..founders).map(|i| Lineage::founder(seed, i)).collect();
     // Three levels (founders, 400 children each, 40 grandchildren per child):
-    // a 28-day village has ~22-26 births, nearly all from one founder (review round 2).
+    // a 28-day village has ~15-26 births, at most a few per mother (review round 2).
     for depth in 0..2 {
         let mut next = Vec::new();
         for parent in &generation {
@@ -112,7 +120,7 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
     let newborns: Vec<u64> = keys
         .iter()
         .copied()
-        .filter(|k| !(0..24).any(|i| Lineage::founder(seed, i).key == *k))
+        .filter(|k| !(0..founders).any(|i| Lineage::founder(seed, i).key == *k))
         .collect();
     assert!(!newborns.is_empty());
     for key in newborns {
@@ -134,7 +142,6 @@ use sim_core::rules::WorldRules;
 use sim_engine::{apply_noise_fork, NoiseFork, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_test::probe::fingerprint;
-use sim_test::scenes::game_v14_scene;
 
 #[test]
 fn harness_keyed_draw_is_pure() {
@@ -196,15 +203,15 @@ fn harness_keyed_step_balanced() {
     }
 }
 
-/// One agent on an open 64 x 64 grid under default rules plus the pause chance,
-/// with or without keyed draws; it is busy (Consuming, frozen) for `busy` ticks,
+/// One agent on an open 64 x 64 grid under default rules plus the pause chance
+/// and keyed draws; it is busy (Consuming, frozen) for `busy` ticks,
 /// then idle. Returns its per-tick displacement from tick 100 to 400.
-fn steps(keyed: bool, busy: u64) -> Vec<(i64, i64)> {
+fn steps(busy: u64) -> Vec<(i64, i64)> {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.world_seed = 12_000;
     engine.resources.rules = WorldRules::default();
     engine.resources.rules.agent.idle_pause_chance = 0.4;
-    engine.resources.rules.agent.keyed_draws = keyed;
+    engine.resources.rules.agent.keyed_draws = true;
     engine.register_system(Box::new(AgentMovementSystem::new()));
     let state = if busy > 0 {
         AgentState::Consuming {
@@ -237,14 +244,18 @@ fn steps(keyed: bool, busy: u64) -> Vec<(i64, i64)> {
 }
 
 #[test]
-fn harness_v15_movement_independent_of_history() {
+fn harness_movement_independent_of_history() {
     // Keyed: the step at every tick from 100 on is the same whether the agent
     // was idle all along or busy for its first 50 ticks.
-    assert_eq!(steps(true, 0), steps(true, 50));
-    // The sequential stream (v8–v14) does depend on history.
-    assert_ne!(steps(false, 0), steps(false, 50));
-    // In a v15 world the movement component is attached but never advanced.
-    let mut engine = game_v15_scene(2);
+    let idle = steps(0);
+    assert_eq!(idle, steps(50));
+    // ... and the steps are real draws, not a frozen agent: with pause chance
+    // 0.4 and (0, 0) one ninth of the cells, about 0.6 x 8/9 = 0.53 of the 300
+    // ticks move (V8-0 measure: 147 of 300).
+    let moved = idle.iter().filter(|&&d| d != (0, 0)).count();
+    assert!((120..=200).contains(&moved), "{moved} of 300 ticks moved");
+    // In a baseline world the movement component is attached but never advanced.
+    let mut engine = baseline_engine(2);
     let before: Vec<(u64, MovementRng)> = {
         let mut rows: Vec<_> = engine
             .world
@@ -298,17 +309,17 @@ fn digests(mut engine: SimEngine, ticks: u64, fork: Option<(u64, u32, bool)>) ->
 #[test]
 fn harness_noise_fork_replicate0_is_identity() {
     // Replicate 0 set directly (not through apply_noise_fork, which returns early).
-    let base = digests(game_v15_scene(12_000), 4 * 1440, None);
-    let fork = digests(game_v15_scene(12_000), 4 * 1440, Some((1440, 0, true)));
+    let base = digests(baseline_engine(12_000), 4 * 1440, None);
+    let fork = digests(baseline_engine(12_000), 4 * 1440, Some((1440, 0, true)));
     assert_eq!(base, fork);
 }
 
 #[test]
 fn harness_noise_fork_prefix_identity() {
     let fork_tick = 1440;
-    let base = digests(game_v15_scene(12_001), 4 * 1440, None);
+    let base = digests(baseline_engine(12_001), 4 * 1440, None);
     let fork = digests(
-        game_v15_scene(12_001),
+        baseline_engine(12_001),
         4 * 1440,
         Some((fork_tick, 3, false)),
     );
@@ -320,39 +331,4 @@ fn harness_noise_fork_prefix_identity() {
         .iter()
         .zip(&fork[prefix + 1..])
         .any(|(a, b)| a != b));
-}
-
-#[test]
-fn harness_v14_draws_unchanged() {
-    // v14 keeps the sequential streams: no lineage is attached, the movement
-    // streams advance, and the Part 0 fingerprints at 1,440 ticks hold.
-    for (seed, expected) in [
-        (0u64, "519530c0aaaae844"),
-        (1, "24d191164e3c4132"),
-        (2, "b44a71909b8615cc"),
-        (3, "c16d5b002bea6cc5"),
-    ] {
-        let mut engine = game_v14_scene(seed);
-        assert_eq!(engine.world.query::<&Lineage>().iter().count(), 0);
-        let start: Vec<MovementRng> = engine
-            .world
-            .query::<&MovementRng>()
-            .iter()
-            .map(|(_, r)| *r)
-            .collect();
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        let now: Vec<MovementRng> = engine
-            .world
-            .query::<&MovementRng>()
-            .iter()
-            .map(|(_, r)| *r)
-            .collect();
-        assert!(
-            start.iter().zip(&now).any(|(a, b)| a != b),
-            "seed {seed}: no stream advanced"
-        );
-    }
 }

@@ -1,18 +1,21 @@
 //! Pass 4 Part 3: deterministic lifespans, elders and old-age replacement.
-use sim_core::components::{Agent, AgentId, AgentState, Elder, Life, Position, TargetKind};
+use sim_core::components::{
+    Agent, AgentId, AgentState, Elder, Life, Lineage, Position, TargetKind,
+};
 use sim_core::rules::WorldRules;
-use sim_systems::runtime::agent::aging::{founder_life, newborn_life};
-use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v10_scene, game_v9_scene};
+use sim_systems::runtime::agent::aging::{keyed_founder_life, keyed_newborn_life, newborn_life};
+use sim_systems::worldgen::WorldGenConfig;
+use sim_test::baseline_engine;
 use std::collections::BTreeSet;
 
 const DAY: u64 = 1440;
 
 fn rule() -> sim_core::rules::AgingRule {
-    WorldRules::game_v10()
+    // The live aging rule (R1, exact: the lifespan fields are unchanged since v10).
+    WorldRules::baseline(7)
         .society
         .aging
-        .expect("v10 aging rule")
+        .expect("baseline aging rule")
 }
 
 #[test]
@@ -23,6 +26,7 @@ fn harness_aging_lifespans_bounded_and_deterministic() {
         rule.lifespan_mean_ticks + rule.lifespan_spread_ticks,
     );
     let mut total = 0u64;
+    let mut keyed_total = 0u64;
     for id in 0..1000u64 {
         let life = newborn_life(20_261_010, id, 5_000, &rule);
         assert!(
@@ -37,7 +41,24 @@ fn harness_aging_lifespans_bounded_and_deterministic() {
         );
         assert_eq!(life.born_tick, 5_000);
         total += life.lifespan_ticks;
+        // The live (keyed, `keyed_draws` = true) draw obeys the same band and
+        // does not depend on the birth tick.
+        let keyed = keyed_newborn_life(20_261_010, id, 5_000, 0, &rule);
+        assert!(
+            (low..=high).contains(&keyed.lifespan_ticks),
+            "keyed id {id}"
+        );
+        assert_eq!(
+            keyed.lifespan_ticks,
+            keyed_newborn_life(20_261_010, id, 5_001, 0, &rule).lifespan_ticks
+        );
+        keyed_total += keyed.lifespan_ticks;
     }
+    let keyed_mean_days = keyed_total as f64 / 1000.0 / DAY as f64;
+    assert!(
+        (57.0..=59.0).contains(&keyed_mean_days),
+        "keyed mean lifespan {keyed_mean_days} days"
+    );
     let mean_days = total as f64 / 1000.0 / DAY as f64;
     assert!(
         (57.0..=59.0).contains(&mean_days),
@@ -49,15 +70,27 @@ fn harness_aging_lifespans_bounded_and_deterministic() {
 fn harness_aging_founders() {
     let rule = rule();
     for seed in 0..8u64 {
-        let mut engine = game_v10_scene(seed);
-        let lives: Vec<Life> = engine
+        let mut engine = baseline_engine(seed);
+        let lives: Vec<(Life, u64)> = engine
             .world
-            .query::<(&Agent, &Life)>()
+            .query::<(&Agent, &Life, &Lineage)>()
             .iter()
-            .map(|(_, (_, l))| *l)
+            .map(|(_, (_, l, lineage))| (*l, lineage.key))
             .collect();
-        assert_eq!(lives.len(), 24, "every founder carries Life (seed {seed})");
-        for life in &lives {
+        // Baseline founder counts are the world's draw (`WorldVariety::draw_v18`),
+        // no longer a fixed 24.
+        let founders = WorldGenConfig::baseline(seed).starting_agents as usize;
+        let (min, max) = sim_core::variety::RANGES_V18.starting_agents;
+        assert!(
+            (min as usize..=max as usize).contains(&founders),
+            "seed {seed}: {founders} founders"
+        );
+        assert_eq!(
+            lives.len(),
+            founders,
+            "every founder carries Life (seed {seed})"
+        );
+        for (life, _) in &lives {
             let age = (-life.born_tick) as u64;
             assert!((6 * DAY..=40 * DAY).contains(&age), "founder age {age}");
             assert!(
@@ -65,14 +98,9 @@ fn harness_aging_founders() {
                 "founder would die before day 3"
             );
         }
-        let ids: Vec<AgentId> = engine
-            .world
-            .query::<&Agent>()
-            .iter()
-            .map(|(_, a)| a.id)
-            .collect();
-        for (id, life) in ids.iter().zip(&lives) {
-            assert_eq!(*life, founder_life(seed, *id, &rule));
+        // Baseline founders draw their life from their lineage key (keyed draws).
+        for (life, key) in &lives {
+            assert_eq!(*life, keyed_founder_life(seed, *key, 0, &rule));
         }
         if seed == 0 {
             for _ in 0..3 * DAY {
@@ -85,7 +113,12 @@ fn harness_aging_founders() {
 
 #[test]
 fn harness_aging_old_age_death_and_replacement() {
-    let mut engine = game_v10_scene(1);
+    // Baseline seed 1 (R3; the only AgingSystem-tick test). Measured: the first
+    // old-age death at tick 23,401 (day 16), a birth on the next tick, and over the
+    // full 60 days 28 old-age deaths and 37 births with no starvation or
+    // dehydration. The run stops once a birth follows the first old-age
+    // death to stay short.
+    let mut engine = baseline_engine(1);
     let mut alive: BTreeSet<AgentId> = engine
         .world
         .query::<&Agent>()
@@ -96,6 +129,9 @@ fn harness_aging_old_age_death_and_replacement() {
     let mut birth_after = false;
     let mut cleaned = 0;
     for _ in 0..60 * DAY {
+        if birth_after {
+            break;
+        }
         let births = engine.resources.tallies.births;
         let old_age = engine.resources.tallies.deaths_old_age;
         engine.tick();
@@ -137,8 +173,11 @@ fn harness_aging_old_age_death_and_replacement() {
 
 #[test]
 fn harness_aging_elders_stay_home() {
+    // Baseline seed 5 (R3): routine elders (elder weights) still never take
+    // building or gathering work and never drift out of their tether while
+    // idle. Measured: 6,509 idle elder observations in 3 days.
     let radius = rule().elder_tether_radius;
-    let mut engine = game_v10_scene(5);
+    let mut engine = baseline_engine(5);
     while engine.resources.settlements.is_empty() {
         engine.tick();
     }
@@ -207,27 +246,4 @@ fn harness_aging_elders_stay_home() {
     }
     assert!(idle_observations > 1000);
     assert_eq!(engine.resources.tallies.deaths_combat, 0);
-}
-
-#[test]
-fn harness_aging_v9_unchanged() {
-    for (seed, expected) in [
-        "c022f6555945fcad",
-        "5ca9b7e597238ee3",
-        "d8afca881c554360",
-        "48cf47e1341f5048",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_v9_scene(seed as u64);
-        assert_eq!(engine.world.query::<&Life>().iter().count(), 0);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert_eq!(engine.world.query::<&Life>().iter().count(), 0);
-        assert_eq!(engine.world.query::<&Elder>().iter().count(), 0);
-        assert_eq!(engine.resources.tallies.deaths_old_age, 0);
-    }
 }

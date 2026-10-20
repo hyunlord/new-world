@@ -22,8 +22,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn v12_world_reports_neutral_pass7_values() {
-        let engine = crate::scenes::game_v12_scene(3);
+    fn baseline_world_reports_no_winter_severity_in_spring() {
+        // Tick 0 is 08:00 of the first spring day: outside any winter.
+        let engine = crate::scenes::baseline_scene(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 2);
         assert_eq!(row["winter_severity"], -1);
@@ -32,7 +33,7 @@ mod tests {
 
     #[test]
     fn wood_retargets_tally_has_its_exact_value() {
-        let mut engine = crate::scenes::game_v12_scene(3);
+        let mut engine = crate::scenes::baseline_scene(3);
         engine.resources.tallies.wood_retargets = 7;
         assert_eq!(metrics(&engine)["wood_retargets_total"], 7);
     }

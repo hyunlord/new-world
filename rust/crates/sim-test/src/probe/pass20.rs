@@ -119,11 +119,14 @@ pub(super) fn seed_block(engine: &SimEngine) -> Option<Value> {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn only_game_v25_has_the_block() {
-        assert!(super::seed_block(&crate::scenes::game_v24_scene(3)).is_none());
-        let block = super::seed_block(&crate::scenes::game_v25_scene(3)).expect("v25 block");
+    fn the_block_is_present_with_the_relations_rule_only() {
+        let mut engine = crate::scenes::baseline_scene(3);
+        let block = super::seed_block(&engine).expect("baseline block");
+        // Tick 0: no porter has left, nothing is in flight.
         assert_eq!(block["tallies"]["porters_departed"], 0);
         assert_eq!(block["in_flight_units"], 0);
         assert!(block["trips"].as_array().is_some_and(Vec::is_empty));
+        engine.resources.rules.society.relations = None;
+        assert!(super::seed_block(&engine).is_none());
     }
 }

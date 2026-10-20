@@ -36,13 +36,13 @@ pub use runner::{run, run_with, run_with_chronicle};
 #[cfg(test)]
 mod tests {
     #[test]
-    fn display_social_counter_does_not_change_legacy_fingerprint() {
-        let mut engine = crate::scenes::legacy_scene();
+    fn display_social_counter_does_not_change_the_fingerprint() {
+        let mut engine = crate::scenes::baseline_scene(0);
         let before = super::fingerprint(&engine);
         engine.resources.tallies.social_completed = 9;
         assert_eq!(before, super::fingerprint(&engine));
         assert_eq!(
-            super::metrics::sample(&engine, "legacy", 0, 0)["social_completed"],
+            super::metrics::sample(&engine, "baseline", 0, 0)["social_completed"],
             9
         );
     }
@@ -56,7 +56,7 @@ mod tests {
         // schema 11 the 8 Pass 11 keys; schema 12 the 14 Pass 12 keys; schema
         // 13 the 2 Pass 13 keys. V8-0 removed four god-hand keys (three of
         // Pass 7, `wet_burn_wood_total` of Pass 12), 0 in every natural run.
-        let sample = super::metrics::sample(&crate::scenes::legacy_scene(), "legacy", 0, 0);
+        let sample = super::metrics::sample(&crate::scenes::baseline_scene(0), "baseline", 0, 0);
         assert_eq!(sample["schema_version"], 13);
         assert_eq!(
             sample.as_object().expect("sample object").len(),

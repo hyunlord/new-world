@@ -183,36 +183,16 @@ fn check_sample(first: &Value, second: &Value, seed: u64) -> Result<(), String> 
     Ok(())
 }
 
-/// A fresh engine of the probe scene `scene` (legacy for any other name).
+/// The probe's world for `scene` and `seed`: the baseline world. `game_v26`
+/// is accepted as an alias of `baseline` (the same rules and world; V8-0 kept
+/// it so identity runs use one command at the v7-final base and on V8).
+/// `ProbeArgs::parse` rejects every other scene name.
 pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
-    match scene {
-        "game" => crate::scenes::game_scene(seed),
-        "game_v9" => crate::scenes::game_v9_scene(seed),
-        "game_v10" => crate::scenes::game_v10_scene(seed),
-        "game_v11" => crate::scenes::game_v11_scene(seed),
-        "game_v12" => crate::scenes::game_v12_scene(seed),
-        "game_v13" => crate::scenes::game_v13_scene(seed),
-        "game_v14" => crate::scenes::game_v14_scene(seed),
-        "game_v15" => crate::scenes::game_v15_scene(seed),
-        "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
-        "game_v16" => crate::scenes::game_v16_scene(seed),
-        "game_v17_nofission" => crate::scenes::game_v17_nofission_scene(seed),
-        "game_v17" => crate::scenes::game_v17_scene(seed),
-        "game_v18_nofission" => crate::scenes::game_v18_nofission_scene(seed),
-        "game_v18" => crate::scenes::game_v18_scene(seed),
-        "game_v19_nofission" => crate::scenes::game_v19_nofission_scene(seed),
-        "game_v19" => crate::scenes::game_v19_scene(seed),
-        "game_v20_inert" => crate::scenes::game_v20_inert_scene(seed),
-        "game_v20" => crate::scenes::game_v20_scene(seed),
-        "game_v21" => crate::scenes::game_v21_scene(seed),
-        "game_v22" => crate::scenes::game_v22_scene(seed),
-        "game_v23" => crate::scenes::game_v23_scene(seed),
-        "game_v24" => crate::scenes::game_v24_scene(seed),
-        "game_v25" => crate::scenes::game_v25_scene(seed),
-        // V8-0: `game_v26` is an alias of `baseline` (the same world and rules).
-        "baseline" | "game_v26" => crate::scenes::baseline_scene(seed),
-        _ => crate::scenes::legacy_scene(),
-    }
+    debug_assert!(
+        matches!(scene, "baseline" | "game_v26"),
+        "unknown probe scene {scene}"
+    );
+    crate::scenes::baseline_scene(seed)
 }
 
 fn run_seed(
@@ -572,39 +552,13 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(
-        scene,
-        "game_v9"
-            | "game_v10"
-            | "game_v11"
-            | "game_v12"
-            | "game_v13"
-            | "game_v14"
-            | "game_v15"
-            | "game_v16_neutral"
-            | "game_v16"
-            | "game_v17_nofission"
-            | "game_v17"
-            | "game_v18_nofission"
-            | "game_v18"
-            | "game_v19_nofission"
-            | "game_v19"
-            | "game_v20_inert"
-            | "game_v20"
-            | "game_v21"
-            | "game_v22"
-            | "game_v23"
-            | "game_v24"
-            | "game_v25"
-            | "game_v26"
-            | "baseline"
-    )
+    matches!(scene, "baseline" | "game_v26")
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn both_v16_scenes_take_both_twin_checks() {
+    fn the_baseline_scene_takes_both_twin_checks() {
         // Pass 10: a scene missing from the list would skip its determinism
         // checks silently. Both checks in `run_seed` call `twin_checked`.
         let source = include_str!("runner.rs");
@@ -615,28 +569,13 @@ mod tests {
             2
         );
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in [
-            "game_v15",
-            "game_v16_neutral",
-            "game_v16",
-            "game_v17_nofission",
-            "game_v17",
-            "game_v18_nofission",
-            "game_v18",
-            "game_v19_nofission",
-            "game_v19",
-            "game_v20_inert",
-            "game_v20",
-            "game_v21",
-            "game_v22",
-            "game_v23",
-            "game_v24",
-            "game_v25",
-            "game_v26",
-        ] {
+        // Every scene the probe accepts is twin-checked.
+        for scene in ["baseline", "game_v26"] {
+            assert!(super::super::args::ProbeArgs::parse(["--scene".into(), scene.into()]).is_ok());
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }
+        assert!(!super::twin_checked("game_v19"));
     }
 
     #[test]

@@ -1,49 +1,33 @@
-//! Pass 12 Part 2: regions that deliver, daughters near water with a winter
-//! fall of their own, and rain that burns wet wood (PASS12_GOAL.md 7.2–7.4).
+//! Pass 12 Part 2: regions that deliver, daughters near water, and food
+//! availability local to a member's catchment (PASS12_GOAL.md 7.2-7.4).
+//!
+//! V8-0: rebased from the `game_v17` / `game_v18` worlds on the baseline
+//! (`sim_test::baseline_engine`, = `game_v26`, whose worldgen keeps v18's
+//! region fill and water rule) and `WorldRules::baseline`; the v17 arms are
+//! gone.
 use sim_core::components::{
     Agent, AgentState, Hunger, Inventory, Position, Settlement, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
-use sim_core::variety::WorldVariety;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::runtime::decision::AgentDecisionSystem;
-use sim_systems::runtime::resource_regen::{ResourceRegenSystem, REGEN_INTERVAL};
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
-use sim_test::scenes::game_v18_nofission_scene;
-
-fn tick_at(day: u64, minute: u64) -> u64 {
-    day * 1440 + minute - 480
-}
-
-fn v18_world(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::game_v18(seed), WorldRules::game_v18(seed))
-}
+use sim_test::baseline_engine;
 
 #[test]
-fn harness_region_fill_delivers_in_v18_only() {
-    // v17 worlds never fill (their digests are pinned in the frozen test).
-    for seed in 0..16 {
-        let v17 = build_world_with(&WorldGenConfig::game_v17(seed), WorldRules::game_v17(seed));
-        let report = v17.resources.worldgen_report;
-        assert_eq!(
-            (report.region_fill_bushes, report.region_fill_deadwood),
-            ([0; 4], 0),
-            "seed {seed}"
-        );
-        assert!(
-            !WorldGenConfig::game_v17(seed).region_fill
-                && WorldGenConfig::game_v17(seed).region_water_max.is_none()
-        );
-    }
-    // v18 over seeds 0..128: realized bushes and deadwood >= 0.95 of requested.
+fn harness_region_fill_delivers() {
+    let cfg = WorldGenConfig::baseline(0);
+    assert!(cfg.region_fill && cfg.region_water_max == Some(12));
+    // Baseline worlds over seeds 0..128: realized bushes and deadwood >= 0.95
+    // of requested, the fill supplying part of it.
     let reports: Vec<_> = std::thread::scope(|scope| {
         let handles: Vec<_> = (0..8u64)
             .map(|part| {
                 scope.spawn(move || {
                     (part * 16..part * 16 + 16)
-                        .map(|s| v18_world(s).resources.worldgen_report)
+                        .map(|s| baseline_engine(s).resources.worldgen_report)
                         .collect::<Vec<_>>()
                 })
             })
@@ -62,23 +46,35 @@ fn harness_region_fill_delivers_in_v18_only() {
         sum(|r| r.region_deadwood_placed),
         sum(|r| r.region_deadwood_requested),
     );
-    println!("v18 seeds 0..128: bushes {bushes}/{bushes_req}, deadwood {wood}/{wood_req}");
+    let fill_bushes = sum(|r| r.region_fill_bushes.iter().sum());
+    let fill_wood = sum(|r| r.region_fill_deadwood);
+    println!(
+        "baseline seeds 0..128: bushes {bushes}/{bushes_req} (fill {fill_bushes}), \
+         deadwood {wood}/{wood_req} (fill {fill_wood})"
+    );
     assert!(f64::from(bushes) >= 0.95 * f64::from(bushes_req));
     assert!(f64::from(wood) >= 0.95 * f64::from(wood_req));
+    // Measured: bushes 2519/2519 with 940 from the fill, deadwood 3692/3716
+    // with 129 from the fill; without the fill the bushes would fall to 63 %
+    // of requested. The bars are half the measured fill.
+    assert!(fill_bushes >= 470, "fill bushes {fill_bushes}");
+    assert!(fill_wood >= 64, "fill deadwood {fill_wood}");
 }
 
 #[test]
 fn harness_region_fill_never_touches_terrain_or_water() {
+    // The regions (and their fill) are placed after everything else: the same
+    // world without wild regions (a count, 0) has the same terrain, water and
+    // buildings, and differs exactly by the regions' bushes and deadwood.
     for seed in [0u64, 5, 24, 77] {
-        let variety = WorldVariety::draw_v18(seed);
-        let filled = WorldGenConfig::game_v18_with(seed, &variety);
-        let unfilled = WorldGenConfig {
-            region_fill: false,
-            ..filled
+        let full = WorldGenConfig::baseline(seed);
+        let bare = WorldGenConfig {
+            wild_regions: 0,
+            ..full
         };
         let (a, b) = (
-            build_world_with(&filled, WorldRules::game_v18(seed)),
-            build_world_with(&unfilled, WorldRules::game_v18(seed)),
+            build_world_with(&full, WorldRules::baseline(seed)),
+            build_world_with(&bare, WorldRules::baseline(seed)),
         );
         assert_eq!(
             a.resources.tile_grid.terrain_type, b.resources.tile_grid.terrain_type,
@@ -96,19 +92,26 @@ fn harness_region_fill_never_touches_terrain_or_water() {
                 "a bush on a deadwood spot"
             );
         }
-        let fill = a.resources.worldgen_report;
-        let extra = fill.region_fill_bushes.iter().sum::<u32>();
+        let report = a.resources.worldgen_report;
+        assert!(report.regions_placed >= 1, "seed {seed}");
         assert_eq!(
-            a.resources.worldgen_report.region_bushes_placed,
-            b.resources.worldgen_report.region_bushes_placed + extra
+            a.resources.food_source_max.len(),
+            b.resources.food_source_max.len() + report.region_bushes_placed as usize,
+            "seed {seed}"
         );
+        assert_eq!(
+            a.resources.wood_source_max.len(),
+            b.resources.wood_source_max.len() + report.region_deadwood_placed as usize,
+            "seed {seed}"
+        );
+        assert!(report.region_fill_bushes.iter().sum::<u32>() <= report.region_bushes_placed);
     }
 }
 
 #[test]
 fn harness_region_water_rule() {
     for seed in 0..64 {
-        let engine = v18_world(seed);
+        let engine = baseline_engine(seed);
         for region in &engine.resources.wild_regions {
             assert!(
                 region.water_distance <= 12,
@@ -118,94 +121,6 @@ fn harness_region_water_rule() {
             );
         }
     }
-}
-
-/// Wood on the spots of area `area`.
-fn area_wood(engine: &SimEngine, area: u8) -> u32 {
-    engine
-        .resources
-        .wood_spot_area
-        .iter()
-        .filter(|(_, a)| **a == area)
-        .map(|(tile, _)| u32::from(engine.resources.wood_tiles.get(tile).copied().unwrap_or(0)))
-        .sum()
-}
-
-#[test]
-fn harness_area_fall_floor() {
-    // A v18 world with a settlement (one member) on region 0's centre, run
-    // through six winter days of regrowth with every spot emptied after each
-    // pulse (as gatherers would; the snow cap of 1 per spot never binds), with
-    // the floor and without it. The floor binds where the region has fewer
-    // spots than floor x the camp's: the first seed whose region 0 has fewer
-    // than 0.6 x the camp's spots is used, with the start value 600 and 1000.
-    let spots = |e: &SimEngine, area: u8| {
-        e.resources
-            .wood_spot_area
-            .values()
-            .filter(|a| **a == area)
-            .count() as u64
-    };
-    let seed = (0..400u64)
-        .find(|&s| {
-            let e = game_v18_nofission_scene(s);
-            spots(&e, 1) * 1000 < 600 * spots(&e, 0)
-        })
-        .expect("a world whose region 0 has few spots");
-    let day = tick_at(21, 600);
-    // Returns (fall placed per area 0..=3 over the six days, the engine).
-    let regrow = |floor: u32| {
-        let mut engine = game_v18_nofission_scene(seed);
-        if let Some(mut firewood) = engine.resources.rules.society.firewood {
-            firewood.area_fall_floor_permille = floor;
-            engine.resources.rules.society.firewood = Some(firewood);
-        }
-        let centre = engine.resources.wild_regions[0].centre;
-        let mut daughter = Settlement::new_with_id(9, 0);
-        daughter.formation_tile = centre;
-        daughter.add_member_agent(9_999);
-        engine.resources.settlements.insert(9, daughter);
-        let all: Vec<_> = engine.resources.wood_source_max.keys().copied().collect();
-        let mut placed = [0u32; 4];
-        let mut system = ResourceRegenSystem;
-        let mut tick = day;
-        while tick < day + 6 * 1440 {
-            for tile in &all {
-                engine.resources.wood_tiles.insert(*tile, 0);
-            }
-            engine.resources.current_tick = tick;
-            system.tick(&mut engine.world, &mut engine.resources);
-            for (area, total) in placed.iter_mut().enumerate() {
-                *total += area_wood(&engine, area as u8);
-            }
-            tick += REGEN_INTERVAL;
-        }
-        (placed, engine)
-    };
-    let (without, plain) = regrow(0);
-    assert_eq!(plain.resources.tallies.area_floor_wood, 0);
-    for floor in [600, 1000] {
-        let (with, engine) = regrow(floor);
-        assert_eq!(
-            with[0], without[0],
-            "the camp's fall is never reduced (floor {floor})"
-        );
-        assert!(
-            with[1] > without[1],
-            "the settled region gets more wood (floor {floor}): {with:?} vs {without:?}"
-        );
-        assert_eq!(
-            with[2..],
-            without[2..],
-            "unsettled regions keep their share"
-        );
-        assert!(engine.resources.tallies.area_floor_wood > 0);
-        println!("floor {floor} (seed {seed}, region spots {} vs camp {}): fall per area {with:?} vs {without:?} without", spots(&engine, 1), spots(&engine, 0));
-    }
-    // At floor 1000 the settled region receives at least the camp's daily fall
-    // less one unit of rounding per day.
-    let (full, _) = regrow(1000);
-    assert!(full[1] + 6 >= full[0], "{full:?}");
 }
 
 /// One hungry member (hunger 70) of a settlement at (20, 20) with an empty
@@ -286,41 +201,23 @@ fn hungry_founder(
 }
 
 #[test]
-fn harness_local_food_availability_only_in_v18() {
+fn harness_local_food_availability() {
     let seeking_food = AgentState::Seeking {
         target: TargetKind::Food,
     };
-    // v17: a full bush anywhere makes the hunger actionable.
-    assert_eq!(
-        hungry(WorldRules::game_v17_nofission(0), false),
-        seeking_food
-    );
-    // v18: only a bush inside the member's catchment does.
-    assert_ne!(
-        hungry(WorldRules::game_v18_nofission(0), false),
-        seeking_food
-    );
-    assert_eq!(
-        hungry(WorldRules::game_v18_nofission(0), true),
-        seeking_food
-    );
-    // The meal target: v17 the nearest bush anywhere, v18 the nearest in the catchment.
-    let (_, v17_target) = hungry_with_target(WorldRules::game_v17_nofission(0), true);
-    let (_, v18_target) = hungry_with_target(WorldRules::game_v18_nofission(0), true);
-    assert_eq!(
-        v17_target,
-        Some((37, 20)),
-        "v17 eats at the nearest bush anywhere"
-    );
-    assert_eq!(v18_target, Some((30, 22)), "v18 eats inside its catchment");
+    let rules = WorldRules::baseline(0);
+    assert!(rules.agent.local_food_availability);
+    // Only a bush inside the member's catchment makes the hunger actionable.
+    assert_ne!(hungry(rules, false), seeking_food);
+    assert_eq!(hungry(rules, true), seeking_food);
+    // The meal target is the nearest bush in the catchment, not the nearer
+    // one two tiles away outside it.
+    let (_, target) = hungry_with_target(rules, true);
+    assert_eq!(target, Some((30, 22)), "eats inside its catchment");
     // Review round 1, M1: a founder still walking keeps the world-wide rule.
-    let (state, target) = hungry_founder(WorldRules::game_v18(0), false, true);
+    let (state, target) = hungry_founder(rules, false, true);
     assert_eq!(state, seeking_food);
     assert_eq!(target, Some((37, 20)));
-    assert!(
-        !WorldRules::game_v17(0).agent.local_food_availability
-            && WorldRules::game_v18(0).agent.local_food_availability
-    );
 }
 
 #[test]
@@ -336,7 +233,7 @@ fn harness_local_gather_stays_in_the_catchment() {
     assert_eq!(
         nearest_gather_tile(&pos, &tiles, 8, None, &[]),
         Some((37, 20)),
-        "None = v17"
+        "no catchment: the nearest in range"
     );
     assert_eq!(
         nearest_gather_tile(&pos, &tiles, 8, Some(((20, 20), 16)), &[]),

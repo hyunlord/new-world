@@ -2,7 +2,9 @@
 //!
 //! Under `AgingRule::elder_evening_tether` an idle elder's tether inside the
 //! evening-gather window is `min(elder_tether_radius, evening tether)`;
-//! outside the window it stays `elder_tether_radius`. Numbers come from the rules.
+//! outside the window it stays `elder_tether_radius`. Numbers come from the
+//! live rules (`WorldRules::baseline`; aging and evening gather are unchanged
+//! since v12, so the thresholds are exact).
 use sim_core::components::{Agent, AgentState, Elder, Position, Settlement};
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
@@ -56,10 +58,10 @@ fn widest(engine: &mut SimEngine, entities: &[hecs::Entity], from: u64, ticks: u
 }
 
 #[test]
-fn harness_elder_evening_tether_v12() {
-    let rules = WorldRules::game_v12();
-    let aging = rules.society.aging.expect("v12 aging");
-    let evening = rules.agent.evening_gather.expect("v12 evening gather");
+fn harness_elder_evening_tether() {
+    let rules = WorldRules::baseline(7);
+    let aging = rules.society.aging.expect("baseline aging");
+    let evening = rules.agent.evening_gather.expect("baseline evening gather");
     assert!(aging.elder_evening_tether);
     let tight = aging.elder_tether_radius.min(evening.tether_radius);
     assert!(
@@ -82,30 +84,10 @@ fn harness_elder_evening_tether_v12() {
 }
 
 #[test]
-fn harness_elder_tether_v11_unchanged() {
-    let rules = WorldRules::game_v11();
-    let aging = rules.society.aging.expect("v11 aging");
-    assert!(!aging.elder_evening_tether);
-    // In v11 the elder tether holds at 19:00 too: elders may stand at 4.
-    let (mut engine, entities) = elders(rules, 6, aging.elder_tether_radius - 1);
-    assert_eq!(
-        widest(&mut engine, &entities, tick_at(3, 1140), 120),
-        aging.elder_tether_radius
-    );
-    assert_eq!(
-        WorldRules::game_v10()
-            .society
-            .aging
-            .map(|rule| rule.elder_evening_tether),
-        Some(false)
-    );
-}
-
-#[test]
 fn harness_elder_tether_returns_after_the_evening() {
     // At 21:00 the evening window closes and the elder tether alone holds again.
-    let rules = WorldRules::game_v12();
-    let aging = rules.society.aging.expect("v12 aging");
+    let rules = WorldRules::baseline(7);
+    let aging = rules.society.aging.expect("baseline aging");
     let evening = rules.agent.evening_gather.expect("evening");
     let (mut engine, entities) = elders(
         rules,

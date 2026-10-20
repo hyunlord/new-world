@@ -4181,9 +4181,9 @@ mod tests {
         fatigue: f64,
     ) -> (SimEngine, hecs::Entity) {
         let mut e = fresh_engine();
-        let v20 = sim_core::rules::WorldRules::game_v20(0);
-        e.resources.rules.agent.night_rest = v20.agent.night_rest;
-        e.resources.rules.agent.temperament = v20.agent.temperament;
+        let baseline = sim_core::rules::WorldRules::baseline(0);
+        e.resources.rules.agent.night_rest = baseline.agent.night_rest;
+        e.resources.rules.agent.temperament = baseline.agent.temperament;
         e.resources.rules.clock_offset_ticks = minute;
         let entity = e.spawn_agent(5, 5);
         e.world
@@ -4210,8 +4210,8 @@ mod tests {
 
     #[test]
     fn person_night_rest_is_the_own_window() {
-        let rule = sim_core::rules::WorldRules::game_v20(0).agent.night_rest;
-        let lean = sim_core::rules::WorldRules::game_v20(0).agent.temperament;
+        let rule = sim_core::rules::WorldRules::baseline(0).agent.night_rest;
+        let lean = sim_core::rules::WorldRules::baseline(0).agent.temperament;
         let cautious = Temperament {
             ns: 500,
             ha: 1000,

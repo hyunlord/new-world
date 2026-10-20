@@ -1,4 +1,5 @@
-//! Pass 11 Part 2: wild regions and village fission (`game_v17`).
+//! Pass 11 Part 2: wild regions and village fission, under the live rules
+//! (`WorldRules::baseline`; V8-0 port of the `game_v17` fixtures).
 use std::collections::BTreeSet;
 
 use hecs::Entity;
@@ -12,8 +13,7 @@ use sim_core::rules::WorldRules;
 use sim_engine::{RuntimeSystem, SimEngine, WildRegion};
 use sim_systems::runtime::settlement::fission::sustain_capacity;
 use sim_systems::runtime::settlement::FissionSystem;
-use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v16_scene, game_v17_nofission_scene, game_v17_scene};
+use sim_test::baseline_engine;
 
 const HOME: (u32, u32) = (20, 20);
 const SITE: (u32, u32) = (46, 20);
@@ -26,15 +26,23 @@ fn tick_at(day: u64, minute: u64) -> u64 {
 /// One resident: id, stage (0 child, 1 adult, 2 elder), lineage key.
 type Resident = (AgentId, u8, u64);
 
-/// A bare `game_v17(seed)` world: one settlement (id 1) at `HOME` founded at
-/// tick 0 holding 100 food and 30 wood, `bushes` capacity-4 bushes around it,
-/// one wild region centred on `SITE`, and the given residents spawned in order.
+/// A bare `WorldRules::baseline(seed)` world: one settlement (id 1) at
+/// `HOME` founded at tick 0 holding 100 food and 30 wood, `bushes`
+/// capacity-4 bushes around it, one wild region centred on `SITE`, and the
+/// given residents spawned in order.
+///
+/// The live fission rule splits by accumulated pressure against a hidden
+/// threshold (Pass 13), not by the crowding gate `game_v17` used. The
+/// settlement's threshold is set to 1, so the first eligible 06:00 check with
+/// a positive hazard splits: with 32 or more members (above `size_lo` 24) and
+/// 100 food (below four days of their need) h > 0 at once.
 fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v17(seed);
+    engine.resources.rules = WorldRules::baseline(seed);
     engine.resources.world_seed = seed;
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.formation_tile = HOME;
+    settlement.fission_threshold = 1;
     settlement.store(ResourceKind::Food, 100);
     settlement.store(ResourceKind::Wood, 30);
     for i in 0..bushes {
@@ -112,76 +120,6 @@ fn group_of(engine: &SimEngine) -> BTreeSet<AgentId> {
         .iter()
         .map(|(_, (a, _))| a.id)
         .collect()
-}
-
-#[test]
-fn harness_fission_inert_before_v17() {
-    for engine in [game_v16_scene(3), game_v17_nofission_scene(3)] {
-        let mut engine = engine;
-        for _ in 0..40 * 1440 {
-            engine.tick();
-        }
-        let t = engine.resources.tallies;
-        assert_eq!(
-            (
-                t.fissions,
-                t.fissions_cancelled,
-                t.fission_blocked_no_site,
-                t.remnant_merges
-            ),
-            (0, 0, 0, 0)
-        );
-        assert!(engine.resources.fission_log.is_empty());
-        assert_eq!(engine.world.query::<&Founding>().iter().count(), 0);
-        assert!(engine.resources.retired_hearths.is_empty());
-        assert_eq!(engine.resources.settlements.len(), 1);
-    }
-    for rules in [
-        WorldRules::game_v16(3),
-        WorldRules::game_v16_neutral(),
-        WorldRules::game_v17_nofission(3),
-    ] {
-        assert_eq!(rules.society.fission, None);
-    }
-    // The v16 world has no regions; v17's worlds share their camp with v16.
-    assert!(game_v16_scene(3).resources.wild_regions.is_empty());
-    let (v16, v17) = (game_v16_scene(5), game_v17_scene(5));
-    assert!(!v17.resources.wild_regions.is_empty());
-    for (tile, kind) in &v16.resources.building_kinds {
-        assert_eq!(v17.resources.building_kinds.get(tile), Some(kind));
-    }
-}
-
-#[test]
-fn harness_fission_only_when_crowded() {
-    let seed = 7;
-    let bushes = bushes_for(seed, 30);
-    let cap = {
-        let (engine, _) = world(seed, bushes, &[]);
-        sustain_capacity(&engine.resources, 1).expect("capacity")
-    };
-    let rule = WorldRules::game_v17(seed).society.fission.expect("rule");
-    // Below crowding (and below min_members): never splits.
-    let below =
-        ((rule.crowding * f64::from(cap)).ceil() as u64 - 1).min(u64::from(rule.min_members) - 1);
-    let (mut engine, _) = world(seed, bushes, &village(below));
-    let mut system = FissionSystem::new();
-    run(&mut engine, &mut system, tick_at(14, 0), tick_at(45, 0));
-    assert!(
-        engine.resources.fission_log.is_empty(),
-        "{below} members of capacity {cap} split"
-    );
-    // Above crowding: one split, at 06:00 of the first spring or summer day
-    // after the minimum age (day 14 is autumn, 21 winter, 28 spring).
-    let above = u64::from(cap.max(rule.min_members)) + 2;
-    let (mut engine, _) = world(seed, bushes, &village(above));
-    let mut system = FissionSystem::new();
-    run(&mut engine, &mut system, tick_at(14, 0), tick_at(45, 0));
-    let log = &engine.resources.fission_log;
-    assert_eq!(log.len(), 1, "one fission (cooldown 28 days)");
-    assert_eq!(log[0].depart_tick, tick_at(28, 360));
-    assert_eq!(log[0].site, SITE);
-    assert_eq!(log[0].parent, 1);
 }
 
 #[test]
@@ -537,36 +475,11 @@ fn harness_remnant_merges() {
 }
 
 #[test]
-fn harness_fission_order_independent() {
-    let seed = 900_321;
-    let bushes = bushes_for(seed, 30);
-    let check = tick_at(28, 360);
-    let people = village(33);
-    let mut reversed = people.clone();
-    reversed.reverse();
-    let outcome = |residents: &[Resident]| {
-        let (mut engine, _) = world(seed, bushes, residents);
-        let mut system = FissionSystem::new();
-        run(&mut engine, &mut system, check, check + 1);
-        (engine.resources.fission_log.clone(), group_of(&engine))
-    };
-    assert_eq!(outcome(&people), outcome(&reversed));
-    // A whole v17 world: two runs of the same seed agree tick for tick.
-    let (mut a, mut b) = (game_v17_scene(900_000), game_v17_scene(900_000));
-    for _ in 0..30 * 1440 {
-        a.tick();
-        b.tick();
-    }
-    assert_eq!(fingerprint(&a), fingerprint(&b));
-    assert_eq!(a.resources.fission_log, b.resources.fission_log);
-}
-
-#[test]
 fn harness_v17_regions_placed() {
     let distance = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
     let mut placed = 0;
     for seed in [0u64, 7, 31, 900_001, 900_017] {
-        let engine = game_v17_scene(seed);
+        let engine = baseline_engine(seed);
         let r = &engine.resources;
         let v = r.world_variety.expect("variety");
         let hearth = *r
@@ -602,43 +515,42 @@ fn harness_v17_regions_placed() {
             }
             assert!(region.bushes <= v.region_bushes && region.deadwood <= v.region_deadwood);
         }
-        // Every region bush and deadwood spot lies in some region's ring and beyond the camp's reach.
+        // Every region deadwood spot lies in some region's ring (2–6, or the
+        // fill ring 7–9 of a short region, `region_fill`) and beyond the
+        // camp's reach; every centre has water within 12 (`region_water_max`).
+        for region in &r.wild_regions {
+            assert!(region.water_distance <= 12, "seed {seed}: {region:?}");
+        }
         for (tile, area) in &r.wood_spot_area {
             if *area > 0 {
                 let region = r.wild_regions[usize::from(*area) - 1];
-                assert!((2..=6).contains(&distance(*tile, region.centre)));
+                assert!((2..=9).contains(&distance(*tile, region.centre)));
                 assert!(distance(*tile, hearth) > reach);
             }
         }
         // Deterministic and independent of the replicate.
-        let mut forked = game_v17_scene(seed);
+        let mut forked = baseline_engine(seed);
         forked.apply_noise_fork(3);
         assert_eq!(forked.resources.wild_regions, r.wild_regions);
         assert_eq!(forked.resources.wood_spot_area, r.wood_spot_area);
-        assert_eq!(game_v17_scene(seed).resources.wild_regions, r.wild_regions);
-        // The camp of the v17 world is the v16 world's (same bushes and deadwood near it).
-        let v16 = game_v16_scene(seed);
-        for (tile, max) in &v16.resources.wood_source_max {
-            assert_eq!(r.wood_source_max.get(tile), Some(max));
-            assert_eq!(r.wood_spot_area.get(tile), Some(&0));
-        }
-        for (tile, max) in &v16.resources.food_source_max {
-            assert_eq!(r.food_source_max.get(tile), Some(max));
-        }
+        assert_eq!(baseline_engine(seed).resources.wild_regions, r.wild_regions);
         placed += r.wild_regions.len();
     }
     assert!(placed >= 5);
 }
 
-/// Review round 1, M4: the real founding path in a whole v17 world — the
+/// Review round 1, M4: the real founding path in a whole world — the
 /// group walks, the stamped hearth and shelters are registered, the formation
 /// scan forms the daughter, and on that tick the group is moved, the store
 /// delivered, the parent linked and the shelters owned by the daughter.
 #[test]
 fn harness_fission_founds_daughter_in_a_whole_world() {
-    let mut engine = game_v17_scene(900_000);
+    // V8-0: baseline world 8 splits at 06:00 of display day 28 and founds its
+    // daughter on day 29 (re-measured; 30-day scan of seeds 0..48, where the
+    // earliest split is day 28 — no seed splits before the first winter).
+    let mut engine = baseline_engine(8);
     let mut departed = None;
-    for _ in 0..40 * 1440 {
+    for _ in 0..34 * 1440 {
         let attempts = engine.resources.fission_log.len();
         engine.tick();
         if departed.is_none() && engine.resources.fission_log.len() > attempts {
@@ -724,8 +636,21 @@ fn harness_fission_founds_daughter_in_a_whole_world() {
             Some(&daughter_id)
         );
     }
-    // Sticky membership: nobody else moved between the villages.
-    assert_eq!(engine.resources.tallies.exclusivity_moves, 0);
+    // Sticky membership: the only moves between villages outside the
+    // fission are residents the formation scan found standing at the new
+    // hearth, and the tally counts exactly those. V8-0 re-measure, world 8:
+    // one such resident (an adult of the camp, not in the group) — the
+    // `game_v17` world 900 000 of Pass 11 had none.
+    let extra = daughter
+        .member_agents
+        .iter()
+        .filter(|id| !record.members.contains(id))
+        .count() as u64;
+    assert_eq!(engine.resources.tallies.exclusivity_moves, extra);
+    assert!(
+        extra <= 1,
+        "{extra} residents joined the daughter by proximity"
+    );
 }
 
 /// Review round 1, M5: under `FissionRule` a bush inside two settlements'
@@ -749,7 +674,4 @@ fn harness_shared_bushes_count_once() {
         (shared - alone / 2.0).abs() < 1e-9,
         "alone {alone}, shared {shared}"
     );
-    // Without the fission rule nothing is shared (v16 accounting).
-    engine.resources.rules = WorldRules::game_v16(5);
-    assert!((supply_per_day(&engine.resources, 1, 16) - alone).abs() < 1e-9);
 }

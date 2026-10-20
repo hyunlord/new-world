@@ -7,15 +7,26 @@ use sim_core::rules::{HousingCount, WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::construction::ConstructionSystem;
 use sim_systems::runtime::settlement::{housing_capacity, SettlementSystem, ShelterPlanningSystem};
-use sim_test::{
-    probe::fingerprint,
-    scenes::{game_scene, game_v9_scene},
-};
+use sim_test::baseline_engine;
+
+/// The live game's village rules (`WorldRules::baseline`) copied into
+/// `WorldRules::default()` (R1, exact: `shelter_planning` and the hearth
+/// anchor are unchanged since v9).
+fn village_rules() -> WorldRules {
+    let live = WorldRules::baseline(7);
+    let mut rules = WorldRules::default();
+    rules.society.shelter_planning = live.society.shelter_planning;
+    rules.society.settlement_anchor = live.society.settlement_anchor;
+    rules
+}
 
 #[test]
 fn harness_village_one_settlement_per_hearth() {
+    // Baseline scene (R3). Two days stay well before the first possible
+    // fission (`min_age_days` 10), so one hearth means one village owning
+    // every building (8 seeds × 2 days: under 1 s in release).
     for seed in 0..8 {
-        let mut engine = game_v9_scene(seed);
+        let mut engine = baseline_engine(seed);
         let mut formed = false;
         for _ in 0..2880 {
             engine.tick();
@@ -61,36 +72,30 @@ fn harness_village_owned_capacity_counts_each_shelter_once() {
             .insert((x, 10), BuildingKind::Shelter);
         engine.resources.building_owner.insert((x, 10), 1);
     }
-    let mut rule = WorldRules::game_v9()
-        .society
-        .shelter_planning
-        .expect("planning");
-    rule.housing = HousingCount::Owned;
+    let rule = village_rules().society.shelter_planning.expect("planning");
+    // Baseline counts owned housing; the v8 `NearFormation` arm is gone.
+    assert_eq!(rule.housing, HousingCount::Owned);
     assert_eq!(housing_capacity(&engine.resources, 1, &rule), 32);
     assert_eq!(housing_capacity(&engine.resources, 2, &rule), 0);
-    rule.housing = HousingCount::NearFormation;
-    assert_eq!(housing_capacity(&engine.resources, 1, &rule), 32);
-    assert_eq!(housing_capacity(&engine.resources, 2, &rule), 32);
 }
 
 #[test]
 fn harness_village_plans_with_headroom() {
-    for game_v9 in [false, true] {
+    // One owned shelter (8 places) and baseline headroom 2: six residents
+    // (6 + 2 ≥ 8) already plan a second shelter, five (5 + 2 < 8) do not.
+    for (members_below_capacity, expected_sites) in [(2, 1), (3, 0)] {
         let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-        engine.resources.rules = if game_v9 {
-            WorldRules::game_v9()
-        } else {
-            WorldRules::game_v8()
-        };
+        engine.resources.rules = village_rules();
         let rule = engine
             .resources
             .rules
             .society
             .shelter_planning
             .expect("planning");
+        assert_eq!(rule.planning_headroom, 2);
         let mut settlement = Settlement::new_with_id(1, 0);
         settlement.formation_tile = (10, 10);
-        for id in 0..rule.residents_per_shelter - 2 {
+        for id in 0..rule.residents_per_shelter - members_below_capacity {
             settlement.add_member_agent(u64::from(id));
         }
         engine.resources.settlements.insert(1, settlement);
@@ -106,23 +111,17 @@ fn harness_village_plans_with_headroom() {
         }
         assert_eq!(
             engine.world.query::<&ConstructionSite>().iter().count(),
-            usize::from(game_v9)
+            expected_sites,
+            "{} residents",
+            rule.residents_per_shelter - members_below_capacity
         );
-        if !game_v9 {
-            let settlement = engine.resources.settlements.get_mut(&1).expect("village");
-            settlement.add_member_agent(100);
-            settlement.add_member_agent(101);
-            engine.resources.current_tick += rule.plan_interval_ticks;
-            planner.tick(&mut engine.world, &mut engine.resources);
-            assert_eq!(engine.world.query::<&ConstructionSite>().iter().count(), 1);
-        }
     }
 }
 
 #[test]
 fn harness_village_completed_site_is_owned() {
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v9();
+    engine.resources.rules = village_rules();
     let rule = engine
         .resources
         .rules
@@ -156,29 +155,9 @@ fn harness_village_completed_site_is_owned() {
 }
 
 #[test]
-fn harness_village_v8_unchanged() {
-    for (seed, expected) in [
-        "f718457fcd90aa27",
-        "23b14e7b27051671",
-        "e968d90d40d0568e",
-        "a8aa877059579761",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_scene(seed as u64);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert!(engine.resources.building_owner.is_empty());
-    }
-}
-
-#[test]
 fn harness_village_dissolution_releases_only_its_owned_buildings() {
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v9();
+    engine.resources.rules = village_rules();
     engine
         .resources
         .settlements

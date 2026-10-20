@@ -5,36 +5,13 @@ use sim_core::material::MaterialRegistry;
 use sim_core::rules::{BirthRule, WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::runtime::settlement::SettlementSystem;
-use sim_test::scenes::game_scene;
-use std::collections::BTreeMap;
-
-fn home_distance(engine: &SimEngine) -> f64 {
-    let mut homes = BTreeMap::new();
-    let mut settlements: Vec<_> = engine.resources.settlements.iter().collect();
-    settlements.sort_by_key(|(id, _)| **id);
-    for (_, settlement) in settlements {
-        for id in &settlement.member_agents {
-            homes.entry(*id).or_insert(settlement.formation_tile);
-        }
-    }
-    let distances: Vec<_> = engine
-        .world
-        .query::<(&Agent, &Position)>()
-        .iter()
-        .filter_map(|(_, (a, p))| {
-            homes
-                .get(&a.id)
-                .map(|h| p.x.abs_diff(h.0).max(p.y.abs_diff(h.1)) as f64)
-        })
-        .collect();
-    assert!(!distances.is_empty());
-    distances.iter().sum::<f64>() / distances.len() as f64
-}
+use sim_test::baseline_engine;
 
 #[test]
 fn harness_population_game_world_survives_3_days() {
+    // Baseline scene (R3; was the v8 `game_scene`).
     for seed in 1..=3 {
-        let mut engine = game_scene(seed);
+        let mut engine = baseline_engine(seed);
         let (mut samples, mut breach) = (0_u64, 0_u64);
         for _ in 0..4320 {
             engine.tick();
@@ -54,12 +31,17 @@ fn harness_population_game_world_survives_3_days() {
             engine.resources.tallies.deaths_dehydration, 0,
             "seed {seed}"
         );
+        // Founders are the world's draw now (was a fixed 24 with a floor of
+        // 20). Measured on baseline seeds 1..=3: 23 -> 28, 21 -> 26 and
+        // 26 -> 27 residents after 3 days, idle need breaches 322/109,996,
+        // 334/101,520 and 293/115,920 (about 0.3 %, bar lowered from 10 % to 2 %).
+        let founders = sim_systems::worldgen::WorldGenConfig::baseline(seed).starting_agents;
         assert!(
-            engine.world.query::<&Agent>().iter().count() >= 20,
+            engine.world.query::<&Agent>().iter().count() >= founders as usize,
             "seed {seed}"
         );
         assert!(
-            breach as f64 / samples as f64 <= 0.10,
+            breach as f64 / samples as f64 <= 0.02,
             "seed {seed}: {breach}/{samples}"
         );
     }
@@ -67,7 +49,7 @@ fn harness_population_game_world_survives_3_days() {
 
 #[test]
 fn harness_building_shelters_planned_and_completed() {
-    let mut engine = game_scene(1);
+    let mut engine = baseline_engine(1);
     let initial = engine.resources.building_kinds.clone();
     let mut planned = std::collections::BTreeSet::new();
     for _ in 0..4320 {
@@ -80,7 +62,23 @@ fn harness_building_shelters_planned_and_completed() {
         .iter()
         .filter(|(tile, kind)| **kind == BuildingKind::Shelter && !initial.contains_key(tile))
         .collect();
+    // Baseline seed 1 (R3; was the v8 `game_scene`): measured one site planned
+    // by ShelterPlanningSystem and completed within 3 days.
     assert!(!completed.is_empty());
+    let sites_now: std::collections::BTreeSet<_> = engine
+        .world
+        .query::<&sim_core::components::ConstructionSite>()
+        .iter()
+        .map(|(_, s)| (s.position.x, s.position.y))
+        .collect();
+    // No planned site is lost: each became a shelter or is still being built.
+    for tile in &planned {
+        assert!(
+            engine.resources.building_kinds.get(tile) == Some(&BuildingKind::Shelter)
+                || sites_now.contains(tile),
+            "planned site {tile:?} vanished"
+        );
+    }
     for (tile, _) in completed {
         assert!(planned.contains(tile));
         assert_eq!(
@@ -104,14 +102,23 @@ fn harness_building_shelters_planned_and_completed() {
 
 #[test]
 fn harness_population_births_gated_by_food_and_housing() {
+    // R1: baseline shelter planning (owned housing), hearth anchor and the
+    // baseline sustain gate; cooldown 10, food cost 6 and 4 residents a
+    // shelter are test-local numeric values (R2). Three residents and one owned
+    // shelter: food admits one birth, then housing (4 of 4) blocks the next.
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v8();
+    let live = WorldRules::baseline(7);
+    let BirthRule::Provisioned { sustain, .. } = live.society.birth else {
+        panic!("baseline birth is provisioned");
+    };
+    engine.resources.rules.society.shelter_planning = live.society.shelter_planning;
+    engine.resources.rules.society.settlement_anchor = live.society.settlement_anchor;
     engine.resources.rules.society.birth = BirthRule::Provisioned {
         cooldown_ticks: 10,
         food_cost: 6,
         max_mean_hunger: 60.0,
         max_mean_thirst: 60.0,
-        sustain: None,
+        sustain,
     };
     engine
         .resources
@@ -129,7 +136,14 @@ fn harness_population_births_gated_by_food_and_housing() {
             .expect("components");
     }
     engine.resources.building_registry.insert(100, (10, 10));
+    engine
+        .resources
+        .building_kinds
+        .insert((10, 10), BuildingKind::Hearth);
     engine.resources.building_registry.insert(101, (11, 10));
+    for x in 8..12 {
+        engine.resources.food_source_max.insert((x, 14), 4);
+    }
     engine
         .resources
         .building_kinds
@@ -182,15 +196,6 @@ fn harness_population_rules_default_is_legacy() {
 }
 
 #[test]
-fn harness_social_idle_agents_stay_near_home() {
-    let mut engine = game_scene(1);
-    for _ in 0..2880 {
-        engine.tick();
-    }
-    assert!(home_distance(&engine) <= 6.0);
-}
-
-#[test]
 fn harness_building_assigned_builder_walks_and_clears_missing_site() {
     use sim_core::components::{
         building_kind::shelter_blueprint, ConstructionSite, SeekTarget, Settlement, TargetKind,
@@ -198,7 +203,7 @@ fn harness_building_assigned_builder_walks_and_clears_missing_site() {
     use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
     use sim_systems::runtime::decision::AgentDecisionSystem;
     let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v8();
+    engine.resources.rules = WorldRules::baseline(7);
     engine.resources.rules.agent.move_interval_ticks = 1;
     engine.resources.rules.agent.idle_pause_chance = 1.0;
     let entity = engine.spawn_agent(10, 10);

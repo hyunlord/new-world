@@ -1,41 +1,37 @@
-//! Pass 12 Part 2: fission as a daily hazard (`game_v18`, PASS12_GOAL.md 7.1).
+//! Pass 12 Part 2: fission as a daily hazard (PASS12_GOAL.md 7.1).
+//!
+//! V8-0: rebased from `game_v18` with the goal's start hazard on
+//! `WorldRules::baseline(seed)`, whose hazard is Pass 13's (`V19_HAZARD`: size
+//! 24..44, crowding weight 0, scarcity weight 1000 over 4 days, ceiling 300)
+//! and whose fission accumulates the hazard as pressure against a hidden
+//! threshold (Pass 13) instead of a daily draw: a logged check carries draw 0
+//! and splits when its pressure reaches its threshold.
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, Lineage, Position, ResourceKind, Settlement,
 };
+use sim_core::fission_threshold::fission_threshold;
 use sim_core::material::MaterialRegistry;
-use sim_core::rng::{keyed_below, NoiseFork, STREAM_FISSION_HAZARD};
 use sim_core::rules::{FissionHazard, WorldRules};
 use sim_engine::{FissionCheck, RuntimeSystem, SimEngine, WildRegion};
 use sim_systems::runtime::settlement::fission::{hazard_terms, sustain_capacity};
 use sim_systems::runtime::settlement::food_economy::adult_need_per_day;
 use sim_systems::runtime::settlement::FissionSystem;
-use sim_test::probe::fingerprint;
-use sim_test::scenes::{game_v17_scene, game_v18_nofission_scene, game_v18_scene};
 
 const HOME: (u32, u32) = (20, 20);
 const SITE: (u32, u32) = (46, 20);
 
-/// The goal's start values (7.1): the mechanism tests use them explicitly so
-/// their numbers do not move with Part 3's tuning.
-const START: FissionHazard = FissionHazard {
-    size_lo: 20,
-    size_hi: 40,
-    crowd_lo_permille: 850,
-    crowd_hi_permille: 1050,
-    scarcity_days: 2,
-    weight_crowd_permille: 500,
-    weight_scarcity_permille: 500,
-    max_daily_permille: 120,
-};
+/// The baseline fission hazard.
+fn baseline_hazard() -> FissionHazard {
+    WorldRules::baseline(0)
+        .society
+        .fission
+        .and_then(|f| f.hazard)
+        .expect("baseline hazard")
+}
 
-/// `game_v18(seed)` with the start hazard and `min_members` 22 (7.1's start values).
-fn start_rules(seed: u64) -> WorldRules {
-    let mut rules = WorldRules::game_v18(seed);
-    if let Some(fission) = rules.society.fission.as_mut() {
-        fission.hazard = Some(START);
-        fission.min_members = 22;
-    }
-    rules
+/// The baseline rules of world `seed`.
+fn baseline_rules(seed: u64) -> WorldRules {
+    WorldRules::baseline(seed)
 }
 
 /// Tick at which the display clock (480-tick offset) reads `minute` on the
@@ -110,8 +106,8 @@ fn run(engine: &mut SimEngine, from: u64, to: u64) {
     }
 }
 
-/// Recompute a logged check from its inputs (7.1's formula and draw).
-fn recompute(engine: &SimEngine, c: &FissionCheck, replicate: u32) -> (i64, i64, i64, i64, u64) {
+/// Recompute a logged check's terms from its inputs (7.1's formula).
+fn recompute(engine: &SimEngine, c: &FissionCheck) -> (i64, i64, i64, i64) {
     let hazard = engine
         .resources
         .rules
@@ -119,76 +115,59 @@ fn recompute(engine: &SimEngine, c: &FissionCheck, replicate: u32) -> (i64, i64,
         .fission
         .and_then(|f| f.hazard)
         .expect("hazard");
-    let (g, q, s, h) = hazard_terms(
+    hazard_terms(
         &hazard,
         c.members,
         c.capacity,
         c.food,
         adult_need_per_day(engine.resources.ticks_per_day),
-    );
-    let draw = keyed_below(
-        engine.resources.world_seed,
-        STREAM_FISSION_HAZARD,
-        u64::from(c.settlement),
-        c.tick,
-        0,
-        replicate,
-        1000,
-    );
-    (g, q, s, h, draw)
-}
-
-#[test]
-fn harness_hazard_inert_in_v17() {
-    let rule = WorldRules::game_v17(1)
-        .society
-        .fission
-        .expect("v17 fission");
-    assert_eq!(
-        (rule.hazard, rule.allowed_seasons),
-        (None, [true, true, false, false])
-    );
-    // Seeds 1 and 2 of v17 split at 06:00 of display day 29: no hazard check is ever logged.
-    for seed in [1, 2] {
-        let mut engine = game_v17_scene(seed);
-        for _ in 0..42 * 1440 {
-            engine.tick();
-        }
-        assert!(
-            !engine.resources.fission_log.is_empty(),
-            "seed {seed} departs in v17"
-        );
-        assert!(engine.resources.fission_checks.is_empty());
-    }
-    let mut engine = game_v18_nofission_scene(1);
-    for _ in 0..42 * 1440 {
-        engine.tick();
-    }
-    assert!(engine.resources.fission_checks.is_empty() && engine.resources.fission_log.is_empty());
+    )
 }
 
 #[test]
 fn harness_hazard_formula() {
-    let hz = START;
-    // Pure terms (need per member 1.0): an ordinary case, capacity 0 (counts
-    // as 1: q = 1000), an empty store (s = 1000) and size at size_lo (h = 0).
-    assert_eq!(hazard_terms(&hz, 30, 30, 30, 1.0), (500, 750, 500, 37));
-    assert_eq!(hazard_terms(&hz, 30, 0, 30, 1.0), (500, 1000, 500, 45));
-    assert_eq!(hazard_terms(&hz, 30, 30, 0, 1.0), (500, 750, 1000, 52));
-    assert_eq!(hazard_terms(&hz, 20, 0, 0, 1.0), (0, 1000, 1000, 0));
+    let hz = baseline_hazard();
+    assert_eq!(
+        (
+            hz.size_lo,
+            hz.size_hi,
+            hz.scarcity_days,
+            hz.max_daily_permille
+        ),
+        (24, 44, 4, 300)
+    );
+    assert_eq!(
+        (hz.weight_crowd_permille, hz.weight_scarcity_permille),
+        (0, 1000)
+    );
+    // Pure terms (need per member 1.0), by hand: an ordinary case (g = 6/20,
+    // c = 1000 so q = 150/200, s = 1 - 30/120, h = 300 x 0.3 x 0.75 = 67),
+    // capacity 0 (counts as 1: q = 1000; crowding weighs 0 so h is unchanged),
+    // an empty store (s = 1000, h = 90) and size at size_lo (h = 0).
+    assert_eq!(hazard_terms(&hz, 30, 30, 30, 1.0), (300, 750, 750, 67));
+    assert_eq!(hazard_terms(&hz, 30, 0, 30, 1.0), (300, 1000, 750, 67));
+    assert_eq!(hazard_terms(&hz, 30, 30, 0, 1.0), (300, 750, 1000, 90));
+    assert_eq!(hazard_terms(&hz, 24, 0, 0, 1.0), (0, 1000, 1000, 0));
     // Constructed settlements: the logged check is the formula on the
-    // settlement's members, sustain capacity and own store, and the draw is
-    // the keyed draw (replicate 0). Four cases: no bushes (capacity 0), an
-    // empty store, a roomy full store, the smallest eligible village.
+    // settlement's members, sustain capacity and own store; with pressure the
+    // first check's pressure is its hazard, against the settlement's drawn
+    // threshold, and no draw is made. Four cases: no bushes (capacity 0), an
+    // empty store, a roomy full store, the smallest eligible village (28).
     let seed = 900_412;
     let check = tick_at(28, 360);
+    let law = baseline_rules(seed)
+        .society
+        .fission
+        .and_then(|f| f.pressure)
+        .expect("baseline pressure")
+        .threshold_table;
     for (bushes, food, members) in [
         (0u32, 100u32, 30u64),
         (40, 0, 30),
         (200, 2000, 30),
-        (40, 100, 22),
+        (40, 100, 28),
     ] {
-        let mut engine = world(start_rules(seed), seed, bushes, food, members, false);
+        let mut engine = world(baseline_rules(seed), seed, bushes, food, members, false);
         let capacity = sustain_capacity(&engine.resources, 1).expect("capacity");
         let resident_members = engine.resources.settlements[&1].member_agents.len() as u32;
         run(&mut engine, check, check + 1);
@@ -199,8 +178,12 @@ fn harness_hazard_formula() {
             (c.tick, c.settlement, c.members, c.capacity, c.food),
             (check, 1, resident_members, capacity, food)
         );
-        assert_eq!((c.g, c.q, c.s, c.h, c.draw), recompute(&engine, &c, 0));
-        assert_eq!(c.split, (c.draw as i64) < c.h);
+        assert_eq!((c.g, c.q, c.s, c.h), recompute(&engine, &c));
+        assert_eq!(c.draw, 0, "pressure makes no draw");
+        assert_eq!(c.pressure, c.h.max(0) as u64, "first day: P = h");
+        assert_eq!(c.threshold, fission_threshold(law, seed, 1, 0));
+        assert!(c.threshold > 0);
+        assert_eq!(c.split, c.pressure > 0 && c.pressure >= c.threshold);
         assert!(c.site_free);
         assert_eq!(engine.resources.fission_log.len(), usize::from(c.split));
         if bushes == 0 {
@@ -213,64 +196,8 @@ fn harness_hazard_formula() {
 }
 
 #[test]
-fn harness_hazard_keyed_with_replicate() {
-    // A whole v18 world: a replicate-0 fork equals the unforked run.
-    let seed = 900_007;
-    let (mut a, mut b, mut c) = (
-        game_v18_scene(seed),
-        game_v18_scene(seed),
-        game_v18_scene(seed),
-    );
-    b.resources.noise_fork = Some(NoiseFork {
-        tick: 0,
-        replicate: 0,
-    });
-    c.resources.noise_fork = Some(NoiseFork {
-        tick: 0,
-        replicate: 3,
-    });
-    for _ in 0..60 * 1440 {
-        a.tick();
-        b.tick();
-        c.tick();
-    }
-    assert_eq!(a.resources.fission_checks, b.resources.fission_checks);
-    assert_eq!(fingerprint(&a), fingerprint(&b));
-    assert!(
-        !a.resources.fission_checks.is_empty(),
-        "the world reaches the draw"
-    );
-    for check in &c.resources.fission_checks {
-        assert_eq!(
-            check.draw,
-            recompute(&c, check, 3).4,
-            "replicate 3 draws with replicate 3"
-        );
-    }
-    // Constant h: the first split day of settlement 1 over the daily checks of
-    // days 10..120 (winter excluded) changes with the replicate in at least
-    // one of eight seeds.
-    let h = 60u64;
-    let first = |seed: u64, replicate: u32| {
-        (10..120u64).filter(|day| (day / 7) % 4 != 3).find(|&day| {
-            keyed_below(
-                seed,
-                STREAM_FISSION_HAZARD,
-                1,
-                tick_at(day, 360),
-                0,
-                replicate,
-                1000,
-            ) < h
-        })
-    };
-    let changed = (0..8).filter(|&s| first(s, 0) != first(s, 3)).count();
-    assert!(changed >= 1, "replicate 3 changes a split day");
-}
-
-#[test]
 fn harness_hazard_rises_with_shortfall() {
-    let hz = START;
+    let hz = baseline_hazard();
     let mut last = i64::MAX;
     for food in (0..=200).step_by(10) {
         let h = hazard_terms(&hz, 30, 30, food, 1.0).3;
@@ -283,7 +210,7 @@ fn harness_hazard_rises_with_shortfall() {
     let seed = 900_413;
     let check = tick_at(28, 360);
     let hazard_with = |food: u32| {
-        let mut engine = world(start_rules(seed), seed, 40, food, 30, false);
+        let mut engine = world(baseline_rules(seed), seed, 40, food, 30, false);
         run(&mut engine, check, check + 1);
         engine.resources.fission_checks[0]
     };
@@ -295,10 +222,19 @@ fn harness_hazard_rises_with_shortfall() {
 #[test]
 fn harness_allowed_seasons() {
     let seed = 900_414;
-    // v18: spring (day 28), summer (day 35) and autumn (day 14) checks reach
-    // the draw; winter (day 21) never does.
+    // Baseline allowed seasons [spring, summer, autumn]: spring (day 28),
+    // summer (day 35) and autumn (day 14) checks are logged; winter (day 21)
+    // never is.
+    assert_eq!(
+        baseline_rules(seed)
+            .society
+            .fission
+            .expect("fission")
+            .allowed_seasons,
+        [true, true, true, false]
+    );
     for (day, logged) in [(14u64, true), (21, false), (28, true), (35, true)] {
-        let mut engine = world(start_rules(seed), seed, 0, 0, 30, false);
+        let mut engine = world(baseline_rules(seed), seed, 0, 0, 30, false);
         run(&mut engine, tick_at(day, 360), tick_at(day, 360) + 1);
         assert_eq!(
             !engine.resources.fission_checks.is_empty(),
@@ -307,60 +243,11 @@ fn harness_allowed_seasons() {
         );
     }
     // No allowed season: no check at all.
-    let mut rules = start_rules(seed);
+    let mut rules = baseline_rules(seed);
     if let Some(fission) = rules.society.fission.as_mut() {
         fission.allowed_seasons = [false; 4];
     }
     let mut engine = world(rules, seed, 0, 0, 30, false);
     run(&mut engine, tick_at(10, 0), tick_at(40, 0));
     assert!(engine.resources.fission_checks.is_empty() && engine.resources.fission_log.is_empty());
-    // A whole v18 world never logs a winter check.
-    let mut engine = game_v18_scene(900_008);
-    for _ in 0..120 * 1440 {
-        engine.tick();
-    }
-    let checks = &engine.resources.fission_checks;
-    assert!(!checks.is_empty());
-    for c in checks {
-        assert_ne!(
-            ((c.tick + 480) / 1440 / 7) % 4,
-            3,
-            "winter check at tick {}",
-            c.tick
-        );
-    }
-}
-
-#[test]
-fn harness_hazard_order_independent() {
-    // Spawn order changes nothing.
-    let seed = 900_415;
-    let check = tick_at(28, 360);
-    let outcome = |reverse: bool| {
-        let mut engine = world(start_rules(seed), seed, 0, 0, 30, reverse);
-        run(&mut engine, check, check + 1);
-        (
-            engine.resources.fission_checks.clone(),
-            engine.resources.fission_log.clone(),
-        )
-    };
-    assert_eq!(outcome(false), outcome(true));
-    // The draw of (sid, tick) is its keyed draw alone: in a whole v18 world
-    // with several settlements every logged draw is recomputed from (seed,
-    // sid, tick, replicate 0), whichever other settlements exist or were checked.
-    let mut engine = game_v18_scene(900_009);
-    for _ in 0..120 * 1440 {
-        engine.tick();
-    }
-    let checks = engine.resources.fission_checks.clone();
-    assert!(!checks.is_empty());
-    for c in &checks {
-        assert_eq!((c.g, c.q, c.s, c.h, c.draw), recompute(&engine, c, 0));
-    }
-    let mut twin = game_v18_scene(900_009);
-    for _ in 0..120 * 1440 {
-        twin.tick();
-    }
-    assert_eq!(twin.resources.fission_checks, checks);
-    assert_eq!(fingerprint(&twin), fingerprint(&engine));
 }

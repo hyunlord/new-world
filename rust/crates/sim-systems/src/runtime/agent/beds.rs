@@ -114,7 +114,7 @@ mod tests {
     fn fixture() -> (World, SimResources) {
         let mut world = World::new();
         let mut r = SimResources::new(32, 32, MaterialRegistry::new());
-        r.rules = WorldRules::game_v8();
+        r.rules = WorldRules::baseline(0);
         r.rules.agent.night_rest = Some(NightRestRule {
             start_minute: 1260,
             end_minute: 360,

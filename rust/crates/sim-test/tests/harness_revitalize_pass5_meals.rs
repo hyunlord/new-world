@@ -10,17 +10,17 @@ use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::runtime::decision::AgentDecisionSystem;
 use sim_systems::runtime::settlement::StockpileConsumeSystem;
-use sim_test::probe::fingerprint;
-use sim_test::scenes::game_v10_scene;
 
 const HOME: (u32, u32) = (20, 20);
+/// World seed of the fixture rules; the meal rule does not depend on it.
+const SEED: u64 = 1;
 
 /// Tick at which the display clock (480-tick offset) reads `minute`.
 fn tick_at(minute: u64) -> u64 {
     (minute + 1440 - 480) % 1440
 }
 
-/// Bare world: one v11 settlement at `HOME` with `store` food and one member
+/// Bare world: one baseline settlement at `HOME` with `store` food and one member
 /// per `(position, hunger, thirst)`; a stocked bush four tiles from camp and
 /// one far away, water on the river bank. Clock at `minute`.
 fn meal_fixture(
@@ -29,7 +29,7 @@ fn meal_fixture(
     minute: u64,
 ) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
-    engine.resources.rules = WorldRules::game_v11();
+    engine.resources.rules = WorldRules::baseline(SEED);
     engine.resources.current_tick = tick_at(minute);
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.formation_tile = HOME;
@@ -225,24 +225,4 @@ fn harness_meal_waits_when_every_bush_is_empty() {
         engine.resources.tallies.wood_trips, 0,
         "no trip while it waited"
     );
-}
-
-#[test]
-fn harness_meal_v10_unchanged() {
-    for (seed, expected) in [
-        "0e38264bd3abe6ba",
-        "3b0590ec71558a58",
-        "d265695444b8b314",
-        "48120c365d543729",
-    ]
-    .into_iter()
-    .enumerate()
-    {
-        let mut engine = game_v10_scene(seed as u64);
-        for _ in 0..1440 {
-            engine.tick();
-        }
-        assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        assert_eq!(engine.resources.rules.society.meals, None);
-    }
 }

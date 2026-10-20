@@ -1,10 +1,16 @@
-//! Seeded-world contracts independent of the Godot runtime.
+//! Seeded-world contracts independent of the Godot runtime, on the live
+//! generator (`WorldGenConfig::baseline` under `WorldRules::baseline`).
 use sim_core::{
     components::{Agent, BuildingKind, Position},
+    rules::WorldRules,
     TerrainType,
 };
 use sim_engine::SimEngine;
-use sim_systems::worldgen::{build_world, WorldGenConfig};
+use sim_systems::worldgen::{build_world_with, WorldGenConfig};
+
+fn build(seed: u64) -> SimEngine {
+    build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed))
+}
 
 fn digest(engine: &SimEngine) -> Vec<u64> {
     let r = &engine.resources;
@@ -46,17 +52,17 @@ fn distance(a: (u32, u32), b: (u32, u32)) -> u32 {
 }
 #[test]
 fn harness_territory_worldgen_deterministic() {
-    let a = build_world(&WorldGenConfig::game_default(1));
-    let b = build_world(&WorldGenConfig::game_default(1));
-    let c = build_world(&WorldGenConfig::game_default(2));
+    let a = build(1);
+    let b = build(1);
+    let c = build(2);
     assert_eq!(digest(&a), digest(&b));
     assert_ne!(digest(&a), digest(&c));
 }
 #[test]
 fn harness_territory_worldgen_invariants() {
     for seed in (1..=8).chain([247, 338, 345, 383, 426, 728, 759, 773]) {
-        let cfg = WorldGenConfig::game_default(seed);
-        let mut engine = build_world(&cfg);
+        let cfg = WorldGenConfig::baseline(seed);
+        let mut engine = build(seed);
         let r = &engine.resources;
         let g = &r.tile_grid;
         for row in g.terrain_type.chunks(cfg.width as usize) {
@@ -126,14 +132,43 @@ fn harness_territory_worldgen_invariants() {
                 "seed {seed}: blocked spawn"
             );
         }
-        assert_eq!(r.food_tiles.len(), cfg.berry_bushes as usize);
+        // Camp bushes lie in the 6..=16 ring around the hearth; wild-region
+        // bushes (Pass 11) lie beyond the camp's forage and wood reach (18 on
+        // the baseline rules), at most `region_bushes` per region.
+        let rules = &r.rules;
+        let camp_reach = rules
+            .agent
+            .forage
+            .map_or(0, |f| f.forage_radius)
+            .max(rules.society.firewood.map_or(0, |f| f.wood_radius));
+        assert_eq!(camp_reach, 18);
+        let camp: Vec<_> = r
+            .food_tiles
+            .keys()
+            .filter(|&&p| distance(p, hearth) <= 16)
+            .collect();
+        assert_eq!(
+            camp.len(),
+            cfg.berry_bushes as usize,
+            "seed {seed}: camp bushes"
+        );
+        let region = r.food_tiles.len() - camp.len();
+        assert!(
+            region <= (cfg.wild_regions * cfg.region_bushes) as usize,
+            "seed {seed}: {region} region bushes"
+        );
         for (&p, &amount) in &r.food_tiles {
-            assert!((6..=16).contains(&distance(p, hearth)));
-            assert_eq!(g.terrain_type[g.idx(p.0, p.1)], TerrainType::Forest);
-            assert!(g
-                .neighbors_4(p.0, p.1)
-                .iter()
-                .any(|&(x, y)| g.terrain_type[g.idx(x, y)] == TerrainType::Plain));
+            let d = distance(p, hearth);
+            if d <= 16 {
+                assert!(d >= 6, "seed {seed}: camp bush at {d}");
+                assert_eq!(g.terrain_type[g.idx(p.0, p.1)], TerrainType::Forest);
+                assert!(g
+                    .neighbors_4(p.0, p.1)
+                    .iter()
+                    .any(|&(x, y)| g.terrain_type[g.idx(x, y)] == TerrainType::Plain));
+            } else {
+                assert!(d > camp_reach, "seed {seed}: region bush at {d}");
+            }
             assert_eq!(amount, cfg.berry_capacity);
             assert_eq!(r.food_source_max.get(&p), Some(&cfg.berry_capacity));
             assert!(!r.building_kinds.contains_key(&p) && !r.water_tiles.contains_key(&p));
@@ -162,7 +197,7 @@ fn harness_territory_worldgen_invariants() {
 #[test]
 fn harness_building_snapshot_matches_registry() {
     use sim_bridge::ffi::world_node::collect_building_snapshot;
-    let mut engine = build_world(&WorldGenConfig::game_default(1));
+    let mut engine = sim_test::baseline_engine(1);
     assert!(engine.resources.building_registry.is_empty());
     assert!(collect_building_snapshot(&engine.resources).is_empty());
     engine.tick();

@@ -203,22 +203,22 @@ pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
 mod tests {
     use super::*;
     #[test]
-    fn idle_actionable_uses_night_threshold_and_preserves_v8() {
+    fn idle_actionable_uses_night_threshold_only_with_night_rest() {
         use sim_core::rules::{NightRestRule, WorldRules};
         for (night_enabled, offset, expected) in [(false, 1260, 0), (true, 1260, 1), (true, 720, 0)]
         {
             let mut engine = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
-            engine.resources.rules = WorldRules::game_v8();
+            // The baseline rules with the night-rest rule set explicitly
+            // (off, or the baseline's 21:00–06:00 window).
+            engine.resources.rules = WorldRules::baseline(0);
             engine.resources.rules.clock_offset_ticks = offset;
-            if night_enabled {
-                engine.resources.rules.agent.night_rest = Some(NightRestRule {
-                    start_minute: 1260,
-                    end_minute: 360,
-                    fatigue_threshold: 0.0,
-                    recovery_per_tick: 0.12,
-                    wake_preempt: 75.0,
-                });
-            }
+            engine.resources.rules.agent.night_rest = night_enabled.then_some(NightRestRule {
+                start_minute: 1260,
+                end_minute: 360,
+                fatigue_threshold: 0.0,
+                recovery_per_tick: 0.12,
+                wake_preempt: 75.0,
+            });
             let agent = engine.spawn_agent(1, 1);
             engine
                 .world
@@ -293,11 +293,12 @@ mod tests {
 
     #[test]
     fn game_boot_shelters_are_initial_not_new_completions() {
-        let mut engine = crate::scenes::game_scene(1);
+        // The camp is a hearth, three shelters and a stockpile (worldgen camp).
+        let mut engine = crate::scenes::baseline_scene(1);
         let initial = shelter_count(&engine);
         assert_eq!(initial, 3);
         for _ in 0..2 {
-            let row = sample(&engine, "game", 1, initial);
+            let row = sample(&engine, "baseline", 1, initial);
             assert_eq!(row["buildings"], 5);
             assert_eq!(row["shelters"], 3);
             assert_eq!(row["shelters_completed"], 0);
@@ -313,9 +314,9 @@ mod tests {
     }
     #[test]
     fn states_partition_population_and_snapshot_does_not_mutate() {
-        let engine = crate::scenes::legacy_scene();
+        let engine = crate::scenes::baseline_scene(0);
         let before = fingerprint(&engine);
-        let row = sample(&engine, "legacy", 0, 0);
+        let row = sample(&engine, "baseline", 0, 0);
         let count = |key: &str| row[key].as_u64().expect("integer metric");
         assert_eq!(
             count("alive"),

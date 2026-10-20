@@ -109,15 +109,19 @@ mod tests {
         assert_eq!(hash, 0xa430d84680aabd0b);
     }
     #[test]
-    fn independent_legacy_engines_match() {
+    fn independent_baseline_engines_match() {
         assert_eq!(
-            fingerprint(&crate::scenes::legacy_scene()),
-            fingerprint(&crate::scenes::legacy_scene())
+            fingerprint(&crate::scenes::baseline_scene(0)),
+            fingerprint(&crate::scenes::baseline_scene(0))
+        );
+        assert_ne!(
+            fingerprint(&crate::scenes::baseline_scene(0)),
+            fingerprint(&crate::scenes::baseline_scene(1))
         );
     }
     #[test]
     fn tally_changes_are_observable() {
-        let mut engine = crate::scenes::legacy_scene();
+        let mut engine = crate::scenes::baseline_scene(0);
         let before = fingerprint(&engine);
         engine.resources.tallies.births += 1;
         assert_ne!(before, fingerprint(&engine));
