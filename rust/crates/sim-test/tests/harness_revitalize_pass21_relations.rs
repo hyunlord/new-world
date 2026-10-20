@@ -5,8 +5,9 @@
 //! the aid keep line, the 30 ‰ drift and its integer stall, the integration
 //! case of brief 6.7 and the invariants of brief 9.
 //!
-//! V8-0: the Pass 20 (`game_v25`) contrast arms are gone (they set
-//! `avoid_gather`, `exchange_first` false and the caps to 0); where a
+//! V8-0: the Pass 20 (`game_v25`) contrast arms are gone (they set the
+//! caps to 0 and turned off the avoid lists and exchange-first order, flags
+//! removed in V8-0 8.3); where a
 //! contrast carries the test, it is made inside the baseline (estranged or
 //! not, a carrier or none).
 //!
@@ -212,10 +213,8 @@ fn harness_p21_v26_relations_frozen_at_grid_g2() {
     assert_eq!(r.estrange_at, -300);
     assert_eq!(r.reconcile_at, -150);
     assert_eq!(r.porter_hunger_max, 30);
-    assert!(r.avoid_gather);
     assert_eq!(r.dispute_cap_per_pair_day, 3);
     assert_eq!(r.quarrel_cap_per_pair_day, 1);
-    assert!(r.exchange_first);
 }
 
 // ------------------------------------------------- 6.2 the gather avoid

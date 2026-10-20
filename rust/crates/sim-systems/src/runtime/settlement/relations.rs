@@ -12,9 +12,8 @@
 //! (hysteresis: estranged at ≤ `estrange_at`, reconciled at ≥
 //! `reconcile_at`). Then every ordered pair (sender g, receiver r) of
 //! non-estranged villages within a porter's reach ([`in_reach`]) is taken in
-//! id order — first kin aid (food, else wood), then exchange (food for wood,
-//! both trips or none; Pass 21 `exchange_first`: the pair's exchange before
-//! either aid) — at most one trip per ordered pair per day and at most
+//! id order — first the pair's exchange (food for wood, both trips or none;
+//! Pass 21), then kin aid (food, else wood) — at most one trip per ordered pair per day and at most
 //! `porter_max` porters per sender per day. The conditions read each village's
 //! measures taken once at the decision ([`food_days_permille`],
 //! [`wood_nights`]); the amounts read the store as debited by earlier
@@ -557,8 +556,8 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
             );
         }
     }
-    // The trips: ordered pairs in id order, aid first, then exchange
-    // (Pass 21 `exchange_first`: the pair's exchange first, then aid).
+    // The trips: ordered pairs in id order; the pair's exchange first, then
+    // aid (Pass 21).
     let mut used: BTreeSet<(SettlementId, SettlementId)> = BTreeSet::new();
     let mut porters_used: BTreeMap<SettlementId, u32> = BTreeMap::new();
     let mut entries: Vec<ChronicleEntry> = Vec::new();
@@ -574,7 +573,7 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
         // one needs food days ≥ the surplus line, the other below the short
         // line, which is lower). When both legs depart, (g, r) and (r, g)
         // are used for the day, so neither sends aid.
-        if rule.exchange_first && !used.contains(&(r, g)) {
+        if !used.contains(&(r, g)) {
             let food_sender = if row.exchange {
                 Some((g, r))
             } else if rows.get(&(r, g)).is_some_and(|back| back.exchange) {
@@ -640,22 +639,6 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
                 }
                 continue;
             }
-        }
-        // b. Exchange: g's food for r's wood, both trips or none.
-        if !rule.exchange_first && row.exchange && !used.contains(&(r, g)) {
-            exchange(
-                world,
-                resources,
-                rule,
-                tick,
-                (g, r),
-                &measures,
-                &mut candidates,
-                &mut porters_used,
-                &mut used,
-                &mut rows,
-                &mut entries,
-            );
         }
     }
     resources

@@ -38,7 +38,6 @@ const START_PRESSURE: FissionPressure = FissionPressure {
         mean_permille: 1200,
     },
     decay_permille: 10,
-    reset_on_split: true,
 };
 
 /// `WorldRules::baseline(seed)` with the start hazard and pressure (7.1's

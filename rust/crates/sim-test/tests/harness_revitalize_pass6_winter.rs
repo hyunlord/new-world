@@ -119,7 +119,7 @@ fn expected_target(rule: &FirewoodRule, season: usize, days_per_season: u32) -> 
     let prep_season = season == 2 || (season == 1 && rule.winter_prep_in_summer);
     let prep_days = rule.winter_prep_days.unwrap_or(f64::from(days_per_season));
     base * per_night
-        + if rule.winter_prep && prep_season {
+        + if prep_season {
             prep_days * burn_per_day(rule, 3)
         } else {
             0.0

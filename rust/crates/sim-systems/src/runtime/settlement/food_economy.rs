@@ -4,7 +4,7 @@ use crate::runtime::decision::HUNGER_CONSUME_AMOUNT;
 use crate::runtime::resource_regen::{season_at, FOOD_REGEN_AMOUNT, REGEN_INTERVAL};
 use hecs::World;
 use sim_core::components::{Agent, Hunger, Inventory, ResourceKind, SettlementId};
-use sim_core::rules::{BirthRule, SustainRule};
+use sim_core::rules::BirthRule;
 use sim_engine::SimResources;
 
 /// Winter index in `SeasonRule::regen_permille`.
@@ -104,11 +104,7 @@ pub fn stock_target(world: &World, resources: &SimResources, sid: SettlementId) 
     let rule = resources.rules.society.stock_target?;
     let need = members_need_per_day(world, resources, sid);
     let mut target = rule.base_days * need;
-    if let (true, Some(seasons), Some((season, _))) = (
-        rule.winter_prep,
-        resources.rules.seasons,
-        season_at(resources),
-    ) {
+    if let (Some(seasons), Some((season, _))) = (resources.rules.seasons, season_at(resources)) {
         if season == 1 || season == 2 {
             let winter = winter_supply_per_day(resources, sid, catchment_radius(resources));
             target += f64::from(seasons.days_per_season) * (need - winter).max(0.0);
@@ -136,7 +132,7 @@ pub fn source_supply_per_day(ticks_per_day: u64) -> f64 {
 }
 
 /// Bush capacity at which a bush counts one whole source under
-/// `SustainRule::capacity_weighted` (Pass 10; v15's capacity).
+/// a sustain rule (Pass 10; v15's capacity).
 pub const REFERENCE_BUSH_CAPACITY: u8 = 4;
 
 /// Sources inside the formation tile's forage radius, each weighted
@@ -188,10 +184,7 @@ pub fn supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius
     let weighted = matches!(
         resources.rules.society.birth,
         BirthRule::Provisioned {
-            sustain: Some(SustainRule {
-                capacity_weighted: true,
-                ..
-            }),
+            sustain: Some(_),
             ..
         }
     );

@@ -37,8 +37,8 @@
 //! Pass 11 (exposure v2, `game_v17`): the hourly damage is scaled by the
 //! resident's `Hardiness` and by its hunger (`exposure_damage`).
 //!
-//! (`FirewoodRule::rain_wet_burn` acted only on intervention rain, removed in
-//! V8-0; the rule field remains in the rules data.)
+//! (The rain rule acted only on intervention rain, removed in V8-0 with its
+//! `rain_wet_burn` field; `rain_soak_permille` remains in the rules data.)
 
 use std::collections::{BTreeMap, BTreeSet};
 

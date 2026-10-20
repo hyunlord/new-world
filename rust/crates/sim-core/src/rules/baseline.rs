@@ -94,7 +94,6 @@ impl WorldRules {
                         utilization: 0.78,
                         reserve_days: 0.5,
                         forage_radius: 16,
-                        capacity_weighted: true,
                     }),
                 },
                 shelter_planning: Some(ShelterPlanningRule {
@@ -119,7 +118,6 @@ impl WorldRules {
                 }),
                 stock_target: Some(StockTargetRule {
                     base_days: 2.5,
-                    winter_prep: true,
                     hoard_cap_factor: 1.5,
                 }),
                 aging: Some(AgingRule {
@@ -148,7 +146,6 @@ impl WorldRules {
                     max_gatherers_per_spot: 1,
                     regen_permille: 500,
                     base_days: 1.5,
-                    winter_prep: true,
                     burn_start_minute: 1080,
                     burn_end_minute: 420,
                     burn_per_hour: [2, 1, 2, 3],
@@ -173,7 +170,6 @@ impl WorldRules {
                     rain_soak_permille: 300,
                     regional_wood: true,
                     area_fall_floor_permille: 1000,
-                    rain_wet_burn: true,
                     floor_separate: true,
                 }),
                 exposure: Some(ExposureRule {
@@ -212,7 +208,6 @@ impl WorldRules {
                             mean_permille: 1200,
                         },
                         decay_permille: 10,
-                        reset_on_split: true,
                     }),
                 }),
                 relations: Some(RelationsRule {
@@ -239,10 +234,8 @@ impl WorldRules {
                     estrange_at: -300,
                     reconcile_at: -150,
                     porter_hunger_max: 30,
-                    avoid_gather: true,
                     dispute_cap_per_pair_day: 3,
                     quarrel_cap_per_pair_day: 1,
-                    exchange_first: true,
                 }),
             },
             clock_offset_ticks: 480,

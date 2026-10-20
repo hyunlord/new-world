@@ -309,11 +309,7 @@ pub fn wood_target(resources: &SimResources) -> Option<f64> {
         resources.current_tick,
     )) * f64::from(burn_hours(&rule));
     let mut target = base * per_night;
-    if let (true, Some(seasons), Some((current, _))) = (
-        rule.winter_prep,
-        resources.rules.seasons,
-        season_at(resources),
-    ) {
+    if let (Some(seasons), Some((current, _))) = (resources.rules.seasons, season_at(resources)) {
         if current == 2 || (current == 1 && rule.winter_prep_in_summer) {
             let prep_days = rule
                 .winter_prep_days
@@ -371,7 +367,6 @@ mod tests {
             max_gatherers_per_spot: 1,
             regen_permille: 500,
             base_days: 1.5,
-            winter_prep: true,
             burn_start_minute: 1080,
             burn_end_minute: 420,
             burn_per_hour: [2, 1, 2, 3],
@@ -396,7 +391,6 @@ mod tests {
             rain_soak_permille: 0,
             regional_wood: false,
             area_fall_floor_permille: 0,
-            rain_wet_burn: false,
             floor_separate: false,
         }
     }

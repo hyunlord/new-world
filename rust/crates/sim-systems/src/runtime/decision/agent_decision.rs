@@ -166,8 +166,8 @@ type TripMemo<K> = BTreeMap<K, (u64, u64, bool)>;
 
 /// Pass 18: per-tick `gather_tile_exists` answers by (tile, catchment) with
 /// the food-tiles version they were computed from. Pass 21: the key also
-/// names whose avoid list was applied (the member's settlement id under
-/// `RelationsRule::avoid_gather`, else `None` for the empty list).
+/// names whose avoid list was applied (the member's settlement id under a
+/// `RelationsRule`, else `None` for the empty list).
 type GatherMemo = BTreeMap<GatherKey, (u64, bool)>;
 
 /// Pass 21: a [`GatherMemo`] key — (tile, catchment, avoid-list owner).
@@ -683,7 +683,7 @@ pub fn nearest_food_tile_in_radius(
         })
 }
 
-/// Pass 21 (`RelationsRule::avoid_gather`): whether `tile` lies on the own
+/// Pass 21 (under a `RelationsRule`): whether `tile` lies on the own
 /// side of every avoided hearth — its Chebyshev distance to each hearth in
 /// `avoid` is at least its distance to `home` (a tie keeps it). The same test
 /// as [`bush_eligible`]'s; always true for an empty list.
@@ -699,7 +699,7 @@ fn own_side(tile: (u32, u32), home: (u32, u32), avoid: &[(u32, u32)]) -> bool {
 /// tile and catchment radius) to tiles inside its catchment; `None` = as v17.
 /// Pass 21: a member also skips tiles nearer (Chebyshev) to a hearth in
 /// `avoid` (the villages estranged from its own) than to its own hearth;
-/// `avoid` is empty unless `RelationsRule::avoid_gather` is set, and is not
+/// `avoid` is empty without a `RelationsRule`, and is not
 /// read without `local` (a non-member has no hearth to compare).
 pub fn nearest_gather_tile(
     pos: &Position,
@@ -1231,12 +1231,12 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         let no_avoid: Vec<(u32, u32)> = Vec::new();
         let avoid_for = |sid: &SettlementId| avoid_of.get(sid).unwrap_or(&no_avoid).as_slice();
-        // Pass 21 (`avoid_gather`): the avoid list of a member's Gather-arm
+        // Pass 21: the avoid list of a member's Gather-arm
         // selectors (`nearest_gather_tile`, `gather_tile_exists`) and its
         // owner (the memo key); the empty list and `None` for a person
         // without a catchment home (a non-member, a founder or porter on its
-        // walk) or without the flag.
-        let avoid_gather = relations_rule.is_some_and(|rule| rule.avoid_gather);
+        // walk) or without a relations rule.
+        let avoid_gather = relations_rule.is_some();
         let gather_avoid = |id: &AgentId| -> (&[(u32, u32)], Option<SettlementId>) {
             match member_of.get(id) {
                 Some(sid) if avoid_gather && local_home.contains_key(id) => {
@@ -3918,7 +3918,7 @@ mod tests {
 
     #[test]
     fn gather_selectors_skip_tiles_on_an_avoided_side() {
-        // Pass 21 (`avoid_gather`): `nearest_gather_tile` and
+        // Pass 21 (avoid lists): `nearest_gather_tile` and
         // `gather_tile_exists` apply `bush_eligible`'s side test to a member
         // (`local` = home and catchment); an empty list changes nothing, and a
         // person without `local` (a non-member) is not filtered.

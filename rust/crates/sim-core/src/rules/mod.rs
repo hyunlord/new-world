@@ -273,15 +273,6 @@ pub struct SustainRule {
     pub reserve_days: f64,
     /// Chebyshev distance within which renewable bushes count.
     pub forage_radius: u32,
-    /// Pass 10 (`game_v16`): each bush counts `min(capacity, 4) / 4` of a
-    /// source in the supply estimate (`food_economy::supply_per_day`), so
-    /// worlds of capacity-3 bushes (which lose regrowth at their cap) do not
-    /// overstate their supply. The estimate feeds both the birth gate
-    /// (`annual_mean_supply`) and the summer/autumn winter-prep store target
-    /// (`winter_supply_per_day` in `stock_target`), so in capacity-3 worlds it
-    /// also raises that target. False = every bush counts one source (v9–v15,
-    /// v16_neutral).
-    pub capacity_weighted: bool,
 }
 /// Sustained sleep in a minute-of-day window.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -338,10 +329,9 @@ pub struct ForageRule {
 /// Settlement store target that starts and stops foraging.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct StockTargetRule {
-    /// Days of current member need kept in store.
+    /// Days of current member need kept in store; with seasons, summer and
+    /// autumn add the expected winter shortfall.
     pub base_days: f64,
-    /// Add the expected winter shortfall in summer and autumn (seasons only).
-    pub winter_prep: bool,
     /// Opportunistic gathering stops at this multiple of the target.
     pub hoard_cap_factor: f64,
 }
@@ -397,10 +387,9 @@ pub struct FirewoodRule {
     pub max_gatherers_per_spot: u32,
     /// Wood regrowth per spot per 120-tick pulse in thousandths.
     pub regen_permille: u32,
-    /// Days of current burn kept in store.
+    /// Days of current burn kept in store; with seasons, autumn (and summer
+    /// under `winter_prep_in_summer`) adds a winter's burn.
     pub base_days: f64,
-    /// Add a winter's burn to the target in summer and autumn (seasons only).
-    pub winter_prep: bool,
     /// Inclusive first minute of the burn window.
     pub burn_start_minute: u32,
     /// Exclusive final minute of the burn window, possibly wrapping midnight.
@@ -473,10 +462,6 @@ pub struct FirewoodRule {
     /// area_fall_floor_permille × n_camp)` instead of `per_day × 1000 ×
     /// n_area` (extra wood; the camp's own fall is never reduced). 0 = v8–v17.
     pub area_fall_floor_permille: u32,
-    /// Rain burns wet wood (Pass 12, `game_v18`): a raining settlement inside
-    /// the burn window still withdraws the hour's wood (`Tallies::wet_burn_wood`)
-    /// and its fire stays out. False = v8–v17 (rain burns nothing).
-    pub rain_wet_burn: bool,
     /// The settled-area floor keeps its own accumulator (Pass 13, `game_v19`;
     /// needs `area_fall_floor_permille`): a settled area's extra (floor −
     /// normal fall) accrues in a separate per-area accumulator whose units are
@@ -568,10 +553,9 @@ pub enum ThresholdLaw {
 pub struct FissionPressure {
     /// The law of θ.
     pub threshold_table: ThresholdLaw,
-    /// Daily decay of P on an eligible day with h = 0 (0 = none).
+    /// Daily decay of P on an eligible day with h = 0 (0 = none). The
+    /// parent's P returns to 0 after its split.
     pub decay_permille: u32,
-    /// The parent's P returns to 0 after its split.
-    pub reset_on_split: bool,
 }
 /// Pass 12: the daily probability that a settlement splits, rising with its
 /// size, its crowding against the birth gate's capacity and a shortfall in

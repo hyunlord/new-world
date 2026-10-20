@@ -82,7 +82,7 @@
 //! neither grows nor decays. The settlement splits when P ≥ θ
 //! (`Settlement::fission_threshold`) and P > 0 and a site is free; a split
 //! blocked by no free site or by group formation keeps P and θ. After a
-//! split P returns to 0 (`reset_on_split`) and θ is redrawn with k = the
+//! split P returns to 0 and θ is redrawn with k = the
 //! parent's fission records (`fission_threshold`, a world draw: never the
 //! replicate). θ is drawn when the settlement forms (`SettlementSystem`).
 
@@ -1067,9 +1067,7 @@ impl FissionSystem {
                 let theta =
                     fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
                 if let Some(parent) = resources.settlements.get_mut(&sid) {
-                    if law.reset_on_split {
-                        parent.fission_pressure = 0;
-                    }
+                    parent.fission_pressure = 0;
                     parent.fission_threshold = theta;
                 }
             }

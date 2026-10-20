@@ -4306,7 +4306,6 @@ mod agent_snapshot_tests {
             max_gatherers_per_spot: 1,
             regen_permille: 500,
             base_days: 1.5,
-            winter_prep: true,
             burn_start_minute: 1080,
             burn_end_minute: 420,
             burn_per_hour: [2, 1, 2, 3],
@@ -4331,7 +4330,6 @@ mod agent_snapshot_tests {
             rain_soak_permille: 0,
             regional_wood: false,
             area_fall_floor_permille: 0,
-            rain_wet_burn: false,
             floor_separate: false,
         };
         resources.rules = WorldRules::baseline(0);
