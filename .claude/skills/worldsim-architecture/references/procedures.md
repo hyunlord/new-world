@@ -31,7 +31,7 @@ placeholders.
   ```
   Integers or permille, not floats, for new state. Zero-sized marker structs are fine (`Cold`, `Elder`).
 - Rule (`rust/crates/sim-core/src/rules/<sub>.rs`): a field on the sub-rule struct, `#[serde(default)]`, `///` doc with unit; an optional mechanic is `Option<<Rule>>` on `AgentRules` / `SocietyRules` (absent = the system is a no-op). The baseline value goes in `rules/baseline.rs` as a flat literal.
-- A new rule field changes `format!("{:#?}", WorldRules::baseline(s))`, so `rust/crates/sim-core/tests/baseline_matches_v7_final.rs` fails on purpose: update its expected dump in the same commit and give the reason in the commit message.
+- A new rule field changes `format!("{:#?}", WorldRules::baseline(s))`, so `rust/crates/sim-core/tests/baseline_matches_v7_final.rs` fails on purpose: update the expected dumps it reads (`rust/crates/sim-core/tests/data/v7_final_rules_seed{0,1,7,42}.txt`) in the same commit and give the reason in the commit message.
 - Non-ECS state goes on `SimResources` (sim-engine) as a `BTreeMap`/`Vec`, never a new `HashMap`. Measurement-only fields are never read by systems.
 
 ### A3. The system file
@@ -173,5 +173,5 @@ fn <thing>_to_dict(rows: Vec<<Thing>Row>) -> VarDictionary {
 
 ### B4. Checks
 1. A Rust test of `sim_bridge::ffi::collect_<thing>` on `baseline_engine` (values and order, not only presence).
-2. `python3 tools/v8/bridge_api.py .` lists the export; update the expected list that gate step 13 compares (`docs/v8/bridge_api_*`, see `tools/v8/gate.sh`) in the same commit; CHANGELOG names the new getter.
+2. `python3 tools/v8/bridge_api.py .` lists the export. Then write the new full list with `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt` (for example `docs/m1/bridge_api_m1.txt`), change gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), and name the added or removed method in CHANGELOG — all in the same commit. The V8-0 lists (`docs/v8/bridge_api_v7_final.txt`, `docs/v8/bridge_api_removed.txt`) stay as V8-0's record.
 3. `cargo build -p sim-bridge`, then `bash tools/v8/gdscript_strict_check.sh` and `bash tools/v8/smoke.sh <log_dir>`.

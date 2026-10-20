@@ -1,6 +1,6 @@
 # Godot UI-side architecture patterns — reference
 
-> **Origin and changes.** Adapted from `.agents/skills/godot/references/architecture-patterns.md` (generic Godot
+> **Origin and changes.** Adapted from (at tag `v7-final-art`) `.agents/skills/godot/references/architecture-patterns.md` (generic Godot
 > skill). Kept: the three principles (small components, signals, data separated from logic) and the state-machine
 > pattern, rewritten for UI modes. **Dropped:** Pattern 1 (3D interaction components), Pattern 2 (health/mana
 > attributes), Pattern 3 (spell effects in `.tres`) and Pattern 4 (inventory) — each keeps gameplay state in

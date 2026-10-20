@@ -54,9 +54,19 @@ GDScript renderers / panels ──► SimReads.read(world_sim, "get_…")   (scr
   runs at the display rate. `set_sim_speed` scales only the time fed to the
   accumulator (0–4×), never the tick length.
 - GDScript never writes simulation state. The only writes from Godot are
-  commands (`on_building_placed`, `reset_world`, tooling `advance_ticks`).
-- One tick is 1 simulated minute; a day is 1,440 ticks (V8's compressed year,
-  ADR 0004, will change the calendar in a later pass).
+  bridge commands: `on_building_placed`, `reset_world`, `reset_world_stress`,
+  `set_sim_speed` and the tooling `advance_ticks` (`SimReads.MUTATORS` holds
+  all but `set_sim_speed`, which `scripts/world/camera_controller.gd` calls directly on the number keys).
+- Time scale now (V7 calendar, unchanged by V8-0): one tick is 1 simulated
+  minute, a day is 1,440 ticks = 48 s of real time at 1× (30 ticks per
+  second), a season is 7 days and a year 4 seasons = 28 days. The V8 target
+  (ADR 0004: about 2 minutes per day at 1×, 6-day seasons, 24-day year)
+  comes in a later pass; no milestone in `docs/ROADMAP.md` schedules it yet,
+  and its tick definition (ticks per day, ticks per second) is not decided —
+  that pass decides it in an ADR. A current year is 40,320 ticks ≈ 22.4
+  minutes at 1×. At most 5 ticks run per frame, so 4× (120 ticks/s) is
+  reached only at ≥ 24 frames per second; below that the game runs slower
+  than the chosen speed.
 
 ## 3. Live systems
 
@@ -74,7 +84,7 @@ Reads/writes come from each file's `//!` header.
 | 3 | `AgentInfluenceSampleSystem` | 110 | 1 | `rust/crates/sim-systems/src/runtime/influence/agent_sample.rs` | `Position`; `SimResources.influence_grid` (current buffer) | `InfluenceSample` |
 | 4 | `AgentMovementSystem` | 120 | 1 | `rust/crates/sim-systems/src/runtime/agent/movement.rs` | `AgentState`, `SeekTarget`, `Agent`, `Child`, `Elder`, `Inventory`, `Lineage`, `Founding`, `Temperament`, `PorterTrip`, `Activity`; `SimResources.settlements`, `tile_grid`, `rules` | `Position`, `MovementRng`; `SimResources.haulers` |
 | 5 | `AgentDecisionSystem` | 125 | 1 | `rust/crates/sim-systems/src/runtime/decision/system.rs` | `Agent`, `Position`, `AgentState`, `SeekTarget`, `Hunger`, `Thirst`, `Sleep`, `Social`, `Inventory`, `Memory`, `Temperament`, `Lineage`, `Founding`, `Child`, `Elder`, `SettlementMigrant`, `PorterTrip`, `ConstructionSite`; `SimResources.rules`, `tile_grid`, `food_tiles`, `water_tiles`, `sleep_tiles`, `wood_tiles`, `settlements`, `settlement_relations`, `site_owner`, `social_retry_after`, `causal_log` | `AgentState`, `Hunger`, `Thirst`, `Sleep`, `Inventory`, `SeekTarget`, `SettlementMigrant`, routine `Activity`/`ActivityRest`/`RoutineObservationBatch`; `SimResources.food_tiles`, `water_tiles`, `sleep_tiles`, `wood_tiles`, `tallies`, `causal_log`, `chronicle`, `combat_pairs`, `social_chase_since`, `social_retry_after`, `settlement_relations` |
-| 6 | `StaleSeekTargetSystem` | 126 | 1 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | ResourceRegenSystem — `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules`; StaleSeekTargetSystem — `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps | ResourceRegenSystem — `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies`; StaleSeekTargetSystem — `SeekTarget` (insert/remove), `AgentState` |
+| 6 | `StaleSeekTargetSystem` | 126 | 1 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps | `SeekTarget` (insert/remove), `AgentState` |
 | 7 | `HungerDecaySystem` | 130 | 1 | `rust/crates/sim-systems/src/runtime/needs/hunger_decay.rs` | `Hunger`, `Cold`; `SimResources.rules.society.firewood` | `Hunger` |
 | 8 | `ThirstDecaySystem` | 131 | 1 | `rust/crates/sim-systems/src/runtime/needs/thirst_decay.rs` | `Thirst` | `Thirst` |
 | 9 | `SleepDecaySystem` | 132 | 1 | `rust/crates/sim-systems/src/runtime/needs/sleep_decay.rs` | `Sleep` | `Sleep` |
@@ -85,7 +95,7 @@ Reads/writes come from each file's `//!` header.
 | 14 | `CombatSystem` | 137 | 1 | `rust/crates/sim-systems/src/runtime/combat/combat_system.rs` | `Agent`, `Position`, `BodyHealth`; `SimResources.combat_pairs`, `causal_log` (`CombatStarted`), `settlements` | `BodyHealth`, `AgentState`, `Memory`; `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`; deaths via `despawn_agent` |
 | 15 | `SettlementSystem` | 138 | 1 | `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules` | `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`; spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick` |
 | 16 | `StarvationSystem` | 139 | 1 | `rust/crates/sim-systems/src/runtime/survival/mod.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Cold`, `ExposureClock`; `SimResources.rules.society.exposure` | `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`) |
-| 17 | `ResourceRegenSystem` | 140 | 120 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | ResourceRegenSystem — `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules`; StaleSeekTargetSystem — `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps | ResourceRegenSystem — `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies`; StaleSeekTargetSystem — `SeekTarget` (insert/remove), `AgentState` |
+| 17 | `ResourceRegenSystem` | 140 | 120 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules` | `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies` |
 | 18 | `StockpileDepositSystem` | 141 | 10 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_deposit.rs` | `Agent`, `Position`, `PorterTrip`; `SimResources.settlements` (rosters, formation tile), `rules` | `Inventory`; `SimResources.settlements` (stockpile), `haulers`, `tallies` |
 | 19 | `StockpileConsumeSystem` | 142 | 5 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_consume.rs` | `Agent`, `Position`, `AgentState`, `Founding`, `Hunger`; `SimResources.settlements`, `rules.society` (`meals`, `relief_radius`) | `Hunger`; `SimResources.settlements` (stockpile food), `tallies` |
 | 20 | `ShelterPlanningSystem` | 143 | 1 | `rust/crates/sim-systems/src/runtime/settlement/shelter_planning.rs` | `ConstructionSite`; `SimResources.settlements`, `building_registry`, `building_kinds`, `building_owner`, `tile_grid`, resource tile maps | spawns `ConstructionSite`; `SimResources.site_owner`, `shelter_plan_skips` |
@@ -103,8 +113,9 @@ Reads/writes come from each file's `//!` header.
 ## 4. Bridge API (`WorldSimNode`, grouped by concern)
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
-after a reset). The exact exported list is checked by
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_v7_final.txt --minus docs/v8/bridge_api_removed.txt`.
+after a reset). The exact exported list is checked by gate step 13, currently
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_v7_final.txt --minus docs/v8/bridge_api_removed.txt`
+(a pass that changes the API updates this command; section 6).
 
 | concern | methods |
 |---|---|
@@ -143,18 +154,20 @@ Short form; the full rules and their history are in
 1. Put the component(s) it needs in `rust/crates/sim-core/src/components/` (plain structs, `Debug, Clone`, serde).
 2. Write the system in `rust/crates/sim-systems/src/runtime/<domain>/<name>.rs`: a struct implementing `RuntimeSystem` (`name`, `priority`, `tick_interval`, `tick`). Start the file with a `//!` header giving purpose, `Priority:`, `Interval:`, `Reads:`, `Writes:`, `Events:`.
 3. Gate it on a rule in `WorldRules` (`rust/crates/sim-core/src/rules/`) when it changes behaviour, and set the rule in `rules/baseline.rs`; update the baseline dumps in `rust/crates/sim-core/tests/data/` in the same commit and record why.
-4. Register it in `register_default_runtime_systems` (`rust/crates/sim-systems/src/lib.rs`).
+4. Register it in the matching `register_<domain>_systems` helper that `register_default_runtime_systems` calls (`rust/crates/sim-systems/src/lib.rs`); pick an unused priority (equal priorities run in registration order).
 5. Test it on `sim_test::baseline_engine(seed)` in the matching domain test file (`rust/crates/sim-test/tests/<domain>_*.rs`) with a threshold on a measured invariant.
 6. Regenerate the table above: `python3 tools/v8/system_table.py --write`.
 7. If behaviour changes on purpose, re-capture the identity base data and say so in the pass's decisions.
 
 ### Add a bridge read
 
-1. Write a pure `collect_…(&World, &SimResources) -> Row/Vec<Row>` in the matching file of `rust/crates/sim-bridge/src/ffi/` and test it in Rust (no Godot needed).
-2. Add a `#[func] fn get_…(&self) -> VarDictionary` on `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) that only calls the collector and a `…_to_dict` marshaller (columns as `Packed*Array`).
-3. Add the name to `GETTERS` in `scripts/core/sim_reads.gd` and read it with `SimReads.read(world_sim, "get_…")`.
-4. Rebuild the library Godot loads (`cd rust && cargo build -p sim-bridge`), then run `bash tools/v8/gdscript_strict_check.sh` (it diffs GDScript calls against the exports) and the smoke.
-5. Record the API change: gate step 13 compares the exports with the V7 base list (`docs/v8/bridge_api_v7_final.txt`) minus the removals in `docs/v8/bridge_api_removed.txt`; a pass that adds or removes a `#[func]` adds a pass-level list beside them and points the check at it, and notes the change in CHANGELOG.
+The full procedure with code skeletons is `.claude/skills/worldsim-architecture/SKILL.md` ("B. Add a bridge read") and its `references/procedures.md`; the steps:
+
+1. Write a pure `collect_…(&World, &SimResources) -> Row/Vec<Row>` in the matching file of `rust/crates/sim-bridge/src/ffi/` (no Godot types; rows sorted by id; say which id space each field uses), re-export it from `rust/crates/sim-bridge/src/ffi/mod.rs`, and test it in Rust on `sim_test::baseline_engine(seed)` (no Godot needed).
+2. Add a `#[func] fn get_…(&self) -> VarDictionary` to the one `#[godot_api] impl WorldSimNode` block in `rust/crates/sim-bridge/src/ffi/node.rs` (every `#[func]` lives there). It only calls the collector and a `…_to_dict` marshaller in the collector's file (columns as `Packed*Array`, ids as i64); read-only, at most 14 parameters.
+3. Add the name to `GETTERS` in `scripts/core/sim_reads.gd` (also `TICK_GETTERS` if it may be cached per sim tick), read it with `SimReads.read(world_sim, "get_…")`, and add the method to the calling `.gd` file's header comment ("Bridge methods: …").
+4. Rebuild the library Godot loads (`cd rust && cargo build -p sim-bridge`), run the headless import (`bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit`, twice on a fresh checkout), then `bash tools/v8/gdscript_strict_check.sh` (it diffs GDScript calls against the exports) and `bash tools/v8/smoke.sh <log_dir>`.
+5. Record the API change. Gate step 13 checks that the set of exported names (`class`, `func`, `signal` lines; order and signatures are not compared) equals an expected list — at V8-0, the V7 base list (`docs/v8/bridge_api_v7_final.txt`) minus `docs/v8/bridge_api_removed.txt`. A pass that adds or removes a `#[func]` writes one list for the pass, `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt` (rewritten by every later commit of the same pass that changes the API), changes gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), updates the check command and the method table in section 4 of this file, and names the added or removed method in CHANGELOG — all in the same commit. The V8-0 lists stay as V8-0's record.
 
 ## 7. GDScript layout and localization
 

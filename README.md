@@ -5,7 +5,7 @@
 - 10명 안팎으로 시작해 출생과 이주로 30~200명까지 자란다. 구조는 수천 명까지 늘릴 수 있게 만든다.
 - 플레이어는 파기·베기·짓기·구역·작업 우선순위·제작 주문을 내리고, 사람들은 숙련과 기질에 따라 스스로 일을 고른다. 위협이 오면 림월드식으로 사람을 소집할 수 있다.
 - 기술은 사람이 가지고, 사람 사이로 퍼지고, 마지막 전승자가 죽으면 사라진다. 시대는 표지 기술이 얼마나 퍼졌는지로 관측된다.
-- 하루는 1배속에서 약 2분, 1년은 계절 6일 × 4 = 24일이다. 화면은 어두운 흙빛 정면 탑다운, 사람 하나가 타일 한 칸이다.
+- 목표 시간 척도(이후 패스에서 바꿈, 아직 일정 없음): 하루는 1배속에서 약 2분, 1년은 계절 6일 × 4 = 24일이다. 지금(V8-0) 빌드는 V7 달력 그대로라 하루가 1배속 48초(1,440틱 ÷ 초당 30틱), 1년이 계절 7일 × 4 = 28일이다. 화면은 어두운 흙빛 정면 탑다운, 사람 하나가 타일 한 칸이다.
 
 자세한 방향은 [docs/VISION.md](docs/VISION.md), 진행 상황은 [docs/ROADMAP.md](docs/ROADMAP.md).
 
@@ -17,7 +17,7 @@
 
 ```bash
 cd rust && cargo build -p sim-bridge && cd ..                 # Godot이 읽는 libsim_bridge 빌드
-"$GODOT_BIN" --headless --path . --import --editor --quit     # 처음 한 번(또는 에셋이 바뀐 뒤) 가져오기
+"$GODOT_BIN" --headless --path . --import --editor --quit     # 가져오기: 새로 받은 체크아웃에서는 두 번(두 번째 결과로 판단), 에셋이 바뀐 뒤에는 한 번
 "$GODOT_BIN" --path .                                         # 게임 실행
 ```
 
@@ -29,7 +29,7 @@ Rust를 고친 뒤에는 Godot을 띄우기 전에 반드시 `cargo build -p sim
 bash tools/v8/gate.sh /path/to/log_dir      # 16단계: fmt, 빌드, 가져오기, 테스트, clippy, 결정론, identity, 문서 …
 ```
 
-`v8/main`은 게이트가 모두 통과한 커밋으로만 옮긴다. 각 단계는 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)와 `.claude/skills/worldsim-testing/SKILL.md`에 있다.
+`v8/main`은 게이트가 모두 통과한 커밋으로만 옮긴다. 16단계 각각의 설명은 `.claude/skills/worldsim-testing/SKILL.md`(절 C)와 `tools/v8/gate.sh` 머리말에 있다.
 
 ## 문서 지도
 
@@ -54,4 +54,4 @@ bash tools/v8/gate.sh /path/to/log_dir      # 16단계: fmt, 빌드, 가져오�
 
 ---
 
-**English.** WorldSim is a Dwarf Fortress–style stone-age settlement sim: about ten founders grow into a village of 30–200 people; the player gives orders (dig, chop, build, zones, work priorities, craft orders) and people choose their own work; technology is owned by individuals, spreads between them and is lost when its last bearer dies, and eras are observed from how widely marker technologies have spread. The simulation is Rust (hecs ECS, deterministic, integer math) behind a Godot 4.6 GDExtension bridge; GDScript only draws and reads. Build the bridge with `cd rust && cargo build -p sim-bridge`, import once with `Godot --headless --path . --import --editor --quit`, run with `Godot --path .`, and check a change with `bash tools/v8/gate.sh <log_dir>`. Agents start at [AGENTS.md](AGENTS.md); the structure is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+**English.** WorldSim is a Dwarf Fortress–style stone-age settlement sim: about ten founders grow into a village of 30–200 people; the player gives orders (dig, chop, build, zones, work priorities, craft orders) and people choose their own work; technology is owned by individuals, spreads between them and is lost when its last bearer dies, and eras are observed from how widely marker technologies have spread. The simulation is Rust (hecs ECS, deterministic, integer math) behind a Godot 4.6 GDExtension bridge; GDScript only draws and reads. Build the bridge with `cd rust && cargo build -p sim-bridge`, import with `Godot --headless --path . --import --editor --quit` (twice on a fresh checkout; judge the second run), run with `Godot --path .`, and check a change with `bash tools/v8/gate.sh <log_dir>`. Agents start at [AGENTS.md](AGENTS.md); the structure is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).

@@ -35,7 +35,7 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Don't** use `godot` types outside `rust/crates/sim-bridge`. *Reason:* sim-core/engine/systems must build and test without an engine; today `use godot` appears only in sim-bridge.
 - **Don't** put an `impl RuntimeSystem` in sim-bridge or simulation logic in a `#[func]` body. *Reason:* `#[func]` methods only forward to a pure Rust function and marshal; logic behind `#[func]` cannot be tested headless.
 - **Do** let systems talk only through `World` components and `SimResources` fields (queues such as `building_event_queue`). *Reason:* there is no event bus; systems never call each other, and priorities serialise access on one thread.
-- **Don't** let GDScript write simulation state; mutations go through the few bridge commands (`SimReads.MUTATORS` such as `advance_ticks`, `reset_world`, `on_building_placed`, plus `set_sim_speed`). *Reason:* GDScript has no access to the ECS and must never become a second simulation.
+- **Don't** let GDScript write simulation state; mutations go through the few bridge commands (`SimReads.MUTATORS`: `advance_ticks`, `reset_world`, `reset_world_stress`, `on_building_placed`; plus `set_sim_speed`). *Reason:* GDScript has no access to the ECS and must never become a second simulation.
 - **Do** put tunables in `WorldRules` sub-rule fields (baseline value in `rules/baseline.rs`) and fixed constants as module-local `pub const`. *Reason:* there is no `config.rs`; the baseline is the one live rule set, and a field is visible in the rules dump test.
 - **Don't** let a system read measurement-only state (`worldgen_report`, probe-only logs). *Reason:* measurement must not change behaviour or identity.
 
@@ -94,7 +94,7 @@ Full step lists with code skeletons: `references/procedures.md`.
 3. Add the `#[func] fn get_<thing>(&self, …) -> VarDictionary` to the `#[godot_api] impl WorldSimNode`: call the collector, then a private `<thing>_to_dict` that builds parallel `Packed*Array` columns. At most 14 arguments (pack the rest, for example into a `Vector2i`). Read-only: a getter never mutates.
 4. Add the getter name to `SimReads.GETTERS` in `scripts/core/sim_reads.gd` (also `TICK_GETTERS` when it may be cached per tick) and read it with `SimReads.read(world, "get_<thing>")` as a literal name.
 5. Test the collector in Rust (`sim_bridge::ffi::collect_<thing>` on `baseline_engine`), asserting content, not just presence.
-6. Update the bridge API check: `python3 tools/v8/bridge_api.py .` prints the exported list; update the expected list under `docs/v8/bridge_api_*` that gate step 13 compares against (see the step in `tools/v8/gate.sh`) in the same commit, and list the new name in CHANGELOG.
+6. Update the bridge API check: write the new full list with `python3 tools/v8/bridge_api.py . > docs/<line>/bridge_api_<pass>.txt` (for example `docs/m1/bridge_api_m1.txt`), change gate step 13 in `tools/v8/gate.sh` to `python3 tools/v8/bridge_api.py . --check docs/<line>/bridge_api_<pass>.txt` (no `--minus`), and name the added or removed method in CHANGELOG — all in the same commit. The V8-0 lists (`docs/v8/bridge_api_v7_final.txt`, `docs/v8/bridge_api_removed.txt`) stay as V8-0's record.
 7. `cargo build -p sim-bridge` before any Godot run (Godot loads the cdylib, which `cargo test` does not rebuild), then the strict check and smoke.
 
 ### C. Size and header report

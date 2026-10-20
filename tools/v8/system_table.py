@@ -54,14 +54,24 @@ def header_field(path, field):
     return "?"
 
 
+def own_part(field, name):
+    """A file holding several systems writes each field as `A — …; B — …`;
+    return the part that belongs to `name` (the whole field otherwise)."""
+    parts = re.split(r";\s*(?=[A-Z][A-Za-z]+System — )", field)
+    for part in parts:
+        if part.startswith(f"{name} — "):
+            return part[len(name) + 3:].strip()
+    return field
+
+
 def table(json_path=None):
     files = system_files()
     lines = [BEGIN, "", "| # | system | priority | interval (ticks) | file | reads | writes |", "|---|---|---|---|---|---|---|"]
     for index, row in enumerate(registered(json_path), 1):
         path = files.get(row["name"])
         rel = path.relative_to(ROOT).as_posix() if path else "?"
-        reads = header_field(path, "Reads") if path else "?"
-        writes = header_field(path, "Writes") if path else "?"
+        reads = own_part(header_field(path, "Reads"), row["name"]) if path else "?"
+        writes = own_part(header_field(path, "Writes"), row["name"]) if path else "?"
         lines.append(f"| {index} | `{row['name']}` | {row['priority']} | {row['interval']} | `{rel}` | {reads} | {writes} |")
     lines += ["", END]
     return "\n".join(lines)

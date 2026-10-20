@@ -41,9 +41,9 @@ So for M1: budget the **renderer**, keep per-agent GDScript loops short, and rea
 Rules that carry over:
 - Pool nodes; never create and free a `Sprite2D` per agent per frame.
 - Hide with `visible = false` on pooled nodes instead of freeing them; the renderer, not capture tools, decides
-  visibility (lesson ART-28, `SKILL.md`).
+  visibility (`SKILL.md` lesson 2026-10-11 "Captures showed villagers absent from the snapshot").
 - Visual variation (body, palette, jitter) from integer hashes of stable ids or tile coordinates, never `randf()`
-  (`docs/art/production/BRIEF.md` L119).
+  (`v7-final-art:docs/art/production/BRIEF.md` L119).
 - Per-frame animation follows frame delta, not simulation ticks (`docs/art/production10/DECISIONS.md` L28).
 - Measure every "optimisation": GDScript caches of `get_meta`/`get_node_or_null` results made W500 19.5 %
   slower than the native calls (`docs/art/production10/DECISIONS.md` L24).

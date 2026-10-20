@@ -21,7 +21,7 @@ GDScript draws, takes input and shows UI. The simulation is Rust (`rust/crates/`
 
 References: [file formats](references/file-formats.md) · [general Godot pitfalls](references/common-pitfalls.md) ·
 [UI-side patterns](references/architecture-patterns.md) · [rendering notes for M1](references/rendering-m1.md).
-Not carried over from `.agents/skills/godot`: `godot4-physics-api.md` (3D physics; WorldSim has no physics bodies,
+Not carried over from `.agents/skills/godot` (at tag `v7-final-art`): `godot4-physics-api.md` (3D physics; WorldSim has no physics bodies,
 and its `query.exclude = [self, body]` example is wrong in 4.x — `exclude` takes RIDs), the RPG templates
 (`assets/templates/*.gd`, `*.tres`) and the `validate_tscn.py`/`validate_tres.py` scripts (the headless import and
 smoke are this repo's validators).
@@ -179,3 +179,4 @@ smoke are this repo's validators).
 | 2026-10-20 | A missing localization key shows as raw key text with no warning | `Locale.ltr` returns the key itself when it is missing and logs nothing | the V8 smoke scans every Label/RichTextLabel/Button for key-shaped text (`raw_keys` must stay 0) | `501867ff`; `v7-final-art:scripts/core/locale.gd` header |
 | 2026-10-17 | User-entered names could inject BBCode in the inspector | BBCode is assembled from strings; safe only because names are generated | escape user-provided text before inserting it into `RichTextLabel` BBCode | `v7-final-art:docs/art/production11/reviews/security-round1.md` |
 | 2026-10-20 | Renaming an atlas PNG: `git mv` refused its `.png.import` ("not under version control") | every `*.import` except the Galmuri fonts is gitignored, so the import file is checkout-local | `git mv` the asset, plain `mv` its `.import`, fix `source_file` / `path` inside it, re-import headless; the old `.ctex` stays in `.godot/imported` until deleted | `docs/v8/V8_0_DECISIONS.md` D24; commit `4c30013a` |
+| 2026-10-20 | A windowed capture run (`tools/v8/capture.gd`) hung until its 600 s limit with no frame saved, right after `CameraController ready` | the display was idle-asleep; `caffeinate -i` keeps the system awake but not the display, and the window got no frames | run windowed captures under `caffeinate -u -d -t <secs>` (or with the display awake); a timeout with zero files means no frames, not a script bug | `docs/v8/V8_0_DECISIONS.md` D33 |

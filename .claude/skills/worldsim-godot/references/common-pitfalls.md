@@ -1,6 +1,6 @@
 # Godot 4.6 general pitfalls — reference
 
-> **Origin and changes.** Adapted from `.agents/skills/godot/references/common-pitfalls.md` (generic Godot skill).
+> **Origin and changes.** Adapted from (at tag `v7-final-art`) `.agents/skills/godot/references/common-pitfalls.md` (generic Godot skill).
 > Kept: `@onready`/`_ready` order, node paths, resource sharing, input placement, static typing, null checks,
 > instancing, tweens. **Fixed for 4.6:** "connecting a signal then emitting at once may miss the callback" is
 > wrong — `connect` takes effect immediately and `emit` calls connected callables synchronously; "connections

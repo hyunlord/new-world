@@ -1,6 +1,6 @@
 # Godot 4.6 text file formats (.gd, .tscn, .tres) — reference
 
-> **Origin and changes.** Adapted from `.agents/skills/godot/references/file-formats.md` (generic Godot skill).
+> **Origin and changes.** Adapted from (at tag `v7-final-art`) `.agents/skills/godot/references/file-formats.md` (generic Godot skill).
 > Kept: the GDScript / scene / resource syntax rules and the instance-override explanation.
 > **Fixed for 4.6:** typed-array rule (Godot writes `Array[T]([...])` only for *typed* properties; untyped
 > `Array` properties are written `[...]` and that is valid); `load_steps` is described as a loading-progress hint,
