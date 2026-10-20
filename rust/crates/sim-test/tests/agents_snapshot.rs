@@ -310,54 +310,11 @@ mod renderer_substrate {
     //!   A10 — all state_tag values in 0..=3
     //!   A11 — entity without AgentState component defaults to tag 0
     //!
-    //! Static file-content assertions (A12–A19) — code-attempt 2/3 additions.
-    //! Per the attempt-2 review, the substrate tests above only exercise
-    //! `collect_agent_snapshot`; the actual P11-α feature lives in GDScript +
-    //! shader code that those Rust tests cannot reach. The following tests
-    //! inspect the actual modified files to prove the new feature code
-    //! paths are present:
-    //!   A12 — agent_renderer.gd enables MultiMesh.use_colors = true
-    //!   A13 — agent_renderer.gd reads `states: PackedByteArray` from snapshot
-    //!   A14 — agent_renderer.gd builds _prev_positions / _curr_positions
-    //!         and interpolates with a lerp_t (Gaffer accumulator)
-    //!   A15 — agent_renderer.gd calls multi_mesh.set_instance_color(i,
-    //!         STATE_TINTS[...]) with a 4-entry STATE_TINTS palette
-    //!   A16 — palette_swap.gdshader declares `varying vec4 v_tint` and captures
-    //!         `v_tint = COLOR` in vertex() (V7 H Phase A green-bug fix)
-    //!   A17 — palette_swap.gdshader multiplies palette_color.rgb * v_tint.rgb
-    //!         in the visible-alpha branch (tex.a > 0.01)
-    //!   A18 — _snapshot_checksum_from MUST iterate every row (no `mini(n, 32)`
-    //!         truncation), so tick-boundary detection covers every agent
-    //!   A19 — _snapshot_checksum_from MUST be identity-aware: signature
-    //!         includes `agent_ids`, body mixes `agent_ids[i]` into the hash,
-    //!         and the call site forwards `agent_ids` (no order-insensitive
-    //!         XOR over positions alone)
+    //! The V7 static file-content checks of `agent_renderer.gd` and
+    //! `palette_swap.gdshader` (A12–A22) were deleted in V8-0 with the V7
+    //! renderer tints they pinned; only the collector tests above remain.
     //!
-    //! D1 follow-up assertions (A20–A22) — anti-circular color-value guard.
-    //! A12–A19 only assert the *shape* of `STATE_TINTS` (4 entries, the `Color(...)`
-    //! form, `set_instance_color(...) + clampi(tag, 0, 3)`), so a regression that
-    //! restored the pre-D1 `Color(1.0, 1.0, 1.0, 1.0)` Idle identity tint — or any
-    //! other off-palette color — would still pass. These three tests close that
-    //! gap:
-    //!   A20 — STATE_TINTS[0] (Idle) MUST equal the D1 cool-blue literal
-    //!         `Color(0.55, 0.70, 0.95, 1.0)` so the Phase 11-α visible delta
-    //!         actually composites over the palette output for the dominant
-    //!         Idle population.
-    //!   A21 — STATE_TINTS block MUST NOT contain the pre-D1 Idle identity
-    //!         tint `Color(1.0, 1.0, 1.0, 1.0)`; on a white tint MultiMesh
-    //!         per-instance color multiplies the palette to identity, leaving
-    //!         the renderer visually indistinguishable from pre-Phase-11-α.
-    //!   A22 — STATE_TINTS palette MUST be the exact ordered D1 palette for
-    //!         indices 0..=3. Parses every `Color(...)` literal inside the
-    //!         palette block and compares the (r, g, b, a) tuple by index to:
-    //!           [0] Idle           — Color(0.55, 0.70, 0.95, 1.0)
-    //!           [1] Seeking        — Color(1.0,  0.85, 0.15, 1.0)
-    //!           [2] Consuming(Ag.) — Color(1.0,  0.40, 0.75, 1.0)
-    //!           [3] Consuming(oth) — Color(0.30, 0.95, 0.35, 1.0)
-    //!         This is the strongest anti-circular guard: any drift on any
-    //!         channel of any of the four entries fails the test.
-    //!
-    //! Run: `cargo test -p sim-test --test harness_p11_alpha_agent_renderer -- --nocapture`
+    //! Run: `cargo test -p sim-test --test agents_snapshot renderer_substrate`
 
     use sim_bridge::ffi::collect_agent_snapshot;
     use sim_core::components::agent_state::TargetKind;

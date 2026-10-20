@@ -3,7 +3,7 @@
 #   walker offsets, selection ring, settlement outline, link hover marker, recall/combat cues, click hit-testing.
 # Bridge methods: art_declump, art_walker_offsets (via declump_offsets.gd / walker_offsets.gd); via SimReads
 #   get_world_info, get_agent_snapshot, get_porter_snapshot, get_society_snapshot, get_activity_snapshot,
-#   get_time_snapshot, get_building_snapshot, get_construction_snapshot, get_resource_snapshot, get_terrain_snapshot,
+#   get_settlement_snapshot, get_time_snapshot, get_building_snapshot, get_construction_snapshot, get_resource_snapshot, get_terrain_snapshot,
 #   get_tile_causal_events; signal world_reset.
 extends Node2D
 
@@ -187,6 +187,13 @@ func _process(delta: float) -> void:
 	var porter_camera: Camera2D = get_node_or_null("../Camera2D") as Camera2D
 	var porter_zoom: float = porter_camera.zoom.x if porter_camera != null else 1.0
 	var society: Dictionary = SimReads.read(world_sim, "get_society_snapshot")
+	# Village state the inspector's village row, chronicle village links and the selection outline read.
+	# V7's status panel fed it every frame; V8-0 deleted that panel, so the renderer feeds it (DECISIONS D31).
+	var settle_snap: Variant = SimReads.read(world_sim, "get_settlement_snapshot")
+	var settlements: Dictionary = settle_snap.duplicate() if settle_snap is Dictionary else {}
+	if not settlements.has("settlement_ids"):
+		settlements["settlement_ids"] = PackedInt32Array(Array(settlements.get("ids", PackedInt64Array())))
+	SettlementSelection.observe(society, settlements)
 	var founders: PackedInt64Array = society.get("founder_agent_ids", PackedInt64Array())
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())

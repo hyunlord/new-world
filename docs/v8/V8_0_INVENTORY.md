@@ -506,13 +506,12 @@ Total: **52** unit tests in deleted modules.
 Kept by V8-0; listed for the owner with a recommendation. The goal's expected
 ASK modules (`influence/**`, `tile/**`, `runtime/influence/**`,
 `runtime/memory/**`, `fission_threshold.rs`) turned out live (section 2.3) and
-are KEEP.
+are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK until the diff review (round 1) showed them live (`scenes/main.tscn` NatureRenderer); they are KEEP, and the M1 tile layer replaces them (DECISIONS D11, D31).
 
 | item | why it is not decided here | recommendation |
 |---|---|---|
-| `rust/crates/sim-systems/src/runtime/combat/**` (CombatSystem, priority 137) + its components/chronicle hooks | registered and ticking (1.2 % of the tick), but skipping it changed no outcome in 4 worlds × 120 days | keep until M5 decides how animal threats and drafting fight; if M5 writes a new combat model, delete this one then |
-| `scripts/ui/nature_renderer.gd`, `scripts/ui/nature_canopy.gd` | they draw trees, berry bushes and deadwood (world content); 7.3's keep list does not name them (DECISIONS D11) | replace with the M1 tile layer, then delete |
-| `shaders/palette_swap.gdshader`, `assets/sprites/palette_lut.png`, `assets/sprites/agent_base.png` | VISION §5 keeps "the palette-swap shader" for clothing colours; this V7 MultiMesh kit is unreferenced, while the live `villager_ramp.gdshader` already does palette ramps | delete unless M1's people sprites adopt the LUT approach |
+| `rust/crates/sim-systems/src/runtime/combat/**` (CombatSystem, priority 137) + its components/chronicle hooks | registered and ticking (1.2 % of the tick), but skipping it changed no outcome in 4 worlds × 120 days | keep until M5 decides how animal threats and drafting fight; if M5 writes a new combat model, delete this one then. Removal scope: the causal panel's combat branches (`scripts/ui/panels/causal_panel.gd`), 5 locale keys (`UI_CAUSAL_EVENT_COMBAT_*`, `UI_COMBAT_HP_AFTER`) and the tests `agents_combat*.rs`, `chronicle_combat.rs` (diff review round 1) |
+| `shaders/palette_swap.gdshader`, `assets/sprites/palette_lut.png`, `assets/sprites/agent_base.png` | VISION §5 keeps "the palette-swap shader" for clothing colours; this V7 MultiMesh kit is unreferenced, while the live `villager_ramp.gdshader` already does palette ramps | keep (VISION §5 keeps a palette-swap shader); the owner confirms whether §5 means this LUT kit or the live `villager_ramp.gdshader` ramps, and M1 deletes the other |
 | `assets/sprites/buildings/**`, `assets/sprites/furniture/**` (174 files, pre-art-line 16×16 sprites) | VISION §6.3 asks to review whether some furniture/buildings can be reused at the new size | decide during M1/M2 art; delete what the new tileset does not reuse |
 
 ## 5. Verdict table
@@ -714,7 +713,7 @@ are KEEP.
 | `localization/key_owners.json` | DELETE | duplicate-key owner policy; the generator treats a missing file as no policy, and the pruned category JSONs carry no duplicates | tools/localization_compile.py _load_key_owners; scratch dry run (Part 1) |
 | `localization/ko/` | KEEP | runtime pipeline: manifest.json, compiled/*.json, category JSONs (keys pruned to the kept UI, 7.4) | scripts/core/locale.gd; tools/v8/locale_keys.py |
 | `project.godot` | KEEP | Godot project root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `rust/` | MIXED | files inside: 2 ASK, 61 DELETE, 369 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 70 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
+| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 368 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 70 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/activity.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/causal.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
@@ -858,6 +857,7 @@ are KEEP.
 | `rust/crates/sim-systems/src/worldgen/mod.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/noise.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/terrain.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
+| `rust/crates/sim-test/benches/phase2_benchmarks.rs` | DELETE | V7 Criterion harness for the Phase 2 influence hard gate; nothing runs it, and VISION §5 keeps one perf check (tools/v8/perf.sh) | diff review round 1 F3; DECISIONS D31 |
 | `rust/crates/sim-test/src/bin/worldsim_perf.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_probe.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_systems.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
@@ -1147,7 +1147,7 @@ are KEEP.
 | `scenes/main.tscn` | KEEP | main scene; deleted UI nodes removed (7.3) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scenes/test/art_calibration.tscn` | DELETE | art calibration scene / Godot test code (6.3) | goal 6.3 |
 | `scenes/ui/god_hand_panel.tscn` | DELETE | god-hand panel scene (7.2) | goal 7.2 |
-| `scripts/` | MIXED | files inside: 4 ASK, 239 DELETE, 65 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
+| `scripts/` | MIXED | files inside: 239 DELETE, 69 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
 | `scripts/core/locale.gd` | KEEP | Locale autoload (7.3 keep set) | goal 7.3; project.godot [autoload] |
 | `scripts/core/settlement_selection.gd` | KEEP | dependency of kept renderers/panels (selected village state); M1 replaces | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/core/sim_reads.gd` | KEEP | SimReads: every bridge read (moved from scripts/ui/ in 8.7) | goal 8.7 |
@@ -1398,9 +1398,9 @@ are KEEP.
 | `scripts/ui/founding_group_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/hud/hud_topbar.gd` | KEEP | hud_topbar.gd (7.3 keep set; moved from scripts/ui/panels/ in 8.7) | goal 7.3, 8.7 |
 | `scripts/ui/morning_chill.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/ui/nature_canopy.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
+| `scripts/ui/nature_canopy.gd` | KEEP | live (main.tscn NatureRenderer: trees, berry bushes, deadwood); moved to scripts/world/ in 8.7; the M1 tile layer replaces it | scenes/main.tscn; DECISIONS D11, D31 |
 | `scripts/ui/nature_layout.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/ui/nature_renderer.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
+| `scripts/ui/nature_renderer.gd` | KEEP | live (main.tscn NatureRenderer: trees, berry bushes, deadwood); moved to scripts/world/ in 8.7; the M1 tile layer replaces it | scenes/main.tscn; DECISIONS D11, D31 |
 | `scripts/ui/need_bar_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/offscreen_marker.gd` | KEEP | dependency of agent_renderer.gd / agent_activity.gd that cannot be cut without rewriting the renderer; listed under 'M1 replaces' | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/agent_inspector_panel.gd` | KEEP | 7.3 keep set | goal 7.3 |
@@ -1446,9 +1446,9 @@ are KEEP.
 | `scripts/world/daylight_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
 | `scripts/world/declump_offsets.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/morning_chill.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/nature_canopy.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
+| `scripts/world/nature_canopy.gd` | KEEP | live: main.tscn NatureRenderer draws the world's trees, berry bushes and deadwood; the M1 tile layer replaces it (ROADMAP M1) | scenes/main.tscn; diff review round 1; DECISIONS D11, D31 |
 | `scripts/world/nature_layout.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/nature_renderer.gd` | ASK | draws the world's trees, berry bushes and deadwood (world content, not an overlay); kept until the M1 tile layer replaces it | DECISIONS D11 |
+| `scripts/world/nature_renderer.gd` | KEEP | live: main.tscn NatureRenderer draws the world's trees, berry bushes and deadwood; the M1 tile layer replaces it (ROADMAP M1) | scenes/main.tscn; diff review round 1; DECISIONS D11, D31 |
 | `scripts/world/offscreen_marker.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/porter_presentation.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/shelter_cold.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |

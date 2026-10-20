@@ -21,13 +21,6 @@ serde_json = "1"
 # `worldsim_perf`'s JSON. Never on by default and never a required feature.
 subprofile = ["sim-systems/subprofile"]
 
-[dev-dependencies]
-criterion = { workspace = true }
-
-[[bench]]
-name = "phase2_benchmarks"
-harness = false
-
 [[bin]]
 name = "worldsim_probe"
 path = "src/bin/worldsim_probe.rs"
