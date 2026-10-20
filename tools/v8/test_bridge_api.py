@@ -1,8 +1,8 @@
 """Tests for tools/v8/bridge_api.py and the bridge API invariant (goal 4.2, 12).
 
-The live check: the exports of rust/crates/sim-bridge equal the V7 base list
-(docs/v8/bridge_api_v7_final.txt) minus the names V8-0 removed on purpose
-(docs/v8/bridge_api_removed.txt).
+The live check: the exports of rust/crates/sim-bridge equal the current pass's
+list (M1: docs/v8/bridge_api_m1.txt, gate step 13). V8-0's record stays: its
+removed names are not exported again.
 """
 import sys
 import tempfile
@@ -67,11 +67,15 @@ class BridgeApiTest(unittest.TestCase):
         self.assertIn("func WorldSimNode.get_other", bridge_api.scan_repo(root))
         self.assertIn("func WorldSimNode.get_thing", bridge_api.scan_repo(root))
 
-    def test_live_bridge_equals_v7_final_minus_the_removed_names(self):
-        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_v7_final.txt"))
+    def test_live_bridge_equals_the_m1_list(self):
+        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_m1.txt"))
+        self.assertEqual(set(bridge_api.scan_repo(ROOT)), expected)
+
+    def test_v8_0_removed_names_stay_removed(self):
+        base = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_v7_final.txt"))
         removed = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_removed.txt"))
-        self.assertTrue(removed <= expected, "a removed name is not in the base list")
-        self.assertEqual(set(bridge_api.scan_repo(ROOT)), expected - removed)
+        self.assertTrue(removed <= base, "a removed name is not in the base list")
+        self.assertFalse(removed & set(bridge_api.scan_repo(ROOT)))
 
 
 if __name__ == "__main__":

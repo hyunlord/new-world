@@ -19,4 +19,5 @@ WorldGenConfig {
     region_water_max: Some(
         12,
     ),
+    colony: None,
 }

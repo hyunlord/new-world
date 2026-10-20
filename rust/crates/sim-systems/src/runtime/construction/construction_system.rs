@@ -1,9 +1,9 @@
 //! ConstructionSystem: advances construction sites worked by co-located agents and turns finished sites into buildings.
 //!
 //! Priority: 133 · Interval: 1 tick · Gate: none
-//! Reads: `Position`, `AgentState`, `ConstructionSite`; `SimResources.tile_grid`, `causal_log` (`ConstructionStarted`), `site_owner`, `rules`
-//! Writes: `ConstructionSite` (progress, despawn), `AgentState`; `SimResources.causal_log`, `building_registry`, `building_kinds`, `building_owner`, `site_owner`, sleep tiles
-//! Events: `CausalEvent::ConstructionCompleted`, `CausalEvent::BuildingPlaced`
+//! Reads: `Position`, `AgentState`, `ConstructionSite`, `MaterialNeeds`, `ColonySite`; `SimResources.tile_grid`, `causal_log` (`ConstructionStarted`), `site_owner`, `settlements`, `rules`
+//! Writes: `ConstructionSite` (progress, despawn), `AgentState`; `SimResources.causal_log`, `building_registry`, `building_kinds`, `building_owner`, `site_owner`, sleep tiles, `colony` (footprints, item ledger, tallies)
+//! Events: `CausalEvent::ConstructionCompleted`, `CausalEvent::BuildingPlaced`; chronicle `HutBuilt` (M1)
 //!
 //! `ConstructionSystem` at priority 133 — the runtime tick of the
 //! Phase 6 agent-driven construction loop (V7 Phase 6-β / P6β-1).
@@ -62,13 +62,24 @@
 //! `radius = 0` distinguishes the agent-construction emission path from
 //! the BSS (`BuildingStampSystem` priority 90) stamping path; the
 //! agent-construction path does not stamp influence in Phase 6-β.
+//!
+//! # M1 colony sites (`MaterialNeeds` + `ColonySite`)
+//!
+//! A colony site advances only once every material is delivered; until then
+//! a co-located `Consuming { ConstructionSite }` agent takes the absent-site
+//! fallback. On completion a hut is registered through [`register_dwelling`],
+//! the path shelters use (kind, sleep tile, owner), its delivered logs move
+//! to `colony.item_ledger.consumed` and its footprint becomes a hut footprint.
 
 use std::collections::HashMap;
 
 use hecs::{Entity, World};
 use sim_core::causal::CausalEvent;
+use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::{ColonySite, ItemKind, MaterialNeeds, Occupant};
 use sim_core::components::{
-    AgentState, BuildingBlueprint, BuildingKind, ConstructionSite, Position, TargetKind,
+    Agent, AgentId, AgentState, BuildingBlueprint, BuildingKind, ConstructionSite, Position,
+    SettlementId, TargetKind,
 };
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
@@ -113,10 +124,12 @@ impl RuntimeSystem for ConstructionSystem {
         let mut sites_by_pos: HashMap<(u32, u32), Entity> = HashMap::new();
         let mut complete_sites_by_pos: HashMap<(u32, u32), Entity> = HashMap::new();
         {
-            let mut q = world.query::<&ConstructionSite>();
-            for (e, site) in q.iter() {
+            let mut q = world.query::<(&ConstructionSite, Option<&MaterialNeeds>)>();
+            for (e, (site, needs)) in q.iter() {
                 let key = (site.position.x, site.position.y);
-                if site.is_complete() {
+                // M1: a colony site waiting for materials is not workable yet.
+                let waiting = needs.is_some_and(|n| n.delivered < n.needed);
+                if site.is_complete() || waiting {
                     complete_sites_by_pos.insert(key, e);
                 } else {
                     sites_by_pos.insert(key, e);
@@ -215,14 +228,33 @@ impl RuntimeSystem for ConstructionSystem {
         for (site_entity, (blueprint, position)) in completed {
             if let Some(rule) = resources.rules.society.shelter_planning {
                 if let Some(sid) = resources.site_owner.remove(&position) {
-                    resources
-                        .building_kinds
-                        .insert(position, BuildingKind::Shelter);
-                    resources.set_sleep_tile(position.0, position.1, RESOURCE_SOURCE_INFINITE);
-                    if rule.housing == sim_core::rules::HousingCount::Owned {
-                        resources.building_owner.insert(position, sid);
-                    }
+                    let owner =
+                        (rule.housing == sim_core::rules::HousingCount::Owned).then_some(sid);
+                    register_dwelling(resources, position, BuildingKind::Shelter, owner);
                 }
+            }
+            let colony_site = world
+                .get::<&ColonySite>(site_entity)
+                .ok()
+                .map(|s| *s)
+                .zip(world.get::<&MaterialNeeds>(site_entity).ok().map(|n| *n));
+            if let Some((site, needs)) = colony_site {
+                let mut builders: Vec<AgentId> = world
+                    .query::<(&Agent, &Position, &AgentState)>()
+                    .iter()
+                    .filter(|(_, (_, pos, state))| {
+                        (pos.x, pos.y) == position
+                            && matches!(
+                                state,
+                                AgentState::Consuming {
+                                    target: TargetKind::ConstructionSite
+                                }
+                            )
+                    })
+                    .map(|(_, (agent, _, _))| agent.id)
+                    .collect();
+                builders.sort_unstable();
+                complete_hut(world, resources, site, needs, &builders, tick);
             }
             let tile_idx = position.1 * width + position.0;
 
@@ -292,6 +324,69 @@ impl RuntimeSystem for ConstructionSystem {
             let _ = world.despawn(site_entity);
         }
     }
+}
+
+/// Register a finished dwelling at `position` (its key tile): its kind, an
+/// infinite sleep tile there and, when given, its owner. The one path shelters
+/// (planned under `shelter_planning`) and M1 huts share.
+pub fn register_dwelling(
+    resources: &mut SimResources,
+    position: (u32, u32),
+    kind: BuildingKind,
+    owner: Option<SettlementId>,
+) {
+    resources.building_kinds.insert(position, kind);
+    resources.set_sleep_tile(position.0, position.1, RESOURCE_SOURCE_INFINITE);
+    if let Some(sid) = owner {
+        resources.building_owner.insert(position, sid);
+    }
+}
+
+/// The settlement whose formation tile lies nearest `tile` (Chebyshev, ties
+/// by id): the owner of a finished hut.
+fn nearest_settlement(resources: &SimResources, tile: (u32, u32)) -> Option<SettlementId> {
+    let mut ids: Vec<_> = resources.settlements.keys().copied().collect();
+    ids.sort_unstable();
+    ids.into_iter().min_by_key(|id| {
+        resources.settlements.get(id).map_or(u32::MAX, |s| {
+            let (x, y) = s.formation_tile;
+            x.abs_diff(tile.0).max(y.abs_diff(tile.1))
+        })
+    })
+}
+
+/// M1: a finished colony site becomes a hut — registered like a shelter at
+/// its centre, owned by the nearest settlement, its logs consumed.
+fn complete_hut(
+    world: &World,
+    resources: &mut SimResources,
+    site: ColonySite,
+    needs: MaterialNeeds,
+    builders: &[AgentId],
+    tick: u64,
+) {
+    let centre = site.centre();
+    let owner = nearest_settlement(resources, centre);
+    register_dwelling(resources, centre, BuildingKind::Hut, owner);
+    for tile in site.tiles() {
+        resources
+            .colony
+            .occupied
+            .insert(tile, Occupant::Hut(centre));
+    }
+    resources
+        .colony
+        .item_ledger
+        .consume(ItemKind::Log, u64::from(needs.delivered));
+    resources.colony.tallies.huts_built += 1;
+    resources.colony.touch(false);
+    let mut entry = ChronicleEntry::new(tick, ChronicleKind::HutBuilt);
+    entry.settlement = owner;
+    entry.subject = builders.first().copied();
+    entry.other = builders.get(1).copied();
+    entry.third = builders.get(2).copied();
+    entry.value = builders.len() as i64;
+    crate::runtime::chronicle_log::record(world, resources, entry);
 }
 
 #[cfg(test)]

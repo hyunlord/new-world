@@ -19,6 +19,15 @@ pub fn baseline_scene(seed: u64) -> SimEngine {
     engine
 }
 
+/// The M1 colony world `seed`: `WorldGenConfig::colony` under
+/// `WorldRules::colony` (192 × 192, 10 founders, trees, orders and jobs; ADR 0014).
+pub fn colony_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::colony(seed),
+        sim_core::rules::WorldRules::colony(seed),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

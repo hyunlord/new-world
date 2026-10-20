@@ -522,6 +522,11 @@ pub struct SimResources {
     /// trips in flight and the measurement-only trip and decision logs.
     /// Empty without `SocietyRules::relations`.
     pub settlement_relations: sim_core::components::SettlementRelations,
+
+    /// M1 colony: trees, ground items, zones, designations, footprints,
+    /// reservations, the command log and the item ledger. Empty without
+    /// `rules.colony` (the baseline world never fills it).
+    pub colony: sim_core::colony::ColonyState,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -711,6 +716,10 @@ impl SimResources {
             fission_checks: Vec::new(),
             chronicle: sim_core::chronicle::Chronicle::new(),
             settlement_relations: sim_core::components::SettlementRelations::default(),
+            colony: sim_core::colony::ColonyState {
+                next_zone_id: 1,
+                ..Default::default()
+            },
         }
     }
 

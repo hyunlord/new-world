@@ -79,11 +79,15 @@ pub enum ChronicleKind {
     /// Pass 20: no subject; settlement = the lower id, settlement2 = the
     /// higher; cause 0; value = the relation.
     VillagesReconciled = 21,
+    /// M1: no subject; settlement = the hut's owner; subject, other, third = the
+    /// first three builders by AgentId (those working at completion); value =
+    /// how many built at completion; cause 0.
+    HutBuilt = 22,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 22] = [
+    pub const ALL: [ChronicleKind; 23] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -106,6 +110,7 @@ impl ChronicleKind {
         Self::Quarrel,
         Self::VillagesEstranged,
         Self::VillagesReconciled,
+        Self::HutBuilt,
     ];
 
     /// Stable numeric discriminant.
@@ -138,6 +143,7 @@ impl ChronicleKind {
             Self::Quarrel => "quarrel",
             Self::VillagesEstranged => "villages_estranged",
             Self::VillagesReconciled => "villages_reconciled",
+            Self::HutBuilt => "hut_built",
         }
     }
 }
@@ -465,10 +471,12 @@ mod tests {
         assert_eq!(ChronicleKind::Quarrel.as_u8(), 19);
         assert_eq!(ChronicleKind::VillagesEstranged.as_u8(), 20);
         assert_eq!(ChronicleKind::VillagesReconciled.as_u8(), 21);
-        assert_eq!(ChronicleKind::ALL.len(), 22);
+        // M1: kind 22 appended; 0–21 unchanged.
+        assert_eq!(ChronicleKind::HutBuilt.as_u8(), 22);
+        assert_eq!(ChronicleKind::ALL.len(), 23);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 22);
+        assert_eq!(names.len(), 23);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

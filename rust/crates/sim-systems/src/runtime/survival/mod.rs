@@ -2,7 +2,7 @@
 //!
 //! Priority: 139 · Interval: 1 tick · Gate: none
 //! Reads: `Agent`, `Position`, `Hunger`, `Thirst`, `Cold`, `ExposureClock`; `SimResources.rules.society.exposure`
-//! Writes: `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`)
+//! Writes: `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`; M1: a worker's load and reservations in `colony`)
 //! Events: `CausalEvent::AgentDied`; chronicle `Died`, `Widowed`; tallies `deaths_starvation`, `deaths_dehydration`
 //!
 //! V7 feature `add-starvation-death` — survival / death subsystem.
@@ -82,6 +82,8 @@ pub fn despawn_agent(
         .get::<&sim_core::components::Life>(entity)
         .ok()
         .map_or(-1, |life| life.age_ticks(tick));
+    // M1: a dying worker's load stays where it fell; its reservations free up.
+    crate::runtime::jobs::on_death(world, resources, entity);
     let _ = world.despawn(entity);
     resources.social_chase_since.remove(&agent_id);
     resources.social_retry_after.remove(&agent_id);

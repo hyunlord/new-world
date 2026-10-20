@@ -21,6 +21,7 @@ pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 
 pub mod causal;
 pub mod chronicle;
+pub mod colony;
 pub mod components;
 pub mod fission_threshold;
 pub mod influence;

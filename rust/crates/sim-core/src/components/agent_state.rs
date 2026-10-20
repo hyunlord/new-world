@@ -67,6 +67,9 @@ pub enum TargetKind {
     GatherWood,
     /// A reserved, economy-neutral routine place in an opted-in world.
     Activity,
+    /// M1 colony job: the worker walks to or works at its `Job`'s tile
+    /// (`sim_systems::runtime::jobs`). The baseline world never produces it.
+    Job,
 }
 
 /// Per-agent FSM state. Lives alongside [`Hunger`]/[`Thirst`] and is
@@ -297,6 +300,7 @@ mod tests {
             TargetKind::Agent(7),
             TargetKind::GatherFood,
             TargetKind::GatherWood,
+            TargetKind::Job,
         ] {
             let encoded = ron::to_string(&kind).unwrap();
             let decoded: TargetKind = ron::from_str(&encoded).unwrap();

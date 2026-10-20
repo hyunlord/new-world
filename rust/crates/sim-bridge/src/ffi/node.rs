@@ -34,7 +34,6 @@
 //! are non-stub forwardings.
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
-use super::art_kernels::{declump_offsets, walker_offsets, DeclumpInput, WalkerInput};
 use super::causal::{
     channel_from_i32, channel_key, collect_tile_causal_events, event_views_to_variant_array,
     try_collect_event_chain, try_collect_tile_causal_history,
@@ -42,6 +41,11 @@ use super::causal::{
 use super::chronicle::{
     collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
     collect_settlement_chronicle, person_to_dict, rows_to_dict,
+};
+use super::colony::{
+    can_place, collect_agent_jobs, collect_colony_overlay, collect_colony_versions, collect_trees,
+    overlay_to_dict, result_to_dict, submit_blueprint, submit_rect, submit_tiles, trees_to_dict,
+    versions_to_dict, RectCommand,
 };
 use super::engine_build::{advance_engine_ticks, build_game_engine, build_stress_engine};
 use super::family::{agent_family_to_dict, collect_agent_family};
@@ -97,10 +101,26 @@ pub struct WorldSimNode {
     base: Base<Node>,
 }
 
-/// Fixed simulation timestep — 30 TPS per Phase 0 design #9 (Gaffer accumulator).
-const FIXED_DT: f64 = 1.0 / 30.0;
-/// Spiral-of-death cap: skip catch-up after this many fixed ticks per frame.
-const MAX_ITERS_PER_FRAME: u32 = 5;
+/// Ticks fed per real second at 1× (ADR 0004, M1): one tick is one simulated
+/// minute, so a simulated day (1,440 ticks) lasts 120 s at 1×; 2×/3×/4× feed
+/// 24/36/48 ticks per second.
+pub const TICKS_PER_SECOND_AT_1X: f64 = 12.0;
+/// Fixed simulation timestep of the Gaffer accumulator.
+const FIXED_DT: f64 = 1.0 / TICKS_PER_SECOND_AT_1X;
+/// Spiral-of-death cap: at most this many ticks per frame; a larger backlog
+/// is dropped (4× = 48 ticks/s needs ≥ 6 frames per second).
+pub const MAX_TICKS_PER_FRAME: u32 = 8;
+const MAX_ITERS_PER_FRAME: u32 = MAX_TICKS_PER_FRAME;
+
+/// Real seconds one simulated day lasts at speed `speed` (0 = never).
+pub fn seconds_per_day(speed: f64) -> f64 {
+    let speed = clamp_sim_speed(speed);
+    if speed <= 0.0 {
+        f64::INFINITY
+    } else {
+        1440.0 / (TICKS_PER_SECOND_AT_1X * speed)
+    }
+}
 
 /// V7 Section 16-γ — clamp a requested simulation-speed multiplier to the
 /// supported `[0.0, 4.0]` range. Pure (no Godot) so the harness can verify it
@@ -154,113 +174,6 @@ impl WorldSimNode {
     /// Emitted after a complete engine replacement so renderers refresh snapshots.
     #[signal]
     fn world_reset();
-
-    /// Rendering-only declump: packed inputs retain source order and f32 component bits.
-    #[func]
-    #[allow(clippy::too_many_arguments)]
-    fn art_declump(
-        &self,
-        row_ids: PackedInt64Array,
-        visible: PackedByteArray,
-        walking: PackedByteArray,
-        place_known: PackedByteArray,
-        target_ids: PackedInt64Array,
-        target_xy: PackedFloat32Array,
-        rect_ids: PackedInt64Array,
-        rect_xywh: PackedFloat32Array,
-        width: i64,
-        height: i64,
-        terrain: PackedByteArray,
-        blocked_xy: PackedInt32Array,
-        spatial: bool,
-    ) -> VarDictionary {
-        let input = DeclumpInput {
-            row_ids: row_ids.as_slice(),
-            visible: visible.as_slice(),
-            walking: walking.as_slice(),
-            place_known: place_known.as_slice(),
-            target_ids: target_ids.as_slice(),
-            target_xy: target_xy.as_slice(),
-            rect_ids: rect_ids.as_slice(),
-            rect_xywh: rect_xywh.as_slice(),
-            width,
-            height,
-            terrain: terrain.as_slice(),
-            blocked_xy: blocked_xy.as_slice(),
-            spatial,
-        };
-        let mut output = VarDictionary::new();
-        match declump_offsets(&input) {
-            Ok(result) => {
-                output.set("ids", PackedInt64Array::from(result.ids.as_slice()));
-                output.set(
-                    "offsets",
-                    PackedFloat32Array::from(result.offsets.as_slice()),
-                );
-            }
-            Err(error) => {
-                godot_error!("art_declump: {}", error);
-                output.set("error", error);
-            }
-        }
-        output
-    }
-
-    /// Rendering-only walker relief; all vector and canvas columns retain f32 bits.
-    #[func]
-    #[allow(clippy::too_many_arguments)]
-    fn art_walker_offsets(
-        &self,
-        row_ids: PackedInt64Array,
-        visible: PackedByteArray,
-        walking: PackedByteArray,
-        place_known: PackedByteArray,
-        direction_xy: PackedFloat32Array,
-        position_ids: PackedInt64Array,
-        position_xy: PackedFloat32Array,
-        rect_ids: PackedInt64Array,
-        rect_xywh: PackedFloat32Array,
-        world_size: Vector2i,
-        terrain: PackedByteArray,
-        blocked_xy: PackedInt32Array,
-        canvas: PackedFloat32Array,
-        spatial: bool,
-    ) -> VarDictionary {
-        let input = WalkerInput {
-            geometry: DeclumpInput {
-                row_ids: row_ids.as_slice(),
-                visible: visible.as_slice(),
-                walking: walking.as_slice(),
-                place_known: place_known.as_slice(),
-                target_ids: position_ids.as_slice(),
-                target_xy: position_xy.as_slice(),
-                rect_ids: rect_ids.as_slice(),
-                rect_xywh: rect_xywh.as_slice(),
-                width: i64::from(world_size.x),
-                height: i64::from(world_size.y),
-                terrain: terrain.as_slice(),
-                blocked_xy: blocked_xy.as_slice(),
-                spatial,
-            },
-            direction_xy: direction_xy.as_slice(),
-            canvas: canvas.as_slice(),
-        };
-        let mut output = VarDictionary::new();
-        match walker_offsets(&input) {
-            Ok(result) => {
-                output.set("ids", PackedInt64Array::from(result.ids.as_slice()));
-                output.set(
-                    "offsets",
-                    PackedFloat32Array::from(result.offsets.as_slice()),
-                );
-            }
-            Err(error) => {
-                godot_error!("art_walker_offsets: {}", error);
-                output.set("error", error);
-            }
-        }
-        output
-    }
 
     /// Rebuild the seeded world, preserving the caller's wall-clock speed setting.
     #[func]
@@ -326,8 +239,8 @@ impl WorldSimNode {
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
-    /// `KEY_1`/`KEY_2`/`KEY_3`/`KEY_4` number keys by `camera_controller.gd`
-    /// (0.25× / 0.5× / 1× / 2×). Pure observability — changes only how often
+    /// `KEY_1`…`KEY_4` number keys by `camera_controller.gd` (1× / 2× / 3× /
+    /// 4× = 12 / 24 / 36 / 48 ticks per second, M1). Pure observability — changes only how often
     /// `tick()` is called per wall-second, never the fixed timestep.
     #[func]
     fn set_sim_speed(&mut self, speed: f64) {
@@ -472,7 +385,116 @@ impl WorldSimNode {
         // Pass 6 — additive cold flags in the same row order (1 with the Cold marker).
         let colds = collect_agent_colds(&self.engine.world);
         dict.set("colds", PackedByteArray::from(colds.as_slice()));
+        // M1 — additive job and carry columns in the same row order: `jobs`
+        // (0 none, 1 chop, 2 haul, 3 deliver, 4 build), `carry_kinds` (-1 none,
+        // 0 log) and `carry_counts`.
+        let jobs = collect_agent_jobs(&self.engine.world);
+        let codes: Vec<u8> = jobs.iter().map(|j| j.0).collect();
+        let kinds: Vec<i32> = jobs.iter().map(|j| j.1).collect();
+        let counts: Vec<i32> = jobs.iter().map(|j| i32::from(j.2)).collect();
+        dict.set("jobs", PackedByteArray::from(codes.as_slice()));
+        dict.set("carry_kinds", PackedInt32Array::from(kinds.as_slice()));
+        dict.set("carry_counts", PackedInt32Array::from(counts.as_slice()));
         dict
+    }
+
+    /// M1 order: mark every tree in the rectangle for felling. Returns
+    /// `{accepted, count, reason}`; logged with the next tick (ADR 0012).
+    #[func]
+    fn cmd_designate_chop(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_rect(
+            &mut self.engine,
+            RectCommand::DesignateChop,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
+    }
+
+    /// M1 order: mark the trees on exactly these tiles (scripts and tools).
+    #[func]
+    fn cmd_designate_chop_tiles(
+        &mut self,
+        xs: PackedInt32Array,
+        ys: PackedInt32Array,
+    ) -> VarDictionary {
+        result_to_dict(submit_tiles(&mut self.engine, xs.as_slice(), ys.as_slice()))
+    }
+
+    /// M1 order: remove chop marks and blueprints in the rectangle.
+    #[func]
+    fn cmd_cancel_area(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_rect(
+            &mut self.engine,
+            RectCommand::CancelArea,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
+    }
+
+    /// M1 order: add the rectangle's valid tiles as stockpile zone(s).
+    #[func]
+    fn cmd_add_stockpile(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_rect(
+            &mut self.engine,
+            RectCommand::AddStockpile,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
+    }
+
+    /// M1 order: remove the rectangle's tiles from every zone.
+    #[func]
+    fn cmd_remove_zone_area(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_rect(
+            &mut self.engine,
+            RectCommand::RemoveZoneArea,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
+    }
+
+    /// M1 order: place a blueprint (`"hut"`) with its footprint's top-left at `(x, y)`.
+    #[func]
+    fn cmd_place_blueprint(&mut self, kind: GString, x: i32, y: i32) -> VarDictionary {
+        result_to_dict(submit_blueprint(&mut self.engine, &kind.to_string(), x, y))
+    }
+
+    /// M1: whether a blueprint (`"hut"`) fits with its top-left at `(x, y)`.
+    #[func]
+    fn can_place_blueprint(&self, kind: GString, x: i32, y: i32) -> bool {
+        can_place(&self.engine.resources, &kind.to_string(), x, y)
+    }
+
+    /// M1: `{trees_version, overlay_version}` — poll every frame, fetch
+    /// `get_trees` / `get_colony_overlay` only when a version changed.
+    #[func]
+    fn get_colony_versions(&self) -> VarDictionary {
+        versions_to_dict(collect_colony_versions(&self.engine.resources))
+    }
+
+    /// M1: every standing tree as `{version, xs, ys}` in `(x, y)` order.
+    #[func]
+    fn get_trees(&self) -> VarDictionary {
+        trees_to_dict(collect_trees(&self.engine.resources))
+    }
+
+    /// M1: the order overlay as `{version, designation_xs/ys, zone_ids,
+    /// zone_xs/ys, item_xs/ys/kinds/counts, site_xs/ys/ws/hs/kinds/needed/
+    /// delivered/progress/required}` (sites by footprint top-left).
+    #[func]
+    fn get_colony_overlay(&self) -> VarDictionary {
+        overlay_to_dict(&collect_colony_overlay(
+            &self.engine.world,
+            &self.engine.resources,
+        ))
     }
 
     /// V7 Phase 14-γ FFI — single-agent detail dictionary for the click

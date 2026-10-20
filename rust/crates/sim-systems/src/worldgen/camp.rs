@@ -410,6 +410,23 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
         r.wood_spot_area.insert(spot, 0);
     }
     let water: Vec<Tile> = r.water_tiles.keys().copied().collect();
+    // Tiles within `region_water_max` of a water tile, as a grid: the same
+    // predicate as testing every water tile per candidate, computed once.
+    let near_water: Option<Vec<bool>> = cfg.region_water_max.map(|max| {
+        let (w, h) = (r.tile_grid.width, r.tile_grid.height);
+        let mut grid = vec![false; (w * h) as usize];
+        for &(qx, qy) in &water {
+            for y in qy.saturating_sub(max)..=(qy + max).min(h - 1) {
+                for x in qx.saturating_sub(max)..=(qx + max).min(w - 1) {
+                    grid[(y * w + x) as usize] = true;
+                }
+            }
+        }
+        grid
+    });
+    let region_max = cfg
+        .colony
+        .map_or(REGION_MAX_DISTANCE, |gen| gen.region_max_distance);
     // Part 3: region bushes and deadwood lie beyond the camp's forage and wood
     // radii, so the original village's economy is v16's (a region bush at 16
     // or deadwood at 16-18 tiles would be the camp's too).
@@ -425,13 +442,13 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
     for region in 0..cfg.wild_regions {
         let candidates: Vec<Tile> = tiles(r)
             .filter(|&p| {
-                (REGION_MIN_DISTANCE..=REGION_MAX_DISTANCE).contains(&distance(p, hearth))
+                (REGION_MIN_DISTANCE..=region_max).contains(&distance(p, hearth))
                     && walkable(r, p)
                     && !r.water_tiles.contains_key(&p)
                     && centres.iter().all(|&c| distance(p, c) >= REGION_SEPARATION)
-                    && cfg
-                        .region_water_max
-                        .is_none_or(|max| water.iter().any(|&q| distance(p, q) <= max))
+                    && near_water
+                        .as_ref()
+                        .is_none_or(|grid| grid[(p.1 * r.tile_grid.width + p.0) as usize])
             })
             .collect();
         if candidates.is_empty() {

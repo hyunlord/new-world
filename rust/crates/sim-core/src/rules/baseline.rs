@@ -243,6 +243,7 @@ impl WorldRules {
                 days_per_season: 7,
                 regen_permille: variety.scale_regen(BASE_REGEN_PERMILLE),
             }),
+            colony: None,
         }
     }
 }

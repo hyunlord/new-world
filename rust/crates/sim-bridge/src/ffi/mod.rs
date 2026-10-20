@@ -15,9 +15,9 @@
 //! Godot dictionaries. Sim-test exercises the collectors directly.
 
 pub mod activity;
-pub mod art_kernels;
 pub mod causal;
 pub mod chronicle;
+pub mod colony;
 pub mod engine_build;
 pub mod family;
 pub mod node;
@@ -27,6 +27,11 @@ pub mod relations;
 pub mod snapshot;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
+pub use colony::{
+    can_place, clip_rect, collect_agent_jobs, collect_colony_overlay, collect_colony_versions,
+    collect_trees, submit_blueprint, submit_rect, submit_tiles, ColonyOverlay, ColonyVersions,
+    OverlaySite, RectCommand,
+};
 pub use family::{collect_agent_family, AgentFamilyRow};
 
 pub use causal::{
@@ -41,9 +46,9 @@ pub use engine_build::{build_game_engine, build_stress_engine};
 pub use engine_build::{
     INITIAL_FOOD, INITIAL_SLEEP, INITIAL_WATER, SOURCE_FOOD, SOURCE_SLEEP, SOURCE_WATER,
 };
-pub use node::clamp_sim_speed;
 pub use node::enqueue_building_placed;
 pub use node::WorldSimNode;
+pub use node::{clamp_sim_speed, seconds_per_day, MAX_TICKS_PER_FRAME, TICKS_PER_SECOND_AT_1X};
 pub use reads_agent::{collect_agent_detail, AgentDetailRow, AGENT_DETAIL_DICT_KEYS};
 pub use reads_agent::{collect_relationship_snapshot, RelationshipSnapshotRow};
 pub use reads_settlement::{

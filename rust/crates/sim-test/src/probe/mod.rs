@@ -4,6 +4,7 @@ mod agent_trace;
 pub(crate) mod area_floor;
 mod args;
 pub mod chronicle_out;
+pub mod colony;
 mod deaths;
 mod deaths_observer;
 pub(crate) mod exposure_health;

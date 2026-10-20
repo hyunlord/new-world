@@ -1,5 +1,7 @@
-//! Seeded Revitalize worlds; legacy fixtures never call this module.
+//! Seeded worlds: the frozen `baseline` (V7) world and the M1 `colony` world
+//! (ADR 0014); legacy fixtures never call this module.
 mod camp;
+pub mod colony;
 mod noise;
 mod terrain;
 use sim_core::{rules::WorldRules, MaterialRegistry};
@@ -47,6 +49,25 @@ pub struct WorldGenConfig {
     /// Pass 12 (`game_v18`): a region centre candidate needs a water tile
     /// within this Chebyshev distance. None = v17 (no water rule).
     pub region_water_max: Option<u32>,
+    /// M1: the colony world's extra steps (`worldgen::colony`). None = baseline.
+    pub colony: Option<ColonyGen>,
+}
+
+/// The M1 colony world's extra worldgen inputs (goal 8.1). Counts are the
+/// baseline means scaled by area (192² / 64² = 9); see `WorldGenConfig::colony`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ColonyGen {
+    /// Bushes placed beyond the camp ring (the camp ring keeps `berry_bushes`).
+    pub outer_bushes: u32,
+    /// Deadwood spots placed beyond the camp band (the band keeps `deadwood_spots`).
+    pub outer_deadwood: u32,
+    /// Chebyshev radius around the hearth with no trees.
+    pub clearing_radius: u32,
+    /// Outermost Chebyshev distance of a wild-region centre from the hearth
+    /// (baseline: `camp::REGION_MAX_DISTANCE`, 28).
+    pub region_max_distance: u32,
+    /// Founders that must be adults (goal 8.1: 7 of 10).
+    pub min_adults: u32,
 }
 impl WorldGenConfig {
     /// The live game's generator inputs for world `seed`: one flat literal
@@ -76,6 +97,45 @@ impl WorldGenConfig {
             region_deadwood: variety.region_deadwood,
             region_fill: true,
             region_water_max: Some(12),
+            colony: None,
+        }
+    }
+
+    /// The M1 colony world for `seed` (goal 8.1, ADR 0014): 192 × 192 (a
+    /// multiple of the 32-tile geology chunk), exactly 10 founders, forest,
+    /// hill and mountain at the baseline's mean variety values (fixed, not
+    /// drawn), bushes and deadwood at the baseline means × 9 (area) — the camp
+    /// ring and band keep the baseline mean (12 bushes, 20 deadwood spots)
+    /// and the rest lies beyond them — and the baseline mean of 2 wild
+    /// regions × 9 = 18 regions of 10 bushes and 15 deadwood spots, their
+    /// centres 22–88 tiles from the hearth. Run it under `WorldRules::colony`.
+    pub const fn colony(seed: u64) -> Self {
+        Self {
+            seed,
+            width: 192,
+            height: 192,
+            starting_agents: 10,
+            berry_bushes: 12,
+            berry_capacity: 4,
+            forest_coverage: 0.3,
+            hill_coverage: 0.1,
+            mountain_coverage: 0.04,
+            deadwood_spots: 20,
+            deadwood_capacity: 6,
+            deadwood_min_radius: 5,
+            deadwood_max_radius: 18,
+            wild_regions: 18,
+            region_bushes: 10,
+            region_deadwood: 15,
+            region_fill: true,
+            region_water_max: Some(12),
+            colony: Some(ColonyGen {
+                outer_bushes: 96,
+                outer_deadwood: 160,
+                clearing_radius: 6,
+                region_max_distance: 88,
+                min_adults: 7,
+            }),
         }
     }
 
@@ -138,6 +198,10 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
     // streams, so the rest of a v17 world is identical to the v16 world.
     if cfg.wild_regions > 0 {
         camp::regions(cfg, &mut engine.resources);
+    }
+    // M1: the colony world's extra steps, last, from their own keyed streams.
+    if let Some(gen) = cfg.colony {
+        colony::generate(cfg, &gen, &mut engine);
     }
     engine
 }

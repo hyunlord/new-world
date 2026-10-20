@@ -52,6 +52,7 @@ macro_rules! scope {
     };
 }
 
+pub mod commands;
 pub mod runtime;
 #[cfg(feature = "subprofile")]
 pub mod subprofile;
@@ -313,6 +314,15 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_shelter_planning_systems(engine);
     register_rhythm_systems(engine);
     register_fire_systems(engine);
+    register_job_systems(engine);
+}
+
+/// Register the M1 job layer (`runtime::jobs`): `JobAssignSystem` (124) and
+/// `JobExecuteSystem` (127), both every tick and both no-ops without
+/// `rules.colony`.
+pub fn register_job_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::jobs::JobAssignSystem::new()));
+    engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
 }
 
 /// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60),

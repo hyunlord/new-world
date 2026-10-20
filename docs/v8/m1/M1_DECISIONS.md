@@ -84,3 +84,216 @@ Raw data lives in `/Users/rexxa/work/m1-data/` ($DATA), outside the repository.
   after Part 3 changes the time scale.
 - Reason: Part 3 rewrites the time scale anyway; one round now, one after, keeps within two rounds.
 - Evidence: `$DATA/logs/docs_q3_q7_round1.md`, `$DATA/logs/docs_fix_round1.md`.
+
+## D8 — Where the M1 data lives: `sim_core::colony` and one `SimResources::colony` field
+
+- Context: 6.1 lets the run choose one file per concern under `components/` or a new `colony/` module, and
+  lists the `SimResources` additions field by field.
+- Choice: a new module `rust/crates/sim-core/src/colony/` (`items.rs`, `orders.rs`, `command.rs`, `job.rs`)
+  holds every M1 type. The `SimResources` additions sit in one struct, `ColonyState`, stored as
+  `SimResources::colony`. It has the listed fields plus `occupied` (footprint tiles of sites and huts) and
+  `tallies` (`ColonyTallies`).
+- Reason: one place for the new world model; the V7 `Tallies` struct is serialized into probe output and
+  struct literals, and a new type avoids touching either (architecture lesson 2026-10-10).
+- Evidence: identity PASS with all of it in the tree (`$DATA/identity/p1_try1`).
+
+## D9 — `Job` carries `amount` and stuck tracking; keys depend on the stage
+
+- Context: 7.1 gives `Job { kind, stage, taken_at }`; 7.2 reserves "an in-transit amount on the site";
+  7.5 needs "no Chebyshev progress for 240 ticks"; 7.6 says every job holds exactly its keys.
+- Choice: `Job` also has `amount` (the logs it moves), `best_distance` and `progress_tick`.
+  `Job::keys()` gives the keys for the current stage:
+  - Chop: `Tree`.
+  - Haul: `Stack(from)` and `Cell(to)` until pickup, then `Cell(to)`.
+  - Deliver: `Stack(from)` until pickup, then nothing.
+  - Build: `Site`.
+
+  A site's in-transit amount is not stored. It is the sum of its `Deliver` jobs' `amount`
+  (`jobs::assign::in_transit`), so it cannot leak. `ColonyRule` gains `stuck_ticks` = 240.
+- Reason: the invariant "every job holds exactly its keys" can then be checked by comparing two sets.
+- Evidence: `rust/crates/sim-core/src/colony/job.rs`; `jobs::invariants::check`.
+
+## D10 — The decision seam
+
+- Context: 4.3 limits `decision/system.rs` to ≤ 60 added lines: keep a job through leisure and idle, cancel
+  it through `jobs/` otherwise. The decision has no single "chosen next state" point: the Idle cascade
+  writes the state in 10 places and leaves early in 6 (`$DATA/logs/decision_map.md`).
+- Choice: `decision/system.rs` gains 25 lines and changes 1 (`git diff --numstat`: `25 1`). The places:
+  - `AgentDecisionSystem::tick` before the agent loop (`let job_holders = jobs::holders(world)`, ~L832).
+  - Before `match *state` (~L1127): a holder runs as a temporary `Idle` (`jobs::hold_for_decision`).
+  - The routine (leisure) arm skips holders (~L1774): `routine.start` has side effects.
+  - The three compile-forced `TargetKind::Job` arms (~L1999, L2133, L2637).
+  - After the loop (~L2660): `jobs::settle_after_decision`.
+  - The SeekTarget post-pass keeps a job holder's target (~L2968).
+
+  `jobs::seam::settle_after_decision` keeps the job (and restores the previous state) when the decision
+  chose nothing, the meal wait, or building the colony site the worker stands on. Anything else releases
+  the job (`CancelReason::Needs`), lets the decision's choice stand and drops the job's `SeekTarget` so
+  the post-pass re-resolves the goal.
+- Reason: no decision logic is duplicated; the cascade decides, jobs/ settles. 4.3's Build case: a builder
+  in `Consuming { ConstructionSite }` on its colony site keeps its job.
+- Evidence: test `jobs_cancel_on_hunger`; identity PASS.
+
+## D11 — Colony sites are `ConstructionSite` entities that do not progress until their logs are in
+
+- Context: 6.3 spawns a `ConstructionSite` with `MaterialNeeds`; 7.3 hands a builder to the V7 flow once
+  `delivered == needed`. The V7 decision lets any agent standing on a site's tile choose "construction".
+- Choice:
+  - `ConstructionSystem` treats a colony site that is still short of logs like an absent site: it does not
+    advance, and a co-located consumer goes back to `Idle`.
+  - On completion, a colony site (`ColonySite` + `MaterialNeeds`) becomes a `BuildingKind::Hut` through
+    `register_dwelling`, the path planned shelters now share (kind, infinite sleep tile at the key tile,
+    owner). It is owned by the settlement whose formation tile is nearest. Its delivered logs move to
+    `item_ledger.consumed`, and its footprint becomes `Occupant::Hut`.
+  - Once the logs are in, any agent on the centre may help build (V7 behaviour).
+- Reason: no material, no progress; and the shelter path is reused, not copied.
+- Evidence: `jobs_deliver_and_build_hut`; `hut_sleeps_four`.
+
+## D12 — Hut beds: `BedAssignmentSystem` with per-dwelling capacity
+
+- Context: 7.7 wants four agents to get beds at the hut. `BedAssignmentSystem` ran only with
+  `shelter_planning` (off in the colony) and used one capacity for every shelter.
+- Choice: it runs when `shelter_planning` or `colony` is set. Each owned dwelling has its own capacity:
+  `residents_per_shelter` for shelters, `hut_beds` for huts. The household packing and the plain index
+  split are unchanged for equal capacities. The hut's centre sleep tile is `RESOURCE_SOURCE_INFINITE`, as
+  shelters'; under night rest a sleep tile is never consumed, so `hut_beds` is enforced by the assignment.
+- Reason: baseline behaviour is the special case of equal capacities (identity proves it).
+- Evidence: identity PASS; `hut_sleeps_four` (exactly 4 agents have `bed_of` = the hut centre).
+
+## D13 — Clobbered jobs and deaths
+
+- Context: other systems move a worker (ConstructionSystem at completion, combat, fission). A dying worker's
+  load must not vanish (7.6 ledger).
+- Choice:
+  - `JobExecuteSystem` validates each worker first. If the state is not its job's state, a builder whose
+    site is gone has finished; anyone else is released (`Interrupted`).
+  - JobAssign skips agents in `combat_pairs`.
+  - `despawn_agent` calls `jobs::on_death` first: the load drops on the worker's tile and its
+    reservations are released.
+- Reason: one validator instead of hooks in every system.
+- Evidence: `rust/crates/sim-systems/src/runtime/jobs/execute.rs` header; `jobs::cancel::on_death`.
+
+## D14 — Command details the brief left open
+
+- Rectangles: inclusive corners in any order, clipped to the map. A rectangle wholly off the map is
+  `OutOfMap`; a valid one that changes nothing is `Nothing` (so the toast can say "할 일이 없음"). The
+  bridge clips negative corners the same way (`ffi::colony::clip_rect`).
+- `AddStockpile`: each 4-connected group of new tiles is one new zone, never merged into an older zone.
+- `PlaceBlueprint` over unreserved loose logs moves them out with the 7.4 spill (a stack may never lie
+  under a site). Mountain is `Blocked`, river is `Water`.
+- `RemoveZoneArea` and `CancelArea` cancel the jobs that held the removed targets at once
+  (`CancelReason::Command`), in `AgentId` order.
+- Every rejection counts in `colony.tallies.commands_rejected` (drafting included); without the colony rule
+  every command is `NoColony`.
+- Evidence: `colony_commands.rs` (one test per reason).
+
+## D15 — Bridge reads: a version getter beside the brief's readers
+
+- Context: 6.5 lists `get_trees` and `get_colony_overlay` with a `version` and asks readers to skip work when
+  it is unchanged. ~10,000 trees per call per frame would be wasted work.
+- Choice: add `get_colony_versions() -> {trees_version, overlay_version}`. GDScript polls it every frame and
+  fetches the big readers only on change. The agent snapshot gains `jobs` (0 none, 1 chop, 2 haul,
+  3 deliver, 4 build), `carry_kinds` (-1 none, 0 log) and `carry_counts`, appended in its row order.
+  `TargetKind::Job` is target code 9 in the snapshot and in `get_agent_detail`.
+- Reason: cheap change detection without changing the brief's readers.
+- Evidence: `engine_colony_ffi.rs`; `docs/v8/bridge_api_m1.txt`.
+
+## D16 — The colony probe is its own runner
+
+- Context: 6.4 `--scene colony --commands --commands-out`; the V7 probe pipeline writes hundreds of V7
+  metrics and is what identity compares.
+- Choice: `worldsim_probe --scene colony` dispatches to `sim_test::probe::colony` (its own parser). It writes
+  `summary.json` with the U-bar measurements and no timings or paths (byte-identical between a run and its
+  replay) and `timing.json`. With `--commands-out`, each seed's applied log is written in the script's own
+  JSON form. Script entries may carry `"resolve"` (`nearest_trees`, `stockpile_east`, `south_of_hearth`);
+  the probe resolves them at their tick. `tools/v8/u_script.json` is the committed U-script template.
+- Reason: the baseline probe stays untouched (identity), and the colony gets the metrics M1 needs.
+- Evidence: probe unit test `a_recorded_command_log_replays_to_a_byte_identical_summary`.
+
+## D17 — Colony worldgen details (goal 8.1)
+
+- Map 192 × 192, exactly 10 founders, forest 30 % / hill 10 % / mountain 4 % (the baseline means, fixed).
+- Area-scaled sources: baseline mean × 9. The camp ring and band keep the baseline mean (12 bushes at
+  6–16, 20 deadwood spots at 5–18); the remainder lies beyond them. 96 bushes at ≥ 17 tiles and 160
+  deadwood spots at ≥ 19 tiles from the hearth, each from its own keyed stream. Wild regions: 2 × 9 = 18
+  asked, centres 22–88 from the hearth (baseline 22–28). The baseline's water rule (a centre within 12
+  tiles of water) keeps the centres near the river, so 11–14 are placed on seeds 0–7. A shortfall is
+  counted, never asserted, as in baseline.
+- The camp clearing: no tree within Chebyshev 6 of the hearth. Trees grow on every other Forest tile that is
+  not a bush, a deadwood spot, a water source or a building: 10,187–10,354 trees on seeds 0–7. Logs come
+  from `tree_logs_min + keyed_below(seed, STREAM_TREE_LOGS, x, y, 0, 0, 3)`.
+- The founder adult check (`worldgen::colony::ensure_adults`) needed 0 fixes on seeds 0–7. The founder age
+  range (6–40 days) lies wholly between childhood (4 days) and old age (46 days). The replacement path is
+  tested synthetically.
+- New keyed streams: `STREAM_TREE_LOGS`, `STREAM_COLONY_BUSH`, `STREAM_COLONY_WOOD`,
+  `STREAM_COLONY_FOUNDER_FIX` (`streams_are_distinct` covers them).
+- `camp::regions` now builds the "within `region_water_max` of water" test as a grid once, instead of
+  scanning every water tile per candidate. The predicate is the same (identity PASS); on 192² it was
+  ~0.5 G operations.
+- Rules (`WorldRules::colony`) = baseline + `colony = Some(ColonyRule::M1)`, `shelter_planning = None`,
+  `fission = None`, `move_interval_ticks = 3`. No other difference.
+
+## D18 — Baseline dumps: only off-valued fields added
+
+- `rust/crates/sim-core/tests/data/v7_final_rules_seed{0,1,7,42}.txt`: `colony: None` added (new field
+  `WorldRules::colony`).
+- `v7_final_worldgen_seed{0,1,7,42}.txt`: `colony: None` added (new field `WorldGenConfig::colony`).
+
+## D19 — Parts 1–3 simulation code landed together
+
+- Context: the job tests (Part 2) and the replay test (Part 1) run on the colony world (Part 3's worldgen).
+  Commands use the jobs module's spill and cancel.
+- Choice: one commit for the simulation code of Parts 1 and 2, with the colony worldgen and
+  `WorldRules::colony`. Part 3's time pacing, the switch of `build_game_engine`, the chronicle line and
+  calibration follow in their own commits.
+- Reason: every commit builds and passes; splitting would have needed non-compiling intermediates.
+
+## D20 — A latent V7 path fixed: memory's "bias-only Construction" arm is off in the colony
+
+- Context: calibration round 0 (D23) had exactly one dehydration death on each of seeds 0–7 with the U-script
+  and none without it. A trace of seed 0 (`$DATA/calib/`, a scratch test, deleted after use) showed it:
+  - agent 8 built the hut and then, standing at (91, 102), entered `Seeking { ConstructionSite }` with no
+    site anywhere (t820);
+  - it stayed there until it died of thirst (t2183).
+
+  The decision's memory flip adds a Construction arm "even when no active ECS ConstructionSite exists" if
+  the agent remembers construction, and only when `shelter_planning` is `None`. That never happens in the
+  baseline world, where planning is on, but it is always the case in the colony. Nothing ever takes an
+  agent out of a site-less `Seeking { ConstructionSite }`.
+- Choice: that arm also requires `resources.rules.colony.is_none()` (one line in `decision/system.rs`,
+  counted in the seam: `26 1` lines). Colony construction goes through jobs.
+- Reason: the colony has no V7 sites to seek; baseline is unchanged (identity PASS).
+- Evidence: round 1 (`$DATA/calib/r1_script`, `r1_noorders`): 0 deaths on seeds 0–7 with and without orders.
+
+## D21 — Identity accepts a chronicle kind vocabulary that grew at its end
+
+- Context: `HutBuilt` (8.4) is chronicle kind 22. Every chronicle file the probe writes carries the `kinds`
+  list, so a strict equality check fails although no entry changed. The testing skill already says to
+  compare chronicles by content and to require the base list to be a prefix of the candidate's (lesson
+  2026-10-18).
+- Choice: the comparison moved out of `identity.sh` into `tools/v8/compare_chronicles.py`, which allows
+  exactly that and nothing else. `test_compare_chronicles.py` covers: equal, grown at the end, a changed
+  entry fails, and a reordered or shrunk list fails.
+- Evidence: identity PASS (`$DATA/identity/p1_try2`: 64 files equal by content, 19,683 entries).
+
+## D22 — Time pacing: 12 ticks per real second at 1×, at most 8 per frame
+
+- 8.2: `FIXED_DT = 1/12 s` (`TICKS_PER_SECOND_AT_1X = 12.0`), `MAX_TICKS_PER_FRAME = 8`, speeds 1×–4× feed
+  12/24/36/48 ticks per second, a day lasts 120/60/40/30 s (`ffi::seconds_per_day`). A backlog over 8 ticks
+  is still dropped. The keys `1`–`4` set 1×–4× (`camera_controller.gd`), and `P` pauses. No simulation state
+  changes (identity PASS); ADR 0004 records the tick definition.
+
+## D23 — Calibration (8.3, seeds 0–7)
+
+- Round 0 (`$DATA/calib/r0_script`, the M1 values of 6.1, `move_interval_ticks` 3, no other change):
+  - U1 hut placed at 360, finished at 704–891;
+  - U2 all 15 trees felled by 1,456–1,749;
+  - U3 0 loose logs at day 5;
+  - 0 ledger or reservation violations, 0 stuck cancels;
+  - but 1 dehydration death on every seed (D20).
+- Round 1, after the D20 fix:
+  - with the script: U1–U3 met on 8/8, 0 deaths;
+  - without orders: 0 deaths on 8/8.
+
+  No calibration value changed. Two rounds of the allowed six were used. All seeds have 19 births and
+  29 people at day 10 (the V7 provisioned births at full food; recorded for M1.5).

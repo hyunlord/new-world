@@ -1,7 +1,7 @@
-//! BedAssignmentSystem: assigns live settlement members to beds in owned shelters, at 20:00 or when the shelters change.
+//! BedAssignmentSystem: assigns live settlement members to beds in owned shelters (and M1 huts), at 20:00 or when the shelters change.
 //!
-//! Priority: 145 · Interval: 1 tick · Gate: `WorldRules.agent.night_rest` and `WorldRules.society.shelter_planning`
-//! Reads: `Agent`, `Kin`, `Child`, `BodyHealth` (households); `SimResources.building_owner`, `building_kinds`, `settlements`, `rules.society.family`
+//! Priority: 145 · Interval: 1 tick · Gate: `WorldRules.agent.night_rest` and (`WorldRules.society.shelter_planning` or `WorldRules.colony`)
+//! Reads: `Agent`, `Kin`, `Child`, `BodyHealth` (households); `SimResources.building_owner`, `building_kinds`, `settlements`, `rules.society.family`, `rules.colony`
 //! Writes: `SimResources.bed_of`
 //! Events: none
 //!
@@ -30,13 +30,28 @@ impl RuntimeSystem for BedAssignmentSystem {
         if resources.rules.agent.night_rest.is_none() {
             return;
         }
-        let Some(rule) = resources.rules.society.shelter_planning else {
+        let planning = resources.rules.society.shelter_planning;
+        // M1: a hut sleeps `hut_beds`; a shelter `residents_per_shelter`.
+        let hut_beds = resources.rules.colony.map(|colony| colony.hut_beds);
+        if planning.is_none() && hut_beds.is_none() {
             return;
+        }
+        let capacity_of = |tile: &(u32, u32)| match resources.building_kinds.get(tile) {
+            Some(BuildingKind::Shelter) => {
+                planning.map_or(0, |rule| rule.residents_per_shelter) as usize
+            }
+            Some(BuildingKind::Hut) => hut_beds.unwrap_or(0) as usize,
+            _ => 0,
         };
         let mut shelters: Vec<_> = resources
             .building_owner
             .iter()
-            .filter(|(p, _)| resources.building_kinds.get(p) == Some(&BuildingKind::Shelter))
+            .filter(|(p, _)| {
+                matches!(
+                    resources.building_kinds.get(p),
+                    Some(BuildingKind::Shelter | BuildingKind::Hut)
+                )
+            })
             .map(|(&(x, y), &sid)| (sid, y, x))
             .collect();
         shelters.sort();
@@ -69,15 +84,16 @@ impl RuntimeSystem for BedAssignmentSystem {
                 .filter(|id| live.contains(id) && !assigned.contains_key(id))
                 .collect();
             members.sort();
+            let capacities: Vec<usize> = beds.iter().map(capacity_of).collect();
             if resources.rules.society.family.is_some() {
-                let capacity = rule.residents_per_shelter as usize;
-                if capacity == 0 {
+                if capacities.iter().all(|&c| c == 0) {
                     continue;
                 }
                 let groups = super::households::households(world, &members.into_iter().collect());
                 let (mut shelter, mut used) = (0, 0);
                 for group in groups {
-                    if used > 0 && group.len() > capacity - used {
+                    let capacity = capacities.get(shelter).copied().unwrap_or(0);
+                    if used > 0 && group.len() > capacity.saturating_sub(used) {
                         shelter += 1;
                         used = 0;
                     }
@@ -87,7 +103,7 @@ impl RuntimeSystem for BedAssignmentSystem {
                         };
                         assigned.insert(id, bed);
                         used += 1;
-                        if used == capacity {
+                        if used >= capacities.get(shelter).copied().unwrap_or(0) {
                             shelter += 1;
                             used = 0;
                         }
@@ -95,11 +111,12 @@ impl RuntimeSystem for BedAssignmentSystem {
                 }
                 continue;
             }
-            for (index, id) in members.into_iter().enumerate() {
-                let Some(bed_index) = index.checked_div(rule.residents_per_shelter as usize) else {
-                    break;
-                };
-                let Some(&bed) = beds.get(bed_index) else {
+            let mut slots = beds
+                .iter()
+                .zip(&capacities)
+                .flat_map(|(bed, &capacity)| std::iter::repeat_n(*bed, capacity));
+            for id in members {
+                let Some(bed) = slots.next() else {
                     break;
                 };
                 assigned.insert(id, bed);

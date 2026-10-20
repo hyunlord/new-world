@@ -104,6 +104,9 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
             Some(TargetKind::Agent(_)) if founding.is_some() => "founding",
             Some(TargetKind::Agent(_)) => "social",
             Some(TargetKind::Activity) => "activity",
+            // M1: a colony job; like "activity" not a schema-twelve class (the
+            // baseline never has one, so the schema stays unchanged).
+            Some(TargetKind::Job) => "job",
         };
         if let Some(i) = ACTIVITIES.iter().position(|a| *a == class) {
             counts[i] += 1;

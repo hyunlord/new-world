@@ -11,7 +11,8 @@
 # Compare: summary.json equal except timing and the git_sha label
 # (compare_summaries.py, zero one-sided paths); every JSON file the probe
 # writes to the chronicle directory (chronicle_N.json, relations_N.json) equal
-# by content except git_sha; every raw per-seed sample file (*.jsonl, which
+# by content except git_sha (compare_chronicles.py; the kinds vocabulary may
+# only grow at its end); every raw per-seed sample file (*.jsonl, which
 # holds no timing) equal line by line with the git_sha label removed
 # (raw_digest below); DETERMINISM PASS for seeds 0-3. Keys a commit removed
 # on purpose (tools/v8/identity_removed_keys.txt, each with its reason) are
@@ -82,23 +83,7 @@ compare() {
         printf '%s\n' "$out" | sed 's/^/  /' | head -60
         status=1
     fi
-    if line=$(python3 - "$base/chronicle" "$cand/chronicle" 2>&1 <<'PY'
-import json, sys
-from pathlib import Path
-ref, cand = Path(sys.argv[1]), Path(sys.argv[2])
-names = sorted(p.name for p in ref.glob('*.json'))
-if not names or names != sorted(p.name for p in cand.glob('*.json')):
-    sys.exit(f'file sets differ ({len(names)} base files)')
-entries = 0
-for name in names:
-    a, b = json.loads((ref / name).read_text()), json.loads((cand / name).read_text())
-    for key in sorted(set(a) | set(b)):
-        if key != 'git_sha' and a.get(key) != b.get(key):
-            sys.exit(f'{name}: {key} differs')
-    entries += len(a.get('entries', []))
-print(f'{len(names)} files equal by content (every field but git_sha; {entries} entries)')
-PY
-    ); then
+    if line=$(python3 "$SCRIPT_DIR/compare_chronicles.py" "$base/chronicle" "$cand/chronicle" 2>&1); then
         echo "chronicle: PASS: $line"
     else
         echo "chronicle: FAIL: $line"; status=1

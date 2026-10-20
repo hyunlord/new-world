@@ -17,6 +17,12 @@ pub mod scenes;
 pub fn baseline_engine(seed: u64) -> sim_engine::SimEngine {
     scenes::baseline_scene(seed)
 }
+
+/// The M1 colony world's engine for world `seed` (`scenes::colony_scene`):
+/// the starting point of every test that runs the colony (ADR 0014).
+pub fn colony_engine(seed: u64) -> sim_engine::SimEngine {
+    scenes::colony_scene(seed)
+}
 /// Pass 18: `worldsim_perf`'s `subprofile` block (feature `subprofile` only).
 #[cfg(feature = "subprofile")]
 pub mod subprofile_report;

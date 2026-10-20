@@ -10,6 +10,9 @@ pub enum BuildingKind {
     Shelter,
     /// Settlement food storage marker.
     Stockpile,
+    /// M1 colony hut: a 3×3 log building the player orders; sleeps
+    /// `ColonyRule::hut_beds` at its centre tile (the key in `building_kinds`).
+    Hut,
 }
 impl BuildingKind {
     /// Stable packed-snapshot code.
@@ -18,11 +21,14 @@ impl BuildingKind {
             Self::Hearth => 0,
             Self::Shelter => 1,
             Self::Stockpile => 2,
+            Self::Hut => 3,
         }
     }
 }
 /// Shared shelter blueprint identity.
 pub const SHELTER_BLUEPRINT_ID: BlueprintId = 1;
+/// M1 hut blueprint identity.
+pub const HUT_BLUEPRINT_ID: BlueprintId = 2;
 /// Construct a one-tile shelter blueprint with the world's work requirement.
 pub fn shelter_blueprint(required_progress: u32) -> BuildingBlueprint {
     BuildingBlueprint::new(SHELTER_BLUEPRINT_ID, 1, 1, required_progress)
@@ -36,9 +42,10 @@ mod tests {
             [
                 BuildingKind::Hearth.code(),
                 BuildingKind::Shelter.code(),
-                BuildingKind::Stockpile.code()
+                BuildingKind::Stockpile.code(),
+                BuildingKind::Hut.code()
             ],
-            [0, 1, 2]
+            [0, 1, 2, 3]
         );
         assert_eq!(shelter_blueprint(240), BuildingBlueprint::new(1, 1, 1, 240));
     }

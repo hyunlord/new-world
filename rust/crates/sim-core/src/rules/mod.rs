@@ -2,7 +2,9 @@
 use serde::{Deserialize, Serialize};
 
 mod baseline;
+mod colony;
 mod routine;
+pub use colony::ColonyRule;
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 
 /// Rules selected once when a world is constructed.
@@ -16,6 +18,9 @@ pub struct WorldRules {
     pub clock_offset_ticks: u64,
     /// Seasonal food regrowth; absent keeps the fixed yearly rate.
     pub seasons: Option<SeasonRule>,
+    /// M1 colony: orders, items and jobs. `None` in the baseline world.
+    #[serde(default)]
+    pub colony: Option<ColonyRule>,
 }
 /// Individual movement policy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -634,6 +639,7 @@ impl Default for WorldRules {
             },
             clock_offset_ticks: 0,
             seasons: None,
+            colony: None,
         }
     }
 }

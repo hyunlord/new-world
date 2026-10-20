@@ -77,7 +77,7 @@ pub use activity::{
 pub use agent::{Agent, AgentId};
 pub use agent_state::{AgentState, TargetKind};
 pub use body_health::{BodyHealth, DEFAULT_MAX_HP};
-pub use building_kind::{shelter_blueprint, BuildingKind, SHELTER_BLUEPRINT_ID};
+pub use building_kind::{shelter_blueprint, BuildingKind, HUT_BLUEPRINT_ID, SHELTER_BLUEPRINT_ID};
 pub use child::Child;
 pub use cold::Cold;
 pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};

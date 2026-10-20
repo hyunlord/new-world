@@ -1070,6 +1070,7 @@ fn harness_p5_beta_target_kind_has_exactly_two_variants() {
             // Revitalize Pass 5 — firewood pickup target (authorized addition).
             TargetKind::GatherWood => "gather_wood",
             TargetKind::Activity => "activity",
+            TargetKind::Job => "job",
         }
     }
     assert_eq!(discriminator(TargetKind::Food), "food");

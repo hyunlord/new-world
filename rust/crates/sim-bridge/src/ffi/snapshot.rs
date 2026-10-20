@@ -237,6 +237,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::GatherFood) => 6,
             Some(TargetKind::GatherWood) => 7,
             Some(TargetKind::Activity) => 8,
+            Some(TargetKind::Job) => 9,
         };
         let life_stage = if maybe_child.is_some() {
             1

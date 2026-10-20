@@ -134,7 +134,7 @@ Reads/writes come from each file's `//!` header.
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
 after a reset). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_v7_final.txt --minus docs/v8/bridge_api_removed.txt`
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m1.txt` (M1; V8-0 checked against `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
@@ -145,7 +145,8 @@ after a reset). The exact exported list is checked by gate step 13, currently
 | settlements | `get_settlement_snapshot`, `get_society_snapshot`, `get_settlement_relations` |
 | chronicle | `get_chronicle_since`, `get_person_chronicle`, `get_settlement_chronicle` |
 | causal "why?" | `get_tile_causal_history`, `get_tile_causal_events`, `get_event_chain`, `get_tile_detail`, `get_influence_overlay` |
-| commands | `on_building_placed` |
+| commands | `on_building_placed`; M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`, `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (each returns `{accepted, count, reason}` and is logged with the next tick, ADR 0012) |
+| colony reads (M1) | `can_place_blueprint`, `get_colony_versions` (poll), `get_trees`, `get_colony_overlay`; the agent snapshot's `jobs`, `carry_kinds`, `carry_counts` columns |
 | render kernels | `art_declump`, `art_walker_offsets` (pure layout maths for the agent renderer; no simulation state) |
 
 The god-hand methods `apply_intervention` and `get_intervention_state` were

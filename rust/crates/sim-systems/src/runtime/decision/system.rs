@@ -829,6 +829,9 @@ impl RuntimeSystem for AgentDecisionSystem {
         // The gather predicate also depends on the person's tile and catchment.
         let mut gather_memo: GatherMemo = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
+        // M1 seam (`runtime::jobs::seam`): job holders run the Idle cascade, settled after the loop.
+        let job_holders = crate::runtime::jobs::holders(world);
+        let mut job_hold: Vec<(hecs::Entity, AgentState)> = Vec::new();
         loop {
             #[cfg(feature = "subprofile")]
             let round_timer = crate::subprofile::Timer::start();
@@ -1120,6 +1123,10 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                         })
                     }
+                }
+                if crate::runtime::jobs::hold_for_decision(entity, *state, &job_holders) {
+                    job_hold.push((entity, *state));
+                    *state = AgentState::Idle;
                 }
                 match *state {
                     AgentState::Idle if founding.contains_key(&agent.id) => {
@@ -1443,6 +1450,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // Construction flip via memory bias).
                             if worker
                                 && planning.is_none()
+                                && resources.rules.colony.is_none() // M1: no V7 sites to seek
                                 && !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
                                 && memory_opt.is_some_and(|m| {
                                     m.entries.iter().any(|e| {
@@ -1764,6 +1772,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 target: TargetKind::GatherFood,
                             };
                         } else if !no_trips
+                            && !job_holders.contains(&entity)
                             && routine.as_ref().is_some_and(|routine| {
                                 routine.can_enter(
                                     agent.id,
@@ -1988,7 +1997,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         | TargetKind::Agent(_)
                                         | TargetKind::GatherFood
                                         | TargetKind::GatherWood
-                                        | TargetKind::Activity => None,
+                                        | TargetKind::Activity
+                                        | TargetKind::Job => None,
                                     };
                                     // Keep an already-critical trip: competing hunger must not
                                     // repeatedly interrupt water seeking until the agent dehydrates.
@@ -2121,6 +2131,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                         }
                         let has_resource = match target {
+                            TargetKind::Job => false,
                             TargetKind::Activity => routine
                                 .as_ref()
                                 .and_then(|routine| routine.activity(agent.id))
@@ -2624,6 +2635,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 // relationships, do not bump familiarity, do not
                                 // advance interaction_progress. β scope.
                             }
+                            TargetKind::Job => {}
                         }
                     }
                 }
@@ -2646,6 +2658,12 @@ impl RuntimeSystem for AgentDecisionSystem {
             routine_replay = Some(replay.into_iter().map(|(id, _)| id).collect());
         }
 
+        crate::runtime::jobs::settle_after_decision(
+            world,
+            resources,
+            &job_hold,
+            &mut preempt_clear_seek,
+        );
         // Pass 20: the tick's quarrels, chronicled after the decision loop.
         for entry in quarrel_entries {
             crate::runtime::chronicle_log::record(world, resources, entry);
@@ -2948,6 +2966,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         seek_clear.push(e);
                     }
                 }
+                // M1: JobAssign / JobExecute own a job holder's SeekTarget.
+                AgentState::Seeking {
+                    target: TargetKind::Job,
+                }
+                | AgentState::Consuming {
+                    target: TargetKind::Job,
+                } => {}
                 // ConstructionSite seek (co-located) / Idle / Consuming → no
                 // goal; drop any stale SeekTarget.
                 _ => {

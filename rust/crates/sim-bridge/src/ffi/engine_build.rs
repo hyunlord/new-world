@@ -118,12 +118,14 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     )
 }
 
-/// The live game's world of `seed`: `WorldGenConfig::baseline` under
-/// `WorldRules::baseline` (= `game_v26` at `v7-final-art`: temperament,
-/// routines, families and village relations). Pure (no Godot) so tests can
-/// check it; `WorldSimNode::init` and `reset_world` call it.
+/// The live game's world of `seed` (M1, ADR 0014): the colony world,
+/// `WorldGenConfig::colony` under `WorldRules::colony` (192 × 192, 10
+/// founders, orders and jobs). The frozen V7 world stays available as
+/// `build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed))`.
+/// Pure (no Godot) so tests can check it; `WorldSimNode::init` and
+/// `reset_world` call it.
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::baseline(seed), WorldRules::baseline(seed))
+    build_world_with(&WorldGenConfig::colony(seed), WorldRules::colony(seed))
 }
 
 /// P4-γ bootstrap: spawn `BOOTSTRAP_AGENT_AXIS²` agents on a deterministic
@@ -274,14 +276,16 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
-    fn live_game_is_the_baseline() {
-        // init and reset_world build the baseline; since V8-0 the stress world
-        // runs the baseline rules too (DECISIONS D10).
+    fn live_game_is_the_colony() {
+        // M1: init and reset_world build the colony world; the stress world
+        // keeps the baseline rules (V8-0 DECISIONS D10).
         let engine = super::build_game_engine(20_261_010);
         assert_eq!(
             engine.resources.rules,
-            sim_core::rules::WorldRules::baseline(20_261_010)
+            sim_core::rules::WorldRules::colony(20_261_010)
         );
+        assert_eq!(engine.resources.tile_grid.width, 192);
+        assert!(!engine.resources.colony.trees.is_empty());
         assert_eq!(
             super::build_stress_engine(1, 30).resources.rules,
             sim_core::rules::WorldRules::baseline(1)

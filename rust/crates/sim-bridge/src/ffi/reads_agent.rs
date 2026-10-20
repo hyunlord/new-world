@@ -186,6 +186,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         // Revitalize Pass 5 — firewood pickup target.
         Some(TargetKind::GatherWood) => 7,
         Some(TargetKind::Activity) => 8,
+        // M1 — a colony job (walking to or working at its tile).
+        Some(TargetKind::Job) => 9,
     };
     AgentDetailRow {
         found: true,

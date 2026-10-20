@@ -936,7 +936,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     | TargetKind::Agent(_)
                     | TargetKind::GatherFood
                     | TargetKind::GatherWood
-                    | TargetKind::Activity => {}
+                    | TargetKind::Activity
+                    | TargetKind::Job => {}
                 }
             }
         }
@@ -979,7 +980,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     | TargetKind::Agent(_)
                     | TargetKind::GatherFood
                     | TargetKind::GatherWood
-                    | TargetKind::Activity => {}
+                    | TargetKind::Activity
+                    | TargetKind::Job => {}
                 }
             }
         }
@@ -1051,7 +1053,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                         | TargetKind::Agent(_)
                         | TargetKind::GatherFood
                         | TargetKind::GatherWood
-                        | TargetKind::Activity => {}
+                        | TargetKind::Activity
+                        | TargetKind::Job => {}
                     }
                 }
             }
