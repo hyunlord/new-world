@@ -46,8 +46,8 @@
 //! Run: `cargo test -p sim-test --test harness_p4_beta_movement -- --nocapture`
 
 use sim_core::components::{Agent, Position};
-use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
 use sim_core::material::MaterialRegistry;
+use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
 use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 use sim_systems::{register_agent_systems, register_phase2_systems};
@@ -126,9 +126,11 @@ fn harness_p4_beta_one_tick_brownian_step() {
 fn harness_p4_beta_determinism_full_trajectory() {
     fn trajectory(seed: u64) -> Vec<(u32, u32)> {
         let mut e = fresh_engine();
-        let id = e
-            .world
-            .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(seed)));
+        let id = e.world.spawn((
+            Position::new(16, 16),
+            Agent { id: 0 },
+            MovementRng::new(seed),
+        ));
         let mut sys = AgentMovementSystem::new();
         let mut out = Vec::with_capacity(16);
         for _ in 0..16 {
@@ -182,9 +184,10 @@ fn harness_p4_beta_distinct_seeds_diverge() {
 fn harness_p4_beta_multi_agent_independence() {
     // Run agent A (seed 7) solo for 16 ticks → expected trajectory.
     let mut solo_engine = fresh_engine();
-    let solo = solo_engine
-        .world
-        .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(7)));
+    let solo =
+        solo_engine
+            .world
+            .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(7)));
     let mut solo_sys = AgentMovementSystem::new();
     let mut solo_traj = Vec::with_capacity(16);
     for _ in 0..16 {
@@ -213,10 +216,7 @@ fn harness_p4_beta_multi_agent_independence() {
     // Diagnostic: how many of the 16 sampled positions actually changed
     // between consecutive ticks (Brownian zero-step is allowed, so this
     // is a soft signal, not an assertion target).
-    let agents_doing_movement = solo_traj
-        .windows(2)
-        .filter(|w| w[0] != w[1])
-        .count();
+    let agents_doing_movement = solo_traj.windows(2).filter(|w| w[0] != w[1]).count();
     eprintln!(
         "[p4-beta][multi_agent_independence] agents_doing_movement={} \
          (transitions where (x,y) changed across the 16-tick solo run)",
@@ -331,12 +331,12 @@ fn harness_p4_beta_influence_sampler_still_reads_canonical_position() {
 
     // Diagnostic: how many agents observed non-zero warmth this tick
     // (here N=1 by construction, but expose it for --nocapture audits).
-    let agents_doing_movement = e
-        .world
-        .query::<(&Position, &MovementRng)>()
-        .iter()
-        .count();
-    let agents_moved = if (p_after.x, p_after.y) != (12, 12) { 1 } else { 0 };
+    let agents_doing_movement = e.world.query::<(&Position, &MovementRng)>().iter().count();
+    let agents_moved = if (p_after.x, p_after.y) != (12, 12) {
+        1
+    } else {
+        0
+    };
     eprintln!(
         "[p4-beta][sampler_coexist] agents_doing_movement={} agents_moved={} \
          warmth={} final=({},{})",
@@ -350,6 +350,12 @@ fn harness_p4_beta_influence_sampler_still_reads_canonical_position() {
         sample.warmth
     );
     // Movement system also ran (AMS@120) and must have kept the agent on-grid.
-    assert!(p_after.x < W, "agent left grid on x after one engine.tick()");
-    assert!(p_after.y < H, "agent left grid on y after one engine.tick()");
+    assert!(
+        p_after.x < W,
+        "agent left grid on x after one engine.tick()"
+    );
+    assert!(
+        p_after.y < H,
+        "agent left grid on y after one engine.tick()"
+    );
 }

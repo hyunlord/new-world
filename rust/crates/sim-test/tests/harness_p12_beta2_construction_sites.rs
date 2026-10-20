@@ -33,7 +33,12 @@ fn harness_p12_beta2_a6_collector_smoke_test_returns_matching_row() {
 
     let rows: Vec<ConstructionSnapshotRow> = collect_construction_snapshot(&world);
 
-    assert_eq!(rows.len(), 1, "A6.1: expected exactly 1 row; got {}", rows.len());
+    assert_eq!(
+        rows.len(),
+        1,
+        "A6.1: expected exactly 1 row; got {}",
+        rows.len()
+    );
     let row = rows[0];
     assert_eq!(row.x, 7, "A6.2: row.x must equal 7; got {}", row.x);
     assert_eq!(row.y, 11, "A6.3: row.y must equal 11; got {}", row.y);

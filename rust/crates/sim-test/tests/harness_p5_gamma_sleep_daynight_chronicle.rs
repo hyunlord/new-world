@@ -12,15 +12,11 @@
 //!   `cargo test -p sim-test --test harness_p5_gamma_sleep_daynight_chronicle -- --nocapture`
 
 use sim_core::causal::{CausalEvent, DecisionReason};
-use sim_core::components::{
-    Agent, AgentState, Hunger, Position, Sleep, TargetKind, Thirst,
-};
+use sim_core::components::{Agent, AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-use sim_systems::runtime::decision::{
-    AgentDecisionSystem, FATIGUE_CONSUME_AMOUNT,
-};
+use sim_systems::runtime::decision::{AgentDecisionSystem, FATIGUE_CONSUME_AMOUNT};
 use sim_systems::runtime::needs::{HungerDecaySystem, SleepDecaySystem, ThirstDecaySystem};
 
 fn fresh_engine() -> SimEngine {
@@ -103,8 +99,12 @@ fn harness_p5_gamma_target_kind_sleep_variant_exists() {
 
     // (b) serde round-trip for Seeking and Consuming variants
     let cases = [
-        AgentState::Seeking { target: TargetKind::Sleep },
-        AgentState::Consuming { target: TargetKind::Sleep },
+        AgentState::Seeking {
+            target: TargetKind::Sleep,
+        },
+        AgentState::Consuming {
+            target: TargetKind::Sleep,
+        },
     ];
     for state in cases {
         let encoded = ron::to_string(&state).unwrap();
@@ -113,10 +113,16 @@ fn harness_p5_gamma_target_kind_sleep_variant_exists() {
     }
 
     // (c) Seeking{Sleep}.suppresses_movement == true
-    assert!(AgentState::Seeking { target: TargetKind::Sleep }.suppresses_movement());
+    assert!(AgentState::Seeking {
+        target: TargetKind::Sleep
+    }
+    .suppresses_movement());
 
     // (d) Consuming{Sleep}.suppresses_movement == false
-    assert!(!AgentState::Consuming { target: TargetKind::Sleep }.suppresses_movement());
+    assert!(!AgentState::Consuming {
+        target: TargetKind::Sleep
+    }
+    .suppresses_movement());
 }
 
 // ─── Assertion 4: decision_reason_fatigue_discriminator ──────────────────
@@ -328,7 +334,12 @@ fn harness_p5_gamma_idle_to_seeking_sleep_on_fatigue_breach() {
 
     // (a) state == Seeking { Sleep }
     let state = *e.world.get::<&AgentState>(entity).unwrap();
-    assert_eq!(state, AgentState::Seeking { target: TargetKind::Sleep });
+    assert_eq!(
+        state,
+        AgentState::Seeking {
+            target: TargetKind::Sleep
+        }
+    );
 
     // (b) exactly one AgentDecision event with FatigueThresholdBreach
     let width = e.resources.tile_grid.width;
@@ -378,7 +389,12 @@ fn harness_p5_gamma_need_priority_order_locked() {
         let mut sys = AgentDecisionSystem::new();
         sys.tick(&mut e.world, &mut e.resources);
         let state = *e.world.get::<&AgentState>(entity).unwrap();
-        assert_eq!(state, AgentState::Seeking { target: TargetKind::Food });
+        assert_eq!(
+            state,
+            AgentState::Seeking {
+                target: TargetKind::Food
+            }
+        );
 
         let width = e.resources.tile_grid.width;
         let tile_idx = (3 * width + 3) as u32;
@@ -388,7 +404,11 @@ fn harness_p5_gamma_need_priority_order_locked() {
             .iter()
             .filter(|ev| matches!(ev, CausalEvent::AgentDecision { .. }))
             .collect();
-        assert_eq!(decisions.len(), 1, "exactly one AgentDecision event per tick");
+        assert_eq!(
+            decisions.len(),
+            1,
+            "exactly one AgentDecision event per tick"
+        );
         match decisions[0] {
             CausalEvent::AgentDecision { reason, .. } => {
                 assert_eq!(*reason, DecisionReason::HungerThresholdBreach);
@@ -415,7 +435,12 @@ fn harness_p5_gamma_need_priority_order_locked() {
         let mut sys = AgentDecisionSystem::new();
         sys.tick(&mut e.world, &mut e.resources);
         let state = *e.world.get::<&AgentState>(entity).unwrap();
-        assert_eq!(state, AgentState::Seeking { target: TargetKind::Water });
+        assert_eq!(
+            state,
+            AgentState::Seeking {
+                target: TargetKind::Water
+            }
+        );
 
         let width = e.resources.tile_grid.width;
         let tile_idx = (3 * width + 3) as u32;
@@ -452,7 +477,12 @@ fn harness_p5_gamma_need_priority_order_locked() {
         let mut sys = AgentDecisionSystem::new();
         sys.tick(&mut e.world, &mut e.resources);
         let state = *e.world.get::<&AgentState>(entity).unwrap();
-        assert_eq!(state, AgentState::Seeking { target: TargetKind::Sleep });
+        assert_eq!(
+            state,
+            AgentState::Seeking {
+                target: TargetKind::Sleep
+            }
+        );
 
         let width = e.resources.tile_grid.width;
         let tile_idx = (3 * width + 3) as u32;
@@ -511,7 +541,10 @@ fn harness_p5_gamma_idle_stability_below_thresholds() {
                 .count()
         })
         .unwrap_or(0);
-    assert_eq!(count, 0, "no AgentDecision events should fire below thresholds");
+    assert_eq!(
+        count, 0,
+        "no AgentDecision events should fire below thresholds"
+    );
 }
 
 // ─── Assertion 10: consuming_sleep_decrements_tile_need_and_returns_to_idle
@@ -526,7 +559,9 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
             .insert(
                 entity,
                 (
-                    AgentState::Consuming { target: TargetKind::Sleep },
+                    AgentState::Consuming {
+                        target: TargetKind::Sleep,
+                    },
                     Sleep::new(50.0, 0.0),
                 ),
             )
@@ -539,7 +574,10 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
         let s = *e.world.get::<&Sleep>(entity).unwrap();
         assert_eq!(s.fatigue, 50.0 - FATIGUE_CONSUME_AMOUNT);
         assert_eq!(s.fatigue, 20.0);
-        assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
+        assert_eq!(
+            *e.world.get::<&AgentState>(entity).unwrap(),
+            AgentState::Idle
+        );
     }
 
     // Setup 2: tile counter == 1 → removed
@@ -550,7 +588,9 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
             .insert(
                 entity,
                 (
-                    AgentState::Consuming { target: TargetKind::Sleep },
+                    AgentState::Consuming {
+                        target: TargetKind::Sleep,
+                    },
                     Sleep::new(50.0, 0.0),
                 ),
             )
@@ -562,7 +602,10 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
         assert!(!e.resources.sleep_tiles.contains_key(&(5, 5)));
         let s = *e.world.get::<&Sleep>(entity).unwrap();
         assert_eq!(s.fatigue, 20.0);
-        assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
+        assert_eq!(
+            *e.world.get::<&AgentState>(entity).unwrap(),
+            AgentState::Idle
+        );
     }
 
     // Setup 3: no tile present (conditional-mutation contract)
@@ -573,7 +616,9 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
             .insert(
                 entity,
                 (
-                    AgentState::Consuming { target: TargetKind::Sleep },
+                    AgentState::Consuming {
+                        target: TargetKind::Sleep,
+                    },
                     Sleep::new(50.0, 0.0),
                 ),
             )
@@ -582,11 +627,16 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
         let mut sys = AgentDecisionSystem::new();
         sys.tick(&mut e.world, &mut e.resources);
 
-        assert!(!e.resources.sleep_tiles.contains_key(&(5, 5)),
-            "no phantom 0-counter entry should be inserted");
+        assert!(
+            !e.resources.sleep_tiles.contains_key(&(5, 5)),
+            "no phantom 0-counter entry should be inserted"
+        );
         let s = *e.world.get::<&Sleep>(entity).unwrap();
         assert_eq!(s.fatigue, 20.0, "need decrement is unconditional");
-        assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
+        assert_eq!(
+            *e.world.get::<&AgentState>(entity).unwrap(),
+            AgentState::Idle
+        );
     }
 
     // Setup 4: underflow guard — Sleep clamped at 0
@@ -597,7 +647,9 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
             .insert(
                 entity,
                 (
-                    AgentState::Consuming { target: TargetKind::Sleep },
+                    AgentState::Consuming {
+                        target: TargetKind::Sleep,
+                    },
                     Sleep::new(10.0, 0.0),
                 ),
             )
@@ -608,7 +660,10 @@ fn harness_p5_gamma_consuming_sleep_decrements_then_idles() {
 
         let s = *e.world.get::<&Sleep>(entity).unwrap();
         assert_eq!(s.fatigue, 0.0, "underflow must clamp to 0, not negative");
-        assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
+        assert_eq!(
+            *e.world.get::<&AgentState>(entity).unwrap(),
+            AgentState::Idle
+        );
     }
 }
 
@@ -636,12 +691,16 @@ fn harness_p5_gamma_seeking_to_consuming_transition() {
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Seeking { target: TargetKind::Food }
+            AgentState::Seeking {
+                target: TargetKind::Food
+            }
         );
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Consuming { target: TargetKind::Food }
+            AgentState::Consuming {
+                target: TargetKind::Food
+            }
         );
     }
 
@@ -666,7 +725,9 @@ fn harness_p5_gamma_seeking_to_consuming_transition() {
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Consuming { target: TargetKind::Water }
+            AgentState::Consuming {
+                target: TargetKind::Water
+            }
         );
     }
 
@@ -691,7 +752,9 @@ fn harness_p5_gamma_seeking_to_consuming_transition() {
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Consuming { target: TargetKind::Sleep }
+            AgentState::Consuming {
+                target: TargetKind::Sleep
+            }
         );
     }
 }
@@ -706,7 +769,9 @@ fn harness_p5_gamma_seeking_with_no_tile_remains_seeking() {
         .insert(
             entity,
             (
-                AgentState::Seeking { target: TargetKind::Sleep },
+                AgentState::Seeking {
+                    target: TargetKind::Sleep,
+                },
                 Sleep::new(60.0, 0.0),
             ),
         )
@@ -717,7 +782,9 @@ fn harness_p5_gamma_seeking_with_no_tile_remains_seeking() {
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Seeking { target: TargetKind::Sleep }
+            AgentState::Seeking {
+                target: TargetKind::Sleep
+            }
         );
         let s = *e.world.get::<&Sleep>(entity).unwrap();
         assert_eq!(s.fatigue, 60.0, "no consume should have happened");
@@ -736,7 +803,10 @@ fn harness_p5_gamma_seeking_with_no_tile_remains_seeking() {
                 .count()
         })
         .unwrap_or(0);
-    assert_eq!(count, 0, "no AgentDecision events emitted in stalled Seeking");
+    assert_eq!(
+        count, 0,
+        "no AgentDecision events emitted in stalled Seeking"
+    );
 }
 
 // ─── Assertion 11: full_day_chronicle_visits_all_three_needs ─────────────
@@ -862,7 +932,11 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     // V7 Phase 6-α / 7-α: ConstructionSite + Agent are
                     // unreachable in the γ chronicle (no decision logic
                     // routes to either). Slice 2-2 GatherFood likewise.
-                    TargetKind::ConstructionSite | TargetKind::Agent(_) | TargetKind::GatherFood | TargetKind::GatherWood | TargetKind::Activity => {}
+                    TargetKind::ConstructionSite
+                    | TargetKind::Agent(_)
+                    | TargetKind::GatherFood
+                    | TargetKind::GatherWood
+                    | TargetKind::Activity => {}
                 }
             }
         }
@@ -901,7 +975,11 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     TargetKind::Water => count_thirst += 1,
                     TargetKind::Sleep => count_fatigue += 1,
                     // V7 Phase 6-α / 7-α: ConstructionSite + Agent unreachable in γ chronicle. Slice 2-2 GatherFood likewise.
-                    TargetKind::ConstructionSite | TargetKind::Agent(_) | TargetKind::GatherFood | TargetKind::GatherWood | TargetKind::Activity => {}
+                    TargetKind::ConstructionSite
+                    | TargetKind::Agent(_)
+                    | TargetKind::GatherFood
+                    | TargetKind::GatherWood
+                    | TargetKind::Activity => {}
                 }
             }
         }
@@ -918,13 +996,25 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
         "[P5-γ chronicle] log-ring AgentDecision events captured: {} (TILE_CAUSAL_RING_SIZE clipping expected)",
         decisions.len()
     );
-    assert!(count_hunger > 0, "hunger executed at least once (count > 0)");
-    assert!(count_thirst > 0, "thirst executed at least once (count > 0)");
-    assert!(count_fatigue > 0, "fatigue executed at least once (count > 0)");
+    assert!(
+        count_hunger > 0,
+        "hunger executed at least once (count > 0)"
+    );
+    assert!(
+        count_thirst > 0,
+        "thirst executed at least once (count > 0)"
+    );
+    assert!(
+        count_fatigue > 0,
+        "fatigue executed at least once (count > 0)"
+    );
 
     // ─── Assertion 12 part — distinct event ids + AgentState transition trace
     // (a)(b) already implied by seen_* + decisions.len() ≥ 3
-    assert!(decisions.len() >= 3, "at least 3 distinct AgentDecision events");
+    assert!(
+        decisions.len() >= 3,
+        "at least 3 distinct AgentDecision events"
+    );
 
     // (c) all event ids unique
     let mut ids: Vec<u64> = decisions.iter().map(|(id, _)| *id).collect();
@@ -943,23 +1033,42 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
     for w in state_trajectory.windows(2) {
         let prev = w[0];
         let curr = w[1];
-        if let AgentState::Seeking { target: prev_target } = prev {
-            if let AgentState::Consuming { target: curr_target } = curr {
+        if let AgentState::Seeking {
+            target: prev_target,
+        } = prev
+        {
+            if let AgentState::Consuming {
+                target: curr_target,
+            } = curr
+            {
                 if prev_target == curr_target {
                     match curr_target {
                         TargetKind::Food => consumed_food = true,
                         TargetKind::Water => consumed_water = true,
                         TargetKind::Sleep => consumed_sleep = true,
                         // V7 Phase 6-α / 7-α: ConstructionSite + Agent unreachable in γ chronicle. Slice 2-2 GatherFood likewise.
-                        TargetKind::ConstructionSite | TargetKind::Agent(_) | TargetKind::GatherFood | TargetKind::GatherWood | TargetKind::Activity => {}
+                        TargetKind::ConstructionSite
+                        | TargetKind::Agent(_)
+                        | TargetKind::GatherFood
+                        | TargetKind::GatherWood
+                        | TargetKind::Activity => {}
                     }
                 }
             }
         }
     }
-    assert!(consumed_food, "trajectory must include Seeking→Consuming{{Food}}");
-    assert!(consumed_water, "trajectory must include Seeking→Consuming{{Water}}");
-    assert!(consumed_sleep, "trajectory must include Seeking→Consuming{{Sleep}}");
+    assert!(
+        consumed_food,
+        "trajectory must include Seeking→Consuming{{Food}}"
+    );
+    assert!(
+        consumed_water,
+        "trajectory must include Seeking→Consuming{{Water}}"
+    );
+    assert!(
+        consumed_sleep,
+        "trajectory must include Seeking→Consuming{{Sleep}}"
+    );
 }
 
 // ─── Assertion 13: phase4_phase5alpha_phase5beta_regression_clean ────────
@@ -977,7 +1086,9 @@ fn harness_p5_gamma_phase4_phase5alpha_phase5beta_regression_clean() {
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Seeking { target: TargetKind::Food }
+            AgentState::Seeking {
+                target: TargetKind::Food
+            }
         );
         let width = e.resources.tile_grid.width;
         let tile_idx = (4 * width + 4) as u32;
@@ -985,10 +1096,15 @@ fn harness_p5_gamma_phase4_phase5alpha_phase5beta_regression_clean() {
         let count = log
             .as_slice()
             .iter()
-            .filter(|ev| matches!(
-                ev,
-                CausalEvent::AgentDecision { reason: DecisionReason::HungerThresholdBreach, .. }
-            ))
+            .filter(|ev| {
+                matches!(
+                    ev,
+                    CausalEvent::AgentDecision {
+                        reason: DecisionReason::HungerThresholdBreach,
+                        ..
+                    }
+                )
+            })
             .count();
         assert_eq!(count, 1, "exactly one HungerThresholdBreach for (a)");
     }
@@ -1011,7 +1127,9 @@ fn harness_p5_gamma_phase4_phase5alpha_phase5beta_regression_clean() {
         sys.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             *e.world.get::<&AgentState>(entity).unwrap(),
-            AgentState::Seeking { target: TargetKind::Water }
+            AgentState::Seeking {
+                target: TargetKind::Water
+            }
         );
         let width = e.resources.tile_grid.width;
         let tile_idx = (4 * width + 4) as u32;
@@ -1019,10 +1137,15 @@ fn harness_p5_gamma_phase4_phase5alpha_phase5beta_regression_clean() {
         let count = log
             .as_slice()
             .iter()
-            .filter(|ev| matches!(
-                ev,
-                CausalEvent::AgentDecision { reason: DecisionReason::ThirstThresholdBreach, .. }
-            ))
+            .filter(|ev| {
+                matches!(
+                    ev,
+                    CausalEvent::AgentDecision {
+                        reason: DecisionReason::ThirstThresholdBreach,
+                        ..
+                    }
+                )
+            })
             .count();
         assert_eq!(count, 1, "exactly one ThirstThresholdBreach for (b)");
     }
@@ -1034,17 +1157,15 @@ fn harness_p5_gamma_phase4_phase5alpha_phase5beta_regression_clean() {
     {
         let mut engine_a = fresh_engine_sized(16, 16);
         engine_a.register_system(Box::new(AgentMovementSystem::new()));
-        let id_a = engine_a.world.spawn((
-            Position::new(5, 5),
-            MovementRng::new(42),
-        ));
+        let id_a = engine_a
+            .world
+            .spawn((Position::new(5, 5), MovementRng::new(42)));
 
         let mut engine_b = fresh_engine_sized(16, 16);
         engine_b.register_system(Box::new(AgentMovementSystem::new()));
-        let id_b = engine_b.world.spawn((
-            Position::new(5, 5),
-            MovementRng::new(42),
-        ));
+        let id_b = engine_b
+            .world
+            .spawn((Position::new(5, 5), MovementRng::new(42)));
 
         let mut trajectory_a: Vec<(u32, u32)> = Vec::with_capacity(65);
         let mut trajectory_b: Vec<(u32, u32)> = Vec::with_capacity(65);

@@ -121,14 +121,40 @@ mod tests {
     #[test]
     fn relations_come_in_key_order_with_every_column() {
         let mut relations = SettlementRelations::default();
-        relations.pairs.insert((3, 7), RelationState { value: -320, estranged: true, base: 150 });
-        relations.pairs.insert((1, 3), RelationState { value: 340, estranged: false, base: 300 });
+        relations.pairs.insert(
+            (3, 7),
+            RelationState {
+                value: -320,
+                estranged: true,
+                base: 150,
+            },
+        );
+        relations.pairs.insert(
+            (1, 3),
+            RelationState {
+                value: 340,
+                estranged: false,
+                base: 300,
+            },
+        );
         let rows = collect_settlement_relations(&relations);
         assert_eq!(
             rows,
             vec![
-                RelationRow { a: 1, b: 3, value: 340, estranged: false, base: 300 },
-                RelationRow { a: 3, b: 7, value: -320, estranged: true, base: 150 },
+                RelationRow {
+                    a: 1,
+                    b: 3,
+                    value: 340,
+                    estranged: false,
+                    base: 300
+                },
+                RelationRow {
+                    a: 3,
+                    b: 7,
+                    value: -320,
+                    estranged: true,
+                    base: 150
+                },
             ]
         );
         assert!(collect_settlement_relations(&SettlementRelations::default()).is_empty());
@@ -137,16 +163,38 @@ mod tests {
     #[test]
     fn porters_come_by_agent_id_with_entity_bits() {
         let mut world = hecs::World::new();
-        let trip = |kind, stage| PorterTrip { from: 1, to: 2, kind, amount: 7, stage, depart_tick: 480 };
+        let trip = |kind, stage| PorterTrip {
+            from: 1,
+            to: 2,
+            kind,
+            amount: 7,
+            stage,
+            depart_tick: 480,
+        };
         let late = world.spawn((Agent { id: 9 }, trip(PorterKind::Wood, PorterStage::Return)));
-        let early = world.spawn((Agent { id: 4 }, trip(PorterKind::Food, PorterStage::Outbound)));
+        let early = world.spawn((
+            Agent { id: 4 },
+            trip(PorterKind::Food, PorterStage::Outbound),
+        ));
         world.spawn((Agent { id: 5 },));
         let rows = collect_porter_snapshot(&world);
         assert_eq!(rows.len(), 2);
-        assert_eq!((rows[0].agent_id, rows[0].entity_bits), (4, early.to_bits().get()));
-        assert_eq!((rows[1].agent_id, rows[1].entity_bits), (9, late.to_bits().get()));
-        assert_eq!((rows[0].trip.kind.as_u8(), rows[0].trip.stage.as_u8()), (0, 0));
-        assert_eq!((rows[1].trip.kind.as_u8(), rows[1].trip.stage.as_u8()), (1, 1));
+        assert_eq!(
+            (rows[0].agent_id, rows[0].entity_bits),
+            (4, early.to_bits().get())
+        );
+        assert_eq!(
+            (rows[1].agent_id, rows[1].entity_bits),
+            (9, late.to_bits().get())
+        );
+        assert_eq!(
+            (rows[0].trip.kind.as_u8(), rows[0].trip.stage.as_u8()),
+            (0, 0)
+        );
+        assert_eq!(
+            (rows[1].trip.kind.as_u8(), rows[1].trip.stage.as_u8()),
+            (1, 1)
+        );
         assert!(collect_porter_snapshot(&hecs::World::new()).is_empty());
     }
 }

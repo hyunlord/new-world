@@ -48,8 +48,8 @@
 //!   A34 : size_of::<BodyHealth>() == 16 bytes
 
 use sim_core::components::{BodyHealth, DEFAULT_MAX_HP, HOSTILITY_BUMP};
-use sim_core::components::{RelationshipKey, RelationshipState, Social};
 use sim_core::components::{Memory, MemoryArm, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
+use sim_core::components::{RelationshipKey, RelationshipState, Social};
 
 // ─── A1: DEFAULT_MAX_HP constant value ──────────────────────────────────
 #[test]
@@ -81,12 +81,28 @@ fn harness_p9_alpha_a3_new_with_max_custom_value() {
 fn harness_p9_alpha_a4_new_with_max_clamps_nonpositive_to_epsilon() {
     // Type A: spec mandates clamp to f64::EPSILON (not just any positive value).
     let zero = BodyHealth::new_with_max(0.0);
-    assert_eq!(zero.max_hp, f64::EPSILON, "new_with_max(0.0) must clamp max_hp to f64::EPSILON");
-    assert_eq!(zero.hp, f64::EPSILON, "new_with_max(0.0) must clamp hp to f64::EPSILON");
+    assert_eq!(
+        zero.max_hp,
+        f64::EPSILON,
+        "new_with_max(0.0) must clamp max_hp to f64::EPSILON"
+    );
+    assert_eq!(
+        zero.hp,
+        f64::EPSILON,
+        "new_with_max(0.0) must clamp hp to f64::EPSILON"
+    );
 
     let neg = BodyHealth::new_with_max(-5.0);
-    assert_eq!(neg.max_hp, f64::EPSILON, "new_with_max(-5.0) must clamp max_hp to f64::EPSILON");
-    assert_eq!(neg.hp, f64::EPSILON, "new_with_max(-5.0) must clamp hp to f64::EPSILON");
+    assert_eq!(
+        neg.max_hp,
+        f64::EPSILON,
+        "new_with_max(-5.0) must clamp max_hp to f64::EPSILON"
+    );
+    assert_eq!(
+        neg.hp,
+        f64::EPSILON,
+        "new_with_max(-5.0) must clamp hp to f64::EPSILON"
+    );
 }
 
 // ─── A5: apply_damage subtracts correctly ───────────────────────────────
@@ -152,13 +168,25 @@ fn harness_p9_alpha_a10_is_dead_true_at_zero() {
 fn harness_p9_alpha_a11_is_dead_false_when_alive_epsilon_boundary() {
     // Type A: spec defines alive as `hp > 0.0`. EPSILON is the critical boundary.
     let full = BodyHealth::new();
-    assert!(!full.is_dead(), "fresh BodyHealth::new() (hp=100) must be alive");
+    assert!(
+        !full.is_dead(),
+        "fresh BodyHealth::new() (hp=100) must be alive"
+    );
 
-    let half = BodyHealth { hp: 0.5, max_hp: 100.0 };
+    let half = BodyHealth {
+        hp: 0.5,
+        max_hp: 100.0,
+    };
     assert!(!half.is_dead(), "hp=0.5 must be alive");
 
-    let eps = BodyHealth { hp: f64::EPSILON, max_hp: 100.0 };
-    assert!(!eps.is_dead(), "hp == f64::EPSILON must be alive (not dead)");
+    let eps = BodyHealth {
+        hp: f64::EPSILON,
+        max_hp: 100.0,
+    };
+    assert!(
+        !eps.is_dead(),
+        "hp == f64::EPSILON must be alive (not dead)"
+    );
 }
 
 // ─── A12: BodyHealth is Copy (compile-time fact) ───────────────────────
@@ -188,10 +216,22 @@ fn harness_p9_alpha_a13_serde_round_trip() {
 #[test]
 fn harness_p9_alpha_a14_partial_eq_distinguishes_both_fields() {
     // Type A: catches a malformed Eq that ignores one field.
-    let base = BodyHealth { hp: 50.0, max_hp: 100.0 };
-    let same = BodyHealth { hp: 50.0, max_hp: 100.0 };
-    let diff_max = BodyHealth { hp: 50.0, max_hp: 80.0 };
-    let diff_hp = BodyHealth { hp: 40.0, max_hp: 100.0 };
+    let base = BodyHealth {
+        hp: 50.0,
+        max_hp: 100.0,
+    };
+    let same = BodyHealth {
+        hp: 50.0,
+        max_hp: 100.0,
+    };
+    let diff_max = BodyHealth {
+        hp: 50.0,
+        max_hp: 80.0,
+    };
+    let diff_hp = BodyHealth {
+        hp: 40.0,
+        max_hp: 100.0,
+    };
 
     assert!(base == same, "identical instances must compare equal");
     assert!(!(base == diff_max), "different max_hp must compare unequal");
@@ -221,7 +261,10 @@ fn harness_p9_alpha_a16_heal_zero_is_noop() {
 #[test]
 fn harness_p9_alpha_a17_heal_on_zero_hp_restores() {
     // Type A: pins behavior on dead agents for Phase 9-β despawn logic.
-    let mut bh = BodyHealth { hp: 0.0, max_hp: 100.0 };
+    let mut bh = BodyHealth {
+        hp: 0.0,
+        max_hp: 100.0,
+    };
     bh.heal(50.0);
     assert_eq!(bh.hp, 50.0);
 }
@@ -232,7 +275,10 @@ fn harness_p9_alpha_a18_negative_apply_damage_invariant() {
     // Type A: structural invariant hp ∈ [0, max_hp] must hold after any call.
     let mut bh = BodyHealth::new();
     bh.apply_damage(-30.0);
-    assert!(bh.hp <= bh.max_hp, "hp must remain <= max_hp after negative apply_damage");
+    assert!(
+        bh.hp <= bh.max_hp,
+        "hp must remain <= max_hp after negative apply_damage"
+    );
     assert!(bh.hp >= 0.0, "hp must remain >= 0.0");
 }
 
@@ -269,7 +315,11 @@ fn harness_p9_alpha_a22_bump_hostility_accumulates() {
     s.bump_hostility(0.1);
     s.bump_hostility(0.1);
     s.bump_hostility(0.1);
-    assert!((s.hostility - 0.3).abs() < 1e-9, "hostility should be ~0.3, got {}", s.hostility);
+    assert!(
+        (s.hostility - 0.3).abs() < 1e-9,
+        "hostility should be ~0.3, got {}",
+        s.hostility
+    );
 }
 
 // ─── A23: bump_hostility saturates at literal 1.0 ──────────────────────
@@ -330,9 +380,13 @@ fn harness_p9_alpha_a27_familiarity_semantics_preserved() {
 #[test]
 fn harness_p9_alpha_a28_relationship_serde_includes_hostility() {
     // Type A: save/load contract — both axes survive serialization.
-    let s = RelationshipState { familiarity: 0.4, hostility: 0.7 };
+    let s = RelationshipState {
+        familiarity: 0.4,
+        hostility: 0.7,
+    };
     let encoded = ron::to_string(&s).expect("serialize RelationshipState");
-    let decoded: RelationshipState = ron::from_str(&encoded).expect("deserialize RelationshipState");
+    let decoded: RelationshipState =
+        ron::from_str(&encoded).expect("deserialize RelationshipState");
     assert!((decoded.familiarity - 0.4).abs() < 1e-9);
     assert!((decoded.hostility - 0.7).abs() < 1e-9);
 }

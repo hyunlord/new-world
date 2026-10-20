@@ -41,7 +41,10 @@ fn seek_tile(engine: &SimEngine, e: hecs::Entity) -> Option<(u32, u32)> {
 }
 
 fn agent_state(engine: &SimEngine, e: hecs::Entity) -> AgentState {
-    *engine.world.get::<&AgentState>(e).expect("AgentState present")
+    *engine
+        .world
+        .get::<&AgentState>(e)
+        .expect("AgentState present")
 }
 
 fn manhattan(a: (u32, u32), b: (u32, u32)) -> i64 {
@@ -75,7 +78,9 @@ fn harness_seektarget_assigned_on_hunger_seek() {
 
     assert_eq!(
         agent_state(&e, agent),
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A1: agent must transition Idle→Seeking{{Food}}"
     );
     assert!(
@@ -101,7 +106,11 @@ fn harness_nearest_food_tile_min_distance_verified() {
     sys.tick(&mut e.world, &mut e.resources);
 
     let chosen = seek_tile(&e, agent).expect("A2: SeekTarget must be present");
-    assert_eq!(chosen, (10, 10), "A2: nearest food tile must be the hand-computed (10,10)");
+    assert_eq!(
+        chosen,
+        (10, 10),
+        "A2: nearest food tile must be the hand-computed (10,10)"
+    );
     // Independent strict-minimum check (defeats return-first cheat).
     let chosen_d = manhattan((12, 12), chosen);
     assert_eq!(
@@ -124,7 +133,12 @@ fn harness_nearest_water_tile_routing_with_confounder() {
     let mut e = engine64();
     let agent = e.spawn_agent(6, 7);
     e.world
-        .insert(agent, (AgentState::Seeking { target: TargetKind::Water },))
+        .insert(
+            agent,
+            (AgentState::Seeking {
+                target: TargetKind::Water,
+            },),
+        )
         .expect("seed agent");
     e.resources.set_water_tile(40, 40, RESOURCE_SOURCE_INFINITE);
     e.resources.set_water_tile(5, 5, RESOURCE_SOURCE_INFINITE);
@@ -135,7 +149,11 @@ fn harness_nearest_water_tile_routing_with_confounder() {
 
     let chosen = seek_tile(&e, agent).expect("A3: SeekTarget must be present");
     assert_eq!(chosen, (5, 5), "A3: nearest WATER tile must be (5,5)");
-    assert_ne!(chosen, (6, 6), "A3: must NOT pick the closer food confounder (6,6)");
+    assert_ne!(
+        chosen,
+        (6, 6),
+        "A3: must NOT pick the closer food confounder (6,6)"
+    );
     assert_eq!(
         manhattan((6, 7), chosen),
         min_manhattan_over((6, 7), &e.resources.water_tiles),
@@ -152,7 +170,12 @@ fn harness_nearest_sleep_tile_routing_with_confounder() {
     let mut e = engine64();
     let agent = e.spawn_agent(22, 18);
     e.world
-        .insert(agent, (AgentState::Seeking { target: TargetKind::Sleep },))
+        .insert(
+            agent,
+            (AgentState::Seeking {
+                target: TargetKind::Sleep,
+            },),
+        )
         .expect("seed agent");
     e.resources.set_sleep_tile(20, 20, RESOURCE_SOURCE_INFINITE);
     e.resources.set_sleep_tile(60, 4, RESOURCE_SOURCE_INFINITE);
@@ -185,7 +208,12 @@ fn harness_tie_break_xy_min_deterministic_repeated() {
         let mut e = engine64();
         let agent = e.spawn_agent(10, 10);
         e.world
-            .insert(agent, (AgentState::Seeking { target: TargetKind::Food },))
+            .insert(
+                agent,
+                (AgentState::Seeking {
+                    target: TargetKind::Food,
+                },),
+            )
             .expect("seed agent");
         e.resources.set_food_tile(8, 10, RESOURCE_SOURCE_INFINITE);
         e.resources.set_food_tile(12, 10, RESOURCE_SOURCE_INFINITE);
@@ -195,7 +223,8 @@ fn harness_tie_break_xy_min_deterministic_repeated() {
 
         let chosen = seek_tile(&e, agent).expect("A5: SeekTarget must be present");
         assert_eq!(
-            chosen, (8, 10),
+            chosen,
+            (8, 10),
             "A5: rep {rep}: equidistant tie must resolve to (x,y)-min (8,10); got {chosen:?}"
         );
     }
@@ -241,8 +270,14 @@ fn harness_cross_engine_identical_targets_nonempty() {
         !a.is_empty(),
         "A6: non-empty floor — engine_a must produce >= 1 SeekTarget"
     );
-    assert_eq!(a, b, "A6: identical seed setup must yield identical SeekTargets by id");
-    println!("[S16-α A6] cross-engine SeekTargets identical ({} entries) ✓", a.len());
+    assert_eq!(
+        a, b,
+        "A6: identical seed setup must yield identical SeekTargets by id"
+    );
+    println!(
+        "[S16-α A6] cross-engine SeekTargets identical ({} entries) ✓",
+        a.len()
+    );
 }
 
 // ─── Assertion 7: cleared when transitioning to Consuming ──────────────────
@@ -256,7 +291,9 @@ fn harness_cleared_when_no_longer_seeking_resource() {
         .insert(
             agent,
             (
-                AgentState::Seeking { target: TargetKind::Food },
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(80.0, 0.0),
                 SeekTarget::new((99, 99)), // stale goal that must disappear
             ),
@@ -269,7 +306,9 @@ fn harness_cleared_when_no_longer_seeking_resource() {
 
     assert_eq!(
         agent_state(&e, agent),
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food
+        },
         "A7: agent must reach Consuming{{Food}}"
     );
     assert!(
@@ -288,11 +327,21 @@ fn harness_no_target_for_construction_or_agent_seek() {
     let mut e = engine64();
     let a = e.spawn_agent(30, 30);
     e.world
-        .insert(a, (AgentState::Seeking { target: TargetKind::ConstructionSite },))
+        .insert(
+            a,
+            (AgentState::Seeking {
+                target: TargetKind::ConstructionSite,
+            },),
+        )
         .expect("seed agent a");
     let b = e.spawn_agent(40, 40);
     e.world
-        .insert(b, (AgentState::Seeking { target: TargetKind::Agent(999_999) },))
+        .insert(
+            b,
+            (AgentState::Seeking {
+                target: TargetKind::Agent(999_999),
+            },),
+        )
         .expect("seed agent b");
     // Resource tiles of every kind exist — yet neither must get a target.
     e.resources.set_food_tile(31, 30, RESOURCE_SOURCE_INFINITE);
@@ -305,16 +354,26 @@ fn harness_no_target_for_construction_or_agent_seek() {
     // PRECONDITION: both agents are actually in the intended Seeking variant.
     assert_eq!(
         agent_state(&e, a),
-        AgentState::Seeking { target: TargetKind::ConstructionSite },
+        AgentState::Seeking {
+            target: TargetKind::ConstructionSite
+        },
         "A8 precondition: agent a must be Seeking{{ConstructionSite}}"
     );
     assert_eq!(
         agent_state(&e, b),
-        AgentState::Seeking { target: TargetKind::Agent(999_999) },
+        AgentState::Seeking {
+            target: TargetKind::Agent(999_999)
+        },
         "A8 precondition: agent b must be Seeking{{Agent(_)}}"
     );
-    assert!(seek_tile(&e, a).is_none(), "A8: ConstructionSite seek must get NO SeekTarget");
-    assert!(seek_tile(&e, b).is_none(), "A8: Agent seek must get NO SeekTarget");
+    assert!(
+        seek_tile(&e, a).is_none(),
+        "A8: ConstructionSite seek must get NO SeekTarget"
+    );
+    assert!(
+        seek_tile(&e, b).is_none(),
+        "A8: Agent seek must get NO SeekTarget"
+    );
     println!("[S16-α A8] Construction/Agent seeks receive no resource SeekTarget ✓");
 }
 
@@ -330,7 +389,11 @@ fn harness_nearest_resource_tile_unit_direct() {
     let pos = Position::new(4, 2);
 
     let got = nearest_resource_tile(&pos, &tiles);
-    assert_eq!(got, Some((3, 3)), "A9: nearest must be the hand-computed (3,3)");
+    assert_eq!(
+        got,
+        Some((3, 3)),
+        "A9: nearest must be the hand-computed (3,3)"
+    );
     assert_eq!(
         manhattan((4, 2), got.unwrap()),
         min_manhattan_over((4, 2), &tiles),
@@ -368,18 +431,28 @@ fn harness_alpha0_substrate_preserved() {
     let nf = engine.resources.food_tiles.len();
     let nw = engine.resources.water_tiles.len();
     let ns = engine.resources.sleep_tiles.len();
-    assert!(nf >= 1 && nw >= 1 && ns >= 1, "A11: every resource map must be non-empty");
+    assert!(
+        nf >= 1 && nw >= 1 && ns >= 1,
+        "A11: every resource map must be non-empty"
+    );
     for map in [
         &engine.resources.food_tiles,
         &engine.resources.water_tiles,
         &engine.resources.sleep_tiles,
     ] {
         for ((x, y), v) in map.iter() {
-            assert_eq!(*v, RESOURCE_SOURCE_INFINITE, "A11: source ({x},{y}) must be u8::MAX");
+            assert_eq!(
+                *v, RESOURCE_SOURCE_INFINITE,
+                "A11: source ({x},{y}) must be u8::MAX"
+            );
         }
     }
     // Exact-count guard (brittle by design; relax to >= 12 if α0 grows).
-    assert_eq!(nf + nw + ns, 12, "A11: combined source-tile count must be 12 (4+4+4)");
+    assert_eq!(
+        nf + nw + ns,
+        12,
+        "A11: combined source-tile count must be 12 (4+4+4)"
+    );
     println!("[S16-α A11] bootstrap substrate intact: {nf}+{nw}+{ns}=12 sources at u8::MAX ✓");
 }
 
@@ -405,8 +478,15 @@ fn harness_idle_below_thresholds_no_target_and_fsm_intact() {
 
     let mut sys = AgentDecisionSystem::new();
     sys.tick(&mut e.world, &mut e.resources);
-    assert_eq!(agent_state(&e, calm), AgentState::Idle, "A12a: calm agent must stay Idle");
-    assert!(seek_tile(&e, calm).is_none(), "A12a: below-threshold agent gets no SeekTarget");
+    assert_eq!(
+        agent_state(&e, calm),
+        AgentState::Idle,
+        "A12a: calm agent must stay Idle"
+    );
+    assert!(
+        seek_tile(&e, calm).is_none(),
+        "A12a: below-threshold agent gets no SeekTarget"
+    );
 
     // (b) Co-located breached agent completes Idle→Seeking→Consuming and
     // ends with no SeekTarget (existing FSM unbroken by the pass).
@@ -422,7 +502,9 @@ fn harness_idle_below_thresholds_no_target_and_fsm_intact() {
     sys2.tick(&mut e2.world, &mut e2.resources);
     assert_eq!(
         agent_state(&e2, hungry),
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A12b: tick 1 must reach Seeking{{Food}}"
     );
     assert_eq!(
@@ -434,7 +516,9 @@ fn harness_idle_below_thresholds_no_target_and_fsm_intact() {
     sys2.tick(&mut e2.world, &mut e2.resources);
     assert_eq!(
         agent_state(&e2, hungry),
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food
+        },
         "A12b: tick 2 must reach Consuming{{Food}}"
     );
     assert!(
@@ -466,12 +550,18 @@ fn harness_threshold_boundary_exact_50() {
     // Y (strictly above): seeks + target.
     assert_eq!(
         agent_state(&e, y),
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A13: Y (50.001 > 50.0) must seek"
     );
     assert!(seek_tile(&e, y).is_some(), "A13: Y must carry a SeekTarget");
     // X (exactly at boundary): stays Idle, no target.
-    assert_eq!(agent_state(&e, x), AgentState::Idle, "A13: X (==50.0) must NOT seek (`>` predicate)");
+    assert_eq!(
+        agent_state(&e, x),
+        AgentState::Idle,
+        "A13: X (==50.0) must NOT seek (`>` predicate)"
+    );
     assert!(seek_tile(&e, x).is_none(), "A13: X must have no SeekTarget");
     println!("[S16-α A13] boundary `>`: X@50.0 idle, Y@50.001 seeks ✓");
 }
@@ -491,7 +581,11 @@ fn harness_multi_agent_single_tick_distinct_kinds() {
     e.world
         .insert(
             a_water,
-            (AgentState::Idle, Hunger::new(0.0, 0.0), Thirst::new(51.0, 0.0)),
+            (
+                AgentState::Idle,
+                Hunger::new(0.0, 0.0),
+                Thirst::new(51.0, 0.0),
+            ),
         )
         .expect("seed water agent");
     let a_sleep = e.spawn_agent(22, 18);
@@ -523,17 +617,39 @@ fn harness_multi_agent_single_tick_distinct_kinds() {
 
     assert_eq!(food_t, (10, 10), "A14: food agent → nearest food (10,10)");
     assert_eq!(water_t, (5, 5), "A14: water agent → nearest water (5,5)");
-    assert_eq!(sleep_t, (20, 20), "A14: sleep agent → nearest sleep (20,20)");
+    assert_eq!(
+        sleep_t,
+        (20, 20),
+        "A14: sleep agent → nearest sleep (20,20)"
+    );
 
     // Independent min over each agent's OWN-kind map (non-circular).
-    assert_eq!(manhattan((12, 12), food_t), min_manhattan_over((12, 12), &e.resources.food_tiles));
-    assert_eq!(manhattan((6, 7), water_t), min_manhattan_over((6, 7), &e.resources.water_tiles));
-    assert_eq!(manhattan((22, 18), sleep_t), min_manhattan_over((22, 18), &e.resources.sleep_tiles));
+    assert_eq!(
+        manhattan((12, 12), food_t),
+        min_manhattan_over((12, 12), &e.resources.food_tiles)
+    );
+    assert_eq!(
+        manhattan((6, 7), water_t),
+        min_manhattan_over((6, 7), &e.resources.water_tiles)
+    );
+    assert_eq!(
+        manhattan((22, 18), sleep_t),
+        min_manhattan_over((22, 18), &e.resources.sleep_tiles)
+    );
 
     // No cross-kind contamination: each chosen tile belongs to its own map.
-    assert!(e.resources.food_tiles.contains_key(&food_t), "A14: food target in food_tiles");
-    assert!(e.resources.water_tiles.contains_key(&water_t), "A14: water target in water_tiles");
-    assert!(e.resources.sleep_tiles.contains_key(&sleep_t), "A14: sleep target in sleep_tiles");
+    assert!(
+        e.resources.food_tiles.contains_key(&food_t),
+        "A14: food target in food_tiles"
+    );
+    assert!(
+        e.resources.water_tiles.contains_key(&water_t),
+        "A14: water target in water_tiles"
+    );
+    assert!(
+        e.resources.sleep_tiles.contains_key(&sleep_t),
+        "A14: sleep target in sleep_tiles"
+    );
     println!("[S16-α A14] 3 agents, 3 kinds, correct per-entity targets, zero contamination ✓");
 }
 
@@ -547,7 +663,12 @@ fn harness_seeking_with_empty_map_null_path() {
     e.world
         .insert(
             agent,
-            (AgentState::Seeking { target: TargetKind::Food }, Hunger::new(80.0, 0.0)),
+            (
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
+                Hunger::new(80.0, 0.0),
+            ),
         )
         .expect("seed agent");
     // food_tiles intentionally left EMPTY.
@@ -561,7 +682,9 @@ fn harness_seeking_with_empty_map_null_path() {
     );
     assert_eq!(
         agent_state(&e, agent),
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A15: agent must remain Seeking{{Food}} (no spurious transition)"
     );
     println!("[S16-α A15] empty food map → no target, stays Seeking{{Food}}, no panic ✓");

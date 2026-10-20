@@ -88,13 +88,24 @@ fn harness_resource_depletion_a1_amounts_maxes_present_and_aligned() {
 
     // Type A — all five arrays + rows.len() must share one length == 6.
     assert_eq!(rows.len(), 6, "A1: 3 food + 2 water + 1 sleep == 6 rows");
-    assert_eq!(amounts.len(), maxes.len(), "A1: amounts.len() == maxes.len()");
+    assert_eq!(
+        amounts.len(),
+        maxes.len(),
+        "A1: amounts.len() == maxes.len()"
+    );
     assert_eq!(maxes.len(), xs.len(), "A1: maxes.len() == xs.len()");
     assert_eq!(xs.len(), ys.len(), "A1: xs.len() == ys.len()");
     assert_eq!(ys.len(), kinds.len(), "A1: ys.len() == kinds.len()");
     assert_eq!(kinds.len(), rows.len(), "A1: kinds.len() == rows.len()");
-    assert_eq!(amounts.len(), 6, "A1: common length == seeded source count 6");
-    println!("[viz-A A1] all arrays length {} == rows.len() == 6 ✓", amounts.len());
+    assert_eq!(
+        amounts.len(),
+        6,
+        "A1: common length == seeded source count 6"
+    );
+    println!(
+        "[viz-A A1] all arrays length {} == rows.len() == 6 ✓",
+        amounts.len()
+    );
 }
 
 // ─── A2: amount + max correct for EVERY kind (cross-kind registry guard) ────
@@ -121,7 +132,10 @@ fn harness_resource_depletion_a2_amount_and_max_correct_for_every_kind() {
         .iter()
         .position(|r| r.kind == 0 && r.x == 8 && r.y == 8)
         .expect("A2: food row (8,8) present");
-    assert_eq!(rows[fi].amount, 30, "A2: food amount == food_tiles value 30");
+    assert_eq!(
+        rows[fi].amount, 30,
+        "A2: food amount == food_tiles value 30"
+    );
     assert_eq!(rows[fi].max, 45, "A2: food max == food_source_max 45");
     assert_eq!(amounts[fi], 30, "A2: amounts[food] mirrors row.amount 30");
     assert_eq!(maxes[fi], 45, "A2: maxes[food] mirrors row.max 45");
@@ -131,7 +145,10 @@ fn harness_resource_depletion_a2_amount_and_max_correct_for_every_kind() {
         .iter()
         .position(|r| r.kind == 1 && r.x == 12 && r.y == 4)
         .expect("A2: water row (12,4) present");
-    assert_eq!(rows[wi].amount, 18, "A2: water amount == water_tiles value 18");
+    assert_eq!(
+        rows[wi].amount, 18,
+        "A2: water amount == water_tiles value 18"
+    );
     assert_eq!(rows[wi].max, 40, "A2: water max == water_source_max 40");
     assert_eq!(amounts[wi], 18, "A2: amounts[water] mirrors row.amount 18");
     assert_eq!(maxes[wi], 40, "A2: maxes[water] mirrors row.max 40");
@@ -141,7 +158,10 @@ fn harness_resource_depletion_a2_amount_and_max_correct_for_every_kind() {
         .iter()
         .position(|r| r.kind == 2 && r.x == 3 && r.y == 15)
         .expect("A2: sleep row (3,15) present");
-    assert_eq!(rows[si].amount, 7, "A2: sleep amount == sleep_tiles value 7");
+    assert_eq!(
+        rows[si].amount, 7,
+        "A2: sleep amount == sleep_tiles value 7"
+    );
     assert_eq!(rows[si].max, 20, "A2: sleep max == sleep_source_max 20");
     assert_eq!(amounts[si], 7, "A2: amounts[sleep] mirrors row.amount 7");
     assert_eq!(maxes[si], 20, "A2: maxes[sleep] mirrors row.max 20");
@@ -163,18 +183,33 @@ fn harness_resource_depletion_a3_ratio_reflects_depletion() {
     res.set_food_source_max(2, 5, 45);
 
     let rows = collect_resource_snapshot(&res);
-    let full = rows.iter().find(|r| r.x == 10 && r.y == 10).expect("A3: full row");
-    let dep = rows.iter().find(|r| r.x == 2 && r.y == 5).expect("A3: depleted row");
+    let full = rows
+        .iter()
+        .find(|r| r.x == 10 && r.y == 10)
+        .expect("A3: full row");
+    let dep = rows
+        .iter()
+        .find(|r| r.x == 2 && r.y == 5)
+        .expect("A3: depleted row");
     let full_ratio = f64::from(full.amount) / f64::from(full.max);
     let dep_ratio = f64::from(dep.amount) / f64::from(dep.max);
 
     // Type A — full source ratio is exactly 1.0.
     assert_eq!(full.amount, full.max, "A3: full source amount == max");
-    assert!((full_ratio - 1.0).abs() < 1e-9, "A3: full source ratio == 1.0");
+    assert!(
+        (full_ratio - 1.0).abs() < 1e-9,
+        "A3: full source ratio == 1.0"
+    );
     // Type A — depleted source amount < max and 0 < ratio < 1 (≈ 10/45).
     assert!(dep.amount < dep.max, "A3: depleted source amount < max");
-    assert!(dep_ratio > 0.0 && dep_ratio < 1.0, "A3: 0 < depleted ratio < 1 (got {dep_ratio})");
-    assert!((dep_ratio - (10.0 / 45.0)).abs() < 1e-9, "A3: depleted ratio == 10/45");
+    assert!(
+        dep_ratio > 0.0 && dep_ratio < 1.0,
+        "A3: 0 < depleted ratio < 1 (got {dep_ratio})"
+    );
+    assert!(
+        (dep_ratio - (10.0 / 45.0)).abs() < 1e-9,
+        "A3: depleted ratio == 10/45"
+    );
     // Type A — strict ordering: depleted < full.
     assert!(dep_ratio < full_ratio, "A3: depleted_ratio < full_ratio");
     println!("[viz-A A3] full={full_ratio} depleted={dep_ratio} ordered ✓");
@@ -200,7 +235,10 @@ fn harness_resource_depletion_a4_unregistered_source_defaults_max_to_amount() {
 
     // Type A — max defaults to the live amount (255); ratio exactly 1.0.
     assert_eq!(row.amount, 255, "A4: amount is the infinite-sentinel 255");
-    assert_eq!(row.max, row.amount, "A4: unregistered source max defaults to amount");
+    assert_eq!(
+        row.max, row.amount,
+        "A4: unregistered source max defaults to amount"
+    );
     assert_eq!(row.max, 255, "A4: max == amount == 255");
     let ratio = f64::from(row.amount) / f64::from(row.max);
     assert!((ratio - 1.0).abs() < 1e-9, "A4: ratio == 1.0");
@@ -230,8 +268,16 @@ fn harness_resource_depletion_a5_xs_ys_kinds_split_contract_preserved() {
     for (i, r) in rows.iter().enumerate() {
         assert_eq!(xs[i], r.x as i32, "A5: xs[{i}] mirrors row.x");
         assert_eq!(ys[i], r.y as i32, "A5: ys[{i}] mirrors row.y");
-        assert_eq!(kinds[i], i32::from(r.kind), "A5: kinds[{i}] mirrors row.kind");
-        assert!((0..=2).contains(&kinds[i]), "A5: kind {} ∈ {{0,1,2}}", kinds[i]);
+        assert_eq!(
+            kinds[i],
+            i32::from(r.kind),
+            "A5: kinds[{i}] mirrors row.kind"
+        );
+        assert!(
+            (0..=2).contains(&kinds[i]),
+            "A5: kind {} ∈ {{0,1,2}}",
+            kinds[i]
+        );
     }
     // Type D — kinds sequence is non-decreasing (the locked α0 (kind, x, y) sort).
     for i in 1..kinds.len() {
@@ -269,7 +315,10 @@ fn harness_resource_depletion_a6_zero_amount_row_exercises_floor() {
     assert_ne!(row.max, 0, "A6: max must NOT be 0");
     assert_eq!(row.amount, 0, "A6: amount stays 0");
     let ratio = f64::from(row.amount) / f64::from(row.max);
-    assert!(ratio.is_finite(), "A6: ratio must be finite (no division by zero)");
+    assert!(
+        ratio.is_finite(),
+        "A6: ratio must be finite (no division by zero)"
+    );
     assert!((ratio - 0.0).abs() < 1e-9, "A6: ratio == 0/1 == 0.0");
     println!("[viz-A A6] sleep amount 0, max floored to 1, ratio 0.0 (no div-by-zero) ✓");
 }
@@ -287,7 +336,10 @@ fn harness_resource_depletion_a7_over_capacity_and_explicit_zero_cap_bounded() {
     res_a.set_food_tile(6, 6, 50);
     res_a.set_food_source_max(6, 6, 45);
     let rows_a = collect_resource_snapshot(&res_a);
-    let over = rows_a.iter().find(|r| r.x == 6 && r.y == 6).expect("A7a: overshoot row");
+    let over = rows_a
+        .iter()
+        .find(|r| r.x == 6 && r.y == 6)
+        .expect("A7a: overshoot row");
     assert!(
         over.amount <= over.max,
         "A7a: overshoot amount {} must be <= max {}",
@@ -295,7 +347,10 @@ fn harness_resource_depletion_a7_over_capacity_and_explicit_zero_cap_bounded() {
         over.max
     );
     let over_ratio = f64::from(over.amount) / f64::from(over.max);
-    assert!(over_ratio <= 1.0, "A7a: overshoot displayed ratio <= 1.0 (got {over_ratio})");
+    assert!(
+        over_ratio <= 1.0,
+        "A7a: overshoot displayed ratio <= 1.0 (got {over_ratio})"
+    );
 
     // (7b) EXPLICIT ZERO CAP — source_max registered as 0 (distinct from absent).
     // Direct insert because set_food_source_max(_,_,0) would REMOVE the entry;
@@ -304,8 +359,15 @@ fn harness_resource_depletion_a7_over_capacity_and_explicit_zero_cap_bounded() {
     res_b.set_food_tile(7, 7, 50);
     res_b.food_source_max.insert((7, 7), 0);
     let rows_b = collect_resource_snapshot(&res_b);
-    let zcap = rows_b.iter().find(|r| r.x == 7 && r.y == 7).expect("A7b: zero-cap row");
-    assert!(zcap.max >= 1, "A7b: explicit-0 max floored to >= 1 (got {})", zcap.max);
+    let zcap = rows_b
+        .iter()
+        .find(|r| r.x == 7 && r.y == 7)
+        .expect("A7b: zero-cap row");
+    assert!(
+        zcap.max >= 1,
+        "A7b: explicit-0 max floored to >= 1 (got {})",
+        zcap.max
+    );
     let zcap_ratio = f64::from(zcap.amount) / f64::from(zcap.max);
     assert!(
         zcap_ratio <= 1.0,
@@ -338,16 +400,28 @@ fn harness_resource_depletion_a8_multi_kind_index_lockstep_correspondence() {
         // the live counter and the registered max verbatim.
         let (live, smax) = match kind {
             0 => (
-                *res.food_tiles.get(&(x, y)).expect("A8: food tile present at identity"),
-                *res.food_source_max.get(&(x, y)).expect("A8: food source_max present"),
+                *res.food_tiles
+                    .get(&(x, y))
+                    .expect("A8: food tile present at identity"),
+                *res.food_source_max
+                    .get(&(x, y))
+                    .expect("A8: food source_max present"),
             ),
             1 => (
-                *res.water_tiles.get(&(x, y)).expect("A8: water tile present at identity"),
-                *res.water_source_max.get(&(x, y)).expect("A8: water source_max present"),
+                *res.water_tiles
+                    .get(&(x, y))
+                    .expect("A8: water tile present at identity"),
+                *res.water_source_max
+                    .get(&(x, y))
+                    .expect("A8: water source_max present"),
             ),
             2 => (
-                *res.sleep_tiles.get(&(x, y)).expect("A8: sleep tile present at identity"),
-                *res.sleep_source_max.get(&(x, y)).expect("A8: sleep source_max present"),
+                *res.sleep_tiles
+                    .get(&(x, y))
+                    .expect("A8: sleep tile present at identity"),
+                *res.sleep_source_max
+                    .get(&(x, y))
+                    .expect("A8: sleep source_max present"),
             ),
             other => panic!("A8: kind {other} ∉ {{0,1,2}} at index {i}"),
         };

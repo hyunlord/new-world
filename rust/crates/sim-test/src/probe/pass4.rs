@@ -5,9 +5,9 @@ use sim_core::components::{
 };
 use sim_engine::SimEngine;
 use sim_systems::runtime::agent::hauls_home;
-use sim_systems::runtime::settlement::firewood::in_gather_window;
 use sim_systems::runtime::decision::agent_decision::clock_in_window;
 use sim_systems::runtime::resource_regen::season_at;
+use sim_systems::runtime::settlement::firewood::in_gather_window;
 use sim_systems::runtime::settlement::food_economy::{stock_in_hand, stock_target, WINTER};
 use std::collections::BTreeMap;
 
@@ -34,8 +34,13 @@ pub(super) fn metrics(engine: &SimEngine, fixed_supply: f64) -> Value {
             }
         }
     }
-    let forage = r.rules.agent.forage.filter(|_| r.rules.society.stock_target.is_some());
-    let in_window = forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
+    let forage = r
+        .rules
+        .agent
+        .forage
+        .filter(|_| r.rules.society.stock_target.is_some());
+    let in_window =
+        forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
     let firewood = r.rules.society.firewood;
     let wood_window = in_gather_window(r);
     let mut query = engine.world.query::<(
@@ -49,26 +54,41 @@ pub(super) fn metrics(engine: &SimEngine, fixed_supply: f64) -> Value {
     )>();
     let mut rows: Vec<_> = query.iter().map(|(_, row)| row).collect();
     rows.sort_by_key(|row| row.0.id);
-    let (mut elders, mut foraging, mut hauling, mut aged, mut age_days) = (0u64, 0u64, 0u64, 0u64, 0.0);
+    let (mut elders, mut foraging, mut hauling, mut aged, mut age_days) =
+        (0u64, 0u64, 0u64, 0u64, 0.0);
     for (agent, pos, state, inventory, child, elder, life) in rows {
         elders += u64::from(elder.is_some());
         if let Some(life) = life {
             aged += 1;
-            age_days += life.age_ticks(engine.current_tick()) as f64 / r.ticks_per_day.max(1) as f64;
+            age_days +=
+                life.age_ticks(engine.current_tick()) as f64 / r.ticks_per_day.max(1) as f64;
         }
         let Some(rule) = forage else { continue };
         foraging += u64::from(matches!(
             state,
-            Some(AgentState::Seeking { target: TargetKind::GatherFood })
+            Some(AgentState::Seeking {
+                target: TargetKind::GatherFood
+            })
         ));
         let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
         // Pass 5: wood loads count as hauling under the firewood rule.
-        let wood = if firewood.is_some() { inventory.map_or(0, |inv| inv.get(ResourceKind::Wood)) } else { 0 };
+        let wood = if firewood.is_some() {
+            inventory.map_or(0, |inv| inv.get(ResourceKind::Wood))
+        } else {
+            0
+        };
         if child.is_none() && state.is_none_or(|s| *s == AgentState::Idle) {
             if let Some(&(x, y)) = homes.get(&agent.id) {
                 let distance = pos.x.abs_diff(x).max(pos.y.abs_diff(y));
-                hauling += u64::from(hauls_home(Some(&rule), firewood.as_ref(), carried, wood,
-                    in_window, wood_window, distance));
+                hauling += u64::from(hauls_home(
+                    Some(&rule),
+                    firewood.as_ref(),
+                    carried,
+                    wood,
+                    in_window,
+                    wood_window,
+                    distance,
+                ));
             }
         }
     }
@@ -91,14 +111,27 @@ mod tests {
     fn v9_world_reports_neutral_pass4_values() {
         let engine = crate::scenes::game_v9_scene(3);
         let row = metrics(&engine, 120.0);
-        for key in ["season", "day_of_season", "days_per_season", "elders", "foraging_now",
-            "hauling_now", "deaths_old_age", "forage_trips_total", "haul_deposits_total"] {
+        for key in [
+            "season",
+            "day_of_season",
+            "days_per_season",
+            "elders",
+            "foraging_now",
+            "hauling_now",
+            "deaths_old_age",
+            "forage_trips_total",
+            "haul_deposits_total",
+        ] {
             assert_eq!(row[key], 0, "{key}");
         }
         assert_eq!(row["stock_target"], 0.0);
         assert_eq!(row["mean_age_days"], 0.0);
         assert_eq!(row["food_supply_season_per_day"], 120.0);
         assert_eq!(row["food_supply_winter_per_day"], 120.0);
-        assert!(row.as_object().expect("object").values().all(|v| !v.is_null()));
+        assert!(row
+            .as_object()
+            .expect("object")
+            .values()
+            .all(|v| !v.is_null()));
     }
 }

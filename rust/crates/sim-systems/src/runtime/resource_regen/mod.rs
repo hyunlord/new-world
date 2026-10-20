@@ -136,7 +136,11 @@ fn snapshot(map: &HashMap<(u32, u32), u8>) -> Vec<((u32, u32), u8)> {
 /// Returns the regrowth discarded by the ceiling: `cur + amount - max` units
 /// when the pulse overshoots, and the whole pulse when the source is already
 /// full. Sentinel tiles discard nothing (they never regenerate).
-fn regen_channel(sources: &[((u32, u32), u8)], tiles: &mut HashMap<(u32, u32), u8>, amount: u8) -> u64 {
+fn regen_channel(
+    sources: &[((u32, u32), u8)],
+    tiles: &mut HashMap<(u32, u32), u8>,
+    amount: u8,
+) -> u64 {
     let mut lost = 0u64;
     for &(key, max) in sources {
         let cur = tiles.get(&key).copied().unwrap_or(0);
@@ -197,16 +201,22 @@ fn regen_wood_winter(resources: &mut SimResources, per_day: u32, cap: Option<u8>
     resources.wood_winter_acc += u64::from(per_day) * 1000;
     while resources.wood_winter_acc >= per_unit {
         resources.wood_winter_acc -= per_unit;
-        let below = |key: &(u32, u32), max: &u8, tiles: &std::collections::BTreeMap<(u32, u32), u8>| {
-            tiles.get(key).copied().unwrap_or(0) < cap.map_or(*max, |cap| cap.min(*max))
-        };
+        let below =
+            |key: &(u32, u32), max: &u8, tiles: &std::collections::BTreeMap<(u32, u32), u8>| {
+                tiles.get(key).copied().unwrap_or(0) < cap.map_or(*max, |cap| cap.min(*max))
+            };
         let tiles = &resources.wood_tiles;
         let after = resources.wood_winter_cursor;
         let chosen = resources
             .wood_source_max
             .iter()
             .filter(|(key, _)| after.is_none_or(|cursor| **key > cursor))
-            .chain(resources.wood_source_max.iter().filter(|(key, _)| after.is_some_and(|cursor| **key <= cursor)))
+            .chain(
+                resources
+                    .wood_source_max
+                    .iter()
+                    .filter(|(key, _)| after.is_some_and(|cursor| **key <= cursor)),
+            )
             .find(|(key, max)| below(key, max, tiles))
             .map(|(key, _)| *key);
         match chosen {
@@ -253,9 +263,16 @@ type AreaSpot = ((u32, u32), u8);
 /// with ceiling `max` instead of `min(cap, max)` (`Tallies::area_floor_placed`;
 /// a unit with no spot below its max is lost: `area_floor_lost_at_max`, also
 /// counted in `winter_wood_lost`).
-fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Option<u8>, floor_permille: u32, floor_separate: bool) {
+fn regen_wood_winter_by_area(
+    resources: &mut SimResources,
+    per_day: u32,
+    cap: Option<u8>,
+    floor_permille: u32,
+    floor_separate: bool,
+) {
     let pulses_per_day = (resources.ticks_per_day / REGEN_INTERVAL).max(1);
-    let mut spots: std::collections::BTreeMap<u8, Vec<AreaSpot>> = std::collections::BTreeMap::new();
+    let mut spots: std::collections::BTreeMap<u8, Vec<AreaSpot>> =
+        std::collections::BTreeMap::new();
     for (key, max) in &resources.wood_source_max {
         let area = resources.wood_spot_area.get(key).copied().unwrap_or(0);
         spots.entry(area).or_default().push((*key, *max));
@@ -276,7 +293,10 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
             .filter(|(_, region)| {
                 resources.settlements.values().any(|s| {
                     !s.member_agents.is_empty()
-                        && s.formation_tile.0.abs_diff(region.centre.0).max(s.formation_tile.1.abs_diff(region.centre.1))
+                        && s.formation_tile
+                            .0
+                            .abs_diff(region.centre.0)
+                            .max(s.formation_tile.1.abs_diff(region.centre.1))
                             <= SETTLED_REGION_RADIUS
                 })
             })
@@ -287,7 +307,11 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
     };
     for (area, list) in spots {
         let normal = u64::from(per_day) * 1000 * list.len() as u64;
-        let add = if settled.contains(&area) { normal.max(u64::from(per_day) * u64::from(floor_permille) * reference) } else { normal };
+        let add = if settled.contains(&area) {
+            normal.max(u64::from(per_day) * u64::from(floor_permille) * reference)
+        } else {
+            normal
+        };
         if add > normal {
             resources.wood_area_floor_acc += add - normal;
             while resources.wood_area_floor_acc >= per_unit {
@@ -296,7 +320,11 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
             }
         }
         // Pass 13: with `floor_separate` the extra accrues apart (ceiling max).
-        let (shared, separate) = if floor_separate && add > normal { (normal, add - normal) } else { (add, 0) };
+        let (shared, separate) = if floor_separate && add > normal {
+            (normal, add - normal)
+        } else {
+            (add, 0)
+        };
         let acc = resources.wood_area_acc.entry(area).or_insert(0);
         *acc += shared;
         let mut units = 0u64;
@@ -317,12 +345,22 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
             let floor_unit = unit >= units;
             let after = resources.wood_area_cursor.get(&area).copied();
             let tiles = &resources.wood_tiles;
-            let ceiling = |max: u8| if floor_unit { max } else { cap.map_or(max, |cap| cap.min(max)) };
-            let below = |key: &(u32, u32), max: &u8| tiles.get(key).copied().unwrap_or(0) < ceiling(*max);
+            let ceiling = |max: u8| {
+                if floor_unit {
+                    max
+                } else {
+                    cap.map_or(max, |cap| cap.min(max))
+                }
+            };
+            let below =
+                |key: &(u32, u32), max: &u8| tiles.get(key).copied().unwrap_or(0) < ceiling(*max);
             let chosen = list
                 .iter()
                 .filter(|(key, _)| after.is_none_or(|cursor| *key > cursor))
-                .chain(list.iter().filter(|(key, _)| after.is_some_and(|cursor| *key <= cursor)))
+                .chain(
+                    list.iter()
+                        .filter(|(key, _)| after.is_some_and(|cursor| *key <= cursor)),
+                )
                 .find(|(key, max)| below(key, max))
                 .map(|(key, _)| *key);
             match chosen {
@@ -337,7 +375,8 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
                     if floor_unit {
                         resources.tallies.area_floor_lost_at_max += 1;
                     } else {
-                        resources.tallies.winter_wood_lost_settled += u64::from(settled.contains(&area));
+                        resources.tallies.winter_wood_lost_settled +=
+                            u64::from(settled.contains(&area));
                     }
                 }
             }
@@ -388,7 +427,8 @@ impl RuntimeSystem for ResourceRegenSystem {
             // pulse buries (Pass 6).
             let snowfall = !rule.windfall_over_snow
                 || resources.current_tick < REGEN_INTERVAL
-                || season_at_tick(resources, resources.current_tick - REGEN_INTERVAL).is_none_or(|(season, _)| season != WINTER);
+                || season_at_tick(resources, resources.current_tick - REGEN_INTERVAL)
+                    .is_none_or(|(season, _)| season != WINTER);
             if winter && snowfall {
                 if let Some(cap) = rule.winter_deadwood_cap {
                     bury_wood(&mut resources.wood_tiles, cap);
@@ -398,8 +438,12 @@ impl RuntimeSystem for ResourceRegenSystem {
                 Some(per_day) => {
                     // Pass 7: a winter of drawn severity sets its own fall;
                     // Pass 8: changed day by day (`winter_fall_at`, floor 0).
-                    let per_day = crate::runtime::settlement::firewood::winter_fall_at(resources, &rule, resources.current_tick)
-                        .unwrap_or(per_day);
+                    let per_day = crate::runtime::settlement::firewood::winter_fall_at(
+                        resources,
+                        &rule,
+                        resources.current_tick,
+                    )
+                    .unwrap_or(per_day);
                     if rule.regional_wood && !resources.wood_spot_area.is_empty() {
                         regen_wood_winter_by_area(
                             resources,
@@ -418,7 +462,12 @@ impl RuntimeSystem for ResourceRegenSystem {
                     resources.wood_regen_acc %= 1000;
                     if units > 0 {
                         let cap = rule.winter_deadwood_cap.filter(|_| winter);
-                        regen_wood(&mut resources.wood_tiles, &resources.wood_source_max, u8::try_from(units).unwrap_or(u8::MAX), cap);
+                        regen_wood(
+                            &mut resources.wood_tiles,
+                            &resources.wood_source_max,
+                            u8::try_from(units).unwrap_or(u8::MAX),
+                            cap,
+                        );
                     }
                 }
             }
@@ -526,9 +575,15 @@ impl RuntimeSystem for StaleSeekTargetSystem {
             .iter()
         {
             let tiles = match state {
-                AgentState::Seeking { target: TargetKind::Food } => &resources.food_tiles,
-                AgentState::Seeking { target: TargetKind::Water } => &resources.water_tiles,
-                AgentState::Seeking { target: TargetKind::Sleep } => &resources.sleep_tiles,
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                } => &resources.food_tiles,
+                AgentState::Seeking {
+                    target: TargetKind::Water,
+                } => &resources.water_tiles,
+                AgentState::Seeking {
+                    target: TargetKind::Sleep,
+                } => &resources.sleep_tiles,
                 // ConstructionSite / Agent seeks are co-located (no resource
                 // SeekTarget); Idle / Consuming carry no resource goal.
                 _ => continue,
@@ -577,7 +632,7 @@ mod tests {
         tiles.insert((0, 0), 4u8); // full: the whole pulse is lost
         tiles.insert((1, 0), 3); // 3 + 2 overshoots by 1
         tiles.insert((3, 0), RESOURCE_SOURCE_INFINITE); // sentinel loses nothing
-        // (2, 0) is absent: regrows from zero without loss.
+                                                        // (2, 0) is absent: regrows from zero without loss.
         assert_eq!(regen_channel(&sources, &mut tiles, 2), 2 + 1);
         assert_eq!((tiles[&(0, 0)], tiles[&(1, 0)], tiles[&(2, 0)]), (4, 4, 2));
         assert_eq!(tiles[&(3, 0)], RESOURCE_SOURCE_INFINITE);
@@ -672,7 +727,9 @@ mod tests {
             .insert(
                 ent,
                 (
-                    AgentState::Seeking { target: TargetKind::Food },
+                    AgentState::Seeking {
+                        target: TargetKind::Food,
+                    },
                     SeekTarget::new((5, 5)), // points at a coord with NO food
                 ),
             )
@@ -682,9 +739,16 @@ mod tests {
         let mut sys = StaleSeekTargetSystem::new();
         sys.tick(&mut e.world, &mut e.resources);
         let seek = e.world.get::<&SeekTarget>(ent).map(|s| s.tile).ok();
-        assert_eq!(seek, Some((8, 5)), "stale target must re-route to the nearest present tile");
+        assert_eq!(
+            seek,
+            Some((8, 5)),
+            "stale target must re-route to the nearest present tile"
+        );
         assert!(
-            matches!(*e.world.get::<&AgentState>(ent).unwrap(), AgentState::Seeking { .. }),
+            matches!(
+                *e.world.get::<&AgentState>(ent).unwrap(),
+                AgentState::Seeking { .. }
+            ),
             "a re-routed agent stays Seeking"
         );
     }
@@ -697,7 +761,9 @@ mod tests {
             .insert(
                 ent,
                 (
-                    AgentState::Seeking { target: TargetKind::Food },
+                    AgentState::Seeking {
+                        target: TargetKind::Food,
+                    },
                     SeekTarget::new((5, 5)),
                 ),
             )
@@ -727,7 +793,9 @@ mod tests {
             .insert(
                 ent,
                 (
-                    AgentState::Seeking { target: TargetKind::Food },
+                    AgentState::Seeking {
+                        target: TargetKind::Food,
+                    },
                     SeekTarget::new((9, 9)),
                 ),
             )
@@ -755,7 +823,9 @@ mod tests {
             .insert(
                 ent,
                 (
-                    AgentState::Seeking { target: TargetKind::Food },
+                    AgentState::Seeking {
+                        target: TargetKind::Food,
+                    },
                     SeekTarget::new((9, 9)),
                 ),
             )

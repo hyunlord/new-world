@@ -25,8 +25,7 @@ impl MaterialBlockingCache {
     /// Build the cache by querying every material in the registry for its
     /// blocking coefficient on every channel.
     pub fn build(registry: &MaterialRegistry) -> Self {
-        let mut cache =
-            AHashMap::with_capacity(registry.count() * InfluenceChannel::COUNT);
+        let mut cache = AHashMap::with_capacity(registry.count() * InfluenceChannel::COUNT);
 
         for material_id in registry.all_ids() {
             // `get` returns `Option<&MaterialDef>`; only proceed for hits.
@@ -73,8 +72,8 @@ impl MaterialBlockingCache {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::material::{MaterialCategory, MaterialDef};
     use crate::material::properties::test_support::valid_props;
+    use crate::material::{MaterialCategory, MaterialDef};
 
     fn sample_material(name: &str) -> MaterialDef {
         MaterialDef {
@@ -99,8 +98,12 @@ mod tests {
     #[test]
     fn test_build_from_registry_populates_all_pairs() {
         let mut registry = MaterialRegistry::new();
-        registry.register(sample_material("alpha"), None).expect("reg");
-        registry.register(sample_material("beta"), None).expect("reg");
+        registry
+            .register(sample_material("alpha"), None)
+            .expect("reg");
+        registry
+            .register(sample_material("beta"), None)
+            .expect("reg");
 
         let cache = MaterialBlockingCache::build(&registry);
         // 2 materials × 8 channels = 16 entries.
@@ -118,7 +121,9 @@ mod tests {
     #[test]
     fn test_get_missing_material_returns_zero() {
         let mut registry = MaterialRegistry::new();
-        registry.register(sample_material("alpha"), None).expect("reg");
+        registry
+            .register(sample_material("alpha"), None)
+            .expect("reg");
         let cache = MaterialBlockingCache::build(&registry);
         let mid_missing = MaterialId::from_str_hash("missing");
         assert_eq!(cache.get(mid_missing, InfluenceChannel::Light), 0.0);
@@ -127,7 +132,9 @@ mod tests {
     #[test]
     fn test_light_blocking_is_one_for_solid() {
         let mut registry = MaterialRegistry::new();
-        registry.register(sample_material("granite"), None).expect("reg");
+        registry
+            .register(sample_material("granite"), None)
+            .expect("reg");
         let cache = MaterialBlockingCache::build(&registry);
         let mid = MaterialId::from_str_hash("granite");
         // Light is binary 1.0 for any solid wall material.
@@ -137,7 +144,9 @@ mod tests {
     #[test]
     fn test_danger_and_social_pass_through() {
         let mut registry = MaterialRegistry::new();
-        registry.register(sample_material("granite"), None).expect("reg");
+        registry
+            .register(sample_material("granite"), None)
+            .expect("reg");
         let cache = MaterialBlockingCache::build(&registry);
         let mid = MaterialId::from_str_hash("granite");
         // Danger and Social spread regardless of walls.

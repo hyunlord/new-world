@@ -132,7 +132,10 @@ fn harness_p14_gamma_a4_detail_agent_id_matches_snapshot() {
             detail.agent_id, row.agent_id, row.entity_bits
         );
     }
-    println!("[P14-γ A4] detail.agent_id == snapshot.agent_ids[i] for all {} agents ✓", snap.len());
+    println!(
+        "[P14-γ A4] detail.agent_id == snapshot.agent_ids[i] for all {} agents ✓",
+        snap.len()
+    );
 }
 
 #[test]
@@ -207,18 +210,9 @@ fn harness_p14_gamma_a7_detail_needs_in_saturation_range_with_clamp_floor() {
         let h = detail.hunger as f64;
         let t = detail.thirst;
         let s = detail.sleep;
-        assert!(
-            (0.0..=100.0).contains(&h),
-            "A7: hunger out of [0,100]: {h}"
-        );
-        assert!(
-            (0.0..=100.0).contains(&t),
-            "A7: thirst out of [0,100]: {t}"
-        );
-        assert!(
-            (0.0..=100.0).contains(&s),
-            "A7: sleep out of [0,100]: {s}"
-        );
+        assert!((0.0..=100.0).contains(&h), "A7: hunger out of [0,100]: {h}");
+        assert!((0.0..=100.0).contains(&t), "A7: thirst out of [0,100]: {t}");
+        assert!((0.0..=100.0).contains(&s), "A7: sleep out of [0,100]: {s}");
     }
     println!("[P14-γ A7] all needs ∈ [0,100] post-tick after 4380 ticks ✓");
 }
@@ -302,7 +296,9 @@ fn harness_p14_gamma_a10_consuming_other_implies_target_set() {
             entity,
             (
                 Position::new(7, 7),
-                AgentState::Seeking { target: TargetKind::Food },
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(80.0, 0.0),
             ),
         )
@@ -314,12 +310,17 @@ fn harness_p14_gamma_a10_consuming_other_implies_target_set() {
     let state = *engine.world.get::<&AgentState>(entity).unwrap();
     assert_eq!(
         state,
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food
+        },
         "A10 setup invariant: agent must be Consuming{{Food}} after 1 tick; got {state:?}"
     );
     let bits = entity.to_bits().get();
     let detail = collect_agent_detail(&engine.world, bits);
-    assert!(detail.found, "A10: detail.found must be true for live entity");
+    assert!(
+        detail.found,
+        "A10: detail.found must be true for live entity"
+    );
     assert_eq!(
         detail.state_tag, 3,
         "A10: state_tag must be 3 (Consuming non-Agent); got {}",
@@ -371,7 +372,15 @@ fn harness_p14_gamma_a11c_dict_key_set_is_exactly_nine() {
     // exactly `{found, agent_id, x, y, state_tag, hunger, thirst, sleep,
     // target_kind}`. No `partner_id`, `target_id`, `target_entity`, etc.
     let expected: [&str; 9] = [
-        "found", "agent_id", "x", "y", "state_tag", "hunger", "thirst", "sleep", "target_kind",
+        "found",
+        "agent_id",
+        "x",
+        "y",
+        "state_tag",
+        "hunger",
+        "thirst",
+        "sleep",
+        "target_kind",
     ];
     let actual: Vec<&str> = AGENT_DETAIL_DICT_KEYS.to_vec();
     assert_eq!(
@@ -436,12 +445,17 @@ fn harness_p14_gamma_a12_seeking_existence_and_target_constraint() {
     let state = *engine.world.get::<&AgentState>(entity).unwrap();
     assert_eq!(
         state,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A12 setup invariant: agent must be Seeking{{Food}} after 1 tick; got {state:?}"
     );
     let bits = entity.to_bits().get();
     let detail = collect_agent_detail(&engine.world, bits);
-    assert!(detail.found, "A12: detail.found must be true for live entity");
+    assert!(
+        detail.found,
+        "A12: detail.found must be true for live entity"
+    );
     assert_eq!(
         detail.state_tag, 1,
         "A12: state_tag must be 1 (Seeking); got {}",

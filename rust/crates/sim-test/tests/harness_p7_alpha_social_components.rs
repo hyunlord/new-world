@@ -303,10 +303,7 @@ fn harness_p7_alpha_a15_key_hash_eq_hashmap_dedup() {
 // ─── A16: RelationshipState::SATURATION == 1.0_f64 (bit-exact) ────────
 #[test]
 fn harness_p7_alpha_a16_relationship_state_saturation_constant() {
-    assert_eq!(
-        RelationshipState::SATURATION.to_bits(),
-        1.0_f64.to_bits()
-    );
+    assert_eq!(RelationshipState::SATURATION.to_bits(), 1.0_f64.to_bits());
 }
 
 // ─── A17: RelationshipState::new default familiarity == 0.0 ───────────
@@ -387,7 +384,10 @@ fn harness_p7_alpha_a22_relationship_state_field_set_audit() {
     let s = RelationshipState::new();
     // Destructuring forces field set; Phase 9-α legitimately adds
     // `hostility` per .harness/plans/phase9.md §3 P9α-2.
-    let RelationshipState { familiarity, hostility } = s;
+    let RelationshipState {
+        familiarity,
+        hostility,
+    } = s;
     assert_eq!(familiarity.to_bits(), 0.0_f64.to_bits());
     assert_eq!(hostility.to_bits(), 0.0_f64.to_bits());
 }
@@ -466,12 +466,10 @@ fn harness_p7_alpha_a24_target_kind_five_variants_exhaustive() {
 // docs for the full truth table.
 #[test]
 fn harness_p7_alpha_a25_agent_state_suppresses_movement_contract() {
-    assert!(
-        AgentState::Seeking {
-            target: TargetKind::Agent(42)
-        }
-        .suppresses_movement()
-    );
+    assert!(AgentState::Seeking {
+        target: TargetKind::Agent(42)
+    }
+    .suppresses_movement());
     assert!(
         AgentState::Consuming {
             target: TargetKind::Agent(42)
@@ -526,9 +524,7 @@ fn harness_p7_alpha_a27_agent_state_target_kind_serde_round_trip() {
     assert_eq!(decoded, p);
     match decoded {
         TargetKind::Agent(id) => assert_eq!(id, 42_u64),
-        other => panic!(
-            "expected TargetKind::Agent(42) after round-trip; observed {other:?}"
-        ),
+        other => panic!("expected TargetKind::Agent(42) after round-trip; observed {other:?}"),
     }
 
     // (d) Bare TargetKind::Agent(0) (boundary u64 = 0) — extra coverage.
@@ -654,19 +650,15 @@ fn harness_p7_alpha_a31_phase6_alpha_regression() {
     //   - a24_serde_target_kind_and_agent_state
 
     // Mirror of a16:
-    assert!(
-        AgentState::Seeking {
-            target: TargetKind::ConstructionSite
-        }
-        .suppresses_movement()
-    );
+    assert!(AgentState::Seeking {
+        target: TargetKind::ConstructionSite
+    }
+    .suppresses_movement());
     // Mirror of a17:
-    assert!(
-        !AgentState::Consuming {
-            target: TargetKind::ConstructionSite
-        }
-        .suppresses_movement()
-    );
+    assert!(!AgentState::Consuming {
+        target: TargetKind::ConstructionSite
+    }
+    .suppresses_movement());
     // Mirror of a18:
     assert_eq!(AgentState::Idle.target(), None);
     assert!(!AgentState::Idle.suppresses_movement());

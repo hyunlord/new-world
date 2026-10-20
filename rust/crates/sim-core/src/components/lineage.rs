@@ -22,12 +22,18 @@ pub struct Lineage {
 impl Lineage {
     /// The founder spawned `founder_index`-th by worldgen in a world of `world_seed`.
     pub const fn founder(world_seed: u64, founder_index: u32) -> Self {
-        Self { key: keyed_u64(world_seed, STREAM_FOUNDER, 0, 0, founder_index, 0), births: 0 }
+        Self {
+            key: keyed_u64(world_seed, STREAM_FOUNDER, 0, 0, founder_index, 0),
+            births: 0,
+        }
     }
 
     /// The next child of this (first) parent; advances `births`.
     pub fn child(&mut self, world_seed: u64) -> Self {
-        let child = Self { key: keyed_u64(world_seed, STREAM_NEWBORN, self.key, 0, self.births, 0), births: 0 };
+        let child = Self {
+            key: keyed_u64(world_seed, STREAM_NEWBORN, self.key, 0, self.births, 0),
+            births: 0,
+        };
         self.births += 1;
         child
     }

@@ -94,7 +94,13 @@ pub(super) fn observe(trace: &mut FamilyTracer, engine: &SimEngine, event: Famil
             let adult_elder: Vec<[AgentId; 2]> = couples
                 .iter()
                 .filter(|pair| elders.contains(&pair[0]) != elders.contains(&pair[1]))
-                .map(|pair| if elders.contains(&pair[0]) { [pair[1], pair[0]] } else { *pair })
+                .map(|pair| {
+                    if elders.contains(&pair[0]) {
+                        [pair[1], pair[0]]
+                    } else {
+                        *pair
+                    }
+                })
                 .collect();
             let split_pairs: Vec<Value> = adult_elder
                 .iter()

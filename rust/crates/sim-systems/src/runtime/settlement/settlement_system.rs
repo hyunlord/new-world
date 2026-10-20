@@ -63,10 +63,10 @@ use std::collections::{HashMap, HashSet};
 use hecs::World;
 use sim_core::causal::event::{CausalEvent, DecisionReason, DissolutionCause, EventId};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, BuildingId, BuildingKind, Hunger, Inventory, Memory, Position,
-    ResourceKind,
-    Settlement, SettlementId, Sleep, Social, Thirst, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
-    SETTLEMENT_FORMATION_BUILDING_THRESHOLD, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
+    Agent, AgentId, AgentState, BodyHealth, BuildingId, BuildingKind, Hunger, Inventory, Memory,
+    Position, ResourceKind, Settlement, SettlementId, Sleep, Social, Thirst,
+    SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_FORMATION_BUILDING_THRESHOLD,
+    SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::BirthRule;
 use sim_engine::{RuntimeSystem, SimResources};
@@ -190,9 +190,7 @@ impl SettlementSystem {
     /// the last non-zero value (plan A4).
     fn snapshot_pre_clearing_population(&mut self, resources: &SimResources) {
         for (sid, settlement) in resources.settlements.iter() {
-            if settlement.population_stats.current > 0
-                && !settlement.member_buildings.is_empty()
-            {
+            if settlement.population_stats.current > 0 && !settlement.member_buildings.is_empty() {
                 self.last_known_population
                     .insert(*sid, settlement.population_stats.current);
                 if let Some(min_member) = settlement.member_agents.iter().min().copied() {
@@ -262,15 +260,18 @@ impl SettlementSystem {
         buildings: &[BuildingPos],
         admitted: &mut Vec<(AgentId, SettlementId)>,
     ) {
-        let live_building_ids: HashSet<BuildingId> =
-            buildings.iter().map(|(id, _)| *id).collect();
+        let live_building_ids: HashSet<BuildingId> = buildings.iter().map(|(id, _)| *id).collect();
         let cap = SETTLEMENT_MAX_POP as usize;
         // Pass 11 (`game_v17`, under `FissionRule`): membership is sticky — the
         // proximity sync admits only agents that belong to no settlement, so a
         // member foraging near another village's hearth stays home (Part 0
         // audit g8). Without the rule the set is empty and nothing changes.
         let settled: HashSet<AgentId> = if resources.rules.society.fission.is_some() {
-            resources.settlements.values().flat_map(|s| s.member_agents.iter().copied()).collect()
+            resources
+                .settlements
+                .values()
+                .flat_map(|s| s.member_agents.iter().copied())
+                .collect()
         } else {
             HashSet::new()
         };
@@ -343,14 +344,12 @@ impl SettlementSystem {
         removed: &mut Vec<(AgentId, SettlementId)>,
     ) {
         // Build agent → rosters map in sorted (settlement, member) order.
-        let mut settlement_ids: Vec<SettlementId> =
-            resources.settlements.keys().copied().collect();
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         settlement_ids.sort_unstable();
         let mut memberships: HashMap<AgentId, Vec<SettlementId>> = HashMap::new();
         for sid in &settlement_ids {
             if let Some(settlement) = resources.settlements.get(sid) {
-                let mut members: Vec<AgentId> =
-                    settlement.member_agents.iter().copied().collect();
+                let mut members: Vec<AgentId> = settlement.member_agents.iter().copied().collect();
                 members.sort_unstable();
                 for aid in members {
                     memberships.entry(aid).or_default().push(*sid);
@@ -425,18 +424,24 @@ impl SettlementSystem {
         candidate_tiles.sort();
         candidate_tiles.dedup();
         if resources.rules.society.shelter_planning.is_some()
-            || resources.rules.society.settlement_anchor == sim_core::rules::SettlementAnchor::Hearth
+            || resources.rules.society.settlement_anchor
+                == sim_core::rules::SettlementAnchor::Hearth
         {
             // Generated camps form around their real Hearth, so movement before
             // formation cannot anchor the village on its westernmost resident.
             // Default rules retain the exact legacy candidate sequence above.
-            let mut hearths: Vec<_> = buildings.iter().filter_map(|(_, position)| {
-                (resources.building_kinds.get(position) == Some(&BuildingKind::Hearth))
-                    .then_some(*position)
-            }).collect();
+            let mut hearths: Vec<_> = buildings
+                .iter()
+                .filter_map(|(_, position)| {
+                    (resources.building_kinds.get(position) == Some(&BuildingKind::Hearth))
+                        .then_some(*position)
+                })
+                .collect();
             hearths.sort_by_key(|&(x, y)| (y, x));
             hearths.dedup();
-            if resources.rules.society.settlement_anchor == sim_core::rules::SettlementAnchor::AnyCluster {
+            if resources.rules.society.settlement_anchor
+                == sim_core::rules::SettlementAnchor::AnyCluster
+            {
                 candidate_tiles.retain(|position| !hearths.contains(position));
                 hearths.extend(candidate_tiles);
             }
@@ -478,7 +483,11 @@ impl SettlementSystem {
             // Pass 13 (`game_v19`): the hidden fission threshold, a world draw
             // keyed by the new id and its splits so far (none for a fresh id).
             if let Some(pressure) = resources.rules.society.fission.and_then(|f| f.pressure) {
-                let k = resources.fission_log.iter().filter(|r| r.parent == new_id).count() as u32;
+                let k = resources
+                    .fission_log
+                    .iter()
+                    .filter(|r| r.parent == new_id)
+                    .count() as u32;
                 settlement.fission_threshold = sim_core::fission_threshold::fission_threshold(
                     pressure.threshold_table,
                     resources.world_seed,
@@ -528,9 +537,7 @@ impl SettlementSystem {
             self.formation_tiles.insert(new_id, candidate);
             self.formation_event_ids.insert(new_id, formed_id);
             self.birth_last_tick.insert(new_id, tick);
-            if settlement.population_stats.current > 0
-                && !settlement.member_buildings.is_empty()
-            {
+            if settlement.population_stats.current > 0 && !settlement.member_buildings.is_empty() {
                 self.last_known_population
                     .insert(new_id, settlement.population_stats.current);
                 if let Some(m) = settlement.member_agents.iter().min().copied() {
@@ -540,8 +547,11 @@ impl SettlementSystem {
                     self.last_known_building_id.insert(new_id, b);
                 }
             }
-            if resources.rules.society.shelter_planning.is_some_and(|rule|
-                rule.housing == sim_core::rules::HousingCount::Owned)
+            if resources
+                .rules
+                .society
+                .shelter_planning
+                .is_some_and(|rule| rule.housing == sim_core::rules::HousingCount::Owned)
             {
                 for tile in resources.building_kinds.keys() {
                     if chebyshev(*tile, candidate) <= SETTLEMENT_PROXIMITY_RADIUS + 3 {
@@ -757,10 +767,16 @@ impl SettlementSystem {
             .map(|(_, (agent, _))| agent.id)
             .collect();
         let mut handled: BTreeSet<AgentId> = BTreeSet::new();
-        let mut formed: Vec<SettlementId> = self.newly_formed_this_tick.iter().map(|(sid, _)| *sid).collect();
+        let mut formed: Vec<SettlementId> = self
+            .newly_formed_this_tick
+            .iter()
+            .map(|(sid, _)| *sid)
+            .collect();
         formed.sort_unstable();
         for sid in formed {
-            let Some(settlement) = resources.settlements.get(&sid) else { continue };
+            let Some(settlement) = resources.settlements.get(&sid) else {
+                continue;
+            };
             let mut members: Vec<AgentId> = settlement.member_agents.iter().copied().collect();
             members.sort_unstable();
             let daughter = members.iter().any(|id| founding.contains(id));
@@ -791,7 +807,11 @@ impl SettlementSystem {
                 } else {
                     ChronicleEntry::new(tick, ChronicleKind::FoundingMember)
                 };
-                crate::runtime::chronicle_log::record(world, resources, entry.subject(id).settlement(Some(sid)));
+                crate::runtime::chronicle_log::record(
+                    world,
+                    resources,
+                    entry.subject(id).settlement(Some(sid)),
+                );
             }
         }
         let changed: BTreeSet<AgentId> = joins.keys().chain(leaves.keys()).copied().collect();
@@ -840,8 +860,7 @@ impl SettlementSystem {
         tick: u64,
     ) {
         let mut births: Vec<(SettlementId, (u32, u32))> = Vec::new();
-        let mut settlement_ids: Vec<SettlementId> =
-            resources.settlements.keys().copied().collect();
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         settlement_ids.sort();
         for sid in settlement_ids {
             let last_birth = match self.birth_last_tick.get(&sid).copied() {
@@ -863,20 +882,36 @@ impl SettlementSystem {
                 continue;
             }
             if let BirthRule::Provisioned {
-                food_cost, max_mean_hunger, max_mean_thirst, sustain, ..
-            } = resources.rules.society.birth {
-                let capacity = resources.rules.society.shelter_planning.map_or(
-                    SETTLEMENT_MAX_POP,
-                    |rule| super::housing_capacity(resources, sid, &rule),
-                );
+                food_cost,
+                max_mean_hunger,
+                max_mean_thirst,
+                sustain,
+                ..
+            } = resources.rules.society.birth
+            {
+                let capacity = resources
+                    .rules
+                    .society
+                    .shelter_planning
+                    .map_or(SETTLEMENT_MAX_POP, |rule| {
+                        super::housing_capacity(resources, sid, &rule)
+                    });
                 if settlement.member_agents.len() as u32 >= capacity
-                    || settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) < food_cost
+                    || settlement
+                        .stockpile
+                        .get(&ResourceKind::Food)
+                        .copied()
+                        .unwrap_or(0)
+                        < food_cost
                 {
                     continue;
                 }
-                let mut members: Vec<_> = world.query::<(&Agent, &Hunger, &Thirst)>()
-                    .iter().filter(|(_, (agent, _, _))| settlement.member_agents.contains(&agent.id))
-                    .map(|(_, (agent, hunger, thirst))| (agent.id, hunger.value, thirst.value)).collect();
+                let mut members: Vec<_> = world
+                    .query::<(&Agent, &Hunger, &Thirst)>()
+                    .iter()
+                    .filter(|(_, (agent, _, _))| settlement.member_agents.contains(&agent.id))
+                    .map(|(_, (agent, hunger, thirst))| (agent.id, hunger.value, thirst.value))
+                    .collect();
                 members.sort_by_key(|(id, _, _)| *id);
                 if members.is_empty() {
                     continue;
@@ -891,13 +926,20 @@ impl SettlementSystem {
                     // Pass 4: with seasons the gate plans against the annual mean
                     // (identical to the fixed supply without seasons).
                     let supply = super::food_economy::annual_mean_supply(
-                        resources, sid, sustain.forage_radius,
+                        resources,
+                        sid,
+                        sustain.forage_radius,
                     );
-                    let adult_need = super::food_economy::adult_need_per_day(resources.ticks_per_day);
+                    let adult_need =
+                        super::food_economy::adult_need_per_day(resources.ticks_per_day);
                     let future_need = (settlement.member_agents.len() as f64 + 1.0) * adult_need;
                     let reserve = sustain.reserve_days
                         * super::food_economy::members_need_per_day(world, resources, sid);
-                    let stock = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
+                    let stock = settlement
+                        .stockpile
+                        .get(&ResourceKind::Food)
+                        .copied()
+                        .unwrap_or(0);
                     if future_need > sustain.utilization * supply
                         || f64::from(stock) < f64::from(food_cost) + reserve
                     {
@@ -934,13 +976,12 @@ impl SettlementSystem {
                 vec![mother, father]
             } else {
                 match resources.settlements.get(&sid) {
-                Some(s) => {
-                    let mut members: Vec<AgentId> =
-                        s.member_agents.iter().copied().collect();
-                    members.sort();
-                    members.into_iter().take(2).collect()
-                }
-                None => Vec::new(),
+                    Some(s) => {
+                        let mut members: Vec<AgentId> = s.member_agents.iter().copied().collect();
+                        members.sort();
+                        members.into_iter().take(2).collect()
+                    }
+                    None => Vec::new(),
                 }
             };
 
@@ -951,14 +992,20 @@ impl SettlementSystem {
             // settlement and tick of the birth.
             let lineage = resources.rules.agent.keyed_draws.then(|| {
                 let parent = parent_ids.first().and_then(|first| {
-                    world.query_mut::<(&Agent, &mut sim_core::components::Lineage)>()
+                    world
+                        .query_mut::<(&Agent, &mut sim_core::components::Lineage)>()
                         .into_iter()
                         .find(|(_, (agent, _))| agent.id == *first)
                         .map(|(_, (_, lineage))| lineage.child(resources.world_seed))
                 });
                 parent.unwrap_or(sim_core::components::Lineage {
                     key: sim_core::rng::keyed_u64(
-                        resources.world_seed, sim_core::rng::STREAM_NEWBORN, u64::from(sid), tick, u32::MAX, 0,
+                        resources.world_seed,
+                        sim_core::rng::STREAM_NEWBORN,
+                        u64::from(sid),
+                        tick,
+                        u32::MAX,
+                        0,
                     ),
                     births: 0,
                 })
@@ -972,7 +1019,10 @@ impl SettlementSystem {
             let parent_temperaments: [Option<sim_core::components::Temperament>; 2] =
                 if resources.rules.agent.temperament.is_some() && lineage.is_some() {
                     let mut found = [None; 2];
-                    for (_, (agent, temperament)) in world.query::<(&Agent, &sim_core::components::Temperament)>().iter() {
+                    for (_, (agent, temperament)) in world
+                        .query::<(&Agent, &sim_core::components::Temperament)>()
+                        .iter()
+                    {
                         for (slot, id) in parent_ids.iter().take(2).enumerate() {
                             if agent.id == *id {
                                 found[slot] = Some(*temperament);
@@ -998,9 +1048,10 @@ impl SettlementSystem {
             let birth_seed = new_agent_id
                 .wrapping_mul(0x9E37_79B9_7F4A_7C15)
                 .wrapping_add(BIRTH_RNG_SALT);
-            let (hunger_rate, thirst_rate, sleep_rate) = resources.rules.society.life_stage
-                .map_or((BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE),
-                    |rule| (rule.hunger_rate, rule.thirst_rate, rule.sleep_rate));
+            let (hunger_rate, thirst_rate, sleep_rate) = resources.rules.society.life_stage.map_or(
+                (BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE),
+                |rule| (rule.hunger_rate, rule.thirst_rate, rule.sleep_rate),
+            );
             let _ = world.insert(
                 entity,
                 (
@@ -1025,14 +1076,26 @@ impl SettlementSystem {
                 let _ = world.insert_one(entity, lineage);
                 // Pass 11: a newborn's hardiness, keyed on its lineage
                 // (replicate 0: an identity trait, not noise).
-                if resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
-                    let _ = world.insert_one(entity, sim_core::components::Hardiness::draw(resources.world_seed, lineage.key));
+                if resources
+                    .rules
+                    .society
+                    .exposure
+                    .is_some_and(|rule| rule.use_hardiness)
+                {
+                    let _ = world.insert_one(
+                        entity,
+                        sim_core::components::Hardiness::draw(resources.world_seed, lineage.key),
+                    );
                 }
                 // Pass 16: a newborn's temperament from its lineage key and the
                 // named parents' (`game_v20`); with effects its loneliness rate
                 // leans with RD (a mutation: no archetype change).
                 if let Some(rule) = resources.rules.agent.temperament {
-                    let temperament = sim_core::components::Temperament::child(resources.world_seed, lineage.key, parent_temperaments);
+                    let temperament = sim_core::components::Temperament::child(
+                        resources.world_seed,
+                        lineage.key,
+                        parent_temperaments,
+                    );
                     let _ = world.insert_one(entity, temperament);
                     if rule.effects {
                         if let Ok(mut social) = world.get::<&mut Social>(entity) {
@@ -1077,10 +1140,17 @@ impl SettlementSystem {
             if let Some(rule) = resources.rules.society.aging {
                 let life = match lineage {
                     Some(lineage) => crate::runtime::agent::aging::keyed_newborn_life(
-                        resources.world_seed, lineage.key, tick, resources.noise_replicate_for(tick), &rule,
+                        resources.world_seed,
+                        lineage.key,
+                        tick,
+                        resources.noise_replicate_for(tick),
+                        &rule,
                     ),
                     None => crate::runtime::agent::aging::newborn_life(
-                        resources.world_seed, new_agent_id, tick, &rule,
+                        resources.world_seed,
+                        new_agent_id,
+                        tick,
+                        &rule,
                     ),
                 };
                 let _ = world.insert_one(entity, life);
@@ -1091,12 +1161,15 @@ impl SettlementSystem {
             crate::runtime::chronicle_log::record(
                 world,
                 resources,
-                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Born)
-                    .subject(new_agent_id)
-                    .other(parent_ids.first().copied())
-                    .third(parent_ids.get(1).copied())
-                    .settlement(Some(sid))
-                    .cause(u8::from(family_parents.is_none())),
+                sim_core::chronicle::ChronicleEntry::new(
+                    tick,
+                    sim_core::chronicle::ChronicleKind::Born,
+                )
+                .subject(new_agent_id)
+                .other(parent_ids.first().copied())
+                .third(parent_ids.get(1).copied())
+                .settlement(Some(sid))
+                .cause(u8::from(family_parents.is_none())),
             );
 
             let parent = self.formation_event_ids.get(&sid).copied();
@@ -1146,27 +1219,17 @@ impl SettlementSystem {
     /// settlement with a live but far-away member keeps `current > 0` and is
     /// therefore NEVER dissolved here — it dissolves only once that last live
     /// member despawns AND no buildings remain.
-    fn run_dissolutions(
-        &mut self,
-        resources: &mut SimResources,
-        width: u32,
-        tick: u64,
-    ) {
+    fn run_dissolutions(&mut self, resources: &mut SimResources, width: u32, tick: u64) {
         let mut to_dissolve: Vec<SettlementId> = Vec::new();
         for (sid, settlement) in resources.settlements.iter() {
-            if settlement.population_stats.current == 0 && settlement.member_buildings.is_empty()
-            {
+            if settlement.population_stats.current == 0 && settlement.member_buildings.is_empty() {
                 to_dissolve.push(*sid);
             }
         }
         to_dissolve.sort();
         for sid in to_dissolve {
             let parent = self.formation_event_ids.get(&sid).copied();
-            let tile = self
-                .formation_tiles
-                .get(&sid)
-                .copied()
-                .unwrap_or((0, 0));
+            let tile = self.formation_tiles.get(&sid).copied().unwrap_or((0, 0));
             let tile_idx = tile.1 * width + tile.0;
             let dissolved_id = resources.issue_event_id();
             let final_population = self
@@ -1200,8 +1263,11 @@ impl SettlementSystem {
             resources.dissolutions.push((sid, tick));
             // Pass 19 chronicle (write-only).
             resources.chronicle.push(
-                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::SettlementDissolved)
-                    .settlement(Some(sid)),
+                sim_core::chronicle::ChronicleEntry::new(
+                    tick,
+                    sim_core::chronicle::ChronicleKind::SettlementDissolved,
+                )
+                .settlement(Some(sid)),
             );
             resources.building_owner.retain(|_, owner| *owner != sid);
             // FULL local-state clear so the same area can re-form.
@@ -1251,7 +1317,14 @@ impl RuntimeSystem for SettlementSystem {
         let mut admitted: Vec<(AgentId, SettlementId)> = Vec::new();
         let mut removed: Vec<(AgentId, SettlementId)> = Vec::new();
         self.sync_membership(resources, &agent_positions, &buildings, &mut admitted);
-        self.run_formation_scan(resources, &agent_positions, &buildings, width, tick, &mut admitted);
+        self.run_formation_scan(
+            resources,
+            &agent_positions,
+            &buildings,
+            width,
+            tick,
+            &mut admitted,
+        );
         // Belonging-model reform: enforce one-settlement-per-agent AFTER both the
         // proximity sync and the formation scan, so a founder added by formation
         // that was already a member elsewhere is moved (not duplicated). Also
@@ -1292,15 +1365,35 @@ mod tests {
     fn hearth_first_formation_is_opt_in() {
         for generated in [false, true] {
             let mut resources = SimResources::new(64, 64, sim_core::MaterialRegistry::new());
-            if generated { resources.rules = sim_core::rules::WorldRules::game_v8(); }
-            resources.building_kinds.insert((10, 10), BuildingKind::Hearth);
-            let positions = HashMap::from([(0, (7, 7)), (1, (10, 10)), (2, (13, 13)), (3, (10, 9))]);
+            if generated {
+                resources.rules = sim_core::rules::WorldRules::game_v8();
+            }
+            resources
+                .building_kinds
+                .insert((10, 10), BuildingKind::Hearth);
+            let positions =
+                HashMap::from([(0, (7, 7)), (1, (10, 10)), (2, (13, 13)), (3, (10, 9))]);
             let buildings = vec![(0, (10, 10)), (1, (9, 9)), (2, (11, 9))];
             let mut system = SettlementSystem::new();
-            system.run_formation_scan(&mut resources, &positions, &buildings, 64, 0, &mut Vec::new());
-            let first = resources.settlements.get(&1).expect("formation threshold met");
-            assert_eq!(first.formation_tile, if generated { (10, 10) } else { (7, 7) });
-            if generated { assert_eq!(first.member_agents.len(), 4); }
+            system.run_formation_scan(
+                &mut resources,
+                &positions,
+                &buildings,
+                64,
+                0,
+                &mut Vec::new(),
+            );
+            let first = resources
+                .settlements
+                .get(&1)
+                .expect("formation threshold met");
+            assert_eq!(
+                first.formation_tile,
+                if generated { (10, 10) } else { (7, 7) }
+            );
+            if generated {
+                assert_eq!(first.member_agents.len(), 4);
+            }
         }
     }
 
@@ -1347,32 +1440,63 @@ mod tests {
         use sim_core::rules::WorldRules;
         for children in [false, true] {
             let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
-            engine.resources.rules = if children { WorldRules::game_v9() } else { WorldRules::game_v8() };
-            if let BirthRule::Provisioned { cooldown_ticks, .. } = &mut engine.resources.rules.society.birth {
+            engine.resources.rules = if children {
+                WorldRules::game_v9()
+            } else {
+                WorldRules::game_v8()
+            };
+            if let BirthRule::Provisioned { cooldown_ticks, .. } =
+                &mut engine.resources.rules.society.birth
+            {
                 *cooldown_ticks = 720;
             }
             for _ in 0..3 {
                 let entity = engine.spawn_agent(10, 10);
-                engine.world.insert(entity, (Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08))).expect("founder needs");
+                engine
+                    .world
+                    .insert(entity, (Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08)))
+                    .expect("founder needs");
             }
             engine.resources.building_registry.insert(100, (10, 10));
             engine.resources.building_registry.insert(101, (11, 10));
-            engine.resources.building_kinds.insert((10, 10), BuildingKind::Hearth);
-            engine.resources.building_kinds.insert((11, 10), BuildingKind::Shelter);
-            for x in 10..20 { engine.resources.food_source_max.insert((x, 11), 4); }
+            engine
+                .resources
+                .building_kinds
+                .insert((10, 10), BuildingKind::Hearth);
+            engine
+                .resources
+                .building_kinds
+                .insert((11, 10), BuildingKind::Shelter);
+            for x in 10..20 {
+                engine.resources.food_source_max.insert((x, 11), 4);
+            }
             let mut system = SettlementSystem::new();
             system.tick(&mut engine.world, &mut engine.resources);
             let sid = *engine.resources.settlements.keys().next().expect("formed");
-            engine.resources.settlements.get_mut(&sid).expect("settlement").store(ResourceKind::Food, 500);
+            engine
+                .resources
+                .settlements
+                .get_mut(&sid)
+                .expect("settlement")
+                .store(ResourceKind::Food, 500);
             engine.resources.current_tick = 720;
             system.tick(&mut engine.world, &mut engine.resources);
             assert_eq!(engine.resources.tallies.births, 1);
-            let mut query = engine.world.query::<(&Agent, &Hunger, &Thirst, &Sleep, Option<&Child>)>();
-            let (_, (_, hunger, thirst, sleep, child)) = query.iter().next().expect("newborn with sleep");
-            let expected = if children { (0.03, 0.048, 0.03) } else { (BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE) };
-            assert_eq!((hunger.growth_rate, thirst.growth_rate, sleep.growth_rate), expected);
+            let mut query = engine
+                .world
+                .query::<(&Agent, &Hunger, &Thirst, &Sleep, Option<&Child>)>();
+            let (_, (_, hunger, thirst, sleep, child)) =
+                query.iter().next().expect("newborn with sleep");
+            let expected = if children {
+                (0.03, 0.048, 0.03)
+            } else {
+                (BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE)
+            };
+            assert_eq!(
+                (hunger.growth_rate, thirst.growth_rate, sleep.growth_rate),
+                expected
+            );
             assert_eq!(child.map(|child| child.born_tick), children.then_some(720));
         }
     }
-
 }

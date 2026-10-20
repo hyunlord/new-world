@@ -827,7 +827,9 @@ impl WorldRules {
     pub const V19_PRESSURE: FissionPressure = FissionPressure {
         // Part 3 round 2 tried mean 1000 / decay 50; round 3 returns to the
         // start values (noise moved the split more under decay 50).
-        threshold_table: ThresholdLaw::Exponential { mean_permille: 1200 },
+        threshold_table: ThresholdLaw::Exponential {
+            mean_permille: 1200,
+        },
         decay_permille: 10,
         reset_on_split: true,
     };
@@ -1056,12 +1058,22 @@ impl WorldRules {
         });
         // Part 3 round 2: a tighter birth gate (utilization 0.81 -> 0.78, both v16
         // rulesets) so the poorest drawn worlds do not starve in winter.
-        if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
-            rules.society.birth
+        if let BirthRule::Provisioned {
+            sustain: Some(mut sustain),
+            cooldown_ticks,
+            food_cost,
+            max_mean_hunger,
+            max_mean_thirst,
+        } = rules.society.birth
         {
             sustain.utilization = 0.78;
-            rules.society.birth =
-                BirthRule::Provisioned { sustain: Some(sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst };
+            rules.society.birth = BirthRule::Provisioned {
+                sustain: Some(sustain),
+                cooldown_ticks,
+                food_cost,
+                max_mean_hunger,
+                max_mean_thirst,
+            };
         }
         rules
     }
@@ -1089,12 +1101,22 @@ impl WorldRules {
         // Part 3 round 1: the supply estimate behind the birth gate and the
         // winter-prep store target weighs bushes by their capacity (no effect
         // where every bush holds 4, i.e. the neutral world).
-        if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
-            rules.society.birth
+        if let BirthRule::Provisioned {
+            sustain: Some(mut sustain),
+            cooldown_ticks,
+            food_cost,
+            max_mean_hunger,
+            max_mean_thirst,
+        } = rules.society.birth
         {
             sustain.capacity_weighted = true;
-            rules.society.birth =
-                BirthRule::Provisioned { sustain: Some(sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst };
+            rules.society.birth = BirthRule::Provisioned {
+                sustain: Some(sustain),
+                cooldown_ticks,
+                food_cost,
+                max_mean_hunger,
+                max_mean_thirst,
+            };
         }
         rules
     }
@@ -1299,15 +1321,23 @@ impl WorldRules {
         rules.society.settlement_anchor = SettlementAnchor::Hearth;
         rules.agent.strict_consume = true;
         rules.agent.night_rest = Some(NightRestRule {
-            start_minute: 1260, end_minute: 360, fatigue_threshold: 0.0,
-            recovery_per_tick: 0.12, wake_preempt: 75.0,
+            start_minute: 1260,
+            end_minute: 360,
+            fatigue_threshold: 0.0,
+            recovery_per_tick: 0.12,
+            wake_preempt: 75.0,
         });
         rules.agent.evening_gather = Some(EveningGatherRule {
-            start_minute: 1080, end_minute: 1260, tether_radius: 3,
+            start_minute: 1080,
+            end_minute: 1260,
+            tether_radius: 3,
         });
         rules.society.life_stage = Some(LifeStageRule {
-            child_ticks: 5760, hunger_rate: 0.03, thirst_rate: 0.048,
-            sleep_rate: 0.03, tether_radius: 3,
+            child_ticks: 5760,
+            hunger_rate: 0.03,
+            thirst_rate: 0.048,
+            sleep_rate: 0.03,
+            tether_radius: 3,
         });
         rules.society.relief_radius = Some(8);
         rules.society.birth = BirthRule::Provisioned {
@@ -1423,7 +1453,11 @@ mod tests {
     #[test]
     fn game_v10_is_v9_plus_pass4_rules() {
         let mut v10 = WorldRules::game_v10();
-        let BirthRule::Provisioned { sustain: Some(sustain), .. } = v10.society.birth else {
+        let BirthRule::Provisioned {
+            sustain: Some(sustain),
+            ..
+        } = v10.society.birth
+        else {
             panic!("v10 must keep provisioned sustain births");
         };
         assert_eq!(sustain.utilization, 0.81);
@@ -1445,7 +1479,12 @@ mod tests {
 
     #[test]
     fn pass5_fields_are_neutral_in_frozen_rules() {
-        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10()] {
+        for rules in [
+            WorldRules::default(),
+            WorldRules::game_v8(),
+            WorldRules::game_v9(),
+            WorldRules::game_v10(),
+        ] {
             assert!(!rules.agent.preempt_gathering);
             assert_eq!(rules.society.meals, None);
             assert_eq!(rules.society.firewood, None);
@@ -1488,13 +1527,22 @@ mod tests {
 
     #[test]
     fn game_v13_sets_the_pass7_fields() {
-        let rule = WorldRules::game_v13().society.firewood.expect("v13 firewood");
+        let rule = WorldRules::game_v13()
+            .society
+            .firewood
+            .expect("v13 firewood");
         let weights = rule.winter_severity_permille.expect("v13 draws severity");
         assert_eq!(weights.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
         // Normal severity is Pass 6's winter.
-        let v12 = WorldRules::game_v12().society.firewood.expect("v12 firewood");
+        let v12 = WorldRules::game_v12()
+            .society
+            .firewood
+            .expect("v12 firewood");
         assert_eq!(rule.winter_severity_burn_per_hour[1], v12.burn_per_hour[3]);
-        assert_eq!(Some(rule.winter_severity_regen_units_per_day[1]), v12.winter_regen_units_per_day);
+        assert_eq!(
+            Some(rule.winter_severity_regen_units_per_day[1]),
+            v12.winter_regen_units_per_day
+        );
         assert!(rule.claims_bounded_by_amount);
     }
 
@@ -1527,7 +1575,11 @@ mod tests {
 
     #[test]
     fn pass8_firewood_fields_reproduce_pass7_in_v11_to_v13() {
-        for rules in [WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13()] {
+        for rules in [
+            WorldRules::game_v11(),
+            WorldRules::game_v12(),
+            WorldRules::game_v13(),
+        ] {
             let rule = rules.society.firewood.expect("firewood");
             assert_eq!(rule.winter_night_burn_permille, None);
             assert_eq!(rule.winter_night_burn_step, 0);
@@ -1538,8 +1590,13 @@ mod tests {
 
     #[test]
     fn game_v14_sets_the_pass8_fields() {
-        let rule = WorldRules::game_v14().society.firewood.expect("v14 firewood");
-        let night = rule.winter_night_burn_permille.expect("v14 draws night burns");
+        let rule = WorldRules::game_v14()
+            .society
+            .firewood
+            .expect("v14 firewood");
+        let night = rule
+            .winter_night_burn_permille
+            .expect("v14 draws night burns");
         assert_eq!(night.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
         let weights = rule.winter_severity_permille.expect("v14 draws severity");
         assert_eq!(weights.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
@@ -1573,8 +1630,16 @@ mod tests {
         assert!(v15.agent.keyed_draws);
         v15.agent.keyed_draws = false;
         assert_eq!(v15, WorldRules::game_v14());
-        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
-            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14()] {
+        for rules in [
+            WorldRules::default(),
+            WorldRules::game_v8(),
+            WorldRules::game_v9(),
+            WorldRules::game_v10(),
+            WorldRules::game_v11(),
+            WorldRules::game_v12(),
+            WorldRules::game_v13(),
+            WorldRules::game_v14(),
+        ] {
             assert!(!rules.agent.keyed_draws);
         }
     }
@@ -1586,24 +1651,47 @@ mod tests {
         assert_eq!(exposure.damage_per_cold_hour, [10.0, 4.0, 5.0]);
         assert_eq!(exposure.heal_block_hours, 2);
         v16.society.exposure = None;
-        let BirthRule::Provisioned { sustain: Some(ref mut sustain), .. } = v16.society.birth else {
+        let BirthRule::Provisioned {
+            sustain: Some(ref mut sustain),
+            ..
+        } = v16.society.birth
+        else {
             panic!("v16_neutral keeps provisioned sustain births");
         };
         assert_eq!(sustain.utilization, 0.78);
         sustain.utilization = 0.81;
         assert_eq!(v16, WorldRules::game_v15());
-        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
-            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
-            WorldRules::game_v15()] {
+        for rules in [
+            WorldRules::default(),
+            WorldRules::game_v8(),
+            WorldRules::game_v9(),
+            WorldRules::game_v10(),
+            WorldRules::game_v11(),
+            WorldRules::game_v12(),
+            WorldRules::game_v13(),
+            WorldRules::game_v14(),
+            WorldRules::game_v15(),
+        ] {
             assert_eq!(rules.society.exposure, None);
         }
     }
 
     #[test]
     fn pass11_fields_are_neutral_before_v17() {
-        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
-            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
-            WorldRules::game_v15(), WorldRules::game_v16_neutral(), WorldRules::game_v16(0), WorldRules::game_v16(7)] {
+        for rules in [
+            WorldRules::default(),
+            WorldRules::game_v8(),
+            WorldRules::game_v9(),
+            WorldRules::game_v10(),
+            WorldRules::game_v11(),
+            WorldRules::game_v12(),
+            WorldRules::game_v13(),
+            WorldRules::game_v14(),
+            WorldRules::game_v15(),
+            WorldRules::game_v16_neutral(),
+            WorldRules::game_v16(0),
+            WorldRules::game_v16(7),
+        ] {
             assert_eq!(rules.society.fission, None);
             if let Some(firewood) = rules.society.firewood {
                 assert_eq!(firewood.rain_soak_permille, 0);
@@ -1637,10 +1725,22 @@ mod tests {
 
     #[test]
     fn pass12_fields_are_neutral_before_v18() {
-        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
-            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
-            WorldRules::game_v15(), WorldRules::game_v16_neutral(), WorldRules::game_v16(0), WorldRules::game_v17(0),
-            WorldRules::game_v17(7), WorldRules::game_v17_nofission(3)] {
+        for rules in [
+            WorldRules::default(),
+            WorldRules::game_v8(),
+            WorldRules::game_v9(),
+            WorldRules::game_v10(),
+            WorldRules::game_v11(),
+            WorldRules::game_v12(),
+            WorldRules::game_v13(),
+            WorldRules::game_v14(),
+            WorldRules::game_v15(),
+            WorldRules::game_v16_neutral(),
+            WorldRules::game_v16(0),
+            WorldRules::game_v17(0),
+            WorldRules::game_v17(7),
+            WorldRules::game_v17_nofission(3),
+        ] {
             if let Some(firewood) = rules.society.firewood {
                 assert_eq!(firewood.area_fall_floor_permille, 0);
                 assert!(!firewood.rain_wet_burn);
@@ -1657,10 +1757,22 @@ mod tests {
     fn game_v18_hazard_is_valid_and_v18_nofission_has_no_fission() {
         assert!(WorldRules::V18_HAZARD.is_valid());
         for bad in [
-            FissionHazard { size_hi: 20, ..WorldRules::V18_HAZARD },
-            FissionHazard { crowd_hi_permille: 850, ..WorldRules::V18_HAZARD },
-            FissionHazard { weight_crowd_permille: 400, ..WorldRules::V18_HAZARD },
-            FissionHazard { max_daily_permille: 1001, ..WorldRules::V18_HAZARD },
+            FissionHazard {
+                size_hi: 20,
+                ..WorldRules::V18_HAZARD
+            },
+            FissionHazard {
+                crowd_hi_permille: 850,
+                ..WorldRules::V18_HAZARD
+            },
+            FissionHazard {
+                weight_crowd_permille: 400,
+                ..WorldRules::V18_HAZARD
+            },
+            FissionHazard {
+                max_daily_permille: 1001,
+                ..WorldRules::V18_HAZARD
+            },
         ] {
             assert!(!bad.is_valid());
         }
@@ -1669,7 +1781,14 @@ mod tests {
             let fission = v18.society.fission.expect("v18 fission");
             assert_eq!(fission.hazard, Some(WorldRules::V18_HAZARD));
             assert_eq!(fission.allowed_seasons, [true, true, true, false]);
-            assert_eq!((fission.min_members, fission.min_age_days, fission.cooldown_days), (32, 10, 28));
+            assert_eq!(
+                (
+                    fission.min_members,
+                    fission.min_age_days,
+                    fission.cooldown_days
+                ),
+                (32, 10, 28)
+            );
             let mut stripped = v18;
             stripped.society.fission = None;
             assert_eq!(stripped, WorldRules::game_v18_nofission(seed));
@@ -1680,7 +1799,10 @@ mod tests {
 
     #[test]
     fn pass6_firewood_fields_reproduce_pass5_in_v11() {
-        let rule = WorldRules::game_v11().society.firewood.expect("v11 firewood");
+        let rule = WorldRules::game_v11()
+            .society
+            .firewood
+            .expect("v11 firewood");
         assert_eq!(rule.winter_prep_days, None);
         assert!(rule.winter_prep_in_summer);
         assert_eq!(rule.winter_base_days, None);
@@ -1742,13 +1864,27 @@ mod tests {
     #[test]
     fn temperament_functions_at_the_extremes_and_the_mean() {
         let r = WorldRules::V20_TEMPERAMENT;
-        let (lo, mid, hi) = (axes(0, 0, 0, 0), axes(500, 500, 500, 500), axes(1000, 1000, 1000, 1000));
+        let (lo, mid, hi) = (
+            axes(0, 0, 0, 0),
+            axes(500, 500, 500, 500),
+            axes(1000, 1000, 1000, 1000),
+        );
         // NS → tether (base 8): 4, 8, 12.
-        assert_eq!([r.tether(8, &lo), r.tether(8, &mid), r.tether(8, &hi)], [4, 8, 12]);
+        assert_eq!(
+            [r.tether(8, &lo), r.tether(8, &mid), r.tether(8, &hi)],
+            [4, 8, 12]
+        );
         // The floor of 2.
         assert_eq!(r.tether(3, &lo), 2);
         // HA → bedtime (start 21:00 = 1260): bold 22:00, mean 21:00, cautious 20:00.
-        assert_eq!([r.bedtime(1260, &lo), r.bedtime(1260, &mid), r.bedtime(1260, &hi)], [1320, 1260, 1200]);
+        assert_eq!(
+            [
+                r.bedtime(1260, &lo),
+                r.bedtime(1260, &mid),
+                r.bedtime(1260, &hi)
+            ],
+            [1320, 1260, 1200]
+        );
         // RD → loneliness rate (base 0.04): 0.02, 0.04, 0.06.
         assert_eq!(r.social_rate(0.04, &lo), 0.04 * 500.0 / 1000.0);
         assert_eq!(r.social_rate(0.04, &mid), 0.04 * 1000.0 / 1000.0);
@@ -1757,15 +1893,61 @@ mod tests {
         assert!((r.social_rate(0.04, &hi) - 0.06).abs() < 1e-15);
         // P → food haul (base 4, span 3): 1, 4, 7; wood haul (base 2, span 2):
         // 0 clamps to 1, 2, 4.
-        assert_eq!([r.food_haul(4, &lo), r.food_haul(4, &mid), r.food_haul(4, &hi)], [1, 4, 7]);
-        assert_eq!([r.wood_haul(2, &lo), r.wood_haul(2, &mid), r.wood_haul(2, &hi)], [1, 2, 4]);
+        assert_eq!(
+            [
+                r.food_haul(4, &lo),
+                r.food_haul(4, &mid),
+                r.food_haul(4, &hi)
+            ],
+            [1, 4, 7]
+        );
+        assert_eq!(
+            [
+                r.wood_haul(2, &lo),
+                r.wood_haul(2, &mid),
+                r.wood_haul(2, &hi)
+            ],
+            [1, 2, 4]
+        );
         // Section 6.2's start spans (food 2, wood 1): 2, 4, 6 and 1, 2, 3.
-        let start = TemperamentRule { p_food_haul_span: 2, p_wood_haul_span: 1, ..r };
-        assert_eq!([start.food_haul(4, &lo), start.food_haul(4, &mid), start.food_haul(4, &hi)], [2, 4, 6]);
-        assert_eq!([start.wood_haul(2, &lo), start.wood_haul(2, &mid), start.wood_haul(2, &hi)], [1, 2, 3]);
+        let start = TemperamentRule {
+            p_food_haul_span: 2,
+            p_wood_haul_span: 1,
+            ..r
+        };
+        assert_eq!(
+            [
+                start.food_haul(4, &lo),
+                start.food_haul(4, &mid),
+                start.food_haul(4, &hi)
+            ],
+            [2, 4, 6]
+        );
+        assert_eq!(
+            [
+                start.wood_haul(2, &lo),
+                start.wood_haul(2, &mid),
+                start.wood_haul(2, &hi)
+            ],
+            [1, 2, 3]
+        );
         // The clamps of 1 and 8.
-        assert_eq!(TemperamentRule { p_wood_haul_span: 3, ..r }.wood_haul(2, &lo), 1);
-        assert_eq!(TemperamentRule { p_food_haul_span: 6, ..r }.food_haul(4, &hi), 8);
+        assert_eq!(
+            TemperamentRule {
+                p_wood_haul_span: 3,
+                ..r
+            }
+            .wood_haul(2, &lo),
+            1
+        );
+        assert_eq!(
+            TemperamentRule {
+                p_food_haul_span: 6,
+                ..r
+            }
+            .food_haul(4, &hi),
+            8
+        );
         // NS → departure key: NS 0 subtracts 0, NS 500 subtracts 0.5, NS 1000 subtracts 1.0.
         assert_eq!(r.departure_key(0.25, &lo), 0.25);
         assert_eq!(r.departure_key(0.25, &mid), 0.25 - 0.5);
@@ -1773,7 +1955,10 @@ mod tests {
         // Truncation toward zero, symmetric: d = ±1 moves nothing at these spans.
         let (minus, plus) = (axes(499, 499, 499, 499), axes(501, 501, 501, 501));
         assert_eq!([r.tether(8, &minus), r.tether(8, &plus)], [8, 8]);
-        assert_eq!([r.bedtime(1260, &minus), r.bedtime(1260, &plus)], [1260, 1260]);
+        assert_eq!(
+            [r.bedtime(1260, &minus), r.bedtime(1260, &plus)],
+            [1260, 1260]
+        );
         assert_eq!([r.food_haul(4, &minus), r.food_haul(4, &plus)], [4, 4]);
         // d = ±125: tether 8 ± 1, bedtime 1260 ∓ 15, food 4 ± 0 (3 × 125 / 500 = 0).
         let (q1, q3) = (axes(375, 375, 375, 375), axes(625, 625, 625, 625));
@@ -1788,9 +1973,17 @@ mod tests {
 
     #[test]
     fn temperament_without_effects_returns_every_base() {
-        let r = WorldRules::game_v20_inert(0).agent.temperament.expect("inert carries the rule");
+        let r = WorldRules::game_v20_inert(0)
+            .agent
+            .temperament
+            .expect("inert carries the rule");
         assert!(!r.effects);
-        for t in [axes(0, 0, 0, 0), axes(500, 500, 500, 500), axes(1000, 1000, 1000, 1000), axes(17, 993, 250, 750)] {
+        for t in [
+            axes(0, 0, 0, 0),
+            axes(500, 500, 500, 500),
+            axes(1000, 1000, 1000, 1000),
+            axes(17, 993, 250, 750),
+        ] {
             assert_eq!(r.tether(8, &t), 8);
             assert_eq!(r.bedtime(1260, &t), 1260);
             assert_eq!(r.social_rate(0.04, &t).to_bits(), 0.04f64.to_bits());
@@ -1804,10 +1997,19 @@ mod tests {
     fn game_v20_is_game_v19_with_temperament() {
         for seed in 0..8u64 {
             let v19 = WorldRules::game_v19(seed);
-            for (v20, effects) in [(WorldRules::game_v20(seed), true), (WorldRules::game_v20_inert(seed), false)] {
+            for (v20, effects) in [
+                (WorldRules::game_v20(seed), true),
+                (WorldRules::game_v20_inert(seed), false),
+            ] {
                 assert_eq!(v20.agent.temperament.map(|t| t.effects), Some(effects));
                 assert_eq!(
-                    WorldRules { agent: AgentRules { temperament: None, ..v20.agent }, ..v20 },
+                    WorldRules {
+                        agent: AgentRules {
+                            temperament: None,
+                            ..v20.agent
+                        },
+                        ..v20
+                    },
                     v19
                 );
             }

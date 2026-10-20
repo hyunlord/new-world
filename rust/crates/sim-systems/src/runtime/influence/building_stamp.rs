@@ -106,9 +106,7 @@ impl RuntimeSystem for BuildingStampSystem {
             // cannot serve this purpose: same-tile `StampDirty` /
             // `InfluenceChanged` events evict `BuildingPlaced` from the
             // per-tile ring buffer within a single tick.
-            resources
-                .building_registry
-                .insert(building_id, ev.position);
+            resources.building_registry.insert(building_id, ev.position);
             resources.causal_log.push(
                 centre_idx,
                 CausalEvent::BuildingPlaced {
@@ -234,8 +232,7 @@ mod tests {
             });
         let mut s = BuildingStampSystem::new();
         s.tick(&mut e.world, &mut e.resources);
-        let regs =
-            &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
+        let regs = &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
         assert_eq!(regs.len(), 1);
         let r = &regs[0];
         assert!(r.max_x <= 31, "max_x {} must be ≤ 31", r.max_x);

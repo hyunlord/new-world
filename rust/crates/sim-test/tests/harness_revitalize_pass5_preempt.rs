@@ -1,7 +1,8 @@
 //! Pass 5 Part 4: critical needs interrupt gathering trips.
 use hecs::Entity;
 use sim_core::components::{
-    Agent, AgentState, Hunger, Inventory, ResourceKind, SeekTarget, Settlement, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentState, Hunger, Inventory, ResourceKind, SeekTarget, Settlement, Sleep, Social,
+    TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
@@ -14,7 +15,13 @@ use sim_test::scenes::game_v10_scene;
 /// One member of a settlement at (20, 20) standing 15 tiles out at (35, 20),
 /// already seeking `target` at `spot`; water on the river bank at (35, 30);
 /// clock at 12:00 on display day 1 (inside the forage and firewood windows).
-fn seeker(rules: WorldRules, target: TargetKind, spot: (u32, u32), hunger: f32, thirst: f64) -> (SimEngine, Entity) {
+fn seeker(
+    rules: WorldRules,
+    target: TargetKind,
+    spot: (u32, u32),
+    hunger: f32,
+    thirst: f64,
+) -> (SimEngine, Entity) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.rules = rules;
     engine.resources.current_tick = 1440 + 720 - 480;
@@ -54,32 +61,79 @@ fn state(engine: &SimEngine, entity: Entity) -> AgentState {
 
 #[test]
 fn harness_gather_preempted_by_thirst() {
-    let (mut engine, gatherer) = seeker(WorldRules::game_v11(), TargetKind::GatherWood, (38, 20), 0.0, 80.0);
+    let (mut engine, gatherer) = seeker(
+        WorldRules::game_v11(),
+        TargetKind::GatherWood,
+        (38, 20),
+        0.0,
+        80.0,
+    );
     let mut decision = AgentDecisionSystem::new();
     decision.tick(&mut engine.world, &mut engine.resources);
     assert_eq!(state(&engine, gatherer), AgentState::Idle);
-    assert!(engine.world.get::<&SeekTarget>(gatherer).is_err(), "the wood target is dropped");
+    assert!(
+        engine.world.get::<&SeekTarget>(gatherer).is_err(),
+        "the wood target is dropped"
+    );
     assert_eq!(engine.resources.tallies.gather_preempted, 1);
     engine.resources.current_tick += 1;
     decision.tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, gatherer), AgentState::Seeking { target: TargetKind::Water });
-    assert_eq!(engine.world.get::<&SeekTarget>(gatherer).expect("water target").tile, (35, 30));
+    assert_eq!(
+        state(&engine, gatherer),
+        AgentState::Seeking {
+            target: TargetKind::Water
+        }
+    );
+    assert_eq!(
+        engine
+            .world
+            .get::<&SeekTarget>(gatherer)
+            .expect("water target")
+            .tile,
+        (35, 30)
+    );
 
     // A forager is interrupted by critical hunger the same way (75 inclusive).
-    let (mut engine, forager) = seeker(WorldRules::game_v11(), TargetKind::GatherFood, (38, 22), 75.0, 0.0);
+    let (mut engine, forager) = seeker(
+        WorldRules::game_v11(),
+        TargetKind::GatherFood,
+        (38, 22),
+        75.0,
+        0.0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(state(&engine, forager), AgentState::Idle);
     assert_eq!(engine.resources.tallies.gather_preempted, 1);
     engine.resources.current_tick += 1;
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, forager), AgentState::Seeking { target: TargetKind::Food });
+    assert_eq!(
+        state(&engine, forager),
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+    );
 
     // Below the critical level the trip continues.
-    let (mut engine, gatherer) = seeker(WorldRules::game_v11(), TargetKind::GatherWood, (38, 20), 60.0, 74.0);
+    let (mut engine, gatherer) = seeker(
+        WorldRules::game_v11(),
+        TargetKind::GatherWood,
+        (38, 20),
+        60.0,
+        74.0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, gatherer), AgentState::Seeking { target: TargetKind::GatherWood });
+    assert_eq!(
+        state(&engine, gatherer),
+        AgentState::Seeking {
+            target: TargetKind::GatherWood
+        }
+    );
     assert_eq!(engine.resources.tallies.gather_preempted, 0);
-    let carried = engine.world.get::<&Inventory>(gatherer).expect("inv").get(ResourceKind::Wood);
+    let carried = engine
+        .world
+        .get::<&Inventory>(gatherer)
+        .expect("inv")
+        .get(ResourceKind::Wood);
     assert_eq!(carried, 0);
 }
 
@@ -87,7 +141,13 @@ fn harness_gather_preempted_by_thirst() {
 fn harness_preempted_gatherer_is_not_sent_out_again() {
     // Review fix: every bush empty (no reachable food need) and wood below
     // target; after the preemption the critical member starts no new trip.
-    let (mut engine, gatherer) = seeker(WorldRules::game_v11(), TargetKind::GatherWood, (38, 20), 80.0, 0.0);
+    let (mut engine, gatherer) = seeker(
+        WorldRules::game_v11(),
+        TargetKind::GatherWood,
+        (38, 20),
+        80.0,
+        0.0,
+    );
     engine.resources.food_tiles.clear();
     let mut decision = AgentDecisionSystem::new();
     for _ in 0..20 {
@@ -95,20 +155,39 @@ fn harness_preempted_gatherer_is_not_sent_out_again() {
         engine.resources.current_tick += 1;
         assert_eq!(state(&engine, gatherer), AgentState::Idle);
     }
-    assert_eq!(engine.resources.tallies.gather_preempted, 1, "preempted once, never re-sent");
+    assert_eq!(
+        engine.resources.tallies.gather_preempted, 1,
+        "preempted once, never re-sent"
+    );
     assert_eq!(engine.resources.tallies.wood_trips, 0);
 }
 
 #[test]
 fn harness_preempt_v10_unchanged() {
     // Under v10 a thirsty forager keeps walking (Pass 4 behaviour).
-    let (mut engine, forager) = seeker(WorldRules::game_v10(), TargetKind::GatherFood, (38, 22), 0.0, 80.0);
+    let (mut engine, forager) = seeker(
+        WorldRules::game_v10(),
+        TargetKind::GatherFood,
+        (38, 22),
+        0.0,
+        80.0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, forager), AgentState::Seeking { target: TargetKind::GatherFood });
+    assert_eq!(
+        state(&engine, forager),
+        AgentState::Seeking {
+            target: TargetKind::GatherFood
+        }
+    );
     assert_eq!(engine.resources.tallies.gather_preempted, 0);
-    for (seed, expected) in ["0e38264bd3abe6ba", "3b0590ec71558a58", "d265695444b8b314", "48120c365d543729"]
-        .into_iter()
-        .enumerate()
+    for (seed, expected) in [
+        "0e38264bd3abe6ba",
+        "3b0590ec71558a58",
+        "d265695444b8b314",
+        "48120c365d543729",
+    ]
+    .into_iter()
+    .enumerate()
     {
         let mut engine = game_v10_scene(seed as u64);
         for _ in 0..1440 {

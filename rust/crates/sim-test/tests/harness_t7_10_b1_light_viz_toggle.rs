@@ -40,10 +40,13 @@ fn fresh_engine() -> SimEngine {
 /// Push a single BuildingPlacedEvent at (32,32) r=12.
 /// Same event triggers both Warmth BFS (T7.10.A) and Light shadowcast (T7.10.B).
 fn place_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 /// Run `n` ticks. Event (if any) is consumed in the first tick.
@@ -69,7 +72,10 @@ fn harness_t7_10_b1_warmth_channel_non_trivial_concurrent() {
     place_source(&mut e);
     run_ticks(&mut e, 10);
 
-    let warmth_buf = e.resources.influence_grid.current_buf(InfluenceChannel::Warmth);
+    let warmth_buf = e
+        .resources
+        .influence_grid
+        .current_buf(InfluenceChannel::Warmth);
     // Type A: threshold >= 300 non-zero positions
     let count = warmth_buf.iter().filter(|&&v| v > 0).count();
     assert!(
@@ -98,7 +104,10 @@ fn harness_t7_10_b1_light_channel_non_trivial_concurrent() {
     place_source(&mut e);
     run_ticks(&mut e, 10);
 
-    let light_buf = e.resources.influence_grid.current_buf(InfluenceChannel::Light);
+    let light_buf = e
+        .resources
+        .influence_grid
+        .current_buf(InfluenceChannel::Light);
     // Type A: threshold >= 450 non-zero positions
     let count = light_buf.iter().filter(|&&v| v > 0).count();
     assert!(
@@ -128,8 +137,14 @@ fn harness_t7_10_b1_light_disc_extends_beyond_warmth() {
     place_source(&mut e);
     run_ticks(&mut e, 10);
 
-    let light_buf = e.resources.influence_grid.current_buf(InfluenceChannel::Light);
-    let warmth_buf = e.resources.influence_grid.current_buf(InfluenceChannel::Warmth);
+    let light_buf = e
+        .resources
+        .influence_grid
+        .current_buf(InfluenceChannel::Light);
+    let warmth_buf = e
+        .resources
+        .influence_grid
+        .current_buf(InfluenceChannel::Warmth);
 
     let max1 = light_buf.iter().copied().max().unwrap_or(0);
     let margin_f = max1 as f64 * 0.01; // 1% of Light peak, spec = 200 → margin ≈ 2.0
@@ -167,9 +182,15 @@ fn harness_t7_10_b1_light_source_tile_is_maximum() {
     place_source(&mut e);
     run_ticks(&mut e, 10);
 
-    let light_buf = e.resources.influence_grid.current_buf(InfluenceChannel::Light);
+    let light_buf = e
+        .resources
+        .influence_grid
+        .current_buf(InfluenceChannel::Light);
     let max_val = light_buf.iter().copied().max().unwrap_or(0);
-    let source_val = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    let source_val = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
 
     // Type A: threshold ratio >= 0.99
     // Integer form: source_val * 100 >= max_val * 99
@@ -214,7 +235,10 @@ fn harness_t7_10_b1_light_zero_beyond_radius() {
             let dx = x as f64 - SX as f64;
             let dy = y as f64 - SY as f64;
             if (dx * dx + dy * dy).sqrt() > 16.0 {
-                let v = e.resources.influence_grid.sample(x, y, InfluenceChannel::Light);
+                let v = e
+                    .resources
+                    .influence_grid
+                    .sample(x, y, InfluenceChannel::Light);
                 if v > max_beyond {
                     max_beyond = v;
                     worst_pos = (x, y);

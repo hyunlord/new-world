@@ -29,7 +29,9 @@ fn trip_row(record: &TripRecord) -> Value {
         record.lost,
         u8::from(record.failed),
         record.trip.depart_tick,
-        record.end_tick.map_or(-1, |tick| i64::try_from(tick).unwrap_or(i64::MAX)),
+        record
+            .end_tick
+            .map_or(-1, |tick| i64::try_from(tick).unwrap_or(i64::MAX)),
     ])
 }
 
@@ -54,19 +56,41 @@ pub(super) fn seed_block(engine: &SimEngine) -> Option<Value> {
         .active
         .values()
         .map(|record| {
-            u64::from(record.trip.amount.saturating_sub(record.delivered + record.returned + record.lost))
+            u64::from(
+                record
+                    .trip
+                    .amount
+                    .saturating_sub(record.delivered + record.returned + record.lost),
+            )
         })
         .sum();
     let days: Vec<Value> = relations
         .days
         .iter()
         .map(|d| {
-            let (kind, amount) = d.sent.map_or((-1, 0), |(kind, amount)| (i64::from(kind.as_u8()), amount));
+            let (kind, amount) = d
+                .sent
+                .map_or((-1, 0), |(kind, amount)| (i64::from(kind.as_u8()), amount));
             json!([
-                d.tick, d.from, d.to, d.value, u8::from(d.estranged), u8::from(d.in_reach),
-                d.from_measure[0], d.from_measure[1], d.from_measure[2], d.from_measure[3],
-                d.to_measure[0], d.to_measure[1], d.to_measure[2], d.to_measure[3],
-                u8::from(d.aid_food), u8::from(d.aid_wood), u8::from(d.exchange), kind, amount,
+                d.tick,
+                d.from,
+                d.to,
+                d.value,
+                u8::from(d.estranged),
+                u8::from(d.in_reach),
+                d.from_measure[0],
+                d.from_measure[1],
+                d.from_measure[2],
+                d.from_measure[3],
+                d.to_measure[0],
+                d.to_measure[1],
+                d.to_measure[2],
+                d.to_measure[3],
+                u8::from(d.aid_food),
+                u8::from(d.aid_wood),
+                u8::from(d.exchange),
+                kind,
+                amount,
             ])
         })
         .collect();

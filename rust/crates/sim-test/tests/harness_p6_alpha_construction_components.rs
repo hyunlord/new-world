@@ -151,14 +151,11 @@ fn harness_p6_alpha_a7_site_derives() {
     // (c) Equal sites compare equal
     assert!(site == s2);
     // (d) Different positions are unequal
-    let site_diff_pos =
-        ConstructionSite::new(bp, Position { x: 9, y: 9 });
+    let site_diff_pos = ConstructionSite::new(bp, Position { x: 9, y: 9 });
     assert!(site != site_diff_pos);
     // (e) Different blueprint ids are unequal
-    let site_diff_bp = ConstructionSite::new(
-        BuildingBlueprint::new(2, 2, 2, 5),
-        Position { x: 3, y: 3 },
-    );
+    let site_diff_bp =
+        ConstructionSite::new(BuildingBlueprint::new(2, 2, 2, 5), Position { x: 3, y: 3 });
     assert!(site != site_diff_bp);
 }
 
@@ -166,10 +163,8 @@ fn harness_p6_alpha_a7_site_derives() {
 #[test]
 fn harness_p6_alpha_a8_progress_field_pub_writable() {
     // Type: compile-time visibility + post-write read identity
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 5),
-        Position { x: 0, y: 0 },
-    );
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 5), Position { x: 0, y: 0 });
     site.progress = 6;
     assert_eq!(site.progress, 6);
 }
@@ -178,10 +173,8 @@ fn harness_p6_alpha_a8_progress_field_pub_writable() {
 #[test]
 fn harness_p6_alpha_a9_advance_increments_one_returns_false() {
     // Type: bool + u32 exact equality after one call
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 5),
-        Position { x: 0, y: 0 },
-    );
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 5), Position { x: 0, y: 0 });
     let edge = site.advance();
     assert!(!edge, "advance pre-completion must return false");
     assert_eq!(site.progress, 1);
@@ -191,12 +184,9 @@ fn harness_p6_alpha_a9_advance_increments_one_returns_false() {
 #[test]
 fn harness_p6_alpha_a10_advance_one_shot_completion_edge() {
     // Type: Vec<bool> exact sequence equality
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 3),
-        Position { x: 0, y: 0 },
-    );
-    let returns: Vec<bool> =
-        (0..4).map(|_| site.advance()).collect();
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 3), Position { x: 0, y: 0 });
+    let returns: Vec<bool> = (0..4).map(|_| site.advance()).collect();
     assert_eq!(returns, vec![false, false, true, false]);
 }
 
@@ -204,12 +194,9 @@ fn harness_p6_alpha_a10_advance_one_shot_completion_edge() {
 #[test]
 fn harness_p6_alpha_a11_advance_required_one_boundary() {
     // Type: Vec<bool> exact sequence + final progress u32 equality
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 1),
-        Position { x: 0, y: 0 },
-    );
-    let returns: Vec<bool> =
-        (0..3).map(|_| site.advance()).collect();
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 1), Position { x: 0, y: 0 });
+    let returns: Vec<bool> = (0..3).map(|_| site.advance()).collect();
     assert_eq!(returns, vec![true, false, false]);
     assert_eq!(site.progress, 1);
 }
@@ -218,10 +205,8 @@ fn harness_p6_alpha_a11_advance_required_one_boundary() {
 #[test]
 fn harness_p6_alpha_a12_advance_saturates() {
     // Type: Vec<u32> bounded check + final equality
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 3),
-        Position { x: 0, y: 0 },
-    );
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 3), Position { x: 0, y: 0 });
     let progress_trace: Vec<u32> = (0..10)
         .map(|_| {
             site.advance();
@@ -238,16 +223,17 @@ fn harness_p6_alpha_a12_advance_saturates() {
 #[test]
 fn harness_p6_alpha_a13_is_complete_inclusive() {
     // Type: bool equality at progress = required-1, =required, >required
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 5),
-        Position { x: 0, y: 0 },
-    );
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 5), Position { x: 0, y: 0 });
     // (a) progress = 4 (4 advance calls), not complete
     for _ in 0..4 {
         site.advance();
     }
     assert_eq!(site.progress, 4);
-    assert!(!site.is_complete(), "progress=4 should not be complete (req=5)");
+    assert!(
+        !site.is_complete(),
+        "progress=4 should not be complete (req=5)"
+    );
 
     // (b) progress = 5 (one more advance), complete
     site.advance();
@@ -266,13 +252,14 @@ fn harness_p6_alpha_a13_is_complete_inclusive() {
 #[test]
 fn harness_p6_alpha_a14_required_zero_trivially_complete() {
     // Type: bool + u32 equalities
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 0),
-        Position { x: 0, y: 0 },
-    );
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 0), Position { x: 0, y: 0 });
     assert!(site.is_complete(), "req=0 must be complete immediately");
     let edge = site.advance();
-    assert!(!edge, "advance() on already-complete site must return false");
+    assert!(
+        !edge,
+        "advance() on already-complete site must return false"
+    );
     assert_eq!(site.progress, 0, "progress must stay at 0");
 }
 
@@ -427,15 +414,12 @@ fn harness_p6_alpha_a22_serde_blueprint() {
 #[test]
 fn harness_p6_alpha_a23_serde_site_mid_construction() {
     // Type: struct equality after RON round-trip; progress must persist
-    let mut site = ConstructionSite::new(
-        BuildingBlueprint::new(1, 2, 2, 5),
-        Position { x: 7, y: 8 },
-    );
+    let mut site =
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 5), Position { x: 7, y: 8 });
     site.advance();
     assert_eq!(site.progress, 1);
     let encoded = ron::to_string(&site).expect("ConstructionSite Serialize");
-    let decoded: ConstructionSite =
-        ron::from_str(&encoded).expect("ConstructionSite Deserialize");
+    let decoded: ConstructionSite = ron::from_str(&encoded).expect("ConstructionSite Deserialize");
     assert_eq!(decoded, site);
     assert_eq!(decoded.progress, 1);
 }
@@ -455,8 +439,7 @@ fn harness_p6_alpha_a24_serde_target_kind_and_agent_state() {
         target: TargetKind::ConstructionSite,
     };
     let encoded = ron::to_string(&s).expect("AgentState Seeking Serialize");
-    let decoded: AgentState =
-        ron::from_str(&encoded).expect("AgentState Seeking Deserialize");
+    let decoded: AgentState = ron::from_str(&encoded).expect("AgentState Seeking Deserialize");
     assert_eq!(decoded, s);
 
     // (c) AgentState::Consuming { ConstructionSite }
@@ -464,8 +447,7 @@ fn harness_p6_alpha_a24_serde_target_kind_and_agent_state() {
         target: TargetKind::ConstructionSite,
     };
     let encoded = ron::to_string(&c).expect("AgentState Consuming Serialize");
-    let decoded: AgentState =
-        ron::from_str(&encoded).expect("AgentState Consuming Deserialize");
+    let decoded: AgentState = ron::from_str(&encoded).expect("AgentState Consuming Deserialize");
     assert_eq!(decoded, c);
 }
 
@@ -505,10 +487,7 @@ fn harness_p6_alpha_a27_phase5_archetype_regression() {
         Thirst::new(0.0, 0.7),
         Sleep::new(0.0, 0.5),
         AgentState::Idle,
-        ConstructionSite::new(
-            BuildingBlueprint::new(1, 2, 2, 5),
-            Position { x: 1, y: 1 },
-        ),
+        ConstructionSite::new(BuildingBlueprint::new(1, 2, 2, 5), Position { x: 1, y: 1 }),
     ));
 
     let count = world

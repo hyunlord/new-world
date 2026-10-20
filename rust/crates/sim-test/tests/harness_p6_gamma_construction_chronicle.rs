@@ -98,12 +98,8 @@ fn harness_p6_gamma_construction_chronicle() {
     // Spawn the co-located ConstructionSite. The original blueprint is
     // cached so A13 can compare what the causal log durably preserves
     // against the original spec after the site entity is gone.
-    let original_blueprint = BuildingBlueprint::new(
-        BLUEPRINT_ID,
-        FOOTPRINT_W,
-        FOOTPRINT_H,
-        REQUIRED_PROGRESS,
-    );
+    let original_blueprint =
+        BuildingBlueprint::new(BLUEPRINT_ID, FOOTPRINT_W, FOOTPRINT_H, REQUIRED_PROGRESS);
     let site_entity = engine.world.spawn((ConstructionSite::new(
         original_blueprint,
         Position {
@@ -413,10 +409,7 @@ fn harness_p6_gamma_construction_chronicle() {
     // site's slot, and verify the BuildingPlaced payload (`position`,
     // a (u32, u32) tuple) is preserved and unrelated to any newly
     // recycled handle.
-    let site_still_alive = engine
-        .world
-        .get::<&ConstructionSite>(site_entity)
-        .is_ok();
+    let site_still_alive = engine.world.get::<&ConstructionSite>(site_entity).is_ok();
     assert!(
         !site_still_alive,
         "A11(i): ConstructionSite entity still alive post-completion. state_log={state_log:?} causal_log={causal_log:?}"
@@ -430,10 +423,7 @@ fn harness_p6_gamma_construction_chronicle() {
     //          original spawn tile (`(SITE_X, SITE_Y)`), proving the
     //          payload is durable data and NOT a stale entity handle.
     let probe_entity = engine.world.spawn(());
-    let probe_has_site = engine
-        .world
-        .get::<&ConstructionSite>(probe_entity)
-        .is_ok();
+    let probe_has_site = engine.world.get::<&ConstructionSite>(probe_entity).is_ok();
     assert!(
         !probe_has_site,
         "A11(ii)a: probe entity (potentially recycled slot of site_entity) carries a ConstructionSite component. probe={probe_entity:?} site={site_entity:?}"

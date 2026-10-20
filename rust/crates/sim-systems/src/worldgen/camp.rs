@@ -144,13 +144,27 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
         // Pass 9: under keyed draws a founder's lineage key is its spawn index,
         // and its age and lifespan are keyed on it (born before tick 0: the
         // replicate in force at tick 0).
-        let lineage = engine.resources.rules.agent.keyed_draws.then(|| sim_core::components::Lineage::founder(cfg.seed, i));
+        let lineage = engine
+            .resources
+            .rules
+            .agent
+            .keyed_draws
+            .then(|| sim_core::components::Lineage::founder(cfg.seed, i));
         if let Some(lineage) = lineage {
             let _ = engine.world.insert_one(entity, lineage);
             // Pass 11: under exposure v2 every founder carries its hardiness,
             // keyed on its lineage (replicate 0: an identity trait).
-            if engine.resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
-                let _ = engine.world.insert_one(entity, sim_core::components::Hardiness::draw(cfg.seed, lineage.key));
+            if engine
+                .resources
+                .rules
+                .society
+                .exposure
+                .is_some_and(|rule| rule.use_hardiness)
+            {
+                let _ = engine.world.insert_one(
+                    entity,
+                    sim_core::components::Hardiness::draw(cfg.seed, lineage.key),
+                );
             }
             // Pass 16: under the temperament rule (`game_v20`) every founder
             // carries its temperament, keyed on its lineage (replicate 0: an
@@ -177,11 +191,17 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
         }
         // Pass 4: founders start already aged, from their own aging stream.
         if let Some(rule) = engine.resources.rules.society.aging {
-            let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);
+            let id = engine
+                .world
+                .get::<&sim_core::components::Agent>(entity)
+                .map(|a| a.id);
             if let Ok(id) = id {
                 let life = match lineage {
                     Some(lineage) => crate::runtime::agent::aging::keyed_founder_life(
-                        cfg.seed, lineage.key, engine.resources.noise_replicate_for(0), &rule,
+                        cfg.seed,
+                        lineage.key,
+                        engine.resources.noise_replicate_for(0),
+                        &rule,
                     ),
                     None => crate::runtime::agent::aging::founder_life(cfg.seed, id, &rule),
                 };
@@ -189,9 +209,17 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
             }
         }
         // Pass 19 chronicle: every founder's person record (every scene).
-        let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);
+        let id = engine
+            .world
+            .get::<&sim_core::components::Agent>(entity)
+            .map(|a| a.id);
         if let Ok(id) = id {
-            crate::runtime::chronicle_log::ensure_entity(&engine.world, &mut engine.resources, id, entity);
+            crate::runtime::chronicle_log::ensure_entity(
+                &engine.world,
+                &mut engine.resources,
+                id,
+                entity,
+            );
         }
     }
     berries(cfg, &mut engine.resources, c);
@@ -327,7 +355,8 @@ pub const REGION_FILL_RING_MAX: u32 = 9;
 /// `(seed, stream, slot = region)`: swap index i uses the draw at tick i.
 fn keyed_shuffle(tiles: &mut [Tile], seed: u64, stream: u64, region: u32) {
     for i in (1..tiles.len()).rev() {
-        let j = sim_core::rng::keyed_below(seed, stream, 0, i as u64, region, 0, i as u64 + 1) as usize;
+        let j =
+            sim_core::rng::keyed_below(seed, stream, 0, i as u64, region, 0, i as u64 + 1) as usize;
         tiles.swap(i, j);
     }
 }
@@ -366,8 +395,8 @@ fn keyed_shuffle(tiles: &mut [Tile], seed: u64, stream: u64, region: u32) {
 /// with the existing two-tile spacing. Tier counts go to the worldgen report.
 pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
     use sim_core::rng::{
-        keyed_below, STREAM_REGION, STREAM_REGION_BUSH, STREAM_REGION_FILL_BUSH, STREAM_REGION_FILL_WOOD,
-        STREAM_REGION_WOOD,
+        keyed_below, STREAM_REGION, STREAM_REGION_BUSH, STREAM_REGION_FILL_BUSH,
+        STREAM_REGION_FILL_WOOD, STREAM_REGION_WOOD,
     };
     let Some(hearth) = r
         .building_kinds
@@ -400,15 +429,27 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                     && walkable(r, p)
                     && !r.water_tiles.contains_key(&p)
                     && centres.iter().all(|&c| distance(p, c) >= REGION_SEPARATION)
-                    && cfg.region_water_max.is_none_or(|max| water.iter().any(|&q| distance(p, q) <= max))
+                    && cfg
+                        .region_water_max
+                        .is_none_or(|max| water.iter().any(|&q| distance(p, q) <= max))
             })
             .collect();
         if candidates.is_empty() {
             continue;
         }
-        let centre = candidates[keyed_below(cfg.seed, STREAM_REGION, 0, 0, region, 0, candidates.len() as u64) as usize];
+        let centre = candidates[keyed_below(
+            cfg.seed,
+            STREAM_REGION,
+            0,
+            0,
+            region,
+            0,
+            candidates.len() as u64,
+        ) as usize];
         centres.push(centre);
-        let ring = |p: Tile| (REGION_RING_MIN..=REGION_RING_MAX).contains(&distance(p, centre)) && beyond_camp(p);
+        let ring = |p: Tile| {
+            (REGION_RING_MIN..=REGION_RING_MAX).contains(&distance(p, centre)) && beyond_camp(p)
+        };
         // Bushes: the camp berries' candidate filter inside the ring.
         let mut bushes: Vec<Tile> = tiles(r)
             .filter(|&p| {
@@ -417,17 +458,26 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                     && !r.building_kinds.contains_key(&p)
                     && !r.water_tiles.contains_key(&p)
                     && !r.food_source_max.contains_key(&p)
-                    && r.tile_grid.neighbors_4(p.0, p.1).iter().any(|&q| terrain(r, q) == TerrainType::Plain)
+                    && r.tile_grid
+                        .neighbors_4(p.0, p.1)
+                        .iter()
+                        .any(|&q| terrain(r, q) == TerrainType::Plain)
             })
             .collect();
         keyed_shuffle(&mut bushes, cfg.seed, STREAM_REGION_BUSH, region);
         bushes.truncate(cfg.region_bushes as usize);
         // Pass 12: fill a short region from looser tiers (none in v17).
         if cfg.region_fill {
-            let far = |p: Tile| (REGION_FILL_RING_MIN..=REGION_FILL_RING_MAX).contains(&distance(p, centre)) && beyond_camp(p);
+            let far = |p: Tile| {
+                (REGION_FILL_RING_MIN..=REGION_FILL_RING_MAX).contains(&distance(p, centre))
+                    && beyond_camp(p)
+            };
             let forest_edge = |p: Tile| {
                 terrain(r, p) == TerrainType::Plain
-                    && r.tile_grid.neighbors_4(p.0, p.1).iter().any(|&q| terrain(r, q) == TerrainType::Forest)
+                    && r.tile_grid
+                        .neighbors_4(p.0, p.1)
+                        .iter()
+                        .any(|&q| terrain(r, q) == TerrainType::Forest)
             };
             let mut added = [0u32; 4];
             for (tier, slot) in [(2u32, 0usize), (3, 1), (4, 2), (5, 3)] {
@@ -450,7 +500,12 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                             && !bushes.contains(&p)
                     })
                     .collect();
-                keyed_shuffle(&mut extra, cfg.seed, STREAM_REGION_FILL_BUSH, region + (tier << 16));
+                keyed_shuffle(
+                    &mut extra,
+                    cfg.seed,
+                    STREAM_REGION_FILL_BUSH,
+                    region + (tier << 16),
+                );
                 let take = (cfg.region_bushes as usize - bushes.len()).min(extra.len());
                 bushes.extend_from_slice(&extra[..take]);
                 added[slot] = take as u32;
@@ -477,12 +532,24 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                         && !r.food_tiles.contains_key(&p)
                 })
                 .collect();
-            keyed_shuffle(&mut candidates, cfg.seed, STREAM_REGION_WOOD, region + if kind == TerrainType::Plain { 1 << 16 } else { 0 });
+            keyed_shuffle(
+                &mut candidates,
+                cfg.seed,
+                STREAM_REGION_WOOD,
+                region
+                    + if kind == TerrainType::Plain {
+                        1 << 16
+                    } else {
+                        0
+                    },
+            );
             for p in candidates {
                 if chosen.len() >= cfg.region_deadwood as usize {
                     break;
                 }
-                if chosen.iter().all(|&q| distance(p, q) >= 2) && r.wood_source_max.keys().all(|&q| distance(p, q) >= 2) {
+                if chosen.iter().all(|&q| distance(p, q) >= 2)
+                    && r.wood_source_max.keys().all(|&q| distance(p, q) >= 2)
+                {
                     chosen.push(p);
                 }
             }
@@ -502,12 +569,19 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                             && !r.food_tiles.contains_key(&p)
                     })
                     .collect();
-                keyed_shuffle(&mut candidates, cfg.seed, STREAM_REGION_FILL_WOOD, region + (tier << 16));
+                keyed_shuffle(
+                    &mut candidates,
+                    cfg.seed,
+                    STREAM_REGION_FILL_WOOD,
+                    region + (tier << 16),
+                );
                 for p in candidates {
                     if chosen.len() >= cfg.region_deadwood as usize {
                         break;
                     }
-                    if chosen.iter().all(|&q| distance(p, q) >= 2) && r.wood_source_max.keys().all(|&q| distance(p, q) >= 2) {
+                    if chosen.iter().all(|&q| distance(p, q) >= 2)
+                        && r.wood_source_max.keys().all(|&q| distance(p, q) >= 2)
+                    {
                         chosen.push(p);
                     }
                 }
@@ -524,7 +598,11 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
         r.worldgen_report.region_bushes_placed += bushes.len() as u32;
         r.worldgen_report.region_deadwood_requested += cfg.region_deadwood;
         r.worldgen_report.region_deadwood_placed += chosen.len() as u32;
-        let water_distance = water.iter().map(|&q| distance(centre, q)).min().unwrap_or(u32::MAX);
+        let water_distance = water
+            .iter()
+            .map(|&q| distance(centre, q))
+            .min()
+            .unwrap_or(u32::MAX);
         r.wild_regions.push(sim_engine::WildRegion {
             centre,
             bushes: bushes.len() as u32,

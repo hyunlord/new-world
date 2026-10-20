@@ -9,7 +9,10 @@ use std::collections::BTreeSet;
 const DAY: u64 = 1440;
 
 fn rule() -> sim_core::rules::AgingRule {
-    WorldRules::game_v10().society.aging.expect("v10 aging rule")
+    WorldRules::game_v10()
+        .society
+        .aging
+        .expect("v10 aging rule")
 }
 
 #[test]
@@ -22,13 +25,24 @@ fn harness_aging_lifespans_bounded_and_deterministic() {
     let mut total = 0u64;
     for id in 0..1000u64 {
         let life = newborn_life(20_261_010, id, 5_000, &rule);
-        assert!((low..=high).contains(&life.lifespan_ticks), "id {id}: {}", life.lifespan_ticks);
-        assert_eq!(life, newborn_life(20_261_010, id, 5_000, &rule), "twin draw differs for {id}");
+        assert!(
+            (low..=high).contains(&life.lifespan_ticks),
+            "id {id}: {}",
+            life.lifespan_ticks
+        );
+        assert_eq!(
+            life,
+            newborn_life(20_261_010, id, 5_000, &rule),
+            "twin draw differs for {id}"
+        );
         assert_eq!(life.born_tick, 5_000);
         total += life.lifespan_ticks;
     }
     let mean_days = total as f64 / 1000.0 / DAY as f64;
-    assert!((57.0..=59.0).contains(&mean_days), "mean lifespan {mean_days} days");
+    assert!(
+        (57.0..=59.0).contains(&mean_days),
+        "mean lifespan {mean_days} days"
+    );
 }
 
 #[test]
@@ -36,14 +50,27 @@ fn harness_aging_founders() {
     let rule = rule();
     for seed in 0..8u64 {
         let mut engine = game_v10_scene(seed);
-        let lives: Vec<Life> = engine.world.query::<(&Agent, &Life)>().iter().map(|(_, (_, l))| *l).collect();
+        let lives: Vec<Life> = engine
+            .world
+            .query::<(&Agent, &Life)>()
+            .iter()
+            .map(|(_, (_, l))| *l)
+            .collect();
         assert_eq!(lives.len(), 24, "every founder carries Life (seed {seed})");
         for life in &lives {
             let age = (-life.born_tick) as u64;
             assert!((6 * DAY..=40 * DAY).contains(&age), "founder age {age}");
-            assert!(life.lifespan_ticks >= age + 3 * DAY, "founder would die before day 3");
+            assert!(
+                life.lifespan_ticks >= age + 3 * DAY,
+                "founder would die before day 3"
+            );
         }
-        let ids: Vec<AgentId> = engine.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+        let ids: Vec<AgentId> = engine
+            .world
+            .query::<&Agent>()
+            .iter()
+            .map(|(_, a)| a.id)
+            .collect();
         for (id, life) in ids.iter().zip(&lives) {
             assert_eq!(*life, founder_life(seed, *id, &rule));
         }
@@ -59,7 +86,12 @@ fn harness_aging_founders() {
 #[test]
 fn harness_aging_old_age_death_and_replacement() {
     let mut engine = game_v10_scene(1);
-    let mut alive: BTreeSet<AgentId> = engine.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    let mut alive: BTreeSet<AgentId> = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(_, a)| a.id)
+        .collect();
     let mut first_old_age = None;
     let mut birth_after = false;
     let mut cleaned = 0;
@@ -67,13 +99,25 @@ fn harness_aging_old_age_death_and_replacement() {
         let births = engine.resources.tallies.births;
         let old_age = engine.resources.tallies.deaths_old_age;
         engine.tick();
-        let now: BTreeSet<AgentId> = engine.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+        let now: BTreeSet<AgentId> = engine
+            .world
+            .query::<&Agent>()
+            .iter()
+            .map(|(_, a)| a.id)
+            .collect();
         if engine.resources.tallies.deaths_old_age > old_age {
             first_old_age.get_or_insert(engine.current_tick());
             for gone in alive.difference(&now) {
-                assert!(!engine.resources.bed_of.contains_key(gone), "bed kept for dead {gone}");
                 assert!(
-                    engine.resources.settlements.values().all(|s| !s.member_agents.contains(gone)),
+                    !engine.resources.bed_of.contains_key(gone),
+                    "bed kept for dead {gone}"
+                );
+                assert!(
+                    engine
+                        .resources
+                        .settlements
+                        .values()
+                        .all(|s| !s.member_agents.contains(gone)),
                     "roster kept dead {gone}"
                 );
                 cleaned += 1;
@@ -99,7 +143,12 @@ fn harness_aging_elders_stay_home() {
         engine.tick();
     }
     let (home, members) = {
-        let settlement = engine.resources.settlements.values().next().expect("village");
+        let settlement = engine
+            .resources
+            .settlements
+            .values()
+            .next()
+            .expect("village");
         let mut members: Vec<_> = settlement.member_agents.iter().copied().collect();
         members.sort_unstable();
         (settlement.formation_tile, members)
@@ -113,17 +162,30 @@ fn harness_aging_elders_stay_home() {
         .map(|(e, _)| e)
         .collect();
     for entity in &elders {
-        engine.world.insert(*entity, (Elder, Position::new(home.0, home.1), AgentState::Idle)).expect("elder");
-        let _ = engine.world.remove_one::<sim_core::components::SeekTarget>(*entity);
+        engine
+            .world
+            .insert(
+                *entity,
+                (Elder, Position::new(home.0, home.1), AgentState::Idle),
+            )
+            .expect("elder");
+        let _ = engine
+            .world
+            .remove_one::<sim_core::components::SeekTarget>(*entity);
     }
     let mut last_idle_distance = vec![None; elders.len()];
     let mut idle_observations = 0;
     for _ in 0..3 * DAY {
         engine.tick();
         for (index, entity) in elders.iter().enumerate() {
-            let Ok(state) = engine.world.get::<&AgentState>(*entity).map(|s| *s) else { continue };
+            let Ok(state) = engine.world.get::<&AgentState>(*entity).map(|s| *s) else {
+                continue;
+            };
             assert!(
-                !matches!(state.target(), Some(TargetKind::ConstructionSite | TargetKind::GatherFood)),
+                !matches!(
+                    state.target(),
+                    Some(TargetKind::ConstructionSite | TargetKind::GatherFood)
+                ),
                 "elder entered {state:?}"
             );
             let pos = *engine.world.get::<&Position>(*entity).expect("pos");
@@ -132,7 +194,10 @@ fn harness_aging_elders_stay_home() {
                 idle_observations += 1;
                 // Inside the tether it stays inside; outside (back from a need trip) it never drifts out.
                 if let Some(previous) = last_idle_distance[index] {
-                    assert!(distance <= radius.max(previous), "idle elder drifted to {distance} from {previous}");
+                    assert!(
+                        distance <= radius.max(previous),
+                        "idle elder drifted to {distance} from {previous}"
+                    );
                 }
                 last_idle_distance[index] = Some(distance);
             } else {
@@ -146,9 +211,14 @@ fn harness_aging_elders_stay_home() {
 
 #[test]
 fn harness_aging_v9_unchanged() {
-    for (seed, expected) in ["c022f6555945fcad", "5ca9b7e597238ee3", "d8afca881c554360", "48cf47e1341f5048"]
-        .into_iter()
-        .enumerate()
+    for (seed, expected) in [
+        "c022f6555945fcad",
+        "5ca9b7e597238ee3",
+        "d8afca881c554360",
+        "48cf47e1341f5048",
+    ]
+    .into_iter()
+    .enumerate()
     {
         let mut engine = game_v9_scene(seed as u64);
         assert_eq!(engine.world.query::<&Life>().iter().count(), 0);

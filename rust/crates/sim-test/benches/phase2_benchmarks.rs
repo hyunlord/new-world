@@ -49,10 +49,13 @@ fn bench_b1_bss_single_event(c: &mut Criterion) {
             || {
                 let mut engine = SimEngine::new(W, H, MaterialRegistry::new());
                 engine.register_system(Box::new(BuildingStampSystem::new()));
-                engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-                    position: (32, 32),
-                    radius: 3,
-                });
+                engine
+                    .resources
+                    .building_event_queue
+                    .push_back(BuildingPlacedEvent {
+                        position: (32, 32),
+                        radius: 3,
+                    });
                 engine
             },
             // Measured closure: 1 tick — BSS drains 1 event, marks 4 channels dirty
@@ -82,10 +85,13 @@ fn bench_b2_bss_1000_events(c: &mut Criterion) {
                 let mut engine = SimEngine::new(W, H, MaterialRegistry::new());
                 engine.register_system(Box::new(BuildingStampSystem::new()));
                 for i in 0u32..1000 {
-                    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-                        position: ((i * 7) % W, (i * 11) % H),
-                        radius: 1,
-                    });
+                    engine
+                        .resources
+                        .building_event_queue
+                        .push_back(BuildingPlacedEvent {
+                            position: ((i * 7) % W, (i * 11) % H),
+                            radius: 1,
+                        });
                 }
                 engine
             },
@@ -119,13 +125,18 @@ fn bench_b3_full_pipeline_10_events(c: &mut Criterion) {
                 for i in 0u32..20 {
                     let x = (i * 3) % W;
                     let y = (i * 5) % H;
-                    engine.world.spawn((Position { x, y }, InfluenceSample::default()));
+                    engine
+                        .world
+                        .spawn((Position { x, y }, InfluenceSample::default()));
                 }
                 for i in 0u32..10 {
-                    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-                        position: ((i * 6) % W, (i * 7 + 3) % H),
-                        radius: 2,
-                    });
+                    engine
+                        .resources
+                        .building_event_queue
+                        .push_back(BuildingPlacedEvent {
+                            position: ((i * 6) % W, (i * 7 + 3) % H),
+                            radius: 2,
+                        });
                 }
                 engine
             },
@@ -163,7 +174,9 @@ fn bench_b4_viz_aligned_tick(c: &mut Criterion) {
                 for i in 0u32..20 {
                     let x = (i * 3) % W;
                     let y = (i * 5) % H;
-                    engine.world.spawn((Position { x, y }, InfluenceSample::default()));
+                    engine
+                        .world
+                        .spawn((Position { x, y }, InfluenceSample::default()));
                 }
                 // Advance tick counter: after 6 calls, current_tick==6.
                 // 6%6==0 → Viz will fire on the next (measured) tick.
@@ -172,10 +185,13 @@ fn bench_b4_viz_aligned_tick(c: &mut Criterion) {
                     engine.tick();
                 }
                 // Queue 1 event for the measured tick (exercises BSS→dirty path with Viz)
-                engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-                    position: (32, 32),
-                    radius: 3,
-                });
+                engine
+                    .resources
+                    .building_event_queue
+                    .push_back(BuildingPlacedEvent {
+                        position: (32, 32),
+                        radius: 3,
+                    });
                 engine
             },
             // Measured: current_tick=6, Viz fires (6%6==0), BSS stamps 1 event
@@ -206,7 +222,9 @@ fn bench_b5_engine_construction(c: &mut Criterion) {
             for i in 0u32..20 {
                 let x = (i * 3) % W;
                 let y = (i * 5) % H;
-                engine.world.spawn((Position { x, y }, InfluenceSample::default()));
+                engine
+                    .world
+                    .spawn((Position { x, y }, InfluenceSample::default()));
             }
             black_box(engine)
         });

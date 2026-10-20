@@ -163,7 +163,8 @@ fn harness_settlements_zero_a3_every_snapshot_row_wellformed() {
         }
     }
     assert_eq!(
-        violations, 0,
+        violations,
+        0,
         "A3: every row must have member_count >= 1 AND settlement_id ∈ live ids; \
          {violations} violation(s) across {} rows",
         snapshot.len()
@@ -248,7 +249,10 @@ fn harness_settlements_zero_a6_snapshot_determinism() {
     }
     let a = run();
     let b = run();
-    assert!(!a.is_empty(), "A6: non-empty floor — settlements must exist");
+    assert!(
+        !a.is_empty(),
+        "A6: non-empty floor — settlements must exist"
+    );
     assert_eq!(
         a.len(),
         b.len(),

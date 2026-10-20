@@ -165,8 +165,14 @@ fn harness_p7_gamma_social_chronicle() {
             .get::<&Social>(entity_2)
             .expect("agent_2 has Social")
             .loneliness;
-        assert_eq!(lone_1, 0.0, "A0(b): agent_1 loneliness must be 0.0 at tick 0");
-        assert_eq!(lone_2, 0.0, "A0(b): agent_2 loneliness must be 0.0 at tick 0");
+        assert_eq!(
+            lone_1, 0.0,
+            "A0(b): agent_1 loneliness must be 0.0 at tick 0"
+        );
+        assert_eq!(
+            lone_2, 0.0,
+            "A0(b): agent_2 loneliness must be 0.0 at tick 0"
+        );
         let pos_1 = {
             let p = engine
                 .world
@@ -319,7 +325,9 @@ fn harness_p7_gamma_social_chronicle() {
     let t_s1 = state_log_1
         .iter()
         .find_map(|(t, s)| match s {
-            AgentState::Seeking { target: TargetKind::Agent(o) } if *o == id_2 => Some(*t),
+            AgentState::Seeking {
+                target: TargetKind::Agent(o),
+            } if *o == id_2 => Some(*t),
             _ => None,
         })
         .unwrap_or_else(|| {
@@ -341,7 +349,9 @@ fn harness_p7_gamma_social_chronicle() {
     let t_s2 = state_log_2
         .iter()
         .find_map(|(t, s)| match s {
-            AgentState::Seeking { target: TargetKind::Agent(o) } if *o == id_1 => Some(*t),
+            AgentState::Seeking {
+                target: TargetKind::Agent(o),
+            } if *o == id_1 => Some(*t),
             _ => None,
         })
         .unwrap_or_else(|| {
@@ -361,7 +371,10 @@ fn harness_p7_gamma_social_chronicle() {
     // valid partner in this 2-agent universe; self-targeting or any
     // other id signals a partner-selection bug.
     for (t, s) in &state_log_1 {
-        if let AgentState::Seeking { target: TargetKind::Agent(x) } = s {
+        if let AgentState::Seeking {
+            target: TargetKind::Agent(x),
+        } = s
+        {
             assert_eq!(
                 *x, id_2,
                 "A3: agent_1 Seeking wrong target at tick {t}: {x} != id_2={id_2}. \
@@ -370,7 +383,10 @@ fn harness_p7_gamma_social_chronicle() {
         }
     }
     for (t, s) in &state_log_2 {
-        if let AgentState::Seeking { target: TargetKind::Agent(x) } = s {
+        if let AgentState::Seeking {
+            target: TargetKind::Agent(x),
+        } = s
+        {
             assert_eq!(
                 *x, id_1,
                 "A3: agent_2 Seeking wrong target at tick {t}: {x} != id_1={id_1}. \
@@ -388,7 +404,9 @@ fn harness_p7_gamma_social_chronicle() {
     let (t_c1, t_c1_target) = state_log_1
         .iter()
         .find_map(|(t, s)| match s {
-            AgentState::Consuming { target: TargetKind::Agent(o) } => Some((*t, *o)),
+            AgentState::Consuming {
+                target: TargetKind::Agent(o),
+            } => Some((*t, *o)),
             _ => None,
         })
         .unwrap_or_else(|| {
@@ -400,7 +418,9 @@ fn harness_p7_gamma_social_chronicle() {
     let (t_c2, t_c2_target) = state_log_2
         .iter()
         .find_map(|(t, s)| match s {
-            AgentState::Consuming { target: TargetKind::Agent(o) } => Some((*t, *o)),
+            AgentState::Consuming {
+                target: TargetKind::Agent(o),
+            } => Some((*t, *o)),
             _ => None,
         })
         .unwrap_or_else(|| {
@@ -915,8 +935,12 @@ fn harness_p7_gamma_social_chronicle() {
     for (log_name, log) in [("state_log_1", &state_log_1), ("state_log_2", &state_log_2)] {
         for (t, s) in log {
             match s {
-                AgentState::Seeking { target: TargetKind::Agent(_) }
-                | AgentState::Consuming { target: TargetKind::Agent(_) } => {
+                AgentState::Seeking {
+                    target: TargetKind::Agent(_),
+                }
+                | AgentState::Consuming {
+                    target: TargetKind::Agent(_),
+                } => {
                     assert!(
                         s.suppresses_movement(),
                         "A14c: {log_name} at tick {t} state {s:?} must have \
@@ -1017,9 +1041,7 @@ fn harness_p7_gamma_social_chronicle() {
     // Diagnostic counter required by attempt-1 RE-CODE feedback (issue 3):
     // emit `agents_doing_social_interaction=N` with `N > 0`.
     let agents_doing_social_interaction = social_decisions.len();
-    println!(
-        "[γ-chronicle p7] agents_doing_social_interaction={agents_doing_social_interaction}"
-    );
+    println!("[γ-chronicle p7] agents_doing_social_interaction={agents_doing_social_interaction}");
     assert!(
         agents_doing_social_interaction > 0,
         "diagnostic: agents_doing_social_interaction must be > 0 (got 0)"

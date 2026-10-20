@@ -68,14 +68,50 @@ fn row_for(rows: &[AgentSnapshotRow], ent: hecs::Entity) -> AgentSnapshotRow {
 fn harness_s16_epsilon_a1_seek_kind_resource_mapping() {
     // Type A — enum→code invariant (1=Food, 2=Water, 3=Sleep), exact equality.
     let mut e = engine();
-    let food = spawn_with(&mut e, 5, 5, AgentState::Seeking { target: TargetKind::Food }, None);
-    let water = spawn_with(&mut e, 6, 6, AgentState::Seeking { target: TargetKind::Water }, None);
-    let sleep = spawn_with(&mut e, 7, 7, AgentState::Seeking { target: TargetKind::Sleep }, None);
+    let food = spawn_with(
+        &mut e,
+        5,
+        5,
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
+        None,
+    );
+    let water = spawn_with(
+        &mut e,
+        6,
+        6,
+        AgentState::Seeking {
+            target: TargetKind::Water,
+        },
+        None,
+    );
+    let sleep = spawn_with(
+        &mut e,
+        7,
+        7,
+        AgentState::Seeking {
+            target: TargetKind::Sleep,
+        },
+        None,
+    );
 
     let rows = collect_agent_snapshot(&e.world);
-    assert_eq!(row_for(&rows, food).seek_kind, 1, "A1: Seeking{{Food}} → seek_kind 1");
-    assert_eq!(row_for(&rows, water).seek_kind, 2, "A1: Seeking{{Water}} → seek_kind 2");
-    assert_eq!(row_for(&rows, sleep).seek_kind, 3, "A1: Seeking{{Sleep}} → seek_kind 3");
+    assert_eq!(
+        row_for(&rows, food).seek_kind,
+        1,
+        "A1: Seeking{{Food}} → seek_kind 1"
+    );
+    assert_eq!(
+        row_for(&rows, water).seek_kind,
+        2,
+        "A1: Seeking{{Water}} → seek_kind 2"
+    );
+    assert_eq!(
+        row_for(&rows, sleep).seek_kind,
+        3,
+        "A1: Seeking{{Sleep}} → seek_kind 3"
+    );
     println!("[S16-ε A1] seek_kind Food=1, Water=2, Sleep=3 ✓");
 }
 
@@ -89,13 +125,21 @@ fn harness_s16_epsilon_a2_target_coords_echo_seek_tile() {
         &mut e,
         3,
         4,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((10, 20))),
     );
     let rows = collect_agent_snapshot(&e.world);
     let row = row_for(&rows, a);
-    assert_eq!(row.target_x, 10, "A2: target_x must equal SeekTarget.tile.0 (10)");
-    assert_eq!(row.target_y, 20, "A2: target_y must equal SeekTarget.tile.1 (20)");
+    assert_eq!(
+        row.target_x, 10,
+        "A2: target_x must equal SeekTarget.tile.0 (10)"
+    );
+    assert_eq!(
+        row.target_y, 20,
+        "A2: target_y must equal SeekTarget.tile.1 (20)"
+    );
     println!("[S16-ε A2] SeekTarget(10,20) → target_x=10, target_y=20 (no axis swap) ✓");
 }
 
@@ -109,7 +153,10 @@ fn harness_s16_epsilon_a3_absent_seek_target_sentinel() {
     let idle = spawn_with(&mut e, 8, 9, AgentState::Idle, None);
     let rows = collect_agent_snapshot(&e.world);
     let row = row_for(&rows, idle);
-    assert_eq!(row.seek_kind, 0, "A3: Idle (no resource trip) → seek_kind 0");
+    assert_eq!(
+        row.seek_kind, 0,
+        "A3: Idle (no resource trip) → seek_kind 0"
+    );
     assert_eq!(row.target_x, -1, "A3: no SeekTarget → target_x sentinel -1");
     assert_eq!(row.target_y, -1, "A3: no SeekTarget → target_y sentinel -1");
     println!("[S16-ε A3] Idle + no SeekTarget → seek_kind 0, target (-1,-1) ✓");
@@ -122,25 +169,41 @@ fn harness_s16_epsilon_a4_state_tag_table_unchanged() {
     // Adding seek_kind/target fields must not perturb state_tag.
     let mut e = engine();
     let idle = spawn_with(&mut e, 1, 1, AgentState::Idle, None);
-    let seeking = spawn_with(&mut e, 2, 2, AgentState::Seeking { target: TargetKind::Food }, None);
+    let seeking = spawn_with(
+        &mut e,
+        2,
+        2,
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
+        None,
+    );
     let consuming_agent = spawn_with(
         &mut e,
         3,
         3,
-        AgentState::Consuming { target: TargetKind::Agent(777) },
+        AgentState::Consuming {
+            target: TargetKind::Agent(777),
+        },
         None,
     );
     let consuming_food = spawn_with(
         &mut e,
         4,
         4,
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food,
+        },
         None,
     );
 
     let rows = collect_agent_snapshot(&e.world);
     assert_eq!(row_for(&rows, idle).state_tag, 0, "A4: Idle → state_tag 0");
-    assert_eq!(row_for(&rows, seeking).state_tag, 1, "A4: Seeking{{..}} → state_tag 1");
+    assert_eq!(
+        row_for(&rows, seeking).state_tag,
+        1,
+        "A4: Seeking{{..}} → state_tag 1"
+    );
     assert_eq!(
         row_for(&rows, consuming_agent).state_tag,
         2,
@@ -164,24 +227,40 @@ fn harness_s16_epsilon_a5_non_resource_seek_kind_zero() {
         &mut e,
         10,
         10,
-        AgentState::Seeking { target: TargetKind::ConstructionSite },
+        AgentState::Seeking {
+            target: TargetKind::ConstructionSite,
+        },
         None,
     );
     let partner = spawn_with(
         &mut e,
         11,
         11,
-        AgentState::Seeking { target: TargetKind::Agent(424242) },
+        AgentState::Seeking {
+            target: TargetKind::Agent(424242),
+        },
         None,
     );
     let rows = collect_agent_snapshot(&e.world);
     let site_row = row_for(&rows, site);
     let partner_row = row_for(&rows, partner);
-    assert_eq!(site_row.seek_kind, 0, "A5: Seeking{{ConstructionSite}} → seek_kind 0");
-    assert_eq!(partner_row.seek_kind, 0, "A5: Seeking{{Agent(_)}} → seek_kind 0");
+    assert_eq!(
+        site_row.seek_kind, 0,
+        "A5: Seeking{{ConstructionSite}} → seek_kind 0"
+    );
+    assert_eq!(
+        partner_row.seek_kind, 0,
+        "A5: Seeking{{Agent(_)}} → seek_kind 0"
+    );
     // Precondition: both are still Seeking (state_tag 1) — not vacuous.
-    assert_eq!(site_row.state_tag, 1, "A5 precondition: ConstructionSite seek is state_tag 1");
-    assert_eq!(partner_row.state_tag, 1, "A5 precondition: Agent seek is state_tag 1");
+    assert_eq!(
+        site_row.state_tag, 1,
+        "A5 precondition: ConstructionSite seek is state_tag 1"
+    );
+    assert_eq!(
+        partner_row.state_tag, 1,
+        "A5 precondition: Agent seek is state_tag 1"
+    );
     println!("[S16-ε A5] ConstructionSite/Agent seeks → seek_kind 0 (state_tag still 1) ✓");
 }
 
@@ -195,7 +274,9 @@ fn harness_s16_epsilon_a6_existing_fields_intact() {
         &mut e,
         13,
         21,
-        AgentState::Consuming { target: TargetKind::Water },
+        AgentState::Consuming {
+            target: TargetKind::Water,
+        },
         Some(SeekTarget::new((1, 2))),
     );
     let expected_agent_id = e.world.get::<&Agent>(ent).expect("Agent").id;
@@ -210,8 +291,14 @@ fn harness_s16_epsilon_a6_existing_fields_intact() {
     assert_eq!(row.x, 13, "A6: x must equal inserted Position.x");
     assert_eq!(row.y, 21, "A6: y must equal inserted Position.y");
     // Consuming{Water} (non-Agent) → state_tag 3 per the A22 table.
-    assert_eq!(row.state_tag, 3, "A6: state_tag must follow the A22 table (Consuming{{Water}}=3)");
-    assert_eq!(row.agent_id, expected_agent_id, "A6: agent_id must equal Agent.id");
+    assert_eq!(
+        row.state_tag, 3,
+        "A6: state_tag must follow the A22 table (Consuming{{Water}}=3)"
+    );
+    assert_eq!(
+        row.agent_id, expected_agent_id,
+        "A6: agent_id must equal Agent.id"
+    );
     println!("[S16-ε A6] entity_bits/x/y/state_tag/agent_id intact ✓");
 }
 
@@ -229,7 +316,11 @@ fn harness_s16_epsilon_a7_live_snapshot_well_formed() {
     }
 
     let rows = collect_agent_snapshot(&e.world);
-    assert_eq!(rows.len(), 64, "A7: row count must equal the bootstrap agent count (64)");
+    assert_eq!(
+        rows.len(),
+        64,
+        "A7: row count must equal the bootstrap agent count (64)"
+    );
     for (i, row) in rows.iter().enumerate() {
         // (a) seek_kind in the locked domain {0,1,2,3}.
         assert!(
@@ -290,7 +381,10 @@ fn harness_s16_epsilon_a8_gathering_loop_preserved() {
     let mut left_idle = false;
     for _ in 0..50 {
         e.tick();
-        let st = *e.world.get::<&AgentState>(agent).expect("AgentState present");
+        let st = *e
+            .world
+            .get::<&AgentState>(agent)
+            .expect("AgentState present");
         if matches!(st, AgentState::Consuming { .. }) {
             reached_consuming = true;
         }
@@ -298,7 +392,10 @@ fn harness_s16_epsilon_a8_gathering_loop_preserved() {
             left_idle = true;
         }
     }
-    assert!(left_idle, "A8: forced-hungry agent must not remain stuck Idle");
+    assert!(
+        left_idle,
+        "A8: forced-hungry agent must not remain stuck Idle"
+    );
     assert!(
         reached_consuming,
         "A8: agent must reach Consuming{{..}} within the 50-tick window"

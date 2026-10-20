@@ -13,8 +13,8 @@
 //!   value at index `ceil(p / 100 × n) − 1`.
 use serde_json::{json, Value};
 use sim_core::components::Agent;
-use sim_core::rules::WorldRules;
 use sim_core::components::{ResourceKind, SettlementId};
+use sim_core::rules::WorldRules;
 use sim_engine::{SimEngine, TickProfile};
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 use std::collections::BTreeMap;
@@ -102,7 +102,10 @@ pub fn build_engine(spec: &RunSpec) -> Result<SimEngine, String> {
     let scene = spec.scene.clone();
     let (seed, agents, side) = (spec.seed, spec.agents, spec.side);
     std::panic::catch_unwind(move || match agents {
-        Some(n) => build_world_with(&WorldGenConfig::stress_v19(seed, n, side), stress_rules(&scene, seed)),
+        Some(n) => build_world_with(
+            &WorldGenConfig::stress_v19(seed, n, side),
+            stress_rules(&scene, seed),
+        ),
         None => crate::probe::scene_engine(&scene, seed),
     })
     .map_err(|payload| panic_text(payload.as_ref()))
@@ -234,7 +237,11 @@ impl SlowestTicks {
 
 fn slow_tick_entry(profile: &TickProfile, tick: u64, us: u32) -> SlowTick {
     let mut order: Vec<usize> = (0..profile.systems.len()).collect();
-    order.sort_by(|&a, &b| profile.last_tick_ns[b].cmp(&profile.last_tick_ns[a]).then(a.cmp(&b)));
+    order.sort_by(|&a, &b| {
+        profile.last_tick_ns[b]
+            .cmp(&profile.last_tick_ns[a])
+            .then(a.cmp(&b))
+    });
     SlowTick {
         tick,
         us,
@@ -242,7 +249,12 @@ fn slow_tick_entry(profile: &TickProfile, tick: u64, us: u32) -> SlowTick {
             .iter()
             .take(SLOW_TICK_SYSTEMS)
             .filter(|&&i| profile.last_tick_ns[i] > 0)
-            .map(|&i| (profile.systems[i].name.clone(), profile.last_tick_ns[i] as f64 / 1000.0))
+            .map(|&i| {
+                (
+                    profile.systems[i].name.clone(),
+                    profile.last_tick_ns[i] as f64 / 1000.0,
+                )
+            })
             .collect(),
         due_periodic: profile
             .systems
@@ -260,7 +272,10 @@ pub fn display_clock(tick: u64, offset: u64, ticks_per_day: u64) -> (u64, String
     }
     let shifted = tick + offset;
     let minute = (shifted % ticks_per_day) * 1440 / ticks_per_day;
-    (shifted / ticks_per_day, format!("{:02}:{:02}", minute / 60, minute % 60))
+    (
+        shifted / ticks_per_day,
+        format!("{:02}:{:02}", minute / 60, minute % 60),
+    )
 }
 
 #[derive(Debug, Default, Clone)]
@@ -283,7 +298,12 @@ pub struct RunOutput {
 
 /// Pass 19: each settlement's member count, largest first.
 fn settlement_sizes(engine: &SimEngine) -> Vec<usize> {
-    let mut sizes: Vec<usize> = engine.resources.settlements.values().map(|s| s.member_agents.len()).collect();
+    let mut sizes: Vec<usize> = engine
+        .resources
+        .settlements
+        .values()
+        .map(|s| s.member_agents.len())
+        .collect();
     sizes.sort_unstable_by(|a, b| b.cmp(a));
     sizes
 }
@@ -314,7 +334,12 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
             warm_systems = profile.systems.clone();
             warm_prune_ns = profile.prune_ns;
         }
-        let bucket = days.entry((tick + offset) / tpd).or_insert_with(|| DayBucket { system_ns: vec![0; systems], ..DayBucket::default() });
+        let bucket = days
+            .entry((tick + offset) / tpd)
+            .or_insert_with(|| DayBucket {
+                system_ns: vec![0; systems],
+                ..DayBucket::default()
+            });
         bucket.ticks += 1;
         bucket.tick_us += u64::from(us);
         for (sum, ns) in bucket.system_ns.iter_mut().zip(&profile.last_tick_ns) {
@@ -331,14 +356,23 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         let now = engine.current_tick();
         let at_sample = (now + offset) % tpd == SAMPLE_MINUTE * tpd / 1440;
         if at_sample {
-            let day = days.entry((now + offset) / tpd).or_insert_with(|| DayBucket { system_ns: vec![0; systems], ..DayBucket::default() });
+            let day = days
+                .entry((now + offset) / tpd)
+                .or_insert_with(|| DayBucket {
+                    system_ns: vec![0; systems],
+                    ..DayBucket::default()
+                });
             day.alive_0600 = Some(alive(&engine));
             day.settlements_0600 = Some(engine.resources.settlements.len() as u64);
         }
         if spec.feed == Feed::Fed && (gifts.is_empty() || at_sample) {
             if let Some(home) = engine.resources.settlements.keys().copied().min() {
                 let requested = GIFT_PER_ALIVE * alive(&engine);
-                let applied = gift_food(&mut engine, home, u32::try_from(requested).unwrap_or(u32::MAX));
+                let applied = gift_food(
+                    &mut engine,
+                    home,
+                    u32::try_from(requested).unwrap_or(u32::MAX),
+                );
                 gifts.push(json!({"tick": engine.current_tick(), "settlement": home, "requested": requested, "applied": applied}));
             }
         }
@@ -370,7 +404,11 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
             })
         })
         .collect();
-    let prune_steady_ns = if profile.ticks >= WARMUP_TICKS { profile.prune_ns - warm_prune_ns } else { 0 };
+    let prune_steady_ns = if profile.ticks >= WARMUP_TICKS {
+        profile.prune_ns - warm_prune_ns
+    } else {
+        0
+    };
     let per_day: Vec<Value> = days
         .iter()
         .map(|(day, b)| {
@@ -379,8 +417,17 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
                    "systems_ms": b.system_ns.iter().map(|&ns| ns as f64 / 1e6).collect::<Vec<_>>()})
         })
         .collect();
-    let samples: Vec<(u64, u64)> = days.values().filter_map(|b| b.alive_0600.zip(b.settlements_0600)).collect();
-    let mean_of = |f: fn(&(u64, u64)) -> u64| if samples.is_empty() { 0.0 } else { samples.iter().map(f).sum::<u64>() as f64 / samples.len() as f64 };
+    let samples: Vec<(u64, u64)> = days
+        .values()
+        .filter_map(|b| b.alive_0600.zip(b.settlements_0600))
+        .collect();
+    let mean_of = |f: fn(&(u64, u64)) -> u64| {
+        if samples.is_empty() {
+            0.0
+        } else {
+            samples.iter().map(f).sum::<u64>() as f64 / samples.len() as f64
+        }
+    };
     let slow: Vec<Value> = slowest
         .ticks
         .iter()
@@ -392,7 +439,8 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         })
         .collect();
     let warm_us = &profile.tick_us[..warm];
-    let snapshots = matches!(spec.mode.as_str(), "natural" | "stress" | "quick").then(|| snapshot_timings(&engine));
+    let snapshots = matches!(spec.mode.as_str(), "natural" | "stress" | "quick")
+        .then(|| snapshot_timings(&engine));
     let json = json!({
         "pass": 15, "mode": spec.mode, "scene": spec.scene, "seed": spec.seed,
         "agents_requested": spec.agents, "founders": founders, "side": spec.side, "feed": spec.feed.as_str(),
@@ -432,7 +480,10 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
         json["subprofile"] = subprofile.summary(offset, tpd);
         json
     };
-    RunOutput { json, tick_us: profile.tick_us }
+    RunOutput {
+        json,
+        tick_us: profile.tick_us,
+    }
 }
 
 /// Median and p90 (nearest rank) of `SNAPSHOT_REPEATS` timed calls of `f`, µs.
@@ -459,7 +510,10 @@ pub fn snapshot_timings(engine: &SimEngine) -> Value {
     let rows = |n: usize| json!(n);
     let mut out = serde_json::Map::new();
     let mut put = |name: &str, (median, p90): (f64, f64), count: Value| {
-        out.insert(name.into(), json!({"median_us": median, "p90_us": p90, "rows": count}));
+        out.insert(
+            name.into(),
+            json!({"median_us": median, "p90_us": p90, "rows": count}),
+        );
     };
     let agents = wn::collect_agent_snapshot(world);
     put(
@@ -483,26 +537,74 @@ pub fn snapshot_timings(engine: &SimEngine) -> Value {
         }),
         rows(settlements.len()),
     );
-    put("get_construction_snapshot", time_collector(|| wn::collect_construction_snapshot(world)), rows(wn::collect_construction_snapshot(world).len()));
-    put("get_building_snapshot", time_collector(|| wn::collect_building_snapshot(r)), rows(wn::collect_building_snapshot(r).len()));
-    put("get_resource_snapshot", time_collector(|| wn::collect_resource_snapshot(r)), rows(wn::collect_resource_snapshot(r).len()));
-    put("get_recent_deaths", time_collector(|| wn::collect_recent_deaths(r)), rows(wn::collect_recent_deaths(r).len()));
-    put("get_relationship_snapshot", time_collector(|| wn::collect_relationship_snapshot(r)), rows(wn::collect_relationship_snapshot(r).len()));
-    put("get_world_info", time_collector(|| wn::collect_world_info(r)), Value::Null);
-    put("get_time_snapshot", time_collector(|| wn::collect_time_snapshot(engine)), Value::Null);
-    put("get_tallies", time_collector(|| wn::collect_tallies(r)), Value::Null);
-    put("get_terrain_snapshot", time_collector(|| wn::collect_terrain_snapshot(r)), Value::Null);
+    put(
+        "get_construction_snapshot",
+        time_collector(|| wn::collect_construction_snapshot(world)),
+        rows(wn::collect_construction_snapshot(world).len()),
+    );
+    put(
+        "get_building_snapshot",
+        time_collector(|| wn::collect_building_snapshot(r)),
+        rows(wn::collect_building_snapshot(r).len()),
+    );
+    put(
+        "get_resource_snapshot",
+        time_collector(|| wn::collect_resource_snapshot(r)),
+        rows(wn::collect_resource_snapshot(r).len()),
+    );
+    put(
+        "get_recent_deaths",
+        time_collector(|| wn::collect_recent_deaths(r)),
+        rows(wn::collect_recent_deaths(r).len()),
+    );
+    put(
+        "get_relationship_snapshot",
+        time_collector(|| wn::collect_relationship_snapshot(r)),
+        rows(wn::collect_relationship_snapshot(r).len()),
+    );
+    put(
+        "get_world_info",
+        time_collector(|| wn::collect_world_info(r)),
+        Value::Null,
+    );
+    put(
+        "get_time_snapshot",
+        time_collector(|| wn::collect_time_snapshot(engine)),
+        Value::Null,
+    );
+    put(
+        "get_tallies",
+        time_collector(|| wn::collect_tallies(r)),
+        Value::Null,
+    );
+    put(
+        "get_terrain_snapshot",
+        time_collector(|| wn::collect_terrain_snapshot(r)),
+        Value::Null,
+    );
     // `get_influence_overlay` hands Godot a copy of one channel's buffer; the
     // copy into a Vec stands in for the PackedByteArray copy.
     put(
         "get_influence_overlay",
-        time_collector(|| r.influence_grid.current_buf(sim_core::influence::InfluenceChannel::all()[0]).to_vec()),
+        time_collector(|| {
+            r.influence_grid
+                .current_buf(sim_core::influence::InfluenceChannel::all()[0])
+                .to_vec()
+        }),
         Value::Null,
     );
     if let Some(first) = agents.first() {
-        put("get_agent_detail", time_collector(|| wn::collect_agent_detail(world, first.entity_bits)), Value::Null);
+        put(
+            "get_agent_detail",
+            time_collector(|| wn::collect_agent_detail(world, first.entity_bits)),
+            Value::Null,
+        );
         let (x, y) = (first.x as i32, first.y as i32);
-        put("get_tile_causal_history", time_collector(|| wn::try_collect_tile_causal_history(r, x, y)), Value::Null);
+        put(
+            "get_tile_causal_history",
+            time_collector(|| wn::try_collect_tile_causal_history(r, x, y)),
+            Value::Null,
+        );
     }
     // The renderer asks for the causal history of every distinct agent tile,
     // twice per frame (inventory): one whole pass over those tiles.
@@ -511,7 +613,12 @@ pub fn snapshot_timings(engine: &SimEngine) -> Value {
     tiles.dedup();
     put(
         "get_tile_causal_history_all_agent_tiles",
-        time_collector(|| tiles.iter().map(|&(x, y)| wn::try_collect_tile_causal_history(r, x, y).len()).sum::<usize>()),
+        time_collector(|| {
+            tiles
+                .iter()
+                .map(|&(x, y)| wn::try_collect_tile_causal_history(r, x, y).len())
+                .sum::<usize>()
+        }),
         rows(tiles.len()),
     );
     let buildings = wn::collect_building_snapshot(r);
@@ -537,7 +644,10 @@ pub fn machine_facts() -> Value {
                     .output()
                     .ok()
                     .filter(|o| o.status.success())
-                    .map_or_else(|| "unknown".to_string(), |o| String::from_utf8_lossy(&o.stdout).trim().to_string())
+                    .map_or_else(
+                        || "unknown".to_string(),
+                        |o| String::from_utf8_lossy(&o.stdout).trim().to_string(),
+                    )
             };
             json!({
                 "uname": cmd("uname", &["-a"]),
@@ -557,8 +667,13 @@ pub fn write_run(dir: &Path, stem: &str, output: &RunOutput) -> Result<String, S
     let name = format!("{stem}.json");
     let text = serde_json::to_string_pretty(&output.json).map_err(|e| e.to_string())?;
     std::fs::write(dir.join(&name), text + "\n").map_err(|e| format!("{name}: {e}"))?;
-    let bytes: Vec<u8> = output.tick_us.iter().flat_map(|v| v.to_le_bytes()).collect();
-    std::fs::write(dir.join(format!("{stem}.tick_us.bin")), bytes).map_err(|e| format!("{stem}: {e}"))?;
+    let bytes: Vec<u8> = output
+        .tick_us
+        .iter()
+        .flat_map(|v| v.to_le_bytes())
+        .collect();
+    std::fs::write(dir.join(format!("{stem}.tick_us.bin")), bytes)
+        .map_err(|e| format!("{stem}: {e}"))?;
     Ok(name)
 }
 
@@ -578,7 +693,8 @@ pub fn update_index(dir: &Path, entries: &[Value]) -> Result<(), String> {
             None => runs.push(entry.clone()),
         }
     }
-    let text = serde_json::to_string_pretty(&json!({"pass": 15, "runs": runs})).map_err(|e| e.to_string())?;
+    let text = serde_json::to_string_pretty(&json!({"pass": 15, "runs": runs}))
+        .map_err(|e| e.to_string())?;
     std::fs::write(&path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))
 }
 
@@ -600,28 +716,40 @@ pub fn run_and_write(dir: &Path, spec: &RunSpec) -> Result<Value, String> {
         Err(error) => {
             let stem = spec.stem(0);
             eprintln!("{stem}: worldgen failed: {error}");
-            return Ok(json!({"stem": stem, "status": "worldgen_failed", "error": error, "mode": spec.mode, "seed": spec.seed,
-                             "agents_requested": spec.agents, "side": spec.side, "feed": spec.feed.as_str()}));
+            return Ok(
+                json!({"stem": stem, "status": "worldgen_failed", "error": error, "mode": spec.mode, "seed": spec.seed,
+                             "agents_requested": spec.agents, "side": spec.side, "feed": spec.feed.as_str()}),
+            );
         }
     };
     let stem = spec.stem(alive(&engine));
     let spec_copy = spec.clone();
-    let output = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || run(&spec_copy, engine))) {
+    let output = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
+        run(&spec_copy, engine)
+    })) {
         Ok(output) => output,
         Err(payload) => {
             let error = panic_text(payload.as_ref());
             eprintln!("{stem}: run failed: {error}");
-            return Ok(json!({"stem": stem, "status": "run_failed", "error": error, "mode": spec.mode, "seed": spec.seed,
-                             "agents_requested": spec.agents, "side": spec.side, "feed": spec.feed.as_str()}));
+            return Ok(
+                json!({"stem": stem, "status": "run_failed", "error": error, "mode": spec.mode, "seed": spec.seed,
+                             "agents_requested": spec.agents, "side": spec.side, "feed": spec.feed.as_str()}),
+            );
         }
     };
     write_run(dir, &stem, &output)?;
     let entry = index_entry(&stem, &output);
     eprintln!(
         "{stem}: mean {:.4} ms p99.9 {:.3} ms max {:.3} ms alive {} wall {:.1} s",
-        output.json["tick_summary"]["mean_ms"].as_f64().unwrap_or(0.0),
-        output.json["tick_summary"]["p999_ms"].as_f64().unwrap_or(0.0),
-        output.json["tick_summary"]["max_ms"].as_f64().unwrap_or(0.0),
+        output.json["tick_summary"]["mean_ms"]
+            .as_f64()
+            .unwrap_or(0.0),
+        output.json["tick_summary"]["p999_ms"]
+            .as_f64()
+            .unwrap_or(0.0),
+        output.json["tick_summary"]["max_ms"]
+            .as_f64()
+            .unwrap_or(0.0),
         output.json["alive_end"],
         output.json["wall_seconds"].as_f64().unwrap_or(0.0)
     );
@@ -654,7 +782,13 @@ pub fn overhead(scene: &str, seed: u64, ticks: u64, repeats: u32) -> Value {
     let median = |v: &[f64]| {
         let mut s = v.to_vec();
         s.sort_by(f64::total_cmp);
-        if s.is_empty() { 0.0 } else if s.len() % 2 == 1 { s[s.len() / 2] } else { (s[s.len() / 2 - 1] + s[s.len() / 2]) / 2.0 }
+        if s.is_empty() {
+            0.0
+        } else if s.len() % 2 == 1 {
+            s[s.len() / 2]
+        } else {
+            (s[s.len() / 2 - 1] + s[s.len() / 2]) / 2.0
+        }
     };
     let (mp, mq) = (median(&plain), median(&profiled));
     json!({"pass": 15, "mode": "overhead", "scene": scene, "seed": seed, "ticks": ticks, "repeats": repeats,
@@ -695,11 +829,26 @@ pub struct PerfArgs {
 /// stockpile deposit the V7 `GiftFood` intervention made (V8-0 removed the god
 /// hand from the game; the fed stress world keeps its feeding here).
 fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u64 {
-    engine.resources.settlements.get_mut(&settlement).map_or(0, |store| {
-        let before = store.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
-        store.store(ResourceKind::Food, amount);
-        u64::from(store.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) - before)
-    })
+    engine
+        .resources
+        .settlements
+        .get_mut(&settlement)
+        .map_or(0, |store| {
+            let before = store
+                .stockpile
+                .get(&ResourceKind::Food)
+                .copied()
+                .unwrap_or(0);
+            store.store(ResourceKind::Food, amount);
+            u64::from(
+                store
+                    .stockpile
+                    .get(&ResourceKind::Food)
+                    .copied()
+                    .unwrap_or(0)
+                    - before,
+            )
+        })
 }
 
 /// The usage line.
@@ -720,23 +869,41 @@ impl PerfArgs {
             repeats: 3,
             out: PathBuf::new(),
         };
-        let list = |v: &str| v.split(',').map(|x| x.trim().parse::<u32>().map_err(|e| format!("{v}: {e}"))).collect::<Result<Vec<_>, _>>();
+        let list = |v: &str| {
+            v.split(',')
+                .map(|x| x.trim().parse::<u32>().map_err(|e| format!("{v}: {e}")))
+                .collect::<Result<Vec<_>, _>>()
+        };
         // Pass 16: `--rules` picks the stress world's rules (default game_v19).
         let mut rules: Option<String> = None;
         let mut i = 1;
         while i < args.len() {
-            let value = args.get(i + 1).ok_or_else(|| format!("{} needs a value", args[i]))?;
+            let value = args
+                .get(i + 1)
+                .ok_or_else(|| format!("{} needs a value", args[i]))?;
             match args[i].as_str() {
                 "--scene" => parsed.scene = value.clone(),
                 "--rules" => {
-                    if !matches!(value.as_str(), "game_v19" | "game_v20" | "game_v20_inert" | "game_v21" | "game_v22" | "game_v23" | "game_v24" | "game_v25" | "game_v26") {
+                    if !matches!(
+                        value.as_str(),
+                        "game_v19"
+                            | "game_v20"
+                            | "game_v20_inert"
+                            | "game_v21"
+                            | "game_v22"
+                            | "game_v23"
+                            | "game_v24"
+                            | "game_v25"
+                            | "game_v26"
+                    ) {
                         return Err(format!("--rules game_v19|game_v20|game_v20_inert|game_v21|game_v22|game_v23|game_v24|game_v25|game_v26, not {value}"));
                     }
                     rules = Some(value.clone());
                 }
                 "--seeds" => {
                     let (a, b) = value.split_once("..").ok_or("--seeds takes A..B")?;
-                    parsed.seeds = a.parse::<u64>().map_err(|e| e.to_string())?..b.parse::<u64>().map_err(|e| e.to_string())?;
+                    parsed.seeds = a.parse::<u64>().map_err(|e| e.to_string())?
+                        ..b.parse::<u64>().map_err(|e| e.to_string())?;
                 }
                 "--seed" => {
                     let s = value.parse::<u64>().map_err(|e| e.to_string())?;
@@ -744,8 +911,16 @@ impl PerfArgs {
                 }
                 "--agents" => parsed.agents = list(value)?,
                 "--side" | "--sides" => parsed.sides = list(value)?,
-                "--days" => parsed.days = value.parse().map_err(|e: std::num::ParseIntError| e.to_string())?,
-                "--repeats" => parsed.repeats = value.parse().map_err(|e: std::num::ParseIntError| e.to_string())?,
+                "--days" => {
+                    parsed.days = value
+                        .parse()
+                        .map_err(|e: std::num::ParseIntError| e.to_string())?
+                }
+                "--repeats" => {
+                    parsed.repeats = value
+                        .parse()
+                        .map_err(|e: std::num::ParseIntError| e.to_string())?
+                }
                 "--feed" => {
                     parsed.feed = match value.as_str() {
                         "fed" => Feed::Fed,
@@ -758,7 +933,10 @@ impl PerfArgs {
             }
             i += 2;
         }
-        if !matches!(mode.as_str(), "natural" | "stress" | "map" | "overhead" | "quick") {
+        if !matches!(
+            mode.as_str(),
+            "natural" | "stress" | "map" | "overhead" | "quick"
+        ) {
             return Err(format!("unknown subcommand {mode}\n{USAGE}"));
         }
         if mode == "quick" {
@@ -774,14 +952,25 @@ impl PerfArgs {
         // Stress, quick and map ignore `--scene` (as before); `--rules` is
         // kept in `scene` for them, and only for them.
         match (mode.as_str(), rules) {
-            ("stress" | "quick" | "map", rules) => parsed.scene = rules.unwrap_or_else(|| "game_v19".into()),
-            (_, Some(_)) => return Err(format!("--rules applies to stress, quick and map\n{USAGE}")),
+            ("stress" | "quick" | "map", rules) => {
+                parsed.scene = rules.unwrap_or_else(|| "game_v19".into())
+            }
+            (_, Some(_)) => {
+                return Err(format!("--rules applies to stress, quick and map\n{USAGE}"))
+            }
             (_, None) => {}
         }
         if matches!(mode.as_str(), "natural" | "overhead") && !parsed.scene.starts_with("game") {
-            return Err(format!("--scene must be a game scene, not {}", parsed.scene));
+            return Err(format!(
+                "--scene must be a game scene, not {}",
+                parsed.scene
+            ));
         }
-        if parsed.seeds.is_empty() || parsed.days == 0 || parsed.agents.is_empty() || parsed.sides.is_empty() {
+        if parsed.seeds.is_empty()
+            || parsed.days == 0
+            || parsed.agents.is_empty()
+            || parsed.sides.is_empty()
+        {
             return Err("empty seeds, days, agents or sides".into());
         }
         Ok(parsed)
@@ -800,15 +989,29 @@ impl PerfArgs {
         match self.mode.as_str() {
             "overhead" => {
                 let result = overhead(&self.scene, self.seeds.start, ticks, self.repeats);
-                let name = format!("overhead_{}_s{}_d{}.json", self.scene, self.seeds.start, self.days);
+                let name = format!(
+                    "overhead_{}_s{}_d{}.json",
+                    self.scene, self.seeds.start, self.days
+                );
                 let text = serde_json::to_string_pretty(&result).map_err(|e| e.to_string())?;
                 std::fs::write(dir.join(&name), text + "\n").map_err(|e| e.to_string())?;
-                eprintln!("{name}: overhead {:.2} %", result["overhead_pct"].as_f64().unwrap_or(0.0));
+                eprintln!(
+                    "{name}: overhead {:.2} %",
+                    result["overhead_pct"].as_f64().unwrap_or(0.0)
+                );
                 return Ok(1);
             }
             "natural" => {
                 for seed in self.seeds.clone() {
-                    let spec = RunSpec { mode: "natural".into(), scene: self.scene.clone(), seed, agents: None, side: 64, feed: Feed::None, ticks };
+                    let spec = RunSpec {
+                        mode: "natural".into(),
+                        scene: self.scene.clone(),
+                        seed,
+                        agents: None,
+                        side: 64,
+                        feed: Feed::None,
+                        ticks,
+                    };
                     record(run_and_write(dir, &spec)?)?;
                 }
             }
@@ -816,13 +1019,25 @@ impl PerfArgs {
                 let side = self.sides[0];
                 'sizes: for &agents in &self.agents {
                     for seed in self.seeds.clone() {
-                        let spec = RunSpec { mode: self.mode.clone(), scene: stress_label(&self.scene).into(), seed, agents: Some(agents), side, feed: self.feed, ticks };
+                        let spec = RunSpec {
+                            mode: self.mode.clone(),
+                            scene: stress_label(&self.scene).into(),
+                            seed,
+                            agents: Some(agents),
+                            side,
+                            feed: self.feed,
+                            ticks,
+                        };
                         let entry = run_and_write(dir, &spec)?;
-                        let slow = entry["wall_seconds"].as_f64().is_some_and(|w| w > SIZE_WALL_LIMIT_SECONDS);
+                        let slow = entry["wall_seconds"]
+                            .as_f64()
+                            .is_some_and(|w| w > SIZE_WALL_LIMIT_SECONDS);
                         record(entry)?;
                         if slow {
                             eprintln!("n = {agents}: a run exceeded {SIZE_WALL_LIMIT_SECONDS} s; the remaining seeds of this size and every larger size are skipped");
-                            record(json!({"stem": format!("size_limit_n{agents}_{}", self.feed.as_str()), "status": "size_limit", "agents_requested": agents, "after_seed": seed}))?;
+                            record(
+                                json!({"stem": format!("size_limit_n{agents}_{}", self.feed.as_str()), "status": "size_limit", "agents_requested": agents, "after_seed": seed}),
+                            )?;
                             break 'sizes;
                         }
                     }
@@ -832,7 +1047,15 @@ impl PerfArgs {
                 for &side in &self.sides {
                     for seed in self.seeds.clone() {
                         let founders = WorldGenConfig::game_v19(seed).starting_agents;
-                        let spec = RunSpec { mode: "map".into(), scene: stress_label(&self.scene).into(), seed, agents: Some(founders), side, feed: Feed::Fed, ticks };
+                        let spec = RunSpec {
+                            mode: "map".into(),
+                            scene: stress_label(&self.scene).into(),
+                            seed,
+                            agents: Some(founders),
+                            side,
+                            feed: Feed::Fed,
+                            ticks,
+                        };
                         record(run_and_write(dir, &spec)?)?;
                     }
                 }
@@ -857,32 +1080,65 @@ mod tests {
             plain.tick();
             profiled.tick_profiled(&mut profile);
         }
-        assert_eq!(crate::probe::fingerprint(&plain), crate::probe::fingerprint(&profiled));
+        assert_eq!(
+            crate::probe::fingerprint(&plain),
+            crate::probe::fingerprint(&profiled)
+        );
         assert_eq!(profile.ticks, 3_000);
         assert_eq!(profile.tick_us.len(), 3_000);
         let names: Vec<&str> = profile.systems.iter().map(|s| s.name.as_str()).collect();
         assert_eq!(names, plain.system_names());
         // Interval-1 systems ran every tick.
-        assert!(profile.systems.iter().filter(|s| s.interval == 1).all(|s| s.calls == 3_000));
+        assert!(profile
+            .systems
+            .iter()
+            .filter(|s| s.interval == 1)
+            .all(|s| s.calls == 3_000));
     }
 
     #[test]
     fn nearest_rank_percentiles() {
         let v: Vec<u32> = (1..=1000).collect();
-        assert_eq!((percentile(&v, 50.0), percentile(&v, 90.0), percentile(&v, 99.9), percentile(&v, 100.0)), (500, 900, 999, 1000));
+        assert_eq!(
+            (
+                percentile(&v, 50.0),
+                percentile(&v, 90.0),
+                percentile(&v, 99.9),
+                percentile(&v, 100.0)
+            ),
+            (500, 900, 999, 1000)
+        );
         assert_eq!(percentile(&[7], 99.9), 7);
         assert_eq!(percentile(&[], 50.0), 0);
         let s = tick_summary(&[1000, 9000, 20_000, 3000]);
         assert_eq!(s["mean_ms"], 8.25);
-        assert_eq!((s["n_over_8ms"].as_u64(), s["n_over_16_67ms"].as_u64(), s["max_ms"].as_f64()), (Some(2), Some(1), Some(20.0)));
+        assert_eq!(
+            (
+                s["n_over_8ms"].as_u64(),
+                s["n_over_16_67ms"].as_u64(),
+                s["max_ms"].as_f64()
+            ),
+            (Some(2), Some(1), Some(20.0))
+        );
     }
 
     #[test]
     fn slowest_ticks_keep_the_twenty_largest() {
         let mut slow = SlowestTicks::default();
-        for (tick, us) in [5u32, 9, 1, 30, 7, 30, 2, 8, 50, 4, 3, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 0, 60].iter().enumerate() {
+        for (tick, us) in [
+            5u32, 9, 1, 30, 7, 30, 2, 8, 50, 4, 3, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 0,
+            60,
+        ]
+        .iter()
+        .enumerate()
+        {
             if slow.admits(*us) {
-                slow.insert(SlowTick { tick: tick as u64, us: *us, top: vec![], due_periodic: vec![] });
+                slow.insert(SlowTick {
+                    tick: tick as u64,
+                    us: *us,
+                    top: vec![],
+                    due_periodic: vec![],
+                });
             }
         }
         let kept: Vec<u32> = slow.ticks.iter().map(|t| t.us).collect();
@@ -903,7 +1159,15 @@ mod tests {
 
     #[test]
     fn a_short_fed_stress_run_reports_consistent_numbers() {
-        let spec = RunSpec { mode: "stress".into(), scene: "stress_v19".into(), seed: 15100, agents: Some(40), side: 64, feed: Feed::Fed, ticks: 1500 };
+        let spec = RunSpec {
+            mode: "stress".into(),
+            scene: "stress_v19".into(),
+            seed: 15100,
+            agents: Some(40),
+            side: 64,
+            feed: Feed::Fed,
+            ticks: 1500,
+        };
         let engine = build_engine(&spec).expect("worldgen");
         let out = run(&spec, engine);
         let j = &out.json;
@@ -913,32 +1177,66 @@ mod tests {
         assert_eq!(j["warmup"]["ticks"], WARMUP_TICKS);
         // Pass 19: settlement sizes sum to the members; the chronicle recorded the founders.
         let sizes = j["settlement_sizes_end"].as_array().expect("sizes");
-        assert_eq!(sizes.len() as u64, j["settlements_end"].as_u64().expect("count"));
+        assert_eq!(
+            sizes.len() as u64,
+            j["settlements_end"].as_u64().expect("count")
+        );
         assert!(j["chronicle_people_end"].as_u64().expect("people") >= 40);
-        assert!(j["chronicle_entries_end"].as_u64().expect("entries") >= 40, "founding members");
+        assert!(
+            j["chronicle_entries_end"].as_u64().expect("entries") >= 40,
+            "founding members"
+        );
         assert!(j["chronicle_approx_bytes_end"].as_u64().expect("bytes") > 0);
         // Per-day ticks cover every tick, and the per-day system sums equal the whole-run sums.
         let days = j["per_day"].as_array().expect("days");
-        assert_eq!(days.iter().map(|d| d["ticks"].as_u64().unwrap_or(0)).sum::<u64>(), 1500);
+        assert_eq!(
+            days.iter()
+                .map(|d| d["ticks"].as_u64().unwrap_or(0))
+                .sum::<u64>(),
+            1500
+        );
         let systems = j["systems"].as_array().expect("systems");
         for (i, s) in systems.iter().enumerate() {
-            let per_day: f64 = days.iter().map(|d| d["systems_ms"][i].as_f64().unwrap_or(0.0)).sum();
+            let per_day: f64 = days
+                .iter()
+                .map(|d| d["systems_ms"][i].as_f64().unwrap_or(0.0))
+                .sum();
             let whole = s["total_ms_incl_warmup"].as_f64().unwrap_or(0.0);
-            assert!((per_day - whole).abs() <= 1e-6 * whole.max(1.0), "{}: {per_day} vs {whole}", s["name"]);
+            assert!(
+                (per_day - whole).abs() <= 1e-6 * whole.max(1.0),
+                "{}: {per_day} vs {whole}",
+                s["name"]
+            );
         }
-        let shares: f64 = systems.iter().map(|s| s["share_of_tick_time"].as_f64().unwrap_or(0.0)).sum();
+        let shares: f64 = systems
+            .iter()
+            .map(|s| s["share_of_tick_time"].as_f64().unwrap_or(0.0))
+            .sum();
         assert!(shares > 0.0 && shares <= 1.0 + 1e-9, "shares {shares}");
         // Fed: the first gift right after the first settlement, then one per 06:00 (day 1 at tick 1320).
         let gifts = j["gifts"].as_array().expect("gifts");
         assert!(!gifts.is_empty());
-        assert!(gifts.iter().skip(1).all(|g| (g["tick"].as_u64().unwrap_or(0) + 480) % 1440 == 360), "{gifts:?}");
+        assert!(
+            gifts
+                .iter()
+                .skip(1)
+                .all(|g| (g["tick"].as_u64().unwrap_or(0) + 480) % 1440 == 360),
+            "{gifts:?}"
+        );
         assert!(gifts.iter().all(|g| g["requested"].as_u64() > Some(0)));
-        assert!(j["slowest_ticks"].as_array().is_some_and(|s| s.len() == SLOWEST_KEPT));
+        assert!(j["slowest_ticks"]
+            .as_array()
+            .is_some_and(|s| s.len() == SLOWEST_KEPT));
         assert!(j["slowest_ticks"][0]["tick"].as_u64() >= Some(WARMUP_TICKS));
-        assert!(j["snapshot_timings"]["get_agent_snapshot"]["median_us"].as_f64().is_some());
+        assert!(j["snapshot_timings"]["get_agent_snapshot"]["median_us"]
+            .as_f64()
+            .is_some());
         assert!(j["per_day"][1]["alive_0600"].as_u64().is_some());
         // The fed run differs from a raw run of the same world only through the gifts.
-        let raw = RunSpec { feed: Feed::Raw, ..spec.clone() };
+        let raw = RunSpec {
+            feed: Feed::Raw,
+            ..spec.clone()
+        };
         let raw_out = run(&raw, build_engine(&raw).expect("worldgen"));
         assert!(raw_out.json["gifts"].as_array().is_some_and(Vec::is_empty));
         // Determinism: the same spec gives the same fingerprint.
@@ -950,39 +1248,73 @@ mod tests {
     fn files_and_index_round_trip() {
         let dir = std::env::temp_dir().join(format!("worldsim_perf_test_{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
-        let spec = RunSpec { mode: "map".into(), scene: "stress_v19".into(), seed: 3, agents: Some(24), side: 64, feed: Feed::Fed, ticks: 70 };
+        let spec = RunSpec {
+            mode: "map".into(),
+            scene: "stress_v19".into(),
+            seed: 3,
+            agents: Some(24),
+            side: 64,
+            feed: Feed::Fed,
+            ticks: 70,
+        };
         let entry = run_and_write(&dir, &spec).expect("run");
         assert_eq!(entry["status"], "ok");
         assert_eq!(entry["file"], "map_stress_v19_s3_n24_side64_fed.json");
         update_index(&dir, std::slice::from_ref(&entry)).expect("index");
         update_index(&dir, &[entry]).expect("index");
-        let index: Value = serde_json::from_str(&std::fs::read_to_string(dir.join("runs.json")).expect("read")).expect("json");
+        let index: Value =
+            serde_json::from_str(&std::fs::read_to_string(dir.join("runs.json")).expect("read"))
+                .expect("json");
         assert_eq!(index["runs"].as_array().map(Vec::len), Some(1));
-        let bin = std::fs::read(dir.join("map_stress_v19_s3_n24_side64_fed.tick_us.bin")).expect("bin");
+        let bin =
+            std::fs::read(dir.join("map_stress_v19_s3_n24_side64_fed.tick_us.bin")).expect("bin");
         assert_eq!(bin.len(), 70 * 4);
         let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]
     fn natural_spec_names_the_scene_founders() {
-        let spec = RunSpec { mode: "natural".into(), scene: "game_v19".into(), seed: 15000, agents: None, side: 64, feed: Feed::None, ticks: 1 };
+        let spec = RunSpec {
+            mode: "natural".into(),
+            scene: "game_v19".into(),
+            seed: 15000,
+            agents: None,
+            side: 64,
+            feed: Feed::None,
+            ticks: 1,
+        };
         let engine = build_engine(&spec).expect("scene");
         assert!(engine.resources.world_variety.is_some());
-        assert_eq!(spec.stem(alive(&engine)), format!("natural_game_v19_s15000_n{}_side64_none", alive(&engine)));
+        assert_eq!(
+            spec.stem(alive(&engine)),
+            format!("natural_game_v19_s15000_n{}_side64_none", alive(&engine))
+        );
     }
 
     #[test]
     fn cli_parses_each_subcommand() {
         let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
-        let p = PerfArgs::parse(&a("stress --seeds 15100..15108 --agents 25,50 --side 64 --days 2 --feed raw --out x")).expect("stress");
-        assert_eq!((p.seeds, p.agents, p.sides, p.days, p.feed), (15100..15108, vec![25, 50], vec![64], 2, Feed::Raw));
+        let p = PerfArgs::parse(&a(
+            "stress --seeds 15100..15108 --agents 25,50 --side 64 --days 2 --feed raw --out x",
+        ))
+        .expect("stress");
+        assert_eq!(
+            (p.seeds, p.agents, p.sides, p.days, p.feed),
+            (15100..15108, vec![25, 50], vec![64], 2, Feed::Raw)
+        );
         let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
-        assert_eq!((q.seeds, q.agents, q.days, q.feed), (15100..15101, vec![500], 1, Feed::Fed));
-        assert!(PerfArgs::parse(&a("natural --scene legacy --seeds 0..1 --days 1 --out z")).is_err());
+        assert_eq!(
+            (q.seeds, q.agents, q.days, q.feed),
+            (15100..15101, vec![500], 1, Feed::Fed)
+        );
+        assert!(
+            PerfArgs::parse(&a("natural --scene legacy --seeds 0..1 --days 1 --out z")).is_err()
+        );
         assert!(PerfArgs::parse(&a("quick")).is_err());
         assert!(PerfArgs::parse(&a("bogus --out z")).is_err());
         assert!(PerfArgs::parse(&a("stress --seeds 1..2 --frobnicate 3 --out z")).is_err());
-        let o = PerfArgs::parse(&a("overhead --seed 15000 --days 30 --repeats 3 --out w")).expect("overhead");
+        let o = PerfArgs::parse(&a("overhead --seed 15000 --days 30 --repeats 3 --out w"))
+            .expect("overhead");
         assert_eq!((o.seeds, o.days, o.repeats), (15000..15001, 30, 3));
     }
 
@@ -990,30 +1322,81 @@ mod tests {
     fn rules_flag_picks_the_stress_rules_and_label() {
         // Pass 16 8.5: --rules (default game_v19, today's behaviour; --scene stays ignored by stress).
         let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
-        for (flag, label) in [("", "stress_v19"), ("--rules game_v19", "stress_v19"), ("--rules game_v20", "stress_v20"), ("--rules game_v20_inert", "stress_v20_inert"), ("--rules game_v21", "stress_v21"), ("--rules game_v22", "stress_v22"), ("--rules game_v23", "stress_v23"), ("--rules game_v24", "stress_v24"), ("--rules game_v25", "stress_v25"), ("--rules game_v26", "stress_v26")] {
-            let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x"))).expect("stress");
+        for (flag, label) in [
+            ("", "stress_v19"),
+            ("--rules game_v19", "stress_v19"),
+            ("--rules game_v20", "stress_v20"),
+            ("--rules game_v20_inert", "stress_v20_inert"),
+            ("--rules game_v21", "stress_v21"),
+            ("--rules game_v22", "stress_v22"),
+            ("--rules game_v23", "stress_v23"),
+            ("--rules game_v24", "stress_v24"),
+            ("--rules game_v25", "stress_v25"),
+            ("--rules game_v26", "stress_v26"),
+        ] {
+            let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x")))
+                .expect("stress");
             assert_eq!(stress_label(&p.scene), label, "{flag}");
         }
-        let ignored = PerfArgs::parse(&a("stress --scene game_v16 --seeds 1..2 --out x")).expect("stress");
+        let ignored =
+            PerfArgs::parse(&a("stress --scene game_v16 --seeds 1..2 --out x")).expect("stress");
         assert_eq!(stress_label(&ignored.scene), "stress_v19");
         assert!(PerfArgs::parse(&a("stress --rules game_v18 --out x")).is_err());
         // Pass 19 7.6: game_v24 maps to stress_v24 and WorldRules::game_v24
         // (an unknown label would silently fall back to game_v19).
-        assert_eq!(stress_rules(stress_label("game_v24"), 4), WorldRules::game_v24(4));
-        assert_ne!(stress_rules(stress_label("game_v24"), 4), WorldRules::game_v23(4));
+        assert_eq!(
+            stress_rules(stress_label("game_v24"), 4),
+            WorldRules::game_v24(4)
+        );
+        assert_ne!(
+            stress_rules(stress_label("game_v24"), 4),
+            WorldRules::game_v23(4)
+        );
         // Pass 20: game_v25 maps to stress_v25 and WorldRules::game_v25.
-        assert_eq!(stress_rules(stress_label("game_v25"), 4), WorldRules::game_v25(4));
-        assert_ne!(stress_rules(stress_label("game_v25"), 4), WorldRules::game_v24(4));
+        assert_eq!(
+            stress_rules(stress_label("game_v25"), 4),
+            WorldRules::game_v25(4)
+        );
+        assert_ne!(
+            stress_rules(stress_label("game_v25"), 4),
+            WorldRules::game_v24(4)
+        );
         // Pass 21: game_v26 maps to stress_v26 and WorldRules::game_v26; the
         // next version is still rejected.
         assert!(PerfArgs::parse(&a("stress --rules game_v27 --out x")).is_err());
-        assert_eq!(stress_rules(stress_label("game_v26"), 4), WorldRules::game_v26(4));
-        assert_ne!(stress_rules(stress_label("game_v26"), 4), WorldRules::game_v25(4));
-        assert!(PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err());
+        assert_eq!(
+            stress_rules(stress_label("game_v26"), 4),
+            WorldRules::game_v26(4)
+        );
+        assert_ne!(
+            stress_rules(stress_label("game_v26"), 4),
+            WorldRules::game_v25(4)
+        );
+        assert!(
+            PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err()
+        );
         let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
         assert_eq!(stress_label(&q.scene), "stress_v19");
-        for (label, rules) in [("stress_v19", WorldRules::game_v19(9)), ("stress_v20", WorldRules::game_v20(9)), ("stress_v20_inert", WorldRules::game_v20_inert(9)), ("stress_v21", WorldRules::game_v21(9)), ("stress_v22", WorldRules::game_v22(9)), ("stress_v23", WorldRules::game_v23(9)), ("stress_v24", WorldRules::game_v24(9)), ("stress_v25", WorldRules::game_v25(9)), ("stress_v26", WorldRules::game_v26(9))] {
-            let spec = RunSpec { mode: "stress".into(), scene: label.into(), seed: 9, agents: Some(30), side: 64, feed: Feed::Fed, ticks: 1 };
+        for (label, rules) in [
+            ("stress_v19", WorldRules::game_v19(9)),
+            ("stress_v20", WorldRules::game_v20(9)),
+            ("stress_v20_inert", WorldRules::game_v20_inert(9)),
+            ("stress_v21", WorldRules::game_v21(9)),
+            ("stress_v22", WorldRules::game_v22(9)),
+            ("stress_v23", WorldRules::game_v23(9)),
+            ("stress_v24", WorldRules::game_v24(9)),
+            ("stress_v25", WorldRules::game_v25(9)),
+            ("stress_v26", WorldRules::game_v26(9)),
+        ] {
+            let spec = RunSpec {
+                mode: "stress".into(),
+                scene: label.into(),
+                seed: 9,
+                agents: Some(30),
+                side: 64,
+                feed: Feed::Fed,
+                ticks: 1,
+            };
             assert_eq!(build_engine(&spec).expect("engine").resources.rules, rules);
             assert!(spec.stem(30).starts_with(&format!("stress_{label}_s9_n30")));
         }

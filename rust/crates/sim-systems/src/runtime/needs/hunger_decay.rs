@@ -56,7 +56,12 @@ impl RuntimeSystem for HungerDecaySystem {
         // cold_hunger_permille / 1000` under the firewood rule. Without the
         // rule, and for every agent without `Cold`, the arithmetic is exactly
         // `Hunger::tick`.
-        let Some(permille) = resources.rules.society.firewood.map(|rule| rule.cold_hunger_permille) else {
+        let Some(permille) = resources
+            .rules
+            .society
+            .firewood
+            .map(|rule| rule.cold_hunger_permille)
+        else {
             for (_entity, hunger) in world.query::<&mut Hunger>().iter() {
                 hunger.tick();
             }

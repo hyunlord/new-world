@@ -189,7 +189,10 @@ fn harness_needs_a1_arrays_mirror_components_length_and_order() {
         live.len(),
         "A1(b): rows.len() must equal live (Agent,Position) count"
     );
-    assert!(!rows.is_empty(), "A1(b): seed-42 fixture must produce agents");
+    assert!(
+        !rows.is_empty(),
+        "A1(b): seed-42 fixture must produce agents"
+    );
 
     let mut value_devs = 0usize;
     let mut pos_misaligns = 0usize;
@@ -214,7 +217,10 @@ fn harness_needs_a1_arrays_mirror_components_length_and_order() {
         }
     }
     assert_eq!(value_devs, 0, "A1(a): need value deviations must be 0");
-    assert_eq!(pos_misaligns, 0, "A1(c): row-order/position misalignments must be 0");
+    assert_eq!(
+        pos_misaligns, 0,
+        "A1(c): row-order/position misalignments must be 0"
+    );
     println!(
         "[viz-B A1] {} rows mirror live needs; 0 value devs, 0 order misaligns ✓",
         rows.len()
@@ -232,14 +238,15 @@ fn harness_needs_a2_source_fields_not_swapped_with_floors() {
     // (sleep MUST come from `.fatigue`, never `.growth_rate`; hunger/thirst
     // not transposed).
     let mut comp: HashMap<u64, (f32, f32, f32, f32)> = HashMap::new(); // h, t, fatigue, growth_rate
-    for (ent, (_a, h, t, s)) in e
-        .world
-        .query::<(&Agent, &Hunger, &Thirst, &Sleep)>()
-        .iter()
-    {
+    for (ent, (_a, h, t, s)) in e.world.query::<(&Agent, &Hunger, &Thirst, &Sleep)>().iter() {
         comp.insert(
             ent.to_bits().get(),
-            (h.value, t.value as f32, s.fatigue as f32, s.growth_rate as f32),
+            (
+                h.value,
+                t.value as f32,
+                s.fatigue as f32,
+                s.growth_rate as f32,
+            ),
         );
     }
 
@@ -278,7 +285,10 @@ fn harness_needs_a2_source_fields_not_swapped_with_floors() {
          (floors {FLOOR_A2B_FATIGUE_NE_GROWTH} / {FLOOR_A2C_DISTINCT_NEEDS})"
     );
     // (a) Type A — exact mapping invariant.
-    assert_eq!(source_violations, 0, "A2(a): field-source violations must be 0");
+    assert_eq!(
+        source_violations, 0,
+        "A2(a): field-source violations must be 0"
+    );
     // (b)/(c) Type C — non-vacuity floors (a 0 observation is a finding, not a pass).
     assert!(
         fatigue_ne_growth >= FLOOR_A2B_FATIGUE_NE_GROWTH,
@@ -309,7 +319,10 @@ fn harness_needs_a3_danger_ratio_and_at_risk_reachable() {
         let mut at_risk = 0usize;
         for r in &rows {
             let d = danger(r);
-            assert!(d >= 0.0, "A3(a): danger must be >= 0 (needs are never negative); got {d}");
+            assert!(
+                d >= 0.0,
+                "A3(a): danger must be >= 0 (needs are never negative); got {d}"
+            );
             if d > max_danger {
                 max_danger = d;
             }
@@ -353,12 +366,26 @@ fn harness_needs_a4_existing_fields_and_split_preserved() {
             .expect("A4: every row entity_bits maps to a live entity");
         assert_eq!(r.x, la.x, "A4: x preserved");
         assert_eq!(r.y, la.y, "A4: y preserved");
-        assert!(r.state_tag <= 3, "A4: state_tag must be in {{0,1,2,3}}; got {}", r.state_tag);
-        assert!(r.seek_kind <= 3, "A4: seek_kind must be in {{0,1,2,3}}; got {}", r.seek_kind);
+        assert!(
+            r.state_tag <= 3,
+            "A4: state_tag must be in {{0,1,2,3}}; got {}",
+            r.state_tag
+        );
+        assert!(
+            r.seek_kind <= 3,
+            "A4: seek_kind must be in {{0,1,2,3}}; got {}",
+            r.seek_kind
+        );
         assert_eq!(r.agent_id, la.agent_id, "A4: agent_id mirrors Agent.id");
         if !la.has_seek {
-            assert_eq!(r.target_x, -1, "A4: absent SeekTarget → target_x sentinel -1");
-            assert_eq!(r.target_y, -1, "A4: absent SeekTarget → target_y sentinel -1");
+            assert_eq!(
+                r.target_x, -1,
+                "A4: absent SeekTarget → target_x sentinel -1"
+            );
+            assert_eq!(
+                r.target_y, -1,
+                "A4: absent SeekTarget → target_y sentinel -1"
+            );
         }
     }
 
@@ -370,7 +397,10 @@ fn harness_needs_a4_existing_fields_and_split_preserved() {
     assert_eq!(ys.len(), rows.len(), "A4: ys length == row count");
     assert_eq!(states.len(), rows.len(), "A4: states length == row count");
     for (i, r) in rows.iter().enumerate() {
-        assert_eq!(ids[i], r.entity_bits as i64, "A4: ids[i] == entity_bits as i64");
+        assert_eq!(
+            ids[i], r.entity_bits as i64,
+            "A4: ids[i] == entity_bits as i64"
+        );
         assert_eq!(xs[i], r.x as i32, "A4: xs[i] == x as i32");
         assert_eq!(ys[i], r.y as i32, "A4: ys[i] == y as i32");
         assert_eq!(states[i], r.state_tag, "A4: states[i] == state_tag");

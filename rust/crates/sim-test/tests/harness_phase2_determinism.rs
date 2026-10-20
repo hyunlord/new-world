@@ -14,13 +14,11 @@
 //!
 //! Run via: `cargo test -p sim-test --test harness_phase2_determinism -- --nocapture`
 
-use sim_core::influence::{
-    DirtyRegion, InfluenceChannel, MaterialBlockingCache,
-};
 use sim_core::influence::propagate::{
-    propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast,
-    stamp_social_aggregate, LodTier,
+    propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast, stamp_social_aggregate,
+    LodTier,
 };
+use sim_core::influence::{DirtyRegion, InfluenceChannel, MaterialBlockingCache};
 use sim_core::material::{MaterialId, MaterialRegistry};
 use sim_core::tile::TileGrid;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
@@ -51,10 +49,22 @@ fn region_tuple(r: &DirtyRegion) -> RegionTuple {
 #[test]
 fn harness_det_a1_queue_fifo_drain_order() {
     let events = [
-        BuildingPlacedEvent { position: (5, 5), radius: 1 },
-        BuildingPlacedEvent { position: (10, 10), radius: 2 },
-        BuildingPlacedEvent { position: (20, 15), radius: 3 },
-        BuildingPlacedEvent { position: (25, 25), radius: 1 },
+        BuildingPlacedEvent {
+            position: (5, 5),
+            radius: 1,
+        },
+        BuildingPlacedEvent {
+            position: (10, 10),
+            radius: 2,
+        },
+        BuildingPlacedEvent {
+            position: (20, 15),
+            radius: 3,
+        },
+        BuildingPlacedEvent {
+            position: (25, 25),
+            radius: 1,
+        },
     ];
 
     // Type A invariant — exact Warmth dirty-region tuple list (plan threshold, locked).
@@ -77,8 +87,7 @@ fn harness_det_a1_queue_fifo_drain_order() {
         }
         bss.tick(&mut e.world, &mut e.resources);
 
-        let regs = &e.resources.influence_grid.dirty_regions
-            [InfluenceChannel::Warmth as usize];
+        let regs = &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
         runs.push(regs.iter().map(region_tuple).collect());
     }
 
@@ -100,9 +109,18 @@ fn harness_det_a1_queue_fifo_drain_order() {
 #[test]
 fn harness_det_a2_dirty_regions_content_byte_identical() {
     let events = [
-        BuildingPlacedEvent { position: (3, 3), radius: 2 },
-        BuildingPlacedEvent { position: (16, 16), radius: 4 },
-        BuildingPlacedEvent { position: (28, 28), radius: 5 },
+        BuildingPlacedEvent {
+            position: (3, 3),
+            radius: 2,
+        },
+        BuildingPlacedEvent {
+            position: (16, 16),
+            radius: 4,
+        },
+        BuildingPlacedEvent {
+            position: (28, 28),
+            radius: 5,
+        },
     ];
     const CHANNELS: &[InfluenceChannel] = &[
         InfluenceChannel::Warmth,
@@ -162,11 +180,26 @@ fn harness_det_a2_dirty_regions_content_byte_identical() {
 #[test]
 fn harness_det_a3_bss_clamp_oob_deterministic() {
     let events = [
-        BuildingPlacedEvent { position: (5, 5), radius: 3 },     // valid
-        BuildingPlacedEvent { position: (999, 999), radius: 1 }, // OOB
-        BuildingPlacedEvent { position: (1, 1), radius: 100 },   // clamp
-        BuildingPlacedEvent { position: (50, 5), radius: 1 },    // OOB (x)
-        BuildingPlacedEvent { position: (31, 31), radius: 0 },   // boundary
+        BuildingPlacedEvent {
+            position: (5, 5),
+            radius: 3,
+        }, // valid
+        BuildingPlacedEvent {
+            position: (999, 999),
+            radius: 1,
+        }, // OOB
+        BuildingPlacedEvent {
+            position: (1, 1),
+            radius: 100,
+        }, // clamp
+        BuildingPlacedEvent {
+            position: (50, 5),
+            radius: 1,
+        }, // OOB (x)
+        BuildingPlacedEvent {
+            position: (31, 31),
+            radius: 0,
+        }, // boundary
     ];
 
     let mut runs: Vec<(usize, ChannelRegions)> = Vec::with_capacity(N);
@@ -195,7 +228,11 @@ fn harness_det_a3_bss_clamp_oob_deterministic() {
     const EXPECTED: &[RegionTuple] = &[(2, 2, 8, 8), (0, 0, 31, 31), (31, 31, 31, 31)];
 
     assert_eq!(runs[0].0, 0, "queue must be fully drained");
-    assert_eq!(runs[0].1.len(), 3, "expected 3 valid stamps (2 OOB skipped)");
+    assert_eq!(
+        runs[0].1.len(),
+        3,
+        "expected 3 valid stamps (2 OOB skipped)"
+    );
     // Type A: exact tuple list matches plan threshold.
     assert_eq!(
         runs[0].1, EXPECTED,
@@ -344,7 +381,10 @@ fn harness_det_b2_propagate_shadowcast_byte_identical() {
         runs.push(buf);
     }
 
-    assert!(runs[0].iter().any(|&b| b > 0), "shadowcast produced no light");
+    assert!(
+        runs[0].iter().any(|&b| b > 0),
+        "shadowcast produced no light"
+    );
     for i in 1..N {
         assert_eq!(runs[0], runs[i], "shadowcast diverged at instance {i}");
     }
@@ -363,7 +403,10 @@ fn harness_det_b3_propagate_noise_byte_identical() {
         runs.push(buf);
     }
 
-    assert!(runs[0].iter().any(|&b| b > 0), "noise produced no influence");
+    assert!(
+        runs[0].iter().any(|&b| b > 0),
+        "noise produced no influence"
+    );
     for i in 1..N {
         assert_eq!(runs[0], runs[i], "noise diverged at instance {i}");
     }
@@ -407,15 +450,13 @@ fn harness_det_b4_stamp_social_aggregate_lod_filter() {
 /// property of the lookup path used by propagate_bfs / propagate_noise.
 #[test]
 fn harness_det_b5_blocking_cache_lookup_byte_identical() {
-    let keys: Vec<(MaterialId, InfluenceChannel)> = [
-        "granite", "oak", "iron", "water",
-    ]
-    .iter()
-    .flat_map(|name| {
-        let mid = MaterialId::from_str_hash(name);
-        InfluenceChannel::all().iter().map(move |ch| (mid, *ch))
-    })
-    .collect();
+    let keys: Vec<(MaterialId, InfluenceChannel)> = ["granite", "oak", "iron", "water"]
+        .iter()
+        .flat_map(|name| {
+            let mid = MaterialId::from_str_hash(name);
+            InfluenceChannel::all().iter().map(move |ch| (mid, *ch))
+        })
+        .collect();
 
     let mut runs: Vec<Vec<u32>> = Vec::with_capacity(N);
     for _ in 0..N {
@@ -525,7 +566,10 @@ fn harness_det_b7_ec3_multi_source_additive_vs_max() {
 
     // Light midpoint must equal max(single-source values), not their sum.
     let light_mid = light_runs[0][(10 * W + 11) as usize];
-    assert!(light_mid <= 100, "Max Light cannot exceed source intensity 100");
+    assert!(
+        light_mid <= 100,
+        "Max Light cannot exceed source intensity 100"
+    );
 
     for i in 1..N {
         assert_eq!(warmth_runs[0], warmth_runs[i], "Warmth diverged at {i}");
@@ -546,7 +590,10 @@ fn harness_det_b8_propagate_danger_byte_identical() {
         runs.push(buf);
     }
 
-    assert!(runs[0].iter().any(|&b| b > 0), "danger produced no influence");
+    assert!(
+        runs[0].iter().any(|&b| b > 0),
+        "danger produced no influence"
+    );
     for i in 1..N {
         assert_eq!(runs[0], runs[i], "danger diverged at instance {i}");
     }

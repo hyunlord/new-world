@@ -98,7 +98,11 @@ impl WorldGenConfig {
     /// [`Self::game_v18`] for given hidden parameters.
     pub const fn game_v18_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> Self {
         // Section 7.3 (a), DAUGHTER_DIAGNOSIS.md (b): centres within 12 of water.
-        Self { region_fill: true, region_water_max: Some(12), ..Self::game_v17_with(seed, variety) }
+        Self {
+            region_fill: true,
+            region_water_max: Some(12),
+            ..Self::game_v17_with(seed, variety)
+        }
     }
 
     /// Pass 13 generator inputs of world `seed` (`game_v19` and
@@ -158,7 +162,12 @@ impl WorldGenConfig {
     /// `WorldRules::game_v19(seed)`). Benchmark-only; not a game scene; never
     /// used by the recorder or the probe's scenes.
     pub const fn stress_v19(seed: u64, agents: u32, side: u32) -> Self {
-        Self { starting_agents: agents, width: side, height: side, ..Self::game_v19(seed) }
+        Self {
+            starting_agents: agents,
+            width: side,
+            height: side,
+            ..Self::game_v19(seed)
+        }
     }
 
     /// Pass 9 generator inputs: the same world as v14 (no worldgen change).
@@ -195,12 +204,18 @@ impl WorldGenConfig {
 
     /// Pass 4 generator inputs: v9 with twelve renewable food sources.
     pub const fn game_v10(seed: u64) -> Self {
-        Self { berry_bushes: 12, ..Self::game_v9(seed) }
+        Self {
+            berry_bushes: 12,
+            ..Self::game_v9(seed)
+        }
     }
 
     /// Versioned generator inputs with ten renewable food sources.
     pub const fn game_v9(seed: u64) -> Self {
-        Self { berry_bushes: 10, ..Self::game_default(seed) }
+        Self {
+            berry_bushes: 10,
+            ..Self::game_default(seed)
+        }
     }
 
     /// 64×64, 24 residents, 8 capacity-four bushes, 30/10/4 percent terrain.
@@ -305,29 +320,49 @@ mod tests {
     fn game_v11_adds_only_deadwood_to_v10() {
         let v11 = WorldGenConfig::game_v11(5);
         assert_eq!(
-            (v11.deadwood_spots, v11.deadwood_capacity, v11.deadwood_min_radius, v11.deadwood_max_radius),
+            (
+                v11.deadwood_spots,
+                v11.deadwood_capacity,
+                v11.deadwood_min_radius,
+                v11.deadwood_max_radius
+            ),
             (20, 6, 5, 18)
         );
-        let plain = WorldGenConfig { deadwood_spots: 0, deadwood_capacity: 0, deadwood_min_radius: 0, deadwood_max_radius: 0, ..v11 };
+        let plain = WorldGenConfig {
+            deadwood_spots: 0,
+            deadwood_capacity: 0,
+            deadwood_min_radius: 0,
+            deadwood_max_radius: 0,
+            ..v11
+        };
         assert_eq!(plain, WorldGenConfig::game_v10(5));
         assert_eq!(WorldGenConfig::game_v10(5).deadwood_spots, 0);
     }
     #[test]
     fn game_v12_is_the_v11_world() {
         for seed in [0, 5, DEFAULT_GAME_SEED] {
-            assert_eq!(WorldGenConfig::game_v12(seed), WorldGenConfig::game_v11(seed));
+            assert_eq!(
+                WorldGenConfig::game_v12(seed),
+                WorldGenConfig::game_v11(seed)
+            );
         }
     }
     #[test]
     fn game_v14_is_the_v13_world() {
         for seed in [0, 5, DEFAULT_GAME_SEED] {
-            assert_eq!(WorldGenConfig::game_v14(seed), WorldGenConfig::game_v13(seed));
+            assert_eq!(
+                WorldGenConfig::game_v14(seed),
+                WorldGenConfig::game_v13(seed)
+            );
         }
     }
     #[test]
     fn game_v13_is_the_v12_world() {
         for seed in [0, 5, DEFAULT_GAME_SEED] {
-            assert_eq!(WorldGenConfig::game_v13(seed), WorldGenConfig::game_v12(seed));
+            assert_eq!(
+                WorldGenConfig::game_v13(seed),
+                WorldGenConfig::game_v12(seed)
+            );
         }
     }
     #[test]
@@ -351,16 +386,42 @@ mod tests {
             let base = WorldGenConfig::game_v19(seed);
             let stress = WorldGenConfig::stress_v19(seed, 500, 64);
             assert_eq!(stress.starting_agents, 500);
-            assert_eq!(WorldGenConfig { starting_agents: base.starting_agents, ..stress }, base);
-            assert_eq!(WorldGenConfig::stress_v19(seed, base.starting_agents, 64), base);
+            assert_eq!(
+                WorldGenConfig {
+                    starting_agents: base.starting_agents,
+                    ..stress
+                },
+                base
+            );
+            assert_eq!(
+                WorldGenConfig::stress_v19(seed, base.starting_agents, 64),
+                base
+            );
             let wide = WorldGenConfig::stress_v19(seed, base.starting_agents, 128);
-            assert_eq!(WorldGenConfig { width: 64, height: 64, ..wide }, base);
+            assert_eq!(
+                WorldGenConfig {
+                    width: 64,
+                    height: 64,
+                    ..wide
+                },
+                base
+            );
         }
     }
     #[test]
     fn stress_v19_world_starts_with_the_requested_founders() {
-        let engine = build_world_with(&WorldGenConfig::stress_v19(15100, 500, 64), WorldRules::game_v19(15100));
+        let engine = build_world_with(
+            &WorldGenConfig::stress_v19(15100, 500, 64),
+            WorldRules::game_v19(15100),
+        );
         assert_eq!(engine.current_tick(), 0);
-        assert_eq!(engine.world.query::<&sim_core::components::Agent>().iter().count(), 500);
+        assert_eq!(
+            engine
+                .world
+                .query::<&sim_core::components::Agent>()
+                .iter()
+                .count(),
+            500
+        );
     }
 }

@@ -328,7 +328,11 @@ mod tests {
         let staggered = WorldRules::V24_ROUTINE;
         assert_eq!(
             staggered.end_stagger,
-            Some(EndStagger { base_minute: 1065, key_span: 30, p_span_minutes: 45 })
+            Some(EndStagger {
+                base_minute: 1065,
+                key_span: 30,
+                p_span_minutes: 45
+            })
         );
         let t = |p: u16| Temperament::from_axes([p; 4]);
         // Extremes: 17:00 at P 0 and key term 0, 18:59 at P 1,000 and key term 29.

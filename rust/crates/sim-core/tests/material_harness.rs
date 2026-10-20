@@ -41,8 +41,16 @@ fn harness_material_validate_no_failure() {
         let def = registry.get(id).expect("def");
         let p = &def.properties;
 
-        assert!(p.density >= 100.0 && p.density <= 25_000.0, "{} density", def.name);
-        assert!(p.hardness >= 1.0 && p.hardness <= 10.0, "{} hardness", def.name);
+        assert!(
+            p.density >= 100.0 && p.density <= 25_000.0,
+            "{} density",
+            def.name
+        );
+        assert!(
+            p.hardness >= 1.0 && p.hardness <= 10.0,
+            "{} hardness",
+            def.name
+        );
         assert!(
             p.shear_yield >= 1_000.0 && p.shear_yield <= 600_000.0,
             "{} shear_yield",

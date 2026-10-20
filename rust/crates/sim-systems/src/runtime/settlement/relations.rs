@@ -37,10 +37,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Elder, Founding, Hunger, Inventory, PairDay,
-    PorterKind, PorterStage, PorterTrip, Position, RelationState, SeekTarget, Settlement,
-    SettlementId, SettlementRelations, TargetKind, Temperament, TripRecord,
-    INVENTORY_CAPACITY, SETTLEMENT_PROXIMITY_RADIUS,
+    Agent, AgentId, AgentState, Child, Elder, Founding, Hunger, Inventory, PairDay, PorterKind,
+    PorterStage, PorterTrip, Position, RelationState, SeekTarget, Settlement, SettlementId,
+    SettlementRelations, TargetKind, Temperament, TripRecord, INVENTORY_CAPACITY,
+    SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::RelationsRule;
 use sim_engine::{RuntimeSystem, SimResources};
@@ -66,7 +66,9 @@ fn chebyshev(a: (u32, u32), b: (u32, u32)) -> u32 {
 /// `floor(members_need_per_day × 1000)` of settlement `sid` (its members'
 /// daily food need in thousandths of a unit).
 pub fn need_milli(world: &World, resources: &SimResources, sid: SettlementId) -> u64 {
-    (members_need_per_day(world, resources, sid) * 1000.0).floor().max(0.0) as u64
+    (members_need_per_day(world, resources, sid) * 1000.0)
+        .floor()
+        .max(0.0) as u64
 }
 
 /// Food days in permille of a day: `stock × 1,000,000 / max(1, need_milli)`.
@@ -114,8 +116,16 @@ pub fn base_relation(rule: &RelationsRule, a: &Settlement, b: &Settlement) -> i3
 /// Whether a porter reaches hearth `b` from hearth `a` in time: the walk
 /// (Chebyshev distance × `move_interval_ticks`) is at most three quarters of
 /// the window from the decision to the latest arrival (ticks are minutes).
-pub fn in_reach(rule: &RelationsRule, move_interval_ticks: u64, a: (u32, u32), b: (u32, u32)) -> bool {
-    let window = u64::from(rule.latest_arrival_minute.saturating_sub(rule.decision_minute));
+pub fn in_reach(
+    rule: &RelationsRule,
+    move_interval_ticks: u64,
+    a: (u32, u32),
+    b: (u32, u32),
+) -> bool {
+    let window = u64::from(
+        rule.latest_arrival_minute
+            .saturating_sub(rule.decision_minute),
+    );
     u64::from(chebyshev(a, b)) * move_interval_ticks.max(1) <= window * 3 / 4
 }
 
@@ -133,7 +143,12 @@ struct Measure {
 
 impl Measure {
     fn row(&self) -> [u64; 4] {
-        [self.food_days, u64::from(self.food), self.wood_nights, u64::from(self.wood)]
+        [
+            self.food_days,
+            u64::from(self.food),
+            self.wood_nights,
+            u64::from(self.wood),
+        ]
     }
 }
 
@@ -190,7 +205,11 @@ impl RuntimeSystem for RelationsSystem {
 fn sync_pairs(resources: &mut SimResources, rule: &RelationsRule) {
     let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
     ids.sort_unstable();
-    let SimResources { settlements, settlement_relations, .. } = resources;
+    let SimResources {
+        settlements,
+        settlement_relations,
+        ..
+    } = resources;
     settlement_relations
         .pairs
         .retain(|(a, b), _| ids.binary_search(a).is_ok() && ids.binary_search(b).is_ok());
@@ -203,9 +222,14 @@ fn sync_pairs(resources: &mut SimResources, rule: &RelationsRule) {
                 continue;
             };
             let base = base_relation(rule, sa, sb);
-            settlement_relations
-                .pairs
-                .insert((*a, *b), RelationState { value: base, estranged: false, base });
+            settlement_relations.pairs.insert(
+                (*a, *b),
+                RelationState {
+                    value: base,
+                    estranged: false,
+                    base,
+                },
+            );
         }
     }
 }
@@ -291,14 +315,20 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
             close(resources, id, record, tick);
         }
     }
-    let deadline = u64::from(rule.latest_arrival_minute.saturating_sub(rule.decision_minute));
+    let deadline = u64::from(
+        rule.latest_arrival_minute
+            .saturating_sub(rule.decision_minute),
+    );
     for (id, entity, pos, trip) in rows {
         let Some(mut record) = resources.settlement_relations.active.get(&id).copied() else {
             // A marker without a booking cannot carry anything; drop it.
             release(world, entity, id);
             continue;
         };
-        let home = resources.settlements.get(&trip.from).map(|s| s.formation_tile);
+        let home = resources
+            .settlements
+            .get(&trip.from)
+            .map(|s| s.formation_tile);
         let Some(home) = home else {
             // The sender dissolved: the load is lost.
             let left = remaining(&record);
@@ -310,8 +340,13 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
         };
         match trip.stage {
             PorterStage::Outbound => {
-                let receiver = resources.settlements.get(&trip.to).map(|s| s.formation_tile);
-                if receiver.is_some_and(|hearth| chebyshev(pos, hearth) <= SETTLEMENT_PROXIMITY_RADIUS) {
+                let receiver = resources
+                    .settlements
+                    .get(&trip.to)
+                    .map(|s| s.formation_tile);
+                if receiver
+                    .is_some_and(|hearth| chebyshev(pos, hearth) <= SETTLEMENT_PROXIMITY_RADIUS)
+                {
                     let load = unload(world, entity, trip.kind, remaining(&record));
                     if let Some(settlement) = resources.settlements.get_mut(&trip.to) {
                         settlement.store(trip.kind.resource(), load);
@@ -319,15 +354,19 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
                     record.delivered += load;
                     resources.tallies.porter_deliveries += 1;
                     match trip.kind {
-                        PorterKind::Food => resources.tallies.porter_food_delivered += u64::from(load),
-                        PorterKind::Wood => resources.tallies.porter_wood_delivered += u64::from(load),
+                        PorterKind::Food => {
+                            resources.tallies.porter_food_delivered += u64::from(load)
+                        }
+                        PorterKind::Wood => {
+                            resources.tallies.porter_wood_delivered += u64::from(load)
+                        }
                     }
                     // The first porter of a delivered trip credits the pair.
-                    if resources
-                        .settlement_relations
-                        .credited
-                        .insert((trip.from, trip.to, trip.depart_tick))
-                    {
+                    if resources.settlement_relations.credited.insert((
+                        trip.from,
+                        trip.to,
+                        trip.depart_tick,
+                    )) {
                         if let Some(state) = resources
                             .settlement_relations
                             .pairs
@@ -392,13 +431,19 @@ fn turn_home(
     record: TripRecord,
     home: (u32, u32),
 ) {
-    let back = PorterTrip { stage: PorterStage::Return, ..trip };
+    let back = PorterTrip {
+        stage: PorterStage::Return,
+        ..trip
+    };
     let _ = world.insert_one(entity, back);
     head_for(world, entity, id, home);
-    resources
-        .settlement_relations
-        .active
-        .insert(id, TripRecord { trip: back, ..record });
+    resources.settlement_relations.active.insert(
+        id,
+        TripRecord {
+            trip: back,
+            ..record
+        },
+    );
 }
 
 /// Drift, estrangement and the day's trips.
@@ -429,7 +474,10 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
     }
     // Credits older than two days can no longer be claimed by a porter.
     let horizon = tick.saturating_sub(2 * resources.ticks_per_day.max(1));
-    resources.settlement_relations.credited.retain(|(_, _, depart)| *depart >= horizon);
+    resources
+        .settlement_relations
+        .credited
+        .retain(|(_, _, depart)| *depart >= horizon);
     for entry in events {
         resources.chronicle.push(entry);
     }
@@ -441,10 +489,20 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
     let burn = burn_night(resources);
     let mut measures: BTreeMap<SettlementId, Measure> = BTreeMap::new();
     for sid in &ids {
-        let Some(settlement) = resources.settlements.get(sid) else { continue };
+        let Some(settlement) = resources.settlements.get(sid) else {
+            continue;
+        };
         let need = need_milli(world, resources, *sid);
-        let food = settlement.stockpile.get(&sim_core::components::ResourceKind::Food).copied().unwrap_or(0);
-        let wood = settlement.stockpile.get(&sim_core::components::ResourceKind::Wood).copied().unwrap_or(0);
+        let food = settlement
+            .stockpile
+            .get(&sim_core::components::ResourceKind::Food)
+            .copied()
+            .unwrap_or(0);
+        let wood = settlement
+            .stockpile
+            .get(&sim_core::components::ResourceKind::Wood)
+            .copied()
+            .unwrap_or(0);
         measures.insert(
             *sid,
             Measure {
@@ -464,29 +522,39 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
     let mut rows: BTreeMap<(SettlementId, SettlementId), PairDay> = BTreeMap::new();
     for g in &ids {
         for r in &ids {
-            let (Some(mg), Some(mr)) = (measures.get(g), measures.get(r)) else { continue };
-            let Some(state) = resources.settlement_relations.get(*g, *r).copied().filter(|_| g != r) else {
+            let (Some(mg), Some(mr)) = (measures.get(g), measures.get(r)) else {
                 continue;
             };
-            rows.insert((*g, *r), PairDay {
-                tick,
-                from: *g,
-                to: *r,
-                value: state.value,
-                estranged: state.estranged,
-                in_reach: in_reach(rule, interval, mg.hearth, mr.hearth),
-                from_measure: mg.row(),
-                to_measure: mr.row(),
-                aid_food: mg.food_days >= u64::from(rule.aid_giver_days_permille)
-                    && mr.food_days < u64::from(rule.aid_receiver_days_permille),
-                aid_wood: mg.wood_nights >= u64::from(rule.wood_giver_nights)
-                    && mr.wood_nights < u64::from(rule.wood_receiver_nights),
-                exchange: mg.food_days >= u64::from(rule.trade_food_surplus_days_permille)
-                    && mg.wood_nights < u64::from(rule.trade_wood_short_nights)
-                    && mr.wood_nights >= u64::from(rule.trade_wood_surplus_nights)
-                    && mr.food_days < u64::from(rule.trade_food_short_days_permille),
-                sent: None,
-            });
+            let Some(state) = resources
+                .settlement_relations
+                .get(*g, *r)
+                .copied()
+                .filter(|_| g != r)
+            else {
+                continue;
+            };
+            rows.insert(
+                (*g, *r),
+                PairDay {
+                    tick,
+                    from: *g,
+                    to: *r,
+                    value: state.value,
+                    estranged: state.estranged,
+                    in_reach: in_reach(rule, interval, mg.hearth, mr.hearth),
+                    from_measure: mg.row(),
+                    to_measure: mr.row(),
+                    aid_food: mg.food_days >= u64::from(rule.aid_giver_days_permille)
+                        && mr.food_days < u64::from(rule.aid_receiver_days_permille),
+                    aid_wood: mg.wood_nights >= u64::from(rule.wood_giver_nights)
+                        && mr.wood_nights < u64::from(rule.wood_receiver_nights),
+                    exchange: mg.food_days >= u64::from(rule.trade_food_surplus_days_permille)
+                        && mg.wood_nights < u64::from(rule.trade_wood_short_nights)
+                        && mr.wood_nights >= u64::from(rule.trade_wood_surplus_nights)
+                        && mr.food_days < u64::from(rule.trade_food_short_days_permille),
+                    sent: None,
+                },
+            );
         }
     }
     // The trips: ordered pairs in id order, aid first, then exchange
@@ -515,7 +583,19 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
                 None
             };
             if let Some((f, w)) = food_sender {
-                if exchange(world, resources, rule, tick, (f, w), &measures, &mut candidates, &mut porters_used, &mut used, &mut rows, &mut entries) {
+                if exchange(
+                    world,
+                    resources,
+                    rule,
+                    tick,
+                    (f, w),
+                    &measures,
+                    &mut candidates,
+                    &mut porters_used,
+                    &mut used,
+                    &mut rows,
+                    &mut entries,
+                ) {
                     continue;
                 }
             }
@@ -529,10 +609,32 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
             None
         };
         if let Some((kind, cause)) = aid {
-            let amount = trip_amount(resources, rule, &measures, &candidates, &porters_used, g, kind);
+            let amount = trip_amount(
+                resources,
+                rule,
+                &measures,
+                &candidates,
+                &porters_used,
+                g,
+                kind,
+            );
             if amount > 0 {
                 used.insert((g, r));
-                let sent = depart(world, resources, tick, Departure { from: g, to: r, kind, amount, cause }, &mut candidates, &mut porters_used, &mut entries);
+                let sent = depart(
+                    world,
+                    resources,
+                    tick,
+                    Departure {
+                        from: g,
+                        to: r,
+                        kind,
+                        amount,
+                        cause,
+                    },
+                    &mut candidates,
+                    &mut porters_used,
+                    &mut entries,
+                );
                 if let Some(day) = rows.get_mut(&(g, r)) {
                     day.sent = Some((kind, sent));
                 }
@@ -541,10 +643,25 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
         }
         // b. Exchange: g's food for r's wood, both trips or none.
         if !rule.exchange_first && row.exchange && !used.contains(&(r, g)) {
-            exchange(world, resources, rule, tick, (g, r), &measures, &mut candidates, &mut porters_used, &mut used, &mut rows, &mut entries);
+            exchange(
+                world,
+                resources,
+                rule,
+                tick,
+                (g, r),
+                &measures,
+                &mut candidates,
+                &mut porters_used,
+                &mut used,
+                &mut rows,
+                &mut entries,
+            );
         }
     }
-    resources.settlement_relations.days.extend(rows.into_values());
+    resources
+        .settlement_relations
+        .days
+        .extend(rows.into_values());
     for entry in entries {
         crate::runtime::chronicle_log::record(world, resources, entry);
     }
@@ -552,7 +669,10 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
 
 /// The exchange of `f`'s food for `w`'s wood: both legs depart (and both
 /// ordered pairs are used for the day) or neither; returns whether they did.
-#[allow(clippy::too_many_arguments, reason = "the day's shared trip state, as in `decide`")]
+#[allow(
+    clippy::too_many_arguments,
+    reason = "the day's shared trip state, as in `decide`"
+)]
 fn exchange(
     world: &mut World,
     resources: &mut SimResources,
@@ -566,17 +686,61 @@ fn exchange(
     rows: &mut BTreeMap<(SettlementId, SettlementId), PairDay>,
     entries: &mut Vec<ChronicleEntry>,
 ) -> bool {
-    let food = trip_amount(resources, rule, measures, candidates, porters_used, f, PorterKind::Food);
-    let wood = trip_amount(resources, rule, measures, candidates, porters_used, w, PorterKind::Wood);
+    let food = trip_amount(
+        resources,
+        rule,
+        measures,
+        candidates,
+        porters_used,
+        f,
+        PorterKind::Food,
+    );
+    let wood = trip_amount(
+        resources,
+        rule,
+        measures,
+        candidates,
+        porters_used,
+        w,
+        PorterKind::Wood,
+    );
     if food == 0 || wood == 0 {
         return false;
     }
     used.insert((f, w));
     used.insert((w, f));
-    let food_leg = Departure { from: f, to: w, kind: PorterKind::Food, amount: food, cause: CAUSE_EXCHANGE_FOOD };
-    let food = depart(world, resources, tick, food_leg, candidates, porters_used, entries);
-    let wood_leg = Departure { from: w, to: f, kind: PorterKind::Wood, amount: wood, cause: CAUSE_EXCHANGE_WOOD };
-    let wood = depart(world, resources, tick, wood_leg, candidates, porters_used, entries);
+    let food_leg = Departure {
+        from: f,
+        to: w,
+        kind: PorterKind::Food,
+        amount: food,
+        cause: CAUSE_EXCHANGE_FOOD,
+    };
+    let food = depart(
+        world,
+        resources,
+        tick,
+        food_leg,
+        candidates,
+        porters_used,
+        entries,
+    );
+    let wood_leg = Departure {
+        from: w,
+        to: f,
+        kind: PorterKind::Wood,
+        amount: wood,
+        cause: CAUSE_EXCHANGE_WOOD,
+    };
+    let wood = depart(
+        world,
+        resources,
+        tick,
+        wood_leg,
+        candidates,
+        porters_used,
+        entries,
+    );
     if let Some(day) = rows.get_mut(&(f, w)) {
         day.sent = Some((PorterKind::Food, food));
     }
@@ -596,25 +760,30 @@ fn porter_candidates(
     ids: &[SettlementId],
 ) -> BTreeMap<SettlementId, Vec<(AgentId, Entity)>> {
     let mut able: BTreeMap<AgentId, (Entity, u16)> = BTreeMap::new();
-    for (entity, (agent, state, inventory, hunger, temperament, child, elder, founding, porter)) in world
-        .query::<(
-            &Agent,
-            &AgentState,
-            &Inventory,
-            Option<&Hunger>,
-            Option<&Temperament>,
-            Option<&Child>,
-            Option<&Elder>,
-            Option<&Founding>,
-            Option<&PorterTrip>,
-        )>()
-        .iter()
+    for (entity, (agent, state, inventory, hunger, temperament, child, elder, founding, porter)) in
+        world
+            .query::<(
+                &Agent,
+                &AgentState,
+                &Inventory,
+                Option<&Hunger>,
+                Option<&Temperament>,
+                Option<&Child>,
+                Option<&Elder>,
+                Option<&Founding>,
+                Option<&PorterTrip>,
+            )>()
+            .iter()
     {
         let free = matches!(
             state,
             AgentState::Idle
-                | AgentState::Seeking { target: TargetKind::Activity }
-                | AgentState::Consuming { target: TargetKind::Activity }
+                | AgentState::Seeking {
+                    target: TargetKind::Activity
+                }
+                | AgentState::Consuming {
+                    target: TargetKind::Activity
+                }
         );
         if free
             && child.is_none()
@@ -629,14 +798,22 @@ fn porter_candidates(
     }
     let mut out = BTreeMap::new();
     for sid in ids {
-        let Some(settlement) = resources.settlements.get(sid) else { continue };
+        let Some(settlement) = resources.settlements.get(sid) else {
+            continue;
+        };
         let mut members: Vec<(u16, AgentId, Entity)> = settlement
             .member_agents
             .iter()
             .filter_map(|id| able.get(id).map(|(entity, rd)| (*rd, *id, *entity)))
             .collect();
         members.sort_by(|a, b| b.0.cmp(&a.0).then(a.1.cmp(&b.1)));
-        out.insert(*sid, members.into_iter().map(|(_, id, entity)| (id, entity)).collect());
+        out.insert(
+            *sid,
+            members
+                .into_iter()
+                .map(|(_, id, entity)| (id, entity))
+                .collect(),
+        );
     }
     out
 }
@@ -652,16 +829,26 @@ fn trip_amount(
     g: SettlementId,
     kind: PorterKind,
 ) -> u32 {
-    let (Some(measure), Some(settlement)) = (measures.get(&g), resources.settlements.get(&g)) else {
+    let (Some(measure), Some(settlement)) = (measures.get(&g), resources.settlements.get(&g))
+    else {
         return 0;
     };
-    let held = u64::from(settlement.stockpile.get(&kind.resource()).copied().unwrap_or(0));
+    let held = u64::from(
+        settlement
+            .stockpile
+            .get(&kind.resource())
+            .copied()
+            .unwrap_or(0),
+    );
     let keep = match kind {
         PorterKind::Food => measure.food_keep,
         PorterKind::Wood => measure.wood_keep,
     };
     let surplus = held.saturating_sub(keep);
-    let slots = u64::from(rule.porter_max.saturating_sub(porters_used.get(&g).copied().unwrap_or(0)));
+    let slots = u64::from(
+        rule.porter_max
+            .saturating_sub(porters_used.get(&g).copied().unwrap_or(0)),
+    );
     let able = candidates.get(&g).map_or(0, Vec::len) as u64;
     let cap = u64::from(INVENTORY_CAPACITY);
     u32::try_from(surplus.min(cap * slots).min(cap * able)).unwrap_or(0)
@@ -680,7 +867,9 @@ fn depart(
 ) -> u32 {
     let cap = INVENTORY_CAPACITY;
     let count = departure.amount.div_ceil(cap) as usize;
-    let Some(pool) = candidates.get_mut(&departure.from) else { return 0 };
+    let Some(pool) = candidates.get_mut(&departure.from) else {
+        return 0;
+    };
     let take = count.min(pool.len());
     let mut chosen: Vec<(AgentId, Entity)> = pool.drain(..take).collect();
     chosen.sort_by_key(|row| row.0);
@@ -697,7 +886,9 @@ fn depart(
             .map_or(0, |s| s.withdraw(departure.kind.resource(), load));
         let overflow = world
             .get::<&mut Inventory>(entity)
-            .map_or(withdrawn, |mut inventory| inventory.add(departure.kind.resource(), withdrawn));
+            .map_or(withdrawn, |mut inventory| {
+                inventory.add(departure.kind.resource(), withdrawn)
+            });
         // Inventories are empty and loads ≤ capacity: nothing overflows.
         if overflow > 0 {
             if let Some(settlement) = resources.settlements.get_mut(&departure.from) {

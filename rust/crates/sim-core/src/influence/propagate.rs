@@ -158,8 +158,11 @@ pub fn propagate_shadowcast(
 
     // v0.1.1 EC-2 + EC-11 fix: source tile is always lit.
     let source_idx = tile_grid.idx(sx, sy);
-    influence[source_idx] =
-        apply_agg(InfluenceChannel::Light, influence[source_idx], initial_intensity);
+    influence[source_idx] = apply_agg(
+        InfluenceChannel::Light,
+        influence[source_idx],
+        initial_intensity,
+    );
 
     // 8-octant transformation matrices (xx, xy, yx, yy).
     const MULTS: [(i32, i32, i32, i32); 8] = [
@@ -249,8 +252,7 @@ fn cast_light_octant(
                 let intensity_f = (initial_intensity as f32) / (1.0 + 0.1 * dist);
                 let intensity = intensity_f.clamp(0.0, 255.0) as u8;
                 let idx = tile_grid.idx(current_x as u32, current_y as u32);
-                influence[idx] =
-                    apply_agg(InfluenceChannel::Light, influence[idx], intensity);
+                influence[idx] = apply_agg(InfluenceChannel::Light, influence[idx], intensity);
             }
 
             let idx = tile_grid.idx(current_x as u32, current_y as u32);
@@ -606,10 +608,7 @@ mod tests {
 
         let mut registry = crate::material::MaterialRegistry::new();
         registry
-            .register(
-                sample_def_with_density("wall_x", 25_000.0, 0.04),
-                None,
-            )
+            .register(sample_def_with_density("wall_x", 25_000.0, 0.04), None)
             .expect("reg");
         let cache = MaterialBlockingCache::build(&registry);
 

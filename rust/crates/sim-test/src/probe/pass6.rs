@@ -26,7 +26,9 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
             }
         }
     }
-    let mut query = engine.world.query::<(&Agent, &Position, Option<&AgentState>, Option<&Elder>)>();
+    let mut query = engine
+        .world
+        .query::<(&Agent, &Position, Option<&AgentState>, Option<&Elder>)>();
     let mut rows: Vec<_> = query.iter().map(|(_, row)| row).collect();
     rows.sort_by_key(|row| row.0.id);
     let (mut gatherers, mut idle_elders, mut near) = (0u64, 0u64, 0u64);
@@ -36,8 +38,13 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
             home.is_some()
                 && matches!(
                     state,
-                    Some(AgentState::Seeking { target: TargetKind::GatherWood }
-                        | AgentState::Consuming { target: TargetKind::GatherWood })
+                    Some(
+                        AgentState::Seeking {
+                            target: TargetKind::GatherWood
+                        } | AgentState::Consuming {
+                            target: TargetKind::GatherWood
+                        }
+                    )
                 ),
         );
         if elder.is_some() && state.is_none_or(|state| *state == AgentState::Idle) {
@@ -66,8 +73,14 @@ mod tests {
         let engine = crate::scenes::game_v11_scene(3);
         let row = metrics(&engine);
         assert_eq!(row.as_object().expect("object").len(), 6);
-        for key in ["wood_gatherers_now", "urgent_wood", "urgent_wood_trips_total", "winter_wood_lost_total",
-            "idle_elders", "idle_elders_near_hearth"] {
+        for key in [
+            "wood_gatherers_now",
+            "urgent_wood",
+            "urgent_wood_trips_total",
+            "winter_wood_lost_total",
+            "idle_elders",
+            "idle_elders_near_hearth",
+        ] {
             assert_eq!(row[key], 0, "{key}");
         }
     }
@@ -83,12 +96,40 @@ mod tests {
         settlement.formation_tile = (10, 10);
         settlement.store(ResourceKind::Wood, 3);
         let states = [
-            (AgentState::Seeking { target: TargetKind::GatherWood }, false, (14, 14), true),
-            (AgentState::Consuming { target: TargetKind::GatherWood }, false, (15, 15), true),
-            (AgentState::Seeking { target: TargetKind::GatherWood }, false, (16, 16), false),
+            (
+                AgentState::Seeking {
+                    target: TargetKind::GatherWood,
+                },
+                false,
+                (14, 14),
+                true,
+            ),
+            (
+                AgentState::Consuming {
+                    target: TargetKind::GatherWood,
+                },
+                false,
+                (15, 15),
+                true,
+            ),
+            (
+                AgentState::Seeking {
+                    target: TargetKind::GatherWood,
+                },
+                false,
+                (16, 16),
+                false,
+            ),
             (AgentState::Idle, true, (12, 13), true),
             (AgentState::Idle, true, (14, 10), true),
-            (AgentState::Seeking { target: TargetKind::Water }, true, (10, 10), true),
+            (
+                AgentState::Seeking {
+                    target: TargetKind::Water,
+                },
+                true,
+                (10, 10),
+                true,
+            ),
         ];
         for (state, elder, (x, y), member) in states {
             let entity = engine.spawn_agent(x, y);
@@ -102,7 +143,10 @@ mod tests {
             }
         }
         engine.resources.settlements.insert(1, settlement);
-        engine.resources.building_kinds.insert((10, 10), BuildingKind::Hearth);
+        engine
+            .resources
+            .building_kinds
+            .insert((10, 10), BuildingKind::Hearth);
         engine.resources.tallies.urgent_wood_trips = 4;
         engine.resources.tallies.winter_wood_lost = 2;
         let row = metrics(&engine);
@@ -117,7 +161,12 @@ mod tests {
             assert_eq!(row[key], want, "{key}");
         }
         // Tonight's burn (2 x 13 = 26 at tick 0, spring) in hand ends urgent mode.
-        engine.resources.settlements.get_mut(&1).expect("village").store(ResourceKind::Wood, 23);
+        engine
+            .resources
+            .settlements
+            .get_mut(&1)
+            .expect("village")
+            .store(ResourceKind::Wood, 23);
         assert_eq!(metrics(&engine)["urgent_wood"], 0);
     }
 }

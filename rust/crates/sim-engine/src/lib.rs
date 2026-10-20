@@ -31,13 +31,13 @@ use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
 use sim_core::components::{
-    Agent, AgentId, BuildingId, BuildingKind, Position, RelationshipKey, RelationshipState, Settlement,
-    SettlementId,
+    Agent, AgentId, BuildingId, BuildingKind, Position, RelationshipKey, RelationshipState,
+    Settlement, SettlementId,
 };
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
-use sim_core::tile::TileGrid;
 use sim_core::rules::WorldRules;
+use sim_core::tile::TileGrid;
 use sim_core::variety::WorldVariety;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -931,7 +931,9 @@ impl SimEngine {
     /// registered system it is first replaced by [`SimEngine::new_tick_profile`]
     /// (its earlier contents are discarded; no panic).
     pub fn tick_profiled(&mut self, profile: &mut TickProfile) {
-        if profile.systems.len() != self.systems.len() || profile.last_tick_ns.len() != self.systems.len() {
+        if profile.systems.len() != self.systems.len()
+            || profile.last_tick_ns.len() != self.systems.len()
+        {
             *profile = self.new_tick_profile();
         }
         self.tick_inner(Some(profile));
@@ -997,7 +999,9 @@ impl SimEngine {
         self.resources.time_of_day = if self.resources.ticks_per_day == 0 {
             0.0
         } else {
-            ((self.current_tick.saturating_add(self.resources.rules.clock_offset_ticks)
+            ((self
+                .current_tick
+                .saturating_add(self.resources.rules.clock_offset_ticks)
                 % self.resources.ticks_per_day) as f64
                 / self.resources.ticks_per_day as f64)
                 * 24.0
@@ -1021,7 +1025,10 @@ impl SimEngine {
         if replicate == 0 {
             return;
         }
-        self.resources.noise_fork = Some(NoiseFork { tick: self.current_tick, replicate });
+        self.resources.noise_fork = Some(NoiseFork {
+            tick: self.current_tick,
+            replicate,
+        });
     }
 
     /// Spawn an agent at tile-coordinate `(x, y)` (V7 Phase 4-α / P4α-2-a;
@@ -1061,8 +1068,20 @@ mod tests {
         engine.tick();
         engine.tick();
         apply_noise_fork(&mut engine, 5);
-        assert_eq!(engine.resources.noise_fork, Some(NoiseFork { tick: 2, replicate: 5 }));
-        assert_eq!((engine.resources.noise_replicate_for(1), engine.resources.noise_replicate_for(2)), (0, 5));
+        assert_eq!(
+            engine.resources.noise_fork,
+            Some(NoiseFork {
+                tick: 2,
+                replicate: 5
+            })
+        );
+        assert_eq!(
+            (
+                engine.resources.noise_replicate_for(1),
+                engine.resources.noise_replicate_for(2)
+            ),
+            (0, 5)
+        );
     }
 
     #[test]
@@ -1178,18 +1197,34 @@ mod tests {
         let every = Arc::new(AtomicU32::new(0));
         let third = Arc::new(AtomicU32::new(0));
         let mut engine = SimEngine::new(32, 32, empty_registry());
-        engine.register_system(Box::new(AtomicMock { name: "third", priority: 20, interval: 3, ticks_run: third.clone() }));
-        engine.register_system(Box::new(AtomicMock { name: "every", priority: 10, interval: 1, ticks_run: every.clone() }));
+        engine.register_system(Box::new(AtomicMock {
+            name: "third",
+            priority: 20,
+            interval: 3,
+            ticks_run: third.clone(),
+        }));
+        engine.register_system(Box::new(AtomicMock {
+            name: "every",
+            priority: 10,
+            interval: 1,
+            ticks_run: every.clone(),
+        }));
         let mut profile = engine.new_tick_profile();
         let names: Vec<&str> = profile.systems.iter().map(|s| s.name.as_str()).collect();
         assert_eq!(names, engine.system_names());
-        assert_eq!((profile.systems[0].priority, profile.systems[1].interval), (10, 3));
+        assert_eq!(
+            (profile.systems[0].priority, profile.systems[1].interval),
+            (10, 3)
+        );
         for _ in 0..7 {
             engine.tick_profiled(&mut profile);
         }
         // Ticks 0..7: "third" is due at 0, 3, 6.
         assert_eq!((profile.systems[0].calls, profile.systems[1].calls), (7, 3));
-        assert_eq!((every.load(Ordering::SeqCst), third.load(Ordering::SeqCst)), (7, 3));
+        assert_eq!(
+            (every.load(Ordering::SeqCst), third.load(Ordering::SeqCst)),
+            (7, 3)
+        );
         assert_eq!(profile.ticks, 7);
         assert_eq!(profile.tick_us.len() as u64, profile.ticks);
         assert!(profile.systems.iter().all(|s| s.max_ns <= s.total_ns));
@@ -1204,12 +1239,28 @@ mod tests {
     #[test]
     fn tick_profile_with_the_wrong_system_count_is_rebuilt() {
         let mut engine = SimEngine::new(32, 32, empty_registry());
-        engine.register_system(Box::new(AtomicMock { name: "a", priority: 1, interval: 1, ticks_run: Arc::new(AtomicU32::new(0)) }));
-        let mut profile = TickProfile { ticks: 99, tick_us: vec![1; 99], ..TickProfile::default() };
+        engine.register_system(Box::new(AtomicMock {
+            name: "a",
+            priority: 1,
+            interval: 1,
+            ticks_run: Arc::new(AtomicU32::new(0)),
+        }));
+        let mut profile = TickProfile {
+            ticks: 99,
+            tick_us: vec![1; 99],
+            ..TickProfile::default()
+        };
         engine.tick_profiled(&mut profile);
         assert_eq!(profile.systems.len(), 1);
         assert_eq!(profile.last_tick_ns.len(), 1);
-        assert_eq!((profile.ticks, profile.tick_us.len(), profile.systems[0].calls), (1, 1, 1));
+        assert_eq!(
+            (
+                profile.ticks,
+                profile.tick_us.len(),
+                profile.systems[0].calls
+            ),
+            (1, 1, 1)
+        );
     }
 
     #[test]
@@ -1222,8 +1273,14 @@ mod tests {
             profiled.tick_profiled(&mut profile);
         }
         assert_eq!(plain.current_tick(), profiled.current_tick());
-        assert_eq!(plain.resources.time_of_day.to_bits(), profiled.resources.time_of_day.to_bits());
-        assert_eq!(plain.resources.current_tick, profiled.resources.current_tick);
+        assert_eq!(
+            plain.resources.time_of_day.to_bits(),
+            profiled.resources.time_of_day.to_bits()
+        );
+        assert_eq!(
+            plain.resources.current_tick,
+            profiled.resources.current_tick
+        );
         assert_eq!(profile.ticks, 50);
     }
 

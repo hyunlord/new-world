@@ -28,10 +28,13 @@ fn fresh_engine() -> SimEngine {
 }
 
 fn place_warmth_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 // ── Plan A1: source center reaches initial intensity ─────────────────────────
@@ -47,8 +50,14 @@ fn harness_t7_10_a_source_center_lit() {
     place_warmth_source(&mut e);
     e.tick();
     // Type A: threshold == 200
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Warmth);
-    assert_eq!(v, 200, "source center must equal WARMTH_INITIAL_INTENSITY (200); got {v}");
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Warmth);
+    assert_eq!(
+        v, 200,
+        "source center must equal WARMTH_INITIAL_INTENSITY (200); got {v}"
+    );
 }
 
 // ── Plan A2: radial decay one step ───────────────────────────────────────────
@@ -64,7 +73,10 @@ fn harness_t7_10_a_radial_decay_one_step() {
     place_warmth_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [170, 174]
-    let v = e.resources.influence_grid.sample(SX, SY + 1, InfluenceChannel::Warmth);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY + 1, InfluenceChannel::Warmth);
     assert!(
         (170..=174).contains(&v),
         "1-step neighbor must decay to ~172 (200*exp(-0.15)); got {v}. \
@@ -85,16 +97,26 @@ fn harness_t7_10_a_gradient_monotone() {
     place_warmth_source(&mut e);
     e.tick();
     for d in 0u32..=11 {
-        let v_near = e.resources.influence_grid.sample(SX + d, SY, InfluenceChannel::Warmth);
-        let v_far = e.resources.influence_grid.sample(SX + d + 1, SY, InfluenceChannel::Warmth);
+        let v_near = e
+            .resources
+            .influence_grid
+            .sample(SX + d, SY, InfluenceChannel::Warmth);
+        let v_far = e
+            .resources
+            .influence_grid
+            .sample(SX + d + 1, SY, InfluenceChannel::Warmth);
         // Type A: strict monotone decrease for each pair (d, d+1)
         assert!(
             v_near > v_far,
             "gradient must be strictly decreasing: \
              sample({},{})={} must > sample({},{})={}; \
              violation at d={d} means BFS decay is broken",
-            SX + d, SY, v_near,
-            SX + d + 1, SY, v_far,
+            SX + d,
+            SY,
+            v_near,
+            SX + d + 1,
+            SY,
+            v_far,
             d = d
         );
     }
@@ -115,7 +137,10 @@ fn harness_t7_10_a_boundary_at_max_radius() {
     e.tick();
     // Tile (44, 32) is exactly Manhattan distance 12 from source (32, 32).
     // Type A: threshold ∈ [26, 34]
-    let v = e.resources.influence_grid.sample(44, 32, InfluenceChannel::Warmth);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(44, 32, InfluenceChannel::Warmth);
     assert!(
         (26..=34).contains(&v),
         "tile at max_radius=12 must be in [26,34] (chain end ≈30); got {v}; \
@@ -135,7 +160,10 @@ fn harness_t7_10_a_max_radius_cutoff() {
     place_warmth_source(&mut e);
     e.tick();
     // Type A: threshold == 0 (distance 13 from source, one beyond max_radius=12)
-    let v = e.resources.influence_grid.sample(SX + 13, SY, InfluenceChannel::Warmth);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 13, SY, InfluenceChannel::Warmth);
     assert_eq!(v, 0, "tile beyond max_radius=12 must be 0; got {v}");
 }
 
@@ -156,7 +184,10 @@ fn harness_t7_10_a_persistence_across_ticks() {
         e.tick(); // ticks 2–11: event-less persistence branch
     }
     // Type A: threshold == 200 (source persists through all 10 idle ticks)
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Warmth);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Warmth);
     assert_eq!(
         v, 200,
         "source must persist across 10 event-less ticks (Cold-tier semantics); got {v}"
@@ -179,35 +210,50 @@ fn harness_t7_10_a_other_channels_remain_zero() {
     e.tick();
 
     // T7.10.B regression guard: Light now propagates at source center.
-    let light = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    let light = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
     assert_eq!(
         light, 200,
         "T7.10.B: Light at source must be 200 (shadowcast propagation); got {light}"
     );
 
     // T7.10.C regression guard: Noise now propagates at source center.
-    let noise = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Noise);
+    let noise = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Noise);
     assert_eq!(
         noise, 200,
         "T7.10.C: Noise at source must be 200 (linear-decay propagation); got {noise}"
     );
 
     // T7.10.D regression guard: Danger now propagates at source center.
-    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    let danger = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Danger);
     assert_eq!(
         danger, 200,
         "T7.10.D: Danger at source must be 200 (linear-decay+cap propagation); got {danger}"
     );
 
     // T7.10.E regression guard: Spiritual now propagates at source center.
-    let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    let spiritual = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         spiritual, 200,
         "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.08 propagation); got {spiritual}"
     );
 
     // T7.10.F regression guard: Beauty now propagates at source center.
-    let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    let beauty = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
         beauty, 200,
         "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"
@@ -239,7 +285,10 @@ fn harness_t7_10_a_no_event_no_warmth() {
     }
     for (x, y) in [(0u32, 0u32), (SX, SY), (W - 1, H - 1)] {
         // Type A: threshold == 0 at all three positions with no events
-        let v = e.resources.influence_grid.sample(x, y, InfluenceChannel::Warmth);
+        let v = e
+            .resources
+            .influence_grid
+            .sample(x, y, InfluenceChannel::Warmth);
         assert_eq!(v, 0, "no events ⇒ Warmth stays zero at ({x},{y}); got {v}");
     }
 }

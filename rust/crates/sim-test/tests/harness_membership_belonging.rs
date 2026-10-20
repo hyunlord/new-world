@@ -188,10 +188,12 @@ fn form_settlement_at(e: &mut SimEngine, cx: u32, cy: u32) -> (SettlementId, Vec
         founders.push(seed_stationary(e, cx + i, cy));
     }
     for i in 0..2u32 {
-        e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-            position: (cx + i, cy + 3),
-            radius: 1,
-        });
+        e.resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (cx + i, cy + 3),
+                radius: 1,
+            });
     }
     let mut bss = BuildingStampSystem::new();
     bss.tick(&mut e.world, &mut e.resources);
@@ -340,7 +342,10 @@ fn harness_membership_a1_member_outside_radius_persists() {
         member_len(&e, sid),
         "A1: population_stats.current must equal member_agents.len()"
     );
-    assert!(current(&e, sid) >= 1, "A1: population_stats.current must be >= 1");
+    assert!(
+        current(&e, sid) >= 1,
+        "A1: population_stats.current must be >= 1"
+    );
     println!(
         "[membership A1] far live member persists (cheby {}); current={} == len={} ✓",
         chebyshev(ft, pos),
@@ -363,7 +368,9 @@ fn harness_membership_a2_dead_member_leaves_within_one_sync() {
     let victim_id = agent_id(&e, victim_ent);
     let survivor_id = agent_id(&e, founders[1]);
 
-    e.world.despawn(victim_ent).expect("raw despawn victim entity");
+    e.world
+        .despawn(victim_ent)
+        .expect("raw despawn victim entity");
 
     let mut left = false;
     for _ in 0..SYNC_BUDGET {
@@ -523,7 +530,10 @@ fn harness_membership_a4_nonmember_entering_radius_joins() {
             break;
         }
     }
-    assert!(joined, "A4: a non-member entering the radius must JOIN within one sync window");
+    assert!(
+        joined,
+        "A4: a non-member entering the radius must JOIN within one sync window"
+    );
     assert!(
         !is_member(&e, control_id),
         "A4 control: an agent left OUTSIDE every radius must NOT be added to any roster"
@@ -557,7 +567,10 @@ fn harness_membership_a5_membership_is_exclusive() {
             return;
         }
         // All three metrics agree (pure vertical separation): f1 is nearer.
-        assert!(manhattan(f1, p) < manhattan(f2, p), "A5-nearer setup: f1 strictly nearer");
+        assert!(
+            manhattan(f1, p) < manhattan(f2, p),
+            "A5-nearer setup: f1 strictly nearer"
+        );
 
         let agent = seed_stationary(&mut e, p.0, p.1);
         let aid = agent_id(&e, agent);
@@ -570,7 +583,9 @@ fn harness_membership_a5_membership_is_exclusive() {
             }
         }
         if !in_any {
-            println!("[membership A5-nearer] SETUP LIMITATION: agent never joined (sync did not run)");
+            println!(
+                "[membership A5-nearer] SETUP LIMITATION: agent never joined (sync did not run)"
+            );
             return;
         }
         assert_eq!(
@@ -652,7 +667,10 @@ fn harness_membership_a6_lockstep_determinism_fingerprint() {
         "A6: two identical seed-42 runs must produce byte-identical per-tick fingerprint sequences \
          (any HashSet/HashMap order leak in retain/add/exclusivity surfaces here)"
     );
-    println!("[membership A6] {} per-tick fingerprints identical; {count_a} settlement(s) ✓", seq_a.len());
+    println!(
+        "[membership A6] {} per-tick fingerprints identical; {count_a} settlement(s) ✓",
+        seq_a.len()
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -710,7 +728,10 @@ fn harness_membership_a8_member_migrates_as_transfer() {
     let current_before = current(&e, x_sid);
 
     e.world
-        .insert_one(mover_ent, Position::new(inside_y_outside_x.0, inside_y_outside_x.1))
+        .insert_one(
+            mover_ent,
+            Position::new(inside_y_outside_x.0, inside_y_outside_x.1),
+        )
         .expect("relocate mover into Y, outside X");
 
     let mut transferred = false;
@@ -721,14 +742,23 @@ fn harness_membership_a8_member_migrates_as_transfer() {
             break;
         }
     }
-    assert!(transferred, "A8: the mover must TRANSFER (∈Y, ∉X) within one sync window");
+    assert!(
+        transferred,
+        "A8: the mover must TRANSFER (∈Y, ∉X) within one sync window"
+    );
     assert_eq!(
         settlements_containing(&e, mover_id),
         1,
         "A8: mover must belong to EXACTLY ONE settlement (no duplicate membership)"
     );
-    assert!(!is_member_of(&e, x_sid, mover_id), "A8: mover removed from the OLD settlement X");
-    assert!(is_member_of(&e, y_sid, mover_id), "A8: mover added to the NEW settlement Y");
+    assert!(
+        !is_member_of(&e, x_sid, mover_id),
+        "A8: mover removed from the OLD settlement X"
+    );
+    assert!(
+        is_member_of(&e, y_sid, mover_id),
+        "A8: mover added to the NEW settlement Y"
+    );
     let current_after = current(&e, x_sid);
     assert_eq!(
         current_after,

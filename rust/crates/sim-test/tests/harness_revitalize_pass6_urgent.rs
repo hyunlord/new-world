@@ -5,14 +5,17 @@
 //! may share a spot. Expected numbers come from `WorldRules::game_v12()`.
 use hecs::Entity;
 use sim_core::components::{
-    Agent, AgentState, Hunger, Inventory, ResourceKind, SeekTarget, Settlement, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentState, Hunger, Inventory, ResourceKind, SeekTarget, Settlement, Sleep, Social,
+    TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::{FirewoodRule, WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::runtime::decision::AgentDecisionSystem;
-use sim_systems::runtime::settlement::firewood::{burn_per_day, is_urgent, night_season, wood_target};
+use sim_systems::runtime::settlement::firewood::{
+    burn_per_day, is_urgent, night_season, wood_target,
+};
 use sim_test::probe::fingerprint;
 use sim_test::scenes::game_v11_scene;
 
@@ -26,12 +29,21 @@ fn tick_at(day: u64, minute: u64) -> u64 {
 }
 
 fn v12_rule() -> FirewoodRule {
-    WorldRules::game_v12().society.firewood.expect("v12 keeps the firewood rule")
+    WorldRules::game_v12()
+        .society
+        .firewood
+        .expect("v12 keeps the firewood rule")
 }
 
 /// Bare world under `rules`: one settlement at `HOME` holding `wood`,
 /// `adults` idle satisfied members on the formation tile, full deadwood spots.
-fn fixture(rules: WorldRules, adults: usize, spots: &[(u32, u32)], tick: u64, wood: u32) -> (SimEngine, Vec<Entity>) {
+fn fixture(
+    rules: WorldRules,
+    adults: usize,
+    spots: &[(u32, u32)],
+    tick: u64,
+    wood: u32,
+) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.rules = rules;
     engine.resources.current_tick = tick;
@@ -73,9 +85,14 @@ fn wood_targets(engine: &SimEngine, entities: &[Entity]) -> Vec<Option<(u32, u32
         .iter()
         .map(|e| {
             let state = *engine.world.get::<&AgentState>(*e).expect("state");
-            matches!(state, AgentState::Seeking { target: TargetKind::GatherWood })
-                .then(|| engine.world.get::<&SeekTarget>(*e).ok().map(|s| s.tile))
-                .flatten()
+            matches!(
+                state,
+                AgentState::Seeking {
+                    target: TargetKind::GatherWood
+                }
+            )
+            .then(|| engine.world.get::<&SeekTarget>(*e).ok().map(|s| s.tile))
+            .flatten()
         })
         .collect()
 }
@@ -92,34 +109,83 @@ fn harness_urgent_window_opens_at_dawn() {
     let rule = v12_rule();
     let start = u64::from(rule.urgent_start_minute.expect("v12 urgent mode"));
     let gather = u64::from(rule.gather_start_minute);
-    assert!(start < gather, "urgent mornings start before the normal window");
+    assert!(
+        start < gather,
+        "urgent mornings start before the normal window"
+    );
     let burn = tonight(WINTER_DAY, start);
     // Tonight's burn is not in hand: an adult leaves for wood at the urgent start.
-    let (mut engine, entities) = fixture(WorldRules::game_v12(), 1, &[(26, 20)], tick_at(WINTER_DAY, start), burn - 1);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        1,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, start),
+        burn - 1,
+    );
     assert!(is_urgent(&engine.world, &engine.resources, 1));
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![Some((26, 20))]);
-    assert_eq!((engine.resources.tallies.wood_trips, engine.resources.tallies.urgent_wood_trips), (1, 1));
+    assert_eq!(
+        (
+            engine.resources.tallies.wood_trips,
+            engine.resources.tallies.urgent_wood_trips
+        ),
+        (1, 1)
+    );
     // One minute before the urgent start nobody goes.
-    let (mut engine, entities) = fixture(WorldRules::game_v12(), 1, &[(26, 20)], tick_at(WINTER_DAY, start - 1), 0);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        1,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, start - 1),
+        0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![None]);
     // Tonight's burn in hand (still below the target): not before the normal window.
     let target = wood_target(&engine.resources).expect("target");
     assert!(f64::from(burn) < target);
     for minute in [start, gather - 1] {
-        let (mut engine, entities) = fixture(WorldRules::game_v12(), 1, &[(26, 20)], tick_at(WINTER_DAY, minute), burn);
+        let (mut engine, entities) = fixture(
+            WorldRules::game_v12(),
+            1,
+            &[(26, 20)],
+            tick_at(WINTER_DAY, minute),
+            burn,
+        );
         assert!(!is_urgent(&engine.world, &engine.resources, 1));
         AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-        assert_eq!(wood_targets(&engine, &entities), vec![None], "minute {minute}");
+        assert_eq!(
+            wood_targets(&engine, &entities),
+            vec![None],
+            "minute {minute}"
+        );
     }
-    let (mut engine, entities) = fixture(WorldRules::game_v12(), 1, &[(26, 20)], tick_at(WINTER_DAY, gather), burn);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        1,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, gather),
+        burn,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![Some((26, 20))]);
-    assert_eq!((engine.resources.tallies.wood_trips, engine.resources.tallies.urgent_wood_trips), (1, 0));
+    assert_eq!(
+        (
+            engine.resources.tallies.wood_trips,
+            engine.resources.tallies.urgent_wood_trips
+        ),
+        (1, 0)
+    );
     // The urgent window closes with the normal one.
     let end = u64::from(rule.gather_end_minute);
-    let (mut engine, entities) = fixture(WorldRules::game_v12(), 1, &[(26, 20)], tick_at(WINTER_DAY, end), 0);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        1,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, end),
+        0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![None]);
 }
@@ -131,30 +197,83 @@ fn harness_urgent_two_per_spot() {
     let per_spot = rule.max_gatherers_per_spot as usize;
     let adults = 2 * per_spot + 1;
     // Urgent: twice the claim cap on the only spot.
-    let (mut engine, entities) = fixture(WorldRules::game_v12(), adults, &[(26, 20)], tick_at(WINTER_DAY, start), 0);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        adults,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, start),
+        0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     let chosen = wood_targets(&engine, &entities);
-    assert_eq!(chosen.iter().filter(|t| **t == Some((26, 20))).count(), 2 * per_spot, "{chosen:?}");
-    assert_eq!(engine.resources.tallies.urgent_wood_trips, 2 * per_spot as u64);
+    assert_eq!(
+        chosen.iter().filter(|t| **t == Some((26, 20))).count(),
+        2 * per_spot,
+        "{chosen:?}"
+    );
+    assert_eq!(
+        engine.resources.tallies.urgent_wood_trips,
+        2 * per_spot as u64
+    );
     // Not urgent (10:00, tonight's burn in hand): the Pass 5 cap.
     let burn = tonight(WINTER_DAY, u64::from(rule.gather_start_minute));
-    let (mut engine, entities) =
-        fixture(WorldRules::game_v12(), adults, &[(26, 20)], tick_at(WINTER_DAY, u64::from(rule.gather_start_minute)), burn);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        adults,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, u64::from(rule.gather_start_minute)),
+        burn,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     let chosen = wood_targets(&engine, &entities);
-    assert_eq!(chosen.iter().filter(|t| **t == Some((26, 20))).count(), per_spot, "{chosen:?}");
+    assert_eq!(
+        chosen.iter().filter(|t| **t == Some((26, 20))).count(),
+        per_spot,
+        "{chosen:?}"
+    );
     // Re-targeting: gatherers whose spot emptied share the remaining spot up to the doubled cap.
-    for (wood, minute, want) in [(0, start, 2 * per_spot), (burn, u64::from(rule.gather_start_minute), per_spot)] {
-        let (mut engine, entities) = fixture(WorldRules::game_v12(), adults, &[(30, 20)], tick_at(WINTER_DAY, minute), wood);
+    for (wood, minute, want) in [
+        (0, start, 2 * per_spot),
+        (burn, u64::from(rule.gather_start_minute), per_spot),
+    ] {
+        let (mut engine, entities) = fixture(
+            WorldRules::game_v12(),
+            adults,
+            &[(30, 20)],
+            tick_at(WINTER_DAY, minute),
+            wood,
+        );
         for entity in &entities {
-            engine.world.insert_one(*entity, AgentState::Seeking { target: TargetKind::GatherWood }).expect("seek");
-            engine.world.insert_one(*entity, SeekTarget::new((40, 40))).expect("empty spot");
+            engine
+                .world
+                .insert_one(
+                    *entity,
+                    AgentState::Seeking {
+                        target: TargetKind::GatherWood,
+                    },
+                )
+                .expect("seek");
+            engine
+                .world
+                .insert_one(*entity, SeekTarget::new((40, 40)))
+                .expect("empty spot");
         }
         AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
         let chosen = wood_targets(&engine, &entities);
-        assert_eq!(chosen.iter().filter(|t| **t == Some((30, 20))).count(), want, "wood {wood}: {chosen:?}");
-        assert_eq!(chosen.iter().filter(|t| t.is_none()).count(), adults - want, "the rest idle: {chosen:?}");
-        assert_eq!(engine.resources.tallies.wood_trips, 0, "re-targeting starts no trip");
+        assert_eq!(
+            chosen.iter().filter(|t| **t == Some((30, 20))).count(),
+            want,
+            "wood {wood}: {chosen:?}"
+        );
+        assert_eq!(
+            chosen.iter().filter(|t| t.is_none()).count(),
+            adults - want,
+            "the rest idle: {chosen:?}"
+        );
+        assert_eq!(
+            engine.resources.tallies.wood_trips, 0,
+            "re-targeting starts no trip"
+        );
     }
 }
 
@@ -163,13 +282,31 @@ fn harness_urgent_ends_when_wood_is_in_hand() {
     let rule = v12_rule();
     let start = u64::from(rule.urgent_start_minute.expect("v12 urgent mode"));
     let burn = tonight(WINTER_DAY, start);
-    let (mut engine, entities) = fixture(WorldRules::game_v12(), 1, &[], tick_at(WINTER_DAY, start), burn - 2);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v12(),
+        1,
+        &[],
+        tick_at(WINTER_DAY, start),
+        burn - 2,
+    );
     assert!(is_urgent(&engine.world, &engine.resources, 1));
     // A gatherer walking home with one unit is wood in hand too.
-    engine.world.get::<&mut Inventory>(entities[0]).expect("inv").add(ResourceKind::Wood, 1);
+    engine
+        .world
+        .get::<&mut Inventory>(entities[0])
+        .expect("inv")
+        .add(ResourceKind::Wood, 1);
     assert!(is_urgent(&engine.world, &engine.resources, 1));
-    engine.resources.settlements.get_mut(&1).expect("village").store(ResourceKind::Wood, 1);
-    assert!(!is_urgent(&engine.world, &engine.resources, 1), "tonight's burn is in hand");
+    engine
+        .resources
+        .settlements
+        .get_mut(&1)
+        .expect("village")
+        .store(ResourceKind::Wood, 1);
+    assert!(
+        !is_urgent(&engine.world, &engine.resources, 1),
+        "tonight's burn is in hand"
+    );
     // With the flag cleared, a new trip waits for the normal window.
     engine.resources.wood_tiles.insert((26, 20), 6);
     engine.resources.wood_source_max.insert((26, 20), 6);
@@ -177,8 +314,18 @@ fn harness_urgent_ends_when_wood_is_in_hand() {
     assert_eq!(wood_targets(&engine, &entities), vec![None]);
     assert_eq!(engine.resources.tallies.urgent_wood_trips, 0);
     // The night ahead decides: after midnight the evening's season still counts.
-    let (engine, _) = fixture(WorldRules::game_v12(), 0, &[], tick_at(WINTER_DAY + 6, 120), 0);
-    assert_eq!(night_season(&engine.resources, &rule), 3, "the last winter night is a winter night");
+    let (engine, _) = fixture(
+        WorldRules::game_v12(),
+        0,
+        &[],
+        tick_at(WINTER_DAY + 6, 120),
+        0,
+    );
+    assert_eq!(
+        night_season(&engine.resources, &rule),
+        3,
+        "the last winter night is a winter night"
+    );
 }
 
 #[test]
@@ -186,14 +333,32 @@ fn harness_urgent_v11_unchanged() {
     let v11 = WorldRules::game_v11().society.firewood.expect("v11");
     assert_eq!(v11.urgent_start_minute, None);
     // No wood at all at 07:00 in v11: nobody leaves before 10:00 and nothing is urgent.
-    let (mut engine, entities) = fixture(WorldRules::game_v11(), 2, &[(26, 20)], tick_at(WINTER_DAY, 420), 0);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v11(),
+        2,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, 420),
+        0,
+    );
     assert!(!is_urgent(&engine.world, &engine.resources, 1));
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood_targets(&engine, &entities), vec![None, None]);
     // At 10:00 the Pass 5 cap of one gatherer per spot holds.
-    let (mut engine, entities) = fixture(WorldRules::game_v11(), 2, &[(26, 20)], tick_at(WINTER_DAY, 600), 0);
+    let (mut engine, entities) = fixture(
+        WorldRules::game_v11(),
+        2,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, 600),
+        0,
+    );
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(wood_targets(&engine, &entities).iter().filter(|t| t.is_some()).count(), 1);
+    assert_eq!(
+        wood_targets(&engine, &entities)
+            .iter()
+            .filter(|t| t.is_some())
+            .count(),
+        1
+    );
     assert_eq!(engine.resources.tallies.urgent_wood_trips, 0);
     // The frozen v11 day: fingerprint of seed 0 after 1,440 ticks (Part 0).
     let mut engine = game_v11_scene(0);
@@ -212,7 +377,13 @@ fn harness_urgent_is_per_settlement() {
     let start = u64::from(rule.urgent_start_minute.expect("v12 urgent mode"));
     let burn = tonight(WINTER_DAY, start);
     let per_spot = rule.max_gatherers_per_spot as usize;
-    let (mut engine, short) = fixture(WorldRules::game_v12(), 2 * per_spot, &[(26, 20)], tick_at(WINTER_DAY, start), 0);
+    let (mut engine, short) = fixture(
+        WorldRules::game_v12(),
+        2 * per_spot,
+        &[(26, 20)],
+        tick_at(WINTER_DAY, start),
+        0,
+    );
     let mut stocked = Settlement::new_with_id(2, 0);
     stocked.formation_tile = (40, 20);
     stocked.store(ResourceKind::Wood, burn);
@@ -222,8 +393,18 @@ fn harness_urgent_is_per_settlement() {
         let id = engine.world.get::<&Agent>(entity).expect("agent").id;
         engine
             .world
-            .insert(entity, (AgentState::Idle, Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08), Sleep::new(0.0, 0.03),
-                Social::new(0.0, 0.04), Inventory::default(), MovementRng::new(index + 50)))
+            .insert(
+                entity,
+                (
+                    AgentState::Idle,
+                    Hunger::new(0.0, 0.05),
+                    Thirst::new(0.0, 0.08),
+                    Sleep::new(0.0, 0.03),
+                    Social::new(0.0, 0.04),
+                    Inventory::default(),
+                    MovementRng::new(index + 50),
+                ),
+            )
             .expect("components");
         stocked.add_member_agent(id);
         others.push(entity);
@@ -234,7 +415,17 @@ fn harness_urgent_is_per_settlement() {
     assert!(is_urgent(&engine.world, &engine.resources, 1));
     assert!(!is_urgent(&engine.world, &engine.resources, 2));
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(wood_targets(&engine, &short), vec![Some((26, 20)); 2 * per_spot]);
-    assert_eq!(wood_targets(&engine, &others), vec![None, None], "the stocked village waits for its normal window");
-    assert_eq!(engine.resources.tallies.urgent_wood_trips, 2 * per_spot as u64);
+    assert_eq!(
+        wood_targets(&engine, &short),
+        vec![Some((26, 20)); 2 * per_spot]
+    );
+    assert_eq!(
+        wood_targets(&engine, &others),
+        vec![None, None],
+        "the stocked village waits for its normal window"
+    );
+    assert_eq!(
+        engine.resources.tallies.urgent_wood_trips,
+        2 * per_spot as u64
+    );
 }

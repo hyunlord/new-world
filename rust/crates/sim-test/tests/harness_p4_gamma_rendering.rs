@@ -190,7 +190,10 @@ fn harness_p4_gamma_d8_post_tick_reflects_beta_motion() {
         moved_at.is_some(),
         "β movement must shift agent away from (32,32) within 8 ticks"
     );
-    println!("[γ-D8] β movement reflected post-tick at tick {} ✓", moved_at.unwrap());
+    println!(
+        "[γ-D8] β movement reflected post-tick at tick {} ✓",
+        moved_at.unwrap()
+    );
 }
 
 // ── Assertion 9 ────────────────────────────────────────────────────────
@@ -230,7 +233,12 @@ fn harness_p4_gamma_a10_three_parallel_arrays_length_and_values() {
         assert_eq!(ids.len(), n as usize, "ids length must equal n = {}", n);
         assert_eq!(xs.len(), n as usize, "xs length must equal n = {}", n);
         assert_eq!(ys.len(), n as usize, "ys length must equal n = {}", n);
-        assert_eq!(states.len(), n as usize, "states length must equal n = {}", n);
+        assert_eq!(
+            states.len(),
+            n as usize,
+            "states length must equal n = {}",
+            n
+        );
 
         // Per-index value identity: ids/xs/ys must mirror row fields.
         for (i, row) in rows.iter().enumerate() {

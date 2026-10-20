@@ -20,7 +20,11 @@ fn harness_lineage_keys_stable_under_birth_shift() {
         }
         keys
     };
-    let with: Vec<u64> = births(true).into_iter().filter(|(who, _)| *who == "p").map(|(_, k)| k).collect();
+    let with: Vec<u64> = births(true)
+        .into_iter()
+        .filter(|(who, _)| *who == "p")
+        .map(|(_, k)| k)
+        .collect();
     let without: Vec<u64> = births(false).into_iter().map(|(_, k)| k).collect();
     assert_eq!(with, without);
     // A birth of the same parent shifts its later children (the known limitation).
@@ -33,12 +37,20 @@ fn harness_lineage_keys_stable_under_birth_shift() {
 fn harness_lineage_founder_keys_follow_seed_and_spawn_index() {
     for seed in [0u64, 7, 12_031] {
         let engine = game_v15_scene(seed);
-        let mut founders: Vec<(u64, Lineage)> =
-            engine.world.query::<(&Agent, &Lineage)>().iter().map(|(_, (a, l))| (a.id, *l)).collect();
+        let mut founders: Vec<(u64, Lineage)> = engine
+            .world
+            .query::<(&Agent, &Lineage)>()
+            .iter()
+            .map(|(_, (a, l))| (a.id, *l))
+            .collect();
         founders.sort_by_key(|row| row.0);
         assert_eq!(founders.len(), 24);
         for (index, (_, lineage)) in founders.iter().enumerate() {
-            assert_eq!(*lineage, Lineage::founder(seed, index as u32), "seed {seed} founder {index}");
+            assert_eq!(
+                *lineage,
+                Lineage::founder(seed, index as u32),
+                "seed {seed} founder {index}"
+            );
         }
     }
 }
@@ -70,7 +82,12 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
     for _ in 0..40_320 {
         engine.tick();
     }
-    let rows: Vec<Lineage> = engine.world.query::<&Lineage>().iter().map(|(_, l)| *l).collect();
+    let rows: Vec<Lineage> = engine
+        .world
+        .query::<&Lineage>()
+        .iter()
+        .map(|(_, l)| *l)
+        .collect();
     let keys: BTreeSet<u64> = rows.iter().map(|l| l.key).collect();
     assert_eq!(keys.len(), rows.len());
     let alive = engine.world.query::<&Agent>().iter().count();
@@ -92,10 +109,17 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
         generation = next;
     }
     closure.extend(generation.iter().map(|l| l.key));
-    let newborns: Vec<u64> = keys.iter().copied().filter(|k| !(0..24).any(|i| Lineage::founder(seed, i).key == *k)).collect();
+    let newborns: Vec<u64> = keys
+        .iter()
+        .copied()
+        .filter(|k| !(0..24).any(|i| Lineage::founder(seed, i).key == *k))
+        .collect();
     assert!(!newborns.is_empty());
     for key in newborns {
-        assert!(closure.contains(&key), "newborn key {key:#x} is not a first parent's child");
+        assert!(
+            closure.contains(&key),
+            "newborn key {key:#x} is not a first parent's child"
+        );
     }
 }
 
@@ -103,7 +127,9 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
 
 use sim_core::components::{AgentState, Position, TargetKind};
 use sim_core::material::MaterialRegistry;
-use sim_core::rng::{keyed_step, keyed_u64, keyed_unit_f64, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_MOVE_PAUSE};
+use sim_core::rng::{
+    keyed_step, keyed_u64, keyed_unit_f64, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_MOVE_PAUSE,
+};
 use sim_core::rules::WorldRules;
 use sim_engine::{apply_noise_fork, NoiseFork, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
@@ -112,7 +138,14 @@ use sim_test::scenes::game_v14_scene;
 
 #[test]
 fn harness_keyed_draw_is_pure() {
-    let key = (12_000u64, STREAM_MOVE_PAUSE, 0xABCD_u64, 28_800u64, 0u32, 3u32);
+    let key = (
+        12_000u64,
+        STREAM_MOVE_PAUSE,
+        0xABCD_u64,
+        28_800u64,
+        0u32,
+        3u32,
+    );
     let value = keyed_u64(key.0, key.1, key.2, key.3, key.4, key.5);
     assert_eq!(value, keyed_u64(key.0, key.1, key.2, key.3, key.4, key.5));
     for other in [
@@ -149,7 +182,10 @@ fn harness_keyed_step_balanced() {
     }
     let share = |count: u32| f64::from(count) / 1e6;
     for (x, row) in cells.iter().enumerate() {
-        assert!((share(row.iter().sum()) - 1.0 / 3.0).abs() <= 0.01, "dx {x}");
+        assert!(
+            (share(row.iter().sum()) - 1.0 / 3.0).abs() <= 0.01,
+            "dx {x}"
+        );
         for (y, cell) in row.iter().enumerate() {
             assert!((share(*cell) - 1.0 / 9.0).abs() <= 0.01, "cell {x},{y}");
         }
@@ -170,7 +206,13 @@ fn steps(keyed: bool, busy: u64) -> Vec<(i64, i64)> {
     engine.resources.rules.agent.idle_pause_chance = 0.4;
     engine.resources.rules.agent.keyed_draws = keyed;
     engine.register_system(Box::new(AgentMovementSystem::new()));
-    let state = if busy > 0 { AgentState::Consuming { target: TargetKind::Food } } else { AgentState::Idle };
+    let state = if busy > 0 {
+        AgentState::Consuming {
+            target: TargetKind::Food,
+        }
+    } else {
+        AgentState::Idle
+    };
     let agent = engine.world.spawn((
         Position::new(32, 32),
         MovementRng::new(77),
@@ -204,7 +246,12 @@ fn harness_v15_movement_independent_of_history() {
     // In a v15 world the movement component is attached but never advanced.
     let mut engine = game_v15_scene(2);
     let before: Vec<(u64, MovementRng)> = {
-        let mut rows: Vec<_> = engine.world.query::<(&Agent, &MovementRng)>().iter().map(|(_, (a, r))| (a.id, *r)).collect();
+        let mut rows: Vec<_> = engine
+            .world
+            .query::<(&Agent, &MovementRng)>()
+            .iter()
+            .map(|(_, (a, r))| (a.id, *r))
+            .collect();
         rows.sort_by_key(|r| r.0);
         rows
     };
@@ -212,7 +259,12 @@ fn harness_v15_movement_independent_of_history() {
         engine.tick();
     }
     for (id, rng) in before {
-        let now = engine.world.query::<(&Agent, &MovementRng)>().iter().find(|(_, (a, _))| a.id == id).map(|(_, (_, r))| *r);
+        let now = engine
+            .world
+            .query::<(&Agent, &MovementRng)>()
+            .iter()
+            .find(|(_, (a, _))| a.id == id)
+            .map(|(_, (_, r))| *r);
         if let Some(now) = now {
             assert_eq!(now, rng, "agent {id}'s sequential stream advanced");
         }
@@ -255,27 +307,52 @@ fn harness_noise_fork_replicate0_is_identity() {
 fn harness_noise_fork_prefix_identity() {
     let fork_tick = 1440;
     let base = digests(game_v15_scene(12_001), 4 * 1440, None);
-    let fork = digests(game_v15_scene(12_001), 4 * 1440, Some((fork_tick, 3, false)));
+    let fork = digests(
+        game_v15_scene(12_001),
+        4 * 1440,
+        Some((fork_tick, 3, false)),
+    );
     let prefix = (fork_tick / 60) as usize;
     // Rows at every 60th tick <= T are equal (row T is still pre-fork) ...
     assert_eq!(base[..=prefix], fork[..=prefix]);
     // ... and the runs differ at some later row.
-    assert!(base[prefix + 1..].iter().zip(&fork[prefix + 1..]).any(|(a, b)| a != b));
+    assert!(base[prefix + 1..]
+        .iter()
+        .zip(&fork[prefix + 1..])
+        .any(|(a, b)| a != b));
 }
 
 #[test]
 fn harness_v14_draws_unchanged() {
     // v14 keeps the sequential streams: no lineage is attached, the movement
     // streams advance, and the Part 0 fingerprints at 1,440 ticks hold.
-    for (seed, expected) in [(0u64, "519530c0aaaae844"), (1, "24d191164e3c4132"), (2, "b44a71909b8615cc"), (3, "c16d5b002bea6cc5")] {
+    for (seed, expected) in [
+        (0u64, "519530c0aaaae844"),
+        (1, "24d191164e3c4132"),
+        (2, "b44a71909b8615cc"),
+        (3, "c16d5b002bea6cc5"),
+    ] {
         let mut engine = game_v14_scene(seed);
         assert_eq!(engine.world.query::<&Lineage>().iter().count(), 0);
-        let start: Vec<MovementRng> = engine.world.query::<&MovementRng>().iter().map(|(_, r)| *r).collect();
+        let start: Vec<MovementRng> = engine
+            .world
+            .query::<&MovementRng>()
+            .iter()
+            .map(|(_, r)| *r)
+            .collect();
         for _ in 0..1440 {
             engine.tick();
         }
         assert_eq!(fingerprint(&engine), expected, "seed {seed}");
-        let now: Vec<MovementRng> = engine.world.query::<&MovementRng>().iter().map(|(_, r)| *r).collect();
-        assert!(start.iter().zip(&now).any(|(a, b)| a != b), "seed {seed}: no stream advanced");
+        let now: Vec<MovementRng> = engine
+            .world
+            .query::<&MovementRng>()
+            .iter()
+            .map(|(_, r)| *r)
+            .collect();
+        assert!(
+            start.iter().zip(&now).any(|(a, b)| a != b),
+            "seed {seed}: no stream advanced"
+        );
     }
 }

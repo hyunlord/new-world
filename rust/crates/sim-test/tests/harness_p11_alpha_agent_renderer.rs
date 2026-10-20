@@ -113,7 +113,12 @@ fn harness_p11_alpha_seeking_state_tag_is_one() {
     let mut e = fresh_engine();
     let entity = e.spawn_agent(1, 2);
     e.world
-        .insert_one(entity, AgentState::Seeking { target: TargetKind::Food })
+        .insert_one(
+            entity,
+            AgentState::Seeking {
+                target: TargetKind::Food,
+            },
+        )
         .expect("entity just spawned");
     let rows = collect_agent_snapshot(&e.world);
     assert_eq!(rows.len(), 1);
@@ -131,7 +136,12 @@ fn harness_p11_alpha_consuming_agent_state_tag_is_two() {
     let mut e = fresh_engine();
     let entity = e.spawn_agent(4, 6);
     e.world
-        .insert_one(entity, AgentState::Consuming { target: TargetKind::Agent(99) })
+        .insert_one(
+            entity,
+            AgentState::Consuming {
+                target: TargetKind::Agent(99),
+            },
+        )
         .expect("entity just spawned");
     let rows = collect_agent_snapshot(&e.world);
     assert_eq!(rows.len(), 1);
@@ -149,7 +159,12 @@ fn harness_p11_alpha_consuming_food_state_tag_is_three() {
     let mut e = fresh_engine();
     let entity = e.spawn_agent(7, 8);
     e.world
-        .insert_one(entity, AgentState::Consuming { target: TargetKind::Food })
+        .insert_one(
+            entity,
+            AgentState::Consuming {
+                target: TargetKind::Food,
+            },
+        )
         .expect("entity just spawned");
     let rows = collect_agent_snapshot(&e.world);
     assert_eq!(rows.len(), 1);
@@ -167,7 +182,12 @@ fn harness_p11_alpha_consuming_sleep_state_tag_is_three() {
     let mut e = fresh_engine();
     let entity = e.spawn_agent(2, 9);
     e.world
-        .insert_one(entity, AgentState::Consuming { target: TargetKind::Sleep })
+        .insert_one(
+            entity,
+            AgentState::Consuming {
+                target: TargetKind::Sleep,
+            },
+        )
         .expect("entity just spawned");
     let rows = collect_agent_snapshot(&e.world);
     assert_eq!(rows.len(), 1);
@@ -258,13 +278,28 @@ fn harness_p11_alpha_state_tag_in_valid_range() {
 
     e.world.insert_one(a0, AgentState::Idle).unwrap();
     e.world
-        .insert_one(a1, AgentState::Seeking { target: TargetKind::Water })
+        .insert_one(
+            a1,
+            AgentState::Seeking {
+                target: TargetKind::Water,
+            },
+        )
         .unwrap();
     e.world
-        .insert_one(a2, AgentState::Consuming { target: TargetKind::Agent(7) })
+        .insert_one(
+            a2,
+            AgentState::Consuming {
+                target: TargetKind::Agent(7),
+            },
+        )
         .unwrap();
     e.world
-        .insert_one(a3, AgentState::Consuming { target: TargetKind::ConstructionSite })
+        .insert_one(
+            a3,
+            AgentState::Consuming {
+                target: TargetKind::ConstructionSite,
+            },
+        )
         .unwrap();
     // a4 left without AgentState to exercise the None → 0 branch.
     let _ = a4;
@@ -283,8 +318,14 @@ fn harness_p11_alpha_state_tag_in_valid_range() {
     tags.sort();
     assert!(tags.contains(&0), "A10: tag 0 (Idle) must appear");
     assert!(tags.contains(&1), "A10: tag 1 (Seeking) must appear");
-    assert!(tags.contains(&2), "A10: tag 2 (Consuming Agent) must appear");
-    assert!(tags.contains(&3), "A10: tag 3 (Consuming other) must appear");
+    assert!(
+        tags.contains(&2),
+        "A10: tag 2 (Consuming Agent) must appear"
+    );
+    assert!(
+        tags.contains(&3),
+        "A10: tag 3 (Consuming other) must appear"
+    );
     println!("[P11-α A10] all state_tag values in 0..=3, all four present ✓");
 }
 

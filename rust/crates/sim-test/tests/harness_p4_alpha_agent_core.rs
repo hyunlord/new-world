@@ -35,9 +35,7 @@ use sim_core::components::{Agent, Position};
 use sim_core::influence::InfluenceChannel;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
-use sim_systems::runtime::influence::agent_sample::{
-    AgentInfluenceSampleSystem, InfluenceSample,
-};
+use sim_systems::runtime::influence::agent_sample::{AgentInfluenceSampleSystem, InfluenceSample};
 
 const W: u32 = 32;
 const H: u32 = 32;
@@ -69,7 +67,10 @@ fn harness_p4_alpha_components_mod_exports() {
 /// invariant — pixel conversion lives in GDScript renderer).
 #[test]
 fn harness_p4_alpha_position_struct_fields_u32() {
-    let p = Position { x: 7_u32, y: 11_u32 };
+    let p = Position {
+        x: 7_u32,
+        y: 11_u32,
+    };
     let _x_check: u32 = p.x;
     let _y_check: u32 = p.y;
     assert_eq!(p.x, 7);
@@ -133,7 +134,10 @@ fn harness_p4_alpha_spawned_agent_has_position() {
 fn harness_p4_alpha_spawned_agent_has_marker() {
     let mut engine = fresh_engine();
     let entity = engine.spawn_agent(1, 2);
-    let mut q = engine.world.query_one::<(&Position, &Agent)>(entity).unwrap();
+    let mut q = engine
+        .world
+        .query_one::<(&Position, &Agent)>(entity)
+        .unwrap();
     let (pos, _agent) = q.get().expect("agent missing Position+Agent tuple");
     assert_eq!(pos.x, 1);
     assert_eq!(pos.y, 2);

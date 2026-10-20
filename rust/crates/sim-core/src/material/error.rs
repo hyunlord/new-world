@@ -50,7 +50,10 @@ mod tests {
 
     #[test]
     fn implements_std_error_send_sync_static() {
-        fn assert_error<T: std::error::Error + std::fmt::Display + std::fmt::Debug + Send + Sync + 'static>() {}
+        fn assert_error<
+            T: std::error::Error + std::fmt::Display + std::fmt::Debug + Send + Sync + 'static,
+        >() {
+        }
         assert_error::<MaterialError>();
     }
 
@@ -65,7 +68,10 @@ mod tests {
         let cases = [
             MaterialError::ParseError("p".into()),
             MaterialError::Io(std::io::Error::other("x")),
-            MaterialError::SchemaMismatch { file_version: 2, supported: 1 },
+            MaterialError::SchemaMismatch {
+                file_version: 2,
+                supported: 1,
+            },
             MaterialError::PropertyOutOfRange {
                 property: "density",
                 value: 0.0,

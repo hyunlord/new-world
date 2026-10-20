@@ -336,8 +336,16 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
     // Type D — test-fixture anchor: 60.0 is what build_engine wrote.
     // ════════════════════════════════════════════════════════════════════
     {
-        let l_att = engine.world.get::<&Social>(attacker_entity).unwrap().loneliness;
-        let l_def = engine.world.get::<&Social>(defender_entity).unwrap().loneliness;
+        let l_att = engine
+            .world
+            .get::<&Social>(attacker_entity)
+            .unwrap()
+            .loneliness;
+        let l_def = engine
+            .world
+            .get::<&Social>(defender_entity)
+            .unwrap()
+            .loneliness;
         assert!(
             (l_att - 60.0).abs() < 1e-9,
             "A1b: attacker loneliness at tick 0 = {l_att} must be 60.0 (±1e-9)"
@@ -456,7 +464,9 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
                 .resources
                 .causal_log
                 .lookup(seed_id)
-                .unwrap_or_else(|| panic!("A1-setup(f): seed event_id {seed_id} must be present in causal_log"));
+                .unwrap_or_else(|| {
+                    panic!("A1-setup(f): seed event_id {seed_id} must be present in causal_log")
+                });
             match ev {
                 CausalEvent::CombatCompleted { attacker, defender, .. } => {
                     assert_eq!(
@@ -766,10 +776,7 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
             "A3-reversed setup: rev_att_id ({rev_att_id}) must be > rev_def_id ({rev_def_id}) \
              in reversed spawn order — build_engine(false, _) bug if not"
         );
-        let (rev_min, rev_max) = (
-            rev_att_id.min(rev_def_id),
-            rev_att_id.max(rev_def_id),
-        );
+        let (rev_min, rev_max) = (rev_att_id.min(rev_def_id), rev_att_id.max(rev_def_id));
         // Run the same Phase-1 window in the reversed engine.
         for _ in 0..=PHASE1_MAX {
             rev_engine.tick();
@@ -886,8 +893,16 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
     {
         let s_att = *engine.world.get::<&AgentState>(attacker_entity).unwrap();
         let s_def = *engine.world.get::<&AgentState>(defender_entity).unwrap();
-        assert_eq!(s_att, AgentState::Idle, "A7: attacker must be Idle after SIC; got {s_att:?}");
-        assert_eq!(s_def, AgentState::Idle, "A7: defender must be Idle after SIC; got {s_def:?}");
+        assert_eq!(
+            s_att,
+            AgentState::Idle,
+            "A7: attacker must be Idle after SIC; got {s_att:?}"
+        );
+        assert_eq!(
+            s_def,
+            AgentState::Idle,
+            "A7: defender must be Idle after SIC; got {s_def:?}"
+        );
     }
 
     // ── A8: attacker loneliness == 30.0 < SOCIAL_THRESHOLD ──────────────
@@ -1064,7 +1079,11 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
             .flat_map(|(_, log)| log.iter().cloned().collect::<Vec<_>>())
             .filter_map(|ev| {
                 if let CausalEvent::AgentDecision {
-                    id, reason, agent, tick, ..
+                    id,
+                    reason,
+                    agent,
+                    tick,
+                    ..
                 } = ev
                 {
                     Some((id, reason, agent, tick))
@@ -1253,13 +1272,15 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
     for (_tile, log) in engine.resources.causal_log.iter() {
         for ev in log.iter() {
             if let CausalEvent::CombatStarted {
-                id, parent, attacker, defender, tick, ..
+                id,
+                parent,
+                attacker,
+                defender,
+                tick,
+                ..
             } = ev
             {
-                if *tick == t_combat
-                    && combat_started_ids.insert(*id)
-                    && started_id.is_none()
-                {
+                if *tick == t_combat && combat_started_ids.insert(*id) && started_id.is_none() {
                     started_id = Some(*id);
                     started_parent = *parent;
                     started_attacker = Some(*attacker);
@@ -1299,10 +1320,7 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
             "A12-reversed setup: rev_att_id ({rev_att_id}) must be > rev_def_id ({rev_def_id}) \
              in reversed spawn order"
         );
-        let (rev_min, rev_max) = (
-            rev_att_id.min(rev_def_id),
-            rev_att_id.max(rev_def_id),
-        );
+        let (rev_min, rev_max) = (rev_att_id.min(rev_def_id), rev_att_id.max(rev_def_id));
         // Run full Phase 1 + Phase 2 in reversed engine.
         let total_ticks = PHASE1_MAX + PHASE2_MAX + 1;
         for _ in 0..total_ticks {
@@ -1312,7 +1330,10 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
         let mut rev_started_defender: Option<AgentId> = None;
         for (_, log) in rev_engine.resources.causal_log.iter() {
             for ev in log.iter() {
-                if let CausalEvent::CombatStarted { attacker, defender, .. } = ev {
+                if let CausalEvent::CombatStarted {
+                    attacker, defender, ..
+                } = ev
+                {
                     if rev_started_attacker.is_none() {
                         rev_started_attacker = Some(*attacker);
                         rev_started_defender = Some(*defender);
@@ -1369,7 +1390,10 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
     let mut cc_tick: Option<u64> = None;
     for (_tile, log) in engine.resources.causal_log.iter() {
         for ev in log.iter() {
-            if let CausalEvent::CombatCompleted { id, parent, tick, .. } = ev {
+            if let CausalEvent::CombatCompleted {
+                id, parent, tick, ..
+            } = ev
+            {
                 if (*tick == t_combat || *tick == t_combat + 1)
                     && combat_completed_ids.insert(*id)
                     && cc_id.is_none()
@@ -1410,7 +1434,13 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
         let mut contradictory = 0_u32;
         for (_, log) in engine.resources.causal_log.iter() {
             for ev in log.iter() {
-                if let CausalEvent::AgentDecision { agent, reason, tick, .. } = ev {
+                if let CausalEvent::AgentDecision {
+                    agent,
+                    reason,
+                    tick,
+                    ..
+                } = ev
+                {
                     if *agent == def_id && *tick == t_combat {
                         // CombatReason on defender is allowed (would mean
                         // defender independently elected combat); any
@@ -1561,7 +1591,10 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
         std::collections::HashSet::new();
     for (_, log) in engine.resources.causal_log.iter() {
         for ev in log.iter() {
-            if let CausalEvent::CombatStarted { attacker, defender, .. } = ev {
+            if let CausalEvent::CombatStarted {
+                attacker, defender, ..
+            } = ev
+            {
                 combat_participants.insert(*attacker);
                 combat_participants.insert(*defender);
             }

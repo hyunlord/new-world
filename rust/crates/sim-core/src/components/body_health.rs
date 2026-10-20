@@ -43,7 +43,10 @@ impl BodyHealth {
     /// divide-by-zero in future percentage calculations.
     pub fn new_with_max(max_hp: f64) -> Self {
         let max = max_hp.max(f64::EPSILON);
-        Self { hp: max, max_hp: max }
+        Self {
+            hp: max,
+            max_hp: max,
+        }
     }
 
     /// Apply damage: `hp = (hp - amount).max(0.0)`. Saturates at 0.

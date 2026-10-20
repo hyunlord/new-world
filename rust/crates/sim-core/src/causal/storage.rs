@@ -120,9 +120,7 @@ impl CausalLogStorage {
         let log = self.logs.get(&tile_idx)?;
         log.as_slice().iter().rev().find_map(|ev| match ev {
             CausalEvent::StampDirty {
-                id,
-                channel: ch,
-                ..
+                id, channel: ch, ..
             } if *ch == channel => Some(*id),
             _ => None,
         })
@@ -300,10 +298,7 @@ mod tests {
             Some(2)
         );
         // Channel never stamped → None.
-        assert_eq!(
-            s.find_recent_stamp_dirty(5, InfluenceChannel::Light),
-            None
-        );
+        assert_eq!(s.find_recent_stamp_dirty(5, InfluenceChannel::Light), None);
         // Tile without log → None.
         assert_eq!(
             s.find_recent_stamp_dirty(999, InfluenceChannel::Warmth),

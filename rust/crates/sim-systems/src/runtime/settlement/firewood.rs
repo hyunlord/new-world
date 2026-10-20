@@ -36,9 +36,14 @@ pub fn burn_season(resources: &SimResources) -> usize {
 /// otherwise (and always in Pass 5) it is [`burn_season`].
 pub fn night_season(resources: &SimResources, rule: &FirewoodRule) -> usize {
     if rule.night_season_from_evening && resources.ticks_per_day != 0 {
-        let minute = resources.current_tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
+        let minute = resources
+            .current_tick
+            .saturating_add(resources.rules.clock_offset_ticks)
+            % resources.ticks_per_day;
         if minute < u64::from(rule.burn_end_minute % MINUTES_PER_DAY) {
-            let evening = resources.current_tick.saturating_sub(resources.ticks_per_day);
+            let evening = resources
+                .current_tick
+                .saturating_sub(resources.ticks_per_day);
             return season_at_tick(resources, evening).map_or(0, |(season, _)| season.min(3));
         }
     }
@@ -83,7 +88,9 @@ pub fn winter_severity(resources: &SimResources, rule: &FirewoodRule, year: u64)
 /// without seasons.
 pub fn year_at_tick(resources: &SimResources, tick: u64) -> u64 {
     resources.rules.seasons.map_or(0, |seasons| {
-        day_index_at(resources, tick).checked_div(4 * u64::from(seasons.days_per_season)).unwrap_or(0)
+        day_index_at(resources, tick)
+            .checked_div(4 * u64::from(seasons.days_per_season))
+            .unwrap_or(0)
     })
 }
 
@@ -93,7 +100,8 @@ pub fn year_at_tick(resources: &SimResources, tick: u64) -> u64 {
 /// booking of [`night_season`].
 pub fn night_tick_at(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u64 {
     if rule.night_season_from_evening && resources.ticks_per_day != 0 {
-        let minute = tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
+        let minute =
+            tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
         if minute < u64::from(rule.burn_end_minute % MINUTES_PER_DAY) {
             return tick.saturating_sub(resources.ticks_per_day);
         }
@@ -116,7 +124,8 @@ pub fn severity_level_at(resources: &SimResources, rule: &FirewoodRule, tick: u6
 /// burn end follow the night booking ([`night_tick_at`]).
 pub fn winter_severity_at(resources: &SimResources, tick: u64) -> i64 {
     resources.rules.society.firewood.map_or(-1, |rule| {
-        severity_level_at(resources, &rule, night_tick_at(resources, &rule, tick)).map_or(-1, i64::from)
+        severity_level_at(resources, &rule, night_tick_at(resources, &rule, tick))
+            .map_or(-1, i64::from)
     })
 }
 
@@ -128,7 +137,10 @@ pub fn winter_severity_at(resources: &SimResources, tick: u64) -> i64 {
 pub fn winter_burn_per_hour(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u16 {
     match severity_level_at(resources, rule, tick) {
         Some(level) => rule.winter_severity_burn_per_hour[usize::from(level).min(2)],
-        None => rule.burn_per_hour[season_at_tick(resources, tick).map_or(0, |(season, _)| season.min(3))],
+        None => {
+            rule.burn_per_hour
+                [season_at_tick(resources, tick).map_or(0, |(season, _)| season.min(3))]
+        }
     }
 }
 
@@ -198,13 +210,23 @@ pub fn night_rate(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u
         return 0;
     }
     let minute = tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
-    if !crate::runtime::decision::agent_decision::minute_in_window(minute, rule.burn_start_minute, rule.burn_end_minute) {
+    if !crate::runtime::decision::agent_decision::minute_in_window(
+        minute,
+        rule.burn_start_minute,
+        rule.burn_end_minute,
+    ) {
         return 0;
     }
     let night = night_tick_at(resources, rule, tick);
     let base = u32::from(winter_burn_per_hour(resources, rule, night));
-    if rule.winter_night_burn_permille.is_some() && severity_level_at(resources, rule, night).is_some() {
-        let delta = i64::from(night_burn_delta(resources, rule, day_index_at(resources, night)));
+    if rule.winter_night_burn_permille.is_some()
+        && severity_level_at(resources, rule, night).is_some()
+    {
+        let delta = i64::from(night_burn_delta(
+            resources,
+            rule,
+            day_index_at(resources, night),
+        ));
         u32::try_from((i64::from(base) + delta).max(1)).unwrap_or(1)
     } else {
         base
@@ -222,8 +244,9 @@ pub fn winter_fall_at(resources: &SimResources, rule: &FirewoodRule, tick: u64) 
     if season != WINTER {
         return None;
     }
-    let fall = severity_level_at(resources, rule, tick)
-        .map_or(per_day, |level| rule.winter_severity_regen_units_per_day[usize::from(level).min(2)]);
+    let fall = severity_level_at(resources, rule, tick).map_or(per_day, |level| {
+        rule.winter_severity_regen_units_per_day[usize::from(level).min(2)]
+    });
     let delta = winter_fall_delta(resources, rule, day_index_at(resources, tick));
     Some(u32::try_from((i64::from(fall) + i64::from(delta)).max(0)).unwrap_or(0))
 }
@@ -248,7 +271,11 @@ pub fn urgent_with(resources: &SimResources, in_hand: u64) -> bool {
 /// Whether settlement `sid` is in urgent mode now: [`urgent_with`] of its
 /// [`wood_in_hand`].
 pub fn is_urgent(world: &World, resources: &SimResources, sid: SettlementId) -> bool {
-    resources.rules.society.firewood.is_some_and(|rule| rule.urgent_start_minute.is_some())
+    resources
+        .rules
+        .society
+        .firewood
+        .is_some_and(|rule| rule.urgent_start_minute.is_some())
         && resources.settlements.contains_key(&sid)
         && urgent_with(resources, wood_in_hand(world, resources, sid))
 }
@@ -268,17 +295,29 @@ pub fn burn_per_day(rule: &FirewoodRule, season: usize) -> f64 {
 pub fn wood_target(resources: &SimResources) -> Option<f64> {
     let rule = resources.rules.society.firewood?;
     let season = burn_season(resources);
-    let base = if season == WINTER { rule.winter_base_days.unwrap_or(rule.base_days) } else { rule.base_days };
+    let base = if season == WINTER {
+        rule.winter_base_days.unwrap_or(rule.base_days)
+    } else {
+        rule.base_days
+    };
     // Pass 7: the current day's burn, the winter's severity included; the
     // autumn preparation below keeps `burn_per_hour[3]` (nobody knows the
     // coming winter).
-    let per_night = f64::from(winter_burn_per_hour(resources, &rule, resources.current_tick)) * f64::from(burn_hours(&rule));
+    let per_night = f64::from(winter_burn_per_hour(
+        resources,
+        &rule,
+        resources.current_tick,
+    )) * f64::from(burn_hours(&rule));
     let mut target = base * per_night;
-    if let (true, Some(seasons), Some((current, _))) =
-        (rule.winter_prep, resources.rules.seasons, season_at(resources))
-    {
+    if let (true, Some(seasons), Some((current, _))) = (
+        rule.winter_prep,
+        resources.rules.seasons,
+        season_at(resources),
+    ) {
         if current == 2 || (current == 1 && rule.winter_prep_in_summer) {
-            let prep_days = rule.winter_prep_days.unwrap_or(f64::from(seasons.days_per_season));
+            let prep_days = rule
+                .winter_prep_days
+                .unwrap_or(f64::from(seasons.days_per_season));
             target += prep_days * burn_per_day(&rule, WINTER);
         }
     }
@@ -297,8 +336,16 @@ pub fn wood_in_hand(world: &World, resources: &SimResources, sid: SettlementId) 
         .map(|(_, (agent, inventory))| (agent.id, inventory.get(ResourceKind::Wood)))
         .collect();
     carried.sort_by_key(|(id, _)| *id);
-    u64::from(settlement.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0))
-        + carried.iter().map(|(_, wood)| u64::from(*wood)).sum::<u64>()
+    u64::from(
+        settlement
+            .stockpile
+            .get(&ResourceKind::Wood)
+            .copied()
+            .unwrap_or(0),
+    ) + carried
+        .iter()
+        .map(|(_, wood)| u64::from(*wood))
+        .sum::<u64>()
 }
 
 /// Whether the clock lies inside the firewood gathering window.
@@ -368,7 +415,10 @@ mod tests {
         assert_eq!(wood_target(&resources), None);
         resources.rules = WorldRules::game_v10();
         resources.rules.society.firewood = Some(rule());
-        resources.rules.seasons = Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] });
+        resources.rules.seasons = Some(SeasonRule {
+            days_per_season: 7,
+            regen_permille: [750, 1250, 1000, 500],
+        });
         // Display day d at 08:00: tick = d x 1440 (480-tick clock offset).
         let at_day = |r: &mut SimResources, d: u64| r.current_tick = d * 1440;
         at_day(&mut resources, 0);
@@ -387,7 +437,10 @@ mod tests {
     fn night_season_belongs_to_the_evening_only_when_enabled() {
         let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
         resources.rules = WorldRules::game_v10();
-        resources.rules.seasons = Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] });
+        resources.rules.seasons = Some(SeasonRule {
+            days_per_season: 7,
+            regen_permille: [750, 1250, 1000, 500],
+        });
         let mut r = rule();
         // 02:00 of display day 28 (the first spring day of year two) after the
         // last winter evening (display day 27): tick = 28 x 1440 + 120 - 480.
@@ -412,7 +465,10 @@ mod tests {
         assert!(!urgent_with(&resources, 0));
         let mut r = rule();
         resources.rules.society.firewood = Some(r);
-        assert!(!urgent_with(&resources, 0), "urgent mode is off without a start minute");
+        assert!(
+            !urgent_with(&resources, 0),
+            "urgent mode is off without a start minute"
+        );
         r.urgent_start_minute = Some(420);
         resources.rules.society.firewood = Some(r);
         resources.rules.seasons = None;
@@ -466,7 +522,10 @@ mod tests {
         r.winter_severity_permille = Some([0, 0, 1000]);
         r.winter_severity_burn_per_hour = [2, 3, 4];
         resources.current_tick = evening + 240;
-        assert_eq!(winter_burn_per_hour(&resources, &r, night_tick_at(&resources, &r, evening + 240)), 4);
+        assert_eq!(
+            winter_burn_per_hour(&resources, &r, night_tick_at(&resources, &r, evening + 240)),
+            4
+        );
         assert_eq!(tonight_burn(&resources, &r), 4.0 * 13.0);
         // Autumn keeps its own rate.
         assert_eq!(winter_burn_per_hour(&resources, &r, 14 * 1440), 2);

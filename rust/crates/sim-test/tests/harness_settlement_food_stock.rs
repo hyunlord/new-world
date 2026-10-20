@@ -50,7 +50,12 @@ fn scene() -> SimEngine {
 /// Sorted, deduplicated list of live `Agent.id`s in the world — the pool of
 /// resolvable member ids the collector can join against.
 fn agent_ids(e: &SimEngine) -> Vec<u64> {
-    let mut v: Vec<u64> = e.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    let mut v: Vec<u64> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(_, a)| a.id)
+        .collect();
     v.sort_unstable();
     v.dedup();
     v
@@ -174,12 +179,16 @@ fn harness_food_stock_a4_rows_sorted_and_food_stock_parity() {
     //   (c) each row's food_stock reflects ITS OWN settlement's injected count.
     let mut e = scene();
     let ids = agent_ids(&e);
-    assert!(ids.len() >= 3, "A4: need >= 3 distinct agents for 3 settlements");
+    assert!(
+        ids.len() >= 3,
+        "A4: need >= 3 distinct agents for 3 settlements"
+    );
 
     // Distinct Food per settlement; insert in NON-ascending id order so the
     // collector's sort is genuinely exercised.
-    let source: HashMap<SettlementId, u32> =
-        [(3u32, 7u32), (1u32, 42u32), (2u32, 99u32)].into_iter().collect();
+    let source: HashMap<SettlementId, u32> = [(3u32, 7u32), (1u32, 42u32), (2u32, 99u32)]
+        .into_iter()
+        .collect();
     e.resources
         .settlements
         .insert(3, make_settlement(3, (30, 30), &[ids[2]], Some(7)));
@@ -225,7 +234,10 @@ fn harness_food_stock_a4_rows_sorted_and_food_stock_parity() {
         mismatches, 0,
         "A4(c): every row must carry its OWN settlement's Food count; {mismatches} mismatch(es)"
     );
-    println!("[food-stock A4] {} rows sorted, length-parity, per-row food_stock correct ✓", rows.len());
+    println!(
+        "[food-stock A4] {} rows sorted, length-parity, per-row food_stock correct ✓",
+        rows.len()
+    );
 }
 
 // ─── Assertion 5: additive_change_preserves_existing_row_fields ────────────
@@ -284,7 +296,10 @@ fn harness_food_stock_a6_zero_member_settlement_with_food_still_skipped() {
     // 0-resolvable-member: a bogus member id that no live agent matches, yet
     // Food is stocked. Must STILL be skipped (count resolves to 0).
     let bogus: u64 = 9_999_999;
-    assert!(!ids.contains(&bogus), "A6: bogus member id must not collide with a real agent");
+    assert!(
+        !ids.contains(&bogus),
+        "A6: bogus member id must not collide with a real agent"
+    );
     e.resources
         .settlements
         .insert(2, make_settlement(2, (20, 20), &[bogus], Some(99)));
@@ -293,7 +308,10 @@ fn harness_food_stock_a6_zero_member_settlement_with_food_still_skipped() {
 
     let has_valid = rows.iter().any(|r| r.settlement_id == 1);
     let has_skipped = rows.iter().filter(|r| r.settlement_id == 2).count();
-    assert!(has_valid, "A6: the valid 1-member settlement must be present");
+    assert!(
+        has_valid,
+        "A6: the valid 1-member settlement must be present"
+    );
     assert_eq!(
         has_skipped, 0,
         "A6: a 0-resolvable-member settlement must be skipped even with Food stocked; \

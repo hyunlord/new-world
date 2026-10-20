@@ -26,7 +26,10 @@ impl Hardiness {
     /// `seed`: `700 + keyed_below(seed, STREAM_HARDINESS, key, 0, 0, 0, 601)`.
     pub const fn draw(seed: u64, lineage_key: u64) -> Self {
         let span = (HARDINESS_MAX_PERMILLE - HARDINESS_MIN_PERMILLE) as u64 + 1;
-        Self { permille: HARDINESS_MIN_PERMILLE + keyed_below(seed, STREAM_HARDINESS, lineage_key, 0, 0, 0, span) as u16 }
+        Self {
+            permille: HARDINESS_MIN_PERMILLE
+                + keyed_below(seed, STREAM_HARDINESS, lineage_key, 0, 0, 0, span) as u16,
+        }
     }
 
     /// The damage multiplier `permille / 1000`.

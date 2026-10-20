@@ -26,12 +26,27 @@ pub(super) fn seed_block(engine: &SimEngine) -> Value {
     let r = &engine.resources;
     let tpd = r.ticks_per_day.max(1);
     let offset = r.rules.clock_offset_ticks;
-    let pressured = r.rules.society.fission.is_some_and(|f| f.pressure.is_some());
+    let pressured = r
+        .rules
+        .society
+        .fission
+        .is_some_and(|f| f.pressure.is_some());
     let checks: Vec<Value> = r
         .fission_checks
         .iter()
         .filter(|_| pressured)
-        .map(|c| json!([c.tick, c.settlement, c.pressure, c.threshold, c.h, c.g, c.q, c.s]))
+        .map(|c| {
+            json!([
+                c.tick,
+                c.settlement,
+                c.pressure,
+                c.threshold,
+                c.h,
+                c.g,
+                c.q,
+                c.s
+            ])
+        })
         .collect();
     let mut half: BTreeMap<SettlementId, u64> = BTreeMap::new();
     for c in r.fission_checks.iter().filter(|_| pressured) {
@@ -43,8 +58,16 @@ pub(super) fn seed_block(engine: &SimEngine) -> Value {
         .fission_log
         .iter()
         .map(|f| {
-            json!([f.fission_id, f.parent, f.depart_tick, f.pressure_at_split, f.threshold_at_split,
-                f.daughter.map_or(-1, i64::from), f.founded_tick.map_or(-1, |t| t as i64), u8::from(f.cancelled_tick.is_some())])
+            json!([
+                f.fission_id,
+                f.parent,
+                f.depart_tick,
+                f.pressure_at_split,
+                f.threshold_at_split,
+                f.daughter.map_or(-1, i64::from),
+                f.founded_tick.map_or(-1, |t| t as i64),
+                u8::from(f.cancelled_tick.is_some())
+            ])
         })
         .collect();
     json!({"pressure_checks": checks, "half_threshold_day": half.iter().map(|(sid, day)| json!([sid, day])).collect::<Vec<_>>(),

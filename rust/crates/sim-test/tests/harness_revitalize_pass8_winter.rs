@@ -9,8 +9,8 @@ use sim_core::material::MaterialRegistry;
 use sim_core::rules::{FirewoodRule, WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use sim_systems::runtime::settlement::firewood::{
-    burn_hours, night_burn_delta, night_rate, night_tick_at, severity_level_at, tonight_burn, urgent_with,
-    winter_burn_per_hour, winter_fall_at, winter_fall_delta, wood_target,
+    burn_hours, night_burn_delta, night_rate, night_tick_at, severity_level_at, tonight_burn,
+    urgent_with, winter_burn_per_hour, winter_fall_at, winter_fall_delta, wood_target,
 };
 use sim_systems::runtime::settlement::FireSystem;
 
@@ -20,7 +20,10 @@ fn tick_at(day: u64, minute: u64) -> u64 {
 }
 
 fn v14_rule() -> FirewoodRule {
-    WorldRules::game_v14().society.firewood.expect("v14 keeps the firewood rule")
+    WorldRules::game_v14()
+        .society
+        .firewood
+        .expect("v14 keeps the firewood rule")
 }
 
 fn resources(rules: WorldRules, seed: u64) -> SimResources {
@@ -32,7 +35,10 @@ fn resources(rules: WorldRules, seed: u64) -> SimResources {
 
 /// The `n` first winter display days (seven-day seasons: days 28y + 21 .. 28y + 27).
 fn winter_days(n: usize) -> Vec<u64> {
-    (0..).flat_map(|year: u64| (21..28).map(move |d| 28 * year + d)).take(n).collect()
+    (0..)
+        .flat_map(|year: u64| (21..28).map(move |d| 28 * year + d))
+        .take(n)
+        .collect()
 }
 
 /// v14 with every winter forced to `level` and the night weights `night`.
@@ -58,13 +64,19 @@ fn burned_at(rules: WorldRules, seed: u64, tick: u64) -> u32 {
     settlement.store(ResourceKind::Wood, 100);
     engine.resources.settlements.insert(1, settlement);
     FireSystem::new().tick(&mut engine.world, &mut engine.resources);
-    100 - engine.resources.settlements[&1].stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0)
+    100 - engine.resources.settlements[&1]
+        .stockpile
+        .get(&ResourceKind::Wood)
+        .copied()
+        .unwrap_or(0)
 }
 
 #[test]
 fn harness_night_burn_is_a_pure_draw() {
     let rule = v14_rule();
-    let weights = rule.winter_night_burn_permille.expect("v14 draws night burns");
+    let weights = rule
+        .winter_night_burn_permille
+        .expect("v14 draws night burns");
     let step = i16::try_from(rule.winter_night_burn_step).expect("small step");
     let mut r = resources(WorldRules::game_v14(), 11);
     // Same seed and evening, same delta, whatever the current tick.
@@ -75,18 +87,27 @@ fn harness_night_burn_is_a_pure_draw() {
     let mut counts = [0u32; 3];
     for day in winter_days(10_000) {
         let delta = night_burn_delta(&r, &rule, day);
-        let index = [-step, 0, step].iter().position(|d| *d == delta).expect("delta is -step, 0 or +step");
+        let index = [-step, 0, step]
+            .iter()
+            .position(|d| *d == delta)
+            .expect("delta is -step, 0 or +step");
         counts[index] += 1;
     }
     for (count, weight) in counts.iter().zip(weights) {
-        assert!((f64::from(*count) / 10_000.0 - f64::from(weight) / 1000.0).abs() <= 0.02, "{counts:?} against {weights:?}");
+        assert!(
+            (f64::from(*count) / 10_000.0 - f64::from(weight) / 1000.0).abs() <= 0.02,
+            "{counts:?} against {weights:?}"
+        );
     }
     // Outside a winter there is no draw.
     for day in [0u64, 7, 14, 20, 28, 48] {
         assert_eq!(night_burn_delta(&r, &rule, day), 0, "day {day}");
     }
     // v13 rules: no delta anywhere in four years.
-    let v13 = WorldRules::game_v13().society.firewood.expect("v13 firewood");
+    let v13 = WorldRules::game_v13()
+        .society
+        .firewood
+        .expect("v13 firewood");
     let r13 = resources(WorldRules::game_v13(), 11);
     assert!((0..112).all(|day| night_burn_delta(&r13, &v13, day) == 0));
 }
@@ -107,10 +128,16 @@ fn harness_fall_spread_is_a_pure_draw() {
         counts[usize::try_from(delta + spread).expect("index")] += 1;
     }
     for count in &counts {
-        assert!((f64::from(*count) / 10_000.0 - 1.0 / width as f64).abs() <= 0.02, "{counts:?}");
+        assert!(
+            (f64::from(*count) / 10_000.0 - 1.0 / width as f64).abs() <= 0.02,
+            "{counts:?}"
+        );
     }
     assert_eq!(winter_fall_delta(&r, &rule, 14), 0, "autumn has no draw");
-    let v13 = WorldRules::game_v13().society.firewood.expect("v13 firewood");
+    let v13 = WorldRules::game_v13()
+        .society
+        .firewood
+        .expect("v13 firewood");
     let r13 = resources(WorldRules::game_v13(), 5);
     assert!((0..112).all(|day| winter_fall_delta(&r13, &v13, day) == 0));
 }
@@ -146,8 +173,16 @@ fn harness_night_and_fall_draw_table() {
     rules.society.firewood = Some(rule);
     for (seed, day, _u_night, night, _u_fall, fall) in TABLE {
         let r = resources(rules, seed);
-        assert_eq!(night_burn_delta(&r, &rule, day), night, "seed {seed} day {day}");
-        assert_eq!(winter_fall_delta(&r, &rule, day), fall, "seed {seed} day {day}");
+        assert_eq!(
+            night_burn_delta(&r, &rule, day),
+            night,
+            "seed {seed} day {day}"
+        );
+        assert_eq!(
+            winter_fall_delta(&r, &rule, day),
+            fall,
+            "seed {seed} day {day}"
+        );
     }
 }
 
@@ -166,20 +201,34 @@ fn harness_villagers_do_not_see_tonights_draw() {
         let mut with = resources(WorldRules::game_v14(), seed);
         let mut without = resources(blind, seed);
         let mut changed = 0;
-        for day in [21u64, 22, 23, 24, 25, 26, 27, 28, 49, 50, 51, 52, 53, 54, 55, 56] {
+        for day in [
+            21u64, 22, 23, 24, 25, 26, 27, 28, 49, 50, 51, 52, 53, 54, 55, 56,
+        ] {
             for hour in 0..24 {
                 let tick = tick_at(day, hour * 60);
                 with.current_tick = tick;
                 without.current_tick = tick;
-                assert_eq!(wood_target(&with), wood_target(&without), "seed {seed} day {day} hour {hour}");
-                assert_eq!(tonight_burn(&with, &rule), tonight_burn(&without, &blind_rule));
+                assert_eq!(
+                    wood_target(&with),
+                    wood_target(&without),
+                    "seed {seed} day {day} hour {hour}"
+                );
+                assert_eq!(
+                    tonight_burn(&with, &rule),
+                    tonight_burn(&without, &blind_rule)
+                );
                 for in_hand in [0u64, 20, 39, 52, 80] {
                     assert_eq!(urgent_with(&with, in_hand), urgent_with(&without, in_hand));
                 }
-                changed += u32::from(night_rate(&with, &rule, tick) != night_rate(&without, &blind_rule, tick));
+                changed += u32::from(
+                    night_rate(&with, &rule, tick) != night_rate(&without, &blind_rule, tick),
+                );
             }
         }
-        assert!(changed > 0, "the fire itself does see the draw (seed {seed})");
+        assert!(
+            changed > 0,
+            "the fire itself does see the draw (seed {seed})"
+        );
     }
 }
 
@@ -217,14 +266,24 @@ fn harness_last_night_keeps_its_evening_draw() {
         let tick = tick_at(day, minute);
         let booked = night_tick_at(&r, &rule, tick);
         let base = i64::from(winter_burn_per_hour(&r, &rule, booked));
-        assert!(severity_level_at(&r, &rule, booked).is_some(), "day {day} {minute}: a winter night");
+        assert!(
+            severity_level_at(&r, &rule, booked).is_some(),
+            "day {day} {minute}: a winter night"
+        );
         let want = u32::try_from((base + delta).max(1)).expect("rate");
-        assert_eq!(night_rate(&r, &rule, tick), want, "day {day} minute {minute}");
+        assert_eq!(
+            night_rate(&r, &rule, tick),
+            want,
+            "day {day} minute {minute}"
+        );
         assert_eq!(burned_at(rules, seed, tick), want);
     }
     // 18:00 of day 28 is a spring evening: its own rate, no draw.
     let spring = tick_at(28, 18 * 60);
-    assert_eq!(night_rate(&r, &rule, spring), u32::from(rule.burn_per_hour[0]));
+    assert_eq!(
+        night_rate(&r, &rule, spring),
+        u32::from(rule.burn_per_hour[0])
+    );
 }
 
 #[test]
@@ -241,11 +300,27 @@ fn harness_firewood_v13_unchanged() {
             let night = night_tick_at(&r, &rule, tick);
             let minute = (tick + 480) % 1440;
             let burning = !(420..1080).contains(&minute);
-            let want = if burning { u32::from(winter_burn_per_hour(&r, &rule, night)) } else { 0 };
+            let want = if burning {
+                u32::from(winter_burn_per_hour(&r, &rule, night))
+            } else {
+                0
+            };
             assert_eq!(night_rate(&r, &rule, tick), want, "seed {seed} hour {hour}");
-            let fall = severity_level_at(&r, &rule, tick).map(|level| rule.winter_severity_regen_units_per_day[usize::from(level)]);
-            assert_eq!(winter_fall_at(&r, &rule, tick), fall, "seed {seed} hour {hour}");
+            let fall = severity_level_at(&r, &rule, tick)
+                .map(|level| rule.winter_severity_regen_units_per_day[usize::from(level)]);
+            assert_eq!(
+                winter_fall_at(&r, &rule, tick),
+                fall,
+                "seed {seed} hour {hour}"
+            );
         }
-        assert_eq!(tonight_burn(&r, &rule), f64::from(winter_burn_per_hour(&r, &rule, night_tick_at(&r, &rule, r.current_tick))) * f64::from(burn_hours(&rule)));
+        assert_eq!(
+            tonight_burn(&r, &rule),
+            f64::from(winter_burn_per_hour(
+                &r,
+                &rule,
+                night_tick_at(&r, &rule, r.current_tick)
+            )) * f64::from(burn_hours(&rule))
+        );
     }
 }

@@ -29,15 +29,17 @@ use std::collections::HashMap;
 
 use sim_core::causal::{CausalEvent, DecisionReason, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryArm, MemoryEntry, MEMORY_CAP,
-    RelationshipKey, RelationshipState, SALIENCE_FLOOR, Sleep, Social, TargetKind,
-    Thirst, DEFAULT_MAX_HP, HOSTILITY_BUMP,
+    Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryArm, MemoryEntry,
+    RelationshipKey, RelationshipState, Sleep, Social, TargetKind, Thirst, DEFAULT_MAX_HP,
+    HOSTILITY_BUMP, MEMORY_CAP, SALIENCE_FLOOR,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::runtime::combat::{CombatSystem, DAMAGE_PER_COMBAT_TICK, REQUIRED_COMBAT_PROGRESS};
+use sim_systems::runtime::combat::{
+    CombatSystem, DAMAGE_PER_COMBAT_TICK, REQUIRED_COMBAT_PROGRESS,
+};
 use sim_systems::runtime::decision::{AgentDecisionSystem, BIAS_FLIP_THRESHOLD};
 use sim_systems::runtime::memory::MemorySystem;
 
@@ -69,18 +71,17 @@ fn setup_pair_with_combat_memory(
     let defender_entity = e.spawn_agent(defender_x, defender_y);
     let attacker_id = e.world.get::<&Agent>(attacker_entity).unwrap().id;
     let defender_id = e.world.get::<&Agent>(defender_entity).unwrap().id;
-    assert!(attacker_id < defender_id, "spawn order must yield smaller-id attacker");
+    assert!(
+        attacker_id < defender_id,
+        "spawn order must yield smaller-id attacker"
+    );
 
     // Both Idle, BodyHealth, Memory. NO Hunger/Thirst/Sleep/Social to keep
     // the natural cascade arms silent so the 7th (combat) arm fires.
     e.world
         .insert(
             attacker_entity,
-            (
-                AgentState::Idle,
-                BodyHealth::new(),
-                Memory::new(),
-            ),
+            (AgentState::Idle, BodyHealth::new(), Memory::new()),
         )
         .unwrap();
     e.world
@@ -88,7 +89,10 @@ fn setup_pair_with_combat_memory(
             defender_entity,
             (
                 AgentState::Idle,
-                BodyHealth { hp: defender_starting_hp, max_hp: DEFAULT_MAX_HP },
+                BodyHealth {
+                    hp: defender_starting_hp,
+                    max_hp: DEFAULT_MAX_HP,
+                },
                 Memory::new(),
             ),
         )
@@ -291,7 +295,9 @@ fn harness_p9_beta_a6_memory_recall_trigger_combat_context_schema() {
     // Type A — exhaustive match without `..` enforces field set is exactly
     // `{ agent_id }`. Construction with an AgentId value must round-trip.
     let agent_id_in: AgentId = 42u64;
-    let trigger = MemoryRecallTrigger::CombatContext { agent_id: agent_id_in };
+    let trigger = MemoryRecallTrigger::CombatContext {
+        agent_id: agent_id_in,
+    };
     match trigger {
         // EXHAUSTIVE — no `..` permitted. Any extra field forces a compile error.
         MemoryRecallTrigger::CombatContext { agent_id } => {
@@ -407,28 +413,45 @@ fn harness_p9_beta_a9_a16_combat_chain_survive_case() {
     assert_eq!(count_combat_started(&e), 1, "exactly one CombatStarted");
     let cs = find_combat_started(&e).expect("CombatStarted present");
     let (cs_id, cs_attacker, cs_defender, cs_position, cs_tick) = match cs {
-        CausalEvent::CombatStarted { id, attacker, defender, position, tick, .. } => {
-            (id, attacker, defender, position, tick)
-        }
+        CausalEvent::CombatStarted {
+            id,
+            attacker,
+            defender,
+            position,
+            tick,
+            ..
+        } => (id, attacker, defender, position, tick),
         _ => unreachable!(),
     };
     assert_eq!(cs_attacker, attacker_id);
     assert_eq!(cs_defender, defender_id);
     assert_eq!(cs_position, (10, 10));
-    assert_eq!(cs_tick, 0, "CombatStarted.tick must equal engine tick at emission");
+    assert_eq!(
+        cs_tick, 0,
+        "CombatStarted.tick must equal engine tick at emission"
+    );
 
     // ─── A10: CombatCompleted in same tick as CombatStarted (REQUIRED_COMBAT_PROGRESS=1).
     assert_eq!(count_combat_completed(&e), 1, "exactly one CombatCompleted");
     let cc = find_combat_completed(&e).expect("CombatCompleted present");
     let (cc_id, cc_parent, cc_attacker, cc_defender, cc_hp_after, cc_tick) = match cc {
-        CausalEvent::CombatCompleted { id, parent, attacker, defender, hp_after, tick, .. } => {
-            (id, parent, attacker, defender, hp_after, tick)
-        }
+        CausalEvent::CombatCompleted {
+            id,
+            parent,
+            attacker,
+            defender,
+            hp_after,
+            tick,
+            ..
+        } => (id, parent, attacker, defender, hp_after, tick),
         _ => unreachable!(),
     };
     assert_eq!(cc_attacker, attacker_id);
     assert_eq!(cc_defender, defender_id);
-    assert_eq!(cc_tick, cs_tick, "CombatCompleted.tick must equal CombatStarted.tick");
+    assert_eq!(
+        cc_tick, cs_tick,
+        "CombatCompleted.tick must equal CombatStarted.tick"
+    );
 
     // ─── A15b: CombatCompleted.parent == CombatStarted.id
     assert_eq!(cc_parent, Some(cs_id));
@@ -451,7 +474,11 @@ fn harness_p9_beta_a9_a16_combat_chain_survive_case() {
 
     // ─── A14: hostility bumped by exactly HOSTILITY_BUMP.
     let key = RelationshipKey::new(attacker_id, defender_id);
-    let rel = e.resources.relationships.get(&key).expect("relationship present");
+    let rel = e
+        .resources
+        .relationships
+        .get(&key)
+        .expect("relationship present");
     let baseline = RelationshipState::default().hostility;
     assert!(
         (rel.hostility - (baseline + HOSTILITY_BUMP)).abs() < 1e-9,
@@ -483,14 +510,14 @@ fn harness_p9_beta_a9_a16_combat_chain_survive_case() {
             } if *agent == attacker_id => {
                 idx_decision = Some(i);
             }
-            CausalEvent::CombatStarted { attacker, defender, .. }
-                if *attacker == attacker_id && *defender == defender_id =>
-            {
+            CausalEvent::CombatStarted {
+                attacker, defender, ..
+            } if *attacker == attacker_id && *defender == defender_id => {
                 idx_started = Some(i);
             }
-            CausalEvent::CombatCompleted { attacker, defender, .. }
-                if *attacker == attacker_id && *defender == defender_id =>
-            {
+            CausalEvent::CombatCompleted {
+                attacker, defender, ..
+            } if *attacker == attacker_id && *defender == defender_id => {
                 idx_completed = Some(i);
             }
             _ => {}
@@ -500,9 +527,24 @@ fn harness_p9_beta_a9_a16_combat_chain_survive_case() {
     let d = idx_decision.expect("AgentDecision{CombatReason} present");
     let s = idx_started.expect("CombatStarted present");
     let c = idx_completed.expect("CombatCompleted present");
-    assert!(r < d, "MemoryRecalled({}) must precede AgentDecision({})", r, d);
-    assert!(d < s, "AgentDecision({}) must precede CombatStarted({})", d, s);
-    assert!(s < c, "CombatStarted({}) must precede CombatCompleted({})", s, c);
+    assert!(
+        r < d,
+        "MemoryRecalled({}) must precede AgentDecision({})",
+        r,
+        d
+    );
+    assert!(
+        d < s,
+        "AgentDecision({}) must precede CombatStarted({})",
+        d,
+        s
+    );
+    assert!(
+        s < c,
+        "CombatStarted({}) must precede CombatCompleted({})",
+        s,
+        c
+    );
 
     // ─── A15b: parent-id linkage RecallId → DecisionId → StartedId → CompletedId.
     let recall_id = match &log.as_slice()[r] {
@@ -541,12 +583,24 @@ fn harness_p9_beta_a9_a16_combat_chain_survive_case() {
     //         defender's memory does NOT reference CombatStarted (asymmetric).
     let attacker_mem = e.world.get::<&Memory>(attacker_entity).unwrap();
     let defender_mem = e.world.get::<&Memory>(defender_entity).unwrap();
-    let attacker_refs_started =
-        attacker_mem.entries.iter().filter(|e| e.event_id == started_id).count();
-    let defender_refs_started =
-        defender_mem.entries.iter().filter(|e| e.event_id == started_id).count();
-    assert!(attacker_refs_started >= 1, "attacker memory must contain CombatStarted ref");
-    assert_eq!(defender_refs_started, 0, "defender memory must NOT contain CombatStarted ref");
+    let attacker_refs_started = attacker_mem
+        .entries
+        .iter()
+        .filter(|e| e.event_id == started_id)
+        .count();
+    let defender_refs_started = defender_mem
+        .entries
+        .iter()
+        .filter(|e| e.event_id == started_id)
+        .count();
+    assert!(
+        attacker_refs_started >= 1,
+        "attacker memory must contain CombatStarted ref"
+    );
+    assert_eq!(
+        defender_refs_started, 0,
+        "defender memory must NOT contain CombatStarted ref"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -594,7 +648,10 @@ fn harness_p9_beta_a13_dead_defender_resource_purge() {
         .keys()
         .filter(|k| k.0 == defender_id || k.1 == defender_id)
         .count();
-    assert_eq!(rel_refs, 0, "relationships must be purged of dead defender refs");
+    assert_eq!(
+        rel_refs, 0,
+        "relationships must be purged of dead defender refs"
+    );
     // (b) interaction_progress
     let ip_refs = e
         .resources
@@ -634,7 +691,10 @@ fn harness_p9_beta_a13_dead_defender_resource_purge() {
             }
         }
     }
-    assert!(log_refs > 0, "dead defender must be preserved in causal log");
+    assert!(
+        log_refs > 0,
+        "dead defender must be preserved in causal log"
+    );
     let _ = attacker_id;
 }
 
@@ -675,7 +735,10 @@ fn harness_p9_beta_a17_no_combat_without_memory_trigger_but_decisions_alive() {
             }
         }
     }
-    assert!(decision_count >= 1, "AgentDecisionSystem must still emit some decision");
+    assert!(
+        decision_count >= 1,
+        "AgentDecisionSystem must still emit some decision"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -684,8 +747,7 @@ fn harness_p9_beta_a17_no_combat_without_memory_trigger_but_decisions_alive() {
 #[test]
 fn harness_p9_beta_a17b_no_combat_when_not_colocated() {
     let mut e = fresh_engine();
-    let (_a, _b, _aid, _did) =
-        setup_pair_with_combat_memory(&mut e, 4, 4, 6, 6, 100.0);
+    let (_a, _b, _aid, _did) = setup_pair_with_combat_memory(&mut e, 4, 4, 6, 6, 100.0);
     e.tick();
     assert_eq!(count_combat_started(&e), 0);
 }
@@ -702,7 +764,9 @@ fn harness_p9_beta_a17c_no_combat_when_either_not_idle() {
     e.world
         .insert_one(
             defender_entity,
-            AgentState::Consuming { target: TargetKind::Food },
+            AgentState::Consuming {
+                target: TargetKind::Food,
+            },
         )
         .unwrap();
     e.tick();
@@ -742,7 +806,10 @@ fn harness_p9_beta_a17d_no_self_target_combat() {
     }
     for (_t, log) in e.resources.causal_log.iter() {
         for ev in log.iter() {
-            if let CausalEvent::CombatStarted { attacker, defender, .. } = ev {
+            if let CausalEvent::CombatStarted {
+                attacker, defender, ..
+            } = ev
+            {
                 assert_ne!(attacker, defender, "self-targeting combat detected");
             }
         }
@@ -847,10 +914,16 @@ fn harness_p9_beta_a18_pair_dedup_smaller_id_only_emitter() {
         assert!(a_id < b_id, "spawn order must yield smaller a_id");
 
         e.world
-            .insert(a_entity, (AgentState::Idle, BodyHealth::new(), Memory::new()))
+            .insert(
+                a_entity,
+                (AgentState::Idle, BodyHealth::new(), Memory::new()),
+            )
             .unwrap();
         e.world
-            .insert(b_entity, (AgentState::Idle, BodyHealth::new(), Memory::new()))
+            .insert(
+                b_entity,
+                (AgentState::Idle, BodyHealth::new(), Memory::new()),
+            )
             .unwrap();
 
         // Only b (larger-id) gets qualifying negative memory; a has none.
@@ -958,7 +1031,10 @@ fn harness_p9_beta_a20_memory_anti_recursion_combat_decision() {
     // Attacker's memory must NOT contain a reference to this decision event.
     let mem = e.world.get::<&Memory>(attacker_entity).unwrap();
     let refs = mem.entries.iter().filter(|e| e.event_id == did).count();
-    assert_eq!(refs, 0, "anti-recursion: CombatReason decision must not be encoded");
+    assert_eq!(
+        refs, 0,
+        "anti-recursion: CombatReason decision must not be encoded"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════

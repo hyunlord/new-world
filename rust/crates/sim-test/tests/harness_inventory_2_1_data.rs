@@ -74,7 +74,10 @@ fn harness_resource_kind_ord_total_order() {
 fn harness_inventory_add_capacity_accumulate_overflow() {
     // (a) read the const (do not hardcode 10).
     let cap = INVENTORY_CAPACITY;
-    assert!(cap >= 5, "test math assumes capacity >= 5; locked const is 10");
+    assert!(
+        cap >= 5,
+        "test math assumes capacity >= 5; locked const is 10"
+    );
 
     // (b) NORMAL path: room >= n → return 0, total grows by exactly n.
     let mut inv = Inventory::default();
@@ -86,7 +89,11 @@ fn harness_inventory_add_capacity_accumulate_overflow() {
     let mut inv = Inventory::default();
     inv.add(ResourceKind::Food, 2);
     inv.add(ResourceKind::Food, 3);
-    assert_eq!(inv.get(ResourceKind::Food), 5, "add accumulates, no overwrite");
+    assert_eq!(
+        inv.get(ResourceKind::Food),
+        5,
+        "add accumulates, no overwrite"
+    );
 
     // (d) fill to exactly capacity.
     let mut inv = Inventory::default();
@@ -117,7 +124,10 @@ fn harness_inventory_add_capacity_accumulate_overflow() {
     inv.add(ResourceKind::Water, rest);
     assert_eq!(inv.total(), cap, "two kinds sum to cap");
     let of_cross = inv.add(ResourceKind::Wood, 1);
-    assert_eq!(of_cross, 1, "cap is a shared total-count budget, not per-kind");
+    assert_eq!(
+        of_cross, 1,
+        "cap is a shared total-count budget, not per-kind"
+    );
     assert_eq!(inv.total(), cap, "cross-kind total never exceeds cap");
 }
 
@@ -204,7 +214,11 @@ fn harness_settlement_stockpile_store_withdraw_symmetry() {
     let mut s = Settlement::new_with_id(1, 0);
     s.store(ResourceKind::Stone, 5);
     s.store(ResourceKind::Stone, 3);
-    assert_eq!(s.stockpile[&ResourceKind::Stone], 8, "uncapped accumulation");
+    assert_eq!(
+        s.stockpile[&ResourceKind::Stone],
+        8,
+        "uncapped accumulation"
+    );
 
     // (c) withdraw-all returns held and drops the key.
     let r = s.withdraw(ResourceKind::Stone, 8);
@@ -228,7 +242,11 @@ fn harness_settlement_stockpile_store_withdraw_symmetry() {
     s.store(ResourceKind::Wood, 3);
     let r = s.withdraw(ResourceKind::Wood, 0);
     assert_eq!(r, 0, "withdraw(k, 0) returns 0");
-    assert_eq!(s.stockpile[&ResourceKind::Wood], 3, "withdraw(k, 0) leaves count");
+    assert_eq!(
+        s.stockpile[&ResourceKind::Wood],
+        3,
+        "withdraw(k, 0) leaves count"
+    );
     assert!(s.stockpile.contains_key(&ResourceKind::Wood));
 
     let mut s2 = Settlement::new_with_id(2, 0);
@@ -258,7 +276,8 @@ fn harness_serde_ron_roundtrip_inventory_and_settlement() {
     st.store(ResourceKind::Stone, 5);
     st.store(ResourceKind::Wood, 2);
     let encoded = ron::to_string(&st).expect("Settlement must serialize to RON");
-    let decoded: Settlement = ron::from_str(&encoded).expect("Settlement must deserialize from RON");
+    let decoded: Settlement =
+        ron::from_str(&encoded).expect("Settlement must deserialize from RON");
     assert_eq!(decoded, st, "Settlement RON round-trip must be identity");
 }
 
@@ -275,7 +294,10 @@ fn harness_settlement_additive_field_regression() {
     assert_eq!(a, b, "two fresh new_with_id(7, 0) instances compare ==");
 
     // (b) pre-existing collection fields at prior defaults.
-    assert!(a.member_agents.is_empty(), "member_agents unchanged from pre-2-1");
+    assert!(
+        a.member_agents.is_empty(),
+        "member_agents unchanged from pre-2-1"
+    );
     assert!(a.member_buildings.is_empty());
     assert!(a.community_history.is_empty());
 
@@ -314,7 +336,11 @@ fn harness_inventory_empty_default_boundary() {
         ResourceKind::Wood,
         ResourceKind::Stone,
     ] {
-        assert_eq!(inv.get(kind), 0, "fresh Inventory get(k) == 0 for every kind");
+        assert_eq!(
+            inv.get(kind),
+            0,
+            "fresh Inventory get(k) == 0 for every kind"
+        );
     }
 }
 

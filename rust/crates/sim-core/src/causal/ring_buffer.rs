@@ -155,7 +155,10 @@ mod tests {
         log.push(placed(1));
         log.push(stamp(1));
         assert_eq!(log.len(), 2);
-        assert!(matches!(log.as_slice()[0], CausalEvent::BuildingPlaced { .. }));
+        assert!(matches!(
+            log.as_slice()[0],
+            CausalEvent::BuildingPlaced { .. }
+        ));
         assert!(matches!(log.as_slice()[1], CausalEvent::StampDirty { .. }));
     }
 

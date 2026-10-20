@@ -32,10 +32,13 @@ fn fresh_engine() -> SimEngine {
 }
 
 fn place_danger_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 // ── Plan D1: source center reaches initial intensity ─────────────────────────
@@ -52,8 +55,14 @@ fn harness_t7_10_d_source_center_lit() {
     place_danger_source(&mut e);
     e.tick();
     // Type A: threshold == 200
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
-    assert_eq!(v, 200, "source center must equal DANGER_INITIAL_INTENSITY (200); got {v}");
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Danger);
+    assert_eq!(
+        v, 200,
+        "source center must equal DANGER_INITIAL_INTENSITY (200); got {v}"
+    );
 }
 
 // ── Plan D2: linear decay one cardinal step (alpha=5 discriminator) ──────────
@@ -73,7 +82,10 @@ fn harness_t7_10_d_linear_one_step_alpha_discriminator() {
     place_danger_source(&mut e);
     e.tick();
     // Type A: threshold == 195 (exact)
-    let v = e.resources.influence_grid.sample(SX + 1, SY, InfluenceChannel::Danger);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY, InfluenceChannel::Danger);
     assert_eq!(
         v, 195,
         "1-step cardinal neighbor must equal 200-5=195 (linear alpha=5); got {v}. \
@@ -99,7 +111,10 @@ fn harness_t7_10_d_bfs_distance_manhattan_discriminator() {
     place_danger_source(&mut e);
     e.tick();
     // Type A: threshold == 190 (200 - 2*5)
-    let v = e.resources.influence_grid.sample(SX + 1, SY + 1, InfluenceChannel::Danger);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY + 1, InfluenceChannel::Danger);
     assert_eq!(
         v, 190,
         "diagonal (SX+1,SY+1) must equal 190 (BFS d=2, 200-2*5); got {v}. \
@@ -123,8 +138,14 @@ fn harness_t7_10_d_gradient_monotone() {
     place_danger_source(&mut e);
     e.tick();
     for d in 0..=14u32 {
-        let v1 = e.resources.influence_grid.sample(SX + d, SY, InfluenceChannel::Danger);
-        let v2 = e.resources.influence_grid.sample(SX + d + 1, SY, InfluenceChannel::Danger);
+        let v1 = e
+            .resources
+            .influence_grid
+            .sample(SX + d, SY, InfluenceChannel::Danger);
+        let v2 = e
+            .resources
+            .influence_grid
+            .sample(SX + d + 1, SY, InfluenceChannel::Danger);
         // Type A: threshold strict `>` for every adjacent pair
         assert!(
             v1 > v2,
@@ -155,7 +176,10 @@ fn harness_t7_10_d_sight_radius_cap_boundary() {
     place_danger_source(&mut e);
     e.tick();
     // Type A: threshold == 125 at d=15 (cap allows this tile)
-    let v15 = e.resources.influence_grid.sample(SX + 15, SY, InfluenceChannel::Danger);
+    let v15 = e
+        .resources
+        .influence_grid
+        .sample(SX + 15, SY, InfluenceChannel::Danger);
     assert_eq!(
         v15, 125,
         "Danger at d=15 must equal 200-15*5=125 (cap=15 allows this tile); got {v15}. \
@@ -163,7 +187,10 @@ fn harness_t7_10_d_sight_radius_cap_boundary() {
          Value ≠125 = wrong alpha."
     );
     // Type A: threshold == 0 at d=16 (cap stops propagation)
-    let v16 = e.resources.influence_grid.sample(SX + 16, SY, InfluenceChannel::Danger);
+    let v16 = e
+        .resources
+        .influence_grid
+        .sample(SX + 16, SY, InfluenceChannel::Danger);
     assert_eq!(
         v16, 0,
         "Danger at d=16 must be 0 (cap=15 blocks expansion past d=15); got {v16}. \
@@ -189,7 +216,10 @@ fn harness_t7_10_d_persistence_ten_ticks() {
         e.tick();
     }
     // Type A: threshold == 200 at source after 10 ticks
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Danger);
     assert_eq!(
         v, 200,
         "source Danger must persist == 200 after 10 ticks (1 event + 9 event-less); got {v}. \
@@ -212,8 +242,14 @@ fn harness_t7_10_d_no_event_no_danger() {
     }
     for (x, y) in [(0u32, 0u32), (SX, SY), (W - 1, H - 1)] {
         // Type A: threshold == 0 at all three positions with no events
-        let v = e.resources.influence_grid.sample(x, y, InfluenceChannel::Danger);
-        assert_eq!(v, 0, "Danger at ({x},{y}) must be 0 with no events; got {v}");
+        let v = e
+            .resources
+            .influence_grid
+            .sample(x, y, InfluenceChannel::Danger);
+        assert_eq!(
+            v, 0,
+            "Danger at ({x},{y}) must be 0 with no events; got {v}"
+        );
     }
 }
 
@@ -233,19 +269,28 @@ fn harness_t7_10_d_warmth_light_noise_regression_guard() {
     place_danger_source(&mut e);
     e.tick();
     // Type A: threshold == 200 for Warmth source center
-    let warmth = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Warmth);
+    let warmth = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Warmth);
     assert_eq!(
         warmth, 200,
         "T7.10.A regression: Warmth at source must remain 200; got {warmth}"
     );
     // Type A: threshold == 200 for Light source center
-    let light = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    let light = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
     assert_eq!(
         light, 200,
         "T7.10.B regression: Light at source must remain 200; got {light}"
     );
     // Type A: threshold == 200 for Noise source center
-    let noise = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Noise);
+    let noise = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Noise);
     assert_eq!(
         noise, 200,
         "T7.10.C regression: Noise at source must remain 200; got {noise}"
@@ -266,8 +311,7 @@ fn harness_t7_10_d_dirty_regions_drained() {
     place_danger_source(&mut e);
     e.tick();
     // Type A: threshold == 0
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Danger as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Danger as usize].len();
     assert_eq!(
         len, 0,
         "dirty_regions[Danger] must be drained by IUS via std::mem::take; got len={len}"
@@ -290,13 +334,19 @@ fn harness_t7_10_d_other_channels_remain_zero() {
     place_danger_source(&mut e);
     e.tick();
     // T7.10.E regression guard: Spiritual now propagates at source center.
-    let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    let spiritual = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         spiritual, 200,
         "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.08 propagation); got {spiritual}"
     );
     // T7.10.F regression guard: Beauty now propagates at source center.
-    let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    let beauty = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
         beauty, 200,
         "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"

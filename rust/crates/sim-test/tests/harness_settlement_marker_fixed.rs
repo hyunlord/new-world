@@ -167,7 +167,10 @@ fn harness_marker_fixed_a2_snapshot_formation_xy_equals_component_field() {
         "A2: every row's (formation_x, formation_y) must equal the component \
          formation_tile; {mismatches} mismatch(es)"
     );
-    println!("[marker-fixed A2] all {} rows' formation_xy == component field ✓", rows.len());
+    println!(
+        "[marker-fixed A2] all {} rows' formation_xy == component field ✓",
+        rows.len()
+    );
 }
 
 // ─── Assertion 3: marker_position_is_fixed_while_members_move (CORE) ───────
@@ -292,8 +295,14 @@ fn harness_marker_fixed_a4_centroid_moves_contrast_proof() {
             eprintln!(
                 "[marker-fixed A4] settlement {id} centroid: ({},{}) → ({},{}); \
                  anchor: ({},{}) → ({},{})",
-                a.centroid_x, a.centroid_y, b.centroid_x, b.centroid_y,
-                a.formation_x, a.formation_y, b.formation_x, b.formation_y
+                a.centroid_x,
+                a.centroid_y,
+                b.centroid_x,
+                b.centroid_y,
+                a.formation_x,
+                a.formation_y,
+                b.formation_x,
+                b.formation_y
             );
             if a.centroid_x != b.centroid_x || a.centroid_y != b.centroid_y {
                 changed += 1;
@@ -306,7 +315,9 @@ fn harness_marker_fixed_a4_centroid_moves_contrast_proof() {
          (members move). 0 changed — investigate (floor-rounding may mask a small \
          net drift for this seed), not an automatic bug verdict"
     );
-    println!("[marker-fixed A4] {changed} settlement centroid(s) moved (contrast vs fixed anchor) ✓");
+    println!(
+        "[marker-fixed A4] {changed} settlement centroid(s) moved (contrast vs fixed anchor) ✓"
+    );
 }
 
 // ─── Assertion 5: formation_anchor_in_bounds ───────────────────────────────
@@ -378,7 +389,10 @@ fn harness_marker_fixed_a6_formation_anchor_pinned_to_static_building_cluster() 
         "A6: every formed settlement's anchor must have >= 2 static building \
          tiles within Chebyshev {SETTLEMENT_PROXIMITY_RADIUS}; {underpinned} underpinned"
     );
-    println!("[marker-fixed A6] all {} anchors pinned to >= 2 static buildings ✓", rows.len());
+    println!(
+        "[marker-fixed A6] all {} anchors pinned to >= 2 static buildings ✓",
+        rows.len()
+    );
 }
 
 // ─── Assertion 7: formation_xy_deterministic_across_runs ───────────────────

@@ -72,7 +72,10 @@ fn harness_p6_beta_a1_construction_system_metadata_and_registry() {
     register_construction_systems(&mut engine);
     let names = engine.system_names();
     let count = names.iter().filter(|n| **n == "ConstructionSystem").count();
-    assert_eq!(count, 1, "exactly one ConstructionSystem must be registered");
+    assert_eq!(
+        count, 1,
+        "exactly one ConstructionSystem must be registered"
+    );
 
     // (c) Priority ordering: SleepDecaySystem(132) < ConstructionSystem(133) <
     //     InfluenceVisualizationSystem(1000).
@@ -88,8 +91,18 @@ fn harness_p6_beta_a1_construction_system_metadata_and_registry() {
         .iter()
         .position(|n| *n == "InfluenceVisualizationSystem")
         .expect("InfluenceVisualizationSystem registered");
-    assert!(i_sleep < i_con, "Sleep({}) must precede Construction({})", i_sleep, i_con);
-    assert!(i_con < i_viz, "Construction({}) must precede Viz({})", i_con, i_viz);
+    assert!(
+        i_sleep < i_con,
+        "Sleep({}) must precede Construction({})",
+        i_sleep,
+        i_con
+    );
+    assert!(
+        i_con < i_viz,
+        "Construction({}) must precede Viz({})",
+        i_con,
+        i_viz
+    );
     println!("[β-1] ConstructionSystem(133) registered between Sleep(132) and Viz(1000) ✓");
 }
 
@@ -208,10 +221,7 @@ fn harness_p6_beta_a4_idle_to_seeking_when_only_site_colocated() {
     let agent_e = engine.spawn_agent(3, 5);
     let agent_id = engine.world.get::<&Agent>(agent_e).unwrap().id;
     insert_quiet_needs(&mut engine, agent_e);
-    engine
-        .world
-        .insert_one(agent_e, AgentState::Idle)
-        .unwrap();
+    engine.world.insert_one(agent_e, AgentState::Idle).unwrap();
 
     let bp = BuildingBlueprint::new(1, 2, 2, 5);
     engine
@@ -397,7 +407,11 @@ fn harness_p6_beta_a6_seeking_to_consuming_emits_construction_started_correct_pa
     let expected_parent_id = id3;
 
     let before_len = engine.resources.causal_log.get(tidx).unwrap().len();
-    let live_blueprint = engine.world.get::<&ConstructionSite>(site_e).unwrap().blueprint;
+    let live_blueprint = engine
+        .world
+        .get::<&ConstructionSite>(site_e)
+        .unwrap()
+        .blueprint;
 
     let mut sys = AgentDecisionSystem::new();
     sys.tick(&mut engine.world, &mut engine.resources);
@@ -571,7 +585,8 @@ fn harness_p6_beta_a8_completion_emits_completed_then_placed_chained() {
             mid.progress,
             (t as u32) + 1,
             "progress must equal tick+1 pre-completion (got {} at tick {})",
-            mid.progress, t
+            mid.progress,
+            t
         );
     }
 
@@ -665,10 +680,7 @@ fn harness_p6_beta_a9_full_4_link_causal_chain_walk() {
     let agent_e = engine.spawn_agent(2, 9);
     let agent_id = engine.world.get::<&Agent>(agent_e).unwrap().id;
     insert_quiet_needs(&mut engine, agent_e);
-    engine
-        .world
-        .insert_one(agent_e, AgentState::Idle)
-        .unwrap();
+    engine.world.insert_one(agent_e, AgentState::Idle).unwrap();
 
     let tidx = tile_idx(2, 9);
 
@@ -794,7 +806,11 @@ fn harness_p6_beta_a10_absent_site_fallback_no_panic() {
     let other_site = engine
         .world
         .spawn((ConstructionSite::new(bp2, Position::new(15, 15)),));
-    let other_progress_before = engine.world.get::<&ConstructionSite>(other_site).unwrap().progress;
+    let other_progress_before = engine
+        .world
+        .get::<&ConstructionSite>(other_site)
+        .unwrap()
+        .progress;
 
     let tidx = tile_idx(1, 1);
     let before_len = engine
@@ -826,7 +842,11 @@ fn harness_p6_beta_a10_absent_site_fallback_no_panic() {
     assert_eq!(completed_count, 0);
     assert_eq!(placed_count, 0);
 
-    let other_after = engine.world.get::<&ConstructionSite>(other_site).unwrap().progress;
+    let other_after = engine
+        .world
+        .get::<&ConstructionSite>(other_site)
+        .unwrap()
+        .progress;
     assert_eq!(other_after, other_progress_before);
     println!("[β-10] Despawned site → agent→Idle, no completion events, no side-effects ✓");
 }
@@ -844,10 +864,7 @@ fn harness_p6_beta_a11_site_without_consuming_construction_agent_does_not_advanc
     // Agent X — Idle.
     let agent_x = engine.spawn_agent(6, 6);
     insert_quiet_needs(&mut engine, agent_x);
-    engine
-        .world
-        .insert_one(agent_x, AgentState::Idle)
-        .unwrap();
+    engine.world.insert_one(agent_x, AgentState::Idle).unwrap();
     let x_before = *engine.world.get::<&AgentState>(agent_x).unwrap();
 
     // Agent Y — Consuming{Food} (NOT ConstructionSite).
@@ -892,7 +909,10 @@ fn harness_p6_beta_a11_site_without_consuming_construction_agent_does_not_advanc
         sys.tick(&mut engine.world, &mut engine.resources);
     }
 
-    assert!(engine.world.contains(site_e), "site must remain after 10 ticks");
+    assert!(
+        engine.world.contains(site_e),
+        "site must remain after 10 ticks"
+    );
     let site = *engine.world.get::<&ConstructionSite>(site_e).unwrap();
     assert_eq!(site.progress, 0);
     assert_eq!(site.blueprint.required_progress, 5);
@@ -1076,8 +1096,22 @@ fn harness_p6_beta_a14_multiple_sites_independence() {
     sys.tick(&mut engine.world, &mut engine.resources);
     assert!(engine.world.contains(site1));
     assert!(engine.world.contains(site2));
-    assert_eq!(engine.world.get::<&ConstructionSite>(site1).unwrap().progress, 1);
-    assert_eq!(engine.world.get::<&ConstructionSite>(site2).unwrap().progress, 0);
+    assert_eq!(
+        engine
+            .world
+            .get::<&ConstructionSite>(site1)
+            .unwrap()
+            .progress,
+        1
+    );
+    assert_eq!(
+        engine
+            .world
+            .get::<&ConstructionSite>(site2)
+            .unwrap()
+            .progress,
+        0
+    );
 
     // No completion events anywhere this tick.
     let p1_t1_new: Vec<&CausalEvent> = engine
@@ -1172,10 +1206,7 @@ fn harness_p6_beta_a16_already_complete_site_does_not_trigger_construction_and_u
     let mut engine = fresh_engine();
     let agent_e = engine.spawn_agent(3, 5);
     insert_quiet_needs(&mut engine, agent_e);
-    engine
-        .world
-        .insert_one(agent_e, AgentState::Idle)
-        .unwrap();
+    engine.world.insert_one(agent_e, AgentState::Idle).unwrap();
 
     // required_progress == 0 → born complete (is_complete() == true).
     let bp_zero = BuildingBlueprint::new(1, 2, 2, 0);
@@ -1413,8 +1444,14 @@ fn harness_p6_beta_a15_two_agents_complete_required_progress_two_in_one_tick() {
     );
 
     // Both agents reset to Idle by ConstructionSystem.
-    assert_eq!(*engine.world.get::<&AgentState>(agent_a).unwrap(), AgentState::Idle);
-    assert_eq!(*engine.world.get::<&AgentState>(agent_b).unwrap(), AgentState::Idle);
+    assert_eq!(
+        *engine.world.get::<&AgentState>(agent_a).unwrap(),
+        AgentState::Idle
+    );
+    assert_eq!(
+        *engine.world.get::<&AgentState>(agent_b).unwrap(),
+        AgentState::Idle
+    );
     println!(
         "[β-15] Two co-located agents complete required_progress=2 in one tick; chain emitted exactly once ✓"
     );

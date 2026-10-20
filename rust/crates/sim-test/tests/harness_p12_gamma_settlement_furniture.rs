@@ -49,7 +49,12 @@ fn harness_p12_gamma_a6_collector_returns_correct_centroid_for_known_membership(
 
     let rows: Vec<SettlementSnapshotRow> = collect_settlement_snapshot(&world, &settlements);
 
-    assert_eq!(rows.len(), 1, "A6.1: expected 1 settlement row; got {}", rows.len());
+    assert_eq!(
+        rows.len(),
+        1,
+        "A6.1: expected 1 settlement row; got {}",
+        rows.len()
+    );
     let row = rows[0];
 
     let expected_x: i32 = (10 + 12 + 14) / 3;
@@ -75,8 +80,7 @@ fn harness_p12_gamma_a6_collector_returns_correct_centroid_for_known_membership(
         row.settlement_id
     );
     assert_eq!(
-        row.entity_bits,
-        7u64,
+        row.entity_bits, 7u64,
         "A6.6: entity_bits must equal settlement_id (7) — no ECS entity exists for a \
          HashMap-sourced settlement; the field remains a stable unique downstream key"
     );
@@ -115,7 +119,7 @@ fn harness_p12_gamma_a8_settlement_with_missing_member_position_is_handled() {
     let mut settlement = Settlement::new_with_id(11, 0);
     settlement.add_member_agent(501); // resolvable
     settlement.add_member_agent(9999); // stale — no Agent with this id
-    // Re-pointed: settlement lives in the HashMap store; agents stay in world.
+                                       // Re-pointed: settlement lives in the HashMap store; agents stay in world.
     let mut settlements: HashMap<SettlementId, Settlement> = HashMap::new();
     settlements.insert(settlement.settlement_id, settlement);
 

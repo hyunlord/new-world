@@ -1,5 +1,7 @@
 //! Pass 12 Part 2: fission as a daily hazard (`game_v18`, PASS12_GOAL.md 7.1).
-use sim_core::components::{Agent, AgentId, AgentState, Child, Elder, Lineage, Position, ResourceKind, Settlement};
+use sim_core::components::{
+    Agent, AgentId, AgentState, Child, Elder, Lineage, Position, ResourceKind, Settlement,
+};
 use sim_core::material::MaterialRegistry;
 use sim_core::rng::{keyed_below, NoiseFork, STREAM_FISSION_HAZARD};
 use sim_core::rules::{FissionHazard, WorldRules};
@@ -46,7 +48,14 @@ fn tick_at(day: u64, minute: u64) -> u64 {
 /// 0 holding `food`, `bushes` capacity-4 bushes, one wild region at `SITE`,
 /// and `members` residents (ids 1..=n; every fifth a child, every seventh an
 /// elder) spawned in order, or in reverse order with `reverse`.
-fn world(rules: WorldRules, seed: u64, bushes: u32, food: u32, members: u64, reverse: bool) -> SimEngine {
+fn world(
+    rules: WorldRules,
+    seed: u64,
+    bushes: u32,
+    food: u32,
+    members: u64,
+    reverse: bool,
+) -> SimEngine {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.rules = rules;
     engine.resources.world_seed = seed;
@@ -54,7 +63,9 @@ fn world(rules: WorldRules, seed: u64, bushes: u32, food: u32, members: u64, rev
     settlement.formation_tile = HOME;
     settlement.store(ResourceKind::Food, food);
     for i in 0..bushes {
-        engine.resources.set_food_source_max(10 + i % 20, 10 + i / 20, 4);
+        engine
+            .resources
+            .set_food_source_max(10 + i % 20, 10 + i / 20, 4);
     }
     let mut ids: Vec<u64> = (1..=members).collect();
     if reverse {
@@ -65,17 +76,28 @@ fn world(rules: WorldRules, seed: u64, bushes: u32, food: u32, members: u64, rev
             Position::new(HOME.0, HOME.1),
             Agent { id: id as AgentId },
             AgentState::Idle,
-            Lineage { key: id.wrapping_mul(0x9E37_79B9_7F4A_7C15) ^ 0x55, births: 0 },
+            Lineage {
+                key: id.wrapping_mul(0x9E37_79B9_7F4A_7C15) ^ 0x55,
+                births: 0,
+            },
         ));
         if id % 7 == 0 {
             engine.world.insert_one(entity, Elder).expect("elder");
         } else if id % 5 == 0 {
-            engine.world.insert_one(entity, Child { born_tick: 0 }).expect("child");
+            engine
+                .world
+                .insert_one(entity, Child { born_tick: 0 })
+                .expect("child");
         }
         settlement.add_member_agent(id as AgentId);
     }
     engine.resources.settlements.insert(1, settlement);
-    engine.resources.wild_regions.push(WildRegion { centre: SITE, bushes: 8, deadwood: 12, water_distance: 3 });
+    engine.resources.wild_regions.push(WildRegion {
+        centre: SITE,
+        bushes: 8,
+        deadwood: 12,
+        water_distance: 3,
+    });
     engine
 }
 
@@ -90,23 +112,52 @@ fn run(engine: &mut SimEngine, from: u64, to: u64) {
 
 /// Recompute a logged check from its inputs (7.1's formula and draw).
 fn recompute(engine: &SimEngine, c: &FissionCheck, replicate: u32) -> (i64, i64, i64, i64, u64) {
-    let hazard = engine.resources.rules.society.fission.and_then(|f| f.hazard).expect("hazard");
-    let (g, q, s, h) = hazard_terms(&hazard, c.members, c.capacity, c.food, adult_need_per_day(engine.resources.ticks_per_day));
-    let draw = keyed_below(engine.resources.world_seed, STREAM_FISSION_HAZARD, u64::from(c.settlement), c.tick, 0, replicate, 1000);
+    let hazard = engine
+        .resources
+        .rules
+        .society
+        .fission
+        .and_then(|f| f.hazard)
+        .expect("hazard");
+    let (g, q, s, h) = hazard_terms(
+        &hazard,
+        c.members,
+        c.capacity,
+        c.food,
+        adult_need_per_day(engine.resources.ticks_per_day),
+    );
+    let draw = keyed_below(
+        engine.resources.world_seed,
+        STREAM_FISSION_HAZARD,
+        u64::from(c.settlement),
+        c.tick,
+        0,
+        replicate,
+        1000,
+    );
     (g, q, s, h, draw)
 }
 
 #[test]
 fn harness_hazard_inert_in_v17() {
-    let rule = WorldRules::game_v17(1).society.fission.expect("v17 fission");
-    assert_eq!((rule.hazard, rule.allowed_seasons), (None, [true, true, false, false]));
+    let rule = WorldRules::game_v17(1)
+        .society
+        .fission
+        .expect("v17 fission");
+    assert_eq!(
+        (rule.hazard, rule.allowed_seasons),
+        (None, [true, true, false, false])
+    );
     // Seeds 1 and 2 of v17 split at 06:00 of display day 29: no hazard check is ever logged.
     for seed in [1, 2] {
         let mut engine = game_v17_scene(seed);
         for _ in 0..42 * 1440 {
             engine.tick();
         }
-        assert!(!engine.resources.fission_log.is_empty(), "seed {seed} departs in v17");
+        assert!(
+            !engine.resources.fission_log.is_empty(),
+            "seed {seed} departs in v17"
+        );
         assert!(engine.resources.fission_checks.is_empty());
     }
     let mut engine = game_v18_nofission_scene(1);
@@ -131,7 +182,12 @@ fn harness_hazard_formula() {
     // empty store, a roomy full store, the smallest eligible village.
     let seed = 900_412;
     let check = tick_at(28, 360);
-    for (bushes, food, members) in [(0u32, 100u32, 30u64), (40, 0, 30), (200, 2000, 30), (40, 100, 22)] {
+    for (bushes, food, members) in [
+        (0u32, 100u32, 30u64),
+        (40, 0, 30),
+        (200, 2000, 30),
+        (40, 100, 22),
+    ] {
         let mut engine = world(start_rules(seed), seed, bushes, food, members, false);
         let capacity = sustain_capacity(&engine.resources, 1).expect("capacity");
         let resident_members = engine.resources.settlements[&1].member_agents.len() as u32;
@@ -139,7 +195,10 @@ fn harness_hazard_formula() {
         let logged = engine.resources.fission_checks.clone();
         assert_eq!(logged.len(), 1, "case {bushes}/{food}/{members}");
         let c = logged[0];
-        assert_eq!((c.tick, c.settlement, c.members, c.capacity, c.food), (check, 1, resident_members, capacity, food));
+        assert_eq!(
+            (c.tick, c.settlement, c.members, c.capacity, c.food),
+            (check, 1, resident_members, capacity, food)
+        );
         assert_eq!((c.g, c.q, c.s, c.h, c.draw), recompute(&engine, &c, 0));
         assert_eq!(c.split, (c.draw as i64) < c.h);
         assert!(c.site_free);
@@ -157,9 +216,19 @@ fn harness_hazard_formula() {
 fn harness_hazard_keyed_with_replicate() {
     // A whole v18 world: a replicate-0 fork equals the unforked run.
     let seed = 900_007;
-    let (mut a, mut b, mut c) = (game_v18_scene(seed), game_v18_scene(seed), game_v18_scene(seed));
-    b.resources.noise_fork = Some(NoiseFork { tick: 0, replicate: 0 });
-    c.resources.noise_fork = Some(NoiseFork { tick: 0, replicate: 3 });
+    let (mut a, mut b, mut c) = (
+        game_v18_scene(seed),
+        game_v18_scene(seed),
+        game_v18_scene(seed),
+    );
+    b.resources.noise_fork = Some(NoiseFork {
+        tick: 0,
+        replicate: 0,
+    });
+    c.resources.noise_fork = Some(NoiseFork {
+        tick: 0,
+        replicate: 3,
+    });
     for _ in 0..60 * 1440 {
         a.tick();
         b.tick();
@@ -167,18 +236,33 @@ fn harness_hazard_keyed_with_replicate() {
     }
     assert_eq!(a.resources.fission_checks, b.resources.fission_checks);
     assert_eq!(fingerprint(&a), fingerprint(&b));
-    assert!(!a.resources.fission_checks.is_empty(), "the world reaches the draw");
+    assert!(
+        !a.resources.fission_checks.is_empty(),
+        "the world reaches the draw"
+    );
     for check in &c.resources.fission_checks {
-        assert_eq!(check.draw, recompute(&c, check, 3).4, "replicate 3 draws with replicate 3");
+        assert_eq!(
+            check.draw,
+            recompute(&c, check, 3).4,
+            "replicate 3 draws with replicate 3"
+        );
     }
     // Constant h: the first split day of settlement 1 over the daily checks of
     // days 10..120 (winter excluded) changes with the replicate in at least
     // one of eight seeds.
     let h = 60u64;
     let first = |seed: u64, replicate: u32| {
-        (10..120u64)
-            .filter(|day| (day / 7) % 4 != 3)
-            .find(|&day| keyed_below(seed, STREAM_FISSION_HAZARD, 1, tick_at(day, 360), 0, replicate, 1000) < h)
+        (10..120u64).filter(|day| (day / 7) % 4 != 3).find(|&day| {
+            keyed_below(
+                seed,
+                STREAM_FISSION_HAZARD,
+                1,
+                tick_at(day, 360),
+                0,
+                replicate,
+                1000,
+            ) < h
+        })
     };
     let changed = (0..8).filter(|&s| first(s, 0) != first(s, 3)).count();
     assert!(changed >= 1, "replicate 3 changes a split day");
@@ -216,7 +300,11 @@ fn harness_allowed_seasons() {
     for (day, logged) in [(14u64, true), (21, false), (28, true), (35, true)] {
         let mut engine = world(start_rules(seed), seed, 0, 0, 30, false);
         run(&mut engine, tick_at(day, 360), tick_at(day, 360) + 1);
-        assert_eq!(!engine.resources.fission_checks.is_empty(), logged, "day {day}");
+        assert_eq!(
+            !engine.resources.fission_checks.is_empty(),
+            logged,
+            "day {day}"
+        );
     }
     // No allowed season: no check at all.
     let mut rules = start_rules(seed);
@@ -234,7 +322,12 @@ fn harness_allowed_seasons() {
     let checks = &engine.resources.fission_checks;
     assert!(!checks.is_empty());
     for c in checks {
-        assert_ne!(((c.tick + 480) / 1440 / 7) % 4, 3, "winter check at tick {}", c.tick);
+        assert_ne!(
+            ((c.tick + 480) / 1440 / 7) % 4,
+            3,
+            "winter check at tick {}",
+            c.tick
+        );
     }
 }
 
@@ -246,7 +339,10 @@ fn harness_hazard_order_independent() {
     let outcome = |reverse: bool| {
         let mut engine = world(start_rules(seed), seed, 0, 0, 30, reverse);
         run(&mut engine, check, check + 1);
-        (engine.resources.fission_checks.clone(), engine.resources.fission_log.clone())
+        (
+            engine.resources.fission_checks.clone(),
+            engine.resources.fission_log.clone(),
+        )
     };
     assert_eq!(outcome(false), outcome(true));
     // The draw of (sid, tick) is its keyed draw alone: in a whole v18 world

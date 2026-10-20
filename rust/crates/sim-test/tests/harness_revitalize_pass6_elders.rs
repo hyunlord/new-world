@@ -25,7 +25,13 @@ fn elders(rules: WorldRules, count: u64, start: u32) -> (SimEngine, Vec<hecs::En
     let mut entities = Vec::new();
     for seed in 0..count {
         let entity = engine.spawn_agent(HOME.0 + start, HOME.1);
-        engine.world.insert(entity, (AgentState::Idle, Elder, MovementRng::new(seed + 11))).expect("elder");
+        engine
+            .world
+            .insert(
+                entity,
+                (AgentState::Idle, Elder, MovementRng::new(seed + 11)),
+            )
+            .expect("elder");
         settlement.add_member_agent(engine.world.get::<&Agent>(entity).expect("agent").id);
         entities.push(entity);
     }
@@ -56,7 +62,10 @@ fn harness_elder_evening_tether_v12() {
     let evening = rules.agent.evening_gather.expect("v12 evening gather");
     assert!(aging.elder_evening_tether);
     let tight = aging.elder_tether_radius.min(evening.tether_radius);
-    assert!(tight < aging.elder_tether_radius, "the evening tether is the tighter one");
+    assert!(
+        tight < aging.elder_tether_radius,
+        "the evening tether is the tighter one"
+    );
     // 19:00: idle elders inside the evening tether stay there for 120 ticks.
     let (mut engine, entities) = elders(rules, 6, tight);
     assert_eq!(widest(&mut engine, &entities, tick_at(3, 1140), 120), tight);
@@ -66,7 +75,10 @@ fn harness_elder_evening_tether_v12() {
     assert!(widest(&mut engine, &entities, tick_at(3, 1200), 60) <= tight);
     // 12:00: the elder tether alone; elders may stand at it, never beyond.
     let (mut engine, entities) = elders(rules, 6, tight);
-    assert_eq!(widest(&mut engine, &entities, tick_at(3, 720), 300), aging.elder_tether_radius);
+    assert_eq!(
+        widest(&mut engine, &entities, tick_at(3, 720), 300),
+        aging.elder_tether_radius
+    );
 }
 
 #[test]
@@ -76,8 +88,17 @@ fn harness_elder_tether_v11_unchanged() {
     assert!(!aging.elder_evening_tether);
     // In v11 the elder tether holds at 19:00 too: elders may stand at 4.
     let (mut engine, entities) = elders(rules, 6, aging.elder_tether_radius - 1);
-    assert_eq!(widest(&mut engine, &entities, tick_at(3, 1140), 120), aging.elder_tether_radius);
-    assert_eq!(WorldRules::game_v10().society.aging.map(|rule| rule.elder_evening_tether), Some(false));
+    assert_eq!(
+        widest(&mut engine, &entities, tick_at(3, 1140), 120),
+        aging.elder_tether_radius
+    );
+    assert_eq!(
+        WorldRules::game_v10()
+            .society
+            .aging
+            .map(|rule| rule.elder_evening_tether),
+        Some(false)
+    );
 }
 
 #[test]
@@ -86,7 +107,14 @@ fn harness_elder_tether_returns_after_the_evening() {
     let rules = WorldRules::game_v12();
     let aging = rules.society.aging.expect("v12 aging");
     let evening = rules.agent.evening_gather.expect("evening");
-    let (mut engine, entities) = elders(rules, 6, aging.elder_tether_radius.min(evening.tether_radius));
+    let (mut engine, entities) = elders(
+        rules,
+        6,
+        aging.elder_tether_radius.min(evening.tether_radius),
+    );
     let after = tick_at(3, u64::from(evening.end_minute));
-    assert_eq!(widest(&mut engine, &entities, after, 300), aging.elder_tether_radius);
+    assert_eq!(
+        widest(&mut engine, &entities, after, 300),
+        aging.elder_tether_radius
+    );
 }

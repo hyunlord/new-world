@@ -45,8 +45,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use hecs::World;
 use sim_core::causal::event::DeathReason;
 use sim_core::components::{
-    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Founding, Hardiness, Hunger, PorterTrip, Position,
-    ResourceKind, SettlementId,
+    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Founding, Hardiness, Hunger,
+    PorterTrip, Position, ResourceKind, SettlementId,
 };
 use sim_core::rules::ExposureRule;
 use sim_engine::{FireState, RuntimeSystem, SimResources};
@@ -101,12 +101,15 @@ impl RuntimeSystem for FireSystem {
                 && resources
                     .settlements
                     .get_mut(sid)
-                    .is_some_and(|settlement| settlement.withdraw(ResourceKind::Wood, per_hour) == per_hour);
+                    .is_some_and(|settlement| {
+                        settlement.withdraw(ResourceKind::Wood, per_hour) == per_hour
+                    });
             fires.insert(*sid, FireState { lit });
         }
         resources.fires = fires;
 
-        let cold_night = resources.rules.seasons.is_some() && season == WINTER
+        let cold_night = resources.rules.seasons.is_some()
+            && season == WINTER
             && clock_in_window(resources, rule.cold_start_minute, rule.cold_end_minute);
         let mut cold: BTreeSet<AgentId> = BTreeSet::new();
         if cold_night {
@@ -193,10 +196,18 @@ fn expose(
             Err(_) => false,
         };
         if !stamped {
-            let _ = world.insert_one(entity, ExposureClock { last_cold_tick: now });
+            let _ = world.insert_one(
+                entity,
+                ExposureClock {
+                    last_cold_tick: now,
+                },
+            );
         }
         let hardiness = world.get::<&Hardiness>(entity).ok().map(|h| *h);
-        let hunger = world.get::<&Hunger>(entity).map(|h| f64::from(h.value)).unwrap_or(0.0);
+        let hunger = world
+            .get::<&Hunger>(entity)
+            .map(|h| f64::from(h.value))
+            .unwrap_or(0.0);
         let damage = exposure_damage(rule, stage, hardiness, hunger);
         let dead = match world.get::<&mut BodyHealth>(entity) {
             Ok(mut health) => {
@@ -206,12 +217,23 @@ fn expose(
             Err(_) => false,
         };
         if dead {
-            let position = world.get::<&Position>(entity).map(|p| (p.x, p.y)).unwrap_or((0, 0));
+            let position = world
+                .get::<&Position>(entity)
+                .map(|p| (p.x, p.y))
+                .unwrap_or((0, 0));
             deaths.push((entity, id, position));
         }
     }
     for (entity, id, position) in deaths {
-        despawn_agent(world, resources, entity, id, position, DeathReason::Exposure, now);
+        despawn_agent(
+            world,
+            resources,
+            entity,
+            id,
+            position,
+            DeathReason::Exposure,
+            now,
+        );
     }
 }
 
@@ -227,7 +249,12 @@ fn expose(
 /// A resident without a `Hardiness` (not expected under `use_hardiness`)
 /// counts factor 1. With v16's rule (`use_hardiness` false, `hunger_weight`
 /// 0) this is exactly `damage_per_cold_hour[stage]`.
-pub fn exposure_damage(rule: &ExposureRule, stage: usize, hardiness: Option<Hardiness>, hunger: f64) -> f64 {
+pub fn exposure_damage(
+    rule: &ExposureRule,
+    stage: usize,
+    hardiness: Option<Hardiness>,
+    hunger: f64,
+) -> f64 {
     let mut damage = rule.damage_per_cold_hour[stage];
     if rule.use_hardiness {
         if let Some(hardiness) = hardiness {
@@ -251,7 +278,10 @@ mod tests {
     #[test]
     fn metadata() {
         let s = FireSystem::new();
-        assert_eq!((s.name(), s.priority(), s.tick_interval()), ("FireSystem", 147, 60));
+        assert_eq!(
+            (s.name(), s.priority(), s.tick_interval()),
+            ("FireSystem", 147, 60)
+        );
     }
 
     #[test]
@@ -264,6 +294,9 @@ mod tests {
         let mut world = World::new();
         FireSystem::new().tick(&mut world, &mut resources);
         assert!(resources.fires.is_empty());
-        assert_eq!(resources.settlements[&1].stockpile.get(&ResourceKind::Wood), Some(&10));
+        assert_eq!(
+            resources.settlements[&1].stockpile.get(&ResourceKind::Wood),
+            Some(&10)
+        );
     }
 }

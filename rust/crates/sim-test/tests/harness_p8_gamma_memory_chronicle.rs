@@ -96,7 +96,11 @@ fn harness_p8_gamma_a_complete_memory_chronicle() {
     let (_ent_4, id_4) = spawn_chronicle_agent(&mut engine, CTRL_X, CTRL_Y);
 
     let shared_tile_idx = SHARED_Y * W + SHARED_X;
-    let (min12, max12) = if id_1 < id_2 { (id_1, id_2) } else { (id_2, id_1) };
+    let (min12, max12) = if id_1 < id_2 {
+        (id_1, id_2)
+    } else {
+        (id_2, id_1)
+    };
 
     // Accumulators for A12/A13 (collected across ALL phases).
     let mut agent2_recalled_total: u32 = 0;
@@ -204,7 +208,13 @@ fn harness_p8_gamma_a_complete_memory_chronicle() {
         .world
         .get::<&mut Memory>(ent_1)
         .unwrap()
-        .insert(MemoryEntry::new(seed_completed_id, t1, 0.9, 1.0, MemoryArm::Social));
+        .insert(MemoryEntry::new(
+            seed_completed_id,
+            t1,
+            0.9,
+            1.0,
+            MemoryArm::Social,
+        ));
 
     // ── A14: seed entry injected correctly (precondition guard) ───────────
     let seed_at_inject = engine
@@ -424,8 +434,7 @@ fn harness_p8_gamma_a_complete_memory_chronicle() {
                 let ev = engine.resources.causal_log.lookup(e.event_id)?;
                 if is_social_arm(ev) {
                     let elapsed = t_flip.saturating_sub(e.encoded_tick);
-                    let recency =
-                        (1.0_f64 - elapsed as f64 / MAX_RECENCY_TICKS as f64).max(0.0);
+                    let recency = (1.0_f64 - elapsed as f64 / MAX_RECENCY_TICKS as f64).max(0.0);
                     Some(e.valence * e.salience * recency)
                 } else {
                     None

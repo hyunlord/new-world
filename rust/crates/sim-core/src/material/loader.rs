@@ -72,7 +72,8 @@ impl MaterialDefRaw {
 /// Load a single RON file.
 pub fn load_ron(path: &Path) -> Result<Vec<MaterialDef>, MaterialError> {
     let text = std::fs::read_to_string(path)?;
-    let file: MaterialFile = ron::from_str(&text).map_err(|e| MaterialError::ParseError(e.to_string()))?;
+    let file: MaterialFile =
+        ron::from_str(&text).map_err(|e| MaterialError::ParseError(e.to_string()))?;
     if file.schema_version != CURRENT_SCHEMA_VERSION {
         return Err(MaterialError::SchemaMismatch {
             file_version: file.schema_version,
@@ -106,11 +107,8 @@ mod tests {
     use std::io::Write;
 
     fn write_temp(name: &str, contents: &str) -> std::path::PathBuf {
-        let dir = std::env::temp_dir().join(format!(
-            "worldsim_loader_{}_{}",
-            name,
-            std::process::id()
-        ));
+        let dir =
+            std::env::temp_dir().join(format!("worldsim_loader_{}_{}", name, std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(format!("{name}.ron"));
         let mut f = std::fs::File::create(&path).unwrap();
@@ -154,7 +152,10 @@ mod tests {
         let path = write_temp("schema_bad", &bad);
         let err = load_ron(&path).expect_err("999 must reject");
         match err {
-            MaterialError::SchemaMismatch { file_version, supported } => {
+            MaterialError::SchemaMismatch {
+                file_version,
+                supported,
+            } => {
                 assert_eq!(file_version, 999);
                 assert_eq!(supported, 1);
             }
@@ -180,7 +181,11 @@ mod tests {
         let path = write_temp("hardness_oor", &bad);
         let err = load_ron(&path).expect_err("oor must reject");
         match err {
-            MaterialError::PropertyOutOfRange { property, value, expected } => {
+            MaterialError::PropertyOutOfRange {
+                property,
+                value,
+                expected,
+            } => {
                 assert_eq!(property, "hardness");
                 assert_eq!(value, 11.0);
                 assert!(!expected.is_empty());
@@ -191,7 +196,8 @@ mod tests {
 
     #[test]
     fn load_directory_empty_dir_returns_empty_vec() {
-        let dir = std::env::temp_dir().join(format!("worldsim_loader_empty_{}", std::process::id()));
+        let dir =
+            std::env::temp_dir().join(format!("worldsim_loader_empty_{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         // Clear any leftovers.
         for e in std::fs::read_dir(&dir).unwrap() {

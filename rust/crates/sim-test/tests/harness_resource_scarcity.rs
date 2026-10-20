@@ -105,7 +105,10 @@ fn place_startup_buildings(e: &mut SimEngine) {
     for pos in [(32u32, 32u32), (24, 32), (40, 32)] {
         e.resources
             .building_event_queue
-            .push_back(BuildingPlacedEvent { position: pos, radius: 8 });
+            .push_back(BuildingPlacedEvent {
+                position: pos,
+                radius: 8,
+            });
     }
 }
 
@@ -175,22 +178,48 @@ fn fnv(acc: &mut u64, bytes: &[u8]) {
 fn behavioural_fingerprint(e: &SimEngine) -> u64 {
     let mut acc: u64 = 0xcbf2_9ce4_8422_2325;
 
-    let ents: Vec<hecs::Entity> = e.world.query::<&Agent>().iter().map(|(ent, _)| ent).collect();
+    let ents: Vec<hecs::Entity> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(ent, _)| ent)
+        .collect();
     let mut rows: Vec<(AgentId, u64, u64, String)> = Vec::new();
     for ent in ents {
-        let Ok(agent) = e.world.get::<&Agent>(ent) else { continue };
+        let Ok(agent) = e.world.get::<&Agent>(ent) else {
+            continue;
+        };
         let pos_bits = e
             .world
             .get::<&Position>(ent)
             .map(|p| ((p.x as u64) << 32) | p.y as u64)
             .unwrap_or(0);
-        let hunger = e.world.get::<&Hunger>(ent).map(|h| (h.value as f64).to_bits()).unwrap_or(0);
-        let thirst = e.world.get::<&Thirst>(ent).map(|t| t.value.to_bits()).unwrap_or(0);
-        let sleep = e.world.get::<&Sleep>(ent).map(|s| s.fatigue.to_bits()).unwrap_or(0);
-        let hp = e.world.get::<&BodyHealth>(ent).map(|b| b.hp.to_bits()).unwrap_or(0);
-        let state = e.world.get::<&AgentState>(ent).map(|s| format!("{s:?}")).unwrap_or_default();
-        let need_mix = hunger
-            .wrapping_mul(0x9E37_79B9)
+        let hunger = e
+            .world
+            .get::<&Hunger>(ent)
+            .map(|h| (h.value as f64).to_bits())
+            .unwrap_or(0);
+        let thirst = e
+            .world
+            .get::<&Thirst>(ent)
+            .map(|t| t.value.to_bits())
+            .unwrap_or(0);
+        let sleep = e
+            .world
+            .get::<&Sleep>(ent)
+            .map(|s| s.fatigue.to_bits())
+            .unwrap_or(0);
+        let hp = e
+            .world
+            .get::<&BodyHealth>(ent)
+            .map(|b| b.hp.to_bits())
+            .unwrap_or(0);
+        let state = e
+            .world
+            .get::<&AgentState>(ent)
+            .map(|s| format!("{s:?}"))
+            .unwrap_or_default();
+        let need_mix = hunger.wrapping_mul(0x9E37_79B9)
             ^ thirst.rotate_left(17)
             ^ sleep.rotate_left(31)
             ^ hp.rotate_left(7);
@@ -251,7 +280,9 @@ fn reseed_agents(e: &mut SimEngine, base: u64) {
         .collect();
     agents.sort_by_key(|(_, id)| *id);
     for (i, (ent, _)) in agents.into_iter().enumerate() {
-        let _ = e.world.insert_one(ent, MovementRng::new(base.wrapping_add(i as u64)));
+        let _ = e
+            .world
+            .insert_one(ent, MovementRng::new(base.wrapping_add(i as u64)));
     }
 }
 
@@ -364,7 +395,10 @@ fn assert_kind_seeded(
     }
     let want: BTreeSet<(u32, u32)> = coords.iter().copied().collect();
     let got: BTreeSet<(u32, u32)> = source_max.keys().copied().collect();
-    assert_eq!(got, want, "A1: {label}_source_max key-set must equal the source-coord set");
+    assert_eq!(
+        got, want,
+        "A1: {label}_source_max key-set must equal the source-coord set"
+    );
     assert_eq!(
         source_max.len(),
         coords.len(),
@@ -374,7 +408,10 @@ fn assert_kind_seeded(
     let finite_count = coords
         .iter()
         .filter(|&&(x, y)| {
-            tiles.get(&(x, y)).copied().is_some_and(|v| (1..=254).contains(&v))
+            tiles
+                .get(&(x, y))
+                .copied()
+                .is_some_and(|v| (1..=254).contains(&v))
         })
         .count();
     assert!(
@@ -390,9 +427,16 @@ fn assert_kind_seeded(
 /// Consuming arm so the finite-tile decrement fires deterministically (idiom
 /// mirrors `harness_s16_alpha0`'s consume-drive).
 fn drive_one_food_consume(e: &mut SimEngine, entity: hecs::Entity, sys: &mut AgentDecisionSystem) {
-    e.world.insert_one(entity, Hunger::new(200.0, 0.0)).expect("entity alive");
     e.world
-        .insert_one(entity, AgentState::Consuming { target: TargetKind::Food })
+        .insert_one(entity, Hunger::new(200.0, 0.0))
+        .expect("entity alive");
+    e.world
+        .insert_one(
+            entity,
+            AgentState::Consuming {
+                target: TargetKind::Food,
+            },
+        )
         .expect("entity alive");
     sys.tick(&mut e.world, &mut e.resources);
 }
@@ -401,9 +445,16 @@ fn drive_one_food_consume(e: &mut SimEngine, entity: hecs::Entity, sys: &mut Age
 /// co-located with its water tile (parity with [`drive_one_food_consume`] for
 /// A10's water depletion path).
 fn drive_one_water_consume(e: &mut SimEngine, entity: hecs::Entity, sys: &mut AgentDecisionSystem) {
-    e.world.insert_one(entity, Thirst::new(200.0, 0.0)).expect("entity alive");
     e.world
-        .insert_one(entity, AgentState::Consuming { target: TargetKind::Water })
+        .insert_one(entity, Thirst::new(200.0, 0.0))
+        .expect("entity alive");
+    e.world
+        .insert_one(
+            entity,
+            AgentState::Consuming {
+                target: TargetKind::Water,
+            },
+        )
         .expect("entity alive");
     sys.tick(&mut e.world, &mut e.resources);
 }
@@ -412,9 +463,16 @@ fn drive_one_water_consume(e: &mut SimEngine, entity: hecs::Entity, sys: &mut Ag
 /// co-located with its sleep tile (parity with [`drive_one_food_consume`] for
 /// A19's sleep depletion path).
 fn drive_one_sleep_consume(e: &mut SimEngine, entity: hecs::Entity, sys: &mut AgentDecisionSystem) {
-    e.world.insert_one(entity, Sleep::new(200.0, 0.0)).expect("entity alive");
     e.world
-        .insert_one(entity, AgentState::Consuming { target: TargetKind::Sleep })
+        .insert_one(entity, Sleep::new(200.0, 0.0))
+        .expect("entity alive");
+    e.world
+        .insert_one(
+            entity,
+            AgentState::Consuming {
+                target: TargetKind::Sleep,
+            },
+        )
         .expect("entity alive");
     sys.tick(&mut e.world, &mut e.resources);
 }
@@ -433,9 +491,18 @@ fn harness_scarcity_a1_finite_seeding_overwrites_infinite() {
 
     // (c) the seed constants must NOT be the sentinel — otherwise the whole
     // feature is inert (a sentinel tile never depletes).
-    assert_ne!(INITIAL_FOOD, RESOURCE_SOURCE_INFINITE, "A1(c): INITIAL_FOOD must be finite");
-    assert_ne!(INITIAL_WATER, RESOURCE_SOURCE_INFINITE, "A1(c): INITIAL_WATER must be finite");
-    assert_ne!(INITIAL_SLEEP, RESOURCE_SOURCE_INFINITE, "A1(c): INITIAL_SLEEP must be finite");
+    assert_ne!(
+        INITIAL_FOOD, RESOURCE_SOURCE_INFINITE,
+        "A1(c): INITIAL_FOOD must be finite"
+    );
+    assert_ne!(
+        INITIAL_WATER, RESOURCE_SOURCE_INFINITE,
+        "A1(c): INITIAL_WATER must be finite"
+    );
+    assert_ne!(
+        INITIAL_SLEEP, RESOURCE_SOURCE_INFINITE,
+        "A1(c): INITIAL_SLEEP must be finite"
+    );
 
     assert_kind_seeded(
         &SOURCE_FOOD,
@@ -507,7 +574,9 @@ fn harness_scarcity_a2_consume_depletes_noncon_control_untouched() {
             e.tick();
             if matches!(
                 e.world.get::<&AgentState>(ent).map(|s| *s),
-                Ok(AgentState::Consuming { target: TargetKind::Food })
+                Ok(AgentState::Consuming {
+                    target: TargetKind::Food
+                })
             ) {
                 consuming_observed = true;
             }
@@ -518,7 +587,10 @@ fn harness_scarcity_a2_consume_depletes_noncon_control_untouched() {
             prev = cur;
         }
         positive_after = e.resources.food_tiles.get(&(fx, fy)).copied().unwrap_or(0);
-        assert!(alive(&e, ent), "A2(a): the consuming agent must remain alive");
+        assert!(
+            alive(&e, ent),
+            "A2(a): the consuming agent must remain alive"
+        );
     }
     println!(
         "[scarcity A2a] POSITIVE: finite tile {SEEDED} → {positive_after} (>=1 consume; consume-decrement events={consumes_fired} consuming_observed={consuming_observed})"
@@ -562,13 +634,21 @@ fn harness_scarcity_a2_consume_depletes_noncon_control_untouched() {
             assert!(
                 !matches!(
                     e.world.get::<&AgentState>(ent).map(|s| *s),
-                    Ok(AgentState::Consuming { target: TargetKind::Food })
-                        | Ok(AgentState::Seeking { target: TargetKind::Food })
+                    Ok(AgentState::Consuming {
+                        target: TargetKind::Food
+                    }) | Ok(AgentState::Seeking {
+                        target: TargetKind::Food
+                    })
                 ),
                 "A2(b): the below-threshold control agent must never seek/consume food"
             );
         }
-        negative_after = e.resources.food_tiles.get(&(fx, fy)).copied().expect("tile present");
+        negative_after = e
+            .resources
+            .food_tiles
+            .get(&(fx, fy))
+            .copied()
+            .expect("tile present");
     }
     println!("[scarcity A2b] NEGATIVE control: non-consuming agent leaves finite tile = {negative_after} (expect EXACTLY {SEEDED})");
     assert_eq!(
@@ -622,7 +702,9 @@ fn harness_scarcity_a3_sustained_consume_monotonic_then_removed() {
         removed,
         "A3(b): tile key must be ABSENT (removed) within {cap} (== seeded) consumes, not left at 0"
     );
-    println!("[scarcity A3] finite tile {seeded} non-increasing → key removed within {cap} consumes ✓");
+    println!(
+        "[scarcity A3] finite tile {seeded} non-increasing → key removed within {cap} consumes ✓"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -655,11 +737,22 @@ fn harness_scarcity_a4_regen_refills_recreates_never_overshoots() {
                 sys.tick(&mut e.world, &mut e.resources);
             }
             let cur = e.resources.food_tiles.get(&(5, 5)).copied().unwrap_or(0);
-            assert!(cur <= k, "A4(a): tile {cur} must never exceed ceiling {k} at tick {t}");
+            assert!(
+                cur <= k,
+                "A4(a): tile {cur} must never exceed ceiling {k} at tick {t}"
+            );
         }
-        let after = e.resources.food_tiles.get(&(5, 5)).copied().expect("tile present");
+        let after = e
+            .resources
+            .food_tiles
+            .get(&(5, 5))
+            .copied()
+            .expect("tile present");
         println!("[scarcity A4a] below-K tile {seeded} → {after} (ceiling {k})");
-        assert!(after > seeded, "A4(a): tile must strictly increase toward K; {after} !> {seeded}");
+        assert!(
+            after > seeded,
+            "A4(a): tile must strictly increase toward K; {after} !> {seeded}"
+        );
         assert!(after <= k, "A4(a): tile must not exceed K");
     }
 
@@ -667,7 +760,10 @@ fn harness_scarcity_a4_regen_refills_recreates_never_overshoots() {
     {
         let mut e = iso_engine();
         e.resources.set_food_source_max(6, 6, k);
-        assert!(!e.resources.food_tiles.contains_key(&(6, 6)), "A4(b) setup: tile absent");
+        assert!(
+            !e.resources.food_tiles.contains_key(&(6, 6)),
+            "A4(b) setup: tile absent"
+        );
         let mut sys = ResourceRegenSystem::new();
         for t in 1..=2 * interval {
             e.resources.current_tick = t;
@@ -675,11 +771,22 @@ fn harness_scarcity_a4_regen_refills_recreates_never_overshoots() {
                 sys.tick(&mut e.world, &mut e.resources);
             }
             let cur = e.resources.food_tiles.get(&(6, 6)).copied().unwrap_or(0);
-            assert!(cur <= k, "A4(b): recreated tile {cur} must never exceed K {k} at tick {t}");
+            assert!(
+                cur <= k,
+                "A4(b): recreated tile {cur} must never exceed K {k} at tick {t}"
+            );
         }
-        let v = e.resources.food_tiles.get(&(6, 6)).copied().expect("recreated tile present");
+        let v = e
+            .resources
+            .food_tiles
+            .get(&(6, 6))
+            .copied()
+            .expect("recreated tile present");
         println!("[scarcity A4b] removed tile recreated → {v} (ceiling {k})");
-        assert!(v > 0, "A4(b): removed-but-registered tile must be recreated with value > 0");
+        assert!(
+            v > 0,
+            "A4(b): removed-but-registered tile must be recreated with value > 0"
+        );
         assert!(v <= k, "A4(b): recreated tile must not exceed K");
     }
 }
@@ -705,7 +812,10 @@ fn harness_scarcity_a5_regen_caps_skips_sentinel_and_254_boundary() {
                 sys.tick(&mut e.world, &mut e.resources);
             }
             let cur = e.resources.food_tiles.get(&(7, 7)).copied().unwrap_or(0);
-            assert!(cur <= k, "A5(a): at-ceiling tile {cur} must never exceed K {k} at tick {t}");
+            assert!(
+                cur <= k,
+                "A5(a): at-ceiling tile {cur} must never exceed K {k} at tick {t}"
+            );
         }
         assert_eq!(
             e.resources.food_tiles.get(&(7, 7)).copied(),
@@ -754,7 +864,10 @@ fn harness_scarcity_a5_regen_caps_skips_sentinel_and_254_boundary() {
                 sys.tick(&mut e.world, &mut e.resources);
             }
             let cur = e.resources.food_tiles.get(&(11, 11)).copied().unwrap_or(0);
-            assert!(cur <= k, "A5(c): 254-ceiling tile {cur} must never exceed 254 at tick {t}");
+            assert!(
+                cur <= k,
+                "A5(c): 254-ceiling tile {cur} must never exceed 254 at tick {t}"
+            );
             assert_ne!(
                 cur, RESOURCE_SOURCE_INFINITE,
                 "A5(c): a 254-ceiling tile must NEVER become the 255 infinite sentinel (tick {t})"
@@ -812,7 +925,10 @@ fn harness_scarcity_a7_population_stays_in_equilibrium() {
     println!(
         "[scarcity A7] final_live={final_live} total_deaths={total_deaths} ceiling={pop_ceiling} (= SETTLEMENT_MAX_POP×{SETTLEMENT_MARGIN})"
     );
-    assert!(final_live >= 20, "A7: population must not near-collapse (>= 20); got {final_live}");
+    assert!(
+        final_live >= 20,
+        "A7: population must not near-collapse (>= 20); got {final_live}"
+    );
     assert!(
         final_live <= pop_ceiling,
         "A7: population must not explode (got {final_live}, ceiling {pop_ceiling})"
@@ -859,7 +975,10 @@ fn harness_scarcity_a8_food_gathering_loop_satiates_survivor() {
         }
     }
     println!("[scarcity A8] starting_hunger={starting_hunger} min_hunger={min_hunger:.4}");
-    assert!(alive(&e, ent), "A8: an agent that can reach a regenerating source must survive");
+    assert!(
+        alive(&e, ent),
+        "A8: an agent that can reach a regenerating source must survive"
+    );
     assert!(
         min_hunger < starting_hunger,
         "A8: hunger must drop below STARTING (real satiation); min {min_hunger:.4} !< {starting_hunger}"
@@ -906,7 +1025,10 @@ fn harness_scarcity_a9_water_gathering_loop_satiates_survivor() {
         }
     }
     println!("[scarcity A9] starting_thirst={starting_thirst} min_thirst={min_thirst:.4}");
-    assert!(alive(&e, ent), "A9: an agent that can reach a regenerating water source must survive");
+    assert!(
+        alive(&e, ent),
+        "A9: an agent that can reach a regenerating water source must survive"
+    );
     assert!(
         min_thirst < starting_thirst,
         "A9: thirst must drop below STARTING (real satiation); min {min_thirst:.4} !< {starting_thirst}"
@@ -976,19 +1098,36 @@ fn harness_scarcity_a10_water_consume_depletes_removes_and_regenerates() {
                     sys.tick(&mut e.world, &mut e.resources);
                 }
                 let cur = e.resources.water_tiles.get(&(19, 19)).copied().unwrap_or(0);
-                assert!(cur <= k, "A10(b): water tile {cur} must never exceed K {k} at tick {t}");
+                assert!(
+                    cur <= k,
+                    "A10(b): water tile {cur} must never exceed K {k} at tick {t}"
+                );
             }
-            let after = e.resources.water_tiles.get(&(19, 19)).copied().expect("tile present");
+            let after = e
+                .resources
+                .water_tiles
+                .get(&(19, 19))
+                .copied()
+                .expect("tile present");
             println!("[scarcity A10b-below] water {below} → {after} (ceiling {k})");
-            assert!(after > below, "A10(b): below-ceiling water tile must increase; {after} !> {below}");
-            assert!(after <= k, "A10(b): below-ceiling water tile must not exceed K");
+            assert!(
+                after > below,
+                "A10(b): below-ceiling water tile must increase; {after} !> {below}"
+            );
+            assert!(
+                after <= k,
+                "A10(b): below-ceiling water tile must not exceed K"
+            );
         }
 
         // absent-but-registered sub-case.
         {
             let mut e = iso_engine();
             e.resources.set_water_source_max(21, 21, k);
-            assert!(!e.resources.water_tiles.contains_key(&(21, 21)), "A10(b) setup: water tile absent");
+            assert!(
+                !e.resources.water_tiles.contains_key(&(21, 21)),
+                "A10(b) setup: water tile absent"
+            );
             let mut sys = ResourceRegenSystem::new();
             for t in 1..=2 * interval {
                 e.resources.current_tick = t;
@@ -996,11 +1135,22 @@ fn harness_scarcity_a10_water_consume_depletes_removes_and_regenerates() {
                     sys.tick(&mut e.world, &mut e.resources);
                 }
                 let cur = e.resources.water_tiles.get(&(21, 21)).copied().unwrap_or(0);
-                assert!(cur <= k, "A10(b): recreated water tile {cur} must never exceed K {k} at tick {t}");
+                assert!(
+                    cur <= k,
+                    "A10(b): recreated water tile {cur} must never exceed K {k} at tick {t}"
+                );
             }
-            let v = e.resources.water_tiles.get(&(21, 21)).copied().expect("recreated tile present");
+            let v = e
+                .resources
+                .water_tiles
+                .get(&(21, 21))
+                .copied()
+                .expect("recreated tile present");
             println!("[scarcity A10b-absent] removed water tile recreated → {v} (ceiling {k})");
-            assert!(v > 0, "A10(b): absent-but-registered water tile must be recreated with value > 0");
+            assert!(
+                v > 0,
+                "A10(b): absent-but-registered water tile must be recreated with value > 0"
+            );
             assert!(v <= k, "A10(b): recreated water tile must not exceed K");
         }
     }
@@ -1095,13 +1245,19 @@ fn harness_scarcity_a13_scarce_kind_depletion() {
         // A kind "removed" iff at least one of its tick-0 source coords is
         // currently ABSENT from the tile map (cumulative-ever across the run).
         if !food_removed {
-            food_removed = SOURCE_FOOD.iter().any(|c| !e.resources.food_tiles.contains_key(c));
+            food_removed = SOURCE_FOOD
+                .iter()
+                .any(|c| !e.resources.food_tiles.contains_key(c));
         }
         if !water_removed {
-            water_removed = SOURCE_WATER.iter().any(|c| !e.resources.water_tiles.contains_key(c));
+            water_removed = SOURCE_WATER
+                .iter()
+                .any(|c| !e.resources.water_tiles.contains_key(c));
         }
         if !sleep_removed {
-            sleep_removed = SOURCE_SLEEP.iter().any(|c| !e.resources.sleep_tiles.contains_key(c));
+            sleep_removed = SOURCE_SLEEP
+                .iter()
+                .any(|c| !e.resources.sleep_tiles.contains_key(c));
         }
     }
     println!(
@@ -1171,7 +1327,8 @@ fn harness_scarcity_a14_depleted_corner_recovers_via_regen() {
                         let cap = ceiling(&e, k, c);
                         if v > 0 && v <= cap {
                             recovered = true;
-                            recovered_label = format!("kind={k} coord={c:?} value={v} ceiling={cap}");
+                            recovered_label =
+                                format!("kind={k} coord={c:?} value={v} ceiling={cap}");
                         }
                     }
                 }
@@ -1252,9 +1409,18 @@ fn harness_scarcity_a15_determinism_of_scarcity_run() {
         dead_b.len(),
         scar_b.len(),
     );
-    assert_eq!(dead_a, dead_b, "A15: dead-agent set must be identical across runs");
-    assert_eq!(scar_a, scar_b, "A15: scarcity-dead set must be identical across runs");
-    assert_eq!(pr_a, pr_b, "A15: per-reason split (incl. dehydration) must be identical");
+    assert_eq!(
+        dead_a, dead_b,
+        "A15: dead-agent set must be identical across runs"
+    );
+    assert_eq!(
+        scar_a, scar_b,
+        "A15: scarcity-dead set must be identical across runs"
+    );
+    assert_eq!(
+        pr_a, pr_b,
+        "A15: per-reason split (incl. dehydration) must be identical"
+    );
     assert_eq!(td_a, td_b, "A15: settlement total_deaths must be identical");
     assert_eq!(live_a, live_b, "A15: final_live must be identical");
 }
@@ -1275,13 +1441,33 @@ fn harness_scarcity_a16_production_init_seeds_all_three_kinds_finite() {
     let finite_food = has_finite(&e.resources.food_tiles);
     let finite_water = has_finite(&e.resources.water_tiles);
     let finite_sleep = has_finite(&e.resources.sleep_tiles);
-    assert!(finite_food, "A16: legacy V7 fixture must seed a FINITE FOOD source (∈ [1,254])");
-    assert!(finite_water, "A16: legacy V7 fixture must seed a FINITE WATER source (∈ [1,254])");
-    assert!(finite_sleep, "A16: legacy V7 fixture must seed a FINITE SLEEP source (∈ [1,254])");
-    assert!(!e.resources.food_source_max.is_empty(), "A16: food_source_max must be non-empty");
-    assert!(!e.resources.water_source_max.is_empty(), "A16: water_source_max must be non-empty");
-    assert!(!e.resources.sleep_source_max.is_empty(), "A16: sleep_source_max must be non-empty");
-    println!("[scarcity A16] production init seeds finite food+water+sleep + registers all 3 ceilings ✓");
+    assert!(
+        finite_food,
+        "A16: legacy V7 fixture must seed a FINITE FOOD source (∈ [1,254])"
+    );
+    assert!(
+        finite_water,
+        "A16: legacy V7 fixture must seed a FINITE WATER source (∈ [1,254])"
+    );
+    assert!(
+        finite_sleep,
+        "A16: legacy V7 fixture must seed a FINITE SLEEP source (∈ [1,254])"
+    );
+    assert!(
+        !e.resources.food_source_max.is_empty(),
+        "A16: food_source_max must be non-empty"
+    );
+    assert!(
+        !e.resources.water_source_max.is_empty(),
+        "A16: water_source_max must be non-empty"
+    );
+    assert!(
+        !e.resources.sleep_source_max.is_empty(),
+        "A16: sleep_source_max must be non-empty"
+    );
+    println!(
+        "[scarcity A16] production init seeds finite food+water+sleep + registers all 3 ceilings ✓"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1309,8 +1495,14 @@ fn harness_scarcity_a18_regen_respects_interval_cadence() {
     // tile UNCHANGED for every tick strictly before the first boundary; tile
     // strictly increased once >= REGEN_INTERVAL ticks elapsed.
     let interval = ResourceRegenSystem::new().tick_interval();
-    assert_eq!(interval, REGEN_INTERVAL, "A18: tick_interval must equal REGEN_INTERVAL const");
-    assert!(interval > 1, "A18: regen interval must exceed 1 (scarcity needs withholding)");
+    assert_eq!(
+        interval, REGEN_INTERVAL,
+        "A18: tick_interval must equal REGEN_INTERVAL const"
+    );
+    assert!(
+        interval > 1,
+        "A18: regen interval must exceed 1 (scarcity needs withholding)"
+    );
 
     let mut e = iso_engine();
     let k: u8 = 80;
@@ -1378,7 +1570,10 @@ fn harness_scarcity_a19_sleep_path_depletes_and_regenerates() {
             prev = cur;
         }
         removed = removed || !e.resources.sleep_tiles.contains_key(&(14, 14));
-        assert!(removed, "A19(a): sleep tile key must be ABSENT (removed) within {cap} (== seeded) consumes");
+        assert!(
+            removed,
+            "A19(a): sleep tile key must be ABSENT (removed) within {cap} (== seeded) consumes"
+        );
         println!("[scarcity A19a] sleep tile {seeded} non-increasing → key removed ✓");
     }
 
@@ -1400,11 +1595,22 @@ fn harness_scarcity_a19_sleep_path_depletes_and_regenerates() {
                     sys.tick(&mut e.world, &mut e.resources);
                 }
                 let cur = e.resources.sleep_tiles.get(&(16, 16)).copied().unwrap_or(0);
-                assert!(cur <= k, "A19(b): sleep tile {cur} must never exceed K {k} at tick {t}");
+                assert!(
+                    cur <= k,
+                    "A19(b): sleep tile {cur} must never exceed K {k} at tick {t}"
+                );
             }
-            let after = e.resources.sleep_tiles.get(&(16, 16)).copied().expect("tile present");
+            let after = e
+                .resources
+                .sleep_tiles
+                .get(&(16, 16))
+                .copied()
+                .expect("tile present");
             println!("[scarcity A19b-below] sleep tile {start} → {after} (ceiling {k})");
-            assert!(after > start, "A19(b): sleep tile must increase toward K; {after} !> {start}");
+            assert!(
+                after > start,
+                "A19(b): sleep tile must increase toward K; {after} !> {start}"
+            );
             assert!(after <= k, "A19(b): sleep tile must not exceed K");
         }
 
@@ -1412,7 +1618,10 @@ fn harness_scarcity_a19_sleep_path_depletes_and_regenerates() {
         {
             let mut e = iso_engine();
             e.resources.set_sleep_source_max(17, 17, k);
-            assert!(!e.resources.sleep_tiles.contains_key(&(17, 17)), "A19(b) setup: sleep tile absent");
+            assert!(
+                !e.resources.sleep_tiles.contains_key(&(17, 17)),
+                "A19(b) setup: sleep tile absent"
+            );
             let mut sys = ResourceRegenSystem::new();
             for t in 1..=2 * interval {
                 e.resources.current_tick = t;
@@ -1420,11 +1629,22 @@ fn harness_scarcity_a19_sleep_path_depletes_and_regenerates() {
                     sys.tick(&mut e.world, &mut e.resources);
                 }
                 let cur = e.resources.sleep_tiles.get(&(17, 17)).copied().unwrap_or(0);
-                assert!(cur <= k, "A19(b): recreated sleep tile {cur} must never exceed K {k} at tick {t}");
+                assert!(
+                    cur <= k,
+                    "A19(b): recreated sleep tile {cur} must never exceed K {k} at tick {t}"
+                );
             }
-            let v = e.resources.sleep_tiles.get(&(17, 17)).copied().expect("recreated tile present");
+            let v = e
+                .resources
+                .sleep_tiles
+                .get(&(17, 17))
+                .copied()
+                .expect("recreated tile present");
             println!("[scarcity A19b-absent] removed sleep tile recreated → {v} (ceiling {k})");
-            assert!(v > 0, "A19(b): absent-but-registered sleep tile must be recreated with value > 0");
+            assert!(
+                v > 0,
+                "A19(b): absent-but-registered sleep tile must be recreated with value > 0"
+            );
             assert!(v <= k, "A19(b): recreated sleep tile must not exceed K");
         }
     }
@@ -1450,7 +1670,10 @@ fn harness_scarcity_a20_single_kind_wipe_yields_none() {
     for (x, y) in food_coords {
         e.resources.set_food_tile(x, y, 0); // 0 removes the key
     }
-    assert!(e.resources.food_tiles.is_empty(), "A20 setup: all food tiles must be removed");
+    assert!(
+        e.resources.food_tiles.is_empty(),
+        "A20 setup: all food tiles must be removed"
+    );
 
     let pos = Position::new(32, 32); // playfield centre
     let food_lookup = nearest_resource_tile(&pos, &e.resources.food_tiles);
@@ -1459,9 +1682,18 @@ fn harness_scarcity_a20_single_kind_wipe_yields_none() {
     println!(
         "[scarcity A20] food_lookup={food_lookup:?} water_lookup={water_lookup:?} sleep_lookup={sleep_lookup:?}"
     );
-    assert_eq!(food_lookup, None, "A20(a): food lookup must return None after a full food wipe");
-    assert!(water_lookup.is_some(), "A20(a): water lookup must still return a tile (kind-isolated wipe)");
-    assert!(sleep_lookup.is_some(), "A20(a): sleep lookup must still return a tile (kind-isolated wipe)");
+    assert_eq!(
+        food_lookup, None,
+        "A20(a): food lookup must return None after a full food wipe"
+    );
+    assert!(
+        water_lookup.is_some(),
+        "A20(a): water lookup must still return a tile (kind-isolated wipe)"
+    );
+    assert!(
+        sleep_lookup.is_some(),
+        "A20(a): sleep lookup must still return a tile (kind-isolated wipe)"
+    );
 
     // (b) TOTAL wipe — remove ALL keys of ALL three kinds; every lookup must
     // return None with NO panic (graceful degradation at the most extreme
@@ -1474,8 +1706,14 @@ fn harness_scarcity_a20_single_kind_wipe_yields_none() {
     for (x, y) in sleep_coords {
         e.resources.set_sleep_tile(x, y, 0);
     }
-    assert!(e.resources.water_tiles.is_empty(), "A20(b) setup: all water tiles removed");
-    assert!(e.resources.sleep_tiles.is_empty(), "A20(b) setup: all sleep tiles removed");
+    assert!(
+        e.resources.water_tiles.is_empty(),
+        "A20(b) setup: all water tiles removed"
+    );
+    assert!(
+        e.resources.sleep_tiles.is_empty(),
+        "A20(b) setup: all sleep tiles removed"
+    );
     assert_eq!(
         nearest_resource_tile(&pos, &e.resources.food_tiles),
         None,
@@ -1526,14 +1764,21 @@ const FREEZE_WINDOW: u32 = 60;
 
 /// Seed a single agent already in `Seeking{Food}` carrying a `SeekTarget` at
 /// `target`, with Hunger held high so it keeps wanting food. Returns the entity.
-fn seed_food_seeker(e: &mut SimEngine, at: (u32, u32), target: (u32, u32), rng: u64) -> hecs::Entity {
+fn seed_food_seeker(
+    e: &mut SimEngine,
+    at: (u32, u32),
+    target: (u32, u32),
+    rng: u64,
+) -> hecs::Entity {
     let ent = e.spawn_agent(at.0, at.1);
     e.world
         .insert(
             ent,
             (
                 MovementRng::new(rng),
-                AgentState::Seeking { target: TargetKind::Food },
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(90.0, 0.05), // stays above HUNGER_THRESHOLD (50)
                 Thirst::new(0.0, 0.0),
                 Sleep::new(0.0, 0.0),
@@ -1642,16 +1887,34 @@ fn harness_scarcity_a22_seeking_reroutes_when_alternative_remains() {
     let mut rerouted_or_consumed = false;
     for _ in 0..FREEZE_WINDOW {
         e.tick();
-        let st = e.world.get::<&AgentState>(ent).map(|s| *s).unwrap_or(AgentState::Idle);
-        let p = e.world.get::<&Position>(ent).map(|p| (p.x, p.y)).unwrap_or((9999, 9999));
+        let st = e
+            .world
+            .get::<&AgentState>(ent)
+            .map(|s| *s)
+            .unwrap_or(AgentState::Idle);
+        let p = e
+            .world
+            .get::<&Position>(ent)
+            .map(|p| (p.x, p.y))
+            .unwrap_or((9999, 9999));
         // re-route success: SeekTarget points at a PRESENT food coord, OR the
         // agent reached a source and is Consuming{Food}.
         if let Ok(seek) = e.world.get::<&SeekTarget>(ent) {
-            if e.resources.food_tiles.get(&seek.tile).copied().is_some_and(|v| v > 0) {
+            if e.resources
+                .food_tiles
+                .get(&seek.tile)
+                .copied()
+                .is_some_and(|v| v > 0)
+            {
                 rerouted_or_consumed = true;
             }
         }
-        if matches!(st, AgentState::Consuming { target: TargetKind::Food }) {
+        if matches!(
+            st,
+            AgentState::Consuming {
+                target: TargetKind::Food
+            }
+        ) {
             rerouted_or_consumed = true;
         }
         samples.push((p, st));
@@ -1769,15 +2032,31 @@ fn harness_scarcity_a25_seeking_exits_when_only_source_vanishes() {
     e.resources.set_food_source_max(t.0, t.1, 80);
     // Remove T — now there is NO food source anywhere.
     e.resources.set_food_tile(t.0, t.1, 0);
-    assert!(e.resources.food_tiles.is_empty(), "A25 setup: no food source remains");
+    assert!(
+        e.resources.food_tiles.is_empty(),
+        "A25 setup: no food source remains"
+    );
 
     let mut samples: Vec<((u32, u32), AgentState)> = Vec::new();
     let mut exited_seeking_food = false;
     for _ in 0..FREEZE_WINDOW {
         e.tick();
-        let st = e.world.get::<&AgentState>(ent).map(|s| *s).unwrap_or(AgentState::Idle);
-        let p = e.world.get::<&Position>(ent).map(|p| (p.x, p.y)).unwrap_or((9999, 9999));
-        if !matches!(st, AgentState::Seeking { target: TargetKind::Food }) {
+        let st = e
+            .world
+            .get::<&AgentState>(ent)
+            .map(|s| *s)
+            .unwrap_or(AgentState::Idle);
+        let p = e
+            .world
+            .get::<&Position>(ent)
+            .map(|p| (p.x, p.y))
+            .unwrap_or((9999, 9999));
+        if !matches!(
+            st,
+            AgentState::Seeking {
+                target: TargetKind::Food
+            }
+        ) {
             exited_seeking_food = true;
         }
         samples.push((p, st));
@@ -1820,9 +2099,20 @@ fn harness_scarcity_a26_regen_no_panic_on_orphan_tile() {
         Some(50),
         "A26: an orphan tile (no registered ceiling) must be left UNTOUCHED by regen"
     );
-    let registered = e.resources.food_tiles.get(&(4, 4)).copied().expect("registered tile present");
-    assert!(registered > 40, "A26: the normally-registered source must still regenerate; {registered} !> 40");
-    assert!(registered <= k, "A26: the registered source must not exceed its ceiling");
+    let registered = e
+        .resources
+        .food_tiles
+        .get(&(4, 4))
+        .copied()
+        .expect("registered tile present");
+    assert!(
+        registered > 40,
+        "A26: the normally-registered source must still regenerate; {registered} !> 40"
+    );
+    assert!(
+        registered <= k,
+        "A26: the registered source must not exceed its ceiling"
+    );
     println!("[scarcity A26] regen no-panic on orphan; orphan untouched (50); registered regenerated → {registered} ✓");
 }
 
@@ -1845,7 +2135,8 @@ fn harness_scarcity_a27_regen_touches_only_registered_coords() {
     e.resources.set_food_tile(7, 7, k);
 
     let pre_tile_keys: BTreeSet<(u32, u32)> = e.resources.food_tiles.keys().copied().collect();
-    let registered_keys: BTreeSet<(u32, u32)> = e.resources.food_source_max.keys().copied().collect();
+    let registered_keys: BTreeSet<(u32, u32)> =
+        e.resources.food_source_max.keys().copied().collect();
     let allowed: BTreeSet<(u32, u32)> = pre_tile_keys.union(&registered_keys).copied().collect();
 
     let mut sys = ResourceRegenSystem::new();
@@ -1905,25 +2196,51 @@ fn harness_scarcity_regen_is_bounded_trickle() {
     let food: Vec<(u32, u32)> = e.resources.food_source_max.keys().copied().collect();
     let water: Vec<(u32, u32)> = e.resources.water_source_max.keys().copied().collect();
     let sleep: Vec<(u32, u32)> = e.resources.sleep_source_max.keys().copied().collect();
-    let mut prev_food: HashMap<(u32, u32), u8> =
-        food.iter().map(|c| (*c, e.resources.food_tiles.get(c).copied().unwrap_or(0))).collect();
-    let mut prev_water: HashMap<(u32, u32), u8> =
-        water.iter().map(|c| (*c, e.resources.water_tiles.get(c).copied().unwrap_or(0))).collect();
-    let mut prev_sleep: HashMap<(u32, u32), u8> =
-        sleep.iter().map(|c| (*c, e.resources.sleep_tiles.get(c).copied().unwrap_or(0))).collect();
+    let mut prev_food: HashMap<(u32, u32), u8> = food
+        .iter()
+        .map(|c| (*c, e.resources.food_tiles.get(c).copied().unwrap_or(0)))
+        .collect();
+    let mut prev_water: HashMap<(u32, u32), u8> = water
+        .iter()
+        .map(|c| (*c, e.resources.water_tiles.get(c).copied().unwrap_or(0)))
+        .collect();
+    let mut prev_sleep: HashMap<(u32, u32), u8> = sleep
+        .iter()
+        .map(|c| (*c, e.resources.sleep_tiles.get(c).copied().unwrap_or(0)))
+        .collect();
 
     let mut regen_recovery_count: u64 = 0;
     let mut max_single_tick_gain: u8 = 0;
     for _ in 0..RUN_TICKS {
         e.tick();
-        scan(&food, &e.resources.food_tiles, &mut prev_food, &mut regen_recovery_count, &mut max_single_tick_gain);
-        scan(&water, &e.resources.water_tiles, &mut prev_water, &mut regen_recovery_count, &mut max_single_tick_gain);
-        scan(&sleep, &e.resources.sleep_tiles, &mut prev_sleep, &mut regen_recovery_count, &mut max_single_tick_gain);
+        scan(
+            &food,
+            &e.resources.food_tiles,
+            &mut prev_food,
+            &mut regen_recovery_count,
+            &mut max_single_tick_gain,
+        );
+        scan(
+            &water,
+            &e.resources.water_tiles,
+            &mut prev_water,
+            &mut regen_recovery_count,
+            &mut max_single_tick_gain,
+        );
+        scan(
+            &sleep,
+            &e.resources.sleep_tiles,
+            &mut prev_sleep,
+            &mut regen_recovery_count,
+            &mut max_single_tick_gain,
+        );
     }
 
     // Intended per-tick regen STEP = the largest single-interval regen amount
     // (the most a tile can gain when regen fires). 1.5× tolerance for rounding.
-    let intended = FOOD_REGEN_AMOUNT.max(WATER_REGEN_AMOUNT).max(SLEEP_REGEN_AMOUNT);
+    let intended = FOOD_REGEN_AMOUNT
+        .max(WATER_REGEN_AMOUNT)
+        .max(SLEEP_REGEN_AMOUNT);
     let bound = intended as f64 * 1.5;
     println!(
         "[scarcity regen-trickle] regen_recovery_count={regen_recovery_count} max_single_tick_gain={max_single_tick_gain} intended_step={intended} bound={bound}"
@@ -1955,10 +2272,14 @@ fn harness_scarcity_agents_gather_under_need() {
     let mut water_consumed = false;
     let mut food_consumed = false;
 
-    let mut prev_food: HashMap<(u32, u32), u8> =
-        SOURCE_FOOD.iter().map(|c| (*c, e.resources.food_tiles.get(c).copied().unwrap_or(0))).collect();
-    let mut prev_water: HashMap<(u32, u32), u8> =
-        SOURCE_WATER.iter().map(|c| (*c, e.resources.water_tiles.get(c).copied().unwrap_or(0))).collect();
+    let mut prev_food: HashMap<(u32, u32), u8> = SOURCE_FOOD
+        .iter()
+        .map(|c| (*c, e.resources.food_tiles.get(c).copied().unwrap_or(0)))
+        .collect();
+    let mut prev_water: HashMap<(u32, u32), u8> = SOURCE_WATER
+        .iter()
+        .map(|c| (*c, e.resources.water_tiles.get(c).copied().unwrap_or(0)))
+        .collect();
 
     for _ in 0..RUN_TICKS {
         e.tick();
@@ -1971,8 +2292,11 @@ fn harness_scarcity_agents_gather_under_need() {
             if thirst.is_some_and(|t| t.value > THIRST_THRESHOLD)
                 && matches!(
                     st,
-                    AgentState::Seeking { target: TargetKind::Water }
-                        | AgentState::Consuming { target: TargetKind::Water }
+                    AgentState::Seeking {
+                        target: TargetKind::Water
+                    } | AgentState::Consuming {
+                        target: TargetKind::Water
+                    }
                 )
             {
                 water_gatherers.insert(a.id);
@@ -1980,8 +2304,11 @@ fn harness_scarcity_agents_gather_under_need() {
             if hunger.is_some_and(|h| h.value > HUNGER_THRESHOLD)
                 && matches!(
                     st,
-                    AgentState::Seeking { target: TargetKind::Food }
-                        | AgentState::Consuming { target: TargetKind::Food }
+                    AgentState::Seeking {
+                        target: TargetKind::Food
+                    } | AgentState::Consuming {
+                        target: TargetKind::Food
+                    }
                 )
             {
                 food_gatherers.insert(a.id);

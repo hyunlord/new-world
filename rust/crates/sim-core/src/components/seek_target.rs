@@ -66,8 +66,7 @@ mod tests {
     fn serde_round_trip() {
         let original = SeekTarget::new((7, 42));
         let encoded = ron::to_string(&original).expect("SeekTarget must Serialize");
-        let decoded: SeekTarget =
-            ron::from_str(&encoded).expect("SeekTarget must Deserialize");
+        let decoded: SeekTarget = ron::from_str(&encoded).expect("SeekTarget must Deserialize");
         assert_eq!(original, decoded);
     }
 }

@@ -159,13 +159,14 @@ fn harness_ffi_on_building_placed_oob_does_not_enqueue_and_returns_false() {
 #[test]
 fn harness_ffi_stamp_marks_exactly_warmth_dirty() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
     // Type A: threshold == 1
     assert_eq!(len, 1, "Warmth dirty_regions.len() must be 1, got {len}");
 }
@@ -177,13 +178,14 @@ fn harness_ffi_stamp_marks_exactly_warmth_dirty() {
 #[test]
 fn harness_ffi_stamp_marks_exactly_spiritual_dirty() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
     // Type A: threshold == 1
     assert_eq!(len, 1, "Spiritual dirty_regions.len() must be 1, got {len}");
 }
@@ -195,13 +197,14 @@ fn harness_ffi_stamp_marks_exactly_spiritual_dirty() {
 #[test]
 fn harness_ffi_stamp_marks_exactly_beauty_dirty() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
     // Type A: threshold == 1
     assert_eq!(len, 1, "Beauty dirty_regions.len() must be 1, got {len}");
 }
@@ -213,13 +216,14 @@ fn harness_ffi_stamp_marks_exactly_beauty_dirty() {
 #[test]
 fn harness_ffi_stamp_marks_exactly_light_dirty() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Light as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Light as usize].len();
     // Type A: threshold == 1
     assert_eq!(len, 1, "Light dirty_regions.len() must be 1, got {len}");
 }
@@ -242,16 +246,20 @@ fn harness_ffi_stamp_marks_exactly_light_dirty() {
 #[test]
 fn harness_ffi_stamp_marks_exactly_noise_dirty() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
 
     // Type A: Noise dirty_regions.len() == 1 (C11 — 5th stamped channel)
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Noise as usize].len();
-    assert_eq!(len, 1, "Noise dirty_regions.len() must be 1 (T7.10.C adds Noise to STAMPED_CHANNELS); got {len}");
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Noise as usize].len();
+    assert_eq!(
+        len, 1,
+        "Noise dirty_regions.len() must be 1 (T7.10.C adds Noise to STAMPED_CHANNELS); got {len}"
+    );
 
     // Confirm all 6 stamped channels have exactly 1 dirty region (combined membership guard,
     // T7.10.D extends to include Danger).
@@ -271,10 +279,7 @@ fn harness_ffi_stamp_marks_exactly_noise_dirty() {
     }
 
     // Non-stamped channels remain clean (mirrors A11 discriminator).
-    for ch in [
-        InfluenceChannel::FoodAroma,
-        InfluenceChannel::Social,
-    ] {
+    for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
         let clen = e.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
             clen, 0,
@@ -292,15 +297,14 @@ fn harness_ffi_stamp_marks_exactly_noise_dirty() {
 #[test]
 fn harness_ffi_non_stamped_channels_produce_zero_dirty_regions() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
-    for ch in [
-        InfluenceChannel::FoodAroma,
-        InfluenceChannel::Social,
-    ] {
+    for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
         let len = e.resources.influence_grid.dirty_regions[ch as usize].len();
         // Type A: threshold == 0 for both non-stamped channels
         assert_eq!(
@@ -319,10 +323,12 @@ fn harness_ffi_non_stamped_channels_produce_zero_dirty_regions() {
 #[test]
 fn harness_ffi_oob_event_discarded_no_dirty_regions_queue_drained() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (999, 999),
-        radius: 1,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (999, 999),
+            radius: 1,
+        });
     bss_tick(&mut e);
     // Type A: (b) queue.len() == 0 (event consumed via pop_front before OOB check)
     assert_eq!(
@@ -351,20 +357,37 @@ fn harness_ffi_oob_event_discarded_no_dirty_regions_queue_drained() {
 #[test]
 fn harness_ffi_dirty_region_coordinate_bounds_match_input() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
-    let regs =
-        &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
+    let regs = &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
     assert_eq!(regs.len(), 1, "expected exactly 1 dirty region for Warmth");
     let r = &regs[0];
     // Type A: exact spatial bounds {17,17,23,23} — Chebyshev box 20±3
-    assert_eq!(r.min_x, 17, "min_x must be exactly 17 (20−3=17), got {}", r.min_x);
-    assert_eq!(r.max_x, 23, "max_x must be exactly 23 (20+3=23), got {}", r.max_x);
-    assert_eq!(r.min_y, 17, "min_y must be exactly 17 (20−3=17), got {}", r.min_y);
-    assert_eq!(r.max_y, 23, "max_y must be exactly 23 (20+3=23), got {}", r.max_y);
+    assert_eq!(
+        r.min_x, 17,
+        "min_x must be exactly 17 (20−3=17), got {}",
+        r.min_x
+    );
+    assert_eq!(
+        r.max_x, 23,
+        "max_x must be exactly 23 (20+3=23), got {}",
+        r.max_x
+    );
+    assert_eq!(
+        r.min_y, 17,
+        "min_y must be exactly 17 (20−3=17), got {}",
+        r.min_y
+    );
+    assert_eq!(
+        r.max_y, 23,
+        "max_y must be exactly 23 (20+3=23), got {}",
+        r.max_y
+    );
 }
 
 // ─── A14: three_events_all_drained_in_single_tick ────────────────────────────
@@ -376,18 +399,24 @@ fn harness_ffi_dirty_region_coordinate_bounds_match_input() {
 #[test]
 fn harness_ffi_three_events_all_drained_in_single_tick() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (10, 10),
-        radius: 2,
-    });
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (30, 30),
-        radius: 1,
-    });
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (50, 50),
-        radius: 5,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (10, 10),
+            radius: 2,
+        });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (30, 30),
+            radius: 1,
+        });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (50, 50),
+            radius: 5,
+        });
     bss_tick(&mut e);
     // Type A: (a) queue.len() == 0 (while-loop drains all, not just first)
     assert_eq!(
@@ -412,18 +441,24 @@ fn harness_ffi_three_events_all_drained_in_single_tick() {
 #[test]
 fn harness_ffi_three_events_all_4_stamped_channels_three_dirty_regions() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (10, 10),
-        radius: 2,
-    });
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (30, 30),
-        radius: 1,
-    });
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (50, 50),
-        radius: 5,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (10, 10),
+            radius: 2,
+        });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (30, 30),
+            radius: 1,
+        });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (50, 50),
+            radius: 5,
+        });
     bss_tick(&mut e);
     for ch in [
         InfluenceChannel::Warmth,
@@ -452,14 +487,15 @@ fn harness_ffi_three_events_all_4_stamped_channels_three_dirty_regions() {
 #[test]
 fn harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bounds() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (1, 1),
-        radius: 100, // saturating arithmetic + grid-clamp required
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (1, 1),
+            radius: 100, // saturating arithmetic + grid-clamp required
+        });
     // Type A: (a) no panic — test returning normally = pass
     bss_tick(&mut e);
-    let regs =
-        &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
+    let regs = &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
     // Type A: (b) len == 1 (one event → one dirty region)
     assert_eq!(
         regs.len(),
@@ -468,10 +504,26 @@ fn harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bou
     );
     // Type A: (c) exact clamped bounds {0, 0, 63, 63}
     let r = &regs[0];
-    assert_eq!(r.min_x, 0, "min_x must be exactly 0 (1.saturating_sub(100)=0), got {}", r.min_x);
-    assert_eq!(r.min_y, 0, "min_y must be exactly 0 (1.saturating_sub(100)=0), got {}", r.min_y);
-    assert_eq!(r.max_x, 63, "max_x must be exactly 63 (clamped to w−1=63), got {}", r.max_x);
-    assert_eq!(r.max_y, 63, "max_y must be exactly 63 (clamped to h−1=63), got {}", r.max_y);
+    assert_eq!(
+        r.min_x, 0,
+        "min_x must be exactly 0 (1.saturating_sub(100)=0), got {}",
+        r.min_x
+    );
+    assert_eq!(
+        r.min_y, 0,
+        "min_y must be exactly 0 (1.saturating_sub(100)=0), got {}",
+        r.min_y
+    );
+    assert_eq!(
+        r.max_x, 63,
+        "max_x must be exactly 63 (clamped to w−1=63), got {}",
+        r.max_x
+    );
+    assert_eq!(
+        r.max_y, 63,
+        "max_y must be exactly 63 (clamped to h−1=63), got {}",
+        r.max_y
+    );
 }
 
 // ─── A17-mixed: mixed_oob_then_valid_event_proves_continue_not_break ─────────
@@ -492,15 +544,19 @@ fn harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bou
 fn harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break() {
     let mut e = fresh_64();
     // First: OOB event — must be discarded via `continue`, NOT via `return`/`break`
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (999, 999),
-        radius: 1,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (999, 999),
+            radius: 1,
+        });
     // Second: valid event — must be processed despite the preceding OOB event
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (30, 30),
-        radius: 2,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (30, 30),
+            radius: 2,
+        });
     bss_tick(&mut e);
     // Type A: (a) queue fully drained — both events consumed via pop_front
     assert_eq!(
@@ -526,14 +582,10 @@ fn harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break() {
         );
     }
     // Type A: (c) 2 non-stamped channels remain clean
-    for ch in [
-        InfluenceChannel::FoodAroma,
-        InfluenceChannel::Social,
-    ] {
+    for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
         let len = e.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
-            len,
-            0,
+            len, 0,
             "non-stamped {ch:?} must have 0 dirty regions, got {len}"
         );
     }
@@ -549,10 +601,12 @@ fn harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break() {
 fn harness_ffi_no_dirty_regions_accumulate_on_empty_queue_tick() {
     let mut e = fresh_64();
     // Tick 1: one event → BSS drains and marks dirty
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (20, 20),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (20, 20),
+            radius: 3,
+        });
     bss_tick(&mut e);
     let after_tick1 =
         e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
@@ -595,7 +649,10 @@ fn harness_ffi_isolation_invariant_survives_empty_queue_tick() {
     // (3) Swap pending → current
     e.resources.influence_grid.swap();
     // Type D: value 200 must survive (BSS empty-queue tick must not clobber pending)
-    let val = e.resources.influence_grid.sample(5, 5, InfluenceChannel::Warmth);
+    let val = e
+        .resources
+        .influence_grid
+        .sample(5, 5, InfluenceChannel::Warmth);
     assert_eq!(
         val, 200,
         "sample(5,5,Warmth) must be 200 — BSS isolation invariant must survive T7.7.B drain code"
@@ -619,8 +676,7 @@ fn harness_ffi_dirty_regions_all_channels_empty_at_construction() {
         let len = e.resources.influence_grid.dirty_regions[*ch as usize].len();
         // Type A: threshold == 0 (construction invariant)
         assert_eq!(
-            len,
-            0,
+            len, 0,
             "dirty_regions[{ch:?}].len() must be 0 at construction, got {len}"
         );
     }
@@ -644,10 +700,12 @@ fn harness_ffi_dirty_regions_all_channels_empty_at_construction() {
 #[test]
 fn harness_ffi_radius_zero_produces_single_pixel_dirty_region() {
     let mut e = fresh_64();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (63, 63), // max-corner of 64×64 grid (inclusive)
-        radius: 0,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (63, 63), // max-corner of 64×64 grid (inclusive)
+            radius: 0,
+        });
     bss_tick(&mut e);
 
     for ch in [
@@ -662,8 +720,7 @@ fn harness_ffi_radius_zero_produces_single_pixel_dirty_region() {
         let len = regs.len();
         // Type A: threshold == 1 (radius=0 must not be treated as "no stamp")
         assert_eq!(
-            len,
-            1,
+            len, 1,
             "{ch:?} dirty_regions.len() must be 1 for radius=0 corner event, got {len}"
         );
         let r = &regs[0];
@@ -691,15 +748,11 @@ fn harness_ffi_radius_zero_produces_single_pixel_dirty_region() {
     }
 
     // Non-stamped channels must remain untouched.
-    for ch in [
-        InfluenceChannel::FoodAroma,
-        InfluenceChannel::Social,
-    ] {
+    for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
         let len = e.resources.influence_grid.dirty_regions[ch as usize].len();
         // Type A: threshold == 0 (radius=0 event must not spill to non-stamped channels)
         assert_eq!(
-            len,
-            0,
+            len, 0,
             "non-stamped {ch:?} must have 0 dirty regions for radius=0 event, got {len}"
         );
     }

@@ -8,16 +8,16 @@
 //! Run via: `cargo test -p sim-test harness_ -- --nocapture`
 
 use hecs::World;
+use sim_core::components::Position;
 use sim_core::influence::InfluenceChannel;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use sim_systems::register_phase2_systems;
+use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 use sim_systems::runtime::influence::{
     AgentInfluenceSampleSystem, BuildingStampSystem, InfluenceUpdateSystem,
     InfluenceVisualizationSystem,
 };
-use sim_core::components::Position;
-use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
 

@@ -244,13 +244,14 @@ impl RuntimeSystem for InfluenceUpdateSystem {
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
         // std::mem::take replaces with an empty Vec — this IS the drain (Cold-tier
         // event-driven semantics require consuming the regions, not just reading them).
-        let warmth_dirty =
-            std::mem::take(&mut resources.influence_grid.dirty_regions[warmth_idx]);
+        let warmth_dirty = std::mem::take(&mut resources.influence_grid.dirty_regions[warmth_idx]);
 
         if !warmth_dirty.is_empty() {
             // Fresh BFS pass for this tick: clear pending[Warmth] first so multiple
             // calls to propagate_bfs accumulate (Additive aggregation) onto a clean slate.
-            resources.influence_grid.clear_pending(InfluenceChannel::Warmth);
+            resources
+                .influence_grid
+                .clear_pending(InfluenceChannel::Warmth);
 
             for region in &warmth_dirty {
                 // Use dirty region center as the BFS source. For a single-building event
@@ -262,8 +263,9 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                 // Borrow disjoint SimResources fields for the propagate_bfs call.
                 let tile_grid = &resources.tile_grid;
                 let blocking_cache = &resources.material_blocking_cache;
-                let pending =
-                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Warmth);
+                let pending = resources
+                    .influence_grid
+                    .pending_buf_mut(InfluenceChannel::Warmth);
 
                 propagate_bfs(
                     tile_grid,
@@ -308,29 +310,29 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // disc must persist. Copy current[Warmth] into pending[Warmth] so the
             // swap below is a no-op for Warmth. Without this, every event-less tick
             // would zero current[Warmth] causing the rendered disc to flicker.
-            let warmth_snapshot =
-                resources.influence_grid.current[warmth_idx].clone();
-            resources.influence_grid.pending[warmth_idx]
-                .copy_from_slice(&warmth_snapshot);
+            let warmth_snapshot = resources.influence_grid.current[warmth_idx].clone();
+            resources.influence_grid.pending[warmth_idx].copy_from_slice(&warmth_snapshot);
         }
 
         // ── Light branch (T7.10.B) ───────────────────────────────────────────
         // Drain Light dirty regions left by BSS (Light is in STAMPED_CHANNELS).
-        let light_dirty =
-            std::mem::take(&mut resources.influence_grid.dirty_regions[light_idx]);
+        let light_dirty = std::mem::take(&mut resources.influence_grid.dirty_regions[light_idx]);
 
         if !light_dirty.is_empty() {
             // Fresh shadowcast pass: clear pending[Light] so multiple sources
             // accumulate (Max aggregation) onto a clean slate.
-            resources.influence_grid.clear_pending(InfluenceChannel::Light);
+            resources
+                .influence_grid
+                .clear_pending(InfluenceChannel::Light);
 
             for region in &light_dirty {
                 let cx = (region.min_x + region.max_x) / 2;
                 let cy = (region.min_y + region.max_y) / 2;
 
                 let tile_grid = &resources.tile_grid;
-                let pending =
-                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Light);
+                let pending = resources
+                    .influence_grid
+                    .pending_buf_mut(InfluenceChannel::Light);
 
                 propagate_shadowcast(
                     tile_grid,
@@ -367,21 +369,20 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // Light field survives event-less ticks. Phase 0 Warm-tier "staggered
             // 1 channel per tick" scheduling is deferred to a later optimization;
             // for T7.10.B we copy current[Light] → pending[Light] to avoid flicker.
-            let light_snapshot =
-                resources.influence_grid.current[light_idx].clone();
-            resources.influence_grid.pending[light_idx]
-                .copy_from_slice(&light_snapshot);
+            let light_snapshot = resources.influence_grid.current[light_idx].clone();
+            resources.influence_grid.pending[light_idx].copy_from_slice(&light_snapshot);
         }
 
         // ── Noise branch (T7.10.C) ───────────────────────────────────────────
         // Drain Noise dirty regions left by BSS (Noise is in STAMPED_CHANNELS).
-        let noise_dirty =
-            std::mem::take(&mut resources.influence_grid.dirty_regions[noise_idx]);
+        let noise_dirty = std::mem::take(&mut resources.influence_grid.dirty_regions[noise_idx]);
 
         if !noise_dirty.is_empty() {
             // Fresh linear-decay pass: clear pending[Noise] so multiple sources
             // accumulate (Max aggregation) onto a clean slate.
-            resources.influence_grid.clear_pending(InfluenceChannel::Noise);
+            resources
+                .influence_grid
+                .clear_pending(InfluenceChannel::Noise);
 
             for region in &noise_dirty {
                 let cx = (region.min_x + region.max_x) / 2;
@@ -389,8 +390,9 @@ impl RuntimeSystem for InfluenceUpdateSystem {
 
                 let tile_grid = &resources.tile_grid;
                 let blocking_cache = &resources.material_blocking_cache;
-                let pending =
-                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Noise);
+                let pending = resources
+                    .influence_grid
+                    .pending_buf_mut(InfluenceChannel::Noise);
 
                 propagate_noise(
                     tile_grid,
@@ -429,38 +431,33 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // the only Noise source — persistence keeps the disc stable for the
             // visualisation toggle. When agents arrive (Phase 3+) this branch can
             // be replaced with an empty pending (no persistence, true Hot-tier).
-            let noise_snapshot =
-                resources.influence_grid.current[noise_idx].clone();
-            resources.influence_grid.pending[noise_idx]
-                .copy_from_slice(&noise_snapshot);
+            let noise_snapshot = resources.influence_grid.current[noise_idx].clone();
+            resources.influence_grid.pending[noise_idx].copy_from_slice(&noise_snapshot);
         }
 
         // ── Danger branch (T7.10.D) ──────────────────────────────────────────
         // Drain Danger dirty regions left by BSS (Danger is in STAMPED_CHANNELS).
-        let danger_dirty =
-            std::mem::take(&mut resources.influence_grid.dirty_regions[danger_idx]);
+        let danger_dirty = std::mem::take(&mut resources.influence_grid.dirty_regions[danger_idx]);
 
         if !danger_dirty.is_empty() {
             // Fresh linear-decay pass (alpha=5, cap=15, no walls): clear pending[Danger]
             // so multiple sources accumulate (Max aggregation) onto a clean slate.
-            resources.influence_grid.clear_pending(InfluenceChannel::Danger);
+            resources
+                .influence_grid
+                .clear_pending(InfluenceChannel::Danger);
 
             for region in &danger_dirty {
                 let cx = (region.min_x + region.max_x) / 2;
                 let cy = (region.min_y + region.max_y) / 2;
 
                 let tile_grid = &resources.tile_grid;
-                let pending =
-                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Danger);
+                let pending = resources
+                    .influence_grid
+                    .pending_buf_mut(InfluenceChannel::Danger);
 
                 // propagate_danger locks Phase 0 v0.1.1 ISSUE 3 fix:
                 //   alpha=5, max_radius=15, blocking_cache=None (pierces walls).
-                propagate_danger(
-                    tile_grid,
-                    pending,
-                    (cx, cy),
-                    DANGER_INITIAL_INTENSITY,
-                );
+                propagate_danger(tile_grid, pending, (cx, cy), DANGER_INITIAL_INTENSITY);
 
                 // Phase 3-α + Phase 3-β: chain to matching same-channel
                 // StampDirty on the same centre tile.
@@ -492,10 +489,8 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // for the visualisation toggle. When agents arrive (Phase 3+) this
             // branch can be replaced with an empty pending (no persistence,
             // true Hot-tier).
-            let danger_snapshot =
-                resources.influence_grid.current[danger_idx].clone();
-            resources.influence_grid.pending[danger_idx]
-                .copy_from_slice(&danger_snapshot);
+            let danger_snapshot = resources.influence_grid.current[danger_idx].clone();
+            resources.influence_grid.pending[danger_idx].copy_from_slice(&danger_snapshot);
         }
 
         // ── Spiritual branch (T7.10.E) ───────────────────────────────────────
@@ -507,7 +502,9 @@ impl RuntimeSystem for InfluenceUpdateSystem {
         if !spiritual_dirty.is_empty() {
             // Fresh BFS exponential pass: clear pending[Spiritual] so multiple
             // sources accumulate (Max aggregation) onto a clean slate.
-            resources.influence_grid.clear_pending(InfluenceChannel::Spiritual);
+            resources
+                .influence_grid
+                .clear_pending(InfluenceChannel::Spiritual);
 
             for region in &spiritual_dirty {
                 let cx = (region.min_x + region.max_x) / 2;
@@ -556,22 +553,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // Cold-tier persistence (T7.10.E, parity with Warmth): copy
             // current[Spiritual] → pending[Spiritual] so the swap is a no-op
             // for Spiritual on event-less ticks.
-            let spiritual_snapshot =
-                resources.influence_grid.current[spiritual_idx].clone();
-            resources.influence_grid.pending[spiritual_idx]
-                .copy_from_slice(&spiritual_snapshot);
+            let spiritual_snapshot = resources.influence_grid.current[spiritual_idx].clone();
+            resources.influence_grid.pending[spiritual_idx].copy_from_slice(&spiritual_snapshot);
         }
 
         // ── Beauty branch (T7.10.F) ──────────────────────────────────────────
         // Drain Beauty dirty regions left by BSS (Beauty was in STAMPED_CHANNELS
         // since T7.10.A; only IUS propagation was missing).
-        let beauty_dirty =
-            std::mem::take(&mut resources.influence_grid.dirty_regions[beauty_idx]);
+        let beauty_dirty = std::mem::take(&mut resources.influence_grid.dirty_regions[beauty_idx]);
 
         if !beauty_dirty.is_empty() {
             // Fresh BFS exponential pass: clear pending[Beauty] so multiple
             // sources accumulate (Max aggregation) onto a clean slate.
-            resources.influence_grid.clear_pending(InfluenceChannel::Beauty);
+            resources
+                .influence_grid
+                .clear_pending(InfluenceChannel::Beauty);
 
             for region in &beauty_dirty {
                 let cx = (region.min_x + region.max_x) / 2;
@@ -620,10 +616,8 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // Cold-tier persistence (T7.10.F, parity with Warmth/Spiritual): copy
             // current[Beauty] → pending[Beauty] so the swap is a no-op for Beauty
             // on event-less ticks.
-            let beauty_snapshot =
-                resources.influence_grid.current[beauty_idx].clone();
-            resources.influence_grid.pending[beauty_idx]
-                .copy_from_slice(&beauty_snapshot);
+            let beauty_snapshot = resources.influence_grid.current[beauty_idx].clone();
+            resources.influence_grid.pending[beauty_idx].copy_from_slice(&beauty_snapshot);
         }
 
         // Remaining 2 unstamped channels (FoodAroma, Social): dispatch-shell
@@ -716,7 +710,9 @@ mod tests {
         let mut s = InfluenceUpdateSystem::new();
         s.tick(&mut e.world, &mut e.resources);
         assert_eq!(
-            e.resources.influence_grid.sample(10, 10, InfluenceChannel::Warmth),
+            e.resources
+                .influence_grid
+                .sample(10, 10, InfluenceChannel::Warmth),
             0
         );
     }

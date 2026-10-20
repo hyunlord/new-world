@@ -69,11 +69,7 @@ fn harness_carry_viz_agent_snapshot_carried_food() {
     // Plan A4 — parallel-array contract: one row per (Agent, Position) entity.
     // The Option<&Inventory> in the query tuple must NOT drop the no-inventory
     // agent. Compare against the independently-counted (Agent, Position) set.
-    let agent_pos_count = e
-        .world
-        .query::<(&Agent, &Position)>()
-        .iter()
-        .count();
+    let agent_pos_count = e.world.query::<(&Agent, &Position)>().iter().count();
     // Type A: rows.len() == count of (Agent, Position) entities (exact).
     assert_eq!(
         rows.len(),
@@ -81,10 +77,18 @@ fn harness_carry_viz_agent_snapshot_carried_food() {
         "rows.len() must equal the (Agent, Position) entity count (Option non-filtering)"
     );
     // Type A: with three spawned agents, that count is exactly 3.
-    assert_eq!(rows.len(), 3, "exactly one snapshot row per spawned agent (3)");
+    assert_eq!(
+        rows.len(),
+        3,
+        "exactly one snapshot row per spawned agent (3)"
+    );
 
     // Type A: agent carrying Food=7 reports carried_food == 7 (exact).
-    assert_eq!(carried_food_for(&rows, a), 7, "Food=7 → carried_food=7 (plan A1)");
+    assert_eq!(
+        carried_food_for(&rows, a),
+        7,
+        "Food=7 → carried_food=7 (plan A1)"
+    );
     // Type A: Water=4 / Food=0 reports carried_food == 0 (anti-total() guard).
     assert_eq!(
         carried_food_for(&rows, b),
@@ -92,7 +96,11 @@ fn harness_carry_viz_agent_snapshot_carried_food() {
         "Water=4, Food=0 → carried_food=0 (plan A2: reads get(Food), not total())"
     );
     // Type A: agent with no Inventory reports carried_food == 0 (None branch).
-    assert_eq!(carried_food_for(&rows, c), 0, "no Inventory → carried_food=0 (plan A3)");
+    assert_eq!(
+        carried_food_for(&rows, c),
+        0,
+        "no Inventory → carried_food=0 (plan A3)"
+    );
 
     println!(
         "[2-5b] carried_food: A(Food=7)=7, B(Water=4,Food=0)=0, C(no-inv)=0; rows={} ✓",
@@ -112,7 +120,10 @@ fn harness_carry_viz_carried_food_tracks_inventory_change() {
 
     let before = collect_agent_snapshot(&e.world);
     // Type A: first collection carried_food == 7.
-    assert_eq!(before[0].carried_food, 7, "before deposit: carried_food=7 (plan A5)");
+    assert_eq!(
+        before[0].carried_food, 7,
+        "before deposit: carried_food=7 (plan A5)"
+    );
 
     // Simulate the real deposit event (2-3a drains Inventory Food → stockpile).
     if let Ok(mut inv) = e.world.get::<&mut Inventory>(a) {
@@ -122,6 +133,9 @@ fn harness_carry_viz_carried_food_tracks_inventory_change() {
 
     let after = collect_agent_snapshot(&e.world);
     // Type A: second collection carried_food == 0.
-    assert_eq!(after[0].carried_food, 0, "after deposit: carried_food drops to 0 (plan A5)");
+    assert_eq!(
+        after[0].carried_food, 0,
+        "after deposit: carried_food drops to 0 (plan A5)"
+    );
     println!("[2-5b] carried_food tracks live Inventory: 7 → 0 on deposit ✓");
 }

@@ -25,7 +25,9 @@ mod tests {
 
     #[test]
     fn healing_is_blocked_for_the_marked_hour_and_the_block() {
-        let clock = ExposureClock { last_cold_tick: 600 };
+        let clock = ExposureClock {
+            last_cold_tick: 600,
+        };
         // Marked at 600: blocked through 659 (the hour) plus two hours (to 779).
         assert!(clock.blocks_healing(600, 2));
         assert!(clock.blocks_healing(779, 2));

@@ -252,7 +252,9 @@ fn harness_mig_unfreeze_a2_outsider_paths_not_frozen() {
     assert!(
         matches!(
             agent_state(&e, outsider),
-            AgentState::Seeking { target: TargetKind::Agent(_) }
+            AgentState::Seeking {
+                target: TargetKind::Agent(_)
+            }
         ),
         "A2: P10-γ — non-member outsider transitions to Seeking{{Agent(member)}} (walks)"
     );
@@ -340,8 +342,12 @@ fn harness_mig_unfreeze_a5a_long_run_no_targetless_seek() {
                 .query::<(&Agent, &AgentState, Option<&SeekTarget>)>()
                 .iter()
             {
-                if matches!(state, AgentState::Seeking { target: TargetKind::Agent(_) })
-                    && seek.is_none()
+                if matches!(
+                    state,
+                    AgentState::Seeking {
+                        target: TargetKind::Agent(_)
+                    }
+                ) && seek.is_none()
                 {
                     c += 1;
                 }
@@ -458,13 +464,17 @@ fn harness_mig_unfreeze_a6_gathering_loop_preserved() {
     dec.tick(&mut e.world, &mut e.resources);
     assert_eq!(
         agent_state(&e, a),
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A6: Idle → Seeking{{Food}}"
     );
     dec.tick(&mut e.world, &mut e.resources);
     assert_eq!(
         agent_state(&e, a),
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food
+        },
         "A6: Seeking{{Food}} → Consuming{{Food}}"
     );
     println!("[mig-unfreeze A6] gathering loop Idle→Seeking{{Food}}→Consuming{{Food}} preserved ✓");
@@ -489,7 +499,9 @@ fn harness_mig_unfreeze_a7_social_path_preserved() {
         .insert(
             a,
             (
-                AgentState::Seeking { target: TargetKind::Agent(bid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(bid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)), // persistent social marker
             ),
@@ -499,7 +511,9 @@ fn harness_mig_unfreeze_a7_social_path_preserved() {
         .insert(
             b,
             (
-                AgentState::Seeking { target: TargetKind::Agent(aid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(aid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)),
             ),
@@ -511,8 +525,16 @@ fn harness_mig_unfreeze_a7_social_path_preserved() {
 
     let at = seek_tile(&e, a).expect("A7: A must carry a SeekTarget");
     let bt = seek_tile(&e, b).expect("A7: B must carry a SeekTarget");
-    assert_eq!(at, (8, 5), "A7: A's SeekTarget must be partner B's tile (8,5)");
-    assert_eq!(bt, (5, 5), "A7: B's SeekTarget must be partner A's tile (5,5)");
+    assert_eq!(
+        at,
+        (8, 5),
+        "A7: A's SeekTarget must be partner B's tile (8,5)"
+    );
+    assert_eq!(
+        bt,
+        (5, 5),
+        "A7: B's SeekTarget must be partner A's tile (5,5)"
+    );
     assert_ne!(at, (5, 5), "A7: A's SeekTarget must NOT be its own tile");
     assert_ne!(bt, (8, 5), "A7: B's SeekTarget must NOT be its own tile");
     println!("[mig-unfreeze A7] Social ζ path preserved (partner SeekTargets attached, not own) ✓");
@@ -543,10 +565,16 @@ fn harness_mig_unfreeze_a8_determinism_preserved() {
     }
     let m1 = run();
     let m2 = run();
-    assert!(!m1.is_empty(), "A8: non-empty floor — bootstrap must spawn agents");
+    assert!(
+        !m1.is_empty(),
+        "A8: non-empty floor — bootstrap must spawn agents"
+    );
     assert_eq!(
         m1, m2,
         "A8: two independent bootstrap+building runs must yield identical {{id→(pos,state)}} maps"
     );
-    println!("[mig-unfreeze A8] determinism preserved across two 200-tick runs ({} agents) ✓", m1.len());
+    println!(
+        "[mig-unfreeze A8] determinism preserved across two 200-tick runs ({} agents) ✓",
+        m1.len()
+    );
 }

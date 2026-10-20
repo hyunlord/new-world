@@ -176,11 +176,24 @@ pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
     });
     let economy = super::long_run::metrics(engine);
     let fixed_supply = economy["food_supply_per_day"].as_f64().unwrap_or(0.0);
-    for extra in [economy, super::pass4::metrics(engine, fixed_supply), super::pass5::metrics(engine),
-        super::pass6::metrics(engine), super::pass7::metrics(engine), super::pass8::metrics(engine),
-        super::pass10::metrics(engine), super::pass11::metrics(engine), super::pass12::metrics(engine), super::pass13::metrics(engine)] {
+    for extra in [
+        economy,
+        super::pass4::metrics(engine, fixed_supply),
+        super::pass5::metrics(engine),
+        super::pass6::metrics(engine),
+        super::pass7::metrics(engine),
+        super::pass8::metrics(engine),
+        super::pass10::metrics(engine),
+        super::pass11::metrics(engine),
+        super::pass12::metrics(engine),
+        super::pass13::metrics(engine),
+    ] {
         if let (Some(base), Some(extra)) = (row.as_object_mut(), extra.as_object()) {
-            base.extend(extra.iter().map(|(key, value)| (key.clone(), value.clone())));
+            base.extend(
+                extra
+                    .iter()
+                    .map(|(key, value)| (key.clone(), value.clone())),
+            );
         }
     }
     row

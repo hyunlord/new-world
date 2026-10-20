@@ -75,7 +75,10 @@ fn spawn_controlled(e: &mut SimEngine, x: u32, y: u32, hp: f64) -> (Entity, Agen
             ent,
             (
                 AgentState::Idle,
-                BodyHealth { hp, max_hp: DEFAULT_MAX_HP },
+                BodyHealth {
+                    hp,
+                    max_hp: DEFAULT_MAX_HP,
+                },
                 Hunger::new(0.0, 0.0),
                 Thirst::new(0.0, 0.0),
                 Memory::new(),
@@ -138,7 +141,13 @@ fn drive_to_death(
 fn find_agent_died(e: &SimEngine, id: AgentId) -> Option<(DeathReason, u64)> {
     for (_t, log) in e.resources.causal_log.iter() {
         for ev in log.iter() {
-            if let CausalEvent::AgentDied { agent, reason, tick, .. } = ev {
+            if let CausalEvent::AgentDied {
+                agent,
+                reason,
+                tick,
+                ..
+            } = ev
+            {
                 if *agent == id {
                     return Some((*reason, *tick));
                 }
@@ -207,7 +216,10 @@ fn place_startup_buildings(e: &mut SimEngine) {
     for pos in [(32u32, 32u32), (24, 32), (40, 32)] {
         e.resources
             .building_event_queue
-            .push_back(BuildingPlacedEvent { position: pos, radius: 8 });
+            .push_back(BuildingPlacedEvent {
+                position: pos,
+                radius: 8,
+            });
     }
 }
 
@@ -236,7 +248,10 @@ fn harness_starvation_a1_hp_decays_under_hunger() {
     let drop = hp0 - hp1;
 
     println!("[starvation A1] hp0={hp0:.4} hp1={hp1:.4} drop={drop:.4} (expect ~16.0)");
-    assert!(hp1 < hp0, "A1: hp must strictly decrease under hunger saturation");
+    assert!(
+        hp1 < hp0,
+        "A1: hp must strictly decrease under hunger saturation"
+    );
     assert!(
         (13.0..=19.0).contains(&drop),
         "A1: hp drop over 200 ticks must be in [13,19]; got {drop:.4}"
@@ -261,7 +276,10 @@ fn harness_starvation_a2_gray_zone_neutral() {
         sys.tick(&mut e.world, &mut e.resources);
     }
     let hp_start = hp(&e, ent);
-    assert!(hp_start < 100.0 && hp_start > 0.0, "A2 setup: hp must be sub-max and >0");
+    assert!(
+        hp_start < 100.0 && hp_start > 0.0,
+        "A2 setup: hp must be sub-max and >0"
+    );
 
     // Neutral window: both needs at 75.0 for 300 ticks.
     for t in 250..550u64 {
@@ -294,7 +312,11 @@ fn harness_starvation_a3_hunger_death_tick_and_reason() {
         "A3: hunger death tick must be in [1238,1262]; got {death}"
     );
     let (reason, _t) = find_agent_died(&e, id).expect("A3: AgentDied event must exist");
-    assert_eq!(reason, DeathReason::Starvation, "A3: reason must be Starvation");
+    assert_eq!(
+        reason,
+        DeathReason::Starvation,
+        "A3: reason must be Starvation"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -319,7 +341,11 @@ fn harness_starvation_a4_thirst_death_faster_dehydration() {
         "A4: thirst death tick must be in [820,848]; got {thirst_death}"
     );
     let (reason, _t) = find_agent_died(&e_t, id_t).expect("A4: AgentDied event must exist");
-    assert_eq!(reason, DeathReason::Dehydration, "A4: reason must be Dehydration");
+    assert_eq!(
+        reason,
+        DeathReason::Dehydration,
+        "A4: reason must be Dehydration"
+    );
     assert!(
         thirst_death < hunger_death,
         "A4: thirst death ({thirst_death}) must be strictly before hunger death ({hunger_death})"
@@ -354,19 +380,31 @@ fn harness_starvation_a6_death_reason_precedence() {
     let (ent_a, id_a) = spawn_controlled(&mut e_a, 10, 10, 100.0);
     drive_to_death(&mut e_a, ent_a, Some(SAT), Some(0.0), 1400);
     let (ra, _) = find_agent_died(&e_a, id_a).expect("A6a event");
-    assert_eq!(ra, DeathReason::Starvation, "A6(a): hunger-only → Starvation");
+    assert_eq!(
+        ra,
+        DeathReason::Starvation,
+        "A6(a): hunger-only → Starvation"
+    );
 
     let mut e_b = iso_engine();
     let (ent_b, id_b) = spawn_controlled(&mut e_b, 10, 10, 100.0);
     drive_to_death(&mut e_b, ent_b, Some(0.0), Some(SAT_T), 1000);
     let (rb, _) = find_agent_died(&e_b, id_b).expect("A6b event");
-    assert_eq!(rb, DeathReason::Dehydration, "A6(b): thirst-only → Dehydration");
+    assert_eq!(
+        rb,
+        DeathReason::Dehydration,
+        "A6(b): thirst-only → Dehydration"
+    );
 
     let mut e_c = iso_engine();
     let (ent_c, id_c) = spawn_controlled(&mut e_c, 10, 10, 100.0);
     drive_to_death(&mut e_c, ent_c, Some(SAT), Some(SAT_T), 700);
     let (rc, _) = find_agent_died(&e_c, id_c).expect("A6c event");
-    assert_eq!(rc, DeathReason::Dehydration, "A6(c): both saturated → Dehydration (precedence)");
+    assert_eq!(
+        rc,
+        DeathReason::Dehydration,
+        "A6(c): both saturated → Dehydration (precedence)"
+    );
     println!("[starvation A6] reasons a={ra:?} b={rb:?} c={rc:?} ✓");
 }
 
@@ -380,11 +418,18 @@ fn harness_starvation_a7_event_one_to_one() {
     let mut e = iso_engine();
     let (ent, id) = spawn_controlled(&mut e, 10, 10, 100.0);
     let death = drive_to_death(&mut e, ent, Some(SAT), Some(0.0), 1400).expect("A7: death");
-    assert_eq!(count_agent_died(&e, id), 1, "A7: exactly one AgentDied for the dead agent");
+    assert_eq!(
+        count_agent_died(&e, id),
+        1,
+        "A7: exactly one AgentDied for the dead agent"
+    );
     let (_r, event_tick) = find_agent_died(&e, id).expect("A7: event present");
     let diff = event_tick.abs_diff(death);
     println!("[starvation A7] death tick={death} event tick={event_tick} diff={diff}");
-    assert!(diff <= 1, "A7: event tick {event_tick} must be within ±1 of despawn tick {death}");
+    assert!(
+        diff <= 1,
+        "A7: event tick {event_tick} must be within ±1 of despawn tick {death}"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -422,12 +467,18 @@ fn harness_starvation_a8_hp_clamped_at_zero() {
         }
     }
     println!("[starvation A8] min_hp={min_hp:.6} last_hp_before_death={last_hp:.6}");
-    assert!(min_hp >= 0.0, "A8(a): observed hp must never be negative; got {min_hp}");
+    assert!(
+        min_hp >= 0.0,
+        "A8(a): observed hp must never be negative; got {min_hp}"
+    );
     assert!(
         last_hp <= 0.01,
         "A8(b): agent must persist until hp reaches ~0; last live hp {last_hp:.6} > 0.01"
     );
-    assert!(present_ok, "A8(c): agent must be present at every sampled tick where hp > 0");
+    assert!(
+        present_ok,
+        "A8(c): agent must be present at every sampled tick where hp > 0"
+    );
     assert!(!alive(&e, ent), "A8: agent must be dead after the window");
 }
 
@@ -449,7 +500,10 @@ fn harness_starvation_a9_settlement_roster_cleanup() {
     drive_to_death(&mut e, ent, Some(SAT), Some(0.0), 1400).expect("A9: death");
 
     let s = &e.resources.settlements[&sid];
-    assert!(!s.member_agents.contains(&id), "A9(a): dead agent removed from member_agents");
+    assert!(
+        !s.member_agents.contains(&id),
+        "A9(a): dead agent removed from member_agents"
+    );
     assert_eq!(
         s.population_stats.total_deaths,
         deaths_before + 1,
@@ -460,7 +514,10 @@ fn harness_starvation_a9_settlement_roster_cleanup() {
         s.member_agents.len(),
         "A9(c): current must equal member_agents.len()"
     );
-    println!("[starvation A9] roster cleaned, total_deaths={} ✓", s.population_stats.total_deaths);
+    println!(
+        "[starvation A9] roster cleaned, total_deaths={} ✓",
+        s.population_stats.total_deaths
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -476,12 +533,22 @@ fn harness_starvation_a10_combat_death_roster_cleanup() {
     let attacker_id = e.world.get::<&Agent>(attacker).unwrap().id;
     let defender_id = e.world.get::<&Agent>(defender).unwrap().id;
     e.world
-        .insert(attacker, (AgentState::Idle, BodyHealth::new(), Memory::new()))
+        .insert(
+            attacker,
+            (AgentState::Idle, BodyHealth::new(), Memory::new()),
+        )
         .unwrap();
     e.world
         .insert(
             defender,
-            (AgentState::Idle, BodyHealth { hp: 5.0, max_hp: DEFAULT_MAX_HP }, Memory::new()),
+            (
+                AgentState::Idle,
+                BodyHealth {
+                    hp: 5.0,
+                    max_hp: DEFAULT_MAX_HP,
+                },
+                Memory::new(),
+            ),
         )
         .unwrap();
     let sid = make_settlement_with(&mut e, &[attacker_id, defender_id]);
@@ -498,10 +565,17 @@ fn harness_starvation_a10_combat_death_roster_cleanup() {
         "A10: scenario must produce a combat death (defender must despawn)"
     );
     let (reason, _t) = find_agent_died(&e, defender_id).expect("A10: AgentDied must be emitted");
-    assert_eq!(reason, DeathReason::Combat, "A10: combat death reason must be Combat");
+    assert_eq!(
+        reason,
+        DeathReason::Combat,
+        "A10: combat death reason must be Combat"
+    );
 
     let s = &e.resources.settlements[&sid];
-    assert!(!s.member_agents.contains(&defender_id), "A10: combat-dead member removed from roster");
+    assert!(
+        !s.member_agents.contains(&defender_id),
+        "A10: combat-dead member removed from roster"
+    );
     assert_eq!(
         s.population_stats.total_deaths,
         deaths_before + 1,
@@ -518,7 +592,10 @@ fn harness_starvation_a11_bandless_death() {
     // Type A — robustness. No settlement exists → cleanup is a no-op (no panic).
     let mut e = iso_engine();
     let (ent, id) = spawn_controlled(&mut e, 10, 10, 100.0);
-    assert!(e.resources.settlements.is_empty(), "A11 setup: no settlements");
+    assert!(
+        e.resources.settlements.is_empty(),
+        "A11 setup: no settlements"
+    );
 
     let death = drive_to_death(&mut e, ent, Some(SAT), Some(0.0), 1400);
     assert!(death.is_some(), "A11(b): bandless agent must despawn");
@@ -563,9 +640,20 @@ fn harness_starvation_a12_multiple_same_tick_deaths() {
     let d1 = d1.expect("A12: agent 1 must die");
     let d2 = d2.expect("A12: agent 2 must die");
     println!("[starvation A12] death ticks d1={d1} d2={d2}");
-    assert!(d1.abs_diff(d2) <= 1, "A12(a): both must die on the same tick (±1)");
-    assert_eq!(count_agent_died(&e, id1), 1, "A12(b): one event for agent 1");
-    assert_eq!(count_agent_died(&e, id2), 1, "A12(b): one event for agent 2");
+    assert!(
+        d1.abs_diff(d2) <= 1,
+        "A12(a): both must die on the same tick (±1)"
+    );
+    assert_eq!(
+        count_agent_died(&e, id1),
+        1,
+        "A12(b): one event for agent 1"
+    );
+    assert_eq!(
+        count_agent_died(&e, id2),
+        1,
+        "A12(b): one event for agent 2"
+    );
 
     let s = &e.resources.settlements[&sid];
     assert!(!s.member_agents.contains(&id1), "A12(c): agent 1 removed");
@@ -597,10 +685,20 @@ fn harness_starvation_a13_well_fed_never_dies() {
             max_seen = cur;
         }
     }
-    println!("[starvation A13] final hp={:.4} max_seen={max_seen:.4}", hp(&e, ent));
+    println!(
+        "[starvation A13] final hp={:.4} max_seen={max_seen:.4}",
+        hp(&e, ent)
+    );
     assert!(alive(&e, ent), "A13: well-fed agent must survive");
-    assert_eq!(hp(&e, ent), DEFAULT_MAX_HP, "A13: hp must stay exactly max_hp");
-    assert!(max_seen <= DEFAULT_MAX_HP, "A13: hp must never exceed max_hp");
+    assert_eq!(
+        hp(&e, ent),
+        DEFAULT_MAX_HP,
+        "A13: hp must stay exactly max_hp"
+    );
+    assert!(
+        max_seen <= DEFAULT_MAX_HP,
+        "A13: hp must never exceed max_hp"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -640,7 +738,10 @@ fn harness_starvation_a14_recovery_heals() {
     let hp_after = hp(&e, ent);
     let rise = hp_after - hp_feed;
     println!("[starvation A14] hp_feed={hp_feed:.4} hp_feed+200={hp_after:.4} rise={rise:.4} (expect ~10.0)");
-    assert!(rise >= 8.0, "A14: hp must rise ≥ 8.0 over the 200-tick recovery; got {rise:.4}");
+    assert!(
+        rise >= 8.0,
+        "A14: hp must rise ≥ 8.0 over the 200-tick recovery; got {rise:.4}"
+    );
     assert!(hp_after > hp_feed, "A14: hp must strictly increase");
     assert!(hp_after <= DEFAULT_MAX_HP, "A14: hp must not exceed max_hp");
     assert!(alive(&e, ent), "A14: recovering agent must survive");
@@ -657,7 +758,10 @@ fn harness_starvation_a15_universal_body_health() {
     let e = bootstrapped();
     let total = e.world.query::<&Agent>().iter().count();
     let with_bh = e.world.query::<(&Agent, &BodyHealth)>().iter().count();
-    assert_eq!(with_bh, total, "A15(a): all bootstrap agents must have BodyHealth");
+    assert_eq!(
+        with_bh, total,
+        "A15(a): all bootstrap agents must have BodyHealth"
+    );
     println!("[starvation A15a] {with_bh}/{total} bootstrap agents carry BodyHealth ✓");
 
     // (b) drive a birth — stable founders WITH BodyHealth + 2 buildings.
@@ -687,7 +791,10 @@ fn harness_starvation_a15_universal_body_health() {
     for pos in [(cx, cy + 3), (cx + 1, cy + 3)] {
         e.resources
             .building_event_queue
-            .push_back(BuildingPlacedEvent { position: pos, radius: 1 });
+            .push_back(BuildingPlacedEvent {
+                position: pos,
+                radius: 1,
+            });
     }
     // Run past the birth cooldown (founded at tick 0, birth at tick 200).
     while e.current_tick() <= 215 {
@@ -732,7 +839,8 @@ fn harness_starvation_a16_gathering_loop_preserved() {
             ),
         )
         .unwrap();
-    e.resources.set_food_tile(20, 20, sim_engine::RESOURCE_SOURCE_INFINITE);
+    e.resources
+        .set_food_tile(20, 20, sim_engine::RESOURCE_SOURCE_INFINITE);
 
     let mut min_hunger = f32::MAX;
     for _ in 0..60u64 {
@@ -743,8 +851,13 @@ fn harness_starvation_a16_gathering_loop_preserved() {
             }
         }
     }
-    println!("[starvation A16] min hunger observed = {min_hunger:.4} (ceiling {SAFE_NEED_CEILING})");
-    assert!(alive(&e, ent), "A16: an agent that can reach food must survive");
+    println!(
+        "[starvation A16] min hunger observed = {min_hunger:.4} (ceiling {SAFE_NEED_CEILING})"
+    );
+    assert!(
+        alive(&e, ent),
+        "A16: an agent that can reach food must survive"
+    );
     assert!(
         (min_hunger as f64) < SAFE_NEED_CEILING,
         "A16: hunger must drop below SAFE_NEED_CEILING (real satiation); min {min_hunger:.4}"
@@ -807,7 +920,10 @@ fn harness_starvation_a17_population_stability() {
     );
     // Population STABILITY — neither collapse nor explosion.
     assert!(final_count > 0, "A17: population must not collapse to zero");
-    assert!(final_count >= 20, "A17: population must not near-totally collapse (≥ 20)");
+    assert!(
+        final_count >= 20,
+        "A17: population must not near-totally collapse (≥ 20)"
+    );
     assert!(
         final_count <= pop_ceiling,
         "A17: population must not explode (got {final_count}, ceiling {pop_ceiling} = SETTLEMENT_MAX_POP×{SETTLEMENT_MARGIN})"
@@ -835,7 +951,10 @@ fn harness_starvation_a18_determinism() {
         set1.len(),
         set2.len()
     );
-    assert_eq!(set1, set2, "A18(a): dead-id set must be identical across runs");
+    assert_eq!(
+        set1, set2,
+        "A18(a): dead-id set must be identical across runs"
+    );
     assert_eq!(deaths1, deaths2, "A18(b): total_deaths must be identical");
     assert_eq!(live1, live2, "A18(c): final live count must be identical");
 }
@@ -865,10 +984,15 @@ fn harness_starvation_a19_heal_gate_strict_boundary_at_ceiling() {
         sys.tick(&mut e.world, &mut e.resources);
     }
     let hp1 = hp(&e, ent);
-    println!("[starvation A19] hp0={hp0:.6} hp1={hp1:.6} (need pinned at exactly {SAFE_NEED_CEILING})");
+    println!(
+        "[starvation A19] hp0={hp0:.6} hp1={hp1:.6} (need pinned at exactly {SAFE_NEED_CEILING})"
+    );
     assert_eq!(
         hp1, hp0,
         "A19: hp must be flat with needs at exactly SAFE_NEED_CEILING (heal gate is strict `<`, not `<=`)"
     );
-    assert!(alive(&e, ent), "A19: agent must stay alive at the ceiling boundary");
+    assert!(
+        alive(&e, ent),
+        "A19: agent must stay alive at the ceiling boundary"
+    );
 }

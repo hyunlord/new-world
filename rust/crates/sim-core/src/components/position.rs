@@ -68,8 +68,7 @@ mod tests {
     fn serde_round_trip_preserves_coordinates() {
         let original = Position::new(42, 17);
         let encoded = ron::to_string(&original).expect("Position must Serialize");
-        let decoded: Position =
-            ron::from_str(&encoded).expect("Position must Deserialize");
+        let decoded: Position = ron::from_str(&encoded).expect("Position must Deserialize");
         assert_eq!(original, decoded);
     }
 }

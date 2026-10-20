@@ -52,8 +52,20 @@ fn iso_engine() -> SimEngine {
 /// closing the circular-`+1` hole flagged in the plan.
 fn production_death(e: &mut SimEngine, x: u32, y: u32, reason: DeathReason, tick: u64) -> AgentId {
     let ent = e.spawn_agent(x, y);
-    let id = e.world.get::<&Agent>(ent).expect("freshly spawned agent").id;
-    despawn_agent(&mut e.world, &mut e.resources, ent, id, (x, y), reason, tick);
+    let id = e
+        .world
+        .get::<&Agent>(ent)
+        .expect("freshly spawned agent")
+        .id;
+    despawn_agent(
+        &mut e.world,
+        &mut e.resources,
+        ent,
+        id,
+        (x, y),
+        reason,
+        tick,
+    );
     id
 }
 
@@ -69,7 +81,10 @@ fn spawn_controlled(e: &mut SimEngine, x: u32, y: u32, hp: f64) -> (Entity, Agen
             ent,
             (
                 AgentState::Idle,
-                BodyHealth { hp, max_hp: DEFAULT_MAX_HP },
+                BodyHealth {
+                    hp,
+                    max_hp: DEFAULT_MAX_HP,
+                },
                 Hunger::new(0.0, 0.0),
                 Thirst::new(0.0, 0.0),
                 Memory::new(),
@@ -115,7 +130,10 @@ fn harness_death_a1_production_death_pushes_exact_entry() {
     // path reaches the shared death funnel and writes an exact-fidelity entry.
     // We measure the +1 growth AND the exact field equality (x/y/reason/tick).
     let mut e = iso_engine();
-    assert!(e.resources.recent_deaths.is_empty(), "A1: buffer must start empty");
+    assert!(
+        e.resources.recent_deaths.is_empty(),
+        "A1: buffer must start empty"
+    );
 
     // (edge case) Death on tile (0,0) — x/y of 0 must be a genuine entry, not a
     // "no data" sentinel. Low hp + saturated Hunger → StarvationSystem kills it.
@@ -128,7 +146,11 @@ fn harness_death_a1_production_death_pushes_exact_entry() {
         len_before_1 + 1,
         "A1: buffer length must increase by exactly 1 per production death"
     );
-    let d0 = e.resources.recent_deaths.last().expect("A1: first entry present");
+    let d0 = e
+        .resources
+        .recent_deaths
+        .last()
+        .expect("A1: first entry present");
     assert_eq!(d0.x, 0, "A1: x == position.0 (0,0 death is genuine)");
     assert_eq!(d0.y, 0, "A1: y == position.1 (0,0 death is genuine)");
     assert_eq!(
@@ -136,7 +158,11 @@ fn harness_death_a1_production_death_pushes_exact_entry() {
         DeathReason::Starvation,
         "A1: reason == Starvation (Hunger saturated, Thirst zero)"
     );
-    assert_eq!(u64::from(d0.tick), death_tick_0, "A1: tick == the production death tick (same clock)");
+    assert_eq!(
+        u64::from(d0.tick),
+        death_tick_0,
+        "A1: tick == the production death tick (same clock)"
+    );
 
     // A second starvation death at a nonzero tile — +1 again, all fields exact.
     let (ent1, _id1) = spawn_controlled(&mut e, 12, 34, 0.1);
@@ -148,10 +174,26 @@ fn harness_death_a1_production_death_pushes_exact_entry() {
         len_before_2 + 1,
         "A1: second production death also grows the buffer by exactly 1"
     );
-    let d1 = e.resources.recent_deaths.last().expect("A1: second entry present");
-    assert_eq!((d1.x, d1.y), (12, 34), "A1: x/y exactly equal the death position");
-    assert_eq!(d1.reason, DeathReason::Starvation, "A1: reason exactly equal (Starvation)");
-    assert_eq!(u64::from(d1.tick), death_tick_1, "A1: tick exactly equal the production death tick");
+    let d1 = e
+        .resources
+        .recent_deaths
+        .last()
+        .expect("A1: second entry present");
+    assert_eq!(
+        (d1.x, d1.y),
+        (12, 34),
+        "A1: x/y exactly equal the death position"
+    );
+    assert_eq!(
+        d1.reason,
+        DeathReason::Starvation,
+        "A1: reason exactly equal (Starvation)"
+    );
+    assert_eq!(
+        u64::from(d1.tick),
+        death_tick_1,
+        "A1: tick exactly equal the production death tick"
+    );
     println!("[viz-D A1] StarvationSystem.tick() deaths → +1 each; x/y/reason/tick all exact ✓");
 }
 
@@ -188,16 +230,29 @@ fn harness_death_a2_collector_split_mirror_buffer() {
             mismatches += 1;
         }
     }
-    assert_eq!(mismatches, 0, "A2: row/buffer field mismatches must be 0 (order preserved)");
+    assert_eq!(
+        mismatches, 0,
+        "A2: row/buffer field mismatches must be 0 (order preserved)"
+    );
 
     // (0,0) edge — the first row's xs/ys must be a genuine 0, not a sentinel.
     let (xs, ys, reasons, ticks) = recent_death_rows_split(&rows);
     assert_eq!(xs.len(), rows.len(), "A2: xs length == rows.len()");
     assert_eq!(ys.len(), rows.len(), "A2: ys length == rows.len()");
-    assert_eq!(reasons.len(), rows.len(), "A2: reasons length == rows.len()");
+    assert_eq!(
+        reasons.len(),
+        rows.len(),
+        "A2: reasons length == rows.len()"
+    );
     assert_eq!(ticks.len(), rows.len(), "A2: ticks length == rows.len()");
-    assert_eq!(xs[0], 0, "A2: (0,0) death → xs[0] == 0 (genuine, not sentinel)");
-    assert_eq!(ys[0], 0, "A2: (0,0) death → ys[0] == 0 (genuine, not sentinel)");
+    assert_eq!(
+        xs[0], 0,
+        "A2: (0,0) death → xs[0] == 0 (genuine, not sentinel)"
+    );
+    assert_eq!(
+        ys[0], 0,
+        "A2: (0,0) death → ys[0] == 0 (genuine, not sentinel)"
+    );
     for (i, r) in rows.iter().enumerate() {
         assert_eq!(xs[i], r.x, "A2: xs[i] == row.x");
         assert_eq!(ys[i], r.y, "A2: ys[i] == row.y");
@@ -221,7 +276,11 @@ fn harness_death_a3_prune_past_retain_window() {
     let mut e = iso_engine();
     let _old = production_death(&mut e, 3, 4, DeathReason::Starvation, T_OLD);
     let _fresh = production_death(&mut e, 7, 8, DeathReason::Combat, T_FRESH);
-    assert_eq!(e.resources.recent_deaths.len(), 2, "A3 setup: two seeded deaths");
+    assert_eq!(
+        e.resources.recent_deaths.len(),
+        2,
+        "A3 setup: two seeded deaths"
+    );
 
     // Advance to current_tick == RETAIN. The last tick() pruned at RETAIN-1,
     // whose old-entry age is RETAIN-1 < RETAIN → still present. Bare engine: the
@@ -243,7 +302,10 @@ fn harness_death_a3_prune_past_retain_window() {
         old_present_before,
         "A3: aged entry must remain while current_tick - T_old < RECENT_DEATH_RETAIN_TICKS"
     );
-    assert!(fresh_present_before, "A3: fresh entry present before the boundary");
+    assert!(
+        fresh_present_before,
+        "A3: fresh entry present before the boundary"
+    );
 
     // One more tick → prune runs at current_tick == RETAIN: age(old) ==
     // RETAIN >= RETAIN → pruned; age(fresh) == RETAIN - T_FRESH < RETAIN → kept.
@@ -264,7 +326,10 @@ fn harness_death_a3_prune_past_retain_window() {
         aged, 0,
         "A3: aged entry removed once current_tick - T_old >= RECENT_DEATH_RETAIN_TICKS"
     );
-    assert_eq!(fresh, 1, "A3: fresh entry survives (current_tick - T_fresh < RETAIN)");
+    assert_eq!(
+        fresh, 1,
+        "A3: fresh entry survives (current_tick - T_fresh < RETAIN)"
+    );
     println!(
         "[viz-D A3] prune at RECENT_DEATH_RETAIN_TICKS={RECENT_DEATH_RETAIN_TICKS}: old gone, fresh kept ✓"
     );
@@ -292,7 +357,10 @@ fn harness_death_a4_reason_u8_mapping_locked() {
         production_death(&mut e, 1, 1, reason, 0);
         let rows = collect_recent_deaths(&e.resources);
         assert_eq!(rows.len(), 1, "A4: one death → one row");
-        assert_eq!(rows[0].reason_u8, expect, "A4: row reason_u8 matches {reason:?}");
+        assert_eq!(
+            rows[0].reason_u8, expect,
+            "A4: row reason_u8 matches {reason:?}"
+        );
     }
     println!("[viz-D A4] as_u8 mapping locked (0/1/2) + row reason_u8 mirrors reason ✓");
 }
@@ -313,7 +381,11 @@ fn harness_death_a8_agent_died_chronicle_additive() {
     // the per-tile causal log is an 8-slot ring).
     let width = e.resources.tile_grid.width;
     let tile_idx = py * width + px;
-    let log = e.resources.causal_log.get(tile_idx).expect("A8: tile must have a causal ring");
+    let log = e
+        .resources
+        .causal_log
+        .get(tile_idx)
+        .expect("A8: tile must have a causal ring");
     let chronicled = log.as_slice().iter().any(|ev| {
         matches!(
             ev,
@@ -324,15 +396,19 @@ fn harness_death_a8_agent_died_chronicle_additive() {
                 && *tick == 42
         )
     });
-    assert!(chronicled, "A8: AgentDied must still be chronicled at the death tile (path intact)");
+    assert!(
+        chronicled,
+        "A8: AgentDied must still be chronicled at the death tile (path intact)"
+    );
 
     // Buffer path also populated (additive).
-    let buffered = e
-        .resources
-        .recent_deaths
-        .iter()
-        .any(|d| d.x == px as i32 && d.y == py as i32 && d.reason == DeathReason::Starvation && d.tick == 42);
-    assert!(buffered, "A8: recent_deaths must ALSO hold the death (additive, not a replacement)");
+    let buffered = e.resources.recent_deaths.iter().any(|d| {
+        d.x == px as i32 && d.y == py as i32 && d.reason == DeathReason::Starvation && d.tick == 42
+    });
+    assert!(
+        buffered,
+        "A8: recent_deaths must ALSO hold the death (additive, not a replacement)"
+    );
     println!("[viz-D A8] AgentDied chronicle + recent_deaths buffer both present (additive) ✓");
 }
 
@@ -351,12 +427,22 @@ fn harness_death_a9_combat_death_reason_u8_two() {
     let attacker_id = e.world.get::<&Agent>(attacker).unwrap().id;
     let defender_id = e.world.get::<&Agent>(defender).unwrap().id;
     e.world
-        .insert(attacker, (AgentState::Idle, BodyHealth::new(), Memory::new()))
+        .insert(
+            attacker,
+            (AgentState::Idle, BodyHealth::new(), Memory::new()),
+        )
         .unwrap();
     e.world
         .insert(
             defender,
-            (AgentState::Idle, BodyHealth { hp: 5.0, max_hp: DEFAULT_MAX_HP }, Memory::new()),
+            (
+                AgentState::Idle,
+                BodyHealth {
+                    hp: 5.0,
+                    max_hp: DEFAULT_MAX_HP,
+                },
+                Memory::new(),
+            ),
         )
         .unwrap();
 
@@ -391,8 +477,16 @@ fn harness_death_a9_combat_death_reason_u8_two() {
         .recent_deaths
         .last()
         .expect("A9: the new entry must be present");
-    assert_eq!(entry.reason, DeathReason::Combat, "A9: buffer entry reason == Combat");
-    assert_eq!((entry.x, entry.y), (5, 5), "A9: entry x/y == the victim's death tile");
+    assert_eq!(
+        entry.reason,
+        DeathReason::Combat,
+        "A9: buffer entry reason == Combat"
+    );
+    assert_eq!(
+        (entry.x, entry.y),
+        (5, 5),
+        "A9: entry x/y == the victim's death tile"
+    );
     assert_eq!(entry.tick, 1, "A9: entry tick == the combat death tick");
 
     let rows = collect_recent_deaths(&e.resources);
@@ -400,7 +494,10 @@ fn harness_death_a9_combat_death_reason_u8_two() {
         .iter()
         .find(|r| r.reason_u8 == 2)
         .expect("A9: a collected row with reason_u8 == 2 must exist");
-    assert_eq!(combat_row.reason_u8, 2, "A9: Combat row → reason_u8 == 2 (red marker)");
+    assert_eq!(
+        combat_row.reason_u8, 2,
+        "A9: Combat row → reason_u8 == 2 (red marker)"
+    );
     println!(
         "[viz-D A9] CombatSystem death → +1 (attacker survives), Combat, x/y/tick exact, reason_u8==2 ✓"
     );
@@ -433,7 +530,10 @@ fn harness_death_a10_current_tick_scalar_is_live() {
         TICK_CALLS - 1,
         "A10(a): `resources.current_tick` (what the #[func] reads) must track the live clock"
     );
-    assert!(n > 0, "A10(a): the scalar must be nonzero (a stale-zero would freeze every marker)");
+    assert!(
+        n > 0,
+        "A10(a): the scalar must be nonzero (a stale-zero would freeze every marker)"
+    );
     println!("[viz-D A10] current_tick source == N ✓");
 }
 
@@ -466,15 +566,23 @@ fn harness_death_a11_mass_same_tick_deaths() {
     assert_eq!(rows.len() as u32, N, "A11: rows.len() == N");
     // Order preserved — buffer is a Vec, push order == collector order.
     for (i, (ex, ey)) in expected.iter().enumerate() {
-        assert_eq!(rows[i].x, *ex as i32, "A11: row[{i}].x preserves push order");
-        assert_eq!(rows[i].y, *ey as i32, "A11: row[{i}].y preserves push order");
+        assert_eq!(
+            rows[i].x, *ex as i32,
+            "A11: row[{i}].x preserves push order"
+        );
+        assert_eq!(
+            rows[i].y, *ey as i32,
+            "A11: row[{i}].y preserves push order"
+        );
     }
     eprintln!(
         "[viz-D A11] FINDING: recent_deaths is UNBOUNDED within the {RECENT_DEATH_RETAIN_TICKS}-tick \
          retain window (no cap in prompt). {N} same-tick deaths all retained; a mass-death tick \
          (famine/raid) could push dozens the renderer iterates every frame."
     );
-    println!("[viz-D A11] {N} same-tick deaths all present, order preserved (unbounded — flagged) ✓");
+    println!(
+        "[viz-D A11] {N} same-tick deaths all present, order preserved (unbounded — flagged) ✓"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -490,9 +598,16 @@ fn harness_death_a12_empty_then_single_fixture_collector() {
     let mut e = iso_engine();
 
     // (a) empty buffer → empty collector + all four split arrays length 0.
-    assert!(e.resources.recent_deaths.is_empty(), "A12: fresh buffer must be empty");
+    assert!(
+        e.resources.recent_deaths.is_empty(),
+        "A12: fresh buffer must be empty"
+    );
     let empty_rows = collect_recent_deaths(&e.resources);
-    assert_eq!(empty_rows.len(), 0, "A12(a): zero deaths → collector returns 0 rows");
+    assert_eq!(
+        empty_rows.len(),
+        0,
+        "A12(a): zero deaths → collector returns 0 rows"
+    );
     let (xs0, ys0, reasons0, ticks0) = recent_death_rows_split(&empty_rows);
     assert_eq!(xs0.len(), 0, "A12(a): empty xs");
     assert_eq!(ys0.len(), 0, "A12(a): empty ys");
@@ -502,16 +617,33 @@ fn harness_death_a12_empty_then_single_fixture_collector() {
     // (b) inject ONE all-zero entry (x=0, y=0, Starvation→0, tick=0) directly
     // into the otherwise-empty buffer. This isolates the collector's read path
     // (A1 already proves the production WRITE path).
-    e.resources
-        .recent_deaths
-        .push(RecentDeath { x: 0, y: 0, reason: DeathReason::Starvation, tick: 0 });
+    e.resources.recent_deaths.push(RecentDeath {
+        x: 0,
+        y: 0,
+        reason: DeathReason::Starvation,
+        tick: 0,
+    });
     let rows = collect_recent_deaths(&e.resources);
-    assert_eq!(rows.len(), 1, "A12(b): single fixture → exactly 1 row (not dropped)");
+    assert_eq!(
+        rows.len(),
+        1,
+        "A12(b): single fixture → exactly 1 row (not dropped)"
+    );
     let (xs, ys, reasons, ticks) = recent_death_rows_split(&rows);
     assert_eq!(xs.len(), 1, "A12(b): xs length 1");
-    assert_eq!((xs[0], ys[0]), (0, 0), "A12(b): (0,0) is a GENUINE row, not a sentinel");
-    assert_eq!(reasons[0], 0, "A12(b): Starvation → reason_u8 == 0 (genuine zero)");
-    assert_eq!(ticks[0], 0, "A12(b): tick 0 → ticks[0] == 0 (genuine, not dropped)");
+    assert_eq!(
+        (xs[0], ys[0]),
+        (0, 0),
+        "A12(b): (0,0) is a GENUINE row, not a sentinel"
+    );
+    assert_eq!(
+        reasons[0], 0,
+        "A12(b): Starvation → reason_u8 == 0 (genuine zero)"
+    );
+    assert_eq!(
+        ticks[0], 0,
+        "A12(b): tick 0 → ticks[0] == 0 (genuine, not dropped)"
+    );
     // The dict's `current_tick` SCALAR presence is a Godot-VarDictionary surface
     // (needs the engine runtime); its source emission is owned by A7 (to_dict
     // emits the "current_tick" key) and its live value by A10.
@@ -525,14 +657,27 @@ fn harness_death_a12_empty_then_single_fixture_collector() {
     let known_now: u64 = 5;
     e2.resources.current_tick = known_now;
     let future_tick = known_now + 50;
-    e2.resources
-        .recent_deaths
-        .push(RecentDeath { x: 3, y: 4, reason: DeathReason::Combat, tick: future_tick as u32 });
+    e2.resources.recent_deaths.push(RecentDeath {
+        x: 3,
+        y: 4,
+        reason: DeathReason::Combat,
+        tick: future_tick as u32,
+    });
     let frows = collect_recent_deaths(&e2.resources);
-    assert_eq!(frows.len(), 1, "A12(c): future-tick entry must still be collected (not dropped)");
-    assert_eq!(frows[0].tick, future_tick as i64, "A12(c): the future tick is preserved verbatim");
+    assert_eq!(
+        frows.len(),
+        1,
+        "A12(c): future-tick entry must still be collected (not dropped)"
+    );
+    assert_eq!(
+        frows[0].tick, future_tick as i64,
+        "A12(c): the future tick is preserved verbatim"
+    );
     let age = known_now.saturating_sub(future_tick);
-    assert_eq!(age, 0, "A12(c): saturating_sub(current,future) == 0 (no underflow, clamped)");
+    assert_eq!(
+        age, 0,
+        "A12(c): saturating_sub(current,future) == 0 (no underflow, clamped)"
+    );
     println!(
         "[viz-D A12] empty→0; all-zero fixture→1 genuine row; future-tick age saturates to 0 (no panic) ✓"
     );
@@ -576,17 +721,28 @@ fn harness_death_a13_dehydration_death_reason_u8_one() {
         len_before + 1,
         "A13: a Dehydration death adds exactly 1 buffer entry (shared funnel)"
     );
-    let d = e.resources.recent_deaths.last().expect("A13: entry present");
+    let d = e
+        .resources
+        .recent_deaths
+        .last()
+        .expect("A13: entry present");
     assert_eq!(
         d.reason,
         DeathReason::Dehydration,
         "A13: both-saturated death → reason == Dehydration (thirst precedence)"
     );
     assert_eq!((d.x, d.y), (7, 19), "A13: x/y == the victim's death tile");
-    assert_eq!(u64::from(d.tick), death_tick, "A13: tick == captured death tick");
+    assert_eq!(
+        u64::from(d.tick),
+        death_tick,
+        "A13: tick == captured death tick"
+    );
     let rows = collect_recent_deaths(&e.resources);
     let row = rows.last().expect("A13: collected row present");
-    assert_eq!(row.reason_u8, 1, "A13: Dehydration → reason_u8 == 1 (blue marker, end-to-end)");
+    assert_eq!(
+        row.reason_u8, 1,
+        "A13: Dehydration → reason_u8 == 1 (blue marker, end-to-end)"
+    );
     println!("[viz-D A13] real Dehydration death → +1, reason_u8 == 1 (blue) end-to-end ✓");
 }
 
@@ -637,16 +793,42 @@ fn harness_death_a14_same_tick_two_deaths_plus_two_ordered() {
     let e1 = &e.resources.recent_deaths[n - 2];
     let e2 = &e.resources.recent_deaths[n - 1];
     // Both deaths stamped with the shared tick; both distinct positions present.
-    assert_eq!(u64::from(e1.tick), shared_tick, "A14: first entry stamped with the shared tick");
-    assert_eq!(u64::from(e2.tick), shared_tick, "A14: second entry stamped with the shared tick");
+    assert_eq!(
+        u64::from(e1.tick),
+        shared_tick,
+        "A14: first entry stamped with the shared tick"
+    );
+    assert_eq!(
+        u64::from(e2.tick),
+        shared_tick,
+        "A14: second entry stamped with the shared tick"
+    );
     let positions = [(e1.x, e1.y), (e2.x, e2.y)];
-    assert!(positions.contains(&(11, 11)), "A14: agent A's death tile present");
-    assert!(positions.contains(&(22, 22)), "A14: agent B's death tile present");
-    assert_ne!((e1.x, e1.y), (e2.x, e2.y), "A14: the two entries are DISTINCT (both kept, no dedup)");
+    assert!(
+        positions.contains(&(11, 11)),
+        "A14: agent A's death tile present"
+    );
+    assert!(
+        positions.contains(&(22, 22)),
+        "A14: agent B's death tile present"
+    );
+    assert_ne!(
+        (e1.x, e1.y),
+        (e2.x, e2.y),
+        "A14: the two entries are DISTINCT (both kept, no dedup)"
+    );
 
     // Order: the collector preserves buffer (push/despawn) order verbatim.
     let rows = collect_recent_deaths(&e.resources);
-    assert_eq!((rows[n - 2].x, rows[n - 2].y), (e1.x, e1.y), "A14: collector preserves entry order");
-    assert_eq!((rows[n - 1].x, rows[n - 1].y), (e2.x, e2.y), "A14: collector preserves entry order");
+    assert_eq!(
+        (rows[n - 2].x, rows[n - 2].y),
+        (e1.x, e1.y),
+        "A14: collector preserves entry order"
+    );
+    assert_eq!(
+        (rows[n - 1].x, rows[n - 1].y),
+        (e2.x, e2.y),
+        "A14: collector preserves entry order"
+    );
     println!("[viz-D A14] two same-tick deaths → +2 exactly, both distinct, order preserved ✓");
 }

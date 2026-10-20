@@ -55,15 +55,28 @@ fn check(engine: &SimEngine, name: &str) {
     let replayed = replay(chronicle);
     for (id, roster) in actual(engine) {
         let expected = replayed.get(&id).cloned().unwrap_or_default();
-        assert_eq!(roster, expected, "{name} tick {}: agent {id}", engine.current_tick());
-        assert!(chronicle.person(id).is_some(), "{name}: living agent {id} has a record");
+        assert_eq!(
+            roster,
+            expected,
+            "{name} tick {}: agent {id}",
+            engine.current_tick()
+        );
+        assert!(
+            chronicle.person(id).is_some(),
+            "{name}: living agent {id} has a record"
+        );
     }
     for entry in chronicle.entries() {
         for id in entry.agents() {
-            assert!(chronicle.person(id).is_some(), "{name}: {entry:?} names {id} without a record");
+            assert!(
+                chronicle.person(id).is_some(),
+                "{name}: {entry:?} names {id} without a record"
+            );
         }
         if entry.kind == ChronicleKind::Died {
-            let person = chronicle.person(entry.subject.expect("died subject")).expect("record");
+            let person = chronicle
+                .person(entry.subject.expect("died subject"))
+                .expect("record");
             assert_eq!(person.died_tick, Some(entry.tick), "{name}: {entry:?}");
             assert_eq!(person.death_reason, Some(entry.cause), "{name}: {entry:?}");
         }
@@ -84,7 +97,11 @@ fn run(mut engine: SimEngine, name: &str, days: u64) -> SimEngine {
 }
 
 fn count(chronicle: &Chronicle, kind: ChronicleKind) -> usize {
-    chronicle.entries().iter().filter(|e| e.kind == kind).count()
+    chronicle
+        .entries()
+        .iter()
+        .filter(|e| e.kind == kind)
+        .count()
 }
 
 #[test]
@@ -94,13 +111,19 @@ fn harness_chronicle_rebuilds_rosters_through_a_fission_game_v23() {
     let chronicle = &engine.resources.chronicle;
     assert_eq!(engine.resources.tallies.fissions, 1);
     assert_eq!(count(chronicle, ChronicleKind::DaughterFounded), 1);
-    assert_eq!(count(chronicle, ChronicleKind::Born) as u64, engine.resources.tallies.births);
+    assert_eq!(
+        count(chronicle, ChronicleKind::Born) as u64,
+        engine.resources.tallies.births
+    );
     assert!(count(chronicle, ChronicleKind::Paired) > 0);
     assert!(count(chronicle, ChronicleKind::Departed) >= 6);
     assert!(count(chronicle, ChronicleKind::FoundingMember) >= 20);
     let deaths = engine.resources.tallies;
-    let died = deaths.deaths_starvation + deaths.deaths_dehydration + deaths.deaths_combat
-        + deaths.deaths_old_age + deaths.deaths_exposure;
+    let died = deaths.deaths_starvation
+        + deaths.deaths_dehydration
+        + deaths.deaths_combat
+        + deaths.deaths_old_age
+        + deaths.deaths_exposure;
     assert_eq!(count(chronicle, ChronicleKind::Died) as u64, died);
 }
 

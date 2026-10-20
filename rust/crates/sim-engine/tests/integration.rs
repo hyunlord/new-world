@@ -74,12 +74,18 @@ fn test_resources_modification_via_tick() {
     let mut engine = SimEngine::new(256, 256, empty_registry());
     engine.register_system(Box::new(WarmthWriter));
     assert_eq!(
-        engine.resources.influence_grid.sample(10, 10, InfluenceChannel::Warmth),
+        engine
+            .resources
+            .influence_grid
+            .sample(10, 10, InfluenceChannel::Warmth),
         0
     );
     engine.tick();
     assert_eq!(
-        engine.resources.influence_grid.sample(10, 10, InfluenceChannel::Warmth),
+        engine
+            .resources
+            .influence_grid
+            .sample(10, 10, InfluenceChannel::Warmth),
         200
     );
 }

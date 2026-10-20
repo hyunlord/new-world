@@ -22,35 +22,26 @@ pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 pub mod causal;
 pub mod chronicle;
 pub mod components;
+pub mod fission_threshold;
 pub mod influence;
 pub mod material;
-pub mod fission_threshold;
 pub mod rng;
 pub mod rules;
 pub mod tile;
 pub mod variety;
 
-pub use components::{Agent, Position};
-pub use tile::TileGrid;
-pub use influence::{
-    AggKind, BlockingDerive, ChannelDef, DecayKind, DirtyRegion, InfluenceChannel,
-    InfluenceGrid, LodTier, MaterialBlockingCache, UpdateTier, propagate_bfs,
-    propagate_danger, propagate_noise, propagate_shadowcast, stamp_social_aggregate,
-};
 pub use causal::{CausalEvent, CausalLogStorage, TileCausalLog, TILE_CAUSAL_RING_SIZE};
+pub use components::{Agent, Position};
+pub use influence::{
+    propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast, stamp_social_aggregate,
+    AggKind, BlockingDerive, ChannelDef, DecayKind, DirtyRegion, InfluenceChannel, InfluenceGrid,
+    LodTier, MaterialBlockingCache, UpdateTier,
+};
+pub use tile::TileGrid;
 
 pub use material::{
-    MaterialId,
-    MaterialCategory,
-    MaterialDef,
-    MaterialProperties,
-    MaterialRegistry,
-    AutoDerivedStats,
-    DerivedStatKind,
-    MaterialError,
-    Explanation,
-    PropertyKind,
-    TerrainType,
+    AutoDerivedStats, DerivedStatKind, Explanation, MaterialCategory, MaterialDef, MaterialError,
+    MaterialId, MaterialProperties, MaterialRegistry, PropertyKind, TerrainType,
 };
 
 #[cfg(test)]

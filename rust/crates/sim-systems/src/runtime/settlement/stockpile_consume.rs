@@ -35,8 +35,8 @@ use sim_engine::{RuntimeSystem, SimResources};
 
 // The relief amount mirrors the ground-tile eat amount; imported (not
 // redefined) from the decision module per the slice-2-4 zero-sim-core rule.
-use crate::runtime::decision::{HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD};
 use crate::runtime::decision::agent_decision::clock_in_window;
+use crate::runtime::decision::{HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD};
 
 /// Famine level at/above which a settlement member draws on the communal
 /// reserve. Set to [`HUNGER_THRESHOLD`] (50.0) so reserve consumption is a
@@ -100,7 +100,11 @@ impl RuntimeSystem for StockpileConsumeSystem {
         // outside them. Without the rule the Pass 4 radius and threshold stay.
         let meals = resources.rules.society.meals;
         let radius = meals.map_or(
-            resources.rules.society.relief_radius.unwrap_or(SETTLEMENT_PROXIMITY_RADIUS),
+            resources
+                .rules
+                .society
+                .relief_radius
+                .unwrap_or(SETTLEMENT_PROXIMITY_RADIUS),
             |rule| rule.camp_radius,
         );
         let threshold = match meals {
@@ -114,8 +118,7 @@ impl RuntimeSystem for StockpileConsumeSystem {
         };
 
         // Iterate settlements in deterministic (sorted) SettlementId order.
-        let mut settlement_ids: Vec<SettlementId> =
-            resources.settlements.keys().copied().collect();
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         settlement_ids.sort_unstable();
 
         for sid in settlement_ids {

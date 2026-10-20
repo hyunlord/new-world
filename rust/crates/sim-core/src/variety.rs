@@ -65,10 +65,20 @@ pub const CLIMATE_PERMILLE: [u16; 3] = [333, 334, 333];
 
 /// Winter severity weights (mild, normal, harsh) of each climate; the neutral
 /// climate is v15's.
-pub const CLIMATE_SEVERITY_PERMILLE: [[u16; 3]; 3] = [[500, 350, 150], [350, 400, 250], [200, 400, 400]];
+pub const CLIMATE_SEVERITY_PERMILLE: [[u16; 3]; 3] =
+    [[500, 350, 150], [350, 400, 250], [200, 400, 400]];
 
 const fn uniform(seed: u64, slot: u32, range: (u32, u32)) -> u32 {
-    range.0 + keyed_below(seed, STREAM_WORLD_VARIETY, 0, 0, slot, 0, (range.1 - range.0 + 1) as u64) as u32
+    range.0
+        + keyed_below(
+            seed,
+            STREAM_WORLD_VARIETY,
+            0,
+            0,
+            slot,
+            0,
+            (range.1 - range.0 + 1) as u64,
+        ) as u32
 }
 
 /// Pass 10: the hidden parameters of one world, drawn from its seed.
@@ -153,7 +163,12 @@ impl WorldVariety {
     /// This world's parameters without wild regions: what `game_v16` uses
     /// and records (slots 0..7 only), so v16 outputs stay unchanged.
     pub const fn without_regions(&self) -> Self {
-        Self { wild_regions: 0, region_bushes: 0, region_deadwood: 0, ..*self }
+        Self {
+            wild_regions: 0,
+            region_bushes: 0,
+            region_deadwood: 0,
+            ..*self
+        }
     }
 
     /// The winter severity weights of this world's climate.
@@ -182,19 +197,43 @@ mod tests {
     fn neutral_is_the_v15_world_and_scales_nothing() {
         let n = WorldVariety::NEUTRAL;
         assert_eq!(n.winter_severity_permille(), [350, 400, 250]);
-        assert_eq!(n.scale_regen([750, 1250, 1000, 500]), [750, 1250, 1000, 500]);
-        let low = WorldVariety { food_regen_permille: 850, ..n };
+        assert_eq!(
+            n.scale_regen([750, 1250, 1000, 500]),
+            [750, 1250, 1000, 500]
+        );
+        let low = WorldVariety {
+            food_regen_permille: 850,
+            ..n
+        };
         // 1250 x 850 / 1000 = 1062.5, rounded down.
-        assert_eq!(low.scale_regen([750, 1250, 1000, 500]), [637, 1062, 850, 425]);
+        assert_eq!(
+            low.scale_regen([750, 1250, 1000, 500]),
+            [637, 1062, 850, 425]
+        );
     }
 
     #[test]
     fn v18_draws_share_every_slot_but_the_region_sizes() {
         for seed in 0..500 {
             let (a, b) = (WorldVariety::draw(seed), WorldVariety::draw_v18(seed));
-            assert_eq!(WorldVariety { region_bushes: 0, region_deadwood: 0, ..a }, WorldVariety { region_bushes: 0, region_deadwood: 0, ..b });
-            assert!((RANGES_V18.region_bushes.0..=RANGES_V18.region_bushes.1).contains(&b.region_bushes));
-            assert!((RANGES_V18.region_deadwood.0..=RANGES_V18.region_deadwood.1).contains(&b.region_deadwood));
+            assert_eq!(
+                WorldVariety {
+                    region_bushes: 0,
+                    region_deadwood: 0,
+                    ..a
+                },
+                WorldVariety {
+                    region_bushes: 0,
+                    region_deadwood: 0,
+                    ..b
+                }
+            );
+            assert!((RANGES_V18.region_bushes.0..=RANGES_V18.region_bushes.1)
+                .contains(&b.region_bushes));
+            assert!(
+                (RANGES_V18.region_deadwood.0..=RANGES_V18.region_deadwood.1)
+                    .contains(&b.region_deadwood)
+            );
         }
     }
 

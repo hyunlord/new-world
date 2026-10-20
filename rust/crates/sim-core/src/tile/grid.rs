@@ -99,11 +99,7 @@ impl TileGrid {
                 }
                 let nx = x as i32 + dx;
                 let ny = y as i32 + dy;
-                if nx >= 0
-                    && (nx as u32) < self.width
-                    && ny >= 0
-                    && (ny as u32) < self.height
-                {
+                if nx >= 0 && (nx as u32) < self.width && ny >= 0 && (ny as u32) < self.height {
                     neighbours.push((nx as u32, ny as u32));
                 }
             }

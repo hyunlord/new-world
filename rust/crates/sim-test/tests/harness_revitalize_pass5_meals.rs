@@ -1,7 +1,8 @@
 //! Pass 5 Part 2: meals at the hearth served from the settlement store.
 use hecs::Entity;
 use sim_core::components::{
-    Agent, AgentState, Hunger, Inventory, ResourceKind, Settlement, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentState, Hunger, Inventory, ResourceKind, Settlement, Sleep, Social, TargetKind,
+    Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
@@ -22,7 +23,11 @@ fn tick_at(minute: u64) -> u64 {
 /// Bare world: one v11 settlement at `HOME` with `store` food and one member
 /// per `(position, hunger, thirst)`; a stocked bush four tiles from camp and
 /// one far away, water on the river bank. Clock at `minute`.
-fn meal_fixture(members: &[((u32, u32), f32, f64)], store: u32, minute: u64) -> (SimEngine, Vec<Entity>) {
+fn meal_fixture(
+    members: &[((u32, u32), f32, f64)],
+    store: u32,
+    minute: u64,
+) -> (SimEngine, Vec<Entity>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.rules = WorldRules::game_v11();
     engine.resources.current_tick = tick_at(minute);
@@ -61,7 +66,11 @@ fn meal_fixture(members: &[((u32, u32), f32, f64)], store: u32, minute: u64) -> 
 }
 
 fn store(engine: &SimEngine) -> u32 {
-    engine.resources.settlements[&1].stockpile.get(&ResourceKind::Food).copied().unwrap_or(0)
+    engine.resources.settlements[&1]
+        .stockpile
+        .get(&ResourceKind::Food)
+        .copied()
+        .unwrap_or(0)
 }
 
 fn state(engine: &SimEngine, entity: Entity) -> AgentState {
@@ -74,7 +83,11 @@ fn hunger(engine: &SimEngine, entity: Entity) -> f32 {
 
 #[test]
 fn harness_meal_breakfast_from_store() {
-    let at_camp = [((20, 20), 30.0, 0.0), ((21, 19), 30.0, 0.0), ((26, 24), 30.0, 0.0)];
+    let at_camp = [
+        ((20, 20), 30.0, 0.0),
+        ((21, 19), 30.0, 0.0),
+        ((26, 24), 30.0, 0.0),
+    ];
     let (mut engine, entities) = meal_fixture(&at_camp, 50, 390);
     let meals = engine.resources.tallies.meals_from_store;
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
@@ -88,7 +101,12 @@ fn harness_meal_breakfast_from_store() {
         engine.resources.current_tick += 1;
         AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
         for &entity in &entities {
-            assert_ne!(state(&engine, entity), AgentState::Seeking { target: TargetKind::Food });
+            assert_ne!(
+                state(&engine, entity),
+                AgentState::Seeking {
+                    target: TargetKind::Food
+                }
+            );
         }
     }
     // Outside the meal windows hunger 30 is not served.
@@ -119,7 +137,11 @@ fn harness_meal_hungry_at_camp_waits_for_store() {
         engine.resources.current_tick = tick;
         decision.tick(&mut engine.world, &mut engine.resources);
         if fed_at.is_none() {
-            assert_eq!(state(&engine, member), AgentState::Idle, "waiting member left at tick {tick}");
+            assert_eq!(
+                state(&engine, member),
+                AgentState::Idle,
+                "waiting member left at tick {tick}"
+            );
         }
         if tick % 5 == 0 {
             consume.tick(&mut engine.world, &mut engine.resources);
@@ -136,23 +158,42 @@ fn harness_meal_hungry_at_camp_waits_for_store() {
     // A critical water need is the one exception.
     let (mut engine, entities) = meal_fixture(&[((21, 21), 55.0, 80.0)], 10, 720);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, entities[0]), AgentState::Seeking { target: TargetKind::Water });
+    assert_eq!(
+        state(&engine, entities[0]),
+        AgentState::Seeking {
+            target: TargetKind::Water
+        }
+    );
 }
 
 #[test]
 fn harness_meal_away_eats_at_bush() {
     let (mut engine, entities) = meal_fixture(&[((32, 20), 55.0, 0.0)], 10, 720);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, entities[0]), AgentState::Seeking { target: TargetKind::Food });
+    assert_eq!(
+        state(&engine, entities[0]),
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+    );
     StockpileConsumeSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(store(&engine), 10, "a member twelve tiles out is not served");
+    assert_eq!(
+        store(&engine),
+        10,
+        "a member twelve tiles out is not served"
+    );
 }
 
 #[test]
 fn harness_meal_empty_store_falls_back() {
     let (mut engine, entities) = meal_fixture(&[((21, 21), 55.0, 0.0)], 0, 720);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(state(&engine, entities[0]), AgentState::Seeking { target: TargetKind::Food });
+    assert_eq!(
+        state(&engine, entities[0]),
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+    );
 }
 
 #[test]
@@ -176,15 +217,26 @@ fn harness_meal_waits_when_every_bush_is_empty() {
             consume.tick(&mut engine.world, &mut engine.resources);
         }
     }
-    assert!(hunger(&engine, entities[0]) < 50.0, "the member was not fed");
-    assert_eq!(engine.resources.tallies.wood_trips, 0, "no trip while it waited");
+    assert!(
+        hunger(&engine, entities[0]) < 50.0,
+        "the member was not fed"
+    );
+    assert_eq!(
+        engine.resources.tallies.wood_trips, 0,
+        "no trip while it waited"
+    );
 }
 
 #[test]
 fn harness_meal_v10_unchanged() {
-    for (seed, expected) in ["0e38264bd3abe6ba", "3b0590ec71558a58", "d265695444b8b314", "48120c365d543729"]
-        .into_iter()
-        .enumerate()
+    for (seed, expected) in [
+        "0e38264bd3abe6ba",
+        "3b0590ec71558a58",
+        "d265695444b8b314",
+        "48120c365d543729",
+    ]
+    .into_iter()
+    .enumerate()
     {
         let mut engine = game_v10_scene(seed as u64);
         for _ in 0..1440 {

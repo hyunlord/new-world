@@ -247,8 +247,12 @@ fn collect_run(ticks: u64) -> Run {
     place_startup_buildings(&mut e);
 
     // Pre-birth snapshot (before tick 1).
-    let pre_birth_ids: HashSet<AgentId> =
-        e.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    let pre_birth_ids: HashSet<AgentId> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(_, a)| a.id)
+        .collect();
 
     let mut traj: HashMap<AgentId, Vec<Obs>> = HashMap::new();
     let mut first: HashMap<AgentId, FirstObs> = HashMap::new();
@@ -263,7 +267,13 @@ fn collect_run(ticks: u64) -> Run {
         // per-entity component reads below).
         let rows: Vec<AgentRow> = e
             .world
-            .query::<(&Agent, &Position, &AgentState, Option<&MovementRng>, Option<&Thirst>)>()
+            .query::<(
+                &Agent,
+                &Position,
+                &AgentState,
+                Option<&MovementRng>,
+                Option<&Thirst>,
+            )>()
             .iter()
             .map(|(ent, (a, p, s, r, t))| {
                 (
@@ -378,7 +388,10 @@ fn harness_newborn_has_movement_rng() {
             !(at_birth && run.ever_has_rng(**id))
         })
         .count();
-    println!("[newborn A2] newborns missing MovementRng = {missing} / {}", newborns.len());
+    println!(
+        "[newborn A2] newborns missing MovementRng = {missing} / {}",
+        newborns.len()
+    );
     assert_eq!(
         missing, 0,
         "A2: every newborn must carry a MovementRng (at birth and throughout); \
@@ -405,7 +418,10 @@ fn harness_newborn_component_completeness() {
     ];
     let run = collect_run(1200);
     let newborns = run.newborns();
-    assert!(!newborns.is_empty(), "A3: newborn set must be non-empty (A1 gate)");
+    assert!(
+        !newborns.is_empty(),
+        "A3: newborn set must be non-empty (A1 gate)"
+    );
 
     let mut missing_any = 0usize;
     for id in &newborns {
@@ -466,10 +482,16 @@ fn harness_newborn_growth_rate_parity_with_bootstrap() {
                 || f.social.1 != r_social
         })
         .count();
-    assert_eq!(boot_dev, 0, "A4: bootstrap growth rates must be uniform; {boot_dev} deviated");
+    assert_eq!(
+        boot_dev, 0,
+        "A4: bootstrap growth rates must be uniform; {boot_dev} deviated"
+    );
 
     let newborns = run.newborns();
-    assert!(!newborns.is_empty(), "A4: newborn set must be non-empty (A1 gate)");
+    assert!(
+        !newborns.is_empty(),
+        "A4: newborn set must be non-empty (A1 gate)"
+    );
     let deviating = newborns
         .iter()
         .filter_map(|id| run.first.get(id))
@@ -504,7 +526,10 @@ fn harness_newborn_actually_moves() {
     let total_ticks = 1200u64;
     let run = collect_run(total_ticks);
     let newborns = run.newborns();
-    assert!(!newborns.is_empty(), "A5: newborn set must be non-empty (A1 gate)");
+    assert!(
+        !newborns.is_empty(),
+        "A5: newborn set must be non-empty (A1 gate)"
+    );
 
     let eligible: Vec<AgentId> = newborns
         .iter()
@@ -551,7 +576,10 @@ fn harness_newborn_need_values_rise_over_time() {
     const WINDOW: u64 = 300;
     let run = collect_run(1200);
     let newborns = run.newborns();
-    assert!(!newborns.is_empty(), "A6: newborn set must be non-empty (A1 gate)");
+    assert!(
+        !newborns.is_empty(),
+        "A6: newborn set must be non-empty (A1 gate)"
+    );
 
     let mut eligible = 0usize;
     let mut non_rising = 0usize;
@@ -570,8 +598,11 @@ fn harness_newborn_need_values_rise_over_time() {
         let consumed_water = window.iter().any(|o| {
             matches!(
                 o.state,
-                AgentState::Seeking { target: TargetKind::Water }
-                    | AgentState::Consuming { target: TargetKind::Water }
+                AgentState::Seeking {
+                    target: TargetKind::Water
+                } | AgentState::Consuming {
+                    target: TargetKind::Water
+                }
             )
         });
         if consumed_water {
@@ -580,7 +611,10 @@ fn harness_newborn_need_values_rise_over_time() {
         eligible += 1;
         let birth_thirst = obs[0].thirst_value;
         // Value at the observation closest to (and not beyond) birth+WINDOW.
-        let end_thirst = window.last().map(|o| o.thirst_value).unwrap_or(birth_thirst);
+        let end_thirst = window
+            .last()
+            .map(|o| o.thirst_value)
+            .unwrap_or(birth_thirst);
         if end_thirst <= birth_thirst {
             non_rising += 1;
             println!(
@@ -613,8 +647,12 @@ fn harness_newborn_bootstrap_agents_unaffected() {
     let mut e = bootstrapped();
     place_startup_buildings(&mut e);
 
-    let pre_birth_ids: HashSet<AgentId> =
-        e.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    let pre_birth_ids: HashSet<AgentId> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(_, a)| a.id)
+        .collect();
 
     let mut prev: HashMap<Entity, (u32, u32)> = HashMap::new();
     let mut streak: HashMap<Entity, u32> = HashMap::new();
@@ -680,8 +718,14 @@ fn harness_newborn_deterministic_birth_seed() {
         .filter_map(|id| run2.final_pos(id).map(|p| (id, p)))
         .collect();
 
-    assert!(!map1.is_empty(), "A8: non-empty floor — run 1 must produce >= 1 newborn");
-    assert!(!map2.is_empty(), "A8: non-empty floor — run 2 must produce >= 1 newborn");
+    assert!(
+        !map1.is_empty(),
+        "A8: non-empty floor — run 1 must produce >= 1 newborn"
+    );
+    assert!(
+        !map2.is_empty(),
+        "A8: non-empty floor — run 2 must produce >= 1 newborn"
+    );
     assert_eq!(
         map1, map2,
         "A8: two independent runs must yield identical {{newborn id -> final position}} maps"
@@ -704,7 +748,10 @@ fn harness_newborn_birth_logic_preserved() {
     let run = collect_run(1200);
     let newborns = run.newborns();
     let newborn_count = newborns.len();
-    assert!(newborn_count >= 1, "A9: newborn set must be non-empty (A1 gate)");
+    assert!(
+        newborn_count >= 1,
+        "A9: newborn set must be non-empty (A1 gate)"
+    );
 
     // (a) AgentBorn correspondence.
     let born_events = run.born_event_count;
@@ -755,7 +802,10 @@ fn harness_newborn_enters_seeking() {
     const MIN_LIFE: u64 = 700;
     let run = collect_run(2000);
     let newborns = run.newborns();
-    assert!(!newborns.is_empty(), "A10: newborn set must be non-empty (A1 gate)");
+    assert!(
+        !newborns.is_empty(),
+        "A10: newborn set must be non-empty (A1 gate)"
+    );
 
     let eligible: Vec<AgentId> = newborns
         .iter()
@@ -775,7 +825,10 @@ fn harness_newborn_enters_seeking() {
         "[newborn A10] eligible (lived >= {MIN_LIFE}) = {}, seekers = {seekers}, fraction = {fraction:.3}",
         eligible.len()
     );
-    assert!(seekers >= 1, "A10: at least one long-lived newborn must reach Seeking; got {seekers}");
+    assert!(
+        seekers >= 1,
+        "A10: at least one long-lived newborn must reach Seeking; got {seekers}"
+    );
     assert!(
         fraction >= 0.5,
         "A10: at least half of long-lived newborns must enter Seeking; fraction {fraction:.3} < 0.5"

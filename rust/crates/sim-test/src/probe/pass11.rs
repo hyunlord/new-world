@@ -18,7 +18,11 @@ pub(super) const MEMBER_DAYS: [u64; 4] = [30, 60, 90, 118];
 /// `*_total` keys are the cumulative fission tallies.
 pub(super) fn metrics(engine: &SimEngine) -> Value {
     let r = &engine.resources;
-    let alive = r.settlements.values().filter(|s| !s.member_agents.is_empty()).count();
+    let alive = r
+        .settlements
+        .values()
+        .filter(|s| !s.member_agents.is_empty())
+        .count();
     let home = r.settlements.keys().copied().min();
     let fire_lit_home = home.is_some_and(|sid| r.fires.get(&sid).is_some_and(|fire| fire.lit));
     let founding = engine.world.query::<(&Agent, &Founding)>().iter().count();
@@ -68,7 +72,11 @@ pub(super) fn seed_block(
     let offset = r.rules.clock_offset_ticks;
     let display_day = |tick: u64| (tick + offset) / tpd;
     let log: Vec<Value> = r.fission_log.iter().map(record_json).collect();
-    let dissolved: BTreeMap<SettlementId, u64> = r.dissolutions.iter().map(|(sid, tick)| (*sid, *tick)).collect();
+    let dissolved: BTreeMap<SettlementId, u64> = r
+        .dissolutions
+        .iter()
+        .map(|(sid, tick)| (*sid, *tick))
+        .collect();
     let mut seen: BTreeMap<SettlementId, (u64, Option<SettlementId>)> = BTreeMap::new();
     for row in days.values() {
         for (sid, (_, founded, parent)) in row {
@@ -114,8 +122,10 @@ pub(super) fn seed_block(
                 *count += 1;
             }
         }
-        winters.push(json!({"first_day": d, "child": stages["child"], "adult": stages["adult"],
-            "elder": stages["elder"], "elders_at_start": elders.get(&d)}));
+        winters.push(
+            json!({"first_day": d, "child": stages["child"], "adult": stages["adult"],
+            "elder": stages["elder"], "elders_at_start": elders.get(&d)}),
+        );
     }
     // Most exposure deaths in one hour per (settlement, night).
     let mut nights: BTreeMap<(Option<SettlementId>, u64), BTreeMap<u64, u64>> = BTreeMap::new();
@@ -123,14 +133,25 @@ pub(super) fn seed_block(
         let clock = tick + offset;
         let night = clock.saturating_sub(tpd / 2) / tpd;
         let hour = clock / (tpd / 24).max(1);
-        *nights.entry((*sid, night)).or_default().entry(hour).or_default() += 1;
+        *nights
+            .entry((*sid, night))
+            .or_default()
+            .entry(hour)
+            .or_default() += 1;
     }
     let settlement_nights: Vec<Value> = nights
         .iter()
-        .map(|((sid, night), hours)| json!({"settlement": sid, "night_day": night,
-            "deaths": hours.values().sum::<u64>(), "max_in_one_hour": hours.values().max()}))
+        .map(|((sid, night), hours)| {
+            json!({"settlement": sid, "night_day": night,
+            "deaths": hours.values().sum::<u64>(), "max_in_one_hour": hours.values().max()})
+        })
         .collect();
-    let max_hour = nights.values().flat_map(|h| h.values()).max().copied().unwrap_or(0);
+    let max_hour = nights
+        .values()
+        .flat_map(|h| h.values())
+        .max()
+        .copied()
+        .unwrap_or(0);
     let first_fission = r.fission_log.iter().filter_map(|f| f.founded_tick).min();
     json!({
         "fissions": r.tallies.fissions, "fissions_cancelled": r.tallies.fissions_cancelled,

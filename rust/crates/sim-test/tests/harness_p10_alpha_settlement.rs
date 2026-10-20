@@ -46,8 +46,8 @@
 
 use sim_core::causal::event::{CausalEvent, EventId};
 use sim_core::components::{
-    Agent, AgentId, BuildingId, Hunger, Memory, PopulationStats, Settlement, SettlementId, Sleep,
-    Social, AgentState, Thirst, SETTLEMENT_DISSOLUTION_THRESHOLD,
+    Agent, AgentId, AgentState, BuildingId, Hunger, Memory, PopulationStats, Settlement,
+    SettlementId, Sleep, Social, Thirst, SETTLEMENT_DISSOLUTION_THRESHOLD,
     SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_FORMATION_BUILDING_THRESHOLD,
     SETTLEMENT_HISTORY_CAP, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
 };
@@ -174,10 +174,19 @@ fn harness_p10_alpha_a9_new_with_id_initializes_empty() {
     // postconditions simultaneously.
     let s = Settlement::new_with_id(0, 0);
     assert!(s.member_agents.is_empty(), "member_agents must be empty");
-    assert!(s.member_buildings.is_empty(), "member_buildings must be empty");
-    assert!(s.community_history.is_empty(), "community_history must be empty");
+    assert!(
+        s.member_buildings.is_empty(),
+        "member_buildings must be empty"
+    );
+    assert!(
+        s.community_history.is_empty(),
+        "community_history must be empty"
+    );
     assert_eq!(s.population_count(), 0, "population_count() must be 0");
-    assert!(s.is_dissolved(), "is_dissolved() must be true on empty settlement");
+    assert!(
+        s.is_dissolved(),
+        "is_dissolved() must be true on empty settlement"
+    );
     assert_eq!(s.settlement_id, 0, "settlement_id must be 0");
     assert_eq!(s.founded_at, 0, "founded_at must be 0");
     // Spot-check the default PopulationStats aggregate too (substrate symmetry).
@@ -190,7 +199,10 @@ fn harness_p10_alpha_a10_add_remove_member_agent_roundtrip() {
     let mut s = Settlement::new_with_id(1, 0);
 
     let agent: AgentId = 10;
-    assert!(s.add_member_agent(agent), "first add_member_agent returns true");
+    assert!(
+        s.add_member_agent(agent),
+        "first add_member_agent returns true"
+    );
     assert_eq!(s.population_count(), 1, "population_count increased by 1");
 
     assert!(

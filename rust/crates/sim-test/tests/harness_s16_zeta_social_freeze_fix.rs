@@ -86,7 +86,10 @@ fn agent_id(e: &SimEngine, ent: Entity) -> AgentId {
 }
 
 fn loneliness(e: &SimEngine, ent: Entity) -> f64 {
-    e.world.get::<&Social>(ent).expect("Social present").loneliness
+    e.world
+        .get::<&Social>(ent)
+        .expect("Social present")
+        .loneliness
 }
 
 /// Spawn `count` agents in a tight cluster near `(cx, cy)`, needs clamped
@@ -125,10 +128,13 @@ fn place_buildings(engine: &mut SimEngine, cx: u32, cy: u32, count: u32) {
     for i in 0..count {
         let dx = i % 3;
         let dy = i / 3;
-        engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-            position: (cx + dx, cy + dy + 3),
-            radius: 1,
-        });
+        engine
+            .resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (cx + dx, cy + dy + 3),
+                radius: 1,
+            });
     }
     let mut bss = BuildingStampSystem::new();
     bss.tick(&mut engine.world, &mut engine.resources);
@@ -189,7 +195,9 @@ fn harness_s16_zeta_a1_social_pair_targets_partner_tile() {
         .insert(
             a,
             (
-                AgentState::Seeking { target: TargetKind::Agent(bid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(bid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)), // stale marker — persistent social tag
             ),
@@ -199,7 +207,9 @@ fn harness_s16_zeta_a1_social_pair_targets_partner_tile() {
         .insert(
             b,
             (
-                AgentState::Seeking { target: TargetKind::Agent(aid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(aid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)),
             ),
@@ -211,18 +221,30 @@ fn harness_s16_zeta_a1_social_pair_targets_partner_tile() {
 
     assert_eq!(
         agent_state(&e, a),
-        AgentState::Seeking { target: TargetKind::Agent(bid) },
+        AgentState::Seeking {
+            target: TargetKind::Agent(bid)
+        },
         "A1: A must remain Seeking{{Agent(B)}}"
     );
     assert_eq!(
         agent_state(&e, b),
-        AgentState::Seeking { target: TargetKind::Agent(aid) },
+        AgentState::Seeking {
+            target: TargetKind::Agent(aid)
+        },
         "A1: B must remain Seeking{{Agent(A)}}"
     );
     let at = seek_tile(&e, a).expect("A1: A must carry a SeekTarget");
     let bt = seek_tile(&e, b).expect("A1: B must carry a SeekTarget");
-    assert_eq!(at, (8, 5), "A1: A's SeekTarget must be partner B's tile (8,5)");
-    assert_eq!(bt, (5, 5), "A1: B's SeekTarget must be partner A's tile (5,5)");
+    assert_eq!(
+        at,
+        (8, 5),
+        "A1: A's SeekTarget must be partner B's tile (8,5)"
+    );
+    assert_eq!(
+        bt,
+        (5, 5),
+        "A1: B's SeekTarget must be partner A's tile (5,5)"
+    );
     assert_ne!(at, (5, 5), "A1: A's SeekTarget must NOT be its own tile");
     assert_ne!(bt, (8, 5), "A1: B's SeekTarget must NOT be its own tile");
     println!("[S16-ζ A1] social pair → partner tiles (A→(8,5), B→(5,5)), not own ✓");
@@ -243,7 +265,9 @@ fn harness_s16_zeta_a2_directed_step_toward_partner() {
             seeker,
             (
                 MovementRng::new(7),
-                AgentState::Seeking { target: TargetKind::Agent(pid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(pid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)), // marker → decision re-resolves to partner tile
             ),
@@ -267,7 +291,9 @@ fn harness_s16_zeta_a2_directed_step_toward_partner() {
         (6, 5),
         "A2: one directed signum step toward (10,5) → (6,5)"
     );
-    println!("[S16-ζ A2] decision attaches (10,5); movement steps (5,5)→(6,5) (movement.rs unchanged) ✓");
+    println!(
+        "[S16-ζ A2] decision attaches (10,5); movement steps (5,5)→(6,5) (movement.rs unchanged) ✓"
+    );
 }
 
 // ─── Assertion 3: partner SeekTarget RE-RESOLVES every tick ────────────────
@@ -284,7 +310,9 @@ fn harness_s16_zeta_a3_partner_seektarget_reresolves() {
         .insert(
             seeker,
             (
-                AgentState::Seeking { target: TargetKind::Agent(pid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(pid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((10, 5)), // already at partner's current tile
             ),
@@ -359,7 +387,9 @@ fn harness_s16_zeta_a4_settlement_migrant_paths_not_frozen() {
     assert!(
         matches!(
             agent_state(&e, migrant),
-            AgentState::Seeking { target: TargetKind::Agent(_) }
+            AgentState::Seeking {
+                target: TargetKind::Agent(_)
+            }
         ),
         "A4: P10-γ — settlement migrant transitions to Seeking{{Agent(member)}} (walks)"
     );
@@ -394,7 +424,9 @@ fn harness_s16_zeta_a5_untagged_manual_seek_no_target() {
         .insert(
             a,
             (
-                AgentState::Seeking { target: TargetKind::Agent(oid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(oid),
+                },
                 Social::new(SOCIAL_THRESHOLD - 1.0, 0.0), // BELOW threshold
             ),
         )
@@ -442,7 +474,9 @@ fn harness_s16_zeta_a6_cleared_on_exit() {
             .insert(
                 a,
                 (
-                    AgentState::Consuming { target: TargetKind::Agent(pid) },
+                    AgentState::Consuming {
+                        target: TargetKind::Agent(pid),
+                    },
                     SeekTarget::new((15, 10)),
                 ),
             )
@@ -476,7 +510,9 @@ fn harness_s16_zeta_a7_resource_set_once_unchanged() {
     dec.tick(&mut e.world, &mut e.resources);
     assert_eq!(
         agent_state(&e, a),
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "A7: Idle→Seeking{{Food}}"
     );
     assert_eq!(
@@ -528,7 +564,10 @@ fn harness_s16_zeta_a8_long_run_social_freeze_eliminated() {
             let moved = prev_pos.get(&ent).map(|prev| *prev != here).unwrap_or(true);
 
             let mut frozen_far = false;
-            if let AgentState::Seeking { target: TargetKind::Agent(pid) } = *state {
+            if let AgentState::Seeking {
+                target: TargetKind::Agent(pid),
+            } = *state
+            {
                 if let Some(partner) = pos_by_id.get(&pid) {
                     let dist = (here.0 as i64 - partner.0 as i64).abs()
                         + (here.1 as i64 - partner.1 as i64).abs();
@@ -569,7 +608,9 @@ fn harness_s16_zeta_a8_long_run_social_freeze_eliminated() {
         trapped, 0,
         "A8: no agent may be permanently trapped at tick {TICKS}; got {trapped}"
     );
-    println!("[S16-ζ A8] long-run social freeze eliminated (worst {max_streak} < 100, 0 trapped) ✓");
+    println!(
+        "[S16-ζ A8] long-run social freeze eliminated (worst {max_streak} < 100, 0 trapped) ✓"
+    );
 }
 
 // ─── Assertion 9: settlement births still fire (cross-feature regression) ──
@@ -619,12 +660,18 @@ fn harness_s16_zeta_a10_determinism_preserved() {
     }
     let m1 = run();
     let m2 = run();
-    assert!(!m1.is_empty(), "A10: non-empty floor — bootstrap must spawn agents");
+    assert!(
+        !m1.is_empty(),
+        "A10: non-empty floor — bootstrap must spawn agents"
+    );
     assert_eq!(
         m1, m2,
         "A10: two independent bootstraps must yield identical {{id→(pos,seek)}} maps"
     );
-    println!("[S16-ζ A10] determinism preserved across two 1500-tick bootstraps ({} agents) ✓", m1.len());
+    println!(
+        "[S16-ζ A10] determinism preserved across two 1500-tick bootstraps ({} agents) ✓",
+        m1.len()
+    );
 }
 
 // ─── Assertion 11: gathering loop + α0 substrate preserved ─────────────────
@@ -643,13 +690,17 @@ fn harness_s16_zeta_a11_gathering_loop_and_substrate_preserved() {
         dec.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             agent_state(&e, a),
-            AgentState::Seeking { target: TargetKind::Food },
+            AgentState::Seeking {
+                target: TargetKind::Food
+            },
             "A11a: Idle→Seeking{{Food}}"
         );
         dec.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             agent_state(&e, a),
-            AgentState::Consuming { target: TargetKind::Food },
+            AgentState::Consuming {
+                target: TargetKind::Food
+            },
             "A11a: Seeking{{Food}}→Consuming{{Food}}"
         );
     }
@@ -659,14 +710,21 @@ fn harness_s16_zeta_a11_gathering_loop_and_substrate_preserved() {
         let nf = e.resources.food_tiles.len();
         let nw = e.resources.water_tiles.len();
         let ns = e.resources.sleep_tiles.len();
-        assert_eq!(nf + nw + ns, 12, "A11b: combined source-tile count must be 12");
+        assert_eq!(
+            nf + nw + ns,
+            12,
+            "A11b: combined source-tile count must be 12"
+        );
         for map in [
             &e.resources.food_tiles,
             &e.resources.water_tiles,
             &e.resources.sleep_tiles,
         ] {
             for ((x, y), v) in map.iter() {
-                assert_eq!(*v, RESOURCE_SOURCE_INFINITE, "A11b: source ({x},{y}) must be u8::MAX");
+                assert_eq!(
+                    *v, RESOURCE_SOURCE_INFINITE,
+                    "A11b: source ({x},{y}) must be u8::MAX"
+                );
             }
         }
     }
@@ -687,7 +745,9 @@ fn harness_s16_zeta_a12_self_seek_guard() {
             a,
             (
                 MovementRng::new(7),
-                AgentState::Seeking { target: TargetKind::Agent(aid) }, // chasing SELF
+                AgentState::Seeking {
+                    target: TargetKind::Agent(aid),
+                }, // chasing SELF
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((20, 20)), // stale marker — self-guard must clear it
             ),
@@ -727,7 +787,9 @@ fn harness_s16_zeta_a13_partner_despawn_clearing() {
         .insert(
             seeker,
             (
-                AgentState::Seeking { target: TargetKind::Agent(pid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(pid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((10, 5)),
             ),
@@ -790,7 +852,9 @@ fn harness_s16_zeta_a14_lonely_settlement_migrant_paths() {
     assert!(
         matches!(
             agent_state(&e, migrant),
-            AgentState::Seeking { target: TargetKind::Agent(_) }
+            AgentState::Seeking {
+                target: TargetKind::Agent(_)
+            }
         ),
         "A14: P10-γ — lonely isolated migrant falls through to the settlement arm and \
          transitions to Seeking{{Agent(member)}} (walks)"

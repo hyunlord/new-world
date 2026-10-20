@@ -137,10 +137,7 @@ fn seed_construction_natural_with_social_bias(
 ) -> (hecs::Entity, AgentId) {
     let (e, id) = spawn_quiescent_agent(engine, tile.0, tile.1);
     // Social loneliness = 0: no natural Social eligibility; flip is memory-only
-    engine
-        .world
-        .insert_one(e, Social::new(0.0, 0.0))
-        .unwrap();
+    engine.world.insert_one(e, Social::new(0.0, 0.0)).unwrap();
     let (peer, _peer_id) = spawn_quiescent_agent(engine, tile.0, tile.1);
     engine
         .world
@@ -150,11 +147,7 @@ fn seed_construction_natural_with_social_bias(
 
     if let Some(entry) = seed_social_entry {
         let idx = tile.1 * engine.resources.tile_grid.width + tile.0;
-        engine
-            .world
-            .get::<&mut Memory>(e)
-            .unwrap()
-            .insert(entry);
+        engine.world.get::<&mut Memory>(e).unwrap().insert(entry);
         engine.resources.causal_log.push(
             idx,
             CausalEvent::SocialInteractionStarted {
@@ -271,32 +264,42 @@ fn harness_p8_beta_a1b_system_registered_in_default_runtime() {
 #[test]
 fn harness_p8_beta_a2_natural_hunger_breach_encoded() {
     let mut engine = fresh_engine();
-    let (entity, agent_id) = spawn_agent_with_memory(
-        &mut engine, 5, 5,
-        60.0, 0.0,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    );
+    let (entity, agent_id) =
+        spawn_agent_with_memory(&mut engine, 5, 5, 60.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     engine.tick();
 
     let hits = entries_matching(&engine.world, entity, 0.4, -0.3, engine.current_tick());
-    assert_eq!(hits.len(), 1, "expected exactly one Hunger-breach encoding (s=0.4 v=-0.3)");
+    assert_eq!(
+        hits.len(),
+        1,
+        "expected exactly one Hunger-breach encoding (s=0.4 v=-0.3)"
+    );
 
     // Bind to the emitted event id (Issue-2: event_id must match)
-    let emitted_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::AgentDecision {
-                id,
-                agent,
-                reason: DecisionReason::HungerThresholdBreach,
-                ..
-            } = ev
-            {
-                if *agent == agent_id { Some(*id) } else { None }
-            } else {
-                None
-            }
+    let emitted_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::AgentDecision {
+                    id,
+                    agent,
+                    reason: DecisionReason::HungerThresholdBreach,
+                    ..
+                } = ev
+                {
+                    if *agent == agent_id {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("HungerThresholdBreach must be emitted for agent");
+        .expect("HungerThresholdBreach must be emitted for agent");
     assert_eq!(
         hits[0].event_id, emitted_id,
         "encoded entry event_id must match emitted HungerThresholdBreach"
@@ -306,63 +309,85 @@ fn harness_p8_beta_a2_natural_hunger_breach_encoded() {
 #[test]
 fn harness_p8_beta_a3_natural_thirst_breach_encoded() {
     let mut engine = fresh_engine();
-    let (entity, agent_id) = spawn_agent_with_memory(
-        &mut engine, 6, 6,
-        0.0, 0.0, 60.0, 0.0,
-        0.0, 0.0, 0.0, 0.0,
-    );
+    let (entity, agent_id) =
+        spawn_agent_with_memory(&mut engine, 6, 6, 0.0, 0.0, 60.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     engine.tick();
 
     let hits = entries_matching(&engine.world, entity, 0.4, -0.3, engine.current_tick());
     assert_eq!(hits.len(), 1, "expected exactly one Thirst-breach encoding");
 
-    let emitted_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::AgentDecision {
-                id,
-                agent,
-                reason: DecisionReason::ThirstThresholdBreach,
-                ..
-            } = ev
-            {
-                if *agent == agent_id { Some(*id) } else { None }
-            } else {
-                None
-            }
+    let emitted_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::AgentDecision {
+                    id,
+                    agent,
+                    reason: DecisionReason::ThirstThresholdBreach,
+                    ..
+                } = ev
+                {
+                    if *agent == agent_id {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("ThirstThresholdBreach must be emitted for agent");
-    assert_eq!(hits[0].event_id, emitted_id, "entry event_id must match emitted ThirstThresholdBreach");
+        .expect("ThirstThresholdBreach must be emitted for agent");
+    assert_eq!(
+        hits[0].event_id, emitted_id,
+        "entry event_id must match emitted ThirstThresholdBreach"
+    );
 }
 
 #[test]
 fn harness_p8_beta_a4_natural_fatigue_breach_encoded() {
     let mut engine = fresh_engine();
-    let (entity, agent_id) = spawn_agent_with_memory(
-        &mut engine, 7, 7,
-        0.0, 0.0, 0.0, 0.0, 60.0, 0.0,
-        0.0, 0.0,
-    );
+    let (entity, agent_id) =
+        spawn_agent_with_memory(&mut engine, 7, 7, 0.0, 0.0, 0.0, 0.0, 60.0, 0.0, 0.0, 0.0);
     engine.tick();
 
     let hits = entries_matching(&engine.world, entity, 0.3, -0.2, engine.current_tick());
-    assert_eq!(hits.len(), 1, "expected exactly one Fatigue-breach encoding");
+    assert_eq!(
+        hits.len(),
+        1,
+        "expected exactly one Fatigue-breach encoding"
+    );
 
-    let emitted_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::AgentDecision {
-                id,
-                agent,
-                reason: DecisionReason::FatigueThresholdBreach,
-                ..
-            } = ev
-            {
-                if *agent == agent_id { Some(*id) } else { None }
-            } else {
-                None
-            }
+    let emitted_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::AgentDecision {
+                    id,
+                    agent,
+                    reason: DecisionReason::FatigueThresholdBreach,
+                    ..
+                } = ev
+                {
+                    if *agent == agent_id {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("FatigueThresholdBreach must be emitted for agent");
-    assert_eq!(hits[0].event_id, emitted_id, "entry event_id must match emitted FatigueThresholdBreach");
+        .expect("FatigueThresholdBreach must be emitted for agent");
+    assert_eq!(
+        hits[0].event_id, emitted_id,
+        "entry event_id must match emitted FatigueThresholdBreach"
+    );
 }
 
 #[test]
@@ -374,41 +399,70 @@ fn harness_p8_beta_a5_natural_construction_reason_encoded() {
 
     let hits = entries_matching(&engine.world, entity, 0.5, 0.1, engine.current_tick());
     assert_eq!(
-        hits.len(), 1,
+        hits.len(),
+        1,
         "expected exactly one ConstructionReason encoding (s=0.5 v=0.1), got entries={:?}",
         engine.world.get::<&Memory>(entity).unwrap().entries
     );
 
-    let emitted_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::AgentDecision {
-                id,
-                agent,
-                reason: DecisionReason::ConstructionReason,
-                ..
-            } = ev
-            {
-                if *agent == agent_id { Some(*id) } else { None }
-            } else {
-                None
-            }
+    let emitted_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::AgentDecision {
+                    id,
+                    agent,
+                    reason: DecisionReason::ConstructionReason,
+                    ..
+                } = ev
+                {
+                    if *agent == agent_id {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("ConstructionReason must be emitted for agent");
-    assert_eq!(hits[0].event_id, emitted_id, "entry event_id must match emitted ConstructionReason");
+        .expect("ConstructionReason must be emitted for agent");
+    assert_eq!(
+        hits[0].event_id, emitted_id,
+        "entry event_id must match emitted ConstructionReason"
+    );
 }
 
 #[test]
 fn harness_p8_beta_a6_natural_social_reason_encoded() {
     let mut engine = fresh_engine();
     let (entity_a, agent_id_a) = spawn_agent_with_memory(
-        &mut engine, 9, 9,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        SOCIAL_THRESHOLD + 1.0, 0.0,
+        &mut engine,
+        9,
+        9,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        SOCIAL_THRESHOLD + 1.0,
+        0.0,
     );
     let (entity_b, agent_id_b) = spawn_agent_with_memory(
-        &mut engine, 9, 9,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        SOCIAL_THRESHOLD + 1.0, 0.0,
+        &mut engine,
+        9,
+        9,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        SOCIAL_THRESHOLD + 1.0,
+        0.0,
     );
     engine.tick();
 
@@ -417,22 +471,62 @@ fn harness_p8_beta_a6_natural_social_reason_encoded() {
     assert_eq!(hits_a.len(), 1, "agent A missing SocialReason encoding");
     assert_eq!(hits_b.len(), 1, "agent B missing SocialReason encoding");
 
-    let emitted_id_a = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::AgentDecision { id, agent, reason: DecisionReason::SocialReason, .. } = ev {
-                if *agent == agent_id_a { Some(*id) } else { None }
-            } else { None }
+    let emitted_id_a = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::AgentDecision {
+                    id,
+                    agent,
+                    reason: DecisionReason::SocialReason,
+                    ..
+                } = ev
+                {
+                    if *agent == agent_id_a {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("SocialReason must be emitted for agent A");
-    let emitted_id_b = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::AgentDecision { id, agent, reason: DecisionReason::SocialReason, .. } = ev {
-                if *agent == agent_id_b { Some(*id) } else { None }
-            } else { None }
+        .expect("SocialReason must be emitted for agent A");
+    let emitted_id_b = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::AgentDecision {
+                    id,
+                    agent,
+                    reason: DecisionReason::SocialReason,
+                    ..
+                } = ev
+                {
+                    if *agent == agent_id_b {
+                        Some(*id)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("SocialReason must be emitted for agent B");
-    assert_eq!(hits_a[0].event_id, emitted_id_a, "agent A entry must reference emitted SocialReason");
-    assert_eq!(hits_b[0].event_id, emitted_id_b, "agent B entry must reference emitted SocialReason");
+        .expect("SocialReason must be emitted for agent B");
+    assert_eq!(
+        hits_a[0].event_id, emitted_id_a,
+        "agent A entry must reference emitted SocialReason"
+    );
+    assert_eq!(
+        hits_b[0].event_id, emitted_id_b,
+        "agent B entry must reference emitted SocialReason"
+    );
 }
 
 #[test]
@@ -445,16 +539,26 @@ fn harness_p8_beta_a7_natural_construction_started_encoded() {
 
     let hits = entries_matching(&engine.world, entity, 0.6, 0.3, engine.current_tick());
     assert_eq!(
-        hits.len(), 1,
+        hits.len(),
+        1,
         "expected exactly one ConstructionStarted encoding (s=0.6 v=0.3), got entries={:?}",
         engine.world.get::<&Memory>(entity).unwrap().entries
     );
 
-    let started_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::ConstructionStarted { id, .. } = ev { Some(*id) } else { None }
+    let started_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::ConstructionStarted { id, .. } = ev {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("ConstructionStarted must be emitted");
+        .expect("ConstructionStarted must be emitted");
     assert_eq!(
         hits[0].event_id, started_id,
         "encoded entry must reference emitted ConstructionStarted id"
@@ -473,15 +577,25 @@ fn harness_p8_beta_a8_natural_construction_completed_encoded() {
 
     let hits = entries_matching(&engine.world, entity, 0.8, 0.6, engine.current_tick());
     assert_eq!(
-        hits.len(), 1,
+        hits.len(),
+        1,
         "expected exactly one ConstructionCompleted encoding (s=0.8 v=0.6), got entries={:?}",
         engine.world.get::<&Memory>(entity).unwrap().entries
     );
-    let emitted_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::ConstructionCompleted { id, .. } = ev { Some(*id) } else { None }
+    let emitted_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::ConstructionCompleted { id, .. } = ev {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("ConstructionCompleted must be emitted");
+        .expect("ConstructionCompleted must be emitted");
     assert_eq!(
         hits[0].event_id, emitted_id,
         "encoded entry must reference the emitted ConstructionCompleted id"
@@ -492,61 +606,139 @@ fn harness_p8_beta_a8_natural_construction_completed_encoded() {
 fn harness_p8_beta_a9_natural_social_interaction_started_both_participants() {
     let mut engine = fresh_engine();
     let (entity_a, _) = spawn_agent_with_memory(
-        &mut engine, 13, 13,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        SOCIAL_THRESHOLD + 1.0, 0.0,
+        &mut engine,
+        13,
+        13,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        SOCIAL_THRESHOLD + 1.0,
+        0.0,
     );
     let (entity_b, _) = spawn_agent_with_memory(
-        &mut engine, 13, 13,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        SOCIAL_THRESHOLD + 1.0, 0.0,
+        &mut engine,
+        13,
+        13,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        SOCIAL_THRESHOLD + 1.0,
+        0.0,
     );
     engine.tick();
     engine.tick();
 
-    let started_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::SocialInteractionStarted { id, .. } = ev { Some(*id) } else { None }
+    let started_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::SocialInteractionStarted { id, .. } = ev {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("SocialInteractionStarted must be emitted");
+        .expect("SocialInteractionStarted must be emitted");
 
     let hits_a = entries_matching(&engine.world, entity_a, 0.6, 0.4, engine.current_tick());
     let hits_b = entries_matching(&engine.world, entity_b, 0.6, 0.4, engine.current_tick());
-    assert_eq!(hits_a.len(), 1, "agent A must encode SocialInteractionStarted exactly once");
-    assert_eq!(hits_b.len(), 1, "agent B must encode SocialInteractionStarted exactly once");
-    assert_eq!(hits_a[0].event_id, started_id, "agent A entry must reference emitted Started id");
-    assert_eq!(hits_b[0].event_id, started_id, "agent B entry must reference emitted Started id");
+    assert_eq!(
+        hits_a.len(),
+        1,
+        "agent A must encode SocialInteractionStarted exactly once"
+    );
+    assert_eq!(
+        hits_b.len(),
+        1,
+        "agent B must encode SocialInteractionStarted exactly once"
+    );
+    assert_eq!(
+        hits_a[0].event_id, started_id,
+        "agent A entry must reference emitted Started id"
+    );
+    assert_eq!(
+        hits_b[0].event_id, started_id,
+        "agent B entry must reference emitted Started id"
+    );
 }
 
 #[test]
 fn harness_p8_beta_a10_natural_social_interaction_completed_both_participants() {
     let mut engine = fresh_engine();
     let (entity_a, _) = spawn_agent_with_memory(
-        &mut engine, 14, 14,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        SOCIAL_THRESHOLD + 1.0, 0.0,
+        &mut engine,
+        14,
+        14,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        SOCIAL_THRESHOLD + 1.0,
+        0.0,
     );
     let (entity_b, _) = spawn_agent_with_memory(
-        &mut engine, 14, 14,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        SOCIAL_THRESHOLD + 1.0, 0.0,
+        &mut engine,
+        14,
+        14,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        SOCIAL_THRESHOLD + 1.0,
+        0.0,
     );
     for _ in 0..12 {
         engine.tick();
     }
 
-    let completed_id = engine.resources.causal_log.iter().find_map(|(_, log)| {
-        log.iter().find_map(|ev| {
-            if let CausalEvent::SocialInteractionCompleted { id, .. } = ev { Some(*id) } else { None }
+    let completed_id = engine
+        .resources
+        .causal_log
+        .iter()
+        .find_map(|(_, log)| {
+            log.iter().find_map(|ev| {
+                if let CausalEvent::SocialInteractionCompleted { id, .. } = ev {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
         })
-    }).expect("SocialInteractionCompleted must be emitted");
+        .expect("SocialInteractionCompleted must be emitted");
 
     let hits_a = entries_matching(&engine.world, entity_a, 0.8, 0.7, engine.current_tick());
     let hits_b = entries_matching(&engine.world, entity_b, 0.8, 0.7, engine.current_tick());
-    assert_eq!(hits_a.len(), 1, "agent A must encode SocialInteractionCompleted exactly once");
-    assert_eq!(hits_b.len(), 1, "agent B must encode SocialInteractionCompleted exactly once");
-    assert_eq!(hits_a[0].event_id, completed_id, "agent A entry must reference emitted Completed id");
-    assert_eq!(hits_b[0].event_id, completed_id, "agent B entry must reference emitted Completed id");
+    assert_eq!(
+        hits_a.len(),
+        1,
+        "agent A must encode SocialInteractionCompleted exactly once"
+    );
+    assert_eq!(
+        hits_b.len(),
+        1,
+        "agent B must encode SocialInteractionCompleted exactly once"
+    );
+    assert_eq!(
+        hits_a[0].event_id, completed_id,
+        "agent A entry must reference emitted Completed id"
+    );
+    assert_eq!(
+        hits_b[0].event_id, completed_id,
+        "agent B entry must reference emitted Completed id"
+    );
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -576,7 +768,11 @@ fn harness_p8_beta_a11_anti_recursion_memory_reason_not_encoded() {
                 ..
             } = ev
             {
-                if *agent == agent_id { Some(*id) } else { None }
+                if *agent == agent_id {
+                    Some(*id)
+                } else {
+                    None
+                }
             } else {
                 None
             }
@@ -636,7 +832,11 @@ fn harness_p8_beta_a12_anti_recursion_memory_recalled_not_encoded() {
     let mut query = engine.world.query::<&Memory>();
     for (_, mem) in query.iter() {
         for recalled_id in &recalled_ids {
-            let encoded_count = mem.entries.iter().filter(|e| &e.event_id == recalled_id).count();
+            let encoded_count = mem
+                .entries
+                .iter()
+                .filter(|e| &e.event_id == recalled_id)
+                .count();
             assert_eq!(
                 encoded_count, 0,
                 "MemoryRecalled event {recalled_id} must NOT be encoded in Memory (anti-recursion)"
@@ -656,17 +856,32 @@ fn harness_p8_beta_a13_non_actor_events_not_encoded_production_run() {
     // Spawn 5 agents with Memory (quiescent — no natural AgentDecision fires) so
     // Memory components exist for the non-encoding check.
     for i in 0..5u32 {
-        spawn_agent_with_memory(&mut engine, 30 + i * 3, 30, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        spawn_agent_with_memory(
+            &mut engine,
+            30 + i * 3,
+            30,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        );
     }
 
     // Inject one BuildingPlacedEvent before the loop.  BuildingStampSystem (priority
     // 90) will drain it on tick 1 and emit 1 BuildingPlaced + 6 StampDirty events.
     // InfluenceUpdateSystem (priority 100) propagates those dirty regions and emits
     // InfluenceChanged events on subsequent ticks.
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (30, 30),
-        radius: 3,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (30, 30),
+            radius: 3,
+        });
 
     // 2 000-tick production run.  After each tick we accumulate any BP / SD / IC
     // event IDs that are currently visible in the ring buffers into a union set.
@@ -679,9 +894,15 @@ fn harness_p8_beta_a13_non_actor_events_not_encoded_production_run() {
         for (_, log) in engine.resources.causal_log.iter() {
             for ev in log.iter() {
                 match ev {
-                    CausalEvent::BuildingPlaced { id, .. } => { non_actor_ids.insert(*id); }
-                    CausalEvent::StampDirty { id, .. } => { non_actor_ids.insert(*id); }
-                    CausalEvent::InfluenceChanged { id, .. } => { non_actor_ids.insert(*id); }
+                    CausalEvent::BuildingPlaced { id, .. } => {
+                        non_actor_ids.insert(*id);
+                    }
+                    CausalEvent::StampDirty { id, .. } => {
+                        non_actor_ids.insert(*id);
+                    }
+                    CausalEvent::InfluenceChanged { id, .. } => {
+                        non_actor_ids.insert(*id);
+                    }
                     _ => {}
                 }
             }
@@ -697,7 +918,11 @@ fn harness_p8_beta_a13_non_actor_events_not_encoded_production_run() {
     let mut q = engine.world.query::<&Memory>();
     for (_, mem) in q.iter() {
         for &non_actor_id in &non_actor_ids {
-            let encoded = mem.entries.iter().filter(|e| e.event_id == non_actor_id).count();
+            let encoded = mem
+                .entries
+                .iter()
+                .filter(|e| e.event_id == non_actor_id)
+                .count();
             assert_eq!(
                 encoded, 0,
                 "non-actor event {non_actor_id} must not be encoded in Memory"
@@ -719,7 +944,8 @@ fn harness_p8_beta_a14_same_tick_duplicate_event_id_idempotency() {
     // to prove the idempotency guard prevents double-insertion.
     let mut engine = fresh_engine();
     // hunger_init=50.1f32 > HUNGER_THRESHOLD=50.0f32 → breach fires naturally on tick 1.
-    let (entity, _) = spawn_agent_with_memory(&mut engine, 20, 20, 50.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    let (entity, _) =
+        spawn_agent_with_memory(&mut engine, 20, 20, 50.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     // Tick 1: AgentDecisionSystem emits AgentDecision{HungerThresholdBreach},
     //         MemorySystem encodes it into Memory (natural encoding pass).
@@ -762,7 +988,13 @@ fn harness_p8_beta_a15_decay_one_tick_uniform_delta_contiguous_window() {
     {
         let mut mem = engine.world.get::<&mut Memory>(entity).unwrap();
         for (i, (&sal, &eid)) in initial_saliences.iter().zip(event_ids.iter()).enumerate() {
-            mem.insert(MemoryEntry::new(eid, base_tick + i as u64, 0.0, sal, MemoryArm::None));
+            mem.insert(MemoryEntry::new(
+                eid,
+                base_tick + i as u64,
+                0.0,
+                sal,
+                MemoryArm::None,
+            ));
         }
     }
 
@@ -772,7 +1004,8 @@ fn harness_p8_beta_a15_decay_one_tick_uniform_delta_contiguous_window() {
 
     let mem = engine.world.get::<&Memory>(entity).unwrap();
     assert_eq!(
-        mem.entries.len(), 5,
+        mem.entries.len(),
+        5,
         "all K=5 entries must remain above SALIENCE_FLOOR after one tick"
     );
 
@@ -787,8 +1020,7 @@ fn harness_p8_beta_a15_decay_one_tick_uniform_delta_contiguous_window() {
         // same IEEE 754 operation — so the result is bit-for-bit identical.
         let expected_post = init_sal - DECAY_RATE;
         assert_eq!(
-            entry.salience,
-            expected_post,
+            entry.salience, expected_post,
             "A15 entry {eid}: expected exact post-decay salience={expected_post}, got {}",
             entry.salience
         );
@@ -830,7 +1062,11 @@ fn harness_p8_beta_a16_cascade_flip_social_bias_target() {
             )
         })
         .collect();
-    assert_eq!(recalls.len(), 1, "exactly one MemoryRecalled(CascadeBias) required for A16");
+    assert_eq!(
+        recalls.len(),
+        1,
+        "exactly one MemoryRecalled(CascadeBias) required for A16"
+    );
     let recall_id = recalls[0].id();
     let recalled_event = if let CausalEvent::MemoryRecalled { recalled_event, .. } = recalls[0] {
         *recalled_event
@@ -859,7 +1095,11 @@ fn harness_p8_beta_a16_cascade_flip_social_bias_target() {
             )
         })
         .collect();
-    assert_eq!(mem_reasons.len(), 1, "exactly one AgentDecision{{MemoryReason}} required for A16");
+    assert_eq!(
+        mem_reasons.len(),
+        1,
+        "exactly one AgentDecision{{MemoryReason}} required for A16"
+    );
     assert_eq!(
         mem_reasons[0].parent(),
         Some(recall_id),
@@ -869,7 +1109,12 @@ fn harness_p8_beta_a16_cascade_flip_social_bias_target() {
     // (iii) AgentState must be Seeking{Agent(_)} — Social bias target
     let state = *engine.world.get::<&AgentState>(entity).unwrap();
     assert!(
-        matches!(state, AgentState::Seeking { target: TargetKind::Agent(_) }),
+        matches!(
+            state,
+            AgentState::Seeking {
+                target: TargetKind::Agent(_)
+            }
+        ),
         "A16: Social bias must flip cascade to Seeking{{Agent}}, got {:?}",
         state
     );
@@ -906,7 +1151,11 @@ fn harness_p8_beta_a17_cascade_flip_construction_bias_target() {
             )
         })
         .collect();
-    assert_eq!(recalls.len(), 1, "exactly one MemoryRecalled(CascadeBias) required for A17");
+    assert_eq!(
+        recalls.len(),
+        1,
+        "exactly one MemoryRecalled(CascadeBias) required for A17"
+    );
     let recall_id = recalls[0].id();
     let recalled_event = if let CausalEvent::MemoryRecalled { recalled_event, .. } = recalls[0] {
         *recalled_event
@@ -936,7 +1185,11 @@ fn harness_p8_beta_a17_cascade_flip_construction_bias_target() {
             )
         })
         .collect();
-    assert_eq!(mem_reasons.len(), 1, "exactly one AgentDecision{{MemoryReason}} required for A17");
+    assert_eq!(
+        mem_reasons.len(),
+        1,
+        "exactly one AgentDecision{{MemoryReason}} required for A17"
+    );
     assert_eq!(
         mem_reasons[0].parent(),
         Some(recall_id),
@@ -969,10 +1222,7 @@ fn build_a18_scenario() -> (SimEngine, hecs::Entity, AgentId, EventId, EventId) 
     let tile = (70u32, 70u32);
     let (e, agent_id) = spawn_quiescent_agent(&mut engine, tile.0, tile.1);
     // Social=0: no natural Social eligibility; bias flip is memory-only
-    engine
-        .world
-        .insert_one(e, Social::new(0.0, 0.0))
-        .unwrap();
+    engine.world.insert_one(e, Social::new(0.0, 0.0)).unwrap();
     let (peer, _) = spawn_quiescent_agent(&mut engine, tile.0, tile.1);
     engine
         .world
@@ -997,7 +1247,13 @@ fn build_a18_scenario() -> (SimEngine, hecs::Entity, AgentId, EventId, EventId) 
         .world
         .get::<&mut Memory>(e)
         .unwrap()
-        .insert(MemoryEntry::new(x_event_id, 0, 0.05, 0.06, MemoryArm::Construction));
+        .insert(MemoryEntry::new(
+            x_event_id,
+            0,
+            0.05,
+            0.06,
+            MemoryArm::Construction,
+        ));
 
     // Y-set causal events and Memory entries (load-bearing Social bias).
     // Both y1 and y2 events are always pushed to the causal log; Memory entries
@@ -1053,18 +1309,30 @@ fn harness_p8_beta_a18_paired_scenario_state_divergence_structural_partialeq() {
     );
 
     // Control (engine_c) must have zero MemoryRecalled for focal agent
-    let c_recalls = engine_c.resources.causal_log.iter()
+    let c_recalls = engine_c
+        .resources
+        .causal_log
+        .iter()
         .flat_map(|(_, log)| log.iter())
         .filter(|e| matches!(e, CausalEvent::MemoryRecalled { agent, .. } if *agent == agent_id_c))
         .count();
-    assert_eq!(c_recalls, 0, "A18 control (no Y-set) must have zero MemoryRecalled, got {c_recalls}");
+    assert_eq!(
+        c_recalls, 0,
+        "A18 control (no Y-set) must have zero MemoryRecalled, got {c_recalls}"
+    );
 
     // Memory-biased (engine_m) must have at least one MemoryRecalled for focal agent
-    let m_recalls = engine_m.resources.causal_log.iter()
+    let m_recalls = engine_m
+        .resources
+        .causal_log
+        .iter()
         .flat_map(|(_, log)| log.iter())
         .filter(|e| matches!(e, CausalEvent::MemoryRecalled { agent, .. } if *agent == agent_id_m))
         .count();
-    assert!(m_recalls >= 1, "A18 memory-biased (Y-set) must have >= 1 MemoryRecalled, got {m_recalls}");
+    assert!(
+        m_recalls >= 1,
+        "A18 memory-biased (Y-set) must have >= 1 MemoryRecalled, got {m_recalls}"
+    );
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1099,24 +1367,52 @@ fn harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory() {
     // Build engine_P (flip scenario)
     let mut engine_p = fresh_engine();
     let (ent_p, agent_id_p) = spawn_quiescent_agent(&mut engine_p, tile.0, tile.1);
-    engine_p.world.insert_one(ent_p, Social::new(0.0, 0.0)).unwrap();
+    engine_p
+        .world
+        .insert_one(ent_p, Social::new(0.0, 0.0))
+        .unwrap();
     let (peer_p, _) = spawn_quiescent_agent(&mut engine_p, tile.0, tile.1);
-    engine_p.world.insert_one(peer_p, Social::new(0.0, 0.0)).unwrap();
+    engine_p
+        .world
+        .insert_one(peer_p, Social::new(0.0, 0.0))
+        .unwrap();
     spawn_construction_site(&mut engine_p, tile.0, tile.1, 100);
     let idx_p = tile.1 * engine_p.resources.tile_grid.width + tile.0;
-    engine_p.resources.causal_log.push(idx_p, CausalEvent::SocialInteractionStarted {
-        id: seed_id, parent: None,
-        agents: (agent_id_p, agent_id_p.saturating_add(1)),
-        position: tile, tick: 0,
-    });
-    engine_p.resources.causal_log.push(idx_p, CausalEvent::SocialInteractionStarted {
-        id: seed_id2, parent: None,
-        agents: (agent_id_p, agent_id_p.saturating_add(1)),
-        position: tile, tick: 0,
-    });
-    engine_p.world.get::<&mut Memory>(ent_p).unwrap()
-        .insert(MemoryEntry::new(seed_id, 0, 1.0, seed_sal, MemoryArm::Social));
-    engine_p.world.get::<&mut Memory>(ent_p).unwrap()
+    engine_p.resources.causal_log.push(
+        idx_p,
+        CausalEvent::SocialInteractionStarted {
+            id: seed_id,
+            parent: None,
+            agents: (agent_id_p, agent_id_p.saturating_add(1)),
+            position: tile,
+            tick: 0,
+        },
+    );
+    engine_p.resources.causal_log.push(
+        idx_p,
+        CausalEvent::SocialInteractionStarted {
+            id: seed_id2,
+            parent: None,
+            agents: (agent_id_p, agent_id_p.saturating_add(1)),
+            position: tile,
+            tick: 0,
+        },
+    );
+    engine_p
+        .world
+        .get::<&mut Memory>(ent_p)
+        .unwrap()
+        .insert(MemoryEntry::new(
+            seed_id,
+            0,
+            1.0,
+            seed_sal,
+            MemoryArm::Social,
+        ));
+    engine_p
+        .world
+        .get::<&mut Memory>(ent_p)
+        .unwrap()
         .insert(MemoryEntry::new(seed_id2, 0, 0.5, 1.0, MemoryArm::Social));
 
     // Build engine_N — IDENTICAL setup to engine_P (ConstructionSite + peer,
@@ -1132,55 +1428,124 @@ fn harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory() {
 
     let mut engine_n = fresh_engine();
     let (ent_n, agent_id_n) = spawn_quiescent_agent(&mut engine_n, tile.0, tile.1);
-    engine_n.world.insert_one(ent_n, Social::new(0.0, 0.0)).unwrap();
+    engine_n
+        .world
+        .insert_one(ent_n, Social::new(0.0, 0.0))
+        .unwrap();
     let (peer_n, _) = spawn_quiescent_agent(&mut engine_n, tile.0, tile.1);
-    engine_n.world.insert_one(peer_n, Social::new(0.0, 0.0)).unwrap();
+    engine_n
+        .world
+        .insert_one(peer_n, Social::new(0.0, 0.0))
+        .unwrap();
     spawn_construction_site(&mut engine_n, tile.0, tile.1, 100);
     let idx_n = tile.1 * engine_n.resources.tile_grid.width + tile.0;
     // Same Social causal-log events as engine_P.
-    engine_n.resources.causal_log.push(idx_n, CausalEvent::SocialInteractionStarted {
-        id: seed_id, parent: None,
-        agents: (agent_id_n, agent_id_n.saturating_add(1)),
-        position: tile, tick: 0,
-    });
-    engine_n.resources.causal_log.push(idx_n, CausalEvent::SocialInteractionStarted {
-        id: seed_id2, parent: None,
-        agents: (agent_id_n, agent_id_n.saturating_add(1)),
-        position: tile, tick: 0,
-    });
+    engine_n.resources.causal_log.push(
+        idx_n,
+        CausalEvent::SocialInteractionStarted {
+            id: seed_id,
+            parent: None,
+            agents: (agent_id_n, agent_id_n.saturating_add(1)),
+            position: tile,
+            tick: 0,
+        },
+    );
+    engine_n.resources.causal_log.push(
+        idx_n,
+        CausalEvent::SocialInteractionStarted {
+            id: seed_id2,
+            parent: None,
+            agents: (agent_id_n, agent_id_n.saturating_add(1)),
+            position: tile,
+            tick: 0,
+        },
+    );
     // Construction causal-log events for the natural-margin entries.
-    engine_n.resources.causal_log.push(idx_n, CausalEvent::AgentDecision {
-        id: con_id1, parent: None,
-        agent: agent_id_n, position: tile,
-        reason: DecisionReason::ConstructionReason, tick: 0,
-    });
-    engine_n.resources.causal_log.push(idx_n, CausalEvent::AgentDecision {
-        id: con_id2, parent: None,
-        agent: agent_id_n, position: tile,
-        reason: DecisionReason::ConstructionReason, tick: 0,
-    });
+    engine_n.resources.causal_log.push(
+        idx_n,
+        CausalEvent::AgentDecision {
+            id: con_id1,
+            parent: None,
+            agent: agent_id_n,
+            position: tile,
+            reason: DecisionReason::ConstructionReason,
+            tick: 0,
+        },
+    );
+    engine_n.resources.causal_log.push(
+        idx_n,
+        CausalEvent::AgentDecision {
+            id: con_id2,
+            parent: None,
+            agent: agent_id_n,
+            position: tile,
+            reason: DecisionReason::ConstructionReason,
+            tick: 0,
+        },
+    );
     // IDENTICAL Social entries to engine_P.
-    engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(seed_id, 0, 1.0, seed_sal, MemoryArm::Social));
-    engine_n.world.get::<&mut Memory>(ent_n).unwrap()
+    engine_n
+        .world
+        .get::<&mut Memory>(ent_n)
+        .unwrap()
+        .insert(MemoryEntry::new(
+            seed_id,
+            0,
+            1.0,
+            seed_sal,
+            MemoryArm::Social,
+        ));
+    engine_n
+        .world
+        .get::<&mut Memory>(ent_n)
+        .unwrap()
         .insert(MemoryEntry::new(seed_id2, 0, 0.5, 1.0, MemoryArm::Social));
     // Construction entries (overwhelming natural margin).
-    engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(con_id1, 0, 1.0, 1.0, MemoryArm::Construction));
-    engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(con_id2, 0, 1.0, 1.0, MemoryArm::Construction));
+    engine_n
+        .world
+        .get::<&mut Memory>(ent_n)
+        .unwrap()
+        .insert(MemoryEntry::new(
+            con_id1,
+            0,
+            1.0,
+            1.0,
+            MemoryArm::Construction,
+        ));
+    engine_n
+        .world
+        .get::<&mut Memory>(ent_n)
+        .unwrap()
+        .insert(MemoryEntry::new(
+            con_id2,
+            0,
+            1.0,
+            1.0,
+            MemoryArm::Construction,
+        ));
 
     // Tick 1: engine_P flips (bias-only Social path), engine_N stays Idle
     engine_p.tick();
     engine_n.tick();
 
-    let p_flipped = engine_p.resources.causal_log.iter()
+    let p_flipped = engine_p
+        .resources
+        .causal_log
+        .iter()
         .flat_map(|(_, l)| l.iter())
-        .any(|e| matches!(e, CausalEvent::MemoryRecalled { agent, recalled_event, .. }
-            if *agent == agent_id_p && *recalled_event == seed_id));
-    assert!(p_flipped, "engine_P must flip via bias-only Social path (2 entries > BIAS_FLIP_THRESHOLD)");
+        .any(|e| {
+            matches!(e, CausalEvent::MemoryRecalled { agent, recalled_event, .. }
+            if *agent == agent_id_p && *recalled_event == seed_id)
+        });
+    assert!(
+        p_flipped,
+        "engine_P must flip via bias-only Social path (2 entries > BIAS_FLIP_THRESHOLD)"
+    );
 
-    let n_recalled = engine_n.resources.causal_log.iter()
+    let n_recalled = engine_n
+        .resources
+        .causal_log
+        .iter()
         .flat_map(|(_, l)| l.iter())
         .any(|e| matches!(e, CausalEvent::MemoryRecalled { .. }));
     assert!(!n_recalled, "engine_N must NOT flip (overwhelming Construction natural margin prevents Social bias flip)");
@@ -1189,10 +1554,24 @@ fn harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory() {
     // where engine_p's seed_id was recalled, that entry was reinforced (not
     // decayed in the same tick) → sal_p = (1.0 + 0.1).min(1.0) = 1.0.
     // engine_n's seed_id was pure-decayed → sal_n = 1.0 - 0.001 = 0.999.
-    let sal_p = engine_p.world.get::<&Memory>(ent_p).unwrap()
-        .entries.iter().find(|e| e.event_id == seed_id).map(|e| e.salience).unwrap_or(0.0);
-    let sal_n = engine_n.world.get::<&Memory>(ent_n).unwrap()
-        .entries.iter().find(|e| e.event_id == seed_id).map(|e| e.salience).unwrap_or(0.0);
+    let sal_p = engine_p
+        .world
+        .get::<&Memory>(ent_p)
+        .unwrap()
+        .entries
+        .iter()
+        .find(|e| e.event_id == seed_id)
+        .map(|e| e.salience)
+        .unwrap_or(0.0);
+    let sal_n = engine_n
+        .world
+        .get::<&Memory>(ent_n)
+        .unwrap()
+        .entries
+        .iter()
+        .find(|e| e.event_id == seed_id)
+        .map(|e| e.salience)
+        .unwrap_or(0.0);
     let expected_p = (seed_sal + REINFORCEMENT_BOOST).min(1.0);
     let expected_n = seed_sal - DECAY_RATE;
     assert!(
@@ -1295,7 +1674,10 @@ fn harness_p8_beta_a21_full_year_only_cascade_bias_trigger_and_upper_bound() {
         engine.tick();
         for (_, log) in engine.resources.causal_log.iter() {
             for ev in log.iter() {
-                if let CausalEvent::MemoryRecalled { id, triggered_by, .. } = ev {
+                if let CausalEvent::MemoryRecalled {
+                    id, triggered_by, ..
+                } = ev
+                {
                     if seen_ids.insert(*id) {
                         match triggered_by {
                             MemoryRecallTrigger::CascadeBias => cascade_bias_count += 1,
@@ -1342,10 +1724,7 @@ fn harness_p8_beta_a22_panic_free_full_year_and_no_unwrap_in_cascade_helpers() {
             engine.tick();
         }
     }));
-    assert!(
-        result.is_ok(),
-        "full-year 4380-tick run must not panic"
-    );
+    assert!(result.is_ok(), "full-year 4380-tick run must not panic");
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -1504,7 +1883,11 @@ fn harness_p8_beta_a25_behavioral_signature_triple_regression() {
 
     for (name, post, baseline) in [
         ("buildings_completed", buildings, BASELINE_SIGNATURE.0),
-        ("social_interactions_completed", social_completed, BASELINE_SIGNATURE.1),
+        (
+            "social_interactions_completed",
+            social_completed,
+            BASELINE_SIGNATURE.1,
+        ),
         ("population", population, BASELINE_SIGNATURE.2),
     ] {
         let ratio = (post as f64 - baseline as f64).abs() / (baseline.max(1) as f64);
@@ -1549,7 +1932,11 @@ fn harness_p8_beta_a27_causal_log_lookup_contract() {
     );
     let result = engine.resources.causal_log.lookup(live_id);
     assert!(result.is_some(), "live event lookup must return Some");
-    assert_eq!(result.unwrap().id(), live_id, "returned event id must match queried id");
+    assert_eq!(
+        result.unwrap().id(),
+        live_id,
+        "returned event id must match queried id"
+    );
 
     // (b) missing: a never-recorded EventId returns None
     let missing_id: EventId = u64::MAX;

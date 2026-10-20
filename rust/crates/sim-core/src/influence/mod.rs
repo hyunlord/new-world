@@ -32,11 +32,9 @@ pub mod grid;
 pub mod propagate;
 
 pub use blocking::MaterialBlockingCache;
-pub use channel::{
-    AggKind, BlockingDerive, ChannelDef, DecayKind, InfluenceChannel, UpdateTier,
-};
+pub use channel::{AggKind, BlockingDerive, ChannelDef, DecayKind, InfluenceChannel, UpdateTier};
 pub use grid::{DirtyRegion, InfluenceGrid};
 pub use propagate::{
-    LodTier, propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast,
-    stamp_social_aggregate,
+    propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast, stamp_social_aggregate,
+    LodTier,
 };

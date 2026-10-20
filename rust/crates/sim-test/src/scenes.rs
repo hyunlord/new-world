@@ -108,7 +108,10 @@ pub fn game_v17_nofission_scene(seed: u64) -> SimEngine {
 }
 
 /// [`game_v17_nofission_scene`] for given hidden parameters.
-pub fn game_v17_nofission_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+pub fn game_v17_nofission_scene_with(
+    seed: u64,
+    variety: &sim_core::variety::WorldVariety,
+) -> SimEngine {
     let mut engine = sim_systems::worldgen::build_world_with(
         &sim_systems::worldgen::WorldGenConfig::game_v17_with(seed, variety),
         sim_core::rules::WorldRules::game_v17_nofission_with(variety),
@@ -142,7 +145,10 @@ pub fn game_v18_nofission_scene(seed: u64) -> SimEngine {
 }
 
 /// [`game_v18_nofission_scene`] for given hidden parameters.
-pub fn game_v18_nofission_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+pub fn game_v18_nofission_scene_with(
+    seed: u64,
+    variety: &sim_core::variety::WorldVariety,
+) -> SimEngine {
     let mut engine = sim_systems::worldgen::build_world_with(
         &sim_systems::worldgen::WorldGenConfig::game_v18_with(seed, variety),
         sim_core::rules::WorldRules::game_v18_nofission_with(variety),
@@ -174,7 +180,10 @@ pub fn game_v19_nofission_scene(seed: u64) -> SimEngine {
 }
 
 /// [`game_v19_nofission_scene`] for given hidden parameters.
-pub fn game_v19_nofission_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+pub fn game_v19_nofission_scene_with(
+    seed: u64,
+    variety: &sim_core::variety::WorldVariety,
+) -> SimEngine {
     let mut engine = sim_systems::worldgen::build_world_with(
         &sim_systems::worldgen::WorldGenConfig::game_v19_with(seed, variety),
         sim_core::rules::WorldRules::game_v19_nofission_with(variety),
@@ -294,7 +303,10 @@ pub fn game_v20_inert_scene(seed: u64) -> SimEngine {
 }
 
 /// [`game_v20_inert_scene`] for given hidden parameters.
-pub fn game_v20_inert_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+pub fn game_v20_inert_scene_with(
+    seed: u64,
+    variety: &sim_core::variety::WorldVariety,
+) -> SimEngine {
     let mut engine = sim_systems::worldgen::build_world_with(
         &sim_systems::worldgen::WorldGenConfig::game_v20_with(seed, variety),
         sim_core::rules::WorldRules::game_v20_inert_with(variety),

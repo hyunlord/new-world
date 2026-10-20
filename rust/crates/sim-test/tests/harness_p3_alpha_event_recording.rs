@@ -43,10 +43,13 @@ fn fresh_engine() -> SimEngine {
 }
 
 fn place_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 fn centre_tile_idx() -> u32 {
@@ -68,7 +71,10 @@ fn harness_p3_alpha_fresh_log_is_empty() {
         0,
         "fresh engine must have zero active causal log tiles"
     );
-    assert!(e.resources.causal_log.is_empty(), "fresh log must report is_empty()");
+    assert!(
+        e.resources.causal_log.is_empty(),
+        "fresh log must report is_empty()"
+    );
 }
 
 // ── Plan P2: BuildingPlaced + 6 StampDirty land on centre tile ───────────────
@@ -184,7 +190,10 @@ fn harness_p3_alpha_fifo_eviction_retains_recent_eight() {
                     slot, expected_ch, channel
                 );
             }
-            other => panic!("expected InfluenceChanged at slot {}; got {:?}", slot, other),
+            other => panic!(
+                "expected InfluenceChanged at slot {}; got {:?}",
+                slot, other
+            ),
         }
     }
 }
@@ -229,13 +238,19 @@ fn harness_p3_alpha_building_placed_fields_round_trip() {
     // a BuildingPlaced { position: (32,32), radius: 12, tick: 0 } existed
     // before eviction. The retention proof is in P3; here we only verify
     // that whatever survived eviction carries the right tick/channel/etc.
-    e2.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    e2.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
     e2.tick();
 
-    let centre = e2.resources.causal_log.get(centre_tile_idx()).expect("centre log");
+    let centre = e2
+        .resources
+        .causal_log
+        .get(centre_tile_idx())
+        .expect("centre log");
 
     // Every StampDirty / InfluenceChanged in the centre log must report
     // tick == 0 (the tick during which BSS and IUS recorded).
@@ -288,14 +303,24 @@ fn harness_p3_alpha_sparse_storage_single_active_tile() {
     );
 
     // Spot-check a few corner tiles — they must have no log.
-    for (x, y) in [(0u32, 0u32), (W - 1, 0), (0, H - 1), (W - 1, H - 1), (SX + 1, SY)] {
+    for (x, y) in [
+        (0u32, 0u32),
+        (W - 1, 0),
+        (0, H - 1),
+        (W - 1, H - 1),
+        (SX + 1, SY),
+    ] {
         let idx = y * W + x;
         assert!(
             e.resources.causal_log.get(idx).is_none(),
             "tile ({},{}) must have NO causal log entry (sparse storage); got log with {} events",
             x,
             y,
-            e.resources.causal_log.get(idx).map(|l| l.len()).unwrap_or(0)
+            e.resources
+                .causal_log
+                .get(idx)
+                .map(|l| l.len())
+                .unwrap_or(0)
         );
     }
 }
@@ -387,10 +412,12 @@ fn harness_p3_alpha_tick_stamp_matches_current_tick() {
 #[test]
 fn harness_p3_alpha_oob_event_does_not_record() {
     let mut e = fresh_engine();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (999, 999),
-        radius: 1,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (999, 999),
+            radius: 1,
+        });
     e.tick();
 
     assert!(
@@ -413,14 +440,18 @@ fn harness_p3_alpha_oob_event_does_not_record() {
 #[test]
 fn harness_p3_alpha_multi_event_isolation() {
     let mut e = fresh_engine();
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (10, 10),
-        radius: 3,
-    });
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (40, 40),
-        radius: 3,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (10, 10),
+            radius: 3,
+        });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (40, 40),
+            radius: 3,
+        });
     e.tick();
 
     // Two distinct centre tiles → at least 2 active tile slots.
@@ -436,8 +467,18 @@ fn harness_p3_alpha_multi_event_isolation() {
     // Both centre tiles must have non-empty logs.
     let idx1 = 10u32 * W + 10;
     let idx2 = 40u32 * W + 40;
-    assert!(e.resources.causal_log.get(idx1).is_some(), "tile ({},{}) must have log", 10, 10);
-    assert!(e.resources.causal_log.get(idx2).is_some(), "tile ({},{}) must have log", 40, 40);
+    assert!(
+        e.resources.causal_log.get(idx1).is_some(),
+        "tile ({},{}) must have log",
+        10,
+        10
+    );
+    assert!(
+        e.resources.causal_log.get(idx2).is_some(),
+        "tile ({},{}) must have log",
+        40,
+        40
+    );
 }
 
 // ── Plan P10: Ring eviction is per-tile (FIFO, capacity TILE_CAUSAL_RING_SIZE) ─

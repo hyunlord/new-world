@@ -80,7 +80,8 @@ impl RuntimeSystem for PairingSystem {
         let mut events = Vec::new();
         // Pass 19 chronicle: (settlement, woman, man, familiarity), pushed
         // after the loop (`resources` stays borrowed through it).
-        let mut paired: Vec<(sim_core::components::SettlementId, AgentId, AgentId, f64)> = Vec::new();
+        let mut paired: Vec<(sim_core::components::SettlementId, AgentId, AgentId, f64)> =
+            Vec::new();
         for (sid, settlement) in settlements {
             let females: Vec<_> = people
                 .iter()
@@ -137,11 +138,14 @@ impl RuntimeSystem for PairingSystem {
             crate::runtime::chronicle_log::record(
                 world,
                 resources,
-                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Paired)
-                    .subject(woman)
-                    .other(Some(man))
-                    .settlement(Some(sid))
-                    .value((familiarity * 1000.0).round() as i64),
+                sim_core::chronicle::ChronicleEntry::new(
+                    tick,
+                    sim_core::chronicle::ChronicleKind::Paired,
+                )
+                .subject(woman)
+                .other(Some(man))
+                .settlement(Some(sid))
+                .value((familiarity * 1000.0).round() as i64),
             );
         }
     }

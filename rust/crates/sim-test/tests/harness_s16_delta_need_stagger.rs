@@ -78,7 +78,11 @@ fn collect_need_values(engine: &SimEngine) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
 /// exact whole numbers (`rng % 46`), so casting to `i64` is lossless for the
 /// distinctness check.
 fn distinct_count(values: &[f64]) -> usize {
-    values.iter().map(|v| *v as i64).collect::<HashSet<_>>().len()
+    values
+        .iter()
+        .map(|v| *v as i64)
+        .collect::<HashSet<_>>()
+        .len()
 }
 
 /// Sort a need-value vector with `f64::total_cmp` (whole numbers compare
@@ -96,7 +100,11 @@ fn harness_s16_delta_initial_need_values_within_bound() {
     // threshold. Any value ≥ 46 means the derivation is wrong; ≥ 50 breaks A13.
     let engine = bootstrapped_engine();
     let (hs, ts, ss) = collect_need_values(&engine);
-    assert_eq!(hs.len(), EXPECTED_AGENTS, "A1.0: must inspect all 64 agents");
+    assert_eq!(
+        hs.len(),
+        EXPECTED_AGENTS,
+        "A1.0: must inspect all 64 agents"
+    );
 
     let mut violations = 0usize;
     for (h, (t, s)) in hs.iter().zip(ts.iter().zip(ss.iter())) {
@@ -130,11 +138,23 @@ fn harness_s16_delta_stagger_spread_exists() {
     //   Hunger distinct = 32, Thirst distinct = 31, Sleep distinct = 31.
     println!("[S16-δ A2] observed distinct counts — Hunger={dh}, Thirst={dt}, Sleep={ds}");
 
-    assert!(dh >= 10, "A2.1: Hunger initial values must have ≥10 distinct; got {dh}");
-    assert!(dt >= 10, "A2.2: Thirst initial values must have ≥10 distinct; got {dt}");
-    assert!(ds >= 10, "A2.3: Sleep initial values must have ≥10 distinct; got {ds}");
+    assert!(
+        dh >= 10,
+        "A2.1: Hunger initial values must have ≥10 distinct; got {dh}"
+    );
+    assert!(
+        dt >= 10,
+        "A2.2: Thirst initial values must have ≥10 distinct; got {dt}"
+    );
+    assert!(
+        ds >= 10,
+        "A2.3: Sleep initial values must have ≥10 distinct; got {ds}"
+    );
     // Explicit "not all identical" guard (subsumed by ≥10 but stated per plan).
-    assert!(dh > 1 && dt > 1 && ds > 1, "A2.4: need values must not be all identical");
+    assert!(
+        dh > 1 && dt > 1 && ds > 1,
+        "A2.4: need values must not be all identical"
+    );
     println!("[S16-δ A2] stagger spread confirmed (≥10 distinct each need) ✓");
 }
 
@@ -149,9 +169,21 @@ fn harness_s16_delta_stagger_determinism() {
     let (ah, at, as_) = collect_need_values(&a);
     let (bh, bt, bs) = collect_need_values(&b);
 
-    assert_eq!(sorted(&ah), sorted(&bh), "A3.1: sorted Hunger values must be identical across engines");
-    assert_eq!(sorted(&at), sorted(&bt), "A3.2: sorted Thirst values must be identical across engines");
-    assert_eq!(sorted(&as_), sorted(&bs), "A3.3: sorted Sleep values must be identical across engines");
+    assert_eq!(
+        sorted(&ah),
+        sorted(&bh),
+        "A3.1: sorted Hunger values must be identical across engines"
+    );
+    assert_eq!(
+        sorted(&at),
+        sorted(&bt),
+        "A3.2: sorted Thirst values must be identical across engines"
+    );
+    assert_eq!(
+        sorted(&as_),
+        sorted(&bs),
+        "A3.3: sorted Sleep values must be identical across engines"
+    );
     println!("[S16-δ A3] two bootstraps → identical sorted need-value lists (deterministic) ✓");
 }
 
@@ -170,8 +202,14 @@ fn harness_s16_delta_all_idle_at_bootstrap_a13_preserved() {
             non_idle += 1;
         }
     }
-    assert_eq!(total, EXPECTED_AGENTS, "A4.0: must spawn exactly {EXPECTED_AGENTS} agents; got {total}");
-    assert_eq!(non_idle, 0, "A4: all {EXPECTED_AGENTS} agents must be Idle at bootstrap; got {non_idle} non-Idle");
+    assert_eq!(
+        total, EXPECTED_AGENTS,
+        "A4.0: must spawn exactly {EXPECTED_AGENTS} agents; got {total}"
+    );
+    assert_eq!(
+        non_idle, 0,
+        "A4: all {EXPECTED_AGENTS} agents must be Idle at bootstrap; got {non_idle} non-Idle"
+    );
     println!("[S16-δ A4] {total} agents, all Idle at bootstrap (A13 preserved) ✓");
 }
 
@@ -211,8 +249,14 @@ fn harness_s16_delta_breach_desynchronization_headline() {
         ticks.len()
     );
 
-    assert!(range >= 200, "A5.1: first-Seek tick range must be ≥ 200 (de-synchronized); got {range}");
-    assert!(distinct >= 10, "A5.2: distinct first-Seek ticks must be ≥ 10 (continuous trickle); got {distinct}");
+    assert!(
+        range >= 200,
+        "A5.1: first-Seek tick range must be ≥ 200 (de-synchronized); got {range}"
+    );
+    assert!(
+        distinct >= 10,
+        "A5.2: distinct first-Seek ticks must be ≥ 10 (continuous trickle); got {distinct}"
+    );
     println!("[S16-δ A5] breach de-synchronization confirmed (range {range} ≥ 200, distinct {distinct} ≥ 10) ✓");
 }
 
@@ -248,7 +292,9 @@ fn harness_s16_delta_accelerated_growth_rates() {
         tr > hr as f64 && (hr as f64) > sr,
         "A6.4: rate ordering must be Thirst({tr}) > Hunger({hr}) > Sleep({sr})"
     );
-    println!("[S16-δ A6] rates: Hunger={hr}, Thirst={tr}, Sleep={sr}; ordering Thirst>Hunger>Sleep ✓");
+    println!(
+        "[S16-δ A6] rates: Hunger={hr}, Thirst={tr}, Sleep={sr}; ordering Thirst>Hunger>Sleep ✓"
+    );
 
     // (c) at least one agent enters Seeking within 700 ticks.
     let mut seeking_seen = false;
@@ -264,7 +310,10 @@ fn harness_s16_delta_accelerated_growth_rates() {
             break;
         }
     }
-    assert!(seeking_seen, "A6.5: ≥1 agent must enter Seeking within 700 ticks (rates were actually raised)");
+    assert!(
+        seeking_seen,
+        "A6.5: ≥1 agent must enter Seeking within 700 ticks (rates were actually raised)"
+    );
     println!("[S16-δ A6] ≥1 agent entered Seeking within 700 ticks (accelerated) ✓");
 }
 
@@ -331,7 +380,10 @@ fn harness_s16_delta_gathering_loop_still_completes() {
 
 /// Whether a `TargetKind` is one of the three staggered resource needs.
 fn is_resource_target(target: TargetKind) -> bool {
-    matches!(target, TargetKind::Food | TargetKind::Water | TargetKind::Sleep)
+    matches!(
+        target,
+        TargetKind::Food | TargetKind::Water | TargetKind::Sleep
+    )
 }
 
 /// Map a resource `TargetKind` to its agent's current need value.

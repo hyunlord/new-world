@@ -59,7 +59,11 @@ fn min_chebyshev_to_lattice(x: u32, y: u32) -> u32 {
 /// in `engine`, re-raising Hunger above the trigger and resetting AgentState
 /// first (per the locked drive discipline). Returns `true` iff a real
 /// `Consuming{Food}` execution fired (Seeking→Consuming then Consuming→Idle).
-fn drive_one_food_consume(engine: &mut SimEngine, entity: hecs::Entity, sys: &mut AgentDecisionSystem) -> bool {
+fn drive_one_food_consume(
+    engine: &mut SimEngine,
+    entity: hecs::Entity,
+    sys: &mut AgentDecisionSystem,
+) -> bool {
     // Re-raise Hunger + reset AgentState so this is a genuine transition,
     // NOT a re-read of the same tile value.
     engine
@@ -68,19 +72,34 @@ fn drive_one_food_consume(engine: &mut SimEngine, entity: hecs::Entity, sys: &mu
         .expect("entity alive");
     engine
         .world
-        .insert_one(entity, AgentState::Seeking { target: TargetKind::Food })
+        .insert_one(
+            entity,
+            AgentState::Seeking {
+                target: TargetKind::Food,
+            },
+        )
         .expect("entity alive");
 
     // Tick 1: Seeking → Consuming (genuine transition; tile must have value > 0).
     sys.tick(&mut engine.world, &mut engine.resources);
-    let after_seek = *engine.world.get::<&AgentState>(entity).expect("state present");
-    if after_seek != (AgentState::Consuming { target: TargetKind::Food }) {
+    let after_seek = *engine
+        .world
+        .get::<&AgentState>(entity)
+        .expect("state present");
+    if after_seek
+        != (AgentState::Consuming {
+            target: TargetKind::Food,
+        })
+    {
         return false;
     }
 
     // Tick 2: Consuming executes (need-decrement + tile guard), → Idle.
     sys.tick(&mut engine.world, &mut engine.resources);
-    let after_consume = *engine.world.get::<&AgentState>(entity).expect("state present");
+    let after_consume = *engine
+        .world
+        .get::<&AgentState>(entity)
+        .expect("state present");
     after_consume == AgentState::Idle
 }
 
@@ -192,7 +211,9 @@ fn harness_resource_source_need_decrement_unconditional() {
         .insert(
             entity,
             (
-                AgentState::Consuming { target: TargetKind::Food },
+                AgentState::Consuming {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(80.0, 0.0),
             ),
         )
@@ -214,7 +235,11 @@ fn harness_resource_source_need_decrement_unconditional() {
          before={before} after={after}"
     );
     // Type: A — agent unconditionally transitions to Idle.
-    assert_eq!(state, AgentState::Idle, "A6.2: agent must transition to Idle");
+    assert_eq!(
+        state,
+        AgentState::Idle,
+        "A6.2: agent must transition to Idle"
+    );
     // Type: A — source tile still 255 (decrement skipped).
     assert_eq!(
         engine.resources.food_tiles.get(&(7, 7)),
@@ -245,12 +270,18 @@ fn harness_resource_finite_tile_decrements_and_removes() {
             .expect("entity alive");
         engine
             .world
-            .insert_one(entity, AgentState::Consuming { target: TargetKind::Food })
+            .insert_one(
+                entity,
+                AgentState::Consuming {
+                    target: TargetKind::Food,
+                },
+            )
             .expect("entity alive");
         sys.tick(&mut engine.world, &mut engine.resources);
         let got = engine.resources.food_tiles.get(&(9, 9)).copied();
         assert_eq!(
-            got, *expected,
+            got,
+            *expected,
             "A7.{}: finite tile after consume #{} must be {:?}; got {:?}",
             i + 1,
             i + 1,
@@ -297,7 +328,10 @@ fn harness_resource_snapshot_sorted_and_deterministic() {
     let call1 = collect_resource_snapshot(&res);
     let call2 = collect_resource_snapshot(&res);
     // Type: A — two calls return identical Vecs.
-    assert_eq!(call1, call2, "A9.1: snapshot must be deterministic across calls");
+    assert_eq!(
+        call1, call2,
+        "A9.1: snapshot must be deterministic across calls"
+    );
     // Type: A — strictly non-decreasing by (kind, x, y).
     for w in call1.windows(2) {
         let (a, b) = (w[0], w[1]);
@@ -315,7 +349,10 @@ fn harness_resource_sources_in_bounds_and_near_lattice() {
     // Type: A (bounds) / E (reachability, soft, reported).
     let engine = bootstrapped_engine();
     let rows = collect_resource_snapshot(&engine.resources);
-    assert!(!rows.is_empty(), "A10.0: snapshot must be non-empty after bootstrap");
+    assert!(
+        !rows.is_empty(),
+        "A10.0: snapshot must be non-empty after bootstrap"
+    );
 
     let mut max_dist = 0u32;
     for r in rows.iter() {
@@ -323,7 +360,10 @@ fn harness_resource_sources_in_bounds_and_near_lattice() {
         assert!(
             r.x < DEFAULT_W && r.y < DEFAULT_H,
             "A10.1: tile ({}, {}) out of 0..{}×0..{} bounds",
-            r.x, r.y, DEFAULT_W, DEFAULT_H
+            r.x,
+            r.y,
+            DEFAULT_W,
+            DEFAULT_H
         );
         let d = min_chebyshev_to_lattice(r.x, r.y);
         max_dist = max_dist.max(d);
@@ -395,7 +435,9 @@ fn harness_resource_bootstrap_tile_non_depleting_behavior() {
     // Select a real bootstrap food tile deterministically (smallest coord).
     let mut food_coords: Vec<(u32, u32)> = engine.resources.food_tiles.keys().copied().collect();
     food_coords.sort();
-    let (fx, fy) = *food_coords.first().expect("A15.0: bootstrap must produce >=1 food tile");
+    let (fx, fy) = *food_coords
+        .first()
+        .expect("A15.0: bootstrap must produce >=1 food tile");
 
     // Place a hungry agent ON that tile (distinct from the lattice agents).
     let entity = engine.spawn_agent(fx, fy);
@@ -433,7 +475,10 @@ fn harness_resource_empty_snapshot_path() {
     // Type: A — n==0 contract: empty Vec + three empty split Vecs.
     let res = SimResources::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
     let rows = collect_resource_snapshot(&res);
-    assert!(rows.is_empty(), "A16.1: empty SimResources → empty snapshot Vec");
+    assert!(
+        rows.is_empty(),
+        "A16.1: empty SimResources → empty snapshot Vec"
+    );
     let (xs, ys, kinds) = resource_rows_split(&rows);
     assert!(xs.is_empty(), "A16.2: xs must be empty");
     assert!(ys.is_empty(), "A16.3: ys must be empty");

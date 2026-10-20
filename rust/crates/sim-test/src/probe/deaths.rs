@@ -280,25 +280,25 @@ impl DeathTracker {
                     .max(at_death.position.1.abs_diff(tile.1))
             };
             let row = json!({"schema_version":1,"scene":scene,"seed":seed,"git_sha":git_sha,"tick":tick,
-                "agent_id":id,"cause":cause,"state_at_death":state_name(at_death.state),"partner_alive":partner_alive,
-                "first_state_after_thirst_breach":history.first_state,
-                "dominant_state_since_thirst_breach":history.dominant(),
-                "ticks_since_thirst_breach":history.breach_tick.map(|first| tick.saturating_sub(first)),
-                "sought_water_since_breach":history.sought,"drank_since_breach":history.drank,
-                "hunger_at_death":at_death.hunger,"thirst_at_death":at_death.thirst,
-                "food_available_at_death":frame.food_available,
-                "water_distance_at_death":frame.water.iter().copied().map(distance).min(),
-                "home_distance_at_death":at_death.home.map(distance),
-                "settlement_food_stock_at_death":at_death.settlement_food,
-                "formation_distance_at_death":at_death.home.map(distance),
-                "life_stage_at_death":if at_death.child { "child" } else { "adult" },
-                "stage":if at_death.child { "child" } else if at_death.elder { "elder" } else { "adult" },
-                "settlement_at_death":at_death.settlement,
-                "bed_assigned":at_death.bed,
-                "death_reason":reason.map(|reason| reason.as_str()),
-                "age_days_at_death":at_death.born_tick.map(|born| {
-                    (tick as i64 - born) as f64 / engine.resources.ticks_per_day.max(1) as f64
-                })});
+            "agent_id":id,"cause":cause,"state_at_death":state_name(at_death.state),"partner_alive":partner_alive,
+            "first_state_after_thirst_breach":history.first_state,
+            "dominant_state_since_thirst_breach":history.dominant(),
+            "ticks_since_thirst_breach":history.breach_tick.map(|first| tick.saturating_sub(first)),
+            "sought_water_since_breach":history.sought,"drank_since_breach":history.drank,
+            "hunger_at_death":at_death.hunger,"thirst_at_death":at_death.thirst,
+            "food_available_at_death":frame.food_available,
+            "water_distance_at_death":frame.water.iter().copied().map(distance).min(),
+            "home_distance_at_death":at_death.home.map(distance),
+            "settlement_food_stock_at_death":at_death.settlement_food,
+            "formation_distance_at_death":at_death.home.map(distance),
+            "life_stage_at_death":if at_death.child { "child" } else { "adult" },
+            "stage":if at_death.child { "child" } else if at_death.elder { "elder" } else { "adult" },
+            "settlement_at_death":at_death.settlement,
+            "bed_assigned":at_death.bed,
+            "death_reason":reason.map(|reason| reason.as_str()),
+            "age_days_at_death":at_death.born_tick.map(|born| {
+                (tick as i64 - born) as f64 / engine.resources.ticks_per_day.max(1) as f64
+            })});
             self.census.record(&row);
             records.push(row);
         }
@@ -314,10 +314,11 @@ impl DeathTracker {
         Ok((records, observed.elapsed))
     }
     fn cross_check(&self, engine: &SimEngine) -> Result<(), String> {
-        for ((cause, actual), baseline) in ["dehydration", "starvation", "other", "old_age", "exposure"]
-            .into_iter()
-            .zip(tallies(engine))
-            .zip(self.baseline)
+        for ((cause, actual), baseline) in
+            ["dehydration", "starvation", "other", "old_age", "exposure"]
+                .into_iter()
+                .zip(tallies(engine))
+                .zip(self.baseline)
         {
             let inferred = self.census.causes.get(cause).copied().unwrap_or(0);
             if actual.saturating_sub(baseline) != inferred {
@@ -330,7 +331,13 @@ impl DeathTracker {
 }
 fn tallies(engine: &SimEngine) -> [u64; 5] {
     let t = &engine.resources.tallies;
-    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat, t.deaths_old_age, t.deaths_exposure]
+    [
+        t.deaths_dehydration,
+        t.deaths_starvation,
+        t.deaths_combat,
+        t.deaths_old_age,
+        t.deaths_exposure,
+    ]
 }
 
 #[cfg(test)]
@@ -487,7 +494,15 @@ mod tests {
                 .collect();
             for (entity, id, position) in victims {
                 let tick = resources.current_tick;
-                despawn_agent(world, resources, entity, id, position, DeathReason::OldAge, tick);
+                despawn_agent(
+                    world,
+                    resources,
+                    entity,
+                    id,
+                    position,
+                    DeathReason::OldAge,
+                    tick,
+                );
             }
         }
     }
@@ -504,14 +519,19 @@ mod tests {
                     AgentState::Idle,
                     Hunger::new(10.0, 0.0),
                     Thirst::new(10.0, 0.0),
-                    sim_core::components::Life { born_tick: -2_880, lifespan_ticks: 2_880 },
+                    sim_core::components::Life {
+                        born_tick: -2_880,
+                        lifespan_ticks: 2_880,
+                    },
                 ),
             )
             .expect("components");
         engine.register_system(Box::new(OldAgeReaper));
         let mut tracker = DeathTracker::install(&mut engine);
         engine.tick();
-        let (rows, _) = tracker.after_tick(&engine, "test", 0, "test").expect("old-age tally");
+        let (rows, _) = tracker
+            .after_tick(&engine, "test", 0, "test")
+            .expect("old-age tally");
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0]["cause"], "old_age");
         assert_eq!(rows[0]["death_reason"], "old_age");

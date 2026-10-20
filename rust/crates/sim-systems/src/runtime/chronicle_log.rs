@@ -40,15 +40,17 @@ pub fn alive_entity(world: &World, id: AgentId) -> Option<Entity> {
     world
         .query::<(&Agent, Option<&BodyHealth>)>()
         .iter()
-        .find(|(_, (agent, health))| agent.id == id && health.is_none_or(|health| !health.is_dead()))
+        .find(|(_, (agent, health))| {
+            agent.id == id && health.is_none_or(|health| !health.is_dead())
+        })
         .map(|(entity, _)| entity)
 }
 
 /// Create `id`'s record from its components if it has none and it is alive.
 pub fn ensure(world: &World, resources: &mut SimResources, id: AgentId) {
-    resources
-        .chronicle
-        .ensure_person(id, || alive_entity(world, id).map(|entity| person_record(world, entity)));
+    resources.chronicle.ensure_person(id, || {
+        alive_entity(world, id).map(|entity| person_record(world, entity))
+    });
 }
 
 /// [`ensure`] when the entity is already known.
@@ -79,12 +81,24 @@ mod tests {
         let mother = world.spawn((
             Agent { id: 1 },
             Sex { female: true },
-            Life { born_tick: -40, lifespan_ticks: 900 },
-            Temperament { ns: 1, ha: 2, rd: 3, p: 4 },
+            Life {
+                born_tick: -40,
+                lifespan_ticks: 900,
+            },
+            Temperament {
+                ns: 1,
+                ha: 2,
+                rd: 3,
+                p: 4,
+            },
         ));
         let child = world.spawn((
             Agent { id: 3 },
-            Kin { mother: Some(1), father: Some(2), ..Kin::default() },
+            Kin {
+                mother: Some(1),
+                father: Some(2),
+                ..Kin::default()
+            },
         ));
         let mut dead = BodyHealth::new();
         dead.hp = 0.0;
@@ -92,16 +106,32 @@ mod tests {
         record(
             &world,
             &mut resources,
-            ChronicleEntry::new(9, ChronicleKind::Born).subject(3).other(Some(1)).third(Some(2)),
+            ChronicleEntry::new(9, ChronicleKind::Born)
+                .subject(3)
+                .other(Some(1))
+                .third(Some(2)),
         );
         let mother_record = resources.chronicle.person(1).expect("alive mother");
         assert_eq!(mother_record.female, Some(true));
         assert_eq!(mother_record.born_tick, Some(-40));
         assert_eq!(mother_record.temperament, Some([1, 2, 3, 4]));
         let child_record = resources.chronicle.person(3).expect("alive child");
-        assert_eq!((child_record.mother, child_record.father), (Some(1), Some(2)));
-        assert_eq!((child_record.female, child_record.born_tick, child_record.temperament), (None, None, None));
-        assert!(resources.chronicle.person(2).is_none(), "the dead are recorded at death only");
+        assert_eq!(
+            (child_record.mother, child_record.father),
+            (Some(1), Some(2))
+        );
+        assert_eq!(
+            (
+                child_record.female,
+                child_record.born_tick,
+                child_record.temperament
+            ),
+            (None, None, None)
+        );
+        assert!(
+            resources.chronicle.person(2).is_none(),
+            "the dead are recorded at death only"
+        );
         assert_eq!(resources.chronicle.len(), 1);
         assert!(is_alive(&world, mother) && is_alive(&world, child));
     }

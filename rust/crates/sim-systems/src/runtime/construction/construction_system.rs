@@ -60,7 +60,9 @@ use std::collections::HashMap;
 
 use hecs::{Entity, World};
 use sim_core::causal::CausalEvent;
-use sim_core::components::{AgentState, BuildingKind, BuildingBlueprint, ConstructionSite, Position, TargetKind};
+use sim_core::components::{
+    AgentState, BuildingBlueprint, BuildingKind, ConstructionSite, Position, TargetKind,
+};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 /// Phase 6-β construction runtime system. Stateless — all per-site state
@@ -190,7 +192,9 @@ impl RuntimeSystem for ConstructionSystem {
                 // First completion edge wins. Later agents observe the
                 // saturated site (advance returns false) and are silently
                 // absorbed into the same tick — no duplicate chain.
-                completed.entry(site_entity).or_insert((blueprint, position));
+                completed
+                    .entry(site_entity)
+                    .or_insert((blueprint, position));
             }
         }
 
@@ -204,7 +208,9 @@ impl RuntimeSystem for ConstructionSystem {
         for (site_entity, (blueprint, position)) in completed {
             if let Some(rule) = resources.rules.society.shelter_planning {
                 if let Some(sid) = resources.site_owner.remove(&position) {
-                    resources.building_kinds.insert(position, BuildingKind::Shelter);
+                    resources
+                        .building_kinds
+                        .insert(position, BuildingKind::Shelter);
                     resources.set_sleep_tile(position.0, position.1, RESOURCE_SOURCE_INFINITE);
                     if rule.housing == sim_core::rules::HousingCount::Owned {
                         resources.building_owner.insert(position, sid);
@@ -215,15 +221,12 @@ impl RuntimeSystem for ConstructionSystem {
 
             // Parent of ConstructionCompleted: the most recent
             // ConstructionStarted on this tile (if any).
-            let started_parent = resources
-                .causal_log
-                .get(tile_idx)
-                .and_then(|log| {
-                    log.as_slice().iter().rev().find_map(|ev| match ev {
-                        CausalEvent::ConstructionStarted { id, .. } => Some(*id),
-                        _ => None,
-                    })
-                });
+            let started_parent = resources.causal_log.get(tile_idx).and_then(|log| {
+                log.as_slice().iter().rev().find_map(|ev| match ev {
+                    CausalEvent::ConstructionStarted { id, .. } => Some(*id),
+                    _ => None,
+                })
+            });
 
             let completed_id = resources.issue_event_id();
             resources.causal_log.push(

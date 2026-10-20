@@ -112,7 +112,13 @@ fn harness_p8_alpha_a5_insert_under_cap_preserves_fields() {
     for i in 0..5u64 {
         let valence = (i as f64) * 0.1;
         let salience = 0.3 + (i as f64) * 0.1;
-        m.insert(MemoryEntry::new(i + 10, i * 7, valence, salience, MemoryArm::None));
+        m.insert(MemoryEntry::new(
+            i + 10,
+            i * 7,
+            valence,
+            salience,
+            MemoryArm::None,
+        ));
     }
     assert_eq!(m.entries.len(), 5);
 
@@ -136,7 +142,13 @@ fn harness_p8_alpha_a6_insert_at_cap_evicts_lowest_salience() {
     let mut m = Memory::new();
     for i in 0..MEMORY_CAP {
         let salience = if i == 7 { 0.1 } else { 0.5 };
-        m.insert(MemoryEntry::new(i as EventId, i as u64, 0.0, salience, MemoryArm::None));
+        m.insert(MemoryEntry::new(
+            i as EventId,
+            i as u64,
+            0.0,
+            salience,
+            MemoryArm::None,
+        ));
     }
 
     // Insert overflow entry.
@@ -176,7 +188,13 @@ fn harness_p8_alpha_a7_insert_eviction_tiebreak_oldest_tick() {
     let mut m = Memory::new();
     for (j, &encoded_tick) in pi.iter().enumerate() {
         let event_id = 100 + j as EventId;
-        m.insert(MemoryEntry::new(event_id, encoded_tick, 0.0, 0.5, MemoryArm::None));
+        m.insert(MemoryEntry::new(
+            event_id,
+            encoded_tick,
+            0.0,
+            0.5,
+            MemoryArm::None,
+        ));
     }
     assert_eq!(m.entries.len(), MEMORY_CAP);
 
@@ -199,7 +217,11 @@ fn harness_p8_alpha_a7_insert_eviction_tiebreak_oldest_tick() {
         }
         assert!(ids.contains(&eid), "event_id {} must still be present", eid);
     }
-    assert_eq!(ids.len(), MEMORY_CAP, "must hold exactly MEMORY_CAP unique ids");
+    assert_eq!(
+        ids.len(),
+        MEMORY_CAP,
+        "must hold exactly MEMORY_CAP unique ids"
+    );
 }
 
 // ─── A8: salience PRIMARY, tick SECONDARY (combined) ────────────────────

@@ -37,9 +37,9 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Child, Cold, ConstructionSite, Elder, Hunger, Inventory, Life,
-    Memory, Position,
-    ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, BodyHealth, Child, Cold, ConstructionSite, Elder, Hunger,
+    Inventory, Life, Memory, Position, ResourceKind, SeekTarget, Settlement, SettlementId, Sleep,
+    Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -191,7 +191,10 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
 /// it directly. Benchmark only — lets the art line measure frame times on a
 /// crowded world; never called by the game's UI.
 pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
-    build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
+    build_world_with(
+        &WorldGenConfig::stress_v19(seed, agents, 64),
+        WorldRules::game_v19(seed),
+    )
 }
 
 /// Revitalize Pass 21 — the live game's world of `seed`: `game_v26`, with
@@ -210,16 +213,29 @@ pub fn build_game_engine(seed: u64) -> SimEngine {
 /// not a live entity or it carries no `Temperament` (every scene before
 /// `game_v20`). Bridge Identity Contract: `WorldSimNode::get_agent_temperament`
 /// only forwards here.
-pub fn collect_agent_temperament(world: &hecs::World, entity_bits: u64) -> Option<sim_core::components::Temperament> {
+pub fn collect_agent_temperament(
+    world: &hecs::World,
+    entity_bits: u64,
+) -> Option<sim_core::components::Temperament> {
     let entity = hecs::Entity::from_bits(entity_bits)?;
-    world.get::<&sim_core::components::Temperament>(entity).ok().map(|t| *t)
+    world
+        .get::<&sim_core::components::Temperament>(entity)
+        .ok()
+        .map(|t| *t)
 }
 
 /// Marshals [`collect_agent_temperament`] into `{found, ns, ha, rd, p}`
 /// (ints; `found: false` and zeros when missing).
-fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperament>) -> VarDictionary {
+fn agent_temperament_to_dict(
+    temperament: Option<sim_core::components::Temperament>,
+) -> VarDictionary {
     let mut dict = VarDictionary::new();
-    let t = temperament.unwrap_or(sim_core::components::Temperament { ns: 0, ha: 0, rd: 0, p: 0 });
+    let t = temperament.unwrap_or(sim_core::components::Temperament {
+        ns: 0,
+        ha: 0,
+        rd: 0,
+        p: 0,
+    });
     dict.set("found", temperament.is_some());
     dict.set("ns", i64::from(t.ns));
     dict.set("ha", i64::from(t.ha));
@@ -311,7 +327,10 @@ impl WorldSimNode {
         match declump_offsets(&input) {
             Ok(result) => {
                 output.set("ids", PackedInt64Array::from(result.ids.as_slice()));
-                output.set("offsets", PackedFloat32Array::from(result.offsets.as_slice()));
+                output.set(
+                    "offsets",
+                    PackedFloat32Array::from(result.offsets.as_slice()),
+                );
             }
             Err(error) => {
                 godot_error!("art_declump: {}", error);
@@ -383,7 +402,8 @@ impl WorldSimNode {
         self.world_seed = seed as u64;
         self.engine = build_game_engine(self.world_seed);
         self.accumulator = 0.0;
-        self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
+        self.base_mut()
+            .call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
     }
 
@@ -396,7 +416,8 @@ impl WorldSimNode {
         self.world_seed = seed as u64;
         self.engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
         self.accumulator = 0.0;
-        self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
+        self.base_mut()
+            .call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
     }
 
@@ -469,10 +490,7 @@ impl WorldSimNode {
         dict.set("tile_x", x);
         dict.set("tile_y", y);
         let grid = &self.engine.resources.influence_grid;
-        let in_bounds = x >= 0
-            && y >= 0
-            && (x as u32) < grid.width
-            && (y as u32) < grid.height;
+        let in_bounds = x >= 0 && y >= 0 && (x as u32) < grid.width && (y as u32) < grid.height;
         dict.set("in_bounds", in_bounds);
         if in_bounds {
             let ux = x as u32;
@@ -528,11 +546,19 @@ impl WorldSimNode {
         ys: PackedInt32Array,
         kinds: PackedStringArray,
     ) -> VarArray {
-        let tiles: Vec<(i32, i32)> = xs.as_slice().iter().copied()
-            .zip(ys.as_slice().iter().copied()).collect();
+        let tiles: Vec<(i32, i32)> = xs
+            .as_slice()
+            .iter()
+            .copied()
+            .zip(ys.as_slice().iter().copied())
+            .collect();
         let names: Vec<String> = kinds.as_slice().iter().map(ToString::to_string).collect();
         let kinds: Vec<&str> = names.iter().map(String::as_str).collect();
-        event_views_to_variant_array(&collect_tile_causal_events(&self.engine.resources, &tiles, &kinds))
+        event_views_to_variant_array(&collect_tile_causal_events(
+            &self.engine.resources,
+            &tiles,
+            &kinds,
+        ))
     }
 
     /// γ-1: walk the causal chain backwards from `event_id` on tile
@@ -612,7 +638,10 @@ impl WorldSimNode {
     /// temperament is the art line's job.
     #[func]
     fn get_agent_temperament(&self, entity_bits: i64) -> VarDictionary {
-        agent_temperament_to_dict(collect_agent_temperament(&self.engine.world, entity_bits as u64))
+        agent_temperament_to_dict(collect_agent_temperament(
+            &self.engine.world,
+            entity_bits as u64,
+        ))
     }
 
     /// Pass 17 family as exactly `{found, female, mother, father, partner, children}`.
@@ -641,7 +670,11 @@ impl WorldSimNode {
     /// death_reason, mother, father, ns, ha, rd, p}`; unknown values are -1.
     #[func]
     fn get_person(&self, agent_id: i64) -> VarDictionary {
-        person_to_dict(collect_person(&self.engine.world, &self.engine.resources.chronicle, agent_id))
+        person_to_dict(collect_person(
+            &self.engine.world,
+            &self.engine.resources.chronicle,
+            agent_id,
+        ))
     }
 
     /// Pass 19 chronicle: every entry naming `agent_id`, in chronicle order, as
@@ -649,21 +682,30 @@ impl WorldSimNode {
     /// cause, value}` packed columns (ids -1 when absent).
     #[func]
     fn get_person_chronicle(&self, agent_id: i64) -> VarDictionary {
-        rows_to_dict(collect_person_chronicle(&self.engine.resources.chronicle, agent_id), false)
+        rows_to_dict(
+            collect_person_chronicle(&self.engine.resources.chronicle, agent_id),
+            false,
+        )
     }
 
     /// Pass 19 chronicle: every entry naming `settlement_id` (same shape as
     /// `get_person_chronicle`).
     #[func]
     fn get_settlement_chronicle(&self, settlement_id: i64) -> VarDictionary {
-        rows_to_dict(collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id), false)
+        rows_to_dict(
+            collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id),
+            false,
+        )
     }
 
     /// Pass 19 chronicle feed: entries from index `start`, at most `max`
     /// (clamped to 1..=512), same shape plus `next` and `total`.
     #[func]
     fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
-        rows_to_dict(collect_chronicle_since(&self.engine.resources.chronicle, start, max), true)
+        rows_to_dict(
+            collect_chronicle_since(&self.engine.resources.chronicle, start, max),
+            true,
+        )
     }
 
     /// Pass 20 village relations: every pair of living villages (lower id
@@ -671,7 +713,9 @@ impl WorldSimNode {
     /// Empty without the relations rule.
     #[func]
     fn get_settlement_relations(&self) -> VarDictionary {
-        relation_rows_to_dict(&collect_settlement_relations(&self.engine.resources.settlement_relations))
+        relation_rows_to_dict(&collect_settlement_relations(
+            &self.engine.resources.settlement_relations,
+        ))
     }
 
     /// Pass 20 porters: every porter on a trip by AgentId as `{ids (entity
@@ -750,10 +794,8 @@ impl WorldSimNode {
     /// authoritative settlement store is `self.engine.resources.settlements`.
     #[func]
     fn get_settlement_snapshot(&self) -> VarDictionary {
-        let rows = collect_settlement_snapshot(
-            &self.engine.world,
-            &self.engine.resources.settlements,
-        );
+        let rows =
+            collect_settlement_snapshot(&self.engine.world, &self.engine.resources.settlements);
         // Pass 6 — additive floor of each settlement's wood target.
         let wood_targets = collect_settlement_wood_targets(&rows, &self.engine.resources);
         settlement_rows_to_dict(&rows, &self.engine.resources.fires, &wood_targets)
@@ -795,12 +837,7 @@ impl WorldSimNode {
 /// `enqueue_building_placed(&mut self.engine.resources, x, y, radius)`.
 /// The Evaluator verifies via Completeness code review that no stub logic
 /// replaces this delegation.
-pub fn enqueue_building_placed(
-    resources: &mut SimResources,
-    x: i32,
-    y: i32,
-    radius: i32,
-) -> bool {
+pub fn enqueue_building_placed(resources: &mut SimResources, x: i32, y: i32, radius: i32) -> bool {
     if x < 0 || y < 0 || radius < 0 {
         return false;
     }
@@ -808,10 +845,12 @@ pub fn enqueue_building_placed(
     if (x as u32) >= grid.width || (y as u32) >= grid.height {
         return false;
     }
-    resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (x as u32, y as u32),
-        radius: radius as u32,
-    });
+    resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (x as u32, y as u32),
+            radius: radius as u32,
+        });
     true
 }
 
@@ -1207,7 +1246,13 @@ impl CausalEventView {
                 defender_id: Some(*defender),
                 hp_after: Some(*hp_after),
             },
-            CausalEvent::AgentBorn { id, parent, agent, tick, .. } => Self {
+            CausalEvent::AgentBorn {
+                id,
+                parent,
+                agent,
+                tick,
+                ..
+            } => Self {
                 kind: "agent_born",
                 id: *id,
                 parent: *parent,
@@ -1230,10 +1275,7 @@ impl CausalEventView {
             // GDScript panels can resolve the membership via the
             // settlement snapshot in Phase 10-γ.
             CausalEvent::SettlementFormed {
-                id,
-                parent,
-                tick,
-                ..
+                id, parent, tick, ..
             } => Self {
                 kind: "settlement_formed",
                 id: *id,
@@ -1254,10 +1296,7 @@ impl CausalEventView {
             },
             // V7 Phase 10-β — settlement dissolution event.
             CausalEvent::SettlementDissolved {
-                id,
-                parent,
-                tick,
-                ..
+                id, parent, tick, ..
             } => Self {
                 kind: "settlement_dissolved",
                 id: *id,
@@ -1378,7 +1417,9 @@ pub enum FfiFieldValue {
 ///   - Variant-specific: `channel`, `position`, `radius`, `region`, `old`,
 ///     `new`, `agent_id`, `reason`, `triggered_by`, `recalled_event` —
 ///     present only when the matching `CausalEventView` field is `Some`.
-pub fn event_view_to_owned_dict(view: &CausalEventView) -> std::collections::BTreeMap<&'static str, FfiFieldValue> {
+pub fn event_view_to_owned_dict(
+    view: &CausalEventView,
+) -> std::collections::BTreeMap<&'static str, FfiFieldValue> {
     let mut dict = std::collections::BTreeMap::new();
     dict.insert("kind", FfiFieldValue::Str(view.kind));
     dict.insert("id", FfiFieldValue::I64(view.id as i64));
@@ -1399,12 +1440,7 @@ pub fn event_view_to_owned_dict(view: &CausalEventView) -> std::collections::BTr
     if let Some((min_x, min_y, max_x, max_y)) = view.region {
         dict.insert(
             "region",
-            FfiFieldValue::Region4i(
-                min_x as i32,
-                min_y as i32,
-                max_x as i32,
-                max_y as i32,
-            ),
+            FfiFieldValue::Region4i(min_x as i32, min_y as i32, max_x as i32, max_y as i32),
         );
     }
     if let Some(old) = view.old_value {
@@ -1423,10 +1459,7 @@ pub fn event_view_to_owned_dict(view: &CausalEventView) -> std::collections::BTr
         dict.insert("triggered_by", FfiFieldValue::Str(triggered_by));
     }
     if let Some(recalled_event) = view.recalled_event {
-        dict.insert(
-            "recalled_event",
-            FfiFieldValue::I64(recalled_event as i64),
-        );
+        dict.insert("recalled_event", FfiFieldValue::I64(recalled_event as i64));
     }
     if let Some(defender_id) = view.defender_id {
         dict.insert("defender_id", FfiFieldValue::I64(defender_id as i64));
@@ -1454,7 +1487,10 @@ pub fn collect_tile_causal_history(
     let Some(log) = resources.causal_log.get(tile_idx) else {
         return Vec::new();
     };
-    log.as_slice().iter().map(CausalEventView::from_event).collect()
+    log.as_slice()
+        .iter()
+        .map(CausalEventView::from_event)
+        .collect()
 }
 
 /// γ-1 pure-Rust collector: walk the parent chain backwards from
@@ -1502,47 +1538,87 @@ mod art_p9_causal_batch_tests {
     fn fixture() -> SimEngine {
         let mut engine = SimEngine::new(2, 2, MaterialRegistry::new());
         let placed = |id| CausalEvent::BuildingPlaced {
-            id, parent: None, position: (0, 0), radius: 1, tick: 3,
+            id,
+            parent: None,
+            position: (0, 0),
+            radius: 1,
+            tick: 3,
         };
         engine.resources.causal_log.push(0, placed(9));
         engine.resources.causal_log.push(0, placed(2));
         engine.resources.causal_log.push(1, placed(2));
         engine.resources.causal_log.push(1, placed(7));
-        engine.resources.causal_log.push(1, CausalEvent::InfluenceChanged {
-            id: 11, parent: None, channel: InfluenceChannel::Warmth,
-            position: (1, 0), old: 0.0, new: 1.0, tick: 4,
-        });
+        engine.resources.causal_log.push(
+            1,
+            CausalEvent::InfluenceChanged {
+                id: 11,
+                parent: None,
+                channel: InfluenceChannel::Warmth,
+                position: (1, 0),
+                old: 0.0,
+                new: 1.0,
+                tick: 4,
+            },
+        );
         engine
     }
 
     #[test]
     fn empty_input_and_invalid_tiles_are_empty() {
         let engine = fixture();
-        assert!(collect_tile_causal_events(&engine.resources, &[], &["building_placed"]).is_empty());
-        assert!(collect_tile_causal_events(&engine.resources, &[(-1, 0), (2, 2)], &["building_placed"]).is_empty());
+        assert!(
+            collect_tile_causal_events(&engine.resources, &[], &["building_placed"]).is_empty()
+        );
+        assert!(collect_tile_causal_events(
+            &engine.resources,
+            &[(-1, 0), (2, 2)],
+            &["building_placed"]
+        )
+        .is_empty());
     }
 
     #[test]
     fn shared_events_are_emitted_once() {
         let engine = fixture();
-        let events = collect_tile_causal_events(&engine.resources, &[(0, 0), (1, 0), (0, 0)], &["building_placed"]);
-        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![9, 2, 7]);
+        let events = collect_tile_causal_events(
+            &engine.resources,
+            &[(0, 0), (1, 0), (0, 0)],
+            &["building_placed"],
+        );
+        assert_eq!(
+            events.iter().map(|event| event.id).collect::<Vec<_>>(),
+            vec![9, 2, 7]
+        );
     }
 
     #[test]
     fn kinds_filter_excludes_other_events() {
         let engine = fixture();
-        assert!(collect_tile_causal_events(&engine.resources, &[(0, 0)], &["combat_started"]).is_empty());
+        assert!(
+            collect_tile_causal_events(&engine.resources, &[(0, 0)], &["combat_started"])
+                .is_empty()
+        );
         assert!(collect_tile_causal_events(&engine.resources, &[(0, 0)], &[]).is_empty());
-        let events = collect_tile_causal_events(&engine.resources, &[(0, 0), (1, 0)], &["influence_changed"]);
-        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![11]);
+        let events = collect_tile_causal_events(
+            &engine.resources,
+            &[(0, 0), (1, 0)],
+            &["influence_changed"],
+        );
+        assert_eq!(
+            events.iter().map(|event| event.id).collect::<Vec<_>>(),
+            vec![11]
+        );
     }
 
     #[test]
     fn input_tile_and_ring_order_win_over_event_id_order() {
         let engine = fixture();
-        let events = collect_tile_causal_events(&engine.resources, &[(1, 0), (0, 0)], &["building_placed"]);
-        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![2, 7, 9]);
+        let events =
+            collect_tile_causal_events(&engine.resources, &[(1, 0), (0, 0)], &["building_placed"]);
+        assert_eq!(
+            events.iter().map(|event| event.id).collect::<Vec<_>>(),
+            vec![2, 7, 9]
+        );
     }
 }
 
@@ -1771,7 +1847,18 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
     for (
         entity,
-        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child, maybe_elder),
+        (
+            agent,
+            pos,
+            maybe_state,
+            maybe_seek,
+            maybe_hunger,
+            maybe_thirst,
+            maybe_sleep,
+            maybe_inv,
+            maybe_child,
+            maybe_elder,
+        ),
     ) in world
         .query::<(
             &Agent,
@@ -1789,10 +1876,18 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     {
         let state_tag: u8 = match maybe_state {
             None | Some(AgentState::Idle) => 0,
-            Some(AgentState::Seeking { target: TargetKind::Activity }
-                | AgentState::Consuming { target: TargetKind::Activity }) => 4,
+            Some(
+                AgentState::Seeking {
+                    target: TargetKind::Activity,
+                }
+                | AgentState::Consuming {
+                    target: TargetKind::Activity,
+                },
+            ) => 4,
             Some(AgentState::Seeking { .. }) => 1,
-            Some(AgentState::Consuming { target: TargetKind::Agent(_) }) => 2,
+            Some(AgentState::Consuming {
+                target: TargetKind::Agent(_),
+            }) => 2,
             Some(AgentState::Consuming { .. }) => 3,
         };
         // V7 Section 16-ε — Seeking need kind (resource trips only). State
@@ -1800,9 +1895,15 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
         // head-dot + goal-line; ConstructionSite/Agent seeks and every
         // non-Seeking state are 0.
         let seek_kind: u8 = match maybe_state {
-            Some(AgentState::Seeking { target: TargetKind::Food }) => 1,
-            Some(AgentState::Seeking { target: TargetKind::Water }) => 2,
-            Some(AgentState::Seeking { target: TargetKind::Sleep }) => 3,
+            Some(AgentState::Seeking {
+                target: TargetKind::Food,
+            }) => 1,
+            Some(AgentState::Seeking {
+                target: TargetKind::Water,
+            }) => 2,
+            Some(AgentState::Seeking {
+                target: TargetKind::Sleep,
+            }) => 3,
             _ => 0,
         };
         // V7 Section 16-ε — goal tile, or the -1 no-SeekTarget sentinel.
@@ -1873,9 +1974,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
 /// Lengths are equal by construction. Exposed so sim-test can validate
 /// the FFI marshalling invariant without a Godot runtime — `agent_rows_to_dict`
 /// is a thin `Vec → PackedArray` adapter over this function.
-pub fn agent_rows_split(
-    rows: &[AgentSnapshotRow],
-) -> (Vec<i64>, Vec<i32>, Vec<i32>, Vec<u8>) {
+pub fn agent_rows_split(rows: &[AgentSnapshotRow]) -> (Vec<i64>, Vec<i32>, Vec<i32>, Vec<u8>) {
     let n = rows.len();
     let mut ids = Vec::with_capacity(n);
     let mut xs = Vec::with_capacity(n);
@@ -2108,14 +2207,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(e) => e,
         None => return AgentDetailRow::default(),
     };
-    let mut q = match world.query_one::<(
-        &Agent,
-        &Position,
-        &AgentState,
-        &Hunger,
-        &Thirst,
-        &Sleep,
-    )>(entity)
+    let mut q = match world
+        .query_one::<(&Agent, &Position, &AgentState, &Hunger, &Thirst, &Sleep)>(entity)
     {
         Ok(q) => q,
         Err(_) => return AgentDetailRow::default(),
@@ -2126,8 +2219,12 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
     };
     let state_tag: u8 = match state {
         AgentState::Idle => 0,
-        AgentState::Seeking { target: TargetKind::Activity }
-            | AgentState::Consuming { target: TargetKind::Activity } => 4,
+        AgentState::Seeking {
+            target: TargetKind::Activity,
+        }
+        | AgentState::Consuming {
+            target: TargetKind::Activity,
+        } => 4,
         AgentState::Seeking { .. } => 1,
         AgentState::Consuming {
             target: TargetKind::Agent(_),
@@ -2243,10 +2340,7 @@ pub struct ConstructionSnapshotRow {
 /// authoritative for that entity. The two should agree in practice.
 pub fn collect_construction_snapshot(world: &hecs::World) -> Vec<ConstructionSnapshotRow> {
     let mut rows = Vec::new();
-    for (entity, (site, pos)) in world
-        .query::<(&ConstructionSite, &Position)>()
-        .iter()
-    {
+    for (entity, (site, pos)) in world.query::<(&ConstructionSite, &Position)>().iter() {
         rows.push(ConstructionSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -2356,9 +2450,20 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
     // as e.g. 5/1 = 5.0). The clamp is read-only on the SNAPSHOT — the backend
     // tile counters are untouched (pure visualisation, no logic change).
     for (&(x, y), &amount) in resources.food_tiles.iter() {
-        let max = resources.food_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
+        let max = resources
+            .food_source_max
+            .get(&(x, y))
+            .copied()
+            .unwrap_or(amount)
+            .max(1);
         let amount = amount.min(max);
-        rows.push(ResourceSnapshotRow { x, y, kind: 0, amount, max });
+        rows.push(ResourceSnapshotRow {
+            x,
+            y,
+            kind: 0,
+            amount,
+            max,
+        });
     }
     if resources.rules.society.shelter_planning.is_some() {
         // The bush persists between harvest and regrowth even when its live
@@ -2376,21 +2481,54 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
         }
     }
     for (&(x, y), &amount) in resources.water_tiles.iter() {
-        let max = resources.water_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
+        let max = resources
+            .water_source_max
+            .get(&(x, y))
+            .copied()
+            .unwrap_or(amount)
+            .max(1);
         let amount = amount.min(max);
-        rows.push(ResourceSnapshotRow { x, y, kind: 1, amount, max });
+        rows.push(ResourceSnapshotRow {
+            x,
+            y,
+            kind: 1,
+            amount,
+            max,
+        });
     }
     for (&(x, y), &amount) in resources.sleep_tiles.iter() {
-        let max = resources.sleep_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
+        let max = resources
+            .sleep_source_max
+            .get(&(x, y))
+            .copied()
+            .unwrap_or(amount)
+            .max(1);
         let amount = amount.min(max);
-        rows.push(ResourceSnapshotRow { x, y, kind: 2, amount, max });
+        rows.push(ResourceSnapshotRow {
+            x,
+            y,
+            kind: 2,
+            amount,
+            max,
+        });
     }
     // Revitalize Pass 5 — every registered deadwood spot, at amount 0 while
     // emptied, so the pile stays visible between pickup and regrowth.
     for (&(x, y), &capacity) in &resources.wood_source_max {
         let max = capacity.max(1);
-        let amount = resources.wood_tiles.get(&(x, y)).copied().unwrap_or(0).min(max);
-        rows.push(ResourceSnapshotRow { x, y, kind: 3, amount, max });
+        let amount = resources
+            .wood_tiles
+            .get(&(x, y))
+            .copied()
+            .unwrap_or(0)
+            .min(max);
+        rows.push(ResourceSnapshotRow {
+            x,
+            y,
+            kind: 3,
+            amount,
+            max,
+        });
     }
     rows.sort_by_key(|r| (r.kind, r.x, r.y));
     rows
@@ -2408,10 +2546,25 @@ mod depleted_food_snapshot_tests {
         engine.resources.set_food_source_max(2, 3, 6);
         engine.resources.set_food_tile(8, 4, 3);
         let rows = collect_resource_snapshot(&engine.resources);
-        assert_eq!(rows, vec![
-            ResourceSnapshotRow { x: 2, y: 3, kind: 0, amount: 0, max: 6 },
-            ResourceSnapshotRow { x: 8, y: 4, kind: 0, amount: 3, max: 6 },
-        ]);
+        assert_eq!(
+            rows,
+            vec![
+                ResourceSnapshotRow {
+                    x: 2,
+                    y: 3,
+                    kind: 0,
+                    amount: 0,
+                    max: 6
+                },
+                ResourceSnapshotRow {
+                    x: 8,
+                    y: 4,
+                    kind: 0,
+                    amount: 3,
+                    max: 6
+                },
+            ]
+        );
         assert!(!engine.resources.food_tiles.contains_key(&(2, 3)));
     }
 
@@ -2537,7 +2690,9 @@ pub fn collect_recent_deaths(resources: &SimResources) -> Vec<RecentDeathRow> {
 /// (`VarDictionary` / `PackedInt32Array` require Godot).
 /// [`recent_death_rows_to_dict`] MUST build its arrays from this — no duplicate
 /// marshalling logic.
-pub fn recent_death_rows_split(rows: &[RecentDeathRow]) -> (Vec<i32>, Vec<i32>, Vec<i32>, Vec<i64>) {
+pub fn recent_death_rows_split(
+    rows: &[RecentDeathRow],
+) -> (Vec<i32>, Vec<i32>, Vec<i32>, Vec<i64>) {
     let mut xs = Vec::with_capacity(rows.len());
     let mut ys = Vec::with_capacity(rows.len());
     let mut reasons = Vec::with_capacity(rows.len());
@@ -2737,32 +2892,57 @@ fn collect_society_snapshot(world: &hecs::World, resources: &SimResources) -> So
     };
     for row in collect_settlement_snapshot(world, &resources.settlements) {
         let settlement = &resources.settlements[&row.settlement_id];
-        snapshot.settlement_ids.push(settlement.settlement_id as i32);
-        snapshot.parent_ids.push(settlement.parent.map_or(-1, |id| id as i32));
+        snapshot
+            .settlement_ids
+            .push(settlement.settlement_id as i32);
+        snapshot
+            .parent_ids
+            .push(settlement.parent.map_or(-1, |id| id as i32));
         snapshot.founded_ticks.push(settlement.founded_at as i64);
-        snapshot.member_counts.push(settlement.member_agents.len() as i32);
-        snapshot.fission_pressures.push(i64::try_from(settlement.fission_pressure).unwrap_or(i64::MAX));
-        snapshot.fission_thresholds.push(i64::try_from(settlement.fission_threshold).unwrap_or(i64::MAX));
+        snapshot
+            .member_counts
+            .push(settlement.member_agents.len() as i32);
+        snapshot
+            .fission_pressures
+            .push(i64::try_from(settlement.fission_pressure).unwrap_or(i64::MAX));
+        snapshot
+            .fission_thresholds
+            .push(i64::try_from(settlement.fission_threshold).unwrap_or(i64::MAX));
     }
-    let mut homes: Vec<_> = resources.settlements.values()
-        .flat_map(|settlement| settlement.member_agents.iter()
-            .map(|&agent_id| (agent_id, settlement.settlement_id)))
+    let mut homes: Vec<_> = resources
+        .settlements
+        .values()
+        .flat_map(|settlement| {
+            settlement
+                .member_agents
+                .iter()
+                .map(|&agent_id| (agent_id, settlement.settlement_id))
+        })
         .collect();
     homes.sort_unstable();
     for (agent_id, settlement_id) in homes {
         snapshot.home_agent_ids.push(agent_id as i64);
         snapshot.home_settlement_ids.push(settlement_id as i32);
     }
-    let mut founders: Vec<_> = world.query::<(&Agent, &Founding)>().iter()
-        .map(|(_, (agent, founding))| (agent.id, *founding)).collect();
+    let mut founders: Vec<_> = world
+        .query::<(&Agent, &Founding)>()
+        .iter()
+        .map(|(_, (agent, founding))| (agent.id, *founding))
+        .collect();
     founders.sort_unstable_by_key(|(agent_id, _)| *agent_id);
     for (agent_id, founding) in founders {
         snapshot.founder_agent_ids.push(agent_id as i64);
-        snapshot.founder_fission_ids.push(founding.fission_id as i32);
+        snapshot
+            .founder_fission_ids
+            .push(founding.fission_id as i32);
         snapshot.founder_site_xs.push(founding.site.0 as i32);
         snapshot.founder_site_ys.push(founding.site.1 as i32);
-        snapshot.founder_leader.push(u8::from(agent_id == founding.leader));
-        snapshot.founder_since_ticks.push(founding.since_tick as i64);
+        snapshot
+            .founder_leader
+            .push(u8::from(agent_id == founding.leader));
+        snapshot
+            .founder_since_ticks
+            .push(founding.since_tick as i64);
     }
     let mut fissions: Vec<_> = resources.fission_log.iter().collect();
     fissions.sort_unstable_by_key(|record| record.fission_id);
@@ -2772,11 +2952,21 @@ fn collect_society_snapshot(world: &hecs::World, resources: &SimResources) -> So
         snapshot.fission_site_xs.push(record.site.0 as i32);
         snapshot.fission_site_ys.push(record.site.1 as i32);
         snapshot.fission_sizes.push(record.members.len() as i32);
-        snapshot.fission_depart_ticks.push(record.depart_tick as i64);
-        snapshot.fission_founded_ticks.push(record.founded_tick.map_or(-1, |tick| tick as i64));
-        snapshot.fission_cancelled_ticks.push(record.cancelled_tick.map_or(-1, |tick| tick as i64));
-        snapshot.fission_daughters.push(record.daughter.map_or(-1, |id| id as i32));
-        snapshot.fission_food_taken.push(i64::from(record.food_taken));
+        snapshot
+            .fission_depart_ticks
+            .push(record.depart_tick as i64);
+        snapshot
+            .fission_founded_ticks
+            .push(record.founded_tick.map_or(-1, |tick| tick as i64));
+        snapshot
+            .fission_cancelled_ticks
+            .push(record.cancelled_tick.map_or(-1, |tick| tick as i64));
+        snapshot
+            .fission_daughters
+            .push(record.daughter.map_or(-1, |id| id as i32));
+        snapshot
+            .fission_food_taken
+            .push(i64::from(record.food_taken));
     }
     for &(x, y) in &resources.retired_hearths {
         snapshot.retired_hearth_xs.push(x as i32);
@@ -2820,7 +3010,10 @@ fn society_snapshot_to_dict(snapshot: &SocietySnapshot) -> VarDictionary {
     ] {
         dict.set(key, PackedInt64Array::from(values.as_slice()));
     }
-    dict.set("founder_leader", PackedByteArray::from(snapshot.founder_leader.as_slice()));
+    dict.set(
+        "founder_leader",
+        PackedByteArray::from(snapshot.founder_leader.as_slice()),
+    );
     dict.set("current_tick", snapshot.current_tick);
     dict
 }
@@ -2896,9 +3089,14 @@ fn settlement_rows_to_dict(
 
 /// Pass 6 — floor of the wood target of every settlement row, in row order;
 /// `0` for every row without the firewood rule.
-pub fn collect_settlement_wood_targets(rows: &[SettlementSnapshotRow], resources: &SimResources) -> Vec<i32> {
+pub fn collect_settlement_wood_targets(
+    rows: &[SettlementSnapshotRow],
+    resources: &SimResources,
+) -> Vec<i32> {
     let target = sim_systems::runtime::settlement::firewood::wood_target(resources)
-        .map_or(0, |target| target.max(0.0).floor().min(f64::from(i32::MAX)) as i32);
+        .map_or(0, |target| {
+            target.max(0.0).floor().min(f64::from(i32::MAX)) as i32
+        });
     vec![target; rows.len()]
 }
 
@@ -2934,9 +3132,7 @@ pub struct RelationshipSnapshotRow {
 /// underlying `f64` type permits).
 ///
 /// Reads only `&SimResources`, so the snapshot cannot mutate sim state.
-pub fn collect_relationship_snapshot(
-    resources: &SimResources,
-) -> Vec<RelationshipSnapshotRow> {
+pub fn collect_relationship_snapshot(resources: &SimResources) -> Vec<RelationshipSnapshotRow> {
     resources
         .relationships
         .iter()
@@ -3044,13 +3240,19 @@ pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
     // Appended after the agent lattice so the existing spawn is unperturbed
     // (Assertion 13: 64 agents, all Idle). Each source is the sentinel value.
     for &(x, y) in SOURCE_FOOD.iter() {
-        engine.resources.set_food_tile(x, y, RESOURCE_SOURCE_INFINITE);
+        engine
+            .resources
+            .set_food_tile(x, y, RESOURCE_SOURCE_INFINITE);
     }
     for &(x, y) in SOURCE_WATER.iter() {
-        engine.resources.set_water_tile(x, y, RESOURCE_SOURCE_INFINITE);
+        engine
+            .resources
+            .set_water_tile(x, y, RESOURCE_SOURCE_INFINITE);
     }
     for &(x, y) in SOURCE_SLEEP.iter() {
-        engine.resources.set_sleep_tile(x, y, RESOURCE_SOURCE_INFINITE);
+        engine
+            .resources
+            .set_sleep_tile(x, y, RESOURCE_SOURCE_INFINITE);
     }
 }
 
@@ -3130,9 +3332,16 @@ pub struct TimeSnapshot {
 /// Read the completed tick count and clock resources without mutation.
 pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
     let ticks_per_day = engine.resources.ticks_per_day;
-    let day_index = engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
-        .checked_div(ticks_per_day).unwrap_or(0);
-    let days_per_season = engine.resources.rules.seasons.map_or(0, |rule| rule.days_per_season);
+    let day_index = engine
+        .current_tick()
+        .saturating_add(engine.resources.rules.clock_offset_ticks)
+        .checked_div(ticks_per_day)
+        .unwrap_or(0);
+    let days_per_season = engine
+        .resources
+        .rules
+        .seasons
+        .map_or(0, |rule| rule.days_per_season);
     let (season, day_of_season) = match u64::from(days_per_season) {
         0 => (0, 0),
         per => (((day_index / per) % 4) as u32, (day_index % per) as u32 + 1),
@@ -3206,8 +3415,16 @@ mod revitalize_tooling_tests {
     fn live_game_is_game_v26() {
         // Pass 21 6.1: init and reset_world build game_v26; the stress world stays v19.
         let engine = super::build_game_engine(20_261_010);
-        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v26(20_261_010));
-        assert!(super::build_stress_engine(1, 30).resources.rules.society.relations.is_none());
+        assert_eq!(
+            engine.resources.rules,
+            sim_core::rules::WorldRules::game_v26(20_261_010)
+        );
+        assert!(super::build_stress_engine(1, 30)
+            .resources
+            .rules
+            .society
+            .relations
+            .is_none());
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
     }
@@ -3217,16 +3434,36 @@ mod revitalize_tooling_tests {
         // Live v22 retains founder temperament; stale bits and v19 agents give None.
         let engine = super::build_game_engine(7);
         let mut seen = 0;
-        for (entity, t) in engine.world.query::<&sim_core::components::Temperament>().iter() {
-            assert_eq!(super::collect_agent_temperament(&engine.world, entity.to_bits().get()), Some(*t));
+        for (entity, t) in engine
+            .world
+            .query::<&sim_core::components::Temperament>()
+            .iter()
+        {
+            assert_eq!(
+                super::collect_agent_temperament(&engine.world, entity.to_bits().get()),
+                Some(*t)
+            );
             seen += 1;
         }
-        assert_eq!(seen, engine.world.query::<&sim_core::components::Agent>().iter().count());
+        assert_eq!(
+            seen,
+            engine
+                .world
+                .query::<&sim_core::components::Agent>()
+                .iter()
+                .count()
+        );
         assert_eq!(super::collect_agent_temperament(&engine.world, 0), None);
-        assert_eq!(super::collect_agent_temperament(&engine.world, u64::MAX), None);
+        assert_eq!(
+            super::collect_agent_temperament(&engine.world, u64::MAX),
+            None
+        );
         let v19 = super::build_stress_engine(7, 3);
         for (entity, _) in v19.world.query::<&sim_core::components::Agent>().iter() {
-            assert_eq!(super::collect_agent_temperament(&v19.world, entity.to_bits().get()), None);
+            assert_eq!(
+                super::collect_agent_temperament(&v19.world, entity.to_bits().get()),
+                None
+            );
         }
     }
 
@@ -3267,9 +3504,22 @@ mod revitalize_tooling_tests {
     fn stress_engine_has_the_requested_founders() {
         // Pass 15 6.4.
         let engine = super::build_stress_engine(15100, 500);
-        assert_eq!(engine.world.query::<&sim_core::components::Agent>().iter().count(), 500);
-        assert_eq!((engine.resources.world_seed, engine.current_tick()), (15100, 0));
-        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v19(15100));
+        assert_eq!(
+            engine
+                .world
+                .query::<&sim_core::components::Agent>()
+                .iter()
+                .count(),
+            500
+        );
+        assert_eq!(
+            (engine.resources.world_seed, engine.current_tick()),
+            (15100, 0)
+        );
+        assert_eq!(
+            engine.resources.rules,
+            sim_core::rules::WorldRules::game_v19(15100)
+        );
     }
 
     #[test]
@@ -3289,16 +3539,25 @@ mod revitalize_tooling_tests {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         engine.resources.rules = sim_core::rules::WorldRules::game_v8();
         engine.resources.time_of_day = 8.0;
-        assert_eq!(super::collect_world_info(&engine.resources).clock_offset_ticks, 480);
+        assert_eq!(
+            super::collect_world_info(&engine.resources).clock_offset_ticks,
+            480
+        );
         let initial = collect_time_snapshot(&engine);
-        assert_eq!((initial.tick, initial.day_index, initial.time_of_day), (0, 0, 8.0));
+        assert_eq!(
+            (initial.tick, initial.day_index, initial.time_of_day),
+            (0, 0, 8.0)
+        );
         advance_engine_ticks(&mut engine, 959);
         let before = collect_time_snapshot(&engine);
         assert_eq!((before.tick, before.day_index), (959, 0));
         assert!((before.time_of_day - (23.0 + 59.0 / 60.0)).abs() < 1e-12);
         advance_engine_ticks(&mut engine, 1);
         let midnight = collect_time_snapshot(&engine);
-        assert_eq!((midnight.tick, midnight.day_index, midnight.time_of_day), (960, 1, 0.0));
+        assert_eq!(
+            (midnight.tick, midnight.day_index, midnight.time_of_day),
+            (960, 1, 0.0)
+        );
     }
 
     #[test]
@@ -3306,11 +3565,17 @@ mod revitalize_tooling_tests {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         engine.resources.rules = sim_core::rules::WorldRules::game_v10();
         let first = collect_time_snapshot(&engine);
-        assert_eq!((first.season, first.day_of_season, first.days_per_season), (0, 1, 7));
+        assert_eq!(
+            (first.season, first.day_of_season, first.days_per_season),
+            (0, 1, 7)
+        );
         // Display day 9 (zero-based) at 00:00 is the third day of summer.
         advance_engine_ticks(&mut engine, (9 * 1440 - 480) as i64);
         let summer = collect_time_snapshot(&engine);
-        assert_eq!((summer.day_index, summer.season, summer.day_of_season), (9, 1, 3));
+        assert_eq!(
+            (summer.day_index, summer.season, summer.day_of_season),
+            (9, 1, 3)
+        );
         engine.resources.rules = sim_core::rules::WorldRules::game_v9();
         assert_eq!(collect_time_snapshot(&engine).days_per_season, 0);
     }
@@ -3330,7 +3595,10 @@ mod revitalize_tooling_tests {
         // Display day 28 at 02:00 belongs to the last winter evening.
         advance_engine_ticks(&mut engine, (7 * 1440 - 360) as i64);
         let night = collect_time_snapshot(&engine);
-        assert_eq!((night.day_index, night.season, night.winter_severity), (28, 0, 0));
+        assert_eq!(
+            (night.day_index, night.season, night.winter_severity),
+            (28, 0, 0)
+        );
         // 07:00 ends the night: spring.
         advance_engine_ticks(&mut engine, 300);
         assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
@@ -3475,7 +3743,12 @@ pub fn collect_terrain_snapshot(resources: &SimResources) -> TerrainSnapshot {
     TerrainSnapshot {
         width: resources.tile_grid.width,
         height: resources.tile_grid.height,
-        terrain: resources.tile_grid.terrain_type.iter().map(|terrain| *terrain as u8).collect(),
+        terrain: resources
+            .tile_grid
+            .terrain_type
+            .iter()
+            .map(|terrain| *terrain as u8)
+            .collect(),
         elevation: resources.tile_grid.elevation.clone(),
     }
 }
@@ -3484,8 +3757,14 @@ fn terrain_snapshot_to_dict(snapshot: &TerrainSnapshot) -> VarDictionary {
     let mut dict = VarDictionary::new();
     dict.set("width", snapshot.width as i64);
     dict.set("height", snapshot.height as i64);
-    dict.set("terrain", PackedByteArray::from(snapshot.terrain.as_slice()));
-    dict.set("elevation", PackedByteArray::from(snapshot.elevation.as_slice()));
+    dict.set(
+        "terrain",
+        PackedByteArray::from(snapshot.terrain.as_slice()),
+    );
+    dict.set(
+        "elevation",
+        PackedByteArray::from(snapshot.elevation.as_slice()),
+    );
     dict
 }
 
@@ -3504,12 +3783,16 @@ pub struct BuildingSnapshotRow {
 
 /// Join registered buildings with their tile-keyed kinds and sort by id.
 pub fn collect_building_snapshot(resources: &SimResources) -> Vec<BuildingSnapshotRow> {
-    let mut rows: Vec<BuildingSnapshotRow> = resources.building_registry.iter()
+    let mut rows: Vec<BuildingSnapshotRow> = resources
+        .building_registry
+        .iter()
         .map(|(&id, &(x, y))| BuildingSnapshotRow {
             id,
             x,
             y,
-            kind: resources.building_kinds.get(&(x, y))
+            kind: resources
+                .building_kinds
+                .get(&(x, y))
                 .map_or(0, |kind| kind.code()),
         })
         .collect();
@@ -3542,7 +3825,10 @@ fn building_rows_to_dict(rows: &[BuildingSnapshotRow]) -> VarDictionary {
 
 #[cfg(test)]
 mod revitalize_world_snapshot_tests {
-    use super::{collect_building_snapshot, collect_terrain_snapshot, collect_world_info, BuildingSnapshotRow};
+    use super::{
+        collect_building_snapshot, collect_terrain_snapshot, collect_world_info,
+        BuildingSnapshotRow,
+    };
     use sim_core::components::BuildingKind;
     use sim_core::material::{MaterialRegistry, TerrainType};
     use sim_engine::SimResources;
@@ -3564,9 +3850,16 @@ mod revitalize_world_snapshot_tests {
     fn terrain_snapshot_preserves_all_codes_and_row_major_elevation() {
         let mut resources = SimResources::new(5, 2, MaterialRegistry::new());
         resources.tile_grid.terrain_type = vec![
-            TerrainType::Plain, TerrainType::Forest, TerrainType::Mountain,
-            TerrainType::Hill, TerrainType::River, TerrainType::Coast,
-            TerrainType::Desert, TerrainType::Tundra, TerrainType::Swamp, TerrainType::Cave,
+            TerrainType::Plain,
+            TerrainType::Forest,
+            TerrainType::Mountain,
+            TerrainType::Hill,
+            TerrainType::River,
+            TerrainType::Coast,
+            TerrainType::Desert,
+            TerrainType::Tundra,
+            TerrainType::Swamp,
+            TerrainType::Cave,
         ];
         resources.tile_grid.elevation = vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
         let snapshot = collect_terrain_snapshot(&resources);
@@ -3581,18 +3874,41 @@ mod revitalize_world_snapshot_tests {
         resources.building_registry.insert(7, (1, 2));
         resources.building_registry.insert(2, (3, 4));
         resources.building_registry.insert(5, (5, 6));
-        resources.building_kinds.insert((3, 4), BuildingKind::Shelter);
-        resources.building_kinds.insert((5, 6), BuildingKind::Stockpile);
+        resources
+            .building_kinds
+            .insert((3, 4), BuildingKind::Shelter);
+        resources
+            .building_kinds
+            .insert((5, 6), BuildingKind::Stockpile);
         // An unregistered kind must not invent a real building.
-        resources.building_kinds.insert((0, 0), BuildingKind::Hearth);
-        assert_eq!(collect_building_snapshot(&resources), vec![
-            BuildingSnapshotRow { id: 2, x: 3, y: 4, kind: 1 },
-            BuildingSnapshotRow { id: 5, x: 5, y: 6, kind: 2 },
-            BuildingSnapshotRow { id: 7, x: 1, y: 2, kind: 0 },
-        ]);
+        resources
+            .building_kinds
+            .insert((0, 0), BuildingKind::Hearth);
+        assert_eq!(
+            collect_building_snapshot(&resources),
+            vec![
+                BuildingSnapshotRow {
+                    id: 2,
+                    x: 3,
+                    y: 4,
+                    kind: 1
+                },
+                BuildingSnapshotRow {
+                    id: 5,
+                    x: 5,
+                    y: 6,
+                    kind: 2
+                },
+                BuildingSnapshotRow {
+                    id: 7,
+                    x: 1,
+                    y: 2,
+                    kind: 0
+                },
+            ]
+        );
     }
 }
-
 
 #[cfg(test)]
 mod society_snapshot_tests {
@@ -3603,20 +3919,34 @@ mod society_snapshot_tests {
     #[test]
     fn society_joins_built_world_agents_and_preserves_order_filter_and_history() {
         let seed = 20_261_013;
-        let mut engine = build_world_with(
-            &WorldGenConfig::game_v17(seed), WorldRules::game_v17(seed),
-        );
+        let mut engine =
+            build_world_with(&WorldGenConfig::game_v17(seed), WorldRules::game_v17(seed));
         advance_engine_ticks(&mut engine, 1_440);
         let agent_rows = collect_agent_snapshot(&engine.world);
         let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
         assert!(!snapshot.home_agent_ids.is_empty());
-        assert_eq!(snapshot.fission_pressures, vec![0; snapshot.settlement_ids.len()]);
-        assert_eq!(snapshot.fission_thresholds, vec![0; snapshot.settlement_ids.len()]);
-        for (&agent_id, &home_id) in snapshot.home_agent_ids.iter().zip(&snapshot.home_settlement_ids) {
+        assert_eq!(
+            snapshot.fission_pressures,
+            vec![0; snapshot.settlement_ids.len()]
+        );
+        assert_eq!(
+            snapshot.fission_thresholds,
+            vec![0; snapshot.settlement_ids.len()]
+        );
+        for (&agent_id, &home_id) in snapshot
+            .home_agent_ids
+            .iter()
+            .zip(&snapshot.home_settlement_ids)
+        {
             assert!(agent_rows.iter().any(|row| row.agent_id as i64 == agent_id));
-            assert!(engine.resources.settlements[&(home_id as u32)].member_agents.contains(&(agent_id as u64)));
+            assert!(engine.resources.settlements[&(home_id as u32)]
+                .member_agents
+                .contains(&(agent_id as u64)));
         }
-        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+        assert_eq!(
+            snapshot,
+            collect_society_snapshot(&engine.world, &engine.resources)
+        );
 
         let first = snapshot.home_agent_ids[0] as u64;
         let second = snapshot.home_agent_ids[1] as u64;
@@ -3636,37 +3966,88 @@ mod society_snapshot_tests {
         hidden.fission_pressure = 777;
         hidden.fission_threshold = 888;
         engine.resources.settlements.insert(30, hidden);
-        let first_entity = engine.world.query::<&Agent>().iter()
-            .find(|(_, agent)| agent.id == first).map(|(entity, _)| entity).unwrap();
-        engine.world.insert_one(first_entity, Founding {
-            site: (8, 9), fission_id: 2, leader: first, since_tick: 100,
-        }).unwrap();
+        let first_entity = engine
+            .world
+            .query::<&Agent>()
+            .iter()
+            .find(|(_, agent)| agent.id == first)
+            .map(|(entity, _)| entity)
+            .unwrap();
+        engine
+            .world
+            .insert_one(
+                first_entity,
+                Founding {
+                    site: (8, 9),
+                    fission_id: 2,
+                    leader: first,
+                    since_tick: 100,
+                },
+            )
+            .unwrap();
         engine.resources.fission_log = vec![
             FissionRecord {
-                fission_id: 2, parent, site: (8, 9), depart_tick: 100,
-                members: vec![first], adults: 1, daughter: None, founded_tick: None,
-                cancelled_tick: None, food_taken: 23, wood_taken: 0, settled_at_leader: false,
-                pressure_at_split: 0, threshold_at_split: 0,
+                fission_id: 2,
+                parent,
+                site: (8, 9),
+                depart_tick: 100,
+                members: vec![first],
+                adults: 1,
+                daughter: None,
+                founded_tick: None,
+                cancelled_tick: None,
+                food_taken: 23,
+                wood_taken: 0,
+                settled_at_leader: false,
+                pressure_at_split: 0,
+                threshold_at_split: 0,
             },
             FissionRecord {
-                fission_id: 1, parent, site: (2, 3), depart_tick: 80,
-                members: vec![second], adults: 1, daughter: Some(20), founded_tick: Some(120),
-                cancelled_tick: Some(90), food_taken: 17, wood_taken: 0, settled_at_leader: false,
-                pressure_at_split: 0, threshold_at_split: 0,
+                fission_id: 1,
+                parent,
+                site: (2, 3),
+                depart_tick: 80,
+                members: vec![second],
+                adults: 1,
+                daughter: Some(20),
+                founded_tick: Some(120),
+                cancelled_tick: Some(90),
+                food_taken: 17,
+                wood_taken: 0,
+                settled_at_leader: false,
+                pressure_at_split: 0,
+                threshold_at_split: 0,
             },
         ];
         engine.resources.retired_hearths.extend([(9, 4), (2, 5)]);
         let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
-        let settlement_rows = collect_settlement_snapshot(&engine.world, &engine.resources.settlements);
-        assert_eq!(snapshot.settlement_ids, settlement_rows.iter().map(|row| row.settlement_id as i32).collect::<Vec<_>>());
+        let settlement_rows =
+            collect_settlement_snapshot(&engine.world, &engine.resources.settlements);
+        assert_eq!(
+            snapshot.settlement_ids,
+            settlement_rows
+                .iter()
+                .map(|row| row.settlement_id as i32)
+                .collect::<Vec<_>>()
+        );
         assert_eq!(snapshot.settlement_ids, vec![parent as i32, 20]);
         assert_eq!(snapshot.parent_ids, vec![-1, parent as i32]);
         assert_eq!(snapshot.fission_pressures, [325, 850]);
         assert_eq!(snapshot.fission_thresholds, [900, 1_200]);
-        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+        assert_eq!(
+            snapshot,
+            collect_society_snapshot(&engine.world, &engine.resources)
+        );
         assert_eq!(snapshot.founded_ticks[1], 120);
-        assert_eq!(snapshot.member_counts[0] as usize, engine.resources.settlements[&parent].member_agents.len());
-        let member_index = snapshot.home_agent_ids.iter().position(|&id| id == first as i64).unwrap();
+        assert_eq!(
+            snapshot.member_counts[0] as usize,
+            engine.resources.settlements[&parent].member_agents.len()
+        );
+        let member_index = snapshot
+            .home_agent_ids
+            .iter()
+            .position(|&id| id == first as i64)
+            .unwrap();
         assert_eq!(snapshot.home_settlement_ids[member_index], parent as i32);
         assert_eq!(snapshot.home_agent_ids.last(), Some(&-1));
         assert_eq!(snapshot.home_settlement_ids.last(), Some(&30));
@@ -3694,21 +4075,35 @@ mod society_snapshot_tests {
     #[test]
     fn society_pressure_columns_read_v19_values_and_saturate_without_mutation() {
         let seed = 20_261_010;
-        let mut engine = build_world_with(
-            &WorldGenConfig::game_v19(seed), WorldRules::game_v19(seed),
-        );
+        let mut engine =
+            build_world_with(&WorldGenConfig::game_v19(seed), WorldRules::game_v19(seed));
         advance_engine_ticks(&mut engine, 1_440);
         let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
         assert!(!snapshot.settlement_ids.is_empty());
-        assert_eq!(snapshot.fission_pressures.len(), snapshot.settlement_ids.len());
-        assert_eq!(snapshot.fission_thresholds.len(), snapshot.settlement_ids.len());
+        assert_eq!(
+            snapshot.fission_pressures.len(),
+            snapshot.settlement_ids.len()
+        );
+        assert_eq!(
+            snapshot.fission_thresholds.len(),
+            snapshot.settlement_ids.len()
+        );
         for (index, &id) in snapshot.settlement_ids.iter().enumerate() {
             let settlement = &engine.resources.settlements[&(id as u32)];
-            assert_eq!(snapshot.fission_pressures[index], i64::try_from(settlement.fission_pressure).unwrap());
-            assert_eq!(snapshot.fission_thresholds[index], i64::try_from(settlement.fission_threshold).unwrap());
+            assert_eq!(
+                snapshot.fission_pressures[index],
+                i64::try_from(settlement.fission_pressure).unwrap()
+            );
+            assert_eq!(
+                snapshot.fission_thresholds[index],
+                i64::try_from(settlement.fission_threshold).unwrap()
+            );
             assert!(snapshot.fission_thresholds[index] > 0);
         }
-        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+        assert_eq!(
+            snapshot,
+            collect_society_snapshot(&engine.world, &engine.resources)
+        );
         let first = snapshot.settlement_ids[0] as u32;
         let settlement = engine.resources.settlements.get_mut(&first).unwrap();
         settlement.fission_pressure = u64::MAX;
@@ -3716,10 +4111,15 @@ mod society_snapshot_tests {
         let saturated = collect_society_snapshot(&engine.world, &engine.resources);
         assert_eq!(saturated.fission_pressures[0], i64::MAX);
         assert_eq!(saturated.fission_thresholds[0], i64::MAX);
-        assert_eq!(engine.resources.settlements[&first].fission_pressure, u64::MAX);
-        assert_eq!(engine.resources.settlements[&first].fission_threshold, u64::MAX);
+        assert_eq!(
+            engine.resources.settlements[&first].fission_pressure,
+            u64::MAX
+        );
+        assert_eq!(
+            engine.resources.settlements[&first].fission_threshold,
+            u64::MAX
+        );
     }
-
 }
 
 #[cfg(test)]
@@ -3751,10 +4151,17 @@ mod pass3_agent_snapshot_tests {
     #[test]
     fn mixed_snapshot_targets_match_detail_and_live_child_markers() {
         let mut world = hecs::World::new();
-        let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
-            Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
-            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood),
-            Some(TargetKind::Activity)];
+        let targets = [
+            None,
+            Some(TargetKind::Food),
+            Some(TargetKind::Water),
+            Some(TargetKind::Sleep),
+            Some(TargetKind::ConstructionSite),
+            Some(TargetKind::Agent(99)),
+            Some(TargetKind::GatherFood),
+            Some(TargetKind::GatherWood),
+            Some(TargetKind::Activity),
+        ];
         let mut expected = Vec::new();
         for (code, target) in targets.into_iter().enumerate() {
             for consuming in [false, true] {
@@ -3763,11 +4170,20 @@ mod pass3_agent_snapshot_tests {
                     Some(target) if consuming => AgentState::Consuming { target },
                     Some(target) => AgentState::Seeking { target },
                 };
-                let entity = world.spawn((Agent { id: expected.len() as u64 },
-                    Position::new(2, 3), state, Hunger::new(10.0, 0.05),
-                    Thirst::new(20.0, 0.08), Sleep::new(30.0, 0.03)));
+                let entity = world.spawn((
+                    Agent {
+                        id: expected.len() as u64,
+                    },
+                    Position::new(2, 3),
+                    state,
+                    Hunger::new(10.0, 0.05),
+                    Thirst::new(20.0, 0.08),
+                    Sleep::new(30.0, 0.03),
+                ));
                 if consuming {
-                    world.insert_one(entity, Child { born_tick: 5 }).expect("child fixture");
+                    world
+                        .insert_one(entity, Child { born_tick: 5 })
+                        .expect("child fixture");
                 }
                 let state_code = match (code, consuming) {
                     (0, _) => 0,
@@ -3784,10 +4200,21 @@ mod pass3_agent_snapshot_tests {
         let target_kinds: Vec<u8> = rows.iter().map(|row| row.target_kind).collect();
         let life_stages: Vec<u8> = rows.iter().map(|row| row.life_stage).collect();
         assert_eq!(rows.len(), expected.len());
-        assert_eq!([ids.len(), xs.len(), ys.len(), states.len(), target_kinds.len(),
-            life_stages.len()], [expected.len(); 6]);
+        assert_eq!(
+            [
+                ids.len(),
+                xs.len(),
+                ys.len(),
+                states.len(),
+                target_kinds.len(),
+                life_stages.len()
+            ],
+            [expected.len(); 6]
+        );
         for (entity, target, stage, state_code) in expected {
-            let index = rows.iter().position(|row| row.entity_bits == entity.to_bits().get())
+            let index = rows
+                .iter()
+                .position(|row| row.entity_bits == entity.to_bits().get())
                 .expect("fixture row present across archetypes");
             let detail = collect_agent_detail(&world, entity.to_bits().get());
             assert!(detail.found);
@@ -3803,13 +4230,32 @@ mod pass3_agent_snapshot_tests {
         use sim_core::components::{Elder, Life};
         let mut world = hecs::World::new();
         world.spawn((Agent { id: 1 }, Position::new(2, 3)));
-        world.spawn((Agent { id: 2 }, Position::new(2, 3), Life { born_tick: -2_880, lifespan_ticks: 90_000 }, Elder));
-        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 100 }, Life { born_tick: 100, lifespan_ticks: 90_000 }));
+        world.spawn((
+            Agent { id: 2 },
+            Position::new(2, 3),
+            Life {
+                born_tick: -2_880,
+                lifespan_ticks: 90_000,
+            },
+            Elder,
+        ));
+        world.spawn((
+            Agent { id: 3 },
+            Position::new(2, 3),
+            Child { born_tick: 100 },
+            Life {
+                born_tick: 100,
+                lifespan_ticks: 90_000,
+            },
+        ));
         let rows = collect_agent_snapshot(&world);
         let ages = collect_agent_ages_days(&world, 1_540, 1_440);
         assert_eq!(rows.len(), ages.len());
-        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&ages)
-            .map(|(row, age)| (row.agent_id, (row.life_stage, *age))).collect();
+        let by_id: std::collections::BTreeMap<_, _> = rows
+            .iter()
+            .zip(&ages)
+            .map(|(row, age)| (row.agent_id, (row.life_stage, *age)))
+            .collect();
         assert_eq!(by_id[&1], (0, -1));
         assert_eq!(by_id[&2], (2, 3));
         assert_eq!(by_id[&3], (1, 1));
@@ -3820,13 +4266,25 @@ mod pass3_agent_snapshot_tests {
         let mut world = hecs::World::new();
         world.spawn((Agent { id: 1 }, Position::new(2, 3)));
         world.spawn((Agent { id: 2 }, Position::new(2, 3), Cold));
-        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 0 }, Cold));
+        world.spawn((
+            Agent { id: 3 },
+            Position::new(2, 3),
+            Child { born_tick: 0 },
+            Cold,
+        ));
         world.spawn((Agent { id: 4 }, Position::new(2, 3), Child { born_tick: 0 }));
         let rows = collect_agent_snapshot(&world);
         let colds = collect_agent_colds(&world);
         assert_eq!(rows.len(), colds.len());
-        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&colds).map(|(row, cold)| (row.agent_id, *cold)).collect();
-        assert_eq!(by_id.into_iter().collect::<Vec<_>>(), vec![(1, 0), (2, 1), (3, 1), (4, 0)]);
+        let by_id: std::collections::BTreeMap<_, _> = rows
+            .iter()
+            .zip(&colds)
+            .map(|(row, cold)| (row.agent_id, *cold))
+            .collect();
+        assert_eq!(
+            by_id.into_iter().collect::<Vec<_>>(),
+            vec![(1, 0), (2, 1), (3, 1), (4, 0)]
+        );
     }
 
     #[test]
@@ -3844,14 +4302,23 @@ mod pass3_agent_snapshot_tests {
         let rows = collect_settlement_snapshot(&world, &resources.settlements);
         assert_eq!(rows.len(), 2);
         // No firewood rule: zero for every row.
-        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![0, 0]);
+        assert_eq!(
+            collect_settlement_wood_targets(&rows, &resources),
+            vec![0, 0]
+        );
         // v11 without seasons: 1.5 x 26 = 39; summer of a seasonal world 1.5 x 13 + 7 x 39 = 292.5 -> 292.
         resources.rules = WorldRules::game_v11();
         resources.rules.seasons = None;
-        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![39, 39]);
+        assert_eq!(
+            collect_settlement_wood_targets(&rows, &resources),
+            vec![39, 39]
+        );
         resources.rules = WorldRules::game_v11();
         resources.current_tick = 7 * 1_440;
-        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![292, 292]);
+        assert_eq!(
+            collect_settlement_wood_targets(&rows, &resources),
+            vec![292, 292]
+        );
         assert!(collect_settlement_wood_targets(&[], &resources).is_empty());
     }
 
@@ -3860,7 +4327,9 @@ mod pass3_agent_snapshot_tests {
         let mut world = hecs::World::new();
         let entity = world.spawn((Agent { id: 1 }, Position::new(2, 3), Child { born_tick: 0 }));
         assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 1);
-        world.remove_one::<Child>(entity).expect("child fixture exists");
+        world
+            .remove_one::<Child>(entity)
+            .expect("child fixture exists");
         assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 0);
     }
 }

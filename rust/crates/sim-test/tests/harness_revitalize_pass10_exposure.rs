@@ -36,7 +36,10 @@ enum Stage {
 /// A bare v16_neutral world at `tick`: one settlement at `HOME` with an empty
 /// wood store (the fire goes out) and one member per `(id, stage, hp)` row,
 /// spawned in the given order with its explicit AgentId, needs met.
-fn exposure_fixture(tick: u64, residents: &[(AgentId, Stage, f64)]) -> (SimEngine, Vec<(AgentId, Entity)>) {
+fn exposure_fixture(
+    tick: u64,
+    residents: &[(AgentId, Stage, f64)],
+) -> (SimEngine, Vec<(AgentId, Entity)>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.rules = WorldRules::game_v16_neutral();
     engine.resources.current_tick = tick;
@@ -52,7 +55,10 @@ fn exposure_fixture(tick: u64, residents: &[(AgentId, Stage, f64)]) -> (SimEngin
             BodyHealth { hp, max_hp: 100.0 },
         ));
         match stage {
-            Stage::Child => engine.world.insert_one(entity, Child { born_tick: 0 }).expect("child"),
+            Stage::Child => engine
+                .world
+                .insert_one(entity, Child { born_tick: 0 })
+                .expect("child"),
             Stage::Elder => engine.world.insert_one(entity, Elder).expect("elder"),
             Stage::Adult => {}
         }
@@ -87,7 +93,13 @@ fn deaths_at_home(engine: &SimEngine) -> Vec<Death> {
             log.as_slice()
                 .iter()
                 .filter_map(|event| match event {
-                    CausalEvent::AgentDied { id, agent, reason, tick, .. } => Some((*id, *agent, *reason, *tick)),
+                    CausalEvent::AgentDied {
+                        id,
+                        agent,
+                        reason,
+                        tick,
+                        ..
+                    } => Some((*id, *agent, *reason, *tick)),
                     _ => None,
                 })
                 .collect()
@@ -97,10 +109,7 @@ fn deaths_at_home(engine: &SimEngine) -> Vec<Death> {
 
 /// The v15 pins of `harness_revitalize_pass10_frozen.rs` (Part 0), seeds 0 and 1:
 /// (seed, fingerprint at 40,320).
-const V15_PINS: [(u64, &str); 2] = [
-    (0, "8f1794218ad25438"),
-    (1, "00a294390654d3c1"),
-];
+const V15_PINS: [(u64, &str); 2] = [(0, "8f1794218ad25438"), (1, "00a294390654d3c1")];
 
 #[test]
 fn harness_exposure_inert_before_v16() {
@@ -118,7 +127,10 @@ fn harness_exposure_inert_before_v16() {
                 })
             })
             .collect();
-        handles.into_iter().map(|h| h.join().expect("seed thread")).collect()
+        handles
+            .into_iter()
+            .map(|h| h.join().expect("seed thread"))
+            .collect()
     });
     let mut cold_hours = 0;
     for ((fp, clocks, tallies), (seed, pin_fp)) in rows.into_iter().zip(V15_PINS) {
@@ -134,7 +146,13 @@ fn harness_exposure_inert_before_v16() {
 
 /// The rule's hourly damage by stage: (child, adult, elder).
 fn damage(engine: &SimEngine) -> (f64, f64, f64) {
-    let d = engine.resources.rules.society.exposure.expect("exposure rule").damage_per_cold_hour;
+    let d = engine
+        .resources
+        .rules
+        .society
+        .exposure
+        .expect("exposure rule")
+        .damage_per_cold_hour;
     (d[0], d[1], d[2])
 }
 
@@ -142,8 +160,14 @@ fn damage(engine: &SimEngine) -> (f64, f64, f64) {
 /// from 22:00; returns the cold hour (1-based) in which the elder died.
 fn elder_death_hour(start: f64, rule: Option<sim_core::rules::ExposureRule>) -> u64 {
     let night = tick_at(21, 1320); // 22:00 of the first winter day, fire out
-    let (mut engine, residents) =
-        exposure_fixture(night, &[(1, Stage::Elder, start), (2, Stage::Adult, 100.0), (3, Stage::Child, 100.0)]);
+    let (mut engine, residents) = exposure_fixture(
+        night,
+        &[
+            (1, Stage::Elder, start),
+            (2, Stage::Adult, 100.0),
+            (3, Stage::Child, 100.0),
+        ],
+    );
     if rule.is_some() {
         engine.resources.rules.society.exposure = rule;
     }
@@ -159,12 +183,19 @@ fn elder_death_hour(start: f64, rule: Option<sim_core::rules::ExposureRule>) -> 
             assert_eq!(engine.resources.tallies.cold_member_hours, 3 * hour);
             let deaths = deaths_at_home(&engine);
             assert_eq!(deaths.len(), 1);
-            assert_eq!((deaths[0].1, deaths[0].2, deaths[0].3), (1, DeathReason::Exposure, night + 60 * (hour - 1)));
+            assert_eq!(
+                (deaths[0].1, deaths[0].2, deaths[0].3),
+                (1, DeathReason::Exposure, night + 60 * (hour - 1))
+            );
             assert!(!engine.resources.settlements[&1].member_agents.contains(&1));
             // Tallied once: the next hour wounds the others but kills no one else.
             fire_at(&mut engine, night + 60 * hour);
             assert_eq!(engine.resources.tallies.deaths_exposure, 1);
-            assert_eq!(engine.resources.tallies.deaths_starvation + engine.resources.tallies.deaths_old_age, 0);
+            assert_eq!(
+                engine.resources.tallies.deaths_starvation
+                    + engine.resources.tallies.deaths_old_age,
+                0
+            );
             return hour;
         }
         assert!(engine.world.get::<&Cold>(elder).is_ok());
@@ -177,10 +208,19 @@ fn elder_death_hour(start: f64, rule: Option<sim_core::rules::ExposureRule>) -> 
 fn harness_exposure_kills_a_cold_elder() {
     // Start values ([9, 6, 9]): an elder at 20 hp dies within three cold hours
     // (20 - 9 - 9 = 2 > 0, then dead in the third hour), as 6.4 states.
-    let start = sim_core::rules::ExposureRule { damage_per_cold_hour: [9.0, 6.0, 9.0], heal_block_hours: 2, hunger_weight: 0.0, use_hardiness: false };
+    let start = sim_core::rules::ExposureRule {
+        damage_per_cold_hour: [9.0, 6.0, 9.0],
+        heal_block_hours: 2,
+        hunger_weight: 0.0,
+        use_hardiness: false,
+    };
     assert_eq!(elder_death_hour(20.0, Some(start)), 3);
     // Tuned rule: an elder at three hours' damage dies in the third cold hour.
-    let tuned = WorldRules::game_v16_neutral().society.exposure.expect("rule").damage_per_cold_hour[2];
+    let tuned = WorldRules::game_v16_neutral()
+        .society
+        .exposure
+        .expect("rule")
+        .damage_per_cold_hour[2];
     assert_eq!(elder_death_hour(3.0 * tuned, None), 3);
     assert_eq!(elder_death_hour(3.0 * tuned + 0.5, None), 4);
 }
@@ -198,7 +238,14 @@ fn harness_exposure_blocks_healing() {
     let after_night = 100.0 - 8.0 * da;
     assert_eq!(hp(&engine, adult), after_night);
     let last_cold = night + 60 * 7;
-    assert_eq!(engine.world.get::<&ExposureClock>(adult).expect("clock").last_cold_tick, last_cold);
+    assert_eq!(
+        engine
+            .world
+            .get::<&ExposureClock>(adult)
+            .expect("clock")
+            .last_cold_tick,
+        last_cold
+    );
     // While Cold: no healing even though both needs are met.
     let mut survival = StarvationSystem::new();
     engine.resources.current_tick = last_cold + 30;
@@ -207,7 +254,14 @@ fn harness_exposure_blocks_healing() {
     // 06:00: the cold window ends, the marker leaves.
     fire_at(&mut engine, last_cold + 60);
     assert!(engine.world.get::<&Cold>(adult).is_err());
-    assert_eq!(engine.world.get::<&ExposureClock>(adult).expect("clock").last_cold_tick, last_cold);
+    assert_eq!(
+        engine
+            .world
+            .get::<&ExposureClock>(adult)
+            .expect("clock")
+            .last_cold_tick,
+        last_cold
+    );
     // Not Cold, but inside the block (the marked hour plus two hours): no healing.
     for tick in [last_cold + 60, last_cold + 120, last_cold + 179] {
         engine.resources.current_tick = tick;
@@ -216,7 +270,16 @@ fn harness_exposure_blocks_healing() {
     }
     // The block ends at last_cold + 60 + 60 x heal_block_hours (2): healing
     // resumes at 3 hp an hour.
-    assert_eq!(engine.resources.rules.society.exposure.expect("rule").heal_block_hours, 2);
+    assert_eq!(
+        engine
+            .resources
+            .rules
+            .society
+            .exposure
+            .expect("rule")
+            .heal_block_hours,
+        2
+    );
     engine.resources.current_tick = last_cold + 180;
     survival.tick(&mut engine.world, &mut engine.resources);
     assert_eq!(hp(&engine, adult), after_night + 0.05);
@@ -224,7 +287,15 @@ fn harness_exposure_blocks_healing() {
     let (mut plain, residents) = exposure_fixture(night, &[(1, Stage::Adult, 52.0)]);
     plain.resources.rules = WorldRules::game_v15();
     let entity = residents[0].1;
-    plain.world.insert_one(entity, ExposureClock { last_cold_tick: last_cold }).expect("clock");
+    plain
+        .world
+        .insert_one(
+            entity,
+            ExposureClock {
+                last_cold_tick: last_cold,
+            },
+        )
+        .expect("clock");
     plain.world.insert_one(entity, Cold).expect("cold");
     plain.resources.current_tick = last_cold + 30;
     StarvationSystem::new().tick(&mut plain.world, &mut plain.resources);
@@ -234,8 +305,14 @@ fn harness_exposure_blocks_healing() {
 #[test]
 fn harness_exposure_adult_survives_one_night() {
     let evening = tick_at(21, 1080); // 18:00: the burn window opens, no wood
-    let (mut engine, residents) =
-        exposure_fixture(evening, &[(1, Stage::Adult, 100.0), (2, Stage::Child, 100.0), (3, Stage::Elder, 100.0)]);
+    let (mut engine, residents) = exposure_fixture(
+        evening,
+        &[
+            (1, Stage::Adult, 100.0),
+            (2, Stage::Child, 100.0),
+            (3, Stage::Elder, 100.0),
+        ],
+    );
     // Every hourly run from 18:00 to 07:00: the cold window holds eight of them.
     for hour in 0..14 {
         fire_at(&mut engine, evening + 60 * hour);
@@ -246,7 +323,10 @@ fn harness_exposure_adult_survives_one_night() {
     assert_eq!(hp(&engine, adult), 100.0 - 8.0 * da);
     assert_eq!(hp(&engine, child), 100.0 - 8.0 * dc);
     assert_eq!(hp(&engine, elder), 100.0 - 8.0 * de);
-    assert!(hp(&engine, adult) > 0.0, "an adult at full hp survives one full dark night");
+    assert!(
+        hp(&engine, adult) > 0.0,
+        "an adult at full hp survives one full dark night"
+    );
     assert_eq!(engine.resources.tallies.deaths_exposure, 0);
     assert!(engine.world.query::<&Cold>().iter().next().is_none());
 }
@@ -259,7 +339,11 @@ fn night_outcome(residents: &[(AgentId, Stage, f64)]) -> (Vec<Death>, String, u6
     for hour in 0..8 {
         fire_at(&mut engine, night + 60 * hour);
     }
-    (deaths_at_home(&engine), fingerprint(&engine), engine.resources.tallies.deaths_exposure)
+    (
+        deaths_at_home(&engine),
+        fingerprint(&engine),
+        engine.resources.tallies.deaths_exposure,
+    )
 }
 
 #[test]
@@ -283,8 +367,15 @@ fn harness_exposure_order_independent() {
     let mut by_stage = rows;
     by_stage.sort_by_key(|row| (row.1 as u8, std::cmp::Reverse(row.0)));
     let grouped = night_outcome(&by_stage);
-    assert!(forward.0.len() >= 4, "several exposure deaths: {:?}", forward.0);
-    assert!(forward.0.windows(2).any(|w| w[0].3 == w[1].3), "at least two deaths share an hour");
+    assert!(
+        forward.0.len() >= 4,
+        "several exposure deaths: {:?}",
+        forward.0
+    );
+    assert!(
+        forward.0.windows(2).any(|w| w[0].3 == w[1].3),
+        "at least two deaths share an hour"
+    );
     for outcome in [&backward, &grouped] {
         assert_eq!(outcome, &forward);
     }
@@ -313,7 +404,19 @@ impl RuntimeSystem for PreFire {
         let rows = world
             .query::<(&Agent, &BodyHealth, Option<&Child>, Option<&Elder>)>()
             .iter()
-            .map(|(_, (a, h, child, elder))| (a.id, h.hp, if child.is_some() { 0 } else if elder.is_some() { 2 } else { 1 }))
+            .map(|(_, (a, h, child, elder))| {
+                (
+                    a.id,
+                    h.hp,
+                    if child.is_some() {
+                        0
+                    } else if elder.is_some() {
+                        2
+                    } else {
+                        1
+                    },
+                )
+            })
             .collect();
         *self.0.lock().expect("lock") = rows;
     }
@@ -326,7 +429,13 @@ fn exposure_deaths_at(engine: &SimEngine, tick: u64) -> Vec<AgentId> {
     for tile in 0..grid.width * grid.height {
         if let Some(log) = engine.resources.causal_log.get(tile) {
             for event in log.as_slice() {
-                if let CausalEvent::AgentDied { agent, reason: DeathReason::Exposure, tick: t, .. } = event {
+                if let CausalEvent::AgentDied {
+                    agent,
+                    reason: DeathReason::Exposure,
+                    tick: t,
+                    ..
+                } = event
+                {
                     if *t == tick {
                         ids.push(*agent);
                     }
@@ -346,7 +455,13 @@ fn harness_exposure_only_from_cold() {
     // of a settlement whose fire is out, whose hp before the run was at most
     // that run's damage for its stage.
     let mut engine = game_v16_neutral_scene(6);
-    let damage = engine.resources.rules.society.exposure.expect("rule").damage_per_cold_hour;
+    let damage = engine
+        .resources
+        .rules
+        .society
+        .exposure
+        .expect("rule")
+        .damage_per_cold_hour;
     let pre = Arc::new(Mutex::new(Vec::new()));
     engine.register_system(Box::new(PreFire(Arc::clone(&pre))));
     let mut seen = 0u64;
@@ -359,7 +474,12 @@ fn harness_exposure_only_from_cold() {
                 .resources
                 .settlements
                 .values()
-                .map(|s| (s.settlement_id, s.member_agents.iter().copied().collect::<BTreeSet<_>>()))
+                .map(|s| {
+                    (
+                        s.settlement_id,
+                        s.member_agents.iter().copied().collect::<BTreeSet<_>>(),
+                    )
+                })
                 .collect();
             rows.sort_by_key(|row| row.0);
             rows
@@ -369,23 +489,54 @@ fn harness_exposure_only_from_cold() {
         if total == seen {
             continue;
         }
-        assert_eq!(tick % 60, 0, "exposure death off a FireSystem run at tick {tick}");
+        assert_eq!(
+            tick % 60,
+            0,
+            "exposure death off a FireSystem run at tick {tick}"
+        );
         let minute = (tick + engine.resources.rules.clock_offset_ticks) % 1440;
-        assert!(!(360..1320).contains(&minute), "exposure death outside the cold window (minute {minute})");
-        let evening_day = (tick + engine.resources.rules.clock_offset_ticks) / 1440 - u64::from(minute < 360);
-        assert_eq!(evening_day % 28 / 7, 3, "the night of evening day {evening_day} is not a winter night");
+        assert!(
+            !(360..1320).contains(&minute),
+            "exposure death outside the cold window (minute {minute})"
+        );
+        let evening_day =
+            (tick + engine.resources.rules.clock_offset_ticks) / 1440 - u64::from(minute < 360);
+        assert_eq!(
+            evening_day % 28 / 7,
+            3,
+            "the night of evening day {evening_day} is not a winter night"
+        );
         let pre_rows = pre.lock().expect("lock").clone();
         let died = exposure_deaths_at(&engine, tick);
-        assert_eq!(died.len() as u64, total - seen, "every new exposure death is in this tick's causal log");
+        assert_eq!(
+            died.len() as u64,
+            total - seen,
+            "every new exposure death is in this tick's causal log"
+        );
         for id in died {
-            let (_, hp_before, stage) = *pre_rows.iter().find(|row| row.0 == id).expect("observed before the fire run");
-            let (sid, _) = members_before.iter().find(|(_, m)| m.contains(&id)).expect("the dead was a settlement member");
-            assert!(!engine.resources.fires[sid].lit, "agent {id} died of exposure beside a lit fire");
-            assert!(hp_before <= damage[stage], "agent {id} had {hp_before} hp, more than one cold hour's damage");
+            let (_, hp_before, stage) = *pre_rows
+                .iter()
+                .find(|row| row.0 == id)
+                .expect("observed before the fire run");
+            let (sid, _) = members_before
+                .iter()
+                .find(|(_, m)| m.contains(&id))
+                .expect("the dead was a settlement member");
+            assert!(
+                !engine.resources.fires[sid].lit,
+                "agent {id} died of exposure beside a lit fire"
+            );
+            assert!(
+                hp_before <= damage[stage],
+                "agent {id} had {hp_before} hp, more than one cold hour's damage"
+            );
             checked += 1;
         }
         seen = total;
     }
-    assert!(seen >= 1, "seed 6 should lose someone to exposure in its first winter");
+    assert!(
+        seen >= 1,
+        "seed 6 should lose someone to exposure in its first winter"
+    );
     assert_eq!(checked as u64, seen);
 }

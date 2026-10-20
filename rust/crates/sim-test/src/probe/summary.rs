@@ -178,7 +178,9 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     .collect();
     markdown.push_str(&pass4_sections(args, runs));
     markdown.push_str(&pass5_sections(args, runs));
-    let rules = super::pass8::rules_block(&super::runner::scene_engine(&args.scene, args.seeds.start).resources);
+    let rules = super::pass8::rules_block(
+        &super::runner::scene_engine(&args.scene, args.seeds.start).resources,
+    );
     let report = json!({"schema_version":13,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
     fs::write(
         args.out.join("summary.json"),
@@ -208,16 +210,24 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
         let mut columns: [Vec<f64>; 6] = Default::default();
         for run in runs {
             for day in 1..=args.days {
-                let Some(row) = run.checkpoints.get(&day) else { continue };
+                let Some(row) = run.checkpoints.get(&day) else {
+                    continue;
+                };
                 let opening = if day > 1 {
-                    run.checkpoints.get(&(day - 1)).and_then(|r| r["season"].as_u64())
+                    run.checkpoints
+                        .get(&(day - 1))
+                        .and_then(|r| r["season"].as_u64())
                 } else {
                     Some(0)
                 };
                 if opening != Some(index as u64) {
                     continue;
                 }
-                let opening_row = if day > 1 { run.checkpoints.get(&(day - 1)).unwrap_or(row) } else { row };
+                let opening_row = if day > 1 {
+                    run.checkpoints.get(&(day - 1)).unwrap_or(row)
+                } else {
+                    row
+                };
                 for (column, value) in columns.iter_mut().zip([
                     opening_row["food_supply_season_per_day"].as_f64(),
                     daily(run, day, "food_harvested_total"),
@@ -251,8 +261,19 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
     };
     for day in 1..=args.days {
         out.push_str(&format!("| {day} |"));
-        for key in ["alive", "births", "deaths_starvation", "deaths_dehydration", "deaths_combat",
-            "deaths_old_age", "deaths_exposure", "children", "adults", "elders", "mean_age_days"] {
+        for key in [
+            "alive",
+            "births",
+            "deaths_starvation",
+            "deaths_dehydration",
+            "deaths_combat",
+            "deaths_old_age",
+            "deaths_exposure",
+            "children",
+            "adults",
+            "elders",
+            "mean_age_days",
+        ] {
             out.push_str(&format!(" {:.3} |", median_at(day, key)));
         }
         out.push('\n');
@@ -260,7 +281,13 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
     out.push_str("\n## Foraging\n\nMedians across seeds. Trips, haul deposits and regrowth lost are per-day counter differences; target, stock in hand (stockpile plus food carried by members) and home distance are checkpoint values.\n\n| Day | Forage trips/day | Haul deposits/day | Stock target | Stock in hand | Stockpile | Regrowth lost/day | Home distance |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
     for day in 1..=args.days {
         let per_day = |key: &str| {
-            percentile(&runs.iter().filter_map(|run| daily(run, day, key)).collect::<Vec<_>>(), 0.5)
+            percentile(
+                &runs
+                    .iter()
+                    .filter_map(|run| daily(run, day, key))
+                    .collect::<Vec<_>>(),
+                0.5,
+            )
         };
         out.push_str(&format!(
             "| {day} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
@@ -280,7 +307,9 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
 /// for day 1), exactly as the Seasons section attributes days.
 fn opening_season(run: &RunResult, day: u64) -> Option<u64> {
     if day > 1 {
-        run.checkpoints.get(&(day - 1)).and_then(|row| row["season"].as_u64())
+        run.checkpoints
+            .get(&(day - 1))
+            .and_then(|row| row["season"].as_u64())
     } else {
         Some(0)
     }
@@ -300,7 +329,9 @@ fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
                 if opening_season(run, day) != Some(index as u64) {
                     continue;
                 }
-                let Some(row) = run.checkpoints.get(&day) else { continue };
+                let Some(row) = run.checkpoints.get(&day) else {
+                    continue;
+                };
                 let store = daily(run, day, "meals_from_store_total").unwrap_or(0.0);
                 let ground = daily(run, day, "ground_meals_total").unwrap_or(0.0);
                 meals[0].push(store);
@@ -329,12 +360,29 @@ fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
         if meals[0].is_empty() {
             continue;
         }
-        out.push_str(&format!("| {name} | {} | {:.3} | {:.3} | {:.3} |\n", meals[0].len(),
-            percentile(&meals[0], 0.5), percentile(&meals[1], 0.5), percentile(&meals[2], 0.5)));
-        let lit_share = if lit.is_empty() { 0.0 } else { lit.iter().sum::<f64>() / lit.len() as f64 };
-        fire.push_str(&format!("| {name} | {} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
-            wood[0].len(), percentile(&wood[0], 0.5), percentile(&wood[1], 0.5), percentile(&wood[2], 0.5),
-            lit_share, percentile(&wood[3], 0.5), percentile(&wood[4], 0.5), percentile(&wood[5], 0.5)));
+        out.push_str(&format!(
+            "| {name} | {} | {:.3} | {:.3} | {:.3} |\n",
+            meals[0].len(),
+            percentile(&meals[0], 0.5),
+            percentile(&meals[1], 0.5),
+            percentile(&meals[2], 0.5)
+        ));
+        let lit_share = if lit.is_empty() {
+            0.0
+        } else {
+            lit.iter().sum::<f64>() / lit.len() as f64
+        };
+        fire.push_str(&format!(
+            "| {name} | {} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            wood[0].len(),
+            percentile(&wood[0], 0.5),
+            percentile(&wood[1], 0.5),
+            percentile(&wood[2], 0.5),
+            lit_share,
+            percentile(&wood[3], 0.5),
+            percentile(&wood[4], 0.5),
+            percentile(&wood[5], 0.5)
+        ));
     }
     out.push_str(&fire);
     out.push_str("\n## Work by hour\n\nAt each requested clock sample on days ≥ 2: adult work share (non-child, non-elder members gathering food or wood, building, or hauling home) and idle share (residents Idle and not hauling / all residents). Each seed's median over its days first, then quantiles across seeds. Spring–autumn excludes winter samples.\n\n| Clock | Adult work median | Adult work min | Idle median | Idle max | Adult work median (spring–autumn) | Idle median (spring–autumn) |\n|---|---:|---:|---:|---:|---:|---:|\n");
@@ -342,9 +390,14 @@ fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
         let seed_medians = |key: &str, work_seasons: bool| {
             runs.iter()
                 .filter_map(|run| {
-                    let values: Vec<f64> = run.clock_rows.iter()
-                        .filter(|((day, m), row)| *m == *minute && *day >= 2
-                            && (!work_seasons || row["season"].as_u64() != Some(3)))
+                    let values: Vec<f64> = run
+                        .clock_rows
+                        .iter()
+                        .filter(|((day, m), row)| {
+                            *m == *minute
+                                && *day >= 2
+                                && (!work_seasons || row["season"].as_u64() != Some(3))
+                        })
                         .map(|(_, row)| row[key].as_f64().unwrap_or(0.0))
                         .collect();
                     (!values.is_empty()).then(|| percentile(&values, 0.5))
@@ -353,11 +406,17 @@ fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
         };
         let work = seed_medians("adult_work_share", false);
         let idle = seed_medians("idle_share", false);
-        out.push_str(&format!("| {:02}:{:02} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
-            minute / 60, minute % 60, percentile(&work, 0.5), percentile(&work, 0.0),
-            percentile(&idle, 0.5), percentile(&idle, 1.0),
+        out.push_str(&format!(
+            "| {:02}:{:02} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            minute / 60,
+            minute % 60,
+            percentile(&work, 0.5),
+            percentile(&work, 0.0),
+            percentile(&idle, 0.5),
+            percentile(&idle, 1.0),
             percentile(&seed_medians("adult_work_share", true), 0.5),
-            percentile(&seed_medians("idle_share", true), 0.5)));
+            percentile(&seed_medians("idle_share", true), 0.5)
+        ));
     }
     out
 }

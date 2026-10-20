@@ -27,7 +27,10 @@ pub struct RelationState {
 impl RelationState {
     /// Add `delta`, clamped to −1,000..=1,000.
     pub fn add(&mut self, delta: i32) {
-        self.value = self.value.saturating_add(delta).clamp(RELATION_MIN, RELATION_MAX);
+        self.value = self
+            .value
+            .saturating_add(delta)
+            .clamp(RELATION_MIN, RELATION_MAX);
     }
 }
 
@@ -140,7 +143,11 @@ mod tests {
 
     #[test]
     fn add_clamps_to_the_relation_range() {
-        let mut state = RelationState { value: 990, estranged: false, base: 0 };
+        let mut state = RelationState {
+            value: 990,
+            estranged: false,
+            base: 0,
+        };
         state.add(40);
         assert_eq!(state.value, RELATION_MAX);
         state.add(-2500);
@@ -156,7 +163,14 @@ mod tests {
         let mut relations = SettlementRelations::default();
         assert_eq!(SettlementRelations::key(5, 2), (2, 5));
         assert_eq!(SettlementRelations::key(2, 5), (2, 5));
-        relations.pairs.insert((2, 5), RelationState { value: -400, estranged: true, base: 150 });
+        relations.pairs.insert(
+            (2, 5),
+            RelationState {
+                value: -400,
+                estranged: true,
+                base: 150,
+            },
+        );
         assert!(relations.estranged(5, 2) && relations.estranged(2, 5));
         assert!(!relations.estranged(2, 6));
         assert_eq!(relations.get(5, 2).map(|s| s.value), Some(-400));

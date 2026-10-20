@@ -65,12 +65,8 @@ pub mod worldgen;
 /// - 110 : [`runtime::influence::AgentInfluenceSampleSystem`]
 /// - 1000: [`runtime::influence::InfluenceVisualizationSystem`] (every 6 ticks)
 pub fn register_phase2_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(
-        runtime::influence::BuildingStampSystem::new(),
-    ));
-    engine.register_system(Box::new(
-        runtime::influence::InfluenceUpdateSystem::new(),
-    ));
+    engine.register_system(Box::new(runtime::influence::BuildingStampSystem::new()));
+    engine.register_system(Box::new(runtime::influence::InfluenceUpdateSystem::new()));
     engine.register_system(Box::new(
         runtime::influence::AgentInfluenceSampleSystem::new(),
     ));
@@ -87,9 +83,7 @@ pub fn register_phase2_systems(engine: &mut SimEngine) {
 /// Runs after `AgentInfluenceSampleSystem` (priority 110) so movement
 /// operates on the post-sample tile.
 pub fn register_agent_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(
-        runtime::agent::AgentMovementSystem::new(),
-    ));
+    engine.register_system(Box::new(runtime::agent::AgentMovementSystem::new()));
 }
 
 /// Register the Phase 5-α/β/γ needs stack on `engine`.
@@ -108,18 +102,10 @@ pub fn register_agent_systems(engine: &mut SimEngine) {
 /// fires on pre-decay `loneliness`, and the loneliness advance applies
 /// afterward — mirroring the Hunger/Thirst/Sleep pre-decision pattern.
 pub fn register_needs_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(
-        runtime::needs::HungerDecaySystem::new(),
-    ));
-    engine.register_system(Box::new(
-        runtime::needs::ThirstDecaySystem::new(),
-    ));
-    engine.register_system(Box::new(
-        runtime::needs::SleepDecaySystem::new(),
-    ));
-    engine.register_system(Box::new(
-        runtime::needs::SocialDecaySystem::new(),
-    ));
+    engine.register_system(Box::new(runtime::needs::HungerDecaySystem::new()));
+    engine.register_system(Box::new(runtime::needs::ThirstDecaySystem::new()));
+    engine.register_system(Box::new(runtime::needs::SleepDecaySystem::new()));
+    engine.register_system(Box::new(runtime::needs::SocialDecaySystem::new()));
 }
 
 /// Register the Phase 5-β decision stack on `engine`.
@@ -131,9 +117,7 @@ pub fn register_needs_systems(engine: &mut SimEngine) {
 /// `HungerDecaySystem` (priority 130) so it observes the post-move
 /// position and the pre-decay need values for the current tick.
 pub fn register_decision_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(
-        runtime::decision::AgentDecisionSystem::new(),
-    ));
+    engine.register_system(Box::new(runtime::decision::AgentDecisionSystem::new()));
 }
 
 /// Register the Phase 6-β construction stack on `engine`.
@@ -147,9 +131,7 @@ pub fn register_decision_systems(engine: &mut SimEngine) {
 /// CausalEvent emission. See `runtime::construction::ConstructionSystem`
 /// for full responsibilities.
 pub fn register_construction_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(
-        runtime::construction::ConstructionSystem::new(),
-    ));
+    engine.register_system(Box::new(runtime::construction::ConstructionSystem::new()));
 }
 
 /// Register the Phase 7-β social interaction stack on `engine`.
@@ -164,9 +146,7 @@ pub fn register_construction_systems(engine: &mut SimEngine) {
 /// (priority 125) owns the Idle→Seeking and Seeking→Consuming
 /// transitions plus `SocialInteractionStarted` emission.
 pub fn register_social_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(
-        runtime::social::SocialInteractionSystem::new(),
-    ));
+    engine.register_system(Box::new(runtime::social::SocialInteractionSystem::new()));
 }
 
 /// Register the Phase 8-β memory stack on `engine`.
@@ -273,7 +253,9 @@ pub fn register_stockpile_consume_systems(engine: &mut SimEngine) {
 /// production `seed_finite_resource_scarcity` path makes sources finite, so the
 /// 12 shared harnesses stay byte-for-byte unchanged.
 pub fn register_resource_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(runtime::resource_regen::StaleSeekTargetSystem::new()));
+    engine.register_system(Box::new(
+        runtime::resource_regen::StaleSeekTargetSystem::new(),
+    ));
     engine.register_system(Box::new(runtime::resource_regen::ResourceRegenSystem::new()));
 }
 
@@ -346,7 +328,9 @@ pub fn register_fire_systems(engine: &mut SimEngine) {
 
 /// Register the rules-gated shelter planner.
 pub fn register_shelter_planning_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(runtime::settlement::ShelterPlanningSystem::default()));
+    engine.register_system(Box::new(
+        runtime::settlement::ShelterPlanningSystem::default(),
+    ));
 }
 
 /// Register rules-gated child maturation, owned-shelter bed assignments and aging.

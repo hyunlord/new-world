@@ -54,8 +54,20 @@ impl MaterialProperties {
     pub fn validate(&self) -> Result<(), MaterialError> {
         check_range("density", self.density, 100.0, 25_000.0, "100..=25000")?;
         check_range("hardness", self.hardness, 1.0, 10.0, "1.0..=10.0")?;
-        check_range("shear_yield", self.shear_yield, 1_000.0, 600_000.0, "1000..=600000")?;
-        check_range("impact_yield", self.impact_yield, 1_000.0, 1_500_000.0, "1000..=1500000")?;
+        check_range(
+            "shear_yield",
+            self.shear_yield,
+            1_000.0,
+            600_000.0,
+            "1000..=600000",
+        )?;
+        check_range(
+            "impact_yield",
+            self.impact_yield,
+            1_000.0,
+            1_500_000.0,
+            "1000..=1500000",
+        )?;
         check_range(
             "fracture_toughness",
             self.fracture_toughness,
@@ -63,7 +75,13 @@ impl MaterialProperties {
             800_000.0,
             "1000..=800000",
         )?;
-        check_range("melting_point", self.melting_point, 0.0, 3_500.0, "0.0..=3500.0")?;
+        check_range(
+            "melting_point",
+            self.melting_point,
+            0.0,
+            3_500.0,
+            "0.0..=3500.0",
+        )?;
         check_range("flammability", self.flammability, 0.0, 1.0, "0.0..=1.0")?;
         check_range(
             "thermal_conductivity",
@@ -74,8 +92,20 @@ impl MaterialProperties {
         )?;
         check_range("cultural_value", self.cultural_value, 0.0, 1.0, "0.0..=1.0")?;
         check_range("rarity", self.rarity, 0.0, 1.0, "0.0..=1.0")?;
-        check_range("work_difficulty", self.work_difficulty, 0.0, 1.0, "0.0..=1.0")?;
-        check_range("aesthetic_value", self.aesthetic_value, 0.0, 1.0, "0.0..=1.0")?;
+        check_range(
+            "work_difficulty",
+            self.work_difficulty,
+            0.0,
+            1.0,
+            "0.0..=1.0",
+        )?;
+        check_range(
+            "aesthetic_value",
+            self.aesthetic_value,
+            0.0,
+            1.0,
+            "0.0..=1.0",
+        )?;
         check_range("workability", self.workability, 0.0, 1.0, "0.0..=1.0")?;
         check_range("preservation", self.preservation, 0.0, 1.0, "0.0..=1.0")?;
         Ok(())
@@ -190,7 +220,11 @@ mod tests {
                 p.$field = $oor;
                 let err = p.validate().expect_err("OOR should fail");
                 match err {
-                    MaterialError::PropertyOutOfRange { property, value, expected } => {
+                    MaterialError::PropertyOutOfRange {
+                        property,
+                        value,
+                        expected,
+                    } => {
                         assert_eq!(property, stringify!($field));
                         assert_eq!(value, $oor);
                         assert!(!expected.is_empty());
@@ -203,8 +237,20 @@ mod tests {
 
     boundary_case!(boundary_density, density, 100.0, 25_000.0, 99.0);
     boundary_case!(boundary_hardness, hardness, 1.0, 10.0, 10.5);
-    boundary_case!(boundary_shear_yield, shear_yield, 1_000.0, 600_000.0, 600_001.0);
-    boundary_case!(boundary_impact_yield, impact_yield, 1_000.0, 1_500_000.0, 1_500_001.0);
+    boundary_case!(
+        boundary_shear_yield,
+        shear_yield,
+        1_000.0,
+        600_000.0,
+        600_001.0
+    );
+    boundary_case!(
+        boundary_impact_yield,
+        impact_yield,
+        1_000.0,
+        1_500_000.0,
+        1_500_001.0
+    );
     boundary_case!(
         boundary_fracture_toughness,
         fracture_toughness,

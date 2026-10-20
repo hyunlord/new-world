@@ -53,12 +53,24 @@ fn bootstrapped_engine() -> SimEngine {
 fn harness_s16_gamma_a1_clamp_sim_speed_pure_correctness() {
     // Type A — mathematical invariant. Expected values are HAND-WRITTEN
     // literals, NOT a re-derivation of `speed.clamp(0.0, 4.0)`.
-    assert_eq!(clamp_sim_speed(0.25), 0.25, "a1.1: 0.25 in-range passthrough");
+    assert_eq!(
+        clamp_sim_speed(0.25),
+        0.25,
+        "a1.1: 0.25 in-range passthrough"
+    );
     assert_eq!(clamp_sim_speed(0.5), 0.5, "a1.2: 0.5 in-range passthrough");
     assert_eq!(clamp_sim_speed(1.0), 1.0, "a1.3: 1.0 in-range passthrough");
     assert_eq!(clamp_sim_speed(2.0), 2.0, "a1.4: 2.0 in-range passthrough");
-    assert_eq!(clamp_sim_speed(10.0), 4.0, "a1.5: 10.0 clamps to upper bound 4.0");
-    assert_eq!(clamp_sim_speed(-1.0), 0.0, "a1.6: -1.0 clamps to lower bound 0.0");
+    assert_eq!(
+        clamp_sim_speed(10.0),
+        4.0,
+        "a1.5: 10.0 clamps to upper bound 4.0"
+    );
+    assert_eq!(
+        clamp_sim_speed(-1.0),
+        0.0,
+        "a1.6: -1.0 clamps to lower bound 0.0"
+    );
     // Inclusive boundary inputs pass through unchanged.
     assert_eq!(clamp_sim_speed(0.0), 0.0, "a1.7: 0.0 inclusive lower bound");
     assert_eq!(clamp_sim_speed(4.0), 4.0, "a1.8: 4.0 inclusive upper bound");
@@ -76,9 +88,18 @@ fn harness_s16_gamma_a10_resource_source_substrate_seeding_intact() {
     let food = engine.resources.food_tiles.len();
     let water = engine.resources.water_tiles.len();
     let sleep = engine.resources.sleep_tiles.len();
-    assert!(food >= 4, "a10.1: food_tiles must have >= 4 source tiles; got {food}");
-    assert!(water >= 4, "a10.2: water_tiles must have >= 4 source tiles; got {water}");
-    assert!(sleep >= 4, "a10.3: sleep_tiles must have >= 4 source tiles; got {sleep}");
+    assert!(
+        food >= 4,
+        "a10.1: food_tiles must have >= 4 source tiles; got {food}"
+    );
+    assert!(
+        water >= 4,
+        "a10.2: water_tiles must have >= 4 source tiles; got {water}"
+    );
+    assert!(
+        sleep >= 4,
+        "a10.3: sleep_tiles must have >= 4 source tiles; got {sleep}"
+    );
     println!("[S16-γ a10] source tiles food={food} water={water} sleep={sleep} (each >= 4) ✓");
 }
 
@@ -102,7 +123,9 @@ fn harness_s16_gamma_a11_gathering_loop_fsm_not_regressed() {
         .insert(
             entity,
             (
-                AgentState::Seeking { target: TargetKind::Food },
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(80.0, 0.0),
             ),
         )
@@ -111,10 +134,15 @@ fn harness_s16_gamma_a11_gathering_loop_fsm_not_regressed() {
     let mut sys = AgentDecisionSystem::new();
     // Tick 1: a co-located Seeking{Food} agent transitions to Consuming{Food}.
     sys.tick(&mut engine.world, &mut engine.resources);
-    let state = *engine.world.get::<&AgentState>(entity).expect("a11.2: state present");
+    let state = *engine
+        .world
+        .get::<&AgentState>(entity)
+        .expect("a11.2: state present");
     assert_eq!(
         state,
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food
+        },
         "a11.3: a hungry agent on a food source must reach Consuming{{Food}}; got {state:?}"
     );
     println!("[S16-γ a11] hungry agent on food tile ({fx},{fy}) → Consuming{{Food}} ✓");

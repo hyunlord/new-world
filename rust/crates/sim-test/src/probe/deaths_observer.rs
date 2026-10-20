@@ -1,7 +1,8 @@
 //! Probe-only observation between needs decay and the two lethal systems.
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Elder, Hunger, Life, Position, ResourceKind, SettlementId, Thirst,
+    Agent, AgentId, AgentState, Child, Elder, Hunger, Life, Position, ResourceKind, SettlementId,
+    Thirst,
 };
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use std::{
@@ -81,24 +82,26 @@ pub(super) fn capture(world: &World, resources: &SimResources) -> Frame {
                 Option<&Elder>,
             )>()
             .iter()
-            .map(|(_, (agent, pos, state, hunger, thirst, child, life, elder))| {
-                (
-                    agent.id,
-                    AgentFrame {
-                        state: state.copied().unwrap_or_default(),
-                        position: (pos.x, pos.y),
-                        hunger: hunger.map_or(0.0, |h| f64::from(h.value)),
-                        thirst: thirst.map_or(0.0, |t| t.value),
-                        home: homes.get(&agent.id).copied(),
-                        settlement_food: stocks.get(&agent.id).copied(),
-                        child: child.is_some(),
-                        elder: elder.is_some(),
-                        settlement: sids.get(&agent.id).copied(),
-                        bed: resources.bed_of.contains_key(&agent.id),
-                        born_tick: life.map(|life| life.born_tick),
-                    },
-                )
-            })
+            .map(
+                |(_, (agent, pos, state, hunger, thirst, child, life, elder))| {
+                    (
+                        agent.id,
+                        AgentFrame {
+                            state: state.copied().unwrap_or_default(),
+                            position: (pos.x, pos.y),
+                            hunger: hunger.map_or(0.0, |h| f64::from(h.value)),
+                            thirst: thirst.map_or(0.0, |t| t.value),
+                            home: homes.get(&agent.id).copied(),
+                            settlement_food: stocks.get(&agent.id).copied(),
+                            child: child.is_some(),
+                            elder: elder.is_some(),
+                            settlement: sids.get(&agent.id).copied(),
+                            bed: resources.bed_of.contains_key(&agent.id),
+                            born_tick: life.map(|life| life.born_tick),
+                        },
+                    )
+                },
+            )
             .collect(),
         food_available: resources.food_tiles.values().any(|quantity| *quantity > 0),
         water: resources

@@ -21,23 +21,33 @@
 //! settlement at 18:00 of each winter's first day with its exposure deaths in
 //! the winter window, and the worldgen fill counts.
 use serde_json::{json, Value};
-use sim_core::components::{Agent, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, SettlementId, TargetKind};
+use sim_core::components::{
+    Agent, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, SettlementId,
+    TargetKind,
+};
 use sim_engine::SimEngine;
-use std::collections::{BTreeMap, BTreeSet};
 use sim_systems::runtime::agent::hauls_home;
 use sim_systems::runtime::decision::agent_decision::clock_in_window;
 use sim_systems::runtime::settlement::firewood::in_gather_window;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// The activity classes, in report order.
-pub(super) const ACTIVITIES: [&str; 10] = ["forage", "wood", "build", "haul", "idle", "eat", "drink", "rest", "social", "founding"];
+pub(super) const ACTIVITIES: [&str; 10] = [
+    "forage", "wood", "build", "haul", "idle", "eat", "drink", "rest", "social", "founding",
+];
 
 /// Schema-twelve row keys (see the module docs).
 pub(super) fn metrics(engine: &SimEngine) -> Value {
     let r = &engine.resources;
     let homes = super::pass5::member_homes(engine);
-    let forage = r.rules.agent.forage.filter(|_| r.rules.society.stock_target.is_some());
+    let forage = r
+        .rules
+        .agent
+        .forage
+        .filter(|_| r.rules.society.stock_target.is_some());
     let firewood = r.rules.society.firewood;
-    let forage_window = forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
+    let forage_window =
+        forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
     let wood_window = in_gather_window(r);
     let mut counts = [0u64; ACTIVITIES.len()];
     let (mut walking, mut total) = (0u64, 0u64);
@@ -53,7 +63,9 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     let mut rows: Vec<_> = query.iter().map(|(_, row)| row).collect();
     rows.sort_by_key(|row| row.0.id);
     for (agent, pos, state, inventory, child, elder, founding) in rows {
-        let Some(&(hx, hy)) = homes.get(&agent.id) else { continue };
+        let Some(&(hx, hy)) = homes.get(&agent.id) else {
+            continue;
+        };
         if child.is_some() || elder.is_some() {
             continue;
         }
@@ -63,10 +75,25 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
         let class = match state.target() {
             None => {
                 let carried = |kind| inventory.map_or(0, |inv| inv.get(kind));
-                let wood = if firewood.is_some() { carried(ResourceKind::Wood) } else { 0 };
-                let hauling = hauls_home(forage.as_ref(), firewood.as_ref(), carried(ResourceKind::Food), wood,
-                    forage_window, wood_window, pos.x.abs_diff(hx).max(pos.y.abs_diff(hy)));
-                if hauling { "haul" } else { "idle" }
+                let wood = if firewood.is_some() {
+                    carried(ResourceKind::Wood)
+                } else {
+                    0
+                };
+                let hauling = hauls_home(
+                    forage.as_ref(),
+                    firewood.as_ref(),
+                    carried(ResourceKind::Food),
+                    wood,
+                    forage_window,
+                    wood_window,
+                    pos.x.abs_diff(hx).max(pos.y.abs_diff(hy)),
+                );
+                if hauling {
+                    "haul"
+                } else {
+                    "idle"
+                }
             }
             Some(TargetKind::GatherFood) => "forage",
             Some(TargetKind::GatherWood) => "wood",
@@ -88,7 +115,10 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     }
     row.insert("adult_act_walking".into(), json!(walking));
     row.insert("adult_act_total".into(), json!(total));
-    row.insert("area_floor_wood_total".into(), json!(r.tallies.area_floor_wood));
+    row.insert(
+        "area_floor_wood_total".into(),
+        json!(r.tallies.area_floor_wood),
+    );
     Value::Object(row)
 }
 
@@ -96,12 +126,25 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
 /// still walking with a fission group left out (review round 1, L5: they are
 /// not at the parent's fire).
 pub(super) fn members_now(engine: &SimEngine) -> BTreeMap<SettlementId, u32> {
-    let walking: BTreeSet<u64> = engine.world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect();
+    let walking: BTreeSet<u64> = engine
+        .world
+        .query::<(&Agent, &Founding)>()
+        .iter()
+        .map(|(_, (a, _))| a.id)
+        .collect();
     engine
         .resources
         .settlements
         .iter()
-        .map(|(sid, s)| (*sid, s.member_agents.iter().filter(|id| !walking.contains(id)).count() as u32))
+        .map(|(sid, s)| {
+            (
+                *sid,
+                s.member_agents
+                    .iter()
+                    .filter(|id| !walking.contains(id))
+                    .count() as u32,
+            )
+        })
         .collect()
 }
 
@@ -130,7 +173,22 @@ pub(super) fn seed_block(
     let checks: Vec<Value> = r
         .fission_checks
         .iter()
-        .map(|c| json!([c.tick, c.settlement, c.members, c.capacity, c.food, c.g, c.q, c.s, c.h, c.draw, u8::from(c.split), u8::from(c.site_free)]))
+        .map(|c| {
+            json!([
+                c.tick,
+                c.settlement,
+                c.members,
+                c.capacity,
+                c.food,
+                c.g,
+                c.q,
+                c.s,
+                c.h,
+                c.draw,
+                u8::from(c.split),
+                u8::from(c.site_free)
+            ])
+        })
         .collect();
     let mut first: BTreeMap<SettlementId, u64> = BTreeMap::new();
     for c in &r.fission_checks {
@@ -161,8 +219,11 @@ pub(super) fn seed_block(
                 *acc.entry(sid).or_insert(0) += 1;
                 acc
             });
-        let inside: BTreeSet<SettlementId> =
-            founders.iter().filter(|(_, (tick, _))| (start..end).contains(tick)).map(|(sid, _)| *sid).collect();
+        let inside: BTreeSet<SettlementId> = founders
+            .iter()
+            .filter(|(_, (tick, _))| (start..end).contains(tick))
+            .map(|(sid, _)| *sid)
+            .collect();
         let ids: BTreeSet<SettlementId> = at_start
             .iter()
             .filter(|(_, m)| **m > 0)
@@ -187,7 +248,9 @@ pub(super) fn seed_block(
                     "exposure_deaths": deaths.get(sid).copied().unwrap_or(0), "founded_inside": inside.contains(sid)})
             })
             .collect();
-        winters.push(json!({"first_day": d, "start_tick": start, "end_tick": end, "settlements": rows}));
+        winters.push(
+            json!({"first_day": d, "start_tick": start, "end_tick": end, "settlements": rows}),
+        );
     }
     let w = r.worldgen_report;
     let t = r.tallies;
@@ -209,11 +272,20 @@ mod tests {
         let all = crate::probe::metrics::sample(&engine, "game_v16", 3, 0);
         let get = |k: &str| row[k].as_u64().expect(k);
         let total = get("adult_act_total");
-        let classes: u64 = super::ACTIVITIES.iter().map(|a| get(&format!("adult_act_{a}"))).sum();
+        let classes: u64 = super::ACTIVITIES
+            .iter()
+            .map(|a| get(&format!("adult_act_{a}")))
+            .sum();
         assert_eq!(classes, total);
-        let work = get("adult_act_forage") + get("adult_act_wood") + get("adult_act_build") + get("adult_act_haul");
+        let work = get("adult_act_forage")
+            + get("adult_act_wood")
+            + get("adult_act_build")
+            + get("adult_act_haul");
         let share = all["adult_work_share"].as_f64().expect("share");
         assert!(total > 0);
-        assert!((share - work as f64 / total as f64).abs() < 1e-12, "{share} vs {work}/{total}");
+        assert!(
+            (share - work as f64 / total as f64).abs() < 1e-12,
+            "{share} vs {work}/{total}"
+        );
     }
 }

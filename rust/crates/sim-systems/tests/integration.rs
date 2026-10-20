@@ -3,16 +3,16 @@
 //! 15 assertions, all Type A (physical/mathematical invariants).
 //! Written TEST-FIRST (RED) before implementation.
 
+use sim_core::components::Position;
 use sim_core::influence::InfluenceChannel;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::register_phase2_systems;
+use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 use sim_systems::runtime::influence::{
     AgentInfluenceSampleSystem, BuildingStampSystem, InfluenceUpdateSystem,
     InfluenceVisualizationSystem,
 };
-use sim_core::components::Position;
-use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 
 fn make_engine(w: u32, h: u32) -> SimEngine {
     SimEngine::new(w, h, MaterialRegistry::new())
@@ -79,7 +79,10 @@ fn harness_influence_update_clear_before_swap() {
     // threshold: == 0  (system clears pending THEN swaps, so current gets the cleared buffer)
     let mut e = make_engine(32, 32);
     // Write into pending[FoodAroma]
-    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::FoodAroma);
+    let buf = e
+        .resources
+        .influence_grid
+        .pending_buf_mut(InfluenceChannel::FoodAroma);
     buf[10 * 32 + 10] = 200;
     // Swap: pending(200) → current, old current(0) → pending
     e.resources.influence_grid.swap();
@@ -87,7 +90,9 @@ fn harness_influence_update_clear_before_swap() {
     let mut s = InfluenceUpdateSystem::new();
     s.tick(&mut e.world, &mut e.resources);
     assert_eq!(
-        e.resources.influence_grid.sample(10, 10, InfluenceChannel::FoodAroma),
+        e.resources
+            .influence_grid
+            .sample(10, 10, InfluenceChannel::FoodAroma),
         0u8
     );
 }
@@ -113,7 +118,10 @@ fn harness_building_stamp_isolation() {
     // metric: sample(5,5,Warmth) after write→tick(Stamp only)→swap
     // threshold: == 200  (shell must NOT clear or modify pending)
     let mut e = make_engine(32, 32);
-    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Warmth);
+    let buf = e
+        .resources
+        .influence_grid
+        .pending_buf_mut(InfluenceChannel::Warmth);
     buf[5 * 32 + 5] = 200;
     // Tick BuildingStampSystem only — must not touch pending
     let mut s = BuildingStampSystem::new();
@@ -121,7 +129,9 @@ fn harness_building_stamp_isolation() {
     // Manual swap: pending(200) → current
     e.resources.influence_grid.swap();
     assert_eq!(
-        e.resources.influence_grid.sample(5, 5, InfluenceChannel::Warmth),
+        e.resources
+            .influence_grid
+            .sample(5, 5, InfluenceChannel::Warmth),
         200u8
     );
 }
@@ -136,12 +146,17 @@ fn harness_agent_sample_reads_current() {
     // metric: InfluenceSample.warmth after write→swap→tick(AgentSampler)
     // threshold: == 123
     let mut e = make_engine(32, 32);
-    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Warmth);
+    let buf = e
+        .resources
+        .influence_grid
+        .pending_buf_mut(InfluenceChannel::Warmth);
     buf[5 * 32 + 5] = 123;
     // Swap: value now in current
     e.resources.influence_grid.swap();
     // Spawn agent at (5,5)
-    let id = e.world.spawn((Position { x: 5, y: 5 }, InfluenceSample::default()));
+    let id = e
+        .world
+        .spawn((Position { x: 5, y: 5 }, InfluenceSample::default()));
     // Tick sampler
     let mut s = AgentInfluenceSampleSystem::new();
     s.tick(&mut e.world, &mut e.resources);
@@ -161,7 +176,10 @@ fn harness_agent_sample_oob_ignored() {
     let mut e = make_engine(32, 32);
     let id = e.world.spawn((
         Position { x: 9999, y: 9999 },
-        InfluenceSample { warmth: 42, danger: 7 },
+        InfluenceSample {
+            warmth: 42,
+            danger: 7,
+        },
     ));
     let mut s = AgentInfluenceSampleSystem::new();
     s.tick(&mut e.world, &mut e.resources);
@@ -194,13 +212,19 @@ fn harness_viz_warmth_total_danger_peak() {
     let mut e = make_engine(32, 32);
     // Write Warmth: [0]=50, [1]=70 → sum=120
     {
-        let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Warmth);
+        let buf = e
+            .resources
+            .influence_grid
+            .pending_buf_mut(InfluenceChannel::Warmth);
         buf[0] = 50;
         buf[1] = 70;
     }
     // Write Danger: [0]=200, [10]=100 → peak=200
     {
-        let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Danger);
+        let buf = e
+            .resources
+            .influence_grid
+            .pending_buf_mut(InfluenceChannel::Danger);
         buf[0] = 200;
         buf[10] = 100;
     }

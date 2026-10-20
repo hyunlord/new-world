@@ -50,15 +50,26 @@ pub fn annual_mean_supply(resources: &SimResources, sid: SettlementId, forage_ra
 }
 
 /// Winter daily supply; equals the fixed supply without seasons.
-pub fn winter_supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+pub fn winter_supply_per_day(
+    resources: &SimResources,
+    sid: SettlementId,
+    forage_radius: u32,
+) -> f64 {
     season_supply_per_day(resources, sid, forage_radius, WINTER)
 }
 
 /// Catchment radius used by the store target: sustain radius, else forage radius, else 16.
 pub fn catchment_radius(resources: &SimResources) -> u32 {
     match resources.rules.society.birth {
-        BirthRule::Provisioned { sustain: Some(rule), .. } => rule.forage_radius,
-        _ => resources.rules.agent.forage.map_or(16, |rule| rule.forage_radius),
+        BirthRule::Provisioned {
+            sustain: Some(rule),
+            ..
+        } => rule.forage_radius,
+        _ => resources
+            .rules
+            .agent
+            .forage
+            .map_or(16, |rule| rule.forage_radius),
     }
 }
 
@@ -74,8 +85,16 @@ pub fn stock_in_hand(world: &World, resources: &SimResources, sid: SettlementId)
         .map(|(_, (agent, inventory))| (agent.id, inventory.get(ResourceKind::Food)))
         .collect();
     carried.sort_by_key(|(id, _)| *id);
-    u64::from(settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0))
-        + carried.iter().map(|(_, food)| u64::from(*food)).sum::<u64>()
+    u64::from(
+        settlement
+            .stockpile
+            .get(&ResourceKind::Food)
+            .copied()
+            .unwrap_or(0),
+    ) + carried
+        .iter()
+        .map(|(_, food)| u64::from(*food))
+        .sum::<u64>()
 }
 
 /// Store target: `base_days x need`, plus in summer and autumn (seasons with
@@ -85,9 +104,11 @@ pub fn stock_target(world: &World, resources: &SimResources, sid: SettlementId) 
     let rule = resources.rules.society.stock_target?;
     let need = members_need_per_day(world, resources, sid);
     let mut target = rule.base_days * need;
-    if let (true, Some(seasons), Some((season, _))) =
-        (rule.winter_prep, resources.rules.seasons, season_at(resources))
-    {
+    if let (true, Some(seasons), Some((season, _))) = (
+        rule.winter_prep,
+        resources.rules.seasons,
+        season_at(resources),
+    ) {
         if season == 1 || season == 2 {
             let winter = winter_supply_per_day(resources, sid, catchment_radius(resources));
             target += f64::from(seasons.days_per_season) * (need - winter).max(0.0);
@@ -130,7 +151,9 @@ fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_rad
     let mut weights: Vec<((u32, u32), u8)> = resources
         .food_source_max
         .iter()
-        .filter(|(tile, _)| tile.0.abs_diff(center.0).max(tile.1.abs_diff(center.1)) <= forage_radius)
+        .filter(|(tile, _)| {
+            tile.0.abs_diff(center.0).max(tile.1.abs_diff(center.1)) <= forage_radius
+        })
         .map(|(tile, max)| (*tile, (*max).min(REFERENCE_BUSH_CAPACITY)))
         .collect();
     weights.sort_unstable();
@@ -164,7 +187,13 @@ fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_rad
 pub fn supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
     let weighted = matches!(
         resources.rules.society.birth,
-        BirthRule::Provisioned { sustain: Some(SustainRule { capacity_weighted: true, .. }), .. }
+        BirthRule::Provisioned {
+            sustain: Some(SustainRule {
+                capacity_weighted: true,
+                ..
+            }),
+            ..
+        }
     );
     let sources = if weighted {
         weighted_source_count(resources, sid, forage_radius)

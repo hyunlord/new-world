@@ -123,7 +123,12 @@ impl AgentState {
     /// surfaces it via the public `suppresses_movement()` predicate.
     pub fn suppresses_movement(&self) -> bool {
         matches!(self, AgentState::Seeking { .. })
-            || matches!(self, AgentState::Consuming { target: TargetKind::Agent(_) })
+            || matches!(
+                self,
+                AgentState::Consuming {
+                    target: TargetKind::Agent(_)
+                }
+            )
     }
 }
 
@@ -140,11 +145,17 @@ mod tests {
     fn target_helper_returns_inner_kind() {
         assert_eq!(AgentState::Idle.target(), None);
         assert_eq!(
-            AgentState::Seeking { target: TargetKind::Food }.target(),
+            AgentState::Seeking {
+                target: TargetKind::Food
+            }
+            .target(),
             Some(TargetKind::Food)
         );
         assert_eq!(
-            AgentState::Consuming { target: TargetKind::Water }.target(),
+            AgentState::Consuming {
+                target: TargetKind::Water
+            }
+            .target(),
             Some(TargetKind::Water)
         );
     }
@@ -154,52 +165,120 @@ mod tests {
         // Idle never suppresses.
         assert!(!AgentState::Idle.suppresses_movement());
         // Seeking always suppresses (any target).
-        assert!(AgentState::Seeking { target: TargetKind::Food }.suppresses_movement());
-        assert!(AgentState::Seeking { target: TargetKind::Water }.suppresses_movement());
-        assert!(AgentState::Seeking { target: TargetKind::Sleep }.suppresses_movement());
-        assert!(AgentState::Seeking { target: TargetKind::ConstructionSite }
-            .suppresses_movement());
-        assert!(AgentState::Seeking { target: TargetKind::Agent(7) }.suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::Food
+        }
+        .suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::Water
+        }
+        .suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::Sleep
+        }
+        .suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::ConstructionSite
+        }
+        .suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::Agent(7)
+        }
+        .suppresses_movement());
         // Consuming{Agent(_)} suppresses (P7-γ A15) — agents in a social
         // interaction must stay on the shared tile through the full
         // REQUIRED_INTERACTION_PROGRESS window.
-        assert!(AgentState::Consuming { target: TargetKind::Agent(7) }.suppresses_movement());
+        assert!(AgentState::Consuming {
+            target: TargetKind::Agent(7)
+        }
+        .suppresses_movement());
         // Consuming{Food|Water|Sleep|ConstructionSite} does NOT surface
         // suppression at the API level (the movement system applies its
         // own Consuming-tick freeze for these variants).
-        assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::Sleep }.suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::ConstructionSite }
-            .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::Food
+        }
+        .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::Water
+        }
+        .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::Sleep
+        }
+        .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::ConstructionSite
+        }
+        .suppresses_movement());
         // Direction-2 slice 2-2 — GatherFood mirrors the resource targets:
         // Seeking suppresses (directed walk to the tile), Consuming does not
         // (the decision system owns the single-tick pickup exit to Idle).
-        assert!(AgentState::Seeking { target: TargetKind::GatherFood }.suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::GatherFood }.suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::GatherFood
+        }
+        .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::GatherFood
+        }
+        .suppresses_movement());
         // Pass 5 — GatherWood mirrors GatherFood.
-        assert!(AgentState::Seeking { target: TargetKind::GatherWood }.suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::GatherWood }.suppresses_movement());
+        assert!(AgentState::Seeking {
+            target: TargetKind::GatherWood
+        }
+        .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::GatherWood
+        }
+        .suppresses_movement());
     }
 
     #[test]
     fn serde_round_trip_each_variant() {
         let cases = [
             AgentState::Idle,
-            AgentState::Seeking { target: TargetKind::Food },
-            AgentState::Seeking { target: TargetKind::Water },
-            AgentState::Seeking { target: TargetKind::Sleep },
-            AgentState::Seeking { target: TargetKind::ConstructionSite },
-            AgentState::Seeking { target: TargetKind::Agent(7) },
-            AgentState::Consuming { target: TargetKind::Food },
-            AgentState::Consuming { target: TargetKind::Water },
-            AgentState::Consuming { target: TargetKind::Sleep },
-            AgentState::Consuming { target: TargetKind::ConstructionSite },
-            AgentState::Consuming { target: TargetKind::Agent(7) },
-            AgentState::Seeking { target: TargetKind::GatherFood },
-            AgentState::Consuming { target: TargetKind::GatherFood },
-            AgentState::Seeking { target: TargetKind::GatherWood },
-            AgentState::Consuming { target: TargetKind::GatherWood },
+            AgentState::Seeking {
+                target: TargetKind::Food,
+            },
+            AgentState::Seeking {
+                target: TargetKind::Water,
+            },
+            AgentState::Seeking {
+                target: TargetKind::Sleep,
+            },
+            AgentState::Seeking {
+                target: TargetKind::ConstructionSite,
+            },
+            AgentState::Seeking {
+                target: TargetKind::Agent(7),
+            },
+            AgentState::Consuming {
+                target: TargetKind::Food,
+            },
+            AgentState::Consuming {
+                target: TargetKind::Water,
+            },
+            AgentState::Consuming {
+                target: TargetKind::Sleep,
+            },
+            AgentState::Consuming {
+                target: TargetKind::ConstructionSite,
+            },
+            AgentState::Consuming {
+                target: TargetKind::Agent(7),
+            },
+            AgentState::Seeking {
+                target: TargetKind::GatherFood,
+            },
+            AgentState::Consuming {
+                target: TargetKind::GatherFood,
+            },
+            AgentState::Seeking {
+                target: TargetKind::GatherWood,
+            },
+            AgentState::Consuming {
+                target: TargetKind::GatherWood,
+            },
         ];
         for state in cases {
             let encoded = ron::to_string(&state).unwrap();

@@ -133,7 +133,9 @@ fn harness_movement_directed_step_toward_food_target_one_tick() {
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((15, 10))),
     );
     run_movement(&mut e, 1);
@@ -151,7 +153,9 @@ fn harness_movement_directed_path_reaches_then_holds_target() {
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((15, 10))),
     );
     let mut sys = AgentMovementSystem::new();
@@ -160,11 +164,21 @@ fn harness_movement_directed_path_reaches_then_holds_target() {
         sys.tick(&mut e.world, &mut e.resources);
         let (x, y) = pos(&e, a);
         assert_eq!(y, 10, "A2: y must never drift (tick {tick})");
-        assert!(x >= prev_x, "A2: x must be monotonically non-decreasing (tick {tick})");
-        assert!(x <= 15, "A2: x must never overshoot past 15 (tick {tick}, x={x})");
+        assert!(
+            x >= prev_x,
+            "A2: x must be monotonically non-decreasing (tick {tick})"
+        );
+        assert!(
+            x <= 15,
+            "A2: x must never overshoot past 15 (tick {tick}, x={x})"
+        );
         prev_x = x;
     }
-    assert_eq!(pos(&e, a), (15, 10), "A2: final position must be the target (15,10)");
+    assert_eq!(
+        pos(&e, a),
+        (15, 10),
+        "A2: final position must be the target (15,10)"
+    );
     println!("[S16-β A2] (10,10)→(15,10) in 5 steps, holds through tick 8 ✓");
 }
 
@@ -180,7 +194,9 @@ fn harness_movement_directed_movement_deterministic_and_nonfrozen() {
             &mut e,
             (10, 10),
             42,
-            AgentState::Seeking { target: TargetKind::Food },
+            AgentState::Seeking {
+                target: TargetKind::Food,
+            },
             Some(SeekTarget::new((15, 10))),
         );
         run_movement(&mut e, 6);
@@ -188,9 +204,18 @@ fn harness_movement_directed_movement_deterministic_and_nonfrozen() {
     }
     let pa = build_and_run();
     let pb = build_and_run();
-    assert_eq!(pa, pb, "A3a: identical setup must yield identical final position");
-    assert!(pa.0 > 10, "A3b: engine_a agent must have moved toward goal (x>10)");
-    assert!(pb.0 > 10, "A3b: engine_b agent must have moved toward goal (x>10)");
+    assert_eq!(
+        pa, pb,
+        "A3a: identical setup must yield identical final position"
+    );
+    assert!(
+        pa.0 > 10,
+        "A3b: engine_a agent must have moved toward goal (x>10)"
+    );
+    assert!(
+        pb.0 > 10,
+        "A3b: engine_b agent must have moved toward goal (x>10)"
+    );
     println!("[S16-β A3] deterministic ({pa:?}=={pb:?}) AND non-frozen (x>10) ✓");
 }
 
@@ -205,7 +230,11 @@ fn harness_movement_end_to_end_gathering_loop_satisfies_hunger() {
         "A4: final Hunger must drop below HUNGER_THRESHOLD(50.0); got {}",
         r.final_hunger
     );
-    assert_eq!(r.final_state, AgentState::Idle, "A4: agent must return to Idle");
+    assert_eq!(
+        r.final_state,
+        AgentState::Idle,
+        "A4: agent must return to Idle"
+    );
     println!(
         "[S16-β A4] end-to-end: Hunger {} < 50.0, state Idle ✓",
         r.final_hunger
@@ -222,11 +251,17 @@ fn harness_movement_seeking_without_target_freezes() {
         &mut e,
         (10, 10),
         42,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         None,
     );
     run_movement(&mut e, 32);
-    assert_eq!(pos(&e, a), (10, 10), "A5: no-target Seeking agent must stay frozen");
+    assert_eq!(
+        pos(&e, a),
+        (10, 10),
+        "A5: no-target Seeking agent must stay frozen"
+    );
     println!("[S16-β A5] Seeking + no SeekTarget → frozen at (10,10) ✓");
 }
 
@@ -241,7 +276,9 @@ fn harness_movement_consuming_state_freezes() {
         &mut e,
         (10, 10),
         1,
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Consuming {
+            target: TargetKind::Food,
+        },
         None,
     );
     run_movement(&mut e, 32);
@@ -250,7 +287,10 @@ fn harness_movement_consuming_state_freezes() {
     let mut probe = MovementRng::new(1);
     let dx = probe.next_step();
     let dy = probe.next_step();
-    assert!(dx != 0 || dy != 0, "A6: seed 1 must yield a non-zero step (else vacuous)");
+    assert!(
+        dx != 0 || dy != 0,
+        "A6: seed 1 must yield a non-zero step (else vacuous)"
+    );
     println!("[S16-β A6] Consuming{{Food}} → frozen at (10,10) ✓");
 }
 
@@ -269,14 +309,23 @@ fn harness_movement_idle_brownian_preserved_bounded() {
     for tick in 1..=32 {
         sys.tick(&mut e.world, &mut e.resources);
         let (x, y) = pos(&e, a);
-        assert!(x.abs_diff(prev.0) <= 1, "A7: |Δx| ≤ 1 per tick (tick {tick})");
-        assert!(y.abs_diff(prev.1) <= 1, "A7: |Δy| ≤ 1 per tick (tick {tick})");
+        assert!(
+            x.abs_diff(prev.0) <= 1,
+            "A7: |Δx| ≤ 1 per tick (tick {tick})"
+        );
+        assert!(
+            y.abs_diff(prev.1) <= 1,
+            "A7: |Δy| ≤ 1 per tick (tick {tick})"
+        );
         if (x, y) != (16, 16) {
             moved = true;
         }
         prev = (x, y);
     }
-    assert!(moved, "A7: Idle agent must execute Brownian motion (net displacement ≠ 0)");
+    assert!(
+        moved,
+        "A7: Idle agent must execute Brownian motion (net displacement ≠ 0)"
+    );
     println!("[S16-β A7] Idle Brownian preserved, |Δ|≤1/axis, moved=true ✓");
 }
 
@@ -291,14 +340,18 @@ fn harness_movement_water_and_sleep_directed_steps() {
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Water },
+        AgentState::Seeking {
+            target: TargetKind::Water,
+        },
         Some(SeekTarget::new((10, 15))),
     );
     let sleep = spawn_probe(
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Sleep },
+        AgentState::Seeking {
+            target: TargetKind::Sleep,
+        },
         Some(SeekTarget::new((5, 10))),
     );
     run_movement(&mut e, 1);
@@ -314,8 +367,14 @@ fn harness_movement_infinite_source_not_depleted_by_loop() {
     // The u8::MAX source must remain u8::MAX after a real co-located consume.
     let r = run_gathering_loop();
     // Validity precondition: only meaningful if the agent actually consumed.
-    assert!(r.final_hunger < 50.0, "A9 precondition (A4): Hunger must have dropped");
-    assert!(r.reached_source, "A9 precondition (A16): agent must have reached (20,20)");
+    assert!(
+        r.final_hunger < 50.0,
+        "A9 precondition (A4): Hunger must have dropped"
+    );
+    assert!(
+        r.reached_source,
+        "A9 precondition (A16): agent must have reached (20,20)"
+    );
     assert_eq!(
         r.source_value,
         Some(RESOURCE_SOURCE_INFINITE),
@@ -334,7 +393,9 @@ fn harness_movement_colocated_target_signum_zero_no_move() {
         &mut e,
         (12, 12),
         7,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((12, 12))),
     );
     run_movement(&mut e, 1);
@@ -348,7 +409,10 @@ fn harness_movement_suppresses_movement_truth_table_unchanged() {
     // Type: D — cross-phase regression guard on the LOCKED predicate. β must
     // NOT alter it; 5 external harnesses depend on it.
     assert!(
-        AgentState::Seeking { target: TargetKind::Food }.suppresses_movement(),
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+        .suppresses_movement(),
         "A11: Seeking{{Food}}.suppresses_movement() must remain true"
     );
     assert!(
@@ -371,7 +435,9 @@ fn harness_movement_directed_step_does_not_consume_rng() {
         &mut e,
         (10, 10),
         S,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((15, 10))),
     );
     let b = spawn_probe(&mut e, (10, 10), S, AgentState::Idle, None);
@@ -390,17 +456,24 @@ fn harness_movement_directed_step_does_not_consume_rng() {
 
     // Observable proxy: transition A → Idle, take one Brownian step each, and
     // compare per-axis displacement vectors.
-    e.world
-        .insert_one(a, AgentState::Idle)
-        .expect("A → Idle");
+    e.world.insert_one(a, AgentState::Idle).expect("A → Idle");
     let a_before = pos(&e, a);
     let b_before = pos(&e, b);
     run_movement(&mut e, 1);
     let a_after = pos(&e, a);
     let b_after = pos(&e, b);
-    let da = (a_after.0 as i64 - a_before.0 as i64, a_after.1 as i64 - a_before.1 as i64);
-    let db = (b_after.0 as i64 - b_before.0 as i64, b_after.1 as i64 - b_before.1 as i64);
-    assert_eq!(da, db, "A12: A and B first-Idle Brownian Δ must match (RNG un-consumed)");
+    let da = (
+        a_after.0 as i64 - a_before.0 as i64,
+        a_after.1 as i64 - a_before.1 as i64,
+    );
+    let db = (
+        b_after.0 as i64 - b_before.0 as i64,
+        b_after.1 as i64 - b_before.1 as i64,
+    );
+    assert_eq!(
+        da, db,
+        "A12: A and B first-Idle Brownian Δ must match (RNG un-consumed)"
+    );
     println!("[S16-β A12] directed step consumes no RNG (Δ {da:?}=={db:?}) ✓");
 }
 
@@ -414,7 +487,9 @@ fn harness_movement_diagonal_two_axis_step_one_tick() {
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((15, 15))),
     );
     run_movement(&mut e, 1);
@@ -432,7 +507,9 @@ fn harness_movement_diagonal_negative_two_axis_step_one_tick() {
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((5, 5))),
     );
     run_movement(&mut e, 1);
@@ -450,7 +527,9 @@ fn harness_movement_diagonal_staggered_axis_arrival() {
         &mut e,
         (10, 10),
         7,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
         Some(SeekTarget::new((15, 12))),
     );
     let mut sys = AgentMovementSystem::new();
@@ -459,10 +538,16 @@ fn harness_movement_diagonal_staggered_axis_arrival() {
         sys.tick(&mut e.world, &mut e.resources);
         let (x, y) = pos(&e, a);
         if tick >= 2 {
-            assert_eq!(y, 12, "A15: y must reach 12 by tick 2 and hold (tick {tick})");
+            assert_eq!(
+                y, 12,
+                "A15: y must reach 12 by tick 2 and hold (tick {tick})"
+            );
         }
         assert!(x >= prev_x, "A15: x must be non-decreasing (tick {tick})");
-        assert!(x <= 15, "A15: x must never overshoot 15 (tick {tick}, x={x})");
+        assert!(
+            x <= 15,
+            "A15: x must never overshoot 15 (tick {tick}, x={x})"
+        );
         prev_x = x;
     }
     assert_eq!(pos(&e, a), (15, 12), "A15: final position must be (15,12)");
@@ -480,6 +565,9 @@ fn harness_movement_agent_reaches_source_tile_during_loop() {
         "A16: agent must reach source (20,20) on at least one tick"
     );
     // Anchor: the run is the same one A4 measured (Hunger dropped).
-    assert!(r.final_hunger < 50.0, "A16: same run as A4 — Hunger must have dropped");
+    assert!(
+        r.final_hunger < 50.0,
+        "A16: same run as A4 — Hunger must have dropped"
+    );
     println!("[S16-β A16] agent reached (20,20) during the 30-tick loop ✓");
 }

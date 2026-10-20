@@ -1,9 +1,7 @@
 //! Deterministic settlement-owned shelter planning, disabled by legacy rules.
 
 use hecs::World;
-use sim_core::components::{
-    building_kind::shelter_blueprint, ConstructionSite, Position,
-};
+use sim_core::components::{building_kind::shelter_blueprint, ConstructionSite, Position};
 use sim_core::material::TerrainType;
 use sim_engine::{RuntimeSystem, SimResources};
 use std::collections::BTreeSet;

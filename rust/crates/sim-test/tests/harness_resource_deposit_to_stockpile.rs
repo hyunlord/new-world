@@ -161,7 +161,10 @@ fn harness_resource_deposit_a2_controlled_fixture_exact_transfer() {
     let mut e = fixture_engine();
     let ft = (30u32, 30u32);
     let f: u32 = 4; // 0 < F <= INVENTORY_CAPACITY
-    assert!(f > 0 && f <= INVENTORY_CAPACITY, "A2: F must be in (0, cap]");
+    assert!(
+        f > 0 && f <= INVENTORY_CAPACITY,
+        "A2: F must be in (0, cap]"
+    );
     // K = 3 members within radius; one at the EXACT boundary tile (cheb == 5).
     let m0 = spawn_member(&mut e, 30, 30, &[(ResourceKind::Food, f)]); // dist 0
     let m1 = spawn_member(&mut e, 33, 32, &[(ResourceKind::Food, f)]); // dist 3
@@ -207,7 +210,11 @@ fn harness_resource_deposit_a3_member_outside_radius_no_deposit() {
         inv_count(&e, m, ResourceKind::Food)
     );
     // Type A — proximity gate.
-    assert_eq!(stock_food(&e, 1), 0, "A3: out-of-radius member must not deposit");
+    assert_eq!(
+        stock_food(&e, 1),
+        0,
+        "A3: out-of-radius member must not deposit"
+    );
     assert_eq!(
         inv_count(&e, m, ResourceKind::Food),
         f,
@@ -232,10 +239,20 @@ fn harness_resource_deposit_a4_empty_inventory_member_noop() {
 
     let s = e.resources.settlements.get(&1).expect("settlement 1");
     let has_food_key = s.stockpile.contains_key(&ResourceKind::Food);
-    println!("[deposit A4] stockpile_food={} has_food_key={has_food_key}", stock_food(&e, 1));
+    println!(
+        "[deposit A4] stockpile_food={} has_food_key={has_food_key}",
+        stock_food(&e, 1)
+    );
     // Type A — no spurious zero key.
-    assert_eq!(stock_food(&e, 1), 0, "A4: empty-handed member must deposit nothing");
-    assert!(!has_food_key, "A4: no Food key must be created in the stockpile map");
+    assert_eq!(
+        stock_food(&e, 1),
+        0,
+        "A4: empty-handed member must deposit nothing"
+    );
+    assert!(
+        !has_food_key,
+        "A4: no Food key must be created in the stockpile map"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -306,23 +323,33 @@ fn harness_resource_deposit_a7_conserves_total_food() {
     let members = [m0, m1, m2];
     insert_settlement(&mut e, 1, ft, &members);
 
-    let total_before: u64 =
-        members.iter().map(|&m| inv_count(&e, m, ResourceKind::Food) as u64).sum::<u64>()
-            + stock_food(&e, 1) as u64;
+    let total_before: u64 = members
+        .iter()
+        .map(|&m| inv_count(&e, m, ResourceKind::Food) as u64)
+        .sum::<u64>()
+        + stock_food(&e, 1) as u64;
 
     e.tick();
 
-    let total_after: u64 =
-        members.iter().map(|&m| inv_count(&e, m, ResourceKind::Food) as u64).sum::<u64>()
-            + stock_food(&e, 1) as u64;
+    let total_after: u64 = members
+        .iter()
+        .map(|&m| inv_count(&e, m, ResourceKind::Food) as u64)
+        .sum::<u64>()
+        + stock_food(&e, 1) as u64;
 
     println!(
         "[deposit A7] total_before={total_before} total_after={total_after} stockpile={}",
         stock_food(&e, 1)
     );
     // Type A — conservation + non-vacuity.
-    assert_eq!(total_after, total_before, "A7: total Food must be conserved");
-    assert!(stock_food(&e, 1) > 0, "A7: a real transfer must have occurred");
+    assert_eq!(
+        total_after, total_before,
+        "A7: total Food must be conserved"
+    );
+    assert!(
+        stock_food(&e, 1) > 0,
+        "A7: a real transfer must have occurred"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -335,7 +362,12 @@ fn harness_resource_deposit_a8_only_food_is_deposited() {
     let ft = (30u32, 30u32);
     let f: u32 = 3;
     let w: u32 = 4; // F + W <= INVENTORY_CAPACITY (10)
-    let m = spawn_member(&mut e, 30, 30, &[(ResourceKind::Food, f), (ResourceKind::Wood, w)]);
+    let m = spawn_member(
+        &mut e,
+        30,
+        30,
+        &[(ResourceKind::Food, f), (ResourceKind::Wood, w)],
+    );
     insert_settlement(&mut e, 1, ft, &[m]);
 
     e.tick();
@@ -353,8 +385,16 @@ fn harness_resource_deposit_a8_only_food_is_deposited() {
     assert_eq!(stock_food(&e, 1), f, "A8: stockpile Food must equal F");
     assert_eq!(stock_wood, 0, "A8: stockpile Wood must be 0");
     assert!(!has_wood_key, "A8: no Wood key must be created");
-    assert_eq!(inv_count(&e, m, ResourceKind::Food), 0, "A8: member Food drained");
-    assert_eq!(inv_count(&e, m, ResourceKind::Wood), w, "A8: member Wood unchanged");
+    assert_eq!(
+        inv_count(&e, m, ResourceKind::Food),
+        0,
+        "A8: member Food drained"
+    );
+    assert_eq!(
+        inv_count(&e, m, ResourceKind::Wood),
+        w,
+        "A8: member Wood unchanged"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -380,8 +420,16 @@ fn harness_resource_deposit_a9_own_settlement_attribution() {
         stock_food(&e, 2)
     );
     // Type A — attribution.
-    assert_eq!(stock_food(&e, 1), f, "A9: member must deposit into its OWN settlement S1");
-    assert_eq!(stock_food(&e, 2), 0, "A9: S2 (not the member's) must receive nothing");
+    assert_eq!(
+        stock_food(&e, 1),
+        f,
+        "A9: member must deposit into its OWN settlement S1"
+    );
+    assert_eq!(
+        stock_food(&e, 2),
+        0,
+        "A9: S2 (not the member's) must receive nothing"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -443,8 +491,14 @@ fn harness_resource_deposit_a11_lockstep_determinism() {
     let (d2, t2) = digest(2000);
     println!("[deposit A11] total1={t1} total2={t2}");
     // Type A — determinism + non-vacuity.
-    assert_eq!(d1, d2, "A11: production digests must be byte-identical across runs");
-    assert!(t1 > 0 && t2 > 0, "A11: deposits must actually occur in both runs");
+    assert_eq!(
+        d1, d2,
+        "A11: production digests must be byte-identical across runs"
+    );
+    assert!(
+        t1 > 0 && t2 > 0,
+        "A11: deposits must actually occur in both runs"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -457,11 +511,7 @@ fn harness_resource_deposit_a12_no_agent_freeze_regression() {
     let mut targetless_seeking = 0u64;
     for _ in 0..YEAR_TICKS {
         e.tick();
-        for (_, (state, seek)) in e
-            .world
-            .query::<(&AgentState, Option<&SeekTarget>)>()
-            .iter()
-        {
+        for (_, (state, seek)) in e.world.query::<(&AgentState, Option<&SeekTarget>)>().iter() {
             if matches!(state, AgentState::Seeking { .. }) && seek.is_none() {
                 targetless_seeking += 1;
             }
@@ -522,7 +572,10 @@ fn harness_resource_deposit_a13_settlement_and_membership_unaffected() {
         violations.len()
     );
     // Type D — regression guards on UNCHANGED systems.
-    assert!(settlement_count >= 1, "A13: at least one settlement must exist");
+    assert!(
+        settlement_count >= 1,
+        "A13: at least one settlement must exist"
+    );
     assert!(
         violations.is_empty(),
         "A13: {} alive member(s) dropped from all rosters — membership collapse regression",

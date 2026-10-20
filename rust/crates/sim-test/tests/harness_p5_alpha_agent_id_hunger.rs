@@ -275,7 +275,10 @@ fn harness_p5_alpha_hunger_tick_floors_at_zero_under_negative_rate() {
     let mut h = Hunger::new(2.0, -5.0);
     // 2 - 5 = -3 → floor at 0.
     h.tick();
-    assert_eq!(h.value, 0.0_f32, "first tick under negative rate must floor at 0");
+    assert_eq!(
+        h.value, 0.0_f32,
+        "first tick under negative rate must floor at 0"
+    );
 
     // Second tick from 0 with -5 rate: -5 → must still floor at 0.
     h.tick();

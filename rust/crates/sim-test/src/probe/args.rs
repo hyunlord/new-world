@@ -66,7 +66,34 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24" | "game_v25" | "game_v26") {
+        if !matches!(
+            parsed.scene.as_str(),
+            "legacy"
+                | "game"
+                | "game_v9"
+                | "game_v10"
+                | "game_v11"
+                | "game_v12"
+                | "game_v13"
+                | "game_v14"
+                | "game_v15"
+                | "game_v16_neutral"
+                | "game_v16"
+                | "game_v17_nofission"
+                | "game_v17"
+                | "game_v18_nofission"
+                | "game_v18"
+                | "game_v19_nofission"
+                | "game_v19"
+                | "game_v20_inert"
+                | "game_v20"
+                | "game_v21"
+                | "game_v22"
+                | "game_v23"
+                | "game_v24"
+                | "game_v25"
+                | "game_v26"
+        ) {
             return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission, game_v17, game_v18_nofission, game_v18, game_v19_nofission, game_v19, game_v20_inert, game_v20, game_v21, game_v22, game_v23, game_v24, game_v25, game_v26".into());
         }
         if parsed.seeds.is_empty() {

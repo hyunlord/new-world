@@ -49,10 +49,13 @@ fn bss_only_engine() -> SimEngine {
 }
 
 fn place_source(engine: &mut SimEngine, position: (u32, u32)) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position,
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position,
+            radius: 12,
+        });
 }
 
 fn centre_tile_idx(x: u32, y: u32) -> u32 {
@@ -438,13 +441,15 @@ fn harness_p3_beta_no_parent_after_eviction() {
         "parent was resolved at push time before eviction"
     );
 
-    let warmth_stamp_present = log.iter().any(|e| matches!(
-        e,
-        CausalEvent::StampDirty {
-            channel: InfluenceChannel::Warmth,
-            ..
-        }
-    ));
+    let warmth_stamp_present = log.iter().any(|e| {
+        matches!(
+            e,
+            CausalEvent::StampDirty {
+                channel: InfluenceChannel::Warmth,
+                ..
+            }
+        )
+    });
     assert!(
         !warmth_stamp_present,
         "the Warmth StampDirty should have been FIFO-evicted by InfluenceChanged pushes"

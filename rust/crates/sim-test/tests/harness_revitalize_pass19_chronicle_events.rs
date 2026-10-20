@@ -6,7 +6,9 @@
 use hecs::Entity;
 use sim_core::causal::event::DeathReason;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind, DepartCause};
-use sim_core::components::{Agent, AgentId, AgentState, Child, Elder, Founding, Lineage, Position, ResourceKind, Settlement};
+use sim_core::components::{
+    Agent, AgentId, AgentState, Child, Elder, Founding, Lineage, Position, ResourceKind, Settlement,
+};
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
 use sim_engine::{RuntimeSystem, SimEngine, WildRegion};
@@ -33,13 +35,23 @@ fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Enti
     settlement.store(ResourceKind::Food, 100);
     settlement.store(ResourceKind::Wood, 30);
     for i in 0..bushes {
-        engine.resources.set_food_source_max(10 + i % 20, 10 + i / 20, 4);
+        engine
+            .resources
+            .set_food_source_max(10 + i % 20, 10 + i / 20, 4);
     }
     let mut entities = Vec::new();
     for &(id, stage, key) in residents {
-        let entity = engine.world.spawn((Position::new(HOME.0, HOME.1), Agent { id }, AgentState::Idle, Lineage { key, births: 0 }));
+        let entity = engine.world.spawn((
+            Position::new(HOME.0, HOME.1),
+            Agent { id },
+            AgentState::Idle,
+            Lineage { key, births: 0 },
+        ));
         match stage {
-            0 => engine.world.insert_one(entity, Child { born_tick: 0 }).expect("child"),
+            0 => engine
+                .world
+                .insert_one(entity, Child { born_tick: 0 })
+                .expect("child"),
             2 => engine.world.insert_one(entity, Elder).expect("elder"),
             _ => {}
         }
@@ -47,14 +59,25 @@ fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Enti
         entities.push(entity);
     }
     engine.resources.settlements.insert(1, settlement);
-    engine.resources.wild_regions.push(WildRegion { centre: SITE, bushes: 6, deadwood: 8, water_distance: 3 });
+    engine.resources.wild_regions.push(WildRegion {
+        centre: SITE,
+        bushes: 6,
+        deadwood: 8,
+        water_distance: 3,
+    });
     (engine, entities)
 }
 
 fn village(n: u64) -> Vec<Resident> {
     (1..=n)
         .map(|id| {
-            let stage = if id % 7 == 0 { 2 } else if id % 5 == 0 { 0 } else { 1 };
+            let stage = if id % 7 == 0 {
+                2
+            } else if id % 5 == 0 {
+                0
+            } else {
+                1
+            };
             (id, stage, id.wrapping_mul(0x9E37_79B9_7F4A_7C15) ^ 0x55)
         })
         .collect()
@@ -77,7 +100,14 @@ fn bushes_for(seed: u64, target: u32) -> u32 {
 }
 
 fn of_kind(engine: &SimEngine, kind: ChronicleKind) -> Vec<ChronicleEntry> {
-    engine.resources.chronicle.entries().iter().copied().filter(|e| e.kind == kind).collect()
+    engine
+        .resources
+        .chronicle
+        .entries()
+        .iter()
+        .copied()
+        .filter(|e| e.kind == kind)
+        .collect()
 }
 
 #[test]
@@ -89,7 +119,12 @@ fn harness_chronicle_records_a_cancelled_fission_and_skips_the_dead() {
     let mut system = FissionSystem::new();
     run(&mut engine, &mut system, check, check + 1);
     let group: Vec<AgentId> = {
-        let mut ids: Vec<AgentId> = engine.world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect();
+        let mut ids: Vec<AgentId> = engine
+            .world
+            .query::<(&Agent, &Founding)>()
+            .iter()
+            .map(|(_, (a, _))| a.id)
+            .collect();
         ids.sort_unstable();
         ids
     };
@@ -99,35 +134,84 @@ fn harness_chronicle_records_a_cancelled_fission_and_skips_the_dead() {
     let fission_id = engine.resources.fission_log[0].fission_id;
     let started = of_kind(&engine, ChronicleKind::FissionStarted);
     assert_eq!(started.len(), 1);
-    assert_eq!((started[0].tick, started[0].settlement, started[0].value), (check, Some(1), i64::from(fission_id)));
+    assert_eq!(
+        (started[0].tick, started[0].settlement, started[0].value),
+        (check, Some(1), i64::from(fission_id))
+    );
     let departed = of_kind(&engine, ChronicleKind::Departed);
-    assert_eq!(departed.iter().filter_map(|e| e.subject).collect::<Vec<_>>(), group);
-    assert!(departed.iter().all(|e| e.cause == DepartCause::Ranked.as_u8() && e.other == started[0].other));
+    assert_eq!(
+        departed
+            .iter()
+            .filter_map(|e| e.subject)
+            .collect::<Vec<_>>(),
+        group
+    );
+    assert!(departed
+        .iter()
+        .all(|e| e.cause == DepartCause::Ranked.as_u8() && e.other == started[0].other));
     // One member dies on the way (the highest id; not the leader).
     let dead = *group.last().expect("group");
     let entity = entities[usize::try_from(dead - 1).expect("id")];
-    despawn_agent(&mut engine.world, &mut engine.resources, entity, dead, HOME, DeathReason::Starvation, check + 10);
+    despawn_agent(
+        &mut engine.world,
+        &mut engine.resources,
+        entity,
+        dead,
+        HOME,
+        DeathReason::Starvation,
+        check + 10,
+    );
     // Two days later the leader still stands at home: the fission is cancelled.
     run(&mut engine, &mut system, check + 1, check + 2 * 1440 + 2);
     assert_eq!(engine.resources.tallies.fissions_cancelled, 1);
-    let cancelled_tick = engine.resources.fission_log[0].cancelled_tick.expect("cancelled");
+    let cancelled_tick = engine.resources.fission_log[0]
+        .cancelled_tick
+        .expect("cancelled");
     let cancelled = of_kind(&engine, ChronicleKind::FissionCancelled);
     assert_eq!(cancelled.len(), 1);
-    assert_eq!((cancelled[0].tick, cancelled[0].settlement, cancelled[0].value), (cancelled_tick, Some(1), i64::from(fission_id)));
+    assert_eq!(
+        (
+            cancelled[0].tick,
+            cancelled[0].settlement,
+            cancelled[0].value
+        ),
+        (cancelled_tick, Some(1), i64::from(fission_id))
+    );
     let back = of_kind(&engine, ChronicleKind::DepartureCancelled);
     let living: Vec<AgentId> = group.iter().copied().filter(|id| *id != dead).collect();
-    assert_eq!(back.iter().filter_map(|e| e.subject).collect::<Vec<_>>(), living, "living members in AgentId order");
-    assert!(back.iter().all(|e| e.tick == cancelled_tick && e.settlement == Some(1) && e.value == i64::from(fission_id)));
+    assert_eq!(
+        back.iter().filter_map(|e| e.subject).collect::<Vec<_>>(),
+        living,
+        "living members in AgentId order"
+    );
+    assert!(back.iter().all(|e| e.tick == cancelled_tick
+        && e.settlement == Some(1)
+        && e.value == i64::from(fission_id)));
     // Order: the cancellation directly precedes its members' entries.
     let entries = engine.resources.chronicle.entries();
-    let at = entries.iter().position(|e| e.kind == ChronicleKind::FissionCancelled).expect("cancel");
-    assert!(entries[at + 1..at + 1 + living.len()].iter().all(|e| e.kind == ChronicleKind::DepartureCancelled));
+    let at = entries
+        .iter()
+        .position(|e| e.kind == ChronicleKind::FissionCancelled)
+        .expect("cancel");
+    assert!(entries[at + 1..at + 1 + living.len()]
+        .iter()
+        .all(|e| e.kind == ChronicleKind::DepartureCancelled));
     // The dead member: Died, record closed, no cancellation entry.
     let died = of_kind(&engine, ChronicleKind::Died);
     assert_eq!(died.len(), 1);
-    assert_eq!((died[0].subject, died[0].settlement, died[0].cause), (Some(dead), Some(1), DeathReason::Starvation.as_u8()));
-    let record = engine.resources.chronicle.person(dead).expect("record created at death");
-    assert_eq!((record.died_tick, record.death_reason), (Some(check + 10), Some(DeathReason::Starvation.as_u8())));
+    assert_eq!(
+        (died[0].subject, died[0].settlement, died[0].cause),
+        (Some(dead), Some(1), DeathReason::Starvation.as_u8())
+    );
+    let record = engine
+        .resources
+        .chronicle
+        .person(dead)
+        .expect("record created at death");
+    assert_eq!(
+        (record.died_tick, record.death_reason),
+        (Some(check + 10), Some(DeathReason::Starvation.as_u8()))
+    );
 }
 
 /// One remnant-merge scenario (Pass 11's): a two-member remnant (settlement 2)
@@ -140,7 +224,12 @@ fn remnant_scenario(seed: u64) -> SimEngine {
     let mut empty = Settlement::new_with_id(3, 0);
     empty.formation_tile = (10, 50);
     for id in [102u64, 101] {
-        engine.world.spawn((Position::new(50, 50), Agent { id }, AgentState::Idle, Lineage { key: id, births: 0 }));
+        engine.world.spawn((
+            Position::new(50, 50),
+            Agent { id },
+            AgentState::Idle,
+            Lineage { key: id, births: 0 },
+        ));
         remnant.add_member_agent(id);
     }
     engine.resources.settlements.insert(2, remnant);
@@ -181,10 +270,21 @@ fn harness_chronicle_records_remnant_merges_and_empty_dissolutions() {
             ],
             "repeat {repeat}"
         );
-        let merge_tick = engine.resources.dissolutions.iter().find(|(sid, _)| *sid == 2).expect("merged").1;
-        assert!(engine.resources.chronicle.entries()[1..].iter().all(|e| e.tick == merge_tick));
+        let merge_tick = engine
+            .resources
+            .dissolutions
+            .iter()
+            .find(|(sid, _)| *sid == 2)
+            .expect("merged")
+            .1;
+        assert!(engine.resources.chronicle.entries()[1..]
+            .iter()
+            .all(|e| e.tick == merge_tick));
         // The merged members got records from their live components on first mention.
-        assert!(engine.resources.chronicle.person(101).is_some() && engine.resources.chronicle.person(102).is_some());
+        assert!(
+            engine.resources.chronicle.person(101).is_some()
+                && engine.resources.chronicle.person(102).is_some()
+        );
     }
 }
 
@@ -201,5 +301,13 @@ fn harness_chronicle_records_a_settlement_system_dissolution() {
     assert!(!engine.resources.settlements.contains_key(&7));
     let entries = engine.resources.chronicle.entries();
     assert_eq!(entries.len(), 1);
-    assert_eq!((entries[0].kind, entries[0].tick, entries[0].settlement, entries[0].cause), (ChronicleKind::SettlementDissolved, 40, Some(7), 0));
+    assert_eq!(
+        (
+            entries[0].kind,
+            entries[0].tick,
+            entries[0].settlement,
+            entries[0].cause
+        ),
+        (ChronicleKind::SettlementDissolved, 40, Some(7), 0)
+    );
 }

@@ -49,10 +49,13 @@ fn bss_only_engine() -> SimEngine {
 }
 
 fn place_source(engine: &mut SimEngine, position: (u32, u32)) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position,
-        radius: RADIUS,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position,
+            radius: RADIUS,
+        });
 }
 
 fn centre_tile_idx(x: u32, y: u32) -> u32 {
@@ -162,7 +165,10 @@ fn harness_p3_gamma_1_enumerator_dict_schema_stamp_dirty() {
 
     assert_eq!(stamp.kind, "stamp_dirty");
     assert_eq!(stamp.parent, Some(building_id));
-    assert!(stamp.channel.is_some(), "StampDirty exposes a channel index");
+    assert!(
+        stamp.channel.is_some(),
+        "StampDirty exposes a channel index"
+    );
     assert_eq!(stamp.position, None);
     assert_eq!(stamp.radius, None);
     let region = stamp.region.expect("StampDirty carries a region");
@@ -282,7 +288,11 @@ fn harness_p3_gamma_1_chain_returns_three_events() {
     );
 
     let chain = collect_event_chain(&engine.resources, tile, 2);
-    assert_eq!(chain.len(), 3, "chain must walk InfluenceChanged → Stamp → BuildingPlaced");
+    assert_eq!(
+        chain.len(),
+        3,
+        "chain must walk InfluenceChanged → Stamp → BuildingPlaced"
+    );
     assert_eq!(chain[0].kind, "influence_changed");
     assert_eq!(chain[0].id, 2);
     assert_eq!(chain[1].kind, "stamp_dirty");
@@ -384,36 +394,34 @@ fn harness_p3_gamma_1_ffi_oob_and_negative_id_return_empty() {
     assert!(neg_y.is_empty(), "negative y must yield empty history");
 
     // x >= width.
-    let big_x =
-        try_collect_tile_causal_history(&engine.resources, W as i32, SY as i32);
+    let big_x = try_collect_tile_causal_history(&engine.resources, W as i32, SY as i32);
     assert!(big_x.is_empty(), "x == width must yield empty history");
     let huge_x = try_collect_tile_causal_history(&engine.resources, 9999, SY as i32);
-    assert!(huge_x.is_empty(), "x far past width must yield empty history");
+    assert!(
+        huge_x.is_empty(),
+        "x far past width must yield empty history"
+    );
 
     // y >= height.
-    let big_y =
-        try_collect_tile_causal_history(&engine.resources, SX as i32, H as i32);
+    let big_y = try_collect_tile_causal_history(&engine.resources, SX as i32, H as i32);
     assert!(big_y.is_empty(), "y == height must yield empty history");
 
     // Same checks for the chain walker.
     let neg_x_chain = try_collect_event_chain(&engine.resources, -1, SY as i32, 1);
     assert!(neg_x_chain.is_empty(), "negative x must yield empty chain");
-    let big_y_chain =
-        try_collect_event_chain(&engine.resources, SX as i32, H as i32, 1);
+    let big_y_chain = try_collect_event_chain(&engine.resources, SX as i32, H as i32, 1);
     assert!(big_y_chain.is_empty(), "y == height must yield empty chain");
 
     // Negative event_id on an in-bounds tile that has real events present
     // — the rejection must come from the negative-id guard, not from a
     // missing tile log.
-    let neg_id_chain =
-        try_collect_event_chain(&engine.resources, SX as i32, SY as i32, -1);
+    let neg_id_chain = try_collect_event_chain(&engine.resources, SX as i32, SY as i32, -1);
     assert!(
         neg_id_chain.is_empty(),
         "negative event_id must yield empty chain (got {} entries)",
         neg_id_chain.len()
     );
-    let neg_id_chain2 =
-        try_collect_event_chain(&engine.resources, SX as i32, SY as i32, i64::MIN);
+    let neg_id_chain2 = try_collect_event_chain(&engine.resources, SX as i32, SY as i32, i64::MIN);
     assert!(
         neg_id_chain2.is_empty(),
         "i64::MIN event_id must yield empty chain (no underflow on cast)"

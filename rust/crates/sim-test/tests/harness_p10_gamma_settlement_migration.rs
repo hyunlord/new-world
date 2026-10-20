@@ -39,8 +39,8 @@ use sim_bridge::ffi::world_node::{
     bootstrap_spawn_agents, collect_agent_snapshot, enqueue_building_placed, AgentSnapshotRow,
 };
 use sim_core::components::{
-    Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, Settlement, SettlementMigrant,
-    Sleep, Social, TargetKind, Thirst, SETTLEMENT_MAX_POP,
+    Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, Settlement,
+    SettlementMigrant, Sleep, Social, TargetKind, Thirst, SETTLEMENT_MAX_POP,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
@@ -104,7 +104,9 @@ fn manhattan(a: (u32, u32), b: (u32, u32)) -> i64 {
 
 /// Chebyshev distance `max(|dx|,|dy|)` between two tiles.
 fn chebyshev(a: (u32, u32), b: (u32, u32)) -> i64 {
-    (a.0 as i64 - b.0 as i64).abs().max((a.1 as i64 - b.1 as i64).abs())
+    (a.0 as i64 - b.0 as i64)
+        .abs()
+        .max((a.1 as i64 - b.1 as i64).abs())
 }
 
 /// INDEPENDENT nearest-member oracle (plan A2/A17 non-circular requirement).
@@ -167,7 +169,12 @@ fn is_seeking_agent_at(state: AgentState, pid: AgentId) -> bool {
 
 /// `true` iff `state` is any `Seeking{Agent(_)}`.
 fn is_seeking_any_agent(state: AgentState) -> bool {
-    matches!(state, AgentState::Seeking { target: TargetKind::Agent(_) })
+    matches!(
+        state,
+        AgentState::Seeking {
+            target: TargetKind::Agent(_)
+        }
+    )
 }
 
 fn count_settlement_reason(e: &SimEngine, aid: AgentId) -> usize {
@@ -393,7 +400,10 @@ fn harness_p10_gamma_a2_seektarget_nearest_member_tile() {
         st, expected_tile,
         "A2: SeekTarget must equal the independently-computed nearest member tile"
     );
-    assert_ne!(st, own, "A2: SeekTarget must NOT be the migrant's own tile (seeded far)");
+    assert_ne!(
+        st, own,
+        "A2: SeekTarget must NOT be the migrant's own tile (seeded far)"
+    );
     println!("[p10-γ A2] SeekTarget {st:?} == oracle nearest, != own {own:?} ✓");
 }
 
@@ -474,7 +484,9 @@ fn harness_p10_gamma_a3_directed_step_chebyshev_minus_one() {
             dx == want_dx && dy == want_dy,
             "3b (LOCKED β): off-axis step must move BOTH axes in the correct signum direction; got ({dx},{dy}), want ({want_dx},{want_dy})"
         );
-        println!("[p10-γ A3b] off-axis {before:?}→{after:?}, Chebyshev −1, diagonal toward {goal:?} ✓");
+        println!(
+            "[p10-γ A3b] off-axis {before:?}→{after:?}, Chebyshev −1, diagonal toward {goal:?} ✓"
+        );
     }
 }
 
@@ -556,7 +568,10 @@ fn harness_p10_gamma_a5_arrival_autojoin() {
             break;
         }
     }
-    assert!(joined, "A5: migrant must join (∈ member_agents) within {BUDGET} ticks");
+    assert!(
+        joined,
+        "A5: migrant must join (∈ member_agents) within {BUDGET} ticks"
+    );
     assert!(
         total_member_count(&e) > pre_count,
         "A5: member count ({}) must strictly exceed the pre-migration founder count ({pre_count})",
@@ -586,8 +601,12 @@ fn harness_p10_gamma_a6_post_join_exit_one_tick() {
     let mut dec = AgentDecisionSystem::new();
     dec.tick(&mut e.world, &mut e.resources);
     let former_target = match agent_state(&e, migrant) {
-        AgentState::Seeking { target: TargetKind::Agent(t) } => t,
-        other => panic!("A6 setup: migrant must be Seeking{{Agent}} after first decision; got {other:?}"),
+        AgentState::Seeking {
+            target: TargetKind::Agent(t),
+        } => t,
+        other => {
+            panic!("A6 setup: migrant must be Seeking{{Agent}} after first decision; got {other:?}")
+        }
     };
 
     let mut joined = false;
@@ -598,7 +617,10 @@ fn harness_p10_gamma_a6_post_join_exit_one_tick() {
             break;
         }
     }
-    assert!(joined, "A6 precondition: migrant must join within {BUDGET} ticks");
+    assert!(
+        joined,
+        "A6 precondition: migrant must join within {BUDGET} ticks"
+    );
 
     // ≤1 decision tick window: exit may already hold at the join observation, or
     // after exactly one more tick (the acknowledged join→clear decision lag).
@@ -634,7 +656,9 @@ fn harness_p10_gamma_a7_social_not_migrant() {
         .insert(
             a,
             (
-                AgentState::Seeking { target: TargetKind::Agent(bid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(bid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)),
             ),
@@ -644,7 +668,9 @@ fn harness_p10_gamma_a7_social_not_migrant() {
         .insert(
             b,
             (
-                AgentState::Seeking { target: TargetKind::Agent(aid) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(aid),
+                },
                 Social::new(SOCIAL_THRESHOLD + 1.0, 0.0),
                 SeekTarget::new((0, 0)),
             ),
@@ -654,12 +680,34 @@ fn harness_p10_gamma_a7_social_not_migrant() {
     let mut dec = AgentDecisionSystem::new();
     dec.tick(&mut e.world, &mut e.resources);
 
-    assert!(!has_marker(&e, a), "A7: social seeker A must NOT carry the marker");
-    assert!(!has_marker(&e, b), "A7: social seeker B must NOT carry the marker");
-    assert_eq!(seek_tile(&e, a), Some((8, 5)), "A7: A → partner B tile (8,5)");
-    assert_eq!(seek_tile(&e, b), Some((5, 5)), "A7: B → partner A tile (5,5)");
-    assert_ne!(seek_tile(&e, a), Some((5, 5)), "A7: A SeekTarget != own tile");
-    assert_ne!(seek_tile(&e, b), Some((8, 5)), "A7: B SeekTarget != own tile");
+    assert!(
+        !has_marker(&e, a),
+        "A7: social seeker A must NOT carry the marker"
+    );
+    assert!(
+        !has_marker(&e, b),
+        "A7: social seeker B must NOT carry the marker"
+    );
+    assert_eq!(
+        seek_tile(&e, a),
+        Some((8, 5)),
+        "A7: A → partner B tile (8,5)"
+    );
+    assert_eq!(
+        seek_tile(&e, b),
+        Some((5, 5)),
+        "A7: B → partner A tile (5,5)"
+    );
+    assert_ne!(
+        seek_tile(&e, a),
+        Some((5, 5)),
+        "A7: A SeekTarget != own tile"
+    );
+    assert_ne!(
+        seek_tile(&e, b),
+        Some((8, 5)),
+        "A7: B SeekTarget != own tile"
+    );
     println!("[p10-γ A7] social seekers keep partner routing, no marker leaked ✓");
 }
 
@@ -679,10 +727,15 @@ fn harness_p10_gamma_a8_dissolve_abort() {
     let mut dec = AgentDecisionSystem::new();
     dec.tick(&mut e.world, &mut e.resources);
     let former = match agent_state(&e, migrant) {
-        AgentState::Seeking { target: TargetKind::Agent(t) } => t,
+        AgentState::Seeking {
+            target: TargetKind::Agent(t),
+        } => t,
         other => panic!("8 setup: migrant must be Seeking{{Agent}}; got {other:?}"),
     };
-    assert!(has_marker(&e, migrant), "8 setup: migrant must carry the marker");
+    assert!(
+        has_marker(&e, migrant),
+        "8 setup: migrant must carry the marker"
+    );
 
     for s in e.resources.settlements.values_mut() {
         s.member_agents.clear();
@@ -690,7 +743,10 @@ fn harness_p10_gamma_a8_dissolve_abort() {
     }
 
     dec.tick(&mut e.world, &mut e.resources); // abort (decision-only: no proximity rebuild)
-    assert!(!has_marker(&e, migrant), "A8: marker removed on dissolve-abort");
+    assert!(
+        !has_marker(&e, migrant),
+        "A8: marker removed on dissolve-abort"
+    );
     assert!(
         !is_seeking_agent_at(agent_state(&e, migrant), former),
         "A8: dissolved → migrant must stop Seeking the former member; got {:?}",
@@ -726,14 +782,21 @@ fn harness_p10_gamma_a9_target_despawn_abort() {
     let mut dec = AgentDecisionSystem::new();
     dec.tick(&mut e.world, &mut e.resources);
     let target = match agent_state(&e, migrant) {
-        AgentState::Seeking { target: TargetKind::Agent(t) } => t,
+        AgentState::Seeking {
+            target: TargetKind::Agent(t),
+        } => t,
         other => panic!("9 setup: migrant must be Seeking{{Agent}}; got {other:?}"),
     };
-    assert!(has_marker(&e, migrant), "9 setup: migrant must carry the marker");
+    assert!(
+        has_marker(&e, migrant),
+        "9 setup: migrant must carry the marker"
+    );
 
     // Despawn the target ENTITY but leave its id in member_agents (stale roster).
     let target_ent = entity_by_id(&e, target);
-    e.world.despawn(target_ent).expect("despawn target member entity");
+    e.world
+        .despawn(target_ent)
+        .expect("despawn target member entity");
     assert!(
         is_member(&e, target),
         "9 setup: despawned member id must still LINGER in member_agents (stale roster)"
@@ -824,8 +887,7 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
             live.insert(a.id);
             let here = (pos.x, pos.y);
             let moved = prev_pos.get(&a.id).map(|p| *p != here).unwrap_or(true);
-            let directed_motile =
-                matches!(state, AgentState::Seeking { .. }) && seek.is_some();
+            let directed_motile = matches!(state, AgentState::Seeking { .. }) && seek.is_some();
             let s = directed_streak.entry(a.id).or_insert(0);
             if directed_motile && !moved {
                 *s += 1;
@@ -900,8 +962,12 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
                 .query::<(&Agent, &AgentState, Option<&SeekTarget>)>()
                 .iter()
             {
-                if matches!(state, AgentState::Seeking { target: TargetKind::Agent(_) })
-                    && seek.is_none()
+                if matches!(
+                    state,
+                    AgentState::Seeking {
+                        target: TargetKind::Agent(_)
+                    }
+                ) && seek.is_none()
                 {
                     targetless += 1;
                 }
@@ -954,7 +1020,10 @@ fn harness_p10_gamma_a11_on_member_tile() {
         "A11: on-tile migrant MUST transition to Seeking{{Agent}} (Stage-2), not stay Idle (Stage-1); got {:?}",
         agent_state(&e, migrant)
     );
-    assert!(has_marker(&e, migrant), "A11: on-tile migrant MUST carry the marker");
+    assert!(
+        has_marker(&e, migrant),
+        "A11: on-tile migrant MUST carry the marker"
+    );
     assert_eq!(
         seek_tile(&e, migrant),
         Some(member_tile),
@@ -963,7 +1032,11 @@ fn harness_p10_gamma_a11_on_member_tile() {
     // Zero-length directed step: one movement tick must not move it / crash.
     let mut mov = AgentMovementSystem::new();
     mov.tick(&mut e.world, &mut e.resources);
-    assert_eq!(agent_pos(&e, migrant), (20, 20), "A11: zero-length step must not move the on-tile migrant");
+    assert_eq!(
+        agent_pos(&e, migrant),
+        (20, 20),
+        "A11: zero-length step must not move the on-tile migrant"
+    );
 
     // Full runtime: proximity join + explicit exit (≤5 ticks after join).
     let mut joined = false;
@@ -974,7 +1047,10 @@ fn harness_p10_gamma_a11_on_member_tile() {
             break;
         }
     }
-    assert!(joined, "A11: on-tile migrant must join within ≤{BUDGET} ticks");
+    assert!(
+        joined,
+        "A11: on-tile migrant must join within ≤{BUDGET} ticks"
+    );
     let mut exited = false;
     for _ in 0..5u64 {
         if !is_seeking_agent_at(agent_state(&e, migrant), member) && !has_marker(&e, migrant) {
@@ -983,7 +1059,10 @@ fn harness_p10_gamma_a11_on_member_tile() {
         }
         e.tick();
     }
-    assert!(exited, "A11: on-tile migrant must exit migration (marker removed) within ≤5 ticks of joining");
+    assert!(
+        exited,
+        "A11: on-tile migrant must exit migration (marker removed) within ≤5 ticks of joining"
+    );
     println!("[p10-γ A11] on-member-tile: zero-length step, joined, exited ✓");
 }
 
@@ -1006,17 +1085,43 @@ fn harness_p10_gamma_a12_concurrent_migrants() {
 
         let mut dec = AgentDecisionSystem::new();
         dec.tick(&mut e.world, &mut e.resources);
-        assert!(is_seeking_agent_at(agent_state(&e, mig1), m_a), "A12a: mig1 → member A");
-        assert!(is_seeking_agent_at(agent_state(&e, mig2), m_b), "A12a: mig2 → member B");
-        assert_eq!(seek_tile(&e, mig1), Some((10, 10)), "A12a: mig1 SeekTarget == A tile");
-        assert_eq!(seek_tile(&e, mig2), Some((30, 30)), "A12a: mig2 SeekTarget == B tile");
+        assert!(
+            is_seeking_agent_at(agent_state(&e, mig1), m_a),
+            "A12a: mig1 → member A"
+        );
+        assert!(
+            is_seeking_agent_at(agent_state(&e, mig2), m_b),
+            "A12a: mig2 → member B"
+        );
+        assert_eq!(
+            seek_tile(&e, mig1),
+            Some((10, 10)),
+            "A12a: mig1 SeekTarget == A tile"
+        );
+        assert_eq!(
+            seek_tile(&e, mig2),
+            Some((30, 30)),
+            "A12a: mig2 SeekTarget == B tile"
+        );
 
         // Move both target members; decision-only ⇒ migrants stay put.
-        e.world.insert_one(entity_by_id(&e, m_a), Position { x: 12, y: 12 }).expect("move A");
-        e.world.insert_one(entity_by_id(&e, m_b), Position { x: 28, y: 28 }).expect("move B");
+        e.world
+            .insert_one(entity_by_id(&e, m_a), Position { x: 12, y: 12 })
+            .expect("move A");
+        e.world
+            .insert_one(entity_by_id(&e, m_b), Position { x: 28, y: 28 })
+            .expect("move B");
         dec.tick(&mut e.world, &mut e.resources);
-        assert_eq!(seek_tile(&e, mig1), Some((12, 12)), "A12a: mig1 re-resolves to A's NEW tile");
-        assert_eq!(seek_tile(&e, mig2), Some((28, 28)), "A12a: mig2 re-resolves to B's NEW tile");
+        assert_eq!(
+            seek_tile(&e, mig1),
+            Some((12, 12)),
+            "A12a: mig1 re-resolves to A's NEW tile"
+        );
+        assert_eq!(
+            seek_tile(&e, mig2),
+            Some((28, 28)),
+            "A12a: mig2 re-resolves to B's NEW tile"
+        );
         println!("[p10-γ A12a] different-target migrants re-resolve independently ✓");
     }
 
@@ -1030,13 +1135,31 @@ fn harness_p10_gamma_a12_concurrent_migrants() {
 
         let mut dec = AgentDecisionSystem::new();
         dec.tick(&mut e.world, &mut e.resources);
-        assert_eq!(seek_tile(&e, mig1), Some((10, 10)), "A12b1: mig1 → shared member tile");
-        assert_eq!(seek_tile(&e, mig2), Some((10, 10)), "A12b1: mig2 → shared member tile");
+        assert_eq!(
+            seek_tile(&e, mig1),
+            Some((10, 10)),
+            "A12b1: mig1 → shared member tile"
+        );
+        assert_eq!(
+            seek_tile(&e, mig2),
+            Some((10, 10)),
+            "A12b1: mig2 → shared member tile"
+        );
 
-        e.world.insert_one(entity_by_id(&e, m), Position { x: 13, y: 13 }).expect("move shared member");
+        e.world
+            .insert_one(entity_by_id(&e, m), Position { x: 13, y: 13 })
+            .expect("move shared member");
         dec.tick(&mut e.world, &mut e.resources);
-        assert_eq!(seek_tile(&e, mig1), Some((13, 13)), "A12b1: mig1 re-resolves to NEW shared tile");
-        assert_eq!(seek_tile(&e, mig2), Some((13, 13)), "A12b1: mig2 re-resolves to NEW shared tile");
+        assert_eq!(
+            seek_tile(&e, mig1),
+            Some((13, 13)),
+            "A12b1: mig1 re-resolves to NEW shared tile"
+        );
+        assert_eq!(
+            seek_tile(&e, mig2),
+            Some((13, 13)),
+            "A12b1: mig2 re-resolves to NEW shared tile"
+        );
         println!("[p10-γ A12b1] same-target migrants both re-resolve to the moving member ✓");
     }
 
@@ -1059,7 +1182,10 @@ fn harness_p10_gamma_a12_concurrent_migrants() {
                 break;
             }
         }
-        assert!(both, "A12b2: BOTH same-target migrants must join within {BUDGET} ticks (neither starved)");
+        assert!(
+            both,
+            "A12b2: BOTH same-target migrants must join within {BUDGET} ticks (neither starved)"
+        );
         println!("[p10-γ A12b2] both same-target migrants joined (neither starved) ✓");
     }
 }
@@ -1094,7 +1220,10 @@ fn harness_p10_gamma_a13_cross_feature_regression() {
             e.tick();
         }
         let births = count_agent_born(&e);
-        assert!(births >= 1, "A13(a): settlement births must still fire; got {births}");
+        assert!(
+            births >= 1,
+            "A13(a): settlement births must still fire; got {births}"
+        );
         println!("[p10-γ A13a] {births} AgentBorn after cooldown — births preserved ✓");
     }
 
@@ -1110,13 +1239,17 @@ fn harness_p10_gamma_a13_cross_feature_regression() {
         dec.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             agent_state(&e, a),
-            AgentState::Seeking { target: TargetKind::Food },
+            AgentState::Seeking {
+                target: TargetKind::Food
+            },
             "A13(b): Idle → Seeking{{Food}}"
         );
         dec.tick(&mut e.world, &mut e.resources);
         assert_eq!(
             agent_state(&e, a),
-            AgentState::Consuming { target: TargetKind::Food },
+            AgentState::Consuming {
+                target: TargetKind::Food
+            },
             "A13(b): Seeking{{Food}} → Consuming{{Food}}"
         );
         println!("[p10-γ A13b] resource gather loop preserved ✓");
@@ -1146,8 +1279,14 @@ fn harness_p10_gamma_a13_cross_feature_regression() {
         let m1 = run();
         let m2 = run();
         assert!(!m1.is_empty(), "A13(c): bootstrap must spawn agents");
-        assert_eq!(m1, m2, "A13(c): two 200-tick runs must yield identical {{id→(pos,state,marker,seek)}} maps");
-        println!("[p10-γ A13c] determinism preserved across two runs ({} agents) ✓", m1.len());
+        assert_eq!(
+            m1, m2,
+            "A13(c): two 200-tick runs must yield identical {{id→(pos,state,marker,seek)}} maps"
+        );
+        println!(
+            "[p10-γ A13c] determinism preserved across two runs ({} agents) ✓",
+            m1.len()
+        );
     }
 }
 
@@ -1193,7 +1332,11 @@ fn harness_p10_gamma_a14_marker_hygiene() {
                 }
                 // Stationary founders are permanent members → never migrants.
                 if founder_ids.contains(&a.id) {
-                    assert!(!marker, "A14(ISO): stationary founder {} must NEVER carry the marker", a.id);
+                    assert!(
+                        !marker,
+                        "A14(ISO): stationary founder {} must NEVER carry the marker",
+                        a.id
+                    );
                 }
                 // No agent may stay member+marker across two consecutive samples.
                 if member && marker && prev_member.contains(&a.id) {
@@ -1208,7 +1351,10 @@ fn harness_p10_gamma_a14_marker_hygiene() {
                 joined = true;
             }
         }
-        assert!(joined, "A14(ISO) non-vacuity: the migrant must actually join within {BUDGET} ticks");
+        assert!(
+            joined,
+            "A14(ISO) non-vacuity: the migrant must actually join within {BUDGET} ticks"
+        );
     }
 
     // ── PROD: stuck-marker invariant across a long wandering run ──
@@ -1245,7 +1391,9 @@ fn harness_p10_gamma_a14_marker_hygiene() {
             }
             consec_member_marker.retain(|k, _| live.contains(k));
         }
-        println!("[p10-γ A14] PROD worst consecutive member+marker streak = {worst} (≤1 tolerated)");
+        println!(
+            "[p10-γ A14] PROD worst consecutive member+marker streak = {worst} (≤1 tolerated)"
+        );
     }
     println!("[p10-γ A14] marker hygiene: stationary founders never marked, no stuck member+marker (≤1-tick join lag tolerated) ✓");
 }
@@ -1282,7 +1430,16 @@ fn harness_p10_gamma_a15_need_preemption() {
             let mut e = fresh_engine();
             form_settlement_stationary(&mut e, 20, 20);
             let (h, t, f) = needs(need);
-            let migrant = seed_outsider(&mut e, 50, 50, h, t, f, SOCIAL_THRESHOLD - 1.0, 9150 + need as u64);
+            let migrant = seed_outsider(
+                &mut e,
+                50,
+                50,
+                h,
+                t,
+                f,
+                SOCIAL_THRESHOLD - 1.0,
+                9150 + need as u64,
+            );
             let mut dec = AgentDecisionSystem::new();
             dec.tick(&mut e.world, &mut e.resources);
             assert!(
@@ -1291,7 +1448,9 @@ fn harness_p10_gamma_a15_need_preemption() {
             );
             assert_eq!(
                 agent_state(&e, migrant),
-                AgentState::Seeking { target: resource(need) },
+                AgentState::Seeking {
+                    target: resource(need)
+                },
                 "A15a(need {need}): must take the resource/rest arm, not the migration arm"
             );
             assert!(
@@ -1312,9 +1471,18 @@ fn harness_p10_gamma_a15_need_preemption() {
             );
             // Breach the need mid-walk.
             match need {
-                0 => e.world.insert_one(migrant, Hunger::new(51.0, 0.0)).expect("breach hunger"),
-                1 => e.world.insert_one(migrant, Thirst::new(51.0, 0.0)).expect("breach thirst"),
-                _ => e.world.insert_one(migrant, Sleep::new(51.0, 0.0)).expect("breach fatigue"),
+                0 => e
+                    .world
+                    .insert_one(migrant, Hunger::new(51.0, 0.0))
+                    .expect("breach hunger"),
+                1 => e
+                    .world
+                    .insert_one(migrant, Thirst::new(51.0, 0.0))
+                    .expect("breach thirst"),
+                _ => e
+                    .world
+                    .insert_one(migrant, Sleep::new(51.0, 0.0))
+                    .expect("breach fatigue"),
             };
             dec.tick(&mut e.world, &mut e.resources); // preemption
             assert!(
@@ -1323,7 +1491,9 @@ fn harness_p10_gamma_a15_need_preemption() {
             );
             assert_eq!(
                 agent_state(&e, migrant),
-                AgentState::Seeking { target: resource(need) },
+                AgentState::Seeking {
+                    target: resource(need)
+                },
                 "A15b(need {need}): preempted migrant must re-route to the resource/rest arm"
             );
         }
@@ -1341,7 +1511,10 @@ fn harness_p10_gamma_a16_serde_round_trip() {
     let encoded = ron::to_string(&original).expect("SettlementMigrant must Serialize");
     let decoded: SettlementMigrant =
         ron::from_str(&encoded).expect("SettlementMigrant must Deserialize");
-    assert_eq!(original, decoded, "A16: marker must be byte-identical after a serde round-trip");
+    assert_eq!(
+        original, decoded,
+        "A16: marker must be byte-identical after a serde round-trip"
+    );
     println!("[p10-γ A16] SettlementMigrant serde round-trip ✓");
 }
 
@@ -1357,10 +1530,18 @@ fn harness_p10_gamma_a17_nearest_selection_determinism() {
         // migrant (10,40): to (10,20)=20 < (10,10)=30 → nearest (10,20).
         let migrant = seed_calm_outsider(&mut e, 10, 40, 9171);
         let (_, expected) = nearest_member(&e, (10, 40));
-        assert_eq!(expected, (10, 20), "A17(i) oracle sanity: nearest must be (10,20)");
+        assert_eq!(
+            expected,
+            (10, 20),
+            "A17(i) oracle sanity: nearest must be (10,20)"
+        );
         let mut dec = AgentDecisionSystem::new();
         dec.tick(&mut e.world, &mut e.resources);
-        assert_eq!(seek_tile(&e, migrant), Some((10, 20)), "A17(i): SeekTarget == nearest member tile");
+        assert_eq!(
+            seek_tile(&e, migrant),
+            Some((10, 20)),
+            "A17(i): SeekTarget == nearest member tile"
+        );
     }
 
     // (ii) EQUAL distance → the documented (x,y) lexicographic tie-break decides,
@@ -1374,14 +1555,21 @@ fn harness_p10_gamma_a17_nearest_selection_determinism() {
         dec.tick(&mut e.world, &mut e.resources);
         seek_tile(&e, migrant).expect("A17(ii): migrant must carry a SeekTarget")
     };
-    assert_eq!(manhattan((15, 40), (10, 10)), manhattan((15, 40), (20, 10)), "A17(ii) sanity: tie");
+    assert_eq!(
+        manhattan((15, 40), (10, 10)),
+        manhattan((15, 40), (20, 10)),
+        "A17(ii) sanity: tie"
+    );
     let first = run_tie();
     let second = run_tie();
     assert_eq!(
         first, (10, 10),
         "A17(ii): the (x,y) lexicographic tie-break must pick the lower-x member (10,10); got {first:?}"
     );
-    assert_eq!(first, second, "A17(ii): two identical runs must select the same member (determinism)");
+    assert_eq!(
+        first, second,
+        "A17(ii): two identical runs must select the same member (determinism)"
+    );
     println!("[p10-γ A17] nearest selection + (x,y) tie-break + determinism ✓");
 }
 
@@ -1403,7 +1591,9 @@ fn harness_p10_gamma_a18_no_ffi_exposure() {
         .insert(
             migrant,
             (
-                AgentState::Seeking { target: TargetKind::Agent(member_id) },
+                AgentState::Seeking {
+                    target: TargetKind::Agent(member_id),
+                },
                 SeekTarget::new((20, 20)),
                 SettlementMigrant,
             ),
@@ -1411,7 +1601,9 @@ fn harness_p10_gamma_a18_no_ffi_exposure() {
         .expect("seed migrant with marker");
 
     let with_marker = collect_agent_snapshot(&e.world);
-    e.world.remove_one::<SettlementMigrant>(migrant).expect("remove marker");
+    e.world
+        .remove_one::<SettlementMigrant>(migrant)
+        .expect("remove marker");
     let without_marker = collect_agent_snapshot(&e.world);
 
     assert_eq!(
@@ -1424,7 +1616,10 @@ fn harness_p10_gamma_a18_no_ffi_exposure() {
         .iter()
         .find(|r| r.agent_id == agent_id(&e, migrant))
         .expect("A18: migrant must appear in the snapshot");
-    assert_eq!(row.seek_kind, 0, "A18: Seeking{{Agent}} carries seek_kind 0 (not a resource trip)");
+    assert_eq!(
+        row.seek_kind, 0,
+        "A18: Seeking{{Agent}} carries seek_kind 0 (not a resource trip)"
+    );
     println!("[p10-γ A18] marker has zero FFI snapshot footprint ✓");
 }
 
@@ -1441,14 +1636,27 @@ fn harness_p10_gamma_a19_no_settlement_empty_roster() {
     {
         let mut e = engine64();
         let outsider = seed_calm_outsider(&mut e, 30, 30, 9191);
-        assert!(e.resources.settlements.is_empty(), "19a setup: no settlements");
+        assert!(
+            e.resources.settlements.is_empty(),
+            "19a setup: no settlements"
+        );
         let mut dec = AgentDecisionSystem::new();
         for _ in 0..5u64 {
             dec.tick(&mut e.world, &mut e.resources); // must not panic
         }
-        assert_eq!(agent_state(&e, outsider), AgentState::Idle, "A19a: stays Idle with no settlement");
-        assert!(!has_marker(&e, outsider), "A19a: no marker with no settlement");
-        assert!(seek_tile(&e, outsider).is_none(), "A19a: no migration-assigned SeekTarget");
+        assert_eq!(
+            agent_state(&e, outsider),
+            AgentState::Idle,
+            "A19a: stays Idle with no settlement"
+        );
+        assert!(
+            !has_marker(&e, outsider),
+            "A19a: no marker with no settlement"
+        );
+        assert!(
+            seek_tile(&e, outsider).is_none(),
+            "A19a: no migration-assigned SeekTarget"
+        );
     }
 
     // ── (b) one settlement, empty roster ──
@@ -1462,11 +1670,20 @@ fn harness_p10_gamma_a19_no_settlement_empty_roster() {
         for _ in 0..5u64 {
             dec.tick(&mut e.world, &mut e.resources); // empty roster ⇒ no candidate, no panic
         }
-        assert_eq!(agent_state(&e, outsider), AgentState::Idle, "A19b: empty roster ⇒ stays Idle");
+        assert_eq!(
+            agent_state(&e, outsider),
+            AgentState::Idle,
+            "A19b: empty roster ⇒ stays Idle"
+        );
         assert!(!has_marker(&e, outsider), "A19b: empty roster ⇒ no marker");
-        assert!(seek_tile(&e, outsider).is_none(), "A19b: empty roster ⇒ no migration SeekTarget");
+        assert!(
+            seek_tile(&e, outsider).is_none(),
+            "A19b: empty roster ⇒ no migration SeekTarget"
+        );
     }
-    println!("[p10-γ A19] no-settlement / empty-roster → Idle, no marker, no garbage target, no panic ✓");
+    println!(
+        "[p10-γ A19] no-settlement / empty-roster → Idle, no marker, no garbage target, no panic ✓"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1514,8 +1731,14 @@ fn harness_p10_gamma_a2b_decoy_closer_non_member_not_selected() {
         st, member_tile,
         "A2b: SeekTarget must be the nearest MEMBER tile, not the closer non-member decoy"
     );
-    assert_ne!(st, decoy_tile, "A2b: SeekTarget must NOT be the closer non-member decoy tile");
-    assert_ne!(st, own, "A2b: SeekTarget must NOT be the migrant's own tile");
+    assert_ne!(
+        st, decoy_tile,
+        "A2b: SeekTarget must NOT be the closer non-member decoy tile"
+    );
+    assert_ne!(
+        st, own,
+        "A2b: SeekTarget must NOT be the migrant's own tile"
+    );
     assert!(
         is_member(&e, member_id),
         "A2b: the chosen target's AgentId must be in member_agents"
@@ -1554,7 +1777,13 @@ fn harness_p10_gamma_a20_full_settlement_no_permanent_freeze() {
     s.population_stats.current = SETTLEMENT_MAX_POP; // FULL → join impossible
     e.resources.settlements.insert(sid, s);
     assert_eq!(
-        e.resources.settlements.values().next().unwrap().population_stats.current,
+        e.resources
+            .settlements
+            .values()
+            .next()
+            .unwrap()
+            .population_stats
+            .current,
         SETTLEMENT_MAX_POP,
         "A20 setup: the injected settlement must be at MAX_POP"
     );

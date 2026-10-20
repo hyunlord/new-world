@@ -38,15 +38,30 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
         target += wood_target(r).unwrap_or(0.0);
         in_hand += wood_in_hand(&engine.world, r, *sid);
         if let Some(settlement) = r.settlements.get(sid) {
-            wood_stock += u64::from(settlement.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0));
+            wood_stock += u64::from(
+                settlement
+                    .stockpile
+                    .get(&ResourceKind::Wood)
+                    .copied()
+                    .unwrap_or(0),
+            );
             for id in &settlement.member_agents {
                 homes.entry(*id).or_insert(settlement.formation_tile);
             }
         }
     }
     let fire_lit = !settlements.is_empty()
-        && settlements.iter().all(|sid| r.fires.get(sid).is_some_and(|fire| fire.lit));
-    let WorkCounts { cold, critical, idle, adults, working, alive } = work_counts(engine, &homes);
+        && settlements
+            .iter()
+            .all(|sid| r.fires.get(sid).is_some_and(|fire| fire.lit));
+    let WorkCounts {
+        cold,
+        critical,
+        idle,
+        adults,
+        working,
+        alive,
+    } = work_counts(engine, &homes);
     let t = r.tallies;
     json!({"meals_from_store_total": t.meals_from_store, "ground_meals_total": t.ground_meals,
         "wood_stock": wood_stock, "wood_target": target, "wood_in_hand": in_hand,
@@ -75,9 +90,14 @@ pub(crate) struct WorkCounts {
 /// formation tile (first settlement in id order).
 pub(crate) fn work_counts(engine: &SimEngine, homes: &BTreeMap<u64, (u32, u32)>) -> WorkCounts {
     let r = &engine.resources;
-    let forage = r.rules.agent.forage.filter(|_| r.rules.society.stock_target.is_some());
+    let forage = r
+        .rules
+        .agent
+        .forage
+        .filter(|_| r.rules.society.stock_target.is_some());
     let firewood = r.rules.society.firewood;
-    let forage_window = forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
+    let forage_window =
+        forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
     let wood_window = in_gather_window(r);
     let mut query = engine.world.query::<(
         &Agent,
@@ -93,13 +113,16 @@ pub(crate) fn work_counts(engine: &SimEngine, homes: &BTreeMap<u64, (u32, u32)>)
     let mut rows: Vec<_> = query.iter().map(|(_, row)| row).collect();
     rows.sort_by_key(|row| row.0.id);
     let alive = rows.len() as u64;
-    let (mut cold, mut critical, mut idle, mut adults, mut working) = (0u64, 0u64, 0u64, 0u64, 0u64);
+    let (mut cold, mut critical, mut idle, mut adults, mut working) =
+        (0u64, 0u64, 0u64, 0u64, 0u64);
     for (agent, pos, state, inventory, child, elder, marker, hunger, thirst) in rows {
         cold += u64::from(marker.is_some());
         let state = state.copied().unwrap_or_default();
         let gathering = matches!(
             state,
-            AgentState::Seeking { target: TargetKind::GatherFood | TargetKind::GatherWood }
+            AgentState::Seeking {
+                target: TargetKind::GatherFood | TargetKind::GatherWood
+            }
         );
         let needy = hunger.is_some_and(|h| f64::from(h.value) >= CRITICAL_GATHERER)
             || thirst.is_some_and(|t| t.value >= CRITICAL_GATHERER);
@@ -109,21 +132,41 @@ pub(crate) fn work_counts(engine: &SimEngine, homes: &BTreeMap<u64, (u32, u32)>)
             && child.is_none()
             && home.is_some_and(|(x, y)| {
                 let carried = |kind| inventory.map_or(0, |inv| inv.get(kind));
-                let wood = if firewood.is_some() { carried(ResourceKind::Wood) } else { 0 };
-                hauls_home(forage.as_ref(), firewood.as_ref(), carried(ResourceKind::Food), wood,
-                    forage_window, wood_window, pos.x.abs_diff(x).max(pos.y.abs_diff(y)))
+                let wood = if firewood.is_some() {
+                    carried(ResourceKind::Wood)
+                } else {
+                    0
+                };
+                hauls_home(
+                    forage.as_ref(),
+                    firewood.as_ref(),
+                    carried(ResourceKind::Food),
+                    wood,
+                    forage_window,
+                    wood_window,
+                    pos.x.abs_diff(x).max(pos.y.abs_diff(y)),
+                )
             });
         idle += u64::from(state == AgentState::Idle && !hauling);
         if home.is_some() && child.is_none() && elder.is_none() {
             adults += 1;
             let at_work = matches!(
                 state.target(),
-                Some(TargetKind::GatherFood | TargetKind::GatherWood | TargetKind::ConstructionSite)
+                Some(
+                    TargetKind::GatherFood | TargetKind::GatherWood | TargetKind::ConstructionSite
+                )
             );
             working += u64::from(at_work || hauling);
         }
     }
-    WorkCounts { cold, critical, idle, adults, working, alive }
+    WorkCounts {
+        cold,
+        critical,
+        idle,
+        adults,
+        working,
+        alive,
+    }
 }
 
 /// Settlement members mapped to their formation tile (first settlement in id order).
@@ -150,16 +193,31 @@ mod tests {
     fn v10_world_reports_neutral_pass5_values() {
         let engine = crate::scenes::game_v10_scene(3);
         let row = metrics(&engine);
-        for key in ["meals_from_store_total", "ground_meals_total", "wood_stock", "wood_in_hand",
-            "fire_lit", "cold_members", "cold_member_hours_total", "wood_trips_total",
-            "wood_gathered_total", "deadwood_total", "gather_preempted_total", "gather_seekers_critical"] {
+        for key in [
+            "meals_from_store_total",
+            "ground_meals_total",
+            "wood_stock",
+            "wood_in_hand",
+            "fire_lit",
+            "cold_members",
+            "cold_member_hours_total",
+            "wood_trips_total",
+            "wood_gathered_total",
+            "deadwood_total",
+            "gather_preempted_total",
+            "gather_seekers_critical",
+        ] {
             assert_eq!(row[key], 0, "{key}");
         }
         assert_eq!(row["wood_target"], 0.0);
         // Tick zero: nobody belongs to a settlement yet and everybody is idle.
         assert_eq!(row["adult_work_share"], 0.0);
         assert_eq!(row["idle_share"], 1.0);
-        assert!(row.as_object().expect("object").values().all(|v| !v.is_null()));
+        assert!(row
+            .as_object()
+            .expect("object")
+            .values()
+            .all(|v| !v.is_null()));
     }
 
     #[test]

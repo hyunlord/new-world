@@ -3,7 +3,8 @@ use std::collections::BTreeSet;
 
 use hecs::Entity;
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position, ResourceKind, Settlement,
+    Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position,
+    ResourceKind, Settlement,
 };
 use sim_core::material::MaterialRegistry;
 use sim_core::rng::{keyed_u64, NoiseFork, STREAM_FISSION};
@@ -37,7 +38,9 @@ fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Enti
     settlement.store(ResourceKind::Food, 100);
     settlement.store(ResourceKind::Wood, 30);
     for i in 0..bushes {
-        engine.resources.set_food_source_max(10 + i % 20, 10 + i / 20, 4);
+        engine
+            .resources
+            .set_food_source_max(10 + i % 20, 10 + i / 20, 4);
     }
     let mut entities = Vec::new();
     for &(id, stage, key) in residents {
@@ -48,7 +51,10 @@ fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Enti
             Lineage { key, births: 0 },
         ));
         match stage {
-            0 => engine.world.insert_one(entity, Child { born_tick: 0 }).expect("child"),
+            0 => engine
+                .world
+                .insert_one(entity, Child { born_tick: 0 })
+                .expect("child"),
             2 => engine.world.insert_one(entity, Elder).expect("elder"),
             _ => {}
         }
@@ -56,7 +62,12 @@ fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Enti
         entities.push(entity);
     }
     engine.resources.settlements.insert(1, settlement);
-    engine.resources.wild_regions.push(WildRegion { centre: SITE, bushes: 6, deadwood: 8, water_distance: 3 });
+    engine.resources.wild_regions.push(WildRegion {
+        centre: SITE,
+        bushes: 6,
+        deadwood: 8,
+        water_distance: 3,
+    });
     (engine, entities)
 }
 
@@ -64,7 +75,13 @@ fn world(seed: u64, bushes: u32, residents: &[Resident]) -> (SimEngine, Vec<Enti
 fn village(n: u64) -> Vec<Resident> {
     (1..=n)
         .map(|id| {
-            let stage = if id % 7 == 0 { 2 } else if id % 5 == 0 { 0 } else { 1 };
+            let stage = if id % 7 == 0 {
+                2
+            } else if id % 5 == 0 {
+                0
+            } else {
+                1
+            };
             (id, stage, id.wrapping_mul(0x9E37_79B9_7F4A_7C15) ^ 0x55)
         })
         .collect()
@@ -89,7 +106,12 @@ fn bushes_for(seed: u64, target: u32) -> u32 {
 }
 
 fn group_of(engine: &SimEngine) -> BTreeSet<AgentId> {
-    engine.world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect()
+    engine
+        .world
+        .query::<(&Agent, &Founding)>()
+        .iter()
+        .map(|(_, (a, _))| a.id)
+        .collect()
 }
 
 #[test]
@@ -100,13 +122,25 @@ fn harness_fission_inert_before_v17() {
             engine.tick();
         }
         let t = engine.resources.tallies;
-        assert_eq!((t.fissions, t.fissions_cancelled, t.fission_blocked_no_site, t.remnant_merges), (0, 0, 0, 0));
+        assert_eq!(
+            (
+                t.fissions,
+                t.fissions_cancelled,
+                t.fission_blocked_no_site,
+                t.remnant_merges
+            ),
+            (0, 0, 0, 0)
+        );
         assert!(engine.resources.fission_log.is_empty());
         assert_eq!(engine.world.query::<&Founding>().iter().count(), 0);
         assert!(engine.resources.retired_hearths.is_empty());
         assert_eq!(engine.resources.settlements.len(), 1);
     }
-    for rules in [WorldRules::game_v16(3), WorldRules::game_v16_neutral(), WorldRules::game_v17_nofission(3)] {
+    for rules in [
+        WorldRules::game_v16(3),
+        WorldRules::game_v16_neutral(),
+        WorldRules::game_v17_nofission(3),
+    ] {
         assert_eq!(rules.society.fission, None);
     }
     // The v16 world has no regions; v17's worlds share their camp with v16.
@@ -128,11 +162,15 @@ fn harness_fission_only_when_crowded() {
     };
     let rule = WorldRules::game_v17(seed).society.fission.expect("rule");
     // Below crowding (and below min_members): never splits.
-    let below = ((rule.crowding * f64::from(cap)).ceil() as u64 - 1).min(u64::from(rule.min_members) - 1);
+    let below =
+        ((rule.crowding * f64::from(cap)).ceil() as u64 - 1).min(u64::from(rule.min_members) - 1);
     let (mut engine, _) = world(seed, bushes, &village(below));
     let mut system = FissionSystem::new();
     run(&mut engine, &mut system, tick_at(14, 0), tick_at(45, 0));
-    assert!(engine.resources.fission_log.is_empty(), "{below} members of capacity {cap} split");
+    assert!(
+        engine.resources.fission_log.is_empty(),
+        "{below} members of capacity {cap} split"
+    );
     // Above crowding: one split, at 06:00 of the first spring or summer day
     // after the minimum age (day 14 is autumn, 21 winter, 28 spring).
     let above = u64::from(cap.max(rule.min_members)) + 2;
@@ -155,12 +193,23 @@ fn harness_fission_group_rules() {
         let mut system = FissionSystem::new();
         let check = tick_at(28, 360);
         run(&mut engine, &mut system, check, check + 1);
-        let record = engine.resources.fission_log.first().expect("fission").clone();
+        let record = engine
+            .resources
+            .fission_log
+            .first()
+            .expect("fission")
+            .clone();
         let group: BTreeSet<AgentId> = record.members.iter().copied().collect();
         assert_eq!(group, group_of(&engine));
         // Size: clamp(round(32 x 0.35), 6, 14) = 11.
         assert_eq!(group.len(), 11);
-        let stage = |id: &AgentId| people.iter().find(|p| p.0 == *id).map(|p| p.1).expect("resident");
+        let stage = |id: &AgentId| {
+            people
+                .iter()
+                .find(|p| p.0 == *id)
+                .map(|p| p.1)
+                .expect("resident")
+        };
         assert!(group.iter().all(|id| stage(id) != 2), "no elder leaves");
         let adults = group.iter().filter(|id| stage(id) == 1).count();
         assert!(adults >= 4 && adults as u32 == record.adults);
@@ -171,7 +220,12 @@ fn harness_fission_group_rules() {
             .map(|p| (keyed_u64(seed, STREAM_FISSION, p.2, check, 0, 0), p.0, p.1))
             .collect();
         ranked.sort_unstable();
-        let mut expected: BTreeSet<AgentId> = ranked.iter().filter(|r| r.2 == 1).take(4).map(|r| r.1).collect();
+        let mut expected: BTreeSet<AgentId> = ranked
+            .iter()
+            .filter(|r| r.2 == 1)
+            .take(4)
+            .map(|r| r.1)
+            .collect();
         for r in &ranked {
             if expected.len() >= 11 {
                 break;
@@ -182,7 +236,12 @@ fn harness_fission_group_rules() {
         // The leader is the group's lowest-AgentId adult; every founder walks to the site.
         let leader = *group.iter().find(|id| stage(id) == 1).expect("adult");
         for (_, (agent, founding)) in engine.world.query::<(&Agent, &Founding)>().iter() {
-            assert_eq!((founding.leader, founding.site, founding.since_tick), (leader, SITE, check), "agent {}", agent.id);
+            assert_eq!(
+                (founding.leader, founding.site, founding.since_tick),
+                (leader, SITE, check),
+                "agent {}",
+                agent.id
+            );
         }
     }
 }
@@ -198,18 +257,43 @@ fn harness_fission_group_resampled_by_replicate() {
             engine.resources.noise_fork = fork;
             let mut system = FissionSystem::new();
             run(&mut engine, &mut system, check, check + 1);
-            engine.resources.fission_log.first().expect("fission").members.clone()
+            engine
+                .resources
+                .fission_log
+                .first()
+                .expect("fission")
+                .members
+                .clone()
         };
         let plain = pick(None);
         // Replicate 0 is the unforked run by definition.
-        assert_eq!(pick(Some(NoiseFork { tick: check - 100, replicate: 0 })), plain);
-        if pick(Some(NoiseFork { tick: check - 100, replicate: 3 })) != plain {
+        assert_eq!(
+            pick(Some(NoiseFork {
+                tick: check - 100,
+                replicate: 0
+            })),
+            plain
+        );
+        if pick(Some(NoiseFork {
+            tick: check - 100,
+            replicate: 3,
+        })) != plain
+        {
             differs += 1;
         }
         // A fork after the check changes nothing.
-        assert_eq!(pick(Some(NoiseFork { tick: check + 1, replicate: 3 })), plain);
+        assert_eq!(
+            pick(Some(NoiseFork {
+                tick: check + 1,
+                replicate: 3
+            })),
+            plain
+        );
     }
-    assert!(differs >= 1, "replicate 3 resamples the group in at least one of 8 seeds");
+    assert!(
+        differs >= 1,
+        "replicate 3 resamples the group in at least one of 8 seeds"
+    );
 }
 
 #[test]
@@ -219,15 +303,30 @@ fn harness_fission_founds_daughter() {
     let (mut engine, entities) = world(seed, bushes, &village(32));
     let mut system = FissionSystem::new();
     let check = tick_at(28, 360);
-    let before = |e: &SimEngine, kind| e.resources.settlements[&1].stockpile.get(&kind).copied().unwrap_or(0);
-    let (food0, wood0) = (before(&engine, ResourceKind::Food), before(&engine, ResourceKind::Wood));
+    let before = |e: &SimEngine, kind| {
+        e.resources.settlements[&1]
+            .stockpile
+            .get(&kind)
+            .copied()
+            .unwrap_or(0)
+    };
+    let (food0, wood0) = (
+        before(&engine, ResourceKind::Food),
+        before(&engine, ResourceKind::Wood),
+    );
     run(&mut engine, &mut system, check, check + 1);
     let record = engine.resources.fission_log[0].clone();
     // Food and wood are conserved at departure: parent + pending = before.
     assert_eq!(record.food_taken, 100 * 11 / 32);
     assert_eq!(record.wood_taken, 30 * 11 / 32);
-    assert_eq!(before(&engine, ResourceKind::Food) + record.food_taken, food0);
-    assert_eq!(before(&engine, ResourceKind::Wood) + record.wood_taken, wood0);
+    assert_eq!(
+        before(&engine, ResourceKind::Food) + record.food_taken,
+        food0
+    );
+    assert_eq!(
+        before(&engine, ResourceKind::Wood) + record.wood_taken,
+        wood0
+    );
     // The group walks: three founders arrive at the site.
     assert_eq!(entities.len(), 32);
     let mut moved = 0;
@@ -243,14 +342,20 @@ fn harness_fission_founds_daughter() {
         .resources
         .building_kinds
         .iter()
-        .find(|(tile, kind)| **kind == BuildingKind::Hearth && tile.0.abs_diff(SITE.0).max(tile.1.abs_diff(SITE.1)) <= 2)
+        .find(|(tile, kind)| {
+            **kind == BuildingKind::Hearth
+                && tile.0.abs_diff(SITE.0).max(tile.1.abs_diff(SITE.1)) <= 2
+        })
         .map(|(tile, _)| tile)
         .expect("daughter hearth");
     let shelters = engine
         .resources
         .building_kinds
         .iter()
-        .filter(|(tile, kind)| **kind == BuildingKind::Shelter && tile.0.abs_diff(hearth.0).max(tile.1.abs_diff(hearth.1)) <= 3)
+        .filter(|(tile, kind)| {
+            **kind == BuildingKind::Shelter
+                && tile.0.abs_diff(hearth.0).max(tile.1.abs_diff(hearth.1)) <= 3
+        })
         .count();
     assert_eq!(shelters, 2);
     assert_eq!(engine.resources.building_event_queue.len(), 3);
@@ -263,16 +368,42 @@ fn harness_fission_founds_daughter() {
     let parent = &engine.resources.settlements[&1];
     let daughter = &engine.resources.settlements[&2];
     for id in &record.members {
-        assert!(daughter.member_agents.contains(id) && !parent.member_agents.contains(id), "agent {id} moved");
+        assert!(
+            daughter.member_agents.contains(id) && !parent.member_agents.contains(id),
+            "agent {id} moved"
+        );
     }
     assert_eq!(daughter.member_agents.len(), 11);
     assert_eq!(parent.member_agents.len(), 21);
     assert_eq!(daughter.parent, Some(1));
     // The pending store is delivered: totals conserved.
-    assert_eq!(daughter.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0), record.food_taken);
-    assert_eq!(daughter.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0), record.wood_taken);
     assert_eq!(
-        parent.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) + daughter.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0),
+        daughter
+            .stockpile
+            .get(&ResourceKind::Food)
+            .copied()
+            .unwrap_or(0),
+        record.food_taken
+    );
+    assert_eq!(
+        daughter
+            .stockpile
+            .get(&ResourceKind::Wood)
+            .copied()
+            .unwrap_or(0),
+        record.wood_taken
+    );
+    assert_eq!(
+        parent
+            .stockpile
+            .get(&ResourceKind::Food)
+            .copied()
+            .unwrap_or(0)
+            + daughter
+                .stockpile
+                .get(&ResourceKind::Food)
+                .copied()
+                .unwrap_or(0),
         food0
     );
     assert_eq!(engine.world.query::<&Founding>().iter().count(), 0);
@@ -294,14 +425,28 @@ fn harness_fission_timeout_and_cancel() {
     assert_eq!(engine.resources.tallies.fissions_cancelled, 1);
     assert_eq!(engine.resources.tallies.fissions, 0);
     assert!(engine.resources.fission_log[0].cancelled_tick.is_some());
-    assert_eq!(engine.world.query::<&Founding>().iter().count(), 0, "markers removed");
-    assert_eq!(engine.resources.settlements[&1].stockpile[&ResourceKind::Food], food0, "store returned");
+    assert_eq!(
+        engine.world.query::<&Founding>().iter().count(),
+        0,
+        "markers removed"
+    );
+    assert_eq!(
+        engine.resources.settlements[&1].stockpile[&ResourceKind::Food],
+        food0,
+        "store returned"
+    );
     assert_eq!(engine.resources.settlements[&1].member_agents.len(), 32);
     // Timeout far from every hearth: the group settles where its leader stands.
     let (mut engine, _) = world(seed, bushes, &village(32));
     let mut system = FissionSystem::new();
     run(&mut engine, &mut system, check, check + 1);
-    let leader = engine.world.query::<&Founding>().iter().next().map(|(_, f)| f.leader).expect("leader");
+    let leader = engine
+        .world
+        .query::<&Founding>()
+        .iter()
+        .next()
+        .map(|(_, f)| f.leader)
+        .expect("leader");
     let spot = (30, 50);
     for (_, (agent, pos)) in engine.world.query_mut::<(&Agent, &mut Position)>() {
         if agent.id == leader {
@@ -310,14 +455,22 @@ fn harness_fission_timeout_and_cancel() {
     }
     run(&mut engine, &mut system, check + 1, check + 2 * 1440 + 1);
     assert!(engine.resources.fission_log[0].settled_at_leader);
-    assert_eq!(engine.resources.building_kinds.get(&spot), Some(&BuildingKind::Hearth));
+    assert_eq!(
+        engine.resources.building_kinds.get(&spot),
+        Some(&BuildingKind::Hearth)
+    );
     // Review round 1, M1: every founder now walks to the placed hearth.
     for (_, founding) in engine.world.query::<&Founding>().iter() {
         assert_eq!(founding.site, spot);
     }
     // No daughter forms here (no SettlementSystem), so one day later it is
     // cancelled and the hearth retired.
-    run(&mut engine, &mut system, check + 2 * 1440 + 1, check + 3 * 1440 + 2);
+    run(
+        &mut engine,
+        &mut system,
+        check + 2 * 1440 + 1,
+        check + 3 * 1440 + 2,
+    );
     assert_eq!(engine.resources.tallies.fissions_cancelled, 1);
     assert!(engine.resources.retired_hearths.contains(&spot));
 }
@@ -332,7 +485,12 @@ fn harness_remnant_merges() {
     let mut empty = Settlement::new_with_id(3, 0);
     empty.formation_tile = (10, 50);
     for id in [101u64, 102] {
-        engine.world.spawn((Position::new(50, 50), Agent { id }, AgentState::Idle, Lineage { key: id, births: 0 }));
+        engine.world.spawn((
+            Position::new(50, 50),
+            Agent { id },
+            AgentState::Idle,
+            Lineage { key: id, births: 0 },
+        ));
         remnant.add_member_agent(id);
     }
     engine.resources.settlements.insert(2, remnant);
@@ -340,18 +498,42 @@ fn harness_remnant_merges() {
     let mut system = FissionSystem::new();
     let start = tick_at(3, 600);
     run(&mut engine, &mut system, start, start + 61);
-    assert!(!engine.resources.settlements.contains_key(&3), "an empty settlement dissolves at once");
+    assert!(
+        !engine.resources.settlements.contains_key(&3),
+        "an empty settlement dissolves at once"
+    );
     assert!(engine.resources.retired_hearths.contains(&(10, 50)));
-    assert!(engine.resources.settlements.contains_key(&2), "a remnant waits 24 hours");
+    assert!(
+        engine.resources.settlements.contains_key(&2),
+        "a remnant waits 24 hours"
+    );
     run(&mut engine, &mut system, start + 61, start + 1440 + 61);
-    assert!(!engine.resources.settlements.contains_key(&2), "merged away");
+    assert!(
+        !engine.resources.settlements.contains_key(&2),
+        "merged away"
+    );
     assert!(engine.resources.retired_hearths.contains(&(50, 50)));
     assert_eq!(engine.resources.tallies.remnant_merges, 1);
     for id in [101u64, 102] {
-        assert!(engine.resources.settlements.values().all(|s| !s.member_agents.contains(&id)), "agent {id} is a non-member");
+        assert!(
+            engine
+                .resources
+                .settlements
+                .values()
+                .all(|s| !s.member_agents.contains(&id)),
+            "agent {id} is a non-member"
+        );
     }
-    assert!(engine.resources.dissolutions.iter().any(|(sid, _)| *sid == 2));
-    assert_eq!(engine.resources.settlements[&1].member_agents.len(), 30, "the village is untouched");
+    assert!(engine
+        .resources
+        .dissolutions
+        .iter()
+        .any(|(sid, _)| *sid == 2));
+    assert_eq!(
+        engine.resources.settlements[&1].member_agents.len(),
+        30,
+        "the village is untouched"
+    );
 }
 
 #[test]
@@ -394,12 +576,26 @@ fn harness_v17_regions_placed() {
             .map(|(tile, _)| tile)
             .expect("camp hearth");
         assert!(r.wild_regions.len() as u32 <= u32::from(v.wild_regions));
-        assert_eq!(r.worldgen_report.regions_requested, u32::from(v.wild_regions));
-        assert_eq!(r.worldgen_report.regions_placed as usize, r.wild_regions.len());
-        let reach = r.rules.agent.forage.map_or(0, |f| f.forage_radius).max(r.rules.society.firewood.map_or(0, |f| f.wood_radius));
+        assert_eq!(
+            r.worldgen_report.regions_requested,
+            u32::from(v.wild_regions)
+        );
+        assert_eq!(
+            r.worldgen_report.regions_placed as usize,
+            r.wild_regions.len()
+        );
+        let reach = r
+            .rules
+            .agent
+            .forage
+            .map_or(0, |f| f.forage_radius)
+            .max(r.rules.society.firewood.map_or(0, |f| f.wood_radius));
         for (i, region) in r.wild_regions.iter().enumerate() {
             let c = region.centre;
-            assert!((22..=28).contains(&distance(c, hearth)), "seed {seed}: centre {c:?}");
+            assert!(
+                (22..=28).contains(&distance(c, hearth)),
+                "seed {seed}: centre {c:?}"
+            );
             assert!(!r.water_tiles.contains_key(&c));
             for other in &r.wild_regions[..i] {
                 assert!(distance(c, other.centre) >= 20);
@@ -453,38 +649,80 @@ fn harness_fission_founds_daughter_in_a_whole_world() {
         }
     }
     assert!(departed.is_some(), "a group departed");
-    assert_eq!(engine.resources.tallies.fissions, 1, "a daughter was founded");
+    assert_eq!(
+        engine.resources.tallies.fissions, 1,
+        "a daughter was founded"
+    );
     let record = engine.resources.fission_log[0].clone();
     let daughter_id = record.daughter.expect("daughter");
     let daughter = &engine.resources.settlements[&daughter_id];
     let parent = &engine.resources.settlements[&record.parent];
     assert_eq!(daughter.parent, Some(record.parent));
     // The hearth is registered through the building queue and is the daughter's anchor.
-    assert_eq!(engine.resources.building_kinds.get(&daughter.formation_tile), Some(&BuildingKind::Hearth));
-    assert!(engine.resources.building_registry.values().any(|p| *p == daughter.formation_tile));
+    assert_eq!(
+        engine
+            .resources
+            .building_kinds
+            .get(&daughter.formation_tile),
+        Some(&BuildingKind::Hearth)
+    );
+    assert!(engine
+        .resources
+        .building_registry
+        .values()
+        .any(|p| *p == daughter.formation_tile));
     // Every living founder is a member of the daughter only, and no longer walks.
-    let living: BTreeSet<AgentId> = engine.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    let living: BTreeSet<AgentId> = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(_, a)| a.id)
+        .collect();
     for id in record.members.iter().filter(|id| living.contains(id)) {
-        assert!(daughter.member_agents.contains(id) && !parent.member_agents.contains(id), "agent {id}");
+        assert!(
+            daughter.member_agents.contains(id) && !parent.member_agents.contains(id),
+            "agent {id}"
+        );
     }
     assert_eq!(engine.world.query::<&Founding>().iter().count(), 0);
     // The store is delivered (nothing could be spent on the founding tick:
     // FissionSystem runs last) and the two shelters are the daughter's.
-    assert_eq!(daughter.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0), record.food_taken);
-    assert_eq!(daughter.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0), record.wood_taken);
+    assert_eq!(
+        daughter
+            .stockpile
+            .get(&ResourceKind::Food)
+            .copied()
+            .unwrap_or(0),
+        record.food_taken
+    );
+    assert_eq!(
+        daughter
+            .stockpile
+            .get(&ResourceKind::Wood)
+            .copied()
+            .unwrap_or(0),
+        record.wood_taken
+    );
     let shelters = engine
         .resources
         .building_kinds
         .iter()
         .filter(|(tile, kind)| {
             **kind == BuildingKind::Shelter
-                && tile.0.abs_diff(daughter.formation_tile.0).max(tile.1.abs_diff(daughter.formation_tile.1)) <= 3
+                && tile
+                    .0
+                    .abs_diff(daughter.formation_tile.0)
+                    .max(tile.1.abs_diff(daughter.formation_tile.1))
+                    <= 3
         })
         .map(|(tile, _)| *tile)
         .collect::<Vec<_>>();
     assert_eq!(shelters.len(), 2);
     for tile in shelters {
-        assert_eq!(engine.resources.building_owner.get(&tile), Some(&daughter_id));
+        assert_eq!(
+            engine.resources.building_owner.get(&tile),
+            Some(&daughter_id)
+        );
     }
     // Sticky membership: nobody else moved between the villages.
     assert_eq!(engine.resources.tallies.exclusivity_moves, 0);
@@ -507,7 +745,10 @@ fn harness_shared_bushes_count_once() {
     let shared = supply_per_day(&engine.resources, 1, 16);
     // Bushes x = 30..=36 lie within 16 of both (20, 20) and (44, 20); x = 37..=39 lie
     // beyond 16 of the first settlement, so they never enter its supply.
-    assert!((shared - alone / 2.0).abs() < 1e-9, "alone {alone}, shared {shared}");
+    assert!(
+        (shared - alone / 2.0).abs() < 1e-9,
+        "alone {alone}, shared {shared}"
+    );
     // Without the fission rule nothing is shared (v16 accounting).
     engine.resources.rules = WorldRules::game_v16(5);
     assert!((supply_per_day(&engine.resources, 1, 16) - alone).abs() < 1e-9);

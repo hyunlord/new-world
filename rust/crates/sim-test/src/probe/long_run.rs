@@ -2,7 +2,8 @@
 use serde_json::{json, Value};
 use sim_core::{
     components::{
-        Agent, AgentState, BuildingKind, Child, Elder, Hunger, Life, Position, SeekTarget, TargetKind,
+        Agent, AgentState, BuildingKind, Child, Elder, Hunger, Life, Position, SeekTarget,
+        TargetKind,
     },
     rules::{BirthRule, HousingCount},
 };
@@ -56,7 +57,14 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     let supply = source_count as f64 * source_supply_per_day(r.ticks_per_day);
     // The production gate plans against the annual mean when seasons are on.
     let planning_supply = r.rules.seasons.map_or(supply, |rule| {
-        supply * f64::from(rule.regen_permille.iter().map(|p| u32::from(*p)).sum::<u32>()) / 4000.0
+        supply
+            * f64::from(
+                rule.regen_permille
+                    .iter()
+                    .map(|p| u32::from(*p))
+                    .sum::<u32>(),
+            )
+            / 4000.0
     });
     let mut homes = BTreeMap::new();
     let mut settlements: Vec<_> = r.settlements.values().collect();
@@ -197,12 +205,22 @@ pub(super) fn check_maturation(engine: &SimEngine) -> Result<(), String> {
 pub(super) fn trace(engine: &SimEngine) -> Value {
     let mut agents: Vec<_> = engine
         .world
-        .query::<(&Agent, Option<&Child>, Option<&Life>, Option<&Elder>, Option<&SeekTarget>)>()
+        .query::<(
+            &Agent,
+            Option<&Child>,
+            Option<&Life>,
+            Option<&Elder>,
+            Option<&SeekTarget>,
+        )>()
         .iter()
         .map(|(_, (agent, child, life, elder, seek))| {
-            (agent.id, child.map(|child| child.born_tick),
-                life.map(|life| (life.born_tick, life.lifespan_ticks)), elder.is_some(),
-                seek.map(|seek| seek.tile))
+            (
+                agent.id,
+                child.map(|child| child.born_tick),
+                life.map(|life| (life.born_tick, life.lifespan_ticks)),
+                elder.is_some(),
+                seek.map(|seek| seek.tile),
+            )
         })
         .collect();
     agents.sort_by_key(|row| row.0);

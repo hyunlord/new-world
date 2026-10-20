@@ -45,8 +45,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
 use sim_core::components::{
     Agent, AgentId, AgentState, BodyHealth, Hunger, Inventory, Memory, Position, ResourceKind,
-    SeekTarget, Sleep, Social, TargetKind, Thirst, INVENTORY_CAPACITY,
-    SETTLEMENT_PROXIMITY_RADIUS,
+    SeekTarget, Sleep, Social, TargetKind, Thirst, INVENTORY_CAPACITY, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
@@ -96,7 +95,9 @@ fn make_stage1_engine(seed: u64, agent_count: u32) -> SimEngine {
             .expect("freshly spawned agent must still exist");
     }
     for &(x, y) in BULK_FOOD.iter() {
-        engine.resources.set_food_tile(x, y, RESOURCE_SOURCE_INFINITE);
+        engine
+            .resources
+            .set_food_tile(x, y, RESOURCE_SOURCE_INFINITE);
     }
     engine
 }
@@ -164,8 +165,11 @@ fn bulk_run(seed: u64, agents: u32, ticks: u64) -> Bulk {
             // A13 — gather-state frozen streak.
             let in_gather = matches!(
                 s.state,
-                AgentState::Seeking { target: TargetKind::GatherFood }
-                    | AgentState::Consuming { target: TargetKind::GatherFood }
+                AgentState::Seeking {
+                    target: TargetKind::GatherFood
+                } | AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
             );
             let g = gather_streak.entry(*id).or_insert(0);
             if in_gather {
@@ -176,8 +180,12 @@ fn bulk_run(seed: u64, agents: u32, ticks: u64) -> Bulk {
             }
 
             // A14 — Consuming{GatherFood} occupancy must be exactly 1 tick.
-            let in_consuming =
-                matches!(s.state, AgentState::Consuming { target: TargetKind::GatherFood });
+            let in_consuming = matches!(
+                s.state,
+                AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
+            );
             let c = consuming_streak.entry(*id).or_insert(0);
             if in_consuming {
                 *c += 1;
@@ -190,8 +198,12 @@ fn bulk_run(seed: u64, agents: u32, ticks: u64) -> Bulk {
 
             // A14 — complete Idle→…→Consuming{GatherFood}→Idle round-trip.
             if let Some(p) = prev.get(id) {
-                let was_consuming_gather =
-                    matches!(p.state, AgentState::Consuming { target: TargetKind::GatherFood });
+                let was_consuming_gather = matches!(
+                    p.state,
+                    AgentState::Consuming {
+                        target: TargetKind::GatherFood
+                    }
+                );
                 let now_idle = matches!(s.state, AgentState::Idle);
                 if was_consuming_gather && now_idle {
                     complete_cycles += 1;
@@ -287,9 +299,18 @@ fn harness_gather_a1_inventories_empty_at_tick_zero() {
         per_agent_max = per_agent_max.max(inv.total());
         count += 1;
     }
-    assert_eq!(count, 20, "A1: all 20 agents must carry an Inventory at spawn");
-    assert_eq!(sum, 0, "A1: sum of all inventory totals at tick 0 must be 0");
-    assert_eq!(per_agent_max, 0, "A1: per-agent max inventory total at tick 0 must be 0");
+    assert_eq!(
+        count, 20,
+        "A1: all 20 agents must carry an Inventory at spawn"
+    );
+    assert_eq!(
+        sum, 0,
+        "A1: sum of all inventory totals at tick 0 must be 0"
+    );
+    assert_eq!(
+        per_agent_max, 0,
+        "A1: per-agent max inventory total at tick 0 must be 0"
+    );
     println!("[gather A1] tick-0 inventories empty (sum=0, max=0, agents=20) ✓");
 }
 
@@ -352,7 +373,10 @@ fn harness_gather_a4_food_only() {
             + inv.get(ResourceKind::Wood)
             + inv.get(ResourceKind::Stone);
     }
-    assert_eq!(non_food, 0, "A4: only Food may be carried this slice; non-Food sum {non_food}");
+    assert_eq!(
+        non_food, 0,
+        "A4: only Food may be carried this slice; non-Food sum {non_food}"
+    );
     println!("[gather A4] non-Food carried sum == 0 ✓");
 }
 
@@ -375,20 +399,28 @@ fn harness_gather_a5_finite_conservation_single_agent() {
         if agent_food(&e, ent) > food_before
             && !matches!(
                 agent_state(&e, ent),
-                AgentState::Consuming { target: TargetKind::GatherFood }
+                AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
             )
         {
             completed = true;
             break;
         }
     }
-    assert!(completed, "A5: the single-agent pickup must complete within 300 ticks");
+    assert!(
+        completed,
+        "A5: the single-agent pickup must complete within 300 ticks"
+    );
 
     let gain = agent_food(&e, ent) - food_before;
     let tile_after = e.resources.food_tiles.get(&(12, 12)).copied().unwrap_or(0) as u32;
     let room = INVENTORY_CAPACITY - food_before;
     let expected = tile_before.min(room);
-    assert_eq!(gain, expected, "A5: Food gain must equal min(C, room) = {expected}");
+    assert_eq!(
+        gain, expected,
+        "A5: Food gain must equal min(C, room) = {expected}"
+    );
     assert_eq!(
         tile_before - tile_after,
         expected,
@@ -412,7 +444,8 @@ fn harness_gather_a6_infinite_source_no_sentinel_corruption() {
     let tile = (10u32, 10u32);
     let mut e = fixture_engine();
     let (ent, _) = spawn_gatherer(&mut e, tile.0, tile.1, 0);
-    e.resources.set_food_tile(tile.0, tile.1, RESOURCE_SOURCE_INFINITE);
+    e.resources
+        .set_food_tile(tile.0, tile.1, RESOURCE_SOURCE_INFINITE);
     // Regen DISABLED: ResourceRegenSystem only acts on tiles registered in
     // `food_source_max`. None is registered here, so it is a pure no-op AND it
     // skips the 255 sentinel anyway — nothing can heal a mid-span corruption.
@@ -436,7 +469,9 @@ fn harness_gather_a6_infinite_source_no_sentinel_corruption() {
             && agent_food(&e, ent) > food_before
             && !matches!(
                 agent_state(&e, ent),
-                AgentState::Consuming { target: TargetKind::GatherFood }
+                AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
             )
         {
             completed = true;
@@ -488,18 +523,26 @@ fn harness_gather_a7_capacity_boundary_conservation() {
             if agent_food(&e, ent) > food_before
                 && !matches!(
                     agent_state(&e, ent),
-                    AgentState::Consuming { target: TargetKind::GatherFood }
+                    AgentState::Consuming {
+                        target: TargetKind::GatherFood
+                    }
                 )
             {
                 completed = true;
                 break;
             }
         }
-        assert!(completed, "A7: the R=2 pickup must complete within 300 ticks");
+        assert!(
+            completed,
+            "A7: the R=2 pickup must complete within 300 ticks"
+        );
 
         let gain = agent_food(&e, ent) - food_before;
         let tile_after = e.resources.food_tiles.get(&(10, 10)).copied().unwrap_or(0);
-        assert_eq!(gain, r, "A7: Food gain must equal remaining room R={r} (NOT C={c})");
+        assert_eq!(
+            gain, r,
+            "A7: Food gain must equal remaining room R={r} (NOT C={c})"
+        );
         assert_eq!(
             tile_before - tile_after,
             r as u8,
@@ -529,8 +572,11 @@ fn harness_gather_a7_capacity_boundary_conservation() {
             e.tick();
             if matches!(
                 agent_state(&e, ent),
-                AgentState::Seeking { target: TargetKind::GatherFood }
-                    | AgentState::Consuming { target: TargetKind::GatherFood }
+                AgentState::Seeking {
+                    target: TargetKind::GatherFood
+                } | AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
             ) {
                 ever_gather_seek = true;
             }
@@ -575,12 +621,18 @@ fn harness_gather_a8_concurrent_conservation() {
         e.tick();
         let settled = !matches!(
             agent_state(&e, a),
-            AgentState::Seeking { target: TargetKind::GatherFood }
-                | AgentState::Consuming { target: TargetKind::GatherFood }
+            AgentState::Seeking {
+                target: TargetKind::GatherFood
+            } | AgentState::Consuming {
+                target: TargetKind::GatherFood
+            }
         ) && !matches!(
             agent_state(&e, b),
-            AgentState::Seeking { target: TargetKind::GatherFood }
-                | AgentState::Consuming { target: TargetKind::GatherFood }
+            AgentState::Seeking {
+                target: TargetKind::GatherFood
+            } | AgentState::Consuming {
+                target: TargetKind::GatherFood
+            }
         );
         // Stop once the tile is exhausted AND both agents have left gather states.
         if settled && !e.resources.food_tiles.contains_key(&(14, 14)) {
@@ -603,7 +655,10 @@ fn harness_gather_a8_concurrent_conservation() {
     );
     // tile_after is a u32 read of a u8 map (>=0 by type) — underflow would have
     // panicked on the saturating subtraction in production; assert it stayed in range.
-    assert!(tile_after <= c_total, "A8: tile count must never go below 0 / above C");
+    assert!(
+        tile_after <= c_total,
+        "A8: tile count must never go below 0 / above C"
+    );
     assert_eq!(
         agent_state(&e, a),
         AgentState::Idle,
@@ -614,7 +669,10 @@ fn harness_gather_a8_concurrent_conservation() {
         AgentState::Idle,
         "A8: agent B exits to Idle cleanly"
     );
-    println!("[gather A8] concurrent: gain {gain_a}+{gain_b}={total_removed} == C-after {} ✓", c_total - tile_after);
+    println!(
+        "[gather A8] concurrent: gain {gain_a}+{gain_b}={total_removed} == C-after {} ✓",
+        c_total - tile_after
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -643,12 +701,22 @@ fn harness_gather_a9_agent_moves_to_target() {
         let st = agent_state(&e, ent);
         let pos = agent_pos(&e, ent);
         let food = agent_food(&e, ent);
-        if matches!(st, AgentState::Seeking { target: TargetKind::GatherFood }) {
+        if matches!(
+            st,
+            AgentState::Seeking {
+                target: TargetKind::GatherFood
+            }
+        ) {
             seeking_dists.push(chebyshev(pos, target));
         }
         // The pickup lands on the Consuming{GatherFood} -> (food increases) tick.
         if food > prev_food
-            && matches!(prev_state, AgentState::Consuming { target: TargetKind::GatherFood })
+            && matches!(
+                prev_state,
+                AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
+            )
         {
             pickup_pos = Some(prev_pos);
             break;
@@ -671,9 +739,18 @@ fn harness_gather_a9_agent_moves_to_target() {
         );
     }
     let pp = pickup_pos.expect("A9: a pickup must complete");
-    assert_eq!(pp, target, "A9: pickup happens adjacent (on the target tile)");
-    assert_ne!(pp, start, "A9: pickup position must differ from the spawn position");
-    println!("[gather A9] traveled {:?} -> picked up at {:?} ✓", seeking_dists, pp);
+    assert_eq!(
+        pp, target,
+        "A9: pickup happens adjacent (on the target tile)"
+    );
+    assert_ne!(
+        pp, start,
+        "A9: pickup position must differ from the spawn position"
+    );
+    println!(
+        "[gather A9] traveled {:?} -> picked up at {:?} ✓",
+        seeking_dists, pp
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -739,7 +816,9 @@ fn harness_gather_a9b_radius_confounder_selects_in_range_tile() {
         e.tick();
         if matches!(
             agent_state(&e, ent),
-            AgentState::Seeking { target: TargetKind::GatherFood }
+            AgentState::Seeking {
+                target: TargetKind::GatherFood
+            }
         ) {
             if let Ok(seek) = e.world.get::<&SeekTarget>(ent) {
                 seek_target = Some(seek.tile);
@@ -747,7 +826,12 @@ fn harness_gather_a9b_radius_confounder_selects_in_range_tile() {
         }
         let food = agent_food(&e, ent);
         if food > prev_food
-            && matches!(prev_state, AgentState::Consuming { target: TargetKind::GatherFood })
+            && matches!(
+                prev_state,
+                AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
+            )
         {
             pickup_pos = Some(prev_pos);
             break;
@@ -812,7 +896,9 @@ fn harness_gather_a10_gather_does_not_reduce_hunger() {
         if agent_food(&e, ent) > food_before
             && !matches!(
                 agent_state(&e, ent),
-                AgentState::Consuming { target: TargetKind::GatherFood }
+                AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
             )
         {
             hunger_after = e.world.get::<&Hunger>(ent).map(|h| h.value).unwrap_or(0.0);
@@ -820,7 +906,10 @@ fn harness_gather_a10_gather_does_not_reduce_hunger() {
             break;
         }
     }
-    assert!(completed, "A10: a gather pickup must complete within 300 ticks");
+    assert!(
+        completed,
+        "A10: a gather pickup must complete within 300 ticks"
+    );
     assert!(
         hunger_after >= hunger_before,
         "A10: gather must NOT decrease Hunger; before {hunger_before}, after {hunger_after}"
@@ -863,8 +952,11 @@ fn harness_gather_a11_hunger_preempts_gather() {
         if hunger > 50.0
             && matches!(
                 agent_state(&e, ent),
-                AgentState::Seeking { target: TargetKind::GatherFood }
-                    | AgentState::Consuming { target: TargetKind::GatherFood }
+                AgentState::Seeking {
+                    target: TargetKind::GatherFood
+                } | AgentState::Consuming {
+                    target: TargetKind::GatherFood
+                }
             )
         {
             gather_ticks_while_hungry += 1;
@@ -882,7 +974,9 @@ fn harness_gather_a11_hunger_preempts_gather() {
         final_hunger < initial_hunger,
         "A11: the agent must actually eat (final Hunger {final_hunger} < initial {initial_hunger})"
     );
-    println!("[gather A11] 0 gather-ticks-while-hungry; hunger {initial_hunger} -> {final_hunger} ✓");
+    println!(
+        "[gather A11] 0 gather-ticks-while-hungry; hunger {initial_hunger} -> {final_hunger} ✓"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1060,23 +1154,39 @@ fn harness_gather_a16_lockstep_determinism() {
             .map(|(_, (a, inv))| (a.id, inv.get(ResourceKind::Food)))
             .collect();
         foods.sort_unstable();
-        let mut tiles: Vec<((u32, u32), u8)> =
-            e.resources.food_tiles.iter().map(|(k, v)| (*k, *v)).collect();
+        let mut tiles: Vec<((u32, u32), u8)> = e
+            .resources
+            .food_tiles
+            .iter()
+            .map(|(k, v)| (*k, *v))
+            .collect();
         tiles.sort_unstable();
         (positions, foods, tiles)
     }
     let a = digest(2000);
     let b = digest(2000);
-    assert_eq!(a.0, b.0, "A16: sorted agent positions must be byte-identical");
-    assert_eq!(a.1, b.1, "A16: per-agent Food inventories must be byte-identical");
+    assert_eq!(
+        a.0, b.0,
+        "A16: sorted agent positions must be byte-identical"
+    );
+    assert_eq!(
+        a.1, b.1,
+        "A16: per-agent Food inventories must be byte-identical"
+    );
     assert_eq!(a.2, b.2, "A16: sorted food_tiles must be byte-identical");
     // Locked non-vacuity gate (Assertion 16, second clause): gathering must have
     // actually occurred in BOTH runs, otherwise determinism is proven only over
     // non-gather behaviour and says nothing about the new gather hot path.
     let food_a: u32 = a.1.iter().map(|(_, f)| *f).sum();
     let food_b: u32 = b.1.iter().map(|(_, f)| *f).sum();
-    assert!(food_a > 0, "A16: run A must have gathered (total carried Food > 0)");
-    assert!(food_b > 0, "A16: run B must have gathered (total carried Food > 0)");
+    assert!(
+        food_a > 0,
+        "A16: run A must have gathered (total carried Food > 0)"
+    );
+    assert!(
+        food_b > 0,
+        "A16: run B must have gathered (total carried Food > 0)"
+    );
     println!(
         "[gather A16] determinism: {} agents, {} food tiles identical ✓ (carried Food a={} b={})",
         a.1.len(),
@@ -1093,11 +1203,17 @@ fn harness_gather_a16_lockstep_determinism() {
 #[test]
 fn harness_gather_a17_suppresses_movement_fsm() {
     assert!(
-        AgentState::Seeking { target: TargetKind::GatherFood }.suppresses_movement(),
+        AgentState::Seeking {
+            target: TargetKind::GatherFood
+        }
+        .suppresses_movement(),
         "A17: Seeking{{GatherFood}} must suppress Brownian movement"
     );
     assert!(
-        !AgentState::Consuming { target: TargetKind::GatherFood }.suppresses_movement(),
+        !AgentState::Consuming {
+            target: TargetKind::GatherFood
+        }
+        .suppresses_movement(),
         "A17: Consuming{{GatherFood}} must NOT suppress movement (decision owns its exit)"
     );
     println!("[gather A17] suppresses_movement: Seeking=true, Consuming=false ✓");

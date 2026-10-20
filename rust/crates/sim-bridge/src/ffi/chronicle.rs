@@ -118,13 +118,17 @@ impl ChronicleRows {
         self.other.push(entry.other.map_or(-1, signed));
         self.third.push(entry.third.map_or(-1, signed));
         self.settlement.push(entry.settlement.map_or(-1, i64::from));
-        self.settlement2.push(entry.settlement2.map_or(-1, i64::from));
+        self.settlement2
+            .push(entry.settlement2.map_or(-1, i64::from));
         self.cause.push(i32::from(entry.cause));
         self.value.push(entry.value);
     }
 
     fn from_entries<'a>(found: bool, entries: impl Iterator<Item = &'a ChronicleEntry>) -> Self {
-        let mut rows = Self { found, ..Self::default() };
+        let mut rows = Self {
+            found,
+            ..Self::default()
+        };
         for entry in entries {
             rows.push(entry);
         }
@@ -151,7 +155,9 @@ pub fn collect_settlement_chronicle(chronicle: &Chronicle, settlement_id: i64) -
 /// Entries `start ..` (at most `max`, clamped to 1..=512) plus `next` and `total`.
 pub fn collect_chronicle_since(chronicle: &Chronicle, start: i64, max: i64) -> ChronicleRows {
     let total = chronicle.len();
-    let start = usize::try_from(start.max(0)).unwrap_or(usize::MAX).min(total);
+    let start = usize::try_from(start.max(0))
+        .unwrap_or(usize::MAX)
+        .min(total);
     let max = max.clamp(1, CHRONICLE_PAGE_MAX) as usize;
     let end = start.saturating_add(max).min(total);
     let mut rows = ChronicleRows::from_entries(true, chronicle.entries()[start..end].iter());
@@ -187,8 +193,14 @@ pub(super) fn rows_to_dict(rows: ChronicleRows, with_page: bool) -> VarDictionar
     dict.set("subject", PackedInt64Array::from(rows.subject.as_slice()));
     dict.set("other", PackedInt64Array::from(rows.other.as_slice()));
     dict.set("third", PackedInt64Array::from(rows.third.as_slice()));
-    dict.set("settlement", PackedInt64Array::from(rows.settlement.as_slice()));
-    dict.set("settlement2", PackedInt64Array::from(rows.settlement2.as_slice()));
+    dict.set(
+        "settlement",
+        PackedInt64Array::from(rows.settlement.as_slice()),
+    );
+    dict.set(
+        "settlement2",
+        PackedInt64Array::from(rows.settlement2.as_slice()),
+    );
     dict.set("cause", PackedInt32Array::from(rows.cause.as_slice()));
     dict.set("value", PackedInt64Array::from(rows.value.as_slice()));
     if with_page {
@@ -206,16 +218,65 @@ mod tests {
     fn chronicle() -> Chronicle {
         let mut chronicle = Chronicle::new();
         // Founder 1 (no parents), founder 2, child 5 of 1 and 2; 2 dies.
-        chronicle.ensure_person(1, || Some(PersonRecord { female: Some(true), born_tick: Some(-9000), temperament: Some([100, 200, 300, 400]), ..PersonRecord::default() }));
-        chronicle.ensure_person(2, || Some(PersonRecord { female: Some(false), born_tick: Some(-8000), ..PersonRecord::default() }));
-        chronicle.push(ChronicleEntry::new(0, ChronicleKind::SettlementFormed).settlement(Some(1)).value(2));
-        chronicle.push(ChronicleEntry::new(0, ChronicleKind::FoundingMember).subject(1).settlement(Some(1)));
-        chronicle.push(ChronicleEntry::new(0, ChronicleKind::FoundingMember).subject(2).settlement(Some(1)));
-        chronicle.ensure_person(5, || Some(PersonRecord { mother: Some(1), father: Some(2), born_tick: Some(70), ..PersonRecord::default() }));
-        chronicle.push(ChronicleEntry::new(70, ChronicleKind::Born).subject(5).other(Some(1)).third(Some(2)).settlement(Some(1)));
+        chronicle.ensure_person(1, || {
+            Some(PersonRecord {
+                female: Some(true),
+                born_tick: Some(-9000),
+                temperament: Some([100, 200, 300, 400]),
+                ..PersonRecord::default()
+            })
+        });
+        chronicle.ensure_person(2, || {
+            Some(PersonRecord {
+                female: Some(false),
+                born_tick: Some(-8000),
+                ..PersonRecord::default()
+            })
+        });
+        chronicle.push(
+            ChronicleEntry::new(0, ChronicleKind::SettlementFormed)
+                .settlement(Some(1))
+                .value(2),
+        );
+        chronicle.push(
+            ChronicleEntry::new(0, ChronicleKind::FoundingMember)
+                .subject(1)
+                .settlement(Some(1)),
+        );
+        chronicle.push(
+            ChronicleEntry::new(0, ChronicleKind::FoundingMember)
+                .subject(2)
+                .settlement(Some(1)),
+        );
+        chronicle.ensure_person(5, || {
+            Some(PersonRecord {
+                mother: Some(1),
+                father: Some(2),
+                born_tick: Some(70),
+                ..PersonRecord::default()
+            })
+        });
+        chronicle.push(
+            ChronicleEntry::new(70, ChronicleKind::Born)
+                .subject(5)
+                .other(Some(1))
+                .third(Some(2))
+                .settlement(Some(1)),
+        );
         chronicle.close_person(2, 90, 3, PersonRecord::default);
-        chronicle.push(ChronicleEntry::new(90, ChronicleKind::Died).subject(2).other(Some(1)).settlement(Some(1)).cause(3).value(8090));
-        chronicle.push(ChronicleEntry::new(90, ChronicleKind::Widowed).subject(1).other(Some(2)));
+        chronicle.push(
+            ChronicleEntry::new(90, ChronicleKind::Died)
+                .subject(2)
+                .other(Some(1))
+                .settlement(Some(1))
+                .cause(3)
+                .value(8090),
+        );
+        chronicle.push(
+            ChronicleEntry::new(90, ChronicleKind::Widowed)
+                .subject(1)
+                .other(Some(2)),
+        );
         chronicle
     }
 
@@ -224,11 +285,20 @@ mod tests {
         let mut world = hecs::World::new();
         let entity = world.spawn((Agent { id: 7 },));
         let other = world.spawn((1u8,));
-        assert_eq!(collect_agent_id(&world, signed(entity.to_bits().get())), Some(7));
-        assert_eq!(collect_agent_id(&world, signed(other.to_bits().get())), None);
+        assert_eq!(
+            collect_agent_id(&world, signed(entity.to_bits().get())),
+            Some(7)
+        );
+        assert_eq!(
+            collect_agent_id(&world, signed(other.to_bits().get())),
+            None
+        );
         assert_eq!(collect_agent_id(&world, 0), None);
         world.despawn(entity).expect("despawn");
-        assert_eq!(collect_agent_id(&world, signed(entity.to_bits().get())), None);
+        assert_eq!(
+            collect_agent_id(&world, signed(entity.to_bits().get())),
+            None
+        );
     }
 
     #[test]
@@ -238,7 +308,15 @@ mod tests {
         let chronicle = chronicle();
         let dead = collect_person(&world, &chronicle, 2);
         assert!(dead.found && !dead.alive);
-        assert_eq!((dead.female, dead.born_tick, dead.died_tick, dead.death_reason), (0, -8000, 90, 3));
+        assert_eq!(
+            (
+                dead.female,
+                dead.born_tick,
+                dead.died_tick,
+                dead.death_reason
+            ),
+            (0, -8000, 90, 3)
+        );
         assert_eq!(dead.temperament, [-1; 4]);
         let history = collect_person_chronicle(&chronicle, 2);
         assert!(history.found);
@@ -254,11 +332,20 @@ mod tests {
         let chronicle = chronicle();
         let founder = collect_person(&world, &chronicle, 1);
         assert!(founder.found && founder.alive);
-        assert_eq!((founder.mother, founder.father, founder.female), (-1, -1, 1));
+        assert_eq!(
+            (founder.mother, founder.father, founder.female),
+            (-1, -1, 1)
+        );
         assert_eq!(founder.temperament, [100, 200, 300, 400]);
         let child = collect_person(&world, &chronicle, 5);
-        assert!(child.found && !child.alive, "no living entity with id 5 in this world");
-        assert_eq!((child.mother, child.father, child.born_tick, child.died_tick), (1, 2, 70, -1));
+        assert!(
+            child.found && !child.alive,
+            "no living entity with id 5 in this world"
+        );
+        assert_eq!(
+            (child.mother, child.father, child.born_tick, child.died_tick),
+            (1, 2, 70, -1)
+        );
     }
 
     #[test]
@@ -267,8 +354,14 @@ mod tests {
         let chronicle = chronicle();
         let nobody = collect_person(&world, &chronicle, 999);
         assert!(!nobody.found && !nobody.alive);
-        assert_eq!((nobody.female, nobody.born_tick, nobody.mother), (-1, -1, -1));
-        assert_eq!(collect_person_chronicle(&chronicle, 999), ChronicleRows::default());
+        assert_eq!(
+            (nobody.female, nobody.born_tick, nobody.mother),
+            (-1, -1, -1)
+        );
+        assert_eq!(
+            collect_person_chronicle(&chronicle, 999),
+            ChronicleRows::default()
+        );
         assert!(!collect_settlement_chronicle(&chronicle, 42).found);
         assert!(!collect_settlement_chronicle(&chronicle, -1).found);
         assert!(!collect_person(&world, &chronicle, -1).found);
@@ -283,7 +376,11 @@ mod tests {
         let all = collect_chronicle_since(&chronicle, 0, 10_000);
         assert_eq!((all.tick.len(), all.next, all.total), (6, 6, 6));
         let one = collect_chronicle_since(&chronicle, 2, 0);
-        assert_eq!((one.tick.len(), one.next), (1, 3), "max below 1 reads one entry");
+        assert_eq!(
+            (one.tick.len(), one.next),
+            (1, 3),
+            "max below 1 reads one entry"
+        );
         let negative = collect_chronicle_since(&chronicle, -5, 2);
         assert_eq!((negative.kind, negative.next), (vec![12, 1], 2));
         let past = collect_chronicle_since(&chronicle, 99, 5);

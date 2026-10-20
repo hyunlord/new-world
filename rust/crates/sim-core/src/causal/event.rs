@@ -715,7 +715,13 @@ mod tests {
             tick: 7,
         };
         match ev {
-            CausalEvent::BuildingPlaced { id, parent, position, radius, tick } => {
+            CausalEvent::BuildingPlaced {
+                id,
+                parent,
+                position,
+                radius,
+                tick,
+            } => {
                 assert_eq!(id, 0);
                 assert_eq!(parent, None);
                 assert_eq!(position, (32, 32));
@@ -735,7 +741,14 @@ mod tests {
             region: DirtyRegion::new(10, 10, 20, 20),
             tick: 1,
         };
-        if let CausalEvent::StampDirty { id, parent, channel, region, tick } = ev {
+        if let CausalEvent::StampDirty {
+            id,
+            parent,
+            channel,
+            region,
+            tick,
+        } = ev
+        {
             assert_eq!(id, 1);
             assert_eq!(parent, Some(0));
             assert_eq!(channel, InfluenceChannel::Warmth);
@@ -758,7 +771,15 @@ mod tests {
             new: 200.0,
             tick: 1,
         };
-        if let CausalEvent::InfluenceChanged { id, parent, channel, old, new, .. } = ev {
+        if let CausalEvent::InfluenceChanged {
+            id,
+            parent,
+            channel,
+            old,
+            new,
+            ..
+        } = ev
+        {
             assert_eq!(id, 7);
             assert_eq!(parent, Some(1));
             assert_eq!(channel, InfluenceChannel::Spiritual);
@@ -990,7 +1011,14 @@ mod tests {
             tick: 833,
         };
         match ev.clone() {
-            CausalEvent::AgentDied { id, parent, agent, position, reason, tick } => {
+            CausalEvent::AgentDied {
+                id,
+                parent,
+                agent,
+                position,
+                reason,
+                tick,
+            } => {
                 assert_eq!(id, 500);
                 assert_eq!(parent, None);
                 assert_eq!(agent, 7);

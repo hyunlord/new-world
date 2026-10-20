@@ -7,26 +7,26 @@
 //! - Mohs scale (1812) for hardness.
 //! - Callister, *Materials Science and Engineering* (yield, fracture).
 
-pub mod id;
 pub mod category;
-pub mod terrain;
-pub mod error;
-pub mod properties;
 pub mod definition;
 pub mod derivation;
+pub mod error;
 pub mod explanation;
-pub mod registry;
+pub mod id;
 pub mod loader;
+pub mod properties;
+pub mod registry;
+pub mod terrain;
 
-pub use id::MaterialId;
 pub use category::MaterialCategory;
-pub use terrain::TerrainType;
-pub use error::MaterialError;
-pub use properties::MaterialProperties;
 pub use definition::MaterialDef;
 pub use derivation::{
     AutoDerivedStats, DerivedStatKind, IRON_AXE_BLUNT, IRON_AXE_CUT, IRON_AXE_DURABILITY,
 };
-pub use explanation::{Explanation, PropertyKind, explain};
+pub use error::MaterialError;
+pub use explanation::{explain, Explanation, PropertyKind};
+pub use id::MaterialId;
+pub use loader::{load_directory, load_ron, MaterialDefRaw, MaterialFile, CURRENT_SCHEMA_VERSION};
+pub use properties::MaterialProperties;
 pub use registry::MaterialRegistry;
-pub use loader::{CURRENT_SCHEMA_VERSION, MaterialDefRaw, MaterialFile, load_directory, load_ron};
+pub use terrain::TerrainType;

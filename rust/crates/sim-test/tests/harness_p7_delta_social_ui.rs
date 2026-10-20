@@ -79,7 +79,9 @@ fn expected_tag(state: AgentState) -> u8 {
     match state {
         AgentState::Idle => 0,
         AgentState::Seeking { .. } => 1,
-        AgentState::Consuming { target: TargetKind::Agent(_) } => 2,
+        AgentState::Consuming {
+            target: TargetKind::Agent(_),
+        } => 2,
         AgentState::Consuming { .. } => 3,
     }
 }
@@ -155,9 +157,15 @@ fn harness_state_tag_row_count_matches_agent_count() {
     let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
     let states = [
         AgentState::Idle,
-        AgentState::Seeking { target: TargetKind::Agent(7) },
-        AgentState::Consuming { target: TargetKind::Agent(8) },
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Agent(7),
+        },
+        AgentState::Consuming {
+            target: TargetKind::Agent(8),
+        },
+        AgentState::Consuming {
+            target: TargetKind::Food,
+        },
     ];
     for (i, s) in states.iter().enumerate() {
         let entity = engine.spawn_agent(2 + i as u32, 2);
@@ -179,7 +187,10 @@ fn harness_state_tag_seeking_non_agent_target() {
     let tag = snapshot_single_state_tag(AgentState::Seeking {
         target: TargetKind::Food,
     });
-    assert_eq!(tag, 1, "A6: Seeking{{Food}} must still produce state_tag == 1");
+    assert_eq!(
+        tag, 1,
+        "A6: Seeking{{Food}} must still produce state_tag == 1"
+    );
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -195,8 +206,8 @@ fn harness_state_tag_matches_live_agentstate_same_query() {
     let rows = collect_agent_snapshot(&engine.world);
     for row in &rows {
         // Re-construct the Entity from raw bits for the cross-check.
-        let entity = hecs::Entity::from_bits(row.entity_bits)
-            .expect("entity_bits is a valid hecs::Entity");
+        let entity =
+            hecs::Entity::from_bits(row.entity_bits).expect("entity_bits is a valid hecs::Entity");
         let live = *engine
             .world
             .get::<&AgentState>(entity)
@@ -217,7 +228,11 @@ fn harness_state_tag_matches_live_agentstate_same_query() {
 fn harness_relationship_snapshot_empty_when_no_relationships() {
     let engine = SimEngine::new(16, 16, MaterialRegistry::new());
     let rows = collect_relationship_snapshot(&engine.resources);
-    assert_eq!(rows.len(), 0, "A8: empty relationships must yield empty rows");
+    assert_eq!(
+        rows.len(),
+        0,
+        "A8: empty relationships must yield empty rows"
+    );
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -313,7 +328,11 @@ fn harness_relationship_snapshot_excludes_negative_values() {
     let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
     insert_pair(&mut engine.resources, 1, 2, -0.1, -0.1);
     let rows = collect_relationship_snapshot(&engine.resources);
-    assert_eq!(rows.len(), 0, "A13: negative-only pair must be filtered by > 0");
+    assert_eq!(
+        rows.len(),
+        0,
+        "A13: negative-only pair must be filtered by > 0"
+    );
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -356,8 +375,7 @@ fn harness_relationship_snapshot_one_row_per_pair_after_two_inserts_same_pair() 
 fn harness_end_to_end_socializing_pair_produces_snapshot_state_tag_2() {
     use sim_systems::runtime::decision::REQUIRED_INTERACTION_PROGRESS;
 
-    let (mut engine, entity_1, entity_2, _id_1, _id_2, rel_key) =
-        build_phase7_gamma_scenario();
+    let (mut engine, entity_1, entity_2, _id_1, _id_2, rel_key) = build_phase7_gamma_scenario();
 
     let mut found_tick: Option<u64> = None;
     for _ in 0..80 {
@@ -374,8 +392,12 @@ fn harness_end_to_end_socializing_pair_produces_snapshot_state_tag_2() {
             .get(&rel_key)
             .copied()
             .unwrap_or(0);
-        if matches!(s1, AgentState::Consuming { target: TargetKind::Agent(_) })
-            && progress < REQUIRED_INTERACTION_PROGRESS
+        if matches!(
+            s1,
+            AgentState::Consuming {
+                target: TargetKind::Agent(_)
+            }
+        ) && progress < REQUIRED_INTERACTION_PROGRESS
         {
             found_tick = Some(now);
             break;
@@ -408,8 +430,7 @@ fn harness_end_to_end_socializing_pair_produces_snapshot_state_tag_2() {
 // ────────────────────────────────────────────────────────────────────────
 #[test]
 fn harness_end_to_end_relationship_snapshot_after_completed_interaction() {
-    let (mut engine, entity_1, entity_2, id_1, id_2, rel_key) =
-        build_phase7_gamma_scenario();
+    let (mut engine, entity_1, entity_2, id_1, id_2, rel_key) = build_phase7_gamma_scenario();
     for _ in 0..80 {
         engine.tick();
     }
@@ -417,7 +438,11 @@ fn harness_end_to_end_relationship_snapshot_after_completed_interaction() {
     let matched: Vec<&RelationshipSnapshotRow> = rows
         .iter()
         .filter(|r| {
-            let (lo, hi) = if id_1 <= id_2 { (id_1, id_2) } else { (id_2, id_1) };
+            let (lo, hi) = if id_1 <= id_2 {
+                (id_1, id_2)
+            } else {
+                (id_2, id_1)
+            };
             r.id_a as u64 == lo && r.id_b as u64 == hi
         })
         .collect();
@@ -456,8 +481,7 @@ fn harness_end_to_end_relationship_snapshot_after_completed_interaction() {
 // ────────────────────────────────────────────────────────────────────────
 #[test]
 fn harness_end_to_end_state_tag_idle_after_interaction() {
-    let (mut engine, entity_1, entity_2, _id_1, _id_2, _rel_key) =
-        build_phase7_gamma_scenario();
+    let (mut engine, entity_1, entity_2, _id_1, _id_2, _rel_key) = build_phase7_gamma_scenario();
     for _ in 0..80 {
         engine.tick();
     }

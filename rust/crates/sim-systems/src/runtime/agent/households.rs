@@ -81,7 +81,10 @@ pub fn households(world: &World, members: &BTreeSet<AgentId>) -> Vec<Vec<AgentId
 /// result as before).
 #[cfg_attr(
     not(test),
-    allow(dead_code, reason = "production calls select_departure_explained; the old entry point stays for its tests")
+    allow(
+        dead_code,
+        reason = "production calls select_departure_explained; the old entry point stays for its tests"
+    )
 )]
 pub(crate) fn select_departure(
     ranked: &[(u64, AgentId, bool)],
@@ -164,7 +167,9 @@ pub(crate) fn select_departure_explained(
         if !chosen.contains_key(id) && chosen.len() + group.len() <= rule.group_max as usize {
             chosen.entry(*id).or_insert(DepartCause::Seed);
             for member in group {
-                chosen.entry(*member).or_insert_with(|| household_cause(member));
+                chosen
+                    .entry(*member)
+                    .or_insert_with(|| household_cause(member));
             }
         }
     }
@@ -176,9 +181,13 @@ pub(crate) fn select_departure_explained(
             .min()
     });
     for group in fill {
-        if !group.iter().any(|id| chosen.contains_key(id)) && chosen.len() + group.len() <= k as usize {
+        if !group.iter().any(|id| chosen.contains_key(id))
+            && chosen.len() + group.len() <= k as usize
+        {
             for member in group {
-                chosen.entry(*member).or_insert_with(|| household_cause(member));
+                chosen
+                    .entry(*member)
+                    .or_insert_with(|| household_cause(member));
             }
         }
     }
@@ -455,7 +464,9 @@ mod tests {
                 .min()
         });
         for group in fill {
-            if !group.iter().any(|id| chosen.contains(id)) && chosen.len() + group.len() <= k as usize {
+            if !group.iter().any(|id| chosen.contains(id))
+                && chosen.len() + group.len() <= k as usize
+            {
                 chosen.extend(group);
             }
         }
@@ -495,7 +506,11 @@ mod tests {
     /// One random settlement: adults (ids < 100), elders (200..), children
     /// (100..200) in households of couples, single parents and singles.
     /// (ranked rows, households, couples) of one random settlement.
-    type Case = (Vec<(u64, AgentId, bool)>, Vec<Vec<AgentId>>, Vec<[AgentId; 2]>);
+    type Case = (
+        Vec<(u64, AgentId, bool)>,
+        Vec<Vec<AgentId>>,
+        Vec<[AgentId; 2]>,
+    );
 
     fn random_case(stream: &mut Stream) -> Case {
         let adults: Vec<AgentId> = (1..=2 + stream.below(24)).collect();
@@ -551,20 +566,27 @@ mod tests {
             rule.group_min = 2 + stream.below(6) as u32;
             rule.group_max = rule.group_min + stream.below(12) as u32;
             rule.min_adults = stream.below(6) as u32;
-            let k = rule.group_min + stream.below(u64::from(rule.group_max - rule.group_min) + 1) as u32;
+            let k = rule.group_min
+                + stream.below(u64::from(rule.group_max - rule.group_min) + 1) as u32;
             let partners = match stream.below(3) {
                 0 => None,
                 1 => Some(&[][..]),
                 _ => Some(couples.as_slice()),
             };
             let frozen = select_departure_p18(&rows, &households, &rule, k, partners);
-            let explained = super::select_departure_explained(&rows, &households, &rule, k, partners);
+            let explained =
+                super::select_departure_explained(&rows, &households, &rule, k, partners);
             assert_eq!(
-                explained.as_ref().map(|m| m.keys().copied().collect::<BTreeSet<_>>()),
+                explained
+                    .as_ref()
+                    .map(|m| m.keys().copied().collect::<BTreeSet<_>>()),
                 frozen,
                 "rows {rows:?} households {households:?} k {k} rule {rule:?}"
             );
-            assert_eq!(select_departure(&rows, &households, &rule, k, partners), frozen);
+            assert_eq!(
+                select_departure(&rows, &households, &rule, k, partners),
+                frozen
+            );
             if let Some(map) = explained {
                 chosen += 1;
                 for (id, cause) in map {
@@ -578,13 +600,23 @@ mod tests {
                 }
             }
         }
-        assert!(chosen > 500, "the generator must reach real groups: {chosen}");
+        assert!(
+            chosen > 500,
+            "the generator must reach real groups: {chosen}"
+        );
     }
 
     #[test]
     fn explained_labels_each_phase() {
         // Adults 1..=6; 1 partnered with elder 50; 2 with child 100.
-        let households = vec![vec![1, 50], vec![2, 100], vec![3], vec![4], vec![5], vec![6]];
+        let households = vec![
+            vec![1, 50],
+            vec![2, 100],
+            vec![3],
+            vec![4],
+            vec![5],
+            vec![6],
+        ];
         let rows = ranked(&[1, 2, 3, 4, 5, 6, 100]);
         let couples = [[1, 50]];
         let map = super::select_departure_explained(&rows, &households, &rule(), 7, Some(&couples))
@@ -607,8 +639,9 @@ mod tests {
         let mut order = vec![1, 2, 3, 4];
         order.extend(100..=112);
         let rows = ranked(&order);
-        let map = super::select_departure_explained(&rows, &households, &rule(), 7, Some(&[[1, 50]]))
-            .expect("topped up");
+        let map =
+            super::select_departure_explained(&rows, &households, &rule(), 7, Some(&[[1, 50]]))
+                .expect("topped up");
         let expect = [
             (1, DepartCause::TopUp),
             (2, DepartCause::Seed),

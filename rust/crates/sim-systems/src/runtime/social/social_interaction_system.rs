@@ -142,8 +142,7 @@ impl RuntimeSystem for SocialInteractionSystem {
         // (c) Classify each consuming row as mutual or fallback.
         //     mutual_pairs is deduplicated by canonical RelationshipKey so
         //     progress is incremented at most once per pair per tick.
-        let mut mutual_pairs: HashMap<RelationshipKey, (usize, usize, (u32, u32))> =
-            HashMap::new();
+        let mut mutual_pairs: HashMap<RelationshipKey, (usize, usize, (u32, u32))> = HashMap::new();
         let mut fallback_entities: Vec<Entity> = Vec::new();
         let mut fallback_keys: Vec<RelationshipKey> = Vec::new();
 
@@ -212,8 +211,7 @@ impl RuntimeSystem for SocialInteractionSystem {
         //   On every subsequent same-pair tick, we INCREMENT by 1.
         //   Completion fires when post-increment progress reaches
         //   `REQUIRED_INTERACTION_PROGRESS`.
-        let mut completion_outputs: Vec<(RelationshipKey, (u32, u32), Entity, Entity)> =
-            Vec::new();
+        let mut completion_outputs: Vec<(RelationshipKey, (u32, u32), Entity, Entity)> = Vec::new();
         let mut ordered_pairs: Vec<OrderedPairRow> = mutual_pairs
             .iter()
             .map(|(k, (a, b, pos))| (*k, *a, *b, *pos))

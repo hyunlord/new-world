@@ -51,8 +51,9 @@ use std::collections::BTreeMap;
 use crate::runtime::decision::agent_decision::clock_in_window;
 use hecs::World;
 use sim_core::components::{
-    Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory, PorterTrip,
-    Position, ResourceKind, SeekTarget, TargetKind, Temperament, SETTLEMENT_PROXIMITY_RADIUS,
+    Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory,
+    PorterTrip, Position, ResourceKind, SeekTarget, TargetKind, Temperament,
+    SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources};
@@ -108,7 +109,12 @@ impl MovementRng {
 /// Whether an Idle settlement member carrying `carried` food walks straight
 /// home under the forage rule: a full load (`>= haul_threshold`), or any food
 /// outside the forage window, while farther than the deposit radius.
-pub fn haul_due(rule: &ForageRule, carried: u32, in_forage_window: bool, home_distance: u32) -> bool {
+pub fn haul_due(
+    rule: &ForageRule,
+    carried: u32,
+    in_forage_window: bool,
+    home_distance: u32,
+) -> bool {
     home_distance > SETTLEMENT_PROXIMITY_RADIUS
         && (carried >= rule.haul_threshold || (carried >= 1 && !in_forage_window))
 }
@@ -127,12 +133,16 @@ pub fn hauls_home(
     home_distance: u32,
 ) -> bool {
     match firewood {
-        None => forage.is_some_and(|rule| haul_due(rule, carried_food, in_forage_window, home_distance)),
+        None => {
+            forage.is_some_and(|rule| haul_due(rule, carried_food, in_forage_window, home_distance))
+        }
         Some(wood) => {
             home_distance > SETTLEMENT_PROXIMITY_RADIUS
                 && (forage.is_some_and(|rule| carried_food >= rule.haul_threshold)
                     || carried_wood >= wood.haul_threshold
-                    || ((carried_food >= 1 || carried_wood >= 1) && !in_forage_window && !in_wood_window))
+                    || ((carried_food >= 1 || carried_wood >= 1)
+                        && !in_forage_window
+                        && !in_wood_window))
         }
     }
 }
@@ -173,15 +183,21 @@ impl RuntimeSystem for AgentMovementSystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let rules = resources.rules.agent;
-        if !resources.current_tick.is_multiple_of(rules.move_interval_ticks.max(1)) {
+        if !resources
+            .current_tick
+            .is_multiple_of(rules.move_interval_ticks.max(1))
+        {
             return;
         }
         let child_rule = resources.rules.society.life_stage;
-        let evening_radius = rules.evening_gather
+        let evening_radius = rules
+            .evening_gather
             .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
             .map(|rule| rule.tether_radius);
         // Same gate as the decision system: foraging needs a store target too.
-        let forage = rules.forage.filter(|_| resources.rules.society.stock_target.is_some());
+        let forage = rules
+            .forage
+            .filter(|_| resources.rules.society.stock_target.is_some());
         let forage_window = forage
             .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
         // Pass 5: wood loads are hauled home too under the firewood rule.
@@ -198,8 +214,12 @@ impl RuntimeSystem for AgentMovementSystem {
                 _ => rule.elder_tether_radius,
             }
         });
-        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
-            || forage.is_some() || elder_radius.is_some() || firewood.is_some()
+        if rules.idle_tether_radius.is_some()
+            || child_rule.is_some()
+            || evening_radius.is_some()
+            || forage.is_some()
+            || elder_radius.is_some()
+            || firewood.is_some()
         {
             let mut settlements: Vec<_> = resources.settlements.iter().collect();
             settlements.sort_by_key(|(id, _)| **id);
@@ -235,7 +255,23 @@ impl RuntimeSystem for AgentMovementSystem {
         // Pass 16 (`game_v20`): a resident's temperament leans its idle tether
         // (NS) and, for workers, its haul loads (P). None before v20.
         let temperament_rule = rules.temperament;
-        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding, temperament, porter)) in world
+        for (
+            _,
+            (
+                pos,
+                rng,
+                state,
+                seek,
+                agent,
+                child,
+                inventory,
+                elder,
+                lineage,
+                founding,
+                temperament,
+                porter,
+            ),
+        ) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -340,7 +376,9 @@ impl RuntimeSystem for AgentMovementSystem {
             // formation tile instead of a Brownian step (no RNG draw).
             // Pass 11: a founder on its way never hauls home (no `Founding`
             // marker exists outside `game_v17`).
-            if let (true, Some(agent), None, false) = (forage.is_some() || firewood.is_some(), agent, child, walker) {
+            if let (true, Some(agent), None, false) =
+                (forage.is_some() || firewood.is_some(), agent, child, walker)
+            {
                 if let Some(&anchor) = home.get(&agent.id) {
                     let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
                     let wood = if firewood.is_some() {
@@ -363,9 +401,19 @@ impl RuntimeSystem for AgentMovementSystem {
                         ),
                         None => (forage, firewood),
                     };
-                    if hauls_home(forage_p.as_ref(), firewood_p.as_ref(), carried, wood, forage_window, wood_window, distance) {
-                        pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x) as u32;
-                        pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y) as u32;
+                    if hauls_home(
+                        forage_p.as_ref(),
+                        firewood_p.as_ref(),
+                        carried,
+                        wood,
+                        forage_window,
+                        wood_window,
+                        distance,
+                    ) {
+                        pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum())
+                            .clamp(0, max_x) as u32;
+                        pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum())
+                            .clamp(0, max_y) as u32;
                         haul_steps.push(agent.id);
                         continue;
                     }
@@ -383,7 +431,8 @@ impl RuntimeSystem for AgentMovementSystem {
                 Some(lineage) => {
                     let key = lineage.key;
                     if rules.idle_pause_chance > 0.0
-                        && keyed_unit_f64(seed, STREAM_MOVE_PAUSE, key, tick, 0, replicate) < rules.idle_pause_chance
+                        && keyed_unit_f64(seed, STREAM_MOVE_PAUSE, key, tick, 0, replicate)
+                            < rules.idle_pause_chance
                     {
                         continue;
                     }
@@ -406,7 +455,9 @@ impl RuntimeSystem for AgentMovementSystem {
             let mut ny = (pos.y as i64 + dy).clamp(0, max_y);
             if let (Some(radius), Some(anchor)) = (
                 if child.is_some() {
-                    child_rule.map(|rule| rule.tether_radius).or(rules.idle_tether_radius)
+                    child_rule
+                        .map(|rule| rule.tether_radius)
+                        .or(rules.idle_tether_radius)
                 } else if elder.is_some() && elder_radius.is_some() {
                     // Pass 4: elders keep to the camp (Pass 6: evening tether inside its window).
                     elder_radius
@@ -421,7 +472,11 @@ impl RuntimeSystem for AgentMovementSystem {
                 // Pass 11: no tether pulls a founder on its way back home.
                 agent.filter(|_| !walker).and_then(|a| home.get(&a.id)),
             ) {
-                if (nx as u32).abs_diff(anchor.0).max((ny as u32).abs_diff(anchor.1)) > radius {
+                if (nx as u32)
+                    .abs_diff(anchor.0)
+                    .max((ny as u32).abs_diff(anchor.1))
+                    > radius
+                {
                     nx = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x);
                     ny = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y);
                 }
@@ -454,27 +509,47 @@ mod tests {
         let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
         // Without the firewood rule: exactly haul_due, wood ignored.
         for (food, window) in [(0, true), (1, true), (4, true), (1, false), (0, false)] {
-            assert_eq!(hauls_home(Some(&forage), None, food, 9, window, false, far),
-                haul_due(&forage, food, window, far));
+            assert_eq!(
+                hauls_home(Some(&forage), None, food, 9, window, false, far),
+                haul_due(&forage, food, window, far)
+            );
         }
         assert!(!hauls_home(None, None, 9, 9, false, false, far));
-        let h = |food, carried_wood, fw, ww| hauls_home(Some(&forage), Some(&wood), food, carried_wood, fw, ww, far);
+        let h = |food, carried_wood, fw, ww| {
+            hauls_home(Some(&forage), Some(&wood), food, carried_wood, fw, ww, far)
+        };
         // Full loads go home inside the windows.
         assert!(h(4, 0, true, true) && h(0, 2, true, true));
         // Partial loads wait while either window is open...
-        assert!(!h(1, 0, true, true) && !h(0, 1, true, false) && !h(0, 1, false, true) && !h(3, 1, true, true));
+        assert!(
+            !h(1, 0, true, true)
+                && !h(0, 1, true, false)
+                && !h(0, 1, false, true)
+                && !h(3, 1, true, true)
+        );
         // ...and go home once both are closed.
         assert!(h(1, 0, false, false) && h(0, 1, false, false));
         assert!(!h(0, 0, false, false));
         // Never inside the deposit radius.
-        assert!(!hauls_home(Some(&forage), Some(&wood), 4, 2, false, false, SETTLEMENT_PROXIMITY_RADIUS));
+        assert!(!hauls_home(
+            Some(&forage),
+            Some(&wood),
+            4,
+            2,
+            false,
+            false,
+            SETTLEMENT_PROXIMITY_RADIUS
+        ));
     }
 
     #[test]
     fn haul_due_needs_a_load_or_the_end_of_the_window_and_distance() {
         let rule = ForageRule {
-            start_minute: 360, end_minute: 1080, forage_radius: 16,
-            haul_threshold: 4, max_foragers_per_bush: 1,
+            start_minute: 360,
+            end_minute: 1080,
+            forage_radius: 16,
+            haul_threshold: 4,
+            max_foragers_per_bush: 1,
         };
         let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
         assert!(haul_due(&rule, 4, true, far));
@@ -583,7 +658,11 @@ mod tests {
         // One tick: dx=signum(15-10)=+1, dy=signum(10-10)=0 → (11,10).
         sys.tick(&mut e.world, &mut e.resources);
         let p = *e.world.get::<&Position>(id).unwrap();
-        assert_eq!((p.x, p.y), (11, 10), "one signum step toward goal, y unchanged");
+        assert_eq!(
+            (p.x, p.y),
+            (11, 10),
+            "one signum step toward goal, y unchanged"
+        );
         // Four more ticks reach (15,10); further ticks hold (signum 0).
         for _ in 0..8 {
             sys.tick(&mut e.world, &mut e.resources);
@@ -654,8 +733,14 @@ mod tests {
             "seed 1 must produce a non-zero step (regression guard against an accidentally-(0,0) seed)"
         );
         // And the public predicate STILL reports false (Assertion-3 contract).
-        assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::Water
+        }
+        .suppresses_movement());
+        assert!(!AgentState::Consuming {
+            target: TargetKind::Food
+        }
+        .suppresses_movement());
     }
 
     #[test]
@@ -676,6 +761,9 @@ mod tests {
                 break;
             }
         }
-        assert!(diverged, "distinct seeds should produce distinct trajectories");
+        assert!(
+            diverged,
+            "distinct seeds should produce distinct trajectories"
+        );
     }
 }

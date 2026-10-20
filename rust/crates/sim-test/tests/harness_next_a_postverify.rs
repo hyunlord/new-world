@@ -253,8 +253,7 @@ fn harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty() {
         })
         .sum();
     assert_eq!(
-        sum,
-        600,
+        sum, 600,
         "sum of current[Beauty] at 3 source centers must be 600 (3 × 200) \
          after FFI path + 1 tick. FFI channel mis-mapping that drops Beauty \
          would yield 0 here. Got {sum}"
@@ -302,7 +301,7 @@ fn harness_ffi_bridge_pre_tick_queue_len_equals_2_after_2_inbounds_1_oob() {
         "Fixture B: in-bounds enqueue calls at (5,5) and (15,15) must return true"
     );
     enqueue_building_placed(&mut engine.resources, 64, 0, 1); // OOB — expected false
-    // Type A: threshold == 2
+                                                              // Type A: threshold == 2
     assert_eq!(
         engine.resources.building_event_queue.len(),
         2,
@@ -410,10 +409,8 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
     // Type A: threshold == true (every byte in pending[FoodAroma] == 0)
     // IUS clears pending for unstamped dispatch-shell channels every tick.
     // A stub IUS skipping clear_pending() would leave 255 in pending.
-    let pending_all_zero = engine
-        .resources
-        .influence_grid
-        .pending[InfluenceChannel::FoodAroma as usize]
+    let pending_all_zero = engine.resources.influence_grid.pending
+        [InfluenceChannel::FoodAroma as usize]
         .iter()
         .all(|&byte| byte == 0);
     assert!(

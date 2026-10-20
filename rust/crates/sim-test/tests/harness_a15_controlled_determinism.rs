@@ -80,7 +80,10 @@ fn finite_scene() -> SimEngine {
     for pos in [(32u32, 32u32), (24, 32), (40, 32)] {
         e.resources
             .building_event_queue
-            .push_back(BuildingPlacedEvent { position: pos, radius: 8 });
+            .push_back(BuildingPlacedEvent {
+                position: pos,
+                radius: 8,
+            });
     }
     e
 }
@@ -90,7 +93,11 @@ fn finite_scene() -> SimEngine {
 /// The ordered `AgentId` sequence the world currently YIELDS over the agent
 /// collection — the raw hecs query order the decision system processes.
 fn yielded_agent_order(e: &SimEngine) -> Vec<AgentId> {
-    e.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect()
+    e.world
+        .query::<&Agent>()
+        .iter()
+        .map(|(_, a)| a.id)
+        .collect()
 }
 
 /// Apply a deterministic permutation `perm` to the engine's base agent
@@ -100,7 +107,12 @@ fn yielded_agent_order(e: &SimEngine) -> Vec<AgentId> {
 /// back, RE-APPENDED at the dense-array tail. Processing the agents in `perm`
 /// order therefore leaves the base archetype yielding in `perm` order.
 fn permute_agent_order(e: &mut SimEngine, perm: impl Fn(&[hecs::Entity]) -> Vec<hecs::Entity>) {
-    let cur: Vec<hecs::Entity> = e.world.query::<&Agent>().iter().map(|(ent, _)| ent).collect();
+    let cur: Vec<hecs::Entity> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(ent, _)| ent)
+        .collect();
     for ent in perm(&cur) {
         let _ = e.world.insert_one(ent, OrderPerm);
         let _ = e.world.remove_one::<OrderPerm>(ent);
@@ -141,22 +153,48 @@ fn fnv(acc: &mut u64, bytes: &[u8]) {
 fn behavioural_fingerprint(e: &SimEngine) -> u64 {
     let mut acc: u64 = 0xcbf2_9ce4_8422_2325;
 
-    let ents: Vec<hecs::Entity> = e.world.query::<&Agent>().iter().map(|(ent, _)| ent).collect();
+    let ents: Vec<hecs::Entity> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(ent, _)| ent)
+        .collect();
     let mut rows: Vec<(AgentId, u64, u64, String)> = Vec::new();
     for ent in ents {
-        let Ok(agent) = e.world.get::<&Agent>(ent) else { continue };
+        let Ok(agent) = e.world.get::<&Agent>(ent) else {
+            continue;
+        };
         let pos_bits = e
             .world
             .get::<&Position>(ent)
             .map(|p| ((p.x as u64) << 32) | p.y as u64)
             .unwrap_or(0);
-        let hunger = e.world.get::<&Hunger>(ent).map(|h| (h.value as f64).to_bits()).unwrap_or(0);
-        let thirst = e.world.get::<&Thirst>(ent).map(|t| t.value.to_bits()).unwrap_or(0);
-        let sleep = e.world.get::<&Sleep>(ent).map(|s| s.fatigue.to_bits()).unwrap_or(0);
-        let hp = e.world.get::<&BodyHealth>(ent).map(|b| b.hp.to_bits()).unwrap_or(0);
-        let state = e.world.get::<&AgentState>(ent).map(|s| format!("{s:?}")).unwrap_or_default();
-        let need_mix = hunger
-            .wrapping_mul(0x9E37_79B9)
+        let hunger = e
+            .world
+            .get::<&Hunger>(ent)
+            .map(|h| (h.value as f64).to_bits())
+            .unwrap_or(0);
+        let thirst = e
+            .world
+            .get::<&Thirst>(ent)
+            .map(|t| t.value.to_bits())
+            .unwrap_or(0);
+        let sleep = e
+            .world
+            .get::<&Sleep>(ent)
+            .map(|s| s.fatigue.to_bits())
+            .unwrap_or(0);
+        let hp = e
+            .world
+            .get::<&BodyHealth>(ent)
+            .map(|b| b.hp.to_bits())
+            .unwrap_or(0);
+        let state = e
+            .world
+            .get::<&AgentState>(ent)
+            .map(|s| format!("{s:?}"))
+            .unwrap_or_default();
+        let need_mix = hunger.wrapping_mul(0x9E37_79B9)
             ^ thirst.rotate_left(17)
             ^ sleep.rotate_left(31)
             ^ hp.rotate_left(7);
@@ -252,7 +290,11 @@ fn per_reason_split(e: &SimEngine) -> (usize, usize, usize) {
 }
 
 fn settlement_total_deaths(e: &SimEngine) -> u32 {
-    e.resources.settlements.values().map(|s| s.population_stats.total_deaths).sum()
+    e.resources
+        .settlements
+        .values()
+        .map(|s| s.population_stats.total_deaths)
+        .sum()
 }
 
 fn live_count(e: &SimEngine) -> usize {
@@ -381,7 +423,10 @@ fn harness_a15_controlled_forced_divergence_lockstep() {
 
     // ── A4 (this pair): end-state observables identical. ──
     let (es_a, es_b) = (end_state(&a), end_state(&b));
-    assert_eq!(es_a, es_b, "A4: end-state observables must be identical across the controlled pair");
+    assert_eq!(
+        es_a, es_b,
+        "A4: end-state observables must be identical across the controlled pair"
+    );
 
     // ── A6: comparison window was non-vacuous. ──
     let deaths_in_window = dead_set(&a).len() - deaths_before;
@@ -450,7 +495,10 @@ fn harness_a15_process_seeded_lockstep() {
 
     // ── A4 (process-seeded pair): end-state observables identical. ──
     let (es_a, es_b) = (end_state(&a), end_state(&b));
-    assert_eq!(es_a, es_b, "A4: end-state observables must be identical across the process-seeded pair");
+    assert_eq!(
+        es_a, es_b,
+        "A4: end-state observables must be identical across the process-seeded pair"
+    );
 
     println!(
         "[a15 A3/A4] process-seeded pair: full {RUN_TICKS}-tick lockstep — \
@@ -493,7 +541,10 @@ fn harness_a15_multi_permutation_robustness() {
              divergent starting order — the fix did not restore lockstep for this permutation"
         );
         // Aggregate end-state must also match per pair (subset of A4 across pairs).
-        assert_eq!(es_a, es_b, "A5[{label}]: end-state observables must match within the pair");
+        assert_eq!(
+            es_a, es_b,
+            "A5[{label}]: end-state observables must match within the pair"
+        );
         println!("[a15 A5] {label}: {ticks}-tick lockstep (orders differ at t0) ✓");
     }
     println!("[a15 A5] all {NUM_PAIRS} controlled-divergent pairs locksteppped ✓");

@@ -33,9 +33,13 @@ pub(super) fn block(engine: &SimEngine) -> Option<Value> {
         entry.0 += u64::from(day.estranged);
     }
     for entry in r.chronicle.entries() {
-        let (Some(a), Some(b)) = (entry.settlement, entry.settlement2) else { continue };
+        let (Some(a), Some(b)) = (entry.settlement, entry.settlement2) else {
+            continue;
+        };
         let row = match entry.kind {
-            ChronicleKind::VillagesEstranged | ChronicleKind::VillagesReconciled => history.entry((a.min(b), a.max(b))).or_default(),
+            ChronicleKind::VillagesEstranged | ChronicleKind::VillagesReconciled => {
+                history.entry((a.min(b), a.max(b))).or_default()
+            }
             _ => continue,
         };
         if entry.kind == ChronicleKind::VillagesEstranged {

@@ -8,7 +8,9 @@ use sim_engine::SimEngine;
 use std::path::{Path, PathBuf};
 
 /// Removes `--chronicle-out DIR` from `args`; returns the rest and the directory.
-pub fn split(args: impl IntoIterator<Item = String>) -> Result<(Vec<String>, Option<PathBuf>), String> {
+pub fn split(
+    args: impl IntoIterator<Item = String>,
+) -> Result<(Vec<String>, Option<PathBuf>), String> {
     let mut rest = Vec::new();
     let mut dir = None;
     let mut args = args.into_iter();
@@ -77,9 +79,21 @@ pub fn document(chronicle: &Chronicle, scene: &str, seed: u64, ticks: u64, git_s
 /// also `relations_<seed>.json` — the measurement-only log of disputes and
 /// quarrels per (display day, village pair) as rows `[day, a, b, disputes,
 /// quarrels]` (a separate file: the chronicle file is unchanged).
-pub fn write(dir: &Path, engine: &SimEngine, scene: &str, seed: u64, git_sha: &str) -> Result<(), String> {
+pub fn write(
+    dir: &Path,
+    engine: &SimEngine,
+    scene: &str,
+    seed: u64,
+    git_sha: &str,
+) -> Result<(), String> {
     std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
-    let doc = document(&engine.resources.chronicle, scene, seed, engine.current_tick(), git_sha);
+    let doc = document(
+        &engine.resources.chronicle,
+        scene,
+        seed,
+        engine.current_tick(),
+        git_sha,
+    );
     let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
     std::fs::write(dir.join(format!("chronicle_{seed}.json")), text).map_err(|e| e.to_string())?;
     if engine.resources.rules.society.relations.is_some() {
@@ -92,7 +106,8 @@ pub fn write(dir: &Path, engine: &SimEngine, scene: &str, seed: u64, git_sha: &s
             .collect();
         let doc = json!({"scene": scene, "seed": seed, "fields": ["day", "a", "b", "disputes", "quarrels"], "dispute_days": rows});
         let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
-        std::fs::write(dir.join(format!("relations_{seed}.json")), text).map_err(|e| e.to_string())?;
+        std::fs::write(dir.join(format!("relations_{seed}.json")), text)
+            .map_err(|e| e.to_string())?;
     }
     Ok(())
 }
@@ -117,9 +132,22 @@ mod tests {
 
     #[test]
     fn split_takes_the_flag_and_its_directory() {
-        let args = ["--seeds", "0..2", "--chronicle-out", "/tmp/x", "--days", "3"].map(String::from);
+        let args = [
+            "--seeds",
+            "0..2",
+            "--chronicle-out",
+            "/tmp/x",
+            "--days",
+            "3",
+        ]
+        .map(String::from);
         let (rest, dir) = split(args).expect("parsed");
-        assert_eq!(rest, ["--seeds", "0..2", "--days", "3"].map(String::from).to_vec());
+        assert_eq!(
+            rest,
+            ["--seeds", "0..2", "--days", "3"]
+                .map(String::from)
+                .to_vec()
+        );
         assert_eq!(dir, Some(PathBuf::from("/tmp/x")));
         assert!(split(["--chronicle-out".to_string()]).is_err());
         assert_eq!(split(["--days".to_string()]).expect("no flag").1, None);
@@ -137,8 +165,13 @@ mod tests {
             assert!(twins_match(&a, &b, &mut seen));
         }
         assert_eq!(seen, a.resources.chronicle.len());
-        assert!(a.resources.chronicle.person_count() >= 20, "founders recorded at worldgen");
-        b.resources.chronicle.push(ChronicleEntry::new(0, ChronicleKind::CameOfAge).subject(1));
+        assert!(
+            a.resources.chronicle.person_count() >= 20,
+            "founders recorded at worldgen"
+        );
+        b.resources
+            .chronicle
+            .push(ChronicleEntry::new(0, ChronicleKind::CameOfAge).subject(1));
         assert!(!twins_match(&a, &b, &mut seen));
         let doc = document(&a.resources.chronicle, "game_v23", 1, a.current_tick(), "x");
         assert_eq!(doc["entry_count"], a.resources.chronicle.len());

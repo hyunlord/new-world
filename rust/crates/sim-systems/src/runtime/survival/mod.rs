@@ -21,7 +21,9 @@
 
 use hecs::{Entity, World};
 use sim_core::causal::event::{CausalEvent, DeathReason};
-use sim_core::components::{Agent, AgentId, BodyHealth, Cold, ExposureClock, Hunger, Position, Thirst};
+use sim_core::components::{
+    Agent, AgentId, BodyHealth, Cold, ExposureClock, Hunger, Position, Thirst,
+};
 use sim_engine::{RecentDeath, RuntimeSystem, SimResources};
 
 /// HP removed per tick while `Hunger.value >= Hunger::SATURATION`.
@@ -162,9 +164,12 @@ pub fn despawn_agent(
             crate::runtime::chronicle_log::record(
                 world,
                 resources,
-                sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Widowed)
-                    .subject(partner)
-                    .other(Some(agent_id)),
+                sim_core::chronicle::ChronicleEntry::new(
+                    tick,
+                    sim_core::chronicle::ChronicleKind::Widowed,
+                )
+                .subject(partner)
+                .other(Some(agent_id)),
             );
         }
     }
@@ -198,13 +203,25 @@ impl RuntimeSystem for StarvationSystem {
         let tick = resources.current_tick;
         // Pass 10: under the exposure rule a resident does not heal while
         // `Cold` or within `heal_block_hours` after its last cold hour.
-        let heal_block = resources.rules.society.exposure.map(|rule| rule.heal_block_hours);
+        let heal_block = resources
+            .rules
+            .society
+            .exposure
+            .map(|rule| rule.heal_block_hours);
 
         // Deferred death list — never despawn mid-query.
         let mut deaths: Vec<(Entity, AgentId, (u32, u32), DeathReason)> = Vec::new();
 
         for (entity, (agent, position, hunger, thirst, health, cold, clock)) in world
-            .query::<(&Agent, &Position, &Hunger, &Thirst, &mut BodyHealth, Option<&Cold>, Option<&ExposureClock>)>()
+            .query::<(
+                &Agent,
+                &Position,
+                &Hunger,
+                &Thirst,
+                &mut BodyHealth,
+                Option<&Cold>,
+                Option<&ExposureClock>,
+            )>()
             .iter()
         {
             let hunger_saturated = hunger.value >= Hunger::SATURATION;
@@ -264,7 +281,15 @@ mod tests {
         let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
         resources.bed_of.insert(7, (2, 2));
         resources.bed_of.insert(8, (2, 2));
-        despawn_agent(&mut world, &mut resources, entity, 7, (2, 2), DeathReason::Starvation, 0);
+        despawn_agent(
+            &mut world,
+            &mut resources,
+            entity,
+            7,
+            (2, 2),
+            DeathReason::Starvation,
+            0,
+        );
         assert!(!resources.bed_of.contains_key(&7));
         assert_eq!(resources.bed_of.get(&8), Some(&(2, 2)));
     }

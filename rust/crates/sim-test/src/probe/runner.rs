@@ -78,7 +78,11 @@ pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> 
 
 /// [`run_with`] that also writes each seed's chronicle to `chronicle_out`
 /// (Pass 19 `--chronicle-out`; the other outputs are unchanged).
-pub fn run_with_chronicle(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std::path::Path>) -> Result<(), String> {
+pub fn run_with_chronicle(
+    args: &ProbeArgs,
+    options: &ProbeOptions,
+    chronicle_out: Option<&std::path::Path>,
+) -> Result<(), String> {
     fs::create_dir_all(&args.out).map_err(|e| e.to_string())?;
     let results = std::thread::scope(|scope| {
         let mut handles = Vec::new();
@@ -113,13 +117,33 @@ pub fn run_with_chronicle(args: &ProbeArgs, options: &ProbeOptions, chronicle_ou
 /// Pass 16: writes `<scene>_s<seed>_agents.jsonl` (one line per person who
 /// was ever a non-elder adult), `_people.jsonl` (every person),
 /// `_fissions.jsonl` (every fission) and `_trace_meta.json`.
-fn write_trace(args: &ProbeArgs, seed: u64, engine: &SimEngine, tracer: &AgentTracer, git_sha: &str) -> Result<(), String> {
+fn write_trace(
+    args: &ProbeArgs,
+    seed: u64,
+    engine: &SimEngine,
+    tracer: &AgentTracer,
+    git_sha: &str,
+) -> Result<(), String> {
     let (agents, people, fissions, mut meta) = tracer.finish(engine);
-    let (family_files, family_meta) = tracer.family_output(engine)
-        .map(|output| (output.files, Some(output.meta))).unwrap_or_default();
-    for (suffix, lines) in [("agents", agents), ("people", people), ("fissions", fissions)].into_iter().chain(tracer.routine_output()).chain(family_files) {
+    let (family_files, family_meta) = tracer
+        .family_output(engine)
+        .map(|output| (output.files, Some(output.meta)))
+        .unwrap_or_default();
+    for (suffix, lines) in [
+        ("agents", agents),
+        ("people", people),
+        ("fissions", fissions),
+    ]
+    .into_iter()
+    .chain(tracer.routine_output())
+    .chain(family_files)
+    {
         let mut out = BufWriter::new(
-            File::create(args.out.join(format!("{}_s{seed}_{suffix}.jsonl", args.scene))).map_err(|e| e.to_string())?,
+            File::create(
+                args.out
+                    .join(format!("{}_s{seed}_{suffix}.jsonl", args.scene)),
+            )
+            .map_err(|e| e.to_string())?,
         );
         for line in lines {
             serde_json::to_writer(&mut out, &line).map_err(|e| e.to_string())?;
@@ -131,14 +155,19 @@ fn write_trace(args: &ProbeArgs, seed: u64, engine: &SimEngine, tracer: &AgentTr
         family_meta["scene"] = serde_json::json!(args.scene);
         family_meta["seed"] = serde_json::json!(seed);
         family_meta["git_sha"] = serde_json::json!(git_sha);
-        fs::write(args.out.join(format!("{}_s{seed}_family_meta.json", args.scene)),
-            serde_json::to_string_pretty(&family_meta).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+        fs::write(
+            args.out
+                .join(format!("{}_s{seed}_family_meta.json", args.scene)),
+            serde_json::to_string_pretty(&family_meta).map_err(|e| e.to_string())?,
+        )
+        .map_err(|e| e.to_string())?;
     }
     meta["scene"] = serde_json::json!(args.scene);
     meta["seed"] = serde_json::json!(seed);
     meta["git_sha"] = serde_json::json!(git_sha);
     fs::write(
-        args.out.join(format!("{}_s{seed}_trace_meta.json", args.scene)),
+        args.out
+            .join(format!("{}_s{seed}_trace_meta.json", args.scene)),
         serde_json::to_string_pretty(&meta).map_err(|e| e.to_string())?,
     )
     .map_err(|e| e.to_string())
@@ -185,7 +214,12 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
     }
 }
 
-fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std::path::Path>, seed: u64) -> Result<RunResult, String> {
+fn run_seed(
+    args: &ProbeArgs,
+    options: &ProbeOptions,
+    chronicle_out: Option<&std::path::Path>,
+    seed: u64,
+) -> Result<RunResult, String> {
     let started = Instant::now();
     let make_scene = || scene_engine(&args.scene, seed);
     let mut engine = make_scene();
@@ -262,7 +296,15 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
         (0u64, 0u64, 0u64, 0u64);
     let winter_starts: BTreeMap<u64, u64> = super::pass10::WINTER_FIRST_DAYS
         .iter()
-        .filter_map(|d| clock_tick(*d, 1080, ticks_per_day, engine.resources.rules.clock_offset_ticks).map(|t| (t, *d)))
+        .filter_map(|d| {
+            clock_tick(
+                *d,
+                1080,
+                ticks_per_day,
+                engine.resources.rules.clock_offset_ticks,
+            )
+            .map(|t| (t, *d))
+        })
         .collect();
     for tick in 0..=total_ticks {
         if let Some(day) = winter_starts.get(&tick) {
@@ -336,10 +378,17 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
                 });
                 row["housing_capacity"] = serde_json::json!(housing_capacity(&engine));
                 checkpoints.insert(tick / ticks_per_day, row);
-                settlement_days.insert(tick / ticks_per_day, super::pass11::settlements_now(&engine));
+                settlement_days.insert(
+                    tick / ticks_per_day,
+                    super::pass11::settlements_now(&engine),
+                );
                 elders_by_day.insert(
                     tick / ticks_per_day,
-                    engine.world.query::<&sim_core::components::Elder>().iter().count() as u64,
+                    engine
+                        .world
+                        .query::<&sim_core::components::Elder>()
+                        .iter()
+                        .count() as u64,
                 );
             }
         }
@@ -389,7 +438,9 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
                 .map(|(sid, s)| (*sid, (1..=2).contains(&s.member_agents.len())))
                 .collect();
             for (sid, s) in &engine.resources.settlements {
-                formed_members.entry(*sid).or_insert(s.member_agents.len() as u32);
+                formed_members
+                    .entry(*sid)
+                    .or_insert(s.member_agents.len() as u32);
             }
             remnant_hours.retain(|sid, _| small.get(sid).copied().unwrap_or(false));
             for (sid, is_small) in small {
@@ -456,10 +507,25 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, chronicle_out: Option<&std
     );
     let pass13 = super::pass13::seed_block(&engine);
     let pass20 = super::pass20::seed_block(&engine);
-    let pass12 = super::pass12::seed_block(&engine, &winter_members, &formed_members, &exposure_deaths, args.days);
-    let mut pass11 = super::pass11::seed_block(&engine, &settlement_days, &exposure_deaths, &elders_by_day, args.days);
+    let pass12 = super::pass12::seed_block(
+        &engine,
+        &winter_members,
+        &formed_members,
+        &exposure_deaths,
+        args.days,
+    );
+    let mut pass11 = super::pass11::seed_block(
+        &engine,
+        &settlement_days,
+        &exposure_deaths,
+        &elders_by_day,
+        args.days,
+    );
     if let Some(object) = pass11.as_object_mut() {
-        object.insert("max_hours_with_1_to_2_members".into(), serde_json::json!(max_remnant_hours));
+        object.insert(
+            "max_hours_with_1_to_2_members".into(),
+            serde_json::json!(max_remnant_hours),
+        );
     }
     Ok(RunResult {
         seed,
@@ -505,7 +571,32 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21" | "game_v22" | "game_v23" | "game_v24" | "game_v25" | "game_v26")
+    matches!(
+        scene,
+        "game_v9"
+            | "game_v10"
+            | "game_v11"
+            | "game_v12"
+            | "game_v13"
+            | "game_v14"
+            | "game_v15"
+            | "game_v16_neutral"
+            | "game_v16"
+            | "game_v17_nofission"
+            | "game_v17"
+            | "game_v18_nofission"
+            | "game_v18"
+            | "game_v19_nofission"
+            | "game_v19"
+            | "game_v20_inert"
+            | "game_v20"
+            | "game_v21"
+            | "game_v22"
+            | "game_v23"
+            | "game_v24"
+            | "game_v25"
+            | "game_v26"
+    )
 }
 
 #[cfg(test)]
@@ -515,9 +606,32 @@ mod tests {
         // Pass 10: a scene missing from the list would skip its determinism
         // checks silently. Both checks in `run_seed` call `twin_checked`.
         let source = include_str!("runner.rs");
-        assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
+        assert_eq!(
+            source
+                .matches(&["if ", "twin_checked(&args.scene)"].concat())
+                .count(),
+            2
+        );
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "game_v22", "game_v23", "game_v24", "game_v25", "game_v26"] {
+        for scene in [
+            "game_v15",
+            "game_v16_neutral",
+            "game_v16",
+            "game_v17_nofission",
+            "game_v17",
+            "game_v18_nofission",
+            "game_v18",
+            "game_v19_nofission",
+            "game_v19",
+            "game_v20_inert",
+            "game_v20",
+            "game_v21",
+            "game_v22",
+            "game_v23",
+            "game_v24",
+            "game_v25",
+            "game_v26",
+        ] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

@@ -81,8 +81,7 @@ impl RuntimeSystem for StockpileDepositSystem {
         // system stores it at the receiver or back home.
         let porters = resources.rules.society.relations.is_some();
         // Iterate settlements in deterministic (sorted) SettlementId order.
-        let mut settlement_ids: Vec<SettlementId> =
-            resources.settlements.keys().copied().collect();
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         settlement_ids.sort_unstable();
 
         for sid in settlement_ids {
@@ -103,7 +102,11 @@ impl RuntimeSystem for StockpileDepositSystem {
                     Some(e) => *e,
                     None => continue,
                 };
-                if porters && world.get::<&sim_core::components::PorterTrip>(entity).is_ok() {
+                if porters
+                    && world
+                        .get::<&sim_core::components::PorterTrip>(entity)
+                        .is_ok()
+                {
                     continue;
                 }
 
@@ -122,12 +125,24 @@ impl RuntimeSystem for StockpileDepositSystem {
                 let (taken, wood) = match world.get::<&mut Inventory>(entity) {
                     Ok(mut inv) => {
                         let n = inv.get(ResourceKind::Food);
-                        let w = if firewood { inv.get(ResourceKind::Wood) } else { 0 };
+                        let w = if firewood {
+                            inv.get(ResourceKind::Wood)
+                        } else {
+                            0
+                        };
                         if n == 0 && w == 0 {
                             continue;
                         }
-                        let food = if n > 0 { inv.remove(ResourceKind::Food, n) } else { 0 };
-                        let wood = if w > 0 { inv.remove(ResourceKind::Wood, w) } else { 0 };
+                        let food = if n > 0 {
+                            inv.remove(ResourceKind::Food, n)
+                        } else {
+                            0
+                        };
+                        let wood = if w > 0 {
+                            inv.remove(ResourceKind::Wood, w)
+                        } else {
+                            0
+                        };
                         (food, wood)
                     }
                     Err(_) => continue,
@@ -177,7 +192,10 @@ mod tests {
         resources.settlements.insert(1, settlement);
         resources.haulers.insert(2);
         StockpileDepositSystem::new().tick(&mut world, &mut resources);
-        assert_eq!(resources.settlements[&1].stockpile.get(&ResourceKind::Food), Some(&8));
+        assert_eq!(
+            resources.settlements[&1].stockpile.get(&ResourceKind::Food),
+            Some(&8)
+        );
         assert_eq!(resources.tallies.haul_deposits, 1);
         assert!(resources.haulers.is_empty());
     }

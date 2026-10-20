@@ -220,7 +220,12 @@ pub fn explain(stat: DerivedStatKind) -> Explanation {
             "RimWorld wiki StuffProperties: max-HP factor normalised to iron baseline",
         ),
     };
-    Explanation { stat, formula, inputs, source }
+    Explanation {
+        stat,
+        formula,
+        inputs,
+        source,
+    }
 }
 
 #[cfg(test)]
@@ -251,7 +256,10 @@ mod tests {
             "workability",
             "preservation",
         ];
-        let actual: Vec<&str> = PropertyKind::all_variants().iter().map(|k| k.snake_case()).collect();
+        let actual: Vec<&str> = PropertyKind::all_variants()
+            .iter()
+            .map(|k| k.snake_case())
+            .collect();
         assert_eq!(actual, expected);
     }
 
@@ -323,6 +331,9 @@ mod tests {
                     || s.contains("Phase 0")
             })
             .count();
-        assert!(with_keywords >= 15, "only {with_keywords} sources have keywords");
+        assert!(
+            with_keywords >= 15,
+            "only {with_keywords} sources have keywords"
+        );
     }
 }

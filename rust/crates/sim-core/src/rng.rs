@@ -140,13 +140,28 @@ pub const fn mix(x: u64) -> u64 {
 /// (constants above), `subject` the entity's lineage key or 0 for world draws,
 /// `tick` the simulation tick, `slot` the index of the draw within that event,
 /// `replicate` the noise replicate (0 = the canonical run).
-pub const fn keyed_u64(world_seed: u64, stream: u64, subject: u64, tick: u64, slot: u32, replicate: u32) -> u64 {
+pub const fn keyed_u64(
+    world_seed: u64,
+    stream: u64,
+    subject: u64,
+    tick: u64,
+    slot: u32,
+    replicate: u32,
+) -> u64 {
     mix(mix(mix(mix(mix(world_seed ^ stream) ^ subject) ^ tick) ^ slot as u64) ^ replicate as u64)
 }
 
 /// A uniform value in `[0, 1)` from the top 53 bits of a keyed draw.
-pub fn keyed_unit_f64(world_seed: u64, stream: u64, subject: u64, tick: u64, slot: u32, replicate: u32) -> f64 {
-    (keyed_u64(world_seed, stream, subject, tick, slot, replicate) >> 11) as f64 / (1u64 << 53) as f64
+pub fn keyed_unit_f64(
+    world_seed: u64,
+    stream: u64,
+    subject: u64,
+    tick: u64,
+    slot: u32,
+    replicate: u32,
+) -> f64 {
+    (keyed_u64(world_seed, stream, subject, tick, slot, replicate) >> 11) as f64
+        / (1u64 << 53) as f64
 }
 
 /// A value in `0..n` by multiply-shift (`n = 0` gives 0). One draw, no
@@ -156,12 +171,30 @@ pub const fn below(draw: u64, n: u64) -> u64 {
 }
 
 /// A keyed value in `0..n` (see [`below`]).
-pub const fn keyed_below(world_seed: u64, stream: u64, subject: u64, tick: u64, slot: u32, replicate: u32, n: u64) -> u64 {
-    below(keyed_u64(world_seed, stream, subject, tick, slot, replicate), n)
+pub const fn keyed_below(
+    world_seed: u64,
+    stream: u64,
+    subject: u64,
+    tick: u64,
+    slot: u32,
+    replicate: u32,
+    n: u64,
+) -> u64 {
+    below(
+        keyed_u64(world_seed, stream, subject, tick, slot, replicate),
+        n,
+    )
 }
 
 /// A keyed Brownian axis step in `{-1, 0, +1}`.
-pub const fn keyed_step(world_seed: u64, stream: u64, subject: u64, tick: u64, slot: u32, replicate: u32) -> i32 {
+pub const fn keyed_step(
+    world_seed: u64,
+    stream: u64,
+    subject: u64,
+    tick: u64,
+    slot: u32,
+    replicate: u32,
+) -> i32 {
     keyed_below(world_seed, stream, subject, tick, slot, replicate, 3) as i32 - 1
 }
 
@@ -236,7 +269,17 @@ mod tests {
 
     #[test]
     fn fork_replicate_starts_at_its_tick() {
-        let fork = NoiseFork { tick: 100, replicate: 3 };
-        assert_eq!((fork.replicate_at(99), fork.replicate_at(100), fork.replicate_at(500)), (0, 3, 3));
+        let fork = NoiseFork {
+            tick: 100,
+            replicate: 3,
+        };
+        assert_eq!(
+            (
+                fork.replicate_at(99),
+                fork.replicate_at(100),
+                fork.replicate_at(500)
+            ),
+            (0, 3, 3)
+        );
     }
 }

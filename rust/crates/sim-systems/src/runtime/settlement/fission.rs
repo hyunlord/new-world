@@ -92,14 +92,20 @@ use hecs::World;
 use sim_core::causal::event::{CausalEvent, DissolutionCause};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind, DepartCause};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position, ResourceKind, SeekTarget,
-    SettlementId, Temperament, SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_PROXIMITY_RADIUS,
+    Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position,
+    ResourceKind, SeekTarget, SettlementId, Temperament, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
+    SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::fission_threshold::fission_threshold;
-use sim_core::rng::{keyed_below, keyed_u64, keyed_unit_f64, STREAM_FISSION, STREAM_FISSION_HAZARD};
+use sim_core::rng::{
+    keyed_below, keyed_u64, keyed_unit_f64, STREAM_FISSION, STREAM_FISSION_HAZARD,
+};
 use sim_core::rules::{BirthRule, FissionHazard, FissionRule};
 use sim_core::TerrainType;
-use sim_engine::{BuildingPlacedEvent, FissionCheck, FissionRecord, RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
+use sim_engine::{
+    BuildingPlacedEvent, FissionCheck, FissionRecord, RuntimeSystem, SimResources,
+    RESOURCE_SOURCE_INFINITE,
+};
 
 use crate::runtime::resource_regen::season_at_tick;
 use crate::runtime::settlement::food_economy::{adult_need_per_day, annual_mean_supply};
@@ -152,10 +158,25 @@ type Roster = BTreeMap<AgentId, (hecs::Entity, (u32, u32), bool, bool, u64)>;
 
 fn roster(world: &World) -> Roster {
     world
-        .query::<(&Agent, &Position, Option<&Child>, Option<&Elder>, Option<&Lineage>)>()
+        .query::<(
+            &Agent,
+            &Position,
+            Option<&Child>,
+            Option<&Elder>,
+            Option<&Lineage>,
+        )>()
         .iter()
         .map(|(e, (a, p, child, elder, lineage))| {
-            (a.id, (e, (p.x, p.y), child.is_none() && elder.is_none(), elder.is_some(), lineage.map_or(a.id, |l| l.key)))
+            (
+                a.id,
+                (
+                    e,
+                    (p.x, p.y),
+                    child.is_none() && elder.is_none(),
+                    elder.is_some(),
+                    lineage.map_or(a.id, |l| l.key),
+                ),
+            )
         })
         .collect()
 }
@@ -164,7 +185,11 @@ fn roster(world: &World) -> Roster {
 /// `floor(utilization × annual_mean_supply / adult_need_per_day)`; `None`
 /// without a provisioned sustain rule.
 pub fn sustain_capacity(resources: &SimResources, sid: SettlementId) -> Option<u32> {
-    let BirthRule::Provisioned { sustain: Some(sustain), .. } = resources.rules.society.birth else {
+    let BirthRule::Provisioned {
+        sustain: Some(sustain),
+        ..
+    } = resources.rules.society.birth
+    else {
         return None;
     };
     let supply = annual_mean_supply(resources, sid, sustain.forage_radius);
@@ -178,19 +203,32 @@ pub fn sustain_capacity(resources: &SimResources, sid: SettlementId) -> Option<u
 /// Pass 12: the hazard terms (g, q, s, h) in thousandths for a settlement of
 /// `members` with `capacity` (`sustain_capacity`) and `food` in its store;
 /// `need_per_member` is `adult_need_per_day` (the only f64, floored once).
-pub fn hazard_terms(hazard: &FissionHazard, members: u32, capacity: u32, food: u32, need_per_member: f64) -> (i64, i64, i64, i64) {
+pub fn hazard_terms(
+    hazard: &FissionHazard,
+    members: u32,
+    capacity: u32,
+    food: u32,
+    need_per_member: f64,
+) -> (i64, i64, i64, i64) {
     let clamp = |x: i64| x.clamp(0, 1000);
     let m = i64::from(members);
-    let g = clamp((m - i64::from(hazard.size_lo)) * 1000 / (i64::from(hazard.size_hi) - i64::from(hazard.size_lo)).max(1));
+    let g = clamp(
+        (m - i64::from(hazard.size_lo)) * 1000
+            / (i64::from(hazard.size_hi) - i64::from(hazard.size_lo)).max(1),
+    );
     let c = m * 1000 / i64::from(capacity.max(1));
     let q = clamp(
         (c - i64::from(hazard.crowd_lo_permille)) * 1000
             / (i64::from(hazard.crowd_hi_permille) - i64::from(hazard.crowd_lo_permille)).max(1),
     );
-    let need = ((f64::from(members) * need_per_member * f64::from(hazard.scarcity_days)).floor() as i64).max(1);
+    let need = ((f64::from(members) * need_per_member * f64::from(hazard.scarcity_days)).floor()
+        as i64)
+        .max(1);
     let s = clamp(1000 - i64::from(food) * 1000 / need);
-    let h = i64::from(hazard.max_daily_permille) * g
-        * (i64::from(hazard.weight_crowd_permille) * q + i64::from(hazard.weight_scarcity_permille) * s)
+    let h = i64::from(hazard.max_daily_permille)
+        * g
+        * (i64::from(hazard.weight_crowd_permille) * q
+            + i64::from(hazard.weight_scarcity_permille) * s)
         / 1_000_000_000;
     (g, q, s, h)
 }
@@ -228,7 +266,12 @@ fn stamp_camp(resources: &mut SimResources, target: (u32, u32)) -> Option<(u32, 
             })
             .min_by_key(|&p| (chebyshev(p, goal), p.1, p.0))?;
         resources.building_kinds.insert(tile, kind);
-        resources.building_event_queue.push_back(BuildingPlacedEvent { position: tile, radius });
+        resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: tile,
+                radius,
+            });
         if kind == BuildingKind::Shelter {
             resources.set_sleep_tile(tile.0, tile.1, RESOURCE_SOURCE_INFINITE);
         }
@@ -242,8 +285,17 @@ fn stamp_camp(resources: &mut SimResources, target: (u32, u32)) -> Option<(u32, 
 impl FissionSystem {
     /// Remove the markers of a group, return its store to the parent, retire
     /// a placed hearth and count the cancellation.
-    fn cancel(&mut self, world: &mut World, resources: &mut SimResources, roster: &Roster, id: u32, tick: u64) {
-        let Some(group) = self.groups.remove(&id) else { return };
+    fn cancel(
+        &mut self,
+        world: &mut World,
+        resources: &mut SimResources,
+        roster: &Roster,
+        id: u32,
+        tick: u64,
+    ) {
+        let Some(group) = self.groups.remove(&id) else {
+            return;
+        };
         for member in &group.members {
             if let Some((entity, ..)) = roster.get(member) {
                 let _ = world.remove_one::<Founding>(*entity);
@@ -285,8 +337,18 @@ impl FissionSystem {
 
     /// The daughter at the group's hearth formed: move the group, deliver the
     /// store, link the parent.
-    fn found(&mut self, world: &mut World, resources: &mut SimResources, roster: &Roster, id: u32, daughter: SettlementId, tick: u64) {
-        let Some(group) = self.groups.remove(&id) else { return };
+    fn found(
+        &mut self,
+        world: &mut World,
+        resources: &mut SimResources,
+        roster: &Roster,
+        id: u32,
+        daughter: SettlementId,
+        tick: u64,
+    ) {
+        let Some(group) = self.groups.remove(&id) else {
+            return;
+        };
         // Pass 19 chronicle (write-only): the daughter, then each living
         // member in AgentId order (the loop below skips the dead too).
         resources.chronicle.push(
@@ -315,8 +377,14 @@ impl FissionSystem {
             if !roster.contains_key(member) {
                 continue;
             }
-            let in_parent = resources.settlements.get(&group.parent).is_some_and(|s| s.member_agents.contains(member));
-            let in_daughter = resources.settlements.get(&daughter).is_some_and(|s| s.member_agents.contains(member));
+            let in_parent = resources
+                .settlements
+                .get(&group.parent)
+                .is_some_and(|s| s.member_agents.contains(member));
+            let in_daughter = resources
+                .settlements
+                .get(&daughter)
+                .is_some_and(|s| s.member_agents.contains(member));
             // The formation scan's exclusivity pass already moved this founder.
             moved_by_scan += u64::from(in_daughter && !in_parent);
             for sid in &ids {
@@ -334,7 +402,10 @@ impl FissionSystem {
             }
         }
         // Measurement: `exclusivity_moves` counts moves outside fission.
-        resources.tallies.exclusivity_moves = resources.tallies.exclusivity_moves.saturating_sub(moved_by_scan);
+        resources.tallies.exclusivity_moves = resources
+            .tallies
+            .exclusivity_moves
+            .saturating_sub(moved_by_scan);
         for settlement in resources.settlements.values_mut() {
             settlement.population_stats.current = settlement.member_agents.len() as u32;
         }
@@ -351,11 +422,25 @@ impl FissionSystem {
     }
 
     /// Walk every departed group forward one tick (fission-id order).
-    fn advance(&mut self, world: &mut World, resources: &mut SimResources, rule: &FissionRule, roster: &Roster, tick: u64) {
+    fn advance(
+        &mut self,
+        world: &mut World,
+        resources: &mut SimResources,
+        rule: &FissionRule,
+        roster: &Roster,
+        tick: u64,
+    ) {
         let ids: Vec<u32> = self.groups.keys().copied().collect();
         for id in ids {
-            let Some(group) = self.groups.get(&id).cloned() else { continue };
-            let alive: Vec<AgentId> = group.members.iter().copied().filter(|m| roster.contains_key(m)).collect();
+            let Some(group) = self.groups.get(&id).cloned() else {
+                continue;
+            };
+            let alive: Vec<AgentId> = group
+                .members
+                .iter()
+                .copied()
+                .filter(|m| roster.contains_key(m))
+                .collect();
             match group.placed {
                 Some((hearth, placed_tick)) => {
                     let daughter = {
@@ -381,14 +466,29 @@ impl FissionSystem {
                     }
                     let near = alive
                         .iter()
-                        .filter(|m| roster.get(m).is_some_and(|row| chebyshev(row.1, group.site) <= SETTLEMENT_PROXIMITY_RADIUS))
+                        .filter(|m| {
+                            roster.get(m).is_some_and(|row| {
+                                chebyshev(row.1, group.site) <= SETTLEMENT_PROXIMITY_RADIUS
+                            })
+                        })
                         .count() as u32;
                     let target = if near >= SETTLEMENT_FORMATION_AGENT_THRESHOLD {
                         Some((group.site, false))
-                    } else if tick >= group.since + u64::from(rule.settle_timeout_days) * resources.ticks_per_day {
-                        let leader = if roster.contains_key(&group.leader) { group.leader } else { alive[0] };
+                    } else if tick
+                        >= group.since
+                            + u64::from(rule.settle_timeout_days) * resources.ticks_per_day
+                    {
+                        let leader = if roster.contains_key(&group.leader) {
+                            group.leader
+                        } else {
+                            alive[0]
+                        };
                         let tile = roster.get(&leader).map_or(group.site, |row| row.1);
-                        if resources.settlements.values().all(|s| chebyshev(s.formation_tile, tile) >= rule.site_clearance) {
+                        if resources
+                            .settlements
+                            .values()
+                            .all(|s| chebyshev(s.formation_tile, tile) >= rule.site_clearance)
+                        {
                             Some((tile, true))
                         } else {
                             self.cancel(world, resources, roster, id, tick);
@@ -409,7 +509,9 @@ impl FissionSystem {
                                         g.site = hearth;
                                         for member in &alive {
                                             if let Some((entity, ..)) = roster.get(member) {
-                                                if let Ok(mut founding) = world.get::<&mut Founding>(*entity) {
+                                                if let Ok(mut founding) =
+                                                    world.get::<&mut Founding>(*entity)
+                                                {
                                                     founding.site = hearth;
                                                 }
                                             }
@@ -430,7 +532,9 @@ impl FissionSystem {
 
     /// Dissolve settlement `sid` explicitly (its buildings stay) and retire its hearth.
     fn dissolve(resources: &mut SimResources, sid: SettlementId, final_population: u32, tick: u64) {
-        let Some(settlement) = resources.settlements.remove(&sid) else { return };
+        let Some(settlement) = resources.settlements.remove(&sid) else {
+            return;
+        };
         let tile = settlement.formation_tile;
         resources.retired_hearths.insert(tile);
         resources.dissolutions.push((sid, tick));
@@ -454,17 +558,27 @@ impl FissionSystem {
     }
 
     /// Hourly: remnants merge away, empty settlements dissolve.
-    fn remnants(&mut self, world: &World, resources: &mut SimResources, rule: &FissionRule, tick: u64) {
+    fn remnants(
+        &mut self,
+        world: &World,
+        resources: &mut SimResources,
+        rule: &FissionRule,
+        tick: u64,
+    ) {
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         for sid in ids {
-            let members = resources.settlements.get(&sid).map_or(0, |s| s.member_agents.len() as u32);
+            let members = resources
+                .settlements
+                .get(&sid)
+                .map_or(0, |s| s.member_agents.len() as u32);
             if members == 0 {
                 self.remnant_since.remove(&sid);
                 Self::dissolve(resources, sid, 0, tick);
                 // Pass 19 chronicle (write-only).
                 resources.chronicle.push(
-                    ChronicleEntry::new(tick, ChronicleKind::SettlementDissolved).settlement(Some(sid)),
+                    ChronicleEntry::new(tick, ChronicleKind::SettlementDissolved)
+                        .settlement(Some(sid)),
                 );
             } else if members <= rule.remnant_members {
                 let since = *self.remnant_since.entry(sid).or_insert(tick);
@@ -506,10 +620,19 @@ impl FissionSystem {
     }
 
     /// Daily 06:00 check, settlements in id order.
-    fn check(&mut self, world: &mut World, resources: &mut SimResources, rule: &FissionRule, roster: &Roster, tick: u64) {
+    fn check(
+        &mut self,
+        world: &mut World,
+        resources: &mut SimResources,
+        rule: &FissionRule,
+        roster: &Roster,
+        tick: u64,
+    ) {
         let tpd = resources.ticks_per_day;
         // Pass 12: the allowed seasons (v17: spring and summer, i.e. season <= 1).
-        if season_at_tick(resources, tick).is_none_or(|(season, _)| !rule.allowed_seasons.get(season).copied().unwrap_or(false)) {
+        if season_at_tick(resources, tick)
+            .is_none_or(|(season, _)| !rule.allowed_seasons.get(season).copied().unwrap_or(false))
+        {
             return;
         }
         let mut checks: Vec<FissionCheck> = Vec::new();
@@ -530,24 +653,38 @@ impl FissionSystem {
         for sid in ids {
             // Both ends of the check for every higher id (Pass 12: `break`
             // so the logged checks are kept; nothing follows the loop).
-            if self.world_last_fission.is_some_and(|last| tick < last + cooldown) {
+            if self
+                .world_last_fission
+                .is_some_and(|last| tick < last + cooldown)
+            {
                 break;
             }
-            let alive = resources.settlements.values().filter(|s| !s.member_agents.is_empty()).count() as u32
+            let alive = resources
+                .settlements
+                .values()
+                .filter(|s| !s.member_agents.is_empty())
+                .count() as u32
                 + self.groups.len() as u32;
             if alive >= rule.max_settlements {
                 break;
             }
-            let Some(settlement) = resources.settlements.get(&sid) else { continue };
+            let Some(settlement) = resources.settlements.get(&sid) else {
+                continue;
+            };
             let members = settlement.member_agents.len() as u32;
             if tick < settlement.founded_at + u64::from(rule.min_age_days) * tpd
-                || self.last_fission.get(&sid).is_some_and(|last| tick < last + cooldown)
+                || self
+                    .last_fission
+                    .get(&sid)
+                    .is_some_and(|last| tick < last + cooldown)
                 || members < rule.min_members
                 || self.groups.values().any(|g| g.parent == sid)
             {
                 continue;
             }
-            let Some(capacity) = sustain_capacity(resources, sid) else { continue };
+            let Some(capacity) = sustain_capacity(resources, sid) else {
+                continue;
+            };
             // Pass 12: the hazard draw replaces the crowding gate.
             let mut check = None;
             match rule.hazard {
@@ -557,30 +694,56 @@ impl FissionSystem {
                     }
                 }
                 Some(hazard) => {
-                    let food = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
-                    let (g, q, s, h) = hazard_terms(&hazard, members, capacity, food, adult_need_per_day(tpd));
+                    let food = settlement
+                        .stockpile
+                        .get(&ResourceKind::Food)
+                        .copied()
+                        .unwrap_or(0);
+                    let (g, q, s, h) =
+                        hazard_terms(&hazard, members, capacity, food, adult_need_per_day(tpd));
                     let (draw, split, pressure, threshold) = match rule.pressure {
                         None => {
                             let replicate = resources.noise_replicate_for(tick);
-                            let draw = keyed_below(resources.world_seed, STREAM_FISSION_HAZARD, u64::from(sid), tick, 0, replicate, 1000);
+                            let draw = keyed_below(
+                                resources.world_seed,
+                                STREAM_FISSION_HAZARD,
+                                u64::from(sid),
+                                tick,
+                                0,
+                                replicate,
+                                1000,
+                            );
                             (draw, (draw as i64) < h, 0, 0)
                         }
                         // Pass 13: accumulate (every gate passed today), no draw.
                         Some(law) => {
-                            let k = resources.fission_log.iter().filter(|r| r.parent == sid).count() as u32;
-                            let Some(settlement) = resources.settlements.get_mut(&sid) else { continue };
+                            let k = resources
+                                .fission_log
+                                .iter()
+                                .filter(|r| r.parent == sid)
+                                .count() as u32;
+                            let Some(settlement) = resources.settlements.get_mut(&sid) else {
+                                continue;
+                            };
                             if settlement.fission_threshold == 0 {
                                 // A settlement formed without its draw (e.g. deserialized
                                 // from before Pass 13) draws it now, with the same key.
-                                settlement.fission_threshold =
-                                    fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
+                                settlement.fission_threshold = fission_threshold(
+                                    law.threshold_table,
+                                    resources.world_seed,
+                                    u64::from(sid),
+                                    k,
+                                );
                             }
                             settlement.fission_pressure = if h > 0 {
                                 settlement.fission_pressure.saturating_add(h as u64)
                             } else {
-                                settlement.fission_pressure.saturating_sub(u64::from(law.decay_permille))
+                                settlement
+                                    .fission_pressure
+                                    .saturating_sub(u64::from(law.decay_permille))
                             };
-                            let (p, theta) = (settlement.fission_pressure, settlement.fission_threshold);
+                            let (p, theta) =
+                                (settlement.fission_pressure, settlement.fission_threshold);
                             (0, p > 0 && p >= theta, p, theta)
                         }
                     };
@@ -602,19 +765,23 @@ impl FissionSystem {
                     });
                 }
             }
-            let Some(settlement) = resources.settlements.get(&sid) else { continue };
+            let Some(settlement) = resources.settlements.get(&sid) else {
+                continue;
+            };
             // Site: the free wild-region centre nearest the parent.
             let home = settlement.formation_tile;
-            let site = resources
-                .wild_regions
-                .iter()
-                .enumerate()
-                .filter(|(_, region)| {
-                    resources.settlements.values().all(|s| chebyshev(s.formation_tile, region.centre) >= rule.site_clearance)
-                        && self.groups.values().all(|g| g.site != region.centre)
-                })
-                .min_by_key(|(index, region)| (chebyshev(region.centre, home), *index))
-                .map(|(_, region)| region.centre);
+            let site =
+                resources
+                    .wild_regions
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, region)| {
+                        resources.settlements.values().all(|s| {
+                            chebyshev(s.formation_tile, region.centre) >= rule.site_clearance
+                        }) && self.groups.values().all(|g| g.site != region.centre)
+                    })
+                    .min_by_key(|(index, region)| (chebyshev(region.centre, home), *index))
+                    .map(|(_, region)| region.centre);
             if let Some(mut check) = check {
                 check.site_free = site.is_some();
                 checks.push(check);
@@ -633,7 +800,11 @@ impl FissionSystem {
             // sorted with `total_cmp` and the id tie-break (a member without
             // the component counts as NS 500); the u64 below is then the rank.
             // Without effects the v17–v19 path stays as it was.
-            let departure = resources.rules.agent.temperament.filter(|rule| rule.effects);
+            let departure = resources
+                .rules
+                .agent
+                .temperament
+                .filter(|rule| rule.effects);
             let ranked: Vec<(u64, AgentId, bool)> = if let Some(lean) = departure {
                 let temperaments: BTreeMap<AgentId, Temperament> = world
                     .query::<(&Agent, &Temperament)>()
@@ -641,37 +812,76 @@ impl FissionSystem {
                     .filter(|(_, (agent, _))| settlement.member_agents.contains(&agent.id))
                     .map(|(_, (agent, t))| (agent.id, *t))
                     .collect();
-                let neutral = Temperament { ns: 500, ha: 500, rd: 500, p: 500 };
+                let neutral = Temperament {
+                    ns: 500,
+                    ha: 500,
+                    rd: 500,
+                    p: 500,
+                };
                 let mut keyed: Vec<(f64, AgentId, bool)> = settlement
                     .member_agents
                     .iter()
                     .filter_map(|id| roster.get(id).map(|row| (*id, row)))
                     .filter(|(id, row)| !row.3 && !porters.contains(id))
                     .map(|(id, row)| {
-                        let unit = keyed_unit_f64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate);
-                        (lean.departure_key(unit, temperaments.get(&id).unwrap_or(&neutral)), id, row.2)
+                        let unit = keyed_unit_f64(
+                            resources.world_seed,
+                            STREAM_FISSION,
+                            row.4,
+                            tick,
+                            0,
+                            replicate,
+                        );
+                        (
+                            lean.departure_key(unit, temperaments.get(&id).unwrap_or(&neutral)),
+                            id,
+                            row.2,
+                        )
                     })
                     .collect();
                 keyed.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
-                keyed.into_iter().enumerate().map(|(rank, (_, id, adult))| (rank as u64, id, adult)).collect()
+                keyed
+                    .into_iter()
+                    .enumerate()
+                    .map(|(rank, (_, id, adult))| (rank as u64, id, adult))
+                    .collect()
             } else {
                 let mut ranked: Vec<(u64, AgentId, bool)> = settlement
                     .member_agents
                     .iter()
                     .filter_map(|id| roster.get(id).map(|row| (*id, row)))
                     .filter(|(id, row)| !row.3 && !porters.contains(id))
-                    .map(|(id, row)| (keyed_u64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate), id, row.2))
+                    .map(|(id, row)| {
+                        (
+                            keyed_u64(
+                                resources.world_seed,
+                                STREAM_FISSION,
+                                row.4,
+                                tick,
+                                0,
+                                replicate,
+                            ),
+                            id,
+                            row.2,
+                        )
+                    })
                     .collect();
                 ranked.sort_unstable();
                 ranked
             };
-            let k = ((f64::from(members) * rule.group_share + 0.5).floor() as u32).clamp(rule.group_min, rule.group_max);
+            let k = ((f64::from(members) * rule.group_share + 0.5).floor() as u32)
+                .clamp(rule.group_min, rule.group_max);
             let adults: Vec<AgentId> = ranked.iter().filter(|r| r.2).map(|r| r.1).collect();
             if (adults.len() as u32) < rule.min_adults || (ranked.len() as u32) < k {
                 continue;
             }
             let family = resources.rules.society.family.map(|_| {
-                let members = settlement.member_agents.iter().copied().filter(|id| !porters.contains(id)).collect();
+                let members = settlement
+                    .member_agents
+                    .iter()
+                    .copied()
+                    .filter(|id| !porters.contains(id))
+                    .collect();
                 (
                     crate::runtime::agent::households::households(world, &members),
                     crate::runtime::agent::households::couples(world, &members),
@@ -695,18 +905,29 @@ impl FissionSystem {
                 ) else {
                     continue;
                 };
-                (explained.keys().copied().collect::<BTreeSet<AgentId>>(), Some(explained))
+                (
+                    explained.keys().copied().collect::<BTreeSet<AgentId>>(),
+                    Some(explained),
+                )
             } else {
-            let mut group: BTreeSet<AgentId> = adults.iter().take(rule.min_adults as usize).copied().collect();
-            for (_, id, _) in &ranked {
-                if group.len() as u32 >= k {
-                    break;
+                let mut group: BTreeSet<AgentId> = adults
+                    .iter()
+                    .take(rule.min_adults as usize)
+                    .copied()
+                    .collect();
+                for (_, id, _) in &ranked {
+                    if group.len() as u32 >= k {
+                        break;
+                    }
+                    group.insert(*id);
                 }
-                group.insert(*id);
-            }
-            (group, None)
+                (group, None)
             };
-            let Some(leader) = group.iter().copied().find(|id| roster.get(id).is_some_and(|row| row.2)) else {
+            let Some(leader) = group
+                .iter()
+                .copied()
+                .find(|id| roster.get(id).is_some_and(|row| row.2))
+            else {
                 continue; // no adult in the group (only with `min_adults` 0)
             };
             self.next_id += 1;
@@ -740,18 +961,46 @@ impl FissionSystem {
                 );
             }
             let (food, wood) = if rule.stock_share {
-                let share = |held: u32| (u64::from(held) * u64::from(k) / u64::from(members.max(1))) as u32;
-                let Some(parent) = resources.settlements.get_mut(&sid) else { continue };
-                let food = share(parent.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0));
-                let wood = share(parent.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0));
-                (parent.withdraw(ResourceKind::Food, food), parent.withdraw(ResourceKind::Wood, wood))
+                let share =
+                    |held: u32| (u64::from(held) * u64::from(k) / u64::from(members.max(1))) as u32;
+                let Some(parent) = resources.settlements.get_mut(&sid) else {
+                    continue;
+                };
+                let food = share(
+                    parent
+                        .stockpile
+                        .get(&ResourceKind::Food)
+                        .copied()
+                        .unwrap_or(0),
+                );
+                let wood = share(
+                    parent
+                        .stockpile
+                        .get(&ResourceKind::Wood)
+                        .copied()
+                        .unwrap_or(0),
+                );
+                (
+                    parent.withdraw(ResourceKind::Food, food),
+                    parent.withdraw(ResourceKind::Wood, wood),
+                )
             } else {
                 (0, 0)
             };
             for id in &group {
                 if let Some((entity, ..)) = roster.get(id) {
-                    let _ = world.insert_one(*entity, Founding { site, fission_id, leader, since_tick: tick });
-                    let walking = world.get::<&AgentState>(*entity).is_ok_and(|s| !matches!(*s, AgentState::Consuming { .. }));
+                    let _ = world.insert_one(
+                        *entity,
+                        Founding {
+                            site,
+                            fission_id,
+                            leader,
+                            since_tick: tick,
+                        },
+                    );
+                    let walking = world
+                        .get::<&AgentState>(*entity)
+                        .is_ok_and(|s| !matches!(*s, AgentState::Consuming { .. }));
                     if walking {
                         let _ = world.insert_one(*entity, AgentState::Idle);
                         let _ = world.remove_one::<SeekTarget>(*entity);
@@ -759,9 +1008,14 @@ impl FissionSystem {
                 }
                 resources.haulers.remove(id);
             }
-            let adults_in_group = group.iter().filter(|id| roster.get(id).is_some_and(|row| row.2)).count() as u32;
-            let (pressure_at_split, threshold_at_split) =
-                resources.settlements.get(&sid).map_or((0, 0), |s| (s.fission_pressure, s.fission_threshold));
+            let adults_in_group = group
+                .iter()
+                .filter(|id| roster.get(id).is_some_and(|row| row.2))
+                .count() as u32;
+            let (pressure_at_split, threshold_at_split) = resources
+                .settlements
+                .get(&sid)
+                .map_or((0, 0), |s| (s.fission_pressure, s.fission_threshold));
             resources.fission_log.push(FissionRecord {
                 fission_id,
                 parent: sid,
@@ -805,8 +1059,13 @@ impl FissionSystem {
             // Pass 13: the parent's pressure resets and θ is redrawn (k now
             // counts this record).
             if let Some(law) = rule.pressure {
-                let k = resources.fission_log.iter().filter(|r| r.parent == sid).count() as u32;
-                let theta = fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
+                let k = resources
+                    .fission_log
+                    .iter()
+                    .filter(|r| r.parent == sid)
+                    .count() as u32;
+                let theta =
+                    fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
                 if let Some(parent) = resources.settlements.get_mut(&sid) {
                     if law.reset_on_split {
                         parent.fission_pressure = 0;
@@ -816,7 +1075,17 @@ impl FissionSystem {
             }
             self.groups.insert(
                 fission_id,
-                Group { parent: sid, site, members: group, leader, since: tick, food, wood, placed: None, log: resources.fission_log.len() - 1 },
+                Group {
+                    parent: sid,
+                    site,
+                    members: group,
+                    leader,
+                    since: tick,
+                    food,
+                    wood,
+                    placed: None,
+                    log: resources.fission_log.len() - 1,
+                },
             );
             self.last_fission.insert(sid, tick);
             self.world_last_fission = Some(tick);
@@ -897,6 +1166,9 @@ mod tests {
     #[test]
     fn metadata() {
         let s = FissionSystem::new();
-        assert_eq!((s.name(), s.priority(), s.tick_interval()), ("FissionSystem", 148, 1));
+        assert_eq!(
+            (s.name(), s.priority(), s.tick_interval()),
+            ("FissionSystem", 148, 1)
+        );
     }
 }

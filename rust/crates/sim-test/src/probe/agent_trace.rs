@@ -29,8 +29,8 @@
 use serde_json::{json, Value};
 use sim_core::causal::CausalEvent;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Elder, FamilyEvent, Inventory, Lineage, Position, ResourceKind, Social, TargetKind,
-    Temperament, SETTLEMENT_PROXIMITY_RADIUS,
+    Agent, AgentId, AgentState, Child, Elder, FamilyEvent, Inventory, Lineage, Position,
+    ResourceKind, Social, TargetKind, Temperament, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_engine::SimEngine;
 use std::collections::{BTreeMap, BTreeSet};
@@ -118,7 +118,8 @@ pub(crate) struct AgentTracer {
 /// The clock minute of the engine's last system tick.
 fn clock_minute(engine: &SimEngine) -> Option<u64> {
     let r = &engine.resources;
-    (r.ticks_per_day != 0).then(|| r.current_tick.saturating_add(r.rules.clock_offset_ticks) % r.ticks_per_day)
+    (r.ticks_per_day != 0)
+        .then(|| r.current_tick.saturating_add(r.rules.clock_offset_ticks) % r.ticks_per_day)
 }
 
 /// The night a clock reading belongs to and its bed minute: 18:00–23:59 →
@@ -141,13 +142,28 @@ impl AgentTracer {
     /// Starts the trace on a freshly built engine (tick 0): every person
     /// present is a founder.
     pub(crate) fn start(engine: &SimEngine) -> Self {
-        let mut tracer = Self { seed: engine.resources.world_seed, routine: super::pass17::RoutineTracer::start(engine), family: super::family_trace::FamilyTracer::start(engine), ..Self::default() };
-        for (_, (agent, lineage, temperament)) in
-            engine.world.query::<(&Agent, Option<&Lineage>, Option<&Temperament>)>().iter()
+        let mut tracer = Self {
+            seed: engine.resources.world_seed,
+            routine: super::pass17::RoutineTracer::start(engine),
+            family: super::family_trace::FamilyTracer::start(engine),
+            ..Self::default()
+        };
+        for (_, (agent, lineage, temperament)) in engine
+            .world
+            .query::<(&Agent, Option<&Lineage>, Option<&Temperament>)>()
+            .iter()
         {
             let key = lineage.map_or(agent.id, |l| l.key);
             let computed = lineage.map(|l| Temperament::founder(tracer.seed, l.key));
-            let person = tracer.person(key, None, computed, temperament, Vec::new(), [None; 2], true);
+            let person = tracer.person(
+                key,
+                None,
+                computed,
+                temperament,
+                Vec::new(),
+                [None; 2],
+                true,
+            );
             tracer.people.insert(agent.id, person);
         }
         tracer.record_prev(engine);
@@ -185,8 +201,10 @@ impl AgentTracer {
 
     fn record_prev(&mut self, engine: &SimEngine) {
         self.prev.clear();
-        for (_, (agent, state, social, inventory)) in
-            engine.world.query::<(&Agent, &AgentState, Option<&Social>, Option<&Inventory>)>().iter()
+        for (_, (agent, state, social, inventory)) in engine
+            .world
+            .query::<(&Agent, &AgentState, Option<&Social>, Option<&Inventory>)>()
+            .iter()
         {
             self.prev.insert(
                 agent.id,
@@ -210,20 +228,54 @@ impl AgentTracer {
 
     /// Observes the engine right after one `engine.tick()`.
     pub(crate) fn after_tick(&mut self, engine: &SimEngine) {
-        let births = self.family.as_mut().map(|family| family.after_tick(engine)).unwrap_or_default();
+        let births = self
+            .family
+            .as_mut()
+            .map(|family| family.after_tick(engine))
+            .unwrap_or_default();
         for event in births {
-            let FamilyEvent::Born { child, mother, father, lineage_key, temperament, .. } = event else { continue };
-            if self.people.contains_key(&child) { continue; }
+            let FamilyEvent::Born {
+                child,
+                mother,
+                father,
+                lineage_key,
+                temperament,
+                ..
+            } = event
+            else {
+                continue;
+            };
+            if self.people.contains_key(&child) {
+                continue;
+            }
             let parents: Vec<_> = [mother, father].into_iter().flatten().collect();
-            let parent_temperaments = [mother, father].map(|id| id.and_then(|id| self.people.get(&id)).and_then(|person| person.temperament));
-            let computed = Some(Temperament::child(self.seed, lineage_key, parent_temperaments));
-            let person = self.person(lineage_key, Some(engine.resources.current_tick), computed, Some(&temperament), parents, parent_temperaments, true);
+            let parent_temperaments = [mother, father].map(|id| {
+                id.and_then(|id| self.people.get(&id))
+                    .and_then(|person| person.temperament)
+            });
+            let computed = Some(Temperament::child(
+                self.seed,
+                lineage_key,
+                parent_temperaments,
+            ));
+            let person = self.person(
+                lineage_key,
+                Some(engine.resources.current_tick),
+                computed,
+                Some(&temperament),
+                parents,
+                parent_temperaments,
+                true,
+            );
             self.people.insert(child, person);
         }
         let r = &engine.resources;
         let sys_tick = r.current_tick;
         let minute = clock_minute(engine);
-        let night = night_of(sys_tick.saturating_add(r.rules.clock_offset_ticks), r.ticks_per_day);
+        let night = night_of(
+            sys_tick.saturating_add(r.rules.clock_offset_ticks),
+            r.ticks_per_day,
+        );
         let width = r.tile_grid.width;
         // Hearths: the first settlement in id order that lists the person.
         let mut hearth: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
@@ -262,15 +314,16 @@ impl AgentTracer {
             if !self.people.contains_key(&id) {
                 // A newborn: its parents from the AgentBorn event at its tile.
                 let key = lineage.map_or(id, |l| l.key);
-                let parents = r
-                    .causal_log
-                    .get(pos.y * width + pos.x)
-                    .and_then(|log| {
-                        log.as_slice().iter().find_map(|event| match event {
-                            CausalEvent::AgentBorn { agent: born, parent_ids, .. } if *born == id => Some(parent_ids.clone()),
-                            _ => None,
-                        })
-                    });
+                let parents = r.causal_log.get(pos.y * width + pos.x).and_then(|log| {
+                    log.as_slice().iter().find_map(|event| match event {
+                        CausalEvent::AgentBorn {
+                            agent: born,
+                            parent_ids,
+                            ..
+                        } if *born == id => Some(parent_ids.clone()),
+                        _ => None,
+                    })
+                });
                 let found = parents.is_some();
                 if !found {
                     self.born_event_misses += 1;
@@ -279,38 +332,73 @@ impl AgentTracer {
                 let mut parent_temperaments = [None; 2];
                 for (slot, pid) in parents.iter().take(2).enumerate() {
                     if alive_before.contains(pid) {
-                        parent_temperaments[slot] = self.people.get(pid).and_then(|p| p.temperament);
+                        parent_temperaments[slot] =
+                            self.people.get(pid).and_then(|p| p.temperament);
                     }
                 }
-                let computed = lineage.map(|l| Temperament::child(self.seed, l.key, parent_temperaments));
-                let person = self.person(key, Some(sys_tick), computed, temperament, parents, parent_temperaments, found);
+                let computed =
+                    lineage.map(|l| Temperament::child(self.seed, l.key, parent_temperaments));
+                let person = self.person(
+                    key,
+                    Some(sys_tick),
+                    computed,
+                    temperament,
+                    parents,
+                    parent_temperaments,
+                    found,
+                );
                 self.people.insert(id, person);
             }
             let adult = child.is_none() && elder.is_none();
             let prev = self.prev.get(&id).copied();
-            let Some(person) = self.people.get_mut(&id) else { continue };
+            let Some(person) = self.people.get_mut(&id) else {
+                continue;
+            };
             if !adult {
                 continue;
             }
             person.adult_ticks += 1;
             let home = hearth.get(&id).copied();
             if let (Some(home), Some(m)) = (home, minute) {
-                if sys_tick.is_multiple_of(10) && (360..1080).contains(&m) && matches!(state, AgentState::Idle) {
-                    person.idle_dist_sum += u64::from(pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)));
+                if sys_tick.is_multiple_of(10)
+                    && (360..1080).contains(&m)
+                    && matches!(state, AgentState::Idle)
+                {
+                    person.idle_dist_sum +=
+                        u64::from(pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)));
                     person.idle_samples += 1;
                 }
             }
-            if let (Some((n, bed)), AgentState::Consuming { target: TargetKind::Sleep }) = (night, state) {
+            if let (
+                Some((n, bed)),
+                AgentState::Consuming {
+                    target: TargetKind::Sleep,
+                },
+            ) = (night, state)
+            {
                 person.bed_minutes.entry(n).or_insert(bed);
             }
             if let Some(prev) = prev {
                 let lonely = social.map_or(0.0, |s| s.loneliness);
-                let was_social = matches!(prev.state, AgentState::Consuming { target: TargetKind::Agent(_) });
-                let is_social = matches!(state, AgentState::Consuming { target: TargetKind::Agent(_) });
-                if was_social && !is_social && prev.loneliness - lonely >= prev.loneliness.min(25.0) {
+                let was_social = matches!(
+                    prev.state,
+                    AgentState::Consuming {
+                        target: TargetKind::Agent(_)
+                    }
+                );
+                let is_social = matches!(
+                    state,
+                    AgentState::Consuming {
+                        target: TargetKind::Agent(_)
+                    }
+                );
+                if was_social && !is_social && prev.loneliness - lonely >= prev.loneliness.min(25.0)
+                {
                     person.social_completed += 1;
                 }
-                let near = home.is_some_and(|h| pos.x.abs_diff(h.0).max(pos.y.abs_diff(h.1)) <= SETTLEMENT_PROXIMITY_RADIUS);
+                let near = home.is_some_and(|h| {
+                    pos.x.abs_diff(h.0).max(pos.y.abs_diff(h.1)) <= SETTLEMENT_PROXIMITY_RADIUS
+                });
                 let (food, wood) = (
                     inventory.map_or(0, |i| i.get(ResourceKind::Food)),
                     inventory.map_or(0, |i| i.get(ResourceKind::Wood)),
@@ -337,7 +425,13 @@ impl AgentTracer {
             let mut eligible: BTreeSet<AgentId> = r
                 .settlements
                 .get(&record.parent)
-                .map(|s| s.member_agents.iter().copied().filter(|id| seen.contains(id) && !elders.contains(id)).collect())
+                .map(|s| {
+                    s.member_agents
+                        .iter()
+                        .copied()
+                        .filter(|id| seen.contains(id) && !elders.contains(id))
+                        .collect()
+                })
                 .unwrap_or_default();
             eligible.extend(record.members.iter().copied());
             self.fissions.push(FissionSeen { index, eligible });
@@ -375,12 +469,18 @@ impl AgentTracer {
                 "eligible": seen.eligible.iter().collect::<Vec<_>>(),
             }));
         }
-        let axes = |t: &Option<Temperament>| t.map(|t| json!({"ns": t.ns, "ha": t.ha, "rd": t.rd, "p": t.p}));
+        let axes = |t: &Option<Temperament>| {
+            t.map(|t| json!({"ns": t.ns, "ha": t.ha, "rd": t.rd, "p": t.p}))
+        };
         let mut agents = Vec::new();
         let mut people = Vec::new();
         for (id, p) in &self.people {
             let temperament = axes(&p.temperament);
-            let source = if p.from_component { "component" } else { "computed" };
+            let source = if p.from_component {
+                "component"
+            } else {
+                "computed"
+            };
             people.push(json!({
                 "id": id,
                 "lineage_key": p.key,
@@ -437,7 +537,10 @@ impl AgentTracer {
         self.routine.output()
     }
 
-    pub(super) fn family_output(&self, engine: &SimEngine) -> Option<super::family_trace::FamilyOutput> {
+    pub(super) fn family_output(
+        &self,
+        engine: &SimEngine,
+    ) -> Option<super::family_trace::FamilyOutput> {
         self.family.as_ref().map(|family| family.output(engine))
     }
 }
@@ -450,7 +553,9 @@ mod tests {
 
     #[test]
     fn options_split_removes_only_the_trace_flag() {
-        let (rest, options) = ProbeOptions::split(["--scene", "game_v20", "--agent-trace", "--days", "3"].map(String::from));
+        let (rest, options) = ProbeOptions::split(
+            ["--scene", "game_v20", "--agent-trace", "--days", "3"].map(String::from),
+        );
         assert!(options.agent_trace);
         assert_eq!(rest, ["--scene", "game_v20", "--days", "3"]);
         let (rest, options) = ProbeOptions::split(["--days", "3"].map(String::from));
@@ -480,7 +585,16 @@ mod tests {
         e.resources.rules.clock_offset_ticks = 359;
         let a = e.spawn_agent(12, 10);
         e.world
-            .insert(a, (AgentState::Idle, Social::new(40.0, 0.0), Inventory::default(), Sleep::new(0.0, 0.0), Lineage { key: 77, births: 0 }))
+            .insert(
+                a,
+                (
+                    AgentState::Idle,
+                    Social::new(40.0, 0.0),
+                    Inventory::default(),
+                    Sleep::new(0.0, 0.0),
+                    Lineage { key: 77, births: 0 },
+                ),
+            )
             .unwrap();
         let id = e.world.get::<&Agent>(a).unwrap().id;
         let mut s = Settlement::new_with_id(1, 0);
@@ -510,7 +624,10 @@ mod tests {
         e.tick();
         t.after_tick(&e);
         // Tick 12: eats 1 food far from home — a drop elsewhere, not a deposit.
-        e.world.get::<&mut Inventory>(a).unwrap().remove(ResourceKind::Food, 1);
+        e.world
+            .get::<&mut Inventory>(a)
+            .unwrap()
+            .remove(ResourceKind::Food, 1);
         e.tick();
         t.after_tick(&e);
         // Tick 13: home (11, 11), within the radius: food 4 → 0 and wood 2 → 0 deposited.
@@ -524,7 +641,9 @@ mod tests {
         e.tick();
         t.after_tick(&e);
         // Tick 14: social starts (Consuming{Agent}); tick 15 ends with a drop 40 → 12 (28 ≥ 25).
-        *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Consuming { target: TargetKind::Agent(99) };
+        *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Consuming {
+            target: TargetKind::Agent(99),
+        };
         e.tick();
         t.after_tick(&e);
         *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Idle;
@@ -532,7 +651,9 @@ mod tests {
         e.tick();
         t.after_tick(&e);
         // Tick 16–17: a combat-like Consuming{Agent} that ends with no drop — not counted.
-        *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Consuming { target: TargetKind::Agent(98) };
+        *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Consuming {
+            target: TargetKind::Agent(98),
+        };
         e.tick();
         t.after_tick(&e);
         *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Idle;
@@ -545,7 +666,9 @@ mod tests {
             t.after_tick(&e);
         }
         // System tick 861 (20:20): asleep — the night's first sleeping minute is 1220.
-        *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Consuming { target: TargetKind::Sleep };
+        *e.world.get::<&mut AgentState>(a).unwrap() = AgentState::Consuming {
+            target: TargetKind::Sleep,
+        };
         for _ in 0..5 {
             e.tick();
             t.after_tick(&e);
@@ -576,7 +699,9 @@ mod tests {
     fn children_and_elders_are_not_counted() {
         let mut e = SimEngine::new(32, 32, MaterialRegistry::new());
         let a = e.spawn_agent(5, 5);
-        e.world.insert(a, (AgentState::Idle, Child { born_tick: 0 })).unwrap();
+        e.world
+            .insert(a, (AgentState::Idle, Child { born_tick: 0 }))
+            .unwrap();
         let mut t = AgentTracer::start(&e);
         for _ in 0..20 {
             e.tick();

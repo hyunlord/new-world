@@ -294,7 +294,11 @@ mod tests {
         assert_eq!(e.valence, 0.5);
         assert_eq!(e.salience, 0.7);
         assert_eq!(e.reinforcement_count, 0);
-        assert_eq!(e.arm, MemoryArm::Social, "arm is stored verbatim at construction");
+        assert_eq!(
+            e.arm,
+            MemoryArm::Social,
+            "arm is stored verbatim at construction"
+        );
     }
 
     #[test]

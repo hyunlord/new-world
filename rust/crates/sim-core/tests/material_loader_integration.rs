@@ -91,7 +91,9 @@ fn registry_with_loaded_granite() {
     let defs = load_ron(&granite_ron_path()).expect("granite.ron must load");
     let mut registry = MaterialRegistry::new();
     for def in defs {
-        registry.register(def, None).expect("granite registers cleanly");
+        registry
+            .register(def, None)
+            .expect("granite registers cleanly");
     }
     assert_eq!(registry.count(), 1);
 
@@ -324,7 +326,11 @@ fn test_registry_with_20_animals() {
     assert_eq!(registry.count(), 20, "registry holds 20 animals");
 
     let animals: Vec<_> = registry.animals().collect();
-    assert_eq!(animals.len(), 20, "by_category Animal dispatcher returns 20");
+    assert_eq!(
+        animals.len(),
+        20,
+        "by_category Animal dispatcher returns 20"
+    );
 
     assert_eq!(registry.stones().count(), 0);
     assert_eq!(registry.woods().count(), 0);
@@ -426,7 +432,11 @@ fn test_registry_with_15_minerals() {
     assert_eq!(registry.count(), 15, "registry holds 15 minerals");
 
     let minerals: Vec<_> = registry.minerals().collect();
-    assert_eq!(minerals.len(), 15, "by_category Mineral dispatcher returns 15");
+    assert_eq!(
+        minerals.len(),
+        15,
+        "by_category Mineral dispatcher returns 15"
+    );
 
     assert_eq!(registry.stones().count(), 0);
     assert_eq!(registry.woods().count(), 0);

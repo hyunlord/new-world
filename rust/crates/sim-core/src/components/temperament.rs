@@ -46,7 +46,12 @@ impl Temperament {
 
     /// Builds a temperament from axes in the order NS, HA, RD, P.
     pub const fn from_axes(axes: [u16; 4]) -> Self {
-        Self { ns: axes[0], ha: axes[1], rd: axes[2], p: axes[3] }
+        Self {
+            ns: axes[0],
+            ha: axes[1],
+            rd: axes[2],
+            p: axes[3],
+        }
     }
 
     /// The founder draw of the resident with lineage key `lineage_key` in
@@ -61,7 +66,15 @@ impl Temperament {
             let mut sum = 0u64;
             let mut s = 1;
             while s <= 3 {
-                sum += keyed_below(seed, STREAM_TEMPERAMENT, lineage_key, 0, 4 * a as u32 + s, 0, 1001);
+                sum += keyed_below(
+                    seed,
+                    STREAM_TEMPERAMENT,
+                    lineage_key,
+                    0,
+                    4 * a as u32 + s,
+                    0,
+                    1001,
+                );
                 s += 1;
             }
             axes[a] = (sum / 3) as u16;
@@ -165,16 +178,31 @@ mod tests {
         let lo = Temperament::from_axes([0; 4]);
         let hi = Temperament::from_axes([1000; 4]);
         for key in 0..2_000u64 {
-            for parents in [[Some(lo), Some(lo)], [Some(hi), Some(hi)], [Some(lo), Some(hi)], [Some(hi), None], [None, Some(lo)]] {
+            for parents in [
+                [Some(lo), Some(lo)],
+                [Some(hi), Some(hi)],
+                [Some(lo), Some(hi)],
+                [Some(hi), None],
+                [None, Some(lo)],
+            ] {
                 let c = Temperament::child(9, key, parents);
                 assert_eq!(c, Temperament::child(9, key, parents));
                 assert!(c.axes().iter().all(|v| *v <= TEMPERAMENT_MAX));
             }
-            assert_eq!(Temperament::child(9, key, [None, None]), Temperament::founder(9, key));
+            assert_eq!(
+                Temperament::child(9, key, [None, None]),
+                Temperament::founder(9, key)
+            );
         }
         // One known parent counts as the mid-parent.
-        assert_eq!(Temperament::child(9, 4, [Some(hi), None]), Temperament::child(9, 4, [Some(hi), Some(hi)]));
-        assert_eq!(Temperament::child(9, 4, [None, Some(lo)]), Temperament::child(9, 4, [Some(lo), Some(lo)]));
+        assert_eq!(
+            Temperament::child(9, 4, [Some(hi), None]),
+            Temperament::child(9, 4, [Some(hi), Some(hi)])
+        );
+        assert_eq!(
+            Temperament::child(9, 4, [None, Some(lo)]),
+            Temperament::child(9, 4, [Some(lo), Some(lo)])
+        );
     }
 
     #[test]
@@ -185,7 +213,8 @@ mod tests {
         let b = Temperament::from_axes([901; 4]);
         let c = Temperament::child(9, 4, [Some(a), Some(b)]).axes();
         for i in 0..4 {
-            let expected = (500 + (800 - 500) / 2 + (fresh[i] as i32 - 500) * 935 / 1000).clamp(0, 1000);
+            let expected =
+                (500 + (800 - 500) / 2 + (fresh[i] as i32 - 500) * 935 / 1000).clamp(0, 1000);
             assert_eq!(i32::from(c[i]), expected);
         }
     }
@@ -209,7 +238,10 @@ mod tests {
             let var: f64 = xs.iter().map(|x| (x - mx) * (x - mx)).sum();
             let slope = cov / var;
             assert!((0.45..=0.55).contains(&slope), "axis {a} slope {slope}");
-            assert!((sd_child - 167.0).abs() <= 10.0, "axis {a} child sd {sd_child}");
+            assert!(
+                (sd_child - 167.0).abs() <= 10.0,
+                "axis {a} child sd {sd_child}"
+            );
         }
     }
 }

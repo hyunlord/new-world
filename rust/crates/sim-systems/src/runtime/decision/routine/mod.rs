@@ -130,7 +130,10 @@ impl RoutineTick {
         active_rows.sort_by_key(|row| row.0);
         // Pass 18: the same per-tile counts, built from sorted places in one
         // pass instead of one map insertion per activity.
-        let mut held: Vec<Tile> = active_rows.iter().map(|(_, activity)| activity.place).collect();
+        let mut held: Vec<Tile> = active_rows
+            .iter()
+            .map(|(_, activity)| activity.place)
+            .collect();
         held.sort_unstable();
         let mut counts: Vec<(Tile, u32)> = Vec::new();
         for place in held {
@@ -188,7 +191,10 @@ impl RoutineTick {
             })
     }
 
-    #[allow(clippy::too_many_arguments, reason = "the caller's row fields, passed instead of per-tick maps")]
+    #[allow(
+        clippy::too_many_arguments,
+        reason = "the caller's row fields, passed instead of per-tick maps"
+    )]
     pub(super) fn start(
         &mut self,
         id: AgentId,
@@ -284,7 +290,12 @@ impl RoutineTick {
 
     /// The free place of `kind` for settlement `sid`: Pass 17's choice
     /// over its candidates, resumed from this tick's [`Cursor`].
-    fn place(&mut self, sid: SettlementId, kind: ActivityKind, resources: &SimResources) -> Option<Tile> {
+    fn place(
+        &mut self,
+        sid: SettlementId,
+        kind: ActivityKind,
+        resources: &SimResources,
+    ) -> Option<Tile> {
         #[cfg(feature = "subprofile")]
         crate::subprofile::count("place_calls", 1);
         if !self.checked {

@@ -10,19 +10,19 @@ mod family_trace;
 mod fingerprint;
 mod long_run;
 pub(crate) mod metrics;
+pub(crate) mod pass10;
+pub(crate) mod pass11;
+pub(crate) mod pass12;
+pub(crate) mod pass13;
+mod pass17;
+mod pass17_activity;
+mod pass20;
+mod pass21;
 mod pass4;
 pub(crate) mod pass5;
 mod pass6;
 mod pass7;
 pub(crate) mod pass8;
-pub(crate) mod pass10;
-pub(crate) mod pass11;
-pub(crate) mod pass12;
-pub(crate) mod pass13;
-mod pass20;
-mod pass21;
-mod pass17;
-mod pass17_activity;
 mod routine_observer;
 mod runner;
 mod summary;
@@ -30,8 +30,8 @@ mod summary;
 pub use agent_trace::ProbeOptions;
 pub use args::ProbeArgs;
 pub use fingerprint::fingerprint;
-pub use runner::{run, run_with, run_with_chronicle};
 pub(crate) use runner::scene_engine;
+pub use runner::{run, run_with, run_with_chronicle};
 
 #[cfg(test)]
 mod tests {
@@ -58,6 +58,9 @@ mod tests {
         // Pass 7, `wet_burn_wood_total` of Pass 12), 0 in every natural run.
         let sample = super::metrics::sample(&crate::scenes::legacy_scene(), "legacy", 0, 0);
         assert_eq!(sample["schema_version"], 13);
-        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6 + 5 + 2 + 3 + 8 + 14 + 2 - 4);
+        assert_eq!(
+            sample.as_object().expect("sample object").len(),
+            53 + 15 + 15 + 6 + 5 + 2 + 3 + 8 + 14 + 2 - 4
+        );
     }
 }

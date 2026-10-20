@@ -156,16 +156,15 @@ fn collect_events<F: Fn(&CausalEvent) -> bool>(engine: &SimEngine, pred: F) -> V
 
 /// Capture all (tick, kind_discriminant, payload_hash) tuples for chronicle-
 /// relevant events filtered to `chronicle_sid`. Used by A20.
-fn capture_event_signature(
-    engine: &SimEngine,
-    chronicle_sid: u32,
-) -> Vec<(u64, u8, u64)> {
+fn capture_event_signature(engine: &SimEngine, chronicle_sid: u32) -> Vec<(u64, u8, u64)> {
     let mut sig = Vec::new();
     for (_tile, log) in engine.resources.causal_log.iter() {
         for ev in log.iter() {
             let (kind, payload): (u8, u64) = match ev {
                 CausalEvent::SettlementFormed {
-                    settlement_id, founding_members, ..
+                    settlement_id,
+                    founding_members,
+                    ..
                 } if *settlement_id == chronicle_sid => {
                     let mut h: u64 = 0;
                     for m in founding_members {
@@ -173,7 +172,9 @@ fn capture_event_signature(
                     }
                     (1u8, h.wrapping_add(u64::from(*settlement_id)))
                 }
-                CausalEvent::AgentBorn { agent, parent_ids, .. } => {
+                CausalEvent::AgentBorn {
+                    agent, parent_ids, ..
+                } => {
                     let mut h: u64 = *agent;
                     for p in parent_ids {
                         h = h.wrapping_mul(31).wrapping_add(*p);
@@ -181,10 +182,13 @@ fn capture_event_signature(
                     (2u8, h)
                 }
                 CausalEvent::SettlementDissolved {
-                    settlement_id, final_population, ..
-                } if *settlement_id == chronicle_sid => {
-                    (3u8, u64::from(*settlement_id).wrapping_add(u64::from(*final_population)))
-                }
+                    settlement_id,
+                    final_population,
+                    ..
+                } if *settlement_id == chronicle_sid => (
+                    3u8,
+                    u64::from(*settlement_id).wrapping_add(u64::from(*final_population)),
+                ),
                 CausalEvent::BuildingPlaced { position, .. } => {
                     (4u8, (position.0 as u64) << 32 | position.1 as u64)
                 }
@@ -224,18 +228,13 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         SETTLEMENT_PROXIMITY_RADIUS, 5,
         "A1: SETTLEMENT_PROXIMITY_RADIUS expected 5"
     );
-    assert_eq!(
-        SETTLEMENT_MAX_POP, 50,
-        "A1: SETTLEMENT_MAX_POP expected 50"
-    );
+    assert_eq!(SETTLEMENT_MAX_POP, 50, "A1: SETTLEMENT_MAX_POP expected 50");
 
     let mut e = chronicle_engine();
     let founders = spawn_stable(&mut e, CX, CY, 3);
     let founder_ids: Vec<AgentId> = founders.iter().map(|(id, _)| *id).collect();
-    let founder_positions_at_tick0: Vec<(AgentId, u32, u32)> = founders
-        .iter()
-        .map(|(id, (x, y))| (*id, *x, *y))
-        .collect();
+    let founder_positions_at_tick0: Vec<(AgentId, u32, u32)> =
+        founders.iter().map(|(id, (x, y))| (*id, *x, *y)).collect();
     println!(
         "[setup] founder_ids={founder_ids:?} positions_at_tick0={founder_positions_at_tick0:?}"
     );
@@ -275,14 +274,19 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     {
         for fid in &founder_ids {
             let mut found = false;
-            for (_ent, (a, hunger, thirst, sleep, _social)) in
-                e.world.query::<(&Agent, &Hunger, &Thirst, &Sleep, &Social)>().iter()
+            for (_ent, (a, hunger, thirst, sleep, _social)) in e
+                .world
+                .query::<(&Agent, &Hunger, &Thirst, &Sleep, &Social)>()
+                .iter()
             {
                 if a.id == *fid {
                     found = true;
                     assert_eq!(hunger.value, 0.0_f32, "A1b: founder {fid} hunger must be 0");
                     assert_eq!(thirst.value, 0.0_f64, "A1b: founder {fid} thirst must be 0");
-                    assert_eq!(sleep.fatigue, 0.0_f64, "A1b: founder {fid} sleep fatigue must be 0");
+                    assert_eq!(
+                        sleep.fatigue, 0.0_f64,
+                        "A1b: founder {fid} sleep fatigue must be 0"
+                    );
                     break;
                 }
             }
@@ -293,7 +297,10 @@ fn harness_p10_gamma_a_settlement_chronicle() {
                 .query::<(&Agent, &MovementRng)>()
                 .iter()
                 .any(|(_, (a, _))| a.id == *fid);
-            assert!(!has_rng, "A1b: founder {fid} must NOT have MovementRng (pinned)");
+            assert!(
+                !has_rng,
+                "A1b: founder {fid} must NOT have MovementRng (pinned)"
+            );
         }
         println!("[A1b] all 3 founders cooldown-only-gated (no starvation, pinned, alive) ✓");
     }
@@ -329,8 +336,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     println!("[A1] 3 founders alive, 2 buildings present in building_registry ✓");
 
     // A2 — Exactly one SettlementFormed at tick 0 referencing the chronicle.
-    let formed_events =
-        collect_events(&e, |ev| matches!(ev, CausalEvent::SettlementFormed { .. }));
+    let formed_events = collect_events(&e, |ev| matches!(ev, CausalEvent::SettlementFormed { .. }));
     assert_eq!(
         formed_events.len(),
         1,
@@ -339,7 +345,10 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     );
     let (formed_id, sid, founding_members_vec) = match &formed_events[0] {
         CausalEvent::SettlementFormed {
-            id, settlement_id, founding_members, ..
+            id,
+            settlement_id,
+            founding_members,
+            ..
         } => (*id, *settlement_id, founding_members.clone()),
         _ => unreachable!(),
     };
@@ -369,7 +378,10 @@ fn harness_p10_gamma_a_settlement_chronicle() {
             "A4: founding_members must be in ascending AgentId order"
         );
         let member_count = s_after_formation.member_agents.len();
-        assert_eq!(member_count, 3, "A4: member_count = {member_count}, expected 3");
+        assert_eq!(
+            member_count, 3,
+            "A4: member_count = {member_count}, expected 3"
+        );
         let registry_members: HashSet<AgentId> =
             s_after_formation.member_agents.iter().copied().collect();
         assert_eq!(
@@ -386,8 +398,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         "A5: member_buildings.len() = {member_buildings_count}, expected 2"
     );
     let registry_ids: Vec<BuildingId> = {
-        let mut ids: Vec<BuildingId> =
-            e.resources.building_registry.keys().copied().collect();
+        let mut ids: Vec<BuildingId> = e.resources.building_registry.keys().copied().collect();
         ids.sort();
         ids
     };
@@ -403,9 +414,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         "A5: member_buildings set must equal the 2 founding building ids \
          actual={actual_founding:?} expected={expected_founding:?}"
     );
-    println!(
-        "[A5] member_buildings set matches 2 founding building ids {expected_founding:?} ✓"
-    );
+    println!("[A5] member_buildings set matches 2 founding building ids {expected_founding:?} ✓");
 
     // A6 — community_history contains exactly one SettlementFormed entry,
     //       AND that entry is the most-recent entry (per plan's "most
@@ -435,8 +444,10 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     );
 
     // A6b — CausalLog contains SettlementFormed for the chronicle settlement.
-    let formed_in_log =
-        collect_events(&e, |ev| matches!(ev, CausalEvent::SettlementFormed { settlement_id, .. } if *settlement_id == sid));
+    let formed_in_log = collect_events(
+        &e,
+        |ev| matches!(ev, CausalEvent::SettlementFormed { settlement_id, .. } if *settlement_id == sid),
+    );
     assert_eq!(
         formed_in_log.len(),
         1,
@@ -462,8 +473,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     // ════════════════════════════════════════════════════════════════════
     let mut pushed_building_ids: Vec<BuildingId> = Vec::new();
     for i in 0..32u32 {
-        let before: HashSet<BuildingId> =
-            e.resources.building_registry.keys().copied().collect();
+        let before: HashSet<BuildingId> = e.resources.building_registry.keys().copied().collect();
         // Buildings placed at Chebyshev 2..4 from anchor — within radius 5
         e.resources
             .building_event_queue
@@ -472,8 +482,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
                 radius: 1,
             });
         e.tick();
-        let after: HashSet<BuildingId> =
-            e.resources.building_registry.keys().copied().collect();
+        let after: HashSet<BuildingId> = e.resources.building_registry.keys().copied().collect();
         let mut new_ids: Vec<BuildingId> = after.difference(&before).copied().collect();
         new_ids.sort();
         assert_eq!(
@@ -552,7 +561,8 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     {
         let n_born = count_kind(&e, |ev| matches!(ev, CausalEvent::AgentBorn { .. }));
         assert_eq!(
-            n_born, 0,
+            n_born,
+            0,
             "A8: cumulative AgentBorn count must be 0 across ticks 1..={} (got {n_born})",
             BIRTH_COOLDOWN_TICKS - 1
         );
@@ -561,9 +571,14 @@ fn harness_p10_gamma_a_settlement_chronicle() {
 
     // A8b — total_births counter is 0 at tick BIRTH_COOLDOWN_TICKS-1.
     {
-        let s = e.resources.settlements.get(&sid).expect("A8b: settlement present");
+        let s = e
+            .resources
+            .settlements
+            .get(&sid)
+            .expect("A8b: settlement present");
         assert_eq!(
-            s.population_stats.total_births, 0,
+            s.population_stats.total_births,
+            0,
             "A8b: total_births = {} at tick {} (must be 0)",
             s.population_stats.total_births,
             BIRTH_COOLDOWN_TICKS - 1
@@ -584,7 +599,8 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         }
         current_positions.sort_by_key(|(id, _, _)| *id);
         assert_eq!(
-            current_positions, founder_positions_at_tick0,
+            current_positions,
+            founder_positions_at_tick0,
             "A19: founder positions drifted at tick {}; expected {:?} got {:?}",
             BIRTH_COOLDOWN_TICKS - 1,
             founder_positions_at_tick0,
@@ -611,7 +627,11 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     );
     let (born_id, born_agent_id, born_tick, born_parent, born_parent_ids) = match &born_events[0] {
         CausalEvent::AgentBorn {
-            id, agent, tick, parent, parent_ids,
+            id,
+            agent,
+            tick,
+            parent,
+            parent_ids,
         } => (*id, *agent, *tick, *parent, parent_ids.clone()),
         _ => unreachable!(),
     };
@@ -619,9 +639,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         born_tick, BIRTH_COOLDOWN_TICKS,
         "A9: AgentBorn.tick = {born_tick}, expected {BIRTH_COOLDOWN_TICKS}"
     );
-    println!(
-        "[A9] AgentBorn id={born_id} agent={born_agent_id} tick={born_tick} ✓"
-    );
+    println!("[A9] AgentBorn id={born_id} agent={born_agent_id} tick={born_tick} ✓");
 
     // A10 — Newborn parent chain: parent_ids.len() == 2 AND both in founder set
     //       AND distinct AND parent (Option<EventId>) == Some(formed_id).
@@ -653,7 +671,11 @@ fn harness_p10_gamma_a_settlement_chronicle() {
 
     // A11 — Newborn is a settlement member; member_count == 4.
     {
-        let s = e.resources.settlements.get(&sid).expect("A11: settlement present");
+        let s = e
+            .resources
+            .settlements
+            .get(&sid)
+            .expect("A11: settlement present");
         assert!(
             s.member_agents.contains(&born_agent_id),
             "A11: newborn {born_agent_id} not in member_agents"
@@ -672,7 +694,11 @@ fn harness_p10_gamma_a_settlement_chronicle() {
 
     // A12 — total_births counter is now exactly 1 (delta from A8b).
     {
-        let s = e.resources.settlements.get(&sid).expect("A12: settlement present");
+        let s = e
+            .resources
+            .settlements
+            .get(&sid)
+            .expect("A12: settlement present");
         assert_eq!(
             s.population_stats.total_births, 1,
             "A12: total_births = {}, expected 1 at tick {}",
@@ -727,8 +753,13 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     };
     e.resources.combat_pairs.insert(nm_pair);
 
-    let history_before_combat: Vec<EventId> =
-        e.resources.settlements.get(&sid).unwrap().community_history.clone();
+    let history_before_combat: Vec<EventId> = e
+        .resources
+        .settlements
+        .get(&sid)
+        .unwrap()
+        .community_history
+        .clone();
 
     // A13c (setup) — inject a FAKE member-involved CombatCompleted with
     // `settlement_link: None` BEFORE the tick fires. This event must NOT
@@ -755,16 +786,23 @@ fn harness_p10_gamma_a_settlement_chronicle() {
 
     // A13 — Diff-based check: one new CombatCompleted entry referencing
     //       the chronicle settlement (combat_pair = born_agent + dummy).
-    let history_after_combat: Vec<EventId> =
-        e.resources.settlements.get(&sid).unwrap().community_history.clone();
+    let history_after_combat: Vec<EventId> = e
+        .resources
+        .settlements
+        .get(&sid)
+        .unwrap()
+        .community_history
+        .clone();
     let combat_evs_routable: Vec<&CausalEvent> = e
         .resources
         .causal_log
         .iter()
         .flat_map(|(_, log)| log.iter().collect::<Vec<&CausalEvent>>())
-        .filter(|ev| matches!(ev, CausalEvent::CombatCompleted { attacker, defender, .. }
+        .filter(|ev| {
+            matches!(ev, CausalEvent::CombatCompleted { attacker, defender, .. }
             if (*attacker == born_agent_id && *defender == dummy_id)
-               || (*attacker == dummy_id && *defender == born_agent_id)))
+               || (*attacker == dummy_id && *defender == born_agent_id))
+        })
         .collect();
     assert!(
         !combat_evs_routable.is_empty(),
@@ -779,7 +817,9 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     //       SettlementReason/settlement-link discriminant the plan A13
     //       requires the routed entry to carry.
     let combat_link: Option<u32> = match combat_ev {
-        CausalEvent::CombatCompleted { settlement_link, .. } => *settlement_link,
+        CausalEvent::CombatCompleted {
+            settlement_link, ..
+        } => *settlement_link,
         _ => unreachable!(),
     };
     assert_eq!(
@@ -816,9 +856,11 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         .causal_log
         .iter()
         .flat_map(|(_, log)| log.iter().collect::<Vec<&CausalEvent>>())
-        .filter(|ev| matches!(ev, CausalEvent::CombatCompleted { attacker, defender, .. }
+        .filter(|ev| {
+            matches!(ev, CausalEvent::CombatCompleted { attacker, defender, .. }
             if (*attacker == nm1_id && *defender == nm2_id)
-               || (*attacker == nm2_id && *defender == nm1_id)))
+               || (*attacker == nm2_id && *defender == nm1_id))
+        })
         .map(|ev| ev.id())
         .collect();
     for nm_ev_id in &nonmember_combat_evs {
@@ -874,20 +916,32 @@ fn harness_p10_gamma_a_settlement_chronicle() {
         )
         .unwrap();
 
-    let history_before_migration: Vec<EventId> =
-        e.resources.settlements.get(&sid).unwrap().community_history.clone();
+    let history_before_migration: Vec<EventId> = e
+        .resources
+        .settlements
+        .get(&sid)
+        .unwrap()
+        .community_history
+        .clone();
     e.tick(); // tick 202
 
-    let history_after_migration: Vec<EventId> =
-        e.resources.settlements.get(&sid).unwrap().community_history.clone();
+    let history_after_migration: Vec<EventId> = e
+        .resources
+        .settlements
+        .get(&sid)
+        .unwrap()
+        .community_history
+        .clone();
     let migration_events: Vec<EventId> = e
         .resources
         .causal_log
         .iter()
         .flat_map(|(_, log)| log.iter().collect::<Vec<&CausalEvent>>())
-        .filter(|ev| matches!(ev, CausalEvent::AgentDecision {
+        .filter(|ev| {
+            matches!(ev, CausalEvent::AgentDecision {
             reason: DecisionReason::SettlementReason, agent, ..
-        } if *agent == outsider_id))
+        } if *agent == outsider_id)
+        })
         .map(|ev| ev.id())
         .collect();
     assert!(
@@ -920,7 +974,13 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     // PHASE 6 — Dissolution (ticks 203–205).
     // Test-only path: building_registry.clear() + despawn → dissolution.
     // ════════════════════════════════════════════════════════════════════
-    let pop_before_clear = e.resources.settlements.get(&sid).unwrap().population_stats.current;
+    let pop_before_clear = e
+        .resources
+        .settlements
+        .get(&sid)
+        .unwrap()
+        .population_stats
+        .current;
     let last_known_member = e
         .resources
         .settlements
@@ -982,7 +1042,13 @@ fn harness_p10_gamma_a_settlement_chronicle() {
                 last_member_id,
                 last_building_id,
                 ..
-            } => (*parent, *final_population, *cause, *last_member_id, *last_building_id),
+            } => (
+                *parent,
+                *final_population,
+                *cause,
+                *last_member_id,
+                *last_building_id,
+            ),
             _ => unreachable!(),
         };
     println!("[A15] SettlementDissolved fired exactly once across window ✓");
@@ -1037,9 +1103,7 @@ fn harness_p10_gamma_a_settlement_chronicle() {
     // for log auditability.
     println!("[A19] founder positions pinned (no MovementRng) throughout chronicle ✓");
 
-    println!(
-        "[chronicle] all A1–A17 (+ A1b A6b A8b A12b A13b A14 A15b A19) assertions passed ✓"
-    );
+    println!("[chronicle] all A1–A17 (+ A1b A6b A8b A12b A13b A14 A15b A19) assertions passed ✓");
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -1051,10 +1115,12 @@ fn harness_p10_gamma_a2b_negative_control_two_founders() {
     let mut e = chronicle_engine();
     let _founders = spawn_stable(&mut e, CX, CY, 2);
     for i in 0..2u32 {
-        e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-            position: (CX + i, CY + 3),
-            radius: 1,
-        });
+        e.resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (CX + i, CY + 3),
+                radius: 1,
+            });
     }
     for _ in 0..10 {
         e.tick();
@@ -1071,10 +1137,12 @@ fn harness_p10_gamma_a2b_negative_control_two_founders() {
 fn harness_p10_gamma_a2b_negative_control_one_building() {
     let mut e = chronicle_engine();
     let _founders = spawn_stable(&mut e, CX, CY, 3);
-    e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (CX, CY + 3),
-        radius: 1,
-    });
+    e.resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (CX, CY + 3),
+            radius: 1,
+        });
     for _ in 0..10 {
         e.tick();
     }
@@ -1199,10 +1267,12 @@ fn run_full_chronicle_capture() -> (u32, Vec<(u64, u8, u64)>) {
 
     // Cap saturation
     for i in 0..32u32 {
-        e.resources.building_event_queue.push_back(BuildingPlacedEvent {
-            position: (CX + 1, CY + 1 + (i % 3)),
-            radius: 1,
-        });
+        e.resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (CX + 1, CY + 1 + (i % 3)),
+                radius: 1,
+            });
         e.tick();
     }
     // Advance to birth boundary

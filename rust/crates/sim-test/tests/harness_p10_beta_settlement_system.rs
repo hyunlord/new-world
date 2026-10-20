@@ -84,12 +84,13 @@ fn place_buildings(engine: &mut SimEngine, cx: u32, cy: u32, count: u32) {
     for i in 0..count {
         let dx = i % 3;
         let dy = i / 3;
-        engine.resources.building_event_queue.push_back(
-            BuildingPlacedEvent {
+        engine
+            .resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
                 position: (cx + dx, cy + dy + 3), // offset away from agents
                 radius: 1,
-            },
-        );
+            });
     }
     let mut bss = BuildingStampSystem::new();
     bss.tick(&mut engine.world, &mut engine.resources);
@@ -109,10 +110,7 @@ fn count_kind<F: Fn(&CausalEvent) -> bool>(engine: &SimEngine, pred: F) -> usize
     n
 }
 
-fn collect_events<F: Fn(&CausalEvent) -> bool>(
-    engine: &SimEngine,
-    pred: F,
-) -> Vec<CausalEvent> {
+fn collect_events<F: Fn(&CausalEvent) -> bool>(engine: &SimEngine, pred: F) -> Vec<CausalEvent> {
     let mut v = Vec::new();
     for (_t, log) in engine.resources.causal_log.iter() {
         for ev in log.iter() {
@@ -129,7 +127,9 @@ fn count_settlement_formed(e: &SimEngine) -> usize {
 }
 
 fn count_settlement_dissolved(e: &SimEngine) -> usize {
-    count_kind(e, |ev| matches!(ev, CausalEvent::SettlementDissolved { .. }))
+    count_kind(e, |ev| {
+        matches!(ev, CausalEvent::SettlementDissolved { .. })
+    })
 }
 
 fn count_agent_born(e: &SimEngine) -> usize {
@@ -143,9 +143,11 @@ fn first_formed(e: &SimEngine) -> Option<CausalEvent> {
 }
 
 fn first_dissolved(e: &SimEngine) -> Option<CausalEvent> {
-    collect_events(e, |ev| matches!(ev, CausalEvent::SettlementDissolved { .. }))
-        .into_iter()
-        .next()
+    collect_events(e, |ev| {
+        matches!(ev, CausalEvent::SettlementDissolved { .. })
+    })
+    .into_iter()
+    .next()
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -160,7 +162,10 @@ fn harness_p10_beta_a1_settlement_runs_after_construction_and_building_stamp() {
     let mut e = SimEngine::new(W, H, MaterialRegistry::new());
     register_default_runtime_systems(&mut e);
     let names = e.system_names();
-    let bss_idx = names.iter().position(|n| *n == "BuildingStampSystem").unwrap();
+    let bss_idx = names
+        .iter()
+        .position(|n| *n == "BuildingStampSystem")
+        .unwrap();
     let cons_idx = names
         .iter()
         .position(|n| *n == "ConstructionSystem")
@@ -208,9 +213,8 @@ fn harness_p10_beta_a2_settlement_formed_event_field_population() {
     place_buildings(&mut e, cx, cy, 3);
     e.tick();
 
-    let formed: Vec<CausalEvent> = collect_events(&e, |ev| {
-        matches!(ev, CausalEvent::SettlementFormed { .. })
-    });
+    let formed: Vec<CausalEvent> =
+        collect_events(&e, |ev| matches!(ev, CausalEvent::SettlementFormed { .. }));
     assert_eq!(formed.len(), 1, "exactly one SettlementFormed event");
     let ev = formed.into_iter().next().unwrap();
     match ev {
@@ -519,7 +523,10 @@ fn harness_p10_beta_a11_founding_members_deterministic_ordering() {
     // Type A — sorted AND identical across re-runs.
     let mut sorted_check = run1.clone();
     sorted_check.sort();
-    assert_eq!(run1, sorted_check, "founding_members must be sorted ascending");
+    assert_eq!(
+        run1, sorted_check,
+        "founding_members must be sorted ascending"
+    );
     assert_eq!(run1, run2, "founding_members must be deterministic");
 }
 
@@ -687,7 +694,10 @@ fn harness_p10_beta_a15_birth_spawns_inside_radius() {
     for _ in 0..(BIRTH_COOLDOWN_TICKS as usize + 1) {
         e.tick();
     }
-    assert!(count_agent_born(&e) >= 1, "must spawn at least one new agent");
+    assert!(
+        count_agent_born(&e) >= 1,
+        "must spawn at least one new agent"
+    );
 
     let mut new_positions: Vec<(u32, u32)> = Vec::new();
     for (_, (a, p)) in e.world.query::<(&Agent, &Position)>().iter() {
@@ -704,7 +714,12 @@ fn harness_p10_beta_a15_birth_spawns_inside_radius() {
         assert!(
             cheb <= SETTLEMENT_PROXIMITY_RADIUS,
             "newborn at ({},{}) must be within radius {} of anchor ({},{}); cheb={}",
-            nx, ny, SETTLEMENT_PROXIMITY_RADIUS, cx, cy, cheb
+            nx,
+            ny,
+            SETTLEMENT_PROXIMITY_RADIUS,
+            cx,
+            cy,
+            cheb
         );
     }
     // Impassable-tile behaviour: at this phase the TileGrid is empty
@@ -755,7 +770,10 @@ fn harness_p10_beta_a16_settlement_reason_fires_for_outsider() {
             }
         )
     });
-    assert!(n >= 1, "outsider must emit AgentDecision{{SettlementReason}}");
+    assert!(
+        n >= 1,
+        "outsider must emit AgentDecision{{SettlementReason}}"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -886,13 +904,15 @@ fn harness_p10_beta_a18_max_pop_caps_migration_pull() {
         .world
         .query::<(&Agent, &AgentState)>()
         .iter()
-        .find_map(|(_, (a, s))| {
-            if a.id == outsider_id {
-                Some(*s)
-            } else {
-                None
-            }
-        })
+        .find_map(
+            |(_, (a, s))| {
+                if a.id == outsider_id {
+                    Some(*s)
+                } else {
+                    None
+                }
+            },
+        )
         .expect("outsider must still be in the world");
     let migration_target_blocked = matches!(
         outsider_state_blocked,
@@ -1071,11 +1091,12 @@ fn harness_p10_beta_a20_settlement_events_not_memory_encoded() {
     // After dissolution, founders are despawned — we sample remaining
     // agents (no member references to dissolved_id can exist).
     for (_, (_a, m)) in e.world.query::<(&Agent, &Memory)>().iter() {
-        let cnt = m.entries.iter().filter(|x| x.event_id == dissolved_id).count();
-        assert_eq!(
-            cnt, 0,
-            "SettlementDissolved must not be memory-encoded"
-        );
+        let cnt = m
+            .entries
+            .iter()
+            .filter(|x| x.event_id == dissolved_id)
+            .count();
+        assert_eq!(cnt, 0, "SettlementDissolved must not be memory-encoded");
     }
 }
 
@@ -1102,37 +1123,36 @@ fn harness_p10_beta_a21_community_history_ingests_qualifying_events() {
     // CombatCompleted, SettlementReason) live exclusively in the per-tile
     // causal log so we snapshot them at the moment they are appended.
     let mut classes_present: HashSet<&str> = HashSet::new();
-    let snapshot_classes = |e: &SimEngine,
-                            sid: SettlementId,
-                            classes: &mut HashSet<&'static str>| {
-        let s = e.resources.settlements.get(&sid).unwrap();
-        for eid in &s.community_history {
-            // Authoritative: BuildingPlaced ids = building_registry keys.
-            if e.resources.building_registry.contains_key(eid) {
-                classes.insert("building_placed");
-            }
-            if let Some(ev) = e.resources.causal_log.lookup(*eid) {
-                match ev {
-                    CausalEvent::BuildingPlaced { .. } => {
-                        classes.insert("building_placed");
+    let snapshot_classes =
+        |e: &SimEngine, sid: SettlementId, classes: &mut HashSet<&'static str>| {
+            let s = e.resources.settlements.get(&sid).unwrap();
+            for eid in &s.community_history {
+                // Authoritative: BuildingPlaced ids = building_registry keys.
+                if e.resources.building_registry.contains_key(eid) {
+                    classes.insert("building_placed");
+                }
+                if let Some(ev) = e.resources.causal_log.lookup(*eid) {
+                    match ev {
+                        CausalEvent::BuildingPlaced { .. } => {
+                            classes.insert("building_placed");
+                        }
+                        CausalEvent::AgentBorn { .. } => {
+                            classes.insert("agent_born");
+                        }
+                        CausalEvent::CombatCompleted { .. } => {
+                            classes.insert("combat_completed");
+                        }
+                        CausalEvent::AgentDecision {
+                            reason: DecisionReason::SettlementReason,
+                            ..
+                        } => {
+                            classes.insert("settlement_reason");
+                        }
+                        _ => {}
                     }
-                    CausalEvent::AgentBorn { .. } => {
-                        classes.insert("agent_born");
-                    }
-                    CausalEvent::CombatCompleted { .. } => {
-                        classes.insert("combat_completed");
-                    }
-                    CausalEvent::AgentDecision {
-                        reason: DecisionReason::SettlementReason,
-                        ..
-                    } => {
-                        classes.insert("settlement_reason");
-                    }
-                    _ => {}
                 }
             }
-        }
-    };
+        };
 
     // (a) BuildingPlaced — snapshot AT formation tick before influence
     //     propagation can evict the BuildingPlaced events.
@@ -1158,9 +1178,7 @@ fn harness_p10_beta_a21_community_history_ingests_qualifying_events() {
         };
         let mut found = None;
         for eid in history_ids {
-            if let Some(CausalEvent::AgentBorn { agent, .. }) =
-                e.resources.causal_log.lookup(eid)
-            {
+            if let Some(CausalEvent::AgentBorn { agent, .. }) = e.resources.causal_log.lookup(eid) {
                 found = Some(*agent);
                 break;
             }
@@ -1230,7 +1248,9 @@ fn harness_p10_beta_a21_community_history_ingests_qualifying_events() {
         let eid = e.spawn_agent(cx, cy);
         e.world.get::<&Agent>(eid).unwrap().id
     };
-    e.resources.combat_pairs.insert((born_agent_id, dummy_defender_aid));
+    e.resources
+        .combat_pairs
+        .insert((born_agent_id, dummy_defender_aid));
     e.tick();
     snapshot_classes(&e, sid, &mut classes_present);
 
@@ -1303,8 +1323,7 @@ fn harness_p10_beta_a22_history_fifo_eviction_at_overflow() {
         );
     }
     // (c) newest entries are retained.
-    let newest_expected =
-        (SETTLEMENT_HISTORY_CAP as EventId).wrapping_add(9);
+    let newest_expected = (SETTLEMENT_HISTORY_CAP as EventId).wrapping_add(9);
     assert!(
         s.community_history.contains(&newest_expected),
         "newest entry {} must be retained",
@@ -1399,8 +1418,7 @@ fn harness_p10_beta_a25_building_registry_via_ffi_path() {
     // Use the public FFI delegate that on_building_placed forwards to
     // exclusively (bounds-check + push_back). Direct push_back would
     // bypass the bounds-check logic exercised by this path.
-    let enqueued =
-        enqueue_building_placed(&mut e.resources, pos.0 as i32, pos.1 as i32, 1);
+    let enqueued = enqueue_building_placed(&mut e.resources, pos.0 as i32, pos.1 as i32, 1);
     assert!(
         enqueued,
         "valid in-bounds position must be accepted by FFI delegate"
@@ -1420,9 +1438,7 @@ fn harness_p10_beta_a25_building_registry_via_ffi_path() {
 // ════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_p10_beta_a26_building_registry_via_construction_path() {
-    use sim_core::components::{
-        BuildingBlueprint, ConstructionSite, Position,
-    };
+    use sim_core::components::{BuildingBlueprint, ConstructionSite, Position};
 
     let mut e = SimEngine::new(W, H, MaterialRegistry::new());
     // Exercise the real agent-completion path:

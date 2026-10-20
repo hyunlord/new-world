@@ -90,7 +90,12 @@ impl RuntimeSystem for MemorySystem {
                 if event.tick() != current_tick {
                     continue;
                 }
-                if let CausalEvent::MemoryRecalled { agent, recalled_event, .. } = event {
+                if let CausalEvent::MemoryRecalled {
+                    agent,
+                    recalled_event,
+                    ..
+                } = event
+                {
                     recalled.push((*agent, *recalled_event));
                 }
             }
@@ -278,7 +283,10 @@ mod tests {
             reason: DecisionReason::HungerThresholdBreach,
             tick: 0,
         };
-        assert_eq!(classify_event(&hunger, &log), Some((MemoryArm::Hunger, 0.4, -0.3, vec![7])));
+        assert_eq!(
+            classify_event(&hunger, &log),
+            Some((MemoryArm::Hunger, 0.4, -0.3, vec![7]))
+        );
 
         let thirst = CausalEvent::AgentDecision {
             id: 1,
@@ -288,7 +296,10 @@ mod tests {
             reason: DecisionReason::ThirstThresholdBreach,
             tick: 0,
         };
-        assert_eq!(classify_event(&thirst, &log), Some((MemoryArm::Thirst, 0.4, -0.3, vec![7])));
+        assert_eq!(
+            classify_event(&thirst, &log),
+            Some((MemoryArm::Thirst, 0.4, -0.3, vec![7]))
+        );
 
         let fatigue = CausalEvent::AgentDecision {
             id: 1,
@@ -298,7 +309,10 @@ mod tests {
             reason: DecisionReason::FatigueThresholdBreach,
             tick: 0,
         };
-        assert_eq!(classify_event(&fatigue, &log), Some((MemoryArm::Fatigue, 0.3, -0.2, vec![7])));
+        assert_eq!(
+            classify_event(&fatigue, &log),
+            Some((MemoryArm::Fatigue, 0.3, -0.2, vec![7]))
+        );
 
         let con = CausalEvent::AgentDecision {
             id: 1,
@@ -308,7 +322,10 @@ mod tests {
             reason: DecisionReason::ConstructionReason,
             tick: 0,
         };
-        assert_eq!(classify_event(&con, &log), Some((MemoryArm::Construction, 0.5, 0.1, vec![7])));
+        assert_eq!(
+            classify_event(&con, &log),
+            Some((MemoryArm::Construction, 0.5, 0.1, vec![7]))
+        );
 
         let social = CausalEvent::AgentDecision {
             id: 1,
@@ -318,7 +335,10 @@ mod tests {
             reason: DecisionReason::SocialReason,
             tick: 0,
         };
-        assert_eq!(classify_event(&social, &log), Some((MemoryArm::Social, 0.5, 0.2, vec![7])));
+        assert_eq!(
+            classify_event(&social, &log),
+            Some((MemoryArm::Social, 0.5, 0.2, vec![7]))
+        );
 
         // SocialInteractionStarted returns BOTH agents.
         let started = CausalEvent::SocialInteractionStarted {
@@ -328,7 +348,10 @@ mod tests {
             position: (0, 0),
             tick: 0,
         };
-        assert_eq!(classify_event(&started, &log), Some((MemoryArm::Social, 0.6, 0.4, vec![3, 5])));
+        assert_eq!(
+            classify_event(&started, &log),
+            Some((MemoryArm::Social, 0.6, 0.4, vec![3, 5]))
+        );
 
         let completed = CausalEvent::SocialInteractionCompleted {
             id: 1,
@@ -346,8 +369,8 @@ mod tests {
 
     #[test]
     fn classify_event_returns_none_for_non_actor_and_anti_recursion() {
-        use sim_core::influence::{DirtyRegion, InfluenceChannel};
         use sim_core::causal::MemoryRecallTrigger;
+        use sim_core::influence::{DirtyRegion, InfluenceChannel};
         let log = CausalLogStorage::new();
 
         let bp = CausalEvent::BuildingPlaced {

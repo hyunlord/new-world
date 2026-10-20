@@ -47,8 +47,8 @@
 
 use sim_core::causal::{CausalEvent, DecisionReason};
 use sim_core::components::{
-    Agent, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Position,
-    RelationshipKey, RelationshipState, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Position, RelationshipKey,
+    RelationshipState, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
@@ -205,8 +205,16 @@ fn count_events_on_tile<F: Fn(&CausalEvent) -> bool>(
 fn harness_p7_beta_a1_system_metadata_priority_interval_and_ordering() {
     let social = SocialInteractionSystem::new();
     // Type A: priority and interval locked.
-    assert_eq!(social.priority(), 134, "SocialInteractionSystem priority must equal 134");
-    assert_eq!(social.tick_interval(), 1, "SocialInteractionSystem tick_interval must equal 1");
+    assert_eq!(
+        social.priority(),
+        134,
+        "SocialInteractionSystem priority must equal 134"
+    );
+    assert_eq!(
+        social.tick_interval(),
+        1,
+        "SocialInteractionSystem tick_interval must equal 1"
+    );
 
     let construction = ConstructionSystem::new();
     // Strict ordering: Construction < Social < InfluenceVisualization.
@@ -298,7 +306,11 @@ fn harness_p7_beta_a4_causal_event_new_variant_field_shapes() {
         "parent must round-trip Some(EventId(42)) — NOT None"
     );
     assert_eq!(started.tick(), 11);
-    assert_eq!(started.channel(), None, ".channel() must be None for Started");
+    assert_eq!(
+        started.channel(),
+        None,
+        ".channel() must be None for Started"
+    );
 
     let completed = CausalEvent::SocialInteractionCompleted {
         id: 101,
@@ -316,11 +328,18 @@ fn harness_p7_beta_a4_causal_event_new_variant_field_shapes() {
         "parent must round-trip Some(EventId(100))"
     );
     assert_eq!(completed.tick(), 14);
-    assert_eq!(completed.channel(), None, ".channel() must be None for Completed");
+    assert_eq!(
+        completed.channel(),
+        None,
+        ".channel() must be None for Completed"
+    );
 
     // Type-pin: agents = (AgentId, AgentId), position = (u32, u32),
     // familiarity_after = f64.
-    if let CausalEvent::SocialInteractionStarted { agents, position, .. } = started {
+    if let CausalEvent::SocialInteractionStarted {
+        agents, position, ..
+    } = started
+    {
         let _: (u64, u64) = agents;
         let _: (u32, u32) = position;
     } else {
@@ -355,16 +374,30 @@ fn harness_p7_beta_a5_idle_cascade_social_triggers() {
     // decision system DIRECTLY (per plan A5: "after one
     // AgentDecisionSystem::tick").
     let mut engine = SimEngine::new(W, H, MaterialRegistry::new());
-    let (ent_a, ent_b, id_a, id_b) =
-        place_mutual_pair_at(&mut engine, (10, 10), 60.0);
+    let (ent_a, ent_b, id_a, id_b) = place_mutual_pair_at(&mut engine, (10, 10), 60.0);
 
     // Pre-tick invariants — both Idle, no events on tile.
     let pre_decisions = count_events_on_tile(&engine.resources, (10, 10), |ev| {
-        matches!(ev, CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. })
+        matches!(
+            ev,
+            CausalEvent::AgentDecision {
+                reason: DecisionReason::SocialReason,
+                ..
+            }
+        )
     });
-    assert_eq!(pre_decisions, 0, "pre-tick: zero SocialReason decisions on tile");
-    assert_eq!(*engine.world.get::<&AgentState>(ent_a).unwrap(), AgentState::Idle);
-    assert_eq!(*engine.world.get::<&AgentState>(ent_b).unwrap(), AgentState::Idle);
+    assert_eq!(
+        pre_decisions, 0,
+        "pre-tick: zero SocialReason decisions on tile"
+    );
+    assert_eq!(
+        *engine.world.get::<&AgentState>(ent_a).unwrap(),
+        AgentState::Idle
+    );
+    assert_eq!(
+        *engine.world.get::<&AgentState>(ent_b).unwrap(),
+        AgentState::Idle
+    );
 
     // EXACTLY ONE AgentDecisionSystem::tick — the plan-locked direct call.
     let mut sys = AgentDecisionSystem::new();
@@ -374,24 +407,38 @@ fn harness_p7_beta_a5_idle_cascade_social_triggers() {
     let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
     assert_eq!(
         state_a,
-        AgentState::Seeking { target: TargetKind::Agent(id_b) },
+        AgentState::Seeking {
+            target: TargetKind::Agent(id_b)
+        },
         "after one AgentDecisionSystem::tick, agent A must be Seeking{{Agent(B)}}"
     );
     assert_eq!(
         state_b,
-        AgentState::Seeking { target: TargetKind::Agent(id_a) },
+        AgentState::Seeking {
+            target: TargetKind::Agent(id_a)
+        },
         "after one AgentDecisionSystem::tick, agent B must be Seeking{{Agent(A)}}"
     );
 
     // Both agents emit exactly one SocialReason decision on the tile.
-    let decisions_a = count_events_on_tile(&engine.resources, (10, 10), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
-    ));
-    let decisions_b = count_events_on_tile(&engine.resources, (10, 10), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_b
-    ));
-    assert_eq!(decisions_a, 1, "agent A must have exactly 1 SocialReason decision; got {decisions_a}");
-    assert_eq!(decisions_b, 1, "agent B must have exactly 1 SocialReason decision; got {decisions_b}");
+    let decisions_a = count_events_on_tile(&engine.resources, (10, 10), |ev| {
+        matches!(ev,
+            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
+        )
+    });
+    let decisions_b = count_events_on_tile(&engine.resources, (10, 10), |ev| {
+        matches!(ev,
+            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_b
+        )
+    });
+    assert_eq!(
+        decisions_a, 1,
+        "agent A must have exactly 1 SocialReason decision; got {decisions_a}"
+    );
+    assert_eq!(
+        decisions_b, 1,
+        "agent B must have exactly 1 SocialReason decision; got {decisions_b}"
+    );
 
     // Diagnostic counter — visible under --nocapture. Must be > 0 to prove
     // the social cascade path actually executed (defends against silent
@@ -414,8 +461,7 @@ fn harness_p7_beta_a5_idle_cascade_social_triggers() {
 #[test]
 fn harness_p7_beta_a5b_sub_threshold_loneliness_does_not_fire_social() {
     let mut engine = fresh_engine();
-    let (ent_a, ent_b, _id_a, _id_b) =
-        place_mutual_pair_at(&mut engine, (12, 12), 30.0);
+    let (ent_a, ent_b, _id_a, _id_b) = place_mutual_pair_at(&mut engine, (12, 12), 30.0);
 
     for _ in 0..10 {
         engine.tick();
@@ -423,12 +469,26 @@ fn harness_p7_beta_a5b_sub_threshold_loneliness_does_not_fire_social() {
 
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
-    assert_eq!(state_a, AgentState::Idle, "agent A must stay Idle (loneliness < threshold)");
-    assert_eq!(state_b, AgentState::Idle, "agent B must stay Idle (loneliness < threshold)");
+    assert_eq!(
+        state_a,
+        AgentState::Idle,
+        "agent A must stay Idle (loneliness < threshold)"
+    );
+    assert_eq!(
+        state_b,
+        AgentState::Idle,
+        "agent B must stay Idle (loneliness < threshold)"
+    );
 
-    let social_decisions = count_events_on_tile(&engine.resources, (12, 12), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. }
-    ));
+    let social_decisions = count_events_on_tile(&engine.resources, (12, 12), |ev| {
+        matches!(
+            ev,
+            CausalEvent::AgentDecision {
+                reason: DecisionReason::SocialReason,
+                ..
+            }
+        )
+    });
     assert_eq!(social_decisions, 0, "no SocialReason decisions allowed");
 
     let started = count_events_on_tile(&engine.resources, (12, 12), |ev| {
@@ -480,12 +540,19 @@ fn harness_p7_beta_a5c_partial_breach_does_not_handshake() {
     }
 
     let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
-    assert_eq!(state_b, AgentState::Idle, "agent B (not breached) must stay Idle");
+    assert_eq!(
+        state_b,
+        AgentState::Idle,
+        "agent B (not breached) must stay Idle"
+    );
 
     let started = count_events_on_tile(&engine.resources, (14, 14), |ev| {
         matches!(ev, CausalEvent::SocialInteractionStarted { .. })
     });
-    assert_eq!(started, 0, "no mutual handshake allowed when only one side breached");
+    assert_eq!(
+        started, 0,
+        "no mutual handshake allowed when only one side breached"
+    );
 }
 
 // ─── A5d: non_co_located_breach_does_not_handshake ─────────────────────
@@ -498,7 +565,7 @@ fn harness_p7_beta_a5d_non_co_located_breach_does_not_handshake() {
     let mut engine = fresh_engine();
     let ent_a = engine.spawn_agent(5, 5);
     let ent_b = engine.spawn_agent(7, 5); // 2 tiles apart, distinct
-    // No MovementRng inserted → AgentMovementSystem leaves them in place.
+                                          // No MovementRng inserted → AgentMovementSystem leaves them in place.
     engine
         .world
         .insert(
@@ -590,21 +657,37 @@ fn harness_p7_beta_a5e_strict_threshold_boundary() {
 
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
-    assert_eq!(state_a, AgentState::Idle, "agent A at threshold must stay Idle (strict `>`)");
-    assert_eq!(state_b, AgentState::Idle, "agent B at threshold must stay Idle (strict `>`)");
+    assert_eq!(
+        state_a,
+        AgentState::Idle,
+        "agent A at threshold must stay Idle (strict `>`)"
+    );
+    assert_eq!(
+        state_b,
+        AgentState::Idle,
+        "agent B at threshold must stay Idle (strict `>`)"
+    );
 
-    let social_decisions = count_events_on_tile(&engine.resources, (16, 16), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. }
-    ));
-    assert_eq!(social_decisions, 0, "no SocialReason at threshold (strict `>`)");
+    let social_decisions = count_events_on_tile(&engine.resources, (16, 16), |ev| {
+        matches!(
+            ev,
+            CausalEvent::AgentDecision {
+                reason: DecisionReason::SocialReason,
+                ..
+            }
+        )
+    });
+    assert_eq!(
+        social_decisions, 0,
+        "no SocialReason at threshold (strict `>`)"
+    );
 }
 
 // ─── A6a: hunger_wins_over_social ──────────────────────────────────────
 #[test]
 fn harness_p7_beta_a6a_hunger_wins_over_social() {
     let mut engine = fresh_engine();
-    let (ent_a, _ent_b, id_a, _id_b) =
-        place_mutual_pair_at(&mut engine, (8, 8), 60.0);
+    let (ent_a, _ent_b, id_a, _id_b) = place_mutual_pair_at(&mut engine, (8, 8), 60.0);
     *engine.world.get::<&mut Hunger>(ent_a).unwrap() = Hunger::new(80.0, 0.0);
 
     let mut left_idle = false;
@@ -621,13 +704,19 @@ fn harness_p7_beta_a6a_hunger_wins_over_social() {
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     assert_eq!(
         state_a,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "Hunger must win — agent A seeks Food"
     );
 
     // Find the most-recent AgentDecision for agent A on tile (8,8).
     let idx = tile_idx((8, 8), engine.resources.tile_grid.width);
-    let log = engine.resources.causal_log.get(idx).expect("log must exist");
+    let log = engine
+        .resources
+        .causal_log
+        .get(idx)
+        .expect("log must exist");
     let last_decision_reason = log.as_slice().iter().rev().find_map(|ev| match ev {
         CausalEvent::AgentDecision { reason, agent, .. } if *agent == id_a => Some(*reason),
         _ => None,
@@ -639,18 +728,22 @@ fn harness_p7_beta_a6a_hunger_wins_over_social() {
     );
 
     // ZERO SocialReason decisions for agent A in this window.
-    let a_social_decisions = count_events_on_tile(&engine.resources, (8, 8), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
-    ));
-    assert_eq!(a_social_decisions, 0, "agent A must emit ZERO SocialReason decisions");
+    let a_social_decisions = count_events_on_tile(&engine.resources, (8, 8), |ev| {
+        matches!(ev,
+            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
+        )
+    });
+    assert_eq!(
+        a_social_decisions, 0,
+        "agent A must emit ZERO SocialReason decisions"
+    );
 }
 
 // ─── A6b: thirst_wins_over_social ──────────────────────────────────────
 #[test]
 fn harness_p7_beta_a6b_thirst_wins_over_social() {
     let mut engine = fresh_engine();
-    let (ent_a, _ent_b, id_a, _id_b) =
-        place_mutual_pair_at(&mut engine, (9, 9), 60.0);
+    let (ent_a, _ent_b, id_a, _id_b) = place_mutual_pair_at(&mut engine, (9, 9), 60.0);
     *engine.world.get::<&mut Thirst>(ent_a).unwrap() = Thirst::new(80.0, 0.0);
 
     for _ in 0..5 {
@@ -662,7 +755,9 @@ fn harness_p7_beta_a6b_thirst_wins_over_social() {
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     assert_eq!(
         state_a,
-        AgentState::Seeking { target: TargetKind::Water },
+        AgentState::Seeking {
+            target: TargetKind::Water
+        },
         "Thirst must win — agent A seeks Water"
     );
 
@@ -678,18 +773,22 @@ fn harness_p7_beta_a6b_thirst_wins_over_social() {
         "agent A's most-recent decision must be ThirstThresholdBreach"
     );
 
-    let a_social_decisions = count_events_on_tile(&engine.resources, (9, 9), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
-    ));
-    assert_eq!(a_social_decisions, 0, "agent A must emit ZERO SocialReason decisions");
+    let a_social_decisions = count_events_on_tile(&engine.resources, (9, 9), |ev| {
+        matches!(ev,
+            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
+        )
+    });
+    assert_eq!(
+        a_social_decisions, 0,
+        "agent A must emit ZERO SocialReason decisions"
+    );
 }
 
 // ─── A6c: fatigue_wins_over_social ─────────────────────────────────────
 #[test]
 fn harness_p7_beta_a6c_fatigue_wins_over_social() {
     let mut engine = fresh_engine();
-    let (ent_a, _ent_b, id_a, _id_b) =
-        place_mutual_pair_at(&mut engine, (11, 11), 60.0);
+    let (ent_a, _ent_b, id_a, _id_b) = place_mutual_pair_at(&mut engine, (11, 11), 60.0);
     *engine.world.get::<&mut Sleep>(ent_a).unwrap() = Sleep::new(80.0, 0.0);
 
     for _ in 0..5 {
@@ -701,7 +800,9 @@ fn harness_p7_beta_a6c_fatigue_wins_over_social() {
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     assert_eq!(
         state_a,
-        AgentState::Seeking { target: TargetKind::Sleep },
+        AgentState::Seeking {
+            target: TargetKind::Sleep
+        },
         "Fatigue must win — agent A seeks Sleep"
     );
 
@@ -717,10 +818,15 @@ fn harness_p7_beta_a6c_fatigue_wins_over_social() {
         "agent A's most-recent decision must be FatigueThresholdBreach"
     );
 
-    let a_social_decisions = count_events_on_tile(&engine.resources, (11, 11), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
-    ));
-    assert_eq!(a_social_decisions, 0, "agent A must emit ZERO SocialReason decisions");
+    let a_social_decisions = count_events_on_tile(&engine.resources, (11, 11), |ev| {
+        matches!(ev,
+            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
+        )
+    });
+    assert_eq!(
+        a_social_decisions, 0,
+        "agent A must emit ZERO SocialReason decisions"
+    );
 }
 
 // ─── A7: construction_wins_over_social ─────────────────────────────────
@@ -729,8 +835,7 @@ fn harness_p7_beta_a6c_fatigue_wins_over_social() {
 #[test]
 fn harness_p7_beta_a7_construction_wins_over_social() {
     let mut engine = fresh_engine();
-    let (ent_a, _ent_b, id_a, _id_b) =
-        place_mutual_pair_at(&mut engine, (5, 5), 60.0);
+    let (ent_a, _ent_b, id_a, _id_b) = place_mutual_pair_at(&mut engine, (5, 5), 60.0);
 
     let blueprint = BuildingBlueprint::new(1u64, 1, 1, 5);
     let site = ConstructionSite::new(blueprint, Position { x: 5, y: 5 });
@@ -745,7 +850,14 @@ fn harness_p7_beta_a7_construction_wins_over_social() {
 
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     assert!(
-        matches!(state_a, AgentState::Seeking { target: TargetKind::ConstructionSite } | AgentState::Consuming { target: TargetKind::ConstructionSite }),
+        matches!(
+            state_a,
+            AgentState::Seeking {
+                target: TargetKind::ConstructionSite
+            } | AgentState::Consuming {
+                target: TargetKind::ConstructionSite
+            }
+        ),
         "agent A must Seek/Consume ConstructionSite, got {state_a:?}"
     );
 
@@ -764,15 +876,25 @@ fn harness_p7_beta_a7_construction_wins_over_social() {
 
     // A must NOT be Seeking{Agent}.
     assert!(
-        !matches!(state_a, AgentState::Seeking { target: TargetKind::Agent(_) }),
+        !matches!(
+            state_a,
+            AgentState::Seeking {
+                target: TargetKind::Agent(_)
+            }
+        ),
         "agent A must not be Seeking{{Agent(_)}}, got {state_a:?}"
     );
 
     // ZERO SocialReason decisions for agent A.
-    let a_social_decisions = count_events_on_tile(&engine.resources, (5, 5), |ev| matches!(ev,
-        CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
-    ));
-    assert_eq!(a_social_decisions, 0, "agent A must emit ZERO SocialReason decisions");
+    let a_social_decisions = count_events_on_tile(&engine.resources, (5, 5), |ev| {
+        matches!(ev,
+            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, agent, .. } if *agent == id_a
+        )
+    });
+    assert_eq!(
+        a_social_decisions, 0,
+        "agent A must emit ZERO SocialReason decisions"
+    );
 }
 
 // ─── A7b: decision_system_runs_before_social_system_within_tick ────────
@@ -783,8 +905,7 @@ fn harness_p7_beta_a7_construction_wins_over_social() {
 #[test]
 fn harness_p7_beta_a7b_decision_runs_before_social_interaction() {
     let mut engine = fresh_engine();
-    let (_ent_a, _ent_b, id_smaller, _id_larger) =
-        place_mutual_pair_at(&mut engine, (7, 7), 60.0);
+    let (_ent_a, _ent_b, id_smaller, _id_larger) = place_mutual_pair_at(&mut engine, (7, 7), 60.0);
 
     // Run enough ticks to produce a matched pair.
     let mut matched = false;
@@ -799,11 +920,20 @@ fn harness_p7_beta_a7b_decision_runs_before_social_interaction() {
         // Find a SocialInteractionStarted whose parent references an
         // AgentDecision{SocialReason, agent==smaller} on this tile.
         for (i, ev) in events.iter().enumerate() {
-            if let CausalEvent::SocialInteractionStarted { parent: Some(parent_id), tick: s_tick, .. } = ev {
+            if let CausalEvent::SocialInteractionStarted {
+                parent: Some(parent_id),
+                tick: s_tick,
+                ..
+            } = ev
+            {
                 // Locate the matching AgentDecision by id.
                 let decision = events.iter().enumerate().find_map(|(j, dev)| match dev {
                     CausalEvent::AgentDecision {
-                        id, agent, reason: DecisionReason::SocialReason, tick: d_tick, ..
+                        id,
+                        agent,
+                        reason: DecisionReason::SocialReason,
+                        tick: d_tick,
+                        ..
                     } if *id == *parent_id && *agent == id_smaller => Some((j, *id, *d_tick)),
                     _ => None,
                 });
@@ -847,8 +977,7 @@ fn harness_p7_beta_a7b_decision_runs_before_social_interaction() {
 #[test]
 fn harness_p7_beta_a8_mutual_handshake_single_started_event() {
     let mut engine = fresh_engine();
-    let (ent_a, ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (20, 20), 60.0);
+    let (ent_a, ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (20, 20), 60.0);
 
     // Walk ticks; capture per-tick Started count once Started appears.
     let mut started_tick_count: Option<usize> = None;
@@ -879,8 +1008,18 @@ fn harness_p7_beta_a8_mutual_handshake_single_started_event() {
         .iter()
         .find(|e| matches!(e, CausalEvent::SocialInteractionStarted { .. }))
         .expect("Started event");
-    if let CausalEvent::SocialInteractionStarted { agents, position, parent, .. } = started {
-        assert_eq!(*agents, (id_smaller, id_larger), "canonical (smaller, larger)");
+    if let CausalEvent::SocialInteractionStarted {
+        agents,
+        position,
+        parent,
+        ..
+    } = started
+    {
+        assert_eq!(
+            *agents,
+            (id_smaller, id_larger),
+            "canonical (smaller, larger)"
+        );
         assert_eq!(*position, (20, 20), "position is the shared tile");
         let parent_id = parent.expect("parent must be Some(eid)");
         // Exactly ONE matching AgentDecision by EventId.
@@ -949,7 +1088,10 @@ fn harness_p7_beta_a8b_agents_tuple_canonical_under_reversed_iteration() {
                 break;
             }
         }
-        assert_eq!(total_started, 1, "variant {variant}: exactly one Started event");
+        assert_eq!(
+            total_started, 1,
+            "variant {variant}: exactly one Started event"
+        );
 
         let idx = tile_idx((25, 25), engine.resources.tile_grid.width);
         let log = engine.resources.causal_log.get(idx).expect("log");
@@ -990,8 +1132,7 @@ fn harness_p7_beta_a8b_agents_tuple_canonical_under_reversed_iteration() {
 #[test]
 fn harness_p7_beta_a9_completion_after_required_progress_ticks() {
     let mut engine = fresh_engine();
-    let (ent_a, ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (30, 30), 70.0);
+    let (ent_a, ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (30, 30), 70.0);
     let key = RelationshipKey::new(id_smaller, id_larger);
 
     // ─── SETUP phase ──────────────────────────────────────────────────
@@ -1014,7 +1155,8 @@ fn harness_p7_beta_a9_completion_after_required_progress_ticks() {
             break;
         }
     }
-    let started_id = started_id_opt.expect("SETUP: SocialInteractionStarted must fire within 6 ticks");
+    let started_id =
+        started_id_opt.expect("SETUP: SocialInteractionStarted must fire within 6 ticks");
     let s_tick = started_tick_opt.expect("SETUP: started tick must be captured");
 
     // SETUP post-condition: handshake-tick progress seed == 0 (just_started
@@ -1075,8 +1217,14 @@ fn harness_p7_beta_a9_completion_after_required_progress_ticks() {
 
             let lone_a_mid = engine.world.get::<&Social>(ent_a).unwrap().loneliness;
             let lone_b_mid = engine.world.get::<&Social>(ent_b).unwrap().loneliness;
-            assert_eq!(lone_a_mid, 70.0, "MEASURE tick {direct_tick_idx}: A loneliness unchanged");
-            assert_eq!(lone_b_mid, 70.0, "MEASURE tick {direct_tick_idx}: B loneliness unchanged");
+            assert_eq!(
+                lone_a_mid, 70.0,
+                "MEASURE tick {direct_tick_idx}: A loneliness unchanged"
+            );
+            assert_eq!(
+                lone_b_mid, 70.0,
+                "MEASURE tick {direct_tick_idx}: B loneliness unchanged"
+            );
 
             let completed_mid = count_events_on_tile(&engine.resources, (30, 30), |ev| {
                 matches!(ev, CausalEvent::SocialInteractionCompleted { .. })
@@ -1093,13 +1241,29 @@ fn harness_p7_beta_a9_completion_after_required_progress_ticks() {
     // bump, progress map cleanup) coincide on the final MEASURE tick.
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
-    assert_eq!(state_a, AgentState::Idle, "A must reset to Idle on completion");
-    assert_eq!(state_b, AgentState::Idle, "B must reset to Idle on completion");
+    assert_eq!(
+        state_a,
+        AgentState::Idle,
+        "A must reset to Idle on completion"
+    );
+    assert_eq!(
+        state_b,
+        AgentState::Idle,
+        "B must reset to Idle on completion"
+    );
 
     let lone_a = engine.world.get::<&Social>(ent_a).unwrap().loneliness;
     let lone_b = engine.world.get::<&Social>(ent_b).unwrap().loneliness;
-    assert_eq!(lone_a, 70.0 - SOCIAL_CONSUME_AMOUNT, "A loneliness decremented");
-    assert_eq!(lone_b, 70.0 - SOCIAL_CONSUME_AMOUNT, "B loneliness decremented");
+    assert_eq!(
+        lone_a,
+        70.0 - SOCIAL_CONSUME_AMOUNT,
+        "A loneliness decremented"
+    );
+    assert_eq!(
+        lone_b,
+        70.0 - SOCIAL_CONSUME_AMOUNT,
+        "B loneliness decremented"
+    );
 
     let fam = engine
         .resources
@@ -1182,35 +1346,55 @@ fn harness_p7_beta_a10_three_link_causal_chain() {
         engine.tick();
         if count_events_on_tile(&engine.resources, (40, 40), |ev| {
             matches!(ev, CausalEvent::SocialInteractionCompleted { .. })
-        }) >= 1 {
+        }) >= 1
+        {
             break;
         }
     }
     let idx = tile_idx((40, 40), engine.resources.tile_grid.width);
     let log = engine.resources.causal_log.get(idx).expect("log");
 
-    let completed_id = log.as_slice().iter().find_map(|e| match e {
-        CausalEvent::SocialInteractionCompleted { id, .. } => Some(*id),
-        _ => None,
-    }).expect("Completed");
+    let completed_id = log
+        .as_slice()
+        .iter()
+        .find_map(|e| match e {
+            CausalEvent::SocialInteractionCompleted { id, .. } => Some(*id),
+            _ => None,
+        })
+        .expect("Completed");
     let chain = engine.resources.causal_log.trace_parents(idx, completed_id);
     // Walk: chain[0]=Completed, chain[1]=Started, chain[2]=AgentDecision.
-    assert_eq!(chain.len(), 3, "chain must have exactly 3 links, got {}", chain.len());
+    assert_eq!(
+        chain.len(),
+        3,
+        "chain must have exactly 3 links, got {}",
+        chain.len()
+    );
 
-    assert!(matches!(chain[0], CausalEvent::SocialInteractionCompleted { .. }), "link 0 = Completed");
+    assert!(
+        matches!(chain[0], CausalEvent::SocialInteractionCompleted { .. }),
+        "link 0 = Completed"
+    );
     let completed_agents = match chain[0] {
         CausalEvent::SocialInteractionCompleted { agents, .. } => *agents,
         _ => unreachable!(),
     };
 
     if let CausalEvent::SocialInteractionStarted { agents, .. } = chain[1] {
-        assert_eq!(*agents, completed_agents, "Started.agents matches Completed.agents");
+        assert_eq!(
+            *agents, completed_agents,
+            "Started.agents matches Completed.agents"
+        );
     } else {
         panic!("link 1 must be Started, got {:?}", chain[1]);
     }
 
     if let CausalEvent::AgentDecision { reason, agent, .. } = chain[2] {
-        assert_eq!(*reason, DecisionReason::SocialReason, "link 2 = AgentDecision{{SocialReason}}");
+        assert_eq!(
+            *reason,
+            DecisionReason::SocialReason,
+            "link 2 = AgentDecision{{SocialReason}}"
+        );
         assert_eq!(*agent, id_smaller, "link 2's agent = smaller id");
     } else {
         panic!("link 2 must be AgentDecision, got {:?}", chain[2]);
@@ -1326,8 +1510,7 @@ fn harness_p7_beta_a11_asymmetric_partner_fallback() {
 #[test]
 fn harness_p7_beta_a11b_progress_cleanup_when_pair_stops_consuming() {
     let mut engine = fresh_engine();
-    let (ent_a, _ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (55, 55), 60.0);
+    let (ent_a, _ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (55, 55), 60.0);
     let key = RelationshipKey::new(id_smaller, id_larger);
 
     // Drive into mutual Consuming.
@@ -1336,7 +1519,8 @@ fn harness_p7_beta_a11b_progress_cleanup_when_pair_stops_consuming() {
         engine.tick();
         if count_events_on_tile(&engine.resources, (55, 55), |ev| {
             matches!(ev, CausalEvent::SocialInteractionStarted { .. })
-        }) >= 1 {
+        }) >= 1
+        {
             handshake_done = true;
             break;
         }
@@ -1351,7 +1535,10 @@ fn harness_p7_beta_a11b_progress_cleanup_when_pair_stops_consuming() {
         .get(&key)
         .copied()
         .unwrap_or(0);
-    assert!(prog_before >= 1, "progress must be ≥1 before forcing Idle; got {prog_before}");
+    assert!(
+        prog_before >= 1,
+        "progress must be ≥1 before forcing Idle; got {prog_before}"
+    );
 
     // Force agent A to Idle (external override).
     *engine.world.get::<&mut AgentState>(ent_a).unwrap() = AgentState::Idle;
@@ -1369,7 +1556,10 @@ fn harness_p7_beta_a11b_progress_cleanup_when_pair_stops_consuming() {
     let completed_after = count_events_on_tile(&engine.resources, (55, 55), |ev| {
         matches!(ev, CausalEvent::SocialInteractionCompleted { .. })
     });
-    assert_eq!(completed_after, 0, "no Completed emission for the broken pair");
+    assert_eq!(
+        completed_after, 0,
+        "no Completed emission for the broken pair"
+    );
 }
 
 // ─── A12: interaction_progress_single_increment_per_pair_per_tick ──────
@@ -1378,8 +1568,7 @@ fn harness_p7_beta_a11b_progress_cleanup_when_pair_stops_consuming() {
 #[test]
 fn harness_p7_beta_a12_single_increment_per_pair_per_tick() {
     let mut engine = fresh_engine();
-    let (_ent_a, _ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (70, 70), 60.0);
+    let (_ent_a, _ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (70, 70), 60.0);
     let key = RelationshipKey::new(id_smaller, id_larger);
 
     // Drive engine until Started appears.
@@ -1388,7 +1577,8 @@ fn harness_p7_beta_a12_single_increment_per_pair_per_tick() {
         engine.tick();
         if count_events_on_tile(&engine.resources, (70, 70), |ev| {
             matches!(ev, CausalEvent::SocialInteractionStarted { .. })
-        }) >= 1 {
+        }) >= 1
+        {
             started_seen = true;
             break;
         }
@@ -1424,8 +1614,7 @@ fn harness_p7_beta_a12_single_increment_per_pair_per_tick() {
 #[test]
 fn harness_p7_beta_a12b_n_ticks_yields_n_progress() {
     let mut engine = fresh_engine();
-    let (_ent_a, _ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (72, 72), 60.0);
+    let (_ent_a, _ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (72, 72), 60.0);
     let key = RelationshipKey::new(id_smaller, id_larger);
 
     // Drive engine until Started appears.
@@ -1433,7 +1622,8 @@ fn harness_p7_beta_a12b_n_ticks_yields_n_progress() {
         engine.tick();
         if count_events_on_tile(&engine.resources, (72, 72), |ev| {
             matches!(ev, CausalEvent::SocialInteractionStarted { .. })
-        }) >= 1 {
+        }) >= 1
+        {
             break;
         }
     }
@@ -1466,8 +1656,7 @@ fn harness_p7_beta_a12b_n_ticks_yields_n_progress() {
 #[test]
 fn harness_p7_beta_a13_familiarity_saturates() {
     let mut engine = fresh_engine();
-    let (_ent_a, _ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (80, 80), 70.0);
+    let (_ent_a, _ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (80, 80), 70.0);
     let key = RelationshipKey::new(id_smaller, id_larger);
     let mut pre = RelationshipState::new();
     pre.bump(0.95);
@@ -1477,20 +1666,32 @@ fn harness_p7_beta_a13_familiarity_saturates() {
         engine.tick();
         if count_events_on_tile(&engine.resources, (80, 80), |ev| {
             matches!(ev, CausalEvent::SocialInteractionCompleted { .. })
-        }) >= 1 {
+        }) >= 1
+        {
             break;
         }
     }
-    let fam = engine.resources.relationships.get(&key).unwrap().familiarity;
+    let fam = engine
+        .resources
+        .relationships
+        .get(&key)
+        .unwrap()
+        .familiarity;
     assert_eq!(fam, 1.0, "familiarity must saturate at 1.0, got {fam}");
 
     let idx = tile_idx((80, 80), engine.resources.tile_grid.width);
     let log = engine.resources.causal_log.get(idx).unwrap();
     let completed_fam = log.as_slice().iter().find_map(|e| match e {
-        CausalEvent::SocialInteractionCompleted { familiarity_after, .. } => Some(*familiarity_after),
+        CausalEvent::SocialInteractionCompleted {
+            familiarity_after, ..
+        } => Some(*familiarity_after),
         _ => None,
     });
-    assert_eq!(completed_fam, Some(1.0), "completed.familiarity_after must be 1.0");
+    assert_eq!(
+        completed_fam,
+        Some(1.0),
+        "completed.familiarity_after must be 1.0"
+    );
 }
 
 // ─── A13b: loneliness_saturates_at_zero ────────────────────────────────
@@ -1613,8 +1814,7 @@ fn harness_p7_beta_a13b_loneliness_saturating_subtract_at_zero() {
 #[test]
 fn harness_p7_beta_a13c_mid_range_familiarity_bump() {
     let mut engine = fresh_engine();
-    let (_ent_a, _ent_b, id_smaller, id_larger) =
-        place_mutual_pair_at(&mut engine, (82, 82), 70.0);
+    let (_ent_a, _ent_b, id_smaller, id_larger) = place_mutual_pair_at(&mut engine, (82, 82), 70.0);
     let key = RelationshipKey::new(id_smaller, id_larger);
     let mut pre = RelationshipState::new();
     pre.bump(0.4);
@@ -1624,20 +1824,32 @@ fn harness_p7_beta_a13c_mid_range_familiarity_bump() {
         engine.tick();
         if count_events_on_tile(&engine.resources, (82, 82), |ev| {
             matches!(ev, CausalEvent::SocialInteractionCompleted { .. })
-        }) >= 1 {
+        }) >= 1
+        {
             break;
         }
     }
-    let fam = engine.resources.relationships.get(&key).unwrap().familiarity;
+    let fam = engine
+        .resources
+        .relationships
+        .get(&key)
+        .unwrap()
+        .familiarity;
     assert_eq!(fam, 0.5, "familiarity 0.4 + 0.1 must equal 0.5; got {fam}");
 
     let idx = tile_idx((82, 82), engine.resources.tile_grid.width);
     let log = engine.resources.causal_log.get(idx).unwrap();
     let completed_fam = log.as_slice().iter().find_map(|e| match e {
-        CausalEvent::SocialInteractionCompleted { familiarity_after, .. } => Some(*familiarity_after),
+        CausalEvent::SocialInteractionCompleted {
+            familiarity_after, ..
+        } => Some(*familiarity_after),
         _ => None,
     });
-    assert_eq!(completed_fam, Some(0.5), "completed.familiarity_after must be 0.5");
+    assert_eq!(
+        completed_fam,
+        Some(0.5),
+        "completed.familiarity_after must be 0.5"
+    );
 }
 
 // ─── A14: pre_existing_phase_regressions_bounded_two_run ───────────────
@@ -1854,9 +2066,17 @@ fn harness_p7_beta_a14_two_run_regression_bounded() {
         "ConstructionReason",
     ];
     for (i, label) in labels.iter().enumerate() {
-        assert_within(label, base_metrics.decision_counts[i], feat_metrics.decision_counts[i]);
+        assert_within(
+            label,
+            base_metrics.decision_counts[i],
+            feat_metrics.decision_counts[i],
+        );
     }
-    assert_within("complete_buildings", base_metrics.complete_buildings, feat_metrics.complete_buildings);
+    assert_within(
+        "complete_buildings",
+        base_metrics.complete_buildings,
+        feat_metrics.complete_buildings,
+    );
 
     // Plan attempt-2 fix #4: locked evaluation_criteria.md Part 3 upper
     // bounds on economic accumulators across the 4380-tick feature run.
@@ -2041,7 +2261,10 @@ fn harness_p7_beta_a17_smaller_agent_id_emits_invariant() {
         // Spawn entities with EXPLICIT AgentId. Bypass engine.spawn_agent
         // (which mints monotonic ids) by spawning with full component tuple.
         let ent_first = engine.world.spawn((
-            Position { x: tile.0, y: tile.1 },
+            Position {
+                x: tile.0,
+                y: tile.1,
+            },
             Agent { id: *id_first },
             Hunger::new(0.0, 0.0),
             Thirst::new(0.0, 0.0),
@@ -2050,7 +2273,10 @@ fn harness_p7_beta_a17_smaller_agent_id_emits_invariant() {
             AgentState::Idle,
         ));
         let ent_second = engine.world.spawn((
-            Position { x: tile.0, y: tile.1 },
+            Position {
+                x: tile.0,
+                y: tile.1,
+            },
             Agent { id: *id_second },
             Hunger::new(0.0, 0.0),
             Thirst::new(0.0, 0.0),
@@ -2116,8 +2342,8 @@ fn harness_p7_beta_a17_smaller_agent_id_emits_invariant() {
         // agent's SocialReason decision can be the parent of the Started
         // event. A regression where the larger agent emits would surface
         // here as parent referring to a `agent == larger` decision.
-        let parent_id = started_parent
-            .unwrap_or_else(|| panic!("A17 [{label}]: Started.parent must be Some"));
+        let parent_id =
+            started_parent.unwrap_or_else(|| panic!("A17 [{label}]: Started.parent must be Some"));
         let parent_decision = log
             .as_slice()
             .iter()
@@ -2153,8 +2379,7 @@ fn harness_p7_beta_a17c_loneliness_below_threshold_does_not_trigger_social() {
     for (i, (lone, label)) in cases.iter().enumerate() {
         let mut engine = fresh_engine();
         let tile = (20 + (i as u32) * 4, 20);
-        let (ent_a, ent_b, _id_a, _id_b) =
-            place_mutual_pair_at(&mut engine, tile, *lone);
+        let (ent_a, ent_b, _id_a, _id_b) = place_mutual_pair_at(&mut engine, tile, *lone);
 
         for _ in 0..10 {
             engine.tick();
@@ -2162,12 +2387,26 @@ fn harness_p7_beta_a17c_loneliness_below_threshold_does_not_trigger_social() {
 
         let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
         let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
-        assert_eq!(state_a, AgentState::Idle, "A17c [{label}]: A must stay Idle");
-        assert_eq!(state_b, AgentState::Idle, "A17c [{label}]: B must stay Idle");
+        assert_eq!(
+            state_a,
+            AgentState::Idle,
+            "A17c [{label}]: A must stay Idle"
+        );
+        assert_eq!(
+            state_b,
+            AgentState::Idle,
+            "A17c [{label}]: B must stay Idle"
+        );
 
-        let social_decisions = count_events_on_tile(&engine.resources, tile, |ev| matches!(ev,
-            CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. }
-        ));
+        let social_decisions = count_events_on_tile(&engine.resources, tile, |ev| {
+            matches!(
+                ev,
+                CausalEvent::AgentDecision {
+                    reason: DecisionReason::SocialReason,
+                    ..
+                }
+            )
+        });
         assert_eq!(social_decisions, 0, "A17c [{label}]: ZERO SocialReason");
 
         let started = count_events_on_tile(&engine.resources, tile, |ev| {
@@ -2222,8 +2461,12 @@ fn harness_p7_beta_a17b_three_agents_no_panic() {
         let state = *engine.world.get::<&AgentState>(ent).unwrap();
         match state {
             AgentState::Idle
-            | AgentState::Seeking { target: TargetKind::Agent(_) }
-            | AgentState::Consuming { target: TargetKind::Agent(_) } => {}
+            | AgentState::Seeking {
+                target: TargetKind::Agent(_),
+            }
+            | AgentState::Consuming {
+                target: TargetKind::Agent(_),
+            } => {}
             other => panic!("agent in unexpected state {other:?}"),
         }
     }
@@ -2330,7 +2573,12 @@ fn harness_p7_beta_a18_co_location_strict_same_tile_required() {
 fn harness_p7_beta_a18b_no_eligible_agents_emits_no_events() {
     let mut engine = make_stage1_engine(42, 20);
     // Zero all loneliness + force Idle.
-    let entities: Vec<hecs::Entity> = engine.world.query::<&Agent>().iter().map(|(e, _)| e).collect();
+    let entities: Vec<hecs::Entity> = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(e, _)| e)
+        .collect();
     for e in entities {
         if let Ok(mut s) = engine.world.get::<&mut Social>(e) {
             s.loneliness = 0.0;
@@ -2350,9 +2598,10 @@ fn harness_p7_beta_a18b_no_eligible_agents_emits_no_events() {
                 match ev {
                     CausalEvent::SocialInteractionStarted { .. } => started += 1,
                     CausalEvent::SocialInteractionCompleted { .. } => completed += 1,
-                    CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. } => {
-                        social_decisions += 1
-                    }
+                    CausalEvent::AgentDecision {
+                        reason: DecisionReason::SocialReason,
+                        ..
+                    } => social_decisions += 1,
                     _ => {}
                 }
             }
@@ -2362,13 +2611,22 @@ fn harness_p7_beta_a18b_no_eligible_agents_emits_no_events() {
 
     // Pre-tick baseline (should be 0 in a fresh engine).
     let (s0, c0, d0) = count_social_events(&engine.resources);
-    assert_eq!((s0, c0, d0), (0, 0, 0), "pre-run baseline must be zero social events");
+    assert_eq!(
+        (s0, c0, d0),
+        (0, 0, 0),
+        "pre-run baseline must be zero social events"
+    );
 
     for _ in 0..50 {
         engine.tick();
         // Re-zero loneliness each tick to keep all agents ineligible
         // (decay would push them above threshold otherwise across 50 ticks).
-        let ents: Vec<hecs::Entity> = engine.world.query::<&Agent>().iter().map(|(e, _)| e).collect();
+        let ents: Vec<hecs::Entity> = engine
+            .world
+            .query::<&Agent>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
         for e in ents {
             if let Ok(mut s) = engine.world.get::<&mut Social>(e) {
                 s.loneliness = 0.0;
@@ -2379,7 +2637,10 @@ fn harness_p7_beta_a18b_no_eligible_agents_emits_no_events() {
     let (started, completed, social_decisions) = count_social_events(&engine.resources);
     assert_eq!(started, 0, "ZERO Started events");
     assert_eq!(completed, 0, "ZERO Completed events");
-    assert_eq!(social_decisions, 0, "ZERO SocialReason AgentDecision events");
+    assert_eq!(
+        social_decisions, 0,
+        "ZERO SocialReason AgentDecision events"
+    );
 }
 
 // ─── §β Re-plan A18p-A22: plan-locked canonical-emergence assertions ────
@@ -2397,7 +2658,10 @@ fn scan_canonical_emergence(engine: &SimEngine) -> (usize, usize, usize, usize) 
                 match ev {
                     CausalEvent::SocialInteractionStarted { .. } => started += 1,
                     CausalEvent::SocialInteractionCompleted { .. } => completed += 1,
-                    CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. } => {
+                    CausalEvent::AgentDecision {
+                        reason: DecisionReason::SocialReason,
+                        ..
+                    } => {
                         social_decisions += 1;
                     }
                     _ => {}
@@ -2433,8 +2697,7 @@ fn run_canonical(seed: u64, ticks: u64) -> SimEngine {
 #[test]
 fn harness_p7_beta_a18p_canonical_emergent_social_run() {
     let engine = run_canonical(42, 4380);
-    let (started, completed, social_decisions, nonzero_rels) =
-        scan_canonical_emergence(&engine);
+    let (started, completed, social_decisions, nonzero_rels) = scan_canonical_emergence(&engine);
 
     println!(
         "[A18p] canonical 4380-tick run seed=42 agents=20: started={} completed={} \
@@ -2470,8 +2733,7 @@ fn harness_p7_beta_a19_three_seed_cross_seed_robustness() {
     let seeds = [42u64, 100u64, 200u64];
     for &seed in &seeds {
         let engine = run_canonical(seed, 4380);
-        let (started, completed, _social_dec, nonzero_rels) =
-            scan_canonical_emergence(&engine);
+        let (started, completed, _social_dec, nonzero_rels) = scan_canonical_emergence(&engine);
         println!(
             "[A19] seed={} started={} completed={} nonzero_rels={}",
             seed, started, completed, nonzero_rels
@@ -2479,7 +2741,10 @@ fn harness_p7_beta_a19_three_seed_cross_seed_robustness() {
         assert!(
             started >= 1 && completed >= 1 && nonzero_rels >= 1,
             "A19: seed {} canonical run must hit A18 floor (got started={} completed={} rels={})",
-            seed, started, completed, nonzero_rels
+            seed,
+            started,
+            completed,
+            nonzero_rels
         );
     }
 }
@@ -2491,11 +2756,16 @@ fn harness_p7_beta_a20_same_seed_determinism() {
     let engine_b = run_canonical(42, 4380);
 
     // (a) relationships HashMap snapshot equal (by content).
-    let mut keys_a: Vec<RelationshipKey> = engine_a.resources.relationships.keys().copied().collect();
-    let mut keys_b: Vec<RelationshipKey> = engine_b.resources.relationships.keys().copied().collect();
+    let mut keys_a: Vec<RelationshipKey> =
+        engine_a.resources.relationships.keys().copied().collect();
+    let mut keys_b: Vec<RelationshipKey> =
+        engine_b.resources.relationships.keys().copied().collect();
     keys_a.sort_by_key(|k| (k.smaller(), k.larger()));
     keys_b.sort_by_key(|k| (k.smaller(), k.larger()));
-    assert_eq!(keys_a, keys_b, "A20: relationship key sets must match across same-seed runs");
+    assert_eq!(
+        keys_a, keys_b,
+        "A20: relationship key sets must match across same-seed runs"
+    );
 
     for k in &keys_a {
         let fa = engine_a.resources.relationships.get(k).unwrap().familiarity;
@@ -2504,7 +2774,9 @@ fn harness_p7_beta_a20_same_seed_determinism() {
             fa.to_bits(),
             fb.to_bits(),
             "A20: familiarity for {:?} must be bit-exact across same-seed runs (a={} b={})",
-            k, fa, fb
+            k,
+            fa,
+            fb
         );
     }
 
@@ -2519,7 +2791,10 @@ fn harness_p7_beta_a20_same_seed_determinism() {
         for tile_idx in 0..(engine.resources.tile_grid.width * engine.resources.tile_grid.height) {
             if let Some(log) = engine.resources.causal_log.get(tile_idx) {
                 for ev in log.as_slice() {
-                    if let CausalEvent::SocialInteractionStarted { tick, id, agents, .. } = ev {
+                    if let CausalEvent::SocialInteractionStarted {
+                        tick, id, agents, ..
+                    } = ev
+                    {
                         out.push((*tick, *id, *agents));
                     }
                 }
@@ -2555,7 +2830,10 @@ fn harness_p7_beta_a21_hot_tier_production_schedule() {
     let names = engine.system_names();
 
     // SocialInteractionSystem must appear exactly once in the production list.
-    let count = names.iter().filter(|n| **n == "SocialInteractionSystem").count();
+    let count = names
+        .iter()
+        .filter(|n| **n == "SocialInteractionSystem")
+        .count();
     assert_eq!(
         count, 1,
         "A21: SocialInteractionSystem must be registered exactly once via register_default_runtime_systems (got {})",
@@ -2571,13 +2849,40 @@ fn harness_p7_beta_a21_hot_tier_production_schedule() {
     );
 
     // Priority ordering: Construction(133) < SocialInteraction(134) < SocialDecay(135) < Viz(1000).
-    let i_con = names.iter().position(|n| *n == "ConstructionSystem").expect("Construction registered");
-    let i_si = names.iter().position(|n| *n == "SocialInteractionSystem").expect("SocialInteraction registered");
-    let i_sd = names.iter().position(|n| *n == "SocialDecaySystem").expect("SocialDecay registered");
-    let i_viz = names.iter().position(|n| *n == "InfluenceVisualizationSystem").expect("Viz registered");
-    assert!(i_con < i_si, "A21: Construction({}) must precede SocialInteraction({})", i_con, i_si);
-    assert!(i_si < i_sd, "A21: SocialInteraction({}) must precede SocialDecay({})", i_si, i_sd);
-    assert!(i_sd < i_viz, "A21: SocialDecay({}) must precede Viz({})", i_sd, i_viz);
+    let i_con = names
+        .iter()
+        .position(|n| *n == "ConstructionSystem")
+        .expect("Construction registered");
+    let i_si = names
+        .iter()
+        .position(|n| *n == "SocialInteractionSystem")
+        .expect("SocialInteraction registered");
+    let i_sd = names
+        .iter()
+        .position(|n| *n == "SocialDecaySystem")
+        .expect("SocialDecay registered");
+    let i_viz = names
+        .iter()
+        .position(|n| *n == "InfluenceVisualizationSystem")
+        .expect("Viz registered");
+    assert!(
+        i_con < i_si,
+        "A21: Construction({}) must precede SocialInteraction({})",
+        i_con,
+        i_si
+    );
+    assert!(
+        i_si < i_sd,
+        "A21: SocialInteraction({}) must precede SocialDecay({})",
+        i_si,
+        i_sd
+    );
+    assert!(
+        i_sd < i_viz,
+        "A21: SocialDecay({}) must precede Viz({})",
+        i_sd,
+        i_viz
+    );
 }
 
 // ─── A22: real partner despawn mid-interaction ─────────────────────────
@@ -2595,10 +2900,14 @@ fn harness_p7_beta_a22_real_partner_despawn_mid_interaction() {
     // Confirm both reached Consuming.
     let state_a = *engine.world.get::<&AgentState>(ent_a).unwrap();
     let state_b = *engine.world.get::<&AgentState>(ent_b).unwrap();
-    assert!(matches!(state_a, AgentState::Consuming { target: TargetKind::Agent(id) } if id == id_b),
-        "A22 precondition: ent_a must be Consuming{{Agent(b)}}");
-    assert!(matches!(state_b, AgentState::Consuming { target: TargetKind::Agent(id) } if id == id_a),
-        "A22 precondition: ent_b must be Consuming{{Agent(a)}}");
+    assert!(
+        matches!(state_a, AgentState::Consuming { target: TargetKind::Agent(id) } if id == id_b),
+        "A22 precondition: ent_a must be Consuming{{Agent(b)}}"
+    );
+    assert!(
+        matches!(state_b, AgentState::Consuming { target: TargetKind::Agent(id) } if id == id_a),
+        "A22 precondition: ent_b must be Consuming{{Agent(a)}}"
+    );
 
     // Despawn partner B mid-Consuming.
     engine.world.despawn(ent_b).unwrap();

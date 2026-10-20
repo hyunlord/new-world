@@ -28,11 +28,22 @@ impl SubprofileLog {
     /// The `subprofile` block: steady-state totals per scope, the slowest
     /// ticks' breakdown, and every tick's per-scope nanoseconds.
     pub fn summary(&self, offset: u64, ticks_per_day: u64) -> Value {
-        let steady: Vec<_> = self.ticks.iter().filter(|(tick, ..)| *tick >= WARMUP_TICKS).collect();
-        let names: BTreeSet<&'static str> = self.ticks.iter().flat_map(|(.., totals)| totals.keys().copied()).collect();
+        let steady: Vec<_> = self
+            .ticks
+            .iter()
+            .filter(|(tick, ..)| *tick >= WARMUP_TICKS)
+            .collect();
+        let names: BTreeSet<&'static str> = self
+            .ticks
+            .iter()
+            .flat_map(|(.., totals)| totals.keys().copied())
+            .collect();
         let mut scopes = Map::new();
         for name in &names {
-            let rows: Vec<ScopeTotal> = steady.iter().map(|(.., totals)| totals.get(name).copied().unwrap_or_default()).collect();
+            let rows: Vec<ScopeTotal> = steady
+                .iter()
+                .map(|(.., totals)| totals.get(name).copied().unwrap_or_default())
+                .collect();
             let ns: u64 = rows.iter().map(|row| row.ns).sum();
             let calls: u64 = rows.iter().map(|row| row.calls).sum();
             let max_ns = rows.iter().map(|row| row.ns).max().unwrap_or(0);
@@ -62,11 +73,29 @@ impl SubprofileLog {
             })
             .collect();
         let mut per_tick = Map::new();
-        per_tick.insert("tick".into(), json!(self.ticks.iter().map(|(tick, ..)| *tick).collect::<Vec<_>>()));
-        per_tick.insert("tick_us".into(), json!(self.ticks.iter().map(|(_, us, _)| *us).collect::<Vec<_>>()));
+        per_tick.insert(
+            "tick".into(),
+            json!(self
+                .ticks
+                .iter()
+                .map(|(tick, ..)| *tick)
+                .collect::<Vec<_>>()),
+        );
+        per_tick.insert(
+            "tick_us".into(),
+            json!(self.ticks.iter().map(|(_, us, _)| *us).collect::<Vec<_>>()),
+        );
         for name in &names {
-            let ns: Vec<u64> = self.ticks.iter().map(|(.., totals)| totals.get(name).map_or(0, |row| row.ns)).collect();
-            let calls: Vec<u64> = self.ticks.iter().map(|(.., totals)| totals.get(name).map_or(0, |row| row.calls)).collect();
+            let ns: Vec<u64> = self
+                .ticks
+                .iter()
+                .map(|(.., totals)| totals.get(name).map_or(0, |row| row.ns))
+                .collect();
+            let calls: Vec<u64> = self
+                .ticks
+                .iter()
+                .map(|(.., totals)| totals.get(name).map_or(0, |row| row.calls))
+                .collect();
             per_tick.insert(format!("{name}.ns"), json!(ns));
             per_tick.insert(format!("{name}.calls"), json!(calls));
         }

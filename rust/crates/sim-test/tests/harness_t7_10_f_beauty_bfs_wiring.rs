@@ -32,10 +32,13 @@ fn fresh_engine() -> SimEngine {
 }
 
 fn place_beauty_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 // ── Plan F1: source center reaches initial intensity ─────────────────────────
@@ -52,8 +55,14 @@ fn harness_t7_10_f_source_center_lit() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold == 200
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
-    assert_eq!(v, 200, "source center must equal BEAUTY_INITIAL_INTENSITY (200); got {v}");
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Beauty);
+    assert_eq!(
+        v, 200,
+        "source center must equal BEAUTY_INITIAL_INTENSITY (200); got {v}"
+    );
 }
 
 // ── Plan F2: exp decay one cardinal step (k=0.12 discriminator) ──────────────
@@ -74,7 +83,10 @@ fn harness_t7_10_f_exp_decay_one_step_discriminator() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [175, 180]
-    let v = e.resources.influence_grid.sample(SX + 1, SY, InfluenceChannel::Beauty);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY, InfluenceChannel::Beauty);
     assert!(
         (175..=180).contains(&v),
         "1-step cardinal neighbor must decay to ~177 (200*exp(-0.12)); got {v}. \
@@ -104,7 +116,10 @@ fn harness_t7_10_f_bfs_distance_manhattan_discriminator() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [155, 160] (two-step chain ≈157)
-    let v = e.resources.influence_grid.sample(SX + 1, SY + 1, InfluenceChannel::Beauty);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY + 1, InfluenceChannel::Beauty);
     assert!(
         (155..=160).contains(&v),
         "diagonal (SX+1,SY+1) must be in [155,160] (BFS d=2 chain ≈157); got {v}. \
@@ -130,8 +145,14 @@ fn harness_t7_10_f_gradient_monotone() {
     place_beauty_source(&mut e);
     e.tick();
     for d in 0..=14u32 {
-        let v1 = e.resources.influence_grid.sample(SX + d, SY, InfluenceChannel::Beauty);
-        let v2 = e.resources.influence_grid.sample(SX + d + 1, SY, InfluenceChannel::Beauty);
+        let v1 = e
+            .resources
+            .influence_grid
+            .sample(SX + d, SY, InfluenceChannel::Beauty);
+        let v2 = e
+            .resources
+            .influence_grid
+            .sample(SX + d + 1, SY, InfluenceChannel::Beauty);
         // Type A: threshold strict `>` for every adjacent pair
         assert!(
             v1 > v2,
@@ -160,7 +181,10 @@ fn harness_t7_10_f_boundary_at_max_radius() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [28, 38]
-    let v = e.resources.influence_grid.sample(SX + 15, SY, InfluenceChannel::Beauty);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 15, SY, InfluenceChannel::Beauty);
     assert!(
         (28..=38).contains(&v),
         "tile at max_radius=15 must be in [28,38] (chain end ≈33); got {v}; \
@@ -183,7 +207,10 @@ fn harness_t7_10_f_max_radius_cutoff() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold == 0 (distance 16 from source, one beyond max_radius=15)
-    let v = e.resources.influence_grid.sample(SX + 16, SY, InfluenceChannel::Beauty);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 16, SY, InfluenceChannel::Beauty);
     assert_eq!(v, 0, "tile beyond max_radius=15 must be 0; got {v}");
 }
 
@@ -204,7 +231,10 @@ fn harness_t7_10_f_persistence_ten_ticks() {
         e.tick(); // ticks 2–11: event-less persistence branch
     }
     // Type A: threshold == 200 (source persists through all 10 idle ticks)
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
         v, 200,
         "source must persist across 10 event-less ticks (Cold-tier semantics); got {v}. \
@@ -227,8 +257,14 @@ fn harness_t7_10_f_no_event_no_beauty() {
     }
     for (x, y) in [(0u32, 0u32), (SX, SY), (W - 1, H - 1)] {
         // Type A: threshold == 0 at all three positions with no events
-        let v = e.resources.influence_grid.sample(x, y, InfluenceChannel::Beauty);
-        assert_eq!(v, 0, "Beauty at ({x},{y}) must be 0 with no events; got {v}");
+        let v = e
+            .resources
+            .influence_grid
+            .sample(x, y, InfluenceChannel::Beauty);
+        assert_eq!(
+            v, 0,
+            "Beauty at ({x},{y}) must be 0 with no events; got {v}"
+        );
     }
 }
 
@@ -247,27 +283,42 @@ fn harness_t7_10_f_prior_channels_regression_guard() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold == 200 for all 5 previously-wired channels' source centers
-    let warmth = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Warmth);
+    let warmth = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Warmth);
     assert_eq!(
         warmth, 200,
         "T7.10.A regression: Warmth at source must remain 200; got {warmth}"
     );
-    let light = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    let light = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
     assert_eq!(
         light, 200,
         "T7.10.B regression: Light at source must remain 200; got {light}"
     );
-    let noise = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Noise);
+    let noise = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Noise);
     assert_eq!(
         noise, 200,
         "T7.10.C regression: Noise at source must remain 200; got {noise}"
     );
-    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    let danger = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Danger);
     assert_eq!(
         danger, 200,
         "T7.10.D regression: Danger at source must remain 200; got {danger}"
     );
-    let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    let spiritual = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         spiritual, 200,
         "T7.10.E regression: Spiritual at source must remain 200; got {spiritual}"
@@ -288,8 +339,7 @@ fn harness_t7_10_f_dirty_regions_drained() {
     place_beauty_source(&mut e);
     e.tick();
     // Type A: threshold == 0
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
     assert_eq!(
         len, 0,
         "dirty_regions[Beauty] must be drained by IUS via std::mem::take; got len={len}"

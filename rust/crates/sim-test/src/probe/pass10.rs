@@ -24,12 +24,28 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
 /// `(min_hp, injured_members)` as [`metrics`] reports them; the recorder reads
 /// the same function.
 pub(crate) fn health(engine: &SimEngine) -> (f64, u64) {
-    let members: BTreeSet<_> =
-        engine.resources.settlements.values().flat_map(|s| s.member_agents.iter().copied()).collect();
-    let mut rows: Vec<_> = engine.world.query::<(&Agent, &BodyHealth)>().iter().map(|(_, (a, h))| (a.id, *h)).collect();
+    let members: BTreeSet<_> = engine
+        .resources
+        .settlements
+        .values()
+        .flat_map(|s| s.member_agents.iter().copied())
+        .collect();
+    let mut rows: Vec<_> = engine
+        .world
+        .query::<(&Agent, &BodyHealth)>()
+        .iter()
+        .map(|(_, (a, h))| (a.id, *h))
+        .collect();
     rows.sort_by_key(|row| row.0);
-    let min_hp = rows.iter().map(|row| row.1.hp).reduce(f64::min).unwrap_or(0.0);
-    let injured = rows.iter().filter(|(id, h)| members.contains(id) && h.hp < h.max_hp).count() as u64;
+    let min_hp = rows
+        .iter()
+        .map(|row| row.1.hp)
+        .reduce(f64::min)
+        .unwrap_or(0.0);
+    let injured = rows
+        .iter()
+        .filter(|(id, h)| members.contains(id) && h.hp < h.max_hp)
+        .count() as u64;
     (min_hp, injured)
 }
 
@@ -56,12 +72,28 @@ pub(super) fn seed_info(engine: &SimEngine) -> Value {
         if let Some(regions) = super::pass11::regions_json(engine) {
             object.insert("wild_regions".into(), regions);
         }
-        if let Some(e) = r.rules.society.exposure.filter(|e| e.use_hardiness || e.hunger_weight != 0.0) {
-            object.insert("exposure_v2".into(), json!({"hunger_weight": e.hunger_weight, "use_hardiness": e.use_hardiness}));
+        if let Some(e) = r
+            .rules
+            .society
+            .exposure
+            .filter(|e| e.use_hardiness || e.hunger_weight != 0.0)
+        {
+            object.insert(
+                "exposure_v2".into(),
+                json!({"hunger_weight": e.hunger_weight, "use_hardiness": e.use_hardiness}),
+            );
         }
-        if let Some(rain) = r.rules.society.firewood.filter(|f| f.rain_soak_permille > 0 || f.regional_wood) {
-            object.insert("firewood_v17".into(), json!({"rain_soak_permille": rain.rain_soak_permille,
-                "regional_wood": rain.regional_wood}));
+        if let Some(rain) = r
+            .rules
+            .society
+            .firewood
+            .filter(|f| f.rain_soak_permille > 0 || f.regional_wood)
+        {
+            object.insert(
+                "firewood_v17".into(),
+                json!({"rain_soak_permille": rain.rain_soak_permille,
+                "regional_wood": rain.regional_wood}),
+            );
         }
         if let Some(f) = r.rules.society.fission {
             object.insert("fission".into(), json!({"min_members": f.min_members, "crowding": f.crowding,
@@ -72,8 +104,13 @@ pub(super) fn seed_info(engine: &SimEngine) -> Value {
                 "remnant_members": f.remnant_members}));
         }
         if let Some(utilization) = match r.rules.society.birth {
-            sim_core::rules::BirthRule::Provisioned { sustain: Some(s), .. } if r.rules.society.fission.is_some()
-                || r.rules.society.exposure.is_some_and(|e| e.use_hardiness) => Some(s.utilization),
+            sim_core::rules::BirthRule::Provisioned {
+                sustain: Some(s), ..
+            } if r.rules.society.fission.is_some()
+                || r.rules.society.exposure.is_some_and(|e| e.use_hardiness) =>
+            {
+                Some(s.utilization)
+            }
             _ => None,
         } {
             object.insert("sustain_utilization".into(), json!(utilization));
@@ -114,8 +151,10 @@ pub(super) fn seed_winters(
 ) -> Vec<Value> {
     let mut out = Vec::new();
     for d in WINTER_FIRST_DAYS {
-        let (Some(start), Some(end)) = (clock_tick(d, 1080, ticks_per_day, offset), clock_tick(d + 7, 420, ticks_per_day, offset))
-        else {
+        let (Some(start), Some(end)) = (
+            clock_tick(d, 1080, ticks_per_day, offset),
+            clock_tick(d + 7, 420, ticks_per_day, offset),
+        ) else {
             continue;
         };
         if end > days * ticks_per_day {
@@ -123,10 +162,20 @@ pub(super) fn seed_winters(
         }
         let at_start = clock_rows.get(&(d, 1080));
         let dark = (d..d + 7)
-            .filter(|e| clock_rows.get(&(e + 1, 120)).is_some_and(|row| row["fire_lit"].as_u64() == Some(0)))
+            .filter(|e| {
+                clock_rows
+                    .get(&(e + 1, 120))
+                    .is_some_and(|row| row["fire_lit"].as_u64() == Some(0))
+            })
             .count();
-        let severity = clock_rows.get(&(d + 1, 120)).and_then(|row| row["winter_severity"].as_i64()).unwrap_or(-1);
-        let deaths = exposure_ticks.iter().filter(|t| (start..end).contains(*t)).count();
+        let severity = clock_rows
+            .get(&(d + 1, 120))
+            .and_then(|row| row["winter_severity"].as_i64())
+            .unwrap_or(-1);
+        let deaths = exposure_ticks
+            .iter()
+            .filter(|t| (start..end).contains(*t))
+            .count();
         out.push(json!({"first_day": d, "start_tick": start, "end_tick": end,
             "members_at_start": at_start.and_then(|row| row["settled_agents"].as_u64()),
             "alive_at_start": at_start.and_then(|row| row["alive"].as_u64()),
@@ -169,7 +218,10 @@ mod tests {
         let mut rows = BTreeMap::new();
         rows.insert((22, 1080), json!({"settled_agents": 40, "alive": 41}));
         for day in 23..=29 {
-            rows.insert((day, 120), json!({"fire_lit": u64::from(day % 2 == 0), "winter_severity": 2}));
+            rows.insert(
+                (day, 120),
+                json!({"fire_lit": u64::from(day % 2 == 0), "winter_severity": 2}),
+            );
         }
         // Window [day 22 18:00, day 29 07:00) = [30_840, 40_260) with offset 480.
         let start = clock_tick(22, 1080, 1440, 480).expect("start");

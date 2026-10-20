@@ -59,8 +59,7 @@ mod tests {
     fn serde_round_trip_preserves_id() {
         let original = Agent { id: 0xDEAD_BEEF };
         let encoded = ron::to_string(&original).expect("Agent must Serialize");
-        let decoded: Agent =
-            ron::from_str(&encoded).expect("Agent must Deserialize");
+        let decoded: Agent = ron::from_str(&encoded).expect("Agent must Deserialize");
         assert_eq!(original, decoded);
         assert_eq!(decoded.id, 0xDEAD_BEEF);
     }

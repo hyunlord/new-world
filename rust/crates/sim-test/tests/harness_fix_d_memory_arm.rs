@@ -43,8 +43,8 @@ use std::hash::BuildHasher;
 use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, seed_finite_resource_scarcity};
 use sim_core::causal::event::{CausalEvent, DeathReason, DecisionReason, EventId};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryArm, MemoryEntry, Position, Sleep,
-    TargetKind, Thirst,
+    Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryArm, MemoryEntry, Position,
+    Sleep, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
@@ -67,7 +67,10 @@ fn finite_scene() -> SimEngine {
     for pos in [(32u32, 32u32), (24, 32), (40, 32)] {
         e.resources
             .building_event_queue
-            .push_back(BuildingPlacedEvent { position: pos, radius: 8 });
+            .push_back(BuildingPlacedEvent {
+                position: pos,
+                radius: 8,
+            });
     }
     e
 }
@@ -102,7 +105,9 @@ fn engines_independently_seeded(a: &SimEngine, b: &SimEngine) -> bool {
 fn encode_event_arm(make: impl FnOnce(EventId, AgentId, u64) -> CausalEvent) -> Option<MemoryArm> {
     let mut e = SimEngine::new(W, H, MaterialRegistry::new());
     let ent = e.spawn_agent(10, 10);
-    e.world.insert_one(ent, Memory::new()).expect("attach Memory");
+    e.world
+        .insert_one(ent, Memory::new())
+        .expect("attach Memory");
     let aid = e.world.get::<&Agent>(ent).expect("agent present").id;
     let tick = e.resources.current_tick;
     let idx = 10 * W + 10;
@@ -111,7 +116,10 @@ fn encode_event_arm(make: impl FnOnce(EventId, AgentId, u64) -> CausalEvent) -> 
     let mut sys = MemorySystem;
     sys.tick(&mut e.world, &mut e.resources);
     let mem = e.world.get::<&Memory>(ent).expect("memory present");
-    mem.entries.iter().find(|m| m.event_id == ev_id).map(|m| m.arm)
+    mem.entries
+        .iter()
+        .find(|m| m.event_id == ev_id)
+        .map(|m| m.arm)
 }
 
 /// Deterministic FNV-1a fold helper.
@@ -133,10 +141,17 @@ fn behavioural_fingerprint(e: &SimEngine) -> u64 {
 
     // Collect entities first (release the query borrow before per-component
     // `world.get` access), then build one row per agent.
-    let ents: Vec<hecs::Entity> = e.world.query::<&Agent>().iter().map(|(ent, _)| ent).collect();
+    let ents: Vec<hecs::Entity> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(ent, _)| ent)
+        .collect();
     let mut rows: Vec<(AgentId, [u8; 8], [u8; 8], String)> = Vec::new();
     for ent in ents {
-        let Ok(agent) = e.world.get::<&Agent>(ent) else { continue };
+        let Ok(agent) = e.world.get::<&Agent>(ent) else {
+            continue;
+        };
         let pos_bits = e
             .world
             .get::<&Position>(ent)
@@ -167,12 +182,16 @@ fn behavioural_fingerprint(e: &SimEngine) -> u64 {
             .get::<&AgentState>(ent)
             .map(|s| format!("{s:?}"))
             .unwrap_or_default();
-        let need_mix = hunger
-            .wrapping_mul(0x9E37_79B9)
+        let need_mix = hunger.wrapping_mul(0x9E37_79B9)
             ^ thirst.rotate_left(17)
             ^ sleep.rotate_left(31)
             ^ hp.rotate_left(7);
-        rows.push((agent.id, pos_bits.to_le_bytes(), need_mix.to_le_bytes(), state));
+        rows.push((
+            agent.id,
+            pos_bits.to_le_bytes(),
+            need_mix.to_le_bytes(),
+            state,
+        ));
     }
     rows.sort_by_key(|(id, ..)| *id);
     for (id, pos_bits, need_mix, state) in &rows {
@@ -475,7 +494,9 @@ fn harness_fix_d_a3_cascade_flip_is_relative_uniform_shift_invariant() {
     fn flip_tick(uniform_shift: bool) -> u64 {
         let mut e = SimEngine::new(W, H, MaterialRegistry::new());
         let ent = e.spawn_agent(20, 20);
-        e.world.insert_one(ent, Memory::new()).expect("attach Memory");
+        e.world
+            .insert_one(ent, Memory::new())
+            .expect("attach Memory");
         {
             let mut mem = e.world.get::<&mut Memory>(ent).expect("memory present");
             // Two Thirst-arm bias entries → delta_Thirst = 2 * recency.
@@ -523,7 +544,12 @@ fn harness_fix_d_a3_cascade_flip_is_relative_uniform_shift_invariant() {
                 .map(|s| *s)
                 .unwrap_or(AgentState::Idle);
             // Flipped ⇒ Seeking{Water}; reverted to natural ⇒ Seeking{Food}.
-            if matches!(st, AgentState::Seeking { target: TargetKind::Food }) {
+            if matches!(
+                st,
+                AgentState::Seeking {
+                    target: TargetKind::Food
+                }
+            ) {
                 flip = Some(t);
                 break;
             }

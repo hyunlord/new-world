@@ -31,10 +31,13 @@ fn fresh_engine() -> SimEngine {
 }
 
 fn place_spiritual_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 // ── Plan E1: source center reaches initial intensity ─────────────────────────
@@ -51,8 +54,14 @@ fn harness_t7_10_e_source_center_lit() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold == 200
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
-    assert_eq!(v, 200, "source center must equal SPIRITUAL_INITIAL_INTENSITY (200); got {v}");
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Spiritual);
+    assert_eq!(
+        v, 200,
+        "source center must equal SPIRITUAL_INITIAL_INTENSITY (200); got {v}"
+    );
 }
 
 // ── Plan E2: exp decay one cardinal step (k=0.08 discriminator vs Warmth k=0.15)
@@ -75,7 +84,10 @@ fn harness_t7_10_e_exp_decay_one_step_discriminator() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [182, 186]
-    let v = e.resources.influence_grid.sample(SX + 1, SY, InfluenceChannel::Spiritual);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY, InfluenceChannel::Spiritual);
     assert!(
         (182..=186).contains(&v),
         "1-step cardinal neighbor must decay to ~184 (200*exp(-0.08)); got {v}. \
@@ -103,7 +115,10 @@ fn harness_t7_10_e_bfs_distance_manhattan_discriminator() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [168, 172] (two-step chain ≈170)
-    let v = e.resources.influence_grid.sample(SX + 1, SY + 1, InfluenceChannel::Spiritual);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY + 1, InfluenceChannel::Spiritual);
     assert!(
         (168..=172).contains(&v),
         "diagonal (SX+1,SY+1) must be in [168,172] (BFS d=2 chain ≈170 with k=0.08); got {v}. \
@@ -129,8 +144,14 @@ fn harness_t7_10_e_gradient_monotone() {
     place_spiritual_source(&mut e);
     e.tick();
     for d in 0..=14u32 {
-        let v1 = e.resources.influence_grid.sample(SX + d, SY, InfluenceChannel::Spiritual);
-        let v2 = e.resources.influence_grid.sample(SX + d + 1, SY, InfluenceChannel::Spiritual);
+        let v1 = e
+            .resources
+            .influence_grid
+            .sample(SX + d, SY, InfluenceChannel::Spiritual);
+        let v2 = e
+            .resources
+            .influence_grid
+            .sample(SX + d + 1, SY, InfluenceChannel::Spiritual);
         // Type A: threshold strict `>` for every adjacent pair
         assert!(
             v1 > v2,
@@ -159,7 +180,10 @@ fn harness_t7_10_e_boundary_at_max_radius() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [55, 65]
-    let v = e.resources.influence_grid.sample(SX + 15, SY, InfluenceChannel::Spiritual);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 15, SY, InfluenceChannel::Spiritual);
     assert!(
         (55..=65).contains(&v),
         "tile at max_radius=15 must be in [55,65] (chain end ≈60 with k=0.08); got {v}; \
@@ -182,7 +206,10 @@ fn harness_t7_10_e_max_radius_cutoff() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold == 0 (distance 16 from source, one beyond max_radius=15)
-    let v = e.resources.influence_grid.sample(SX + 16, SY, InfluenceChannel::Spiritual);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 16, SY, InfluenceChannel::Spiritual);
     assert_eq!(v, 0, "tile beyond max_radius=15 must be 0; got {v}");
 }
 
@@ -203,7 +230,10 @@ fn harness_t7_10_e_persistence_ten_ticks() {
         e.tick(); // ticks 2–11: event-less persistence branch
     }
     // Type A: threshold == 200 (source persists through all 10 idle ticks)
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         v, 200,
         "source must persist across 10 event-less ticks (Cold-tier semantics); got {v}. \
@@ -226,8 +256,14 @@ fn harness_t7_10_e_no_event_no_spiritual() {
     }
     for (x, y) in [(0u32, 0u32), (SX, SY), (W - 1, H - 1)] {
         // Type A: threshold == 0 at all three positions with no events
-        let v = e.resources.influence_grid.sample(x, y, InfluenceChannel::Spiritual);
-        assert_eq!(v, 0, "Spiritual at ({x},{y}) must be 0 with no events; got {v}");
+        let v = e
+            .resources
+            .influence_grid
+            .sample(x, y, InfluenceChannel::Spiritual);
+        assert_eq!(
+            v, 0,
+            "Spiritual at ({x},{y}) must be 0 with no events; got {v}"
+        );
     }
 }
 
@@ -246,25 +282,37 @@ fn harness_t7_10_e_prior_channels_regression_guard() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold == 200 for Warmth source center
-    let warmth = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Warmth);
+    let warmth = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Warmth);
     assert_eq!(
         warmth, 200,
         "T7.10.A regression: Warmth at source must remain 200; got {warmth}"
     );
     // Type A: threshold == 200 for Light source center
-    let light = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    let light = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
     assert_eq!(
         light, 200,
         "T7.10.B regression: Light at source must remain 200; got {light}"
     );
     // Type A: threshold == 200 for Noise source center
-    let noise = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Noise);
+    let noise = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Noise);
     assert_eq!(
         noise, 200,
         "T7.10.C regression: Noise at source must remain 200; got {noise}"
     );
     // Type A: threshold == 200 for Danger source center
-    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    let danger = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Danger);
     assert_eq!(
         danger, 200,
         "T7.10.D regression: Danger at source must remain 200; got {danger}"
@@ -285,8 +333,7 @@ fn harness_t7_10_e_dirty_regions_drained() {
     place_spiritual_source(&mut e);
     e.tick();
     // Type A: threshold == 0
-    let len =
-        e.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+    let len = e.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
     assert_eq!(
         len, 0,
         "dirty_regions[Spiritual] must be drained by IUS via std::mem::take; got len={len}"
@@ -303,7 +350,10 @@ fn harness_t7_10_e_other_channels_remain_zero() {
     place_spiritual_source(&mut e);
     e.tick();
     // T7.10.F regression guard: Beauty now propagates at source center.
-    let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    let beauty = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
         beauty, 200,
         "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"
@@ -335,9 +385,14 @@ fn harness_t7_10_e_spiritual_warmth_ratio_at_d10() {
     let mut e = fresh_engine();
     place_spiritual_source(&mut e);
     e.tick();
-    let spiritual =
-        e.resources.influence_grid.sample(SX + 10, SY, InfluenceChannel::Spiritual);
-    let warmth = e.resources.influence_grid.sample(SX + 10, SY, InfluenceChannel::Warmth);
+    let spiritual = e
+        .resources
+        .influence_grid
+        .sample(SX + 10, SY, InfluenceChannel::Spiritual);
+    let warmth = e
+        .resources
+        .influence_grid
+        .sample(SX + 10, SY, InfluenceChannel::Warmth);
 
     // Type A: Warmth must propagate to d=10 (within Warmth's max_radius=12).
     assert!(

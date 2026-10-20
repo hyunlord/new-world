@@ -34,8 +34,11 @@ fn food_stock(engine: &SimEngine) -> u32 {
 fn is_gathering(state: AgentState) -> bool {
     matches!(
         state,
-        AgentState::Seeking { target: TargetKind::GatherFood }
-            | AgentState::Consuming { target: TargetKind::GatherFood }
+        AgentState::Seeking {
+            target: TargetKind::GatherFood
+        } | AgentState::Consuming {
+            target: TargetKind::GatherFood
+        }
     )
 }
 
@@ -85,9 +88,14 @@ fn targets(engine: &SimEngine, entities: &[Entity]) -> Vec<Option<(u32, u32)>> {
         .iter()
         .map(|e| {
             let state = *engine.world.get::<&AgentState>(*e).expect("state");
-            matches!(state, AgentState::Seeking { target: TargetKind::GatherFood })
-                .then(|| engine.world.get::<&SeekTarget>(*e).ok().map(|s| s.tile))
-                .flatten()
+            matches!(
+                state,
+                AgentState::Seeking {
+                    target: TargetKind::GatherFood
+                }
+            )
+            .then(|| engine.world.get::<&SeekTarget>(*e).ok().map(|s| s.tile))
+            .flatten()
         })
         .collect()
 }
@@ -122,7 +130,12 @@ fn harness_forage_stops_at_target() {
     let target = stock_target(&engine.world, &engine.resources, sid).expect("v10 target");
     assert!(target > 0.0);
     let surplus = (3.0 * target).ceil() as u32 + 200;
-    engine.resources.settlements.get_mut(&sid).expect("village").store(ResourceKind::Food, surplus);
+    engine
+        .resources
+        .settlements
+        .get_mut(&sid)
+        .expect("village")
+        .store(ResourceKind::Food, surplus);
     // Drop trips already underway so only new decisions are observed.
     let gathering: Vec<_> = engine
         .world
@@ -132,7 +145,10 @@ fn harness_forage_stops_at_target() {
         .map(|(e, _)| e)
         .collect();
     for entity in gathering {
-        engine.world.insert_one(entity, AgentState::Idle).expect("idle");
+        engine
+            .world
+            .insert_one(entity, AgentState::Idle)
+            .expect("idle");
         let _ = engine.world.remove_one::<SeekTarget>(entity);
     }
     let trips = engine.resources.tallies.forage_trips;
@@ -141,11 +157,24 @@ fn harness_forage_stops_at_target() {
         let target = stock_target(&engine.world, &engine.resources, sid).unwrap_or(0.0);
         let in_hand = stock_in_hand(&engine.world, &engine.resources, sid) as f64;
         if in_hand >= 2.0 * target {
-            let gatherers = engine.world.query::<&AgentState>().iter().filter(|(_, s)| is_gathering(**s)).count();
-            assert_eq!(gatherers, 0, "gathering at tick {} with {in_hand} >= 2 x {target}", engine.current_tick());
+            let gatherers = engine
+                .world
+                .query::<&AgentState>()
+                .iter()
+                .filter(|(_, s)| is_gathering(**s))
+                .count();
+            assert_eq!(
+                gatherers,
+                0,
+                "gathering at tick {} with {in_hand} >= 2 x {target}",
+                engine.current_tick()
+            );
         }
     }
-    assert_eq!(engine.resources.tallies.forage_trips, trips, "forage arm fired above the target");
+    assert_eq!(
+        engine.resources.tallies.forage_trips, trips,
+        "forage arm fired above the target"
+    );
     assert!(stock_in_hand(&engine.world, &engine.resources, sid) as f64 >= 2.0 * target);
 }
 
@@ -194,16 +223,35 @@ fn harness_haul_home_deposits() {
     for elapsed in 1..=limit {
         engine.tick();
         let pos = *engine.world.get::<&Position>(entity).expect("pos");
-        if arrived.is_none() && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= SETTLEMENT_PROXIMITY_RADIUS {
+        if arrived.is_none()
+            && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= SETTLEMENT_PROXIMITY_RADIUS
+        {
             arrived = Some(elapsed);
         }
-        if engine.world.get::<&Inventory>(entity).expect("inv").get(ResourceKind::Food) == 0 {
+        if engine
+            .world
+            .get::<&Inventory>(entity)
+            .expect("inv")
+            .get(ResourceKind::Food)
+            == 0
+        {
             break;
         }
     }
     assert!(arrived.is_some(), "hauler never reached the deposit radius");
-    assert_eq!(engine.world.get::<&Inventory>(entity).expect("inv").get(ResourceKind::Food), 0);
-    assert!(food_stock(&engine) >= before + 6, "stock {} did not gain the load over {before}", food_stock(&engine));
+    assert_eq!(
+        engine
+            .world
+            .get::<&Inventory>(entity)
+            .expect("inv")
+            .get(ResourceKind::Food),
+        0
+    );
+    assert!(
+        food_stock(&engine) >= before + 6,
+        "stock {} did not gain the load over {before}",
+        food_stock(&engine)
+    );
     assert_eq!(engine.resources.tallies.haul_deposits, deposits + 1);
     assert!(engine.resources.settlements.contains_key(&sid));
 }
@@ -214,9 +262,17 @@ fn harness_forage_claims_cap() {
     let (mut engine, entities) = forage_fixture(3, &bushes, 1);
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     let chosen = targets(&engine, &entities);
-    assert_eq!(chosen.iter().filter(|t| t.is_some()).count(), 2, "{chosen:?}");
+    assert_eq!(
+        chosen.iter().filter(|t| t.is_some()).count(),
+        2,
+        "{chosen:?}"
+    );
     for bush in bushes {
-        assert_eq!(chosen.iter().filter(|t| **t == Some(bush)).count(), 1, "{chosen:?}");
+        assert_eq!(
+            chosen.iter().filter(|t| **t == Some(bush)).count(),
+            1,
+            "{chosen:?}"
+        );
     }
     assert_eq!(engine.resources.tallies.forage_trips, 2);
 
@@ -224,7 +280,11 @@ fn harness_forage_claims_cap() {
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
     let chosen = targets(&engine, &entities);
     for bush in bushes {
-        assert_eq!(chosen.iter().filter(|t| **t == Some(bush)).count(), 2, "{chosen:?}");
+        assert_eq!(
+            chosen.iter().filter(|t| **t == Some(bush)).count(),
+            2,
+            "{chosen:?}"
+        );
     }
 }
 
@@ -242,12 +302,25 @@ fn harness_forage_retargets_when_bush_empties() {
         decision.tick(&mut engine.world, &mut engine.resources);
         let state = *engine.world.get::<&AgentState>(forager).expect("state");
         let pos = *engine.world.get::<&Position>(forager).expect("pos");
-        let seek = engine.world.get::<&SeekTarget>(forager).ok().map(|s| s.tile);
+        let seek = engine
+            .world
+            .get::<&SeekTarget>(forager)
+            .ok()
+            .map(|s| s.tile);
         // After every decision pass a gatherer heads to a tile that holds food:
         // a bush emptied since the last tick is replaced within that one tick.
-        if matches!(state, AgentState::Seeking { target: TargetKind::GatherFood }) {
-            let target = seek.unwrap_or_else(|| panic!("forager without a target at tick {tick} at {pos:?}"));
-            assert!(engine.resources.food_tiles.contains_key(&target), "seeking empty tile {target:?} at tick {tick}");
+        if matches!(
+            state,
+            AgentState::Seeking {
+                target: TargetKind::GatherFood
+            }
+        ) {
+            let target = seek
+                .unwrap_or_else(|| panic!("forager without a target at tick {tick} at {pos:?}"));
+            assert!(
+                engine.resources.food_tiles.contains_key(&target),
+                "seeking empty tile {target:?} at tick {tick}"
+            );
         }
         match phase {
             0 if seek == Some(bushes[0]) && tick > 16 => {
@@ -256,13 +329,25 @@ fn harness_forage_retargets_when_bush_empties() {
                 phase = 1;
             }
             1 => {
-                let retargeted = engine.world.get::<&SeekTarget>(forager).ok().map(|s| s.tile);
-                assert_eq!(retargeted, Some(bushes[1]), "no re-target after the bush emptied");
+                let retargeted = engine
+                    .world
+                    .get::<&SeekTarget>(forager)
+                    .ok()
+                    .map(|s| s.tile);
+                assert_eq!(
+                    retargeted,
+                    Some(bushes[1]),
+                    "no re-target after the bush emptied"
+                );
                 engine.resources.set_food_tile(20, 33, 0);
                 phase = 2;
             }
             2 => {
-                assert_eq!(state, AgentState::Idle, "forager must idle when no bush qualifies");
+                assert_eq!(
+                    state,
+                    AgentState::Idle,
+                    "forager must idle when no bush qualifies"
+                );
                 assert!(engine.world.get::<&SeekTarget>(forager).is_err());
                 return;
             }
@@ -278,9 +363,20 @@ fn harness_forage_gatherer_whose_tile_vanished_idles_instead_of_freezing() {
     // earlier in the same tick) must not stay frozen in Seeking{GatherFood}.
     let (mut engine, entities) = forage_fixture(1, &[], 1);
     let gatherer = entities[0];
-    engine.world.insert_one(gatherer, AgentState::Seeking { target: TargetKind::GatherFood }).expect("state");
+    engine
+        .world
+        .insert_one(
+            gatherer,
+            AgentState::Seeking {
+                target: TargetKind::GatherFood,
+            },
+        )
+        .expect("state");
     AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(*engine.world.get::<&AgentState>(gatherer).expect("state"), AgentState::Idle);
+    assert_eq!(
+        *engine.world.get::<&AgentState>(gatherer).expect("state"),
+        AgentState::Idle
+    );
     assert!(engine.world.get::<&SeekTarget>(gatherer).is_err());
 }
 
@@ -288,42 +384,87 @@ fn harness_forage_gatherer_whose_tile_vanished_idles_instead_of_freezing() {
 fn harness_haul_home_after_the_forage_window() {
     // Outside the window even one carried unit is hauled home and deposited.
     let mut engine = game_v10_scene(4);
-    let end = u64::from(WorldRules::game_v10().agent.forage.expect("forage").end_minute);
+    let end = u64::from(
+        WorldRules::game_v10()
+            .agent
+            .forage
+            .expect("forage")
+            .end_minute,
+    );
     while engine.current_tick() + 480 < end + 10 {
         engine.tick();
     }
     let (home, member) = {
-        let settlement = engine.resources.settlements.values().next().expect("village");
+        let settlement = engine
+            .resources
+            .settlements
+            .values()
+            .next()
+            .expect("village");
         let mut members: Vec<_> = settlement.member_agents.iter().copied().collect();
         members.sort_unstable();
         (settlement.formation_tile, members[members.len() - 1])
     };
-    let entity = engine.world.query::<&Agent>().iter().find(|(_, a)| a.id == member).map(|(e, _)| e).expect("member");
+    let entity = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .find(|(_, a)| a.id == member)
+        .map(|(e, _)| e)
+        .expect("member");
     let mut inventory = Inventory::default();
     inventory.add(ResourceKind::Food, 1);
     engine
         .world
-        .insert(entity, (Position::new(home.0, home.1 + 10), AgentState::Idle, inventory,
-            Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08), Sleep::new(0.0, 0.03), Social::new(0.0, 0.04)))
+        .insert(
+            entity,
+            (
+                Position::new(home.0, home.1 + 10),
+                AgentState::Idle,
+                inventory,
+                Hunger::new(0.0, 0.05),
+                Thirst::new(0.0, 0.08),
+                Sleep::new(0.0, 0.03),
+                Social::new(0.0, 0.04),
+            ),
+        )
         .expect("hauler");
     let _ = engine.world.remove_one::<SeekTarget>(entity);
     let (before, deposits) = (food_stock(&engine), engine.resources.tallies.haul_deposits);
     for _ in 0..(10 * engine.resources.rules.agent.move_interval_ticks + 20) {
         engine.tick();
-        if engine.world.get::<&Inventory>(entity).expect("inv").get(ResourceKind::Food) == 0 {
+        if engine
+            .world
+            .get::<&Inventory>(entity)
+            .expect("inv")
+            .get(ResourceKind::Food)
+            == 0
+        {
             break;
         }
     }
-    assert_eq!(engine.world.get::<&Inventory>(entity).expect("inv").get(ResourceKind::Food), 0);
+    assert_eq!(
+        engine
+            .world
+            .get::<&Inventory>(entity)
+            .expect("inv")
+            .get(ResourceKind::Food),
+        0
+    );
     assert!(food_stock(&engine) > before);
     assert_eq!(engine.resources.tallies.haul_deposits, deposits + 1);
 }
 
 #[test]
 fn harness_forage_v9_unchanged() {
-    for (seed, expected) in ["c022f6555945fcad", "5ca9b7e597238ee3", "d8afca881c554360", "48cf47e1341f5048"]
-        .into_iter()
-        .enumerate()
+    for (seed, expected) in [
+        "c022f6555945fcad",
+        "5ca9b7e597238ee3",
+        "d8afca881c554360",
+        "48cf47e1341f5048",
+    ]
+    .into_iter()
+    .enumerate()
     {
         let mut engine = game_v9_scene(seed as u64);
         for _ in 0..1440 {

@@ -80,10 +80,7 @@ fn harness_scaffold_process_equivalent_drives_current_tick_to_n() {
     // which executes `self.engine.tick()` exactly once per frame.
     for frame in 0..10 {
         engine.tick();
-        println!(
-            "frame {frame}: current_tick() = {}",
-            engine.current_tick()
-        );
+        println!("frame {frame}: current_tick() = {}", engine.current_tick());
     }
 
     // Type A: threshold == 10 (one tick per frame, 10 frames)
@@ -128,8 +125,7 @@ fn harness_scaffold_resources_current_tick_propagated_by_tick() {
         "engine.current_tick() must be 5 after 5 ticks"
     );
     assert_eq!(
-        engine.resources.current_tick,
-        4,
+        engine.resources.current_tick, 4,
         "resources.current_tick must be 4 after 5 ticks \
          (pre-dispatch snapshot of the tick counter on the last call). \
          Got {}",

@@ -96,7 +96,9 @@ impl RuntimeSystem for CombatSystem {
         for (attacker_id, defender_id) in completed {
             // Remove tracking before any despawn path (idempotent cleanup).
             resources.combat_pairs.remove(&(attacker_id, defender_id));
-            resources.combat_progress.remove(&(attacker_id, defender_id));
+            resources
+                .combat_progress
+                .remove(&(attacker_id, defender_id));
 
             let attacker_entity = match id_to_entity.get(&attacker_id).copied() {
                 Some(e) => e,

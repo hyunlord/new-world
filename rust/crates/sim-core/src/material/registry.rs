@@ -79,7 +79,9 @@ impl MaterialRegistry {
 
     /// Lazy-cached explanation for a derived stat.
     pub fn explain(&mut self, stat: DerivedStatKind) -> &Explanation {
-        self.explain_cache.entry(stat).or_insert_with(|| explain(stat))
+        self.explain_cache
+            .entry(stat)
+            .or_insert_with(|| explain(stat))
     }
 
     /// Eagerly populate `derive_cache` and `explain_cache` for every
@@ -360,9 +362,16 @@ mod tests {
     #[test]
     fn bulk_register_100_with_collision_precheck() {
         let names: Vec<String> = (0..100).map(|i| format!("synth_{i}")).collect();
-        let hashes: Vec<u32> = names.iter().map(|n| MaterialId::from_str_hash(n).raw()).collect();
+        let hashes: Vec<u32> = names
+            .iter()
+            .map(|n| MaterialId::from_str_hash(n).raw())
+            .collect();
         let unique: std::collections::HashSet<u32> = hashes.iter().copied().collect();
-        assert_eq!(unique.len(), 100, "djb2 collision in synth_ set — fix the harness data, not the assertion");
+        assert_eq!(
+            unique.len(),
+            100,
+            "djb2 collision in synth_ set — fix the harness data, not the assertion"
+        );
 
         let mut r = MaterialRegistry::new();
         for name in &names {

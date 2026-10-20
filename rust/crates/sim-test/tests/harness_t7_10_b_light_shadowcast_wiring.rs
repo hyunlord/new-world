@@ -29,10 +29,13 @@ fn fresh_engine() -> SimEngine {
 }
 
 fn place_light_source(engine: &mut SimEngine) {
-    engine.resources.building_event_queue.push_back(BuildingPlacedEvent {
-        position: (SX, SY),
-        radius: 12,
-    });
+    engine
+        .resources
+        .building_event_queue
+        .push_back(BuildingPlacedEvent {
+            position: (SX, SY),
+            radius: 12,
+        });
 }
 
 // ── Plan B1: source center reaches initial intensity ─────────────────────────
@@ -49,8 +52,14 @@ fn harness_t7_10_b_source_center_lit() {
     place_light_source(&mut e);
     e.tick();
     // Type A: threshold == 200
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
-    assert_eq!(v, 200, "source center must equal LIGHT_INITIAL_INTENSITY (200); got {v}");
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
+    assert_eq!(
+        v, 200,
+        "source center must equal LIGHT_INITIAL_INTENSITY (200); got {v}"
+    );
 }
 
 // ── Plan B2: shadowcast falloff one cardinal step ────────────────────────────
@@ -66,7 +75,10 @@ fn harness_t7_10_b_falloff_one_step() {
     place_light_source(&mut e);
     e.tick();
     // Type A: threshold ∈ [178, 184]
-    let v = e.resources.influence_grid.sample(SX + 1, SY, InfluenceChannel::Light);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY, InfluenceChannel::Light);
     assert!(
         (178..=184).contains(&v),
         "1-step neighbor must decay to ~181 (200/(1+0.1)); got {v}. \
@@ -93,7 +105,10 @@ fn harness_t7_10_b_falloff_diagonal_euclidean_discriminator() {
     e.tick();
     // Type A: threshold ∈ [172, 179]  (Euclidean d≈1.414 → 200/1.1414≈175)
     // BFS-Manhattan gives 166 which falls OUTSIDE this range — discriminates impls.
-    let v = e.resources.influence_grid.sample(SX + 1, SY + 1, InfluenceChannel::Light);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 1, SY + 1, InfluenceChannel::Light);
     assert!(
         (172..=179).contains(&v),
         "diagonal tile (SX+1,SY+1) must be in [172,179] \
@@ -123,16 +138,26 @@ fn harness_t7_10_b_gradient_monotone() {
     // Min gap ≥ 3 (at d=14→15: floor(200/2.4)=83 > floor(200/2.5)=80),
     // so strict `>` is safe — no u8 truncation ties possible.
     for d in 0u32..=14 {
-        let v_near = e.resources.influence_grid.sample(SX + d, SY, InfluenceChannel::Light);
-        let v_far = e.resources.influence_grid.sample(SX + d + 1, SY, InfluenceChannel::Light);
+        let v_near = e
+            .resources
+            .influence_grid
+            .sample(SX + d, SY, InfluenceChannel::Light);
+        let v_far = e
+            .resources
+            .influence_grid
+            .sample(SX + d + 1, SY, InfluenceChannel::Light);
         // Type A: strictly decreasing for every pair (d, d+1) on [0,14]
         assert!(
             v_near > v_far,
             "gradient must be strictly decreasing: \
              sample({},{})={} must > sample({},{})={}; \
              violation at d={d} means shadowcast falloff is broken",
-            SX + d, SY, v_near,
-            SX + d + 1, SY, v_far,
+            SX + d,
+            SY,
+            v_near,
+            SX + d + 1,
+            SY,
+            v_far,
         );
     }
 }
@@ -153,7 +178,10 @@ fn harness_t7_10_b_boundary_at_max_radius() {
     e.tick();
     // Tile (SX+15, SY) is Euclidean distance exactly 15 from source.
     // Type A: threshold ∈ [76, 84]
-    let v = e.resources.influence_grid.sample(SX + 15, SY, InfluenceChannel::Light);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 15, SY, InfluenceChannel::Light);
     assert!(
         (76..=84).contains(&v),
         "tile at max_radius=15 must be in [76,84] (chain end ≈80); got {v}; \
@@ -174,7 +202,10 @@ fn harness_t7_10_b_max_radius_cutoff() {
     place_light_source(&mut e);
     e.tick();
     // Type A: threshold == 0 (Euclidean distance 16 > max_radius 15)
-    let v = e.resources.influence_grid.sample(SX + 16, SY, InfluenceChannel::Light);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX + 16, SY, InfluenceChannel::Light);
     assert_eq!(v, 0, "tile beyond max_radius=15 must be 0; got {v}");
 }
 
@@ -195,7 +226,10 @@ fn harness_t7_10_b_persistence_across_ticks() {
         e.tick(); // ticks 2–11: event-less persistence branch
     }
     // Type A: threshold == 200 (source persists through all 10 idle ticks)
-    let v = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    let v = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Light);
     assert_eq!(
         v, 200,
         "source must persist across 10 event-less ticks (Warm-tier persistence); got {v}"
@@ -220,45 +254,57 @@ fn harness_t7_10_b_other_channels_behavior() {
     e.tick();
 
     // T7.10.A regression guard: Warmth must still propagate to 200 at source.
-    let warmth = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Warmth);
+    let warmth = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Warmth);
     assert_eq!(
         warmth, 200,
         "T7.10.A regression: Warmth at source must remain 200; got {warmth}"
     );
 
     // T7.10.C regression guard: Noise must propagate to 200 at source.
-    let noise = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Noise);
+    let noise = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Noise);
     assert_eq!(
         noise, 200,
         "T7.10.C: Noise at source must be 200 (linear-decay propagation); got {noise}"
     );
 
     // T7.10.D regression guard: Danger must propagate to 200 at source.
-    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    let danger = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Danger);
     assert_eq!(
         danger, 200,
         "T7.10.D: Danger at source must be 200 (linear-decay+cap propagation); got {danger}"
     );
 
     // T7.10.E regression guard: Spiritual must propagate to 200 at source.
-    let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    let spiritual = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         spiritual, 200,
         "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.08 propagation); got {spiritual}"
     );
 
     // T7.10.F regression guard: Beauty now propagates at source center.
-    let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    let beauty = e
+        .resources
+        .influence_grid
+        .sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
         beauty, 200,
         "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"
     );
 
     // Unstamped channels (BSS never marks dirty) — only 2 remain post-T7.10.F.
-    for ch in [
-        InfluenceChannel::FoodAroma,
-        InfluenceChannel::Social,
-    ] {
+    for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
         let v = e.resources.influence_grid.sample(SX, SY, ch);
         assert_eq!(v, 0, "{ch:?} must remain zero (not stamped); got {v}");
     }
@@ -279,7 +325,10 @@ fn harness_t7_10_b_no_event_no_light() {
     }
     for (x, y) in [(0u32, 0u32), (SX, SY), (W - 1, H - 1)] {
         // Type A: threshold == 0 at all three positions with no events
-        let v = e.resources.influence_grid.sample(x, y, InfluenceChannel::Light);
+        let v = e
+            .resources
+            .influence_grid
+            .sample(x, y, InfluenceChannel::Light);
         assert_eq!(v, 0, "no events ⇒ Light stays zero at ({x},{y}); got {v}");
     }
 }

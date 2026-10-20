@@ -93,7 +93,10 @@ fn spawn_famine_member(e: &mut SimEngine, x: u32, y: u32, growth: f32) -> AgentI
             ent,
             (
                 AgentState::Idle,
-                BodyHealth { hp: DEFAULT_MAX_HP, max_hp: DEFAULT_MAX_HP },
+                BodyHealth {
+                    hp: DEFAULT_MAX_HP,
+                    max_hp: DEFAULT_MAX_HP,
+                },
                 Hunger::new(0.0, growth),
                 Thirst::new(0.0, 0.0),
             ),
@@ -253,8 +256,12 @@ fn harness_stockpile_consume_a1_controlled_relief_bounded() {
 #[test]
 fn harness_stockpile_consume_a2_no_double_dip() {
     for state in [
-        AgentState::Seeking { target: TargetKind::Food },
-        AgentState::Consuming { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
+        AgentState::Consuming {
+            target: TargetKind::Food,
+        },
     ] {
         let mut e = consume_only_engine();
         let ft = (30u32, 30u32);
@@ -269,7 +276,10 @@ fn harness_stockpile_consume_a2_no_double_dip() {
         let got = stock_food(&e, 1);
         println!("[consume A2] state={state:?} stockpile {stock0}->{got}");
         // Type A — hard gate: ground eater never drains the reserve.
-        assert_eq!(got, stock0, "A2: ground-eating member must not drain the reserve");
+        assert_eq!(
+            got, stock0,
+            "A2: ground-eating member must not drain the reserve"
+        );
     }
 }
 
@@ -299,9 +309,20 @@ fn harness_stockpile_consume_a3_gating_noop() {
         hunger_of(&e, sated)
     );
     // Type A — both predicates hard-gate relief.
-    assert_eq!(got, stock0, "A3: far/below-threshold members must not drain the reserve");
-    assert_eq!(hunger_of(&e, far), Some(60.0), "A3: far member hunger unchanged");
-    assert_eq!(hunger_of(&e, sated), Some(THRESH - 1.0), "A3: sated member hunger unchanged");
+    assert_eq!(
+        got, stock0,
+        "A3: far/below-threshold members must not drain the reserve"
+    );
+    assert_eq!(
+        hunger_of(&e, far),
+        Some(60.0),
+        "A3: far member hunger unchanged"
+    );
+    assert_eq!(
+        hunger_of(&e, sated),
+        Some(THRESH - 1.0),
+        "A3: sated member hunger unchanged"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -321,9 +342,15 @@ fn harness_stockpile_consume_a4_empty_reserve_no_phantom_relief() {
     }
 
     let h1 = hunger_of(&e, m).expect("member alive");
-    println!("[consume A4] empty reserve: hunger {h0}->{h1} stock={}", stock_food(&e, 1));
+    println!(
+        "[consume A4] empty reserve: hunger {h0}->{h1} stock={}",
+        stock_food(&e, 1)
+    );
     // Type A — got==0 ⇒ no relief (consume_only engine: only relief writes Hunger).
-    assert_eq!(h1, h0, "A4: empty reserve must NOT relieve hunger (got>0 guard)");
+    assert_eq!(
+        h1, h0,
+        "A4: empty reserve must NOT relieve hunger (got>0 guard)"
+    );
     assert_eq!(stock_food(&e, 1), 0, "A4: stockpile remains 0");
 }
 
@@ -346,8 +373,15 @@ fn harness_stockpile_consume_a5_at_threshold_fires() {
     let hunger_drop = THRESH - h1;
     println!("[consume A5] at-threshold: stock {stock0}->{stock1} hunger {THRESH}->{h1}");
     // Type A — inclusive comparison: relief fires AT the boundary.
-    assert_eq!(stock0 - stock1, PER_MEAL, "A5: stockpile must drop by one meal at the boundary");
-    assert!(hunger_drop >= 25.0, "A5: hunger must be relieved (>=25) at the exact threshold");
+    assert_eq!(
+        stock0 - stock1,
+        PER_MEAL,
+        "A5: stockpile must drop by one meal at the boundary"
+    );
+    assert!(
+        hunger_drop >= 25.0,
+        "A5: hunger must be relieved (>=25) at the exact threshold"
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -391,8 +425,14 @@ fn harness_stockpile_famine_relief() {
         "[consume A6] STOCKED starv={stocked_starv} dehy={stocked_dehy} | CONTROL starv={control_starv} dehy={control_dehy} | ceil(N/2)={half}"
     );
     // Water confirmed constant: no dehydration deaths in EITHER arm.
-    assert_eq!(stocked_dehy, 0, "A6: STOCKED must have zero Dehydration deaths (water held abundant)");
-    assert_eq!(control_dehy, 0, "A6: CONTROL must have zero Dehydration deaths (water held abundant)");
+    assert_eq!(
+        stocked_dehy, 0,
+        "A6: STOCKED must have zero Dehydration deaths (water held abundant)"
+    );
+    assert_eq!(
+        control_dehy, 0,
+        "A6: CONTROL must have zero Dehydration deaths (water held abundant)"
+    );
     // Non-vacuity: famine IS lethal without the reserve.
     assert!(
         control_starv >= half,
@@ -443,13 +483,19 @@ fn harness_stockpile_consume_a7_plenty_non_interference() {
         "[consume A7] with_relief={with_relief} control={control} (tol={RELIEF_TOLERANCE}) settlements={settlement_count} final_pop={final_pop} pop_samples={pop_samples:?}"
     );
     // (i) reserve not materially net-drained in plenty.
-    assert!(with_relief >= 100, "A7(i): with-relief stockpile Food must be a non-trivial >= 100");
+    assert!(
+        with_relief >= 100,
+        "A7(i): with-relief stockpile Food must be a non-trivial >= 100"
+    );
     assert!(
         with_relief >= control - RELIEF_TOLERANCE,
         "A7(i): relief must not net-drain the reserve in plenty (with={with_relief} control={control} tol={RELIEF_TOLERANCE})"
     );
     // (ii) settlements persist.
-    assert!(settlement_count >= 1, "A7(ii): at least one settlement must exist");
+    assert!(
+        settlement_count >= 1,
+        "A7(ii): at least one settlement must exist"
+    );
     // (iii) population in the structural sanity band, not frozen.
     assert!(
         (20..=400).contains(&final_pop),
@@ -492,7 +538,13 @@ fn harness_stockpile_consume_a8_determinism() {
 
     let d1 = digest(2000);
     let d2 = digest(2000);
-    println!("[consume A8] total1={} live1={} | total2={} live2={}", d1.0, d1.1, d2.0, d2.1);
+    println!(
+        "[consume A8] total1={} live1={} | total2={} live2={}",
+        d1.0, d1.1, d2.0, d2.1
+    );
     // Type A — bit-exact replay.
-    assert_eq!(d1, d2, "A8: production digests must be byte-identical across runs");
+    assert_eq!(
+        d1, d2,
+        "A8: production digests must be byte-identical across runs"
+    );
 }

@@ -16,9 +16,7 @@
 
 use sim_bridge::ffi::world_node::CausalEventView;
 use sim_core::causal::{CausalEvent, DecisionReason};
-use sim_core::components::{
-    Agent, AgentId, AgentState, Hunger, Position, TargetKind, Thirst,
-};
+use sim_core::components::{Agent, AgentId, AgentState, Hunger, Position, TargetKind, Thirst};
 use sim_core::influence::InfluenceChannel;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
@@ -96,7 +94,10 @@ fn harness_p5_beta_thirst_construct_clamps_initial_to_saturation_range() {
     let b = Thirst::new(50.0, 0.1);
     let c = Thirst::new(999.0, 0.1);
     assert_eq!(a.value, 0.0, "negative initial must clamp to 0");
-    assert_eq!(b.value, 50.0, "in-range initial must pass through unchanged");
+    assert_eq!(
+        b.value, 50.0,
+        "in-range initial must pass through unchanged"
+    );
     assert_eq!(
         c.value,
         Thirst::SATURATION,
@@ -137,10 +138,22 @@ fn harness_p5_beta_agent_state_default_and_movement_suppression_truth_table() {
 
     // (b) suppresses_movement() truth table across all 5 distinct values.
     assert!(!AgentState::Idle.suppresses_movement());
-    assert!(AgentState::Seeking { target: TargetKind::Food }.suppresses_movement());
-    assert!(AgentState::Seeking { target: TargetKind::Water }.suppresses_movement());
-    assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
-    assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
+    assert!(AgentState::Seeking {
+        target: TargetKind::Food
+    }
+    .suppresses_movement());
+    assert!(AgentState::Seeking {
+        target: TargetKind::Water
+    }
+    .suppresses_movement());
+    assert!(!AgentState::Consuming {
+        target: TargetKind::Food
+    }
+    .suppresses_movement());
+    assert!(!AgentState::Consuming {
+        target: TargetKind::Water
+    }
+    .suppresses_movement());
     println!("[β-3] AgentState default + movement suppression truth table ✓");
 }
 
@@ -218,20 +231,52 @@ fn harness_p5_beta_agent_decision_system_executes_between_movement_and_decay() {
     let thirst_sys = ThirstDecaySystem::new();
 
     assert_eq!(move_sys.name(), "AgentMovementSystem");
-    assert_eq!(move_sys.priority(), 120, "AgentMovementSystem.priority() must equal 120");
-    assert_eq!(move_sys.tick_interval(), 1, "AgentMovementSystem.tick_interval() must equal 1");
+    assert_eq!(
+        move_sys.priority(),
+        120,
+        "AgentMovementSystem.priority() must equal 120"
+    );
+    assert_eq!(
+        move_sys.tick_interval(),
+        1,
+        "AgentMovementSystem.tick_interval() must equal 1"
+    );
 
     assert_eq!(decision_sys.name(), "AgentDecisionSystem");
-    assert_eq!(decision_sys.priority(), 125, "AgentDecisionSystem.priority() must equal 125");
-    assert_eq!(decision_sys.tick_interval(), 1, "AgentDecisionSystem.tick_interval() must equal 1");
+    assert_eq!(
+        decision_sys.priority(),
+        125,
+        "AgentDecisionSystem.priority() must equal 125"
+    );
+    assert_eq!(
+        decision_sys.tick_interval(),
+        1,
+        "AgentDecisionSystem.tick_interval() must equal 1"
+    );
 
     assert_eq!(hunger_sys.name(), "HungerDecaySystem");
-    assert_eq!(hunger_sys.priority(), 130, "HungerDecaySystem.priority() must equal 130");
-    assert_eq!(hunger_sys.tick_interval(), 1, "HungerDecaySystem.tick_interval() must equal 1");
+    assert_eq!(
+        hunger_sys.priority(),
+        130,
+        "HungerDecaySystem.priority() must equal 130"
+    );
+    assert_eq!(
+        hunger_sys.tick_interval(),
+        1,
+        "HungerDecaySystem.tick_interval() must equal 1"
+    );
 
     assert_eq!(thirst_sys.name(), "ThirstDecaySystem");
-    assert_eq!(thirst_sys.priority(), 131, "ThirstDecaySystem.priority() must equal 131");
-    assert_eq!(thirst_sys.tick_interval(), 1, "ThirstDecaySystem.tick_interval() must equal 1");
+    assert_eq!(
+        thirst_sys.priority(),
+        131,
+        "ThirstDecaySystem.priority() must equal 131"
+    );
+    assert_eq!(
+        thirst_sys.tick_interval(),
+        1,
+        "ThirstDecaySystem.tick_interval() must equal 1"
+    );
 
     println!(
         "[β-5a] schedule order move({}) < decision({}) < hunger({}) < thirst({}) ✓",
@@ -257,11 +302,7 @@ fn harness_p5_beta_causal_event_agent_decision_accessors_return_correct_fields()
     assert_eq!(ev.id(), 7u64);
     assert_eq!(ev.parent(), Some(3u64));
     assert_eq!(ev.tick(), 99);
-    assert_eq!(
-        ev.channel(),
-        None,
-        "AgentDecision has no influence channel"
-    );
+    assert_eq!(ev.channel(), None, "AgentDecision has no influence channel");
     println!("[β-6] AgentDecision accessors: id=7, parent=Some(3), tick=99, channel=None ✓");
 }
 
@@ -337,7 +378,12 @@ fn harness_p5_beta_idle_agent_with_hunger_above_threshold_transitions_to_seeking
     let state = *engine.world.get::<&AgentState>(entity).unwrap();
     let hunger_val = engine.world.get::<&Hunger>(entity).unwrap().value;
     let thirst_val = engine.world.get::<&Thirst>(entity).unwrap().value;
-    assert_eq!(state, AgentState::Seeking { target: TargetKind::Food });
+    assert_eq!(
+        state,
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+    );
     assert_eq!(
         hunger_val, 80.0_f32,
         "Hunger.value must remain EXACTLY 80.0 during the Idle→Seeking transition (got {})",
@@ -348,9 +394,7 @@ fn harness_p5_beta_idle_agent_with_hunger_above_threshold_transitions_to_seeking
         "Thirst.value must remain EXACTLY 10.0 during the Idle→Seeking transition (got {})",
         thirst_val
     );
-    println!(
-        "[β-8] Idle+Hunger=80 → Seeking{{Food}}; Hunger=80.0 exact, Thirst=10.0 exact ✓",
-    );
+    println!("[β-8] Idle+Hunger=80 → Seeking{{Food}}; Hunger=80.0 exact, Thirst=10.0 exact ✓",);
 }
 
 // ── Assertion 9: idle_agent_with_only_thirst_breaching_transitions_to_seeking_water ──
@@ -375,7 +419,12 @@ fn harness_p5_beta_idle_agent_with_only_thirst_breaching_transitions_to_seeking_
     run_ticks(&mut engine, 1);
 
     let state = *engine.world.get::<&AgentState>(entity).unwrap();
-    assert_eq!(state, AgentState::Seeking { target: TargetKind::Water });
+    assert_eq!(
+        state,
+        AgentState::Seeking {
+            target: TargetKind::Water
+        }
+    );
     println!("[β-9] Idle+Thirst=80 (Hunger=10) → Seeking{{Water}} ✓");
 }
 
@@ -403,7 +452,9 @@ fn harness_p5_beta_hunger_wins_when_both_needs_breach_simultaneously() {
     let state = *engine.world.get::<&AgentState>(entity).unwrap();
     assert_eq!(
         state,
-        AgentState::Seeking { target: TargetKind::Food },
+        AgentState::Seeking {
+            target: TargetKind::Food
+        },
         "Hunger must win on simultaneous breach"
     );
     println!("[β-10] Tie-break: Hunger wins over Thirst ✓");
@@ -453,7 +504,9 @@ fn harness_p5_beta_seeking_position_frozen_idle_baseline_moves() {
                 MovementRng::new(seed),
                 Hunger::new(0.0, 0.0),
                 Thirst::new(0.0, 0.0),
-                AgentState::Seeking { target: TargetKind::Food },
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
             ),
         )
         .unwrap();
@@ -522,7 +575,9 @@ fn harness_p5_beta_consuming_food_decrements_tile_to_zero_then_idles_with_tile_r
             (
                 Position::new(7, 7),
                 MovementRng::new(MOVING_SEED),
-                AgentState::Seeking { target: TargetKind::Food },
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(80.0, 0.0),
                 Thirst::new(0.0, 0.0),
             ),
@@ -600,7 +655,9 @@ fn harness_p5_beta_consuming_water_decrements_nonzero_counter_then_idles_with_ti
             (
                 Position::new(8, 8),
                 MovementRng::new(MOVING_SEED),
-                AgentState::Seeking { target: TargetKind::Water },
+                AgentState::Seeking {
+                    target: TargetKind::Water,
+                },
                 Hunger::new(0.0, 0.0),
                 Thirst::new(80.0, 0.0),
             ),
@@ -677,7 +734,9 @@ fn harness_p5_beta_agent_decision_parent_none_and_some_branches() {
         let tile_idx = 3u32 * W + 3u32;
         if let Some(log) = engine.resources.causal_log.get(tile_idx) {
             assert!(
-                !log.as_slice().iter().any(|ev| matches!(ev, CausalEvent::InfluenceChanged { .. })),
+                !log.as_slice()
+                    .iter()
+                    .any(|ev| matches!(ev, CausalEvent::InfluenceChanged { .. })),
                 "no InfluenceChanged at (3,3) before tick"
             );
         }
@@ -762,11 +821,12 @@ fn harness_p5_beta_agent_decision_parent_none_and_some_branches() {
             .as_slice()
             .iter()
             .filter_map(|ev| match ev {
-                CausalEvent::AgentDecision { agent, parent, position, .. }
-                    if *agent == agent_id_b && *position == (4, 4) =>
-                {
-                    Some(*parent)
-                }
+                CausalEvent::AgentDecision {
+                    agent,
+                    parent,
+                    position,
+                    ..
+                } if *agent == agent_id_b && *position == (4, 4) => Some(*parent),
                 _ => None,
             })
             .collect();
@@ -867,7 +927,9 @@ fn harness_p5_beta_consuming_food_on_absent_tile_decrements_hunger_and_idles() {
             entity,
             (
                 Position::new(11, 11),
-                AgentState::Consuming { target: TargetKind::Food },
+                AgentState::Consuming {
+                    target: TargetKind::Food,
+                },
                 Hunger::new(80.0, 0.0),
                 Thirst::new(0.0, 0.0),
             ),
@@ -918,7 +980,9 @@ fn harness_p5_beta_consuming_water_on_absent_tile_decrements_thirst_and_idles() 
             entity,
             (
                 Position::new(12, 12),
-                AgentState::Consuming { target: TargetKind::Water },
+                AgentState::Consuming {
+                    target: TargetKind::Water,
+                },
                 Hunger::new(0.0, 0.0),
                 Thirst::new(80.0, 0.0),
             ),
@@ -952,7 +1016,9 @@ fn harness_p5_beta_consuming_water_on_absent_tile_decrements_thirst_and_idles() 
         None,
         "absent-tile Consume{{Water}} MUST NOT create a tile entry"
     );
-    println!("[β-17] Absent-tile Consume{{Water}}: state→Idle, Thirst=50, water_tiles still empty ✓");
+    println!(
+        "[β-17] Absent-tile Consume{{Water}}: state→Idle, Thirst=50, water_tiles still empty ✓"
+    );
 }
 
 // ── Assertion 18: consume_amount_constants_locked_to_thirty ──

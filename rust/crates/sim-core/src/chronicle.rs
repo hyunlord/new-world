@@ -466,7 +466,8 @@ mod tests {
         assert_eq!(ChronicleKind::VillagesEstranged.as_u8(), 20);
         assert_eq!(ChronicleKind::VillagesReconciled.as_u8(), 21);
         assert_eq!(ChronicleKind::ALL.len(), 22);
-        let names: std::collections::BTreeSet<&str> = ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
+        let names: std::collections::BTreeSet<&str> =
+            ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
         assert_eq!(names.len(), 22);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
@@ -488,10 +489,15 @@ mod tests {
                 .settlement(Some(2))
                 .settlement2(Some(2)),
         );
-        chronicle.push(ChronicleEntry::new(7, ChronicleKind::SettlementFormed).settlement(Some(1)).value(9));
+        chronicle.push(
+            ChronicleEntry::new(7, ChronicleKind::SettlementFormed)
+                .settlement(Some(1))
+                .value(9),
+        );
         assert_eq!(chronicle.len(), 3);
         assert!(!chronicle.is_empty());
-        let ticks = |entries: Vec<&ChronicleEntry>| entries.iter().map(|e| e.tick).collect::<Vec<_>>();
+        let ticks =
+            |entries: Vec<&ChronicleEntry>| entries.iter().map(|e| e.tick).collect::<Vec<_>>();
         assert_eq!(ticks(chronicle.of_agent(3).collect()), vec![5, 6]);
         assert_eq!(ticks(chronicle.of_agent(4).collect()), vec![5]);
         assert_eq!(ticks(chronicle.of_agent(10).collect()), vec![5]);
@@ -508,7 +514,14 @@ mod tests {
         for tick in [9, 3, 7] {
             chronicle.push(ChronicleEntry::new(tick, ChronicleKind::CameOfAge).subject(1));
         }
-        assert_eq!(chronicle.entries().iter().map(|e| e.tick).collect::<Vec<_>>(), vec![9, 3, 7]);
+        assert_eq!(
+            chronicle
+                .entries()
+                .iter()
+                .map(|e| e.tick)
+                .collect::<Vec<_>>(),
+            vec![9, 3, 7]
+        );
     }
 
     #[test]
@@ -521,21 +534,38 @@ mod tests {
         assert!(chronicle.person(2).is_none());
         chronicle.close_person(1, 50, 3, || panic!("record exists"));
         let one = chronicle.person(1).expect("record");
-        assert_eq!((one.female, one.died_tick, one.death_reason), (Some(true), Some(50), Some(3)));
+        assert_eq!(
+            (one.female, one.died_tick, one.death_reason),
+            (Some(true), Some(50), Some(3))
+        );
         // A death without a prior record creates it from the components.
         chronicle.close_person(7, 60, 0, || person(false));
         let seven = chronicle.person(7).expect("created at death");
-        assert_eq!((seven.female, seven.born_tick, seven.died_tick), (Some(false), Some(-100), Some(60)));
-        assert_eq!(chronicle.people().map(|(id, _)| id).collect::<Vec<_>>(), vec![1, 7]);
+        assert_eq!(
+            (seven.female, seven.born_tick, seven.died_tick),
+            (Some(false), Some(-100), Some(60))
+        );
+        assert_eq!(
+            chronicle.people().map(|(id, _)| id).collect::<Vec<_>>(),
+            vec![1, 7]
+        );
         assert_eq!(chronicle.person_count(), 2);
     }
 
     #[test]
     fn founding_member_lookup_reads_only_that_kind() {
         let mut chronicle = Chronicle::new();
-        chronicle.push(ChronicleEntry::new(1, ChronicleKind::Joined).subject(4).settlement(Some(1)));
+        chronicle.push(
+            ChronicleEntry::new(1, ChronicleKind::Joined)
+                .subject(4)
+                .settlement(Some(1)),
+        );
         assert!(!chronicle.has_founding_member(4));
-        chronicle.push(ChronicleEntry::new(2, ChronicleKind::FoundingMember).subject(4).settlement(Some(1)));
+        chronicle.push(
+            ChronicleEntry::new(2, ChronicleKind::FoundingMember)
+                .subject(4)
+                .settlement(Some(1)),
+        );
         assert!(chronicle.has_founding_member(4));
         assert!(!chronicle.has_founding_member(5));
     }

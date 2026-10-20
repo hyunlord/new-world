@@ -45,9 +45,7 @@ use sim_bridge::ffi::world_node::{
     collect_agent_snapshot, event_view_to_owned_dict, CausalEventView, FfiFieldValue,
 };
 use sim_core::causal::{CausalEvent, DecisionReason, MemoryRecallTrigger};
-use sim_core::components::{
-    AgentState, Hunger, Memory, Position, Sleep, Social, Thirst,
-};
+use sim_core::components::{AgentState, Hunger, Memory, Position, Sleep, Social, Thirst};
 use sim_core::material::MaterialRegistry;
 use sim_engine::SimEngine;
 use sim_systems::register_default_runtime_systems;
@@ -218,9 +216,7 @@ fn harness_p8_delta_memory_recalled_ffi_dict_includes_triggered_by_cascade_bias_
                 "A6: production FFI dict[\"triggered_by\"] for CascadeBias must be \"cascade_bias\" (the GDScript CausalPanel match arm pins on this exact literal), got {s:?}",
             );
         }
-        other => panic!(
-            "A6: production FFI dict[\"triggered_by\"] must be Str(_), got {other:?}",
-        ),
+        other => panic!("A6: production FFI dict[\"triggered_by\"] must be Str(_), got {other:?}",),
     }
     // (c) kind also flows through — sanity check the discriminator the
     // CausalPanel uses to even enter the memory-rendering branch.
@@ -325,8 +321,8 @@ fn harness_p8_delta_memory_snapshot_exposes_agent_id_matching_component_id() {
         rows.len(),
     );
     for row in &rows {
-        let entity = hecs::Entity::from_bits(row.entity_bits)
-            .expect("entity_bits is a valid hecs::Entity");
+        let entity =
+            hecs::Entity::from_bits(row.entity_bits).expect("entity_bits is a valid hecs::Entity");
         let agent = engine
             .world
             .get::<&Agent>(entity)
@@ -381,9 +377,12 @@ fn harness_p8_delta_memory_ffi_event_agent_id_matches_constructed_agent_id() {
     };
     let view = CausalEventView::from_event(&ev);
     let dict = event_view_to_owned_dict(&view);
-    let agent_id_value = dict
-        .get("agent_id")
-        .unwrap_or_else(|| panic!("FFI dict missing \"agent_id\" for MemoryRecalled; keys={:?}", dict.keys().collect::<Vec<_>>()));
+    let agent_id_value = dict.get("agent_id").unwrap_or_else(|| {
+        panic!(
+            "FFI dict missing \"agent_id\" for MemoryRecalled; keys={:?}",
+            dict.keys().collect::<Vec<_>>()
+        )
+    });
     match agent_id_value {
         FfiFieldValue::I64(v) => assert_eq!(
             *v as u64,

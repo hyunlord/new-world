@@ -22,6 +22,8 @@ fn main() -> std::process::ExitCode {
 mod tests {
     #[test]
     fn cli_rejects_unknown_subcommands() {
-        assert!(sim_test::perf::PerfArgs::parse(&["bogus".into(), "--out".into(), "x".into()]).is_err());
+        assert!(
+            sim_test::perf::PerfArgs::parse(&["bogus".into(), "--out".into(), "x".into()]).is_err()
+        );
     }
 }

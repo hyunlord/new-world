@@ -421,14 +421,20 @@ mod tests {
             "blunt_damage_factor",
             "max_hit_points_factor",
         ];
-        let actual: Vec<&str> = DerivedStatKind::all_variants().iter().map(|k| k.snake_case()).collect();
+        let actual: Vec<&str> = DerivedStatKind::all_variants()
+            .iter()
+            .map(|k| k.snake_case())
+            .collect();
         assert_eq!(actual, expected);
     }
 
     #[test]
     fn derive_iron_equivalent_matches_locked_baselines_within_tolerance() {
         let props = iron_equivalent();
-        assert!(props.validate().is_ok(), "iron_equivalent fixture must validate");
+        assert!(
+            props.validate().is_ok(),
+            "iron_equivalent fixture must validate"
+        );
         let stats = derive_all(&props);
         let tol = 1e-6;
         assert!(
@@ -453,12 +459,23 @@ mod tests {
 
     #[test]
     fn derive_all_produces_finite_values_for_three_fixtures() {
-        for (name, props) in [("granite", granite()), ("oak", oak()), ("obsidian", obsidian())] {
-            assert!(props.validate().is_ok(), "{name} fixture must be valid before derive");
+        for (name, props) in [
+            ("granite", granite()),
+            ("oak", oak()),
+            ("obsidian", obsidian()),
+        ] {
+            assert!(
+                props.validate().is_ok(),
+                "{name} fixture must be valid before derive"
+            );
             let stats = derive_all(&props);
             for kind in DerivedStatKind::all_variants() {
                 let v = kind.read(&stats);
-                assert!(v.is_finite() && !v.is_nan(), "{name}.{} = {v}", kind.snake_case());
+                assert!(
+                    v.is_finite() && !v.is_nan(),
+                    "{name}.{} = {v}",
+                    kind.snake_case()
+                );
             }
         }
     }

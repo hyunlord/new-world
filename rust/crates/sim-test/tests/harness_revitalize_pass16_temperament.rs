@@ -22,9 +22,12 @@ fn harness_v20_inert_equals_v19_at_40320_ticks() {
     let rows: Vec<_> = std::thread::scope(|scope| {
         let handles: Vec<_> = (0..5u64)
             .flat_map(|seed| {
-                [game_v19_scene as fn(u64) -> sim_engine::SimEngine, game_v20_inert_scene]
-                    .into_iter()
-                    .map(move |make| (seed, make))
+                [
+                    game_v19_scene as fn(u64) -> sim_engine::SimEngine,
+                    game_v20_inert_scene,
+                ]
+                .into_iter()
+                .map(move |make| (seed, make))
             })
             .map(|(seed, make)| {
                 scope.spawn(move || {
@@ -34,7 +37,10 @@ fn harness_v20_inert_equals_v19_at_40320_ticks() {
                 })
             })
             .collect();
-        handles.into_iter().map(|h| h.join().expect("thread")).collect()
+        handles
+            .into_iter()
+            .map(|h| h.join().expect("thread"))
+            .collect()
     });
     for pair in rows.chunks(2) {
         let (v19, inert) = (&pair[0], &pair[1]);
@@ -51,25 +57,44 @@ fn harness_v20_inert_equals_v19_at_40320_ticks() {
 #[test]
 fn harness_v20_every_resident_has_temperament_and_rd_rate() {
     let rule = WorldRules::game_v20(3).agent.temperament.expect("v20 rule");
-    for (make, effects) in [(game_v20_scene as fn(u64) -> sim_engine::SimEngine, true), (game_v20_inert_scene, false)] {
+    for (make, effects) in [
+        (game_v20_scene as fn(u64) -> sim_engine::SimEngine, true),
+        (game_v20_inert_scene, false),
+    ] {
         let start = make(3);
         let mut founders = 0;
-        for (_, (lineage, t, social)) in start.world.query::<(&Lineage, &Temperament, &Social)>().iter() {
+        for (_, (lineage, t, social)) in start
+            .world
+            .query::<(&Lineage, &Temperament, &Social)>()
+            .iter()
+        {
             founders += 1;
             assert_eq!(*t, Temperament::founder(3, lineage.key));
-            let expected = if effects { rule.social_rate(0.04, t) } else { 0.04 };
+            let expected = if effects {
+                rule.social_rate(0.04, t)
+            } else {
+                0.04
+            };
             assert_eq!(social.growth_rate.to_bits(), expected.to_bits());
         }
         assert_eq!(founders, start.world.query::<&Agent>().iter().count());
         // 30 days: births happen; every newborn carries its own temperament.
         let engine = run(make, 3, 43_200);
         let agents = engine.world.query::<&Agent>().iter().count();
-        let with = engine.world.query::<(&Agent, &Temperament, &Social)>().iter().count();
+        let with = engine
+            .world
+            .query::<(&Agent, &Temperament, &Social)>()
+            .iter()
+            .count();
         assert_eq!(agents, with);
         assert!(engine.resources.tallies.births > 0);
         for (_, (t, social)) in engine.world.query::<(&Temperament, &Social)>().iter() {
             assert!(t.axes().iter().all(|v| *v <= 1000));
-            let expected = if effects { rule.social_rate(0.04, t) } else { 0.04 };
+            let expected = if effects {
+                rule.social_rate(0.04, t)
+            } else {
+                0.04
+            };
             assert_eq!(social.growth_rate.to_bits(), expected.to_bits());
         }
     }
@@ -89,7 +114,8 @@ fn harness_v20_diverges_and_adults_wander_by_ns() {
         let mut engine = game_v20_scene(seed);
         for tick in 0..14_400u64 {
             engine.tick();
-            let minute = (engine.resources.current_tick + engine.resources.rules.clock_offset_ticks) % 1440;
+            let minute =
+                (engine.resources.current_tick + engine.resources.rules.clock_offset_ticks) % 1440;
             if tick % 10 != 0 || !(360..1080).contains(&minute) {
                 continue;
             }
@@ -111,10 +137,16 @@ fn harness_v20_diverges_and_adults_wander_by_ns() {
                 )>()
                 .iter()
             {
-                if child.is_some() || elder.is_some() || !matches!(state, sim_core::components::AgentState::Idle) {
+                if child.is_some()
+                    || elder.is_some()
+                    || !matches!(state, sim_core::components::AgentState::Idle)
+                {
                     continue;
                 }
-                let Some((_, hearth)) = homes.iter().find(|(members, _)| members.contains(&agent.id)) else {
+                let Some((_, hearth)) = homes
+                    .iter()
+                    .find(|(members, _)| members.contains(&agent.id))
+                else {
                     continue;
                 };
                 let d = u64::from(pos.x.abs_diff(hearth.0).max(pos.y.abs_diff(hearth.1)));
@@ -128,5 +160,8 @@ fn harness_v20_diverges_and_adults_wander_by_ns() {
     }
     assert!(low.1 > 100 && high.1 > 100, "{low:?} {high:?}");
     let (low_mean, high_mean) = (low.0 as f64 / low.1 as f64, high.0 as f64 / high.1 as f64);
-    assert!(high_mean > low_mean, "NS high {high_mean} vs low {low_mean}");
+    assert!(
+        high_mean > low_mean,
+        "NS high {high_mean} vs low {low_mean}"
+    );
 }

@@ -55,13 +55,11 @@ impl MaterialDef {
                 (1.0 - k).clamp(0.0, 1.0) as f32
             }
             InfluenceChannel::Light => 1.0,
-            InfluenceChannel::Noise => {
-                (self.properties.density / 25_000.0).clamp(0.0, 1.0) as f32
-            }
+            InfluenceChannel::Noise => (self.properties.density / 25_000.0).clamp(0.0, 1.0) as f32,
             InfluenceChannel::FoodAroma => 0.5,
-            InfluenceChannel::Danger
-            | InfluenceChannel::Social
-            | InfluenceChannel::Spiritual => 0.0,
+            InfluenceChannel::Danger | InfluenceChannel::Social | InfluenceChannel::Spiritual => {
+                0.0
+            }
             InfluenceChannel::Beauty => 1.0,
         }
     }

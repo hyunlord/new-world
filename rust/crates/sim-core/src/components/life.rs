@@ -27,7 +27,10 @@ mod tests {
 
     #[test]
     fn founder_age_counts_ticks_before_world_start() {
-        let life = Life { born_tick: -8_640, lifespan_ticks: 83_520 };
+        let life = Life {
+            born_tick: -8_640,
+            lifespan_ticks: 83_520,
+        };
         assert_eq!(life.age_ticks(0), 8_640);
         assert_eq!(life.age_ticks(1_440), 10_080);
     }

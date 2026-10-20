@@ -3,7 +3,9 @@
 //! Expected numbers come from `WorldRules::game_v12()` (Part 5 may retune it);
 //! `harness_wood_target_formula_table` pins the formula with explicit literals.
 use hecs::Entity;
-use sim_core::components::{Agent, AgentState, Cold, Hunger, Inventory, ResourceKind, Settlement, Sleep, Social, Thirst};
+use sim_core::components::{
+    Agent, AgentState, Cold, Hunger, Inventory, ResourceKind, Settlement, Sleep, Social, Thirst,
+};
 use sim_core::material::MaterialRegistry;
 use sim_core::rules::{FirewoodRule, SeasonRule, WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
@@ -25,7 +27,10 @@ fn tick_at(day: u64, minute: u64) -> u64 {
 }
 
 fn v12_rule() -> FirewoodRule {
-    WorldRules::game_v12().society.firewood.expect("v12 keeps the firewood rule")
+    WorldRules::game_v12()
+        .society
+        .firewood
+        .expect("v12 keeps the firewood rule")
 }
 
 fn resources_at(rules: WorldRules, tick: u64) -> SimResources {
@@ -70,7 +75,11 @@ fn village(rules: WorldRules, tick: u64, wood: u32, members: usize) -> (SimEngin
 }
 
 fn wood_store(engine: &SimEngine) -> u32 {
-    engine.resources.settlements[&1].stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0)
+    engine.resources.settlements[&1]
+        .stockpile
+        .get(&ResourceKind::Wood)
+        .copied()
+        .unwrap_or(0)
 }
 
 /// Run one regrowth pulse at `tick`.
@@ -82,10 +91,19 @@ fn pulse(resources: &mut SimResources, tick: u64) {
 
 /// The formula of section 7.2 for the current season of `resources`.
 fn expected_target(rule: &FirewoodRule, season: usize, days_per_season: u32) -> f64 {
-    let base = if season == 3 { rule.winter_base_days.unwrap_or(rule.base_days) } else { rule.base_days };
+    let base = if season == 3 {
+        rule.winter_base_days.unwrap_or(rule.base_days)
+    } else {
+        rule.base_days
+    };
     let prep_season = season == 2 || (season == 1 && rule.winter_prep_in_summer);
     let prep_days = rule.winter_prep_days.unwrap_or(f64::from(days_per_season));
-    base * burn_per_day(rule, season) + if rule.winter_prep && prep_season { prep_days * burn_per_day(rule, 3) } else { 0.0 }
+    base * burn_per_day(rule, season)
+        + if rule.winter_prep && prep_season {
+            prep_days * burn_per_day(rule, 3)
+        } else {
+            0.0
+        }
 }
 
 #[test]
@@ -97,13 +115,22 @@ fn harness_wood_target_formula_table() {
     rule.winter_prep_days = Some(3.0);
     rule.winter_prep_in_summer = false;
     rule.winter_base_days = Some(4.0);
-    for (day, want) in [(SPRING, 39.0), (SUMMER, 19.5), (AUTUMN, 156.0), (WINTER, 156.0), (NEXT_SPRING, 39.0)] {
+    for (day, want) in [
+        (SPRING, 39.0),
+        (SUMMER, 19.5),
+        (AUTUMN, 156.0),
+        (WINTER, 156.0),
+        (NEXT_SPRING, 39.0),
+    ] {
         let resources = resources_at(rules, tick_at(day, 720));
         assert_eq!(wood_target(&resources), Some(want), "display day {day}");
     }
     // Without seasons: base days of the spring burn only.
     rules.seasons = None;
-    assert_eq!(wood_target(&resources_at(rules, tick_at(SUMMER, 720))), Some(39.0));
+    assert_eq!(
+        wood_target(&resources_at(rules, tick_at(SUMMER, 720))),
+        Some(39.0)
+    );
 }
 
 #[test]
@@ -113,7 +140,11 @@ fn harness_wood_target_by_season() {
     let dps = rules.seasons.expect("v12 seasons").days_per_season;
     for (season, day) in [(0usize, SPRING), (1, SUMMER), (2, AUTUMN), (3, WINTER)] {
         let resources = resources_at(rules, tick_at(day, 720));
-        assert_eq!(wood_target(&resources), Some(expected_target(&rule, season, dps)), "season {season}");
+        assert_eq!(
+            wood_target(&resources),
+            Some(expected_target(&rule, season, dps)),
+            "season {season}"
+        );
     }
     // Winter keeps `winter_base_days` of the winter burn; it exceeds one night.
     let winter = wood_target(&resources_at(rules, tick_at(WINTER, 720))).expect("target");
@@ -124,15 +155,25 @@ fn harness_wood_target_by_season() {
 fn harness_autumn_only_prep() {
     let v12 = v12_rule();
     assert!(!v12.winter_prep_in_summer);
-    let summer = wood_target(&resources_at(WorldRules::game_v12(), tick_at(SUMMER, 720))).expect("summer");
-    let autumn = wood_target(&resources_at(WorldRules::game_v12(), tick_at(AUTUMN, 720))).expect("autumn");
-    assert_eq!(summer, v12.base_days * burn_per_day(&v12, 1), "summer gathers for summer nights only");
+    let summer =
+        wood_target(&resources_at(WorldRules::game_v12(), tick_at(SUMMER, 720))).expect("summer");
+    let autumn =
+        wood_target(&resources_at(WorldRules::game_v12(), tick_at(AUTUMN, 720))).expect("autumn");
+    assert_eq!(
+        summer,
+        v12.base_days * burn_per_day(&v12, 1),
+        "summer gathers for summer nights only"
+    );
     let prep = v12.winter_prep_days.expect("v12 prep days") * burn_per_day(&v12, 3);
     assert_eq!(autumn, v12.base_days * burn_per_day(&v12, 2) + prep);
     // v11 still prepares in summer with a full season of winter burn.
     let v11 = WorldRules::game_v11().society.firewood.expect("v11");
-    let v11_summer = wood_target(&resources_at(WorldRules::game_v11(), tick_at(SUMMER, 720))).expect("v11 summer");
-    assert_eq!(v11_summer, v11.base_days * burn_per_day(&v11, 1) + 7.0 * burn_per_day(&v11, 3));
+    let v11_summer = wood_target(&resources_at(WorldRules::game_v11(), tick_at(SUMMER, 720)))
+        .expect("v11 summer");
+    assert_eq!(
+        v11_summer,
+        v11.base_days * burn_per_day(&v11, 1) + 7.0 * burn_per_day(&v11, 3)
+    );
 }
 
 #[test]
@@ -155,11 +196,20 @@ fn harness_winter_cap_buries_deadwood() {
     }
     pulse(&mut winter, tick_at(WINTER, 480));
     for (spot, amount) in spots {
-        assert_eq!(winter.wood_tiles.get(&spot).copied().unwrap_or(0), amount.min(cap), "{spot:?}");
+        assert_eq!(
+            winter.wood_tiles.get(&spot).copied().unwrap_or(0),
+            amount.min(cap),
+            "{spot:?}"
+        );
     }
     // A cap of 0 removes every spot from the ground; the registrations stay.
     let mut rules = WorldRules::game_v12();
-    rules.society.firewood.as_mut().expect("firewood").winter_deadwood_cap = Some(0);
+    rules
+        .society
+        .firewood
+        .as_mut()
+        .expect("firewood")
+        .winter_deadwood_cap = Some(0);
     let mut bare = resources_at(rules, 0);
     for (spot, amount) in spots {
         bare.wood_source_max.insert(spot, 6);
@@ -174,15 +224,24 @@ fn harness_winter_cap_buries_deadwood() {
     }
     assert!(bare.wood_tiles.is_empty());
     let per_day = u64::from(v12_rule().winter_regen_units_per_day.expect("regen"));
-    assert_eq!(bare.tallies.winter_wood_lost, 13 * per_day / (1440 / REGEN_INTERVAL));
+    assert_eq!(
+        bare.tallies.winter_wood_lost,
+        13 * per_day / (1440 / REGEN_INTERVAL)
+    );
 }
 
 #[test]
 fn harness_winter_spread_regrowth() {
     let rule = v12_rule();
-    let per_day = u64::from(rule.winter_regen_units_per_day.expect("v12 winter regrowth"));
+    let per_day = u64::from(
+        rule.winter_regen_units_per_day
+            .expect("v12 winter regrowth"),
+    );
     let cap = rule.winter_deadwood_cap.expect("v12 winter cap");
-    assert!(per_day > 0 && cap > 0, "the scenario needs regrowth and a positive cap");
+    assert!(
+        per_day > 0 && cap > 0,
+        "the scenario needs regrowth and a positive cap"
+    );
     let spots = [(5u32, 9u32), (5, 12), (8, 3), (9, 9)];
     let mut resources = resources_at(WorldRules::game_v12(), 0);
     for spot in spots {
@@ -200,8 +259,17 @@ fn harness_winter_spread_regrowth() {
         pulse(&mut resources, start + step * REGEN_INTERVAL);
         // Exactly floor((step + 1) x per_day / 12) units have arrived or been lost.
         let landed: u64 = resources.wood_tiles.values().map(|v| u64::from(*v)).sum();
-        assert_eq!(landed + resources.tallies.winter_wood_lost, (step + 1) * per_day / pulses_per_day, "pulse {step}");
-        let changed: Vec<_> = resources.wood_tiles.iter().filter(|(k, v)| before.get(k) != Some(v)).map(|(k, _)| *k).collect();
+        assert_eq!(
+            landed + resources.tallies.winter_wood_lost,
+            (step + 1) * per_day / pulses_per_day,
+            "pulse {step}"
+        );
+        let changed: Vec<_> = resources
+            .wood_tiles
+            .iter()
+            .filter(|(k, v)| before.get(k) != Some(v))
+            .map(|(k, _)| *k)
+            .collect();
         assert!(changed.len() <= 1, "one spot at a time");
         arrivals.extend(changed);
         if resources.tallies.winter_wood_lost > lost_before {
@@ -212,7 +280,9 @@ fn harness_winter_spread_regrowth() {
     // Units arrive in key order, wrapping, one per spot until every spot holds the cap.
     let mut order: Vec<(u32, u32)> = spots.to_vec();
     order.sort();
-    let expected: Vec<(u32, u32)> = (0..capacity as usize).map(|i| order[i % order.len()]).collect();
+    let expected: Vec<(u32, u32)> = (0..capacity as usize)
+        .map(|i| order[i % order.len()])
+        .collect();
     assert_eq!(arrivals, expected);
     // Afterwards every unit finds no spot below the cap and is lost.
     assert_eq!(lost_at.len(), 2);
@@ -224,7 +294,10 @@ fn harness_winter_spread_regrowth() {
     while !resources.wood_tiles.contains_key(&order[1]) {
         pulse(&mut resources, start + step * REGEN_INTERVAL);
         step += 1;
-        assert!(step < total_pulses + pulses_per_day, "a unit arrives within a day");
+        assert!(
+            step < total_pulses + pulses_per_day,
+            "a unit arrives within a day"
+        );
     }
     assert_eq!(resources.wood_tiles[&order[1]], 1);
     assert_eq!(resources.tallies.winter_wood_lost, 2);
@@ -247,7 +320,10 @@ fn harness_spring_restores_deadwood() {
         tick += REGEN_INTERVAL;
     }
     assert_eq!(resources.wood_regen_acc, 500);
-    assert!(resources.wood_tiles.get(&spot).copied().unwrap_or(0) <= rule.winter_deadwood_cap.expect("cap"));
+    assert!(
+        resources.wood_tiles.get(&spot).copied().unwrap_or(0)
+            <= rule.winter_deadwood_cap.expect("cap")
+    );
     // Spring: the Pass 5 regrowth returns, regen_permille per pulse per spot, up to capacity.
     resources.wood_tiles.insert(spot, 1);
     let spring = tick_at(NEXT_SPRING, 480);
@@ -272,7 +348,11 @@ fn harness_last_winter_night_is_winter() {
     let winter_hour = u32::from(rule.burn_per_hour[3]);
     let (mut engine, members) = village(WorldRules::game_v12(), night, 10, 2);
     FireSystem::new().tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(wood_store(&engine), 10 - winter_hour, "the winter rate burns to the end of the night");
+    assert_eq!(
+        wood_store(&engine),
+        10 - winter_hour,
+        "the winter rate burns to the end of the night"
+    );
     assert!(engine.resources.fires[&1].lit);
     assert!(engine.world.get::<&Cold>(members[0]).is_err());
     // Out of wood that night: the members are cold.
@@ -301,8 +381,17 @@ fn harness_last_winter_night_is_winter() {
 fn harness_firewood_v11_unchanged() {
     let v11 = WorldRules::game_v11();
     // Pass 5 targets: 1.5 x burn plus a full season of winter burn in summer and autumn.
-    for (day, want) in [(SPRING, 39.0), (SUMMER, 292.5), (AUTUMN, 312.0), (WINTER, 58.5)] {
-        assert_eq!(wood_target(&resources_at(v11, tick_at(day, 720))), Some(want), "display day {day}");
+    for (day, want) in [
+        (SPRING, 39.0),
+        (SUMMER, 292.5),
+        (AUTUMN, 312.0),
+        (WINTER, 58.5),
+    ] {
+        assert_eq!(
+            wood_target(&resources_at(v11, tick_at(day, 720))),
+            Some(want),
+            "display day {day}"
+        );
     }
     // Pass 5 regrowth all year: no cap, no spread accumulator, nothing lost.
     let mut resources = resources_at(v11, 0);
@@ -313,11 +402,24 @@ fn harness_firewood_v11_unchanged() {
         pulse(&mut resources, tick_at(WINTER, 480) + step * REGEN_INTERVAL);
     }
     assert_eq!(resources.wood_tiles[&(10, 10)], 6);
-    assert_eq!(resources.wood_tiles[&(12, 10)], 6, "24 pulses x 0.5 refill an empty spot");
-    assert_eq!((resources.wood_winter_acc, resources.wood_winter_cursor), (0, None));
+    assert_eq!(
+        resources.wood_tiles[&(12, 10)],
+        6,
+        "24 pulses x 0.5 refill an empty spot"
+    );
+    assert_eq!(
+        (resources.wood_winter_acc, resources.wood_winter_cursor),
+        (0, None)
+    );
     assert_eq!(resources.tallies.winter_wood_lost, 0);
     // The season rule of v11 is unchanged.
-    assert_eq!(v11.seasons, Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] }));
+    assert_eq!(
+        v11.seasons,
+        Some(SeasonRule {
+            days_per_season: 7,
+            regen_permille: [750, 1250, 1000, 500]
+        })
+    );
 }
 
 #[test]
@@ -343,7 +445,12 @@ fn harness_first_winter_night_is_autumn() {
 fn harness_winter_regrowth_branches_without_one_field() {
     // Spread regrowth without a cap fills spots up to their capacity, one at a time.
     let mut rules = WorldRules::game_v12();
-    rules.society.firewood.as_mut().expect("firewood").winter_deadwood_cap = None;
+    rules
+        .society
+        .firewood
+        .as_mut()
+        .expect("firewood")
+        .winter_deadwood_cap = None;
     let per_day = u64::from(v12_rule().winter_regen_units_per_day.expect("regen"));
     let mut resources = resources_at(rules, 0);
     resources.wood_source_max.insert((3, 3), 2);
@@ -353,11 +460,24 @@ fn harness_winter_regrowth_branches_without_one_field() {
     for step in 0..pulses {
         pulse(&mut resources, start + step * REGEN_INTERVAL);
     }
-    assert_eq!(resources.wood_tiles.values().map(|v| u64::from(*v)).sum::<u64>(), 4, "capacity 2 + 2");
+    assert_eq!(
+        resources
+            .wood_tiles
+            .values()
+            .map(|v| u64::from(*v))
+            .sum::<u64>(),
+        4,
+        "capacity 2 + 2"
+    );
     assert_eq!(resources.tallies.winter_wood_lost, 1);
     // A cap without spread regrowth: the Pass 5 regrowth continues, never above the cap.
     let mut rules = WorldRules::game_v12();
-    rules.society.firewood.as_mut().expect("firewood").winter_regen_units_per_day = None;
+    rules
+        .society
+        .firewood
+        .as_mut()
+        .expect("firewood")
+        .winter_regen_units_per_day = None;
     let cap = v12_rule().winter_deadwood_cap.expect("cap");
     let mut resources = resources_at(rules, 0);
     resources.wood_source_max.insert((3, 3), 6);
@@ -366,6 +486,15 @@ fn harness_winter_regrowth_branches_without_one_field() {
     for step in 0..24 {
         pulse(&mut resources, start + step * REGEN_INTERVAL);
     }
-    assert_eq!((resources.wood_tiles[&(3, 3)], resources.wood_tiles[&(4, 3)]), (cap, cap));
-    assert_eq!((resources.wood_winter_acc, resources.tallies.winter_wood_lost), (0, 0));
+    assert_eq!(
+        (resources.wood_tiles[&(3, 3)], resources.wood_tiles[&(4, 3)]),
+        (cap, cap)
+    );
+    assert_eq!(
+        (
+            resources.wood_winter_acc,
+            resources.tallies.winter_wood_lost
+        ),
+        (0, 0)
+    );
 }
