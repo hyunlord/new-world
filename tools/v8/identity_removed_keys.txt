@@ -1,0 +1,9 @@
+# Keys removed from the probe output on purpose by V8-0, with the commit
+# area that removed them. identity.sh drops them from the base data only
+# where the base value is zero/false/null/empty (natural runs never set them).
+# 7.2 god hand (ADR 0010): intervention-only state and tallies
+interventions_applied_total    # raw rows (probe/pass7.rs): Tallies::interventions_applied
+fire_blocked_settlements       # raw rows (probe/pass7.rs): intervention rain
+cold_snap_nights_left          # raw rows (probe/pass7.rs): intervention cold snap
+wet_burn_wood_total            # raw rows (probe/pass12.rs): wood burned wet by intervention rain
+wet_burn_wood                  # summary pass12 block: the same tally

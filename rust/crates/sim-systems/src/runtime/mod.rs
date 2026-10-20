@@ -16,7 +16,6 @@ pub mod combat;
 pub mod construction;
 pub mod decision;
 pub mod influence;
-pub mod intervention;
 pub mod memory;
 pub mod needs;
 pub mod resource_regen;

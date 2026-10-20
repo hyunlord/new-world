@@ -108,7 +108,6 @@ fn harness_hazard_inert_in_v17() {
         }
         assert!(!engine.resources.fission_log.is_empty(), "seed {seed} departs in v17");
         assert!(engine.resources.fission_checks.is_empty());
-        assert_eq!(engine.resources.tallies.wet_burn_wood, 0);
     }
     let mut engine = game_v18_nofission_scene(1);
     for _ in 0..42 * 1440 {

@@ -5,12 +5,12 @@ const GETTERS: Array[String] = [
 	"get_agent_snapshot", "get_settlement_snapshot", "get_construction_snapshot",
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
-	"get_intervention_state", "get_world_info", "get_terrain_snapshot",
+	"get_world_info", "get_terrain_snapshot",
 	"get_activity_snapshot", "get_porter_snapshot", "get_settlement_relations",
 ]
 const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations"]
 const MUTATORS: Array[String] = [
-	"apply_intervention", "advance_ticks", "reset_world", "reset_world_stress",
+	"advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",
 ]
 var _world: Node
@@ -229,18 +229,11 @@ func recent_deaths() -> Dictionary:
 func society_snapshot() -> Dictionary:
 	return read_raw("get_society_snapshot")
 
-func intervention_state() -> Dictionary:
-	return read_raw("get_intervention_state")
-
 func world_info() -> Dictionary:
 	return read_raw("get_world_info")
 
 func terrain_snapshot() -> Dictionary:
 	return read_raw("get_terrain_snapshot")
-
-func apply_intervention(kind: String, settlement_id: int, amount: int) -> Dictionary:
-	var result: Variant = mutate_raw("apply_intervention", [kind, settlement_id, amount])
-	return result if result is Dictionary else {}
 
 func advance_ticks(n: int) -> int:
 	return int(mutate_raw("advance_ticks", [n]))

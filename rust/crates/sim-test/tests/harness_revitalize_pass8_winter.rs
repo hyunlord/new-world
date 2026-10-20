@@ -49,14 +49,11 @@ fn v14_with(level: usize, night: [u16; 3], step: u16) -> WorldRules {
 }
 
 /// Wood burned by one hourly fire update at system tick `tick` from a store of 100.
-fn burned_at(rules: WorldRules, seed: u64, tick: u64, cold_snap: bool) -> u32 {
+fn burned_at(rules: WorldRules, seed: u64, tick: u64) -> u32 {
     let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
     engine.resources.rules = rules;
     engine.resources.world_seed = seed;
     engine.resources.current_tick = tick;
-    if cold_snap {
-        engine.resources.cold_snap_nights = 1;
-    }
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.store(ResourceKind::Wood, 100);
     engine.resources.settlements.insert(1, settlement);
@@ -196,15 +193,13 @@ fn harness_night_rate_floor_is_one() {
     assert_eq!(winter_burn_per_hour(&r, &rule, night), 2);
     assert_eq!(night_burn_delta(&r, &rule, 22), -3);
     assert_eq!(night_rate(&r, &rule, night), 1);
-    assert_eq!(burned_at(rules, 4, night, false), 1);
-    // A cold snap adds its unit above the floor.
-    assert_eq!(burned_at(rules, 4, night, true), 2);
+    assert_eq!(burned_at(rules, 4, night), 1);
     // Outside the burn window the rate is 0 and nothing burns.
     assert_eq!(night_rate(&r, &rule, tick_at(22, 12 * 60)), 0);
-    assert_eq!(burned_at(rules, 4, tick_at(22, 12 * 60), false), 0);
+    assert_eq!(burned_at(rules, 4, tick_at(22, 12 * 60)), 0);
     // Harsh (4) drawn +3 burns 7.
     let harsh = v14_with(2, [0, 0, 1000], 3);
-    assert_eq!(burned_at(harsh, 4, night, false), 7);
+    assert_eq!(burned_at(harsh, 4, night), 7);
 }
 
 #[test]
@@ -225,7 +220,7 @@ fn harness_last_night_keeps_its_evening_draw() {
         assert!(severity_level_at(&r, &rule, booked).is_some(), "day {day} {minute}: a winter night");
         let want = u32::try_from((base + delta).max(1)).expect("rate");
         assert_eq!(night_rate(&r, &rule, tick), want, "day {day} minute {minute}");
-        assert_eq!(burned_at(rules, seed, tick, false), want);
+        assert_eq!(burned_at(rules, seed, tick), want);
     }
     // 18:00 of day 28 is a spring evening: its own rate, no draw.
     let spring = tick_at(28, 18 * 60);
@@ -234,7 +229,7 @@ fn harness_last_night_keeps_its_evening_draw() {
 
 #[test]
 fn harness_firewood_v13_unchanged() {
-    // Under v13 the fire burns the severity's rate (+1 on a cold snap) at
+    // Under v13 the fire burns the severity's rate at
     // every hour of a year and the winter fall is the severity's: Pass 7.
     let rules = WorldRules::game_v13();
     let rule = rules.society.firewood.expect("v13 firewood");
@@ -248,9 +243,6 @@ fn harness_firewood_v13_unchanged() {
             let burning = !(420..1080).contains(&minute);
             let want = if burning { u32::from(winter_burn_per_hour(&r, &rule, night)) } else { 0 };
             assert_eq!(night_rate(&r, &rule, tick), want, "seed {seed} hour {hour}");
-            r.cold_snap_tonight = true;
-            assert_eq!(night_rate(&r, &rule, tick), if burning { want + 1 } else { 0 });
-            r.cold_snap_tonight = false;
             let fall = severity_level_at(&r, &rule, tick).map(|level| rule.winter_severity_regen_units_per_day[usize::from(level)]);
             assert_eq!(winter_fall_at(&r, &rule, tick), fall, "seed {seed} hour {hour}");
         }

@@ -542,11 +542,7 @@ func _update_shelter_cold(delta: float) -> void:
 		if int(sprite.get_meta("building_kind", -1)) == 1:
 			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
 			SHELTER_COLD.apply(sprite, int(counts.get(tile, 0)), _elapsed, delta)
-	var cold_snap: bool = false
-	if _world_sim.has_method("get_intervention_state"):
-		var intervention: Dictionary = SimReads.read(_world_sim, "get_intervention_state")
-		cold_snap = bool(intervention.get("cold_snap_tonight", false))
-	var target: float = 0.18 if cold_snap else (0.12 if not counts.is_empty() else 0.0)
+	var target: float = 0.12 if not counts.is_empty() else 0.0
 	if target != _tint_target:
 		_tint_start = _tint_strength
 		_tint_target = target
@@ -557,7 +553,6 @@ func _update_shelter_cold(delta: float) -> void:
 	if _chill_tint != null:
 		_chill_tint.color.a = _tint_strength
 		_chill_tint.set_meta("night_chill_strength", _tint_strength)
-		_chill_tint.set_meta("cold_snap_tint", cold_snap)
 
 func _update_cold_ash(sprite: Sprite2D, cold: bool) -> void:
 	sprite.set_meta("cold_ash", cold)

@@ -190,9 +190,8 @@ fn in_severity_winter(resources: &SimResources, rule: &FirewoodRule, day: u64) -
 /// The rate `FireSystem` withdraws per settlement-hour at system tick `tick`
 /// (Pass 8): 0 outside the burn window; otherwise the night's rate
 /// ([`winter_burn_per_hour`] of the evening's tick), changed by the evening's
-/// [`night_burn_delta`] with a floor of 1 when night weights are set, plus 1
-/// while `cold_snap_tonight`. The fire, the probe key and the recorder all
-/// read it, so they never disagree. Villagers never read it: `wood_target`,
+/// [`night_burn_delta`] with a floor of 1 when night weights are set. The
+/// fire and the probe key both read it, so they never disagree. Villagers never read it: `wood_target`,
 /// [`tonight_burn`] and urgency keep the severity's rate.
 pub fn night_rate(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u32 {
     if resources.ticks_per_day == 0 {
@@ -204,13 +203,12 @@ pub fn night_rate(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u
     }
     let night = night_tick_at(resources, rule, tick);
     let base = u32::from(winter_burn_per_hour(resources, rule, night));
-    let rate = if rule.winter_night_burn_permille.is_some() && severity_level_at(resources, rule, night).is_some() {
+    if rule.winter_night_burn_permille.is_some() && severity_level_at(resources, rule, night).is_some() {
         let delta = i64::from(night_burn_delta(resources, rule, day_index_at(resources, night)));
         u32::try_from((i64::from(base) + delta).max(1)).unwrap_or(1)
     } else {
         base
-    };
-    rate + u32::from(resources.cold_snap_tonight)
+    }
 }
 
 /// Winter deadwood fall per day in force at tick `tick` (Pass 8): the

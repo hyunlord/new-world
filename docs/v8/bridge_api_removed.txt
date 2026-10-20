@@ -1,0 +1,4 @@
+# Bridge exports removed on purpose, each with its reason (goal 4.2).
+# 7.2 (god hand removed; ADR 0010):
+func WorldSimNode.apply_intervention
+func WorldSimNode.get_intervention_state

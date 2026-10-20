@@ -14,8 +14,8 @@
 use serde_json::{json, Value};
 use sim_core::components::Agent;
 use sim_core::rules::WorldRules;
-use sim_engine::{Intervention, SimEngine, TickProfile};
-use sim_systems::runtime::intervention::{apply_intervention, home_settlement};
+use sim_core::components::{ResourceKind, SettlementId};
+use sim_engine::{SimEngine, TickProfile};
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -336,13 +336,10 @@ pub fn run(spec: &RunSpec, mut engine: SimEngine) -> RunOutput {
             day.settlements_0600 = Some(engine.resources.settlements.len() as u64);
         }
         if spec.feed == Feed::Fed && (gifts.is_empty() || at_sample) {
-            if let Some(home) = home_settlement(&engine.resources) {
+            if let Some(home) = engine.resources.settlements.keys().copied().min() {
                 let requested = GIFT_PER_ALIVE * alive(&engine);
-                let record = apply_intervention(
-                    &mut engine,
-                    Intervention::GiftFood { settlement: home, amount: u32::try_from(requested).unwrap_or(u32::MAX) },
-                );
-                gifts.push(json!({"tick": record.tick, "settlement": home, "requested": requested, "applied": record.applied}));
+                let applied = gift_food(&mut engine, home, u32::try_from(requested).unwrap_or(u32::MAX));
+                gifts.push(json!({"tick": engine.current_tick(), "settlement": home, "requested": requested, "applied": applied}));
             }
         }
     }
@@ -691,6 +688,18 @@ pub struct PerfArgs {
     pub repeats: u32,
     /// Output directory.
     pub out: PathBuf,
+}
+
+/// Benchmark-only daily food gift of the fed stress world: store `amount`
+/// food in `settlement`'s stockpile and return what was added. This is the
+/// stockpile deposit the V7 `GiftFood` intervention made (V8-0 removed the god
+/// hand from the game; the fed stress world keeps its feeding here).
+fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u64 {
+    engine.resources.settlements.get_mut(&settlement).map_or(0, |store| {
+        let before = store.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
+        store.store(ResourceKind::Food, amount);
+        u64::from(store.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) - before)
+    })
 }
 
 /// The usage line.

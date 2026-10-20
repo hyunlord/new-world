@@ -86,3 +86,20 @@ context, choice, reason, evidence. Raw data paths are under
 - Context: the chain's root (`WorldRules::game_v8`, `WorldGenConfig::game_default`, `scenes::game_scene`, `worldgen::build_world`) is not named in 8.1 but nothing live uses it.
 - Choice: delete them in 8.1 with the chain; tests that used them are adapted to the baseline (triage recipe R1/R3) or deleted. The bridge's pure helpers used by kept tests (`init_production_engine`, `bootstrap_spawn_agents`, `seed_finite_resource_scarcity`) stay.
 - Evidence: `docs/v8/harvest/test_triage.md` §1.
+
+## D17 — 7.6: `--cacheinfo` cleared skip-worktree; restored at once
+- Context: the goal's 7.6 commands (`git hash-object -w` + `git update-index --cacheinfo 100644,<sha>,.claude/settings.json`) re-create the index entry, which drops the skip-worktree bit: after the commit `git ls-files -v .claude/settings.json` showed `H`.
+- Choice: re-set it immediately with `git update-index --skip-worktree .claude/settings.json` (the working file was never edited); verified `S`, and `git show HEAD:.claude/settings.json` byte-equal to the local `{}` file. Recorded as a pitfall lesson.
+- Evidence: commit `19baad71`; this log.
+- Ordering note (extends D13): 7.6 and a separate tools batch (`53da844f`) were committed before 7.2–7.5 because they touch no code the later batches depend on.
+
+## D18 — 7.2 scope: what "intervention-only" removed and what stayed
+- Removed (runtime state only interventions set; 0/false/empty in every natural run): `SimResources::{fire_blocked_until, cold_snap_nights, cold_snap_tonight, intervention_log}`, `Tallies::{interventions_applied, wet_burn_wood}` (`wet_burn_wood` was incremented only by the intervention-rain branch of `FireSystem`), the types `Intervention` / `InterventionRecord` (`sim-engine/src/intervention.rs`), `sim-systems/src/runtime/intervention.rs`, the rain and cold-snap branches of `FireSystem` and the cold-snap `+1` of `firewood::night_rate`, the bridge's `apply_intervention` and `get_intervention_state` `#[func]`s with `parse_intervention`, `collect_intervention_state`, `apply_intervention_command`, `intervention_reply_to_dict` and their four tests, the GDScript panel/scene/effects and `SimReads` entries.
+- Both bridge methods are intervention methods (`get_intervention_state` only reported rain, cold snaps and the intervention log), so `docs/v8/bridge_api_removed.txt` lists both; `tools/v8/bridge_api.py --check` passes (37 = 39 − 2).
+- Kept: the rule fields `FirewoodRule::{rain_soak_permille, rain_wet_burn}`. They acted only through interventions, but they are rules data with non-zero values (300, true) printed in the probe summary's rules block and in the v7-final rules dumps; removing them would make identity fail on non-zero values. `windfall_over_snow` is read by the live `ResourceRegenSystem` and is not intervention-only. All three are listed as candidates for removal when the probe schema is next revised.
+- Probe output: five zero-valued keys disappear (`interventions_applied_total`, `fire_blocked_settlements`, `cold_snap_nights_left`, `wet_burn_wood_total` in raw rows, `wet_burn_wood` in the summary). `tools/v8/identity_removed_keys.txt` lists them; identity drops a listed key from the base data only where its base value is zero/false/null/empty.
+
+## D19 — The fed stress world keeps its daily food gift inside the perf harness
+- Context: `worldsim_perf`'s fed stress world (`quick`, `stress --feed fed`) fed the camp each day through the GiftFood intervention.
+- Choice: `sim-test/src/perf.rs` `gift_food` does the same stockpile deposit (store `amount` food in the lowest-id settlement, report what was added). Benchmark-only; the game has no such call.
+- Evidence: the `quick` fingerprint after 8.1 must equal base `stress --rules game_v26` (`d4d9b81677e1ebcc`).

@@ -54,9 +54,10 @@ mod tests {
         // keys; schema 8 the 2 Pass 8 keys; schema 9 adds no row key (its two
         // keys live in the summary's rules block); schema 10 the 3 Pass 10 keys;
         // schema 11 the 8 Pass 11 keys; schema 12 the 14 Pass 12 keys; schema
-        // 13 the 2 Pass 13 keys.
+        // 13 the 2 Pass 13 keys. V8-0 removed four god-hand keys (three of
+        // Pass 7, `wet_burn_wood_total` of Pass 12), 0 in every natural run.
         let sample = super::metrics::sample(&crate::scenes::legacy_scene(), "legacy", 0, 0);
         assert_eq!(sample["schema_version"], 13);
-        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6 + 5 + 2 + 3 + 8 + 14 + 2);
+        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6 + 5 + 2 + 3 + 8 + 14 + 2 - 4);
     }
 }

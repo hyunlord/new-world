@@ -436,35 +436,6 @@ impl WorldSimNode {
         tallies_to_dict(collect_tallies(&self.engine.resources))
     }
 
-    /// Revitalize Pass 7 — the god's hand: apply one intervention now, between
-    /// ticks. `kind` is one of `gift_food`, `spoil_food`, `gift_wood`,
-    /// `rot_wood`, `rain`, `cold_snap`, `windfall`; `settlement_id < 0` means
-    /// home (the lowest settlement id now); `amount` is hours for rain, nights
-    /// for a cold snap and units otherwise. Returns `{ok, applied, tick}`.
-    #[func]
-    fn apply_intervention(&mut self, kind: GString, settlement_id: i64, amount: i64) -> VarDictionary {
-        intervention_reply_to_dict(apply_intervention_command(&mut self.engine, &kind.to_string(), settlement_id, amount))
-    }
-
-    /// Art Pass 6: read intervention presentation state without advancing the world.
-    #[func]
-    fn get_intervention_state(&self) -> VarDictionary {
-        let state = collect_intervention_state(&self.engine.resources, self.engine.current_tick());
-        let mut dict = VarDictionary::new();
-        dict.set("rain_settlement_ids", PackedInt32Array::from(state.rain_settlement_ids.as_slice()));
-        dict.set("rain_ticks_left", PackedInt32Array::from(state.rain_ticks_left.as_slice()));
-        dict.set("cold_snap_nights_left", i64::from(state.cold_snap_nights_left));
-        dict.set("cold_snap_tonight", state.cold_snap_tonight);
-        dict.set("log_ticks", PackedInt64Array::from(state.log_ticks.as_slice()));
-        dict.set("log_ids", PackedInt64Array::from(state.log_ids.as_slice()));
-        dict.set("log_settlement_ids", PackedInt32Array::from(state.log_settlement_ids.as_slice()));
-        let kinds: Vec<GString> = state.log_kinds.iter().map(|kind| GString::from(*kind)).collect();
-        dict.set("log_kinds", PackedStringArray::from(kinds.as_slice()));
-        dict.set("log_amounts", PackedInt64Array::from(state.log_amounts.as_slice()));
-        dict.set("log_applied", PackedInt64Array::from(state.log_applied.as_slice()));
-        dict
-    }
-
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
@@ -3181,139 +3152,6 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
     }
 }
 
-/// Pass 7: build an intervention from the FFI arguments. `None` for an
-/// unknown kind, a negative amount, or a settlement kind with no settlement
-/// (`settlement_id < 0` and no `home`, or an id beyond `u32`). `amount` above
-/// `u32::MAX` saturates. `cold_snap` and `windfall` ignore the settlement.
-pub fn parse_intervention(
-    kind: &str,
-    settlement_id: i64,
-    amount: i64,
-    home: Option<sim_core::components::SettlementId>,
-) -> Option<sim_engine::Intervention> {
-    use sim_systems::runtime::intervention::{intervention_from_kind, kind_needs_settlement};
-    if amount < 0 {
-        return None;
-    }
-    let amount = u32::try_from(amount).unwrap_or(u32::MAX);
-    let settlement = if !kind_needs_settlement(kind) {
-        0
-    } else if settlement_id < 0 {
-        home?
-    } else {
-        sim_core::components::SettlementId::try_from(settlement_id).ok()?
-    };
-    intervention_from_kind(kind, settlement, amount)
-}
-
-/// Read-only intervention presentation columns, ordered by settlement and log time.
-#[derive(Debug, Default, PartialEq, Eq)]
-pub struct InterventionState {
-    /// Settlement IDs with active rain, ascending.
-    pub rain_settlement_ids: Vec<i32>,
-    /// Remaining ticks paired with the settlement IDs, saturated to the FFI range.
-    pub rain_ticks_left: Vec<i32>,
-    /// Pending cold-snap nights, including tonight when active.
-    pub cold_snap_nights_left: u32,
-    /// Whether the simulation has booked tonight as a cold snap.
-    pub cold_snap_tonight: bool,
-    /// Ticks of the last 32 records, oldest first.
-    pub log_ticks: Vec<i64>,
-    /// Absolute record indices, stable across the bounded presentation window.
-    pub log_ids: Vec<i64>,
-    /// Actual target settlement, or -1 for world-wide interventions.
-    pub log_settlement_ids: Vec<i32>,
-    /// Canonical intervention names, paired with log ticks.
-    pub log_kinds: Vec<&'static str>,
-    /// Requested units, hours or nights for each record.
-    pub log_amounts: Vec<i64>,
-    /// Applied amounts for each record.
-    pub log_applied: Vec<i64>,
-}
-
-/// Collect presentation state without mutating resources or consuming randomness.
-pub fn collect_intervention_state(resources: &SimResources, now: u64) -> InterventionState {
-    use sim_engine::Intervention;
-    use sim_systems::runtime::intervention::KINDS;
-    let mut state = InterventionState {
-        cold_snap_nights_left: resources.cold_snap_nights,
-        cold_snap_tonight: resources.cold_snap_tonight,
-        ..InterventionState::default()
-    };
-    let mut rain: Vec<_> = resources.fire_blocked_until.iter().filter(|(_, until)| **until > now).collect();
-    rain.sort_unstable_by_key(|(id, _)| **id);
-    for (id, until) in rain {
-        state.rain_settlement_ids.push(i32::try_from(*id).unwrap_or(i32::MAX));
-        state.rain_ticks_left.push(i32::try_from(*until - now).unwrap_or(i32::MAX));
-    }
-    for (index, record) in resources.intervention_log.iter().enumerate().skip(resources.intervention_log.len().saturating_sub(32)) {
-        let (kind, amount) = match record.intervention {
-            Intervention::GiftFood { amount, .. } => (KINDS[0], amount),
-            Intervention::SpoilFood { amount, .. } => (KINDS[1], amount),
-            Intervention::GiftWood { amount, .. } => (KINDS[2], amount),
-            Intervention::RotWood { amount, .. } => (KINDS[3], amount),
-            Intervention::Rain { hours, .. } => (KINDS[4], hours),
-            Intervention::ColdSnap { nights } => (KINDS[5], nights),
-            Intervention::Windfall { units } => (KINDS[6], units),
-        };
-        let settlement = match record.intervention {
-            Intervention::GiftFood { settlement, .. }
-            | Intervention::SpoilFood { settlement, .. }
-            | Intervention::GiftWood { settlement, .. }
-            | Intervention::RotWood { settlement, .. }
-            | Intervention::Rain { settlement, .. } => i32::try_from(settlement).unwrap_or(i32::MAX),
-            Intervention::ColdSnap { .. } | Intervention::Windfall { .. } => -1,
-        };
-        state.log_ids.push(i64::try_from(index).unwrap_or(i64::MAX));
-        state.log_settlement_ids.push(settlement);
-        state.log_ticks.push(i64::try_from(record.tick).unwrap_or(i64::MAX));
-        state.log_kinds.push(kind);
-        state.log_amounts.push(i64::from(amount));
-        state.log_applied.push(i64::try_from(record.applied).unwrap_or(i64::MAX));
-    }
-    state
-}
-
-/// Pass 7: result of the `apply_intervention` command.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct InterventionReply {
-    /// False for an unknown kind, a negative amount or no settlement.
-    pub ok: bool,
-    /// What the intervention changed (0 when nothing changed or not `ok`).
-    pub applied: u64,
-    /// Completed ticks when it was applied.
-    pub tick: u64,
-}
-
-/// Pass 7: parse and apply one intervention now (the `#[func]` body). `ok` is
-/// false when parsing fails or a settlement kind names a settlement that does
-/// not exist.
-pub fn apply_intervention_command(engine: &mut SimEngine, kind: &str, settlement_id: i64, amount: i64) -> InterventionReply {
-    use sim_systems::runtime::intervention::{home_settlement, kind_needs_settlement};
-    let home = home_settlement(&engine.resources);
-    // Review round 1 (L3): an explicit settlement id that does not exist is "no settlement".
-    let parsed = parse_intervention(kind, settlement_id, amount, home).filter(|_| {
-        !kind_needs_settlement(kind)
-            || settlement_id < 0
-            || u32::try_from(settlement_id).is_ok_and(|id| engine.resources.settlements.contains_key(&id))
-    });
-    match parsed {
-        Some(intervention) => {
-            let record = sim_systems::runtime::intervention::apply_intervention(engine, intervention);
-            InterventionReply { ok: true, applied: record.applied, tick: record.tick }
-        }
-        None => InterventionReply { ok: false, applied: 0, tick: engine.current_tick() },
-    }
-}
-
-fn intervention_reply_to_dict(reply: InterventionReply) -> VarDictionary {
-    let mut dict = VarDictionary::new();
-    dict.set("ok", reply.ok);
-    dict.set("applied", reply.applied as i64);
-    dict.set("tick", reply.tick as i64);
-    dict
-}
-
 /// Read the cumulative counters without depending on event retention.
 pub fn collect_tallies(resources: &SimResources) -> sim_engine::Tallies {
     resources.tallies
@@ -3346,7 +3184,6 @@ fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
     dict.set("fissions_cancelled", tallies.fissions_cancelled as i64);
     dict.set("remnant_merges", tallies.remnant_merges as i64);
     // Revitalize Pass 12: wood a raining settlement burned wet (display-only).
-    dict.set("wet_burn_wood", tallies.wet_burn_wood as i64);
     // Revitalize Pass 13: settled-area floor wood placed (display-only).
     dict.set("area_floor_placed", tallies.area_floor_placed as i64);
     // Revitalize Pass 5 tallies (display-only).
@@ -3500,90 +3337,6 @@ mod revitalize_tooling_tests {
     }
 
     #[test]
-    fn parse_intervention_resolves_home_and_rejects_bad_input() {
-        use sim_engine::Intervention;
-        assert_eq!(super::parse_intervention("gift_food", -1, 30, Some(4)), Some(Intervention::GiftFood { settlement: 4, amount: 30 }));
-        assert_eq!(super::parse_intervention("rain", 7, 13, Some(4)), Some(Intervention::Rain { settlement: 7, hours: 13 }));
-        assert_eq!(super::parse_intervention("cold_snap", -1, 2, None), Some(Intervention::ColdSnap { nights: 2 }));
-        assert_eq!(super::parse_intervention("windfall", -5, 10, None), Some(Intervention::Windfall { units: 10 }));
-        assert_eq!(super::parse_intervention("flood", -1, 1, Some(4)), None);
-        assert_eq!(super::parse_intervention("gift_wood", -1, -1, Some(4)), None);
-        assert_eq!(super::parse_intervention("rot_wood", -1, 1, None), None);
-        assert_eq!(super::parse_intervention("spoil_food", i64::MAX, 1, Some(4)), None);
-    }
-
-    #[test]
-    fn intervention_state_is_read_only_sorted_bounded_and_preserves_variant_amounts() {
-        use sim_engine::{InterventionRecord, SimResources};
-        use sim_systems::runtime::intervention::{intervention_from_kind, KINDS};
-        let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
-        assert_eq!(super::collect_intervention_state(&resources, 0), super::InterventionState::default());
-        resources.fire_blocked_until.extend([(9, 30), (2, 20), (3, 10), (4, 9)]);
-        resources.cold_snap_nights = 2;
-        resources.cold_snap_tonight = true;
-        for tick in 0..35 {
-            resources.intervention_log.push(InterventionRecord {
-                tick,
-                intervention: intervention_from_kind(KINDS[usize::try_from(tick % 7).unwrap()], 2, u32::try_from(tick + 1).unwrap()).unwrap(),
-                applied: tick,
-                soaked_wood: 0,
-            });
-        }
-        let state = super::collect_intervention_state(&resources, 10);
-        assert_eq!(state.rain_settlement_ids, [2, 9]);
-        assert_eq!(state.rain_ticks_left, [10, 20]);
-        assert_eq!((state.cold_snap_nights_left, state.cold_snap_tonight), (2, true));
-        assert_eq!(state.log_ticks, (3..35).collect::<Vec<i64>>());
-        assert_eq!(state.log_ids, (3..35).collect::<Vec<i64>>());
-        assert_eq!(state.log_settlement_ids, (3..35).map(|index| if index % 7 < 5 { 2 } else { -1 }).collect::<Vec<i32>>());
-        assert_eq!(state.log_amounts, (4..36).collect::<Vec<i64>>());
-        assert_eq!(state.log_applied, state.log_ticks);
-        for (offset, kind) in state.log_kinds.iter().enumerate() {
-            assert_eq!(*kind, KINDS[(offset + 3) % 7]);
-        }
-        assert_eq!(state, super::collect_intervention_state(&resources, 10));
-        assert_eq!(resources.intervention_log.len(), 35);
-        assert_eq!(resources.fire_blocked_until.len(), 4);
-    }
-
-    #[test]
-    fn intervention_feed_identity_distinguishes_equal_casts_and_targets() {
-        use sim_engine::{Intervention, InterventionRecord, SimResources};
-        let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
-        for settlement in [7, 42, 7] {
-            resources.intervention_log.push(InterventionRecord {
-                tick: 12,
-                intervention: Intervention::GiftFood { settlement, amount: 60 },
-                applied: 60,
-                soaked_wood: 0,
-            });
-        }
-        let state = super::collect_intervention_state(&resources, 12);
-        assert_eq!(state.log_ids, [0, 1, 2]);
-        assert_eq!(state.log_ticks, [12, 12, 12]);
-        assert_eq!(state.log_settlement_ids, [7, 42, 7]);
-        assert_eq!(state.log_applied, [60, 60, 60]);
-    }
-
-    #[test]
-    fn apply_intervention_command_reports_ok_applied_and_tick() {
-        use super::apply_intervention_command;
-        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
-        advance_engine_ticks(&mut engine, 3);
-        let none = apply_intervention_command(&mut engine, "gift_food", -1, 5);
-        assert_eq!((none.ok, none.applied, none.tick), (false, 0, 3));
-        engine.resources.settlements.insert(2, sim_core::components::Settlement::new_with_id(2, 0));
-        let gift = apply_intervention_command(&mut engine, "gift_food", -1, 5);
-        assert_eq!((gift.ok, gift.applied, gift.tick), (true, 5, 3));
-        let missing = apply_intervention_command(&mut engine, "rain", 9, 5);
-        assert_eq!((missing.ok, missing.applied), (false, 0));
-        let snap = apply_intervention_command(&mut engine, "cold_snap", -1, 1);
-        assert_eq!((snap.ok, snap.applied), (true, 1));
-        assert_eq!(engine.resources.tallies.interventions_applied, 2);
-        assert_eq!(engine.resources.intervention_log.len(), 2);
-    }
-
-    #[test]
     fn time_snapshot_handles_disabled_clock() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         engine.resources.ticks_per_day = 0;
@@ -3619,14 +3372,12 @@ mod revitalize_tooling_tests {
             urgent_wood_trips: 0,
             winter_wood_lost: 0,
             wood_retargets: 0,
-            interventions_applied: 0,
             deaths_exposure: 0,
             fissions: 0,
             fissions_cancelled: 0,
             fission_blocked_no_site: 0,
             remnant_merges: 0,
             exclusivity_moves: 0,
-            wet_burn_wood: 0,
             area_floor_wood: 0,
             winter_wood_lost_settled: 0,
             area_floor_placed: 0,

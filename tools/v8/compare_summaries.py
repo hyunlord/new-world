@@ -7,8 +7,14 @@ identity (tools/v8/identity.sh) requires zero differences AND zero one-sided
 paths. Copied from tools/revitalize/compare_summaries.py (Pass 21) with the
 `git_sha` label added to the excluded keys.
 
-usage: compare_summaries.py REFERENCE.json CANDIDATE.json
-exit 0 when every shared simulation value is identical, 1 otherwise.
+usage: compare_summaries.py REFERENCE.json CANDIDATE.json [--removed-keys FILE]
+exit 0 when every simulation value is identical and no path is one-sided, 1 otherwise.
+
+--removed-keys FILE lists keys a later commit removed on purpose (one per line,
+`#` comments; tools/v8/identity_removed_keys.txt). A reference-only path whose
+path has such a key as one of its components (the key itself, or a per-day
+statistic below it such as `days.1.<key>.max`) is dropped ONLY if its reference
+value is zero, false, null or empty; any other value is still a difference.
 """
 import json
 import sys
@@ -41,7 +47,26 @@ def compare(reference, candidate):
     return len(shared), diffs, sorted(set(ref) - set(cand)), sorted(set(cand) - set(ref))
 
 
+def removed_keys(path):
+    keys = set()
+    with open(path) as stream:
+        for line in stream:
+            key = line.split("#", 1)[0].strip()
+            if key:
+                keys.add(key)
+    return keys
+
+
+def components(path):
+    return {part.split("[", 1)[0] for part in path.split(".")}
+
+
 def main(argv):
+    removed = set()
+    if "--removed-keys" in argv:
+        i = argv.index("--removed-keys")
+        removed = removed_keys(argv[i + 1])
+        argv = argv[:i] + argv[i + 2:]
     if len(argv) != 3:
         print(__doc__.strip(), file=sys.stderr)
         return 2
@@ -50,6 +75,11 @@ def main(argv):
     with open(argv[2]) as stream:
         candidate = json.load(stream)
     shared, diffs, ref_only, cand_only = compare(reference, candidate)
+    if removed:
+        ref_flat = dict(flatten(reference))
+        allowed = [p for p in ref_only if components(p) & removed and ref_flat[p] in (0, 0.0, False, None, "", [], {})]
+        ref_only = [p for p in ref_only if p not in allowed]
+        print(f"removed-key paths dropped (reference value zero/empty): {len(allowed)}")
     print(f"shared simulation values: {shared}")
     print(f"differences: {len(diffs)}")
     for path, a, b in diffs[:40]:

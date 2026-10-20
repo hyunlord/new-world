@@ -11,9 +11,10 @@
 //! (any other Agent target). `adult_act_walking` counts the adults in a
 //! Seeking state (on their way to any target) and `adult_act_total` all
 //! adult members; `adult_act_forage + wood + build + haul` is the numerator of
-//! `adult_work_share`. `wet_burn_wood_total` and `area_floor_wood_total` are
-//! the cumulative Pass 12 tallies (rain burning wet wood, the settled-region
-//! winter-fall floor).
+//! `adult_work_share`. `area_floor_wood_total` is the cumulative Pass 12
+//! tally of the settled-region winter-fall floor. (`wet_burn_wood_total`, the
+//! wood intervention rain burned wet, was removed with the god hand in V8-0;
+//! it was 0 in every natural run.)
 //!
 //! Per-seed block ([`seed_block`]): every daily fission check that reached the
 //! hazard draw, the first day each settlement reached it, members of every
@@ -87,7 +88,6 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     }
     row.insert("adult_act_walking".into(), json!(walking));
     row.insert("adult_act_total".into(), json!(total));
-    row.insert("wet_burn_wood_total".into(), json!(r.tallies.wet_burn_wood));
     row.insert("area_floor_wood_total".into(), json!(r.tallies.area_floor_wood));
     Value::Object(row)
 }
@@ -193,7 +193,7 @@ pub(super) fn seed_block(
     let t = r.tallies;
     json!({"fission_checks": checks, "first_draw_day": first.iter().map(|(sid, day)| json!([sid, day])).collect::<Vec<_>>(),
         "settlement_winters": winters, "region_fill_bushes": w.region_fill_bushes, "region_fill_deadwood": w.region_fill_deadwood,
-        "wet_burn_wood": t.wet_burn_wood, "area_floor_wood": t.area_floor_wood, "winter_wood_lost_settled": t.winter_wood_lost_settled,
+        "area_floor_wood": t.area_floor_wood, "winter_wood_lost_settled": t.winter_wood_lost_settled,
         "winter_wood_lost": t.winter_wood_lost})
 }
 

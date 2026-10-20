@@ -13,7 +13,9 @@
 # writes to the chronicle directory (chronicle_N.json, relations_N.json) equal
 # by content except git_sha; every raw per-seed sample file (*.jsonl, which
 # holds no timing) equal line by line with the git_sha label removed
-# (raw_digest below); DETERMINISM PASS for seeds 0-3.
+# (raw_digest below); DETERMINISM PASS for seeds 0-3. Keys a commit removed
+# on purpose (tools/v8/identity_removed_keys.txt, each with its reason) are
+# dropped from the base side only where their base value is zero/empty.
 # Copied from tools/revitalize/identity_p21.sh + validate_identity_p21.sh,
 # reduced to one scene. Raw data must live outside the repository.
 set -euo pipefail
@@ -21,6 +23,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 WORKERS="${IDENTITY_WORKERS:-6}"
+REMOVED="$SCRIPT_DIR/identity_removed_keys.txt"
 SCENE=game_v26
 FLAGS=(--seeds 0..32 --days 120 --clock-samples 02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30 --sample-every 120 --workers "$WORKERS")
 
@@ -38,16 +41,28 @@ capture() {
 }
 
 # sha256 of each raw *.jsonl file's content with the git_sha label removed
-# from every row (rows re-serialised with sorted keys).
+# from every row (rows re-serialised with sorted keys). With a second
+# argument (tools/v8/identity_removed_keys.txt) the listed keys are removed
+# too, after checking that every such value is zero/false/null/empty.
 raw_digest() {
-    python3 - "$1" <<'PY'
+    python3 - "$1" "${2:-}" <<'PY'
 import hashlib, json, sys
 from pathlib import Path
+removed = set()
+if sys.argv[2]:
+    for line in Path(sys.argv[2]).read_text().splitlines():
+        key = line.split('#', 1)[0].strip()
+        if key:
+            removed.add(key)
 for path in sorted(Path(sys.argv[1]).glob('*.jsonl')):
     digest = hashlib.sha256()
     for line in path.read_text().splitlines():
         row = json.loads(line)
         row.pop('git_sha', None)
+        for key in removed & set(row):
+            if row[key] not in (0, 0.0, False, None, '', [], {}):
+                sys.exit(f'{path.name}: removed key {key} has a non-zero value {row[key]!r}')
+            row.pop(key)
         digest.update(json.dumps(row, sort_keys=True).encode() + b'\n')
     print(digest.hexdigest(), path.name)
 PY
@@ -55,7 +70,7 @@ PY
 
 compare() {
     local base="$1" cand="$2" status=0 out diffs ref_only cand_only line
-    out=$(python3 "$SCRIPT_DIR/compare_summaries.py" "$base/probe/summary.json" "$cand/probe/summary.json" 2>&1) || true
+    out=$(python3 "$SCRIPT_DIR/compare_summaries.py" "$base/probe/summary.json" "$cand/probe/summary.json" --removed-keys "$REMOVED" 2>&1) || true
     diffs=$(printf '%s\n' "$out" | awk '/^differences:/ {print $2}')
     ref_only=$(printf '%s\n' "$out" | awk '/^reference-only paths:/ {print $3}')
     cand_only=$(printf '%s\n' "$out" | awk '/^candidate-only paths:/ {print $3}')
@@ -88,8 +103,9 @@ PY
     else
         echo "chronicle: FAIL: $line"; status=1
     fi
-    if [[ -s "$base/raw_sha256.txt" ]] && cmp -s "$base/raw_sha256.txt" "$cand/raw_sha256.txt"; then
-        echo "raw samples: PASS: $(wc -l < "$cand/raw_sha256.txt" | tr -d ' ') per-seed sample files equal (git_sha removed)"
+    if raw_digest "$base/probe" "$REMOVED" > "$cand/raw_sha256_base_reduced.txt" && raw_digest "$cand/probe" "$REMOVED" > "$cand/raw_sha256_reduced.txt" \
+        && [[ -s "$cand/raw_sha256_reduced.txt" ]] && cmp -s "$cand/raw_sha256_base_reduced.txt" "$cand/raw_sha256_reduced.txt"; then
+        echo "raw samples: PASS: $(wc -l < "$cand/raw_sha256_reduced.txt" | tr -d ' ') per-seed sample files equal (git_sha and $(grep -cv '^#' "$REMOVED" | tr -d ' ') removed zero-valued keys stripped)"
     else
         echo "raw samples: FAIL (raw_sha256.txt differs or is missing)"; status=1
     fi

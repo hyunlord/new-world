@@ -21,12 +21,8 @@
 //!
 //! Pass 7: in a winter of drawn severity the hourly rate is
 //! `winter_severity_burn_per_hour[level]` of the night's winter
-//! (`firewood::winter_burn_per_hour` at the evening's tick). Two interventions
-//! act here: rain (`fire_blocked_until`) keeps a settlement's fire out without
-//! burning wood, and a cold snap flags the night (`cold_snap_tonight`, set at
-//! the first run inside the burn window while `cold_snap_nights > 0`, cleared
-//! with one night counted off at the first run outside it): the fire burns one
-//! more unit an hour and an unlit hearth leaves its members cold in any season.
+//! (`firewood::winter_burn_per_hour` at the evening's tick). (The V7 god-hand
+//! rain and cold-snap interventions acted here; V8-0 removed them.)
 //!
 //! Pass 8: the hourly rate is `firewood::night_rate`, which adds the night's
 //! drawn change (`night_burn_delta` of the evening, floor 1) when night weights
@@ -41,10 +37,8 @@
 //! Pass 11 (exposure v2, `game_v17`): the hourly damage is scaled by the
 //! resident's `Hardiness` and by its hunger (`exposure_damage`).
 //!
-//! Pass 12 (`FirewoodRule::rain_wet_burn`, `game_v18`): a raining settlement
-//! inside the burn window still withdraws the hour's wood (all it holds, if
-//! less; `Tallies::wet_burn_wood`) and its fire stays out — the wood burns
-//! wet and gives no warmth.
+//! (`FirewoodRule::rain_wet_burn` acted only on intervention rain, removed in
+//! V8-0; the rule field remains in the rules data.)
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -93,34 +87,17 @@ impl RuntimeSystem for FireSystem {
             return;
         };
         let burning = clock_in_window(resources, rule.burn_start_minute, rule.burn_end_minute);
-        // Pass 7 cold snap: flag the night from the first run inside the burn
-        // window; count it off at the first run outside it.
-        if burning && !resources.cold_snap_tonight && resources.cold_snap_nights > 0 {
-            resources.cold_snap_tonight = true;
-        } else if !burning && resources.cold_snap_tonight {
-            resources.cold_snap_tonight = false;
-            resources.cold_snap_nights = resources.cold_snap_nights.saturating_sub(1);
-        }
-        let snap = resources.cold_snap_tonight;
         // The night's season: the current season, or (Pass 6) the evening's.
         let season = night_season(resources, &rule);
         // Pass 7: the night's rate, the severity of its winter included;
-        // Pass 8: the night's drawn change too (`night_rate`, cold snap included).
+        // Pass 8: the night's drawn change too (`night_rate`).
         let per_hour = night_rate(resources, &rule, resources.current_tick);
         let now = resources.current_tick;
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         let mut fires = BTreeMap::new();
         for sid in &ids {
-            // Pass 7 rain: the fire stays out and burns nothing.
-            let raining = resources.fire_blocked_until.get(sid).is_some_and(|until| now < *until);
-            // Pass 12: under `rain_wet_burn` the rain burns the hour's wood wet.
-            if burning && raining && rule.rain_wet_burn {
-                let wet = resources.settlements.get_mut(sid).map_or(0, |settlement| settlement.withdraw(ResourceKind::Wood, per_hour));
-                resources.tallies.wet_burn_wood += u64::from(wet);
-            }
             let lit = burning
-                && !raining
                 && resources
                     .settlements
                     .get_mut(sid)
@@ -129,7 +106,7 @@ impl RuntimeSystem for FireSystem {
         }
         resources.fires = fires;
 
-        let cold_night = ((resources.rules.seasons.is_some() && season == WINTER) || snap)
+        let cold_night = resources.rules.seasons.is_some() && season == WINTER
             && clock_in_window(resources, rule.cold_start_minute, rule.cold_end_minute);
         let mut cold: BTreeSet<AgentId> = BTreeSet::new();
         if cold_night {
