@@ -33,3 +33,5 @@ KST plus recorded pauses (DECISIONS L0.2).
 | 5 | 08:17 | 08:19 | every run's small files fetched (`runs/`), `judge6.py`: largest N 2,000; reading "learnable from observables" (second clause) |
 | 7 (review 1) | 08:25 | 08:41 | review round 1 (fresh subagent, read-only, HEAD `008c8f90`): no BLOCKING, 2 MAJOR, 7 MINOR, 6 NOTE; independent recomputation of C1 and the closure agrees; responses 08:42–09:00 (DECISIONS L7.1–L7.3) |
 | 7 (pre-gate) | 08:26 | 08:31 | preliminary gate on `008c8f90`: Mac 243 OK (29 skipped), DGX 243 OK (0 skipped) |
+| 7 (review 2) | 08:44 | 08:54 | review round 2 (fresh subagent, read-only, HEAD `8532576a`): no BLOCKING, 1 MAJOR, 3 MINOR, 5 NOTE; judge and paper reproduced byte for byte |
+| 7 (post hoc) | 08:55 | 09:18 | seeds 3–9 of `mlp_obs` / `seq_obs` at every N (56 runs, ≤ 40 s each in the queue) and their v2 test evaluations (DECISIONS L7.4) |

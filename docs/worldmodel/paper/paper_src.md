@@ -404,13 +404,13 @@ are training-free or trained on v2 alone, so both columns repeat their value).*
 **The new worlds are consistent with v2's population.** Across {{d6:ks_summary/tests#0}} two-sample Kolmogorov–Smirnov comparisons of the
 true effects per act, outcome and horizon (and of the act rows and split shifts) between the {{d6:manifest/worlds#0}}
 v2x worlds and v2's 400 train worlds, the largest statistic is {{d6:ks_summary/max_D#3}} and the smallest p-value
-{{d6:ks_summary/min_p#3}}: no test rejects, and at these sample sizes a difference of about D = 0.08 would be
-detectable. The same recorder and design generated both sets, so the learning curve varies only the number of worlds.
+{{d6:ks_summary/min_p#3}}: no test rejects (at these sample sizes the test rejects D ≳ 0.08 at α = 0.05). The same recorder and design generated both sets, so the learning curve varies only the number of worlds.
 
 **Nonlinearity helps (C1–C3).** At 2,000 worlds the observable model chosen on validation (`{{j6:rules/C1/chosen#str}}`)
 beats the observable ridge at one week ({{j6:rules/C1/verdict/model#3}} vs {{j6:rules/C1/verdict/baseline#3}},
 {{j6:rules/C1/verdict/ci_diff#ci3}}, **{{j6:rules/C1/verdict/verdict#str}}**: the interval excludes zero but the ratio
-{{j6:rules/C1/verdict/ratio#3}} misses the 0.8 bar) and at one month (the model chosen at that lag, `{{j6:rules/C2/chosen#str}}`: {{j6:rules/C2/verdict/model#3}} vs
+{{j6:rules/C1/verdict/ratio#3}} misses the 0.8 bar) and at one month (the model chosen at that lag on the seed-averaged validation predictions, `{{j6:rules/C2/chosen#str}}` — by a
+margin of under 0.001, and the other model is KEEP as well: {{j6:rules/C2/verdict/model#3}} vs
 {{j6:rules/C2/verdict/baseline#3}}, **{{j6:rules/C2/verdict/verdict#str}}**; the ridge is worse than `zero` there, the
 chosen model slightly better). With the hidden state the gap to the ridge is larger (C3, diagnostic: one week
 {{j6:rules/C3/7d/model#3}} vs {{j6:rules/C3/7d/baseline#3}}, **{{j6:rules/C3/7d/verdict#str}}**; one month
@@ -454,12 +454,16 @@ worlds we fit only a log-linear slope and do not extrapolate it.
 **How firm is the decisive interval? (post hoc).** The pre-registered intervals resample test worlds only; they do not
 include training-seed variation. The reading rests on clause 2, i.e. on the slope of `mlp_obs`, whose three seeds give
 {{j6:posthoc/slopes/mlp_obs|7d/per_seed/0#4s}}, {{j6:posthoc/slopes/mlp_obs|7d/per_seed/1#4s}} and
-{{j6:posthoc/slopes/mlp_obs|7d/per_seed/2#4s}} per doubling: without seed 0 the slope is
-{{j6:posthoc/slopes/mlp_obs|7d/leave_one_seed_out/0#ci4}}, an interval that touches zero. A bootstrap over test worlds
-and training seeds keeps it below zero ({{j6:posthoc/slopes/mlp_obs|7d/world_and_seed_bootstrap#ci4}}), and the GRU,
-which also has a closure above 0.35 ({{j6:curves/seq_obs/2000/7d/closure#ci2}}), meets clause 2 whichever seed is
-dropped (worlds and seeds: {{j6:posthoc/slopes/seq_obs|7d/world_and_seed_bootstrap#ci4}}). The reading therefore stands,
-with a narrow margin on the size of the data effect.
+{{j6:posthoc/slopes/mlp_obs|7d/per_seed/2#4s}} per doubling. Without seed 0 the slope is
+{{j6:posthoc/slopes/mlp_obs|7d/leave_one_seed_out/0#ci4}}, an interval that contains zero, and a normal interval with both
+variance parts (test worlds, and the unbiased between-seed variance of three seeds) is
+{{j6:posthoc/slopes/mlp_obs|7d/world_plus_seed_normal#ci4}}: at three seeds, the decisive clause is not robust to
+training-seed variation. We therefore trained seven more seeds of `mlp_obs` and `seq_obs` at every N after the review
+(post hoc; the rules keep seeds 0–2). With ten seeds the `mlp_obs` slope is
+{{j6:posthoc/seeds10/mlp_obs|7d/slope_world_plus_seed_normal#ci4}} with both variance parts, and its closure at 2,000
+worlds {{j6:posthoc/seeds10/mlp_obs|7d/closure_largest_n#ci3}}: the conditions of clause 2 hold at ten seeds. The GRU's
+ten-seed slope is smaller ({{j6:posthoc/seeds10/seq_obs|7d/slope_world_plus_seed_normal#ci4}}). The data effect is real
+for the C1 model but small, and three seeds were too few to show it firmly.
 
 **Against the methods of Section 5.1 (post hoc).** At one week `mlp_obs` at 2,000 worlds
 ({{j6:curves/mlp_obs/2000/7d/value#3}}) is below every observable method of Table 1 on v2 — `an5_arm`
@@ -468,7 +472,7 @@ with a narrow margin on the size of the data effect.
 v2's own training worlds ({{j6:curves/mlp_obs/400/7d/value#3}}; Δ vs `an5_arm`
 {{j6:posthoc/versus/mlp_obs_n400 − an5_arm|7d/ci_diff#ci3}}, vs `wm3_full`
 {{j6:posthoc/versus/mlp_obs_n400 − wm3_full|7d/ci_diff#ci3}}): the earlier models were not held back by the amount of data
-alone. On the obs2 test (a v2→obs2 transfer, report only) the same models do not beat `zero` (`mlp_obs`
+alone. On the obs2 test (a v2→obs2 transfer, report only) the same models are worse than `zero` (`mlp_obs`
 {{j6:obs2/cell_averages/mlp_obs/7d#3}} vs {{j6:obs2/cell_averages/zero/7d#3}} at one week,
 {{j6:obs2/models/mlp_obs/7d/vs_zero/ci_diff#ci3}}) but transfer far better than the ridge
 ({{j6:obs2/cell_averages/ridge_obs (WM-5)/7d#3}}).
@@ -586,8 +590,9 @@ learning-curve models); M1b-obs2 stopped at its 8,000-step cap without convergin
 training). The learning curve has four points on one design (v2's arms and act times), one feature set, one small
 architecture grid chosen at 400 worlds and frozen, and stops at 2,000 worlds; its models are trained on true effects of
 other worlds, which only a simulator provides; the slope is a fit over 400–2,000 worlds, not a forecast; the
-pre-registered closure and slope intervals resample test worlds only, and with one of `mlp_obs`'s three seeds left out its
-slope interval touches zero (post hoc, Section 5.4); the obs2 transfer of these models is reported, not judged. Claims are limited to
+pre-registered closure and slope intervals resample test worlds only; with three seeds the decisive slope interval is not
+robust to seed variation, and only seven further seeds, trained post hoc, show the slope condition with both variance
+parts (Section 5.4); the obs2 transfer of these models is reported, not judged. Claims are limited to
 the pre-registered rules; comparisons labelled post hoc are descriptive.
 
 **Broader impact.** The benchmark is built on a toy simulation of a village and makes no claim about real societies or
@@ -737,9 +742,9 @@ project repository; the episode arrays live outside version control (several GB 
 All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took {{j5:compute/recording_total#0}} s of wall time at four or eight recorder workers (round 0 {{j5:compute/recording/r0#0}} s; rounds 1–5 {{j5:compute/recording/round1_record#0}}, {{j5:compute/recording/round2_record#0}}, {{j5:compute/recording/round3_record#0}}, {{j5:compute/recording/round4_record#0}}, {{j5:compute/recording/round5_record#0}} s; val and test families {{j5:compute/recording/fam_val_record#0}} and {{j5:compute/recording/fam_test_record#0}} s). The trainings of this study took {{j5:compute/training_total_hours#1}} GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs. The learning curve (Section 5.4):
 recording v2x took {{j6:compute/recording_total#0}} s of wall time ({{j6:compute/probe_total#0}} s for the
 determinism-checked timeline in 16 chunks, {{j6:compute/families#0}} s for the families at eight recorder calls in
-parallel); its {{j6:compute/training_runs#0}} trainings (including the grid and the two reproductions) took
+parallel); its {{j6:compute/training_runs#0}} trainings (including the grid, the two reproductions and the post hoc seeds 3–9) took
 {{j6:compute/training_total#0}} s of in-process time in total ({{j6:compute/training_wall_total#0}} s of queue wall time,
-start-up included), and its {{j6:compute/evaluations#0}} test evaluations
+start-up included), and its {{j6:compute/evaluations#0}} v2 test evaluations
 {{j6:compute/evaluation_total#0}} s.
 
 ## Appendix F. All pre-registered verdicts, training reached (R4) and rounding alone (D2)

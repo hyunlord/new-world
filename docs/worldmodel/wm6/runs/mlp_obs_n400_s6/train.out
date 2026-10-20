@@ -1,0 +1,1 @@
+mlp_obs n400 s6: stop patience best epoch 40 val 0.4625 2s

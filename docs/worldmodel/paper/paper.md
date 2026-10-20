@@ -404,13 +404,13 @@ are training-free or trained on v2 alone, so both columns repeat their value).*
 **The new worlds are consistent with v2's population.** Across 40 two-sample Kolmogorov–Smirnov comparisons of the
 true effects per act, outcome and horizon (and of the act rows and split shifts) between the 1,600
 v2x worlds and v2's 400 train worlds, the largest statistic is 0.078 and the smallest p-value
-0.066: no test rejects, and at these sample sizes a difference of about D = 0.08 would be
-detectable. The same recorder and design generated both sets, so the learning curve varies only the number of worlds.
+0.066: no test rejects (at these sample sizes the test rejects D ≳ 0.08 at α = 0.05). The same recorder and design generated both sets, so the learning curve varies only the number of worlds.
 
 **Nonlinearity helps (C1–C3).** At 2,000 worlds the observable model chosen on validation (`mlp_obs`)
 beats the observable ridge at one week (0.422 vs 0.470,
 −0.049 [−0.078, −0.019], **WEAK**: the interval excludes zero but the ratio
-0.896 misses the 0.8 bar) and at one month (the model chosen at that lag, `seq_obs`: 0.472 vs
+0.896 misses the 0.8 bar) and at one month (the model chosen at that lag on the seed-averaged validation predictions, `seq_obs` — by a
+margin of under 0.001, and the other model is KEEP as well: 0.472 vs
 0.594, **KEEP**; the ridge is worse than `zero` there, the
 chosen model slightly better). With the hidden state the gap to the ridge is larger (C3, diagnostic: one week
 0.307 vs 0.427, **KEEP**; one month
@@ -454,12 +454,16 @@ worlds we fit only a log-linear slope and do not extrapolate it.
 **How firm is the decisive interval? (post hoc).** The pre-registered intervals resample test worlds only; they do not
 include training-seed variation. The reading rests on clause 2, i.e. on the slope of `mlp_obs`, whose three seeds give
 −0.0158, −0.0023 and
-−0.0058 per doubling: without seed 0 the slope is
-−0.0040 [−0.0078, +0.0001], an interval that touches zero. A bootstrap over test worlds
-and training seeds keeps it below zero (−0.0080 [−0.0159, −0.0012]), and the GRU,
-which also has a closure above 0.35 (+0.46 [+0.38, +0.53]), meets clause 2 whichever seed is
-dropped (worlds and seeds: −0.0056 [−0.0103, −0.0010]). The reading therefore stands,
-with a narrow margin on the size of the data effect.
+−0.0058 per doubling. Without seed 0 the slope is
+−0.0040 [−0.0078, +0.0001], an interval that contains zero, and a normal interval with both
+variance parts (test worlds, and the unbiased between-seed variance of three seeds) is
+−0.0080 [−0.0170, +0.0011]: at three seeds, the decisive clause is not robust to
+training-seed variation. We therefore trained seven more seeds of `mlp_obs` and `seq_obs` at every N after the review
+(post hoc; the rules keep seeds 0–2). With ten seeds the `mlp_obs` slope is
+−0.0083 [−0.0133, −0.0034] with both variance parts, and its closure at 2,000
+worlds +0.452 [+0.380, +0.522]: the conditions of clause 2 hold at ten seeds. The GRU's
+ten-seed slope is smaller (−0.0042 [−0.0091, +0.0006]). The data effect is real
+for the C1 model but small, and three seeds were too few to show it firmly.
 
 **Against the methods of Section 5.1 (post hoc).** At one week `mlp_obs` at 2,000 worlds
 (0.422) is below every observable method of Table 1 on v2 — `an5_arm`
@@ -468,7 +472,7 @@ with a narrow margin on the size of the data effect.
 v2's own training worlds (0.438; Δ vs `an5_arm`
 −0.047 [−0.081, −0.012], vs `wm3_full`
 −0.058 [−0.112, −0.018]): the earlier models were not held back by the amount of data
-alone. On the obs2 test (a v2→obs2 transfer, report only) the same models do not beat `zero` (`mlp_obs`
+alone. On the obs2 test (a v2→obs2 transfer, report only) the same models are worse than `zero` (`mlp_obs`
 0.226 vs 0.217 at one week,
 +0.009 [+0.001, +0.016]) but transfer far better than the ridge
 (0.537).
@@ -586,8 +590,9 @@ learning-curve models); M1b-obs2 stopped at its 8,000-step cap without convergin
 training). The learning curve has four points on one design (v2's arms and act times), one feature set, one small
 architecture grid chosen at 400 worlds and frozen, and stops at 2,000 worlds; its models are trained on true effects of
 other worlds, which only a simulator provides; the slope is a fit over 400–2,000 worlds, not a forecast; the
-pre-registered closure and slope intervals resample test worlds only, and with one of `mlp_obs`'s three seeds left out its
-slope interval touches zero (post hoc, Section 5.4); the obs2 transfer of these models is reported, not judged. Claims are limited to
+pre-registered closure and slope intervals resample test worlds only; with three seeds the decisive slope interval is not
+robust to seed variation, and only seven further seeds, trained post hoc, show the slope condition with both variance
+parts (Section 5.4); the obs2 transfer of these models is reported, not judged. Claims are limited to
 the pre-registered rules; comparisons labelled post hoc are descriptive.
 
 **Broader impact.** The benchmark is built on a toy simulation of a village and makes no claim about real societies or
@@ -676,7 +681,7 @@ for the diagnostic), its last state concatenated with the features and the act o
 GBM: one LightGBM regressor per cell, L1 objective, 31 leaves, learning rate 0.05, at least 20 rows per leaf, up to 500
 rounds with early stopping after 50 rounds without validation improvement. Ridge: WM-5's per-cell λ ∈ {0.01, …, 1,000}
 on validation. Seeds 0–2 for the neural models. Every neural run stopped by patience
-(52–159 epochs, 56 runs);
+(44–176 epochs, 112 runs);
 none reached the time cap (longest run 27 s). GBM stopped early in every cell but one
 (`gbm_priv` at 1,600 worlds, the spoil's 30-day food store, reached the 500-round cap).
 
@@ -737,10 +742,10 @@ project repository; the episode arrays live outside version control (several GB 
 All recording, training and evaluation ran on one shared NVIDIA GB10 machine (DGX Spark, 20 CPU cores, 119 GiB unified memory), with other users' jobs present throughout (load averages 2–36; one other user's process held up to 29 GiB of GPU memory). Recording obs2 took 40,085 s of wall time at four or eight recorder workers (round 0 3,042 s; rounds 1–5 6,140, 4,619, 2,637, 954, 144 s; val and test families 6,613 and 15,936 s). The trainings of this study took 22.3 GPU-hours of wall time (one at a time; per run in Appendix B); the evaluations add minutes per run. The earlier studies' compute is in their run logs. The learning curve (Section 5.4):
 recording v2x took 25,733 s of wall time (11,823 s for the
 determinism-checked timeline in 16 chunks, 13,910 s for the families at eight recorder calls in
-parallel); its 74 trainings (including the grid and the two reproductions) took
-515 s of in-process time in total (1,680 s of queue wall time,
-start-up included), and its 66 test evaluations
-76 s.
+parallel); its 130 trainings (including the grid, the two reproductions and the post hoc seeds 3–9) took
+990 s of in-process time in total (2,960 s of queue wall time,
+start-up included), and its 122 v2 test evaluations
+154 s.
 
 ## Appendix F. All pre-registered verdicts, training reached (R4) and rounding alone (D2)
 

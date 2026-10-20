@@ -85,7 +85,8 @@ between the new worlds' true effects and WM-2's 400 train worlds' (both replicat
 (WM-2: 489 / 560 = 87.3 %), so the `sp*L` arms are present in 1,388 worlds. The integer outcomes (alive, deaths,
 settlements) have many ties, which makes the KS p-values conservative; their means and spreads agree as well (table).
 The cast rows of the `E` arms are the same row (490) in both sets; the `sp*L` cast rows (T_low) agree (D 0.021).
-No KS test rejects; at these sizes a difference of about D = 0.08 would be detectable at α = 0.05, so the test shows
+No KS test rejects; at these sizes the test rejects D ≳ 0.08 at α = 0.05 (a true D of that size is detected about half the
+time), so it shows
 consistency, not identity. With the same recorder and design generating both sets, adding the new worlds changes only the
 number of training worlds.
 

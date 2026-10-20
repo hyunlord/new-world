@@ -355,9 +355,11 @@ def runs_info(runs: Path, prereg_time: int | None) -> dict:
 
 
 def posthoc(sc: Scorer, nmax: int | None, seed: int = 1) -> dict:
-    """Post hoc (REVIEW.md round 1, MAJOR 1 / 2; not pre-registered): the C4 slopes per seed, leaving one seed out, and
-    with a bootstrap over test worlds and training seeds (per draw: the world draw of the main bootstrap and, per N,
-    three seeds drawn with replacement, `default_rng(1)`); and the learning-curve models against the other methods."""
+    """Post hoc (REVIEW.md rounds 1 and 2; not pre-registered): the C4 slopes per seed, leaving one seed out, with a
+    bootstrap over test worlds and training seeds (per draw: the world draw of the main bootstrap and, per N, three seeds
+    drawn with replacement, `default_rng(1)` — which shrinks the seed variance by 2/3, round 2 MAJOR 1) and with a normal
+    interval of the test-world variance plus the unbiased between-seed variance; seeds 0–9 of the observable models
+    (`seeds10`); and the learning-curve models against the other methods."""
     out = {"note": "post hoc (REVIEW.md round 1); not a pre-registered rule"}
     if nmax is None:
         return out
@@ -387,8 +389,11 @@ def posthoc(sc: Scorer, nmax: int | None, seed: int = 1) -> dict:
             n_idx = np.arange(len(NS))[None, :, None]
             boot = stack[pick, b_idx, n_idx].mean(axis=2)                           # [B, 4]
             lo, hi = pct(boot @ xc / (xc @ xc))
-            node["world_and_seed_bootstrap"] = {"point": fit(np.mean([per[s] for s in per], axis=0)), "lo": lo, "hi": hi}
+            node["world_and_seed_bootstrap"] = {"point": fit(np.mean([per[s] for s in per], axis=0)), "lo": lo, "hi": hi,
+                                                "note": "resampling 3 seeds with replacement shrinks the seed variance by 2/3"}
+            node["world_plus_seed_normal"] = world_plus_seed(per, draws, xc)
             out["slopes"][f"{m}|{lag}"] = node
+    out["seeds10"] = seeds10(sc, nmax)
     out["versus"] = {}
     pairs = [("mlp_obs", 400, "an5_arm"), ("mlp_obs", 400, "wm3_full"), ("mlp_obs", nmax, "an5_arm"),
              ("mlp_obs", nmax, "wm3_full")]
@@ -403,6 +408,58 @@ def posthoc(sc: Scorer, nmax: int | None, seed: int = 1) -> dict:
         for lag in LAGS:
             r = ef.compare([sc.model_errs("mlp_obs", 400)[0]], repro, sc.cells[lag], sc.worlds)
             out["versus"][f"mlp_obs_n400 − ridge_obs (WM-5)|{lag}"] = {"a": r["model"], "b": r["baseline"], "ci_diff": r["ci_diff"]}
+    return out
+
+
+def world_plus_seed(per: dict, draws: dict, xc: np.ndarray) -> dict:
+    """Normal interval of the seed-averaged slope with both variance parts: the test-world bootstrap variance of the
+    seed-averaged slope plus the unbiased between-seed variance of the per-seed slopes divided by the number of seeds
+    (REVIEW.md round 2, MAJOR 1)."""
+    slopes = np.array([float(np.asarray(v) @ xc / (xc @ xc)) for v in per.values()])
+    avg_draw = np.mean([draws[s] for s in per], axis=0) @ xc / (xc @ xc)
+    var_w = float(np.var(avg_draw, ddof=1))
+    var_s = float(np.var(slopes, ddof=1) / len(slopes))
+    point = float(slopes.mean())
+    se = float(np.sqrt(var_w + var_s))
+    return {"point": point, "lo": point - 1.959964 * se, "hi": point + 1.959964 * se, "se_worlds": float(np.sqrt(var_w)),
+            "se_seeds": float(np.sqrt(var_s)), "seeds": len(slopes)}
+
+
+SEEDS10 = tuple(range(10))
+
+
+def seeds10(sc: Scorer, nmax: int) -> dict:
+    """Post hoc (REVIEW.md round 2): `mlp_obs` / `seq_obs` with seeds 0–9 at every N (seeds 3–9 trained after the
+    review; the pre-registered rules use seeds 0–2): per-seed slopes, the slope of the seed-averaged model with its
+    test-world bootstrap CI and the world-plus-seed normal interval, and the closure at the largest N."""
+    out = {"note": "post hoc (REVIEW.md round 2); seeds 3-9 trained after the review; not a pre-registered rule"}
+    x = np.log2(NS)
+    xc = x - x.mean()
+    z = {lag: sc.stat(sc.ref["zero"], lag) for lag in LAGS}
+    f = {lag: sc.stat(sc.ref["floor"], lag) for lag in LAGS}
+    zd = {lag: sc.stat(sc.ref["zero"], lag, sc.counts) for lag in LAGS}
+    fd = {lag: sc.stat(sc.ref["floor"], lag, sc.counts) for lag in LAGS}
+    for m in ("mlp_obs", "seq_obs"):
+        seeds = [s for s in SEEDS10 if all(f"{m}_n{n}_s{s}" in sc.errs for n in NS)]
+        if len(seeds) <= len(SEEDS):
+            continue
+        for lag in LAGS:
+            per = {s: [sc.stat(sc.errs[f"{m}_n{n}_s{s}"], lag) for n in NS] for s in seeds}
+            draws = {s: np.stack([sc.stat(sc.errs[f"{m}_n{n}_s{s}"], lag, sc.counts) for n in NS], axis=1) for s in seeds}
+            avg = np.mean([per[s] for s in seeds], axis=0)
+            avg_draw = np.mean([draws[s] for s in seeds], axis=0) @ xc / (xc @ xc)
+            lo, hi = pct(avg_draw)
+            node = {"seeds": seeds, "values": avg.tolist(),
+                    "per_seed": {str(s): float(np.asarray(per[s]) @ xc / (xc @ xc)) for s in seeds},
+                    "slope_world_bootstrap": {"point": float(avg @ xc / (xc @ xc)), "lo": lo, "hi": hi},
+                    "slope_world_plus_seed_normal": world_plus_seed(per, draws, xc)}
+            md = np.mean([draws[s][:, NS.index(nmax)] for s in seeds], axis=0)
+            with np.errstate(invalid="ignore", divide="ignore"):
+                cd = (zd[lag] - md) / (zd[lag] - fd[lag])
+            clo, chi = pct(cd)
+            v = float(avg[NS.index(nmax)])
+            node["closure_largest_n"] = {"point": (z[lag] - v) / (z[lag] - f[lag]), "lo": clo, "hi": chi}
+            out[f"{m}|{lag}"] = node
     return out
 
 
@@ -519,15 +576,30 @@ def markdown(j: dict) -> str:
     if ph.get("slopes"):
         L += ["## Post hoc (REVIEW.md round 1; not pre-registered): slope robustness and comparisons", "",
               "Slopes per doubling: per seed; leaving one seed out (test-world bootstrap CI); a bootstrap over test worlds "
-              "and training seeds.", "", "| model | lag | per seed (s0, s1, s2) | without s0 | without s1 | without s2 | "
-              "worlds + seeds [95 % CI] |", "|---|---|---|---|---|---|---|"]
+              "and training seeds (3 seeds resampled with replacement: shrinks the seed variance by 2/3); a normal interval "
+              "with the test-world variance plus the unbiased between-seed variance / 3.", "",
+              "| model | lag | per seed (s0, s1, s2) | without s0 | without s1 | without s2 | worlds + seeds bootstrap | "
+              "worlds + seeds normal (unbiased) |", "|---|---|---|---|---|---|---|---|"]
         for k, v in ph["slopes"].items():
             m, lag = k.split("|")
             lo = v["leave_one_seed_out"]
             ws = v["world_and_seed_bootstrap"]
             L.append(f"| `{m}` | {lag} | " + ", ".join(f"{x:+.4f}" for x in v["per_seed"].values()) + " | "
                      + " | ".join(f"{lo[s]['point']:+.4f} [{lo[s]['lo']:+.4f}, {lo[s]['hi']:+.4f}]" for s in ("0", "1", "2"))
-                     + f" | {ws['point']:+.4f} [{ws['lo']:+.4f}, {ws['hi']:+.4f}] |")
+                     + f" | {ws['point']:+.4f} [{ws['lo']:+.4f}, {ws['hi']:+.4f}] | "
+                     + f"{v['world_plus_seed_normal']['point']:+.4f} [{v['world_plus_seed_normal']['lo']:+.4f}, "
+                     + f"{v['world_plus_seed_normal']['hi']:+.4f}] |")
+        s10 = {k: v for k, v in (ph.get("seeds10") or {}).items() if k != "note"}
+        if s10:
+            L += ["", "Post hoc, seeds 0–9 (seeds 3–9 trained after review round 2; not pre-registered):", "",
+                  "| model | lag | 12-cell average per N (10 seeds) | slope, world bootstrap | slope, worlds + seeds normal | "
+                  "closure at the largest N |", "|---|---|---|---|---|---|"]
+            for k, v in s10.items():
+                m, lag = k.split("|")
+                a, b, cl = v["slope_world_bootstrap"], v["slope_world_plus_seed_normal"], v["closure_largest_n"]
+                L.append(f"| `{m}` | {lag} | " + ", ".join(fmt(x) for x in v["values"]) + f" | {a['point']:+.4f} [{a['lo']:+.4f}, "
+                         f"{a['hi']:+.4f}] | {b['point']:+.4f} [{b['lo']:+.4f}, {b['hi']:+.4f}] | {cl['point']:.3f} "
+                         f"[{cl['lo']:.3f}, {cl['hi']:.3f}] |")
         L += ["", "| comparison | lag | a | b | Δ [95 % CI] |", "|---|---|---|---|---|"]
         for k, v in ph["versus"].items():
             pair, lag = k.split("|")

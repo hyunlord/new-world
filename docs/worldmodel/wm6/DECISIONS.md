@@ -119,8 +119,8 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 - **L6.2 WM5.md pointer.** GOAL.md 11.1's line is inserted directly under WM5.md's title (as WM-5 did for WM4.md).
 - **L6.3 The paper's wording follows the reading's clause.** The reading is "learnable from observables" through its
   second clause (closure 0.449 < 0.5, slope CI < 0); the abstract, introduction and the new conclusion say "part of the
-  room is learnable from the observable state" and give, beside it, the closure, the slow slope (with the flat last
-  step), the one-month closure and the hidden-state share. The paper had no conclusion section; one was added
+  room is learnable from the observable state" and give, beside it, the closure, the slow slope (with its uninformative
+  last step), the one-month closure and the hidden-state share. The paper had no conclusion section; one was added
   (Section 7; limitations became Section 8). Section headings carry no internal study names.
 
 ## Part 7
@@ -145,3 +145,19 @@ Autonomous decisions of the WM-6 run (GOAL.md 0.3.1), with reasons. Ids `L<part>
 - **L7.3 GBM run configs** lack `n_train_worlds` and `train_reps` (GOAL.md 4.4; review round 1, N11). They were not
   re-run for this: their `n_train_cases` (1,145 / 2,284 / 4,579 / 5,733) equal the counts of replicate-0 W3 cases of the
   nested worlds (checked by the reviewer against the manifest), and they read the same `load_sets` as the neural runs.
+- **L7.4 Review round 2 responses** (REVIEW.md round 2; no BLOCKING, 1 MAJOR, 3 MINOR, 5 NOTE).
+  - M1 (the round-1 world + seed bootstrap resamples 3 seeds with replacement and so shrinks the seed variance by 2/3;
+    with an unbiased seed variance the `mlp_obs` slope interval includes zero, −0.0080 [−0.0170, +0.0011]): accepted.
+    The judge adds that normal interval (`world_plus_seed_normal`) for every slope, and the robustness text in the paper,
+    WM6.md, REPORT.md and READINESS.md now says that at three seeds the decisive clause is not robust to seed variation.
+  - **Post hoc seed extension.** Each run takes ≤ 27 s, so seven more seeds (3–9) of `mlp_obs` and `seq_obs` were
+    trained at every N (56 runs, queue lines from `8532576a`, 08:55–09:17) and evaluated (`finals6.sh`, 09:18); the
+    pre-registered rules and the reading keep seeds 0–2 (`judge6.SEEDS`), and the ten-seed numbers are a separate post
+    hoc block (`posthoc.seeds10`). Result: `mlp_obs` ten-seed slope −0.0083 [−0.0133, −0.0034] with both variance
+    parts, closure at 2,000 worlds 0.452 [0.38, 0.52] — the clause-2 conditions hold at ten seeds; `seq_obs` −0.0042
+    [−0.0091, +0.0006]. This extension was not seen by a review round (two rounds maximum, GOAL.md 0.3.3); it changes
+    no pre-registered number.
+  - m2 wording carried into WM6.md, REPORT.md and L6.3; m3 traced-number count updated; m4 REPORT.md placeholders filled
+    (Part 7); N5 "contains zero", `seq_obs` "not the C1 model"; N6 the paper states the C2 choice's margin and the other
+    choice's KEEP; N7 obs2 "worse than `zero`"; N8 "the test rejects D ≳ 0.08 at α = 0.05"; N9 slope stated in
+    absolute and relative terms.

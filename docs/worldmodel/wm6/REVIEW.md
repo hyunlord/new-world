@@ -189,3 +189,144 @@ The WM-6 run is sound. The v2x population check is computed correctly, and the n
 | N13 commit string vs binary source | datasheet and DATASET_V2X.md state both (`26b9af1f` merge of `f5373ab2`; verified on the DGX) |
 | N14 unused reference | `hestness2017scaling` cited in §5.4 |
 | N15 mechanism stated as fact | labelled post hoc, untested |
+
+
+## Round 2 — fresh `general-purpose` subagent, read-only, HEAD `8532576a` (2026-10-20 08:44–08:54 KST)
+
+There is no BLOCKING finding. There is one MAJOR finding: the post hoc check added in response to round 1 overstates how robust the decisive slope interval is. The rest are leftover wording fixes, stale counts and report placeholders.
+
+### What I re-checked and confirmed
+
+- **Reproduction.** `judge6.py --out /private/tmp/claude-501/wm6r2/judge` produces `judge.json` and `judge.md` byte-identical to the committed files (`cmp`). `figures.py check` prints OK, and the working tree is unchanged.
+- **C1/C2 model choice.** `average_predictions` with `rules()` (`judge6.py:172-223`) now follows METRICS §3 to the letter:
+  - The choice is made on seed-averaged val predictions; ties go to `mlp_obs`.
+  - The verdict uses seed-averaged errors, which is what METRICS §1 says.
+  - `shift = 0.0` is harmless because the shift cells are not in `sc.cells`.
+  - My own MAE code reproduces the val values: 7 d `mlp_obs` 0.41208 vs `seq_obs` 0.41460; 30 d `mlp_obs` 0.48808 vs `seq_obs` 0.48746. So C1 is `mlp_obs` and C2 is `seq_obs`.
+  - The reported alternative for C2 (`mlp_obs`, −0.122 [−0.154, −0.087]) is correctly KEEP: seeds 0.473, 0.473, 0.471, all below the threshold 0.4756.
+- **`posthoc` block, recomputed independently:**
+  - Per-seed slopes: −0.01582, −0.00228, −0.00578.
+  - Without seed 0: −0.00403 [−0.00783, +0.00011].
+  - Bootstrap over worlds and seeds: [−0.01595, −0.00122], identical when drawn with `default_rng(1)`, shape (B, 4, S).
+  - The indexing `stack[pick, b_idx, n_idx]` is correct, and the world draw is shared across seeds and N.
+- **The reading** (`judge6.py:244-264`) still applies METRICS §4 in order, and the label is unchanged.
+
+### Findings
+
+#### MAJOR 1 — the bootstrap over worlds and seeds understates seed variance; with an unbiased estimate the `mlp_obs` slope interval includes zero
+
+**Where:**
+- `paper_src.md:458-462`: "A bootstrap over test worlds and training seeds keeps it below zero … The reading therefore stands"
+- `WM6.md:23-25`
+- `REPORT.md:75-76`: "세계+시드 부트스트랩은 … 0 미만이다"
+- `READINESS.md:16`
+- `judge6.py:357-390`
+
+**Evidence:**
+- Resampling 3 seeds with replacement shrinks the seed variance by (S−1)/S = 2/3.
+- Splitting the slope's variance into its parts (my scratch script):
+
+  | source | SE |
+  |---|---|
+  | worlds only | 0.0022 |
+  | seeds, unbiased (from the per-seed slopes) | 0.0041 |
+  | total | 0.0046 |
+
+- The total gives −0.0080 ± 0.0090, upper bound **+0.0011**. Using an unbiased per-N seed variance instead (the scheme the code uses) still gives an upper bound of about +0.0002.
+- The variance the bootstrap actually implies gives an upper bound of −0.0002, and the percentile interval gives −0.0012. The exclusion of zero therefore comes from the small-sample shrinkage, not from the data.
+- The upper bound also moves with the scheme:
+  - `effects6.py:422` seeds `torch.manual_seed(seed)`, so seed s starts from the same initial weights at every N.
+  - Resampling seeds paired across N gives upper bounds of −0.0002 to −0.0008 (RNG seeds 1–3), against −0.0010 to −0.0013 for the independent scheme.
+- `seq_obs` holds up under every scheme: per-seed slopes −0.0045, −0.0062, −0.0059; unbiased total SE ≈ 0.0021; upper ≈ −0.0015. But `seq_obs` is not the C1 model.
+
+**Fix:**
+- In §5.4, WM6.md, REPORT.md (both 기능 설명 and 정직한 판단, which currently omits this) and READINESS Q6, say:
+  - With 3 seeds the bootstrap over worlds and seeds understates seed variance.
+  - With an unbiased seed variance, the C1 model's slope interval includes zero (upper ≈ +0.001).
+  - Whether the decisive clause survives training-seed variation is therefore unresolved for `mlp_obs`. It does hold for `seq_obs`.
+- Replace "The reading therefore stands, with a narrow margin" with "The reading is applied as pre-registered; its decisive clause is not robust to seed variation for the C1 model at three seeds."
+- Add a line to the `judge6.py` docstring.
+- Optionally add to READINESS's remaining work: more `mlp_obs` / `seq_obs` seeds per N (each run is ≤ 27 s), as an explicitly post hoc check.
+
+#### MINOR 2 — round-1 wording fixes were not carried into WM6.md, REPORT.md and DECISIONS
+
+| finding | where | fix |
+|---|---|---|
+| m8 "flat" | `REPORT.md:212` ("평평하다"), `REPORT.md:229` ("마지막 구간은 평평하다"), `DECISIONS.md` L6.3 ("with the flat last step") | "시드 잡음 안에서 판단 불가 (0.32배)" / "uninformative" |
+| m9 "learnable" outside its meaning | `REPORT.md:81` ("숨은 상태로는 30일도 학습된다") | "특권 모델의 30일 닫힘이 0.11 → 0.42로 오른다" |
+| M2 "sits in hidden state" | `REPORT.md:90` ("1개월 효과의 학습 가능한 부분은 숨은 상태에 있다") and `REPORT.md:231` ("나머지의 약 절반은 숨은 상태에 있으며 … 관측으로는 거의 배울 수 없다") | "숨은 상태를 더하면 회복된다"; "여기서 평가한 관측 모델(2,000세계까지)은 거의 배우지 못했다" |
+| N15 mechanism stated as fact | `WM6.md:99` ("the month-ahead effect depends on the hidden fission state") | add "(post hoc, untested)" |
+| m4 KS proven equal | `WM6.md:45-46` ("show no difference") | "no test rejects" |
+| m5 one world | `WM6.md:15-16` ("bit for bit") | add "(checked on one world)" |
+| N12 test features | `WM6.md:4-5` ("before any test feature existed"), `REPORT.md:62` ("모든 테스트 특징보다 먼저") | contradicts L3.1; align with L3.1's wording |
+| M2 "not chaos" | `WM6.md:132` ("not an artefact of chaotic per-world effects") | label post hoc, as WM6.md:32 already does |
+
+#### MINOR 3 — stale count of traced numbers
+
+`WM6.md:122` and `REPORT.md:32` say 653. `paper_numbers.json` now has `count` 673. Update both to 673.
+
+#### MINOR 4 — REPORT.md is not final
+
+- The required headings of GOAL.md 12 are all present.
+- Placeholders remain: `[PART7_COMMITS]` (:97), `[REVIEW_SUMMARY]` (:178), `L7.x` (:16, :182), `[PART7_TIMES]` (:202), `[GATE]` (:222).
+- 정직한 판단 (:224-233) does not mention MAJOR 1.
+- Fill all of these before the gate and the final message.
+
+#### NOTE 5 — "touches zero" understates the leave-seed-0-out interval
+
+- **Where:** `paper_src.md:458`, `:589-590`; `WM6.md:24`.
+- **Problem:** [−0.0078, +0.0001] contains zero; it does not just touch it.
+- **Also:** "the GRU … meets clause 2" (`paper_src.md:460`) is loose, because clause 2 is defined for the C1 model only.
+- **Fix:** "contains zero"; "`seq_obs` (not the C1 model) satisfies clause 2's conditions".
+
+#### NOTE 6 — the paper does not mention that the C2 choice changed
+
+- **Where:** `paper_src.md:418-420` and Appendix F.
+- **Problem:** after the review the C2 model changed to `seq_obs`, on a val margin of 0.0006, and the other choice is also KEEP. Neither appears in the paper.
+- **Fix:** add one clause.
+
+#### NOTE 7 — the obs2 transfer is worded too softly
+
+- **Where:** `paper_src.md:471` ("do not beat `zero`"), `REPORT.md:215`.
+- **Problem:** both models are significantly worse than `zero`: NONE at both lags (7 d +0.009 [+0.001, +0.016]; 30 d +0.048 [+0.042, +0.053]).
+- **Fix:** "are worse than `zero`".
+
+#### NOTE 8 — "D ≈ 0.08 would be detectable" overstates power
+
+- **Where:** paper §5.4, WM6.md, DATASET_V2X.md.
+- **Problem:** 0.076–0.081 is the α = 0.05 rejection threshold at these sizes (the spoil arms have about 1,388 vs 350 worlds). A true D of that size is detected only about half the time; 80 % power needs about D ≈ 0.10.
+- **Fix:** "the test rejects D ≳ 0.08 at α = 0.05".
+
+#### NOTE 9 — ambiguous slope wording
+
+- **Where:** `WM6.md:96`, "about one hundredth of the 12-cell average per doubling".
+- **Problem:** it can be read as 1 % relative. The slopes are 0.006–0.008 absolute, which is 1.3–1.9 % relative.
+- **Fix:** state the absolute numbers.
+
+### Verdict
+
+The round-1 fixes in the judge are correct: the C1/C2 choice now matches METRICS §3, and the reported alternative is right. Both judge outputs reproduce byte for byte, the figures check passes, and the pre-registered reading is still applied exactly as METRICS §4 states. The gate (code, data, judged verdicts) is not blocked.
+
+The new post hoc robustness paragraph should not ship as written. It presents a 3-seed bootstrap over worlds and seeds as keeping the C1 model's slope interval below zero, but with seed variance estimated without the small-sample shrinkage that interval includes zero. Before the fast-forward:
+
+1. Reword the robustness claim in the paper, WM6.md, REPORT.md and READINESS (MAJOR 1).
+2. Carry the round-1 wording fixes into WM6.md, REPORT.md and DECISIONS L6.3 (MINOR 2), and fix the 653 → 673 count (MINOR 3).
+3. Fill REPORT.md's placeholders and add the seed caveat to 정직한 판단 (MINOR 4).
+
+None of these needs a re-run. After those edits, re-run `figures.py check`. The run is then ready for the gate and the fast-forward.
+
+Scratch scripts are in `/private/tmp/claude-501/wm6r2/` (`indep.py`, `judge/`).
+
+### Responses to round 2 (DECISIONS L7.4)
+
+| finding | response |
+|---|---|
+| M1 the world + seed bootstrap understates seed variance | accepted: `world_plus_seed_normal` (test-world variance + unbiased between-seed variance) added to every slope; the paper, WM6.md, REPORT.md and READINESS.md say the decisive clause is not robust to seed variation at three seeds. Post hoc, seeds 3–9 of `mlp_obs` / `seq_obs` were trained at every N and evaluated: ten-seed `mlp_obs` slope −0.0083 [−0.0133, −0.0034] with both variance parts, closure 0.452 [0.38, 0.52] (clause-2 conditions hold at ten seeds); `seq_obs` −0.0042 [−0.0091, +0.0006]. The pre-registered rules keep seeds 0–2. This extension was not reviewed (two rounds maximum) |
+| m2 leftover wording | carried into WM6.md, REPORT.md and DECISIONS L6.3 |
+| m3 traced-number count | updated (674) |
+| m4 REPORT.md placeholders, 정직한 판단 | filled; 정직한 판단 states the seed issue and the post hoc ten-seed result |
+| N5 "touches zero" / clause 2 for the GRU | "contains zero"; the GRU sentence replaced by its ten-seed slope |
+| N6 C2 choice change not in the paper | §5.4 states the choice rule, its margin (< 0.001) and that the other model is KEEP too |
+| N7 obs2 transfer too soft | "worse than `zero`" |
+| N8 KS power | "the test rejects D ≳ 0.08 at α = 0.05" (DATASET_V2X.md adds that a true D of that size is detected about half the time) |
+| N9 slope wording | absolute and relative |
