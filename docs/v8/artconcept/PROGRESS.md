@@ -5,6 +5,7 @@
 - Part 2: generation execution finished: 114 calls and byte-verified originals. Four selected diagnostic slots remain camera-rejected; 08 C2 unavailable; 05/06 C2 content mismatch. Full accepted comparison NOT achieved.
 - Part 3: 12 named boards built, byte caps and source SHA verified, actual visual QA recorded. Diagnostic failures labelled.
 - Part 4: executed: fresh blind14-crop/8-scene review, original answers and scoring, leader consistency and production notes. 08 readability remains NOT_VERIFIED; diagnostic scene/content limitations retained.
-- Part 5: pending Korean book, cost ledger and section-8 report; remote verification after every Part.
+- Part 4 publication: 4e0aeabf pushed; remote equals local commit.
+- Part 5: Korean book, cost ledger and section-8 report prepared; publication verification follows.
 
 Completion requires every original requirement in CONCEPT_GOAL.md, not this ledger alone.
