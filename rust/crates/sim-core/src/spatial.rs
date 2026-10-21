@@ -117,13 +117,17 @@ impl<T: Copy + Ord> ChunkIndex<T> {
     /// The chunk ids at chunk-Chebyshev distance exactly `r` from `centre`'s
     /// chunk, in `(cy, cx)` order (only ids with entries).
     fn ring_ids(&self, centre: Tile, r: u32) -> Vec<ChunkId> {
+        // Rows and columns beyond every non-empty chunk hold nothing: bound the
+        // walk by them so a huge `r` costs no more than the map (review NIT-2).
+        let max_cy = self.chunks.keys().map(|id| id.0).max().unwrap_or(0);
+        let max_cx = self.chunks.keys().map(|id| id.1).max().unwrap_or(0);
         let (cy, cx) = chunk_of(centre);
+        if r > cy.max(cx).saturating_add(max_cy.max(max_cx)) {
+            return Vec::new();
+        }
         let (cy, cx, r) = (i64::from(cy), i64::from(cx), i64::from(r));
         let mut out = Vec::new();
-        for y in (cy - r)..=(cy + r) {
-            if y < 0 || y > i64::from(u32::MAX) {
-                continue;
-            }
+        for y in (cy - r).max(0)..=(cy + r).min(i64::from(max_cy)) {
             let full = y == cy - r || y == cy + r;
             let xs: Vec<i64> = if full {
                 ((cx - r)..=(cx + r)).collect()
@@ -133,7 +137,7 @@ impl<T: Copy + Ord> ChunkIndex<T> {
                 vec![cx - r, cx + r]
             };
             for x in xs {
-                if x < 0 || x > i64::from(u32::MAX) {
+                if x < 0 || x > i64::from(max_cx) {
                     continue;
                 }
                 let id = (y as u32, x as u32);

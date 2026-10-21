@@ -124,8 +124,10 @@ order tool (scripts/world/colony/order_tool.gd) ──► WorldSimNode.cmd_*(…
          idle or leisured adults, AgentId order: Build (deliver, then build) > Chop > Haul;
          each job reserves its tree / stack / cell / site (SimResources.colony.reservations)
    ──► AgentDecisionSystem 125 + jobs::seam      (runtime/decision/system.rs, runtime/jobs/seam.rs)
-         a job holder keeps its job unless the decision picks a survival or social choice;
-         then the job is cancelled (CancelReason::Needs) and its reservations released
+         M1.5: a job holder runs the decision only with an urgent hunger, thirst or fatigue
+         (threshold + ColonyRule.yield_margin_permille) or a critical one, and not while carrying
+         a load within finish_leg_tiles of its destination; then any non-idle choice cancels
+         the job (CancelReason::Needs) and releases its reservations
    ──► JobExecuteSystem 127                      (runtime/jobs/execute.rs)
          walk, chop (logs drop as an ItemStack), pick up into Carry, put down (merge, spill),
          deliver into the site's MaterialNeeds; ConstructionSystem 133 finishes the hut
@@ -142,8 +144,8 @@ order tool (scripts/world/colony/order_tool.gd) ──► WorldSimNode.cmd_*(…
 - All of it is gated on `rules.colony` (`ColonyRule`, `WorldRules::colony`):
   in the baseline world every job system returns at once, so the frozen
   baseline stays identical (ADR 0014).
-- The decision system gains only the seam: +26 −1 lines (`git diff --numstat`) that call
-  `jobs::seam::{holders, hold_for_decision, settle_after_decision}` and the
+- The decision system gains only the seam: +26 −1 lines in M1 and +4 −1 in M1.5 (`git diff --numstat`) that call
+  `jobs::seam::{holders, hold_for_decision, skips_decision, settle_after_decision}` and the
   compile-forced `TargetKind::Job` arms; the memory "bias-only Construction"
   arm is off in the colony (M1 D20).
 
@@ -174,7 +176,7 @@ Reads/writes come from each file's `//!` header.
 | 14 | `SocialDecaySystem` | 135 | 1 | `rust/crates/sim-systems/src/runtime/needs/social_decay.rs` | `Social` | `Social` |
 | 15 | `MemorySystem` | 136 | 1 | `rust/crates/sim-systems/src/runtime/memory/memory_system.rs` | `Agent`; `SimResources.causal_log` (this tick's events, `MemoryRecalled`) | `Memory` |
 | 16 | `CombatSystem` | 137 | 1 | `rust/crates/sim-systems/src/runtime/combat/combat_system.rs` | `Agent`, `Position`, `BodyHealth`; `SimResources.combat_pairs`, `causal_log` (`CombatStarted`), `settlements` | `BodyHealth`, `AgentState`, `Memory`; `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`; deaths via `despawn_agent` |
-| 17 | `SettlementSystem` | 138 | 1 | `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules` | `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`; spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick` |
+| 17 | `SettlementSystem` | 138 | 1 | `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules`, `due_births` (M1.5, under `BirthRule::Fertility`) | `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`, `due_births` (drained); spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick` |
 | 18 | `StarvationSystem` | 139 | 1 | `rust/crates/sim-systems/src/runtime/survival/mod.rs` | `Agent`, `Position`, `Hunger`, `Thirst`, `Cold`, `ExposureClock`; `SimResources.rules.society.exposure` | `BodyHealth`; deaths via `despawn_agent` (despawn; `SimResources.settlements` rosters, `relationships`, social and combat maps, `bed_of`, `haulers`, `recent_deaths`, `chronicle`; M1: a worker's load and reservations in `colony`) |
 | 19 | `ResourceRegenSystem` | 140 | 120 | `rust/crates/sim-systems/src/runtime/resource_regen/mod.rs` | `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules` | `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies` |
 | 20 | `StockpileDepositSystem` | 141 | 10 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_deposit.rs` | `Agent`, `Position`, `PorterTrip`; `SimResources.settlements` (rosters, formation tile), `rules` | `Inventory`; `SimResources.settlements` (stockpile), `haulers`, `tallies` |
@@ -210,6 +212,12 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | causal "why?" | `get_tile_causal_history`, `get_tile_causal_events`, `get_event_chain`, `get_tile_detail`, `get_influence_overlay` |
 | commands | `on_building_placed`; M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`, `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (each returns `{accepted, count, reason}` and is logged with the next tick, ADR 0012) |
 | colony reads (M1) | `can_place_blueprint`, `get_colony_versions` (poll), `get_trees`, `get_colony_overlay`; the agent snapshot's `jobs`, `carry_kinds`, `carry_counts` columns |
+| calendar and ages (M1.5) | `get_time_snapshot`'s `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info`'s `ticks_per_year`; the agent snapshot's `ages_years`, `infants`, `pregnant_days` columns |
+
+Every getter, key, type, id space and row order is documented in
+`docs/v8/snapshot_schema.md` (schema version 1, M1.5); the gate step
+`schema_docs` (`python3 tools/v8/check_docs_helpers.py schema .`) fails on any
+getter or key missing there (ADR 0016 C2).
 
 The god-hand methods `apply_intervention` and `get_intervention_state` were
 removed in V8-0 (ADR 0010); the render kernels `art_declump` and
@@ -274,3 +282,29 @@ calls. UI text goes through `Locale.ltr("KEY")`; keys live in
 `localization/<lang>/<category>.json` (the source) and are compiled into
 `localization/compiled/<lang>.json` (what the game loads) by
 `python3 tools/localization_compile.py --project-root .`.
+
+## 8. Contract and benchmark (M1.5, ADR 0016)
+
+The simulation contract binds every pass; each clause has its gate step.
+
+| clause | what it says | how it is checked |
+|---|---|---|
+| C1 reproducible | the state at a tick is a pure function of `(rules, seed, command log)`; a save is that state with a format version, and `save → load → tick` = `tick` | `identity`, `determinism`, `colony_determinism`, `replay`, `save_roundtrip` (`tools/v8/save_roundtrip.sh`; `sim_systems::save`) |
+| C2 view-independent | the sim crates know no pixels or Godot; renderers read documented snapshots only; a second renderer agrees with the Godot view | `schema_docs`, `renderer_agreement` (`tools/v8/renderer_agreement.sh`: `worldsim_probe --ascii`, `sim_test::probe::ascii`, against `scripts/world/colony/agent_layer.gd`), `bridge_api` |
+| C3 measured budget | colony 192², N = 200/1,000/2,000: tick mean, p99, per-system share, bytes per agent and per tile; ceilings 5 ms (N = 1,000), 10 ms (N = 2,000), 4 KiB per agent, 96 B per tile; > +10 % against the previous pass fails; no O(agents × candidates) search without the spatial index | `bench` (`tools/v8/bench.sh` → `worldsim_perf bench`, `sim_test::bench`; ledger `docs/perf/PERF_LEDGER.md`) |
+| C4 method | closed-form state, event-driven work, integer tables, no new float state, keyed draws, key-ordered maps, `(y, x)` then id ties | `forbidden_math`, identity, review |
+| C5 structure | logic in the owning system, generated system table, files over 1,200 lines reported | `docs`, the pass report |
+
+- **Spatial index** (`rust/crates/sim-core/src/spatial.rs`): `ChunkIndex<T>` over 16 × 16-tile chunks
+  (`BTreeMap<(cy, cx), Vec<(tile, T)>>`, sorted `(y, x, T)`); `nearest_where` returns the smallest
+  `(Chebyshev distance, y, x, T)` that passes a predicate, visiting non-empty chunks by exact distance. Kept in
+  `SimResources.spatial`: the colony job searches' indexes (ground stacks, zone cells, chop marks), rebuilt when
+  `ColonyState::overlay_version` changes, and the agents' index, built on demand once per tick
+  (`SpatialIndex::agents_at`). Derived state: never saved.
+- **Benchmark** (`worldsim_perf bench`): five scenes on `WorldGenConfig::colony_stress(15100, N, side)` under
+  `WorldRules::colony`, each in its own process for a clean resident size, 1,440 warm-up and 2,880 profiled
+  ticks, 3 repeats, medians; fed like `quick`. `bench-summarise` merges interleaved sessions of two binaries.
+- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, bincode of the tick,
+  all of `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids
+  and generations, the allocator's free list) and each system's `save_state`.
+

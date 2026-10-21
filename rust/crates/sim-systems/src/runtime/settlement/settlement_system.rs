@@ -1,8 +1,8 @@
 //! SettlementSystem: forms, syncs, grows (births) and dissolves settlements.
 //!
 //! Priority: 138 · Interval: 1 tick · Gate: none
-//! Reads: `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules`
-//! Writes: `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`; spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick`
+//! Reads: `Agent`, `Position`, `Hunger`, `Thirst`, `Kin`, `Sex`, `Lineage`, `Temperament`, `Founding`; `SimResources.building_registry`, `building_kinds`, `causal_log`, `fission_log`, `rules`, `due_births` (M1.5, under `BirthRule::Fertility`)
+//! Writes: `SimResources.settlements`, `building_owner`, `dissolutions`, `chronicle`, `causal_log`, `tallies`, `due_births` (drained); spawns newborns (needs, `Memory`, `Lineage`, `Kin`, `Sex`, `Child`, `Life`); mother's `Kin.last_birth_tick`
 //! Events: `CausalEvent::SettlementFormed`/`AgentBorn`/`SettlementDissolved`; chronicle formation, membership, `Born` and dissolution entries; `FamilyEvent::Born`; tallies `births`, `exclusivity_moves`
 //!
 //! V7 Phase 10-β — `SettlementSystem` (priority 138, every tick).
@@ -884,18 +884,31 @@ impl SettlementSystem {
             let mut due = std::mem::take(&mut resources.due_births);
             due.sort();
             for birth in due {
-                let Some(spawn_pos) = self.formation_tiles.get(&birth.settlement).copied() else {
-                    continue;
-                };
                 let mother = world
                     .query::<&Agent>()
                     .iter()
                     .find(|(_, agent)| agent.id == birth.mother)
                     .map(|(entity, _)| entity);
+                // A mother who died since the birth was queued takes the child
+                // with her (the death has its own chronicle entry).
                 let Some(mother) = mother else {
                     continue;
                 };
-                births.push((birth.settlement, spawn_pos));
+                // The queued settlement, else the one she belongs to now; with
+                // none the birth waits in the queue for the next tick.
+                let home = Some(birth.settlement)
+                    .filter(|sid| self.formation_tiles.contains_key(sid))
+                    .or_else(|| {
+                        crate::runtime::agent::fertility::settlement_of(resources, birth.mother)
+                            .filter(|sid| self.formation_tiles.contains_key(sid))
+                    });
+                let Some((sid, spawn_pos)) =
+                    home.and_then(|sid| self.formation_tiles.get(&sid).map(|p| (sid, *p)))
+                else {
+                    resources.due_births.push(birth);
+                    continue;
+                };
+                births.push((sid, spawn_pos));
                 fixed_parents.push(Some((mother, birth.mother, birth.father)));
             }
         }

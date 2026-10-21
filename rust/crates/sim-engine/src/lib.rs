@@ -190,8 +190,8 @@ pub struct FireState {
 /// FFI) and draws a fading, reason-coloured marker at the death tile.
 ///
 /// Display-only: this buffer is never read by simulation logic, so it cannot
-/// affect determinism. `SimResources` is NOT serde-serialized, so the field
-/// carries no save/load or lockstep weight.
+/// affect determinism. It is saved with the rest of `SimResources` (M1.5
+/// save files) so a loaded game shows the same recent markers.
 #[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct RecentDeath {
     /// Death tile-x (the dead agent's last `Position` tile). Stored as `i32`

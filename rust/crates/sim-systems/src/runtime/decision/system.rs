@@ -830,7 +830,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut gather_memo: GatherMemo = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
         // M1 seam (`runtime::jobs::seam`): job holders run the Idle cascade, settled after the loop.
-        let job_holders = crate::runtime::jobs::holders(world);
+        let job_holders = crate::runtime::jobs::holders(world, resources);
         let mut job_hold: Vec<(hecs::Entity, AgentState)> = Vec::new();
         loop {
             #[cfg(feature = "subprofile")]
@@ -1125,6 +1125,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                 }
                 if crate::runtime::jobs::hold_for_decision(entity, *state, &job_holders) {
+                    if crate::runtime::jobs::skips_decision(entity, &job_holders) {
+                        continue;
+                    }
                     job_hold.push((entity, *state));
                     *state = AgentState::Idle;
                 }

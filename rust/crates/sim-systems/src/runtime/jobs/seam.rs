@@ -16,11 +16,17 @@
 //!   post-pass re-resolves the new goal. The release is counted (measurement
 //!   only) in `colony.release_counts` by need, job kind, stage and need value.
 //!
-//! M1.5 (goal 8.2): under `ColonyRule::yield_margin_permille` and
-//! `finish_leg_tiles` (the colony's `ColonyRule::M1_5`) the first case also
-//! covers a choice the job does not yield to (`keeps_job`): only an urgent
-//! hunger, thirst or fatigue releases a job, and a carried load within reach
-//! of its destination is delivered first. M1's `ColonyRule::M1` keeps M1.
+//! M1.5 (goal 8.2, review MAJOR-1): under `ColonyRule::yield_margin_permille`
+//! and `finish_leg_tiles` (the colony's `ColonyRule::M1_5`) only a worker that
+//! may yield runs the cascade at all. It may yield with an urgent need — hunger
+//! or thirst at or past its seek threshold plus the margin, fatigue at or past
+//! its own threshold plus the margin — unless it carries a load within reach of
+//! its destination; with a critical hunger or thirst (`critical_preemption`, 75)
+//! it may yield wherever it is. Every other worker skips the decision this tick
+//! (`skips_decision`): it keeps its job and its state, and no arm runs, so no
+//! causal event, memory, trip tally or claim is left behind by a choice that
+//! would be undone. M1's `ColonyRule::M1` (`None`) keeps M1: every holder runs it.
+
 use hecs::{Entity, World};
 use sim_core::colony::{CancelReason, Job, JobKind, JobReleaseKey, JobStage};
 use sim_core::components::{AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
@@ -28,70 +34,6 @@ use sim_engine::SimResources;
 use std::collections::BTreeSet;
 
 use super::cancel::release_job;
-
-/// M1.5 (goal 8.2): whether a worker keeps its job although the decision
-/// chose `choice`. Under `ColonyRule::yield_margin_permille` a job yields only
-/// to an urgent personal need — food when hunger is at least
-/// `HUNGER_THRESHOLD + margin`, water when thirst is at least
-/// `THIRST_THRESHOLD + margin`, sleep when fatigue is at least the person's
-/// own fatigue threshold + margin (`margin` = permille of the 0–100 scale) —
-/// and never to survival work (foraging, firewood), social or other choices.
-/// Under `finish_leg_tiles` a `Haul` or `Deliver` carrying its load within
-/// that distance of the destination finishes the leg first. Both `None`
-/// (M1): never kept.
-fn keeps_job(world: &World, res: &SimResources, entity: Entity, choice: AgentState) -> bool {
-    let Some(rule) = res.rules.colony else {
-        return false;
-    };
-    let job = world.get::<&Job>(entity).ok().map(|job| *job);
-    if let (Some(limit), Some(job), Ok(pos)) =
-        (rule.finish_leg_tiles, job, world.get::<&Position>(entity))
-    {
-        let near = job
-            .kind
-            .dest()
-            .is_some_and(|to| super::items::chebyshev((pos.x, pos.y), to) <= limit);
-        if job.stage == JobStage::ToDest && near {
-            return true;
-        }
-    }
-    let Some(permille) = rule.yield_margin_permille else {
-        return false;
-    };
-    let margin = 100.0 * f64::from(permille) / 1000.0;
-    use crate::runtime::decision::needs as n;
-    match choice.target() {
-        Some(TargetKind::Food) => world
-            .get::<&Hunger>(entity)
-            .is_ok_and(|h| f64::from(h.value) < f64::from(n::HUNGER_THRESHOLD) + margin),
-        Some(TargetKind::Water) => world
-            .get::<&Thirst>(entity)
-            .is_ok_and(|t| t.value < n::THIRST_THRESHOLD + margin),
-        Some(TargetKind::Sleep) => {
-            let day_tick = (res.ticks_per_day != 0).then(|| {
-                res.current_tick
-                    .saturating_add(res.rules.clock_offset_ticks)
-                    % res.ticks_per_day
-            });
-            let temperament = world
-                .get::<&sim_core::components::Temperament>(entity)
-                .ok()
-                .map(|t| *t);
-            let threshold = match (res.rules.agent.temperament, temperament) {
-                (Some(lean), Some(t)) => {
-                    n::person_night_rest(res.rules.agent.night_rest, Some(lean), Some(&t), day_tick)
-                        .map_or(n::FATIGUE_THRESHOLD, |r| r.fatigue_threshold)
-                }
-                _ => n::fatigue_threshold_at(res),
-            };
-            world
-                .get::<&Sleep>(entity)
-                .is_ok_and(|s| s.fatigue < threshold + margin)
-        }
-        // Survival work, social and every other choice keep the job.
-        _ => true,
-    }
-}
 
 /// The measurement key of a release to `choice` (see `JobReleaseKey`).
 fn release_key(world: &World, entity: Entity, choice: AgentState) -> JobReleaseKey {
@@ -126,17 +68,101 @@ fn release_key(world: &World, entity: Entity, choice: AgentState) -> JobReleaseK
     (need, kind, stage, value.map_or(255, bin))
 }
 
-/// Every entity that holds a `Job` (sorted set: membership only).
-pub fn holders(world: &World) -> BTreeSet<Entity> {
-    world
+/// The job holders of a tick (sorted sets: membership only): every entity with
+/// a `Job`, and those of them that may not yield this tick (`inert`).
+#[derive(Debug, Default, Clone)]
+pub struct JobHolders {
+    all: BTreeSet<Entity>,
+    inert: BTreeSet<Entity>,
+}
+
+impl JobHolders {
+    /// Whether `entity` holds a `Job` (membership; M1's set semantics).
+    pub fn contains(&self, entity: &Entity) -> bool {
+        self.all.contains(entity)
+    }
+}
+
+/// A need value in tenths of a point (the 0–100 scales), so a permille margin
+/// of the scale is a whole number of tenths.
+fn tenths(value: f64) -> i64 {
+    (value * 10.0) as i64
+}
+
+/// Whether the worker `entity` may yield its job this tick (see the module header).
+fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
+    let Some(rule) = res.rules.colony else {
+        return true;
+    };
+    let Some(margin) = rule.yield_margin_permille else {
+        return true;
+    };
+    use crate::runtime::decision::needs as n;
+    let margin = i64::from(margin);
+    let hunger = world
+        .get::<&Hunger>(entity)
+        .map_or(0, |h| tenths(f64::from(h.value)));
+    let thirst = world.get::<&Thirst>(entity).map_or(0, |t| tenths(t.value));
+    let critical = tenths(
+        res.rules
+            .agent
+            .critical_preemption
+            .unwrap_or(n::CRITICAL_NEED),
+    );
+    if hunger >= critical || thirst >= critical {
+        return true;
+    }
+    let job = world.get::<&Job>(entity).ok().map(|job| *job);
+    if let (Some(limit), Some(job), Ok(pos)) =
+        (rule.finish_leg_tiles, job, world.get::<&Position>(entity))
+    {
+        let near = job
+            .kind
+            .dest()
+            .is_some_and(|to| super::items::chebyshev((pos.x, pos.y), to) <= limit);
+        if job.stage == JobStage::ToDest && near {
+            return false;
+        }
+    }
+    let day_tick = (res.ticks_per_day != 0).then(|| {
+        res.current_tick
+            .saturating_add(res.rules.clock_offset_ticks)
+            % res.ticks_per_day
+    });
+    let temperament = world
+        .get::<&sim_core::components::Temperament>(entity)
+        .ok()
+        .map(|t| *t);
+    let fatigue_threshold = match (res.rules.agent.temperament, temperament) {
+        (Some(lean), Some(t)) => {
+            n::person_night_rest(res.rules.agent.night_rest, Some(lean), Some(&t), day_tick)
+                .map_or(n::FATIGUE_THRESHOLD, |r| r.fatigue_threshold)
+        }
+        _ => n::fatigue_threshold_at(res),
+    };
+    let fatigue = world.get::<&Sleep>(entity).map_or(0, |s| tenths(s.fatigue));
+    hunger >= tenths(f64::from(n::HUNGER_THRESHOLD)) + margin
+        || thirst >= tenths(n::THIRST_THRESHOLD) + margin
+        || fatigue >= tenths(fatigue_threshold) + margin
+}
+
+/// Every entity that holds a `Job`, and which of them may not yield this tick.
+pub fn holders(world: &World, res: &SimResources) -> JobHolders {
+    let all: BTreeSet<Entity> = world
         .query::<&Job>()
         .iter()
         .map(|(entity, _)| entity)
-        .collect()
+        .collect();
+    let inert = all
+        .iter()
+        .copied()
+        .filter(|&entity| !may_yield(world, res, entity))
+        .collect();
+    JobHolders { all, inert }
 }
 
 /// Whether the decision should run `entity` (in `state`) as a temporary Idle.
-pub fn hold_for_decision(entity: Entity, state: AgentState, holders: &BTreeSet<Entity>) -> bool {
+pub fn hold_for_decision(entity: Entity, state: AgentState, holders: &JobHolders) -> bool {
     match state {
         AgentState::Seeking {
             target: TargetKind::Job,
@@ -146,9 +172,15 @@ pub fn hold_for_decision(entity: Entity, state: AgentState, holders: &BTreeSet<E
         } => true,
         AgentState::Consuming {
             target: TargetKind::ConstructionSite,
-        } => holders.contains(&entity),
+        } => holders.all.contains(&entity),
         _ => false,
     }
+}
+
+/// Whether a held worker skips the decision this tick: it may not yield, so it
+/// keeps its job and state and no arm runs for it (M1.5, review MAJOR-1).
+pub fn skips_decision(entity: Entity, holders: &JobHolders) -> bool {
+    holders.inert.contains(&entity)
 }
 
 /// Settle each held worker after the decision loop (see the module header).
@@ -178,7 +210,7 @@ pub fn settle_after_decision(
         ) && world
             .get::<&Position>(entity)
             .is_ok_and(|pos| res.colony.occupied.contains_key(&(pos.x, pos.y)));
-        if now == AgentState::Idle || own_site || keeps_job(world, res, entity, now) {
+        if now == AgentState::Idle || own_site {
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                 *state = previous;
             }
@@ -233,41 +265,52 @@ mod tests {
         res.rules.colony = Some(rule);
         // 12:00 of the clock: outside the night-rest window, fatigue threshold 50.
         res.rules.agent.night_rest = sim_core::rules::WorldRules::baseline(0).agent.night_rest;
+        res.rules.agent.critical_preemption = Some(75.0);
         res.current_tick = 720;
         res
     }
 
+    fn inert(world: &World, res: &SimResources, e: Entity) -> bool {
+        let h = holders(world, res);
+        assert!(hold_for_decision(
+            e,
+            AgentState::Seeking {
+                target: TargetKind::Job
+            },
+            &h
+        ));
+        skips_decision(e, &h)
+    }
+
     #[test]
-    fn a_job_yields_only_to_an_urgent_need_and_finishes_a_near_leg() {
-        let seek = |target| AgentState::Seeking { target };
-        let res15 = res(ColonyRule::M1_5);
-        // Thirst 64 < 50 + 15: kept; 65: released (thresholds 50, margin 150 ‰ = 15).
-        let (w, e) = worker(JobStage::ToSource, (0, 0), 10.0, 64.0, 10.0);
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::Water)));
-        let (w, e) = worker(JobStage::ToSource, (0, 0), 10.0, 65.0, 10.0);
-        assert!(!keeps_job(&w, &res15, e, seek(TargetKind::Water)));
-        // Hunger 64.9 kept, 65 released; fatigue 64 kept (day threshold 50), 66 released.
-        let (w, e) = worker(JobStage::ToSource, (0, 0), 64.9, 10.0, 10.0);
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::Food)));
-        let (w, e) = worker(JobStage::ToSource, (0, 0), 65.0, 10.0, 66.0);
-        assert!(!keeps_job(&w, &res15, e, seek(TargetKind::Food)));
-        assert!(!keeps_job(&w, &res15, e, seek(TargetKind::Sleep)));
-        let (w, e) = worker(JobStage::ToSource, (0, 0), 10.0, 10.0, 64.0);
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::Sleep)));
-        // Survival work and social never take the job.
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::GatherFood)));
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::GatherWood)));
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::Agent(3))));
-        // A load 12 tiles from its destination is delivered first, even when urgent;
-        // 13 tiles away it is not.
-        let (w, e) = worker(JobStage::ToDest, (18, 0), 10.0, 90.0, 10.0);
-        assert!(keeps_job(&w, &res15, e, seek(TargetKind::Water)));
-        let (w, e) = worker(JobStage::ToDest, (17, 0), 10.0, 90.0, 10.0);
-        assert!(!keeps_job(&w, &res15, e, seek(TargetKind::Water)));
-        // M1: every non-idle choice releases.
-        let res1 = res(ColonyRule::M1);
+    fn only_an_urgent_or_critical_need_lets_a_worker_run_the_decision() {
+        let m15 = res(ColonyRule::M1_5);
+        // Thresholds 50, margin 150 ‰ of the scale = 15 points.
+        for (h, t, f, runs) in [
+            (10.0, 64.9, 10.0, false),
+            (10.0, 65.0, 10.0, true),
+            (64.9, 10.0, 10.0, false),
+            (65.0, 10.0, 10.0, true),
+            (10.0, 10.0, 64.9, false),
+            (10.0, 10.0, 65.0, true),
+        ] {
+            let (w, e) = worker(JobStage::ToSource, (0, 0), h, t, f);
+            assert_eq!(
+                !inert(&w, &m15, e),
+                runs,
+                "hunger {h} thirst {t} fatigue {f}"
+            );
+        }
+        // A load 12 tiles from its destination is delivered first even at an
+        // urgent thirst, 13 tiles away it is not; a critical thirst (75) always runs.
+        let (w, e) = worker(JobStage::ToDest, (18, 0), 10.0, 70.0, 10.0);
+        assert!(inert(&w, &m15, e));
+        let (w, e) = worker(JobStage::ToDest, (17, 0), 10.0, 70.0, 10.0);
+        assert!(!inert(&w, &m15, e));
+        let (w, e) = worker(JobStage::ToDest, (18, 0), 10.0, 75.0, 10.0);
+        assert!(!inert(&w, &m15, e));
+        // M1: every holder runs the decision.
         let (w, e) = worker(JobStage::ToDest, (18, 0), 10.0, 10.0, 10.0);
-        assert!(!keeps_job(&w, &res1, e, seek(TargetKind::GatherFood)));
-        assert!(!keeps_job(&w, &res1, e, seek(TargetKind::Water)));
+        assert!(!inert(&w, &res(ColonyRule::M1), e));
     }
 }

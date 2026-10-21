@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
-# V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21). Twenty-one steps, each logged to <log_dir>/<step>.log
+# V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
+# 22-25). Twenty-five steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -29,6 +30,13 @@
 #   20 uid_check         tools/v8/check_docs_helpers.py uid (committed Godot UIDs, M1 5.3)
 #   21 play_check        tools/v8/test_play.sh: tools/play.sh exit codes (unknown version 3, no Godot 2,
 #                        bad argument 4) and --headless-check main, m1, v7 (worktrees under PLAY_ROOT)
+#   22 schema_docs       tools/v8/check_docs_helpers.py schema: docs/v8/snapshot_schema.md names every bridge
+#                        getter and key (M1.5, ADR 0016 C2)
+#   23 renderer_agreement tools/v8/renderer_agreement.sh: the text renderer's people = the Godot agent layer's,
+#                        seed 100, U-script, tick 900 (C2)
+#   24 save_roundtrip    tools/v8/save_roundtrip.sh: save -> load -> tick equals tick, colony seeds 0-7 (C1)
+#   25 bench             tools/v8/bench.sh: the standing colony benchmark against docs/perf/PERF_LEDGER.md
+#                        (> +10 % on tick mean, p99 or RSS/agent fails; C3 ceilings report only)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -84,6 +92,14 @@ step 19 replay bash -c 'p=rust/target/release/worldsim_probe; $p --scene colony 
 step 20 uid_check bash -c 'out=$(python3 tools/v8/check_docs_helpers.py uid); [[ -z "$out" ]] || { echo "$out"; exit 1; }; echo "every Godot source has its committed .uid"'
 step 21 play_check bash tools/v8/test_play.sh
 grep -c '^PLAY_TEST_PASS' "$LOG/play_check.log" | awk '{print "   play_check passed", $1, "of 6"}' >> "$SUMMARY"
+# M1.5 (goal 10.4, ADR 0016): the contract's new checks.
+step 22 schema_docs python3 tools/v8/check_docs_helpers.py schema .
+step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_agreement"
+grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
+step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
+grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
+step 25 bench bash tools/v8/bench.sh "$LOG/bench"
+grep -E 'ceiling|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 21-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 25-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -32,6 +32,12 @@ headless specifics in `worldsim-godot`.
 - **Don't** judge a change on p99 / p99.9 from three repeats. *Reason:* tails of a few runs are single-tick machine spikes (Pass 21 U6: per-repeat ratios ×1.023 / ×1.490 / ×0.516); report them as noise.
 - **Don't** compare timings taken under different host load, and never call a contended number a result. *Reason:* on the shared Mac one layer "cost" +62 % because the host load fell 176 → 36 between samples.
 - **Don't** use debug builds, debug dylibs or headless dummy-renderer timings as performance evidence. *Reason:* debug W500 was 51 ms against 29 ms release; the dummy renderer draws nothing.
+
+### Benchmark, save, second renderer (M1.5, ADR 0016)
+- **Do** measure colony-scale cost with the standing benchmark (`worldsim_perf bench`, gate step `bench` = `tools/v8/bench.sh`): five colony scenes (N = 200/1,000/2,000, N = 200 with `tools/v8/bench_script.json`, N = 200 on 64²), each in its own process (clean RSS), 3 repeats, medians; the gate compares with the latest pass in `docs/perf/PERF_LEDGER.md` (> +10 % on tick mean, p99 or RSS/agent fails unless `--justified` quotes the CHANGELOG). *Reason:* C3; the natural `perf.sh` worlds hold 10–40 people and cannot show O(N²) work.
+- **Do** append a pass's ledger rows only from a session where base and candidate ran back to back, interleaved (`bench --repeats 1` per binary per round, then `bench-summarise`), with the host load recorded. *Reason:* timings taken under different load are not comparable (perf lessons below).
+- **Do** keep the benchmark world alive: it is fed like `quick` (3 food per person at 06:00); check `alive_end` and the deaths in every run file. *Reason:* without the gift N = 2,000 lost 1,611 people inside the run, and a world that dies is cheap.
+- **Do** prove view independence with `tools/v8/renderer_agreement.sh` (text renderer = Godot agent layer, seed 100, tick 900) and keep `docs/v8/snapshot_schema.md` complete (`python3 tools/v8/check_docs_helpers.py schema .`, gate step `schema_docs`). *Reason:* C2; the schema check fails on any undocumented getter or key.
 
 ### Assertions
 - **Do** assert a threshold on a measured invariant, with the observed value and margin in a comment. *Reason:* `> 0` passes when a value collapses from 368 to 1.
@@ -65,7 +71,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5).
 
 | # | step | checks |
 |---|---|---|
@@ -90,6 +96,10 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 19 | `replay` | a scripted colony run's recorded command log replays to a byte-identical summary |
 | 20 | `uid_check` | `tools/v8/check_docs_helpers.py uid` (every Godot source has its committed `.uid`) |
 | 21 | `play_check` | `tools/v8/test_play.sh`: `tools/play.sh` exit codes (unknown version 3, no Godot 2, bad argument 4) and `--headless-check` of `main`, `m1`, `v7` (0 `SCRIPT ERROR` in 300 headless frames) |
+| 22 | `schema_docs` | `tools/v8/check_docs_helpers.py schema .`: every bridge getter and key is in `docs/v8/snapshot_schema.md` (C2) |
+| 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2) |
+| 24 | `save_roundtrip` | `tools/v8/save_roundtrip.sh`: `save_load.rs` (colony seeds 0–7 save → load → tick = tick; C1) |
+| 25 | `bench` | `tools/v8/bench.sh`: the standing benchmark against `docs/perf/PERF_LEDGER.md` (> +10 % fails; ceilings report only; C3) |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -122,6 +132,8 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-21 | a probe exposure counter (fertile, paired, fed woman-days) disagreed with the system it measured, and a probe-side job-release observer attributed only 50 of 131 releases | the observer saw the state after the whole tick, when a released worker had already been set `Idle` by a later system | count an event where the code makes the decision (a measurement-only counter at the seam, read by nothing), and check the count against the system's own tally (`counted == needs_tally`) | `rust/crates/sim-systems/src/runtime/jobs/seam.rs`; `docs/v8/m1_5/M1_5_DECISIONS.md` D3 |
+| 2026-10-21 | a measurement patch applied to the base worktree (benchmark, chronicle-out, churn counter) had to be proved inert | measurement code inside sim crates could change behaviour | run the patched base probe and `cmp` its colony `summary.json` with the unpatched base's (byte-identical on 32 seeds, with and without the U-script) before trusting its numbers | `docs/v8/m1_5/M1_5_DECISIONS.md` D3 |
 | 2026-10-15 | claims of "no behaviour change" needed proof; shared-key comparisons could miss added or dropped keys | — | identity before claiming no behaviour change: full summaries minus timing including key sets, raw sample hashes, chronicle by content, determinism twins, on the exact final build | `v7-final-art:docs/revitalize/DECISIONS.md` L870, L1202, L846; `v7-final-art:docs/revitalize/REVIEW_PASS21.md` Round 1 M2 |
 | 2026-10-18 | the identity validator passed a corrupted chronicle with exit 0 | a review fix put `2>&1` on its own line after the heredoc inside `$( … )`: an empty command | redirect on the command itself; add a negative test (one changed value must FAIL); show every comparator can fail | `0ade8ffd`; `v7-final-art:docs/revitalize/DECISIONS.md` L1204; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 2 MAJOR A |
 | 2026-10-18 | chronicle files were never byte-identical across builds | each file carries the `git_sha` label and a `kinds` vocabulary that grew 17 → 22 | compare by content; require the base kind list to be a prefix of the candidate's; say "identical in content" | `v7-final-art:docs/revitalize/DECISIONS.md` L1202; `v7-final-art:docs/revitalize/REVIEW_PASS20.md` Round 1 N1 |

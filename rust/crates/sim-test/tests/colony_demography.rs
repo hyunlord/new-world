@@ -31,6 +31,16 @@ fn calendar_derivations() {
         assert!(WorldRules::colony(seed).calendar_consistent());
         assert!(WorldRules::baseline(seed).calendar_consistent());
     }
+    // The engine clock and the daily systems' interval equal the calendar's day
+    // in both worlds (review NIT-1).
+    for engine in [sim_test::colony_engine(0), sim_test::baseline_engine(0)] {
+        let day = engine.resources.rules.calendar.ticks_per_day;
+        assert_eq!(engine.resources.ticks_per_day, day);
+        assert_eq!(
+            sim_systems::runtime::agent::fertility::FERTILITY_INTERVAL,
+            day
+        );
+    }
     // The colony's ages are years of its calendar.
     let aging = colony.society.aging.expect("colony aging");
     assert_eq!(aging.elder_age_ticks, 50 * 34_560);

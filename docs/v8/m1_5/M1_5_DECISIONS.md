@@ -97,6 +97,15 @@ duration stay. Colony values differ from the baseline only where the table says 
 | `memory_system.rs` | `MAX_RECENCY_TICKS` (const) | 4,380 | ticks (~3 days) | unchanged | memory recency in days |
 | `resource_regen` | `REGEN_INTERVAL` (const) | 120 | ticks | unchanged | a pulse |
 | `firewood.rs` | year of a tick (`year_at_tick`) | `4 × days_per_season` | days | **calendar `days_per_year`** | D4 |
+| `fertility.rs` | `FERTILITY_INTERVAL` / `FERTILITY_MINUTE` (consts, new) | — | ticks / minutes | 1,440 / 720 | a day and a clock time; the interval equals the calendar's day in both worlds (asserted in `calendar_derivations`) |
+| `aging.rs`, `maturation.rs` | system intervals 60 | 60 | ticks | unchanged | an hour |
+| `settlement_system.rs` | `BIRTH_COOLDOWN_TICKS` (const) | 200 | ticks | — | `BirthRule::Legacy` only |
+| `firewood.rs` | `MINUTES_PER_DAY` (const) | 1,440 | minutes | unchanged | clock arithmetic of a day |
+| `fission.rs`, `relations.rs` | check minute (`CHECK_MINUTE × tpd / 1440`), a two-day horizon | | minutes / days | — (off or inert in the colony) | times of day, day measures |
+| `RelationsRule` | `dispute_cap_per_pair_day`, `quarrel_cap_per_pair_day` | 3, 1 | per day | unchanged (inert) | day measures |
+| `FissionRule` | `allowed_seasons` | `[_; 4]` | seasons | — (off) | one flag per season |
+| `food_economy.rs` | `annual_mean_supply` (`/ 4000`) | 4 seasons | | unchanged | `SeasonRule.regen_permille` and `burn_per_hour` are `[_; 4]`: a calendar with more than 4 seasons is not supported (`seasons_per_year` must stay 4) |
+| `sim-engine` | `SimResources.ticks_per_day` (the engine clock) | 1,440 | ticks | 1,440 | equals `calendar.ticks_per_day` in both worlds (asserted) |
 
 ## D6 — Fertility: 33 ‰ a day, not the goal's 12 ‰, so the rate is the stated 0.25 births per woman-year
 
@@ -231,6 +240,7 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
 | base `3183e77d` | 4,786 | 1,012 | 0.211 | 3,774 |
 | Part 1 (calendar) | 4,424 | 1,008 | 0.228 | 3,416 |
 | Part 4 (remedies) | 1,030 | 1,014 | 0.984 | 16 |
+| Part 6 (review fix D18: non-yielding workers skip the decision) | 1,042 | 1,013 | 0.972 | 28 |
 
 ## D14 — The text renderer and the snapshot schema (goal 8.1)
 
@@ -316,3 +326,29 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   F6 (`order_bar.gd`; README updated). A failed load shows its own toast (`UI_LOAD_FAILED`, a fourth key).
 - A save is exact only within one build; across commits the guarantee stays C1's replay of `(seed, commands)`.
   `FORMAT_VERSION` must be bumped by hand when any saved type changes.
+
+## D18 — Code review fixes (`$DATA/review/code_review.md`)
+
+- MAJOR-1 — held workers' undone choices left side effects every tick (an `AgentDecision` causal event and a memory
+  per tick, forage-trip tallies up to 1,562 on one seed, bush claims, social invites). Fix: the seam decides before
+  the cascade. `jobs::holders` marks the holders that may not yield (`JobHolders::inert`: no urgent need, or a near
+  load, and no critical need); the decision loop `continue`s for them (`jobs::skips_decision`, 3 lines in
+  `decision/system.rs` plus the changed `holders(world, resources)` call: 4 lines, under the 20-line cap). A worker
+  that may yield runs the cascade and the M1 settle rule applies (idle or own site keeps the job, anything else
+  releases it), so its side effects are real. `keeps_job` is removed. The comparisons are in integer tenths of a
+  point (NIT-5). Unit test `only_an_urgent_or_critical_need_lets_a_worker_run_the_decision`.
+- MINOR-5 — a near load no longer holds a worker at a critical hunger or thirst (75).
+- MINOR-1 — a due birth whose settlement has no formation tile goes to the mother's current settlement; with none
+  it waits in the queue; only a mother who died meanwhile takes the birth with her.
+- MINOR-2 — fertility births bypass `SETTLEMENT_MAX_POP` (50) and the shelter-capacity gate on purpose: they were
+  the provisioned rule's limits; the fertility rule is limited by pairing, age, gestation and the fed gate. No
+  colony reader assumes ≤ 50 (the benchmark's colonies start at 200–2,000).
+- MINOR-3 — test `save_load_roundtrip_through_a_pregnancy_and_a_due_birth` (save mid-pregnancy, and between 12:00
+  and 12:01 with births queued).
+- MINOR-4 — `SettlementSystem`'s header names `due_births`.
+- NIT-1 — the D5 table gains the missing durations; the engine clock and `FERTILITY_INTERVAL` are asserted equal to
+  the calendar's day. NIT-2 — `ChunkIndex::ring` is bounded by the filled chunks. NIT-3 — a miss runs the map-wide
+  check at most once per search and tick. NIT-4 — the stale `RecentDeath` comment. NIT-6 (the mother named as the
+  father when `requires_partner` is false) stays: the option is off in the colony; recorded here.
+- Re-measured after MAJOR-1 (behaviour changes only for job holders): calibration seeds 0–7 with the U-script, the
+  M1 fixtures and the J1 evaluation (see the evaluation file); the 3-year runs without orders have no job holders.

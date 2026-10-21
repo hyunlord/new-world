@@ -24,4 +24,4 @@ pub mod seam;
 pub use assign::{JobAssignSystem, JOB_ASSIGN_PRIORITY};
 pub use cancel::{cancel, finish, on_death, release_job};
 pub use execute::{JobExecuteSystem, JOB_EXECUTE_PRIORITY};
-pub use seam::{hold_for_decision, holders, settle_after_decision};
+pub use seam::{hold_for_decision, holders, settle_after_decision, skips_decision, JobHolders};

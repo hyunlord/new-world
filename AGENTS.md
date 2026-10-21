@@ -48,14 +48,15 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 ## The gate
 
 ```bash
-bash tools/v8/gate.sh <log_dir>        # 21 steps; every step except perf must pass
+bash tools/v8/gate.sh <log_dir>        # 25 steps; every step except perf must pass
 ```
 
 Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
 (all targets), forbidden-math grep, GDScript strict check, headless smoke,
 identity, determinism, perf (report only), bridge API, docs check,
 inventory closure, Python unit tests, M1 tests, colony determinism,
-command replay, `.uid` check, play check (`tools/v8/test_play.sh`). Rebuild the bridge (`cargo build -p
+command replay, `.uid` check, play check (`tools/v8/test_play.sh`), and since M1.5 (ADR 0016) snapshot schema
+docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`. Rebuild the bridge (`cargo build -p
 sim-bridge`) before any Godot run — `cargo test` does not refresh the library
 Godot loads.
 

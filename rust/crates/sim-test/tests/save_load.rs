@@ -255,3 +255,74 @@ fn load_rejects_other_version() {
         Err(SaveError::Decode(_))
     ));
 }
+
+/// Tick `engine` (no orders) until `stop` holds, at most `limit` ticks.
+fn run_until(engine: &mut SimEngine, limit: u64, stop: impl Fn(&SimEngine) -> bool) -> bool {
+    for _ in 0..limit {
+        if stop(engine) {
+            return true;
+        }
+        engine.tick();
+    }
+    stop(engine)
+}
+
+/// Save at `engine`'s current tick, load, and tick the loaded and a twin
+/// continuous engine `ticks` further; both must stay equal.
+fn compare_after_load(label: &str, mut twin: SimEngine, mut engine: SimEngine, ticks: u64) {
+    let bytes = save::save(&mut engine).expect("save");
+    let mut loaded = save::load(&bytes).expect("load");
+    for step in 0..ticks {
+        twin.tick();
+        loaded.tick();
+        if step % 240 == 0 || step + 1 == ticks {
+            assert_same(&format!("{label} +{}", step + 1), &twin, &loaded);
+        }
+    }
+    let a = save::save(&mut twin).expect("save twin");
+    let b = save::save(&mut loaded).expect("save loaded");
+    assert!(a == b, "{label}: full state differs after load");
+}
+
+#[test]
+fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
+    // Review MINOR-3: save while a woman is pregnant, and on the tick after
+    // FertilitySystem queued a birth (12:00) before SettlementSystem spawns it
+    // (12:01); the loaded engine must give the same births as the continuous one.
+    let pregnant = |e: &SimEngine| {
+        e.world
+            .query::<&sim_core::components::Pregnant>()
+            .iter()
+            .count()
+            > 0
+    };
+    let queued = |e: &SimEngine| !e.resources.due_births.is_empty();
+    let mut a = sim_test::colony_engine(1);
+    let mut b = sim_test::colony_engine(1);
+    assert!(
+        run_until(&mut a, 40 * 1_440, pregnant),
+        "no pregnancy in 40 days"
+    );
+    assert!(run_until(&mut b, 40 * 1_440, pregnant));
+    let births = a.resources.tallies.births;
+    compare_after_load("seed 1 mid-pregnancy", a, b, 1_000);
+    let mut a = sim_test::colony_engine(1);
+    let mut b = sim_test::colony_engine(1);
+    assert!(
+        run_until(&mut a, 60 * 1_440, queued),
+        "no queued birth in 60 days"
+    );
+    assert!(run_until(&mut b, 60 * 1_440, queued));
+    assert_eq!(births, 0, "the first save was before any birth");
+    let before = a.resources.tallies.births;
+    let waiting = a.resources.due_births.len() as u64;
+    let mut probe = save::load(&save::save(&mut a).expect("save")).expect("load");
+    assert_eq!(probe.resources.due_births.len() as u64, waiting);
+    probe.tick();
+    assert_eq!(
+        probe.resources.tallies.births,
+        before + waiting,
+        "the queued births survived the load"
+    );
+    compare_after_load("seed 1 due birth queued", a, b, 2_000);
+}

@@ -6,11 +6,30 @@
 # Bridge methods called: via SimReads advance_ticks, get_time_snapshot, get_agent_snapshot; through OrderBar
 #   save_world, load_world.
 # Run: "$GODOT_BIN" --headless --path . --script res://tools/v8/save_load_check.gd
+#   Windowed with "-- --shots <abs dir>" it also saves the screen right after the save and after the first load
+#   (save_toast.png, load_toast.png: the F5 / F9 toasts; M1.5 goal 10.3).
 extends SceneTree
+
+var _shots: String = ""
 
 
 func _init() -> void:
+	var args: PackedStringArray = OS.get_cmdline_user_args()
+	for i: int in args.size():
+		if args[i] == "--shots" and i + 1 < args.size():
+			_shots = args[i + 1]
 	call_deferred("_run")
+
+
+## Save the screen to <shots>/<name> after a few frames (windowed runs only).
+func _shot(name: String) -> void:
+	if _shots == "":
+		return
+	DirAccess.make_dir_recursive_absolute(_shots)
+	for _i: int in 6:
+		await process_frame
+	var image: Image = root.get_texture().get_image()
+	image.save_png(_shots.path_join(name))
 
 
 func _fail(reason: String) -> void:
@@ -48,6 +67,7 @@ func _run() -> void:
 	if path == "" or not FileAccess.file_exists(path):
 		_fail("quick_save wrote no file (%s)" % path)
 		return
+	await _shot("save_toast.png")
 	SimReads.mutate(world, "advance_ticks", [400])
 	await process_frame
 	if _tick(world) != saved_tick + 400 or _agents(world) == saved_agents:
@@ -58,6 +78,7 @@ func _run() -> void:
 		return
 	await process_frame
 	await process_frame
+	await _shot("load_toast.png")
 	var loaded_tick: int = _tick(world)
 	var loaded_agents: String = _agents(world)
 	if loaded_tick != saved_tick:

@@ -59,32 +59,46 @@ pub fn in_transit(world: &World) -> BTreeMap<(u32, u32), u16> {
 /// every later agent of the tick and is skipped (M1.5 DECISIONS D15).
 #[derive(Debug, Default, Clone, Copy)]
 struct Exhausted {
-    short_site: bool,
-    stocked_logs: bool,
-    any_logs: bool,
-    ready_site: bool,
-    marked_tree: bool,
-    loose_logs: bool,
-    open_cell: bool,
+    short_site: Memo,
+    stocked_logs: Memo,
+    any_logs: Memo,
+    ready_site: Memo,
+    marked_tree: Memo,
+    loose_logs: Memo,
+    open_cell: Memo,
 }
 
-/// `index.nearest_where(pos, radius, pred)`, unless `done` says nothing
-/// passes `pred` anywhere; sets `done` when a map-wide search finds nothing.
+/// What this tick has learned about one search: `empty` = nothing passes its
+/// predicate anywhere on the map; `seen` = something did (a map-wide check
+/// need not run again: if that candidate is taken later, the only cost is a
+/// later miss that is not memoised — never a wrong answer).
+#[derive(Debug, Default, Clone, Copy)]
+struct Memo {
+    empty: bool,
+    seen: bool,
+}
+
+/// `index.nearest_where(pos, radius, pred)`, unless `memo` says nothing passes
+/// `pred` anywhere; a miss runs one map-wide check per search and tick.
 fn search<T: Copy + Ord>(
     index: &ChunkIndex<T>,
     pos: (u32, u32),
     radius: u32,
-    done: &mut bool,
+    memo: &mut Memo,
     mut pred: impl FnMut((u32, u32), &T) -> bool,
 ) -> Option<((u32, u32), T)> {
-    if *done {
+    if memo.empty {
         return None;
     }
     let found = index.nearest_where(pos, radius, &mut pred);
-    if found.is_none()
-        && (radius == u32::MAX || index.nearest_where(pos, u32::MAX, &mut pred).is_none())
-    {
-        *done = true;
+    if found.is_some() {
+        memo.seen = true;
+    } else if !memo.seen {
+        if radius == u32::MAX || index.nearest_where(pos, u32::MAX, &mut pred).is_none() {
+            memo.empty = true;
+        } else {
+            memo.seen = true;
+        }
     }
     found
 }
@@ -167,7 +181,7 @@ fn pick(
         return Some((JobKind::Chop { tree }, 0));
     }
     // Haul: the nearest loose stack, to the stockpile cell nearest that stack.
-    if ex.open_cell {
+    if ex.open_cell.empty {
         return None;
     }
     let loose = search(&index.ground, pos, radius, &mut ex.loose_logs, |t, _| {
