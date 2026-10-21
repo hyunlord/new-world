@@ -6,9 +6,10 @@ the 2:1 step from 1920x1080), with its file name and a one-line caption in a
 strip under it, two shots per row. The caption font is the game's Galmuri11 at
 24 px (its 12-px design grid), so Korean captions render as in the game.
 
-usage: contact_sheet.py --manifest shots.json --out sheet.png [--shots DIR]
+usage: contact_sheet.py --manifest shots.json --out sheet.png [--shots DIR] [--columns N]
   shots.json: [{"file": "m1_01_start_2x.png", "caption": "..."}, ...]
-  (file paths are relative to --shots, or to the manifest's folder by default)
+  (file paths are relative to --shots, or to the manifest's folder by default; an entry with an empty "file"
+  leaves its cell blank, so rows can hold before / after pairs with a third column used only by some rows)
 
 The output is a palette PNG (adaptive, 256 colours) so a 12-shot sheet stays
 well under the 4 MB limit; exits 1 when it would not.
@@ -33,10 +34,10 @@ MAX_BYTES = 4 * 1024 * 1024
 FONT = Path(__file__).resolve().parents[2] / "assets/fonts/galmuri/Galmuri11.ttf"
 
 
-def sheet_size(count: int) -> tuple[int, int]:
-    """Pixel size of a sheet holding `count` shots."""
-    rows = max(1, (count + COLUMNS - 1) // COLUMNS)
-    return (COLUMNS * TILE_W + (COLUMNS + 1) * GAP, rows * (TILE_H + STRIP_H) + (rows + 1) * GAP)
+def sheet_size(count: int, columns: int = COLUMNS) -> tuple[int, int]:
+    """Pixel size of a sheet holding `count` cells in `columns` columns."""
+    rows = max(1, (count + columns - 1) // columns)
+    return (columns * TILE_W + (columns + 1) * GAP, rows * (TILE_H + STRIP_H) + (rows + 1) * GAP)
 
 
 def _font(size: int) -> ImageFont.ImageFont:
@@ -46,15 +47,17 @@ def _font(size: int) -> ImageFont.ImageFont:
         return ImageFont.load_default()
 
 
-def build(items: list[tuple[Path, str]]) -> Image.Image:
-    """Lay out `items` (image path, caption) and return the RGB sheet."""
-    if not items:
+def build(items: list[tuple[Path | None, str]], columns: int = COLUMNS) -> Image.Image:
+    """Lay out `items` (image path or None for a blank cell, caption) and return the RGB sheet."""
+    if not any(path is not None for path, _ in items):
         raise ValueError("no shots")
-    sheet = Image.new("RGB", sheet_size(len(items)), BACKGROUND)
+    sheet = Image.new("RGB", sheet_size(len(items), columns), BACKGROUND)
     draw = ImageDraw.Draw(sheet)
     font = _font(24)
     for index, (path, caption) in enumerate(items):
-        col, row = index % COLUMNS, index // COLUMNS
+        if path is None:
+            continue
+        col, row = index % columns, index // columns
         x = GAP + col * (TILE_W + GAP)
         y = GAP + row * (TILE_H + STRIP_H + GAP)
         with Image.open(path) as shot:
@@ -76,16 +79,18 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--manifest", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--shots", type=Path)
+    parser.add_argument("--columns", type=int, default=COLUMNS)
     args = parser.parse_args(argv)
     base = args.shots or args.manifest.parent
     entries = json.loads(args.manifest.read_text(encoding="utf-8"))
-    items = [(base / e["file"], str(e["caption"])) for e in entries]
-    missing = [str(p) for p, _ in items if not p.is_file()]
+    items = [((base / e["file"]) if e.get("file") else None, str(e.get("caption", ""))) for e in entries]
+    missing = [str(p) for p, _ in items if p is not None and not p.is_file()]
     if missing:
         print("contact_sheet: missing " + ", ".join(missing), file=sys.stderr)
         return 1
-    size = save(build(items), args.out)
-    print(f"contact_sheet: {args.out} {sheet_size(len(items))[0]}x{sheet_size(len(items))[1]} {size} bytes, {len(items)} shots")
+    size = save(build(items, args.columns), args.out)
+    w, h = sheet_size(len(items), args.columns)
+    print(f"contact_sheet: {args.out} {w}x{h} {size} bytes, {sum(p is not None for p, _ in items)} shots")
     if size > MAX_BYTES:
         print(f"contact_sheet: {size} bytes exceeds {MAX_BYTES}", file=sys.stderr)
         return 1

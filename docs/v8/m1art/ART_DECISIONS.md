@@ -64,3 +64,17 @@ Decisions taken without asking the owner (goal §0). One line of context, the de
 - **D16 (Part 1) — a hut-floor bug caught in preview.** `_hut_walls` cleared the interior after the floor was
   painted, so the hut showed the ground through its floor (iteration 3). Fixed; `test_hut_floor_is_opaque` fails
   on the old code (checked by reintroducing the clear).
+- **D17 (Part 4) — FPS measured uncapped, A/B in one session.** M1 measured 120.00 / 119.92 FPS, the display's
+  refresh cap, which cannot show a 0.9× regression. `tools/v8/m1_gui_test.gd --no-vsync` turns vsync and the frame
+  cap off for its FPS phase; the base (`bba3110e`, a detached worktree with the same test script) and the pass
+  checkout loaded the same release bridge library from the debug path (SHA `85c47662`; the debug library
+  `14fab8d5` restored after), base and after interleaved.
+- **D18 (Part 4) — FPS round 2 is void.** In the second round the base run took about two hours for a six-minute
+  job and measured 112 / 93 FPS, and the after run hung twice on a frame wait (a known macOS stall when the window
+  gets no frames; `worldsim-godot` lesson 2026-10-11). The window was evidently not being drawn normally; round 2 is
+  reported with its numbers and not used. Round 1 (clean, interleaved) is the measurement.
+- **D19 (Part 4) — one revision round after blind read 1 (6/10).** Child redrawn with child proportions (8×10, big
+  head), the sleep frame as a head and a blanket (no belt, no eye pixels), the blueprint ghost with hatched walls,
+  a doorway and faint bedroll/hearth plan lines; the blueprint crop was re-centred (the site's dumped tile is its
+  top-left) and the question asks for the main thing the crop is centred on. Round 2 uses a new subagent and the
+  final capture; find-the-people is rerun on the same final capture.

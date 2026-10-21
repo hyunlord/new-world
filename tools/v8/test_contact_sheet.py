@@ -43,6 +43,23 @@ class ContactSheetTest(unittest.TestCase):
             self.assertEqual(sheet.getpixel((gap + 960, gap)), contact_sheet.BACKGROUND)
             self.assertNotEqual(sheet.getpixel((gap + 959, gap + 540)), (255, 0, 0))
 
+    def test_three_columns_and_blank_cells(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            entries = self._shots(folder, 2)
+            entries.insert(1, {"file": "", "caption": ""})
+            (folder / "m.json").write_text(json.dumps(entries), encoding="utf-8")
+            out = folder / "sheet.png"
+            code = contact_sheet.main(["--manifest", str(folder / "m.json"), "--out", str(out), "--columns", "3"])
+            self.assertEqual(code, 0)
+            with Image.open(out) as sheet:
+                self.assertEqual(sheet.size, (3 * 960 + 4 * contact_sheet.GAP, 540 + 64 + 2 * contact_sheet.GAP))
+                rgb = sheet.convert("RGB")
+                gap = contact_sheet.GAP
+                # the blank middle cell stays background; the third cell holds the second shot
+                self.assertEqual(rgb.getpixel((gap + 960 + gap + 100, gap + 100)), contact_sheet.BACKGROUND)
+                self.assertNotEqual(rgb.getpixel((gap + 2 * (960 + gap) + 100, gap + 100)), contact_sheet.BACKGROUND)
+
     def test_missing_shot_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)

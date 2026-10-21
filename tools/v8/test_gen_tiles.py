@@ -171,7 +171,7 @@ class GenTilesTest(unittest.TestCase):
         self.assertEqual((y0, y1), (0, 16), "adult: head on row 0, feet on row 15")
         x0, y0, x1, y1 = self.tile("child_outline_0").getbbox()
         self.assertLessEqual(x1 - x0, 12)
-        self.assertLessEqual(y1 - y0, 12)
+        self.assertLessEqual(y1 - y0, 10, "a child is clearly shorter than an adult (16)")
         self.assertEqual(y1, 16, "child feet on row 15")
         self.assertEqual(self.tile("person_outline_sleep").getbbox()[3] - self.tile("person_outline_sleep").getbbox()[1], 6)
 

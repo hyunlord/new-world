@@ -1,0 +1,86 @@
+[
+ {
+  "file": "before_m1_01_start_2x.png",
+  "caption": "이전 · P1 시작 캠프 · 틱 360(14:00)"
+ },
+ {
+  "file": "after_m1_01_start_2x.png",
+  "caption": "이후 · P1 시작 캠프 · 틱 360(14:00)"
+ },
+ {
+  "file": "",
+  "caption": ""
+ },
+ {
+  "file": "before_m1_03_work_2x.png",
+  "caption": "이전 · P3 작업 중 · 틱 481(16:01)"
+ },
+ {
+  "file": "after_m1_03_work_2x.png",
+  "caption": "이후 · P3 작업 중 · 틱 481(16:01)"
+ },
+ {
+  "file": "mockup_map.png",
+  "caption": "목업(v8_target_view_b) 지도 부분, 같은 2배"
+ },
+ {
+  "file": "before_m1_04_hut_done_2x.png",
+  "caption": "이전 · P4 오두막 완성+60 · 틱 826(21:46)"
+ },
+ {
+  "file": "after_m1_04_hut_done_2x.png",
+  "caption": "이후 · P4 오두막 완성+60 · 틱 826(21:46)"
+ },
+ {
+  "file": "",
+  "caption": ""
+ },
+ {
+  "file": "before_m1_05_night_2x.png",
+  "caption": "이전 · P5 23:00 밤 · 틱 900(23:00)"
+ },
+ {
+  "file": "after_m1_05_night_2x.png",
+  "caption": "이후 · P5 23:00 밤 · 틱 900(23:00)"
+ },
+ {
+  "file": "",
+  "caption": ""
+ },
+ {
+  "file": "before_m1_06_far_1x.png",
+  "caption": "이전 · P6 1배 원경 · 틱 481(16:01)"
+ },
+ {
+  "file": "after_m1_06_far_1x.png",
+  "caption": "이후 · P6 1배 원경 · 틱 481(16:01)"
+ },
+ {
+  "file": "",
+  "caption": ""
+ },
+ {
+  "file": "before_m1_07_inspector.png",
+  "caption": "이전 · P7 인스펙터 · 틱 481(16:01)"
+ },
+ {
+  "file": "after_m1_07_inspector.png",
+  "caption": "이후 · P7 인스펙터 · 틱 481(16:01)"
+ },
+ {
+  "file": "",
+  "caption": ""
+ },
+ {
+  "file": "before_m1_09_orderbar.png",
+  "caption": "이전 · P9 F3 오두막 모드 · 틱 481(16:01)"
+ },
+ {
+  "file": "after_m1_09_orderbar.png",
+  "caption": "이후 · P9 F3 오두막 모드 · 틱 481(16:01)"
+ },
+ {
+  "file": "",
+  "caption": ""
+ }
+]

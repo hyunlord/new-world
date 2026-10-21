@@ -53,7 +53,8 @@ Sprites (names; see the painters for the exact pixels)
     people (greyscale layers r == g == b; the renderer modulates skin, hair, tunic, halo; the outline layer is
         drawn last, unmodulated, and carries the outline, eyes and belt):
         person_<layer>_<frame>, child_<layer>_<frame> with layer skin/hair/tunic/outline/halo and frame 0 (stand),
-        1 (stride), sleep. Adults and children are 16x16 cells with the feet on row 15 (a child's figure is 8x12);
+        1 (stride), sleep. Adults and children are 16x16 cells with the feet on row 15 (a child's figure is 8x10,
+        a big head on a small body);
         the sleep frames are 16x8 (lying, head to the left), drawn centred on the tile.
         shadow 10x4 (alpha 110), drawn under the feet (cell x + 3, y + 13).
         carry_back / carry_front 16x16: three outlined logs across the shoulders; carry_back (two logs) is drawn
@@ -589,17 +590,28 @@ def hut(rr):
 
 
 def hut_ghost(blue):
-    """The hut silhouette as a blueprint: flat walls, faint floor, dashed outline on both wall edges."""
+    """The hut as a blueprint: hatched walls, the doorway, the bedrolls and hearth as faint plan lines, a dashed
+    outline on both wall edges. `blue` False gives the greyscale ghost the order tool tints green or red."""
     im, d = new(HUT, HUT)
     S, k = HUT, HUT_WALL
     if blue:
-        wall, floor, line = (120, 176, 236, 80), (120, 176, 236, 36), (160, 210, 255, 230)
+        wall, floor, line, plan = (120, 176, 236, 80), (120, 176, 236, 30), (170, 214, 255, 235), (170, 214, 255, 120)
     else:
-        wall, floor, line = (225, 225, 225, 128), (210, 210, 210, 48), (255, 255, 255, 200)
+        wall, floor, line, plan = (225, 225, 225, 128), (210, 210, 210, 48), (255, 255, 255, 200), None
     d.rectangle([0, 0, S - 1, S - 1], fill=wall)
     d.rectangle([k, k, S - 1 - k, S - 1 - k], fill=floor)
     d.rectangle([20, S - k, 27, S - 1], fill=floor)  # doorway
     px = im.load()
+    if blue:  # diagonal hatching across the walls, as on a plan
+        for y in range(S):
+            for x in range(S):
+                in_wall = not (k <= x < S - k and k <= y < S - k) and not (20 <= x <= 27 and y >= S - k)
+                if in_wall and (x + y) % 4 == 0:
+                    px[x, y] = plan
+        for bx, by in HUT_BEDROLLS:
+            d.rectangle([bx, by, bx + 13, by + 7], outline=plan)
+            d.line([(bx + 3, by + 1), (bx + 3, by + 6)], fill=plan)
+        d.ellipse([20, 19, 27, 26], outline=plan)
 
     def dash(points):
         for i, (x, y) in enumerate(points):
@@ -652,39 +664,40 @@ CHILD_TOP = [
     "................",
     "................",
     "................",
+    "................",
+    "................",
     "....oooooooo....",
     "....ohhhhhho....",
     "....osesseso....",
-    "....ossssss" + "o....",
     "....oSssssSo....",
-    "....oooooooo....",
-    "....oTTTTTTo....",
-    "....obbbbbbo....",
-    "....ouuuuuuo....",
-    "....oooooooo....",
+    ".....oooooo.....",
+    ".....oTTTTo.....",
+    ".....ouuuuo.....",
+    ".....oooooo.....",
 ]
 CHILD = {
     "0": CHILD_TOP + [".....oLooLo.....", ".....oooooo....."],
     "1": CHILD_TOP + ["....oLo..oLo....", "....ooo..ooo...."],
 }
+# Lying, head to the left, under a blanket in the tunic colour (no belt; eyes closed).
 ADULT_SLEEP = [
     "................",
-    ".ooooooooooooooo",
-    ".ohsesoTttbtuLLo",
-    ".ohssssTttbtuooo",
-    ".ohssssTttbtuooo",
-    ".ohsesoTttbtuLLo",
-    ".ooooooooooooooo",
+    ".ooooooooooooo..",
+    "ohhsssoTTTTTTTo.",
+    "ohhssssttttttto.",
+    "ohhssssttttttto.",
+    "ohhsssouuuuuuuo.",
+    ".ooooooooooooo..",
     "................",
 ]
 CHILD_SLEEP = [
     "................",
-    "..oooooooooooo..",
-    "..ohsesoTtbtLo..",
-    "..ohssssTtbtoo..",
-    "..ohssssTtbtoo..",
-    "..ohsesoTtbtLo..",
-    "..oooooooooooo..",
+    "..ooooooooo.....",
+    ".ohhssoTTTTo....",
+    ".ohhssstttto....",
+    ".ohhssstttto....",
+    ".ohhssouuuuo....",
+    "..ooooooooo.....",
     "................",
 ]
 

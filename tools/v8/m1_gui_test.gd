@@ -6,12 +6,14 @@
 #   4. run 3 game days at 4× speed (live loop, key 4).
 #   After each step it asserts the command's effect through the colony reads, and it saves the shots
 #   before, after_orders, day1, hut_done and far. With --fps-seconds N it then measures the mean FPS at 4× for
-#   N seconds at 2× zoom and at 1× zoom (U7). Prints M1_GUI_PASS / M1_GUI_FAIL lines and a JSON summary.
+#   N seconds at 2× zoom and at 1× zoom (U7); --no-vsync turns vsync and the frame cap off for that phase, so the
+#   number is not clipped at the display's refresh rate (M1-ART 8.5). Prints M1_GUI_PASS / M1_GUI_FAIL lines and a
+#   JSON summary.
 # Tooling only: the game never runs this script.
 # Bridge methods called: get_time_snapshot, get_building_snapshot, get_trees, get_terrain_snapshot,
 #   get_colony_overlay, can_place_blueprint, get_tallies (all reads).
 # usage: Godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
-#          --script res://tools/v8/m1_gui_test.gd -- --out <abs dir> [--days 3] [--fps-seconds 120]
+#          --script res://tools/v8/m1_gui_test.gd -- --out <abs dir> [--days 3] [--fps-seconds 120] [--no-vsync]
 extends SceneTree
 
 const TILE: float = 16.0
@@ -20,6 +22,7 @@ const DAY: int = 1440
 var _out: String = ""
 var _days: int = 3
 var _fps_seconds: float = 0.0
+var _no_vsync: bool = false
 var _failures: Array[String] = []
 var _summary: Dictionary = {}
 var _main: Node
@@ -36,6 +39,8 @@ func _init() -> void:
 			_days = int(args[i + 1])
 		elif args[i] == "--fps-seconds" and i + 1 < args.size():
 			_fps_seconds = float(args[i + 1])
+		elif args[i] == "--no-vsync":
+			_no_vsync = true
 	call_deferred("_run")
 
 
@@ -313,7 +318,10 @@ func _step_run(hearth: Vector2i) -> void:
 
 
 func _fps(hearth: Vector2i) -> void:
-	var results: Dictionary = {}
+	var results: Dictionary = {"vsync": not _no_vsync}
+	if _no_vsync:
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		Engine.max_fps = 0
 	for zoom: float in [2.0, 1.0]:
 		_camera.zoom = Vector2.ONE * zoom
 		_camera.call("center_on_tile", hearth)

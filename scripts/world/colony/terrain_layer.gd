@@ -176,7 +176,7 @@ func _dark_grass(noise: float, hash_value: int) -> bool:
 	return noise > DARK_GRASS
 
 
-## The side (0 N, 1 E, 2 S, 3 W) of a worn tile that faces open grass, or -1.
+## The side (0 N, 1 E, 2 S, 3 W) of a worn tile that faces open grass (not water, rock or hill), or -1.
 func _grass_side(worn: PackedByteArray, terrain: PackedByteArray, w: int, h: int, x: int, y: int) -> int:
 	for side: int in 4:
 		var nx: int = x + N4[side].x
@@ -184,7 +184,7 @@ func _grass_side(worn: PackedByteArray, terrain: PackedByteArray, w: int, h: int
 		if nx < 0 or ny < 0 or nx >= w or ny >= h:
 			continue
 		var j: int = ny * w + nx
-		if worn[j] == 0 and terrain[j] != RIVER and terrain[j] != MOUNTAIN:
+		if worn[j] == 0 and terrain[j] != RIVER and terrain[j] != MOUNTAIN and terrain[j] != HILL:
 			return side
 	return -1
 
