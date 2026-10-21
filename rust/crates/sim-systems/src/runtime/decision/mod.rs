@@ -14,7 +14,7 @@
 
 mod forage;
 mod memory_bias;
-mod needs;
+pub(crate) mod needs;
 mod routine;
 mod system;
 mod targets;

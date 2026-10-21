@@ -3,14 +3,27 @@ fn main() -> std::process::ExitCode {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args.iter().any(|arg| arg == "--help" || arg == "-h") {
         println!("usage: worldsim_probe --scene colony --seeds a..b --days N --workers 1..8 --out DIR [--commands FILE] [--commands-out DIR] [--check-determinism]");
+        println!("usage: worldsim_probe --scene colony --seeds S..S+1 --ascii --tick T [--rect x,y,w,h] [--commands FILE] [--ascii-legend] [--out FILE] [--people-json FILE]");
         println!("usage: worldsim_probe --scene baseline --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,...] [--agent-trace] [--chronicle-out DIR]");
         return std::process::ExitCode::SUCCESS;
     }
-    // M1: the colony scene has its own runner (commands, U-bars).
-    if args
+    let colony = args
         .windows(2)
-        .any(|w| w[0] == "--scene" && w[1] == "colony")
-    {
+        .any(|w| w[0] == "--scene" && w[1] == "colony");
+    // M1.5: the text renderer (goal 8.1) is a colony run that prints a grid.
+    if colony && args.iter().any(|arg| arg == "--ascii") {
+        return match sim_test::probe::ascii::AsciiArgs::parse(args)
+            .and_then(|a| sim_test::probe::ascii::run(&a))
+        {
+            Ok(()) => std::process::ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::ExitCode::FAILURE
+            }
+        };
+    }
+    // M1: the colony scene has its own runner (commands, U-bars).
+    if colony {
         return match sim_test::probe::colony::ColonyArgs::parse(args)
             .and_then(|a| sim_test::probe::colony::run(&a))
         {

@@ -18,6 +18,8 @@
 #      folder has its tracked .uid, every tracked .uid has its source, every .tscn header has a uid
 #   9. a contact sheet of the current game exists (V8-PLAY 3): docs/images/*_contact_sheet.png, and
 #      README.md links each one by its path
+#  10. the snapshot schema (M1.5 goal 8.1): docs/v8/snapshot_schema.md names every get_* #[func] of
+#      sim-bridge and exactly the dictionary keys each sets (check_docs_helpers.py schema)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -94,6 +96,13 @@ else
     for sheet in $sheets; do
         grep -qF "($sheet)" README.md && ok "README links $sheet" || fail "README.md does not link $sheet"
     done
+fi
+
+schema_check=$(python3 tools/v8/check_docs_helpers.py schema .)
+if [[ $? -eq 0 ]]; then
+    ok "snapshot schema ${schema_check#schema: }"
+else
+    fail "snapshot schema: $(echo "$schema_check" | sed 's/^schema: //' | head -8 | tr '\n' ';')"
 fi
 
 if (( status == 0 )); then echo "docs: PASS"; else echo "docs: FAIL"; fi

@@ -3,6 +3,7 @@ pub(crate) mod adult_work;
 mod agent_trace;
 pub(crate) mod area_floor;
 mod args;
+pub mod ascii;
 pub mod chronicle_out;
 pub mod churn;
 pub mod colony;

@@ -29,6 +29,18 @@ pub struct ColonyRule {
     /// Ticks without Chebyshev progress after which a walking job is
     /// cancelled as stuck (7.5).
     pub stuck_ticks: u64,
+    /// M1.5 (goal 8.2, remedy 1): a job yields to a personal need only when
+    /// the need is this far (permille of the 0–100 need scale) beyond the
+    /// need's seek threshold (hunger, thirst, the person's fatigue
+    /// threshold); survival work, social and leisure choices never take a
+    /// job holder away. `None` = M1: every non-idle choice releases the job.
+    #[serde(default)]
+    pub yield_margin_permille: Option<u32>,
+    /// M1.5 (goal 8.2, remedy 2): a `Haul` or `Deliver` walking its load
+    /// (`ToDest`) with the destination within this Chebyshev distance
+    /// finishes the leg before yielding. `None` = M1.
+    #[serde(default)]
+    pub finish_leg_tiles: Option<u32>,
 }
 
 impl ColonyRule {
@@ -45,6 +57,16 @@ impl ColonyRule {
         hut_beds: 4,
         job_scan_radius: 96,
         stuck_ticks: 240,
+        yield_margin_permille: None,
+        finish_leg_tiles: None,
+    };
+
+    /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
+    /// (goal 8.2; calibration in M1.5 DECISIONS).
+    pub const M1_5: Self = Self {
+        yield_margin_permille: Some(150),
+        finish_leg_tiles: Some(12),
+        ..Self::M1
     };
 }
 
@@ -106,7 +128,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M1),
+            colony: Some(ColonyRule::M1_5),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base

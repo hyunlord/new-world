@@ -200,3 +200,54 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   code that the baseline runs (identity risk), for a part of `AgentDecisionSystem` whose share of the decision cost
   is not yet profiled. M-PERF takes it, starting with a profile of `AgentDecisionSystem` (66–86 % of the tick at
   N = 2,000 in the trial runs).
+
+## D13 — Job churn (goal 8.2): the diagnosis, the remedies, the calibration
+
+- Diagnosis (8.2.1, on the M1 fixtures at the base commit, seeds 100–131, 10 days, U-script; the seam's
+  measurement-only counter, D3): 4,786 jobs taken, 1,012 finished (0.21), 3,774 released by `CancelReason::Needs`.
+  By the need the decision turned to: **forage 2,160 (57 %)**, thirst 836 (22 %), sleep 541 (14 %), firewood 170
+  (4.5 %), social 54 (1.4 %), hunger 13 (0.3 %). By stage: walking to the source 2,895 (77 %), working 653, walking
+  the load 226. Thirst releases happen at thirst 50–59 (550), 60–69 (58), 70–79 (228); sleep releases at fatigue
+  0–59, mostly at night (the night-rest threshold is 0). The churn is not hunger: three releases in five are a
+  worker turned forager because the store was under its target.
+- Remedy 1 (`ColonyRule.yield_margin_permille`, start and final value 150): a job yields only to an urgent
+  personal need — food at hunger ≥ 50 + 15, water at thirst ≥ 50 + 15, sleep at fatigue ≥ the person's own
+  threshold + 15 (the night-rest threshold 0 at night, 50 by day). Survival work (foraging, firewood), social and
+  every other choice never take a job holder; the worker's previous state is restored, as M1 did for an idle
+  choice. Rationale: a job exists only because the player ordered it; the colony's foraging and firewood are done by
+  those without a job and by workers once their job is done.
+- Remedy 2 (`ColonyRule.finish_leg_tiles`, 12): a `Haul` or `Deliver` in `ToDest` within 12 tiles of its
+  destination delivers before yielding (even to an urgent need).
+- Both live in `ColonyRule::M1_5` (the colony's rule); `ColonyRule::M1` keeps M1's values (`None`) for the job
+  fixtures. Code: `jobs::seam::keeps_job` (no change to `decision/system.rs`; `decision::needs` became
+  `pub(crate)` so the seam reads the same thresholds); unit test `a_job_yields_only_to_an_urgent_need_and_finishes_a_near_leg`.
+- Calibration (seeds 0–7, U-script, 10 days): round 1 at 150 ‰ and 12 tiles: finished / taken 0.97–1.00 on 8 / 8
+  (before: 0.19–0.35), 0 deaths, U1–U3 8 / 8. No second round.
+- After (M1 fixtures, seeds 100–131, re-captured at Part 4: `$DATA/p4/fixtures`): 1,030 taken, 1,014 finished
+  (0.984), 16 releases (all thirst); 32 / 32 seeds ≥ 0.5; U1, U2, U3 32 / 32; 0 deaths.
+
+| run | taken | finished | ratio | released by need |
+|---|---|---|---|---|
+| base `3183e77d` | 4,786 | 1,012 | 0.211 | 3,774 |
+| Part 1 (calendar) | 4,424 | 1,008 | 0.228 | 3,416 |
+| Part 4 (remedies) | 1,030 | 1,014 | 0.984 | 16 |
+
+## D14 — The text renderer and the snapshot schema (goal 8.1)
+
+- `worldsim_probe --scene colony --seeds S..S+1 --ascii --tick T [--rect x,y,w,h] [--commands FILE]
+  [--ascii-legend] [--out FILE] [--people-json FILE]` (`sim_test::probe::ascii`) draws only from the bridge's
+  pure collectors (`collect_terrain_snapshot`, `collect_colony_overlay`, `collect_building_snapshot`,
+  `collect_trees`, `collect_agent_snapshot`, `collect_agent_jobs`, `collect_time_snapshot`).
+- Choices beyond the goal's glyph list: all ten terrain types have a glyph (`,` forest floor, `:` desert for "dirt",
+  `_` coast, `-` tundra, `"` swamp, `o` cave); a marked standing tree shows `x` (trees are drawn above marks); a
+  tile with k ≥ 2 people shows the digit k (sleepers share their shelter's tile, so one character per person cannot
+  count them; the Godot view fans sleepers out for drawing only); stumps follow the tree layer's own rule (a tree
+  gone from `get_trees` is a stump for 1,440 ticks; the simulation has no stumps).
+- Agreement (`tools/v8/renderer_agreement.sh`, future gate step `renderer_agreement`): seed 100, U-script, tick 900;
+  the multiset of person tiles from the text renderer equals the tiles of the people `agent_layer.gd` has drawn
+  (its own node positions minus the drawing-only sleeper spread, converted with `View.world_to_tile`):
+  `RENDERER_AGREEMENT PASS n=10 tick=900` (also at tick 600). A one-tile shift of one person fails it.
+- `docs/v8/snapshot_schema.md` (schema version 1) documents 31 getters and 283 keys; `check_docs_helpers.py
+  schema` checks names and keys against the bridge source (check 10 of `check_docs.sh`; the gate step
+  `schema_docs`).
+- `--ascii-diff` (the first item of the drop order) was not done.
