@@ -103,7 +103,7 @@
 - Part 2 [`6c74d1a8`](https://github.com/hyunlord/new-world/commit/6c74d1a8): 01~08의 `art/concepts/<slug>/LOG.md` 8개, `docs/v8/artconcept/CONCEPT_DECISIONS.md`, `ORIGINALS.json`, `PROGRESS.md`.
 - Part 3 [`483b5ab0`](https://github.com/hyunlord/new-world/commit/483b5ab06f35cb89be6d00a00bafc18ac416cf1e): 위 경로 목록의 `art/concepts/boards/` PNG 12개, `docs/v8/artconcept/ASSEMBLY.md`, `ASSEMBLY_REVIEW.md`, `BOARD_QA.md`, `PROGRESS.md`, `build_boards.py`.
 - Part 4 [`4e0aeabf`](https://github.com/hyunlord/new-world/commit/4e0aeabf7bfd0564261dd435aa99fa6d508812b5): `CHECKS.md`, `BLIND_REVIEW.md`, `SCORES.json`, `REQUIREMENT_AUDIT.md`, `ASSEMBLY.md`, `ORIGINALS.json`, `PROGRESS.md`, `art/concepts/06_cave_ochre/LOG.md`. 검사·원문·감사 및 06 컷아웃 채택 정정.
-- Part 5: **PENDING — 리더의 커밋 이후 실제 SHA·변경 경로를 대입**. 책·비용·본 보고 및 종료 기록.
+- Part 5 [`01617208`](https://github.com/hyunlord/new-world/commit/01617208578c64db54abee115c3c5b37df032639): `CONCEPT_BOOK.md`, `COST.md`, `CONCEPT_REPORT.md`, `PROGRESS.md`. 책·비용·§8 보고. 후속 게시 증거 기록은 본 보고·비용·감사·진행 기록만 갱신한다.
 
 ### 제한사항 (카메라 규칙 위반으로 버린 수, 모델이 못 한 것, 드롭한 컨셉·주제)
 
@@ -119,6 +119,12 @@
 git ls-remote 결과
 
 ```text
-PENDING: 최종 Part 5 push 후 git ls-remote origin v8/art-concept 결과와
-로컬 HEAD 일치를 리더가 실제 출력으로 대체한다. 현재 최종 원격 검증을 주장하지 않는다.
+$ git rev-parse HEAD
+01617208578c64db54abee115c3c5b37df032639
+$ git ls-remote origin v8/art-concept
+01617208578c64db54abee115c3c5b37df032639\trefs/heads/v8/art-concept
 ```
+
+Part 5 본문 게시 직후의 실제 일치 증거다. 이 증거를 문서에 넣는 후속 커밋은 별도로 push·검증하며 최종 응답에 해당 SHA를 기록한다.
+
+최종 게시 감사 시각: 2026-10-22 02:15:22 KST. 시작 약 01:28 KST부터 약 48분 경과. 추가 생성은 없으며, 전체 비교 판정은 PARTIAL로 유지한다.
