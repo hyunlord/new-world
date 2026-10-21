@@ -1,7 +1,7 @@
 """Tests for tools/v8/bridge_api.py and the bridge API invariant (goal 4.2, 12).
 
 The live check: the exports of rust/crates/sim-bridge equal the current pass's
-list (M1: docs/v8/bridge_api_m1.txt, gate step 13). V8-0's record stays: its
+list (M1.5: docs/v8/bridge_api_m1_5.txt, gate step 13; M1's list stays as its record). V8-0's record stays: its
 removed names are not exported again.
 """
 import sys
@@ -67,8 +67,9 @@ class BridgeApiTest(unittest.TestCase):
         self.assertIn("func WorldSimNode.get_other", bridge_api.scan_repo(root))
         self.assertIn("func WorldSimNode.get_thing", bridge_api.scan_repo(root))
 
-    def test_live_bridge_equals_the_m1_list(self):
-        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_m1.txt"))
+    def test_live_bridge_equals_the_current_list(self):
+        # The list gate step 13 checks (M1.5: save_world and load_world added).
+        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_m1_5.txt"))
         self.assertEqual(set(bridge_api.scan_repo(ROOT)), expected)
 
     def test_v8_0_removed_names_stay_removed(self):

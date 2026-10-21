@@ -352,3 +352,16 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   father when `requires_partner` is false) stays: the option is off in the colony; recorded here.
 - Re-measured after MAJOR-1 (behaviour changes only for job holders): calibration seeds 0–7 with the U-script, the
   M1 fixtures and the J1 evaluation (see the evaluation file); the 3-year runs without orders have no job holders.
+
+## D19 — First gate run red: a wrong base path and a pinned bridge list
+
+- Gate 1 (`$DATA/gate1`, commit `b092b7b3`) failed three steps; 22 others passed (debug and release tests 1,820 / 0,
+  smoke, determinism, colony determinism, replay, play check 6/6, schema docs, renderer agreement, save round trip,
+  bench PASS against the M1.5 ledger line).
+  - `identity` and `perf`: `--base-data $DATA/base` pointed at the data root; the identity capture is
+    `$DATA/base/identity`, and no base `perf.sh` summary had been captured. Not a code fault: the base `perf.sh` run
+    (base binaries `$DATA/base/bin`) goes to `$DATA/base/identity/perf`, and the gate is rerun whole with
+    `--base-data $DATA/base/identity` (every Part's identity run already used that directory).
+  - `python_unittest`: `tools/v8/test_bridge_api.py` compared the live bridge with M1's list, so the save/load
+    methods failed it. The test now reads `docs/v8/bridge_api_m1_5.txt` (the list step 13 checks); the architecture
+    skill's Procedure B names the test.
