@@ -9,8 +9,8 @@ Raw images, rejected candidates, logs and working files: `/Users/rexxa/work/artt
 
 | Part | Deliverable and proof | State |
 |---|---|---|
-| 0 | English STYLE with Korean summary; reproducible 48-colour palette; all eight pipeline steps; three synthetic fixtures, negative checks; commit/push/ref equality | COMPLETE: a799b4bd; remote SHA verified |
-| 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | COMPLETE: eaf9442d; 51/51 mechanical PASS; remote SHA verified; visual limits retained |
+| 0 | English STYLE with Korean summary; reproducible 48-colour palette; all eight pipeline steps; three synthetic fixtures, negative checks; commit/push/ref equality | PUBLISHED: a799b4bd; remote SHA verified; literal palette method and historical prompt-reference compliance PARTIAL (REQUIREMENTS_AUDIT.md) |
+| 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | PUBLISHED: eaf9442d; 51/51 mechanical PASS; remote SHA verified; appearance compliance PARTIAL |
 | 2 | Four bodies × two directions × four upright frames plus south sleep; generated-on-body hair/beard, tops and tools, subtraction extraction; PERSON_SPEC | PUBLISHEDa849de65 continuation; PARTIAL:256/612wardrobe, spear absent;404submitted assets checked |
 | 3 | Native-scale1920×1080 comparison;24labelled requests; anonymous crops | PUBLISHED973435a7 continuation; PARTIAL:22complete/2incomplete |
 | 4 | Fresh-context blind/variation, consistency and costs | EXECUTED:scene3/10→3/10FAIL;variation10/24FAIL;404/404mechanical PASS; continuation published3fe552c6 |
@@ -56,3 +56,16 @@ The checkpoint above is historical, at `caf2557916c2fa35be47d492d051d87116204343
 No second blind scene revision, random-sample replacement, body-pixel repair, acceptance relaxation or deadline reset is authorized. Decisions D22–D24 record the continuation and the failed bounded spear diagnostic.
 
 Original goal remains unfulfilled:356mandatory wardrobe keys and2complete board requests are missing; the failed blind/variation scores remain unchanged. Finishing this bounded continuation is not completion of Parts0–5 against the original contract.
+
+## Second bounded continuation
+
+Baseline:d3bada0f. This wave preserves the entire404-asset package and every frozen evaluation input.
+
+| Step | Deliverable | State |
+|---|---|---|
+| 1 | Freeze baseline, original deadline and43-call cap | COMPLETE: external `continuation2_accounting/plan.json` and immutable baseline |
+| 2 | Generate four board-hair and39missing female non-spear tool candidates | COMPLETE:43returns,0errors,0accepted,0pending; all43raw/archive pairs independently byte-verified |
+| 3 | Validate unchanged integration and audited semantic/provenance claims | COMPLETE:404/404mechanicalPASS; registry/atlas/board exact;404sources,12scene files,sixsamples preserved; environment29groups/59raw pairs verified |
+| 4 | Freeze separate costs and publish evidence/report updates | COMPLETE: cost freeze2026-10-21T15:31:23.029526Z; this publication records Part4and Part5commits |
+
+No accepted-key count improved. Original wardrobe256/612, board22/24 and failed3/10/10/24readability gates remain unresolved. Labelled semantic review additionally records handedness/texture/log-count limitations. The one permitted scene revision is exhausted; further generation or documentation cannot replace its failed result. This batch's completion does not establish the original objective.

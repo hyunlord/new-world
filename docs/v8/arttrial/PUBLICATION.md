@@ -2,11 +2,11 @@
 
 Branch: `v8/art-trial`. Base: `3183e77dfbe6373f1c3d3e0d08a1121fb546b694`. No other branch pushed; no PR or merge.
 
-**Outcome: visual acceptance FAIL; required person coverage PARTIAL. Current package:404assets,256/612wardrobe,22/24complete board requests. Publication does not certify all original requirements complete.**
+**Outcome: visual acceptance FAIL; required person coverage PARTIAL. Current package:404assets,256/612wardrobe,22/24complete board requests. The second43-call continuation added zero assets. Publication does not certify all original requirements complete.**
 
 Every recorded SHA was pushed and independently returned by `git ls-remote origin v8/art-trial` at its milestone. Historical records retain their original file lists.
 
-## Part0 — a799b4bd451fe3f55a7a96321e6e8221caf33a17
+## initial Part0 — a799b4bd451fe3f55a7a96321e6e8221caf33a17
 
 [Commit](https://github.com/hyunlord/new-world/commit/a799b4bd451fe3f55a7a96321e6e8221caf33a17)
 
@@ -41,7 +41,7 @@ Changed paths:
 - `docs/v8/arttrial/TRIAL_DECISIONS.md`
 - `docs/v8/arttrial/TRIAL_GOAL.md`
 
-## Part1 — eaf9442d4dd38cc08e6091f33b2e202fb57aefcf
+## initial Part1 — eaf9442d4dd38cc08e6091f33b2e202fb57aefcf
 
 [Commit](https://github.com/hyunlord/new-world/commit/eaf9442d4dd38cc08e6091f33b2e202fb57aefcf)
 
@@ -69,7 +69,7 @@ Changed paths:
 - `docs/v8/arttrial/visual_raw_hut_01.json`
 - `docs/v8/arttrial/visual_raw_tree_01.json`
 
-## Part2 — 821f702ed8ab52a0f60d698cf4e2b15baf392e4a
+## initial Part2 — 821f702ed8ab52a0f60d698cf4e2b15baf392e4a
 
 [Commit](https://github.com/hyunlord/new-world/commit/821f702ed8ab52a0f60d698cf4e2b15baf392e4a)
 
@@ -97,7 +97,7 @@ Changed paths:
 - `docs/v8/arttrial/TRIAL_DECISIONS.md`
 - `docs/v8/arttrial/visual_body_adult_m_01.json`
 
-## Part3 — a9fec1a94ddad5243886788f90562020d3787e4a
+## initial Part3 — a9fec1a94ddad5243886788f90562020d3787e4a
 
 [Commit](https://github.com/hyunlord/new-world/commit/a9fec1a94ddad5243886788f90562020d3787e4a)
 
@@ -113,7 +113,7 @@ Changed paths:
 - `docs/v8/arttrial/BOARD_PROVENANCE.json`
 - `docs/v8/arttrial/SCENE_PROVENANCE.json`
 
-## Part4 — 0b4454fcf43057061a5ae4ebaf0231fc0c051e38
+## initial Part4 — 0b4454fcf43057061a5ae4ebaf0231fc0c051e38
 
 [Commit](https://github.com/hyunlord/new-world/commit/0b4454fcf43057061a5ae4ebaf0231fc0c051e38)
 
@@ -130,7 +130,7 @@ Changed paths:
 - `docs/v8/arttrial/visual_scene_round1.json`
 - `docs/v8/arttrial/visual_scene_round2.json`
 
-## Part5 — caf2557916c2fa35be47d492d051d87116204343
+## initial Part5 — caf2557916c2fa35be47d492d051d87116204343
 
 [Commit](https://github.com/hyunlord/new-world/commit/caf2557916c2fa35be47d492d051d87116204343)
 
@@ -144,7 +144,7 @@ Changed paths:
 - `docs/v8/arttrial/PUBLICATION.md`
 - `docs/v8/arttrial/TRIAL_REPORT.md`
 
-## Part2 continuation — a849de65dc2e1f5174d0bfbca4116abf46fd4365
+## continuation Part2 — a849de65dc2e1f5174d0bfbca4116abf46fd4365
 
 [Commit](https://github.com/hyunlord/new-world/commit/a849de65dc2e1f5174d0bfbca4116abf46fd4365)
 
@@ -164,7 +164,7 @@ Changed paths:
 - `docs/v8/arttrial/CONTINUATION.md`
 - `docs/v8/arttrial/CONTINUATION_VERIFICATION.json`
 
-## Part3 continuation — 973435a7706e7b4e807d238b53df285b655cd7ed
+## continuation Part3 — 973435a7706e7b4e807d238b53df285b655cd7ed
 
 [Commit](https://github.com/hyunlord/new-world/commit/973435a7706e7b4e807d238b53df285b655cd7ed)
 
@@ -176,7 +176,7 @@ Changed paths:
 - `docs/v8/arttrial/BOARD_PROVENANCE.json`
 - `docs/v8/arttrial/CONTINUATION_VISUAL_QA.json`
 
-## Part4 continuation — 3fe552c67df73431250a920ede33adb018a7fec1
+## continuation Part4 — 3fe552c67df73431250a920ede33adb018a7fec1
 
 [Commit](https://github.com/hyunlord/new-world/commit/3fe552c67df73431250a920ede33adb018a7fec1)
 
@@ -189,9 +189,11 @@ Changed paths:
 - `docs/v8/arttrial/REFERENCE_DISTRIBUTION.md`
 - `docs/v8/arttrial/VALIDATION.md`
 
-## Current Part5 continuation report commit
+## continuation Part5 — d3bada0f2c823289b3287c892936e2b8be1a02ea
 
-This document is included in the current report commit; its resulting SHA is recorded after publication in the final response and external `preflight/publication.json`.
+[Commit](https://github.com/hyunlord/new-world/commit/d3bada0f2c823289b3287c892936e2b8be1a02ea)
+
+Remote: `d3bada0f2c823289b3287c892936e2b8be1a02ea refs/heads/v8/art-trial`
 
 Changed paths:
 
@@ -200,10 +202,32 @@ Changed paths:
 - `docs/v8/arttrial/EXECUTION_PLAN.md`
 - `docs/v8/arttrial/PUBLICATION.md`
 
+## continuation2 Part4 — a1766ff6cad5e5f3160c713cfe23850a2c3b4f80
+
+[Commit](https://github.com/hyunlord/new-world/commit/a1766ff6cad5e5f3160c713cfe23850a2c3b4f80)
+
+Remote: `a1766ff6cad5e5f3160c713cfe23850a2c3b4f80 refs/heads/v8/art-trial`
+
+Changed paths:
+
+- `docs/v8/arttrial/CONTINUATION2.md`
+- `docs/v8/arttrial/CONTINUATION2_VERIFICATION.json`
+- `docs/v8/arttrial/COST.md`
+- `docs/v8/arttrial/ENVIRONMENT.md`
+- `docs/v8/arttrial/ENVIRONMENT_CANDIDATE_AUDIT.json`
+- `docs/v8/arttrial/REQUIREMENTS_AUDIT.md`
+- `docs/v8/arttrial/SEMANTIC_AUDIT.json`
+- `docs/v8/arttrial/TRIAL_DECISIONS.md`
+- `docs/v8/arttrial/VALIDATION.md`
+
+## Current second-continuation Part5
+
+This commit updates TRIAL_REPORT.md, DECISION_BRIEF.md, EXECUTION_PLAN.md and this publication ledger. Its own SHA and subsequent remote equality are recorded in the final response and external `preflight/publication.json` after push, avoiding a self-referential hash.
+
 ## Byte, scope and preservation gates
 
-The allowed-path package remains below12MB total and1.5MB per file. Exact committed path/byte/hash evidence is saved externally in `continuation_accounting/final_committed_budget.json` after this publication. Only final atlas/swatch and comparison images are committed; all raw images, rejections and intermediates remain external.
+The allowed-path package remains below12MB total and1.5MB per file. Exact committed path/byte/hash evidence is saved externally in `continuation2_accounting/final_committed_budget.json` after this publication. Only final atlas/swatch and comparison images are committed; all raw images, rejections and intermediates remain external.
 
-The pre-existing `.gitignore` modification, untracked `.ignore` and unrelated `docs/art/` are preserved and excluded. This is not a claim of a globally clean worktree. All383prior source hashes,12frozen scene artifacts and6sample recompositions remain unchanged. See `CONTINUATION_VERIFICATION.json`.
+The pre-existing `.gitignore` modification, untracked `.ignore` and unrelated `docs/art/` are preserved and excluded. This is not a claim of a globally clean worktree. All404prior source hashes,12frozen scene artifacts and sixsample recompositions remain unchanged. Registry, atlas PNG/JSON and person board remain byte-identical. See `CONTINUATION2_VERIFICATION.json`.
 
-Historical cost snapshots remain byte-identical in `continuation_accounting/baseline/`; current costs and their remaining historical unknowns are disclosed in `COST.md`.
+Historical834-call and first142-call continuation ledgers remain byte-identical in their external snapshots. Current costs and historical unknowns are disclosed in `COST.md`.
