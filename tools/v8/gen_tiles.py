@@ -43,7 +43,8 @@ Sprites (names; see the painters for the exact pixels)
     zone parts 16x16, transparent: stock_edge_n/e/s/w (1-px darker border on that side), stock_stake_nw/ne/sw/se
         (a small stake in that corner).
     canopy: tree_<species>_<size> 24x24 for species oak/birch/pine and size 0..2 (drawn at the tile minus 4 px, so
-        neighbours overlap into a mass); tree_<species>_lo 16x16 impostors for 1x zoom; tree_shadow 20x8 (alpha 90).
+        neighbours overlap into a mass; at 1x zoom the renderer draws size 1 without jitter or shadow);
+        tree_shadow 20x8 (alpha 90).
     nature 16x16: stump, bush_full, bush_bare, deadwood.
     items 16x16: logs_s (1-8), logs_m (9-16), logs_l (17+).
     buildings: hut 48x48 (log walls, south doorway, earth floor, 4 bedrolls, hearth stone; no roof), hut_ghost
@@ -374,7 +375,7 @@ def _disc(px, w, h, cx, cy, r, color, dx=0.0, dy=0.0, rad=None):
 
 
 def canopy(species, diam, size, rr):
-    """A 24x24 (or 16x16 for impostors) canopy: lumps shaded shadow -> base -> light -> highlight from the
+    """A 24x24 canopy: lumps shaded shadow -> base -> light -> highlight from the
     top-left, a darker underside, a 1-px outline."""
     im = Image.new("RGBA", (size, size), TRANSPARENT)
     px = im.load()
@@ -519,13 +520,16 @@ def shelter():
 
 HUT = 48
 HUT_WALL = 7
+# Top-left of the four 14x8 bedrolls inside the hut; the agent layer lays sleepers on them (agent_layer.gd BEDROLLS
+#   = these minus (1, 4)).
+HUT_BEDROLLS = ((9, 9), (25, 9), (9, 30), (25, 30))
 
 
 def _hut_walls(d, wall_l, wall, wall_d, gap, grain, ring):
     """Two courses of logs on every side: north/south run east-west, west/east run north-south."""
     S, k = HUT, HUT_WALL
-    d.rectangle([0, 0, S - 1, S - 1], fill=gap)
-    d.rectangle([k, k, S - 1 - k, S - 1 - k], fill=(0, 0, 0, 0))
+    for box in ([0, 0, S - 1, k - 1], [0, S - k, S - 1, S - 1], [0, 0, k - 1, S - 1], [S - k, 0, S - 1, S - 1]):
+        d.rectangle(box, fill=gap)
     for y0 in (0, S - k):  # north, south
         for course in (1, 4):
             y = y0 + course
@@ -557,18 +561,17 @@ def hut(rr):
     d.line([(k, k), (k, S - 1 - k)], fill=rgba(shade(floor, 0.74)))
     d.line([(k + 1, k + 1), (S - 2 - k, k + 1)], fill=rgba(shade(floor, 0.86)))
     _hut_walls(d, rgba(LOG_LIGHT), rgba(LOG), rgba(LOG_DARK), rgba(OUTLINE), rgba(GRAIN), rgba(GRAIN_RING))
-    # four bedrolls (2x2), hides with a lighter pillow at the head (north)
+    # four bedrolls (2x2), lying east-west like the sleep pose: hides with a lighter pillow at the head (west)
     hides = [(150, 112, 72), (128, 96, 66), (140, 116, 82), (120, 90, 60)]
-    for i, (bx, by) in enumerate(((10, 10), (29, 10), (10, 26), (29, 26))):
+    for i, (bx, by) in enumerate(HUT_BEDROLLS):
         h = hides[i]
-        d.rectangle([bx, by, bx + 8, by + 11], fill=rgba(OUTLINE))
-        d.rectangle([bx + 1, by + 1, bx + 7, by + 10], fill=rgba(h))
-        d.line([(bx + 1, by + 10), (bx + 7, by + 10)], fill=rgba(shade(h, 0.8)))
-        d.line([(bx + 7, by + 1), (bx + 7, by + 10)], fill=rgba(shade(h, 0.86)))
+        d.rectangle([bx, by, bx + 13, by + 7], fill=rgba(OUTLINE))
+        d.rectangle([bx + 1, by + 1, bx + 12, by + 6], fill=rgba(h))
+        d.line([(bx + 1, by + 6), (bx + 12, by + 6)], fill=rgba(shade(h, 0.8)))
         for _ in range(4):
-            d.point((bx + rr.randrange(2, 7), by + rr.randrange(5, 10)), fill=rgba(shade(h, 1.16)))
-        d.rectangle([bx + 2, by + 2, bx + 6, by + 4], fill=rgba((206, 192, 156)))  # pillow
-        d.line([(bx + 2, by + 4), (bx + 6, by + 4)], fill=rgba((172, 158, 124)))
+            d.point((bx + rr.randrange(5, 12), by + rr.randrange(2, 6)), fill=rgba(shade(h, 1.16)))
+        d.rectangle([bx + 1, by + 1, bx + 3, by + 5], fill=rgba((206, 192, 156)))  # pillow
+        d.line([(bx + 3, by + 1), (bx + 3, by + 5)], fill=rgba((172, 158, 124)))
     # a small hearth stone in the middle
     d.ellipse([20, 19, 27, 26], fill=rgba(OUTLINE))
     d.ellipse([21, 20, 26, 25], fill=rgba((116, 110, 102)))
@@ -834,9 +837,6 @@ def build_sprites():
         for size, diam in enumerate(CANOPY_SIZES):
             add("canopy", f"tree_{species}_{size}", canopy(species, diam, 24, rr(k)))
             k += 1
-    for species in ("oak", "birch", "pine"):
-        add("small", f"tree_{species}_lo", canopy(species, 15, 16, rr(k)))
-        k += 1
     add("small", "tree_shadow", tree_shadow())
     add("small", "stump", stump(rr(90)))
     add("small", "bush_full", bush(True, rr(91)))

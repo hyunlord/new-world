@@ -1,5 +1,7 @@
 # daylight_controller.gd (DaylightController in scenes/main.tscn): day/night CanvasModulate tint, hearth glows lit by
-#   settlement fire state, and shelter doorway glows at night (asks AgentRenderer for sheltered sleepers).
+#   settlement fire state (centred on the hearth tile), and shelter doorway glows at night (asks AgentRenderer for
+#   sheltered sleepers). `tint_at` / `night_factor_at` are static so the colony agent layer warms people near a fire
+#   with the same night curve.
 # Bridge methods: via SimReads get_time_snapshot, get_settlement_snapshot, get_building_snapshot; signal world_reset.
 extends Node2D
 
@@ -46,14 +48,8 @@ func _process(delta: float) -> void:
 func _update_daylight() -> void:
 	var snapshot: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var hour: float = fposmod(float(snapshot.get("time_of_day", 0.0)), 24.0)
-	var tint: Color = NIGHT_TINT
-	for i: int in range(HOURS.size() - 1):
-		if hour >= HOURS[i] and hour < HOURS[i + 1]:
-			var blend: float = (hour - HOURS[i]) / (HOURS[i + 1] - HOURS[i])
-			tint = TINTS[i].lerp(TINTS[i + 1], blend)
-			break
-	_modulate.color = tint
-	var night_factor: float = clampf((1.0 - tint.r) / (1.0 - NIGHT_TINT.r), 0.0, 1.0)
+	_modulate.color = tint_at(hour)
+	var night_factor: float = night_factor_at(hour)
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	for id: int in _glows.keys():
 		var glow: Sprite2D = _glows[id] as Sprite2D
@@ -61,6 +57,20 @@ func _update_daylight() -> void:
 		glow.modulate = Color(1.0, 0.6, 0.25, WOOD.glow_alpha(state, night_factor, _elapsed))
 		glow.set_meta("fire_lit", state.get("fire_lit", null))
 		glow.set_meta("glow_alpha", glow.modulate.a)
+
+## The CanvasModulate tint at clock hour `hour` (0–24).
+static func tint_at(hour: float) -> Color:
+	var h: float = fposmod(hour, 24.0)
+	for i: int in range(HOURS.size() - 1):
+		if h >= HOURS[i] and h < HOURS[i + 1]:
+			var blend: float = (h - HOURS[i]) / (HOURS[i + 1] - HOURS[i])
+			return TINTS[i].lerp(TINTS[i + 1], blend)
+	return NIGHT_TINT
+
+
+## 0 by day, 1 at full night, from the tint's red channel.
+static func night_factor_at(hour: float) -> float:
+	return clampf((1.0 - tint_at(hour).r) / (1.0 - NIGHT_TINT.r), 0.0, 1.0)
 
 func _reconcile_hearths() -> void:
 	var snapshot: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
@@ -82,7 +92,7 @@ func _reconcile_hearths() -> void:
 		glow.set_meta("tile", Vector2i(xs[i], ys[i]))
 		glow.set_meta("art_kind", "hearth_glow")
 		glow.set_meta("art_id", ids[i])
-		glow.position = SPRITE_ORIGIN + Vector2(xs[i], ys[i]) * TILE_SIZE + Vector2.ONE * (TILE_SIZE / 2.0)
+		glow.position = SPRITE_ORIGIN + Vector2(xs[i], ys[i]) * TILE_SIZE
 		seen[ids[i]] = true
 	for id: int in _glows.keys():
 		if not seen.has(id):

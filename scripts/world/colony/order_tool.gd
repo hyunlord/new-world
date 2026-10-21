@@ -3,7 +3,7 @@
 #   the command; in the hut mode a 3×3 ghost follows the cursor, green or red by `can_place_blueprint`, and a
 #   click places it. Right click or Esc leaves the mode. A short toast shows the result count with the order's
 #   noun ("나무 16그루 베기 표시") or the reject reason. With no mode, a click keeps V8-0's behaviour: a person opens the inspector, an empty tile the
-#   causal "why?" panel.
+#   causal "why?" panel. In an area mode the tile under the mouse gets a 1-px white hover frame.
 # Bridge methods: can_place_blueprint, get_agent_detail, get_tile_causal_history (direct); via SimReads.mutate
 #   cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint.
 extends Node2D
@@ -184,7 +184,7 @@ func _draw() -> void:
 		var texture: Texture2D = View.texture()
 		if texture != null:
 			var origin: Vector2 = View.tile_to_world(_hover - Vector2i(1, 1))
-			draw_texture_rect_region(texture, Rect2(origin, Vector2(48, 48)), View.rect("hut_ghost"), GHOST_OK if _ghost_ok else GHOST_BAD)
+			draw_texture_rect_region(texture, Rect2(origin, Vector2(48, 48)), View.rect("hut_ghost_place"), GHOST_OK if _ghost_ok else GHOST_BAD)
 	elif _dragging:
 		var a: Vector2i = Vector2i(mini(_drag_from.x, _drag_to.x), mini(_drag_from.y, _drag_to.y))
 		var b: Vector2i = Vector2i(maxi(_drag_from.x, _drag_to.x), maxi(_drag_from.y, _drag_to.y))
@@ -192,3 +192,7 @@ func _draw() -> void:
 		var color: Color = RECT_COLORS.get(mode, Color.WHITE)
 		draw_rect(rect, Color(color, 0.18))
 		draw_rect(rect, color, false, 1.0)
+	elif mode != Mode.NONE:
+		var texture: Texture2D = View.texture()
+		if texture != null:
+			draw_texture_rect_region(texture, Rect2(View.tile_to_world(_hover), Vector2(View.TILE, View.TILE)), View.rect("hover"))

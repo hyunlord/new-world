@@ -2,7 +2,8 @@
 # Purpose: load res://scenes/main.tscn, advance the simulation to a tick through the bridge's tooling call,
 #   and save a "near" frame (the camp at the default 2× zoom) and a "far" frame (1× zoom, the map centre).
 #   Tooling only: the game never runs this script.
-# Bridge methods called: advance_ticks (tooling), get_time_snapshot, get_agent_snapshot, get_building_snapshot.
+# Bridge methods called: advance_ticks (tooling), get_time_snapshot, get_agent_snapshot, get_building_snapshot,
+#   get_colony_overlay (the --m1-set dumps).
 # --panels adds three shots at the near framing: "inspect" (a click on the first agent through
 #   OrderTool.click_world opens the inspector), "causal" (a click on an empty tile opens the causal "why?"
 #   panel) and "chronicle" (the chronicle panel toggled as the C key does).
@@ -13,8 +14,11 @@
 #   tick m1_03 work, m1_06 far (1×, camp centred), m1_07 inspector on the person carrying most, m1_08 "why?"
 #   on an empty tile, m1_09 order bar in hut mode with a red ghost over a tree (synthetic F3 key and mouse
 #   motion, as m1_gui_test.gd drives it) → m1_04 hut done + 60 with the chronicle shown → m1_05 the first 23:00
-#   after it; m1_03b is the literal tick 900; m1_07 is the inspector scrolled to its job and carry lines,
-#   m1_07a its top. Ticks advance one at a time; m1_set.json records them.
+#   after it → m1_10 the next 10:00 at the same framing (the finished camp by day, M1-ART); m1_03b is the literal
+#   tick 900; m1_07 is the inspector scrolled to its job and carry lines,
+#   m1_07a its top. Ticks advance one at a time; m1_set.json records them, and for every shot a dump ("dumps") of
+#   what is on screen in image pixels: each person (centre of the drawn tile, stage, job, carry count, asleep, the
+#   agent layer's frame and halo), buildings, log stacks, zone tiles and blueprint sites (M1-ART goal 8.2, 8.3).
 #   Extra bridge methods: get_world_info, get_chronicle_since, get_trees, get_terrain_snapshot, can_place_blueprint,
 #   get_colony_overlay; via SimReads.mutate_raw reset_world, cmd_designate_chop_tiles, cmd_add_stockpile,
 #   cmd_place_blueprint (orders, as a player would give them).
@@ -183,7 +187,7 @@ func _m1_shots(main: Node, world: Node, camera: Camera2D) -> void:
 	var p4_tick: int = -1
 	var done: Dictionary = {}
 	var limit: int = 360 + 4 * 1440
-	while done.size() < 3:
+	while done.size() < 4:
 		var now: int = _now(world)
 		if now >= limit:
 			push_error("capture: --m1-set ran past tick %d (hut tick %d)" % [limit, hut_tick])
@@ -216,6 +220,10 @@ func _m1_shots(main: Node, world: Node, camera: Camera2D) -> void:
 			await _near(camera, _mid(hearth, _hut_tile(world) + Vector2i(1, 1)))
 			await _save_m1("m1_05_night_2x.png", world)
 			done["night"] = true
+		if done.has("night") and _minute_of_day(world) == 10 * 60 and not done.has("morning"):
+			await _near(camera, _mid(hearth, _hut_tile(world) + Vector2i(1, 1)))
+			await _save_m1("m1_10_morning_2x.png", world)
+			done["morning"] = true
 		world.call("advance_ticks", 1)
 	var file: FileAccess = FileAccess.open(_out.path_join("m1_set.json"), FileAccess.WRITE)
 	if file != null:
@@ -281,6 +289,70 @@ func _save_m1(name: String, world: Node) -> void:
 	var shots: Dictionary = _record.get("shots", {})
 	shots[name] = _now(world)
 	_record["shots"] = shots
+	var dumps: Dictionary = _record.get("dumps", {})
+	dumps[name] = _dump(world)
+	_record["dumps"] = dumps
+
+
+## What the shot shows, in image pixels (the window is the 1920×1080 canvas): people, buildings, stacks, zones, sites.
+func _dump(world: Node) -> Dictionary:
+	var xf: Transform2D = root.get_canvas_transform()
+	var view: Rect2 = Rect2(Vector2.ZERO, Vector2(1920, 1080))
+	var agents: Node = root.get_node_or_null("Main/ColonyView/AgentLayer")
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var stages: PackedByteArray = snap.get("life_stages", PackedByteArray())
+	var jobs: PackedByteArray = snap.get("jobs", PackedByteArray())
+	var carries: PackedInt32Array = snap.get("carry_counts", PackedInt32Array())
+	var states: PackedByteArray = snap.get("states", PackedByteArray())
+	var targets: PackedByteArray = snap.get("target_kinds", PackedByteArray())
+	var people: Array = []
+	for i: int in mini(ids.size(), mini(xs.size(), ys.size())):
+		var drawn: Vector2 = Vector2(xs[i], ys[i]) * TILE
+		var look: Dictionary = {}
+		if agents != null:
+			var d: Vector2 = agents.call("drawn_position", ids[i])
+			if d.x >= 0.0:
+				drawn = d
+			look = agents.call("person_look", ids[i])
+		var centre: Vector2 = xf * (drawn + Vector2(8, 8))
+		people.append({"tile": [xs[i], ys[i]], "screen": [roundi(centre.x), roundi(centre.y)],
+			"on_screen": view.has_point(centre), "stage": int(stages[i]) if i < stages.size() else 0,
+			"job": int(jobs[i]) if i < jobs.size() else 0, "carry": int(carries[i]) if i < carries.size() else 0,
+			"asleep": i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3,
+			"look": look})
+	var out: Dictionary = {"zoom": xf.x.x, "people": people}
+	var b: Dictionary = world.call("get_building_snapshot")
+	var bk: PackedByteArray = b.get("kinds", PackedByteArray())
+	var bx: PackedInt32Array = b.get("xs", PackedInt32Array())
+	var by: PackedInt32Array = b.get("ys", PackedInt32Array())
+	var buildings: Array = []
+	for i: int in mini(bk.size(), mini(bx.size(), by.size())):
+		var c: Vector2 = xf * (Vector2(bx[i], by[i]) * TILE + Vector2(8, 8))
+		buildings.append({"kind": int(bk[i]), "tile": [bx[i], by[i]], "screen": [roundi(c.x), roundi(c.y)]})
+	out["buildings"] = buildings
+	var o: Dictionary = world.call("get_colony_overlay")
+	for pair: Array in [["stacks", "item_xs", "item_ys"], ["zones", "zone_xs", "zone_ys"], ["sites", "site_xs", "site_ys"], ["chops", "designation_xs", "designation_ys"]]:
+		var pxs: PackedInt32Array = o.get(pair[1], PackedInt32Array())
+		var pys: PackedInt32Array = o.get(pair[2], PackedInt32Array())
+		var rows: Array = []
+		for i: int in mini(pxs.size(), pys.size()):
+			var c: Vector2 = xf * (Vector2(pxs[i], pys[i]) * TILE + Vector2(8, 8))
+			rows.append({"tile": [pxs[i], pys[i]], "screen": [roundi(c.x), roundi(c.y)]})
+		out[pair[0]] = rows
+	var counts: PackedInt32Array = o.get("item_counts", PackedInt32Array())
+	for i: int in mini(counts.size(), (out["stacks"] as Array).size()):
+		(out["stacks"][i] as Dictionary)["count"] = counts[i]
+	var trees: Node = root.get_node_or_null("Main/ColonyView/TreeLayer")
+	if trees != null and trees.has_method("stump_tiles"):
+		var stumps: Array = []
+		for t: Vector2i in trees.call("stump_tiles"):
+			var c: Vector2 = xf * (Vector2(t) * TILE + Vector2(8, 8))
+			stumps.append({"tile": [t.x, t.y], "screen": [roundi(c.x), roundi(c.y)]})
+		out["stumps"] = stumps
+	return out
 
 
 ## The top-left tile of the first finished hut (building kind 3), or (-1, -1).

@@ -24,7 +24,6 @@ GROUND = (["grass_%d" % i for i in range(3)] + ["grass_dark_%d" % i for i in ran
           + ["stock_floor"])
 ZONE = ["stock_edge_" + s for s in "nesw"] + ["stock_stake_" + c for c in ("nw", "ne", "sw", "se")]
 CANOPY = ["tree_%s_%d" % (s, z) for s in ("oak", "birch", "pine") for z in range(3)]
-CANOPY_LO = ["tree_%s_lo" % s for s in ("oak", "birch", "pine")]
 NATURE = ["stump", "bush_full", "bush_bare", "deadwood"]
 ITEMS = ["logs_s", "logs_m", "logs_l"]
 BUILDINGS = ["hut", "shelter", "hearth_0", "hearth_1"]
@@ -36,14 +35,14 @@ MARKS = ["mark_chop", "select", "hover"]
 ICONS = ["icon_" + k for k in ("chop", "stockpile", "hut", "remove", "cancel")]
 GHOSTS = ["hut_ghost", "hut_ghost_place"]
 
-SIZE = {n: (16, 16) for n in GROUND + ZONE + CANOPY_LO + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]}
+SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]}
 SIZE.update({n: (24, 24) for n in CANOPY})
 SIZE.update({n: (12, 12) for n in ICONS})
 SIZE.update({"hut": (48, 48), "hut_ghost": (48, 48), "hut_ghost_place": (48, 48), "shelter": (16, 20),
              "tree_shadow": (20, 8), "shadow": (10, 4)})
 SIZE.update({n: ((16, 8) if n.endswith("_sleep") else (16, 16)) for n in PEOPLE})
 # Object sprites must carry the outline colour (craft rule 1); people carry it in their outline layer.
-OUTLINED = (CANOPY + CANOPY_LO + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop"] + ICONS
+OUTLINED = (CANOPY + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop"] + ICONS
             + [n for n in PEOPLE if "_outline_" in n] + ["stock_stake_" + c for c in ("nw", "ne", "sw", "se")])
 
 
@@ -142,7 +141,7 @@ class GenTilesTest(unittest.TestCase):
                 self.assertIn(OUTLINE, {p[:3] for p in visible(self.tile(name))})
 
     def test_object_sprites_have_transparent_background(self):
-        for name in CANOPY + CANOPY_LO + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop", "shadow", "tree_shadow"]:
+        for name in CANOPY + NATURE + ITEMS + ["shelter", "hearth_0", "hearth_1"] + CARRY + ["mark_chop", "shadow", "tree_shadow"]:
             with self.subTest(name=name):
                 alphas = [p[3] for p in self.tile(name).get_flattened_data()]
                 self.assertIn(0, alphas)
@@ -218,7 +217,7 @@ class GenTilesTest(unittest.TestCase):
         dark = sum(mean("grass_dark_%d" % i) for i in range(3)) / 3
         self.assertTrue(6 <= g - dark <= 14, (g, dark))
 
-    def test_canopy_overhangs_its_tile_and_impostor_fits(self):
+    def test_canopy_overhangs_its_tile_and_sizes_grow(self):
         for name in CANOPY:
             with self.subTest(name=name):
                 x0, y0, x1, y1 = self.tile(name).getbbox()
@@ -238,6 +237,13 @@ class GenTilesTest(unittest.TestCase):
         sizes = [len(visible(self.tile(n))) for n in ITEMS]
         self.assertEqual(sizes, sorted(sizes))
         self.assertGreater(sizes[2], 180, "the large pile fills its tile")
+
+    def test_hut_floor_is_opaque(self):
+        # the walls must not punch the floor out: every interior pixel of the hut is opaque
+        hut = self.tile("hut")
+        k = gen_tiles.HUT_WALL
+        holes = [(x, y) for y in range(k, 48 - k) for x in range(k, 48 - k) if hut.getpixel((x, y))[3] < 255]
+        self.assertEqual(holes, [])
 
     def test_hearth_frames_differ(self):
         self.assertNotEqual(self.tile("hearth_0").tobytes(), self.tile("hearth_1").tobytes())
