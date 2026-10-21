@@ -1,0 +1,1598 @@
+[
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-afc726cc-b69e-49ad-93b2-a786c6456b5f.png",
+    "sha256": "77da53c8b04e4e4d210195d044a0afe7a8e84245dc885f8b647ba4f473dc9a67",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 24.2,
+    "generator_kept": false,
+    "reason": "Photographic detail does not match oil painting."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S1_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S1_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-ddfbe282-30d7-4615-8257-945e8b945a10.png",
+    "sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 33.8,
+    "generator_kept": true,
+    "reason": "Frozen oil reference; overhead but face tilted up."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-e8beb8a4-e8c4-4c8a-851a-b933cc918963.png",
+    "sha256": "67edbda769992a33dbd31512a1cb16dff77e0253d13fb7eeecacb283479f2f73",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.6,
+    "generator_kept": true,
+    "reason": "Three logs, stone axe, same oil brushwork."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-25da512d-b576-4946-a8c2-66483da29715.png",
+    "sha256": "5c91976bfeef22ca4dbc452d091c3d70dd8eefdeb3ded79aa673c5edd4c89777",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 26.158,
+    "generator_kept": true,
+    "reason": "Elder child stick overhead."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-2f9f6ecf-81ff-4a17-9db6-334a3e59d762.png",
+    "sha256": "fa0e7a4b7392277bc5b65805ccf7eab41f27e9bae2021e558c94e4b1484783d1",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.093,
+    "generator_kept": true,
+    "reason": "Roofless hut four bedrolls south door."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-96a11c65-fd78-4e95-acf6-fd99ff8189d8.png",
+    "sha256": "7ade343d071274a31462a9d6c805eb3bcabe2ce4360d930b37a5ee58027c567b",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 26.187,
+    "generator_kept": false,
+    "reason": "Oblique camera rejected."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S5_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S5_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-328250aa-72eb-4305-826d-560be4c48d45.png",
+    "sha256": "a4bdea42ce1dc26aeaa903456c4ba2e2da786dac45f67e9bb5804c7c035cfb6d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 26.198,
+    "generator_kept": false,
+    "reason": "Tent instead of lean-to rejected."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S5_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S5_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-6e5bd389-d859-4aea-8ddb-870bed1d4f76.png",
+    "sha256": "4ebb143f63e31c25c6afad6bbcdbd6322f9dcfa15451add3fc1181ff24f6583e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 26.971,
+    "generator_kept": true,
+    "reason": "Overhead single hide plane accepted; post height weak."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-732964e7-7003-4efc-97bc-3eb1a68a3a91.png",
+    "sha256": "99dc62d4fbb770647338dbca7325612ca6c647ad5e4c11ac31f49768987e12d9",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 29,
+    "generator_kept": true,
+    "reason": "Four correct ground quadrants."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-f426e840-fd62-47a6-be55-a4c5c02d4a2e.png",
+    "sha256": "415f903aea6aead15ba2469939a0c7ff96fd9845c6aa1758a7021402fcbbe5ac",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 46.717,
+    "generator_kept": false,
+    "reason": "Oblique camera, excess shelters."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-bd90bbd6-0aaa-4cfd-a782-3a919d489987.png",
+    "sha256": "d513ca211697250b0af421d930e34ddb34116eb032e2edc408e3766a19584891",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 47.518,
+    "generator_kept": true,
+    "reason": "Best overhead camp, eight people and three shelters; people oversized about90-110px."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-911a0258-b657-42ae-be6c-6313625a0c67.png",
+    "sha256": "02a6d740b5341fd87c2a112db43f5f3679c61499eeeefd65c930998cde940164",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 46.011,
+    "generator_kept": false,
+    "reason": "Scale improved but shelter front faces too oblique; camera rejection."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-ffbc0e36-7f37-4fdd-8f86-53bfb3a1d687.png",
+    "sha256": "fb2201812255039dd91964023c30fa3cc71f21ee827903320d48a8febf6f676f",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.48,
+    "generator_kept": true,
+    "reason": "Three-quarter woodcutter portrait."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-668c82a2-660c-47e2-a84b-395e43e3734f.png",
+    "sha256": "49195f76f6631be835cef920f5a043814ccdaa96e1d51031170b4d2e584e41e1",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 21.66,
+    "generator_kept": true,
+    "reason": "Magenta gatherer cutout."
+  },
+  {
+    "concept": "01_earth_and_ash",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/01_earth_and_ash/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4a-bf7d-7a13-b013-de57d1934ae0/exec-fe9883fb-8053-4bfe-a8c4-04ae0fb908a4.png",
+    "sha256": "c5d3f722485290054f4389fef810a430fae2c7318eed26fd9b5b0a89d2f9c616",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.256,
+    "generator_kept": true,
+    "reason": "Magenta woodcutter cutout."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-aa2d29cc-b526-4342-aa4a-b0ec1c2dfdb7.png",
+    "sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 21,
+    "generator_kept": true,
+    "reason": "Strict overhead crown/shoulders/feet; warm flat woodcut outlines and basket clear. Frozen reference."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-37421a3c-c8f8-4ab9-bac4-6a9596e29791.png",
+    "sha256": "911109ec41ada689de04c61b592404c52fe87d210a06b572f8c742ec8b8bf912",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.163,
+    "generator_kept": true,
+    "reason": "Overhead man with three log ends and axe; bold contours and flat ochre match S1."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-2af5c168-59b6-4a67-8660-00c150de09b5.png",
+    "sha256": "14ae64b55ded0105b64a9d0e634c9cabcda852bb756f30421196a9892cad8161",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.926,
+    "generator_kept": true,
+    "reason": "Two overhead people, elder uses stick; same warm contour treatment."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-f2aa7780-41ce-483c-8a74-1663f5a5750f.png",
+    "sha256": "ec0e5386086018bca6da14df39faa401eb2b1dfcb2c53a1ca1d55b07fdca42ac",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 24.332,
+    "generator_kept": true,
+    "reason": "Roofless square floor-plan, four bedrolls, south doorway and hearth verified; woodcut medium stable."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-5935155e-1136-4d3b-8d45-03a6886e71e7.png",
+    "sha256": "885904fbeaf50e59bd4da57a0ba0d9d1e6c0cbb65c2b050bae2654aa6fee093c",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 24.95,
+    "generator_kept": false,
+    "reason": "Rejected camera: shelter shows substantial front triangle and sloped perspective, not strict overhead."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S5_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S5_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-de3a56a4-d598-4754-b5d4-fc7c5568daaa.png",
+    "sha256": "022329ce81a5f96b6f84ded08d7f9b84e31d57aa1b2df07d6f7f673380128d61",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 24.661,
+    "generator_kept": true,
+    "reason": "Revised overhead roof patch, circular hearth, log stack and berry bush; allowed minor front-face cheat only. Medium matches reference."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-c8b2c9c6-0e11-4dc6-9bb3-062b95460265.png",
+    "sha256": "3a03f0d7e82eafa2a01e636a7428aa7dc409a753886f720b937f6ff766829f93",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 28.058,
+    "generator_kept": true,
+    "reason": "Four overhead quadrants in required order: water bank, forest floor, meadow, bare rock; style matches. Seamlessness remains production risk, not measured here."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-df4aa232-d276-4b72-812a-e3958ebab7ec.png",
+    "sha256": "16a24c55b9ca29818d0f3c6a3ed6e36f7c00407c492c72cdfcd515a94f651432",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 27.243,
+    "generator_kept": false,
+    "reason": "Rejected: substantial front faces and triangular tent entrances show oblique map camera; people also larger than requested game scale."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-b5a0cab0-c3af-4b8d-b3d4-0f0a62dc58fa.png",
+    "sha256": "e839247237056e6c90e966d8440f4e65978c9c7ef2925e186b64979d16b24567",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 25.895,
+    "generator_kept": true,
+    "reason": "Valid overhead and eight people, but people remain roughly 100 px rather than 64; retained candidate pending scale correction."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-e27dd85f-eab1-4a1a-a381-c6f061860def.png",
+    "sha256": "c7ac4fc6b7bdcea986779890002240a9925cfe4f8fe2349875655bbfa8a71538",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 42.815,
+    "generator_kept": false,
+    "reason": "Rejected for content: only seven people. Camera overhead improved, but choose try 2 with eight people and record scale limitation."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-538b3cc0-368c-4f7d-a4fe-5c33dff79038.png",
+    "sha256": "bc2b51d3310263f8c50a2ab75e7bdd01cebcdd89e36fe8a571ff42d38b06bb0b",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 22.862,
+    "generator_kept": true,
+    "reason": "Three-quarter front woodcutter face/shoulders; same bold contour and flat warm fills."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-63e5d526-9334-4a66-b0f6-a3757e2d0239.png",
+    "sha256": "cf8e4ca54f944cc9c6ba90c85585f87bbb8196957be46b41749eea240f153a7c",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 19.906,
+    "generator_kept": true,
+    "reason": "Single required magenta gatherer generation. Overhead camera, basket and complete feet present; flat magenta permits chroma key."
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/02_folk_woodcut/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-3864af11-d6dc-4311-a7e1-392071c69820.png",
+    "sha256": "2655ffdb1706f1f39c9db7fe83e49cc6e6b8e0307831248de8539bdb8990051e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 21.601,
+    "generator_kept": true,
+    "reason": "Single required magenta woodcutter generation. Overhead camera, stone axe, three log ends and complete body; medium matches S1."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-cf0f1594-8b6f-4cc6-bec1-50a21cab08c0.png",
+    "sha256": "5a202377a69da0d65feb72f4e596ff71033fb235955285bd880193b92c6dee8d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 23.5,
+    "generator_kept": true,
+    "reason": "Overhead head/shoulders/feet; transparent washes, natural ochre ground and crisp basket. Frozen reference."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-d65937a5-ff39-4ae5-bf53-ae33a09da2f2.png",
+    "sha256": "e0fbc40bbbfdc59c0a0e1b04bdb1b84992e93af4443c613eef11dbbdb664b109",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 22.983,
+    "generator_kept": true,
+    "reason": "Overhead man, three logs and stone axe clear; wash and paper treatment match S1."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-97de78da-5f4b-4079-a230-a774e67e2d51.png",
+    "sha256": "3ee5a2eb01d0d5c2af5c23334168fbfe6a580c7c676c3d708d0c430834af7238",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 26.361,
+    "generator_kept": true,
+    "reason": "Overhead elder and child with stick; soft watercolour ground and crisp silhouettes match S1."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-50ecd72a-28db-470b-822b-d7d3a92ab2b6.png",
+    "sha256": "70e2bb7d4f9d7e77d8cc63167a1e773fe0588ff37b4cdefb2f0b61aa295b4d2a",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 28.641,
+    "generator_kept": true,
+    "reason": "Roofless overhead floor-plan with slight permitted wall-face cheat, four bedrolls, south doorway, hearth; watercolour wash stable."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-f7f5e39f-acad-44ab-a427-5ce7da5d9ce0.png",
+    "sha256": "b5e63c60f9d1c7f541ef0a42f5ec9559b765ed91aac04ff8e5f4343510c9a5e2",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 28.507,
+    "generator_kept": false,
+    "reason": "Rejected camera: shelter shows substantial front triangle and sloped perspective, not strict overhead."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S5_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S5_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-26eba502-da30-4833-b6ea-66ade37e49ea.png",
+    "sha256": "a89a2bb3448e15f926fa455ec3a2a43fd6cb226263804687d998d56f114e2d93",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 26.754,
+    "generator_kept": true,
+    "reason": "Revised overhead roof patch, circular hearth, log stack and berry bush; allowed minor front-face cheat only. Medium matches reference."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-bc7b2b08-050f-4f94-bf56-129c8055f756.png",
+    "sha256": "8766486e4ccf12abd88279e65ca878affc470f0351e6890f62257c6ff8896db9",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 30.855,
+    "generator_kept": true,
+    "reason": "Four overhead quadrants in required order: water bank, forest floor, meadow, bare rock; style matches. Seamlessness remains production risk, not measured here."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-f3d8b3bc-4227-4aa3-8097-57bdfa55e353.png",
+    "sha256": "ca81dcabbc6edfde92e8c311ab2701beb356cc490c98ed566bb4727e542ed0c6",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 48.681,
+    "generator_kept": false,
+    "reason": "Rejected: substantial front faces and triangular tent entrances show oblique map camera; people also larger than requested game scale."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-e73ec75f-a96d-4445-9cd6-ec5cda2366e4.png",
+    "sha256": "89e38ee50e3323d6404db9001a4fc25dbe024a7cc3ab48d435de8da2042194ee",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 46.954,
+    "generator_kept": false,
+    "reason": "Rejected for content/camera: only two clear lean-tos and triangular entrances persist; eight people present."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-e69225b8-11aa-4045-9a13-df9293120058.png",
+    "sha256": "b9f8f8d055fe1557299375def39dfaeb7cc3dfa6135de3f601b61eb04f777afd",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 48.51,
+    "generator_kept": true,
+    "reason": "Eight people and four roofs (hut plus three lean-tos), overhead camera and smaller figures near requested game scale. Selected."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-3e2254f4-661b-48e5-8cd4-8c25e640e12b.png",
+    "sha256": "12480cb33bbdf5d7f2b1e89af5226efe7725a896802f2b679ee14426a6ce2384",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 23.835,
+    "generator_kept": false,
+    "reason": "Rejected portrait camera on completion audit: elevated overhead angle rather than eye-level three-quarter front. Replaced by S8_2; original preserved."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-14d927ba-0aab-46d1-ac75-a4f806dde32b.png",
+    "sha256": "a844fa5d18a45134a8a8c0e7fb2af04b67e5d835c02570731abdc10577a134bc",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 21.227,
+    "generator_kept": true,
+    "reason": "Single required magenta gatherer generation. Overhead camera, basket and complete feet present; flat magenta permits chroma key."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-7691016d-6e64-4d6d-bbaa-9605f12b2678.png",
+    "sha256": "e7647e2ee65c225701cc8f2797be8a7eb5c3b9c8d065a2d577e6aba18d6a6d2c",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 21.598,
+    "generator_kept": true,
+    "reason": "Single required magenta woodcutter generation. Overhead camera, stone axe, three log ends and complete body; medium matches S1."
+  },
+  {
+    "concept": "03_watercolor_field",
+    "file": "S8_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/03_watercolor_field/S8_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-84a4-7922-803e-78263ec1435a/exec-8708ba3a-a8d3-4269-b772-2cc9f4cb79e3.png",
+    "sha256": "cf3f31061e4f453f89e9f02c9f6a324db03b7c6d91ce8496f9ce40a98858658c",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 24.683,
+    "generator_kept": true,
+    "reason": "Eye-level three-quarter front woodcutter head and shoulders, both eyes visible, upright face and no overhead foreshortening. Watercolour light, paper grain and warm earth treatment match references."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-8f9d8804-953e-4940-9854-2aa056f5b140.png",
+    "sha256": "9c68e44feead9e6a1b38be1c4b9f156518e3aa6e30198de139d0e741514ed614",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 42.091,
+    "generator_kept": false,
+    "reason": "Camera correct overhead, but photographic human anatomy/materials instead of handmade miniature illustration."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S1_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S1_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-b749d179-2a78-43a1-8a6c-8b4ff055a0b7.png",
+    "sha256": "d35cba83e2924ed29bef627ecfc9ef123a61b96535699b9ef864036305ca7cce",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 36.994,
+    "generator_kept": true,
+    "reason": "Direct overhead crown and feet view; matte sculpted hair/skin, tactile miniature landscaping and soft light now fit handmade diorama."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-fc2be842-a18e-4aaa-94ac-047e9fdad496.png",
+    "sha256": "470bf8020189a8b0d2f520e614dc91d6022cf15100fa5759179d57d739467fbb",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 38.625,
+    "generator_kept": true,
+    "reason": "Overhead miniature matches S1 sculpted hair and tactile ground; three log ends and stone axe visible."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-bc587646-df92-4b38-b9f5-507711558168.png",
+    "sha256": "2f4cda20082d2a7a11748751c3da690f807b104a1b4e551e6744d7f0a6ad65a8",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 35.328,
+    "generator_kept": true,
+    "reason": "Elder with stick and smaller child, overhead with slight face cheat; same handmade miniature texture and light."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-80027b84-4580-46ea-b75f-7bfd98dca390.png",
+    "sha256": "40b3c05b971cbcef5ea58f016a052eb376d55be55ad9e5ec6104b4de1c9ada9b",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.494,
+    "generator_kept": true,
+    "reason": "Roofless overhead square hut, four bedrolls, central warm hearth and south gap. Tactile model ground consistent; slight front wall face cheat within brief."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-fd1a4e4a-5cca-423a-a8c6-a5b339629c35.png",
+    "sha256": "96ac78bb95340ca4269e36d2392381bbb28d408ee93a5bed48d0ca15ba83071e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 35.907,
+    "generator_kept": false,
+    "reason": "Reference subject leaked into prop scene as extra gatherer; lean-to also too oblique. Required four props present but content/camera comparison weakened."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S5_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S5_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-2145b131-054e-41b7-8c37-20130d82b8cb.png",
+    "sha256": "659a85bb008314c0254aa126b4f1b6990223220072ef741eabf312f937b89117",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 35.801,
+    "generator_kept": false,
+    "reason": "No people and all props present, but lean-to shows long front legs and opening from an oblique camera, rejected camera."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S5_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S5_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-1f533e6f-ee60-4f14-8e07-a87dcc3035df.png",
+    "sha256": "1996716b0d4c3c2376aaebece94f1748dde7043ef53e868acf070916086eb084",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 55.896,
+    "generator_kept": false,
+    "reason": "Best of three but still broad front opening/legs rather than strict roof plan; camera rejected and attempt cap reached. Can be shown only as failed evidence."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-26bddb8b-9e31-43eb-8616-5a57e4b78cb9.png",
+    "sha256": "f70ded88e44fd8565a3748f76538b75acbf97cd6a6e61ec7732b693135067958",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 43.255,
+    "generator_kept": true,
+    "reason": "Four correct overhead quadrants; tactile ground matches S1, detail dense and exact seams unverified."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-91a8c507-1502-4af8-9ef6-3493eaaccb80.png",
+    "sha256": "d8fb9317fcdf27f91b427446757cd9ff314def7ecaf2db426619ecaddb83547b",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 43.586,
+    "generator_kept": false,
+    "reason": "Nine people rather than eight; hut round rather than square reference and camera oblique on shelters."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-91137ff8-570b-4667-ae60-9cdef51c4c24.png",
+    "sha256": "619a79aefb36f1ff54c5138da101508d18cb69955dce5ab725509c593ec3474f",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 37.677,
+    "generator_kept": false,
+    "reason": "Eight people achieved but only two lean-tos, five bedrolls and oblique shelter openings; rejected content/camera."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-65df7da3-4179-467a-8bdf-ede19c7fd39d.png",
+    "sha256": "7ce28c0a111694496134a6a46172ed0d94cde3f742e5c9f332658dddd720dd13",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 51.809,
+    "generator_kept": false,
+    "reason": "Eight workers, three lean-tos, roofless four-bed hut achieved; lean-to openings remain oblique despite explicit orthographic plan, camera rejected at cap. Best content evidence only."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-cd1dbca6-c605-406c-a1cc-eb3d1ce05af6.png",
+    "sha256": "df8a4169b9a3d0a53c3b8d6f86bc03c20d204e57b09fa4207853531e6427a782",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.118,
+    "generator_kept": true,
+    "reason": "Face and shoulders in three-quarter frontal high angle; matte sculpted hair and hide match S1/S2, portrait exception applies."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-65447ba9-c131-4cf1-83d7-5c9d72805ba2.png",
+    "sha256": "cca136f0f5a4e09f00b8cbb5a8f257e0f176e046022a0201aa47af4010e75778",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 40.674,
+    "generator_kept": true,
+    "reason": "Single permitted magenta cutout attempt; crown-dominant overhead with slight front-face/leg cheat, full basket and feet, miniature matches S1."
+  },
+  {
+    "concept": "04_diorama",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/04_diorama/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-0c0ceb88-698b-4163-8fc3-1de1c4b35530.png",
+    "sha256": "cab54ce719b77e7ec7161c1ab947838f6bde2a73e284db4f2b53a9d12f0ee49e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.112,
+    "generator_kept": true,
+    "reason": "Single magenta attempt; three logs and axe inside bounds, crown-dominant overhead, matte miniature match."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-297ebb38-863d-4df7-93ac-f256e398d82b.png",
+    "sha256": "ee350137de590b29e0992593d7f2ca6ee35f1b020e734142a3672b48a48c3de3",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 33.018,
+    "generator_kept": false,
+    "reason": "Ink treatment appropriate but face looking upward reads frontal portrait rather than crown-dominant map character."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S1_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S1_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-865946d0-dd0d-4d6e-8f39-067a7c1ed54b.png",
+    "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.224,
+    "generator_kept": true,
+    "reason": "Crown-dominant vertical overhead view with feet; precise ink silhouettes, restrained washes and two-tone arms match concept."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-9a2b3727-50d1-47e0-af0d-562f1aed5e1c.png",
+    "sha256": "344b11dbf3f4332e94f3165f65f0ac749c199f09c59c4a646940dacd461a9a6b",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 38.459,
+    "generator_kept": true,
+    "reason": "Overhead crown view, three logs and stone axe; fine outlines/two-tone arms and upper-left light match S1."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-377d83f3-134f-4f5e-aff4-da3c69c99aae.png",
+    "sha256": "a7e7d9e25fe9de2e0427298789ae98310b7b8e105d006c304406d74ab0a8df95",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 37.939,
+    "generator_kept": true,
+    "reason": "Two overhead figures correct elder/staff and child; ink washes and lighting closely track reference."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-547ca291-c1d0-4f78-9db0-792f5075bd1d.png",
+    "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 36.33,
+    "generator_kept": true,
+    "reason": "Roofless overhead four-bed hut with warm central hearth and south door; fine outlines consistent, walls use permissible face cheat."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-ac42c417-af2d-4bb4-b0d9-2ce7297e4790.png",
+    "sha256": "dfefa4865f95ac1b2cb0e3425fea1dd6c90dd3d5b1f43fda1e51befbd2fcd20d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 37.59,
+    "generator_kept": false,
+    "reason": "Four props and ink style correct, but front opening and long legs make shelter oblique, rejected camera."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S5_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S5_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-3c4391ef-81f3-4270-aeae-ecd5ff230140.png",
+    "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 38.28,
+    "generator_kept": true,
+    "reason": "Roof now occludes interior, four props viewed from above; peripheral angled support poles remain a mild front-face cheat. Ink medium and upper-left shadows match."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-8483166d-468f-4245-b1db-d85eafd0da14.png",
+    "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 51.664,
+    "generator_kept": true,
+    "reason": "Four overhead ground quadrants with fine ink botanical detail; forest/meadow available, seamlessness unverified and texture dense."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-2c825964-8fd5-4236-99ec-13c310b22787.png",
+    "sha256": "55d75736b4248ce068bd9297c6c845d9b298fc16442126b9ca43c01400b982ad",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 55.215,
+    "generator_kept": false,
+    "reason": "Eight workers counted; three single-panel lean-to roofs, roofless four-bed hut, stockpile, river and forest. Overhead with limited wall cheat, fine ink coherent. People roughly80-100px rather than requested64px, scale limitation. Superseded by try3 for improved scale/overhead roofs."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-89e60a81-53f9-4b0a-a20c-8c39b79af127.png",
+    "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.323,
+    "generator_kept": true,
+    "reason": "Three-quarter front male portrait with face and shoulders; same ink, hides and restrained wash. Portrait requested512 but actual output recorded separately."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-5ab8bdcb-f8ee-4edc-a1a6-b8c160302059.png",
+    "sha256": "4f249a0ca7ce06aca9d725a5a197428f11477f30660eed7d28d4cffc4cb1d311",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 30.321,
+    "generator_kept": true,
+    "reason": "Single magenta attempt; full overhead gatherer, basket and feet, ink contour matches reference."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-2978634b-0c5b-48ad-b2c8-3b9528f8063c.png",
+    "sha256": "82a0e1a67029a133e8fa92f0a50959beb7e4203bd0ec8ade704921455cf3dddb",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 109.332,
+    "generator_kept": false,
+    "reason": "Single allowed cutout attempt. Overhead ink style and axe correct, but FOUR log ends instead of three; retained only for readability experiment with explicit content limitation."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-4441982e-521d-43db-a7dd-1426b721758b.png",
+    "sha256": "d57483f2a8b06a506fcf7e07093e01cfd1c372bc76c46db7edaf9dbc880a13b2",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 68.202,
+    "generator_kept": false,
+    "reason": "Scale smaller but only seven people; shelter interiors and front wall faces oblique, camera/content rejected."
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-256113b0-ca7c-4671-b14b-78b5b02e91fc.png",
+    "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 81.747,
+    "generator_kept": true,
+    "reason": "Eight people and three single-panel roofs, overhead plan restored with roofless four-bed hut; best camera/scale compromise. Visible body extents roughly70-90px, still larger than64px target; limitation remains."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-292404d5-19bf-4965-85ba-686bfb121e25.png",
+    "sha256": "b290771be08893524f35fb08e4d631f432ecd8897d8d5be842dfeb207c5d8e12",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 27.895,
+    "generator_kept": true,
+    "reason": "Accepted sole cutout attempt: overhead gatherer, basket clear, full body enclosed, flat magenta background and matching pigment."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-7571cdf1-8b07-4fe1-964a-ab769db74bcd.png",
+    "sha256": "b78be4a0d3e708e404283ab78fbfc2a4ab93865c8df08b860e168b42a9e170d6",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.735,
+    "generator_kept": true,
+    "reason": "Sole allowed cutout attempt retained with limitation: FOUR visible log ends instead of three. Axe, overhead camera, matching mineral style and flat magenta usable for readability. No retry authorized for cutout."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-3498f02a-6e65-4edf-8bf3-a727593a5756.png",
+    "sha256": "75f5d350894226efad732cdd368900129940a61cf835fb04465cdb30f094a2d8",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 44.261,
+    "generator_kept": false,
+    "reason": "Camera overhead accepted, but treatment too detailed and realistic; lacks broad mineral pigment silhouettes."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S1_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S1_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-756e75ca-6cc9-4688-bf20-770b4b9ff62b.png",
+    "sha256": "2c8aaf537670952d35889e1c7b815f17ac04ff42ed1f8f322f7b3febf5447d58",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 33.868,
+    "generator_kept": true,
+    "reason": "Accepted overhead crown/shoulders/feet camera; basket identifiable, broad charcoal/ochre masses and bone accents with mineral grain. Frozen reference."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-cef1f10e-415e-4aec-9fbe-58b3e788088b.png",
+    "sha256": "37bf3a199dee8000aa3ef2fc181a65e21bd3fc2ab71758a16cb89df17a50ed48",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 31.527,
+    "generator_kept": true,
+    "reason": "Overhead crown and foreshortened body accepted, three log ends and stone axe visible. Mineral pigment and palette closely match S1."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-590fe42d-c8c0-4a76-a303-f724fea5ff82.png",
+    "sha256": "5cc6ace84f127fad2953fea8b2e5500d40a0da0168e93c90262dd8326ba87a36",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 35.806,
+    "generator_kept": true,
+    "reason": "Overhead elder and smaller child, elder stick clear, matching mineral palette; extra context hearth and river stay stone-age."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-729e68b2-a878-4e66-85a7-89bc693eab8c.png",
+    "sha256": "b54a74eb1e8a01e5f70279ab67428764501f4e737df8807584b1a2284441ac06",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.399,
+    "generator_kept": true,
+    "reason": "Roofless plan view accepted with allowed front-face wall cheat; four separate bedrolls, central hearth, south doorway. Mineral palette matches though built forms use finer detail, medium consistency risk."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-811b64f2-793e-4410-a59c-a7e92b653ff0.png",
+    "sha256": "9d84b6729681e2354ae4e0d1498556c728fa89c29a51f9ac7abd74b1fdb21584",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.549,
+    "generator_kept": false,
+    "reason": "Rejected content: unwanted gatherer copied from style reference into props-only subject. Overhead camera accepted."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S5_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S5_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-dea6e1b3-a2e0-4d7b-8d42-d4da1451f3de.png",
+    "sha256": "26dd997082827a4996b48400d32d4003385362ffe41bf5354bc20fd9f087763e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.428,
+    "generator_kept": false,
+    "reason": "Rejected camera: shelter and log rack show diagonal isometric sides more than slight front-face cheat. Content now correct."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S5_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S5_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-2552aaeb-5355-41da-ab11-8403c6017cab.png",
+    "sha256": "717766a3bc606603e18a1fa620fc871c28a9ba0d158ae00766be221199e711c2",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 41.874,
+    "generator_kept": true,
+    "reason": "Accepted corrected vertical overhead props: lean-to roof, circular hearth, parallel log lengths, berry bush; pigment grain consistent."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-89974aad-68cc-4987-8db3-a37d26333824.png",
+    "sha256": "2f7070b8a8c4a5cd4464971435a4823433d3c18596088ebc21648ae8a10d98dc",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 37.385,
+    "generator_kept": true,
+    "reason": "All four terrain quadrants correct and overhead; mineral ochre treatment retained. Root and rock macrofeatures may reveal seams in tiling."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-5675c480-217b-4edf-9a0e-873c74a286c8.png",
+    "sha256": "a8015caf42daf0aadf0b62163c02e930db29d1589e7053a12b33297c64111326",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 33.732,
+    "generator_kept": false,
+    "reason": "Rejected: only seven people visible and hut front/lean-to angles become oblique rather than overhead. People also too large for 64 px target."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-cf0ac133-dbbb-413f-b652-2067706f93ae.png",
+    "sha256": "b2c9a4da2e19ac28ef4d58c8558ec158502022038b7b70557adbfaf410dc8595",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 35.857,
+    "generator_kept": false,
+    "reason": "Rejected: nine people (two gatherers at top) and oversized people; lean-tos remain oblique. Third attempt will enforce overhead distant map."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-f69a7a68-fe8d-4218-8d4d-53e7a3ba66b4.png",
+    "sha256": "52a9ddd4afb9933b3f901841a2332b889dead54fe007efb9c1464d7228163be1",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 51.206,
+    "generator_kept": false,
+    "reason": "Final camera audit: rejected diagnostic only; eight workers correct but shelter front elevations too pronounced, workers larger than 64 px target. Three-try cap exhausted."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-36e32351-9e72-4990-a3b7-e5a1eb1b56f3.png",
+    "sha256": "611cd294a9801d51f7610caaca4e0c62fb64df3d4a4ac586fe4ed95e70b9b900",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 37.512,
+    "generator_kept": false,
+    "reason": "Rejected composition: portrait inset over camp scene instead of single face-and-shoulders portrait."
+  },
+  {
+    "concept": "06_cave_ochre",
+    "file": "S8_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/06_cave_ochre/S8_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-3d4e6014-331f-4eb3-9b25-b64f63db099f.png",
+    "sha256": "a43b097926c31ba11a0d834581e0c30f8ce37a943944d2185709e4872ce4de12",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 32.152,
+    "generator_kept": true,
+    "reason": "Accepted single front three-quarter woodcutter head and shoulders with mineral pigment; slightly downcast head."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-810a7b9c-86b1-4c8b-bbdb-a5ec060ed91d.png",
+    "sha256": "e49a62ab50ed3cf43fba4a2eafe09c7956c9618983cc1a26df62aef7fe381881",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.129,
+    "generator_kept": true,
+    "reason": "Accepted sole gatherer cutout: overhead full body, berry basket, flat magenta and consistent opaque warm strokes."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-5a242a71-c897-4522-8b00-fed7759fe225.png",
+    "sha256": "5a190d1a268460a52dadd84eb8b8f9be7457ebdfe96dab04db659f4622252bf5",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 50.46,
+    "generator_kept": true,
+    "reason": "Accepted sole cutout: overhead bearded man, exactly three logs, stone axe, flat magenta and matching warm gouache."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-f7ea02ec-e5a6-4dbc-8d44-2a1e7c86d3ef.png",
+    "sha256": "d9dee7b871116760e35b0d9b0844281da6eec4f380876118e96cd8b85f4cc1fb",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 31.277,
+    "generator_kept": false,
+    "reason": "Rejected style: realistic detailed hands, face and woven basket overpower simplified storybook gouache shapes. Camera accepted."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S1_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S1_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-f73c2bcf-b89c-4c6d-8457-a3958dee2baf.png",
+    "sha256": "6eda7ea18cc0099bd2f84fcdbb80e99ebe992a0c76f618f30a6e3138cf75a2fa",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 33.378,
+    "generator_kept": true,
+    "reason": "Accepted frozen reference: overhead woman and berry basket, rounded face/shoulder masses, broad matte opaque strokes, warm shadows without black contours."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-069c64b4-2373-40cb-b39c-2838a5809e32.png",
+    "sha256": "320b1f9435dfcdc8f7e38fe9b718693276f1f765dcead74cc2a248cad7c7a92d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 30.627,
+    "generator_kept": true,
+    "reason": "Accepted overhead man with exactly three logs and stone axe. Matte strokes, rounded body and lighting closely match S1."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-40c49e7c-d48a-4764-91d2-cd8a515d4f95.png",
+    "sha256": "e21bda81b15b354ba88a4c31cec834f6259c0dc9ea6e1627e0adc1e3ea4e027e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.03,
+    "generator_kept": true,
+    "reason": "Accepted overhead elder with stick and child, shared packed earth and warm opaque strokes. Age and size contrast clear."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-a8d97164-6918-4ec4-8ec8-781339eebc51.png",
+    "sha256": "0690b27076a23892f1b0702cc445a18a509a1c54dd018aa8279c8686c858459d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 33.101,
+    "generator_kept": true,
+    "reason": "Accepted roofless plan, four bedrolls, south doorway, small hearth. Rounded gouache ground matches S1 but logs finer; medium consistency risk."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-06cc0592-381b-4761-aa94-85707a8ad773.png",
+    "sha256": "63eb2b6942ed7b7c2b7cf392bca517fe556be01dad82534ac2b530aa18db0b45",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 33.557,
+    "generator_kept": true,
+    "reason": "Accepted four requested props, overhead ground/circular hearth with slight shelter front cheat. Warm broad matte brushwork consistent."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-ef04781e-a36f-4d43-b950-70a7e293626e.png",
+    "sha256": "39b296f3c88d5effe4188b1eab435cf2b73b1c5959cbb78b16986ca6e2ba0caa",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 34.786,
+    "generator_kept": true,
+    "reason": "Accepted top-down four terrain quadrants with rounded gouache brushwork. Large roots and directional strokes risk visible repeats."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-005ff851-bb20-406c-baef-806829bf3ecb.png",
+    "sha256": "5db4eece08c905929127613a8f10abe200fbd7b559f59f869e6edbe58f902d9c",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 35.64,
+    "generator_kept": false,
+    "reason": "Rejected camera/scale: eight people count correct, but lean-to front elevations are too pronounced and workers ~100 px rather than ~64."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S7_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S7_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-7f35f431-7826-4f53-9b83-5aa2be9d786e.png",
+    "sha256": "866a9f01d3a4d92ee536127092f4343e6f118d1b9fe21fc3984aee104660590c",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 37.136,
+    "generator_kept": false,
+    "reason": "Rejected camera: huts and shelters still show broad front/side elevations. Eight workers count correct."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S7_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S7_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-0c4de351-3381-4a52-b0d7-5027b1cab33a.png",
+    "sha256": "22fc2590148c6dbad9d117f45d537f52fe5d22c8baf321cb9a0ef03aedbfe20a",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 33.181,
+    "generator_kept": false,
+    "reason": "Final camera audit: rejected diagnostic only; eight workers correct but shelter front elevations too pronounced, workers larger than 64 px target. Three-try cap exhausted."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-9cda2a24-a072-432b-ae65-3718817aedff.png",
+    "sha256": "827342308114e368f160501010d76f2bb89144a2ad8add208bd6eddf87686c3b",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 31.104,
+    "generator_kept": false,
+    "reason": "Rejected portrait camera: face down and crown dominates, not front three-quarter inspector portrait."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S8_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S8_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-d7cf2a19-1c5b-47f0-a4cd-e15dbfd25418.png",
+    "sha256": "a3897ba267c51e9c0de06221c085e6b144e3609f5ab2ed8b45c91583a942ae18",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 30.278,
+    "generator_kept": false,
+    "reason": "Rejected subject identity: camera fixed, but generated gatherer woman rather than bearded male woodcutter."
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "file": "S8_3.png",
+    "path": "/Users/rexxa/work/artconcept-data/07_storybook_gouache/S8_3.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-db7b-7e60-8385-faf0d23379ab/exec-d362fca4-61e6-44a7-a35b-db03dae022d1.png",
+    "sha256": "62b0f8e511e1599f7fac60ce98b11c014e0a5de31a4e5ce099251b6d889b4486",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 30.97,
+    "generator_kept": true,
+    "reason": "Accepted eye-level front three-quarter bearded woodcutter face/shoulders, warm opaque gouache and no scene/inset."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-e0828e4a-a4bb-4f11-8d61-8f00a48d2a31.png",
+    "sha256": "44cc206fa629685f88775c15460dd9d8285ebcec61cd525160828f7632b37d1a",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.323,
+    "generator_kept": false,
+    "reason": "Camera overhead and content correct, but photoreal surface detail overwhelms intended illustrated dry-brush medium."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S1_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S1_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-aa655f03-bd2e-4a80-9f94-97da2d8d7bfb.png",
+    "sha256": "355ae64664572fcb318172ec409c034ab2bfa46bd5cbe93f244529340b9b85b2",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 23.676,
+    "generator_kept": true,
+    "reason": "Frozen reference: visible broad painted facets, cool ground and long blue shadow; vertical view with crown, shoulders and feet; reed basket and berries clear."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-d63203c9-5681-49e6-aedc-63424b4cd15d.png",
+    "sha256": "7910d516a6f6c4fdfda2cfaa1eeb44946b6b83f8400157c96a84c38c8d8ad0ca",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 22.334,
+    "generator_kept": true,
+    "reason": "Three log ends and stone axe distinct; overhead crown and feet; same painted facets, grey ground and long lower-right blue shadow as S1."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S3_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S3_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-faa0d634-59c3-4445-9216-f1ad0be3c8ee.png",
+    "sha256": "c6fe5bef75fa8ce098e6d90deee65de433bd75c4e1db63cd5e3f4d41873e8fdf",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 25.811,
+    "generator_kept": true,
+    "reason": "Elder with stick and small child legible from overhead; reference brushwork and shadow retained."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S4_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S4_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-e8683bde-2439-48b5-b158-df2fc029bbec.png",
+    "sha256": "01f71ae249e497b0dae69aa31eb44d0738d087ea5e2c8967c0ce6a7869e754a4",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 22.035,
+    "generator_kept": true,
+    "reason": "Four bedrolls, central amber hearth, south opening and roofless square overhead hut are explicit. Rough painted texture and lighting consistent."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S5_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S5_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-75676bc0-11c4-4cb9-9500-ae2213078b95.png",
+    "sha256": "ae8f27b45b4eaa50eada24126b11ba2d8b1e519846cd35118337a45b7f13b900",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 23.953,
+    "generator_kept": true,
+    "reason": "Four required props read separately from overhead; shelter includes front-face cheat. Amber fire anchors cool rough ground."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S6_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S6_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-3b1297d3-4f8c-4b00-b978-d7d5dae2fc94.png",
+    "sha256": "c147f0812f57fc68fb5a67a175a26946aa6ab49eec0c5c453b14d642fcbff10d",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 27.555,
+    "generator_kept": true,
+    "reason": "Correct four overhead quadrants: shallow water, leaf litter, actual green meadow, bare rock. No snow substitution. Strong textures may reveal repetition."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S7_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S7_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-c90981b9-fa76-453e-b977-4b3e843e04ad.png",
+    "sha256": "2ea672bd4c601824d8896f0a428199fcfcd9565da4b96899661262e302da6426",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "wall_seconds": 41.636,
+    "generator_kept": true,
+    "reason": "Eight workers visibly countable, three shelters, roofless four-bed hut, river and broadleaf forest. Overhead scene retains slight front-face cheat; blue shadows less dominant amid grass. People approximately 64-90 px, scale imperfect."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S8_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S8_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-a93a5ae9-9fff-4a15-9f53-0522220353ce.png",
+    "sha256": "ab7941aa8f1ed7bce5e439d81995e7a1de54abb664346a9e34f6bdbf4dfd1213",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 27.706,
+    "generator_kept": false,
+    "reason": "Portrait remains elevated looking down; intended three-quarter front at eye level not achieved."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "S8_2.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/S8_2.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-fe75fa01-4912-4adb-a6d9-2b340679346c.png",
+    "sha256": "a928845f4ed085ea66b83de097d7ef2a08ce19583f7460e0434041aab51bda2e",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 22.594,
+    "generator_kept": true,
+    "reason": "Eye-level three-quarter face/shoulder portrait corrected; painted facets and cool backdrop match reference."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "C1_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/C1_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-1fb2cb69-ba5a-49fe-89bc-0ef0395dea0f.png",
+    "sha256": "9a0e5c4b1ce03fd12834fda6366979ce31738e2ec510394c01f450abc57fdf73",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 21.455,
+    "generator_kept": true,
+    "reason": "One required extra generation, overhead full figure and basket on clean magenta, no ground patch or shadow."
+  },
+  {
+    "concept": "08_cold_north",
+    "file": "C2_1.png",
+    "path": "/Users/rexxa/work/artconcept-data/08_cold_north/C2_1.png",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-fa4e-7460-86a2-704535f5a589/exec-84e5fb85-9c80-4b94-801f-3424f9141ce1.png",
+    "sha256": "5d168135876bdde6cdbff8973a1427315d1c01e1f05622afcda43cd96e4a6abb",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "wall_seconds": 23.025,
+    "generator_kept": false,
+    "reason": "Required one-shot magenta cutout failed: model retained natural earth and shadow and rendered four logs. Chroma key cannot extract it; preserve failure, do not retry beyond exactly-once constraint."
+  }
+]
