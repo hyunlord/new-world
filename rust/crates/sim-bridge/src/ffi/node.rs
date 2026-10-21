@@ -61,6 +61,7 @@ use super::relations::{
     collect_porter_snapshot, collect_settlement_relations, porter_rows_to_dict,
     relation_rows_to_dict,
 };
+use super::save::{load_engine_from_file, save_engine_to_file};
 use super::snapshot::{
     agent_rows_to_dict, building_rows_to_dict, collect_agent_ages_days, collect_agent_ages_years,
     collect_agent_colds, collect_agent_infancy_and_pregnancy, collect_agent_snapshot,
@@ -199,6 +200,43 @@ impl WorldSimNode {
         self.base_mut()
             .call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
+    }
+
+    /// M1.5 save: write the whole simulation state to the absolute file
+    /// `path` (GDScript globalizes `user://saves/<seed>-<tick>.wsave`).
+    /// `true` on success; on failure logs a warning and returns `false`. The
+    /// state is unchanged either way.
+    #[func]
+    fn save_world(&mut self, path: GString) -> bool {
+        match save_engine_to_file(&mut self.engine, std::path::Path::new(&path.to_string())) {
+            Ok(_) => true,
+            Err(e) => {
+                godot_warn!("save_world failed: {e}");
+                false
+            }
+        }
+    }
+
+    /// M1.5 load: replace the engine by the one saved at the absolute file
+    /// `path` and emit `world_reset` (deferred) so every layer rebuilds. On
+    /// failure the running world is kept, a warning is logged and `false`
+    /// is returned.
+    #[func]
+    fn load_world(&mut self, path: GString) -> bool {
+        match load_engine_from_file(std::path::Path::new(&path.to_string())) {
+            Ok(engine) => {
+                self.world_seed = engine.resources.world_seed;
+                self.engine = engine;
+                self.accumulator = 0.0;
+                self.base_mut()
+                    .call_deferred("emit_signal", &["world_reset".to_variant()]);
+                true
+            }
+            Err(e) => {
+                godot_warn!("load_world failed: {e}");
+                false
+            }
+        }
     }
 
     /// Read seed, dimensions, and simulation pacing from authoritative resources.

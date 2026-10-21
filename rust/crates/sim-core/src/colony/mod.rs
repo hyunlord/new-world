@@ -51,7 +51,7 @@ impl ColonyTallies {
 }
 
 /// All colony state kept beside the ECS world (`SimResources::colony`).
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ColonyState {
     /// Standing trees by tile.
     pub trees: BTreeMap<(u32, u32), Tree>,

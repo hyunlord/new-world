@@ -5,7 +5,7 @@
 #   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
 #   get_trees, get_colony_overlay (GETTERS); get_tile_causal_events; advance_ticks, reset_world, reset_world_stress,
 #   on_building_placed, cmd_designate_chop, cmd_designate_chop_tiles, cmd_cancel_area, cmd_add_stockpile,
-#   cmd_remove_zone_area, cmd_place_blueprint (MUTATORS); signal world_reset.
+#   cmd_remove_zone_area, cmd_place_blueprint, save_world, load_world (MUTATORS); signal world_reset.
 class_name SimReads
 extends Node
 
@@ -24,6 +24,8 @@ const MUTATORS: Array[String] = [
 	# M1 orders (ADR 0012): each returns {accepted, count, reason}.
 	"cmd_designate_chop", "cmd_designate_chop_tiles", "cmd_cancel_area",
 	"cmd_add_stockpile", "cmd_remove_zone_area", "cmd_place_blueprint",
+	# M1.5 save files: save_world(path) -> bool, load_world(path) -> bool (a load replaces the world).
+	"save_world", "load_world",
 ]
 var _world: Node
 var _cache: Dictionary = {}
@@ -188,7 +190,7 @@ func mutate_raw(method: String, arguments: Array = []) -> Variant:
 	var result: Variant = _world.callv(method, arguments)
 	invalidate()
 	# Rust schedules these signals deferred; same-frame reads need fresh terrain now.
-	if method == "reset_world" or method == "reset_world_stress":
+	if method == "reset_world" or method == "reset_world_stress" or method == "load_world":
 		_on_world_reset()
 	return result
 

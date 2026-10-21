@@ -103,10 +103,12 @@ pub struct Settlement {
 
     /// Agents currently considered members of this settlement.
     /// Phase 10-β `SettlementSystem` maintains this via proximity scan.
+    #[serde(serialize_with = "crate::save_serde::sorted_set")]
     pub member_agents: HashSet<AgentId>,
 
     /// Buildings within the settlement boundary.
     /// Phase 10-β wires `BuildingId` to completed `hecs::Entity` handles.
+    #[serde(serialize_with = "crate::save_serde::sorted_set")]
     pub member_buildings: HashSet<BuildingId>,
 
     /// Snapshot population statistics (kept in sync by `SettlementSystem`).

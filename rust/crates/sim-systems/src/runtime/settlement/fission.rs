@@ -128,7 +128,7 @@ fn chebyshev(a: (u32, u32), b: (u32, u32)) -> u32 {
 }
 
 /// A departed group on its way (or waiting for its daughter to form).
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 struct Group {
     parent: SettlementId,
     site: (u32, u32),
@@ -144,7 +144,7 @@ struct Group {
 }
 
 /// Pass 11 village fission.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct FissionSystem {
     last_fission: BTreeMap<SettlementId, u64>,
     world_last_fission: Option<u64>,
@@ -1112,6 +1112,13 @@ impl RuntimeSystem for FissionSystem {
         1
     }
 
+    fn save_state(&self) -> Result<Vec<u8>, String> {
+        crate::save::encode(self)
+    }
+    fn load_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        *self = crate::save::decode(bytes)?;
+        Ok(())
+    }
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let Some(rule) = resources.rules.society.fission else {
             return;

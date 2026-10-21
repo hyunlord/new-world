@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 194,
+    "active_key_count": 198,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 194,
+    "key_count": 198,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -186,6 +186,8 @@
     "UI_JOB_HAUL": "통나무 나르는 중",
     "UI_JOB_NONE": "—",
     "UI_LIFE_EVENTS": "생애 사건",
+    "UI_LOAD_DONE": "불러옴",
+    "UI_LOAD_FAILED": "불러오기 실패",
     "UI_MALE": "남",
     "UI_MEMORY_RECALL_TRIGGER_CASCADE": "연쇄 편향",
     "UI_MEMORY_RECALL_TRIGGER_PERIODIC": "주기적",
@@ -194,8 +196,8 @@
     "UI_ORDER_CANCEL": "취소",
     "UI_ORDER_CHOP": "베기",
     "UI_ORDER_HINT_AREA": "드래그해서 영역을 고르세요",
-    "UI_ORDER_HINT_IDLE": "F1–F5 명령 · Home/H 캠프로",
-    "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 명령 · Home/H 캠프로",
+    "UI_ORDER_HINT_IDLE": "F1–F4·F6 명령 · Home/H 캠프로",
+    "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F4·F6 명령 · Home/H 캠프로",
     "UI_ORDER_HINT_PLACE": "클릭해서 놓으세요",
     "UI_ORDER_HUT": "오두막",
     "UI_ORDER_REMOVE_ZONE": "구역 지우기",
@@ -211,6 +213,8 @@
     "UI_REJECT_NOTHING": "할 일이 없음",
     "UI_REJECT_OUT_OF_MAP": "지도 밖",
     "UI_REJECT_WATER": "물 위에는 지을 수 없음",
+    "UI_SAVE_DONE": "저장함",
+    "UI_SAVE_FAILED": "저장 실패",
     "UI_SPEED_PAUSED": "일시정지",
     "UI_TEMPERAMENT_HA": "신중함",
     "UI_TEMPERAMENT_NS": "호기심",

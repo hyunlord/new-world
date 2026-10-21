@@ -72,7 +72,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 /// The state is advanced via `splitmix64`, a 64-bit mixing function whose
 /// output stream passes the standard PractRand statistical battery for the
 /// step counts a single simulation will ever realistically consume.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct MovementRng {
     state: u64,
 }

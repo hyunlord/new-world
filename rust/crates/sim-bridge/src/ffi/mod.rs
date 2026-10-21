@@ -24,6 +24,7 @@ pub mod node;
 pub mod reads_agent;
 pub mod reads_settlement;
 pub mod relations;
+pub mod save;
 pub mod snapshot;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
@@ -54,6 +55,7 @@ pub use reads_agent::{collect_relationship_snapshot, RelationshipSnapshotRow};
 pub use reads_settlement::{
     collect_settlement_snapshot, collect_settlement_wood_targets, SettlementSnapshotRow,
 };
+pub use save::{load_engine_from_file, save_engine_to_file};
 pub use snapshot::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
 pub use snapshot::{
     collect_agent_ages_days, collect_agent_ages_years, collect_agent_colds,

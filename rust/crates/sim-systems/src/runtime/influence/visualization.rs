@@ -21,7 +21,7 @@ use sim_core::influence::InfluenceChannel;
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Coarse per-tick summary of the influence grid (debug / harness only).
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct VisualizationDigest {
     /// Engine tick at which this digest was captured.
     pub tick: u64,
@@ -32,6 +32,7 @@ pub struct VisualizationDigest {
 }
 
 /// Phase 2 influence visualiser — fires every 6 ticks at priority 1000.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct InfluenceVisualizationSystem {
     last: VisualizationDigest,
 }
@@ -71,6 +72,13 @@ impl RuntimeSystem for InfluenceVisualizationSystem {
         6
     }
 
+    fn save_state(&self) -> Result<Vec<u8>, String> {
+        crate::save::encode(self)
+    }
+    fn load_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        *self = crate::save::decode(bytes)?;
+        Ok(())
+    }
     fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
         let warmth_total: u64 = resources
             .influence_grid

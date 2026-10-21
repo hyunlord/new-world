@@ -51,7 +51,7 @@ pub use sim_core::rng::NoiseFork;
 /// Warmth/Spiritual/Beauty/Light channels.
 ///
 /// Phase 0 v0.1.3 §5 — R1 event_queue path (T7.7.B land).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct BuildingPlacedEvent {
     /// Tile coordinates of the building origin (top-left corner).
     pub position: (u32, u32),
@@ -61,7 +61,7 @@ pub struct BuildingPlacedEvent {
 
 /// Cumulative population and social counters for display and measurement only.
 /// Never read by simulation logic, so they cannot affect determinism.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Tallies {
     /// Agents born after world initialization; excludes initial spawns.
     pub births: u64,
@@ -175,7 +175,7 @@ pub struct Tallies {
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct FireState {
     /// Whether the last hourly update burned a full hour of wood.
     pub lit: bool,
@@ -192,7 +192,7 @@ pub struct FireState {
 /// Display-only: this buffer is never read by simulation logic, so it cannot
 /// affect determinism. `SimResources` is NOT serde-serialized, so the field
 /// carries no save/load or lockstep weight.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
 pub struct RecentDeath {
     /// Death tile-x (the dead agent's last `Position` tile). Stored as `i32`
     /// per the viz-D buffer schema so the FFI `x as i32` cast is identity and
@@ -247,6 +247,29 @@ pub trait RuntimeSystem {
 
     /// Per-tick work. Called by [`SimEngine::tick`] when due.
     fn tick(&mut self, world: &mut World, resources: &mut SimResources);
+
+    /// M1.5 save files: the system's internal state as bytes (its own
+    /// encoding; hash collections in sorted key order so two saves of one
+    /// state are equal). Default: no state (empty). A system that keeps
+    /// state across ticks implements this and [`RuntimeSystem::load_state`];
+    /// a pure cache of other state may stay empty and rebuild itself.
+    fn save_state(&self) -> Result<Vec<u8>, String> {
+        Ok(Vec::new())
+    }
+
+    /// Put back the state written by [`RuntimeSystem::save_state`] into a
+    /// freshly constructed system. Default: accepts only empty bytes.
+    fn load_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        if bytes.is_empty() {
+            Ok(())
+        } else {
+            Err(format!(
+                "{} keeps no state but the save holds {} bytes for it",
+                self.name(),
+                bytes.len()
+            ))
+        }
+    }
 }
 
 /// Sentinel quantity marking a tile as a non-depleting **source**
@@ -260,12 +283,20 @@ pub trait RuntimeSystem {
 /// stays ripple-free across FFI and save format.
 pub const RESOURCE_SOURCE_INFINITE: u8 = u8::MAX;
 
+/// An empty blocking cache: the value a loaded save starts with before
+/// `sim_systems::save::load` rebuilds it from the loaded material registry
+/// (the cache is derived state and is not written to save files).
+fn empty_blocking_cache() -> MaterialBlockingCache {
+    MaterialBlockingCache::build(&MaterialRegistry::new())
+}
+
 /// Shared world state owned by the engine.
 ///
 /// `hecs` enforces single-writer semantics on the [`World`]; this struct
 /// applies the same convention to non-ECS resources by handing every
 /// system a `&mut SimResources` and trusting priorities to serialise
 /// access.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SimResources {
     /// Construction-time policy; default preserves every legacy behavior.
     pub rules: WorldRules,
@@ -317,6 +348,7 @@ pub struct SimResources {
     pub material_registry: MaterialRegistry,
 
     /// Pre-computed `(material, channel) → block` lookup (T7.4 land).
+    #[serde(skip, default = "empty_blocking_cache")]
     pub material_blocking_cache: MaterialBlockingCache,
 
     /// Current tick — refreshed by [`SimEngine::tick`] before systems run.
@@ -358,14 +390,17 @@ pub struct SimResources {
     /// not need a richer food economy (calorie content, freshness, etc.)
     /// and the sparse map keeps the substrate ripple-free across
     /// TileGrid, FFI, and save format.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub food_tiles: HashMap<(u32, u32), u8>,
 
     /// Sparse water-tile substrate (V7 Phase 5-β / P5β-7). Mirrors
     /// [`SimResources::food_tiles`] for the second need.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub water_tiles: HashMap<(u32, u32), u8>,
 
     /// Sparse sleep-tile substrate (V7 Phase 5-γ / P5γ-7). Mirrors
     /// [`SimResources::food_tiles`] for the third need.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub sleep_tiles: HashMap<(u32, u32), u8>,
 
     /// Regen ceiling per registered FOOD source (`add-resource-scarcity-regen`).
@@ -376,25 +411,30 @@ pub struct SimResources {
     /// [`SimResources::food_tiles`] toward this ceiling. Empty by default — a
     /// harness that does NOT seed finite scarcity leaves it empty, so regen is
     /// a pure no-op there (the 12 shared harnesses are unperturbed).
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub food_source_max: HashMap<(u32, u32), u8>,
 
     /// Regen ceiling per registered WATER source. Mirrors
     /// [`SimResources::food_source_max`] for the water channel.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub water_source_max: HashMap<(u32, u32), u8>,
 
     /// Regen ceiling per registered SLEEP source. Mirrors
     /// [`SimResources::food_source_max`] for the sleep channel.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub sleep_source_max: HashMap<(u32, u32), u8>,
 
     /// Sparse per-pair relationship state (V7 Phase 7-β / P7β-13).
     /// Bumped by `SocialInteractionSystem` on `SocialInteractionCompleted`.
     /// Starts empty; never seeded by engine construction.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub relationships: HashMap<RelationshipKey, RelationshipState>,
 
     /// Sparse per-pair multi-tick interaction progress counter
     /// (V7 Phase 7-β / P7β-13). Incremented once per mutual
     /// `Consuming{Agent(other)}` pair per tick by `SocialInteractionSystem`;
     /// removed on completion or asymmetric-partner fallback. Starts empty.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub interaction_progress: HashMap<RelationshipKey, u32>,
 
     /// Active combat pairs for the current tick. Keys are canonical
@@ -402,6 +442,7 @@ pub struct SimResources {
     /// `AgentDecisionSystem` when the combat cascade arm fires.
     /// `CombatSystem` (priority 137) consumes and removes completed pairs.
     /// Phase 9-β / P9β-1.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_set")]
     pub combat_pairs: HashSet<(AgentId, AgentId)>,
 
     /// Per-pair combat progress counter. Keyed by the same canonical
@@ -409,6 +450,7 @@ pub struct SimResources {
     /// increments each pair's counter until it reaches
     /// `REQUIRED_COMBAT_PROGRESS`, at which point `CombatCompleted` fires.
     /// Phase 9-β / P9β-1.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub combat_progress: HashMap<(AgentId, AgentId), u32>,
 
     /// Current simulated time-of-day in `[0.0, 24.0)` (V7 Phase 5-γ /
@@ -430,6 +472,7 @@ pub struct SimResources {
     /// Phase 10-β scope). Starts empty — no settlements exist at world
     /// construction time. Follows the established SimResources HashMap
     /// sparse-collection pattern (`relationships`, `combat_pairs`, etc.).
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub settlements: HashMap<SettlementId, Settlement>,
 
     /// Monotonic source of [`SettlementId`]s (V7 Phase 10-α / P10Plan-1).
@@ -452,6 +495,7 @@ pub struct SimResources {
     /// `InfluenceChanged` events evict `BuildingPlaced` records within a
     /// single tick. The registry is the authoritative
     /// "where are the buildings?" lookup. V7 Phase 10-β.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     pub building_registry: HashMap<BuildingId, (u32, u32)>,
 
     /// Bounded, display-only buffer of recent agent deaths (V7 viz-D
@@ -544,13 +588,16 @@ pub struct SimResources {
     /// M1.5 spatial indexes (ADR 0016 C3; `sim_core::spatial`): derived
     /// state, rebuilt from the world (the colony indexes when the colony's
     /// `overlay_version` changes, the agents' on demand once per tick). Never
-    /// read in the baseline world.
+    /// read in the baseline world. Not saved: a loaded engine starts with
+    /// empty indexes and rebuilds them on first use (`ColonyIndex::version`
+    /// is `None`, the agents' tick is `None`).
+    #[serde(skip)]
     pub spatial: sim_core::spatial::SpatialIndex,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
 /// measurement only. Factors and the hazard in thousandths.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct FissionCheck {
     /// Tick of the check.
     pub tick: u64,
@@ -585,7 +632,7 @@ pub struct FissionCheck {
 }
 
 /// One departed fission group (Pass 11); measurement only.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct FissionRecord {
     /// `FissionSystem` counter, from 1.
     pub fission_id: u32,
@@ -618,7 +665,7 @@ pub struct FissionRecord {
 }
 
 /// One wild region placed by worldgen (Pass 11).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct WildRegion {
     /// Centre tile (a walkable, non-water tile 22–28 from the camp hearth).
     pub centre: (u32, u32),
@@ -632,7 +679,7 @@ pub struct WildRegion {
 }
 
 /// Worldgen counts kept for measurement (Pass 10): never read by systems.
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct WorldGenReport {
     /// Deadwood spots the generator was asked for.
     pub deadwood_spots_requested: u32,
@@ -1053,6 +1100,52 @@ impl SimEngine {
     /// Number of completed ticks since construction.
     pub fn current_tick(&self) -> u64 {
         self.current_tick
+    }
+
+    /// M1.5 save files: `(name, state)` of every registered system in
+    /// execution order ([`RuntimeSystem::save_state`]).
+    pub fn system_states(&self) -> Result<Vec<(String, Vec<u8>)>, String> {
+        self.systems
+            .iter()
+            .map(|s| Ok((s.name().to_string(), s.save_state()?)))
+            .collect()
+    }
+
+    /// M1.5 save files: replace the world, the resources and the tick
+    /// counter, and load every registered system's state from `states`
+    /// (as [`SimEngine::system_states`] wrote it). The registered systems
+    /// must match `states` one to one, by position and name; otherwise
+    /// nothing is replaced and an error names the first mismatch. A system
+    /// whose `load_state` fails leaves the engine half-loaded: discard it.
+    pub fn install_saved(
+        &mut self,
+        world: World,
+        resources: SimResources,
+        current_tick: u64,
+        states: &[(String, Vec<u8>)],
+    ) -> Result<(), String> {
+        if states.len() != self.systems.len() {
+            return Err(format!(
+                "the save lists {} systems, the engine registers {}",
+                states.len(),
+                self.systems.len()
+            ));
+        }
+        for (system, (name, _)) in self.systems.iter().zip(states) {
+            if system.name() != name {
+                return Err(format!(
+                    "system mismatch: save has {name}, engine has {}",
+                    system.name()
+                ));
+            }
+        }
+        for (system, (_, bytes)) in self.systems.iter_mut().zip(states) {
+            system.load_state(bytes)?;
+        }
+        self.world = world;
+        self.resources = resources;
+        self.current_tick = current_tick;
+        Ok(())
     }
 
     /// Fork the noise (Pass 9): from the current tick on (the next `tick()`

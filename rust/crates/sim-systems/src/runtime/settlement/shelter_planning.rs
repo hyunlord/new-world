@@ -14,7 +14,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 use std::collections::BTreeSet;
 
 /// Plans one pending shelter per settlement when current housing is full.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct ShelterPlanningSystem {
     /// Number of eligible planning attempts with no valid construction tile.
     pub skipped_no_tile: u64,
@@ -29,6 +29,13 @@ impl RuntimeSystem for ShelterPlanningSystem {
     }
     fn tick_interval(&self) -> u64 {
         1
+    }
+    fn save_state(&self) -> Result<Vec<u8>, String> {
+        crate::save::encode(self)
+    }
+    fn load_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        *self = crate::save::decode(bytes)?;
+        Ok(())
     }
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let Some(rule) = resources.rules.society.shelter_planning else {

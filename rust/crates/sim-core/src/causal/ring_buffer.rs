@@ -29,7 +29,7 @@ pub const TILE_CAUSAL_RING_SIZE: usize = 8;
 /// evicted before pushing the new event at the back. This preserves the
 /// MOST RECENT 8 events — the relevant set for the "왜?" UI which
 /// answers "why is THIS tile in THIS state RIGHT NOW?".
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct TileCausalLog {
     events: ArrayVec<CausalEvent, TILE_CAUSAL_RING_SIZE>,
 }

@@ -7,6 +7,7 @@ license.workspace = true
 [dependencies]
 hecs = { workspace = true }
 serde = { workspace = true }
+bincode = { workspace = true }
 sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }
 

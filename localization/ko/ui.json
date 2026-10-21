@@ -189,6 +189,10 @@
 	"UI_ORDER_TOAST_HUT": "오두막 청사진 {count}개 놓음",
 	"UI_ORDER_TOAST_REMOVE_ZONE": "구역 {count}칸 지움",
 	"UI_ORDER_TOAST_CANCEL": "명령 {count}개 취소",
-	"UI_ORDER_HINT_IDLE": "F1–F5 명령 · Home/H 캠프로",
-	"UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 명령 · Home/H 캠프로"
+	"UI_ORDER_HINT_IDLE": "F1–F4·F6 명령 · Home/H 캠프로",
+	"UI_ORDER_HINT_IDLE_MAC": "fn + F1–F4·F6 명령 · Home/H 캠프로",
+	"UI_SAVE_DONE": "저장함",
+	"UI_LOAD_DONE": "불러옴",
+	"UI_SAVE_FAILED": "저장 실패",
+	"UI_LOAD_FAILED": "불러오기 실패"
 }

@@ -115,7 +115,7 @@ impl DeathReason {
 /// driven breaches. Phase 5-γ adds the Fatigue branch.
 /// Phase 6-β adds the Construction branch — the 4th cascade step, lowest
 /// priority among the four drives. Mood/morale/social reasons land in δ.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub enum DecisionReason {
     /// Hunger crossed `HUNGER_THRESHOLD` upward this tick.
     HungerThresholdBreach,
@@ -223,7 +223,7 @@ pub type EventId = u64;
 ///
 /// [`TileCausalLog`]: super::TileCausalLog
 /// [`TILE_CAUSAL_RING_SIZE`]: super::TILE_CAUSAL_RING_SIZE
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum CausalEvent {
     /// A building placement event arrived from FFI and was accepted by BSS
     /// (in-bounds, non-zero radius). Recorded once per accepted event onto

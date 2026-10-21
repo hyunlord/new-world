@@ -14,7 +14,9 @@ use crate::components::{AgentId, SettlementId};
 
 /// What a [`ChronicleEntry`] records. Discriminants are stable (`as_u8`).
 #[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, serde::Serialize, serde::Deserialize,
+)]
 pub enum ChronicleKind {
     /// subject = child, other = mother, third = father, settlement; cause 0
     /// couple / 1 fallback parents.
@@ -151,7 +153,9 @@ impl ChronicleKind {
 /// Why a member left with a fission group (the phase of
 /// `households::select_departure_explained` that first chose them).
 #[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, serde::Serialize, serde::Deserialize,
+)]
 pub enum DepartCause {
     /// Chosen by rank without a family rule (no households).
     Ranked = 0,
@@ -194,7 +198,7 @@ impl DepartCause {
 }
 
 /// One chronicle record. Field meanings depend on [`ChronicleKind`].
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ChronicleEntry {
     /// Simulation tick of the event.
     pub tick: u64,
@@ -293,7 +297,7 @@ impl ChronicleEntry {
 }
 
 /// What is known of a person, kept after death.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct PersonRecord {
     /// `Sex::female` when the person carried `Sex`.
     pub female: Option<bool>,
@@ -312,7 +316,7 @@ pub struct PersonRecord {
 }
 
 /// The chronicle store (`SimResources::chronicle`).
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Chronicle {
     entries: Vec<ChronicleEntry>,
     by_agent: BTreeMap<AgentId, Vec<u32>>,

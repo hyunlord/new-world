@@ -54,6 +54,7 @@ macro_rules! scope {
 
 pub mod commands;
 pub mod runtime;
+pub mod save;
 #[cfg(feature = "subprofile")]
 pub mod subprofile;
 pub mod worldgen;

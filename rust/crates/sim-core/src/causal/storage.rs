@@ -28,7 +28,7 @@ use crate::influence::InfluenceChannel;
 /// Indexed by linear tile index (`y * width + x`). Lookups for tiles that
 /// have never observed a causal event return `None` / `0` without
 /// allocating an empty log.
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, serde::Serialize, serde::Deserialize)]
 pub struct CausalLogStorage {
     logs: BTreeMap<u32, TileCausalLog>,
 }

@@ -192,6 +192,55 @@ impl MaterialRegistry {
     }
 }
 
+/// The saved form of a [`MaterialRegistry`] (M1.5 save files): definitions in
+/// id order and the per-mod and per-category id lists in key order, each list
+/// in its registration order. The derive and explain caches are not saved;
+/// they refill lazily with the same values.
+#[derive(serde::Serialize, serde::Deserialize)]
+struct SavedRegistry {
+    defs: Vec<MaterialDef>,
+    by_mod: Vec<(String, Vec<MaterialId>)>,
+    by_category: Vec<(MaterialCategory, Vec<MaterialId>)>,
+}
+
+impl serde::Serialize for MaterialRegistry {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let mut defs: Vec<MaterialDef> = self.defs.values().cloned().collect();
+        defs.sort_by_key(|def| def.id);
+        let mut by_mod: Vec<(String, Vec<MaterialId>)> = self
+            .by_mod
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        by_mod.sort_by(|a, b| a.0.cmp(&b.0));
+        let mut by_category: Vec<(MaterialCategory, Vec<MaterialId>)> = self
+            .by_category
+            .iter()
+            .map(|(k, v)| (*k, v.clone()))
+            .collect();
+        by_category.sort_by_key(|entry| entry.0);
+        SavedRegistry {
+            defs,
+            by_mod,
+            by_category,
+        }
+        .serialize(serializer)
+    }
+}
+
+impl<'de> serde::Deserialize<'de> for MaterialRegistry {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let saved = SavedRegistry::deserialize(deserializer)?;
+        let mut registry = MaterialRegistry::new();
+        for def in saved.defs {
+            registry.defs.insert(def.id, def);
+        }
+        registry.by_mod = saved.by_mod.into_iter().collect();
+        registry.by_category = saved.by_category.into_iter().collect();
+        Ok(registry)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

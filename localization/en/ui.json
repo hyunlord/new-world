@@ -189,6 +189,10 @@
 	"UI_ORDER_TOAST_HUT": "{count} hut blueprint placed",
 	"UI_ORDER_TOAST_REMOVE_ZONE": "{count} zone tiles removed",
 	"UI_ORDER_TOAST_CANCEL": "{count} orders cancelled",
-	"UI_ORDER_HINT_IDLE": "F1–F5 orders · Home/H camp",
-	"UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 orders · Home/H camp"
+	"UI_ORDER_HINT_IDLE": "F1–F4·F6 orders · Home/H camp",
+	"UI_ORDER_HINT_IDLE_MAC": "fn + F1–F4·F6 orders · Home/H camp",
+	"UI_SAVE_DONE": "Saved",
+	"UI_LOAD_DONE": "Loaded",
+	"UI_SAVE_FAILED": "Save failed",
+	"UI_LOAD_FAILED": "Load failed"
 }

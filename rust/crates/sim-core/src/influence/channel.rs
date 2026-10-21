@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// Per-channel decay, aggregation and update-tier policies are encoded as
 /// methods on this enum so callers cannot drift from the spec.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum InfluenceChannel {
     /// Environmental warmth from STATIC heat sources (hearth, stove, sun).

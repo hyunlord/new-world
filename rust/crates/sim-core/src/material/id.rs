@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// 32-bit content-derived id for materials. Stable across runs given the
 /// same input string (the algorithm is `const fn`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct MaterialId(u32);
 

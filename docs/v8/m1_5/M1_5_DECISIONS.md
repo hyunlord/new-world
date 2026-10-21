@@ -287,3 +287,32 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   caps a woman at 24 / 66 ≈ 0.36 births a year). The probe now also reports the conception rate per at-risk day
   (women eligible for the draw: not pregnant, not delivering, past the postpartum days), which must match the
   rule's 33 ‰ and can fail in both directions; the report gives it beside D1.
+
+## D17 — Save and load (goal 7): kept; where it lives, what is saved, F5 and F9
+
+- Built by a subagent in an isolated worktree (`m1_5-save`, commit `9ef5f697`), cherry-picked onto `v8/wip` with one
+  conflict (`sim-core/src/lib.rs` module list) and one addition (`SimResources.spatial` is `#[serde(skip)]`: derived,
+  rebuilt on first use). Report: `$DATA/logs/save_report.md`.
+- Format: magic `WORLDSIM`, `FORMAT_VERSION` 1 (u32 LE), then bincode 1.3 (`DefaultOptions`) of `{current_tick,
+  resources (all of SimResources), world, systems: [(name, bytes)]}`. bincode 1.x instead of postcard: one crate,
+  no new transitive dependencies. Every hash collection is written in key order (`sim_core::save_serde`).
+- Where: `sim_systems::save::{save, load, …}`, not `SimEngine::save(&self)` / `SimEngine::load`: the component
+  registry names sim-systems types (`MovementRng`, `InfluenceSample`) and a ready engine needs
+  `register_default_runtime_systems`. sim-engine gained `RuntimeSystem::save_state` / `load_state` (default: no
+  state), `SimEngine::system_states` and `install_saved`. `save` takes `&mut SimEngine`: hecs 0.10.5 exposes its
+  allocator's free list only through `reserve_entity`, so `save` reads it that way and replaces the world with the
+  one rebuilt from the bytes (the load path) — after a save the engine is the loaded engine.
+- World: archetypes in creation order (empty ones included), entities by id and generation in dense order, one
+  column per component (registry of 37 types; an unregistered type fails the save), the allocator's free list
+  rebuilt in stack order with its generations. System state saved: `SettlementSystem`, `FissionSystem`,
+  `BedAssignmentSystem`, `ShelterPlanningSystem`, `InfluenceVisualizationSystem`; rebuilt: the decision's places
+  cache, the material blocking cache, the spatial indexes.
+- Tests (`save_load.rs`, gate step `save_roundtrip` = `tools/v8/save_roundtrip.sh`): colony seeds 0–7 with the
+  U-script, tick 2,000 → save → load → +1,000 equal to the continuous run at 7 checkpoints (colony fingerprint,
+  probe fingerprint, chronicle) and byte-identical full saves at the end; two baseline seeds; a save right after a
+  death (non-empty free list) chained twice through births; deterministic saves; version and magic rejected. Two
+  deliberate breakages failed the tests. On the merged code (Parts 4–5 included): `SAVE_ROUNDTRIP PASS`.
+- Keys: goal 7 puts save on F5, which was M1's cancel order. Choice: F5 save, F9 load, the cancel order moves to
+  F6 (`order_bar.gd`; README updated). A failed load shows its own toast (`UI_LOAD_FAILED`, a fourth key).
+- A save is exact only within one build; across commits the guarantee stays C1's replay of `(seed, commands)`.
+  `FORMAT_VERSION` must be bumped by hand when any saved type changes.

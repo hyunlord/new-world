@@ -12,6 +12,7 @@ use crate::material::{MaterialId, TerrainType};
 /// Each parallel array has length `width * height`. Walls, floors and
 /// ground resources are sparse (`Option<MaterialId>`); terrain, elevation
 /// and outdoor flags are dense.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TileGrid {
     /// Width in tiles.
     pub width: u32,

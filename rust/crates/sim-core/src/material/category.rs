@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// High-level material classification. The order is locked by §3.B of the
 /// material schema spec — do not reorder.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum MaterialCategory {
     /// Stone-like inorganic (granite, basalt, ...).

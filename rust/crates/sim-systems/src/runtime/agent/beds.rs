@@ -12,7 +12,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Reassigns beds at 20:00 or when the set of owned shelters changes.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct BedAssignmentSystem {
     last_shelters: Vec<(SettlementId, u32, u32)>,
 }
@@ -25,6 +25,13 @@ impl RuntimeSystem for BedAssignmentSystem {
     }
     fn tick_interval(&self) -> u64 {
         1
+    }
+    fn save_state(&self) -> Result<Vec<u8>, String> {
+        crate::save::encode(self)
+    }
+    fn load_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        *self = crate::save::decode(bytes)?;
+        Ok(())
     }
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         if resources.rules.agent.night_rest.is_none() {

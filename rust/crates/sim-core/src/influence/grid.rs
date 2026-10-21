@@ -9,7 +9,7 @@
 use crate::influence::channel::InfluenceChannel;
 
 /// Inclusive 2D bounding box, used to mark Cold-tier dirty regions.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct DirtyRegion {
     /// Inclusive minimum X.
     pub min_x: u32,
@@ -38,6 +38,7 @@ impl DirtyRegion {
 /// Each channel owns two parallel buffers (`current`, `pending`) and a
 /// list of dirty regions. The simulation writes into `pending` during a
 /// tick, then calls [`InfluenceGrid::swap`] at tick end.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct InfluenceGrid {
     /// Width in tiles (matches the owning `TileGrid`).
     pub width: u32,

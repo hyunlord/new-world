@@ -131,17 +131,20 @@ fn manhattan(a: (u32, u32), b: (u32, u32)) -> u64 {
 /// the canonical [`Settlement`] component. This keeps the Phase 10-α data
 /// struct stable while still allowing the system to recompute proximity
 /// and gate births deterministically.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct SettlementSystem {
     /// Formation tile per settlement — used as the proximity anchor for
     /// membership sync and community-history routing.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     formation_tiles: HashMap<SettlementId, (u32, u32)>,
     /// Formation `EventId` per settlement — parent of
     /// `SettlementDissolved` and `AgentBorn` events.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     formation_event_ids: HashMap<SettlementId, EventId>,
     /// Tick at which the last `AgentBorn` fired for each settlement.
     /// Initialised to `founded_at` so the first birth requires
     /// `BIRTH_COOLDOWN_TICKS` after formation.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     birth_last_tick: HashMap<SettlementId, u64>,
     /// Snapshot of `building_registry` keys seen at the previous tick.
     /// Used to compute the set of buildings newly added this tick for
@@ -149,21 +152,25 @@ pub struct SettlementSystem {
     /// purpose because the per-tile ring buffer evicts `BuildingPlaced`
     /// events within a single tick under normal stamp + influence
     /// propagation load.
+    #[serde(serialize_with = "sim_core::save_serde::sorted_set")]
     seen_building_ids: HashSet<BuildingId>,
     /// Per-settlement pre-clearing population snapshot — the population
     /// captured at the LAST tick where both `current > 0` AND
     /// `!member_buildings.is_empty()` held. Used at dissolution to
     /// populate `SettlementDissolved.final_population` (plan A4).
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     last_known_population: HashMap<SettlementId, u32>,
     /// Last observed member id per settlement (lowest-id member at the
     /// snapshot moment). Captured at the same snapshot point as
     /// `last_known_population` and used to populate
     /// `SettlementDissolved.last_member_id` (V7 Phase 10-γ / P10γ-A17).
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     last_known_member_id: HashMap<SettlementId, AgentId>,
     /// Last observed building id per settlement (lowest-id building at
     /// the snapshot moment). Captured at the same snapshot point as
     /// `last_known_population` and used to populate
     /// `SettlementDissolved.last_building_id` (V7 Phase 10-γ / P10γ-A17).
+    #[serde(serialize_with = "sim_core::save_serde::sorted_map")]
     last_known_building_id: HashMap<SettlementId, BuildingId>,
     /// Monotonic side-effect counter incremented every tick the system
     /// runs (plan A28). Observable via [`Self::tick_run_count`].
@@ -171,6 +178,7 @@ pub struct SettlementSystem {
     /// Settlement→event-id pairs already routed to community history
     /// during the current tick. Prevents double-append within a single
     /// tick (plan A21 1:1 correspondence).
+    #[serde(serialize_with = "sim_core::save_serde::sorted_set")]
     routed_this_tick: HashSet<(SettlementId, EventId)>,
     /// Settlements minted by `run_formation_scan` during the current tick
     /// (V7 Phase 10-γ / P10γ-A6). Stored as `(settlement_id, formed_id)`
@@ -1339,6 +1347,13 @@ impl RuntimeSystem for SettlementSystem {
         1
     }
 
+    fn save_state(&self) -> Result<Vec<u8>, String> {
+        crate::save::encode(self)
+    }
+    fn load_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        *self = crate::save::decode(bytes)?;
+        Ok(())
+    }
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         self.tick_run_count = self.tick_run_count.saturating_add(1);
         self.routed_this_tick.clear();

@@ -27,7 +27,7 @@ use sim_core::influence::InfluenceChannel;
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Most recent influence sample observed by an agent (debug component).
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, serde::Serialize, serde::Deserialize)]
 pub struct InfluenceSample {
     /// Warmth value at the agent's tile as of the last tick.
     pub warmth: u8,

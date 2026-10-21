@@ -70,7 +70,7 @@ GDScript layers / panels  ──► SimReads.read(world_sim, "get_…")   (scrip
   0–4× (0 also stops the clock); it never changes the tick length.
 - GDScript never writes simulation state. The only writes from Godot are
   bridge commands: the M1 orders (`cmd_*`, below), `on_building_placed`,
-  `reset_world`, `reset_world_stress`, `set_sim_speed` and the tooling
+  `reset_world`, `reset_world_stress`, `save_world`, `load_world` (M1.5), `set_sim_speed` and the tooling
   `advance_ticks` (`SimReads.MUTATORS` holds all but `set_sim_speed`, which
   `scripts/world/camera_controller.gd` calls directly on the number keys).
 - Calendar (M1.5, ADR 0017): one tick is one simulated minute; a day is
@@ -195,13 +195,14 @@ Reads/writes come from each file's `//!` header.
 ## 4. Bridge API (`WorldSimNode`, grouped by concern)
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
-after a reset). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m1.txt` (M1; V8-0 checked against `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
+after a reset or a load). The exact exported list is checked by gate step 13, currently
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m1_5.txt` (M1.5; M1 checked `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
 |---|---|
 | lifecycle and speed | `reset_world`, `reset_world_stress` (benchmark world), `set_sim_speed`, `advance_ticks` (tooling) |
+| save files (M1.5) | `save_world(path) -> bool`, `load_world(path) -> bool` (absolute path; GDScript globalizes `user://saves/<seed>-<tick>.wsave`; a load replaces the engine and emits `world_reset`; bytes from `sim_systems::save`) |
 | per-frame snapshots | `get_agent_snapshot`, `get_building_snapshot`, `get_construction_snapshot`, `get_resource_snapshot`, `get_terrain_snapshot`, `get_time_snapshot`, `get_tallies`, `get_world_info`, `get_recent_deaths`, `get_activity_snapshot`, `get_porter_snapshot` |
 | one agent | `get_agent_detail`, `get_agent_id`, `get_agent_temperament`, `get_agent_family`, `get_relationship_snapshot`, `get_person` |
 | settlements | `get_settlement_snapshot`, `get_society_snapshot`, `get_settlement_relations` |

@@ -30,7 +30,7 @@ pub const HOSTILITY_BUMP: f64 = 0.1;
 /// that go through `new()` are guaranteed canonical order — which is
 /// what makes `HashMap<RelationshipKey, _>` dedupe (a, b) and (b, a)
 /// onto a single entry.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct RelationshipKey(pub AgentId, pub AgentId);
 
 impl RelationshipKey {

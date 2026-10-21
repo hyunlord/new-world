@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 194,
+    "active_key_count": 198,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 194,
+    "key_count": 198,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -186,6 +186,8 @@
     "UI_JOB_HAUL": "Hauling logs",
     "UI_JOB_NONE": "—",
     "UI_LIFE_EVENTS": "Life Events",
+    "UI_LOAD_DONE": "Loaded",
+    "UI_LOAD_FAILED": "Load failed",
     "UI_MALE": "Male",
     "UI_MEMORY_RECALL_TRIGGER_CASCADE": "Cascade bias",
     "UI_MEMORY_RECALL_TRIGGER_PERIODIC": "Periodic",
@@ -194,8 +196,8 @@
     "UI_ORDER_CANCEL": "Cancel",
     "UI_ORDER_CHOP": "Chop",
     "UI_ORDER_HINT_AREA": "Drag to select an area",
-    "UI_ORDER_HINT_IDLE": "F1–F5 orders · Home/H camp",
-    "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 orders · Home/H camp",
+    "UI_ORDER_HINT_IDLE": "F1–F4·F6 orders · Home/H camp",
+    "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F4·F6 orders · Home/H camp",
     "UI_ORDER_HINT_PLACE": "Click to place",
     "UI_ORDER_HUT": "Hut",
     "UI_ORDER_REMOVE_ZONE": "Remove zone",
@@ -211,6 +213,8 @@
     "UI_REJECT_NOTHING": "Nothing to do here",
     "UI_REJECT_OUT_OF_MAP": "Outside the map",
     "UI_REJECT_WATER": "Can't build on water",
+    "UI_SAVE_DONE": "Saved",
+    "UI_SAVE_FAILED": "Save failed",
     "UI_SPEED_PAUSED": "Paused",
     "UI_TEMPERAMENT_HA": "Caution",
     "UI_TEMPERAMENT_NS": "Curiosity",
