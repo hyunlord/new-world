@@ -142,3 +142,13 @@ Goal: `docs/v8/play/PLAY_GOAL.md`. Data outside the repository: `/Users/rexxa/wo
 - Choice: gate step 21 `play_check` = `tools/v8/test_play.sh` (exit codes 3, 2, 4 and the headless check of
   main, m1 and v7). It uses the play worktrees (warm after the first run; about 100 s cold).
 - Reason: one step proves both the launcher's contract and that the published versions still load.
+
+## D14 — The gate runs on the last code commit; the report commit follows it
+
+- Context: 4.2 asks for the gate on the final commit with nothing edited during the run; the report (5) must
+  quote the gate's results, so it cannot be inside the gated commit.
+- Choice: the full gate ran on `761fd5e2` (all tools, docs, README and launchers final). The report commit
+  after it adds only `docs/v8/play/PLAY_REPORT.md`, this entry and the ROADMAP status; `check_docs.sh` and
+  `test_play.sh --quick` were run on it. `v8/main` is fast-forwarded to the report commit, as M1 did
+  (gate at `6ea19569`, `v8/main` at the report commit `892edca1`).
+- Reason: the report commit changes no code, test or tool the gate exercises; step 14 (docs) is rerun on it.
