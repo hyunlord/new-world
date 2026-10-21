@@ -543,8 +543,8 @@ pub struct SimResources {
 
     /// M1.5 spatial indexes (ADR 0016 C3; `sim_core::spatial`): derived
     /// state, rebuilt from the world (the colony indexes when the colony's
-    /// `overlay_version` changes, the agents' every colony tick). Never read
-    /// in the baseline world.
+    /// `overlay_version` changes, the agents' on demand once per tick). Never
+    /// read in the baseline world.
     pub spatial: sim_core::spatial::SpatialIndex,
 }
 

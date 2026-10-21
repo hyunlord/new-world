@@ -8,8 +8,9 @@
 //! M1.5 demographics (goal 5.3, ADR 0017). A woman is eligible on a day when
 //! she is female (`Sex`), not a child, alive, aged in
 //! `[fertile_from_years, fertile_to_years)` (closed form from `Life::born_tick`
-//! and the calendar), not pregnant, at least `postpartum_days` past her last
-//! birth (`Kin::last_birth_tick`), has a living partner (`Kin::partner`,
+//! and the calendar), not pregnant, not delivering today, at least
+//! `postpartum_days` calendar days past the day of her last birth
+//! (`Kin::last_birth_tick`), has a living partner (`Kin::partner`,
 //! with `requires_partner`), and belongs to a fed settlement (its members'
 //! mean hunger and thirst at most `max_mean_hunger` / `max_mean_thirst`, the
 //! gate `BirthRule::Provisioned` uses). She conceives when the keyed draw
@@ -143,12 +144,16 @@ impl RuntimeSystem for FertilitySystem {
             .map(|(entity, (agent, p))| (agent.id, entity, *p))
             .collect();
         due.sort_by_key(|row| row.0);
+        // A mother delivering today does not conceive today (her
+        // `last_birth_tick` is written when the child is spawned, next tick).
+        let mut delivered: BTreeSet<AgentId> = BTreeSet::new();
         for (mother, entity, pregnancy) in due {
             // Without a settlement the birth waits for the next day.
             let Some(settlement) = settlement_of(resources, mother) else {
                 continue;
             };
             if world.remove_one::<Pregnant>(entity).is_ok() {
+                delivered.insert(mother);
                 resources.due_births.push(DueBirth {
                     mother,
                     father: pregnancy.father,
@@ -170,9 +175,12 @@ impl RuntimeSystem for FertilitySystem {
             .collect();
         let from = calendar.years_to_ticks(u64::from(fertile_from_years)) as i64;
         let to = calendar.years_to_ticks(u64::from(fertile_to_years)) as i64;
-        let postpartum = calendar.days_to_ticks(u64::from(postpartum_days));
         let gestation = calendar.days_to_ticks(u64::from(gestation_days));
         let replicate = resources.noise_replicate_for(now);
+        // Days count on the display calendar: a birth at 12:01 of day d allows
+        // a conception from 12:00 of day d + postpartum_days.
+        let offset = resources.rules.clock_offset_ticks;
+        let day_of = |t: u64| t.saturating_add(offset) / calendar.ticks_per_day.max(1);
         let mut women: BTreeMap<AgentId, (Entity, u64, Option<AgentId>)> = BTreeMap::new();
         for (entity, (agent, sex, kin, life, lineage, child, pregnant)) in world
             .query::<(
@@ -193,9 +201,10 @@ impl RuntimeSystem for FertilitySystem {
                 && pregnant.is_none()
                 && alive.contains(&agent.id)
                 && (from..to).contains(&age)
-                && kin
-                    .last_birth_tick
-                    .is_none_or(|t| now >= t.saturating_add(postpartum))
+                && !delivered.contains(&agent.id)
+                && kin.last_birth_tick.is_none_or(|t| {
+                    day_index >= day_of(t).saturating_add(u64::from(postpartum_days))
+                })
                 && (!requires_partner || partner.is_some());
             if eligible {
                 women.insert(agent.id, (entity, lineage.key, partner));

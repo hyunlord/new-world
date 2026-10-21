@@ -178,14 +178,14 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   three predicates) equal a linear scan.
 - What is indexed: the job searches' candidates — ground stacks (Deliver sources, Haul stacks), zone cells (Haul
   destinations), chop-marked trees (Chop), and the sites (Build/Deliver, few: indexed per tick from the site view)
-  — plus the agents (`SpatialIndexSystem`, priority 119, colony only, O(N) per tick). Not indexed: the 10,000
+  — plus the agents (first `SpatialIndexSystem` at priority 119; since D15 built on demand). Not indexed: the 10,000
   unmarked trees (no job searches them; an index would be rebuilt at every felling and read by nobody).
 - How it stays current: the colony indexes are derived from `ColonyState` and rebuilt when its `overlay_version`
   changes — every mutation of ground items, zones, designations, sites and trees already bumps that counter
   (`commands.rs`, `jobs/items.rs`, `jobs/execute.rs`, `construction_system.rs`, worldgen). One counter instead of
   an update at every mutation site cannot miss a site (M1's lesson: a hand-rolled move is a ledger hole); the
   rebuild is O(stacks + cells + marks) — tens to hundreds of entries — a few hundred times a game day.
-- The agents' index has no reader in M1.5 (M2's proximity searches are the first).
+- The agents' index has no reader in M1.5 (M2's proximity searches are the first); see D15.
 - Evidence: the M1 fixtures (seeds 100–131, 10 days, with and without the U-script) are **byte-identical** before
   and after the index: `summary.json` (with the colony fingerprints of every day) `cmp`-equal, the 64 chronicle
   files equal by content, `churn.json` equal (`$DATA/p1/fixtures` vs `$DATA/p2/fixtures`).
@@ -251,3 +251,39 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   schema` checks names and keys against the bridge source (check 10 of `check_docs.sh`; the gate step
   `schema_docs`).
 - `--ascii-diff` (the first item of the drop order) was not done.
+
+## D15 — The index made faster than the linear scan it replaced; the agents' index on demand
+
+- Context: the first interleaved benchmark session (`$DATA/bench/prelim`, contended: 1-minute load 10–17) showed
+  `JobAssignSystem` at 14 % of the tick in the scripted N = 200 scene against 4.4 % at the base, and the per-tick
+  agents index (`SpatialIndexSystem`) at 2.4–4.5 % of the tick with no reader.
+- Causes: (1) the ring walk visited every chunk coordinate of every ring (a `BTreeMap` lookup each, a vector per
+  ring) even where nothing was indexed; (2) most of ~150 idle agents searched for candidates that were all reserved,
+  so each search scanned everything and found nothing — every tick, for every agent.
+- Changes (results unchanged: the M1 fixtures and the calibration seeds stay byte-identical):
+  - `nearest_where` visits only the non-empty chunks, in order of their exact Chebyshev distance to the centre, and
+    stops at the first chunk farther than the best entry (equal distances are still compared).
+  - `JobAssignSystem` remembers, within one tick, the searches that found nothing anywhere on the map (`Exhausted`):
+    candidates only shrink inside a tick (each assignment adds reservations and logs in transit), so an empty search
+    stays empty for every later agent of that tick.
+  - The agents' index is built on demand at most once per tick (`SpatialIndex::agents_at`); `SpatialIndexSystem`
+    is removed. Goal 6.2 asked for a rebuild every tick at priority 119; with no reader in M1.5 that cost 2–4 % of
+    every tick for nothing, against C3.
+- Effect (scripted N = 200 scene, two interleaved pairs): `JobAssignSystem` 18 µs per tick at the base, 6 µs after
+  (−67 %); the tick mean 393/395 µs (base) against 381/374 µs.
+
+## D16 — Review fix: no conception on the due day; postpartum counted in calendar days
+
+- Context: the numbers review (`$DATA/review/numbers_review.md`, finding 2) found that `FertilitySystem` removed a
+  mother's `Pregnant` in step 1 and let her conceive again in step 2 of the same 12:00 tick, before
+  `SettlementSystem` wrote her `last_birth_tick` on the next tick: 2 of 93 births in the first evaluation came 18 days
+  after the mother's previous birth. It also noted the postpartum wait was 49 days (the birth is spawned at 12:01).
+- Fix: mothers delivering today are skipped in step 2; the postpartum gate compares calendar days (`day of the
+  conception ≥ day of the last birth + postpartum_days`), so the wait is exactly 48 days. Regression test
+  `a_mother_does_not_conceive_on_her_due_day_or_before_her_postpartum_days` (1,000 ‰; fails without the fix). The
+  rate test's recursion uses 48 days. The evaluation was re-run on the fixed code (`$DATA/eval2/`); the first run
+  (`$DATA/eval/`) is kept as a record.
+- Also from the review (finding 1): D1's upper bound cannot fail at any conception rate (gestation plus postpartum
+  caps a woman at 24 / 66 ≈ 0.36 births a year). The probe now also reports the conception rate per at-risk day
+  (women eligible for the draw: not pregnant, not delivering, past the postpartum days), which must match the
+  rule's 33 ‰ and can fail in both directions; the report gives it beside D1.

@@ -53,6 +53,42 @@ pub fn in_transit(world: &World) -> BTreeMap<(u32, u32), u16> {
     out
 }
 
+/// Searches that found no candidate anywhere on the map this tick. Within one
+/// `JobAssignSystem` tick the candidates only shrink (each assignment adds
+/// reservations and logs in transit), so an empty search stays empty for
+/// every later agent of the tick and is skipped (M1.5 DECISIONS D15).
+#[derive(Debug, Default, Clone, Copy)]
+struct Exhausted {
+    short_site: bool,
+    stocked_logs: bool,
+    any_logs: bool,
+    ready_site: bool,
+    marked_tree: bool,
+    loose_logs: bool,
+    open_cell: bool,
+}
+
+/// `index.nearest_where(pos, radius, pred)`, unless `done` says nothing
+/// passes `pred` anywhere; sets `done` when a map-wide search finds nothing.
+fn search<T: Copy + Ord>(
+    index: &ChunkIndex<T>,
+    pos: (u32, u32),
+    radius: u32,
+    done: &mut bool,
+    mut pred: impl FnMut((u32, u32), &T) -> bool,
+) -> Option<((u32, u32), T)> {
+    if *done {
+        return None;
+    }
+    let found = index.nearest_where(pos, radius, &mut pred);
+    if found.is_none()
+        && (radius == u32::MAX || index.nearest_where(pos, u32::MAX, &mut pred).is_none())
+    {
+        *done = true;
+    }
+    found
+}
+
 /// The first job (in work-type order) for an agent at `pos`, or `None`.
 ///
 /// M1.5 (goal 6.2): every candidate search goes through the spatial index —
@@ -67,6 +103,7 @@ fn pick(
     sites: &BTreeMap<(u32, u32), SiteView>,
     site_index: &ChunkIndex<()>,
     transit: &BTreeMap<(u32, u32), u16>,
+    ex: &mut Exhausted,
 ) -> Option<(JobKind, u16)> {
     let colony = &res.colony;
     let index = &res.spatial.colony;
@@ -90,15 +127,18 @@ fn pick(
             (coming < view.needs.needed).then_some(view.needs.needed - coming)
         })
     };
-    if let Some((site, ())) = site_index.nearest_where(pos, radius, |c, _| missing(&c).is_some()) {
+    let short = search(site_index, pos, radius, &mut ex.short_site, |c, _| {
+        missing(&c).is_some()
+    });
+    if let Some((site, ())) = short {
         let missing = missing(&site).unwrap_or(0);
-        let stocked = index
-            .ground
-            .nearest_where(pos, radius, |t, _| log_stack(t, Some(true)));
+        let stocked = search(&index.ground, pos, radius, &mut ex.stocked_logs, |t, _| {
+            log_stack(t, Some(true))
+        });
         let source = stocked.or_else(|| {
-            index
-                .ground
-                .nearest_where(pos, radius, |t, _| log_stack(t, None))
+            search(&index.ground, pos, radius, &mut ex.any_logs, |t, _| {
+                log_stack(t, None)
+            })
         });
         if let Some((from, ())) = source {
             let amount = rule.carry_logs.min(count(from)).min(missing);
@@ -113,7 +153,7 @@ fn pick(
                 && !colony.reservations.contains_key(&ReserveKey::Site(centre))
         })
     };
-    if let Some((site, ())) = site_index.nearest_where(pos, radius, |c, _| ready(c)) {
+    if let Some((site, ())) = search(site_index, pos, radius, &mut ex.ready_site, |c, _| ready(c)) {
         return Some((JobKind::Build { site }, 0));
     }
     // Chop: the nearest marked tree no one has taken.
@@ -121,19 +161,26 @@ fn pick(
         colony.trees.contains_key(&tile)
             && !colony.reservations.contains_key(&ReserveKey::Tree(tile))
     };
-    if let Some((tree, ())) = index.marked.nearest_where(pos, radius, |t, _| choppable(t)) {
+    if let Some((tree, ())) = search(&index.marked, pos, radius, &mut ex.marked_tree, |t, _| {
+        choppable(t)
+    }) {
         return Some((JobKind::Chop { tree }, 0));
     }
     // Haul: the nearest loose stack, to the stockpile cell nearest that stack.
-    if let Some((from, ())) = index
-        .ground
-        .nearest_where(pos, radius, |t, _| log_stack(t, Some(false)))
-    {
+    if ex.open_cell {
+        return None;
+    }
+    let loose = search(&index.ground, pos, radius, &mut ex.loose_logs, |t, _| {
+        log_stack(t, Some(false))
+    });
+    if let Some((from, ())) = loose {
         let room = |cell: (u32, u32)| room_on(res, cell, ItemKind::Log, rule.stack_max_logs);
         let open = |cell: (u32, u32)| {
             room(cell) > 0 && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
         };
-        if let Some((to, ())) = index.cells.nearest_where(from, u32::MAX, |c, _| open(c)) {
+        if let Some((to, ())) = search(&index.cells, from, u32::MAX, &mut ex.open_cell, |c, _| {
+            open(c)
+        }) {
             let amount = rule.carry_logs.min(count(from)).min(room(to));
             return Some((JobKind::Haul { from, to }, amount));
         }
@@ -197,9 +244,17 @@ impl RuntimeSystem for JobAssignSystem {
         }
         let mut transit = in_transit(world);
         let mut taken: Vec<(Entity, Job)> = Vec::new();
+        let mut exhausted = Exhausted::default();
         for (id, entity, pos) in available {
-            let Some((kind, amount)) = pick(resources, &rule, pos, &sites, &site_index, &transit)
-            else {
+            let Some((kind, amount)) = pick(
+                resources,
+                &rule,
+                pos,
+                &sites,
+                &site_index,
+                &transit,
+                &mut exhausted,
+            ) else {
                 continue;
             };
             let job = Job {

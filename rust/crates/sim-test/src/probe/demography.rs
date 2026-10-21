@@ -5,7 +5,11 @@
 //! (`[fertile_from_years, fertile_to_years)` of the rule) with a living
 //! partner in a settlement whose members' mean hunger and thirst are within
 //! the rule's limits ("fertile, paired, fed"), pregnant or not. D1 is
-//! births / (woman-days / days per year). At every year boundary it records
+//! births / (woman-days / days per year). Of those days, the at-risk days
+//! (not pregnant, not delivering today, past the postpartum days — the days
+//! `FertilitySystem` draws for) and the conceptions among them give the
+//! conception rate per at-risk day, which must match the rule's permille
+//! (a measure that can fail both ways). At every year boundary it records
 //! the living population. At the end it reads the chronicle: old-age deaths
 //! with their age in years (founders = the agents alive at tick 0), and for
 //! each child born in the first year its coming of age (tick, age in years
@@ -23,6 +27,8 @@ use std::collections::{BTreeMap, BTreeSet};
 pub struct Demography {
     founders: BTreeSet<AgentId>,
     woman_days: u64,
+    at_risk_days: u64,
+    conceptions: u64,
     population_by_year: BTreeMap<u64, u64>,
 }
 
@@ -100,21 +106,45 @@ impl Demography {
             .years_to_ticks(u64::from(fertile_from_years)) as i64;
         let to = r.rules.calendar.years_to_ticks(u64::from(fertile_to_years)) as i64;
         let mut fed_cache: BTreeMap<u32, bool> = BTreeMap::new();
-        let mut women: Vec<AgentId> = engine
+        let BirthRule::Fertility {
+            postpartum_days, ..
+        } = r.rules.society.birth
+        else {
+            return;
+        };
+        let offset = r.rules.clock_offset_ticks;
+        let day_of = |t: u64| (t + offset) / tpd;
+        let delivering: BTreeSet<AgentId> = r.due_births.iter().map(|b| b.mother).collect();
+        let mut women: Vec<(AgentId, bool, bool)> = engine
             .world
-            .query::<(&Agent, &Sex, &Kin, &Life, Option<&Child>)>()
+            .query::<(
+                &Agent,
+                &Sex,
+                &Kin,
+                &Life,
+                Option<&Child>,
+                Option<&sim_core::components::Pregnant>,
+            )>()
             .iter()
-            .filter(|(_, (a, sex, kin, life, child))| {
+            .filter(|(_, (a, sex, kin, life, child, _))| {
                 sex.female
                     && child.is_none()
                     && alive.contains(&a.id)
                     && (from..to).contains(&life.age_ticks(at))
                     && kin.partner.is_some_and(|p| alive.contains(&p))
             })
-            .map(|(_, (a, ..))| a.id)
+            .map(|(_, (a, _, kin, _, _, pregnant))| {
+                let conceived = pregnant.is_some_and(|p| p.conceived_tick == at);
+                let past_postpartum = kin
+                    .last_birth_tick
+                    .is_none_or(|t| day_of(at) >= day_of(t) + u64::from(postpartum_days));
+                let at_risk = conceived
+                    || (pregnant.is_none() && past_postpartum && !delivering.contains(&a.id));
+                (a.id, at_risk, conceived)
+            })
             .collect();
         women.sort_unstable();
-        for id in women {
+        for (id, at_risk, conceived) in women {
             let sid = sim_systems::runtime::agent::fertility::settlement_of(r, id);
             let Some(sid) = sid else { continue };
             let ok = *fed_cache.entry(sid).or_insert_with(|| {
@@ -124,6 +154,8 @@ impl Demography {
             });
             if ok {
                 self.woman_days += 1;
+                self.at_risk_days += u64::from(at_risk);
+                self.conceptions += u64::from(conceived);
             }
         }
     }
@@ -189,6 +221,9 @@ impl Demography {
             "woman_days": self.woman_days,
             "woman_years": woman_years,
             "births_per_woman_year": if woman_years > 0.0 { births as f64 / woman_years } else { 0.0 },
+            "at_risk_days": self.at_risk_days,
+            "conceptions": self.conceptions,
+            "conceptions_per_at_risk_day": if self.at_risk_days > 0 { self.conceptions as f64 / self.at_risk_days as f64 } else { 0.0 },
             "population_by_year": self.population_by_year,
             "alive_end": alive,
             "extinct": alive == 0,

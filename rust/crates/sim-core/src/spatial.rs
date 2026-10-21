@@ -8,17 +8,18 @@
 //! returns the entry with the smallest `(Chebyshev distance, y, x, value)`
 //! among those within `max_radius` that satisfy a predicate — exactly the
 //! choice of a linear `min_by_key((distance, y, x))` over the same set (the
-//! job layer's `nearest`). The search stops when the next ring's nearest
-//! possible tile is farther than the best found: a tile in chunk ring `r ≥ 1`
-//! lies at least `(r − 1) × 16 + 1` tiles away, so ties at equal distance are
-//! still compared.
+//! job layer's `nearest`). It visits the non-empty chunks in order of their
+//! exact Chebyshev distance to the centre and stops at the first chunk
+//! farther than the best entry found, so ties at equal distance in another
+//! chunk are still compared (M1.5 DECISIONS D15: a ring walk over every chunk
+//! coordinate cost more than the linear scan when candidates are few).
 //!
 //! [`ColonyIndex`] holds the job searches' indexes (ground stacks, zone
 //! cells, chop-marked trees), derived from `ColonyState` and rebuilt when its
 //! `overlay_version` changes (every change to zones, designations, ground
 //! items, sites or trees bumps it). [`SpatialIndex`] adds the agents' index,
-//! rebuilt each colony tick by `SpatialIndexSystem`. Integer only; nothing
-//! here is random or hash-ordered.
+//! built on demand at most once per tick ([`SpatialIndex::agents_at`]).
+//! Integer only; nothing here is random or hash-ordered.
 use std::collections::BTreeMap;
 
 use crate::colony::ColonyState;
@@ -53,9 +54,6 @@ pub const fn chunk_of(tile: Tile) -> ChunkId {
 pub struct ChunkIndex<T> {
     chunks: BTreeMap<ChunkId, Vec<(Tile, T)>>,
     len: usize,
-    /// `(min cy, max cy, min cx, max cx)` of every chunk ever filled (an
-    /// upper bound of the ring count; never shrinks before `clear`).
-    bounds: Option<(u32, u32, u32, u32)>,
 }
 
 impl<T> Default for ChunkIndex<T> {
@@ -63,7 +61,6 @@ impl<T> Default for ChunkIndex<T> {
         Self {
             chunks: BTreeMap::new(),
             len: 0,
-            bounds: None,
         }
     }
 }
@@ -88,7 +85,6 @@ impl<T: Copy + Ord> ChunkIndex<T> {
     pub fn clear(&mut self) {
         self.chunks.clear();
         self.len = 0;
-        self.bounds = None;
     }
 
     /// Add `(tile, value)`, keeping the chunk's entries sorted by `(y, x, value)`.
@@ -99,10 +95,6 @@ impl<T: Copy + Ord> ChunkIndex<T> {
         let at = list.partition_point(|(t, v)| (t.1, t.0, *v) < key);
         list.insert(at, (tile, value));
         self.len += 1;
-        self.bounds = Some(match self.bounds {
-            None => (id.0, id.0, id.1, id.1),
-            Some((a, b, c, d)) => (a.min(id.0), b.max(id.0), c.min(id.1), d.max(id.1)),
-        });
     }
 
     /// Remove one `(tile, value)` entry; returns whether it was there.
@@ -167,27 +159,18 @@ impl<T: Copy + Ord> ChunkIndex<T> {
         self.chunks.values().flatten()
     }
 
-    /// The largest chunk ring that can hold an entry, seen from `centre`.
-    fn max_ring(&self, centre: Tile) -> u32 {
-        let Some((y0, y1, x0, x1)) = self.bounds else {
-            return 0;
-        };
-        let (cy, cx) = chunk_of(centre);
-        [
-            cy.abs_diff(y0),
-            cy.abs_diff(y1),
-            cx.abs_diff(x0),
-            cx.abs_diff(x1),
-        ]
-        .into_iter()
-        .max()
-        .unwrap_or(0)
+    /// The Chebyshev distance from `centre` to the nearest tile of chunk `id`.
+    fn chunk_distance(centre: Tile, id: ChunkId) -> u32 {
+        let axis = |c: u32, lo: u32| lo.saturating_sub(c).max(c.saturating_sub(lo + CHUNK - 1));
+        axis(centre.0, id.1 * CHUNK).max(axis(centre.1, id.0 * CHUNK))
     }
 
     /// The entry with the smallest `(Chebyshev distance to centre, y, x,
     /// value)` among those within `max_radius` for which `pred` holds (see
-    /// the module header). `pred` is called only for entries that would beat
-    /// the best so far.
+    /// the module header). The non-empty chunks are visited by their exact
+    /// distance to `centre`; the search stops at the first chunk farther than
+    /// the best entry found, so a chunk at the best entry's distance is still
+    /// compared. `pred` is called only for entries that would beat the best.
     pub fn nearest_where(
         &self,
         centre: Tile,
@@ -197,13 +180,22 @@ impl<T: Copy + Ord> ChunkIndex<T> {
         if self.len == 0 {
             return None;
         }
+        let mut order: Vec<(u32, ChunkId)> = self
+            .chunks
+            .keys()
+            .map(|id| (Self::chunk_distance(centre, *id), *id))
+            .filter(|(d, _)| *d <= max_radius)
+            .collect();
+        order.sort_unstable();
         let mut best: Option<(u32, u32, u32, T)> = None;
-        for r in 0..=self.max_ring(centre) {
-            let lower = if r == 0 { 0 } else { (r - 1) * CHUNK + 1 };
-            if lower > max_radius || best.is_some_and(|b| lower > b.0) {
+        for (lower, id) in order {
+            if best.is_some_and(|b| lower > b.0) {
                 break;
             }
-            for &(tile, value) in self.ring(centre, r) {
+            let Some(list) = self.chunks.get(&id) else {
+                continue;
+            };
+            for &(tile, value) in list {
                 let d = chebyshev(centre, tile);
                 if d > max_radius {
                     continue;
@@ -262,10 +254,31 @@ impl ColonyIndex {
 pub struct SpatialIndex {
     /// The colony job searches' indexes.
     pub colony: ColonyIndex,
-    /// Agents by tile (`AgentId`), rebuilt every colony tick at priority 119.
+    /// Agents by tile (`AgentId`); read it through [`Self::agents_at`].
     pub agents: ChunkIndex<AgentId>,
-    /// The tick `agents` was built at.
+    /// The tick `agents` was built at (`None` = never).
     pub agents_tick: Option<u64>,
+}
+
+impl SpatialIndex {
+    /// The agents' index for `tick`, rebuilt from `positions` (`(tile,
+    /// AgentId)` of every agent) only when it was last built at another
+    /// tick: a system that needs agents by place pays O(N) once per tick, and
+    /// a tick in which nobody asks pays nothing (DECISIONS D15).
+    pub fn agents_at(
+        &mut self,
+        tick: u64,
+        positions: impl FnOnce() -> Vec<(Tile, AgentId)>,
+    ) -> &ChunkIndex<AgentId> {
+        if self.agents_tick != Some(tick) {
+            self.agents.clear();
+            for (tile, id) in positions() {
+                self.agents.insert(tile, id);
+            }
+            self.agents_tick = Some(tick);
+        }
+        &self.agents
+    }
 }
 
 #[cfg(test)]
@@ -365,6 +378,24 @@ mod tests {
             edge.nearest_where((16, 1), 5, |_, _| true),
             Some(((15, 0), ()))
         );
+    }
+
+    #[test]
+    fn the_agents_index_is_built_once_per_tick_on_demand() {
+        let mut index = SpatialIndex::default();
+        let mut builds = 0;
+        let positions = |builds: &mut u32| {
+            *builds += 1;
+            vec![((3, 3), 7u64), ((40, 2), 2)]
+        };
+        assert_eq!(index.agents_at(5, || positions(&mut builds)).len(), 2);
+        assert_eq!(index.agents_at(5, || positions(&mut builds)).len(), 2);
+        assert_eq!(builds, 1);
+        let nearest =
+            index
+                .agents_at(6, || positions(&mut builds))
+                .nearest_where((39, 0), 10, |_, _| true);
+        assert_eq!((nearest, builds), (Some(((40, 2), 2)), 2));
     }
 
     #[test]

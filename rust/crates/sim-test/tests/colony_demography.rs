@@ -193,9 +193,9 @@ fn run_days(world: &mut hecs::World, resources: &mut SimResources, days: u64) ->
 
 /// The rule's expected births per woman over `days` days, by a day-by-day
 /// recursion on probabilities (independent of the system's code): each
-/// midday the women due deliver (eligible again 49 days later: the 48
-/// postpartum days from the birth one tick after 12:00), then each eligible
-/// woman conceives with probability `p` and is due 18 days later.
+/// midday the women due deliver (eligible again `postpartum` days later, not on
+/// the day itself), then each eligible woman conceives with probability `p`
+/// and is due 18 days later.
 fn expected_births(p: f64, gestation: usize, postpartum: usize, days: usize) -> f64 {
     let mut due = vec![0.0; days + gestation + 1];
     let mut returning = vec![0.0; days + gestation + postpartum + 2];
@@ -203,7 +203,7 @@ fn expected_births(p: f64, gestation: usize, postpartum: usize, days: usize) -> 
     let mut births = 0.0;
     for d in 0..days {
         births += due[d];
-        returning[d + postpartum + 1] += due[d];
+        returning[d + postpartum] += due[d];
         eligible += returning[d];
         let conceive = eligible * p;
         eligible -= conceive;
@@ -234,8 +234,8 @@ fn fertility_rate_matches_rule() {
         days as usize,
     );
     let expected = per_woman * women as f64;
-    // The rule's long-run rate is 1 / (18 + 49 + (1 − p) / p) births a day
-    // = 0.249 a year at 33 ‰; over 240 days (with the first pregnancies
+    // The rule's long-run rate is 1 / (18 + 48 + (1 − p) / p) births a day
+    // = 0.252 a year at 33 ‰; over 240 days (with the first pregnancies
     // still running) the recursion expects about 230.
     assert!((200.0..260.0).contains(&expected), "expected {expected}");
     let ratio = births as f64 / expected;
@@ -359,5 +359,57 @@ fn pregnancy_to_birth_household() {
     assert!(
         home.contains(&mother_id) && home.contains(&father_id),
         "{home:?}"
+    );
+}
+
+#[test]
+fn a_mother_does_not_conceive_on_her_due_day_or_before_her_postpartum_days() {
+    // Review finding (M1.5 numbers review 2): with a 1,000 ‰ chance a woman
+    // whose child is due today must not conceive again the same day, nor
+    // before 48 days have passed since the birth.
+    let (mut world, mut resources, women) = synthetic(1, true, 0.0);
+    if let BirthRule::Fertility {
+        conception_per_day_permille,
+        ..
+    } = &mut resources.rules.society.birth
+    {
+        *conception_per_day_permille = 1000;
+    }
+    let mut system = FertilitySystem;
+    let midday = system.tick_offset(&resources);
+    let mother = women[0];
+    let _ = world.insert_one(
+        mother,
+        Pregnant {
+            conceived_tick: 0,
+            due_tick: midday,
+            father: 1,
+        },
+    );
+    // Day 0: the birth is queued and no new pregnancy starts.
+    let births = run_days(&mut world, &mut resources, 1);
+    assert_eq!(births, 1);
+    assert!(
+        world.get::<&Pregnant>(mother).is_err(),
+        "conceived on the due day"
+    );
+    // Days 1..47 (the run sets the last birth at 12:01 of day 0): still no conception.
+    let mut system_days = 0;
+    for day in 1..48u64 {
+        resources.current_tick = day * DAY + midday;
+        system.tick(&mut world, &mut resources);
+        system_days += 1;
+        assert!(
+            world.get::<&Pregnant>(mother).is_err(),
+            "conceived on day {day}"
+        );
+    }
+    assert_eq!(system_days, 47);
+    // Day 48: eligible again, and at 1,000 ‰ she conceives.
+    resources.current_tick = 48 * DAY + midday;
+    system.tick(&mut world, &mut resources);
+    assert!(
+        world.get::<&Pregnant>(mother).is_ok(),
+        "not eligible on day 48"
     );
 }
