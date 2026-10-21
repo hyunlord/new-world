@@ -1,0 +1,32 @@
+{
+  "scope": "arttrial",
+  "iteration": 1,
+  "timestamp": "2026-10-21T14:01:54.600717+00:00",
+  "status": "FAIL",
+  "visual_review": {
+    "scene": "Rendered10people, requiredcampobjects, mixed15trees andriver; sourcepanels nativepixels; historicalplacementdifference disclosed. Generatedwoodpiles mistakenforgrain; childelderandsleepunreadable.",
+    "blind_scene": {
+      "score": 3,
+      "denominator": 10,
+      "threshold": 8
+    },
+    "variation": {
+      "score": 10,
+      "denominator": 24,
+      "threshold": 20
+    },
+    "mechanical_checks": "288acceptedassets pass atlatestintegration, notfullrequiredcoverage"
+  },
+  "revision_round": {
+    "allowed": 1,
+    "targets": [
+      "log_piles",
+      "carry_logs_south_idle",
+      "adult_m_south_sleep",
+      "child_south_idle",
+      "elder_south_idle"
+    ],
+    "preservation": "people/boards/round1_frozen andvariation_first_frozen"
+  },
+  "next_action": "Evaluate generated revisioncandidates, rerender, freshblindscene rerunonlyonce; preserve bothscores."
+}

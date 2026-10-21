@@ -1,0 +1,36 @@
+{
+  "scope": "arttrial",
+  "iteration": 2,
+  "timestamp": "2026-10-21T14:18:07.334540+00:00",
+  "status": "FAIL",
+  "blind_scene": {
+    "round1": 3,
+    "round2": 3,
+    "denominator": 10,
+    "threshold": 8,
+    "lenient_round2_generic_carrying": 4,
+    "revision_rounds_used": 1,
+    "further_revision": false
+  },
+  "variation": {
+    "score": 10,
+    "denominator": 24,
+    "threshold": 20
+  },
+  "board": {
+    "requested": 24,
+    "complete": 21,
+    "incomplete": 3,
+    "distinct_rendered_pixels": 24,
+    "complete_gate": "FAIL"
+  },
+  "visual_observations": [
+    "Standalone horizontal log recognized afterrevision",
+    "Hut remainsenclosure,lean-to readasdryingframe",
+    "Carrierreadasloadedpole,notlogs",
+    "Childelderandsleepunrecognized",
+    "Reading-sheet labelsandverbatimanswers reviewedatnativeoutputsize"
+  ],
+  "evidence": "BLIND_RESULTS.md; externalpeople/revision_scene andboards/round1_frozen; originalvariation frozen",
+  "next_action": "Finish boundedfirstpass coverage/accounting, publishfailedtrial evidence anddecisionreport; no reroll."
+}
