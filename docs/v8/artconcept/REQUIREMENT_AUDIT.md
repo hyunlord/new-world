@@ -2,7 +2,7 @@
 
 # ART-CONCEPT 요구사항 감사
 
-갱신 기준: 2026-10-22, Part 3 원격 `483b5ab0` 이후 작업 트리. `CONCEPT_GOAL.md`, 8개 생성 manifest/LOG, `ORIGINALS.json`, `ASSEMBLY.md`, `BOARD_QA.md`, `BLIND_REVIEW.md`, `SCORES.json`, 책·비용·보고와 실제 보드 파일 크기를 대조했다. 이 감사는 새로운 이미지 생성이나 원본 보정을 수행하지 않았다.
+갱신 기준: 2026-10-22, Part 5 게시 증거 커밋 `5953a010`의 로컬·원격 일치. `CONCEPT_GOAL.md`, 8개 생성 manifest/LOG, `ORIGINALS.json`, `ASSEMBLY.md`, `BOARD_QA.md`, `BLIND_REVIEW.md`, `SCORES.json`, 책·비용·보고와 실제 보드 파일 크기를 대조했다. 이 감사는 새로운 이미지 생성이나 원본 보정을 수행하지 않았다.
 
 **전체 목표 완료는 달성되지 않았다.** 114회 생성, 12개 보드, 가능한 입력의 블라인드 검사와 한국어 책·비용·§8 보고는 마련됐다. 그러나 카메라 거절 주제 4칸과 실패 컷아웃 3개 때문에 원래 요구한 8개 컨셉의 완전한 동일조건 비교는 성립하지 않는다. 실행과 실패 보고를 마쳤다는 사실은 요구 충족으로 바뀌지 않는다. 오너에게 질문하지 않는 지시를 유지하며, 임의로 시도 수나 내용 조건을 완화하지 않는다.
 
@@ -10,10 +10,10 @@
 
 | 요구 | 판정 및 증거 | 남은 조건 |
 |---|---|---|
-| 지정 art-prod 체크아웃, base `3183e77dfbe6373f1c3d3e0d08a1121fb546b694`, 브랜치 `v8/art-concept` | Git 이력·브랜치 확인. base에서 Part 0–3 순차 커밋. | 최종 원격·이력 재확인. |
+| 지정 art-prod 체크아웃, base `3183e77dfbe6373f1c3d3e0d08a1121fb546b694`, 브랜치 `v8/art-concept` | Git 이력·브랜치 확인. base에서 Part 0–5 순차 커밋. | `5953a010` 로컬·원격 일치 재확인. |
 | 내장 이미지 도구 사용 | 114개 원본의 로그·출처 기록. 외부 원본 `/Users/rexxa/work/artconcept-data/<concept>/`. | 도구 실행 성공은 이미지 조건 합격과 구분. |
-| 범위 `art/concepts/**`, `docs/v8/artconcept/**`; 게임·assets·docs/images 변경/merge 없음 | 현재 패스 커밋과 산출물 범위 부합. 기존 `.gitignore`, `.ignore`, `docs/art/`는 별도 사용자 변경. | Part 4/5도 명시 경로 staging; 기존 변경 포함 금지. |
-| Part마다 `v8-artconcept(pN)` 커밋·push·ls-remote | Part 0 `ff56df32`, 1 `18d8211b`, 2 `6c74d1a8`, 3 `483b5ab0` 확인. | **Part 4/5 커밋·push·최종 원격 일치 미완료.** |
+| 범위 `art/concepts/**`, `docs/v8/artconcept/**`; 게임·assets·docs/images 변경/merge 없음 | 현재 패스 커밋과 산출물 범위 부합. 기존 `.gitignore`, `.ignore`, `docs/art/`는 별도 사용자 변경. | Part 4/5도 허용 경로만 게시. 기존 변경은 작업 트리에 남아 있음. |
+| Part마다 `v8-artconcept(pN)` 커밋·push·ls-remote | Part 0 `ff56df32`, 1 `18d8211b`, 2 `6c74d1a8`, 3 `483b5ab0`, 4 `4e0aeabf`, 5 `01617208`, 게시 증거 `5953a010` 확인. | 각 Part 게시 완료. |
 | 결정 기록·오너 선택 보존 | `CONCEPT_DECISIONS.md`; 원래 8개 컨셉 유지, 최종 화풍 선택 없음. | 결선 추천과 선택 구별 유지. |
 | 목표6시간·hard stop9시간·드롭 순서 | COST 집계 시 전체 경과 약40분. 컨셉/주제 드롭 없음. | 최종 종료시각은 비용 스냅샷 이후이므로 구별. |
 | 원본 모든 시도 보존·무수정, 허용 처리만 | `ORIGINALS.json` 114개, 원본 크기 보존. 조립은 chroma key/허용 crop·downscale. BOARD_QA는 79개 조립 입력 SHA와 별도 manifest 87개 SHA subset을 대조해 불일치0. | subset 검사를 전체114개 증명으로 확대 해석하지 않음. |
@@ -30,9 +30,9 @@
 | §6.2 동일 reviewer에 무표기 S7 8장, 두 순위 원문 | BLIND_REVIEW의 A–H 순위와 설명, SCORES의 대응 관계 있음. | 04/06/07 장면 camera rejected이므로 완전한 동일카메라 비교 미달. 1시간 시청은 정지이미지 선호 추정이며 실제1시간 관찰 아님. |
 | §6.3 8개 일관성 판독 | CHECKS/BOOK의8개 위험·근거 있음. | 다음 패스 재현성 보증 아님. |
 | §6.4 리그·지면·200개 제작 메모 | CHECKS/BOOK 8개 메모 완료. | 실제 리그/무봉합/200개 제작은 이 패스 범위 밖. |
-| Part 5 `CONCEPT_BOOK.md` | 한국어8개 절, 보드 링크, 네 검사, 강약점, 비교표, 두 결선 추천 있음. 전체PARTIAL 명시. | 최종 문서 publication은 Part5 push 후 확인. |
+| Part 5 `CONCEPT_BOOK.md` | 한국어8개 절, 보드 링크, 네 검사, 강약점, 비교표, 두 결선 추천 있음. 전체PARTIAL 명시. | Part 5 push 및 원격 일치 확인. |
 | Part 5 `COST.md` | 114회,엄격채택73(주제60+컷아웃13),비채택41,시간합3899.304초 기록. 병렬 전체경과와 합산시간 구별, 과금NOT_MEASURED. | 최종 종료시각과 혼동 금지. |
-| Part 5 `CONCEPT_REPORT.md` §8 형식 | 의도·공통조건·8컨셉·보드·검사·비용·두결선·파일·제한사항 항목 존재. | Part4/5 커밋별 파일과 최종ls-remote 증거 미완료. 보고 제목이 완료 선언을 의미하지 않도록 본문 PARTIAL 유지. |
+| Part 5 `CONCEPT_REPORT.md` §8 형식 | 의도·공통조건·8컨셉·보드·검사·비용·두결선·파일·제한사항 항목 존재. | Part 4/5 커밋별 파일과 ls-remote 증거 기록 완료. 보고 제목이 완료 선언을 의미하지 않도록 본문 PARTIAL 유지. |
 
 ## 8×8 주제와 모든 시도 수
 
@@ -79,7 +79,7 @@ BOARD_QA는 모든컨셉2열×4행·한국어피치·S번호, 사람/오두막8�
 
 ```text
 $ git ls-remote origin v8/art-concept
-483b5ab06f35cb89be6d00a00bafc18ac416cf1e refs/heads/v8/art-concept
+5953a010f93004e1052f46030cb59deb71616f2a refs/heads/v8/art-concept
 ```
 
-Part3까지의증거이며 Part4/5는 아직pending이다. 이감사는 goal complete를 선언하지 않는다.
+Part 5 게시 증거 커밋까지 현재 원격과 일치한다. 이 감사의 후속 문서 수정도 별도 push·검증한다. 생성 제한으로 남은 결손은 해소되지 않았으므로 goal complete를 선언하지 않는다.
