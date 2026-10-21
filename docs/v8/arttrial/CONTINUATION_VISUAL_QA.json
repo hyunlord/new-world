@@ -1,0 +1,12 @@
+{
+  "board_sha256": "90daaa83be2a222387bdef795d322fbf4d28c65122cfc2b517090049cf4bd7d1",
+  "parent_observation": {
+    "image": "/Users/rexxa/work/arttrial-data/continuation_accounting/integration/20261021T145541783929Z/arttrial_people_coverage.png",
+    "sha256": "90daaa83be2a222387bdef795d322fbf4d28c65122cfc2b517090049cf4bd7d1",
+    "reviewer": "parent /root",
+    "observation": "Parent viewed provisional1600x1520 board: all labels visible; red borders correctly only5/6;22complete header correct.",
+    "scope": "Coverage-board disclosure/layout only; no new blind scoring or visual asset acceptance."
+  },
+  "parent_observation_applies": true,
+  "needs_parent_review": false
+}
