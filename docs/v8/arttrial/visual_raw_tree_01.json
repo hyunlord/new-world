@@ -1,0 +1,15 @@
+{
+  "score": 72,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Canopy is much more densely textured than the quiet reference crowns.",
+    "Raw output contains more than four material values and soft transitions inside nominal pixel blocks.",
+    "Native 48px readability and the final palette have not yet been tested."
+  ],
+  "suggestions": [
+    "Run the required block-mode, palette and silhouette pipeline before evaluating acceptance.",
+    "Make candidate two use larger, calmer canopy clusters with fewer interior marks."
+  ],
+  "reasoning": "Raw generation reads as a top-down tree with a small south trunk, but source-scale detail is not final pixel-art evidence. Keep it as an unaccepted candidate."
+}

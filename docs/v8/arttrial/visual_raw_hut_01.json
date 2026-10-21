@@ -1,0 +1,15 @@
+{
+  "score": 78,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Floor and timber use more small texture marks and values than the reference's calm materials.",
+    "The north wall has a relatively deep exposed face compared with the requested 10–15 percent cheat.",
+    "Final 96px doorway, bedroll and end-grain readability remains unverified."
+  ],
+  "suggestions": [
+    "Evaluate after the required palette and block-mode reduction.",
+    "Ask candidate two for quieter floor clusters and a shallower wall face."
+  ],
+  "reasoning": "The roofless plan, four bedrolls, central stone ring and south door are visible. The raw candidate still requires pixel-scale validation and comparison with another candidate."
+}

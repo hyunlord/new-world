@@ -1,0 +1,812 @@
+{
+  "atlas": "sheet.png",
+  "size": [
+    512,
+    240
+  ],
+  "tile_size": 32,
+  "palettes": {
+    "skin": "d8a884",
+    "hairs": [
+      "2a1e16",
+      "5a3a22",
+      "8a6a3a",
+      "3a2a1e"
+    ],
+    "tunics": [
+      "efe2c0",
+      "6fb0e8",
+      "e0604c",
+      "50c0a8",
+      "b088e0",
+      "e888b0"
+    ],
+    "elder_hair": "e8e8e8"
+  },
+  "tiles": {
+    "bank_e": [
+      0,
+      0,
+      32,
+      32
+    ],
+    "bank_in_ne": [
+      32,
+      0,
+      32,
+      32
+    ],
+    "bank_in_nw": [
+      64,
+      0,
+      32,
+      32
+    ],
+    "bank_in_se": [
+      96,
+      0,
+      32,
+      32
+    ],
+    "bank_in_sw": [
+      128,
+      0,
+      32,
+      32
+    ],
+    "bank_n": [
+      160,
+      0,
+      32,
+      32
+    ],
+    "bank_s": [
+      192,
+      0,
+      32,
+      32
+    ],
+    "bank_w": [
+      224,
+      0,
+      32,
+      32
+    ],
+    "berry_bush_bare": [
+      256,
+      0,
+      32,
+      32
+    ],
+    "berry_bush_full": [
+      288,
+      0,
+      32,
+      32
+    ],
+    "boulder": [
+      320,
+      0,
+      32,
+      32
+    ],
+    "canopy_shadow": [
+      352,
+      0,
+      48,
+      48
+    ],
+    "deadwood": [
+      400,
+      0,
+      32,
+      32
+    ],
+    "ground_dark_grass_0": [
+      432,
+      0,
+      32,
+      32
+    ],
+    "ground_dark_grass_1": [
+      464,
+      0,
+      32,
+      32
+    ],
+    "ground_dirt_0": [
+      0,
+      48,
+      32,
+      32
+    ],
+    "ground_dirt_1": [
+      32,
+      48,
+      32,
+      32
+    ],
+    "ground_dirt_2": [
+      64,
+      48,
+      32,
+      32
+    ],
+    "ground_forest_floor_0": [
+      96,
+      48,
+      32,
+      32
+    ],
+    "ground_forest_floor_1": [
+      128,
+      48,
+      32,
+      32
+    ],
+    "ground_forest_floor_2": [
+      160,
+      48,
+      32,
+      32
+    ],
+    "ground_grass_0": [
+      192,
+      48,
+      32,
+      32
+    ],
+    "ground_grass_1": [
+      224,
+      48,
+      32,
+      32
+    ],
+    "ground_grass_2": [
+      256,
+      48,
+      32,
+      32
+    ],
+    "ground_grass_3": [
+      288,
+      48,
+      32,
+      32
+    ],
+    "hearth_0": [
+      320,
+      48,
+      32,
+      32
+    ],
+    "hearth_1": [
+      352,
+      48,
+      32,
+      32
+    ],
+    "hill_0": [
+      384,
+      48,
+      32,
+      32
+    ],
+    "hill_1": [
+      416,
+      48,
+      32,
+      32
+    ],
+    "hut": [
+      0,
+      80,
+      96,
+      96
+    ],
+    "hut_ghost": [
+      96,
+      80,
+      96,
+      96
+    ],
+    "lean_to": [
+      192,
+      80,
+      32,
+      48
+    ],
+    "log_pile_1": [
+      224,
+      80,
+      32,
+      32
+    ],
+    "log_pile_2": [
+      256,
+      80,
+      32,
+      32
+    ],
+    "log_pile_3": [
+      288,
+      80,
+      32,
+      32
+    ],
+    "mountain_0": [
+      320,
+      80,
+      32,
+      32
+    ],
+    "mountain_1": [
+      352,
+      80,
+      32,
+      32
+    ],
+    "stockpile_floor_corner": [
+      384,
+      80,
+      32,
+      32
+    ],
+    "stockpile_floor_edge": [
+      416,
+      80,
+      32,
+      32
+    ],
+    "stockpile_floor_interior": [
+      448,
+      80,
+      32,
+      32
+    ],
+    "stump": [
+      480,
+      80,
+      32,
+      32
+    ],
+    "tree_birch_l": [
+      0,
+      176,
+      64,
+      64
+    ],
+    "tree_birch_s": [
+      64,
+      176,
+      48,
+      48
+    ],
+    "tree_oak_l": [
+      112,
+      176,
+      64,
+      64
+    ],
+    "tree_oak_s": [
+      176,
+      176,
+      48,
+      48
+    ],
+    "tree_pine_l": [
+      224,
+      176,
+      64,
+      64
+    ],
+    "tree_pine_s": [
+      288,
+      176,
+      48,
+      48
+    ],
+    "water_deep_0": [
+      336,
+      176,
+      32,
+      32
+    ],
+    "water_deep_1": [
+      368,
+      176,
+      32,
+      32
+    ],
+    "water_shallow_0": [
+      400,
+      176,
+      32,
+      32
+    ],
+    "water_shallow_1": [
+      432,
+      176,
+      32,
+      32
+    ]
+  },
+  "boxes": {
+    "hut": [
+      96,
+      96
+    ],
+    "lean_to": [
+      32,
+      48
+    ],
+    "tree_oak_s": [
+      48,
+      48
+    ],
+    "tree_oak_l": [
+      64,
+      64
+    ],
+    "tree_birch_s": [
+      48,
+      48
+    ],
+    "tree_birch_l": [
+      64,
+      64
+    ],
+    "tree_pine_s": [
+      48,
+      48
+    ],
+    "tree_pine_l": [
+      64,
+      64
+    ],
+    "log_pile_1": [
+      32,
+      32
+    ],
+    "log_pile_2": [
+      32,
+      32
+    ],
+    "log_pile_3": [
+      32,
+      32
+    ],
+    "stump": [
+      32,
+      32
+    ],
+    "deadwood": [
+      32,
+      32
+    ],
+    "hearth_0": [
+      32,
+      32
+    ],
+    "hearth_1": [
+      32,
+      32
+    ],
+    "berry_bush_full": [
+      32,
+      32
+    ],
+    "berry_bush_bare": [
+      32,
+      32
+    ],
+    "boulder": [
+      32,
+      32
+    ],
+    "stockpile_floor_corner": [
+      32,
+      32
+    ],
+    "stockpile_floor_edge": [
+      32,
+      32
+    ],
+    "stockpile_floor_interior": [
+      32,
+      32
+    ],
+    "ground_dirt_0": [
+      32,
+      32
+    ],
+    "ground_dirt_1": [
+      32,
+      32
+    ],
+    "ground_dirt_2": [
+      32,
+      32
+    ],
+    "ground_forest_floor_0": [
+      32,
+      32
+    ],
+    "ground_forest_floor_1": [
+      32,
+      32
+    ],
+    "ground_forest_floor_2": [
+      32,
+      32
+    ],
+    "water_shallow_0": [
+      32,
+      32
+    ],
+    "water_shallow_1": [
+      32,
+      32
+    ],
+    "hill_0": [
+      32,
+      32
+    ],
+    "hill_1": [
+      32,
+      32
+    ],
+    "ground_grass_0": [
+      32,
+      32
+    ],
+    "ground_grass_1": [
+      32,
+      32
+    ],
+    "ground_grass_2": [
+      32,
+      32
+    ],
+    "ground_grass_3": [
+      32,
+      32
+    ],
+    "ground_dark_grass_0": [
+      32,
+      32
+    ],
+    "ground_dark_grass_1": [
+      32,
+      32
+    ],
+    "water_deep_0": [
+      32,
+      32
+    ],
+    "water_deep_1": [
+      32,
+      32
+    ],
+    "mountain_0": [
+      32,
+      32
+    ],
+    "mountain_1": [
+      32,
+      32
+    ],
+    "bank_n": [
+      32,
+      32
+    ],
+    "bank_w": [
+      32,
+      32
+    ],
+    "bank_s": [
+      32,
+      32
+    ],
+    "bank_e": [
+      32,
+      32
+    ],
+    "bank_in_nw": [
+      32,
+      32
+    ],
+    "bank_in_sw": [
+      32,
+      32
+    ],
+    "bank_in_se": [
+      32,
+      32
+    ],
+    "bank_in_ne": [
+      32,
+      32
+    ],
+    "hut_ghost": [
+      96,
+      96
+    ],
+    "canopy_shadow": [
+      48,
+      48
+    ]
+  },
+  "anchors": {
+    "hut": [
+      48,
+      80
+    ],
+    "lean_to": [
+      16,
+      44
+    ],
+    "tree_oak_s": [
+      24,
+      40
+    ],
+    "tree_oak_l": [
+      32,
+      62
+    ],
+    "tree_birch_s": [
+      24,
+      46
+    ],
+    "tree_birch_l": [
+      32,
+      62
+    ],
+    "tree_pine_s": [
+      24,
+      46
+    ],
+    "tree_pine_l": [
+      32,
+      62
+    ],
+    "log_pile_1": [
+      16,
+      28
+    ],
+    "log_pile_2": [
+      16,
+      28
+    ],
+    "log_pile_3": [
+      16,
+      28
+    ],
+    "stump": [
+      16,
+      28
+    ],
+    "deadwood": [
+      16,
+      28
+    ],
+    "hearth_0": [
+      16,
+      28
+    ],
+    "hearth_1": [
+      16,
+      28
+    ],
+    "berry_bush_full": [
+      16,
+      28
+    ],
+    "berry_bush_bare": [
+      16,
+      28
+    ],
+    "boulder": [
+      16,
+      28
+    ],
+    "stockpile_floor_corner": [
+      16,
+      28
+    ],
+    "stockpile_floor_edge": [
+      16,
+      28
+    ],
+    "stockpile_floor_interior": [
+      16,
+      28
+    ],
+    "ground_dirt_0": [
+      16,
+      16
+    ],
+    "ground_dirt_1": [
+      16,
+      16
+    ],
+    "ground_dirt_2": [
+      16,
+      16
+    ],
+    "ground_forest_floor_0": [
+      16,
+      16
+    ],
+    "ground_forest_floor_1": [
+      16,
+      16
+    ],
+    "ground_forest_floor_2": [
+      16,
+      16
+    ],
+    "water_shallow_0": [
+      16,
+      16
+    ],
+    "water_shallow_1": [
+      16,
+      16
+    ],
+    "hill_0": [
+      16,
+      16
+    ],
+    "hill_1": [
+      16,
+      16
+    ],
+    "ground_grass_0": [
+      16,
+      16
+    ],
+    "ground_grass_1": [
+      16,
+      16
+    ],
+    "ground_grass_2": [
+      16,
+      16
+    ],
+    "ground_grass_3": [
+      16,
+      16
+    ],
+    "ground_dark_grass_0": [
+      16,
+      16
+    ],
+    "ground_dark_grass_1": [
+      16,
+      16
+    ],
+    "water_deep_0": [
+      16,
+      16
+    ],
+    "water_deep_1": [
+      16,
+      16
+    ],
+    "mountain_0": [
+      16,
+      16
+    ],
+    "mountain_1": [
+      16,
+      16
+    ],
+    "bank_n": [
+      16,
+      16
+    ],
+    "bank_w": [
+      16,
+      16
+    ],
+    "bank_s": [
+      16,
+      16
+    ],
+    "bank_e": [
+      16,
+      16
+    ],
+    "bank_in_nw": [
+      16,
+      16
+    ],
+    "bank_in_sw": [
+      16,
+      16
+    ],
+    "bank_in_se": [
+      16,
+      16
+    ],
+    "bank_in_ne": [
+      16,
+      16
+    ],
+    "hut_ghost": [
+      48,
+      80
+    ],
+    "canopy_shadow": [
+      24,
+      40
+    ]
+  },
+  "kinds": {
+    "hut": "object",
+    "lean_to": "object",
+    "tree_oak_s": "object",
+    "tree_oak_l": "object",
+    "tree_birch_s": "object",
+    "tree_birch_l": "object",
+    "tree_pine_s": "object",
+    "tree_pine_l": "object",
+    "log_pile_1": "object",
+    "log_pile_2": "object",
+    "log_pile_3": "object",
+    "stump": "object",
+    "deadwood": "object",
+    "hearth_0": "object",
+    "hearth_1": "object",
+    "berry_bush_full": "object",
+    "berry_bush_bare": "object",
+    "boulder": "object",
+    "stockpile_floor_corner": "ground",
+    "stockpile_floor_edge": "ground",
+    "stockpile_floor_interior": "ground",
+    "ground_dirt_0": "ground",
+    "ground_dirt_1": "ground",
+    "ground_dirt_2": "ground",
+    "ground_forest_floor_0": "ground",
+    "ground_forest_floor_1": "ground",
+    "ground_forest_floor_2": "ground",
+    "water_shallow_0": "ground",
+    "water_shallow_1": "ground",
+    "hill_0": "ground",
+    "hill_1": "ground",
+    "ground_grass_0": "ground",
+    "ground_grass_1": "ground",
+    "ground_grass_2": "ground",
+    "ground_grass_3": "ground",
+    "ground_dark_grass_0": "ground",
+    "ground_dark_grass_1": "ground",
+    "water_deep_0": "ground",
+    "water_deep_1": "ground",
+    "mountain_0": "ground",
+    "mountain_1": "ground",
+    "bank_n": "ground",
+    "bank_w": "ground",
+    "bank_s": "ground",
+    "bank_e": "ground",
+    "bank_in_nw": "ground",
+    "bank_in_sw": "ground",
+    "bank_in_se": "ground",
+    "bank_in_ne": "ground",
+    "hut_ghost": "ghost",
+    "canopy_shadow": "shadow"
+  },
+  "channels": {
+    "outline": "141210",
+    "skin": "9a9a9a",
+    "loincloth": "6e6e6e",
+    "hair": "b0b0b0",
+    "top": "c0c0c0"
+  },
+  "skins": [
+    "d8a884",
+    "b9815f",
+    "915c40",
+    "68402e"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "51-asset environment sheet, parent visual review before blind tests",
+  "status": "PARTIAL",
+  "mechanical_gate": "51/51 PASS",
+  "observed": [
+    "Hut interior, four bedrolls, central stone ring and south doorway remain visible",
+    "Lean-to 02 has a clearer south opening than candidate 01",
+    "Material reduction preserves tree silhouettes and quiets canopy colour noise",
+    "Middle log-pile revision shows four columns and three rows at nearest-neighbour inspection",
+    "Ghost has a transparent gap separating its dashed perimeter and blue fill"
+  ],
+  "limitations": [
+    "Lean-to has four posts rather than two poles",
+    "Hearth stone ring changes between frames",
+    "Stockpile stakes are faint and joined-floor readability awaits the composite",
+    "Small/large physical log counts are not independently verified",
+    "Ten ground variants use the allowed legacy fallback; two shallow-water variants collapse to identical colours",
+    "Mixed neighbouring ground tiles and runtime rendering are not verified"
+  ],
+  "blind_read_status": "NOT_RUN",
+  "evidence": "/Users/rexxa/work/arttrial-data/environment-final/contact.png"
+}

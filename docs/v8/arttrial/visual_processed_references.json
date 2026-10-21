@@ -1,0 +1,14 @@
+{
+  "score": 90,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The generated hut has richer timber highlights than the code-drawn reference.",
+    "Tree and hut hierarchy against composed people has not yet been evaluated."
+  ],
+  "suggestions": [
+    "Use tree candidate 1 and hut candidate 2 as attached family references.",
+    "Evaluate native-scale scene hierarchy and blind recognition after people and composites exist."
+  ],
+  "reasoning": "For this two-object reference selection only, processed silhouettes and material clusters match the requested top-down colony direction. This does not establish the full set's consistency or the independent read-test thresholds."
+}

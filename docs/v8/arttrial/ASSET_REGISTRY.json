@@ -1,0 +1,821 @@
+{
+  "palette": "../../../art/palette/worldsim_b.json",
+  "assets": [
+    {
+      "name": "hut",
+      "image": "/Users/rexxa/work/arttrial-data/buildings/hut_candidate_02.png",
+      "box": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "kind": "object",
+      "family": "buildings",
+      "reference": "/Users/rexxa/work/arttrial-data/buildings/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "lean_to",
+      "image": "/Users/rexxa/work/arttrial-data/buildings/lean_to_02.png",
+      "box": [
+        32,
+        48
+      ],
+      "anchor": [
+        16,
+        44
+      ],
+      "kind": "object",
+      "family": "buildings",
+      "reference": "/Users/rexxa/work/arttrial-data/buildings/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "tree_oak_s",
+      "image": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "box": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        40
+      ],
+      "kind": "object",
+      "family": "trees",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "tree_oak_l",
+      "image": "/Users/rexxa/work/arttrial-data/materials/tree_oak_l.png",
+      "box": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        62
+      ],
+      "kind": "object",
+      "family": "trees",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "tree_birch_s",
+      "image": "/Users/rexxa/work/arttrial-data/materials/tree_birch_s.png",
+      "box": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "kind": "object",
+      "family": "trees",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "tree_birch_l",
+      "image": "/Users/rexxa/work/arttrial-data/materials/tree_birch_l.png",
+      "box": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        62
+      ],
+      "kind": "object",
+      "family": "trees",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "tree_pine_s",
+      "image": "/Users/rexxa/work/arttrial-data/materials/tree_pine_s.png",
+      "box": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        46
+      ],
+      "kind": "object",
+      "family": "trees",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "tree_pine_l",
+      "image": "/Users/rexxa/work/arttrial-data/materials/tree_pine_l.png",
+      "box": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        62
+      ],
+      "kind": "object",
+      "family": "trees",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/tree_oak_s.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "log_pile_1",
+      "image": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "wood",
+      "reference": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "log_pile_2",
+      "image": "/Users/rexxa/work/arttrial-data/processed/log_pile_2_count_03_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "wood",
+      "reference": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "log_pile_3",
+      "image": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_04_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "wood",
+      "reference": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "stump",
+      "image": "/Users/rexxa/work/arttrial-data/wood/processed/stump_01_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "wood",
+      "reference": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "deadwood",
+      "image": "/Users/rexxa/work/arttrial-data/wood/processed/deadwood_01_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "wood",
+      "reference": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "hearth_0",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/hearth_01_frame_0_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "hearth",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "hearth_1",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/hearth_01_frame_1_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "hearth",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "berry_bush_full",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_full_01_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "bushes",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/tree_oak_candidate_01.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "berry_bush_bare",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_bare_02_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "bushes",
+      "reference": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_full_01.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "boulder",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/boulder_01_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "object",
+      "family": "stone",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "stockpile_floor_corner",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_corner_01_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "ground",
+      "family": "stockpile_floor",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "stockpile_floor_edge",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_edge_01_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "ground",
+      "family": "stockpile_floor",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "stockpile_floor_interior",
+      "image": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_interior_02_material.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "kind": "ground",
+      "family": "stockpile_floor",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_dirt_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_dirt_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_dirt_2",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_2.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_forest_floor_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_forest_floor_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_forest_floor_2",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_2.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "water_shallow_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "water_shallow_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "hill_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/hill_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/hill_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "hill_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/hill_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/hill_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_grass_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_grass_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_grass_2",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_2.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_grass_3",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_3.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_dark_grass_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dark_grass_candidate_01_tile_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dark_grass_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "ground_dark_grass_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dark_grass_candidate_01_tile_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dark_grass_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "water_deep_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/water_deep_candidate_01_tile_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/water_deep_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "water_deep_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/water_deep_candidate_01_tile_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/water_deep_candidate_01_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "mountain_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/mountain_candidate_01_material_tile_0.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/mountain_candidate_01_material_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "mountain_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/processed/mountain_candidate_01_material_tile_1.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "ground",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/processed/mountain_candidate_01_material_tile_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_n",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_n.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_w",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_w.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_s",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_s.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_e",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_e.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_in_nw",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_in_nw.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_in_sw",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_in_sw.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_in_se",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_in_se.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "bank_in_ne",
+      "image": "/Users/rexxa/work/arttrial-data/banks/bank_in_ne.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "ground",
+      "family": "banks",
+      "reference": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "hut_ghost",
+      "image": "/Users/rexxa/work/arttrial-data/materials/hut_ghost_moat.png",
+      "box": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        80
+      ],
+      "kind": "ghost",
+      "family": "ghost",
+      "reference": "/Users/rexxa/work/arttrial-data/materials/hut_ghost_moat.png",
+      "min_component_pixels": 2
+    },
+    {
+      "name": "canopy_shadow",
+      "image": "/Users/rexxa/work/arttrial-data/processed/canopy_shadow.png",
+      "box": [
+        48,
+        48
+      ],
+      "anchor": [
+        24,
+        40
+      ],
+      "kind": "shadow",
+      "family": "shadow",
+      "reference": "/Users/rexxa/work/arttrial-data/processed/canopy_shadow.png",
+      "min_component_pixels": 2
+    }
+  ]
+}

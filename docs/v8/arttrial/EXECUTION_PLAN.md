@@ -9,8 +9,8 @@ Raw images, rejected candidates, logs and working files: `/Users/rexxa/work/artt
 
 | Part | Deliverable and proof | State |
 |---|---|---|
-| 0 | English STYLE with Korean summary; reproducible 48-colour palette; all eight pipeline steps; three synthetic fixtures, negative checks; commit/push/ref equality | VERIFIED_LOCAL; publication pending |
-| 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | PENDING |
+| 0 | English STYLE with Korean summary; reproducible 48-colour palette; all eight pipeline steps; three synthetic fixtures, negative checks; commit/push/ref equality | COMPLETE: a799b4bd; remote SHA verified |
+| 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | VERIFIED_LOCAL: 51/51 mechanical PASS; 14 tests and static gate PASS; publication pending |
 | 2 | Four bodies × two directions × four upright frames plus south sleep; generated-on-body hair/beard, tops and tools, subtraction extraction; PERSON_SPEC | PENDING |
 | 3 | Native-scale 1920×1080 scene, code and mock-up comparison; 24 labelled variations; optional night; anonymous test crops kept external | PENDING |
 | 4 | Fresh context blind test ≥8/10, variation ≥20/24, all-assets consistency, pairwise uniqueness, full cost ledger; preserve failures and at most one revision | PENDING |
@@ -41,4 +41,5 @@ Synthetic tests exercise each pipeline step, including overflow rejection, off-p
 - Tree and wood asset generators own separate external subdirectories and selection ledgers. Parent must independently review and merge their entries.
 - People pilot: first sheet rejected for repeated walk phases; raw02 corrects them. Parent inspected direction-specific registered output: 26–27-pixel adult silhouettes, nine distinct poses, accepted provisionally as the family reference. Other three bodies are in generation.
 - Two generated short-hair variants failed strict subtraction because they erase body pixels. Both are retained as rejected geometry drift; neither is an accepted paper-doll layer. A bounded alternative attempt is running without relaxing extraction checks.
-- Environment: ten additional tree candidates and eleven wood candidates are preserved externally. Selected tree foliage/bark receives a documented material-subpalette pass before final approval. Ground and remaining props are in production.
+- Environment: 51 assets packed in art/trial/sheet.png (21,520 bytes), all mechanical checks pass. Material-reduced outputs, ground failure/fallback evidence and raw candidates are external; visual limitations are preserved in ENVIRONMENT.md.
+- People: 36 bodies exist; calibrated child idle now24px in both directions. Single-frame edits have produced nine aligned hide-wrap poses; remaining layers are in progress. Raw sheet drift failures remain in the ledger.
