@@ -151,3 +151,17 @@ Evidence: `art/pipeline/test_compose.py`; external `preflight/tint-toggle-before
 - Choice: stop further spear generation. Test only existing raw candidates with a preregistered global isotropic scale and translation grid; do not repair local pixels, rename the requested object or substitute another provider.
 - Reason: whole-image registration can test a processing explanation while retaining the same body-preservation gate and original generated pixels.
 - Evidence: external `people/spear_scale_diagnostic/REPORT.md` and `results.json`: 378 transforms, zero passes, 1–30 erased body pixels. The best candidate also failed direct spear readability. This bounded negative result does not prove every possible global transform impossible; the required spear remains absent.
+
+## D25 — Bound the second missing-key continuation
+
+- Context: the d3bada0f checkpoint preserves404assets, but two fixed board requests and356mandatory wardrobe keys remain incomplete.
+- Choice: preregister four adult-male east-idle hair attempts (two long-tied, two braided) and one attempt for each of39missing adult-female non-spear tool keys. Preserve all404existing entries, the frozen board attributes, both scene rounds and the six variation samples. Attach original mannequin and accepted family/style references; retain the original extraction gates. No extra retries, spear calls, source repairs or replacements belong to this batch.
+- Reason: measure another bounded missing-key batch without changing the task's thresholds or hiding its failed evaluations. The original deadline remains2026-10-22T02:21:38Z.
+- Evidence: external `continuation2_accounting/plan.json` and both producer preregistrations. The four hair attempts yielded zero accepted assets; neither missing style is resolved. Final tool results and costs are recorded separately from the immutable first continuation.
+
+## D26 — Separate inventory acceptance from measured semantic compliance
+
+- Context: mechanical checks and extraction acceptance do not establish anatomical handedness, log counts, material texture or successful blind recognition.
+- Choice: retain existing source pixels and selection records, and add a labelled internal semantic audit of the404-asset checkpoint. Report12tools consistent with right-side attachment,29anatomically uncertain and one contrary-side front-facing female pick. Two raised work poses support preparation, not a verified animation cycle. The revised large pile has16clearly distinguishable ends; its requested17–25physical logs remainNOT_VERIFIED.
+- Reason: silently changing old pixels or treating prompt/producer count metadata as observation would undermine the frozen evaluation evidence. Inventory counts must not be described as complete visual-contract compliance.
+- Evidence: `REQUIREMENTS_AUDIT.md`, `SEMANTIC_AUDIT.json`, and external `continuation2_accounting/semantic_audit/` source hashes and native/enlarged contacts. This labelled inspection is not an additional blind round and does not change3/10or10/24scores.

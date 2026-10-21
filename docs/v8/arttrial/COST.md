@@ -1,6 +1,56 @@
 # ART-TRIAL generation cost ledger
 
-## Current continuation checkpoint
+## Current second-continuation checkpoint
+
+Status: **FROZEN_ALL_LANES_COMPLETE**. Snapshot: 2026-10-21T15:31:23.029526+00:00. Historical caf25579 ledgers remain byte-identical.
+
+Wave 2 only: **43 observed calls, 43 returned originals, 0 tool errors, 0 observed in flight, 0 accepted frames from 0 sources**. Unrecorded planned slots are not counted. Caller sum 16947.962s; interval union 829.194s; measured calls 43, pending/unknown durations 0.
+
+Preserved continuation 1: **142 calls, 140 returned, 2 errors, 21 accepted sources/frames; 404 published package assets from 306 sources**. Frozen snapshot 2026-10-21T15:06:35.105264+00:00; copied ledger SHA `c110f8116ca4281cd2bd98aa79ab2c29c999b553aadbbcce06df8d2be0c6d7a1`. All prior accounting files are verified byte-identical before and after refresh.
+
+Combined continuations 1 + 2: **185 calls, 183 returned originals, 2 explicit tool refusals/errors, 21 accepted frames from 21 new sources**. In flight: 0; unknown outputs: 0; byte-verified archives: 183; mismatches: 0.
+
+Cumulative: **1019 known calls, 1008 returned originals, 11 known tool errors, 306 producer-selected source originals ever**. Historical unresolved seven launched batch slots remain separate; no missing outputs are invented.
+
+Final package: **404 assets from 306 generated source originals**; 345 frames have direct generation lineage and 59 are derived/legacy. This count follows actual integrated source paths, separately from producer-selected-ever. Registry: `/Users/rexxa/work/arttrial-data/continuation2_accounting/integration/20261021T152938803284Z/registry.json`; SHA-256 `07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905`.
+
+| Family | Combined continuations / cumulative calls | Combined continuations / cumulative returned | Combined continuations / cumulative selected sources | Combined continuations accepted / cumulative producer-selected frame records | Combined continuations caller sum / union seconds | Cumulative measured caller sum / union seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| environment | 0 / 65 | 0 / 65 | 0 / 27 | 0 / 54 | 0.000 / 0.000 | 4112.977 / 946.494 |
+| body | 0 / 11 | 0 / 11 | 0 / 7 | 0 / 39 | 0.000 / 0.000 | 367.964 / 289.278 |
+| hair | 114 / 404 | 112 / 398 | 16 / 73 | 16 / 73 | 16022.141 / 1160.014 | 38215.692 / 4267.106 |
+| top | 0 / 194 | 0 / 193 | 0 / 147 | 0 / 147 | 0.000 / 0.000 | 120695.146 / 3448.681 |
+| tool | 71 / 316 | 71 / 312 | 5 / 42 | 5 / 42 | 28168.489 / 1527.103 | 66528.185 / 4909.594 |
+| carry | 0 / 29 | 0 / 29 | 0 / 10 | 0 / 10 | 0.000 / 0.000 | 784.402 / 576.521 |
+
+Cumulative producer-selected frame records retain the historical 331 records plus 13 generated scene revisions and newly accepted frames. They are not atlas totals: derived shadows and legacy assets follow the final package separately. Per-family selected-source columns use historical producer selections; the one historical integrated replacement is documented below.
+
+Combined continuations measured caller sum: **44190.63s**; invocation overlap union: **1909.232s**; first observed invocation to last completion: **2600.956s**. First invocation to ledger freeze: **2796.748s**. Measured and pending/unknown call counts are recorded separately; unknown durations are not imputed.
+
+Cumulative measured caller sum: **230704.366s**; measured overlap union: **8015.856s**. Historical two bounded calls and three unknown-duration calls remain separate. Total observed trial-start-to-freeze span from 2026-10-21T12:21:38Z: **11385.030s**; later publication time is excluded. Caller sums include concurrent orchestration; interval unions exclude gaps and are not campaign elapsed time.
+
+Historical unknown-duration identities:
+- `people/layers/carry_single/south_idle_01`: Known invocation; duration unknown, not zero
+- `people/layers/tools_single/spear_south_idle_01`: Known invocation; duration unknown, not zero
+- `people/layers/tops_single/woven_tunic_south_work_01`: Known invocation; duration unknown, not zero
+
+Historical source discrepancy: `hair/short/adult_f/east/idle`.
+
+- producer_selected: `people/layers/hair_single/short_adult_f_east_idle`
+  Processed image: `/Users/rexxa/work/arttrial-data/people/layers/hair_single/short_adult_f_east_idle_layer.png`; SHA `63e3a86d34c5dc712ea3523c0f21e1706afe18292c82c2f3e68455e7e857f03a`.
+  Raw archive: `/Users/rexxa/work/arttrial-data/people/layers/hair_single/short_adult_f_east_idle.png`.
+  Generated original: `/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e6d-48a6-7501-8339-93ad555174df/exec-8f6e8774-a306-4d97-ac5e-15b33e284446.png`; SHA `c34b604dd761821e1ffe19c4815b3bb932baafc7279bddc4f28caea126598585`.
+
+- integrated_atlas: `people/layers/hair_adult_f/short_east_idle`
+  Processed image: `/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_east_idle_layer.png`; SHA `63e3a86d34c5dc712ea3523c0f21e1706afe18292c82c2f3e68455e7e857f03a`.
+  Raw archive: `/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_east_idle.png`.
+  Generated original: `/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e86-90cc-7481-854f-d080a1cf30e3/exec-4dd53d60-c96c-44d0-87ed-185448546925.png`; SHA `9e8e04d68a6f55ac2acb40e7f8b19d8a669ec1093502304f3bae025719f7db78`.
+
+Historical count remains 285, but producer-selected and integrated source sets differ by this replacement. Historical ledgers are unchanged. Final package uses exact integrated image path and provenance; identical processed bytes alone cannot choose the generating call.
+
+Material/palette operations, layer extraction, shadows and atlas packing add zero generation calls. Monetary cost: **NOT_REPORTED_BY_TOOL**. Historical failed calls and unresolved batch evidence remain in the audit.
+
+## Historical first-continuation checkpoint (preserved)
 
 Status: **FROZEN_ALL_LANES_COMPLETE**. Snapshot: 2026-10-21T15:06:35.105264+00:00. Historical caf25579 ledgers remain byte-identical.
 

@@ -1,0 +1,109 @@
+{
+  "baseline_registry": "/Users/rexxa/work/arttrial-data/continuation2_accounting/baseline/ASSET_REGISTRY.json",
+  "baseline_sha256": "07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905",
+  "registry_sha256": "07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905",
+  "baseline_count": 404,
+  "added_count": 0,
+  "submitted_count": 404,
+  "final_lanes_complete": true,
+  "completion_evidence": "Explicit operator attestation after all producers report completion; manifest existence alone is not completion.",
+  "lanes": [
+    {
+      "lane": "hair_board_continuation2",
+      "manifest_present": true,
+      "sha256": "3ff5f36c9d4b232659ddd88f4d22f3f01d313884e5a22190bda7a07a235333fa",
+      "accepted_count": 0,
+      "complete_attested": true
+    },
+    {
+      "lane": "tools_adult_f_continuation",
+      "manifest_present": true,
+      "sha256": "3ff5f36c9d4b232659ddd88f4d22f3f01d313884e5a22190bda7a07a235333fa",
+      "accepted_count": 0,
+      "complete_attested": true
+    }
+  ],
+  "preservation": {
+    "source_hashes_preserved": 404,
+    "scene_hashes_preserved": 12,
+    "sample_hashes_and_recompositions_preserved": 6,
+    "attributes_sha256": "d2153a372f56e9859211be52c7fd39b2f4a4b330519c32bffaabb5613436dc9c"
+  },
+  "checks": {
+    "passed": true,
+    "asset_count": 404,
+    "source_png_bytes": 84606,
+    "sheet_png_bytes": 41745,
+    "per_file_limit_bytes": 1500000,
+    "oversized_sources": [],
+    "atlas_written": true
+  },
+  "reference_normalization": "D18 bottom-center anchors and D21 existing canonical family references; producer metadata retained; no historical prompt-reference claim.",
+  "published_preservation": {
+    "registry": {
+      "equal": true,
+      "current": "/Users/rexxa/work/arttrial-data/continuation2_accounting/integration/20261021T152938803284Z/registry.json",
+      "compared": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/ASSET_REGISTRY.json",
+      "sha256": "07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905"
+    },
+    "atlas_png": {
+      "equal": true,
+      "current": "/Users/rexxa/work/arttrial-data/continuation2_accounting/integration/20261021T152938803284Z/validated/sheet.png",
+      "compared": "/Users/rexxa/work/new-world-art-prod/art/trial/sheet.png",
+      "sha256": "a000e0e26aee9cd06a4396aab984e5f58cd2bd0668fd1fadfe39a18dc5c7590d"
+    },
+    "atlas_json": {
+      "equal": true,
+      "current": "/Users/rexxa/work/arttrial-data/continuation2_accounting/integration/20261021T152938803284Z/validated/sheet.json",
+      "compared": "/Users/rexxa/work/new-world-art-prod/art/trial/sheet.json",
+      "sha256": "f5fc5b193cf9600233e6b6a8669b674989658b0793039e9c51f04b802b6ae1d5"
+    },
+    "board_prior": {
+      "equal": true,
+      "current": "/Users/rexxa/work/arttrial-data/continuation2_accounting/integration/20261021T152938803284Z/arttrial_people_coverage.png",
+      "compared": "/Users/rexxa/work/arttrial-data/continuation_accounting/integration/20261021T150603242887Z/arttrial_people_coverage.png",
+      "sha256": "90daaa83be2a222387bdef795d322fbf4d28c65122cfc2b517090049cf4bd7d1"
+    },
+    "prior_wave_files_preserved": 53,
+    "metadata_changes": [
+      "verification.json baseline path, lane identities and completion attestation differ from wave1",
+      "producer_metadata.json empty because0additions",
+      "coverage.json snapshot timestamp differs; counts unchanged",
+      "latest.json points to new final snapshot"
+    ],
+    "board_published": {
+      "equal": true,
+      "current": "/Users/rexxa/work/arttrial-data/continuation2_accounting/integration/20261021T152938803284Z/arttrial_people_coverage.png",
+      "compared": "/Users/rexxa/work/new-world-art-prod/docs/images/arttrial_people.png",
+      "sha256": "90daaa83be2a222387bdef795d322fbf4d28c65122cfc2b517090049cf4bd7d1"
+    }
+  },
+  "parent_raw_verification": {
+    "hair": [
+      {
+        "id": "braided_east_idle_cont2_01",
+        "sha256": "2396d76132d60bccb185cb9a9037becd7d8ed25cfbb06eb46482fe86d430c582",
+        "original": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e6d-48a6-7501-8339-93ad555174df/exec-aa0506ec-90ea-4214-83c6-554583be9157.png"
+      },
+      {
+        "id": "braided_east_idle_cont2_02",
+        "sha256": "9eb443100b55717d0ff36395b74ea5d2827b9fe182a2420a87674698b82e316d",
+        "original": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e6d-48a6-7501-8339-93ad555174df/exec-606be390-f721-4d1c-81b2-b298ba7da846.png"
+      },
+      {
+        "id": "long_tied_east_idle_cont2_02",
+        "sha256": "97ec220571fb962c26bf966ea99e6acd23801141705c40bb4d85b6ae779dcc7d",
+        "original": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e6d-48a6-7501-8339-93ad555174df/exec-8b1f9452-887f-41d1-8ddb-c4b2a0e9d0e7.png"
+      },
+      {
+        "id": "long_tied_east_idle_cont2_01",
+        "sha256": "029fad9e814f1b166c31d3e77577ac50e4953463f25e7eafdf5fcdb9cc88ebd9",
+        "original": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e6d-48a6-7501-8339-93ad555174df/exec-1abebd46-70c9-46d3-b482-cf651fecfaab.png"
+      }
+    ],
+    "tool_pairs_verified": 39,
+    "total_pairs_verified": 43,
+    "all_byte_identical": true
+  },
+  "scope": "Second bounded continuation, zero accepted additions; preserves frozen failed evaluations."
+}

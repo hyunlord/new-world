@@ -33,4 +33,4 @@ Mountain was not granted a style-failure fallback: material reduction was applie
 - Tree sizes are declared sprite boxes, not a guarantee of identical canopy occupancy across species.
 - No runtime integration or acceptance is implied. Animals have not been generated; optional-drop decisions remain explicit in the final report.
 
-Parent inspected the packed sheet and labelled contact sheet at native/nearest scales. Blind reading has not yet occurred.
+Parent inspected the packed sheet and labelled contact sheet at native/nearest scales during Part1. The subsequent blind readings are complete: both scene rounds scored3/10, below8/10. See `BLIND_RESULTS.md`; this historical environment inspection is not blind acceptance.

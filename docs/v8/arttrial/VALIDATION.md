@@ -22,7 +22,7 @@ Baseline `cargo test --workspace && cargo clippy --workspace -- -D warnings`:PAS
 
 Post-work gate:PASS; session98271 exited0. `cargo test --workspace && cargo clippy --workspace -- -D warnings` completed, final clippy0.16s. No Rust files changed. Evidence: `/Users/rexxa/work/arttrial-data/preflight/postwork-rust-gate.json`.
 
-## Visual and coverage gates
+## Historical caf25579 visual and coverage gates
 
 Scene round1:3/10FAIL. Scene round2:3/10FAIL (generic-carrying leniency4/10 alsoFAIL). Variation:10/24FAIL. Strict24complete board gate:FAIL; coverage board displays omissions explicitly. One scene revision round exhausted; no additional reviewer reroll.
 
@@ -42,3 +42,13 @@ Current pipeline rerun:65tests PASS in10.765s; offline Ruff PASS; basedpyright0e
 The additive integration helper passes3regression tests, Ruff and strict basedpyright. The isolated continuation accounting helper passes its tests, Ruff and structural checks, with0type errors and200warnings from dynamic producer data. These warnings are retained; the shipped pipeline's clean result is separate. Parent independently checked all140continuation raw/original byte pairs,142call records,21selected records and zero current in-flight calls. Historical unresolved batch slots and unknown durations remain disclosed in `COST.md`.
 
 Scene3/10and variation10/24remainFAIL. Wardrobe256/612and complete-board22/24remainFAIL. No additional reviewer round, sample replacement or relaxed threshold was used.
+
+## Second continuation and semantic/provenance audit
+
+All43new calls returned; zero accepted additions. Final integration again validates404/404assets and preserves404source hashes,12scene artifacts and six sample recompositions. Parent independently compares the registry, atlas PNG/JSON and published board bytes: all unchanged. Parent independently rechecks43new raw/original pairs: all byte-identical. `CONTINUATION2_VERIFICATION.json` contains the final completed-lane evidence.
+
+No shipped pipeline, game code or final image changed in this wave; the65-test clean pipeline result above remains the unchanged-code checkpoint, not a newly rerun test claim. The external wave2integration helper passes its three regression tests, Ruff and strict type checking. The external wave2accounting helper passes its tests, Ruff and structural checks; type checking reports0errors and227warnings from dynamic producer data. These warnings are retained separately from the clean shipped pipeline result. Final costs freeze at2026-10-21T15:31:23.029526Z.
+
+`REQUIREMENTS_AUDIT.md` and `SEMANTIC_AUDIT.json` separate technical selection from semantic compliance. Labelled internal review found12tools consistent with right-side attachment,29uncertain and one contrary-side pick; the two raised work stills do not verify animation. Revised large log count17–25remainsNOT_VERIFIED. These observations do not modify frozen blind inputs or scores.
+
+`ENVIRONMENT_CANDIDATE_AUDIT.json` verifies all29generated environment groups retain at least two distinct original candidates with decision reasons. Parent independently rehashed all59unique raw/archive pairs and confirmed exact equality. Four early dedicated timing paths remainNOT_VERIFIED; no times are inferred from file timestamps. Candidate provenance is verified separately from visual acceptance.

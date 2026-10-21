@@ -1,0 +1,3753 @@
+{
+  "scope": "Read-only candidate-retention audit against original environment-final 51-name packed output; no rerun or visual re-acceptance.",
+  "requirement_quote": "For each: at least 2 candidates, pick by check.py score and your own reading; keep the rejects in the data dir with one line why.",
+  "original_environment_count": 51,
+  "generated_object_frame_slots": 21,
+  "ground_materials": 8,
+  "ground_output_tiles": 20,
+  "derived_exempt_outputs": [
+    "bank_e",
+    "bank_in_ne",
+    "bank_in_nw",
+    "bank_in_se",
+    "bank_in_sw",
+    "bank_n",
+    "bank_s",
+    "bank_w",
+    "canopy_shadow",
+    "hut_ghost"
+  ],
+  "covered_original_names": 51,
+  "uncovered_original_names": [],
+  "extra_producer_names": [],
+  "groups": [
+    {
+      "name": "tree_oak_l",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "tree_oak_l_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_oak_l_candidate_01.png",
+          "raw_sha256_actual": "2f016a1d4b7db763be8a38d720aa51905021d7ad21ef2361982769fcf104ea8b",
+          "raw_sha256_recorded": "2f016a1d4b7db763be8a38d720aa51905021d7ad21ef2361982769fcf104ea8b",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-0a9bddfd-13c1-4335-9bb8-d8c9a97afffd.png",
+          "original_archive_sha256_actual": "2f016a1d4b7db763be8a38d720aa51905021d7ad21ef2361982769fcf104ea8b",
+          "original_archive_equals_raw": true,
+          "reason": "Pointed canopy lobes and fragmented bright patches make the large oak read less round and calm.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "tree_oak_l",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 2475,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              2475
+            ],
+            "reference_delta_e": 0.01604000986602077
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_oak_l_candidate_01.png",
+          "processed_sha256_actual": "3dd948ff695ed86bf3148de5dd4f983e6729aef9dcb70fcdf280033f06c75e88",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_oak_l_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_oak_l_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "dee1a2842ede916d4a2eecb2eadf49431af55756ec1f40474c8830ddea06bd6f",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "3a34e8f901c3cc3e4e047fe6092f736e38ed27564ba3ae026c2284a5e1ef044a"
+        },
+        {
+          "id": "tree_oak_l_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_oak_l_candidate_02.png",
+          "raw_sha256_actual": "74fea950f54a716eefe450ea6fbff183152b83f8a7dfe3be27a9f3f4a2f2c115",
+          "raw_sha256_recorded": "74fea950f54a716eefe450ea6fbff183152b83f8a7dfe3be27a9f3f4a2f2c115",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-96fc28c9-8f2a-4337-88c6-0e899ac291d5.png",
+          "original_archive_sha256_actual": "74fea950f54a716eefe450ea6fbff183152b83f8a7dfe3be27a9f3f4a2f2c115",
+          "original_archive_equals_raw": true,
+          "reason": "Broad round crown and continuous upper-left light match the reference better than candidate 1. Five foliage values remain after quantization; strict material-value rule not passed.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "tree_oak_l",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 2373,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              2373
+            ],
+            "reference_delta_e": 0.0019992744345136795
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_oak_l_candidate_02.png",
+          "processed_sha256_actual": "2b23f80f4f49b3820529300aa5549bfeb0a116f5e46f14b7e3e724ec885757c7",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_oak_l_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_oak_l_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "c75fd75684aa4465b5be98473b7332e16f18b0d7cf32feb75d8896615da41ef9",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "5f5b5d3a6e0dd11b1f91c8955a951675b603421b4e7fc643791005a0521bc749"
+        }
+      ]
+    },
+    {
+      "name": "tree_birch_s",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "tree_birch_s_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_birch_s_candidate_01.png",
+          "raw_sha256_actual": "36d4d87ec6b061f33a6a6f9d0d432845d8dc3a0fccce129c09cc8284a65e7e57",
+          "raw_sha256_recorded": "36d4d87ec6b061f33a6a6f9d0d432845d8dc3a0fccce129c09cc8284a65e7e57",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-ac7cfed2-2641-40d4-887a-0e78ddd4814c.png",
+          "original_archive_sha256_actual": "36d4d87ec6b061f33a6a6f9d0d432845d8dc3a0fccce129c09cc8284a65e7e57",
+          "original_archive_equals_raw": true,
+          "reason": "Light olive lumpy crown and tiny pale trunk survive at 48px; limited bright patch is calmer than candidate 2. Six foliage RGB values remain, including sparse extras; strict material-value rule not passed.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "tree_birch_s",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1198,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1198
+            ],
+            "reference_delta_e": 0.5965625852526444
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_birch_s_candidate_01.png",
+          "processed_sha256_actual": "bb63afda54aaf33bd0bc1e776a67812f5bf541c4681364d9461452056abf4eac",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_birch_s_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_birch_s_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "61ea01dff51c4980551bca2dacccca4c5f849cd8e6f6d31415d35fb3b9813f0b",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "ea345c9cdaa59e347815803ace7cfcabb253bcd9004e66ccef85bb76a9e138db"
+        },
+        {
+          "id": "tree_birch_s_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_birch_s_candidate_02.png",
+          "raw_sha256_actual": "2be072e1eaf8292d1dd4679541d8cb873fb9c23353cbc74730710c60b97f8830",
+          "raw_sha256_recorded": "2be072e1eaf8292d1dd4679541d8cb873fb9c23353cbc74730710c60b97f8830",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-28a22aa7-f9eb-401e-a1d5-8416d05673af.png",
+          "original_archive_sha256_actual": "2be072e1eaf8292d1dd4679541d8cb873fb9c23353cbc74730710c60b97f8830",
+          "original_archive_equals_raw": true,
+          "reason": "Large bright yellow-green region competes with people and weakens the quiet canopy hierarchy.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "tree_birch_s",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1290,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1290
+            ],
+            "reference_delta_e": 3.0770809278070708
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_birch_s_candidate_02.png",
+          "processed_sha256_actual": "9c5a915819a96757ab5ccae8998baeccab25f1537183b5c64fbeec6e375f4ca1",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_birch_s_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_birch_s_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "de363842f098aae1d1e62ce2bc9e09eedb5f2f1606b18673c153d7cf14ca5e2c",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "c3a6b3a887d79e6a0b37ba4f5bf728707b8c12a45792aecdc496bbc5cbbfdf0e"
+        }
+      ]
+    },
+    {
+      "name": "tree_birch_l",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "tree_birch_l_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_birch_l_candidate_01.png",
+          "raw_sha256_actual": "aa46db1b62243af9ee66ab0ebd1619e65f25ed13dc32052a7d084b10de47e8ef",
+          "raw_sha256_recorded": "aa46db1b62243af9ee66ab0ebd1619e65f25ed13dc32052a7d084b10de47e8ef",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-4c4ff365-22c9-4ae8-b3ba-f22536c146a0.png",
+          "original_archive_sha256_actual": "aa46db1b62243af9ee66ab0ebd1619e65f25ed13dc32052a7d084b10de47e8ef",
+          "original_archive_equals_raw": true,
+          "reason": "Wide irregular crown and pale bark marker distinguish the mature birch; modest highlight is quieter than candidate 2. Six foliage RGB values remain; strict material-value rule not passed.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "tree_birch_l",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 2342,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              2342
+            ],
+            "reference_delta_e": 0.5168705256139581
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_birch_l_candidate_01.png",
+          "processed_sha256_actual": "3979cc2408f370f223aa87096fc972ebfbbd1feee64891a173bd2d0eeb675e5a",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_birch_l_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_birch_l_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "7b37388699f4e6361909cc66e0afc794fcfa04af058cacc34830659786e689e8",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "0d634ab45e06e97c16cf0641f99605c4497eefb8da9e81ec16f32dcd8c225fc1"
+        },
+        {
+          "id": "tree_birch_l_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_birch_l_candidate_02.png",
+          "raw_sha256_actual": "6e58039b46ab67a9034c28f356c97928afca43096cf3963dcceaf0d268ac8eee",
+          "raw_sha256_recorded": "6e58039b46ab67a9034c28f356c97928afca43096cf3963dcceaf0d268ac8eee",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-167ad8e1-ef6a-4ef1-bc27-7bb8a807898d.png",
+          "original_archive_sha256_actual": "6e58039b46ab67a9034c28f356c97928afca43096cf3963dcceaf0d268ac8eee",
+          "original_archive_equals_raw": true,
+          "reason": "Larger brighter highlight mass and less distinct pale bark marker reduce hierarchy and species cues.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "tree_birch_l",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 2393,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              2393
+            ],
+            "reference_delta_e": 1.2138312318024183
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_birch_l_candidate_02.png",
+          "processed_sha256_actual": "edcb2eccb4d2c0d21604b4f2c99cbd6701ae870d70fe5d07c1e2c21c96e20fe4",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_birch_l_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_birch_l_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "a459d50b9dadbfb8adaacda533df9181a11979aef9f47424f5170d637e62e645",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "c097a4ceefc51e5a52a0048a9071bd6a7157026dd7c3d0c2d5e6263e39a6fa27"
+        }
+      ]
+    },
+    {
+      "name": "tree_pine_s",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "tree_pine_s_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_pine_s_candidate_01.png",
+          "raw_sha256_actual": "95a58d6a94da66a60cbc522e4979198ad01cf9b8f9b2055a5336b18a04ea3eb3",
+          "raw_sha256_recorded": "95a58d6a94da66a60cbc522e4979198ad01cf9b8f9b2055a5336b18a04ea3eb3",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-2811cfd7-f994-4fde-be36-70fbba2fc2cf.png",
+          "original_archive_sha256_actual": "95a58d6a94da66a60cbc522e4979198ad01cf9b8f9b2055a5336b18a04ea3eb3",
+          "original_archive_equals_raw": true,
+          "reason": "Four foliage values, pointed radial needle masses and lighter crown read as a small overhead pine; dark base and tiny trunk remain.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "tree_pine_s",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1223,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1223
+            ],
+            "reference_delta_e": 1.1311183169507628
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_pine_s_candidate_01.png",
+          "processed_sha256_actual": "93ed77ff1a485bb5cdc05c7e1037ee580002ccb96320ca47c200b8731dd3500e",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_pine_s_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_pine_s_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "266739f76ed1d1ab149ff2737ffeef103cd4ddbf2e925dd153610318789316cf",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "f0738a7cc3e61107d5b601daae79a20d9092b934cf75511a1d34eb62f7bcb37e"
+        },
+        {
+          "id": "tree_pine_s_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_pine_s_candidate_02.png",
+          "raw_sha256_actual": "32902ce44ddfd726ab54857a48c44abfb2bceae6cf8d7412eb8011885b2b52ad",
+          "raw_sha256_recorded": "32902ce44ddfd726ab54857a48c44abfb2bceae6cf8d7412eb8011885b2b52ad",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-466f5442-4d3c-4d3a-89ca-46de8322e02f.png",
+          "original_archive_sha256_actual": "32902ce44ddfd726ab54857a48c44abfb2bceae6cf8d7412eb8011885b2b52ad",
+          "original_archive_equals_raw": true,
+          "reason": "More evenly spaced star spokes look ornamental and a sparse fifth bright green breaks the four-value foliage limit.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "tree_pine_s",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1172,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1172
+            ],
+            "reference_delta_e": 1.094019191535868
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_pine_s_candidate_02.png",
+          "processed_sha256_actual": "09c21ad8e78e19d47dffa35f61f0ab19afbb52ed686beae2ed57d2e720bc480f",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_pine_s_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_pine_s_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "9472784944233d09923b34806ac27d002adad75688a70becc52885802c89603b",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "1852a1537b80a862927d285c93647fe32577b98a01f6611931e829b1f5930a18"
+        }
+      ]
+    },
+    {
+      "name": "tree_pine_l",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "tree_pine_l_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_pine_l_candidate_01.png",
+          "raw_sha256_actual": "0e858f46665da7ae293be868b749bd5197bfaf345f9a09c819f29305f251578d",
+          "raw_sha256_recorded": "0e858f46665da7ae293be868b749bd5197bfaf345f9a09c819f29305f251578d",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-4eb3762f-aaef-48ad-9149-3088bb38b7db.png",
+          "original_archive_sha256_actual": "0e858f46665da7ae293be868b749bd5197bfaf345f9a09c819f29305f251578d",
+          "original_archive_equals_raw": true,
+          "reason": "Four foliage values and many irregular pointed radial branches read as a mature overhead conifer; short warm trunk is subordinate.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "tree_pine_l",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 2186,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              2186
+            ],
+            "reference_delta_e": 1.089142206257945
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_pine_l_candidate_01.png",
+          "processed_sha256_actual": "7ef75eb3037872bcfbec3c443bfa66c68aabd8611d6861765728b470768fc780",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_pine_l_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_pine_l_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "7b429c75babfeeac47e2343183662ce827c490104f8dfa848fb1b0e533b7b528",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "58de51da043e66046c69221932048faf109262d1790d57535e0a4d52214cf83e"
+        },
+        {
+          "id": "tree_pine_l_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/trees/raw/tree_pine_l_candidate_02.png",
+          "raw_sha256_actual": "d83c3fe165ae9df3ec232d35cc0c0bd70ce604562c9ac13aa1d16bf3281f58f0",
+          "raw_sha256_recorded": "d83c3fe165ae9df3ec232d35cc0c0bd70ce604562c9ac13aa1d16bf3281f58f0",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-da6b524a-eeaf-4da5-bd21-9f8b97548342.png",
+          "original_archive_sha256_actual": "d83c3fe165ae9df3ec232d35cc0c0bd70ce604562c9ac13aa1d16bf3281f58f0",
+          "original_archive_equals_raw": true,
+          "reason": "Rounder crown and broad lobes blur the pine-versus-oak distinction; five foliage values remain.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "tree_pine_l",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 2200,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              2200
+            ],
+            "reference_delta_e": 0.0334012435683471
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/trees/processed/tree_pine_l_candidate_02.png",
+          "processed_sha256_actual": "f4fe059babfc8e40f6bfbbb574c370c16f68ca7156e60e7ed6e802b52d177e1c",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/trees/prompts/tree_pine_l_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/trees/timing/tree_pine_l_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "8c5b8ae1da6acf05709ba6f5ae1507d50a7d16d14148b5f45e7e7198ff5e9108",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "949a18fa2d40a1b7f27830f36547475cb724e097e28c65e20de1b512c3b8fe79"
+        }
+      ]
+    },
+    {
+      "name": "log_pile_1",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "log_pile_1_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_1_01.png",
+          "raw_sha256_actual": "d9557d22cc6bdeac38469ee19f844a67635cc74f0333982669248ed5653bce28",
+          "raw_sha256_recorded": "d9557d22cc6bdeac38469ee19f844a67635cc74f0333982669248ed5653bce28",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-e216018c-b9ff-4bab-a506-2d3433bcde16.png",
+          "original_archive_sha256_actual": "d9557d22cc6bdeac38469ee19f844a67635cc74f0333982669248ed5653bce28",
+          "original_archive_equals_raw": true,
+          "reason": "Four long straight parallel forms resemble planks or fence more than stacked logs.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "log_pile_1_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 590,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              590
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_01.png",
+          "processed_sha256_actual": "1dfc7ad494f4fd7c4203a8f27e554894a54fa0c6cce6f57cda5cd883203d3582",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_1_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_1_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "511fe7c9da2c1fe93a5c7933bc0589ffb2c0b122df514b5a4d536afe3bc5c332",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "1a76c2c3a710a0b20e74a5878f486375044379e841583094b42b799f4a130e09"
+        },
+        {
+          "id": "log_pile_1_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_1_02.png",
+          "raw_sha256_actual": "e2efd7a1849595ba5aa7a8aec61cbaca5c6e3f66faa57e12717f286cb8ac00a4",
+          "raw_sha256_recorded": "e2efd7a1849595ba5aa7a8aec61cbaca5c6e3f66faa57e12717f286cb8ac00a4",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-95d1c3c6-2ce8-45fe-a795-96ded18c4583.png",
+          "original_archive_sha256_actual": "e2efd7a1849595ba5aa7a8aec61cbaca5c6e3f66faa57e12717f286cb8ac00a4",
+          "original_archive_equals_raw": true,
+          "reason": "Six short rounded log forms read more clearly than the long fence-like alternative.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "log_pile_1_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 555,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              555
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02.png",
+          "processed_sha256_actual": "2eef0f9936dbbabda667ee5501e8beb22e4fe6160eda8f74ed2bdd07aeb2266a",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_1_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_1_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "33006f8f55f633268717e7cfed3617f09946852291db36ab06febd3b3da1cca6",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "eac311d3bf398d26e44f19d42da09834f37ccb938f9db3a4602a82becb413a8a"
+        }
+      ]
+    },
+    {
+      "name": "log_pile_2",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "log_pile_2_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_2_01.png",
+          "raw_sha256_actual": "390d4536f73da46d6c386fda8341f1fde77241b8a41045de4a0b0fd68778fe75",
+          "raw_sha256_recorded": "390d4536f73da46d6c386fda8341f1fde77241b8a41045de4a0b0fd68778fe75",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-232cd267-0247-41c1-8419-f88d96b8e219.png",
+          "original_archive_sha256_actual": "390d4536f73da46d6c386fda8341f1fde77241b8a41045de4a0b0fd68778fe75",
+          "original_archive_equals_raw": true,
+          "reason": "Compact medium heap with multiple staggered rounded ends; consistent bark clusters.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "log_pile_2_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 568,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              568
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_2_01.png",
+          "processed_sha256_actual": "58a46ecb4e4f57c466030aad666c9a537598dd22d7c99862a9fcfe3c6a8af8cc",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_2_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_2_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "d2179a7cf8cc0b0e72007e841680d8c15bfb3df7bbebea765c6cff8d5e00210e",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "ae98d9bb9c38856902b0af0896d5de33b517c15d99e1d50ef84fc2b8968a52c1"
+        },
+        {
+          "id": "log_pile_2_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_2_02.png",
+          "raw_sha256_actual": "352b4c0acf68d34d87a4469be0aab4515296c003fa4e7515729a8bdd6eabe002",
+          "raw_sha256_recorded": "352b4c0acf68d34d87a4469be0aab4515296c003fa4e7515729a8bdd6eabe002",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-007a7f42-8ada-4e2c-a25e-500ae1feb993.png",
+          "original_archive_sha256_actual": "352b4c0acf68d34d87a4469be0aab4515296c003fa4e7515729a8bdd6eabe002",
+          "original_archive_equals_raw": true,
+          "reason": "Flatter stretched silhouette with fewer distinct tiers and more board-like columns.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "log_pile_2_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 409,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              409
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_2_02.png",
+          "processed_sha256_actual": "ff969992d88d34991d13e7c3970e16d285c986821c7aa00569614fca2ee589a2",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_2_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_2_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "a86d596b208dcfd62e49bc08f39ca957097ab72ccc2ccc20519623f244d2ed58",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "87bd0b92c2ba4eba3b37f584bdfe74e2744f26b6692522a47fe48dfad043057a"
+        }
+      ]
+    },
+    {
+      "name": "log_pile_3",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "log_pile_3_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_3_01.png",
+          "raw_sha256_actual": "1d818fb6078ffbbbeeb75ef2499fd07083c5f33ae81283032e60f9ef13743ac8",
+          "raw_sha256_recorded": "1d818fb6078ffbbbeeb75ef2499fd07083c5f33ae81283032e60f9ef13743ac8",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-ef2f59a6-6dd2-4401-9961-71015650c06e.png",
+          "original_archive_sha256_actual": "1d818fb6078ffbbbeeb75ef2499fd07083c5f33ae81283032e60f9ef13743ac8",
+          "original_archive_equals_raw": true,
+          "reason": "Wide flat two-tier silhouette undersells high inventory.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "log_pile_3_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 370,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              370
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_01.png",
+          "processed_sha256_actual": "bfae0f60c37c467af3317b2eb12bea02fd6b6b88a148da1b599f585d108304fd",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_3_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_3_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "215766f3f299aa76b29fc350bf576c4bea7cfc7f266f918aaaf3122550f0cd8a",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "cecdd5fc7cb300fcb0f2000fa0f22b5a6ff67d85ff0ea53fce66163a814e28d4"
+        },
+        {
+          "id": "log_pile_3_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_3_02.png",
+          "raw_sha256_actual": "c34c72902939d529ebfa82ed7bd8d6e86406defc921b8f3173942196d32fe926",
+          "raw_sha256_recorded": "c34c72902939d529ebfa82ed7bd8d6e86406defc921b8f3173942196d32fe926",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-b4d3b83c-48e0-4743-a4a8-c3aa778df5ec.png",
+          "original_archive_sha256_actual": "c34c72902939d529ebfa82ed7bd8d6e86406defc921b8f3173942196d32fe926",
+          "original_archive_equals_raw": true,
+          "reason": "Denser than candidate01 but fewer distinct tiers than03.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "log_pile_3_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 476,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              476
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_02.png",
+          "processed_sha256_actual": "6a2f34b4f068e23d5cae2394a47c5900f31964d8a4ee9e21914f3ab68380b1f3",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_3_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_3_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "74024a06bf283912019acaa3b258e3c2af675be10303cbb9507d0d30c9b8e560",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "55a47d48a4abedc827fe762c065abe17b955b77b5aea2d873c5a99fad73063d6"
+        },
+        {
+          "id": "log_pile_3_03",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_3_03.png",
+          "raw_sha256_actual": "95d7d2726be74b99c1734f707f060a82bfa926c7cb47f4ea38f60efda33565d0",
+          "raw_sha256_recorded": "95d7d2726be74b99c1734f707f060a82bfa926c7cb47f4ea38f60efda33565d0",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-a9e6be47-35e9-4595-9003-589cfae6d1e4.png",
+          "original_archive_sha256_actual": "95d7d2726be74b99c1734f707f060a82bfa926c7cb47f4ea38f60efda33565d0",
+          "original_archive_equals_raw": true,
+          "reason": "Densest square pile, most distinct repeated cut ends, strongest high-stock silhouette.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "log_pile_3_03",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 690,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              690
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_03.png",
+          "processed_sha256_actual": "672349cce4bb1ddcc2c435a7def124f38071a3ba89460f12de75958b18240574",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_3_03.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_3_03.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "2d9a982d5b656b0ba3c1d4da44c31b5991c9a008ea4f07c8d8e5d62094c92b81",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "d13c814cec2fa3bb04b5f6fd8c47e2323f233583d4d4097f62c07281ed61e0f1"
+        },
+        {
+          "id": "log_pile_3_04",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/log_pile_3_04.png",
+          "raw_sha256_actual": "5b445a45f0d13d374c6e21e23b4273c107e6cecd99984e1f923693f03b1109ad",
+          "raw_sha256_recorded": "5b445a45f0d13d374c6e21e23b4273c107e6cecd99984e1f923693f03b1109ad",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-c810293b-6502-4732-b4fd-84739ce430a0.png",
+          "original_archive_sha256_actual": "5b445a45f0d13d374c6e21e23b4273c107e6cecd99984e1f923693f03b1109ad",
+          "original_archive_equals_raw": true,
+          "reason": "Final retry has shortest individual logs and densest repeated cut ends, approximately20visible forms; exact count remainsNOT_VERIFIED.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "log_pile_3_04",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 716,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              716
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_04.png",
+          "processed_sha256_actual": "965aeb12eb404576bb7eaca702f8e91b58c12535e5323327c32fa5e5ff5c4def",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/log_pile_3_04.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/log_pile_3_04.json",
+          "check_sidecar": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_04.json",
+          "check_sidecar_sha256": "e595c639b21a9af107e59bca1c60fc1f35f02842f48f36bbaf092125d73c14d3",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "ca6b8da1bdd5d2f25e51e24a4ef2d5c84ab9d385175337c83f89739db9517ede",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "b8da8085a1f7e301e7d1e702f5ec7a1df192f6553788d47b34c2828eec2b2cfa"
+        }
+      ]
+    },
+    {
+      "name": "stump",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "stump_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/stump_01.png",
+          "raw_sha256_actual": "0497ade54cbd2051abe2654a1f871457aa9ff3749ae177a98117b47e3e89dd97",
+          "raw_sha256_recorded": "0497ade54cbd2051abe2654a1f871457aa9ff3749ae177a98117b47e3e89dd97",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-495fca40-8539-4a85-95fc-2034e11bbbb5.png",
+          "original_archive_sha256_actual": "0497ade54cbd2051abe2654a1f871457aa9ff3749ae177a98117b47e3e89dd97",
+          "original_archive_equals_raw": true,
+          "reason": "Fresh cut disk with clear concentric rings, dark bark and readable root flares.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "stump_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 453,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              453
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/stump_01.png",
+          "processed_sha256_actual": "db5e3e80f1fc839d6a14019a111ea156b03a9526486669ba892045c6a31b385d",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/stump_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/stump_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "57c4b3155c929354df166530ee080ed3c27f542aa9439bef583e07a7c126cb78",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "5f03f4b5bc27092f3f99e53e1e221507817adb20f8f15073d0a79292bedcc9af"
+        },
+        {
+          "id": "stump_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/stump_02.png",
+          "raw_sha256_actual": "6ccf27ba7a9aea3e5845d397d9b2e197dfe7bd74b6a13d662fb0a1c656005185",
+          "raw_sha256_recorded": "6ccf27ba7a9aea3e5845d397d9b2e197dfe7bd74b6a13d662fb0a1c656005185",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-d9bbf2b6-a19b-413f-9509-f4e81e2b59c6.png",
+          "original_archive_sha256_actual": "6ccf27ba7a9aea3e5845d397d9b2e197dfe7bd74b6a13d662fb0a1c656005185",
+          "original_archive_equals_raw": true,
+          "reason": "Central rings merge into spiral-like knot; less clear cut-stump silhouette.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "stump_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 469,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              469
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/stump_02.png",
+          "processed_sha256_actual": "5d9c8bc704330aad1191f5c70be0193f3d96d0be0f5b73c1876a6f3ede01d6b0",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/stump_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/stump_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "2bffe48484015e62132c660b3cbf13206c296bbebf9028db1a82af9804181d9f",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "837581c694ca12280241ea6f9f8b8e7638a1d35a3aea31f066ef8ca3a8108393"
+        }
+      ]
+    },
+    {
+      "name": "deadwood",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "deadwood_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/deadwood_01.png",
+          "raw_sha256_actual": "02d733c183828850a43bb86dcd9bd0801c60b566efbc64ce0a7a7d763e096f33",
+          "raw_sha256_recorded": "02d733c183828850a43bb86dcd9bd0801c60b566efbc64ce0a7a7d763e096f33",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-93ecd858-8358-48af-9e9d-86961ba6179e.png",
+          "original_archive_sha256_actual": "02d733c183828850a43bb86dcd9bd0801c60b566efbc64ce0a7a7d763e096f33",
+          "original_archive_equals_raw": true,
+          "reason": "Several crossed forked branches form a connected irregular deadwood heap.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "deadwood_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 319,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              319
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/deadwood_01.png",
+          "processed_sha256_actual": "c9f479596f2aaa041b2395e6824bc47b7c124969d7e015013b771a126bbee0f9",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/deadwood_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/deadwood_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "d287bed13a990e0c77a89d16b3141db89265fc70181518100caeb2168153424f",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "5adad23c07949da0175c430fe8ade0824205078ebb23dd8da8cd7082cf25924f"
+        },
+        {
+          "id": "deadwood_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/wood/raw/deadwood_02.png",
+          "raw_sha256_actual": "102836f556650ba986d77b1f730c950bdbdc1c2613d426c69db5aed38b3a404d",
+          "raw_sha256_recorded": "102836f556650ba986d77b1f730c950bdbdc1c2613d426c69db5aed38b3a404d",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-49ce5ca2-29b2-4d54-9666-55352bddf5ad.png",
+          "original_archive_sha256_actual": "102836f556650ba986d77b1f730c950bdbdc1c2613d426c69db5aed38b3a404d",
+          "original_archive_equals_raw": true,
+          "reason": "Too sparse for pile and contains detached two-pixel fragment despite mechanical pass.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "deadwood_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 224,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              222,
+              2
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/wood/processed/deadwood_02.png",
+          "processed_sha256_actual": "dd158af638ded22946674f167bdfbae6997361e6ac4beb1185cafc522d8cabc6",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/wood/prompts/deadwood_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/wood/timing/deadwood_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "299ce0eb2bfe6e241c0af7733fda4371ee5189499ddd0d17111947b28932ce58",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "99eda774215ed3fc463ac0520b7693c86b2aaba12086f5d71c4ea3116d67b3e9"
+        }
+      ]
+    },
+    {
+      "name": "hearth_0",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "hearth_01_frame_0",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/hearth_01.png",
+          "raw_sha256_actual": "638d85475f44c5aba5cc0e42cbc883715d5669f218b3ae57a6f1960a75f45686",
+          "raw_sha256_recorded": "638d85475f44c5aba5cc0e42cbc883715d5669f218b3ae57a6f1960a75f45686",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-0054d790-ae10-4c86-91e3-cbcefd3974dc.png",
+          "original_archive_sha256_actual": "638d85475f44c5aba5cc0e42cbc883715d5669f218b3ae57a6f1960a75f45686",
+          "original_archive_equals_raw": true,
+          "reason": "Strong orange flame with left tongue in readable stone ring; stone ring drifts between frames and exceeds four gray values.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "hearth_01_frame_0",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 604,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              604
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/hearth_01_frame_0.png",
+          "processed_sha256_actual": "ee03abfde289229b81b0af945b62f0fff3736dfa3e2ceabd7c2e69105fc2753e",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/hearth_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/hearth_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "0fdada24a6668ac2fa49ecdb9a3a63948d3440a8973cc4b93cd1598acadd652e",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "cbfbc826aa63a010649f33a7bdff0e99c8bc04050dfc2c49c46af47e581d9740"
+        },
+        {
+          "id": "hearth_02_frame_0",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/hearth_02.png",
+          "raw_sha256_actual": "8c902f8fd3a13ccb30afc94cb2ecdc40cd29892e5393a434183213db56b54e20",
+          "raw_sha256_recorded": "8c902f8fd3a13ccb30afc94cb2ecdc40cd29892e5393a434183213db56b54e20",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-2a6643e2-35b6-45e7-9981-acef9e4e3bd7.png",
+          "original_archive_sha256_actual": "8c902f8fd3a13ccb30afc94cb2ecdc40cd29892e5393a434183213db56b54e20",
+          "original_archive_equals_raw": true,
+          "reason": "Fire too small and weak; crossed logs dominate.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "hearth_02_frame_0",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 595,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              595
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/hearth_02_frame_0.png",
+          "processed_sha256_actual": "1dc8237ee5459d2ae2e5ccd49ea789f4bb57094018bb7ae7c29f3ba10dc1cfab",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/hearth_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/hearth_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "b218042ac41e766be225cf93fbf5476f65fa55133ff93ab96616c3f5f9d90519",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "de749c9ca50c86e8d3af194486420caa79fb57f6b10d7c0335b50daa4aabb567"
+        }
+      ]
+    },
+    {
+      "name": "hearth_1",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "hearth_01_frame_1",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/hearth_01.png",
+          "raw_sha256_actual": "638d85475f44c5aba5cc0e42cbc883715d5669f218b3ae57a6f1960a75f45686",
+          "raw_sha256_recorded": "638d85475f44c5aba5cc0e42cbc883715d5669f218b3ae57a6f1960a75f45686",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-0054d790-ae10-4c86-91e3-cbcefd3974dc.png",
+          "original_archive_sha256_actual": "638d85475f44c5aba5cc0e42cbc883715d5669f218b3ae57a6f1960a75f45686",
+          "original_archive_equals_raw": true,
+          "reason": "Distinct tall rightward tongue versus frame0; stone ring drifts and exceeds four gray values.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "hearth_01_frame_1",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 604,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              604
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/hearth_01_frame_1.png",
+          "processed_sha256_actual": "1729d71e2aa8e6dba71ea6082117b4675210890edbd62a7b582ddd788f51b822",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/hearth_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/hearth_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "0fdada24a6668ac2fa49ecdb9a3a63948d3440a8973cc4b93cd1598acadd652e",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "cbfbc826aa63a010649f33a7bdff0e99c8bc04050dfc2c49c46af47e581d9740"
+        },
+        {
+          "id": "hearth_02_frame_1",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/hearth_02.png",
+          "raw_sha256_actual": "8c902f8fd3a13ccb30afc94cb2ecdc40cd29892e5393a434183213db56b54e20",
+          "raw_sha256_recorded": "8c902f8fd3a13ccb30afc94cb2ecdc40cd29892e5393a434183213db56b54e20",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-2a6643e2-35b6-45e7-9981-acef9e4e3bd7.png",
+          "original_archive_sha256_actual": "8c902f8fd3a13ccb30afc94cb2ecdc40cd29892e5393a434183213db56b54e20",
+          "original_archive_equals_raw": true,
+          "reason": "Fire too small and distinction weak.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "hearth_02_frame_1",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 598,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              598
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/hearth_02_frame_1.png",
+          "processed_sha256_actual": "9abf53b3a47e2147f9769322bfa5938eaa25ff2aaec13b3ee441a1095695a514",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/hearth_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/hearth_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "b218042ac41e766be225cf93fbf5476f65fa55133ff93ab96616c3f5f9d90519",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "de749c9ca50c86e8d3af194486420caa79fb57f6b10d7c0335b50daa4aabb567"
+        },
+        {
+          "id": "hearth_edit_03",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/hearth_edit_03.png",
+          "raw_sha256_actual": "65857360a4051ef60016da06ab0685047f5b405384f57769d6b1b51d38fe30df",
+          "raw_sha256_recorded": "65857360a4051ef60016da06ab0685047f5b405384f57769d6b1b51d38fe30df",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-d07cebf1-e093-49bf-a4cf-1405ff6c0933.png",
+          "original_archive_sha256_actual": "65857360a4051ef60016da06ab0685047f5b405384f57769d6b1b51d38fe30df",
+          "original_archive_equals_raw": true,
+          "reason": "Flame-only edit failed geometry preservation:128outer-ring pixels changed versus57in original pair; retain original pair asANIMATION_PARTIAL.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "hearth_edit_03",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 606,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              606
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/hearth_edit_03.png",
+          "processed_sha256_actual": "5afb1dd8014694319b853cf08120b98acf9040f48f47b8b0e240a9f32e22e0f5",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/hearth_edit_03.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/hearth_edit_03.json",
+          "check_sidecar": "/Users/rexxa/work/arttrial-data/props/processed/hearth_edit_03.json",
+          "check_sidecar_sha256": "a649226150f66a9fa79eb13e14bf763ccb77cdff373c5522a97b46c4454469fa",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "15dd21525218974dd1d46bc84fe805e48b977c43d44f450918fabc4b46616913",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "dba643399308d9ccaf99d1ff14206db0fac5980ac32f8c909a61f8ede2d48038"
+        }
+      ]
+    },
+    {
+      "name": "berry_bush_full",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "berry_bush_full_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/berry_bush_full_01.png",
+          "raw_sha256_actual": "f21b1b93634459b6c7df30ffbda6a50255095e4ea9decc2289c5aeefd1635dba",
+          "raw_sha256_recorded": "f21b1b93634459b6c7df30ffbda6a50255095e4ea9decc2289c5aeefd1635dba",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-326d8783-ad1e-4587-b0aa-87e031b9924f.png",
+          "original_archive_sha256_actual": "f21b1b93634459b6c7df30ffbda6a50255095e4ea9decc2289c5aeefd1635dba",
+          "original_archive_equals_raw": true,
+          "reason": "Quiet four-value olive crown with visible dull red berries; twig material exceeds strict four-value limit.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "berry_bush_full_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 535,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              535
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_full_01.png",
+          "processed_sha256_actual": "fd6c1a6520abc8ffa50e2c245dc53575e5b6afca5f23dcedc7133b812f5f6a21",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/berry_bush_full_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/berry_bush_full_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "5435fcb6f54e4928e548f1e08b6f9c3149c5140e205d59e7aa8c456e3824808f",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "1b754f72ebed440f9456ee4abac180017743f982e0057991c910142022668f6f"
+        },
+        {
+          "id": "berry_bush_full_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/berry_bush_full_02.png",
+          "raw_sha256_actual": "78d6141ac0cac417185847949acdbe5dadaf4792cd8d65633f00bbe8a876e1d7",
+          "raw_sha256_recorded": "78d6141ac0cac417185847949acdbe5dadaf4792cd8d65633f00bbe8a876e1d7",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-9fd9069e-9ded-477b-9a5e-af082fd6407c.png",
+          "original_archive_sha256_actual": "78d6141ac0cac417185847949acdbe5dadaf4792cd8d65633f00bbe8a876e1d7",
+          "original_archive_equals_raw": true,
+          "reason": "Bright green and pink berry highlights compete with people; five foliage values.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "berry_bush_full_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 540,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              540
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_full_02.png",
+          "processed_sha256_actual": "8b0cdfff3c52f749972b7b5e50c802b4c19a3fbcba5be40bba4deedc3aebb214",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/berry_bush_full_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/berry_bush_full_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "eeca9cc07cec92553b952fce4cdbaccfb57252c3caf3c53827825f077560a055",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "0f656b9a474589fb100d7720e038a1a9ac5b802ecf8579e52670885823dcf793"
+        }
+      ]
+    },
+    {
+      "name": "berry_bush_bare",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "berry_bush_bare_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/berry_bush_bare_02.png",
+          "raw_sha256_actual": "d689662aa02ba8d2806a99e7e44d9b2dd9457af5f7208856890bf9f5a8b9f0dd",
+          "raw_sha256_recorded": "d689662aa02ba8d2806a99e7e44d9b2dd9457af5f7208856890bf9f5a8b9f0dd",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-cdd5152a-877c-4923-8822-49741e736cea.png",
+          "original_archive_sha256_actual": "d689662aa02ba8d2806a99e7e44d9b2dd9457af5f7208856890bf9f5a8b9f0dd",
+          "original_archive_equals_raw": true,
+          "reason": "Three foliage values, harvested state clear without berries; sparse twig colors exceed four-value rule and silhouette differs slightly from full.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "berry_bush_bare_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 530,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              530
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_bare_02.png",
+          "processed_sha256_actual": "9e642ff7b5e779e1d6be8644b6c6df6fd81c6c7c576ae92fb06b9f2ffe5c5ecc",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/berry_bush_bare_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/berry_bush_bare_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "4a8dbcc75670162acaf89210c0755fd6404a7a0cf0e8d1602808f4ac27eac49e",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "c3dbb1aa679b752f2d66dc19e6fc8c702f96236bc8ef83e4a0c7ecfb81269066"
+        },
+        {
+          "id": "berry_bush_bare_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/berry_bush_bare_01.png",
+          "raw_sha256_actual": "0c1d09761d1626871f93275a3a48da368978cf90955ca8d4cc4b468459ce3691",
+          "raw_sha256_recorded": "0c1d09761d1626871f93275a3a48da368978cf90955ca8d4cc4b468459ce3691",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-14732e59-f33e-42e2-b055-e6f591f7127f.png",
+          "original_archive_sha256_actual": "0c1d09761d1626871f93275a3a48da368978cf90955ca8d4cc4b468459ce3691",
+          "original_archive_equals_raw": true,
+          "reason": "Four foliage values and more tiny twig-color noise than02.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "berry_bush_bare_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 547,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              547
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/berry_bush_bare_01.png",
+          "processed_sha256_actual": "fd8577442173651df4612d40ae6af7d40b280be59ee49709bacc3483fc7c79c3",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/berry_bush_bare_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/berry_bush_bare_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "b68aa9e4887d5efed59d8912145db01f042ae1d3d9a5424fa1c0fc7df16a9ac8",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "98b5ec0f8192bb2999a672d404ab3519f6a8d5aacf212cefcf8f3d696dd31a42"
+        }
+      ]
+    },
+    {
+      "name": "boulder",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "boulder_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/boulder_01.png",
+          "raw_sha256_actual": "c0ab316d11359f1ce852f0bb3fe4bc034d7830d8f031946ced15a2659ba77169",
+          "raw_sha256_recorded": "c0ab316d11359f1ce852f0bb3fe4bc034d7830d8f031946ced15a2659ba77169",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-1deab58f-7275-4a58-95ba-f6d4c70e1786.png",
+          "original_archive_sha256_actual": "c0ab316d11359f1ce852f0bb3fe4bc034d7830d8f031946ced15a2659ba77169",
+          "original_archive_equals_raw": true,
+          "reason": "Quiet broad asymmetrical gray boulder with upper-left light; more than four stone values survive.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "boulder_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 614,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              614
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/boulder_01.png",
+          "processed_sha256_actual": "5d4811e307105b110263886de4ae9d3fb034496804699186b192b5cff1543016",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/boulder_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/boulder_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "bf4d88137c54fe08727eb18821d7ea42ee10b2829f5a2e95cb8e8610ef55a550",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "4e664251a3b22aa0abe1f355bb11cbea513a756375d1f23248d8f281bcfff877"
+        },
+        {
+          "id": "boulder_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/boulder_02.png",
+          "raw_sha256_actual": "9a48e521cc63591cdc4f9216d79ca597987dfdd73303f5194ce55e8caa104676",
+          "raw_sha256_recorded": "9a48e521cc63591cdc4f9216d79ca597987dfdd73303f5194ce55e8caa104676",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-1cc8805d-c8d1-4084-a9e3-49d8cc047b2a.png",
+          "original_archive_sha256_actual": "9a48e521cc63591cdc4f9216d79ca597987dfdd73303f5194ce55e8caa104676",
+          "original_archive_equals_raw": true,
+          "reason": "Bright white broad plane competes with people and central crack too dominant.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "boulder_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 591,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              591
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/boulder_02.png",
+          "processed_sha256_actual": "a7d61c3dd70aee82568736007d204910c8f6a5326bd1d5c4b4b854ad926bb858",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/boulder_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/boulder_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "2072cc679bff3c4afe7f8b3118ede068291f29fc2db18687aec91ba01eb49db9",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "4bbcaeb8d06ba81cccabc387fc515df9d3e23c8fea3bbfdda538708d0056c414"
+        }
+      ]
+    },
+    {
+      "name": "stockpile_floor_corner",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "stockpile_floor_corner_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/stockpile_floor_corner_01.png",
+          "raw_sha256_actual": "6e6612bca7bc173a8fa05679692d3378e744a4cba2abe5ff54b8a413992a96ae",
+          "raw_sha256_recorded": "6e6612bca7bc173a8fa05679692d3378e744a4cba2abe5ff54b8a413992a96ae",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-a62f7268-a3b8-425c-b971-fb361ca222ef.png",
+          "original_archive_sha256_actual": "6e6612bca7bc173a8fa05679692d3378e744a4cba2abe5ff54b8a413992a96ae",
+          "original_archive_equals_raw": true,
+          "reason": "Quiet tamped earth with corner stake and subdued north/west wear; seamless joining unverified.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "stockpile_floor_corner_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 962,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              962
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_corner_01.png",
+          "processed_sha256_actual": "a47d0d043fb0163563769c05da43a2394c642d3b5e63ee0224094601a452adef",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/stockpile_floor_corner_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/stockpile_floor_corner_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "c681ba285256e7659f4a6144f0ff06feeebd2e583fd3db0f8080f0a3d473357d",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "991a3da6ff147a8d25b26dfb060ba7fd31dbea1294cd8fad3e0a55afd64608b4"
+        },
+        {
+          "id": "stockpile_floor_corner_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/stockpile_floor_corner_02.png",
+          "raw_sha256_actual": "2405d14745951e63cf17b5da03f462605949ca88cd1adf403b63d88a5e449444",
+          "raw_sha256_recorded": "2405d14745951e63cf17b5da03f462605949ca88cd1adf403b63d88a5e449444",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-040b68c4-c782-478e-acd7-41d3f5be4f35.png",
+          "original_archive_sha256_actual": "2405d14745951e63cf17b5da03f462605949ca88cd1adf403b63d88a5e449444",
+          "original_archive_equals_raw": true,
+          "reason": "Noisier high-contrast mottling and excessive soil values.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "stockpile_floor_corner_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 961,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              961
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_corner_02.png",
+          "processed_sha256_actual": "21bf0f3c34b55923ef55977875342cbcddf1659f813cfb0e1713b24a88f8a9b2",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/stockpile_floor_corner_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/stockpile_floor_corner_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "049edd2fb296c1efffca5fde648c7bd9b6b27d2c6388bcf965d37afe202d57bd",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "e160954f78785fa98212a31e8caafbe47a598b16f142ec655c86f3ad8c752fe0"
+        }
+      ]
+    },
+    {
+      "name": "stockpile_floor_edge",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "stockpile_floor_edge_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/stockpile_floor_edge_01.png",
+          "raw_sha256_actual": "15f0af246fa70f2ae2c0935f541c080318bb3ecd6da0d5dd4552f6e2f49b78d6",
+          "raw_sha256_recorded": "15f0af246fa70f2ae2c0935f541c080318bb3ecd6da0d5dd4552f6e2f49b78d6",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-50708b34-be83-4617-90a7-fa937ed933a0.png",
+          "original_archive_sha256_actual": "15f0af246fa70f2ae2c0935f541c080318bb3ecd6da0d5dd4552f6e2f49b78d6",
+          "original_archive_equals_raw": true,
+          "reason": "North stake and quiet trodden boundary distinguish edge tile; seamless joining unverified.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "stockpile_floor_edge_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 961,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              961
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_edge_01.png",
+          "processed_sha256_actual": "e7c507c33ca2f17ae7aa6961c99f33d11488a87aa5c7bd6efc637e50f02deb16",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/stockpile_floor_edge_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/stockpile_floor_edge_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "5987988fa94e2df724628eaa8f339cb350872dcd2f51298c74c368d68fc980bf",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "a32a20e131a369a2879f9c9c175e2b8e7405314e6fa328ed5cd2f750479fe2df"
+        },
+        {
+          "id": "stockpile_floor_edge_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/stockpile_floor_edge_02.png",
+          "raw_sha256_actual": "abd309c3d5d3c4a46e97b4213c90def72b9cf46bc0120931ca26afccef5c2241",
+          "raw_sha256_recorded": "abd309c3d5d3c4a46e97b4213c90def72b9cf46bc0120931ca26afccef5c2241",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-b1cba825-0f8a-403c-b198-c1c24c5c0894.png",
+          "original_archive_sha256_actual": "abd309c3d5d3c4a46e97b4213c90def72b9cf46bc0120931ca26afccef5c2241",
+          "original_archive_equals_raw": true,
+          "reason": "Hallucinated stone ring instead of plain ground tile.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "stockpile_floor_edge_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1020,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1020
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_edge_02.png",
+          "processed_sha256_actual": "fd18d4a70d66c2ee9b0e476b7d5543ccab821d9794b1ff4a4c8d16278de13c36",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/stockpile_floor_edge_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/stockpile_floor_edge_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "e68701e6622280da48254086418d00b67942321d24bec183f7e1d5be75c03b36",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "576718df4cdee33cd41643d499368b729e6cf30958dfe6c99cde07252781a201"
+        }
+      ]
+    },
+    {
+      "name": "stockpile_floor_interior",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "stockpile_floor_interior_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/stockpile_floor_interior_02.png",
+          "raw_sha256_actual": "77bb5ba7c846c2d3dc3ad54fa26186e11dac7764d4b28543aef8e2d5a6a4b74c",
+          "raw_sha256_recorded": "77bb5ba7c846c2d3dc3ad54fa26186e11dac7764d4b28543aef8e2d5a6a4b74c",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-1b52a2bc-a463-46c1-b832-46c6c83a7e48.png",
+          "original_archive_sha256_actual": "77bb5ba7c846c2d3dc3ad54fa26186e11dac7764d4b28543aef8e2d5a6a4b74c",
+          "original_archive_equals_raw": true,
+          "reason": "Quiet four-value tamped earth, faint corner stake; seamless joining unverified.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "stockpile_floor_interior_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1023,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1023
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_interior_02.png",
+          "processed_sha256_actual": "3cb8c49c31abf7fc8c4689650faf95f1c21266af1686b3bb668074451c932795",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/stockpile_floor_interior_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/stockpile_floor_interior_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "790a4d007b4081bc55078cc91ea4a9ad9f7ae4f0bfd65536159d962e7abd5ff6",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "601ebb67c4ce7c32e032f8f01b3226abad2059713a7ba48de852d9d367a89c20"
+        },
+        {
+          "id": "stockpile_floor_interior_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/props/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/props/raw/stockpile_floor_interior_01.png",
+          "raw_sha256_actual": "c02744e2a9889b7575b5457080e041c0e496d6fa528b449df12be8e25acfbd90",
+          "raw_sha256_recorded": "c02744e2a9889b7575b5457080e041c0e496d6fa528b449df12be8e25acfbd90",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e7a-7c1c-7b61-bfd8-4119f29c76ae/exec-c28910a2-f3ff-487a-a872-9d833a874d70.png",
+          "original_archive_sha256_actual": "c02744e2a9889b7575b5457080e041c0e496d6fa528b449df12be8e25acfbd90",
+          "original_archive_equals_raw": true,
+          "reason": "Busier dark mottling and prominent corner stake attract attention.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "stockpile_floor_interior_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1024,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1024
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/props/processed/stockpile_floor_interior_01.png",
+          "processed_sha256_actual": "7b3ccbdd4bef8851417a4446559d833faf04cc157d5a50cbb95a0bf2450653a5",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/props/prompts/stockpile_floor_interior_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/props/timing/stockpile_floor_interior_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "c26fbf9bf683228938e4f2d9c1ca76afd18fa3a57bd23f27c4225d5077678f6c",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "8a06b10fde99061a06017137f2359a3d21b05cdf2a2ae6b3c379e6631fd643d1"
+        }
+      ]
+    },
+    {
+      "name": "tree_oak_s",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "tree_oak_candidate_01",
+          "record_source": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/CANDIDATES.md",
+          "raw_path": "/Users/rexxa/work/arttrial-data/raw/tree_oak_candidate_01.png",
+          "raw_sha256_actual": "8753c845c5a1f7047495f90eedce2be309b2ccdf3e25560cbeee43e8ed2de031",
+          "raw_sha256_recorded": "8753c845c5a1f7047495f90eedce2be309b2ccdf3e25560cbeee43e8ed2de031",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e68-f163-7bb1-b2a9-a28de3ecb5b8/exec-51ddfc7d-19f2-48af-a0ed-e03253e78d8e.png",
+          "original_archive_sha256_actual": "8753c845c5a1f7047495f90eedce2be309b2ccdf3e25560cbeee43e8ed2de031",
+          "original_archive_equals_raw": true,
+          "reason": "| tree_oak_s | `raw/tree_oak_candidate_01.png`; processed 48\u00d748, 1,392 visible px, 1,149 moved \u0394E>8 | `raw/tree_oak_candidate_02.png`; processed 48\u00d748, 1,356 visible px, 650 moved \u0394E>8 | Accept 1 as first tree reference. At final scale it has a round canopy, subdued green lobes and visible short trunk. Reject 2: the isolated yellow highlight and tall lobed silhouette compete with the intended quiet canopy. A lower movement count does not override visual reading. |",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "tree_oak_candidate_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1392,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1392
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/processed/tree_oak_candidate_01.png",
+          "processed_sha256_actual": "a574baea0e9db007f08adf1d3302db8d695b9915f9b0745470701e4cb1134339",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/raw/tree_oak_candidate_01.prompt.txt",
+          "timing_path": null,
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "e5449438509817260cb40e366e751a364e047d07f83412a7d6f8536d5f51d8d8",
+          "timing_path_exists": false,
+          "timing_path_sha256_actual": null
+        },
+        {
+          "id": "tree_oak_candidate_02",
+          "record_source": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/CANDIDATES.md",
+          "raw_path": "/Users/rexxa/work/arttrial-data/raw/tree_oak_candidate_02.png",
+          "raw_sha256_actual": "d34e3f1ca9499110f90fe36cd1c0ad5392bbe42801d4b9963d4f9eb70f287ad9",
+          "raw_sha256_recorded": "d34e3f1ca9499110f90fe36cd1c0ad5392bbe42801d4b9963d4f9eb70f287ad9",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e68-f163-7bb1-b2a9-a28de3ecb5b8/exec-d7df95ce-f9bb-4f05-a3da-72a63f631cd9.png",
+          "original_archive_sha256_actual": "d34e3f1ca9499110f90fe36cd1c0ad5392bbe42801d4b9963d4f9eb70f287ad9",
+          "original_archive_equals_raw": true,
+          "reason": "| tree_oak_s | `raw/tree_oak_candidate_01.png`; processed 48\u00d748, 1,392 visible px, 1,149 moved \u0394E>8 | `raw/tree_oak_candidate_02.png`; processed 48\u00d748, 1,356 visible px, 650 moved \u0394E>8 | Accept 1 as first tree reference. At final scale it has a round canopy, subdued green lobes and visible short trunk. Reject 2: the isolated yellow highlight and tall lobed silhouette compete with the intended quiet canopy. A lower movement count does not override visual reading. |",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "tree_oak_candidate_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 1356,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              1356
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/processed/tree_oak_candidate_02.png",
+          "processed_sha256_actual": "0e0b0db62f3d19de1a6a7f9d2ff64a48c2e0a300a896b4419224e8cc0403dd2c",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/raw/tree_oak_candidate_02.prompt.txt",
+          "timing_path": null,
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "6f89cdc6753557944156f46fe65c837fd52fbb399fd063130b084554a3d873a2",
+          "timing_path_exists": false,
+          "timing_path_sha256_actual": null
+        }
+      ]
+    },
+    {
+      "name": "hut",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "hut_candidate_01",
+          "record_source": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/CANDIDATES.md",
+          "raw_path": "/Users/rexxa/work/arttrial-data/raw/hut_candidate_01.png",
+          "raw_sha256_actual": "31365e8a7f799fafd4820a71fe770413b1eae2c50a6832f6afa31f441137a031",
+          "raw_sha256_recorded": "31365e8a7f799fafd4820a71fe770413b1eae2c50a6832f6afa31f441137a031",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e68-f163-7bb1-b2a9-a28de3ecb5b8/exec-fbd66761-1c18-417e-9a3e-3cd8b8f207fe.png",
+          "original_archive_sha256_actual": "31365e8a7f799fafd4820a71fe770413b1eae2c50a6832f6afa31f441137a031",
+          "original_archive_equals_raw": true,
+          "reason": "| hut | `raw/hut_candidate_01.png`; processed 96\u00d796, 8,114 visible px, 2,099 moved \u0394E>8 | `raw/hut_candidate_02.png`; processed 96\u00d796, 7,975 visible px, 930 moved \u0394E>8 | Accept 2 as first building reference. Wider clear floor and four separated bedrolls, central stone ring and south doorway survive reduction. Reject 1: noisier floor/wood and narrower usable interior. |",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "hut_candidate_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 8114,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              8114
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_01.png",
+          "processed_sha256_actual": "1303b7a9bcbfa3d7ce2ba0d0e200444f6e0cd633c2686c7fbb0dd8beb745d0e1",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/raw/hut_candidate_01.prompt.txt",
+          "timing_path": null,
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "f7e81b9fa2f6d55397d1f07b87583a7fb8c0954fb9183365f49aa733c4a57f8c",
+          "timing_path_exists": false,
+          "timing_path_sha256_actual": null
+        },
+        {
+          "id": "hut_candidate_02",
+          "record_source": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/CANDIDATES.md",
+          "raw_path": "/Users/rexxa/work/arttrial-data/raw/hut_candidate_02.png",
+          "raw_sha256_actual": "9a71399aefaebdb7d096967f35e4f3fef6113a304a02a7752aaf395a3ece51c0",
+          "raw_sha256_recorded": "9a71399aefaebdb7d096967f35e4f3fef6113a304a02a7752aaf395a3ece51c0",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e68-f163-7bb1-b2a9-a28de3ecb5b8/exec-7cb82a8b-0efb-42ee-b8fa-e8adeb72f91e.png",
+          "original_archive_sha256_actual": "9a71399aefaebdb7d096967f35e4f3fef6113a304a02a7752aaf395a3ece51c0",
+          "original_archive_equals_raw": true,
+          "reason": "| hut | `raw/hut_candidate_01.png`; processed 96\u00d796, 8,114 visible px, 2,099 moved \u0394E>8 | `raw/hut_candidate_02.png`; processed 96\u00d796, 7,975 visible px, 930 moved \u0394E>8 | Accept 2 as first building reference. Wider clear floor and four separated bedrolls, central stone ring and south doorway survive reduction. Reject 1: noisier floor/wood and narrower usable interior. |",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "hut_candidate_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 7975,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              7975
+            ],
+            "reference_delta_e": null
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/processed/hut_candidate_02.png",
+          "processed_sha256_actual": "b89087a1f6dcb54a385f97f5f4d39c3031b3201bf3f89c88af881dcdbf1214d1",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/raw/hut_candidate_02.prompt.txt",
+          "timing_path": null,
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "3b5e51fa1d1d2194ae29de138a17226746abb8617e28add0316bb6f07720a746",
+          "timing_path_exists": false,
+          "timing_path_sha256_actual": null
+        }
+      ]
+    },
+    {
+      "name": "lean_to",
+      "kind": "generated_object",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "lean_to_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/buildings/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/raw/lean_to_01.png",
+          "raw_sha256_actual": "b9f2e3630474240b824ef892ac08b0cf2fce7d281842ce498d87cac525f66442",
+          "raw_sha256_recorded": "b9f2e3630474240b824ef892ac08b0cf2fce7d281842ce498d87cac525f66442",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e68-f163-7bb1-b2a9-a28de3ecb5b8/exec-59950883-3de1-4cdb-9ab3-bcf8dd430200.png",
+          "original_archive_sha256_actual": "b9f2e3630474240b824ef892ac08b0cf2fce7d281842ce498d87cac525f66442",
+          "original_archive_equals_raw": true,
+          "reason": "Central peaked ridge and bright split planes read as closed pitched tent; candidate02 has clearer open south shelter face. Four posts also remain.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "name": "lean_to_01",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 870,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              870
+            ],
+            "reference_delta_e": 7.092363102513808
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/buildings/lean_to_01.png",
+          "processed_sha256_actual": "0fb6f66fe735e37af4a32ec8e645fc8a43eeaaa504da0bf0b8f7b4e524b24399",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/raw/lean_to_01.prompt.txt",
+          "timing_path": "/Users/rexxa/work/arttrial-data/raw/lean_to_01.timing.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "1aa72832c03b61b8a67ac5582a0f7b993e6a67abe64c1fb2a832600a3f966782",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "97461e26cd8d4a56fa180c667f1824b01429341cf48bdfbbf5a369e9c69d84f1"
+        },
+        {
+          "id": "lean_to_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/buildings/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/raw/lean_to_02.png",
+          "raw_sha256_actual": "c3cf5826cadefa956f3bb67dfc62c83a2a9a84ea9f0be11e5c7178bbe0646fd5",
+          "raw_sha256_recorded": "c3cf5826cadefa956f3bb67dfc62c83a2a9a84ea9f0be11e5c7178bbe0646fd5",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e68-f163-7bb1-b2a9-a28de3ecb5b8/exec-9fc79477-3c53-469b-aee5-00ce5c81eab3.png",
+          "original_archive_sha256_actual": "c3cf5826cadefa956f3bb67dfc62c83a2a9a84ea9f0be11e5c7178bbe0646fd5",
+          "original_archive_equals_raw": true,
+          "reason": "Single sloping hide surface and broad south-facing dark opening read as shelter more directly than candidate01 pitched tent. Calmer four-value hide and wood retain top-down footprint. Four support posts remain despite brief requesting two poles; no geometry edit to hide discrepancy.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "name": "lean_to_02",
+            "passed": true,
+            "errors": [],
+            "visible_pixels": 683,
+            "palette_compliance": 1.0,
+            "component_sizes": [
+              683
+            ],
+            "reference_delta_e": 6.56089830197199
+          },
+          "processed_path": "/Users/rexxa/work/arttrial-data/buildings/lean_to_02.png",
+          "processed_sha256_actual": "445958e36c63d407312c5c6990326a73978649796fc0844c8281b92464c4d4d1",
+          "prompt_path": "/Users/rexxa/work/arttrial-data/raw/lean_to_02.prompt.txt",
+          "timing_path": "/Users/rexxa/work/arttrial-data/raw/lean_to_02.timing.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "8fc38ecbe11c31fe0869dad2ff28ce7a1e7f2d3aee4d552d41547cf5fd51388c",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "7bb4de925921c3f85cc370c8ce3a37fba57ea17295f89099e08d22c7ee128c0c"
+        }
+      ]
+    },
+    {
+      "name": "ground_dark_grass",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "ground_dark_grass_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dark_grass_candidate_01.png",
+          "raw_sha256_actual": "b31086b05cf297f3930e3d201aac938cf1ac5419d341b9ac2f6ced55a8a05531",
+          "raw_sha256_recorded": "b31086b05cf297f3930e3d201aac938cf1ac5419d341b9ac2f6ced55a8a05531",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-dde40977-2ff9-4405-b3c8-ab174c3d6ba6.png",
+          "original_archive_sha256_actual": "b31086b05cf297f3930e3d201aac938cf1ac5419d341b9ac2f6ced55a8a05531",
+          "original_archive_equals_raw": true,
+          "reason": "Selected candidate 1: sparser calmer blades.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dark_grass_candidate_01.png",
+            "source_sha256": "b31086b05cf297f3930e3d201aac938cf1ac5419d341b9ac2f6ced55a8a05531",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dark_grass_candidate_01.png",
+            "output_sha256": "77baff007691bc9eb8325fdfab7a618b752750a6abe5d502df3388ea20674517",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 4,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.14192670226149856,
+                "interior_mean": 0.4246830627087038,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.10069677765654751,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.37956090352983385,
+                "interior_mean": 0.25937006612090596,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.06734147547895612,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.3350645226083015,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.047308900753832324,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.6336912033822273,
+                  "interior_mean": 0.18766949868147667,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.4915772945205032,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.5677068090459942,
+                  "interior_mean": 0.47967578482254597,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.03297718655935339,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.18923560301533143,
+                  "interior_mean": 0.3204924370929226,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.025791242459725368,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": true
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_dark_grass_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_dark_grass_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "7963746834559be7a2c66a5a95bfd4642224eb65f2f7f633909b64669f80182b",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "d6af2c1457e82b57c8c0281018db7c55974f8e2aded143d0edb0d454a9cd3938"
+        },
+        {
+          "id": "ground_dark_grass_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dark_grass_candidate_02.png",
+          "raw_sha256_actual": "58c1afaf957a25645958375fe3f6910bc3905456807e800e5a3e667906d49b35",
+          "raw_sha256_recorded": "58c1afaf957a25645958375fe3f6910bc3905456807e800e5a3e667906d49b35",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-f9a128d4-57de-460c-88ff-658c6b807d2c.png",
+          "original_archive_sha256_actual": "58c1afaf957a25645958375fe3f6910bc3905456807e800e5a3e667906d49b35",
+          "original_archive_equals_raw": true,
+          "reason": "Reject candidate 2 despite seam PASS: denser repeated speckle competes more with items.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dark_grass_candidate_02.png",
+            "source_sha256": "58c1afaf957a25645958375fe3f6910bc3905456807e800e5a3e667906d49b35",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dark_grass_candidate_02.png",
+            "output_sha256": "a2d832e2b1911d02d38918842381976c16a569e80bc6bc75256824207898586e",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 1.1982280178246332,
+                "interior_mean": 0.6764811035741635,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.22322785122757494,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 1.0924635073348394,
+                "interior_mean": 0.4474694339671993,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.4863111135374596,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 1.2673824067644546,
+                  "interior_mean": 0.7158318308754307,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.5555695004586241,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.18923560301533143,
+                  "interior_mean": 0.5464726678505253,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.08200242947073817,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.18923560301533143,
+                  "interior_mean": 0.6640710750994476,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.1283292633675375,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.8229268063975588,
+                  "interior_mean": 0.4227006957029592,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.35036361349248896,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": true
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_dark_grass_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_dark_grass_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "2c064297c3e8654c215f224309bbf011e3bf99341eb9a2ec4e6ff5e88239d63d",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "2fd0fa202ab4af9b6ad70d4616db532f2388e8f97399ebfeb3d5840c023ffc6f"
+        }
+      ]
+    },
+    {
+      "name": "ground_dirt",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "ground_dirt_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dirt_candidate_01.png",
+          "raw_sha256_actual": "5cb9404065ca554ad26ebac3a28e604612a5855e2cf184c1e070c685f69b0b2f",
+          "raw_sha256_recorded": "5cb9404065ca554ad26ebac3a28e604612a5855e2cf184c1e070c685f69b0b2f",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-2412cf1c-fbdc-46a9-8717-a790d7f9a6e9.png",
+          "original_archive_sha256_actual": "5cb9404065ca554ad26ebac3a28e604612a5855e2cf184c1e070c685f69b0b2f",
+          "original_archive_equals_raw": true,
+          "reason": "Sparse warm dirt is visually calm but crop 0 exceeds the preregistered relative edge limit.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dirt_candidate_01.png",
+            "source_sha256": "5cb9404065ca554ad26ebac3a28e604612a5855e2cf184c1e070c685f69b0b2f",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dirt_candidate_01.png",
+            "output_sha256": "3363647e732264b1292cb69801fd49d99932b747fe21550368c3bd3bdcc3d103",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.5109054154501854,
+                "interior_mean": 0.44896774920239574,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.23969262905330974,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.7372583007456099,
+                "interior_mean": 0.45093578719968685,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.40854283471918446,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 2.3522970043291553,
+                  "interior_mean": 0.5169375566586675,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.6403373258635268,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 1.9660221353216265,
+                  "interior_mean": 0.48580812951921576,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.21499666920879287,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.35399858711161725,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.1393950988090249,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.7864088541286506,
+                  "interior_mean": 0.3793666146641544,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.34763946535375906,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.3932044270643253,
+                  "interior_mean": 0.6285807026449565,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.1292883914882401,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 1.9660221353216265,
+                  "interior_mean": 0.5241165363735747,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.3932044270643256,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                128,
+                128
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_dirt_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_dirt_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "d653bc5678e68edca63ea483a6d68751baca05314136b309f4f39deab9027321",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "c58751567ecc3523343916db9318b1d827a1b9f81b551ee3ef9116384f276c4a"
+        },
+        {
+          "id": "ground_dirt_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dirt_candidate_02.png",
+          "raw_sha256_actual": "3221ccf037ac4d5ee00611cc4b47bf8eb04fc979a25c093f4ad9fc68947d08d8",
+          "raw_sha256_recorded": "3221ccf037ac4d5ee00611cc4b47bf8eb04fc979a25c093f4ad9fc68947d08d8",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-e589636b-7b51-4f3d-8169-2f56e7afae47.png",
+          "original_archive_sha256_actual": "3221ccf037ac4d5ee00611cc4b47bf8eb04fc979a25c093f4ad9fc68947d08d8",
+          "original_archive_equals_raw": true,
+          "reason": "Dense grey mottling is visually noisy and prescribed crop seams fail.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_dirt_candidate_02.png",
+            "source_sha256": "3221ccf037ac4d5ee00611cc4b47bf8eb04fc979a25c093f4ad9fc68947d08d8",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_dirt_candidate_02.png",
+            "output_sha256": "04ce71869addb4e59abbd3c94f1fc33040dcbc0edae3de53c7d76f538803e701",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 3.793202777156464,
+                "interior_mean": 3.8172848933279986,
+                "relative_limit": 5.725927339991998,
+                "strip_mean_delta": 0.21560439123781827,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 3.6335870332779248,
+                "interior_mean": 3.8337976852958437,
+                "relative_limit": 5.750696527943766,
+                "strip_mean_delta": 0.3104253920633753,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 2.793616760642702,
+                  "interior_mean": 3.777003069000426,
+                  "relative_limit": 5.665504603500639,
+                  "strip_mean_delta": 2.616866427048521,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 6.122370400546744,
+                  "interior_mean": 3.528458611456347,
+                  "relative_limit": 5.29268791718452,
+                  "strip_mean_delta": 1.482037172498397,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 7.23438587102843,
+                  "interior_mean": 3.7560328710868083,
+                  "relative_limit": 5.634049306630212,
+                  "strip_mean_delta": 1.385499521455396,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 6.568130389503889,
+                  "interior_mean": 3.9200764705752906,
+                  "relative_limit": 5.880114705862936,
+                  "strip_mean_delta": 0.9643661111967929,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 5.931426812990534,
+                  "interior_mean": 3.3161648276340396,
+                  "relative_limit": 4.974247241451059,
+                  "strip_mean_delta": 1.3049112326994423,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 5.582910831078306,
+                  "interior_mean": 3.5235651022009327,
+                  "relative_limit": 5.2853476533013986,
+                  "strip_mean_delta": 0.9852195584255885,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                128,
+                128
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_dirt_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_dirt_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "026a669f7dfa0f4acf4bef4e1dbf2bf22fd7f523d28367a0214d6d673a33c85a",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "ad96fe6f3d2cbcc0d3a99b4c07740ea0b16f7d4b5d8924f0ded5a405a233a290"
+        }
+      ]
+    },
+    {
+      "name": "ground_forest_floor",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "ground_forest_floor_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_forest_floor_candidate_01.png",
+          "raw_sha256_actual": "4981e8ed11e3b68ac8e75b8acf0d62a666de04927e889f7803511e2c526c4e61",
+          "raw_sha256_recorded": "4981e8ed11e3b68ac8e75b8acf0d62a666de04927e889f7803511e2c526c4e61",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-1b2b0fec-aee9-4add-a58e-1688a6531d5f.png",
+          "original_archive_sha256_actual": "4981e8ed11e3b68ac8e75b8acf0d62a666de04927e889f7803511e2c526c4e61",
+          "original_archive_equals_raw": true,
+          "reason": "Leaf fragments are readable but prescribed crop boundaries fail the fixed edge rule.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_forest_floor_candidate_01.png",
+            "source_sha256": "4981e8ed11e3b68ac8e75b8acf0d62a666de04927e889f7803511e2c526c4e61",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_forest_floor_candidate_01.png",
+            "output_sha256": "7ecedd66a5fa65a12c0a684735df7cbab1f3e76ca9612b1324eb42d677a2f9ea",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 1.7147042990961527,
+                "interior_mean": 1.3994547734568445,
+                "relative_limit": 2.0991821601852667,
+                "strip_mean_delta": 0.30401812426199126,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 1.2613108126690267,
+                "interior_mean": 1.3952650462302092,
+                "relative_limit": 2.092897569345314,
+                "strip_mean_delta": 0.20325838497018303,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 2.004063147654803,
+                  "interior_mean": 1.5711110499112284,
+                  "relative_limit": 2.3566665748668427,
+                  "strip_mean_delta": 0.48981045527880457,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 2.0040631476548034,
+                  "interior_mean": 1.515694556928888,
+                  "relative_limit": 2.273541835393332,
+                  "strip_mean_delta": 0.4596496026224706,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 2.833756711948003,
+                  "interior_mean": 1.5169328851684294,
+                  "relative_limit": 2.275399327752644,
+                  "strip_mean_delta": 0.4113325940712742,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 1.3743394338885802,
+                  "interior_mean": 1.4232418642413112,
+                  "relative_limit": 2.1348627963619666,
+                  "strip_mean_delta": 1.1173590289033142,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 2.633786861421026,
+                  "interior_mean": 1.1036541905174868,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.15538246069578568,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 2.848663793040649,
+                  "interior_mean": 1.2158819494281796,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.8412691106939969,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                128,
+                128
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_forest_floor_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_forest_floor_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "174d7983639658204a30ae9f90d89a7b79c00b91efed07f408b95be9364e2b2b",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "0ae025200331ef72736bae8dd4cf4a0540fd4764802cbfc337ef2bb2926b3dfc"
+        },
+        {
+          "id": "ground_forest_floor_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_forest_floor_candidate_02.png",
+          "raw_sha256_actual": "a022820a58488af8d088e3a5578a614f43a48160e5132e83ed5b1e56866c1c14",
+          "raw_sha256_recorded": "a022820a58488af8d088e3a5578a614f43a48160e5132e83ed5b1e56866c1c14",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-07551c62-cb63-4468-9aa1-6e59a0604bf6.png",
+          "original_archive_sha256_actual": "a022820a58488af8d088e3a5578a614f43a48160e5132e83ed5b1e56866c1c14",
+          "original_archive_equals_raw": true,
+          "reason": "Bright twig flecks repeat regularly and prescribed crop boundaries fail.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_forest_floor_candidate_02.png",
+            "source_sha256": "a022820a58488af8d088e3a5578a614f43a48160e5132e83ed5b1e56866c1c14",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_forest_floor_candidate_02.png",
+            "output_sha256": "3a702ea7dab73e263380525a5f799a211607d9dc14e4e13e37bc289f951cc08c",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.6373932922095886,
+                "interior_mean": 1.0074343849823157,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.1283870454566283,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.3083045919175309,
+                "interior_mean": 0.9780852209528693,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.04698846816641582,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.31486185688311147,
+                  "interior_mean": 1.489536145805117,
+                  "relative_limit": 2.234304218707676,
+                  "strip_mean_delta": 0.6058057599330253,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 2.7869135446713686,
+                  "interior_mean": 1.5100807578529754,
+                  "relative_limit": 2.265121136779463,
+                  "strip_mean_delta": 1.2022122129979707,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 0.6297237137662229,
+                  "interior_mean": 1.2893337321634826,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.03917458368970275,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 2.258966589926766,
+                  "interior_mean": 1.2935901807390449,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.8483262848978094,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 0.31486185688311147,
+                  "interior_mean": 1.394307943910199,
+                  "relative_limit": 2.0914619158652985,
+                  "strip_mean_delta": 0.5809852588861415,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 2.4733923017310024,
+                  "interior_mean": 1.1764938802583453,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 1.1269663214369967,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                128,
+                128
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_forest_floor_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_forest_floor_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "be412abe211e365401d1b6a7855f6602875108444d96ca72d90bb6d6d74d2191",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "0c1ff8d7ddcd0273bc028e423a429b003968c1ef158f0e848d9f04119be5dcac"
+        }
+      ]
+    },
+    {
+      "name": "ground_grass",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "ground_grass_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_grass_candidate_01.png",
+          "raw_sha256_actual": "fa0f4d9ab524d0594c237925f642b90036c9b8e405582f30771f25fbb5fc66b4",
+          "raw_sha256_recorded": "fa0f4d9ab524d0594c237925f642b90036c9b8e405582f30771f25fbb5fc66b4",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-c3a48425-3752-41d7-9157-c69ca0686529.png",
+          "original_archive_sha256_actual": "fa0f4d9ab524d0594c237925f642b90036c9b8e405582f30771f25fbb5fc66b4",
+          "original_archive_equals_raw": true,
+          "reason": "Selected candidate 1: clearer grass versus shaded-grass contrast.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_grass_candidate_01.png",
+            "source_sha256": "fa0f4d9ab524d0594c237925f642b90036c9b8e405582f30771f25fbb5fc66b4",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01.png",
+            "output_sha256": "5e8e054457a394250652563c4e5a6cdc101d63b3bfe7f20cce171bace14f33ba",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.6250727212827841,
+                "interior_mean": 0.763243480738579,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.3718115673469739,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.04730890075383286,
+                "interior_mean": 0.5986521618176655,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.11672509216391438,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.9592111832205659,
+                  "interior_mean": 0.7158434684460748,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.05724934716967041,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.5446197768270595,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.08200242947073517,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.8243653357810725,
+                  "interior_mean": 0.7227686930762789,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.5677068090459866,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.635129732765741,
+                  "interior_mean": 0.5443385645692089,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.40990199020409884,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 1.9699350632499424,
+                  "interior_mean": 0.864450575319865,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.21011298022869554,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 1.2688209361479683,
+                  "interior_mean": 0.6972491333157728,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.5859112053993458,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.8917882595008192,
+                  "interior_mean": 0.9585451440922294,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.41447641040164407,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.7328489128083572,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.3153236746612431,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                128,
+                128
+              ],
+              [
+                224,
+                224
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": true
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_grass_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_grass_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "3f989016b0eaad97e8ba93764644fb3c6f52aecba343c2944580aa2c4bfe9336",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "58765b68dd12eeb961323a4b024776613dcfc4eb73dc2f76a423856eb59d9094"
+        },
+        {
+          "id": "ground_grass_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/ground_grass_candidate_02.png",
+          "raw_sha256_actual": "63821427ddcb54feca7470fa2d86df7bc0ee73c8c6863c76ab9b24c922f4a883",
+          "raw_sha256_recorded": "63821427ddcb54feca7470fa2d86df7bc0ee73c8c6863c76ab9b24c922f4a883",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-947d8ffb-ba0e-4d9e-b889-5040269bef0d.png",
+          "original_archive_sha256_actual": "63821427ddcb54feca7470fa2d86df7bc0ee73c8c6863c76ab9b24c922f4a883",
+          "original_archive_equals_raw": true,
+          "reason": "Reject candidate 2 despite seam PASS: dark base is less distinct from shaded grass.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/ground_grass_candidate_02.png",
+            "source_sha256": "63821427ddcb54feca7470fa2d86df7bc0ee73c8c6863c76ab9b24c922f4a883",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_02.png",
+            "output_sha256": "c56eaa2309cfb4b9b9b384073780675edf59a72b2e16b49251ce43565e1da8fb",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 0,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 1.3871039884940861,
+                "interior_mean": 0.8815972481830544,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.12669343693074575,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 1.0860244202337381,
+                "interior_mean": 0.5897827334129009,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.0475586503054214,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.37847120603066287,
+                  "interior_mean": 0.898354230910582,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.38046920244341115,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 1.2673824067644546,
+                  "interior_mean": 0.46173389533938836,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.2742449586567868,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 1.0781468037491233,
+                  "interior_mean": 0.9425345291933364,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.3804692024434101,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 1.901073610146682,
+                  "interior_mean": 0.6377570699549319,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.5677068090459958,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.5677068090459942,
+                  "interior_mean": 0.8593646482319345,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.45827045146717943,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 1.3348053304842014,
+                  "interior_mean": 0.4961852080610735,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.16400485894147465,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.9461780150766571,
+                  "interior_mean": 0.9132511456415933,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.33334170027517124,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.635129732765741,
+                  "interior_mean": 0.6084272822295269,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.697001163937272,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                128,
+                128
+              ],
+              [
+                224,
+                224
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": true
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/ground_grass_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/ground_grass_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "f169b2ddf0d6ab95a2b920bf0007552c356db27a6f1f2eae68ce5eb9f288f820",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "8051dd1454c49b3381e27f27bef4a009b0038fdb408aef9e5e10ac5821f3fa14"
+        }
+      ]
+    },
+    {
+      "name": "hill",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "hill_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/hill_candidate_01.png",
+          "raw_sha256_actual": "fe25b6d03d425d92615288cb1ad6b8faf872b2cb57fbf0a092c8ffe42093796a",
+          "raw_sha256_recorded": "fe25b6d03d425d92615288cb1ad6b8faf872b2cb57fbf0a092c8ffe42093796a",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-d0628d1b-fde8-499b-9977-0650cdabecaf.png",
+          "original_archive_sha256_actual": "fe25b6d03d425d92615288cb1ad6b8faf872b2cb57fbf0a092c8ffe42093796a",
+          "original_archive_equals_raw": true,
+          "reason": "Large repeated brown clumps become landmarks and both crop boundaries fail.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/hill_candidate_01.png",
+            "source_sha256": "fe25b6d03d425d92615288cb1ad6b8faf872b2cb57fbf0a092c8ffe42093796a",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/hill_candidate_01.png",
+            "output_sha256": "f5a4ea22e5f82fac2d2cd51e183793e0cdafd7dd4088ef22097eace678541462",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 37,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 1.8862531968929448,
+                "interior_mean": 1.1743877381015597,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.27627628869443444,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 1.3109113323281734,
+                "interior_mean": 1.1308391887391551,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.7741404153174961,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 4.623291935904539,
+                  "interior_mean": 1.2103443084141705,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 5.325891360554197,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 5.121245344050401,
+                  "interior_mean": 1.1829645312857027,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 2.2263701807364398,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 3.819365437049244,
+                  "interior_mean": 1.2071422124829478,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.9345922915929529,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 13.627800829897202,
+                  "interior_mean": 1.2360648307573716,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 8.58576196792776,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/hill_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/hill_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "6c91f3830dec0f9d4b5993ce1b3d07160f8d1e7600977544e82911c80d210fef",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "108c31e959729591be974cd0327fcc48ef1491bb9203516d0144363c323cd3d7"
+        },
+        {
+          "id": "hill_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/hill_candidate_02.png",
+          "raw_sha256_actual": "5b6dbae531165c76ce646b2c5a96b9f882c93ae4b2ae9dcb2c3f15046822fc63",
+          "raw_sha256_recorded": "5b6dbae531165c76ce646b2c5a96b9f882c93ae4b2ae9dcb2c3f15046822fc63",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-944a95b3-8f61-4799-9509-38f9b04b03d4.png",
+          "original_archive_sha256_actual": "5b6dbae531165c76ce646b2c5a96b9f882c93ae4b2ae9dcb2c3f15046822fc63",
+          "original_archive_equals_raw": true,
+          "reason": "Dense repeated clumps read as noise and both crop boundaries fail.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/hill_candidate_02.png",
+            "source_sha256": "5b6dbae531165c76ce646b2c5a96b9f882c93ae4b2ae9dcb2c3f15046822fc63",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/hill_candidate_02.png",
+            "output_sha256": "a2b73c8a8d33e011d387700ca40590badc70b3fedad43c3d75dd0be7423f9543",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 6,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 2.875679332833222,
+                "interior_mean": 2.3418476774441332,
+                "relative_limit": 3.5127715161662,
+                "strip_mean_delta": 0.35098109581409676,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 3.045874748416698,
+                "interior_mean": 2.1471211117314204,
+                "relative_limit": 3.2206816675971304,
+                "strip_mean_delta": 0.43958026866460237,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 4.9473263287692975,
+                  "interior_mean": 2.2973472626541724,
+                  "relative_limit": 3.4460208939812587,
+                  "strip_mean_delta": 2.2787573790669273,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 9.422979443263621,
+                  "interior_mean": 1.8934257976007307,
+                  "relative_limit": 2.840138696401096,
+                  "strip_mean_delta": 5.19659047568384,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 5.360610331638238,
+                  "interior_mean": 2.51617759523366,
+                  "relative_limit": 3.77426639285049,
+                  "strip_mean_delta": 2.123792997291867,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 5.033070225096408,
+                  "interior_mean": 2.1033076777454895,
+                  "relative_limit": 3.1549615166182345,
+                  "strip_mean_delta": 1.0770778292839058,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/hill_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/hill_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "45bec3941856da4df5d4cfc5b4aa360354f384f19316e103afccbb17fe5d4681",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "9150fed5ba3ba47e9ffd65b1b7578f1788552bf341e18e3ff5cf9678ed63f38b"
+        }
+      ]
+    },
+    {
+      "name": "mountain",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "mountain_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/mountain_candidate_01.png",
+          "raw_sha256_actual": "3976d99e6ab0fa5d795b6bc79c87d92d449faf60ed1788b9672e70225c9e04cf",
+          "raw_sha256_recorded": "3976d99e6ab0fa5d795b6bc79c87d92d449faf60ed1788b9672e70225c9e04cf",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-2e7415ff-a9a0-4c30-8e7f-edfeb550f937.png",
+          "original_archive_sha256_actual": "3976d99e6ab0fa5d795b6bc79c87d92d449faf60ed1788b9672e70225c9e04cf",
+          "original_archive_equals_raw": true,
+          "reason": "Selected candidate 1 after 5-pixel material remap; quieter rock flecks.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "parent_record": "/Users/rexxa/work/arttrial-data/ground/processed/mountain_candidate_01.json",
+            "declared_material": "all ground rock colors",
+            "before_colors": 6,
+            "after_colors": 4,
+            "retained": [
+              [
+                46,
+                43,
+                41
+              ],
+              [
+                69,
+                64,
+                60
+              ],
+              [
+                87,
+                79,
+                63
+              ],
+              [
+                92,
+                86,
+                80
+              ]
+            ],
+            "remaps": [
+              {
+                "source": [
+                  20,
+                  18,
+                  16
+                ],
+                "target": [
+                  46,
+                  43,
+                  41
+                ],
+                "pixels": 4,
+                "delta_e": 12.20453663751584
+              },
+              {
+                "source": [
+                  84,
+                  70,
+                  52
+                ],
+                "target": [
+                  87,
+                  79,
+                  63
+                ],
+                "pixels": 1,
+                "delta_e": 4.79188640058371
+              }
+            ],
+            "changed_pixels": 5,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.0,
+                "interior_mean": 0.3181003041435611,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.0745024550585334,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.11477336133717961,
+                "interior_mean": 0.30668870779172674,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.03653401058511461,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.3736736424819184,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.15303114844957474,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.3060622968991456,
+                  "interior_mean": 0.3440547105239366,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.0765155742247874,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.6121245937982912,
+                  "interior_mean": 0.15796763710923645,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.15303114844957477,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.3060622968991456,
+                  "interior_mean": 0.16784061442856374,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.07651557422478389,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "metric_passed": true,
+            "output_sha256": "2c77962d2a26ecc4982b022caf9c89555c3cd54fb22c82f373da7421575a18b5"
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/mountain_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/mountain_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "89922701f8f8b666a8415f68df163bdf23b5ea52d871bd50b9b98eb4bf22b311",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "973cb06fddef02bc390af4b93335f009ddf14133e2d8e1a46804be1af0aae0ce"
+        },
+        {
+          "id": "mountain_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/mountain_candidate_02.png",
+          "raw_sha256_actual": "af0937ab8d1f2c47cfd3ff0643e1639ec896f2a33147436f4e4d5ef0031bc56a",
+          "raw_sha256_recorded": "af0937ab8d1f2c47cfd3ff0643e1639ec896f2a33147436f4e4d5ef0031bc56a",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-e129c5aa-05c4-43fa-b4d7-a6a8f7d84025.png",
+          "original_archive_sha256_actual": "af0937ab8d1f2c47cfd3ff0643e1639ec896f2a33147436f4e4d5ef0031bc56a",
+          "original_archive_equals_raw": true,
+          "reason": "Reject candidate 2 after 1-pixel material remap despite seam PASS: noisier black-and-grey speckle.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "parent_record": "/Users/rexxa/work/arttrial-data/ground/processed/mountain_candidate_02.json",
+            "declared_material": "all ground rock colors",
+            "before_colors": 5,
+            "after_colors": 4,
+            "retained": [
+              [
+                46,
+                43,
+                41
+              ],
+              [
+                69,
+                64,
+                60
+              ],
+              [
+                20,
+                18,
+                16
+              ],
+              [
+                92,
+                86,
+                80
+              ]
+            ],
+            "remaps": [
+              {
+                "source": [
+                  87,
+                  79,
+                  63
+                ],
+                "target": [
+                  92,
+                  86,
+                  80
+                ],
+                "pixels": 1,
+                "delta_e": 7.042317364929862
+              }
+            ],
+            "changed_pixels": 1,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.0382577871123932,
+                "interior_mean": 0.8408375698289688,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.349904839209835,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.8489624854175613,
+                "interior_mean": 0.8951477022288504,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.5621014238138288,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.76278353984474,
+                  "interior_mean": 0.9645155384432204,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 1.1431133984439716,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.3060622968991456,
+                  "interior_mean": 0.900259703246909,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.34141284175491915,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.7545940610050492,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.5147981644269243,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.3060622968991456,
+                  "interior_mean": 0.7151870348342455,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.15303114844957133,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "metric_passed": true,
+            "output_sha256": "eea5ecaed6af258ba2f97ce14ede76e2e79b6a45f42ce26d77f1418ffc7f49f7"
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/mountain_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/mountain_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "aecf06c2509c180ed957919efd4a33162f3bf626a1265460b59013f0841440b6",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "8a9d9ac656000484604b5f7c3403e1e7167bc5d355b5e92c87138096cedde1af"
+        }
+      ]
+    },
+    {
+      "name": "water_deep",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "water_deep_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/water_deep_candidate_01.png",
+          "raw_sha256_actual": "4e5254d8f9b59fd64c7e72c8d70741246cd636f47e637bf1a11aabe31313691c",
+          "raw_sha256_recorded": "4e5254d8f9b59fd64c7e72c8d70741246cd636f47e637bf1a11aabe31313691c",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-59312fbf-f27c-44da-be63-4e63cd87fa82.png",
+          "original_archive_sha256_actual": "4e5254d8f9b59fd64c7e72c8d70741246cd636f47e637bf1a11aabe31313691c",
+          "original_archive_equals_raw": true,
+          "reason": "Selected candidate 1: calmer ripple density and every prescribed crop passes.",
+          "selected_or_preferred": true,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/water_deep_candidate_01.png",
+            "source_sha256": "4e5254d8f9b59fd64c7e72c8d70741246cd636f47e637bf1a11aabe31313691c",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/water_deep_candidate_01.png",
+            "output_sha256": "59745ddc94c718918c57533f071d7a509e7b0d7acbba80667bbf7d35885f9035",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 64916,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 0.4157273882217356,
+                "interior_mean": 0.25828792454572225,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.020786369411085772,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 0.0,
+                "interior_mean": 0.46267876435121424,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.41572738822172395,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 0.665163821154777,
+                  "interior_mean": 0.2360258720226628,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.16629095528869584,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.2574827694792685,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.16629095528869572,
+                  "passed": true
+                },
+                "passed": true
+              },
+              {
+                "x": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.08582758982642284,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.0,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 0.2574827694792685,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.0,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": true
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/water_deep_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/water_deep_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "2124a5d0310b1d0f8a787755c1348d0f05afa82dde2539bcaf5aa246d7089d96",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "495d31e7ecc02af2685d90a9366df5b64fe6f7bfe6c01f1e3a4fa01aacab275e"
+        },
+        {
+          "id": "water_deep_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/water_deep_candidate_02.png",
+          "raw_sha256_actual": "d85a6961d0d7ddb6ab2527dfeee93078e85c995da2d7f63e0b8924313c126c29",
+          "raw_sha256_recorded": "d85a6961d0d7ddb6ab2527dfeee93078e85c995da2d7f63e0b8924313c126c29",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-3b985a50-6194-4935-9046-ec8ac2f1ae92.png",
+          "original_archive_sha256_actual": "d85a6961d0d7ddb6ab2527dfeee93078e85c995da2d7f63e0b8924313c126c29",
+          "original_archive_equals_raw": true,
+          "reason": "Denser brighter ripples; crop 0 fails the fixed relative seam limit.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/water_deep_candidate_02.png",
+            "source_sha256": "d85a6961d0d7ddb6ab2527dfeee93078e85c995da2d7f63e0b8924313c126c29",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/water_deep_candidate_02.png",
+            "output_sha256": "11e1b02bdcf21b5e5df720af486f03aadcf3e593665f02396afa255659b41a46",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 64616,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 1.5797640752425952,
+                "interior_mean": 0.5887638153990962,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.22865006352194667,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 1.0808912093765126,
+                "interior_mean": 1.1504809632246489,
+                "relative_limit": 2.0,
+                "strip_mean_delta": 0.14550458587760792,
+                "passed": true
+              },
+              "passed": true
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 3.325819105773885,
+                  "interior_mean": 0.5364224364151428,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.8314547764434675,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 0.665163821154777,
+                  "interior_mean": 0.9226465906340455,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.16629095528869542,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 0.665163821154777,
+                  "interior_mean": 0.7326835367081413,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 0.1662909552886933,
+                  "passed": true
+                },
+                "y": {
+                  "edge_mean": 0.0,
+                  "interior_mean": 1.180039587785848,
+                  "relative_limit": 2.0,
+                  "strip_mean_delta": 1.440868017955947,
+                  "passed": true
+                },
+                "passed": true
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/water_deep_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/water_deep_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "befe72e31c07cc0ef2edac7205f2902da8a0d64e2fd17bd27ec8733ee8b6d5dc",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "10a7b676ac68e41c97716f72ea9d9b4614ced30d68832e0aca59527d8e1e167f"
+        }
+      ]
+    },
+    {
+      "name": "water_shallow",
+      "kind": "ground_material",
+      "status": "VERIFIED",
+      "issues": [],
+      "candidates": [
+        {
+          "id": "water_shallow_candidate_01",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/water_shallow_candidate_01.png",
+          "raw_sha256_actual": "bdf60539621163d7de8b73616d8ac43dcd8cfb73a03d584d548a17dc5c3c7e0d",
+          "raw_sha256_recorded": "bdf60539621163d7de8b73616d8ac43dcd8cfb73a03d584d548a17dc5c3c7e0d",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-69629351-c8c7-44a1-8e7e-23d4aa18fe3f.png",
+          "original_archive_sha256_actual": "bdf60539621163d7de8b73616d8ac43dcd8cfb73a03d584d548a17dc5c3c7e0d",
+          "original_archive_equals_raw": true,
+          "reason": "Mottled sediment patches form a noticeable pattern and both crop boundaries fail.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/water_shallow_candidate_01.png",
+            "source_sha256": "bdf60539621163d7de8b73616d8ac43dcd8cfb73a03d584d548a17dc5c3c7e0d",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/water_shallow_candidate_01.png",
+            "output_sha256": "e59ac698614fb4a4258391f263d69089473b6c005e89a603e0c02b00b8dcc64e",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 56569,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 3.733080355985126,
+                "interior_mean": 2.611560346203141,
+                "relative_limit": 3.9173405193047115,
+                "strip_mean_delta": 0.5804406663849885,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 6.436340376459658,
+                "interior_mean": 3.375435442934048,
+                "relative_limit": 5.063153164401072,
+                "strip_mean_delta": 0.530921980471612,
+                "passed": false
+              },
+              "passed": false
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 6.5237288629972,
+                  "interior_mean": 3.5653639226315277,
+                  "relative_limit": 5.348045883947291,
+                  "strip_mean_delta": 4.055117546381328,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 3.801033032698294,
+                  "interior_mean": 4.3453348848856805,
+                  "relative_limit": 6.518002327328521,
+                  "strip_mean_delta": 1.087673435077641,
+                  "passed": true
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 8.294463240977953,
+                  "interior_mean": 2.554304196087319,
+                  "relative_limit": 3.8314562941309784,
+                  "strip_mean_delta": 3.959699104396299,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 7.596589188934219,
+                  "interior_mean": 3.061692113136774,
+                  "relative_limit": 4.592538169705161,
+                  "strip_mean_delta": 4.590609360095803,
+                  "passed": false
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/water_shallow_candidate_01.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/water_shallow_candidate_01.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "7aaaafe492291874b8a5d83935301da01d56c54d6585164d8cdf11a7417bfb29",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "8eaa6e289bd8ee8939289d6d8a84aaa09909afa2f95ff8f00e8061057a65b5e6"
+        },
+        {
+          "id": "water_shallow_candidate_02",
+          "record_source": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+          "raw_path": "/Users/rexxa/work/arttrial-data/ground/raw/water_shallow_candidate_02.png",
+          "raw_sha256_actual": "eb698365c5822878b4752f0604ca60e0876ec6d548ef378bdcb5b077c17aa232",
+          "raw_sha256_recorded": "eb698365c5822878b4752f0604ca60e0876ec6d548ef378bdcb5b077c17aa232",
+          "raw_hash_matches_record": true,
+          "original_archive_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15e79-e299-7ed2-a1bc-6aac08547184/exec-c2266905-e33a-48fe-a829-dfdae491d63b.png",
+          "original_archive_sha256_actual": "eb698365c5822878b4752f0604ca60e0876ec6d548ef378bdcb5b077c17aa232",
+          "original_archive_equals_raw": true,
+          "reason": "Horizontal patches are busier and both crop boundaries fail.",
+          "selected_or_preferred": false,
+          "check_evidence": {
+            "source": "/Users/rexxa/work/arttrial-data/ground/raw/water_shallow_candidate_02.png",
+            "source_sha256": "eb698365c5822878b4752f0604ca60e0876ec6d548ef378bdcb5b077c17aa232",
+            "source_size": [
+              1254,
+              1254
+            ],
+            "image": "/Users/rexxa/work/arttrial-data/ground/processed/water_shallow_candidate_02.png",
+            "output_sha256": "5be325f7f3b5e1ca5215dc341d93a5f5f5da9134fd6974880875c8a065eafc68",
+            "palette_sha256": "2ab151d8d7017c4f7556b0b0bd34d99a82778db73f65066cac6da892fe027779",
+            "moved_over_8": 57178,
+            "texture_seams": {
+              "x": {
+                "edge_mean": 2.338586017240299,
+                "interior_mean": 2.387593711424118,
+                "relative_limit": 3.581390567136177,
+                "strip_mean_delta": 0.04031795112348258,
+                "passed": true
+              },
+              "y": {
+                "edge_mean": 6.315609801552508,
+                "interior_mean": 4.007911205828158,
+                "relative_limit": 6.011866808742237,
+                "strip_mean_delta": 0.6001227592182213,
+                "passed": false
+              },
+              "passed": false
+            },
+            "tile_seams": [
+              {
+                "x": {
+                  "edge_mean": 10.861131525442318,
+                  "interior_mean": 1.919967901017473,
+                  "relative_limit": 2.8799518515262097,
+                  "strip_mean_delta": 1.1204925046423242,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 15.461363617687844,
+                  "interior_mean": 3.7840875686341535,
+                  "relative_limit": 5.676131352951231,
+                  "strip_mean_delta": 1.729440230472056,
+                  "passed": false
+                },
+                "passed": false
+              },
+              {
+                "x": {
+                  "edge_mean": 7.217698539741795,
+                  "interior_mean": 2.1857020722645077,
+                  "relative_limit": 3.2785531083967614,
+                  "strip_mean_delta": 8.260272682484297,
+                  "passed": false
+                },
+                "y": {
+                  "edge_mean": 2.8355983373267772,
+                  "interior_mean": 4.053005927457423,
+                  "relative_limit": 6.0795088911861335,
+                  "strip_mean_delta": 3.506843558910903,
+                  "passed": true
+                },
+                "passed": false
+              }
+            ],
+            "tile_positions": [
+              [
+                0,
+                0
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "distinct_tiles": true,
+            "metric_passed": false
+          },
+          "processed_path": null,
+          "processed_sha256_actual": null,
+          "prompt_path": "/Users/rexxa/work/arttrial-data/ground/prompts/water_shallow_candidate_02.json",
+          "timing_path": "/Users/rexxa/work/arttrial-data/ground/timing/water_shallow_candidate_02.json",
+          "prompt_path_exists": true,
+          "prompt_path_sha256_actual": "dcf1261da34191e61121e3a248de1383772ead88ace9edf218ef9dce34ef8feb",
+          "timing_path_exists": true,
+          "timing_path_sha256_actual": "e966a7d40600effa604ced56780b089126241b1a11c369b36e9601d88c3098a9"
+        }
+      ]
+    }
+  ],
+  "unique_retained_raw_count": 59,
+  "raw_record_hash_matches": 59,
+  "raw_original_archive_matches": 59,
+  "fallback_tiles": [
+    {
+      "name": "ground_dirt_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_0.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        112,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "a430032c80b89b08d19b4292b8491d46c11f5dc912cbe85caba4f789c8f68272",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "ground_dirt_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_1.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        144,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "04431b13b1930b1bc0bc76c3c1c646435c442135660c3d230bb36f0e0b230081",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "ground_dirt_2",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_dirt_2.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        176,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "710a364d698b0ba4d282b81718141e8ff9ebef8d6c3dabacb5aee2b1224d965b",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "ground_forest_floor_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_0.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        96,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "00eb6224c1a22a9c3ce3ac4007b6a8ca9985c75a089c637d97d6d67ed9c76765",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "ground_forest_floor_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_1.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        128,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "2a492cc1789555c56a3b22992c9ed833f0d270911b20dae31fd43de80f179a3c",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "ground_forest_floor_2",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/ground_forest_floor_2.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        160,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "8888ef2c22ed98771395b249573a64649bea16f32f6b0d4b7ed009e51310cace",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "water_shallow_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_0.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        432,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "36fc92af2c953364e30720007a87d769401911e6f5f31ca87b9f04f896f88485",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "water_shallow_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/water_shallow_1.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        464,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "36fc92af2c953364e30720007a87d769401911e6f5f31ca87b9f04f896f88485",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "hill_0",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/hill_0.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        256,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "c2eb0939fac1e1180351f740e76460f633aacdf59f9277b315c13b44a0f73eb1",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    },
+    {
+      "name": "hill_1",
+      "image": "/Users/rexxa/work/arttrial-data/ground/fallback/hill_1.png",
+      "source_kind": "legacy_fallback",
+      "legacy_source": "/Users/rexxa/work/new-world-art-prod/assets/v8/tiles.png",
+      "legacy_source_sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+      "legacy_rect": [
+        304,
+        0,
+        16,
+        16
+      ],
+      "transform": "nearest2x then master palette map; no drawn pixels",
+      "output_sha256": "89018bd54bc3854ba17b05f1e6a83a9d6379444f5b45e7d3985a37d32af88a9a",
+      "legacy_source_hash_matches": true,
+      "output_hash_matches": true
+    }
+  ],
+  "fallback_source_record": "/Users/rexxa/work/arttrial-data/ground/fallback_records.json",
+  "derived_source_records": [
+    "/Users/rexxa/work/arttrial-data/banks/selection.json",
+    "/Users/rexxa/work/arttrial-data/materials/derived_visual_verdict.json",
+    "/Users/rexxa/work/arttrial-data/buildings/ghost_identity.json"
+  ],
+  "issues": [],
+  "input_files": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/TRIAL_GOAL.md",
+      "sha256": "fd0ed8cd1cecb2205149f0c31db041882184cb3a1af3b3564eefe55138dd83db"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial/CANDIDATES.md",
+      "sha256": "4a744a0d9e4787283bf6b778d424ed73be960f8935b7b869bda07681e325496e"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/environment-final/sheet.json",
+      "sha256": "6c7e0037b2da72f83a6268c83e5700e3cfa08b6a3886de4012ddfcb7ab0c23b5"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/environment-final/sheet.png",
+      "sha256": "275767e7c78a260ffdffa69471747f2992ddf97e962a33f94a0e61cbdce40bf1"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/generations.json",
+      "sha256": "3d12e4cfb985da7e5f44c60b7a0efd46ed262f44adfff418a28f1ea3a83a450f"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/trees/selection.json",
+      "sha256": "f8c45b6355d09930c4eb0e38b6146c0942b75b0a747ee609fcba50e02d718e17"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/wood/selection.json",
+      "sha256": "c0abf5da8dc910affae82b4c46460206f201155c1fe24642f47680d878c227ea"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/props/selection.json",
+      "sha256": "127e29a9270fb33e9d11c805ce374c2b4fbf27cba8033c53cc3c71076b6af1c9"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/buildings/selection.json",
+      "sha256": "a5ad32bb5b34f5f4b981b1f9f241bf04f5efd28f3579df7b7f255401d64505e9"
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial-data/ground/selection.json",
+      "sha256": "7d7c5492b69a11ab19304f5ef0bba684cac08873118498ad73ac05363eb22a2f"
+    }
+  ],
+  "limitations": [
+    "Candidate provenance verification does not establish semantic quality, blind readability, animation fidelity, or full brief acceptance.",
+    "Ground candidate requirement applies per seamless256 material, not separately per cut32 tile.",
+    "Hearth frames and stockpile pieces may share a generated sheet; distinct raw candidates are counted per required output, not falsely counted as independent calls.",
+    "Current producer selections may include subsequent material processing; original packed geometry identity is not asserted by this audit.",
+    "No runtime evidence or cost recalculation performed."
+  ],
+  "status": "VERIFIED",
+  "all_candidate_check_evidence_retained": true,
+  "auxiliary_prompt_timing_gaps": [
+    {
+      "candidate": "tree_oak_candidate_01",
+      "field": "timing_path",
+      "status": "NOT_VERIFIED"
+    },
+    {
+      "candidate": "tree_oak_candidate_02",
+      "field": "timing_path",
+      "status": "NOT_VERIFIED"
+    },
+    {
+      "candidate": "hut_candidate_01",
+      "field": "timing_path",
+      "status": "NOT_VERIFIED"
+    },
+    {
+      "candidate": "hut_candidate_02",
+      "field": "timing_path",
+      "status": "NOT_VERIFIED"
+    }
+  ]
+}

@@ -1,0 +1,581 @@
+{
+  "scope": "Current404 registry snapshot only;42 tool layers and original3+revision3log piles. New female continuation assets deliberately excluded pending final acceptance.",
+  "registry_sha256": "07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905",
+  "method": "Direct inspection of every diagnostic sheet: logs native32 and nearest8x; tools native box and nearest5x, original body/extracted layer/alpha composite side by side. Labels visible: internal semantic audit, NOT a new blind test. No tinting, repair, production replacement, score changes or generation.",
+  "logs": [
+    {
+      "name": "log_pile_1",
+      "image": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_1_02_material.png",
+      "sha256": "2cc2cf09f1e099ea2bc1a41646e2aed4aa58f1628172f598c0d26c46457baf95",
+      "sheet": "logs.png",
+      "visually_distinguishable_end_shapes": 6,
+      "confidence": "medium",
+      "required_log_bracket": [
+        1,
+        8
+      ],
+      "physical_total": "uncertain; no hidden logs inferred",
+      "observation": "Six front-facing bright end regions appear in two rows of three; rear/top caps overlap long shafts. Exact physical log total is uncertain."
+    },
+    {
+      "name": "log_pile_2",
+      "image": "/Users/rexxa/work/arttrial-data/processed/log_pile_2_count_03_material.png",
+      "sha256": "0d306b1c5ec9cd07eec47be71a21d29acf885e3f26e4836882b323cfbc4ca7ad",
+      "sheet": "logs.png",
+      "visually_distinguishable_end_shapes": 12,
+      "confidence": "high",
+      "required_log_bracket": [
+        9,
+        16
+      ],
+      "physical_total": "uncertain; no hidden logs inferred",
+      "observation": "Three rows of four distinct bright end shapes. Visible count fits requested9–16."
+    },
+    {
+      "name": "log_pile_3",
+      "image": "/Users/rexxa/work/arttrial-data/wood/processed/log_pile_3_04_material.png",
+      "sha256": "3ba5c6ddc4038eaf61618a5a4bc78c97e2b7640544ac5940784d7aa768613669",
+      "sheet": "logs.png",
+      "visually_distinguishable_end_shapes": 20,
+      "confidence": "high",
+      "required_log_bracket": [
+        17,
+        25
+      ],
+      "physical_total": "uncertain; no hidden logs inferred",
+      "observation": "Four rows of five distinct bright end shapes. Visible count fits requested17–25."
+    },
+    {
+      "name": "revision1/log_pile_1",
+      "image": "/Users/rexxa/work/arttrial-data/wood/revision1/material.png",
+      "sha256": "98f36b61b468440771d1b8fbb94917701b9fe47a543e8073df86a44c4c860ab5",
+      "sheet": "logs.png",
+      "visually_distinguishable_end_shapes": 4,
+      "confidence": "medium",
+      "required_log_bracket": [
+        1,
+        8
+      ],
+      "physical_total": "uncertain; no hidden logs inferred",
+      "observation": "Two rows with two distinguishable right-facing end shapes each. Shaft overlap prevents proving hidden-log total."
+    },
+    {
+      "name": "revision1/log_pile_2",
+      "image": "/Users/rexxa/work/arttrial-data/wood/revision1/log_pile_2_revision_01_material.png",
+      "sha256": "27e7d41f68836d530c4079bf677cb167272441250af68a0de8ba6f83a98aff39",
+      "sheet": "logs.png",
+      "visually_distinguishable_end_shapes": 9,
+      "confidence": "medium",
+      "required_log_bracket": [
+        9,
+        16
+      ],
+      "physical_total": "uncertain; no hidden logs inferred",
+      "observation": "Three rows of three distinguishable right-facing bright end shapes. Visible count fits requested9–16; do not infer hidden logs."
+    },
+    {
+      "name": "revision1/log_pile_3",
+      "image": "/Users/rexxa/work/arttrial-data/wood/revision1/log_pile_3_revision_01_material.png",
+      "sha256": "d4f449eebade7e4cd038d3e45d6236e95e1cb5835afade419a4bf35de000bdab",
+      "sheet": "logs.png",
+      "visually_distinguishable_end_shapes": 16,
+      "confidence": "medium",
+      "required_log_bracket": [
+        17,
+        25
+      ],
+      "physical_total": "uncertain; no hidden logs inferred",
+      "observation": "Four rows of four clearly separable bright right-facing end shapes. Dark left patches/overlapping shafts do not establish additional ends. Requested17–25 physical logs is NOT_VERIFIED, not proven absent."
+    }
+  ],
+  "tools": [
+    {
+      "name": "tool/axe/adult_f/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/axe_east_walk_a_01_layer.png",
+      "sha256": "5f76613f6a1227d679afbbe44507f2b84b7446cba0003c64b3494fafb2f61ec3",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_f_east_walk_a.png",
+      "body_sha256": "01b7d0372e1323dbce7a7567c2d39d47e4e3e223dbc5e5942a8a6d1e49495c88",
+      "sheet": "tools_1.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/axe/adult_f/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/axe_east_walk_b_01_layer.png",
+      "sha256": "2a65cb0a2b2239c4625e862c373852a1bf3fecdb7b1a83ba9d491a80e93c27f2",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_f_east_walk_b.png",
+      "body_sha256": "70d44595bf864d3a44545b750b4a609fb830be3bbec7f1c117b5e5ac87ac2ea0",
+      "sheet": "tools_1.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hammer/adult_f/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/hammer_east_walk_a_01_layer.png",
+      "sha256": "8b11e1199a69c206d552bdff69fd7c8df2b07b72aa5a81e92c1f56596543297e",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_f_east_walk_a.png",
+      "body_sha256": "01b7d0372e1323dbce7a7567c2d39d47e4e3e223dbc5e5942a8a6d1e49495c88",
+      "sheet": "tools_1.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hoe/adult_f/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/hoe_east_idle_01_layer.png",
+      "sha256": "f0fcff8de64adc84410940c0fad2e5bcb073df163999cd26682f05e9a3a15be2",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_f_east_idle.png",
+      "body_sha256": "1b6936ed3c8dc4fd901f4bd45be83b4c2d3936f5a0048bc5e4f8a3fb135c18ba",
+      "sheet": "tools_1.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/pick/adult_f/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/pick_east_walk_b_01_layer.png",
+      "sha256": "d592829e871c0c8d7d575b2e9682105d7d358fdf788c7e71e8c52d21b0914e0a",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_f_east_walk_b.png",
+      "body_sha256": "70d44595bf864d3a44545b750b4a609fb830be3bbec7f1c117b5e5ac87ac2ea0",
+      "sheet": "tools_1.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/pick/adult_f/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/pick_south_walk_a_01_layer.png",
+      "sha256": "ba23111cf21850851de77ac9891d79a959eec824ab0138abb827d51bddd9f5f1",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_f_south_walk_a.png",
+      "body_sha256": "96e05f15489389fd1a654f162b3f20dcb13387fdfdca9839381686e215ab354c",
+      "sheet": "tools_1.png",
+      "handedness": "CONTRARY_VISIBLE_SIDE",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Pick attaches on screen-right of the front-facing body, conventionally the subject left. This contradicts a blanket right-hand claim; pixel anatomy lacks finger detail."
+    },
+    {
+      "name": "tool/axe/adult_m/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_east_walk_a_02_strict_layer.png",
+      "sha256": "d5a7a325fbbe5618eaedbbd80df277a18915543cefe6390b3bd5f9512603fc3e",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_east_walk_a.png",
+      "body_sha256": "715167044b34fcf0f2571bb08fdf91198a792477c5687760b0857b2ca898fd57",
+      "sheet": "tools_2.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/axe/adult_m/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_east_walk_b_04_strict_layer.png",
+      "sha256": "60cc9f8f5d11d602d9beb01f7dce4e94ce424e31eb9ac47fcabcd2fbe4bae9ba",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_east_walk_b.png",
+      "body_sha256": "ced7379305bb8f6f03608ebfa3bd56863497283690084ac4013b10793c7e59d9",
+      "sheet": "tools_2.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/axe/adult_m/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_idle_05_strict_layer.png",
+      "sha256": "6f14c532264ffabe1bcbaf4852cde1fdbddc09cdebb8e929e4a601edd4505c95",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_south_idle.png",
+      "body_sha256": "3579a0a61ef97000145602f6603166b89ee35a582fd7e37e7d75fa61ce32c6a6",
+      "sheet": "tools_2.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/axe/adult_m/south/work",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_work_08_strict_layer.png",
+      "sha256": "de6da06fb0703d63bd4f4a850b097e80d1ad3cd9f975cef13779c05c34825fa3",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_south_work.png",
+      "body_sha256": "b9bdd282369283f234ca5b48acfbfebaf69a3c328a1c1a5db9cc4533a4d54c0d",
+      "sheet": "tools_2.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "RAISED_POSE_SUPPORTED",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof. Work body has raised arm and tool elevated above its idle position; supports a swing-preparation pose. A single still does not prove swing animation."
+    },
+    {
+      "name": "tool/basket/adult_m/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/basket_east_idle_06_strict_layer.png",
+      "sha256": "bad2c799779ed8ad140ed2fbdc69eafc2a6b26f944c61096a1f391121eced5d4",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_east_idle.png",
+      "body_sha256": "7b4921d7748208fcfa573cb501d6ef20f593962a6bfad68e2d377d259c655c81",
+      "sheet": "tools_2.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hammer/adult_m/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/hammer_south_idle_05_strict_layer.png",
+      "sha256": "23008f89c991f7300cb374e83e0d2f3976e1f1871b78391ad3a54776576ed023",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_south_idle.png",
+      "body_sha256": "3579a0a61ef97000145602f6603166b89ee35a582fd7e37e7d75fa61ce32c6a6",
+      "sheet": "tools_2.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/hoe/adult_m/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/hoe_south_idle_08_strict_layer.png",
+      "sha256": "1a187dbfa20be3f94fb1af596dbc2512cdaeb8a58996c6e13a1330a58bba1de2",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_south_idle.png",
+      "body_sha256": "3579a0a61ef97000145602f6603166b89ee35a582fd7e37e7d75fa61ce32c6a6",
+      "sheet": "tools_3.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/pick/adult_m/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/pick_east_idle_08_strict_layer.png",
+      "sha256": "8eda13bfa1f1cf1fd253bf378135480076a29964554f17f21e0a1a1e81f05148",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/adult_m_east_idle.png",
+      "body_sha256": "7b4921d7748208fcfa573cb501d6ef20f593962a6bfad68e2d377d259c655c81",
+      "sheet": "tools_3.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/axe/child/south/sleep",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/axe_south_sleep_01.layer.png",
+      "sha256": "859cc55aa7e5dd9e153022acd097117aeb715bfd14c8f3db2c715264f4ac8808",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_sleep.png",
+      "body_sha256": "c8bbeda2a5c33f488b89ad25c414cff39281eafdfc1d1cc9d4b4ee5c377da25f",
+      "sheet": "tools_3.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Lying silhouette and overlapping tool do not identify a right versus left hand."
+    },
+    {
+      "name": "tool/axe/child/south/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/axe_south_walk_b_01.layer.png",
+      "sha256": "d3f73bc7759ca7d930e1f45659c63506b86c22ec564360d3108b010f8943e3dc",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_walk_b.png",
+      "body_sha256": "d44dd66236ff3c824658e2fa2653737349405e5078fc6cfb601b66960ab9fd44",
+      "sheet": "tools_3.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/basket/child/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_east_walk_a_01.layer.png",
+      "sha256": "86ac38847107017a02dad9c10d4ccd90012b048c1f0e7ecd19a02470e33b2532",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_east_walk_a.png",
+      "body_sha256": "ecaded39cb760eaa3b26dec98c5d9027d87f403bb9029490cb99752a22060cb5",
+      "sheet": "tools_3.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/basket/child/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_east_walk_b_01.layer.png",
+      "sha256": "aa436fc054902fc955d2644e445fd5f84e41c0d68dd6380b5929f460ea504336",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_east_walk_b.png",
+      "body_sha256": "0996028a8b47023f93dfd58bd418cff6b6b0a3c56041152e7eed8df239349b3c",
+      "sheet": "tools_3.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand. Basket hangs below the forward arm with sparse handle pixels; continuous grip is visually uncertain at native resolution."
+    },
+    {
+      "name": "tool/basket/child/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_south_idle_01.layer.png",
+      "sha256": "5f1590b8a47457c75cb879cdc85344986ed781cec20de36d9ed144a8ff194767",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_idle.png",
+      "body_sha256": "d11631f9aadb218b0233c7253ba16edc5c0cb2616aec0d7843a40cc2c92f02e9",
+      "sheet": "tools_4.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/basket/child/south/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_south_walk_b_01.layer.png",
+      "sha256": "2b554e055d4cb05a7d4899c7987df6fa9cc1e89e7008625dfff12be4a169af16",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_walk_b.png",
+      "body_sha256": "d44dd66236ff3c824658e2fa2653737349405e5078fc6cfb601b66960ab9fd44",
+      "sheet": "tools_4.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/hammer/child/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/hammer_east_walk_a_01.layer.png",
+      "sha256": "0a3f2be31451c89a6f21e5bac6e7a2b091712ccd2fe197a5f398059fc6b62639",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_east_walk_a.png",
+      "body_sha256": "ecaded39cb760eaa3b26dec98c5d9027d87f403bb9029490cb99752a22060cb5",
+      "sheet": "tools_4.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hammer/child/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/hammer_east_walk_b_01.layer.png",
+      "sha256": "30b78153fd60209c8b3b8ac083efd552ce0c28377521fc2262c67c028e2545a2",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_east_walk_b.png",
+      "body_sha256": "0996028a8b47023f93dfd58bd418cff6b6b0a3c56041152e7eed8df239349b3c",
+      "sheet": "tools_4.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hoe/child/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/hoe_east_walk_a_01.layer.png",
+      "sha256": "4d30cd2fc9a23c2e025e85a5d513812e44cef95048b6a2a48dcf85beb802a263",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_east_walk_a.png",
+      "body_sha256": "ecaded39cb760eaa3b26dec98c5d9027d87f403bb9029490cb99752a22060cb5",
+      "sheet": "tools_4.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hoe/child/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_child/hoe_south_walk_a_01.layer.png",
+      "sha256": "9ebc9f7c502a98decaab1db13c235047178d627c55c8e09bd3318a925eba5a2b",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_walk_a.png",
+      "body_sha256": "954279d546b500b26d69fb50901a987cc1a41e874f9d38dda99bbab10eb68992",
+      "sheet": "tools_4.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/axe/elder/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/axe_elder_east_idle_01_layer.png",
+      "sha256": "1b31f542e77d1539432e9a5fcb7f7a1ed23813978829a5a14080999e93a7dd35",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_idle.png",
+      "body_sha256": "b3beb8a5a298c6ade1e6f362c0f59e3819a57105431c2d66aef6437bbc59f355",
+      "sheet": "tools_5.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/axe/elder/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/axe_elder_east_walk_a_01_layer.png",
+      "sha256": "443d95d8ea452153beda5e0191accde5f1eff4419a64384b2fef52ef23a39ba8",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_a.png",
+      "body_sha256": "c2181edc2087f2d29c48b41de5c6060578bfb0a2b97c31af364edb38d9ae6d6a",
+      "sheet": "tools_5.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/axe/elder/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/axe_elder_east_walk_b_01_layer.png",
+      "sha256": "f55f92fd794861a1a85e18aeaa01c709f8b1e12bb4953989bb5dccca9500af60",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_b.png",
+      "body_sha256": "595937d8e31e658d4f853020311eb65b4ac5903a6acc843d8fc69db91df73c2b",
+      "sheet": "tools_5.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/basket/elder/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/basket_elder_east_walk_b_continuation_01_layer.png",
+      "sha256": "7692b68fdea30f10659973a8503cb6a99c269d79388376382c1914cdb7f673b9",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_b.png",
+      "body_sha256": "595937d8e31e658d4f853020311eb65b4ac5903a6acc843d8fc69db91df73c2b",
+      "sheet": "tools_5.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/basket/elder/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/basket_elder_south_idle_01_layer.png",
+      "sha256": "4088dba345d0cdacacad0ba4597ea96c58699a166fa7974ae3162a99b4797465",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_idle.png",
+      "body_sha256": "54f291a99b33a4b7498c0c47206c8a2422b3f41331d0866af586082bed01b0e8",
+      "sheet": "tools_5.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/basket/elder/south/sleep",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/basket_elder_south_sleep_01_layer.png",
+      "sha256": "86d20ea2da2c24627659f4b9a20908fb4f02d3ca1208c9287786e2e8d30738ca",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_sleep.png",
+      "body_sha256": "b7ba7f194f9f2fb6a35c3119ed520d239881cd3b3330170466cb6fef1fd607bb",
+      "sheet": "tools_5.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Lying silhouette and overlapping tool do not identify a right versus left hand."
+    },
+    {
+      "name": "tool/basket/elder/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/basket_elder_south_walk_a_01_layer.png",
+      "sha256": "82109b7a765b657ca5b37a49d7c7cd20b86d693f4c487a7bf1ef06a5b52e8856",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_walk_a.png",
+      "body_sha256": "169726cc235ce18f8e30c09ad4d17de96ea89f80e0cf3cd683b891d8d605653b",
+      "sheet": "tools_6.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/hammer/elder/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hammer_elder_east_idle_01_layer.png",
+      "sha256": "9cb8b2c939aa267af17702dfbb219da08811831cbcde7428d4bdcdd127410c33",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_idle.png",
+      "body_sha256": "b3beb8a5a298c6ade1e6f362c0f59e3819a57105431c2d66aef6437bbc59f355",
+      "sheet": "tools_6.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hammer/elder/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hammer_elder_east_walk_a_01_layer.png",
+      "sha256": "d4b029d0f76a7af4dd4d163ca7ec0413db3428b9ad32189c9ceb0b80da1dcfef",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_a.png",
+      "body_sha256": "c2181edc2087f2d29c48b41de5c6060578bfb0a2b97c31af364edb38d9ae6d6a",
+      "sheet": "tools_6.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hammer/elder/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hammer_elder_east_walk_b_01_layer.png",
+      "sha256": "5c2bbed5848781989e55c6beadaf0064823c077ca282b6f451071d726d9d5b26",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_b.png",
+      "body_sha256": "595937d8e31e658d4f853020311eb65b4ac5903a6acc843d8fc69db91df73c2b",
+      "sheet": "tools_6.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hammer/elder/south/sleep",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hammer_elder_south_sleep_01_layer.png",
+      "sha256": "d21724575bf26227701b6df68deafdf0fd29e0ce837cf6c10b8781a3ef2d6f0d",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_sleep.png",
+      "body_sha256": "b7ba7f194f9f2fb6a35c3119ed520d239881cd3b3330170466cb6fef1fd607bb",
+      "sheet": "tools_6.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Lying silhouette and overlapping tool do not identify a right versus left hand. Tool lies lengthwise over upper body; hand connection is ambiguous."
+    },
+    {
+      "name": "tool/hoe/elder/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_east_idle_continuation_01_layer.png",
+      "sha256": "36b5170770c782c9afab5144fc044fe8e7ea0f32f30eaf4c3dccc1dfcdb0419b",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_idle.png",
+      "body_sha256": "b3beb8a5a298c6ade1e6f362c0f59e3819a57105431c2d66aef6437bbc59f355",
+      "sheet": "tools_6.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/hoe/elder/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_south_idle_continuation_01_layer.png",
+      "sha256": "9ef4b7be01a47ae140e1d230f077e89532e3d18bed5f626ed21d313efdba7449",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_idle.png",
+      "body_sha256": "54f291a99b33a4b7498c0c47206c8a2422b3f41331d0866af586082bed01b0e8",
+      "sheet": "tools_7.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/hoe/elder/south/sleep",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hoe_elder_south_sleep_01_layer.png",
+      "sha256": "dd774fbbd7e8ab13d4daffe83de3702b50bbc7341933d3b8d81a0d3b50bd9064",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_sleep.png",
+      "body_sha256": "b7ba7f194f9f2fb6a35c3119ed520d239881cd3b3330170466cb6fef1fd607bb",
+      "sheet": "tools_7.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Lying silhouette and overlapping tool do not identify a right versus left hand. Extracted layer is only two small dark fragments; the composite does not clearly expose a recognizable hoe."
+    },
+    {
+      "name": "tool/hoe/elder/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hoe_elder_south_walk_a_01_layer.png",
+      "sha256": "02fa43910cd8a2380613a3a5164d7ec43c4f5c5e1ca648864928789b7fbeadee",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_walk_a.png",
+      "body_sha256": "169726cc235ce18f8e30c09ad4d17de96ea89f80e0cf3cd683b891d8d605653b",
+      "sheet": "tools_7.png",
+      "handedness": "RIGHT_SIDE_CONSISTENT",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool lies on screen-left of front-facing body, consistent with anatomical right. Finger/grip detail is not resolved; this is side-consistency rather than anatomical proof."
+    },
+    {
+      "name": "tool/pick/elder/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/pick_elder_east_idle_01_layer.png",
+      "sha256": "0ef1ae29719dba013c78fc03bad3517baafd4a7746dba6511f0025ccdd22adef",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_idle.png",
+      "body_sha256": "b3beb8a5a298c6ade1e6f362c0f59e3819a57105431c2d66aef6437bbc59f355",
+      "sheet": "tools_7.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/pick/elder/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_walk_a_continuation_01_layer.png",
+      "sha256": "f8716984be066c139a4a1d9a603f6cc1c9d80dabfd4a20d94b530c3c78fd54e7",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_a.png",
+      "body_sha256": "c2181edc2087f2d29c48b41de5c6060578bfb0a2b97c31af364edb38d9ae6d6a",
+      "sheet": "tools_7.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "NOT_APPLICABLE_NONWORK",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand."
+    },
+    {
+      "name": "tool/pick/elder/east/work",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_work_continuation_01_layer.png",
+      "sha256": "be2962fd9ed2b47ff690e94e66069d7812c6bc16ab1fa7d7bdfd535ea1dcfdc8",
+      "body": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_work.png",
+      "body_sha256": "3be7fdbe5a2236299767a0c1290841cad709adc142251441275a498cae187b93",
+      "sheet": "tools_7.png",
+      "handedness": "NOT_VERIFIED",
+      "work_pose": "RAISED_POSE_SUPPORTED",
+      "observation": "Tool is adjacent to the visible forward arm/hand region. Side silhouette lacks sufficient near/far arm anatomy to establish anatomical right hand. Work body has raised arm and tool elevated above its idle position; supports a swing-preparation pose. A single still does not prove swing animation."
+    }
+  ],
+  "handedness_counts": {
+    "NOT_VERIFIED": 29,
+    "CONTRARY_VISIBLE_SIDE": 1,
+    "RIGHT_SIDE_CONSISTENT": 12
+  },
+  "work_keys": [
+    "tool/axe/adult_m/south/work",
+    "tool/pick/elder/east/work"
+  ],
+  "source_hash_recheck_mismatches": [],
+  "conclusion": "Visible end counts support original medium12/large20. Revised large only16 distinguishable bright ends leaves17–25 requirement unverified. Two registered work poses support raised-tool preparation, not full swing animation. No blanket right-hand compliance: one front-facing female pick uses contrary visible side; side/sleep anatomy ambiguous. Preserve original acceptance records and frozen scores; these are additional limitations, not retroactive pixel edits.",
+  "snapshot_commit": "d3bada0f2c823289b3287c892936e2b8be1a02ea",
+  "snapshot_asset_count": 404,
+  "ongoing_wave2_included": false,
+  "external_evidence_root": "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit",
+  "external_contact_sheets": [
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/logs.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_1.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_2.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_3.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_4.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_5.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_6.png",
+    "/Users/rexxa/work/arttrial-data/continuation2_accounting/semantic_audit/tools_7.png"
+  ],
+  "review_scope": "Labelled internal semantic inspection only, not blind evaluation or new acceptance. Original source and body SHA256 values are embedded per item. Frozen scores and accepted assets unchanged."
+}
