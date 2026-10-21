@@ -52,3 +52,14 @@ Deleted by M1 (goal 9.7). Every path is available at `24e16677` (`v8/main` befor
 | `scripts/world/cold_audit.json`, `shaders/settlement_outline.gdshader` | data and shader used only by those renderers | 2 | `24e16677`, `v7-final-art` |
 | `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | the bridge methods `art_declump`, `art_walker_offsets` (render kernels of the V7 agent renderer) | 1 | `24e16677`, `v7-final-art` |
 
+## Living art branches (2026-10-22)
+
+Not deleted material: the art track's work lives on side branches that are never merged into the V8 line
+(ADR 0018). Read a file with `git show origin/<branch>:<path>`.
+
+| branch | head | what it holds | status |
+|---|---|---|---|
+| `v8/art-trial` | `c3dafb07` | ART-TRIAL: generated 32-px people and environment for the M1 scene; `docs/v8/arttrial/` (goal, decisions, decision brief, blind results, cost, report), the trial's asset sheets and boards; raw originals in `/Users/rexxa/work/arttrial-data/` | done, failed (3/10, 10/24) |
+| `v8/art-concept` | `a5406866` | ART-CONCEPT: eight visual languages × eight subjects; `art/concepts/<slug>/` (concept, generation log), `art/concepts/boards/` (12 boards), `docs/v8/artconcept/` (goal, decisions, checks, blind review, scores, book, cost, report); raw originals in `/Users/rexxa/work/artconcept-data/` | done; owner chose 05 |
+| `v8/art-trial2` | (running) | ART-TRIAL2: concept 05 at production scale (cut-out rigs, generated environment, portraits); only `art/**` and `docs/v8/arttrial2/**` | running in a parallel session |
+

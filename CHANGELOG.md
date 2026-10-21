@@ -5,6 +5,13 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## Unreleased — M2
+
+Things and making (`docs/v8/m2/M2_GOAL.md`). Filled in by Part 7.
+
+### Added
+- ADR 0018 (art direction: illustrated 2D top-down at 64-px tiles, concept 05 ink-and-tone, cut-out people, generated environment); VISION §6 rewritten for it; ROADMAP rows ART-TRIAL, ART-CONCEPT, ART-TRIAL2, M-ART2, M-PERF; HISTORY and `docs/archive/INDEX.md` list the art branches.
+
 ## M1.5 — 2026-10-22
 
 The colony's own calendar and demographics, and the simulation contract (ADR 0016) that every later pass is held to (`docs/v8/m1_5/M1_5_GOAL.md`). **The colony's behaviour changes** (calendar, ages, births); the `baseline` world is bit-identical (identity PASS). The colony fixtures are re-captured at each behaviour-changing commit (`/Users/rexxa/work/m1_5-data/{p1,p4,p6}/fixtures/`). Evaluation `docs/v8/m1_5/M1_5_EVALUATION.md`, report `docs/v8/m1_5/M1_5_REPORT.md`; benchmark ledger `docs/perf/PERF_LEDGER.md` (N = 1,000: 1.79 ms; ceilings 4/4 PASS). Gate 25/25 green at `cdd4a775` (`v8/main`).
