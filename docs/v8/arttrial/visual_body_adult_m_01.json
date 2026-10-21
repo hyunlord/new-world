@@ -1,0 +1,15 @@
+{
+  "score": 68,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "South walk A and walk B both advance the same leg rather than opposite legs.",
+    "East walk A and walk B are nearly the same gait phase.",
+    "Raw grey fills include unrequested shading; exact tint channels need pipeline normalization."
+  ],
+  "suggestions": [
+    "Edit only the third cell of the first two rows to show the opposite foot and arm forward.",
+    "Preserve the complete sheet registration and use flat skin/loincloth greys."
+  ],
+  "reasoning": "The nine requested poses occupy the expected cells, but near-duplicate walk poses cannot establish a working animation. Keep this sheet unaccepted and retain the original for comparison."
+}

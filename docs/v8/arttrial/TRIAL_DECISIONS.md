@@ -77,3 +77,56 @@ Context: sheet edits changed body silhouettes by 1–5 pixels per frame after re
 Choice: preserve failed sheets, compare both subtraction inputs with the same palette, and use the permitted pose-edit fallback: enlarge each actual native body frame with nearest-neighbour to a magenta 1024-square reference, generate the worn version on it, and majority-reduce the entire returned canvas to the original 32-square coordinate system. No trimming, individual recentering, deformation, or restoring body pixels. Sleeping references keep their 32×16 image at the square's origin and reject foreground outside that declared box. Check erased pixels, changed regions, air-facing outline and visual attachment before acceptance.
 Reason: the first single-frame hair edit preserves the body silhouette exactly and changes four normalized head pixels. Its 218 pre-palette RGB changes remain recorded; normalized geometry success is not raw byte identity or proof that every pose/style works.
 Evidence: external `people/layers/hair_single_01*`; `art/pipeline/single_frame.py`; negative tests and prior sheet-rejection records. Semantic-mask repair of failed variants was reviewed and rejected as original-gate evidence.
+
+## D14 — Layer coverage follows independent attribute selection
+Context: §5 explicitly requires 36 body frames and the same frame set for each layer family. It does not quote a total layer count, but sex/age, hair and job resolve independently.
+Choice: target the 17 required variants (five hair, two beards, four tops, six tools) across all four bodies and nine poses: 612 layer frames, separately from bodies and shadows. This is an integration interpretation, not a literal count in the brief. Keep a key-level coverage inventory; a completed board subset cannot establish complete attribute support. Log carry remains required for the scene.
+Reason: restricting jobs or hairstyles silently by body would contradict the composition mapping. Missing keys remain explicit errors; neither relabelled poses nor resized layers count as coverage.
+Evidence: `TRIAL_GOAL.md` §5.1–5.3; `PERSON_SPEC.md`; external `people/board_attributes.json`.
+
+## D15 — Intended layer overlap versus unrelated drift
+Context: a garment or hand-held tool necessarily changes pixels in its contact region. A diagnostic demanding zero body-colour changes everywhere would reject legitimate occlusion.
+Choice: register the intended garment/head/tool contact region before subsequent generation attempts. Accept actual generated overlap only within that region after the prescribed palette processing, with visual review; reject erased body alpha, unrelated waist/foot/head changes, and stray pixels. Preserve earlier strict diagnostics and rejected candidates. Never repair pixels or crop a failing difference layer to make it pass.
+Reason: subtraction isolates the worn object, including its overlap with the mannequin. Pixel registration and semantic attachment still require evidence; a region is not permission to ignore arbitrary changes.
+Evidence: external per-family single-frame diagnostics and prompts; `art/pipeline/single_frame.py`.
+
+## D16 — Tint channels belong to their semantic layer
+Context: an actual generated stone hammer uses neutral grays also reserved for skin and clothing. Applying every channel to every layer turned its stone head blue and skin-coloured. Morphological closing also copies some unchanged body pixels into clothing layers.
+Choice: scope tinting to body skin/loincloth, top/headwear clothing, and hair/beard hair channels. Tool and carry material colours remain unchanged. Exact RGBA matches to the registered underlying body retain the body's tint, preserving copied skin pixels without altering the generated layer mask.
+Reason: source colour alone cannot distinguish gray stone from skin across unrelated families. Both the material-preservation and closed-hole skin cases have failing-first regression evidence.
+Evidence: `art/pipeline/test_compose.py`; external `preflight/tint-toggle-before.json`, `preflight/tint-fix-qa.json`, and `people/tint_material_before_after.png`. The real hammer comparison changes 17 rendered pixels; source assets are unchanged.
+
+## D17 — Freeze failed reads and separate revised silhouettes from original frame sets
+
+- Context: First scene blind score is3/10 (strict shelter-word reading2/10), below8/10; fixed random variation score10/24, below20/24. Pixel-valid layers do not establish readability.
+- Choice: Preserve both verbatim responses and exact original pixels. Use the one permitted scene revision round for log piles, shoulder logs, sleeper, child and elder silhouettes. New body shapes and their matching layers are versioned separately, rather than silently replacing a body under existing incompatible garments.
+- Reason: Replacing only a mannequin would invalidate every earlier layer aligned to it. Original variation inputs and their measured score remain unchanged; no resampling or field removal.
+- Evidence: `BLIND_RESULTS.md`; external `people/boards/round1_frozen/`, `variation_first_frozen/`, `people/revision_*/`. Final report must state version coverage and whether the scene-only revision supports the full nine-frame wardrobe.
+
+## D18 — Person anchors describe the canvas, not the visible foot
+
+- Context: Producer registries used mixed y=29,30,32 anchors even though image coordinates were identical; `PERSON_SPEC.md` already defines `(16,box_height)`.
+- Choice: Normalize body/shadow/hair/beard/top/tool/carry/head metadata centrally to `(box_width//2,box_height)`, including sleep `(16,16)`. No image pixels move.
+- Reason: Downstream sheet consumers must align whole layer canvases consistently. Current PIL compositor already aligns by equal canvas coordinates.
+- Evidence: external `people/integrate_registry.py`, final registry validation.
+
+## D19 — Show missing requested layers instead of substituting attributes
+
+- Context: Frozen24-person inputs require four still-unaccepted keys across three people: adult-male east-idle short/long-tied/braided hair and spear. Bounded generated retries failed registration; spear calls also returned tool refusals and further spear calls were stopped. Strict `compose_person` correctly refuses these requests.
+- Choice: Preserve the strict compositor and frozen input manifest. Publish a clearly marked coverage board:21 complete composites and3 incomplete renderings that draw only existing accepted layers. Red borders and explicit MISSING labels identify omissions; no replacement hairstyles, jobs, copied masks or fabricated layer pixels.
+- Reason: The owner needs the24 requested slots visible without mistaking absent artwork for successful coverage. This artifact is a failed completeness result, not24 complete composites.
+- Evidence: external `people/render_coverage_board.py`, `boards/coverage_board_provenance.json`. All24 rendered pixel sets differ, but the complete24-person gate remainsFAIL. The preregistered random six are all complete and their original pixels remain frozen; score10/24 is unchanged.
+
+## D20 — Preserve failed registration recovery
+
+- Context: three frozen board requests lack accepted adult-male east-idle hair; the short candidate changes one unrelated foot pixel.
+- Choice: test only global whole-image shifts before the existing reduction/extraction pipeline; do not patch a local pixel, ignore body erasure or substitute a style.
+- Reason: a global grid-phase mismatch is a legitimate alternative explanation that can be checked without repairing generated anatomy.
+- Evidence: coarse25 shifts and fine147 style/shift combinations produced zero passes. Short zero shift remains best, retaining the unwanted pixel at(16,26). External `people/grid_registration_diagnostic/{REPORT.md,FINE_REPORT.md,metrics.json,fine_summary.json}` preserves sources, transforms and metrics. This bounded search does not prove all global registration methods impossible. Original failures and thresholds remain unchanged.
+
+## D21 — Comparable family colour measurements
+
+- Context: producer manifests mixed body-context colour references and narrow elder-style family names. Those scores cannot be treated as one common layer-family distribution.
+- Choice: at final integration, normalize hair, beard, tool and body measurement families to one declared canonical image each: short/adult_m/south/idle; short/adult_f/south/walk_a beard; axe/adult_m/south/idle; body/adult_m/south/idle. Keep original producer references in external `people/canonical_reference_mapping.json`. Top already shares one hide-wrap reference.
+- Reason: measure every submitted member against a stable family colour reference without changing pixels, source acceptance or outline context. Shadows retain identity references because they are deterministic derivatives.
+- Evidence/limit: this is post-production measurement normalization, not proof that the canonical image was attached to every earlier prompt. Person edits chiefly attached their exact mannequin; the full cross-family prompt-reference discipline is PARTIAL. Historical producer scores remain available and are not rewritten as earlier decisions.

@@ -13,7 +13,7 @@ import math
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Final, TypedDict
+from typing import Final
 
 import numpy as np
 from PIL import Image
@@ -39,22 +39,6 @@ NAMES: Final = tuple(f'{direction}_{pose}' for direction in ('south', 'east')
                     for pose in ('idle', 'walk_a', 'walk_b', 'work')) + ('south_sleep',)
 BODY_COLORS: Final = ((20, 18, 16), (154, 154, 154), (110, 110, 110))
 ROOT: Final = Path(__file__).resolve().parents[2]
-
-
-class GeometryDocument(TypedDict):
-    crop: list[int]
-    target: list[int]
-    offset: list[int]
-    box: list[int]
-
-
-class TransformDocument(TypedDict):
-    source_size: list[int]
-    cells: list[list[int]]
-    normalized_cell: list[int]
-    south: GeometryDocument
-    east: GeometryDocument
-    sleep: GeometryDocument
 
 
 @dataclass(frozen=True, slots=True)
@@ -196,6 +180,44 @@ def build_transform(image: Image.Image, upright_height: int = 28) -> SheetTransf
     result = SheetTransform(image.size, cells, size, fit_union(frames[:4], (32, 32), upright_height),
                             fit_union(frames[4:8], (32, 32), upright_height),
                             fit_union(frames[8:], (32, 16), 12))
+    result.validate()
+    return result
+
+
+def calibrate_transform(image: Image.Image, desired_idle_height: int = 24) -> SheetTransform:
+    """Opt in to exact idle occupancy while retaining one transform per direction.
+
+    Keep the nominal child crop (including its reserved context) and sleep
+    geometry. Search at most 32 integer target heights, ordered by distance
+    from the nominal height then by smaller height. Width follows the fixed
+    crop aspect ratio, rounded to the nearest pixel. All four poses and later
+    variants reuse that direction's selected target and centered offset.
+    No source pixels, individual pose anchors, or default adult sizes change.
+    """
+    if type(desired_idle_height) is not int or not 1 <= desired_idle_height <= 32:
+        raise PipelineError('Idle height must be an integer inside the 32px box')
+    nominal = build_transform(image, upright_height=24)
+    cells = normalized_frames(image, nominal.cells, nominal.normalized_cell)
+    calibrated: list[FrameTransform] = []
+    for start, geometry in ((0, nominal.south), (4, nominal.east)):
+        crop_width = geometry.crop[2] - geometry.crop[0]
+        crop_height = geometry.crop[3] - geometry.crop[1]
+        idle = ingest(cells[start], geometry.crop).image
+        candidates = sorted(range(1, min(32, crop_height) + 1),
+                            key=lambda height: (abs(height - geometry.target[1]), height))
+        for height in candidates:
+            width = round(crop_width * height / crop_height)
+            if not 1 <= width <= min(32, crop_width):
+                continue
+            bbox = pixelize(idle, (width, height)).getbbox()
+            if bbox is not None and bbox[3] - bbox[1] == desired_idle_height:
+                calibrated.append(FrameTransform(geometry.crop, (width, height),
+                                                  ((32 - width) // 2, (32 - height) // 2), geometry.box))
+                break
+        else:
+            raise PipelineError(f'Cannot calibrate {NAMES[start]} to {desired_idle_height}px inside 32px box')
+    result = SheetTransform(nominal.source_size, nominal.cells, nominal.normalized_cell,
+                            calibrated[0], calibrated[1], nominal.sleep)
     result.validate()
     return result
 

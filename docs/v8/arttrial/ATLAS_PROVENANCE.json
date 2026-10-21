@@ -1,0 +1,1929 @@
+{
+  "status": "PASS",
+  "assets": 383,
+  "all_atlas_regions_exact_rgba": true,
+  "all_anchors_exact": true,
+  "atlas_size": [
+    512,
+    944
+  ],
+  "atlas_sha256": "9672e264b808145b619c0e09b21549b1aa3185a7bdab7f438450d7052503851a",
+  "registry_sha256": "2c42e60c90b8329845f51ee314eff12166a01aef933b407ab08780f35cf42628",
+  "records": [
+    {
+      "name": "hut",
+      "source_sha256": "1551f3cea9f566eb23bbd3781e9c8043ee09c8f483dd5988d11ead2b1c4e8d5b",
+      "rgba_sha256": "633fc02c51bddac9abdff4e46a05c75cf1e0b3ed5ade6a9f766014a6b453b6f7"
+    },
+    {
+      "name": "lean_to",
+      "source_sha256": "445958e36c63d407312c5c6990326a73978649796fc0844c8281b92464c4d4d1",
+      "rgba_sha256": "30c6411d56eb8465b9df3fcd0dd5db41587f1dfdca172b69b7cd36310435fdfd"
+    },
+    {
+      "name": "tree_oak_s",
+      "source_sha256": "d21cda81497e34dbfb6e6240fe54ebe9925ea321df28309f0e622d76a8485383",
+      "rgba_sha256": "0a592c73faa5482e65b2e7ae242f5919e6acf1f82ef69eed9d08c3f22da08856"
+    },
+    {
+      "name": "tree_oak_l",
+      "source_sha256": "0a3ee0ce75bd04b3ec81ead24682ca6ae0434aa69c4371e147195c947bcd503b",
+      "rgba_sha256": "c582f4af9e6f8e6cf1429150ef52ce58254800b406e6f1e69836c3bb55ac3635"
+    },
+    {
+      "name": "tree_birch_s",
+      "source_sha256": "a93686bf1f98aff4e1e7694a7fc8c63484dab86210985e1dc32234507d13effb",
+      "rgba_sha256": "9cd80ad65534af9374b530286491c7f9abd839b9f3bd20ef847dc6b4ad756c63"
+    },
+    {
+      "name": "tree_birch_l",
+      "source_sha256": "9f497905980416c4580d812003db13d8f1f4508bd6b4e28076a13e4cf721c7ee",
+      "rgba_sha256": "3fcc65cd9f1b20faa88e1ef9b292e3d9cda711b966fb87fbf182cfa23d1741f6"
+    },
+    {
+      "name": "tree_pine_s",
+      "source_sha256": "ba942475387b2153f174e4adabd605512f327fad53f45daece9c2e80d5d4f3ad",
+      "rgba_sha256": "0430094a7615f091414d5dc59d4d03662509244aa26de44a5cd69f2dff2814d6"
+    },
+    {
+      "name": "tree_pine_l",
+      "source_sha256": "3925c85cfddeccc39f2d370040347ba819572b20741b80d80aeaad2c69703900",
+      "rgba_sha256": "bf07499c0ee42157495f34eeb28b344b19dadd626ea9edfe74ec9398104f8945"
+    },
+    {
+      "name": "log_pile_1",
+      "source_sha256": "2cc2cf09f1e099ea2bc1a41646e2aed4aa58f1628172f598c0d26c46457baf95",
+      "rgba_sha256": "c1d073d2b72f292d63b21887ce69e37c767dee80887f653c0824b2a7482b4800"
+    },
+    {
+      "name": "log_pile_2",
+      "source_sha256": "0d306b1c5ec9cd07eec47be71a21d29acf885e3f26e4836882b323cfbc4ca7ad",
+      "rgba_sha256": "ab50146bdf5c3f96ce6c73d4b828ef41416355820afbff137ffcf550d3de9272"
+    },
+    {
+      "name": "log_pile_3",
+      "source_sha256": "3ba5c6ddc4038eaf61618a5a4bc78c97e2b7640544ac5940784d7aa768613669",
+      "rgba_sha256": "be7d9205f2c524b2f1225f336c708575aaabdf7cc7f00da32baeeb6616d1eaf0"
+    },
+    {
+      "name": "stump",
+      "source_sha256": "38bb4ed6850aa6ec14088914a4c5dcbc08825cd13d47439fcabb3a6fb372dad3",
+      "rgba_sha256": "6ad0ae7694c5ca3a54f8a5dc4c296314b7c982a2fe061334b87ddcdc2ef94209"
+    },
+    {
+      "name": "deadwood",
+      "source_sha256": "8545ff6126c8601a7335b3bd5c2d2ca6eb10a625cc208cfbe5b10297abf64a17",
+      "rgba_sha256": "b1d6e6bf0dbe6a6f2e405408f767a34972ff9add9585cc14a41c9051ad8148ad"
+    },
+    {
+      "name": "hearth_0",
+      "source_sha256": "02c93ccebeba296c575eadf371203b1614e714b16c90f5ffe144e601957b0b95",
+      "rgba_sha256": "4c832315fc4f098915808b11fcc17cd4deb71612b97205628769be6b32516c50"
+    },
+    {
+      "name": "hearth_1",
+      "source_sha256": "62be20263f7f2f03c042760177a0e98b075cdaa68e976f10a22505b3d242f6d5",
+      "rgba_sha256": "19e4fc1b8cc40d045c4875c9c5213face96e4331df28c8bc2db0d3713360069d"
+    },
+    {
+      "name": "berry_bush_full",
+      "source_sha256": "a75b09cb7f266ea4c18d17b1d6c9976f60485af771ed7e1e7e5d9cface27ffc5",
+      "rgba_sha256": "5f396fd2f9065f72783ee84a475b892b66ad1e91f1f09de724b50b326f488aea"
+    },
+    {
+      "name": "berry_bush_bare",
+      "source_sha256": "6f10841e4ff246906a049ff2f42d68f9df9468c63a9a8ccece2e2cbbfe2524db",
+      "rgba_sha256": "df6bc114e0659a084144d990d631d02c34eae92aee7cf9d1f2a34ad51d6f839b"
+    },
+    {
+      "name": "boulder",
+      "source_sha256": "ba8410fbd35a99bf5ca1db314a161b6122db96e9bbc03a153fa680482246a85b",
+      "rgba_sha256": "22a1ab87e0e0a2ca4167bfc2edc123f8fe720d9f52995500857b89c8d2879804"
+    },
+    {
+      "name": "stockpile_floor_corner",
+      "source_sha256": "2a51d89c9383a447eadd11ec6f2daff538bf356c12f3f01d015abacc7983eaa4",
+      "rgba_sha256": "e9caea59b27f0c751b6bbdee0eeacb0a7443ffc50c5fe0db40e4c4e78f2b94d3"
+    },
+    {
+      "name": "stockpile_floor_edge",
+      "source_sha256": "cdca45082796d5825b2a186b7737dfa0431b14f15e6fdfb936f5820e4ce37eae",
+      "rgba_sha256": "97a3f3e58b7593b0258aa421314b47818c1cfc68c890a045b5c5bad6f8a9e4e2"
+    },
+    {
+      "name": "stockpile_floor_interior",
+      "source_sha256": "d290a34505d622ccb3e07cb99a2898a4c2259941925fc13679142282cac9c6d4",
+      "rgba_sha256": "987dd8aec3fd40277382b21b5eb066f23a9eebd70322fecc46802f419c8b1dc5"
+    },
+    {
+      "name": "ground_dirt_0",
+      "source_sha256": "a430032c80b89b08d19b4292b8491d46c11f5dc912cbe85caba4f789c8f68272",
+      "rgba_sha256": "6391a3971fac5ed524393452902a209d2ec09e519c76ef7556be8922a0a88ee2"
+    },
+    {
+      "name": "ground_dirt_1",
+      "source_sha256": "04431b13b1930b1bc0bc76c3c1c646435c442135660c3d230bb36f0e0b230081",
+      "rgba_sha256": "e00e52d12b5509df61a50c5f9fbcc0cbc428e067c81cc50de69752a660397f0f"
+    },
+    {
+      "name": "ground_dirt_2",
+      "source_sha256": "710a364d698b0ba4d282b81718141e8ff9ebef8d6c3dabacb5aee2b1224d965b",
+      "rgba_sha256": "577e3c48ea0b1ab68ce1bf0cfb5d60ca9134a1548379d4ac4510c77c173716e3"
+    },
+    {
+      "name": "ground_forest_floor_0",
+      "source_sha256": "00eb6224c1a22a9c3ce3ac4007b6a8ca9985c75a089c637d97d6d67ed9c76765",
+      "rgba_sha256": "20306fcd8db0a487c5dd64f60a6a7ab02b1e05c81d852bcb5746a0b96233b7ee"
+    },
+    {
+      "name": "ground_forest_floor_1",
+      "source_sha256": "2a492cc1789555c56a3b22992c9ed833f0d270911b20dae31fd43de80f179a3c",
+      "rgba_sha256": "c6a0f3a1f0b8f4f236e3fc517f678ab86bd447bbf6917e4a1241e8e95061c202"
+    },
+    {
+      "name": "ground_forest_floor_2",
+      "source_sha256": "8888ef2c22ed98771395b249573a64649bea16f32f6b0d4b7ed009e51310cace",
+      "rgba_sha256": "32dc5327b3141ff9bbd942a3ad31163c62f8646b0173bb021277051d293a53e6"
+    },
+    {
+      "name": "water_shallow_0",
+      "source_sha256": "36fc92af2c953364e30720007a87d769401911e6f5f31ca87b9f04f896f88485",
+      "rgba_sha256": "502d4029a91832c696b428e5c11b45667ff59e643e2e310cde5dba8f9212fdea"
+    },
+    {
+      "name": "water_shallow_1",
+      "source_sha256": "36fc92af2c953364e30720007a87d769401911e6f5f31ca87b9f04f896f88485",
+      "rgba_sha256": "502d4029a91832c696b428e5c11b45667ff59e643e2e310cde5dba8f9212fdea"
+    },
+    {
+      "name": "hill_0",
+      "source_sha256": "c2eb0939fac1e1180351f740e76460f633aacdf59f9277b315c13b44a0f73eb1",
+      "rgba_sha256": "1dc905f2c526a22313052c5dbcb4ad05ae39d33a8875c4db882db3436572ebab"
+    },
+    {
+      "name": "hill_1",
+      "source_sha256": "89018bd54bc3854ba17b05f1e6a83a9d6379444f5b45e7d3985a37d32af88a9a",
+      "rgba_sha256": "266f275476a0f34e0483b68dbcdea512a915273bcb3ae25d62aec901453e7307"
+    },
+    {
+      "name": "ground_grass_0",
+      "source_sha256": "88b44fb668dc919faf84028456b4e25487bac4c4f0c049ee6ced347a9ec93f9f",
+      "rgba_sha256": "d59fa313af59fc5bbbe6a10ab6be3ae1ff090560882468c568d6d7beed900e22"
+    },
+    {
+      "name": "ground_grass_1",
+      "source_sha256": "f289b242aad03fd38a559fb8ac10b06a009db019ace142b14532dc27d795673c",
+      "rgba_sha256": "18dc7d0119ad000454674845b2cebc011572c98bc54dc4945b10e186320d09d1"
+    },
+    {
+      "name": "ground_grass_2",
+      "source_sha256": "dc86f56190fa3ca507f3dc60ca111ca615aca35e5491b08f80ad1d21d09db23f",
+      "rgba_sha256": "4cd1e7d7844a2cb30050ca90859e4df7df1f267688073775d1eaa829f2755af8"
+    },
+    {
+      "name": "ground_grass_3",
+      "source_sha256": "e24359fb44f0cfc5e968838de694a8792a60293ae10f995c59567f9d01f4cc17",
+      "rgba_sha256": "ff8a108ede35f971ddfcc787e3e4f4cd55b9e65e85bd1ffa549747944803e715"
+    },
+    {
+      "name": "ground_dark_grass_0",
+      "source_sha256": "dc5b97c7f09be8068b9175db2b0805904a84c99e2ef4e12fd2453b0c39d482a1",
+      "rgba_sha256": "9c58452ee5ce5e4f0b469d52100ff5302ba1d72c44afc55949c42be7d23b086a"
+    },
+    {
+      "name": "ground_dark_grass_1",
+      "source_sha256": "c4fa264ad44ddd7bacce8826f58d7ad8b366e0a55ca3303920983cde7c1e4c32",
+      "rgba_sha256": "58f8b45d194c3fece733fd34b2fe882a8daacbb5ddb892f2caf667146a15e7cb"
+    },
+    {
+      "name": "water_deep_0",
+      "source_sha256": "9a82a973463ff095266aa5c9ffdb5af8810a1cc050498eeaf3103222c4870d44",
+      "rgba_sha256": "ed31340cd67ef9c1115795658c5ceca18161b12e8c59ccf9b4629591714eb41a"
+    },
+    {
+      "name": "water_deep_1",
+      "source_sha256": "e86b727da36c388b7891c49599fde1edca579afe873b92c052f6053a13314479",
+      "rgba_sha256": "4dea3db672f90493e3079795e8d9a5a8532f66de73de0628ca113c7a1e656bc8"
+    },
+    {
+      "name": "mountain_0",
+      "source_sha256": "be171d6f8a937f0e21ceac76baaf145d82c1cc25b36b38ec4271d7a055eb4306",
+      "rgba_sha256": "d99fdda07ad858d62eff619869be6b2ba69772960d5b98b8a61da8b7ca64c08b"
+    },
+    {
+      "name": "mountain_1",
+      "source_sha256": "d8e5ddb88848c583f30e319a13000fe54e9baa97d37a9bf00d57a9e32b5df799",
+      "rgba_sha256": "96338beed891935e3af3c7c649828d7faa5221b03dd7dce41dedbca2c797875f"
+    },
+    {
+      "name": "bank_n",
+      "source_sha256": "596838582bbe5fb32e6545e915675aea9ba083721e0e987898cb7db3971ccde9",
+      "rgba_sha256": "8932ac743b9ecdccceb475fb12a08cd84933dffd6ee3efa6154a4bd533433494"
+    },
+    {
+      "name": "bank_w",
+      "source_sha256": "d5cb2b30e45c576069670db5a3deccd3fb194081e94ad68403bd3a49a906ba09",
+      "rgba_sha256": "e96dfb7e61dfe473d22b04c1816512b5fd1afeb2e4589d8b6147e48980d4898e"
+    },
+    {
+      "name": "bank_s",
+      "source_sha256": "20d36a3dba71c9354f9e6514cbefa8e9b36d587eea7e8719fc6b5dbe1a055d0e",
+      "rgba_sha256": "58bb7cc701088d73936b18a201b7ce0b9b0787672bd41a0d84f8ee934a41bac7"
+    },
+    {
+      "name": "bank_e",
+      "source_sha256": "8aadc05340bd8c22887a70aa053c4adcc97e8912ee7c1838580097d2541688b3",
+      "rgba_sha256": "5565bd3f158bdbd629acfc784523c47efd0042b61580bf537c5fb8072aeda620"
+    },
+    {
+      "name": "bank_in_nw",
+      "source_sha256": "87748a7cf7ed8fb5f2fb1b177a9a5848407779918c472b57b7919a4d82132c63",
+      "rgba_sha256": "010118b5a7a62deeabb080c669fde5d04d35501685529fd1f03586c1ecffabf0"
+    },
+    {
+      "name": "bank_in_sw",
+      "source_sha256": "efc6559e34e211ba91c88e6f5dc44b2d50b6dfc2c7ecb4e660014b4e79520f47",
+      "rgba_sha256": "a3fcd4abce51885a127e044d460343d4626ae987971b5f8550d0d764acb75d34"
+    },
+    {
+      "name": "bank_in_se",
+      "source_sha256": "b8f234da1c480c4a3215b799fb5493d34913e0cd5f27175148e6b6ec11ea58b7",
+      "rgba_sha256": "bc6c979c5d24c8ff292ca01d6fadde5f5d251b04d9846068ee57ee831e99f681"
+    },
+    {
+      "name": "bank_in_ne",
+      "source_sha256": "7bc50c0491698ea98242468e4f08d0652d6e7f240b65bb1388160ccce523f83a",
+      "rgba_sha256": "caa3db95e13cda2dc9d64b49c60a7af324ee1cb1cfe0749c11b55492ea59ab3c"
+    },
+    {
+      "name": "hut_ghost",
+      "source_sha256": "e79aad991dbe004e0de89f60d18b08c68a67bb7e9844bcfe3cfad73e01ce7423",
+      "rgba_sha256": "bb1eee59cdde63d851220233357715b2e3575d7f7bdb34f57b1d5a4882f6eeaf"
+    },
+    {
+      "name": "canopy_shadow",
+      "source_sha256": "7a2a1abc86b1223c6f0767b4478adcfa34305f6e2822f5b8233da2f6204d60b3",
+      "rgba_sha256": "d1dd3f3ea41567c3f511a7f201f37bb4444deb57a1e15f4b310ede579a9fb3fc"
+    },
+    {
+      "name": "body/base/adult_m/south/idle",
+      "source_sha256": "3579a0a61ef97000145602f6603166b89ee35a582fd7e37e7d75fa61ce32c6a6",
+      "rgba_sha256": "c643f6ff45dfe85eee4d886814094cfea5e008befe1650ec556925a597392ae9"
+    },
+    {
+      "name": "shadow/base/adult_m/south/idle",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_m/south/walk_a",
+      "source_sha256": "a99f309deb1839ff87d8308e8e9c3afb76c01fdea83170721f47e02b30173fa8",
+      "rgba_sha256": "16ca5d684c66d1ec9c9461cda7b20d6b21c599cb5f60f5dfdefa1980e903ebc1"
+    },
+    {
+      "name": "shadow/base/adult_m/south/walk_a",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_m/south/walk_b",
+      "source_sha256": "a49dc41922111cf262354d79fafe6f1b57f3631b0eed1524a28d32ec34571cf2",
+      "rgba_sha256": "d396f1ac2efee1272cce536484d4dbc85d3b2f2bce6e568717a88899599f123a"
+    },
+    {
+      "name": "shadow/base/adult_m/south/walk_b",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_m/south/work",
+      "source_sha256": "b9bdd282369283f234ca5b48acfbfebaf69a3c328a1c1a5db9cc4533a4d54c0d",
+      "rgba_sha256": "f9c75aad150d5a4672d44b3e9029d6e4aff687acbdb5670ed5c4b6cd20068bd6"
+    },
+    {
+      "name": "shadow/base/adult_m/south/work",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_m/east/idle",
+      "source_sha256": "7b4921d7748208fcfa573cb501d6ef20f593962a6bfad68e2d377d259c655c81",
+      "rgba_sha256": "fca7687b081ea3086a836da08ee243b1152bf00ba6214e3a37797d748adf5344"
+    },
+    {
+      "name": "shadow/base/adult_m/east/idle",
+      "source_sha256": "66370aa2186524ac28933f8bebc03fac7086b77590e4155113296c525ac6c598",
+      "rgba_sha256": "2a87d4f5ac36bc05a2d0fc234fb99dbb0c35c95b7a6754c1472cc2f11bb81655"
+    },
+    {
+      "name": "body/base/adult_m/east/walk_a",
+      "source_sha256": "715167044b34fcf0f2571bb08fdf91198a792477c5687760b0857b2ca898fd57",
+      "rgba_sha256": "c86163aa336aeeb5ce2fb65096c6112ca65b1aa4ccb8da30d26b3311afd64761"
+    },
+    {
+      "name": "shadow/base/adult_m/east/walk_a",
+      "source_sha256": "66370aa2186524ac28933f8bebc03fac7086b77590e4155113296c525ac6c598",
+      "rgba_sha256": "2a87d4f5ac36bc05a2d0fc234fb99dbb0c35c95b7a6754c1472cc2f11bb81655"
+    },
+    {
+      "name": "body/base/adult_m/east/walk_b",
+      "source_sha256": "ced7379305bb8f6f03608ebfa3bd56863497283690084ac4013b10793c7e59d9",
+      "rgba_sha256": "bfd6e82fe0ef6a0a68e55c4352c129a31d9655efb7e708e66dd05942f08b4ff2"
+    },
+    {
+      "name": "shadow/base/adult_m/east/walk_b",
+      "source_sha256": "66370aa2186524ac28933f8bebc03fac7086b77590e4155113296c525ac6c598",
+      "rgba_sha256": "2a87d4f5ac36bc05a2d0fc234fb99dbb0c35c95b7a6754c1472cc2f11bb81655"
+    },
+    {
+      "name": "body/base/adult_m/east/work",
+      "source_sha256": "5aa77c75c576531c74c4089a8d991f5dad1f251a8abada3b9151a2c5194f5b20",
+      "rgba_sha256": "8c816dc96ecc2bcfacfcc28495823e9c4a62c3a04a1a6e09a4b7ee67fa0130d2"
+    },
+    {
+      "name": "shadow/base/adult_m/east/work",
+      "source_sha256": "66370aa2186524ac28933f8bebc03fac7086b77590e4155113296c525ac6c598",
+      "rgba_sha256": "2a87d4f5ac36bc05a2d0fc234fb99dbb0c35c95b7a6754c1472cc2f11bb81655"
+    },
+    {
+      "name": "body/base/adult_m/south/sleep",
+      "source_sha256": "4e73b9cd026419bcd8a15cbd389630e705434a95357ec81ea6f2db6519c1d888",
+      "rgba_sha256": "966551c1a16e2567b4326195d3ac6a2134658fb559c268a5eb7007c87a879168"
+    },
+    {
+      "name": "shadow/base/adult_m/south/sleep",
+      "source_sha256": "b07b176209b8bc927b4a896c815b1636d6f085ad4180b03d3c25c07c50e2e371",
+      "rgba_sha256": "92591df991e1da05d52aeccab42033fa1a302ed0be49a2beaccc4f76f1163ca9"
+    },
+    {
+      "name": "body/base/adult_f/south/idle",
+      "source_sha256": "f9545e3c361fa7a635d78b777312d7671495210b4a7695c70030d45482b83497",
+      "rgba_sha256": "77cd93e70f21db5d94dbf635887ff31c4372c6e223f36fa810abf1d188c2dfc1"
+    },
+    {
+      "name": "shadow/base/adult_f/south/idle",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_f/south/walk_a",
+      "source_sha256": "96e05f15489389fd1a654f162b3f20dcb13387fdfdca9839381686e215ab354c",
+      "rgba_sha256": "b5905d3cbc5bd1f55da62d71ba49a956957811bfb709ded9bf31462569ecff0d"
+    },
+    {
+      "name": "shadow/base/adult_f/south/walk_a",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_f/south/walk_b",
+      "source_sha256": "97d99827217838471051a48decd2097027c3e48fbe0328011d7c4c8f266d2c64",
+      "rgba_sha256": "8b3f7e31638841c78d9aea057832f1438c951ded7535728626f935091efd5f6c"
+    },
+    {
+      "name": "shadow/base/adult_f/south/walk_b",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_f/south/work",
+      "source_sha256": "7735594b40e5481906feedff52274e3a4bf3df3b28f05d3cead39801367c1c32",
+      "rgba_sha256": "9752407ee3a10a14b7e27ab3bae583021288a29bee423dfd8e10e5f95dc47c20"
+    },
+    {
+      "name": "shadow/base/adult_f/south/work",
+      "source_sha256": "7d3895a7bc977bb5ac177225a07100d2dee4cd71c97cc00e6789be43f4544800",
+      "rgba_sha256": "b9a48280b23d65611341f6af5e473d8d7094f05b9e7fbeb568d3f987caf86155"
+    },
+    {
+      "name": "body/base/adult_f/east/idle",
+      "source_sha256": "1b6936ed3c8dc4fd901f4bd45be83b4c2d3936f5a0048bc5e4f8a3fb135c18ba",
+      "rgba_sha256": "d7b1901470236d063faeff7490c6057ac4e06f08b8dd8326f8352bc640092267"
+    },
+    {
+      "name": "shadow/base/adult_f/east/idle",
+      "source_sha256": "64e4e85c5754ea4ae2328d2cf40a69fb48ac227ca66feee3253a5319bd91edfa",
+      "rgba_sha256": "5daab1fe321e0de9833d6d121acd4021ed55a1e6507deb213a4d7da95c2461f7"
+    },
+    {
+      "name": "body/base/adult_f/east/walk_a",
+      "source_sha256": "01b7d0372e1323dbce7a7567c2d39d47e4e3e223dbc5e5942a8a6d1e49495c88",
+      "rgba_sha256": "f5546c40034da515050d1410b0f8a79b663c6912eebca2ce68105f5d56d7d108"
+    },
+    {
+      "name": "shadow/base/adult_f/east/walk_a",
+      "source_sha256": "64e4e85c5754ea4ae2328d2cf40a69fb48ac227ca66feee3253a5319bd91edfa",
+      "rgba_sha256": "5daab1fe321e0de9833d6d121acd4021ed55a1e6507deb213a4d7da95c2461f7"
+    },
+    {
+      "name": "body/base/adult_f/east/walk_b",
+      "source_sha256": "70d44595bf864d3a44545b750b4a609fb830be3bbec7f1c117b5e5ac87ac2ea0",
+      "rgba_sha256": "e18e053efef5dd37550dc839db33f3aa678c0de1f2414283a4b95298fefc4f90"
+    },
+    {
+      "name": "shadow/base/adult_f/east/walk_b",
+      "source_sha256": "64e4e85c5754ea4ae2328d2cf40a69fb48ac227ca66feee3253a5319bd91edfa",
+      "rgba_sha256": "5daab1fe321e0de9833d6d121acd4021ed55a1e6507deb213a4d7da95c2461f7"
+    },
+    {
+      "name": "body/base/adult_f/east/work",
+      "source_sha256": "23cd119b90dab558d011569616718a39babda64166052f4139e7e7da86d75d5a",
+      "rgba_sha256": "7eeb6d516eb5af223698d95c34770447643400c4906fb5bf4a87f0ecdec55f4e"
+    },
+    {
+      "name": "shadow/base/adult_f/east/work",
+      "source_sha256": "64e4e85c5754ea4ae2328d2cf40a69fb48ac227ca66feee3253a5319bd91edfa",
+      "rgba_sha256": "5daab1fe321e0de9833d6d121acd4021ed55a1e6507deb213a4d7da95c2461f7"
+    },
+    {
+      "name": "body/base/adult_f/south/sleep",
+      "source_sha256": "c7baed2b8e4780636760a1f32e92e905cfd073d43736faae870016d0fb021f45",
+      "rgba_sha256": "8cfeaf574a2fa5b886dbb6171da1328a642181dd9a56d178eaced3379678c86d"
+    },
+    {
+      "name": "shadow/base/adult_f/south/sleep",
+      "source_sha256": "5b30fa14ea17cf2d663d9070e4ab52951b10ea05847ba3d483324a73669566a1",
+      "rgba_sha256": "a3549985196c4eb37aac69cb060d5f39e245315cd2cf7e5db4f08117d3d4c5d0"
+    },
+    {
+      "name": "body/base/child/south/idle",
+      "source_sha256": "d11631f9aadb218b0233c7253ba16edc5c0cb2616aec0d7843a40cc2c92f02e9",
+      "rgba_sha256": "6d209ab378176e0f2c829e5f088e863e2fc64114529b6eb02ef0693d0b2b5785"
+    },
+    {
+      "name": "shadow/base/child/south/idle",
+      "source_sha256": "f923b1843d3d3667bde598aaa2087d98319a70b7f9d0feac8e57b86cfbe58882",
+      "rgba_sha256": "e2bd86e3b70462e7e806c5ab91550119558b0abb8c65ee6edfd19d30edf968d4"
+    },
+    {
+      "name": "body/base/child/south/walk_a",
+      "source_sha256": "954279d546b500b26d69fb50901a987cc1a41e874f9d38dda99bbab10eb68992",
+      "rgba_sha256": "3971ff609a2fc1718d9465b611208d30c4711044feb0dee8e75d5038304ef0c7"
+    },
+    {
+      "name": "shadow/base/child/south/walk_a",
+      "source_sha256": "f923b1843d3d3667bde598aaa2087d98319a70b7f9d0feac8e57b86cfbe58882",
+      "rgba_sha256": "e2bd86e3b70462e7e806c5ab91550119558b0abb8c65ee6edfd19d30edf968d4"
+    },
+    {
+      "name": "body/base/child/south/walk_b",
+      "source_sha256": "d44dd66236ff3c824658e2fa2653737349405e5078fc6cfb601b66960ab9fd44",
+      "rgba_sha256": "ea58ffcf35d14f5201de1e27ce9eeba59ec8072eb97cef10d30088892804c27f"
+    },
+    {
+      "name": "shadow/base/child/south/walk_b",
+      "source_sha256": "f923b1843d3d3667bde598aaa2087d98319a70b7f9d0feac8e57b86cfbe58882",
+      "rgba_sha256": "e2bd86e3b70462e7e806c5ab91550119558b0abb8c65ee6edfd19d30edf968d4"
+    },
+    {
+      "name": "body/base/child/south/work",
+      "source_sha256": "ae1b33586ad054ee682f7efa9377e8f8b41463ef81c1255acf40f6ee3b87b799",
+      "rgba_sha256": "b5a7915d23aa083307ef7aee79df6c2c98047446e3b18bfc78c23da0e604f462"
+    },
+    {
+      "name": "shadow/base/child/south/work",
+      "source_sha256": "f923b1843d3d3667bde598aaa2087d98319a70b7f9d0feac8e57b86cfbe58882",
+      "rgba_sha256": "e2bd86e3b70462e7e806c5ab91550119558b0abb8c65ee6edfd19d30edf968d4"
+    },
+    {
+      "name": "body/base/child/east/idle",
+      "source_sha256": "47c6ed9391c563915696f7464b72a412a263c8b04d367a79d199fbeac553bedb",
+      "rgba_sha256": "fc68d22736c08edb85904517dfd096f257b5ee01f363509f6e83735dadd0550d"
+    },
+    {
+      "name": "shadow/base/child/east/idle",
+      "source_sha256": "2ffd927cb05f34a9838000a353238dce3eed080d8b4dce8b5f353b367b77ecb3",
+      "rgba_sha256": "0c64f858068a59843d06942d57af00e8c1373692103a244c383a46e0f8424928"
+    },
+    {
+      "name": "body/base/child/east/walk_a",
+      "source_sha256": "ecaded39cb760eaa3b26dec98c5d9027d87f403bb9029490cb99752a22060cb5",
+      "rgba_sha256": "c90889f9c12221afe57aef4a8af89e95b2872695fbc4d3bd8ee031a87ed8f45f"
+    },
+    {
+      "name": "shadow/base/child/east/walk_a",
+      "source_sha256": "2ffd927cb05f34a9838000a353238dce3eed080d8b4dce8b5f353b367b77ecb3",
+      "rgba_sha256": "0c64f858068a59843d06942d57af00e8c1373692103a244c383a46e0f8424928"
+    },
+    {
+      "name": "body/base/child/east/walk_b",
+      "source_sha256": "0996028a8b47023f93dfd58bd418cff6b6b0a3c56041152e7eed8df239349b3c",
+      "rgba_sha256": "cebac7801dd38d741d59cb57c41aa475af25c745d7d9ddf92c394b138ca92dca"
+    },
+    {
+      "name": "shadow/base/child/east/walk_b",
+      "source_sha256": "2ffd927cb05f34a9838000a353238dce3eed080d8b4dce8b5f353b367b77ecb3",
+      "rgba_sha256": "0c64f858068a59843d06942d57af00e8c1373692103a244c383a46e0f8424928"
+    },
+    {
+      "name": "body/base/child/east/work",
+      "source_sha256": "c31c6b3ab93718694950d0e3de76b35bd1da34ec475c2adb660af1d4d72ae3c6",
+      "rgba_sha256": "b103bca7620231f114a4cbf671b0cc78272e7deef6a8251245781f99ab0be54f"
+    },
+    {
+      "name": "shadow/base/child/east/work",
+      "source_sha256": "2ffd927cb05f34a9838000a353238dce3eed080d8b4dce8b5f353b367b77ecb3",
+      "rgba_sha256": "0c64f858068a59843d06942d57af00e8c1373692103a244c383a46e0f8424928"
+    },
+    {
+      "name": "body/base/child/south/sleep",
+      "source_sha256": "c8bbeda2a5c33f488b89ad25c414cff39281eafdfc1d1cc9d4b4ee5c377da25f",
+      "rgba_sha256": "22ea1d11f145f754f7ec6ab19fd2abf22ad678d0ae1c87367e4479fbab65883e"
+    },
+    {
+      "name": "shadow/base/child/south/sleep",
+      "source_sha256": "98e552fe2405b03d4461ac4955cfa03c8594fd05934cc3b1dba27562ae969128",
+      "rgba_sha256": "c123e589d7ad10d259f31c7ef5df273f2022c86a80d5038f5bfc260a9ebdcb30"
+    },
+    {
+      "name": "body/base/elder/south/idle",
+      "source_sha256": "54f291a99b33a4b7498c0c47206c8a2422b3f41331d0866af586082bed01b0e8",
+      "rgba_sha256": "eded4ca45eef29043157bb90b49b6611ac971d1b1202da33632a25b8f0c27cb2"
+    },
+    {
+      "name": "shadow/base/elder/south/idle",
+      "source_sha256": "0ae47cd67cb01b02f83fae7a84a4ae88534723da22aa011c97abcbf5a2642921",
+      "rgba_sha256": "0a18f01bb8db21d3dc14ad9f61d118f000111a6b57824fc3c008a4f074bec12d"
+    },
+    {
+      "name": "body/base/elder/south/walk_a",
+      "source_sha256": "169726cc235ce18f8e30c09ad4d17de96ea89f80e0cf3cd683b891d8d605653b",
+      "rgba_sha256": "eefdd965d2b5ad7ff53979df0731db3182dbc8829db6e649ae466e7b22355348"
+    },
+    {
+      "name": "shadow/base/elder/south/walk_a",
+      "source_sha256": "0ae47cd67cb01b02f83fae7a84a4ae88534723da22aa011c97abcbf5a2642921",
+      "rgba_sha256": "0a18f01bb8db21d3dc14ad9f61d118f000111a6b57824fc3c008a4f074bec12d"
+    },
+    {
+      "name": "body/base/elder/south/walk_b",
+      "source_sha256": "0cb5a40267ae5fe6c660971b2db6204d7efbb4656777f0239ebe32ab0e5a3887",
+      "rgba_sha256": "cb657fb14059b62a6a5c78fb78b0ab44c404b9bbeedd06e5bb3df20b8d766737"
+    },
+    {
+      "name": "shadow/base/elder/south/walk_b",
+      "source_sha256": "0ae47cd67cb01b02f83fae7a84a4ae88534723da22aa011c97abcbf5a2642921",
+      "rgba_sha256": "0a18f01bb8db21d3dc14ad9f61d118f000111a6b57824fc3c008a4f074bec12d"
+    },
+    {
+      "name": "body/base/elder/south/work",
+      "source_sha256": "2e8cf0d77bb7f2c47e89e623218408bceddd037d34d7ee554dfdd0616917112c",
+      "rgba_sha256": "5491fbfb4a542a03734dee6a3dc5ac3b67c62d1f79a7f14e63dd8f7009059619"
+    },
+    {
+      "name": "shadow/base/elder/south/work",
+      "source_sha256": "0ae47cd67cb01b02f83fae7a84a4ae88534723da22aa011c97abcbf5a2642921",
+      "rgba_sha256": "0a18f01bb8db21d3dc14ad9f61d118f000111a6b57824fc3c008a4f074bec12d"
+    },
+    {
+      "name": "body/base/elder/east/idle",
+      "source_sha256": "b3beb8a5a298c6ade1e6f362c0f59e3819a57105431c2d66aef6437bbc59f355",
+      "rgba_sha256": "125e2c29135f13f1363c97caea1e1dcbc19ec8eae27ce3d76f705aeb9279ae77"
+    },
+    {
+      "name": "shadow/base/elder/east/idle",
+      "source_sha256": "ffd3c866ffff434baad564f60a03359c2e7720b323851eae981b25450c3b90d8",
+      "rgba_sha256": "5614acb88c118fa52c02245cde96e065f9e3f88e18499cb099f2e20de3a032ca"
+    },
+    {
+      "name": "body/base/elder/east/walk_a",
+      "source_sha256": "c2181edc2087f2d29c48b41de5c6060578bfb0a2b97c31af364edb38d9ae6d6a",
+      "rgba_sha256": "345b98d0b73fe4db3cab35ca8ef4a52f5a62a773a5aa8178929adbfa7157fc72"
+    },
+    {
+      "name": "shadow/base/elder/east/walk_a",
+      "source_sha256": "ffd3c866ffff434baad564f60a03359c2e7720b323851eae981b25450c3b90d8",
+      "rgba_sha256": "5614acb88c118fa52c02245cde96e065f9e3f88e18499cb099f2e20de3a032ca"
+    },
+    {
+      "name": "body/base/elder/east/walk_b",
+      "source_sha256": "595937d8e31e658d4f853020311eb65b4ac5903a6acc843d8fc69db91df73c2b",
+      "rgba_sha256": "49a5b2cec025391a2a986cc3d40074548bd070db8dc1559d4f9bb78d0ae032e7"
+    },
+    {
+      "name": "shadow/base/elder/east/walk_b",
+      "source_sha256": "ffd3c866ffff434baad564f60a03359c2e7720b323851eae981b25450c3b90d8",
+      "rgba_sha256": "5614acb88c118fa52c02245cde96e065f9e3f88e18499cb099f2e20de3a032ca"
+    },
+    {
+      "name": "body/base/elder/east/work",
+      "source_sha256": "3be7fdbe5a2236299767a0c1290841cad709adc142251441275a498cae187b93",
+      "rgba_sha256": "3ceef553558fffbd78e3dba0e3837f61cfe04bc06afc076f4680928a1977655a"
+    },
+    {
+      "name": "shadow/base/elder/east/work",
+      "source_sha256": "ffd3c866ffff434baad564f60a03359c2e7720b323851eae981b25450c3b90d8",
+      "rgba_sha256": "5614acb88c118fa52c02245cde96e065f9e3f88e18499cb099f2e20de3a032ca"
+    },
+    {
+      "name": "body/base/elder/south/sleep",
+      "source_sha256": "b7ba7f194f9f2fb6a35c3119ed520d239881cd3b3330170466cb6fef1fd607bb",
+      "rgba_sha256": "2851ca54d116ee35dc6af11452b034f6d68ca923d462d7d8b02db2c5887b1c93"
+    },
+    {
+      "name": "shadow/base/elder/south/sleep",
+      "source_sha256": "5b30fa14ea17cf2d663d9070e4ab52951b10ea05847ba3d483324a73669566a1",
+      "rgba_sha256": "a3549985196c4eb37aac69cb060d5f39e245315cd2cf7e5db4f08117d3d4c5d0"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/east/idle",
+      "source_sha256": "3c6558154c7d35988a571afaf44175485d7c4fe3db984e238ab0c5819de2a7cb",
+      "rgba_sha256": "de91e63afe0b06d261039fe67a3b9f5568c5e6a3353bf636b3628a456f4e89cc"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/east/walk_a",
+      "source_sha256": "60acc3961e97362e62fe4db273d6785370d929ce64db22fed33171d5775cb311",
+      "rgba_sha256": "762d3a3cb1900748dd5888224d7a5f659fb92073f5b3917beef74a6c0cf62885"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/east/walk_b",
+      "source_sha256": "3264d3bf74ff74dfec2d1286f8b35cacfc76bf0045c109a41d1dc3ca4799d923",
+      "rgba_sha256": "9265a4ec1f7f3d7585de6cf59b062e253f44cf162cc222c6978954a335d0d65a"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/east/work",
+      "source_sha256": "357895f904d0cbe8996f16a29fb085b671b4cd1b7278ad475ee6e4de24f8aa1e",
+      "rgba_sha256": "2eeb716aa5dc223ad87aa0f5a12b590e20f2dd5c18fd90447a8fc431245d337f"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/south/idle",
+      "source_sha256": "c164db1824873efbebe427163ce9ed86b10f2e01de9814e42b7872028cbcfd0a",
+      "rgba_sha256": "6dfc04ad564d5c086342661ef4fd46b51a1aca9299192965aef6525c77e1a6d5"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/south/sleep",
+      "source_sha256": "82a76f9289ee5a2dd56a67a833ef67e919706bffee3c6d2712ee7aee1dc79bcf",
+      "rgba_sha256": "d5e0d05382d0e060500069a4e7dc00d62ca1d55db7e202395e4b9f1dd1556532"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/south/walk_a",
+      "source_sha256": "baad5899a37ab283a975ba5155224318ebae0ebfd808237d9fff2cd123136cf8",
+      "rgba_sha256": "a8ff91e1c60fb639fcec9ecb706bf368729ade5d9d70f11c70aee349501a78b5"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/south/walk_b",
+      "source_sha256": "e83b1b71f3f6b78aea6765ab3ed354222d76e1e390deefd184f91aef87f574b4",
+      "rgba_sha256": "7babbc9bf6f0aa34926b5505b11cfd535148b7982f4d0282c768b7c9b6cd10af"
+    },
+    {
+      "name": "top/fur_cloak/adult_f/south/work",
+      "source_sha256": "4da7e2303ecfd7be955a56064624c72887405e5a47c3165d83832901284fee44",
+      "rgba_sha256": "a51b7e215132bbbffb4e4fdb13aeb2a79507de67d8c6b7b64c8318c2560a9767"
+    },
+    {
+      "name": "top/fur_cloak/child/east/idle",
+      "source_sha256": "7e8d9cbbb864340291bc4241eed36312329f09c970bd2706b5339e0cfb304baf",
+      "rgba_sha256": "6be92b733e21650b94be86c90c70a2a8e731cfc89524e60421e23ab569d2dead"
+    },
+    {
+      "name": "top/fur_cloak/child/east/walk_a",
+      "source_sha256": "c60ae9c123299c7e369dabbdf55ea5ca17b6cd18da8ce3d9b75526aa33215942",
+      "rgba_sha256": "689e270ea783677d571a88200bf0e7011b88c3680436be35032e6ef8793b1fbb"
+    },
+    {
+      "name": "top/fur_cloak/child/east/walk_b",
+      "source_sha256": "ec6d87c1a273e8bda530e61c9b45cd578cb8d0deefa73b75988fa15aafbc6f05",
+      "rgba_sha256": "01985908e7c7b8c519002b6dbd5cd65d3c8d35b20bf6f0dee0351729dafd6217"
+    },
+    {
+      "name": "top/fur_cloak/child/east/work",
+      "source_sha256": "c3eae9bd8ebc7302b96d3d1841e80e59eb3b70400b2ddafcf12bffe2a5db2f46",
+      "rgba_sha256": "29e768b0c3a9fdbcee708ec141658f8e8afdca09ecf66f62701593d5771a671c"
+    },
+    {
+      "name": "top/fur_cloak/child/south/idle",
+      "source_sha256": "92d47d081329b49ccd8041eb3a77c0cfd5f98575afbfccb9b27355cf4df82dce",
+      "rgba_sha256": "8d4a4b068e71e944e2b87ea7ca15211ce1f5e90c9d53d932276e9c932570c878"
+    },
+    {
+      "name": "top/fur_cloak/child/south/sleep",
+      "source_sha256": "d7844c23a306c2b8fc6004ee54ab3be53bdaef06b62ebd09929ac72bfd9f7153",
+      "rgba_sha256": "35bcd6460be89c742a0db01d0e3105c99481e8e14b23e146b51eb547fb47cc68"
+    },
+    {
+      "name": "top/fur_cloak/child/south/walk_a",
+      "source_sha256": "c0851001bd289664a61dc04ffa713c361863144e057fa977bb0c212b3ce8e035",
+      "rgba_sha256": "dfcc9951e39f344c77c508cc0b13d5679036ebb6b0f3f1e3ffee2c1156652862"
+    },
+    {
+      "name": "top/fur_cloak/child/south/walk_b",
+      "source_sha256": "ce5cfae721ec0cfe789a9ef940c745f2e67b35aa56036c70f1c89480d2922640",
+      "rgba_sha256": "c37aaf3a3605c38a81a845d486af175a6ac1c2e9405df8071d601378b7e0b8cb"
+    },
+    {
+      "name": "top/fur_cloak/child/south/work",
+      "source_sha256": "614fd7b5d29735dc459a7d5fb404893c266b7c24724f779e0dd600e9b2f796a1",
+      "rgba_sha256": "ff4584da1cddfa9561cb91a2c121abb2eef65333dab4bee004ce6869068ccff1"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/east/idle",
+      "source_sha256": "00dae38b3231e0c0b37f6eac54f7f8829354a621cedaf9ab59fbcc4806932f5a",
+      "rgba_sha256": "7bf087f151c4dec9e777a2bbe6c8c0c3aaa4659ef6d0e9ccac49439276f47dd6"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/east/walk_a",
+      "source_sha256": "fbc37b828eacf7778c4111d21883f6a3cd6a84dee84c35659f84dde2d655f19b",
+      "rgba_sha256": "b2faeb70d3b1fcc03c3d5413df16e7b542c015c7e780d06525caf9eedf8ffd59"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/east/walk_b",
+      "source_sha256": "1f81f8bd5756f67119982d4ebd730d86c89bb8b9f5863eb57f83a997ed3e0d73",
+      "rgba_sha256": "e1eef34199992304833ae2b2cfff72d86d6e841ed922163ffe1161e1a10c83f1"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/east/work",
+      "source_sha256": "c5c635f9cfa88daf1b9977dcae8b6fad48afdb9654df5ccd8a31cbfd6da54358",
+      "rgba_sha256": "698872b922a26a784cb5a642e5282cafe9daece83b137eff60b3b6444f742490"
+    },
+    {
+      "name": "top/fur_cloak/elder/east/idle",
+      "source_sha256": "256a66fc1b8f0912b057e9eb4f1996585dab20a73fc79e08c001b0b6fa2fc962",
+      "rgba_sha256": "fe726d50ee703644b6f80f8272840ddf2a4c077f28dc5b8e5baa8aa1f594c72a"
+    },
+    {
+      "name": "top/fur_cloak/elder/east/walk_a",
+      "source_sha256": "8d2f5f980e8cbef5a6111c9e16dacb950101096994dc19113eaa22e57681c98c",
+      "rgba_sha256": "e992e4589a71d8b913243c5880836d635b4633ce248523fa2ce85e96e27520f0"
+    },
+    {
+      "name": "top/fur_cloak/elder/east/walk_b",
+      "source_sha256": "6e0e3795f65d488085fc2ee86606a06f69fac0c9dc80cf14c1fc0bee6b38d13a",
+      "rgba_sha256": "f185ec463400c2b7ca6369df6b8b775aa174567a780dfb3abf16d8281b2dc867"
+    },
+    {
+      "name": "top/fur_cloak/elder/east/work",
+      "source_sha256": "2e04997892fc3b7a598a7100c6d7ec935dde61bd089d4e82111171daf2043963",
+      "rgba_sha256": "d2a53dae9236829ade6c17b8da1e914e61b2f169743a7d32e19ac70054e5bff0"
+    },
+    {
+      "name": "top/fur_cloak/elder/south/idle",
+      "source_sha256": "dd06591b96b93cf45a8500444fab777cbbc5994ac322616b29cbd594a06560df",
+      "rgba_sha256": "544da3a110a1ca9c793f358d59f5b51bc931c8e54e86481a13bc962a16d66f89"
+    },
+    {
+      "name": "top/fur_cloak/elder/south/sleep",
+      "source_sha256": "9ca6e040fe7ce6625c4811628c7274177b27427a49f8f9847dd52338242a40ef",
+      "rgba_sha256": "e172bb4a37593d7b677fdf677998e29154a391689a246385a8aed4bac9cde34c"
+    },
+    {
+      "name": "top/fur_cloak/elder/south/walk_a",
+      "source_sha256": "f4c36db36b6a86a2d8b208d10dcacff8ba72b3d7ea9ca9b44455d688d382c2e6",
+      "rgba_sha256": "5ae33fa5432291eb085ab857a08ee4c23e5885ace17dcb78327bf7b5659355a9"
+    },
+    {
+      "name": "top/fur_cloak/elder/south/walk_b",
+      "source_sha256": "f9ec7e3eabdc5e1ba91b56df2091934815e6b88e92fb8c9bc5f20e3750da3529",
+      "rgba_sha256": "812ef586996b073dfe97e7419a31abb1d2a540ce3b3791fea0aeda001ed71765"
+    },
+    {
+      "name": "top/fur_cloak/elder/south/work",
+      "source_sha256": "87344c4430a3b00f59e387c6c4177203abb597ae4c96ecfb4b870f691fdf5909",
+      "rgba_sha256": "b0cb650fde08ae310ef9ff504671248d00fd444ee80a71317a2ea52a988be656"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/south/idle",
+      "source_sha256": "bd1332b2114a30b8d028a9fae8a1ef831e101e982b4954506c7671739e8f1e93",
+      "rgba_sha256": "61eb8afbea66b41889e548495a8f018c5ef50468285d91756afcbc66ba9d024d"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/south/sleep",
+      "source_sha256": "e1f97ff6d4be462edbbda54f70e242056fde12c2fa7a8a5bf1ad0755ce76469b",
+      "rgba_sha256": "1569845ed2a461e8041e228120a8e48cd6cb54603eaa30a683cb5439f836f88e"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/south/walk_a",
+      "source_sha256": "a1780a218173d5921f657473bd86c042ade9951122335e71f25465a67ee26be9",
+      "rgba_sha256": "dcc9bbcaa0ab5d00a9f2f7bb4d90d53509beb4036dea4e0aaca9fa34f3359204"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/south/walk_b",
+      "source_sha256": "05c2dfda9ae915a3fe1a248024f7d337f83013773cd93ad29f2363fb5a5c8065",
+      "rgba_sha256": "089c8772345f02b4377c2ae01dab6bce56d7d93f4d6fc832fd8703155c63d891"
+    },
+    {
+      "name": "top/fur_cloak/adult_m/south/work",
+      "source_sha256": "3377e914f1d8ce2cd156aa37cab662dc6ffa3c69c728dfe770363dc358f1c9ec",
+      "rgba_sha256": "224c3f79316f672268493c1d72dec2f59677bcb31fab7e9b6caa6bc64b04ff8a"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/east/idle",
+      "source_sha256": "cd4cbbd2b5b4043a72618847bd57039482709b435e84239d7d449a478a9ca32d",
+      "rgba_sha256": "d73b8346b20631a08c9be57de6217f78fcf20b3f3a63999158219a40cb7fc1c2"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/east/walk_a",
+      "source_sha256": "550e0c998508c702ecc5fc8b7ddd2d2717abd5efa824e26997d8849231567c77",
+      "rgba_sha256": "ca193ba5c8af739dadf29977979e3902279babc1a72ed7a74dd1aabaabdba7e9"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/east/walk_b",
+      "source_sha256": "7da14e096ca6f8ac7c952d8a3b10ccf8ac6e6865e68e084891a5406d2fcd44fd",
+      "rgba_sha256": "6832a883a0eafcf54a43be9963e453bf48a9887ab1b389f5a06116a3cf16a50e"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/east/work",
+      "source_sha256": "f6cc0a85d07f09f459df87eaafb479556f049d04070c05a961adf59220904ba2",
+      "rgba_sha256": "671bd6fa41dec181c90c18fd3efc3e394be4d59e44a5121f6d070192adaa84f8"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/south/idle",
+      "source_sha256": "2b5e855290a1a284a4297998233cbac356a97874a7fd00080101bb2135909444",
+      "rgba_sha256": "73dc1a7d96bd2423dfc422cf14580a7839099517887808a55b3d37054d858009"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/south/sleep",
+      "source_sha256": "b5d9d0f7468ea55499a91b471bbec3dc8654454388fb10a8b6d45ac2223aaa90",
+      "rgba_sha256": "a4ad0ce945670363596c7338d0886586b87a43261931e1cb5cec7401466d660a"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/south/walk_a",
+      "source_sha256": "f08faad35645da4de7718b3e34cb4378ddd8f361db53788554ab35845691ed88",
+      "rgba_sha256": "2cbb7a0118bce40e4c580bef411daf986142e8f72af36233402fcfc25ada0d3c"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/south/walk_b",
+      "source_sha256": "ecf4481a2c2e7b71f8aa6767922a9825bf32ae05489a608b900bd018072dbe68",
+      "rgba_sha256": "b2505e3bf37eff48870dab39163ad338c3c0dda9678180c949c38828b9b122ce"
+    },
+    {
+      "name": "top/hide_wrap/adult_f/south/work",
+      "source_sha256": "cd6cf6d215ab85d7f74a09f5f16b19344abe9cc5a8301b3e4dc2ff06c8f7607e",
+      "rgba_sha256": "153add316e156095d5795a955c8d396192c4340a365c27eca1b7ea92b6f52d7e"
+    },
+    {
+      "name": "top/hide_wrap/child/east/idle",
+      "source_sha256": "9b243b5b408fc5dd55fb08a05bb12e758ff74fb2ca9b7dcecf5c6bad15bbc1dd",
+      "rgba_sha256": "96548559441091ff473411ff97dc39c060db502eccc09f6a8c744a610d9be918"
+    },
+    {
+      "name": "top/hide_wrap/child/east/walk_a",
+      "source_sha256": "836ab90abd9dcfd685610f69d419785efba9ab508fc99b139dae6d758f15dc2d",
+      "rgba_sha256": "d579111d93468ec384256a812a3740dd91081b42fc5fd5534a258fc55525e504"
+    },
+    {
+      "name": "top/hide_wrap/child/east/walk_b",
+      "source_sha256": "d8c0fbdf0b75d359c1faea83c0b87ca69d831df95bf48313d2bba3dc04b0a466",
+      "rgba_sha256": "44bf9e5e80e6e1be8703aa850d7f3f260c2809ca1aef306ff872bb5b931200d2"
+    },
+    {
+      "name": "top/hide_wrap/child/east/work",
+      "source_sha256": "8098af541e27e521b5d93835be14c77aa01d6c91be96454dca1106d5d48f5ae6",
+      "rgba_sha256": "88e77bc3cb33206f09968766931a86eb7dba976bf558178c6902fa38808c2773"
+    },
+    {
+      "name": "top/hide_wrap/child/south/idle",
+      "source_sha256": "8afc172e6ce7bffddd87d01165465309bc93d913769bd9f8fff2da49f1006c4e",
+      "rgba_sha256": "db535f84f552f0f3ba419d55eed8d76dc3d20e943fd267194a8d8a44b2be5a01"
+    },
+    {
+      "name": "top/hide_wrap/child/south/sleep",
+      "source_sha256": "3d84216a20960253a8a527911833ad509b37fb1520ff3f0c840e481ccfcb4321",
+      "rgba_sha256": "feea2e7fc7fe86b80db1908750ba294c743bee9b2b37f1b22d579cd9c1ebb05d"
+    },
+    {
+      "name": "top/hide_wrap/child/south/walk_a",
+      "source_sha256": "91cf0e7d3b04f79dab41cd6a91dadbc6bb94a39b1f3f0bd12bfca6517c294a4b",
+      "rgba_sha256": "fd5609da738182dab3da43113458028917ba503e79e126ee9d4f91422ed81c7e"
+    },
+    {
+      "name": "top/hide_wrap/child/south/walk_b",
+      "source_sha256": "7cdd334b841f36b69124009e677d51564cc037c1322ca7567eabcc500cd7dc69",
+      "rgba_sha256": "69f7238413274cb1dc5403a882e42baebe1a6bce1b8bc7382b976fce629e565b"
+    },
+    {
+      "name": "top/hide_wrap/child/south/work",
+      "source_sha256": "6f6a0a5784923f489057fdff7ac76f413718a33859ab638678f215a8eb62c69f",
+      "rgba_sha256": "6c7debe3a35f85e70ca363bdea6646f7adb6ddc29c75c35bf134f14266eda30f"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/east/idle",
+      "source_sha256": "ffbc192c6f1f354972123e318667e894c752313ecc26750de4d2576ca402d4f7",
+      "rgba_sha256": "818fe9d7743b7b1e62936cbdc7dba5249b1d7f90922a6611be3975a017d0696b"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/east/walk_a",
+      "source_sha256": "f392abab07148afac2a039931493b2d9c170f1b4493cf8982c5ac2850bf0bcc9",
+      "rgba_sha256": "d5ff2f8b927169d337cbf7cb972c42fbf01ad2bf0a23cef8f6c2e8b3e4fb1f81"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/east/walk_b",
+      "source_sha256": "f4ee7e1c965153c918f440a629fbb3be911828a0a6c1d78443aa73836a782dcd",
+      "rgba_sha256": "45e1f37908039a97662932c5be3742fc7eb39d9307baef114b4c2d993806a1f1"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/east/work",
+      "source_sha256": "548236540749621f2f423ad06b35aff6d0471c3cc339afa73b320d194be89f73",
+      "rgba_sha256": "958cb96fcc0b70fa7734356281d9137c9b2269908cf0352be211e3bdd07c6233"
+    },
+    {
+      "name": "top/hide_wrap/elder/east/idle",
+      "source_sha256": "23b08521da382691c7dd585ad0fce93a98a6bae5b485293ad26a069e7cc13d3d",
+      "rgba_sha256": "fad2dd3bc364a42b1db2eb28d1270a603cc7f562dc6e931f0c5b578fa9935dab"
+    },
+    {
+      "name": "top/hide_wrap/elder/east/walk_a",
+      "source_sha256": "696451e15277f531bfa2ae53df96cd2858da438e4c49065f29c6f6b58669ae42",
+      "rgba_sha256": "fa40703dc521c72ff1119a4e6d97801a7525220ed0efab7328012c2a1f9ebba1"
+    },
+    {
+      "name": "top/hide_wrap/elder/east/walk_b",
+      "source_sha256": "d6e558044466d6b91a19a9e2be3a60a1593b98a64066c2d6a9209c9e8d80c296",
+      "rgba_sha256": "6082dd81afc5bbd7ac085cba08f88ad9f7adc591a6468d872ea59d2e89de1b80"
+    },
+    {
+      "name": "top/hide_wrap/elder/east/work",
+      "source_sha256": "55500ca3c50c5b1bce7937a4cfc0c2f171f27fbee5ae85975e70ff553593b9d7",
+      "rgba_sha256": "5b5fa15ddf9bbfb5847cea46fa8fe3a547a64090f7947fc3ccc9860dd6d51d24"
+    },
+    {
+      "name": "top/hide_wrap/elder/south/idle",
+      "source_sha256": "ddcd5dd1f9cd8d0f413eec14a776ec564c13beca99c1a198eaa0d89cb59baae9",
+      "rgba_sha256": "f4c783291be2f6719b3490a5c9e88689ef9d8b57bba0a91eafe094d197ff7117"
+    },
+    {
+      "name": "top/hide_wrap/elder/south/sleep",
+      "source_sha256": "80cef59cde944f623c7aea44ced4393edca8762be07d27de4f5ec6ed790e86b3",
+      "rgba_sha256": "4858cc8c46d5766c268ea101f61681097fc0f38a438ecaf10b0c03a106296502"
+    },
+    {
+      "name": "top/hide_wrap/elder/south/walk_a",
+      "source_sha256": "dcde00380fc45552a13cb1196a47ddc9c1bf8056039e0313b4a0d2f4cca2b707",
+      "rgba_sha256": "b65045000ba6e68b9faa7c06e2c474cc573552213d3fd4b8801ca3923ca468d6"
+    },
+    {
+      "name": "top/hide_wrap/elder/south/walk_b",
+      "source_sha256": "3141101228fa96d4e9f0fa6a5366b595cfbc6dc6dabd7b9496e7ae0da4471557",
+      "rgba_sha256": "c5b0d3f5b0752241954917e12608963b46e671f404656ea7d8aa35cbc9664379"
+    },
+    {
+      "name": "top/hide_wrap/elder/south/work",
+      "source_sha256": "12b517def7fe007b013d448204a58437c5c6b260a34a6cb2fdf78c0478865542",
+      "rgba_sha256": "931e5a6931b63349da99d5c823b46379164b18bde8089632218327e4c84bbaa2"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/south/idle",
+      "source_sha256": "4e3eb23e62bb101ae4c6d20431352aeeab585e9b9696bcb70cb95965275a2db1",
+      "rgba_sha256": "7ab514c7ad7116eb55405b753cea497fb111f058c79ae3b88eda041b73ffb658"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/south/sleep",
+      "source_sha256": "6e4f3caa274af128fc08c46eaaaeb8acdb44aa98f2eca62a9e776f3809254691",
+      "rgba_sha256": "769f0029c04c4203e4e31344eaa77ea7c67349c971ecfb44eef72327c3c56c2d"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/south/walk_a",
+      "source_sha256": "fac975948f45019533572c9e3fd872a88de7007fcae907a8edbec58ebc074465",
+      "rgba_sha256": "a947b9520b857d6761aeb287e7577ed37db3907daf798aca5f64c59de654efbb"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/south/walk_b",
+      "source_sha256": "f45b434e2075fe0cc41945dcb097f1bb544044fc2f49064daa837283ddc18614",
+      "rgba_sha256": "341b37d06f03a97d5570de8edc49a27fce543bb5178d2834dce9df3c9b4963d2"
+    },
+    {
+      "name": "top/hide_wrap/adult_m/south/work",
+      "source_sha256": "e1cbc835902974afe6b3da7edfab0902abdeaab5f1c570d0006baee2ee15a4f6",
+      "rgba_sha256": "1cd4d6f1b9dbaa28b5acdeb9e745017f253f7429e8c0c399ae7ef90d00ee3d47"
+    },
+    {
+      "name": "top/leather_vest/adult_f/east/idle",
+      "source_sha256": "97af59926f5d14079ed70e9f3f91e96a3319b6c88012687e1a37c85d777e33e1",
+      "rgba_sha256": "b1122abb6fdb4c703e01282fd73493989e3d7bbfb764c0366b9db7eebf4e7f73"
+    },
+    {
+      "name": "top/leather_vest/adult_f/east/walk_a",
+      "source_sha256": "3ab30a12cd7411b07bc24dc2485ede2faf7a75346ff2990f9e8ca15440a0378b",
+      "rgba_sha256": "d0108e56c2816b17432dc753030f6184b1745d943fedef92127242c967b11891"
+    },
+    {
+      "name": "top/leather_vest/adult_f/east/walk_b",
+      "source_sha256": "535ced6ecc34242a3ea5c9e324e07f04fb8054032b623dc10c7c1a66f18ea108",
+      "rgba_sha256": "ee69c1e2c440b7ae9ab2289f5a014e8b2c3b4f3cfb887ad07cf74357f548cbef"
+    },
+    {
+      "name": "top/leather_vest/adult_f/east/work",
+      "source_sha256": "e3f6957008ce8b8384c8bde5d00348072e980ad5924a01a49e44ba0228653a76",
+      "rgba_sha256": "a49b0297ddc073e1728914d083f0f221b4e536270d1a91263049de1ff064a04f"
+    },
+    {
+      "name": "top/leather_vest/adult_f/south/idle",
+      "source_sha256": "75f90b27b9ebba77eddccd73311172c29eec22d40b94b0a84ff6b6f701664543",
+      "rgba_sha256": "22c1f6b7da4389e560b7e97962df4bf6b4f56e65b3b8a9d5de2b3d85ef3c93c8"
+    },
+    {
+      "name": "top/leather_vest/adult_f/south/sleep",
+      "source_sha256": "adf08741ad03520df1d59a0e7f9313937f1f529ddde3062e6020196b906b4a24",
+      "rgba_sha256": "1adfe3fff041dee4b610ba8790de6828532e79df1d48be5b97c17c0d00b520b5"
+    },
+    {
+      "name": "top/leather_vest/adult_f/south/walk_a",
+      "source_sha256": "15009f6bff9b5fb610c57ff46b8b87482de7f6acc46416dc9e20929a894ba303",
+      "rgba_sha256": "03fc6bde3ae27897361eb8a9ad849ab71a326a2d9ce0be944ad817c4955f7d25"
+    },
+    {
+      "name": "top/leather_vest/adult_f/south/walk_b",
+      "source_sha256": "99a8326bd820b2a3d61bd8fdb03dc0d852034dcf82783568f9f2cb3b9b5e0b51",
+      "rgba_sha256": "c69eb51a13cff1ff856fb758ff6096b5298da409e3494cd291bdab6558bd4d47"
+    },
+    {
+      "name": "top/leather_vest/adult_f/south/work",
+      "source_sha256": "ff9ad43777cd970a05b81df4f93019f72ec991f6863e201e3afa475e66537bf2",
+      "rgba_sha256": "5426688785d604b688a26b175e4fa1496467d006b55a7f3719f7cd9bb41c0c1d"
+    },
+    {
+      "name": "top/leather_vest/child/east/idle",
+      "source_sha256": "4ef5e2451c114657c7d21e84e28934063870fc14993d927b40a916b27c32654c",
+      "rgba_sha256": "dd417460d24183b8c3ff5907e19175bae27dca6548dfb6b3bb62bde3fcc1a51e"
+    },
+    {
+      "name": "top/leather_vest/child/east/walk_a",
+      "source_sha256": "b5bfede892e798d47f7ecf8f6dbac9cbb42183b25428d3d6104e0ad4cb021481",
+      "rgba_sha256": "cf4835f88751d158d35e78b43ef63a1a669f4571500a635699d0a8b3cf56d364"
+    },
+    {
+      "name": "top/leather_vest/child/east/walk_b",
+      "source_sha256": "732556443e67325477b235ed51297a32f998a5abcfb8b38748b97d18b4c4cda6",
+      "rgba_sha256": "62124bb92670a16d596385bf7f1263088d147614481b858cacc98fde5680f272"
+    },
+    {
+      "name": "top/leather_vest/child/east/work",
+      "source_sha256": "126b96aebb362f920bd50964de209269a9956e1a2032aefdf65ead78cd8cd2a4",
+      "rgba_sha256": "1e61a50c3d10b36521f852688e063d4bc797fcea28b978bcffac7281053badad"
+    },
+    {
+      "name": "top/leather_vest/child/south/idle",
+      "source_sha256": "5aa35a1d9ad4cf35ce6ec7bca3925fdd93557d75278bd4b4ca9de722cef00d83",
+      "rgba_sha256": "e82e346e726cae11f83d24982609fb82cd552eb4fcc1782c7bd041e497ef410d"
+    },
+    {
+      "name": "top/leather_vest/child/south/sleep",
+      "source_sha256": "4e28441a6985c274214df4ed5bb04aaaba85231bad14c83ebbdc0a5b96fe312f",
+      "rgba_sha256": "223ba05b20dc8562cd30a7d7165f15185563c855df6d8008106a563154493bfb"
+    },
+    {
+      "name": "top/leather_vest/child/south/walk_a",
+      "source_sha256": "f88932abafdcc67539e9f2795dcb58bf27a5fcd5688522041213cda4fda28272",
+      "rgba_sha256": "522fed91889e778508eb3bf08ff623a43cf42e630d2ace7fdb6019aaf9ad8bcd"
+    },
+    {
+      "name": "top/leather_vest/child/south/walk_b",
+      "source_sha256": "b9108e9ace73936d9b2bba95d675c433b6efc746d8bf6caef2d4a75e6548535e",
+      "rgba_sha256": "68752731e6ced9fb22945041a5598cb146f691413329747dec1f0dda54470372"
+    },
+    {
+      "name": "top/leather_vest/child/south/work",
+      "source_sha256": "3a66d1c569ba6ea93a2982884a89ef4b636b1b99fef1d870dba3181727c2852c",
+      "rgba_sha256": "e0602b15742d9401813e43f743cbbf07194ad5094b3c8ef7b3cda038f49d7864"
+    },
+    {
+      "name": "top/leather_vest/adult_m/east/idle",
+      "source_sha256": "380d0a6ce47484b40357971d32b819473febabdf5d6c4b06eefa4c31d7bc11af",
+      "rgba_sha256": "7ac72ba44c271754adc62899df850233f39e6e8a72d433208ae64ec6d5c5d384"
+    },
+    {
+      "name": "top/leather_vest/adult_m/east/walk_a",
+      "source_sha256": "c542081e8a55b130c65da3663134911671d4f41435a24aaba17b22040915a65d",
+      "rgba_sha256": "016452fb26d54ea650080142a7ef4227da3bc41d08ec879bc6681ee56d124306"
+    },
+    {
+      "name": "top/leather_vest/adult_m/east/walk_b",
+      "source_sha256": "37928b4367f7e5cf847fba4aad9e836a90fab3c024ac73f0b9f89517912d04d0",
+      "rgba_sha256": "9b80683e5e03a949a7a582ada29a2d5ace29ac085e0e307950c6d1b45f001af7"
+    },
+    {
+      "name": "top/leather_vest/adult_m/east/work",
+      "source_sha256": "ca133cea29385b61abc1a3c5f873f8f18dfc712c1b371b69f186bae238233c9d",
+      "rgba_sha256": "176420ed053c59261f25ba527b92348242dbcbc98b995bcad01cdfe4cee4fba0"
+    },
+    {
+      "name": "top/leather_vest/elder/east/idle",
+      "source_sha256": "f2c00a3f0e95aabb0a18b5d186b0c2bc2cb9a412bec483995d76b3561c6a9e91",
+      "rgba_sha256": "01a5c7b4b932cf247f63d13840dd174b5c72f257d241010a2098a4d659dcfa0c"
+    },
+    {
+      "name": "top/leather_vest/elder/east/walk_a",
+      "source_sha256": "b269ae43be0fdb5082f4ea2fe0c4ed1b58b962e120f57303b14a2de5efb21925",
+      "rgba_sha256": "b9a49945a40808274973a6f061ebac80d2098b91805c2bffe6c35e92dd04b2ec"
+    },
+    {
+      "name": "top/leather_vest/elder/east/walk_b",
+      "source_sha256": "0176822692140266751a7a81b32dcb7f686aed63891104bfd5107386a68af91c",
+      "rgba_sha256": "ac762bf6f2458a8f603e93b742c9c2ad5ae727cfb9aeb1d183e5a4f350f0e979"
+    },
+    {
+      "name": "top/leather_vest/elder/east/work",
+      "source_sha256": "6e0fc4c74d21a543bb5ed2994a8f5f581a4c82907642e9735343f1bc476dec7d",
+      "rgba_sha256": "3f5bb9c656af2cd71a6cefc02a4886846f6d9765fc0dbdfdddab368571c54558"
+    },
+    {
+      "name": "top/leather_vest/elder/south/idle",
+      "source_sha256": "d5b47c491e0e1d0b0ef05212d046c0318caa14a17242f159c4326dabe1c54bf9",
+      "rgba_sha256": "0b894719b09cb911a5a455942125c8ae1ad9fcbef5c8f4e4be28ea664aaae2bb"
+    },
+    {
+      "name": "top/leather_vest/elder/south/sleep",
+      "source_sha256": "1377566d3791284ac773ef7ec70f74db7c12b4d2e1653b95b9bdc03e311a2e2f",
+      "rgba_sha256": "32c0cd045f475f15a7322771c250551fb627a1b0700f80f130d76665afee28f4"
+    },
+    {
+      "name": "top/leather_vest/elder/south/walk_a",
+      "source_sha256": "d2b17933390b9e68aa1b7cf6d74c8fc78a50a473b3618a38533dd931063125d4",
+      "rgba_sha256": "a3a9cbfe654d04657ab96abdd6b02c19582a462f6f290753c958a93458ab895c"
+    },
+    {
+      "name": "top/leather_vest/elder/south/walk_b",
+      "source_sha256": "34d60e15372d130e94b7181d9e98633656876f8c20cf84d07a44e8fecd296d61",
+      "rgba_sha256": "446b788f68c39c3813fd5371db6c9fb2bef7592f3951691dd0fbad8232fa5614"
+    },
+    {
+      "name": "top/leather_vest/elder/south/work",
+      "source_sha256": "84ec539300f58242299f3e1e6603bcb15dffdff17212dcf4155efde0a9aeb178",
+      "rgba_sha256": "58d2877547e5c2729ecb00662b7698ee8a158d886ca147d678db4d54f0fd97de"
+    },
+    {
+      "name": "top/leather_vest/adult_m/south/idle",
+      "source_sha256": "38b14ac7c123464e0577bdc361bb80129c007ab3a36a41ddcf95e944f0b62648",
+      "rgba_sha256": "582d569b97a767b7062a7a73062c2ef9bbebc18e6f02fa6cb8b6f8dac4b53a8c"
+    },
+    {
+      "name": "top/leather_vest/adult_m/south/sleep",
+      "source_sha256": "a2638fa31b372b94497ac1394aed0d5188ba48a1ef30db0db0b0e7207c99937d",
+      "rgba_sha256": "d02824e83d6a2c6922c1388966093d8abd2c96bc17042202c10f089f66d231c7"
+    },
+    {
+      "name": "top/leather_vest/adult_m/south/walk_a",
+      "source_sha256": "2505f7823530cdd096c936768e75fe6bd1e0d968ef94107f87a1041e43cf39b9",
+      "rgba_sha256": "7838d5e013a733eefe1a9e40458774dc37d28c73879fc9b36a9b6a01a6b6fcf6"
+    },
+    {
+      "name": "top/leather_vest/adult_m/south/walk_b",
+      "source_sha256": "cf563203d65c77ddb048617990df2be1599cc62733ad6de812a8cf59a08b6e03",
+      "rgba_sha256": "78607b9f3aa9f3e6c1a6bf28f51a68bbd89591525b298c2b8eb9ab3caff8f62f"
+    },
+    {
+      "name": "top/leather_vest/adult_m/south/work",
+      "source_sha256": "1714f3bc9aa7b0edcd757fe1b6f66daf937e00ac5ca0b912e768e5cb74957dc7",
+      "rgba_sha256": "b21c112e660578a7a1396bcabe8adb6c363dc73441e5dd3340bfd4c72076e5b6"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/east/idle",
+      "source_sha256": "262db9175cb5c0f06347eae668f9601a9530c17e5b574160c97db796ba34afe7",
+      "rgba_sha256": "587ce80498345bbf6372a2acad37880ec4ccc2723a2b31f645023092a279ce36"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/east/walk_a",
+      "source_sha256": "2628fbf28066637830e0629552e8ac479b9bd326f0426ce8cdee6b2ffbccf878",
+      "rgba_sha256": "6382b7ccf515fe8eae51e049db6647be2c45e408afd41494d9ad3eca18fcb58e"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/east/walk_b",
+      "source_sha256": "0e1220c30d12958a6f1d264fbf72cb540733384598a7d017a4b9b1fe98354072",
+      "rgba_sha256": "fb98a9a6d4720c11dac141f22a7eadde4e4a2097292ce0ec7c4e13c3bd581f34"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/east/work",
+      "source_sha256": "9c035feda0e8c4569d1fd1183a5cf0c5ee2cd1f2d3dc6f652407edecc4fdcc44",
+      "rgba_sha256": "4eafc05d9956397ce70f3aa5e3d497b3eef6862ae07820e24d73bdf85dc0255f"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/south/idle",
+      "source_sha256": "4328067e243e03cbad98fafea9de055b21a2cececb879a027264c9750e6942a2",
+      "rgba_sha256": "ca0fddeb1e61800c65c80660618d9f3c43f9a06ef4e9ac1f49cec29dcdfd273d"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/south/sleep",
+      "source_sha256": "6b6a251ea563fef60ae08da506e00be4650745a48dc36a141e0f7acdc85d1645",
+      "rgba_sha256": "6f68475610666e491f7fbb5c715217e4ab558e0590849638daf84addc1f55a77"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/south/walk_a",
+      "source_sha256": "27c04d691e6c7104dc72bfa7b172dcd5ed11ae00d628e229459af41270a7d425",
+      "rgba_sha256": "449636714a80869bf70b727f1e49e84b7c34abdc69175c402ed3131ce23b1360"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/south/walk_b",
+      "source_sha256": "3da47103b76d4e70a158cb3445707a929186586779b008f4f49a7e49301936c0",
+      "rgba_sha256": "dc5fcf4848e7bfd5de24cabacba95110fc49bfcce71e5382bf8711d0a3c3755a"
+    },
+    {
+      "name": "top/woven_tunic/adult_f/south/work",
+      "source_sha256": "69423a2eaf1ec1df2000508245958b7c5208deebb1913e0e67b66438fd0d56fa",
+      "rgba_sha256": "021c6552946d26e8a5ac8682a6223ad907004b5079593515f4d0650ae0a4eff7"
+    },
+    {
+      "name": "top/woven_tunic/child/east/idle",
+      "source_sha256": "36535269951d9f107b77c3cdbdddbc0cc124fc588671fecfa7449d51e632d800",
+      "rgba_sha256": "f51e6645a07bd4242d4bc194e221b94abd187636955887955ce9608e718023b5"
+    },
+    {
+      "name": "top/woven_tunic/child/east/walk_a",
+      "source_sha256": "45f55452def898e5fb78179e7cb6b0682786f6939de1e25c503e055c88a7a2af",
+      "rgba_sha256": "8d0cd84b9b3867c772629694af9b73283a2dd8b0b405c825b336557ff69e4872"
+    },
+    {
+      "name": "top/woven_tunic/child/east/walk_b",
+      "source_sha256": "8261db739ef996345ff1feb424f6d94aa9056658f8da979141de7e5ee41cddad",
+      "rgba_sha256": "dc5300b633d2677addda30fc098f8d30d60d4db5b39442c75bdc42bee145470b"
+    },
+    {
+      "name": "top/woven_tunic/child/east/work",
+      "source_sha256": "009fec37de16a119b8a21484266c1bc9aa605e560c359597b910c1f4ed245a21",
+      "rgba_sha256": "00b9ee53be6f912120d8633d5b8334c6729bcb4a15c7fbc57570e85d5d4d557e"
+    },
+    {
+      "name": "top/woven_tunic/child/south/idle",
+      "source_sha256": "35087c2268af0fffdd942b52646c04dac220e69f57d3e98927188a07581be4d1",
+      "rgba_sha256": "0975f26b54a05992b7804fd46caab7fe6d25ae7ae99db8e0b1f53810ff3d59fe"
+    },
+    {
+      "name": "top/woven_tunic/child/south/sleep",
+      "source_sha256": "3d01e8b57703eb9962716a5778ca984e4c72b3b15d85822e530367bd35ad1587",
+      "rgba_sha256": "43ad0fbf10a7c67534195d8ae6f6227fec6893edd52796ef75c348a8e946c782"
+    },
+    {
+      "name": "top/woven_tunic/child/south/walk_a",
+      "source_sha256": "47fec3705b535d45ffbe76e50b03a2949fd1c2177fbc6243e57b122809584b34",
+      "rgba_sha256": "7aa4d09dcd5dfe088e5872a6bd37b17980ddb0c483b9e2fe4a06e68f82dfcdbc"
+    },
+    {
+      "name": "top/woven_tunic/child/south/walk_b",
+      "source_sha256": "03a57ab5de32df56c510f6184043bc6809d956b3df01a0eee4baa84b52be0f78",
+      "rgba_sha256": "8097224c6b3651a81ca4466f751428bbca0957589c03481722031d83143ce04e"
+    },
+    {
+      "name": "top/woven_tunic/child/south/work",
+      "source_sha256": "e48a114b0b243c3a6f847c966beaa15e2b2b8be0be25946923357a9e22c34419",
+      "rgba_sha256": "5541145d65aa4ba870ea6663074351bb6c813f348cfcb87f109ef31b51c0ded5"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/east/idle",
+      "source_sha256": "55aeeab12bde39528716606e17a7091833929dedfd435f6cc26ae70225ca533a",
+      "rgba_sha256": "f7045c3186c6a8fa558ca097d239683dffde7456d761d14c655eadff37064ee6"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/east/walk_a",
+      "source_sha256": "52dbeab5158c3f5f8fdcfbd018e01721b15a2773a2df3372265e38abb46d515b",
+      "rgba_sha256": "ec001047c07ae50fb09a7cbbcacb2062aaed17441375ec86bb166421349c63c1"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/east/walk_b",
+      "source_sha256": "fd9b4efd3449bcd0cfb858d7053558e9d96a90f8d4fe7b89f410786eabeb3aca",
+      "rgba_sha256": "9c57278abdf7ece1cbf8242c422a3c3db15966b212f01850ee9b545b8072c4cb"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/east/work",
+      "source_sha256": "29e6ea59f7452667327148b94d17a1f82c1deceb13dcc73109c9caffdd5d5d93",
+      "rgba_sha256": "0879f4ce14a155ef57b2fd97ccac07c0d17cfef2fe913af6d71a56b1273c49ca"
+    },
+    {
+      "name": "top/woven_tunic/elder/east/idle",
+      "source_sha256": "74bd362456f2af4cbe22e631f8d750b3ab03691958985c9554e692df95b85068",
+      "rgba_sha256": "c17a4679d59f09a87e0e9224ff633b4d2d221a3b5a4ad59b94c612388d26ada6"
+    },
+    {
+      "name": "top/woven_tunic/elder/east/walk_a",
+      "source_sha256": "1ce41661f9fded003bae36f0d8f6f37c139a665c89375aa00f7b7846786af71e",
+      "rgba_sha256": "131780c38f1e01f354068519950a43a55d53f40aaaa227c9f02498fd249ef2e9"
+    },
+    {
+      "name": "top/woven_tunic/elder/east/walk_b",
+      "source_sha256": "7fd13cd1f26a67221640f8629f2d2229c5edbef3a3ce33b403aabe0453c27952",
+      "rgba_sha256": "826810b134c8bc9f5df3ad35e34c81495355ae4e4a709c7ba23912f87e517447"
+    },
+    {
+      "name": "top/woven_tunic/elder/east/work",
+      "source_sha256": "55dc7f703f3848df1183ee3ceb08c7ccdec522ee074e202e05a697c0c5c6e800",
+      "rgba_sha256": "19c3d4dc7c50df09354e7706bbc59f0a340be08441da560f07056e83a0a31ae1"
+    },
+    {
+      "name": "top/woven_tunic/elder/south/idle",
+      "source_sha256": "4c8d155f6745b4bc9cc6cc2c0ec0fae81da3ed161564eba07c7e7acc83875fb5",
+      "rgba_sha256": "407c8981aac72e347fb198be9dae78fa3d3faadd42902c7fe561f7815f79a63b"
+    },
+    {
+      "name": "top/woven_tunic/elder/south/sleep",
+      "source_sha256": "3871f2f1e35c5d2e5fdab437715b5fcbc1f415ae00f90334d9985842e23415cb",
+      "rgba_sha256": "b8d8f1cc5d851bd4ba7bc32e4069019af592721eff4835b8d673752dffbe7969"
+    },
+    {
+      "name": "top/woven_tunic/elder/south/walk_a",
+      "source_sha256": "65c3bcc7b1b3d651ab256015f63e47f43fd153cf16335e98d71a661a7c8682d7",
+      "rgba_sha256": "8273376b862016a91ba9afccc772fb59c8e1c0227c750264f6c125c56c5c28b2"
+    },
+    {
+      "name": "top/woven_tunic/elder/south/walk_b",
+      "source_sha256": "bee647d3aa7f84c3fa6cbbf619eb05fe6e0248060fb6e19d3f016eb63bd4192e",
+      "rgba_sha256": "0d2da9b2af6f85ddc43438f704ae0a677832b35e180e56aa282f3458a81e477e"
+    },
+    {
+      "name": "top/woven_tunic/elder/south/work",
+      "source_sha256": "0e3edb1b342afa66a63d485d58546177c4277a1dfd2efe13e7d0246a3ca03d1c",
+      "rgba_sha256": "2cbc123f96ffc693c8ed24d112e32b06b882d97a85b07621c4c03f4e3c27ee54"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/south/idle",
+      "source_sha256": "115d9364bcdf70e16a5326acc3d5bb51daa2091e2ccb249c13fcecb97f181891",
+      "rgba_sha256": "3c88d322d8104afd3d49416dd7be52874adbc4626c618731f4f052af2bf84c33"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/south/sleep",
+      "source_sha256": "b9aa2a43b80c8c9de18607ce8f4e3c289a52c8270c1b57df114f3ebd04f870f1",
+      "rgba_sha256": "fe8b716faf669c6612d173850aa53df216579b59fbe13550db88bfed7ff7e68b"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/south/walk_a",
+      "source_sha256": "cebdb240660a52ed12c36f1497e035bc32b83e389b2f58e75c03b98e579992b5",
+      "rgba_sha256": "9ffa93df014560543286a11fbb07d929e1309ea369d9782e0deca594bcf7f5d8"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/south/walk_b",
+      "source_sha256": "d73c8f5a8ec9fcf02dee3898af23babf183ee4ea8237fa64d878af5c68970847",
+      "rgba_sha256": "58e1df4f6aec6a8bbe72e715bb8260216852309d128b948adcfe5833acbc185e"
+    },
+    {
+      "name": "top/woven_tunic/adult_m/south/work",
+      "source_sha256": "ff8580c9ac94efaeee7000aa6b285a3c08149ed0b088ecf58cb42bcbf0e570cd",
+      "rgba_sha256": "44b1b4afea6666c9700e56da000ec48b7807461936ec7d95fa034117d969eb4a"
+    },
+    {
+      "name": "carry/logs/adult_m/east/idle",
+      "source_sha256": "e57068c03495e3048f3014da94f92abeb17179606bf9c5a28f8dd7b1b5f98369",
+      "rgba_sha256": "a2e57a72ce30c20db0aeba828069ce94c6e8e3cedd2034f79b2ace1333526b91"
+    },
+    {
+      "name": "carry/logs/adult_m/east/walk_a",
+      "source_sha256": "7bb068c3eadcdeacb5f38dd1ddfea3d7846ad2108e821249355ebcaaa64e3c9d",
+      "rgba_sha256": "3f6f9fe7e7fa47c0665f9d25ba745b452313bed0b2ab4ba3ecd7c4a18c3deaa0"
+    },
+    {
+      "name": "carry/logs/adult_m/east/walk_b",
+      "source_sha256": "ad9cc53af851087a05a1cc8019bdbe737e52fa62281d2dbba2e7c456e213c984",
+      "rgba_sha256": "85180e0ac3e0e170f2443366813e784d9084c9c09ce1bb8bd8f107042b0fc7b4"
+    },
+    {
+      "name": "carry/logs/adult_m/east/work",
+      "source_sha256": "ac8084a17248a4a8d501d3b27bab69d3d45b7500c216bc24042a0319f6f49560",
+      "rgba_sha256": "0a1e5261c0ff1524f770b742e0cbe3a7f837774e8ec73e54c4ff0711c69cfd01"
+    },
+    {
+      "name": "carry/logs/adult_m/south/idle",
+      "source_sha256": "68259e8a41d6b4790c289bb9c9306237008dda54fc52bf5fe8fae5111e93c5db",
+      "rgba_sha256": "34cf4f432f2d2b7e6637858bc2246bd7b4c518823c3c101b3571cba1daea9efe"
+    },
+    {
+      "name": "carry/logs/adult_m/south/sleep",
+      "source_sha256": "2287962da4a80fdc7d40a3c0a9b4c70a9b66fae00f03fffa9b23b0eeda739b8f",
+      "rgba_sha256": "2ca3905823ddd79f829dbce76ab6601280d256025f774fbd6a21af09486030e7"
+    },
+    {
+      "name": "carry/logs/adult_m/south/walk_a",
+      "source_sha256": "5f49abdc0339aae41ac533b0dfa95a86e94751698ad56112ad4fa0ed2e907b99",
+      "rgba_sha256": "b4c37bca357f8035048023590efdf33a2565fc993f4ef237b75eaec73e31c12c"
+    },
+    {
+      "name": "carry/logs/adult_m/south/walk_b",
+      "source_sha256": "5853663162cc80ed9974dc4cd1d73ccb9a103cd1e99e5a5c6cddfb4f31961817",
+      "rgba_sha256": "91fb012684cb973d0373a4110dce091b3f7c5ed3b9794671900e9d4525e18566"
+    },
+    {
+      "name": "carry/logs/adult_m/south/work",
+      "source_sha256": "36e7464772684ad8f6b96c68191ec069c947535198fa0c5a8166680559b2fe17",
+      "rgba_sha256": "fbdc1396b1959043e08a985fff79436cd73b18632879e3357871a8b1948304da"
+    },
+    {
+      "name": "hair/short/adult_m/south/idle",
+      "source_sha256": "ef385c3ea51f9c6d0be2527824d84c50525364bf11660399890f0cbb488f3d22",
+      "rgba_sha256": "8dda408b6b56318cce0cbef32c125b1e727391f140fc46900a92b77769a82f4b"
+    },
+    {
+      "name": "beard/short/adult_f/south/walk_a",
+      "source_sha256": "b5fe29af50b46a81d3f89b005ed966440f779b78e3ea81d97565ed12c301c888",
+      "rgba_sha256": "16fda3301026ad4de4276c67916f67586455bf3a5eae991922a9eb46cb4d1e41"
+    },
+    {
+      "name": "beard/short/adult_f/south/work",
+      "source_sha256": "c40b72c248ac1f482c8387ed08cf62b4dc17b42d9e4c230af13c598746b16e3a",
+      "rgba_sha256": "5ee9e7b64d37e250418d79db32905d38740a56a0f607b225c84b504ae6d29a6c"
+    },
+    {
+      "name": "hair/bun/adult_f/south/walk_a",
+      "source_sha256": "f64a6e7d113f6d89ab6a87bdba4687e6368c9f497e482f7a9b468aef7850e45c",
+      "rgba_sha256": "87a6326b1473512b0fce53387c5733bde6ee7891a87a294db73406bb11ac81c4"
+    },
+    {
+      "name": "hair/long_tied/adult_f/south/walk_a",
+      "source_sha256": "2f2515816a4869cd3f77e6f725953625dbe194b30b3994652eaf6ba18eb8537a",
+      "rgba_sha256": "d1403859c9765e70f6c89bf40bf7ada9c7a650f19c1a5b2ca7561f1c939c0c13"
+    },
+    {
+      "name": "hair/short/adult_f/east/idle",
+      "source_sha256": "63e3a86d34c5dc712ea3523c0f21e1706afe18292c82c2f3e68455e7e857f03a",
+      "rgba_sha256": "5ca9633503a8530607810e924a152e745a3fb4b9fa019d4b301bb15236b56a35"
+    },
+    {
+      "name": "hair/short/adult_f/south/walk_a",
+      "source_sha256": "1d08799a2995374e4ec49f9c27c5f1e4402c5df7e0114c91d20c7d1b374036da",
+      "rgba_sha256": "6f8a735fc704595a3b48505a94b2b64f97cef103f9ebd10d2bd9277c2926ed57"
+    },
+    {
+      "name": "hair/short/adult_f/south/work",
+      "source_sha256": "dc21e5acc2eb6073eb7df6d1e2852a7921cf442f27ef4c4d08bddd95b45b02c2",
+      "rgba_sha256": "ccd28199e63f468c45883933a2a5e2d7963115066faf904a4193f96fec3209ae"
+    },
+    {
+      "name": "hair/short/adult_f/south/idle",
+      "source_sha256": "1d08799a2995374e4ec49f9c27c5f1e4402c5df7e0114c91d20c7d1b374036da",
+      "rgba_sha256": "6f8a735fc704595a3b48505a94b2b64f97cef103f9ebd10d2bd9277c2926ed57"
+    },
+    {
+      "name": "beard/short/adult_f/east/walk_a",
+      "source_sha256": "a1efdb64251f52cacfab000cb77079b2dbbf39f96ab383241f918f9d80307df1",
+      "rgba_sha256": "b9c48bb0e75c42be7c2c71812fc07bd1837cf4baa02b385875a4332be73f3a26"
+    },
+    {
+      "name": "beard/short/adult_f/east/work",
+      "source_sha256": "e5ed5cfe00a118a783a8d8554d6e3a6d3cde1b26e2fd36c48890819f054f5c77",
+      "rgba_sha256": "87782cd36f5ae17d8eea5438c57cd6ede9afbf82a058b8ea015e985ea2334a1b"
+    },
+    {
+      "name": "hair/bun/adult_f/east/walk_b",
+      "source_sha256": "4a5d0f90fc084a44c5cdd8c85cf1fd9579000e0ab959d78795a1947aadaae725",
+      "rgba_sha256": "290a8fbb070c45758f5359a56307bcfee137e6d017de3b26c3d2a87edc3165c2"
+    },
+    {
+      "name": "hair/long_tied/adult_f/east/walk_b",
+      "source_sha256": "bb140c39add8b5acdf85eaecc65e3aa7de338dbe8dce73b614ff8e87aaf5e276",
+      "rgba_sha256": "d1c6d8635293a41114aa3a0206ca6380837ae98afe9a4529d3a8e9c522882ea9"
+    },
+    {
+      "name": "hair/short/adult_f/east/work",
+      "source_sha256": "63e3a86d34c5dc712ea3523c0f21e1706afe18292c82c2f3e68455e7e857f03a",
+      "rgba_sha256": "5ca9633503a8530607810e924a152e745a3fb4b9fa019d4b301bb15236b56a35"
+    },
+    {
+      "name": "hair/short/child/south/idle",
+      "source_sha256": "ab989ee7772c9428117b0e224d3e9f44ae5ee891bc81ce4182cab3867321c72e",
+      "rgba_sha256": "1099e46ca26258be08bf0a282370c7eec11849524f243b99f59636e7e428d266"
+    },
+    {
+      "name": "hair/short/child/east/idle",
+      "source_sha256": "a6a67b2c664d855c3541308cd3e70c82ca6f08e1af7b6f4a51984e23892a4de0",
+      "rgba_sha256": "d7bf5829ae991f898aeb7b91216cf0167b3392f696d4194ae30c1013730ff9fc"
+    },
+    {
+      "name": "hair/short/child/south/work",
+      "source_sha256": "0acde06d5bb5dc442472536963c183c535c52ac24628b267e5bf72c865d18f35",
+      "rgba_sha256": "1f1f129ec6ee090b5ed389be70ed704685a7726b137f21a2dc7f37e2fb399eb3"
+    },
+    {
+      "name": "hair/short/child/south/sleep",
+      "source_sha256": "58a9e6876c9041627e9a979cc126770f5f2e6d167ed1c3fbc1b34ea89973690b",
+      "rgba_sha256": "d1803eecb1ec3bd0b0507a58c8cbb2563a05b5a86d8e315b71d53e9266ba194f"
+    },
+    {
+      "name": "hair/short/child/east/walk_a",
+      "source_sha256": "4d3c44bed4c91dddc08eeb2e7714154b950de9bc0b461aea100b4a7abeba68f5",
+      "rgba_sha256": "2c443a8d352f94564c7b980cfe506b7783a2346e35c78972d0fea040b1d62fa6"
+    },
+    {
+      "name": "hair/short/child/east/work",
+      "source_sha256": "a6a67b2c664d855c3541308cd3e70c82ca6f08e1af7b6f4a51984e23892a4de0",
+      "rgba_sha256": "d7bf5829ae991f898aeb7b91216cf0167b3392f696d4194ae30c1013730ff9fc"
+    },
+    {
+      "name": "hair/short/child/south/walk_a",
+      "source_sha256": "5b18caa3227077806e0c52977fbccfd0ee543b9a441cafb9d4262b66b9b0f61f",
+      "rgba_sha256": "6ef38c2c3eb18d30a444662abd68deb9fb3181bbfcbdb7de73f08cbb11e4b893"
+    },
+    {
+      "name": "hair/short/child/south/walk_b",
+      "source_sha256": "59ddc767771f9b6116b91451061b429c103d728b7d917741d4b2692a4f7d8745",
+      "rgba_sha256": "1b5f0449c77365b910344f010d700dc47de36be4f331148b0bd351b4f406b889"
+    },
+    {
+      "name": "hair/short/child/east/walk_b",
+      "source_sha256": "5104fefa7802c976d596038ed780ab6b04f6e423853310ab2864edcd1775cf58",
+      "rgba_sha256": "9f9f79f1b082c26f77bebbb84602eb3b7b51b9b5a3b373b7e6bea2f630a32663"
+    },
+    {
+      "name": "hair/shaved_sides/child/east/walk_a",
+      "source_sha256": "320c8a7a62c8099052bc095d0dbf05a677849d194e2b4ccf7a6199adc050d6ac",
+      "rgba_sha256": "1662e924a3dd6fac24ffc6f92fae68b5f2ef29bd152cf84928c6502062a61b53"
+    },
+    {
+      "name": "beard/short/child/east/walk_a",
+      "source_sha256": "cbea9bc989e9f49f54f4720dfd229cb881011cf347a26a14322c159f73e6810a",
+      "rgba_sha256": "9b00deb9eaa69ffe27141f3b27e7c4716fae790d06ed8b7d67e3a04d4d7c1b68"
+    },
+    {
+      "name": "beard/long/child/east/walk_a",
+      "source_sha256": "64a4cc9f2fd0fc2284e0e0e8defefed9b522b81d62d4af2e62f6b216ace84ffd",
+      "rgba_sha256": "a2f45a95349ded2f49396ab9a150d80fbc3b5a4909c94c97ed4b874cb1741eb3"
+    },
+    {
+      "name": "beard/long/child/east/walk_b",
+      "source_sha256": "7f9c193e9224471a259a3dfe2e03ad89c238031b6a14685a798cbdb3d4ec4404",
+      "rgba_sha256": "380ff56317b2e9f7b98e1b982290a2001274b3ff9fcf484076a12feb9106cb76"
+    },
+    {
+      "name": "beard/short/child/east/work",
+      "source_sha256": "ff0127b7c230ac982a8c1d7e7b2cbfccc26d3d2e827968aa2e0f4c8e4d6561b9",
+      "rgba_sha256": "9ace67c334fbec4a833f5cce63573196a32ebeba0b4d4499168a192fbc9eccda"
+    },
+    {
+      "name": "hair/short/elder/south/idle",
+      "source_sha256": "715a6e7bdff51669502d4de2a53cd45fdddb1043fb7992fec08bbe75fe07ecef",
+      "rgba_sha256": "b6953f9cad03b51ceafd77c3e84fbd3802372c73781836df60af63940f9fd310"
+    },
+    {
+      "name": "beard/short/elder/south/idle",
+      "source_sha256": "aa124dafc141611591106422981deada8a19d4bdd180d6aafd05222af1db7882",
+      "rgba_sha256": "030981f1e4c43809635eaaa1f1ffe5ebbb7a212ee7696a3684350253e0012aae"
+    },
+    {
+      "name": "hair/short/elder/south/walk_a",
+      "source_sha256": "c4b487a81027d53f78f08499f434c7b3c31948dd38035366479ccf36eac0f10f",
+      "rgba_sha256": "46a782d7155f0233f1860d3fbfb941ac67f92cde15aeed23c698f043acdbf700"
+    },
+    {
+      "name": "beard/short/elder/south/walk_a",
+      "source_sha256": "351de9bcd6a1c992af0a57b7605552875ffa0a849674952932b1b8ba2d91d423",
+      "rgba_sha256": "552f1fb3637dfa74e6ed6de035ef9fad8136c2980228d7655befa117c9af8562"
+    },
+    {
+      "name": "hair/bun/elder/south/work",
+      "source_sha256": "cdacb9ec22a237daf6f1fde3c38a762b60b3e85f0b29b6f8043052d19a442a4c",
+      "rgba_sha256": "d038e15ce22f06e41558995306b5e88f3b6160353f24948b7db72b739502e14b"
+    },
+    {
+      "name": "beard/short/elder/south/work",
+      "source_sha256": "9b8ed0d07255af120847284242214cbe7331047aceabec1c93473dd36d6f538f",
+      "rgba_sha256": "201717c39fda466d52fe55a3b1ace406d34eb2366564874636693c7665cfd7db"
+    },
+    {
+      "name": "hair/short/elder/south/sleep",
+      "source_sha256": "88573a2678062885d1223d431b3ce489fe65e91267b6bc72283a04df2f4474b1",
+      "rgba_sha256": "afa98a7f924e13e808cb50ac3aa247b255e65a5f246465bd034143fd36810879"
+    },
+    {
+      "name": "hair/short/elder/east/idle",
+      "source_sha256": "0672eac16fb947c9d77476f01798bc5997c2ea755d0f83d6f4bd1613fde7316c",
+      "rgba_sha256": "1e7742908bd1ef06f413403025394ae1d2798dce58bee9c1c881096692bfaaec"
+    },
+    {
+      "name": "hair/short/adult_m/east/walk_a",
+      "source_sha256": "1d08799a2995374e4ec49f9c27c5f1e4402c5df7e0114c91d20c7d1b374036da",
+      "rgba_sha256": "6f8a735fc704595a3b48505a94b2b64f97cef103f9ebd10d2bd9277c2926ed57"
+    },
+    {
+      "name": "hair/short/adult_m/east/walk_b",
+      "source_sha256": "ef385c3ea51f9c6d0be2527824d84c50525364bf11660399890f0cbb488f3d22",
+      "rgba_sha256": "8dda408b6b56318cce0cbef32c125b1e727391f140fc46900a92b77769a82f4b"
+    },
+    {
+      "name": "hair/short/adult_m/south/sleep",
+      "source_sha256": "62dc8a4cd2f06a1e39583d9e941f4595304375f562a701250c9e07ab8c748e49",
+      "rgba_sha256": "823d56ea88468c836c951d61310a02acbf295c31a286a5732ffd5f224e260a84"
+    },
+    {
+      "name": "hair/long_tied/adult_m/south/idle",
+      "source_sha256": "1b8e58efee9f5aa54f7cf6eed42126de4fe04086654f17e2a0e23f8ffc34fea9",
+      "rgba_sha256": "7fa915a711e0b28e509c69d3c5b59b73e091d910e6f059240b4c1a4fd39c53c4"
+    },
+    {
+      "name": "hair/braided/adult_m/south/idle",
+      "source_sha256": "ec7f1f7fd54557b88464a6534ae2c68ea9cf972ebf4f47c6fb8e0e12d1eaf17c",
+      "rgba_sha256": "abd760a126ab9ba988734410bc18c94e7a1ee7e91043c1b4d493ac63dc6fcabb"
+    },
+    {
+      "name": "hair/bun/adult_m/south/idle",
+      "source_sha256": "3dd89ad6d0de3ca4bc934232b39c2dc32e590df07414e72ac1c1e069f3af6e8e",
+      "rgba_sha256": "8267c59f4eb6f17bb0a6bd1974440034b9bf10b6662528ba2a167ec0e876d5c8"
+    },
+    {
+      "name": "hair/shaved_sides/adult_m/south/idle",
+      "source_sha256": "2fa70fd65f582d2fd34ff87fc6206f592457f29aa46aeb633537262eab2ec22d",
+      "rgba_sha256": "28865bddae47eb474182e04c56409a7f549f29029dc15a5decadd67b0b549df5"
+    },
+    {
+      "name": "hair/short/adult_m/south/walk_a",
+      "source_sha256": "ef385c3ea51f9c6d0be2527824d84c50525364bf11660399890f0cbb488f3d22",
+      "rgba_sha256": "8dda408b6b56318cce0cbef32c125b1e727391f140fc46900a92b77769a82f4b"
+    },
+    {
+      "name": "hair/short/adult_m/south/walk_b",
+      "source_sha256": "ef385c3ea51f9c6d0be2527824d84c50525364bf11660399890f0cbb488f3d22",
+      "rgba_sha256": "8dda408b6b56318cce0cbef32c125b1e727391f140fc46900a92b77769a82f4b"
+    },
+    {
+      "name": "hair/short/adult_m/south/work",
+      "source_sha256": "ef385c3ea51f9c6d0be2527824d84c50525364bf11660399890f0cbb488f3d22",
+      "rgba_sha256": "8dda408b6b56318cce0cbef32c125b1e727391f140fc46900a92b77769a82f4b"
+    },
+    {
+      "name": "hair/bun/adult_m/south/walk_a",
+      "source_sha256": "fe3a01efa07f9ef8d29854ff15ec2bb8885cb20089ce911196049f3dfa0c8496",
+      "rgba_sha256": "c47aa34ca3beabdf36498d7f152bb904536a64df8a0112bae3d8f6c65dce97b1"
+    },
+    {
+      "name": "hair/shaved_sides/adult_m/south/walk_a",
+      "source_sha256": "2fa70fd65f582d2fd34ff87fc6206f592457f29aa46aeb633537262eab2ec22d",
+      "rgba_sha256": "28865bddae47eb474182e04c56409a7f549f29029dc15a5decadd67b0b549df5"
+    },
+    {
+      "name": "hair/braided/adult_m/south/walk_b",
+      "source_sha256": "b42e0e3e10824cf8a4ed342a902d428ea095dd8f82662283b4dcddf713c53e5c",
+      "rgba_sha256": "f685bc92435ae34acc0db4361447d65bb1a36e595971fa9d3ad590bf428e8e76"
+    },
+    {
+      "name": "hair/bun/adult_m/south/walk_b",
+      "source_sha256": "fe3a01efa07f9ef8d29854ff15ec2bb8885cb20089ce911196049f3dfa0c8496",
+      "rgba_sha256": "c47aa34ca3beabdf36498d7f152bb904536a64df8a0112bae3d8f6c65dce97b1"
+    },
+    {
+      "name": "hair/bun/adult_m/east/idle",
+      "source_sha256": "14e894568400afe8a0661e698a917af8fee977e4695167c97eb1e08d2b95d724",
+      "rgba_sha256": "5cc12b8e69174f4091297b3308ffa1641c2e0226d333f09d6bcb60e80dfb2081"
+    },
+    {
+      "name": "hair/long_tied/adult_m/east/walk_a",
+      "source_sha256": "ce250b4d3203b15ed6bff699ae9623474b84c1121326f7eb6bd4c97301dfc79f",
+      "rgba_sha256": "818caf4d0720f5a5cf7bec79ea3d380339a12b56893efb70df274e544dabb088"
+    },
+    {
+      "name": "hair/long_tied/adult_m/east/walk_b",
+      "source_sha256": "ba2c523a55bff7b98ea7e77e6cf41a7c593b71a4e4541bb4661963de83a254bb",
+      "rgba_sha256": "090dbddcb7ec0041ce6c16db290a48ab11c31372c23e39156590ddf481e72a41"
+    },
+    {
+      "name": "hair/bun/adult_m/east/walk_b",
+      "source_sha256": "ed50d372b7b3ef5d1ff124156489eb19861552ea5c46501ae6d9b57a80b3abd6",
+      "rgba_sha256": "9f9e6a5eeba3ef2d604735bcd17ae5c3090de33568d81889627f5eddb54e7cbf"
+    },
+    {
+      "name": "tool/pick/adult_f/south/walk_a",
+      "source_sha256": "ba23111cf21850851de77ac9891d79a959eec824ab0138abb827d51bddd9f5f1",
+      "rgba_sha256": "10bef78aafd30a1a0715f273442fe9a9f6bf96f9084c36006617ad34bf44b1ad"
+    },
+    {
+      "name": "tool/hoe/adult_f/east/idle",
+      "source_sha256": "f0fcff8de64adc84410940c0fad2e5bcb073df163999cd26682f05e9a3a15be2",
+      "rgba_sha256": "232a20c2cf3a866fd634adf9f84eac312d6c51dcbeb2aac09187a0f42b3d1af0"
+    },
+    {
+      "name": "tool/axe/adult_f/east/walk_a",
+      "source_sha256": "5f76613f6a1227d679afbbe44507f2b84b7446cba0003c64b3494fafb2f61ec3",
+      "rgba_sha256": "7fd4c608a870cd19c5eeb3732f37a6d3dc632d4f3b6c12667c4b8b8acedd9027"
+    },
+    {
+      "name": "tool/hammer/adult_f/east/walk_a",
+      "source_sha256": "8b11e1199a69c206d552bdff69fd7c8df2b07b72aa5a81e92c1f56596543297e",
+      "rgba_sha256": "3037fca6144e87d55c238449a17c2c8577bcfd290afa8c72a72c5cd0f7d8ef2b"
+    },
+    {
+      "name": "tool/axe/adult_f/east/walk_b",
+      "source_sha256": "2a65cb0a2b2239c4625e862c373852a1bf3fecdb7b1a83ba9d491a80e93c27f2",
+      "rgba_sha256": "3944eff6cde893fa9dbef656e110f9e89e210e759cdbd95d3c1ab875ec35b58e"
+    },
+    {
+      "name": "tool/pick/adult_f/east/walk_b",
+      "source_sha256": "d592829e871c0c8d7d575b2e9682105d7d358fdf788c7e71e8c52d21b0914e0a",
+      "rgba_sha256": "bb08ac32c3e69ef5714bf38b26f5cd345fdaf5d261225d762b2f466259255199"
+    },
+    {
+      "name": "tool/basket/child/south/idle",
+      "source_sha256": "5f1590b8a47457c75cb879cdc85344986ed781cec20de36d9ed144a8ff194767",
+      "rgba_sha256": "f124cf60ef48831679d8942f1877d035d4b198d838663e40008a325dbc4c99eb"
+    },
+    {
+      "name": "tool/hoe/child/south/walk_a",
+      "source_sha256": "9ebc9f7c502a98decaab1db13c235047178d627c55c8e09bd3318a925eba5a2b",
+      "rgba_sha256": "c6dfe99a047515ba1c29ede66acd119d3debb56c330fdd07789eb8bd2130d022"
+    },
+    {
+      "name": "tool/axe/child/south/walk_b",
+      "source_sha256": "d3f73bc7759ca7d930e1f45659c63506b86c22ec564360d3108b010f8943e3dc",
+      "rgba_sha256": "6ff62af3059b9fafac911825329ee2be4aab9006bdc1316f317be442195893c4"
+    },
+    {
+      "name": "tool/basket/child/south/walk_b",
+      "source_sha256": "2b554e055d4cb05a7d4899c7987df6fa9cc1e89e7008625dfff12be4a169af16",
+      "rgba_sha256": "6ca2e9cf98623dc12ce4d42744a1f89094c67f732e582975c8f07cfdde4209a6"
+    },
+    {
+      "name": "tool/hammer/child/east/walk_a",
+      "source_sha256": "0a3f2be31451c89a6f21e5bac6e7a2b091712ccd2fe197a5f398059fc6b62639",
+      "rgba_sha256": "c45d2aee18ae5b7baf22edc6f7a8827a6d62664c761a9d2ac3a52bced3bbafe6"
+    },
+    {
+      "name": "tool/hoe/child/east/walk_a",
+      "source_sha256": "4d30cd2fc9a23c2e025e85a5d513812e44cef95048b6a2a48dcf85beb802a263",
+      "rgba_sha256": "eb338633c7aeaa957ed05a4fb63bbafc35d9661765773c735d0f277fadfa0a5c"
+    },
+    {
+      "name": "tool/basket/child/east/walk_a",
+      "source_sha256": "86ac38847107017a02dad9c10d4ccd90012b048c1f0e7ecd19a02470e33b2532",
+      "rgba_sha256": "e338c377ee7e3f1447c2dbe6a2b873001763e0a80aa79e86cdf3c65bd785a01f"
+    },
+    {
+      "name": "tool/hammer/child/east/walk_b",
+      "source_sha256": "30b78153fd60209c8b3b8ac083efd552ce0c28377521fc2262c67c028e2545a2",
+      "rgba_sha256": "5908ed0dba659ff80694a405b75d88f35bc9e53b5646c7c79b97d0f8089813f2"
+    },
+    {
+      "name": "tool/basket/child/east/walk_b",
+      "source_sha256": "aa436fc054902fc955d2644e445fd5f84e41c0d68dd6380b5929f460ea504336",
+      "rgba_sha256": "8ebeae3aae8b7dd7f6088f21b42fa5f4bd9e534f2b770b469592dd7cda323042"
+    },
+    {
+      "name": "tool/axe/child/south/sleep",
+      "source_sha256": "859cc55aa7e5dd9e153022acd097117aeb715bfd14c8f3db2c715264f4ac8808",
+      "rgba_sha256": "300cd08156269050349e027274847a5b034832a55630f42ba285052c14965df2"
+    },
+    {
+      "name": "tool/axe/elder/east/idle",
+      "source_sha256": "1b31f542e77d1539432e9a5fcb7f7a1ed23813978829a5a14080999e93a7dd35",
+      "rgba_sha256": "13b1a54fac2bf3d5e7eded5e04ba387cdbddfb048da623747ff9c5065c1024d5"
+    },
+    {
+      "name": "tool/axe/elder/east/walk_a",
+      "source_sha256": "443d95d8ea452153beda5e0191accde5f1eff4419a64384b2fef52ef23a39ba8",
+      "rgba_sha256": "7c3a886ae0792dc5a14b6602d09b5cedcb67138a43b12d53aece450dedcf4543"
+    },
+    {
+      "name": "tool/axe/elder/east/walk_b",
+      "source_sha256": "f55f92fd794861a1a85e18aeaa01c709f8b1e12bb4953989bb5dccca9500af60",
+      "rgba_sha256": "03d7f4309fb5a7f16c821aeebfbd8407344ca9b16c83efeeff8ae494c720ce41"
+    },
+    {
+      "name": "tool/hammer/elder/south/sleep",
+      "source_sha256": "d21724575bf26227701b6df68deafdf0fd29e0ce837cf6c10b8781a3ef2d6f0d",
+      "rgba_sha256": "577b990b3073fad8ec43cfc6a467ce53406c509e7fd04fe2935c4b6d4e904e72"
+    },
+    {
+      "name": "tool/hammer/elder/east/idle",
+      "source_sha256": "9cb8b2c939aa267af17702dfbb219da08811831cbcde7428d4bdcdd127410c33",
+      "rgba_sha256": "c47653fb5f0041a5d151206753c2708110f6189665056db40851318a677f36a6"
+    },
+    {
+      "name": "tool/hammer/elder/east/walk_a",
+      "source_sha256": "d4b029d0f76a7af4dd4d163ca7ec0413db3428b9ad32189c9ceb0b80da1dcfef",
+      "rgba_sha256": "7fc8545d785b80fe4bd07fc0da7a57e9f1bf13ac78089c80d1dca4a1fc329fb1"
+    },
+    {
+      "name": "tool/hammer/elder/east/walk_b",
+      "source_sha256": "5c2bbed5848781989e55c6beadaf0064823c077ca282b6f451071d726d9d5b26",
+      "rgba_sha256": "445b3050433d6eeb16c240485fe592838ccbd492e029ccc22e2661a7f646b50a"
+    },
+    {
+      "name": "tool/hoe/elder/south/walk_a",
+      "source_sha256": "02fa43910cd8a2380613a3a5164d7ec43c4f5c5e1ca648864928789b7fbeadee",
+      "rgba_sha256": "02431b60eba3f5dc59296d2e90825479483408df03946e68b925addda4e5645c"
+    },
+    {
+      "name": "tool/hoe/elder/south/sleep",
+      "source_sha256": "dd774fbbd7e8ab13d4daffe83de3702b50bbc7341933d3b8d81a0d3b50bd9064",
+      "rgba_sha256": "b2e9a2e104de713c9c70d5ae22a93b08a3bde78791a0a6fae333ba4b53f8c318"
+    },
+    {
+      "name": "tool/pick/elder/east/idle",
+      "source_sha256": "0ef1ae29719dba013c78fc03bad3517baafd4a7746dba6511f0025ccdd22adef",
+      "rgba_sha256": "ba851cb580599aefe6cbba36e1cff85fb43bb62a3f07b99ac35f71abf2521dfd"
+    },
+    {
+      "name": "tool/basket/elder/south/idle",
+      "source_sha256": "4088dba345d0cdacacad0ba4597ea96c58699a166fa7974ae3162a99b4797465",
+      "rgba_sha256": "0bd444a113b0531c8bb3ff8b172061643e42ecb4cbee41e8e373e55ca5f660b2"
+    },
+    {
+      "name": "tool/basket/elder/south/walk_a",
+      "source_sha256": "82109b7a765b657ca5b37a49d7c7cd20b86d693f4c487a7bf1ef06a5b52e8856",
+      "rgba_sha256": "dc2c0e78ee169a3f1b3a51cfd30da749fea4ebc30c0ff5b2fe1c5c68336ec108"
+    },
+    {
+      "name": "tool/basket/elder/south/sleep",
+      "source_sha256": "86d20ea2da2c24627659f4b9a20908fb4f02d3ca1208c9287786e2e8d30738ca",
+      "rgba_sha256": "b716023619630dff64db56de2dff0165f26113cbbb87d11ef23b385b49b6488a"
+    },
+    {
+      "name": "tool/hammer/adult_m/south/idle",
+      "source_sha256": "23008f89c991f7300cb374e83e0d2f3976e1f1871b78391ad3a54776576ed023",
+      "rgba_sha256": "63460dd149465acd38038e9f563ab8e62d47a524a7e8deb98cf5eda71ff1c33b"
+    },
+    {
+      "name": "tool/axe/adult_m/east/walk_a",
+      "source_sha256": "d5a7a325fbbe5618eaedbbd80df277a18915543cefe6390b3bd5f9512603fc3e",
+      "rgba_sha256": "403885334b85c033dc5dab490d901f171d9083c00bd039c91b2acb84e44fd1fc"
+    },
+    {
+      "name": "tool/axe/adult_m/south/work",
+      "source_sha256": "de6da06fb0703d63bd4f4a850b097e80d1ad3cd9f975cef13779c05c34825fa3",
+      "rgba_sha256": "003aea0e9ed45a0dc22d7c63fab706a86502ebfa2852d45e4aa97c25a487bd47"
+    },
+    {
+      "name": "tool/axe/adult_m/south/idle",
+      "source_sha256": "6f14c532264ffabe1bcbaf4852cde1fdbddc09cdebb8e929e4a601edd4505c95",
+      "rgba_sha256": "5d4dd5c2f6e5fb310e185ca04569b617c2c30c4e4d260aed5dcaac86d1cfb78c"
+    },
+    {
+      "name": "tool/axe/adult_m/east/walk_b",
+      "source_sha256": "60cc9f8f5d11d602d9beb01f7dce4e94ce424e31eb9ac47fcabcd2fbe4bae9ba",
+      "rgba_sha256": "2a5d5fe80f284918373033797654d4a1559225ddaa0ed5022323bc0fb0e35af9"
+    },
+    {
+      "name": "tool/hoe/adult_m/south/idle",
+      "source_sha256": "1a187dbfa20be3f94fb1af596dbc2512cdaeb8a58996c6e13a1330a58bba1de2",
+      "rgba_sha256": "d5abf8075d96f3cfc8578001139f5bb8db48e4ce5afd5f6f43d7b7e094a67c52"
+    },
+    {
+      "name": "tool/basket/adult_m/east/idle",
+      "source_sha256": "bad2c799779ed8ad140ed2fbdc69eafc2a6b26f944c61096a1f391121eced5d4",
+      "rgba_sha256": "b30efd218d3cbbf3c198c07ccff66a49fa3a180a14fd3c13fbbc61c2a40edb08"
+    },
+    {
+      "name": "tool/pick/adult_m/east/idle",
+      "source_sha256": "8eda13bfa1f1cf1fd253bf378135480076a29964554f17f21e0a1a1e81f05148",
+      "rgba_sha256": "4d322939c8e8a9d24f30ef6633cf7ba378896e208cfe01c735923dde0fb11a52"
+    },
+    {
+      "name": "revision1/body/base/adult_m/south/sleep",
+      "source_sha256": "7863456ee445bd6d98b7a20959fb654bc0d838e1044e184a5011549197603cad",
+      "rgba_sha256": "82ddce250912357ff5118fb668692f5a9057d1b1eb2cf9a6409cdf157bb5bc8e"
+    },
+    {
+      "name": "revision1/hair/short/adult_m/south/sleep",
+      "source_sha256": "f124726eeaca69e32390a92effcafd0efd2c2ee0462eea7f98bad50dbbd0cdf2",
+      "rgba_sha256": "41c7664d0dfac014059fda906342d3c0b59ef279c9931ac4c84631f3ee49c492"
+    },
+    {
+      "name": "revision1/top/hide_wrap/adult_m/south/sleep",
+      "source_sha256": "339b3a192d4a8d388bacb905b47a4c0f71ffc08bb8453cb8beefd6f758805422",
+      "rgba_sha256": "8db2e9d79602fb0f04d19ea84128910e44184b602c0a89e0bfe455bacf56503e"
+    },
+    {
+      "name": "revision1/shadow/base/adult_m/south/sleep",
+      "source_sha256": "f984e1ed6fea8b87db459a420c0cecaef988af24138d6ae45052a42a8e0ae056",
+      "rgba_sha256": "5ace3a44e156ac339083be7a98af3266bcc445c1c030ebf267158b159ed223d7"
+    },
+    {
+      "name": "revision1/body/base/child/south/idle",
+      "source_sha256": "4e9980d7d3614587071e9a660b2ad86f52708abdea4b9b79dc0cfe3a798b59f3",
+      "rgba_sha256": "39651ad0b848901e231163dd95a011ad3ceb1bad46c5cef1c15679642ff54dfb"
+    },
+    {
+      "name": "revision1/hair/short/child/south/idle",
+      "source_sha256": "5eb0b093aa0989c2bd598a6e50275f5ac3d8e0bf56e3a2c0936bab0dd472a22c",
+      "rgba_sha256": "14ef160eeeb3b6eabb11b565356024e8e1a12f277bc242dde2ba12a78d372718"
+    },
+    {
+      "name": "revision1/top/hide_wrap/child/south/idle",
+      "source_sha256": "e6740dd38ab9fc97b3bea1f50d76b30d67604a38353bcbc11c127d1e833d907a",
+      "rgba_sha256": "e9e5cef006453d74f7fb1c1366ae74ec0e6625af86307508b35e547768ba3842"
+    },
+    {
+      "name": "revision1/shadow/base/child/south/idle",
+      "source_sha256": "18aef405edb93bc38970b02b20383d3dcbc93ebcee879016d51a1e6d4db18117",
+      "rgba_sha256": "870f36fc19a9fe17967465e72a3f8daf3f8484d72c64f0f9df7b4c2d0d0e3eaf"
+    },
+    {
+      "name": "revision1/body/base/elder/south/idle",
+      "source_sha256": "e7f74d424c7f68a278c4a631d2a08cf7de4d23f8e4635ea2e1dbf67bf9e5eb88",
+      "rgba_sha256": "3f5f2682565237eabd2840af69eaf05a695d85d0b4e22b80671b11fe99edf5f6"
+    },
+    {
+      "name": "revision1/hair/short/elder/south/idle",
+      "source_sha256": "13b69cc804e3fe442dd3756db2a4e3d07e9338b80cfb846a743552ffb4b4662a",
+      "rgba_sha256": "aae14a7b613b7d7a8a12109f339a54ba96a0040256f281e5ef518a22aeac29bd"
+    },
+    {
+      "name": "revision1/top/hide_wrap/elder/south/idle",
+      "source_sha256": "95444365e37f972452ae86033aaf3655043465e419ff872bed67a6bac2d0d4ba",
+      "rgba_sha256": "27f585cae6ab66a1fd239c7b16f5b7ad3bc95bd10ee42f89b10c072446de3c39"
+    },
+    {
+      "name": "revision1/shadow/base/elder/south/idle",
+      "source_sha256": "d6429b5c363a8cf199f7af49c2a5608a24fd06c806110c32a9db4f988944e48a",
+      "rgba_sha256": "dff52c487681c474a04aea1e988703cb97d2dac2942304fdffb40247b8b256aa"
+    },
+    {
+      "name": "revision1/carry/logs/adult_m/south/idle",
+      "source_sha256": "7785d66f334f44adf97653c590486c7b98a5fc2f1bb6d580e05ad086296f5cfe",
+      "rgba_sha256": "df2643e384448ff9fe0594f9fb2d24667c2426ca461f33f523b477037b42475c"
+    },
+    {
+      "name": "revision1/log_pile_1",
+      "source_sha256": "98f36b61b468440771d1b8fbb94917701b9fe47a543e8073df86a44c4c860ab5",
+      "rgba_sha256": "d6df8e82417fa92d0c749e395942b89e0235e21e9f1ed052a8da9f700c337781"
+    },
+    {
+      "name": "revision1/log_pile_2",
+      "source_sha256": "27e7d41f68836d530c4079bf677cb167272441250af68a0de8ba6f83a98aff39",
+      "rgba_sha256": "b6372bf47bcff666104e3559d085563821e32ff1006961b5253d13943733fb36"
+    },
+    {
+      "name": "revision1/log_pile_3",
+      "source_sha256": "d4f449eebade7e4cd038d3e45d6236e95e1cb5835afade419a4bf35de000bdab",
+      "rgba_sha256": "bee772454bdc1f77654627b0334f9febf23cf4f3d9055753e733823ac059b4c4"
+    }
+  ]
+}

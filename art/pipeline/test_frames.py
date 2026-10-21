@@ -10,6 +10,7 @@ from .frames import (
     SheetTransform,
     apply_transform,
     build_transform,
+    calibrate_transform,
     extract_variants,
     normalize_cell,
     save_frames,
@@ -124,6 +125,41 @@ class FrameTests(unittest.TestCase):
         bad.putpixel((0, 0), (176, 176, 176, 255))
         with self.assertRaises(PipelineError):
             _ = apply_transform(bad, transform, colors)
+
+    def test_child_calibration_corrects_short_idle_with_one_transform_per_direction(self) -> None:
+        image = fixture()
+        draw = ImageDraw.Draw(image)
+        # A taller work pose enlarges each union, shortening idle under nominal scaling.
+        for row in range(2):
+            draw.rectangle((3 * 64 + 24, row * 64 + 7,
+                            3 * 64 + 39, row * 64 + 49), fill='#9A9A9A')
+        nominal = build_transform(image, upright_height=24)
+        old = apply_transform(image, nominal)
+        for index in (0, 4):
+            bbox = old[index].image.getbbox()
+            assert bbox is not None
+            self.assertLess(bbox[3] - bbox[1], 24)
+        calibrated = calibrate_transform(image)
+        self.assertEqual(calibrated, calibrate_transform(image))
+        self.assertEqual(calibrated.sleep, nominal.sleep)
+        frames = apply_transform(image, calibrated)
+        for start, geometry in ((0, calibrated.south), (4, calibrated.east)):
+            bbox = frames[start].image.getbbox()
+            assert bbox is not None
+            self.assertEqual(bbox[3] - bbox[1], 24)
+            for index in range(start, start + 4):
+                cell = image.crop(calibrated.cells[index])
+                self.assertEqual(geometry.crop, (nominal.south, nominal.east)[start // 4].crop)
+                self.assertEqual(cell.size, calibrated.normalized_cell)
+            self.assertEqual(frames[start].image.tobytes(), frames[start + 1].image.tobytes())
+            self.assertNotEqual(frames[start].image.tobytes(), frames[start + 3].image.tobytes())
+        restored = SheetTransform.from_json(calibrated.to_json())
+        self.assertEqual([frame.image.tobytes() for frame in frames],
+                         [frame.image.tobytes() for frame in apply_transform(image, restored)])
+        layers = extract_variants(image, image, restored, ((20, 18, 16), (154, 154, 154), (110, 110, 110)))
+        self.assertTrue(all(frame.image.getbbox() is None for frame in layers))
+        with self.assertRaises(PipelineError):
+            _ = calibrate_transform(image, desired_idle_height=32)
 
     def test_child_scale_and_external_evidence(self) -> None:
         image = fixture()

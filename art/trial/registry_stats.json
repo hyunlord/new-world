@@ -1,8 +1,8 @@
 {
   "passed": true,
-  "asset_count": 51,
-  "source_png_bytes": 26682,
-  "sheet_png_bytes": 21520,
+  "asset_count": 383,
+  "source_png_bytes": 81957,
+  "sheet_png_bytes": 41776,
   "per_file_limit_bytes": 1500000,
   "oversized_sources": [],
   "atlas_written": true
