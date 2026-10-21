@@ -293,6 +293,7 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// - 147  FireSystem (Revitalize Pass 5, interval 60; no-op without the firewood rule)
 /// - 148  FissionSystem (Revitalize Pass 11; no-op without the fission rule)
 /// - 149  RelationsSystem (Revitalize Pass 20; no-op without the relations rule)
+/// - 150  FertilitySystem (M1.5, interval 1,440 at 12:00; no-op without `BirthRule::Fertility`)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -343,10 +344,13 @@ pub fn register_shelter_planning_systems(engine: &mut SimEngine) {
     ));
 }
 
-/// Register rules-gated child maturation, owned-shelter bed assignments and aging.
+/// Register rules-gated child maturation, owned-shelter bed assignments, aging and fertility.
 pub fn register_rhythm_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::agent::MaturationSystem));
     engine.register_system(Box::new(runtime::agent::PairingSystem));
     engine.register_system(Box::new(runtime::agent::BedAssignmentSystem::default()));
     engine.register_system(Box::new(runtime::agent::AgingSystem));
+    // M1.5: per-woman fertility (priority 150, daily at 12:00; no-op unless
+    // the birth rule is `Fertility`, the colony's).
+    engine.register_system(Box::new(runtime::agent::FertilitySystem));
 }

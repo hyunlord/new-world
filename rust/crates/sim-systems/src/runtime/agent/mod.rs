@@ -10,6 +10,8 @@
 
 pub mod aging;
 pub mod beds;
+/// M1.5 per-woman fertility (`BirthRule::Fertility`).
+pub mod fertility;
 /// Shared household partition and family-aware departure selection.
 pub mod households;
 pub mod maturation;
@@ -21,5 +23,6 @@ pub use movement::{haul_due, hauls_home, AgentMovementSystem, MovementRng};
 
 pub use aging::AgingSystem;
 pub use beds::BedAssignmentSystem;
+pub use fertility::FertilitySystem;
 pub use maturation::MaturationSystem;
 pub use pairing::PairingSystem;

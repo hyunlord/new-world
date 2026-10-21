@@ -237,6 +237,14 @@ pub trait RuntimeSystem {
     /// `n > 1` means the system runs when `current_tick % n == 0`.
     fn tick_interval(&self) -> u64;
 
+    /// M1.5: the tick within each interval at which the system runs: it is
+    /// due when `current_tick % n == tick_offset % n` (`n` the interval).
+    /// Default 0 (the old rule). A daily system at a clock time returns that
+    /// time's tick within the day (`FertilitySystem`: 12:00).
+    fn tick_offset(&self, _resources: &SimResources) -> u64 {
+        0
+    }
+
     /// Per-tick work. Called by [`SimEngine::tick`] when due.
     fn tick(&mut self, world: &mut World, resources: &mut SimResources);
 }
@@ -527,6 +535,11 @@ pub struct SimResources {
     /// reservations, the command log and the item ledger. Empty without
     /// `rules.colony` (the baseline world never fills it).
     pub colony: sim_core::colony::ColonyState,
+
+    /// M1.5 births that are due (`BirthRule::Fertility`): `FertilitySystem`
+    /// queues them, `SettlementSystem` spawns them on the next tick. Always
+    /// empty under any other birth rule.
+    pub due_births: Vec<sim_core::components::DueBirth>,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -720,6 +733,7 @@ impl SimResources {
                 next_zone_id: 1,
                 ..Default::default()
             },
+            due_births: Vec::new(),
         }
     }
 
@@ -986,7 +1000,14 @@ impl SimEngine {
             p.prune_ns = p.prune_ns.saturating_add(elapsed_ns(start));
         }
         for (index, system) in self.systems.iter_mut().enumerate() {
-            if self.current_tick.is_multiple_of(system.tick_interval()) {
+            let interval = system.tick_interval();
+            let offset = system.tick_offset(&self.resources);
+            let due = if offset == 0 {
+                self.current_tick.is_multiple_of(interval)
+            } else {
+                interval != 0 && self.current_tick % interval == offset % interval
+            };
+            if due {
                 match profile.as_deref_mut() {
                     None => system.tick(&mut self.world, &mut self.resources),
                     Some(p) => {

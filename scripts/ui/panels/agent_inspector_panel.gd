@@ -13,7 +13,8 @@
 #
 # Temperament and family use separate selected-agent getters.
 # The nine-key detail schema remains unchanged.
-# Bridge methods: get_agent_detail (direct); via SimReads get_agent_snapshot, get_porter_snapshot, get_world_info,
+# Bridge methods: get_agent_detail (direct); via SimReads get_agent_snapshot (incl. M1.5 ages_years, infants,
+#   pregnant_days), get_porter_snapshot, get_world_info (ticks_per_day, ticks_per_year, clock_offset_ticks),
 #   get_activity_snapshot; via person_read_cache.gd get_person, get_person_chronicle, get_agent_family,
 #   get_agent_temperament; signal world_reset.
 extends Control
@@ -498,6 +499,7 @@ func _carried_amount_byte(agent_id: int, key: String) -> int:
 	return 0
 
 
+## "어른 · 24세" (M1.5: age in whole years; "아기" under 3 years), plus "· 임신 중 · 12일 남음" while pregnant.
 func _age_line(agent_id: int) -> String:
 	if _world_sim == null:
 		return ""
@@ -506,10 +508,12 @@ func _age_line(agent_id: int) -> String:
 		return ""
 	var data: Dictionary = snapshot
 	var ids: Variant = data.get("agent_ids", null)
-	var ages: Variant = data.get("ages_days", null)
+	var ages: Variant = data.get("ages_years", null)
 	var stages: Variant = data.get("life_stages", null)
 	if not (ids is PackedInt64Array and ages is PackedInt32Array and stages is PackedByteArray):
 		return ""
+	var infants: Variant = data.get("infants", null)
+	var pregnant: Variant = data.get("pregnant_days", null)
 	var stage_keys: Array[String] = ["INSPECTOR_STAGE_ADULT", "INSPECTOR_STAGE_CHILD", "INSPECTOR_STAGE_ELDER"]
 	for index: int in mini(ids.size(), mini(ages.size(), stages.size())):
 		if ids[index] != agent_id:
@@ -518,11 +522,19 @@ func _age_line(agent_id: int) -> String:
 		var stage: int = int(stages[index])
 		if age < 0 or stage >= stage_keys.size():
 			return ""
+		var stage_key: String = stage_keys[stage]
+		if stage == 1 and infants is PackedByteArray and index < infants.size() and infants[index] == 1:
+			stage_key = "INSPECTOR_STAGE_INFANT"
 		var age_format: String = _loc("INSPECTOR_AGE_FMT")
-		var stage_label: String = _loc(stage_keys[stage])
-		if age_format == "INSPECTOR_AGE_FMT" or stage_label == stage_keys[stage]:
+		var stage_label: String = _loc(stage_key)
+		if age_format == "INSPECTOR_AGE_FMT" or stage_label == stage_key:
 			return ""
-		return "%s · %s" % [stage_label, age_format % age]
+		var text: String = "%s · %s" % [stage_label, age_format % age]
+		if pregnant is PackedInt32Array and index < pregnant.size() and pregnant[index] >= 0:
+			var pregnant_format: String = _loc("UI_INSPECT_PREGNANT_FMT")
+			if pregnant_format != "UI_INSPECT_PREGNANT_FMT":
+				text += " · " + pregnant_format % int(pregnant[index])
+		return text
 	return ""
 
 func _is_cold(agent_id: int) -> bool:
@@ -689,7 +701,7 @@ func _set_live_visible(value: bool) -> void:
 func _world_info() -> Dictionary:
 	if _world_sim != null and _world_sim.has_method("get_world_info"):
 		return SimReads.read(_world_sim, "get_world_info")
-	return {"ticks_per_day": 1, "clock_offset_ticks": 0}
+	return {"ticks_per_day": 1, "ticks_per_year": 1, "clock_offset_ticks": 0}
 
 
 func _refresh_record() -> void:

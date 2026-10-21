@@ -6,6 +6,16 @@ fn main() -> std::process::ExitCode {
         println!("{}", sim_test::perf::USAGE);
         return std::process::ExitCode::SUCCESS;
     }
+    // M1.5: the standing benchmark has its own parser (`sim_test::bench`).
+    if matches!(args[0].as_str(), "bench" | "bench-one") {
+        return match sim_test::bench::main(&args) {
+            Ok(()) => std::process::ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::ExitCode::FAILURE
+            }
+        };
+    }
     match sim_test::perf::PerfArgs::parse(&args).and_then(|args| args.execute()) {
         Ok(written) => {
             eprintln!("worldsim_perf: {written} run(s) written");

@@ -842,7 +842,7 @@ pub struct PerfArgs {
 /// food in `settlement`'s stockpile and return what was added. This is the
 /// stockpile deposit the V7 `GiftFood` intervention made (V8-0 removed the god
 /// hand from the game; the fed stress world keeps its feeding here).
-fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u64 {
+pub(crate) fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u64 {
     engine
         .resources
         .settlements

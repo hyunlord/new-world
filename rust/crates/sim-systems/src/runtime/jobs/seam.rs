@@ -13,14 +13,48 @@
 //! - anything else (food, water, sleep, foraging, firewood, a V7 site,
 //!   social, fire, flight) — the job is released (`CancelReason::Needs`) and
 //!   the decision's choice stands; the job's `SeekTarget` is dropped so the
-//!   post-pass re-resolves the new goal.
+//!   post-pass re-resolves the new goal. The release is counted (measurement
+//!   only) in `colony.release_counts` by need, job kind, stage and need value.
 use hecs::{Entity, World};
-use sim_core::colony::{CancelReason, Job};
-use sim_core::components::{AgentState, Position, TargetKind};
+use sim_core::colony::{CancelReason, Job, JobKind, JobReleaseKey, JobStage};
+use sim_core::components::{AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
 use sim_engine::SimResources;
 use std::collections::BTreeSet;
 
 use super::cancel::release_job;
+
+/// The measurement key of a release to `choice` (see `JobReleaseKey`).
+fn release_key(world: &World, entity: Entity, choice: AgentState) -> JobReleaseKey {
+    let job = world.get::<&Job>(entity).ok().map(|job| *job);
+    let kind = match job.map(|j| j.kind) {
+        Some(JobKind::Chop { .. }) => 0,
+        Some(JobKind::Haul { .. }) => 1,
+        Some(JobKind::Deliver { .. }) => 2,
+        Some(JobKind::Build { .. }) | None => 3,
+    };
+    let stage = match job.map(|j| j.stage) {
+        Some(JobStage::ToSource) | None => 0,
+        Some(JobStage::Working { .. }) => 1,
+        Some(JobStage::ToDest) => 2,
+    };
+    let bin = |v: f64| (v.clamp(0.0, 100.0) / 10.0) as u8;
+    let (need, value) = match choice.target() {
+        Some(TargetKind::Food) => (
+            0,
+            world
+                .get::<&Hunger>(entity)
+                .ok()
+                .map(|h| f64::from(h.value)),
+        ),
+        Some(TargetKind::Water) => (1, world.get::<&Thirst>(entity).ok().map(|t| t.value)),
+        Some(TargetKind::Sleep) => (2, world.get::<&Sleep>(entity).ok().map(|s| s.fatigue)),
+        Some(TargetKind::Agent(_)) => (3, None),
+        Some(TargetKind::GatherFood) => (4, None),
+        Some(TargetKind::GatherWood) => (5, None),
+        _ => (6, None),
+    };
+    (need, kind, stage, value.map_or(255, bin))
+}
 
 /// Every entity that holds a `Job` (sorted set: membership only).
 pub fn holders(world: &World) -> BTreeSet<Entity> {
@@ -80,6 +114,8 @@ pub fn settle_after_decision(
             }
         } else {
             clear_seek.push(entity);
+            let key = release_key(world, entity, now);
+            *res.colony.release_counts.entry(key).or_insert(0) += 1;
             release_job(world, res, entity, CancelReason::Needs);
         }
     }

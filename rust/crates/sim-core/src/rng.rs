@@ -110,9 +110,12 @@ pub const STREAM_COLONY_BUSH: u64 = 0x434F_4C42_5553_485F;
 pub const STREAM_COLONY_WOOD: u64 = 0x434F_4C57_4F4F_445F;
 /// M1: a replacement adult founder ("colony_founder_fix"; subject = founder slot).
 pub const STREAM_COLONY_FOUNDER_FIX: u64 = 0x434F_4C46_4E46_4958;
+/// M1.5: a woman's daily conception draw, keyed `(seed, STREAM_CONCEIVE,
+/// lineage key, day index)` ("conceive").
+pub const STREAM_CONCEIVE: u64 = 0x434F_4E43_4549_5645;
 
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 26] = [
+pub const STREAMS: [u64; 27] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -139,6 +142,7 @@ pub const STREAMS: [u64; 26] = [
     STREAM_COLONY_BUSH,
     STREAM_COLONY_WOOD,
     STREAM_COLONY_FOUNDER_FIX,
+    STREAM_CONCEIVE,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

@@ -131,6 +131,7 @@ WorldRules {
                 thirst_rate: 0.048,
                 sleep_rate: 0.03,
                 tether_radius: 3,
+                infant_ticks: None,
             },
         ),
         stock_target: Some(
@@ -149,6 +150,7 @@ WorldRules {
                 founder_min_remaining_ticks: 4320,
                 elder_tether_radius: 4,
                 elder_evening_tether: true,
+                lifespan_bounds_ticks: None,
             },
         ),
         meals: Some(
@@ -330,4 +332,9 @@ WorldRules {
         },
     ),
     colony: None,
+    calendar: CalendarRule {
+        ticks_per_day: 1440,
+        days_per_season: 7,
+        seasons_per_year: 4,
+    },
 }

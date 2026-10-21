@@ -1,0 +1,8 @@
+[
+  {"tick": 360, "cmd": "designate_chop_tiles", "resolve": "nearest_trees", "count": 60},
+  {"tick": 360, "cmd": "add_stockpile", "resolve": "stockpile_east", "size": 8, "offset": 3},
+  {"tick": 360, "cmd": "place_blueprint", "kind": "hut", "resolve": "south_of_hearth"},
+  {"tick": 360, "cmd": "place_blueprint", "kind": "hut", "resolve": "south_of_hearth"},
+  {"tick": 360, "cmd": "place_blueprint", "kind": "hut", "resolve": "south_of_hearth"},
+  {"tick": 360, "cmd": "place_blueprint", "kind": "hut", "resolve": "south_of_hearth"}
+]

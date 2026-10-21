@@ -1,10 +1,12 @@
-# hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with clock (dawn/day/evening/night, aligned with the
-#   daylight tint), season, population, villages, shelters (V7 shelters + M1 huts), sites (V7 construction sites +
-#   M1 hut blueprints), stored food and firewood stocks, logs lying in stacks (M1 items), wild berries on the whole
-#   map, births, deaths, cold count, pause and display speed; L toggles ko/en.
+# hud_topbar.gd (UI/HudTopbar in scenes/main.tscn): top bar with the date (M1.5 calendar: "3년 차 · 봄 2일째"),
+#   clock (dawn/day/evening/night, aligned with the daylight tint), population, villages, shelters (V7 shelters +
+#   M1 huts), sites (V7 construction sites + M1 hut blueprints), stored food and firewood stocks, logs lying in
+#   stacks (M1 items), wild berries on the whole map, births, deaths, cold count, pause and display speed;
+#   L toggles ko/en.
 # Read-only, localized counters from authoritative simulation snapshots.
 # Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
-#   get_building_snapshot, get_time_snapshot, get_resource_snapshot, get_tallies, get_colony_overlay.
+#   get_building_snapshot, get_time_snapshot (day_index, time_of_day, season, day_of_season, days_per_season,
+#   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -183,8 +185,13 @@ func _refresh() -> void:
 	var clock: Dictionary = _snapshot("get_time_snapshot")
 	var minutes: int = clampi(roundi(float(clock.get("time_of_day", 0.0)) * 60.0), 0, 1439)
 	var hour: int = int(minutes / 60.0)
-	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc(phase_key(hour))
-	_clock_label.text += _season_label(clock)
+	var time_text: String = "%02d:%02d · " % [hour, minutes % 60] + _loc(phase_key(hour))
+	var date_text: String = _date_label(clock)
+	# M1.5: the calendar date replaces the running day counter (it would contradict "봄 2일째");
+	# a world without seasons keeps "N일차".
+	if date_text.is_empty():
+		date_text = _loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)
+	_clock_label.text = date_text + " · " + time_text
 	var severity: int = int(clock.get("winter_severity", -1))
 	_winter_label.visible = severity >= 0 and severity <= 2
 	if _winter_label.visible:
@@ -281,7 +288,9 @@ func _loc(key: String) -> String:
 
 
 
-func _season_label(clock: Dictionary) -> String:
+## The calendar date, e.g. "3년 차 · 봄 2일째" / "Year 3 · Spring, day 2"; "" without a calendar.
+## Bridge contract: year_index and season are zero-based; day_of_season is one-based.
+func _date_label(clock: Dictionary) -> String:
 	if not clock.has("season") or not clock.has("day_of_season") or int(clock.get("days_per_season", 0)) <= 0:
 		return ""
 	var season: int = int(clock["season"])
@@ -289,10 +298,18 @@ func _season_label(clock: Dictionary) -> String:
 	var keys: Array[String] = ["HUD_SEASON_SPRING", "HUD_SEASON_SUMMER", "HUD_SEASON_AUTUMN", "HUD_SEASON_WINTER"]
 	if season < 0 or season >= keys.size() or day < 1 or day > int(clock["days_per_season"]):
 		return ""
+	var year: int = maxi(0, int(clock.get("year_index", 0))) + 1
+	var season_text: String
 	if int(clock.get("winter_severity", -1)) >= 0 and season != 3:
-		return " · " + (_loc("HUD_SEASON_LAST_NIGHT_FMT") % [_loc("HUD_SEASON_WINTER"), int(clock["days_per_season"])])
-	# Bridge contract: season is zero-based; day_of_season is one-based.
-	return " · " + (_loc("HUD_SEASON_DAY_FMT") % [_loc(keys[season]), day])
+		# From 00:00 to the burn end the night still belongs to the evening's winter; when the day has
+		# rolled into spring the year has too, so the night belongs to the previous year.
+		if season == 0:
+			year = maxi(1, year - 1)
+		season_text = _loc("HUD_SEASON_LAST_NIGHT_FMT") % [_loc("HUD_SEASON_WINTER"), int(clock["days_per_season"])]
+	else:
+		season_text = _loc("HUD_SEASON_DAY_FMT") % [_loc(keys[season]), day]
+	var year_text: String = _loc("UI_TIME_YEAR_FMT").format({"year": year}) if clock.has("year_index") else ""
+	return season_text if year_text.is_empty() else year_text + " · " + season_text
 
 
 func _make_cold_icon() -> TextureRect:

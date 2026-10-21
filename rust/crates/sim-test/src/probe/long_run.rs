@@ -252,6 +252,7 @@ mod tests {
                 thirst_rate: 0.048,
                 sleep_rate: 0.03,
                 tether_radius: 3,
+                infant_ticks: None,
             });
             let entity = engine.spawn_agent(1, 1);
             engine

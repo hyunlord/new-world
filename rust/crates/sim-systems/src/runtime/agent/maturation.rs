@@ -79,6 +79,7 @@ mod tests {
             thirst_rate: 0.048,
             sleep_rate: 0.03,
             tether_radius: 3,
+            infant_ticks: None,
         });
         let entity = world.spawn((
             Agent { id: 2 },

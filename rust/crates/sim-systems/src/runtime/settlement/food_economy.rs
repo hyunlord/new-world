@@ -104,10 +104,10 @@ pub fn stock_target(world: &World, resources: &SimResources, sid: SettlementId) 
     let rule = resources.rules.society.stock_target?;
     let need = members_need_per_day(world, resources, sid);
     let mut target = rule.base_days * need;
-    if let (Some(seasons), Some((season, _))) = (resources.rules.seasons, season_at(resources)) {
+    if let (Some(_), Some((season, _))) = (resources.rules.seasons, season_at(resources)) {
         if season == 1 || season == 2 {
             let winter = winter_supply_per_day(resources, sid, catchment_radius(resources));
-            target += f64::from(seasons.days_per_season) * (need - winter).max(0.0);
+            target += f64::from(resources.rules.season_days()) * (need - winter).max(0.0);
         }
     }
     Some(target)
@@ -181,12 +181,14 @@ fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_rad
 
 /// Renewable daily food supply inside the formation tile's forage radius.
 pub fn supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+    // M1.5: the colony's `Fertility` rule keeps the weighted count its
+    // provisioned rule used, so its store target is unchanged by the switch.
     let weighted = matches!(
         resources.rules.society.birth,
         BirthRule::Provisioned {
             sustain: Some(_),
             ..
-        }
+        } | BirthRule::Fertility { .. }
     );
     let sources = if weighted {
         weighted_source_count(resources, sid, forage_radius)

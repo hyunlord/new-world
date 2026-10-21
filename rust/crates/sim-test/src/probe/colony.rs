@@ -9,6 +9,9 @@
 //! command log as `colony_s<seed>_commands.json` (concrete commands, the same
 //! JSON form, replayable with `--commands`). `--check-determinism` runs a twin
 //! in lockstep and compares `colony_fingerprint` every 240 ticks.
+//! M1.5 (measurement only; `summary.json` unchanged): `--chronicle-out DIR`
+//! writes each seed's `chronicle_<seed>.json` (`chronicle_out::write`), and
+//! `churn.json` holds the job-churn diagnosis per seed (`probe::churn`).
 //!
 //! Script entries: `{"tick": T, "cmd": NAME, ...}` with the fields of the
 //! command (`designate_chop`/`cancel_area`/`add_stockpile`/`remove_zone_area`:
@@ -30,6 +33,8 @@ use std::time::Instant;
 
 /// Ticks per game day.
 const DAY: u64 = 1_440;
+/// Longest run (days): 20 colony years of 24 days.
+pub const MAX_DAYS: u64 = 480;
 
 type Tile = (u32, u32);
 /// `(centre distance, y, x)`: the hut-spot ordering key.
@@ -54,6 +59,8 @@ pub struct ColonyArgs {
     pub commands_out: Option<PathBuf>,
     /// Run a lockstep twin and compare fingerprints.
     pub check_determinism: bool,
+    /// Where to write each seed's chronicle (`chronicle_<seed>.json`).
+    pub chronicle_out: Option<PathBuf>,
 }
 
 impl ColonyArgs {
@@ -67,6 +74,7 @@ impl ColonyArgs {
             commands: None,
             commands_out: None,
             check_determinism: false,
+            chronicle_out: None,
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
@@ -91,14 +99,17 @@ impl ColonyArgs {
                 "--out" => parsed.out = value.into(),
                 "--commands" => parsed.commands = Some(value.into()),
                 "--commands-out" => parsed.commands_out = Some(value.into()),
+                "--chronicle-out" => parsed.chronicle_out = Some(value.into()),
                 _ => return Err(format!("unknown colony probe argument {flag} {value}")),
             }
         }
         if parsed.seeds.is_empty()
-            || !(1..=60).contains(&parsed.days)
+            || !(1..=MAX_DAYS).contains(&parsed.days)
             || !(1..=8).contains(&parsed.workers)
         {
-            return Err("colony probe: nonempty seeds, days 1..=60, workers 1..=8".into());
+            return Err(format!(
+                "colony probe: nonempty seeds, days 1..={MAX_DAYS}, workers 1..=8"
+            ));
         }
         Ok(parsed)
     }
@@ -414,6 +425,7 @@ struct SeedRun {
     seed: u64,
     summary: Value,
     timing: Value,
+    churn: Value,
 }
 
 fn deaths(engine: &SimEngine) -> Value {
@@ -443,6 +455,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let (mut ledger_bad, mut reserve_bad, mut first_bad) = (0u64, 0u64, Value::Null);
     let mut fingerprints = BTreeMap::new();
     let mut tick_ns: Vec<u64> = Vec::with_capacity(total as usize);
+    let mut demography = super::demography::Demography::new(&engine);
     for tick in 0..total {
         let mut avoid = Vec::new();
         while next < script.len() && script[next].tick == tick {
@@ -483,6 +496,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         let started = Instant::now();
         engine.tick();
         tick_ns.push(started.elapsed().as_nanos() as u64);
+        demography.after_tick(&engine);
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -539,6 +553,10 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         )
         .map_err(|e| e.to_string())?;
     }
+    if let Some(dir) = &args.chronicle_out {
+        let sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
+        super::chronicle_out::write(dir, &engine, "colony", seed, &sha)?;
+    }
     let c = &engine.resources.colony;
     let (created, ground, carried, delivered, consumed) =
         invariants::log_ledger(&engine.world, &engine.resources);
@@ -575,6 +593,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "deaths": deaths(&engine),
         "births": engine.resources.tallies.births,
         "alive_end": alive,
+        "demography": demography.report(&engine),
         "fingerprints": fingerprints,
     });
     let mut sorted = tick_ns.clone();
@@ -585,6 +604,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         seed,
         summary,
         timing: json!({"seed": seed, "mean_ms": mean, "p99_ms": p99, "ticks": tick_ns.len()}),
+        churn: json!({"seed": seed, "churn": super::churn::report(&engine)}),
     })
 }
 
@@ -638,6 +658,14 @@ pub fn run(args: &ColonyArgs) -> Result<(), String> {
     std::fs::write(
         args.out.join("timing.json"),
         serde_json::to_string_pretty(&timing).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    std::fs::write(
+        args.out.join("churn.json"),
+        serde_json::to_string_pretty(&json!({
+            "seeds": runs.iter().map(|r| r.churn.clone()).collect::<Vec<_>>(),
+        }))
+        .map_err(|e| e.to_string())?,
     )
     .map_err(|e| e.to_string())?;
     if args.check_determinism {
@@ -701,6 +729,7 @@ mod tests {
             commands: Some(script),
             commands_out: Some(base.join("log")),
             check_determinism: false,
+            chronicle_out: None,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {

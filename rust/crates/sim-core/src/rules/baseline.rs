@@ -115,6 +115,7 @@ impl WorldRules {
                     thirst_rate: 0.048,
                     sleep_rate: 0.03,
                     tether_radius: 3,
+                    infant_ticks: None,
                 }),
                 stock_target: Some(StockTargetRule {
                     base_days: 2.5,
@@ -129,6 +130,7 @@ impl WorldRules {
                     founder_min_remaining_ticks: 4320,
                     elder_tether_radius: 4,
                     elder_evening_tether: true,
+                    lifespan_bounds_ticks: None,
                 }),
                 meals: Some(MealRule {
                     breakfast_start: 360,
@@ -244,6 +246,7 @@ impl WorldRules {
                 regen_permille: variety.scale_regen(BASE_REGEN_PERMILLE),
             }),
             colony: None,
+            calendar: CalendarRule::BASELINE,
         }
     }
 }

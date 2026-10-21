@@ -1,6 +1,7 @@
 # chronicle_text.gd: static helpers that turn packed chronicle columns into rows and localized BBCode lines
 #   (day prefix, person/village links, death and porter wording); used by chronicle_panel.gd and agent_inspector_panel.gd.
-# Bridge methods: none (formats chronicle rows and world info its callers read).
+# Bridge methods: none (formats chronicle rows and world info its callers read: ticks_per_day, ticks_per_year,
+#   clock_offset_ticks from get_world_info).
 extends RefCounted
 const LocaleScript = preload("res://scripts/core/locale.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -17,6 +18,10 @@ static func loc(locale: Node, key: String) -> String:
 
 static func day(tick: int, info: Dictionary) -> int:
 	return floori(float(tick + int(info.get("clock_offset_ticks", 0))) / float(maxi(1, int(info.get("ticks_per_day", 1))))) + 1
+
+## Whole years in `ticks` (M1.5: world info `ticks_per_year`; a missing or zero value counts as 1).
+static func age_years(ticks: int, info: Dictionary) -> int:
+	return floori(float(ticks) / float(maxi(1, int(info.get("ticks_per_year", 1)))))
 
 static func rows(packed: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -83,7 +88,8 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		9: return loc(locale, "CHRON_LEFT_BROKE_UP_FMT" if cause == 0 else "CHRON_LEFT_FMT") % village(place, locale)
 		10: return loc(locale, "CHRON_WIDOWED_FMT") % person(other, locale)
 		11:
-			return loc(locale, "CHRON_DIED_FMT") % [floori(float(value) / float(maxi(1, int(info.get("ticks_per_day", 1))))), death(cause, locale)] if value >= 0 else loc(locale, "CHRON_DIED_NO_AGE_FMT") % death(cause, locale)
+			# M1.5: the age at death (value, in ticks) is shown in whole years.
+			return loc(locale, "CHRON_DIED_FMT") % [age_years(value, info), death(cause, locale)] if value >= 0 else loc(locale, "CHRON_DIED_NO_AGE_FMT") % death(cause, locale)
 		12: return loc(locale, "CHRON_SETTLEMENT_FORMED_FMT") % [village(place, locale), value]
 		13: return loc(locale, "CHRON_FISSION_STARTED_FMT") % [village(place, locale), person(other, locale)]
 		14: return loc(locale, "CHRON_DAUGHTER_FOUNDED_FMT") % [village(place, locale), village(parent, locale)]

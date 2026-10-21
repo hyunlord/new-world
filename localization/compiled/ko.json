@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 191,
+    "active_key_count": 194,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 191,
+    "key_count": 194,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -50,7 +50,7 @@
     "CHRON_DEATH_STARVATION": "굶주림",
     "CHRON_DEPARTED_FMT": "떠남 — %s, 이끈 이: %s. %s",
     "CHRON_DEPARTURE_CANCELLED_FMT": "이주 취소 — %s",
-    "CHRON_DIED_FMT": "%d일을 살고 세상을 떠남 — %s",
+    "CHRON_DIED_FMT": "%d세에 세상을 떠남 — %s",
     "CHRON_DIED_NO_AGE_FMT": "세상을 떠남 — %s",
     "CHRON_FISSION_CANCELLED_FMT": "%s 분열 취소",
     "CHRON_FISSION_STARTED_FMT": "%s 갈라지기 시작 — 이끈 이: %s",
@@ -96,7 +96,7 @@
     "HUD_WINTER_HARSH": "혹독한 겨울",
     "HUD_WINTER_MILD": "온화한 겨울",
     "HUD_WINTER_NORMAL": "보통 겨울",
-    "INSPECTOR_AGE_FMT": "나이 %d일",
+    "INSPECTOR_AGE_FMT": "%d세",
     "INSPECTOR_CARRYING_FMT": "식량 %d개 운반 중",
     "INSPECTOR_CARRYING_WOOD_FMT": "장작 %d개 운반 중",
     "INSPECTOR_COLD": "불이 꺼져 추위에 떨고 있음",
@@ -109,6 +109,7 @@
     "INSPECTOR_STAGE_ADULT": "어른",
     "INSPECTOR_STAGE_CHILD": "아이",
     "INSPECTOR_STAGE_ELDER": "노인",
+    "INSPECTOR_STAGE_INFANT": "아기",
     "INSPECTOR_STATE_FMT": "상태: %s",
     "INSPECTOR_STATE_SEEKING": "이동 중",
     "INSPECTOR_STATE_WORKING": "작업 중",
@@ -178,6 +179,7 @@
     "UI_INSPECTOR_TEMPERAMENT": "기질",
     "UI_INSPECT_CARRYING": "들고 있음",
     "UI_INSPECT_NOW": "지금",
+    "UI_INSPECT_PREGNANT_FMT": "임신 중 · %d일 남음",
     "UI_JOB_BUILD": "오두막 짓는 중",
     "UI_JOB_CHOP": "나무 베는 중",
     "UI_JOB_DELIVER": "오두막에 통나무 가져가는 중",
@@ -214,6 +216,7 @@
     "UI_TEMPERAMENT_NS": "호기심",
     "UI_TEMPERAMENT_P": "끈기",
     "UI_TEMPERAMENT_RD": "정",
+    "UI_TIME_YEAR_FMT": "{year}년 차",
     "UI_UNKNOWN": "불명",
     "VILLAGE_RESTLESS_CALM": "평온",
     "VILLAGE_RESTLESS_READY": "갈라질 기세",

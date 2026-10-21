@@ -62,12 +62,13 @@ use super::relations::{
     relation_rows_to_dict,
 };
 use super::snapshot::{
-    agent_rows_to_dict, building_rows_to_dict, collect_agent_ages_days, collect_agent_colds,
-    collect_agent_snapshot, collect_building_snapshot, collect_construction_snapshot,
-    collect_recent_deaths, collect_resource_snapshot, collect_tallies, collect_terrain_snapshot,
-    collect_time_snapshot, collect_world_info, construction_rows_to_dict,
-    recent_death_rows_to_dict, resource_rows_to_dict, tallies_to_dict, terrain_snapshot_to_dict,
-    time_snapshot_to_dict, world_info_to_dict,
+    agent_rows_to_dict, building_rows_to_dict, collect_agent_ages_days, collect_agent_ages_years,
+    collect_agent_colds, collect_agent_infancy_and_pregnancy, collect_agent_snapshot,
+    collect_building_snapshot, collect_construction_snapshot, collect_recent_deaths,
+    collect_resource_snapshot, collect_tallies, collect_terrain_snapshot, collect_time_snapshot,
+    collect_world_info, construction_rows_to_dict, recent_death_rows_to_dict,
+    resource_rows_to_dict, tallies_to_dict, terrain_snapshot_to_dict, time_snapshot_to_dict,
+    world_info_to_dict,
 };
 use godot::classes::INode;
 use godot::prelude::*;
@@ -382,6 +383,21 @@ impl WorldSimNode {
             self.engine.resources.ticks_per_day,
         );
         dict.set("ages_days", PackedInt32Array::from(ages.as_slice()));
+        // M1.5 — additive whole-year ages, infant flags and pregnancy days left
+        // in the same row order (`docs/v8/snapshot_schema.md`).
+        let years = collect_agent_ages_years(
+            &self.engine.world,
+            self.engine.current_tick(),
+            self.engine.resources.rules.calendar.ticks_per_year(),
+        );
+        dict.set("ages_years", PackedInt32Array::from(years.as_slice()));
+        let (infants, pregnant) = collect_agent_infancy_and_pregnancy(
+            &self.engine.world,
+            &self.engine.resources,
+            self.engine.current_tick(),
+        );
+        dict.set("infants", PackedByteArray::from(infants.as_slice()));
+        dict.set("pregnant_days", PackedInt32Array::from(pregnant.as_slice()));
         // Pass 6 — additive cold flags in the same row order (1 with the Cold marker).
         let colds = collect_agent_colds(&self.engine.world);
         dict.set("colds", PackedByteArray::from(colds.as_slice()));

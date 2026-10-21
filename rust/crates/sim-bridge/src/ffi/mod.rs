@@ -55,7 +55,10 @@ pub use reads_settlement::{
     collect_settlement_snapshot, collect_settlement_wood_targets, SettlementSnapshotRow,
 };
 pub use snapshot::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
-pub use snapshot::{collect_agent_ages_days, collect_agent_colds};
+pub use snapshot::{
+    collect_agent_ages_days, collect_agent_ages_years, collect_agent_colds,
+    collect_agent_infancy_and_pregnancy,
+};
 pub use snapshot::{collect_building_snapshot, collect_terrain_snapshot, collect_world_info};
 pub use snapshot::{collect_construction_snapshot, ConstructionSnapshotRow};
 pub use snapshot::{collect_recent_deaths, recent_death_rows_split, RecentDeathRow};

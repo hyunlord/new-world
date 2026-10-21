@@ -42,11 +42,23 @@ pub fn aging_stream(world_seed: u64, agent_id: u64) -> MovementRng {
     )
 }
 
-/// Mean of three uniform draws in `[mean - spread, mean + spread]`, integer only.
+/// Mean of three uniform draws in `[mean - spread, mean + spread]`, integer
+/// only, clamped to `lifespan_bounds_ticks` when the rule has bounds (M1.5).
 pub fn draw_lifespan(rng: &mut MovementRng, rule: &AgingRule) -> u64 {
     let span = 2 * rule.lifespan_spread_ticks + 1;
     let sum: u64 = (0..3).map(|_| rng.next_u64() % span).sum();
-    rule.lifespan_mean_ticks - rule.lifespan_spread_ticks + sum / 3
+    bounded(
+        rule,
+        rule.lifespan_mean_ticks - rule.lifespan_spread_ticks + sum / 3,
+    )
+}
+
+/// `lifespan` clamped to the rule's bounds (unchanged without bounds).
+fn bounded(rule: &AgingRule, lifespan: u64) -> u64 {
+    match rule.lifespan_bounds_ticks {
+        Some((lo, hi)) => lifespan.clamp(lo, hi.max(lo)),
+        None => lifespan,
+    }
 }
 
 /// A founder's age (born before tick zero) and lifespan, with the guaranteed remainder.
@@ -86,7 +98,10 @@ fn keyed_lifespan(world_seed: u64, key: u64, replicate: u32, rule: &AgingRule) -
     let sum: u64 = (1..=3)
         .map(|slot| below(life_draw(world_seed, key, slot, replicate), span))
         .sum();
-    rule.lifespan_mean_ticks - rule.lifespan_spread_ticks + sum / 3
+    bounded(
+        rule,
+        rule.lifespan_mean_ticks - rule.lifespan_spread_ticks + sum / 3,
+    )
 }
 
 /// A founder's age and lifespan under keyed draws: slot 0 the age, slots 1–3
@@ -201,6 +216,7 @@ mod tests {
         founder_min_remaining_ticks: 4_320,
         elder_tether_radius: 4,
         elder_evening_tether: false,
+        lifespan_bounds_ticks: None,
     };
 
     #[test]

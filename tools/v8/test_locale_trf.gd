@@ -1,5 +1,6 @@
 # tools/v8/test_locale_trf.gd — unit test of Locale.trf / Locale.format_text (M1 9.7).
-# Purpose: placeholder substitution with {name} params on the real locale tables (ko default, then en).
+# Purpose: placeholder substitution with {name} params on the real locale tables (ko default, then en),
+#   including the M1.5 year key UI_TIME_YEAR_FMT as the top bar formats it (String.format).
 # Bridge methods called: none.
 # usage: Godot --headless --path . --script res://tools/v8/test_locale_trf.gd
 #   prints TRF_TEST_PASS and exits 0, or prints each failure and exits 1.
@@ -35,8 +36,10 @@ func _run() -> void:
 		locale.call("set_language", "ko")
 		_check("ko table", str(locale.call("trf", "UI_BLUEPRINT_LOGS", {"delivered": 5, "needed": 12})), "통나무 5/12")
 		_check("ko count", str(locale.call("trf", "UI_ORDER_RESULT_COUNT", {"count": 15})), "15개")
+		_check("ko year", str(locale.call("ltr", "UI_TIME_YEAR_FMT")).format({"year": 1}), "1년 차")
 		locale.call("set_language", "en")
 		_check("en table", str(locale.call("trf", "UI_BLUEPRINT_LOGS", {"delivered": 5, "needed": 12})), "5/12 logs")
+		_check("en year", str(locale.call("ltr", "UI_TIME_YEAR_FMT")).format({"year": 3}), "Year 3")
 		_check("missing key", str(locale.call("trf", "NO_SUCH_KEY_M1", {"a": 1})), "NO_SUCH_KEY_M1")
 		locale.call("set_language", "ko")
 	if _failures == 0:

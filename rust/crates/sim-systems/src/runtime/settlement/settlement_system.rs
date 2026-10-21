@@ -867,8 +867,35 @@ impl SettlementSystem {
         tick: u64,
     ) {
         let mut births: Vec<(SettlementId, (u32, u32))> = Vec::new();
+        // M1.5: under `BirthRule::Fertility` the births are the ones
+        // `FertilitySystem` queued (mother, father, settlement), in mother
+        // order; the settlement gate below is the provisioned rule's.
+        let mut fixed_parents: Vec<Option<(hecs::Entity, AgentId, AgentId)>> = Vec::new();
+        let fertility = matches!(resources.rules.society.birth, BirthRule::Fertility { .. });
+        if fertility {
+            let mut due = std::mem::take(&mut resources.due_births);
+            due.sort();
+            for birth in due {
+                let Some(spawn_pos) = self.formation_tiles.get(&birth.settlement).copied() else {
+                    continue;
+                };
+                let mother = world
+                    .query::<&Agent>()
+                    .iter()
+                    .find(|(_, agent)| agent.id == birth.mother)
+                    .map(|(entity, _)| entity);
+                let Some(mother) = mother else {
+                    continue;
+                };
+                births.push((birth.settlement, spawn_pos));
+                fixed_parents.push(Some((mother, birth.mother, birth.father)));
+            }
+        }
         let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         settlement_ids.sort();
+        if fertility {
+            settlement_ids.clear();
+        }
         for sid in settlement_ids {
             let last_birth = match self.birth_last_tick.get(&sid).copied() {
                 Some(t) => t,
@@ -877,6 +904,7 @@ impl SettlementSystem {
             let cooldown = match resources.rules.society.birth {
                 BirthRule::Legacy => BIRTH_COOLDOWN_TICKS,
                 BirthRule::Provisioned { cooldown_ticks, .. } => cooldown_ticks,
+                BirthRule::Fertility { .. } => u64::MAX,
             };
             if tick < last_birth.saturating_add(cooldown) {
                 continue;
@@ -970,12 +998,15 @@ impl SettlementSystem {
                 None => continue,
             };
             births.push((sid, spawn_pos));
+            fixed_parents.push(None);
         }
 
-        for (sid, spawn_pos) in births {
-            let family_parents = resources.rules.society.family.and_then(|_| {
-                let members = &resources.settlements.get(&sid)?.member_agents;
-                crate::runtime::agent::pairing::birth_parents(world, members)
+        for ((sid, spawn_pos), fixed) in births.into_iter().zip(fixed_parents) {
+            let family_parents = fixed.or_else(|| {
+                resources.rules.society.family.and_then(|_| {
+                    let members = &resources.settlements.get(&sid)?.member_agents;
+                    crate::runtime::agent::pairing::birth_parents(world, members)
+                })
             });
             // A qualifying family supplies mother then father; the original
             // two-lowest-member parent chain remains the disabled/fallback path.
@@ -1196,8 +1227,12 @@ impl SettlementSystem {
             resources.tallies.births += 1;
 
             if let Some(settlement) = resources.settlements.get_mut(&sid) {
-                if let BirthRule::Provisioned { food_cost, .. } = resources.rules.society.birth {
-                    settlement.withdraw(ResourceKind::Food, food_cost);
+                match resources.rules.society.birth {
+                    BirthRule::Provisioned { food_cost, .. }
+                    | BirthRule::Fertility { food_cost, .. } => {
+                        settlement.withdraw(ResourceKind::Food, food_cost);
+                    }
+                    BirthRule::Legacy => {}
                 }
                 settlement.add_member_agent(new_agent_id);
                 settlement.population_stats.current = settlement.member_agents.len() as u32;

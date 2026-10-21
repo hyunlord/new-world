@@ -120,6 +120,44 @@ pub fn collect_agent_ages_days(world: &hecs::World, tick: u64, ticks_per_day: u6
         .collect()
 }
 
+/// M1.5 — whole-year age of every snapshot row (`age_ticks / ticks_per_year`),
+/// in [`collect_agent_snapshot`] order; `-1` without `Life`.
+pub fn collect_agent_ages_years(world: &hecs::World, tick: u64, ticks_per_year: u64) -> Vec<i32> {
+    collect_agent_ages_days(world, tick, ticks_per_year)
+}
+
+/// M1.5 — per snapshot row (in [`collect_agent_snapshot`] order): whether the
+/// agent is an infant (`Child::is_infant` under the life-stage rule's
+/// `infant_ticks`; 1 or 0), and the whole days left of a pregnancy (`-1` when
+/// not pregnant; `Pregnant::days_left`).
+pub fn collect_agent_infancy_and_pregnancy(
+    world: &hecs::World,
+    resources: &SimResources,
+    tick: u64,
+) -> (Vec<u8>, Vec<i32>) {
+    let infant_ticks = resources
+        .rules
+        .society
+        .life_stage
+        .and_then(|rule| rule.infant_ticks);
+    let tpd = resources.rules.calendar.ticks_per_day;
+    world
+        .query::<(
+            &Agent,
+            &Position,
+            Option<&Child>,
+            Option<&sim_core::components::Pregnant>,
+        )>()
+        .iter()
+        .map(|(_, (_, _, child, pregnant))| {
+            (
+                u8::from(child.is_some_and(|c| c.is_infant(tick, infant_ticks))),
+                pregnant.map_or(-1, |p| p.days_left(tick, tpd).min(i32::MAX as u64) as i32),
+            )
+        })
+        .unzip()
+}
+
 /// Pass 6 — `1` for every snapshot row whose agent carries the `Cold` marker,
 /// else `0`, in [`collect_agent_snapshot`] order (the same `Agent` +
 /// `Position` archetype iteration). All zero without the firewood rule.
@@ -863,6 +901,14 @@ pub struct TimeSnapshot {
     /// 2 harsh, -1 outside a winter or without the rule or weights; from 00:00
     /// to the burn end it reads the evening's winter (night booking).
     pub winter_severity: i64,
+    /// M1.5: zero-based calendar year of `day_index` (0 without seasons).
+    pub year_index: u64,
+    /// M1.5: zero-based season (the same value as `season`).
+    pub season_index: u32,
+    /// M1.5: one-based day within the year (0 without seasons).
+    pub day_of_year: u32,
+    /// M1.5: days per calendar year (0 without seasons).
+    pub days_per_year: u32,
 }
 
 /// Read the completed tick count and clock resources without mutation.
@@ -873,14 +919,20 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
         .saturating_add(engine.resources.rules.clock_offset_ticks)
         .checked_div(ticks_per_day)
         .unwrap_or(0);
-    let days_per_season = engine
-        .resources
-        .rules
-        .seasons
-        .map_or(0, |rule| rule.days_per_season);
-    let (season, day_of_season) = match u64::from(days_per_season) {
-        0 => (0, 0),
-        per => (((day_index / per) % 4) as u32, (day_index % per) as u32 + 1),
+    // M1.5: the calendar's days per season (`WorldRules::season_days`).
+    let rules = &engine.resources.rules;
+    let days_per_season = rules.season_days();
+    let (year_index, season, day_of_season, day_of_year, days_per_year) = if days_per_season == 0 {
+        (0, 0, 0, 0, 0)
+    } else {
+        let (year, season, day, day_of_year) = rules.calendar.date_of_day(day_index);
+        (
+            year,
+            season,
+            day + 1,
+            day_of_year + 1,
+            rules.calendar.days_per_year() as u32,
+        )
     };
     TimeSnapshot {
         tick: engine.current_tick(),
@@ -894,6 +946,10 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
             &engine.resources,
             engine.current_tick(),
         ),
+        year_index,
+        season_index: season,
+        day_of_year,
+        days_per_year,
     }
 }
 
@@ -912,6 +968,10 @@ pub(super) fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
     dict.set("day_of_season", snapshot.day_of_season as i64);
     dict.set("days_per_season", snapshot.days_per_season as i64);
     dict.set("winter_severity", snapshot.winter_severity);
+    dict.set("year_index", snapshot.year_index as i64);
+    dict.set("season_index", snapshot.season_index as i64);
+    dict.set("day_of_year", snapshot.day_of_year as i64);
+    dict.set("days_per_year", snapshot.days_per_year as i64);
     dict
 }
 
@@ -956,6 +1016,9 @@ pub struct WorldInfoSnapshot {
     pub move_interval_ticks: u64,
     /// Display clock offset from elapsed ticks.
     pub clock_offset_ticks: u64,
+    /// M1.5: ticks per calendar year (`CalendarRule::ticks_per_year`); ages
+    /// in years are whole `age_ticks / ticks_per_year`.
+    pub ticks_per_year: u64,
 }
 
 /// Read immutable world metadata directly from the authoritative resources.
@@ -967,6 +1030,7 @@ pub fn collect_world_info(resources: &SimResources) -> WorldInfoSnapshot {
         ticks_per_day: resources.ticks_per_day,
         move_interval_ticks: resources.rules.agent.move_interval_ticks,
         clock_offset_ticks: resources.rules.clock_offset_ticks,
+        ticks_per_year: resources.rules.calendar.ticks_per_year(),
     }
 }
 
@@ -978,6 +1042,7 @@ pub(super) fn world_info_to_dict(snapshot: WorldInfoSnapshot) -> VarDictionary {
     dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
     dict.set("move_interval_ticks", snapshot.move_interval_ticks as i64);
     dict.set("clock_offset_ticks", snapshot.clock_offset_ticks as i64);
+    dict.set("ticks_per_year", snapshot.ticks_per_year as i64);
     dict
 }
 

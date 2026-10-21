@@ -5,6 +5,25 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M1.5 — 2026-10-21 (in progress)
+
+The colony's own calendar and demographics, and the simulation contract (ADR 0016) that every later pass is held to (`docs/v8/m1_5/M1_5_GOAL.md`). **The colony's behaviour changes** (calendar, ages, births); the `baseline` world is bit-identical (identity PASS). The colony fixtures are re-captured at each behaviour-changing commit (`/Users/rexxa/work/m1_5-data/p1/fixtures/`).
+
+### Added
+- ADR 0016 (the simulation contract C1–C5 and its gate steps), ADR 0017 (calendar and demographics); `AGENTS.md` points at ADR 0016.
+- `CalendarRule` (`WorldRules.calendar`): baseline 7-day seasons (unchanged), colony 6-day seasons and a 24-day year; every derived length is a method.
+- `BirthRule::Fertility` and `FertilitySystem` (priority 150, daily at 12:00): conception 33 ‰ a day for fertile (16–44), paired, fed women; `Pregnant { conceived_tick, due_tick, father }`, 18 days of gestation, 48 days after a birth; births through the settlement's birth path (`SimResources.due_births`). `RuntimeSystem::tick_offset` (default 0).
+- Colony ages in years: elders at 50, lifespans 62 ± 8 years clamped to 40–85 (`AgingRule.lifespan_bounds_ticks`), founders 16–40, childhood until 15, infants until 3 (`LifeStageRule.infant_ticks`, `Child::is_infant`).
+- Bridge reads: `get_time_snapshot` `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info` `ticks_per_year`; `get_agent_snapshot` columns `ages_years`, `infants`, `pregnant_days`.
+- UI: the top bar reads `1년 차 · 봄 1일째`; the inspector shows ages in years (`INSPECTOR_AGE_FMT` "%d세"), the infant stage (`INSPECTOR_STAGE_INFANT`) and a pregnancy (`UI_INSPECT_PREGNANT_FMT`); deaths read "{age}세에 세상을 떠남"; `UI_TIME_YEAR_FMT`.
+- Measurement: `worldsim_perf bench` / `bench-one` (`sim_test::bench`, `WorldGenConfig::colony_stress`, `tools/v8/bench_script.json`), `tools/v8/bench_ledger.py` (+ tests); the colony probe's `--chronicle-out`, `churn.json` (the decision seam counts job releases by need, kind, stage and need value in `ColonyState::release_counts`, measurement only) and a `demography` block (births per woman-year, population per year, old-age deaths, coming of age); colony runs up to 480 days.
+- Tests: `colony_demography.rs` (`calendar_derivations`, `ages_in_years`, `fertility_rate_matches_rule`, `no_births_without_partner_or_food`, `pregnancy_to_birth_household`).
+
+### Changed
+- Season readers take the day count from the calendar (`WorldRules::season_days`); the year of a tick is the calendar's year.
+- Colony: `FirewoodRule.winter_prep_days` = one colony winter (calibration, DECISIONS D9); births by fertility, not by the provisioned cooldown (10 days no longer double the colony: 0 births in 10 days, 11–15 people after 3 years on the calibration seeds).
+- The baseline rules dumps gain the off-valued fields `infant_ticks: None`, `lifespan_bounds_ticks: None` and the baseline calendar.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

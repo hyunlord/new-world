@@ -2,8 +2,10 @@
 use serde::{Deserialize, Serialize};
 
 mod baseline;
+mod calendar;
 mod colony;
 mod routine;
+pub use calendar::CalendarRule;
 pub use colony::ColonyRule;
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 
@@ -21,6 +23,30 @@ pub struct WorldRules {
     /// M1 colony: orders, items and jobs. `None` in the baseline world.
     #[serde(default)]
     pub colony: Option<ColonyRule>,
+    /// M1.5 calendar (ADR 0017): day, season and year lengths. Baseline keeps
+    /// 7-day seasons; the colony has 6-day seasons and a 24-day year. Season
+    /// readers take `days_per_season` from here; `SeasonRule::days_per_season`
+    /// must equal it ([`WorldRules::calendar_consistent`]).
+    #[serde(default)]
+    pub calendar: CalendarRule,
+}
+
+impl WorldRules {
+    /// Days per season when seasons are on, else 0 (the calendar's value).
+    pub const fn season_days(&self) -> u32 {
+        match self.seasons {
+            Some(_) => self.calendar.days_per_season,
+            None => 0,
+        }
+    }
+
+    /// Whether the season rule's day count equals the calendar's (both worlds must).
+    pub const fn calendar_consistent(&self) -> bool {
+        match self.seasons {
+            Some(rule) => rule.days_per_season == self.calendar.days_per_season,
+            None => true,
+        }
+    }
 }
 /// Individual movement policy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -230,6 +256,32 @@ pub enum BirthRule {
         /// Supply-aware birth limits; absent preserves v8.
         sustain: Option<SustainRule>,
     },
+    /// M1.5 (colony, ADR 0017): a per-woman fertility rate instead of a
+    /// settlement provision (`FertilitySystem`). Each day at 12:00 every
+    /// fertile woman with a partner, not pregnant and past her postpartum
+    /// days, in a fed settlement, conceives with probability
+    /// `conception_per_day_permille` / 1000 (a keyed draw); the child is born
+    /// `gestation_days` later through the settlement's birth path.
+    Fertility {
+        /// Daily conception chance of an eligible woman, permille.
+        conception_per_day_permille: u32,
+        /// Youngest fertile age, years.
+        fertile_from_years: u32,
+        /// Age (years) from which a woman no longer conceives.
+        fertile_to_years: u32,
+        /// Days from conception to birth.
+        gestation_days: u32,
+        /// Days after a birth before the mother can conceive again.
+        postpartum_days: u32,
+        /// Only a woman with a living partner conceives.
+        requires_partner: bool,
+        /// Highest allowed mean hunger of the settlement's members.
+        max_mean_hunger: f64,
+        /// Highest allowed mean thirst of the settlement's members.
+        max_mean_thirst: f64,
+        /// Food taken from the settlement store at the birth (what is there, up to this).
+        food_cost: u32,
+    },
 }
 /// Deterministic automatic shelter planning limits.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -316,6 +368,11 @@ pub struct LifeStageRule {
     pub sleep_rate: f64,
     /// Maximum child idle distance from the settlement hearth.
     pub tether_radius: u32,
+    /// M1.5: a child younger than this many ticks is an infant
+    /// (`Child::is_infant`, derived from the age; no component). `None` = no
+    /// infant stage (baseline).
+    #[serde(default)]
+    pub infant_ticks: Option<u64>,
 }
 /// Purposeful daytime foraging toward bushes and hauling food home.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -360,6 +417,10 @@ pub struct AgingRule {
     /// Inside the evening-gather window an idle elder follows the evening
     /// tether when it is tighter (Pass 6). False = the elder tether at all hours.
     pub elder_evening_tether: bool,
+    /// M1.5: every drawn lifespan is clamped to `[min, max]` ticks (the
+    /// colony: 40–85 years). `None` = no clamp (baseline).
+    #[serde(default)]
+    pub lifespan_bounds_ticks: Option<(u64, u64)>,
 }
 /// Breakfast and dinner served from the settlement store (Pass 5).
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -640,6 +701,7 @@ impl Default for WorldRules {
             clock_offset_ticks: 0,
             seasons: None,
             colony: None,
+            calendar: CalendarRule::BASELINE,
         }
     }
 }

@@ -104,13 +104,18 @@ pub fn season_at(resources: &SimResources) -> Option<(usize, u32)> {
 /// `(season, one-based day of season)` of simulation tick `tick`; `None`
 /// when seasons are off. Same rule as [`season_at`].
 pub fn season_at_tick(resources: &SimResources, tick: u64) -> Option<(usize, u32)> {
-    let rule = resources.rules.seasons?;
-    let per_season = u64::from(rule.days_per_season);
+    resources.rules.seasons?;
+    // M1.5: the day count comes from the calendar (`WorldRules::season_days`).
+    let per_season = u64::from(resources.rules.season_days());
+    let per_year = u64::from(resources.rules.calendar.seasons_per_year.max(1));
     if per_season == 0 {
         return None;
     }
     let d = day_index_at(resources, tick);
-    Some((((d / per_season) % 4) as usize, (d % per_season) as u32 + 1))
+    Some((
+        ((d / per_season) % per_year) as usize,
+        (d % per_season) as u32 + 1,
+    ))
 }
 
 /// Resource regeneration system (priority 140, interval [`REGEN_INTERVAL`]).

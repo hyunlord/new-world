@@ -84,12 +84,12 @@ pub fn winter_severity(resources: &SimResources, rule: &FirewoodRule, year: u64)
     }
 }
 
-/// Year of simulation tick `tick`: display day / (4 x days_per_season); 0
-/// without seasons.
+/// Year of simulation tick `tick`: display day / days per year (the
+/// calendar's); 0 without seasons.
 pub fn year_at_tick(resources: &SimResources, tick: u64) -> u64 {
-    resources.rules.seasons.map_or(0, |seasons| {
+    resources.rules.seasons.map_or(0, |_| {
         day_index_at(resources, tick)
-            .checked_div(4 * u64::from(seasons.days_per_season))
+            .checked_div(resources.rules.calendar.days_per_year())
             .unwrap_or(0)
     })
 }
@@ -309,11 +309,11 @@ pub fn wood_target(resources: &SimResources) -> Option<f64> {
         resources.current_tick,
     )) * f64::from(burn_hours(&rule));
     let mut target = base * per_night;
-    if let (Some(seasons), Some((current, _))) = (resources.rules.seasons, season_at(resources)) {
+    if let (Some(_), Some((current, _))) = (resources.rules.seasons, season_at(resources)) {
         if current == 2 || (current == 1 && rule.winter_prep_in_summer) {
             let prep_days = rule
                 .winter_prep_days
-                .unwrap_or(f64::from(seasons.days_per_season));
+                .unwrap_or(f64::from(resources.rules.season_days()));
             target += prep_days * burn_per_day(&rule, WINTER);
         }
     }

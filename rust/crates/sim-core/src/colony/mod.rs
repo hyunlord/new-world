@@ -79,7 +79,20 @@ pub struct ColonyState {
     pub overlay_version: u64,
     /// Counters.
     pub tallies: ColonyTallies,
+    /// Measurement only (M1.5 goal 8.2.1): jobs the decision seam released to
+    /// a need, counted by [`JobReleaseKey`]. No system reads it, and no
+    /// fingerprint or summary includes it.
+    pub release_counts: BTreeMap<JobReleaseKey, u64>,
 }
+
+/// Measurement-only key of a job released to a need (`ColonyState::release_counts`):
+/// `(need, job kind, job stage, need value bin)`. Need: 0 hunger (the choice
+/// targets food), 1 thirst (water), 2 sleep, 3 social (another agent),
+/// 4 forage, 5 firewood, 6 other. Kind: 0 chop, 1 haul, 2 deliver, 3 build.
+/// Stage: 0 walking to the source, 1 working, 2 walking to the destination.
+/// Bin: the chosen need's value (hunger, thirst or fatigue) in tens, 0–10;
+/// 255 for a need without a value.
+pub type JobReleaseKey = (u8, u8, u8, u8);
 
 impl ColonyState {
     /// Mark the overlay (and, with `trees`, the tree layer) as changed.

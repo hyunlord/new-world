@@ -139,6 +139,30 @@ impl WorldGenConfig {
         }
     }
 
+    /// The standing benchmark's colony world (M1.5 goal 6.1, ADR 0016 C3):
+    /// [`Self::colony`]`(seed)` on a `side × side` map with `agents` founders,
+    /// the bushes and deadwood beyond the camp scaled with the founders
+    /// (`outer × agents / 10`; worldgen places as many as the map has
+    /// candidates for) so nobody starves inside a benchmark run. Run it under
+    /// `WorldRules::colony`; measurement only, never a game scene.
+    pub const fn colony_stress(seed: u64, agents: u32, side: u32) -> Self {
+        let base = Self::colony(seed);
+        let scale = if agents > 10 { agents } else { 10 };
+        Self {
+            starting_agents: agents,
+            width: side,
+            height: side,
+            colony: Some(ColonyGen {
+                outer_bushes: 96 * scale / 10,
+                outer_deadwood: 160 * scale / 10,
+                clearing_radius: 6,
+                region_max_distance: 88,
+                min_adults: 7,
+            }),
+            ..base
+        }
+    }
+
     /// The benchmark stress world: [`Self::baseline`]`(seed)` with `agents`
     /// founders on a `side × side` map (run it under `WorldRules::baseline`).
     /// Used by `worldsim_perf` (`quick`, `stress`) and the bridge's
