@@ -1,10 +1,10 @@
 # Submitted reference-distance distribution
 
-Snapshot: 2026-10-21T14:32:39.228621+00:00
-Registry: `/Users/rexxa/work/arttrial-data/people/revision_scene/registry.json`
-Registry SHA256: `2c42e60c90b8329845f51ee314eff12166a01aef933b407ab08780f35cf42628`
+Snapshot: 2026-10-21T15:05:48.434161+00:00
+Registry: `/Users/rexxa/work/arttrial-data/continuation_accounting/integration/20261021T150434649889Z/registry.json`
+Registry SHA256: `07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905`
 
-Submitted: 383; mechanical check PASS: 383; same-path self references: 58; identical-byte references: 63; distinct reference paths: 61.
+Submitted: 404; mechanical check PASS: 404; same-path self references: 58; identical-byte references: 63; distinct reference paths: 61.
 
 Unchanged check_asset/reference_distance: symmetric occupancy-weighted nearest-colour Lab distance. NumPy linear percentiles. Strictly above P90 is descriptive, never acceptance.
 
@@ -13,14 +13,14 @@ All submitted registry entries included, including self references and failed ch
 | Family | n | Measured | min | p50 | p90 | max | Self | Distinct refs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | banks | 8 | 8 | 0.667569 | 1.262576 | 1.857583 | 1.857583 | 0 | 1 |
-| beard | 11 | 11 | 0.000000 | 8.234164 | 15.536842 | 18.193388 | 1 | 1 |
+| beard | 17 | 17 | 0.000000 | 8.234164 | 19.189311 | 26.018494 | 1 | 1 |
 | body | 39 | 39 | 0.000000 | 0.000000 | 0.000000 | 0.669331 | 1 | 1 |
 | buildings | 2 | 2 | 0.000000 | 3.280449 | 5.904808 | 6.560898 | 1 | 1 |
 | bushes | 2 | 2 | 0.316427 | 0.883461 | 1.337089 | 1.450496 | 0 | 2 |
 | carry | 10 | 10 | 0.000000 | 4.190648 | 5.642856 | 6.608442 | 1 | 1 |
 | ghost | 1 | 1 | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 1 | 1 |
 | ground | 20 | 20 | 0.000000 | 0.000000 | 0.000000 | 0.009512 | 8 | 8 |
-| hair | 46 | 46 | 0.000000 | 0.000000 | 16.565564 | 66.262258 | 1 | 1 |
+| hair | 56 | 56 | 0.000000 | 0.000000 | 20.704525 | 66.262258 | 1 | 1 |
 | hearth | 2 | 2 | 8.311887 | 8.385910 | 8.445128 | 8.459933 | 0 | 1 |
 | person_shadow_adult_f | 9 | 9 | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 9 | 9 |
 | person_shadow_adult_m | 9 | 9 | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 9 | 9 |
@@ -29,7 +29,7 @@ All submitted registry entries included, including self references and failed ch
 | shadow | 4 | 4 | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 4 | 4 |
 | stockpile_floor | 3 | 3 | 3.334142 | 5.252788 | 5.629768 | 5.724013 | 0 | 1 |
 | stone | 1 | 1 | 9.485506 | 9.485506 | 9.485506 | 9.485506 | 0 | 1 |
-| tool | 37 | 37 | 0.000000 | 1.439763 | 10.369830 | 14.672875 | 1 | 1 |
+| tool | 42 | 42 | 0.000000 | 1.455043 | 10.550961 | 14.672875 | 1 | 1 |
 | top | 147 | 147 | 0.000000 | 0.746476 | 3.307791 | 12.171744 | 1 | 1 |
 | trees | 6 | 6 | 0.000000 | 0.575109 | 2.618301 | 2.788092 | 1 | 1 |
 | wood | 8 | 8 | 0.000000 | 1.933588 | 4.884759 | 5.692829 | 1 | 1 |
@@ -44,7 +44,7 @@ Recorded reference paths:
 
 ## beard: strictly above P90
 
-`beard/long/child/east/walk_b`
+`beard/long/elder/east/idle`, `beard/short/elder/east/work`
 
 Recorded reference paths:
 
@@ -108,7 +108,7 @@ Recorded reference paths:
 
 ## hair: strictly above P90
 
-`hair/bun/adult_f/east/walk_b`, `hair/bun/adult_m/east/walk_b`, `hair/bun/elder/south/work`
+`hair/braided/elder/east/walk_b`, `hair/braided/elder/south/walk_a`, `hair/bun/adult_f/east/walk_b`, `hair/bun/adult_m/east/walk_b`, `hair/bun/elder/south/idle`, `hair/long_tied/elder/south/idle`
 
 Recorded reference paths:
 
@@ -215,7 +215,7 @@ Recorded reference paths:
 
 ## tool: strictly above P90
 
-`tool/basket/child/south/idle`, `tool/basket/elder/south/sleep`, `tool/basket/elder/south/walk_a`, `tool/hoe/elder/south/sleep`
+`tool/basket/child/south/idle`, `tool/basket/elder/east/walk_b`, `tool/basket/elder/south/sleep`, `tool/basket/elder/south/walk_a`
 
 Recorded reference paths:
 
@@ -250,19 +250,3 @@ Per-asset source/reference hashes, distances, self-reference classifications and
 Regenerate for a frozen revision registry:
 
 `python3 /Users/rexxa/work/arttrial-data/people/reference_distribution.py /absolute/path/to/registry.json`
-
-## Final reference-family audit
-
-21 declared families;61 distinct reference paths;0 missing measurements. Hair, beard, tool, body and top each use exactly one recorded reference.
-
-D21 is post-production measurement normalization, not evidence that canonical references were attached during generation or were historically first accepted assets. Prompt-reference fulfillment remains PARTIAL. Producer reference mapping is preserved separately.
-
-383 submitted assets include baseline367 plus16 versioned scene-only entries; these are not383 independent generations. Every submitted row contributes once to percentile statistics.
-
-Self references and byte-identical references are included, so zero distances do not establish independent agreement. Shadows have many self references.
-
-Colour-support nearest-neighbour distances do not measure silhouette, proportions, alignment, readability, anatomy or semantic correctness. P90 flags are descriptive, not acceptance thresholds.
-
-Families retaining multiple reference paths: bushes (2), ground (8), person_shadow_adult_f (9), person_shadow_adult_m (9), person_shadow_child (9), person_shadow_elder (9), shadow (4).
-
-Producer mapping SHA256: `effa4731fa682058c95f8034d7f5cc212153e627834a78a0783928758f8297f3`.

@@ -1,6 +1,6 @@
 # Validation evidence
 
-## Code checkpoint
+## Historical caf25579 code checkpoint
 
 - `python3 -m unittest discover -s art/pipeline -t . -p 'test_*.py'`:65 tests,11.582s,PASS (final rerun).
 - `uvx ruff check art/pipeline`:PASS.
@@ -31,3 +31,14 @@ Final registered assets:383/383 mechanical PASS; all383packed atlas rectangles a
 ## External accounting tools
 
 The cost reconciler lives outside the shipped pipeline. Its final lint/no-excuse checks pass; basedpyright reports0errors and407warnings from dynamic producer JSON. Those warnings are retained, not suppressed or represented as a clean typecheck. The shipped `art/pipeline` has0errors/0warnings/0notes. Accounting invariants, source hashes and independent interval-union checks provide the ledger evidence.
+
+
+## Continuation verification
+
+The continuation adds21frames to the preserved383-asset package. All404assets pass mechanical checks, and every packed region, box and anchor exactly matches its registered source. All383historical source hashes,12scene artifacts and6sample recompositions remain unchanged. The board has22complete and2incomplete requests, with24distinct rendered images. `CONTINUATION_VERIFICATION.json` and `CONTINUATION_VISUAL_QA.json` record the final checks and byte-bound parent visual observation.
+
+Current pipeline rerun:65tests PASS in10.765s; offline Ruff PASS; basedpyright0errors,0warnings,0notes. Evidence: external `continuation_accounting/pipeline_verification.json`. Pipeline code and Rust code were unchanged by this continuation; no new runtime or performance claim is made.
+
+The additive integration helper passes3regression tests, Ruff and strict basedpyright. The isolated continuation accounting helper passes its tests, Ruff and structural checks, with0type errors and200warnings from dynamic producer data. These warnings are retained; the shipped pipeline's clean result is separate. Parent independently checked all140continuation raw/original byte pairs,142call records,21selected records and zero current in-flight calls. Historical unresolved batch slots and unknown durations remain disclosed in `COST.md`.
+
+Scene3/10and variation10/24remainFAIL. Wardrobe256/612and complete-board22/24remainFAIL. No additional reviewer round, sample replacement or relaxed threshold was used.
