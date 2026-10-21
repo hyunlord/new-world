@@ -84,2240 +84,2366 @@
       32,
       32
     ],
-    "beard/short/adult_f/east/walk_a": [
+    "beard/long/elder/east/idle": [
       320,
+      0,
+      32,
+      32
+    ],
+    "beard/long/elder/east/walk_a": [
+      352,
+      0,
+      32,
+      32
+    ],
+    "beard/long/elder/east/work": [
+      384,
+      0,
+      32,
+      32
+    ],
+    "beard/short/adult_f/east/walk_a": [
+      416,
       0,
       32,
       32
     ],
     "beard/short/adult_f/east/work": [
-      352,
+      448,
       0,
       32,
       32
     ],
     "beard/short/adult_f/south/walk_a": [
-      384,
+      480,
       0,
       32,
       32
     ],
     "beard/short/adult_f/south/work": [
-      416,
       0,
+      32,
       32,
       32
     ],
     "beard/short/child/east/walk_a": [
-      448,
-      0,
+      32,
+      32,
       32,
       32
     ],
     "beard/short/child/east/work": [
-      480,
-      0,
+      64,
+      32,
+      32,
+      32
+    ],
+    "beard/short/child/south/idle": [
+      96,
+      32,
+      32,
+      32
+    ],
+    "beard/short/child/south/sleep": [
+      128,
+      32,
+      32,
+      16
+    ],
+    "beard/short/elder/east/work": [
+      160,
+      32,
       32,
       32
     ],
     "beard/short/elder/south/idle": [
-      0,
+      192,
       32,
       32,
       32
     ],
     "beard/short/elder/south/walk_a": [
-      32,
+      224,
       32,
       32,
       32
     ],
     "beard/short/elder/south/work": [
-      64,
+      256,
       32,
       32,
       32
     ],
     "berry_bush_bare": [
-      96,
+      288,
       32,
       32,
       32
     ],
     "berry_bush_full": [
-      128,
+      320,
       32,
       32,
       32
     ],
     "body/base/adult_f/east/idle": [
-      160,
+      352,
       32,
       32,
       32
     ],
     "body/base/adult_f/east/walk_a": [
-      192,
+      384,
       32,
       32,
       32
     ],
     "body/base/adult_f/east/walk_b": [
-      224,
+      416,
       32,
       32,
       32
     ],
     "body/base/adult_f/east/work": [
-      256,
+      448,
       32,
       32,
       32
     ],
     "body/base/adult_f/south/idle": [
-      288,
+      480,
       32,
       32,
       32
     ],
     "body/base/adult_f/south/sleep": [
-      320,
-      32,
+      0,
+      64,
       32,
       16
     ],
     "body/base/adult_f/south/walk_a": [
-      352,
       32,
+      64,
       32,
       32
     ],
     "body/base/adult_f/south/walk_b": [
-      384,
-      32,
+      64,
+      64,
       32,
       32
     ],
     "body/base/adult_f/south/work": [
-      416,
-      32,
+      96,
+      64,
       32,
       32
     ],
     "body/base/adult_m/east/idle": [
-      448,
-      32,
+      128,
+      64,
       32,
       32
     ],
     "body/base/adult_m/east/walk_a": [
-      480,
-      32,
+      160,
+      64,
       32,
       32
     ],
     "body/base/adult_m/east/walk_b": [
-      0,
+      192,
       64,
       32,
       32
     ],
     "body/base/adult_m/east/work": [
-      32,
+      224,
       64,
       32,
       32
     ],
     "body/base/adult_m/south/idle": [
-      64,
+      256,
       64,
       32,
       32
     ],
     "body/base/adult_m/south/sleep": [
-      96,
+      288,
       64,
       32,
       16
     ],
     "body/base/adult_m/south/walk_a": [
-      128,
+      320,
       64,
       32,
       32
     ],
     "body/base/adult_m/south/walk_b": [
-      160,
+      352,
       64,
       32,
       32
     ],
     "body/base/adult_m/south/work": [
-      192,
+      384,
       64,
       32,
       32
     ],
     "body/base/child/east/idle": [
-      224,
+      416,
       64,
       32,
       32
     ],
     "body/base/child/east/walk_a": [
-      256,
+      448,
       64,
       32,
       32
     ],
     "body/base/child/east/walk_b": [
-      288,
+      480,
       64,
       32,
       32
     ],
     "body/base/child/east/work": [
-      320,
-      64,
+      0,
+      96,
       32,
       32
     ],
     "body/base/child/south/idle": [
-      352,
-      64,
+      32,
+      96,
       32,
       32
     ],
     "body/base/child/south/sleep": [
-      384,
       64,
+      96,
       32,
       16
     ],
     "body/base/child/south/walk_a": [
-      416,
-      64,
+      96,
+      96,
       32,
       32
     ],
     "body/base/child/south/walk_b": [
-      448,
-      64,
+      128,
+      96,
       32,
       32
     ],
     "body/base/child/south/work": [
-      480,
-      64,
+      160,
+      96,
       32,
       32
     ],
     "body/base/elder/east/idle": [
-      0,
+      192,
       96,
       32,
       32
     ],
     "body/base/elder/east/walk_a": [
-      32,
+      224,
       96,
       32,
       32
     ],
     "body/base/elder/east/walk_b": [
-      64,
+      256,
       96,
       32,
       32
     ],
     "body/base/elder/east/work": [
-      96,
+      288,
       96,
       32,
       32
     ],
     "body/base/elder/south/idle": [
-      128,
+      320,
       96,
       32,
       32
     ],
     "body/base/elder/south/sleep": [
-      160,
+      352,
       96,
       32,
       16
     ],
     "body/base/elder/south/walk_a": [
-      192,
+      384,
       96,
       32,
       32
     ],
     "body/base/elder/south/walk_b": [
-      224,
+      416,
       96,
       32,
       32
     ],
     "body/base/elder/south/work": [
-      256,
+      448,
       96,
       32,
       32
     ],
     "boulder": [
-      288,
+      480,
       96,
       32,
       32
     ],
     "canopy_shadow": [
-      320,
-      96,
+      0,
+      128,
       48,
       48
     ],
     "carry/logs/adult_m/east/idle": [
-      368,
-      96,
+      48,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/east/walk_a": [
-      400,
-      96,
+      80,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/east/walk_b": [
-      432,
-      96,
+      112,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/east/work": [
-      464,
-      96,
+      144,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/south/idle": [
-      0,
-      144,
+      176,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/south/sleep": [
-      32,
-      144,
+      208,
+      128,
       32,
       16
     ],
     "carry/logs/adult_m/south/walk_a": [
-      64,
-      144,
+      240,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/south/walk_b": [
-      96,
-      144,
+      272,
+      128,
       32,
       32
     ],
     "carry/logs/adult_m/south/work": [
+      304,
       128,
-      144,
       32,
       32
     ],
     "deadwood": [
-      160,
-      144,
+      336,
+      128,
       32,
       32
     ],
     "ground_dark_grass_0": [
-      192,
-      144,
+      368,
+      128,
       32,
       32
     ],
     "ground_dark_grass_1": [
-      224,
-      144,
+      400,
+      128,
       32,
       32
     ],
     "ground_dirt_0": [
-      256,
-      144,
+      432,
+      128,
       32,
       32
     ],
     "ground_dirt_1": [
-      288,
-      144,
+      464,
+      128,
       32,
       32
     ],
     "ground_dirt_2": [
-      320,
-      144,
+      0,
+      176,
       32,
       32
     ],
     "ground_forest_floor_0": [
-      352,
-      144,
+      32,
+      176,
       32,
       32
     ],
     "ground_forest_floor_1": [
-      384,
-      144,
+      64,
+      176,
       32,
       32
     ],
     "ground_forest_floor_2": [
-      416,
-      144,
+      96,
+      176,
       32,
       32
     ],
     "ground_grass_0": [
-      448,
-      144,
+      128,
+      176,
       32,
       32
     ],
     "ground_grass_1": [
-      480,
-      144,
+      160,
+      176,
       32,
       32
     ],
     "ground_grass_2": [
-      0,
+      192,
       176,
       32,
       32
     ],
     "ground_grass_3": [
-      32,
+      224,
       176,
       32,
       32
     ],
     "hair/braided/adult_m/south/idle": [
-      64,
+      256,
       176,
       32,
       32
     ],
     "hair/braided/adult_m/south/walk_b": [
-      96,
+      288,
+      176,
+      32,
+      32
+    ],
+    "hair/braided/elder/east/walk_b": [
+      320,
+      176,
+      32,
+      32
+    ],
+    "hair/braided/elder/south/walk_a": [
+      352,
       176,
       32,
       32
     ],
     "hair/bun/adult_f/east/walk_b": [
-      128,
+      384,
       176,
       32,
       32
     ],
     "hair/bun/adult_f/south/walk_a": [
-      160,
+      416,
       176,
       32,
       32
     ],
     "hair/bun/adult_m/east/idle": [
-      192,
+      448,
       176,
       32,
       32
     ],
     "hair/bun/adult_m/east/walk_b": [
-      224,
+      480,
       176,
       32,
       32
     ],
     "hair/bun/adult_m/south/idle": [
-      256,
-      176,
+      0,
+      208,
       32,
       32
     ],
     "hair/bun/adult_m/south/walk_a": [
-      288,
-      176,
+      32,
+      208,
       32,
       32
     ],
     "hair/bun/adult_m/south/walk_b": [
-      320,
-      176,
+      64,
+      208,
+      32,
+      32
+    ],
+    "hair/bun/elder/south/idle": [
+      96,
+      208,
+      32,
+      32
+    ],
+    "hair/bun/elder/south/walk_a": [
+      128,
+      208,
       32,
       32
     ],
     "hair/bun/elder/south/work": [
-      352,
-      176,
+      160,
+      208,
       32,
       32
     ],
     "hair/long_tied/adult_f/east/walk_b": [
-      384,
-      176,
+      192,
+      208,
       32,
       32
     ],
     "hair/long_tied/adult_f/south/walk_a": [
-      416,
-      176,
+      224,
+      208,
       32,
       32
     ],
     "hair/long_tied/adult_m/east/walk_a": [
-      448,
-      176,
+      256,
+      208,
       32,
       32
     ],
     "hair/long_tied/adult_m/east/walk_b": [
-      480,
-      176,
+      288,
+      208,
       32,
       32
     ],
     "hair/long_tied/adult_m/south/idle": [
-      0,
+      320,
+      208,
+      32,
+      32
+    ],
+    "hair/long_tied/elder/south/idle": [
+      352,
       208,
       32,
       32
     ],
     "hair/shaved_sides/adult_m/south/idle": [
-      32,
+      384,
       208,
       32,
       32
     ],
     "hair/shaved_sides/adult_m/south/walk_a": [
-      64,
+      416,
       208,
       32,
       32
     ],
     "hair/shaved_sides/child/east/walk_a": [
-      96,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_f/east/idle": [
-      128,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_f/east/work": [
-      160,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_f/south/idle": [
-      192,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_f/south/walk_a": [
-      224,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_f/south/work": [
-      256,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_m/east/walk_a": [
-      288,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_m/east/walk_b": [
-      320,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_m/south/idle": [
-      352,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_m/south/sleep": [
-      384,
-      208,
-      32,
-      16
-    ],
-    "hair/short/adult_m/south/walk_a": [
-      416,
-      208,
-      32,
-      32
-    ],
-    "hair/short/adult_m/south/walk_b": [
       448,
       208,
       32,
       32
     ],
-    "hair/short/adult_m/south/work": [
+    "hair/shaved_sides/elder/east/walk_a": [
       480,
       208,
       32,
       32
     ],
-    "hair/short/child/east/idle": [
+    "hair/shaved_sides/elder/south/walk_a": [
       0,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_f/east/idle": [
+      32,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_f/east/work": [
+      64,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_f/south/idle": [
+      96,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_f/south/walk_a": [
+      128,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_f/south/work": [
+      160,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/east/idle": [
+      192,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/east/walk_a": [
+      224,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/east/walk_b": [
+      256,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/south/idle": [
+      288,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/south/sleep": [
+      320,
+      240,
+      32,
+      16
+    ],
+    "hair/short/adult_m/south/walk_a": [
+      352,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/south/walk_b": [
+      384,
+      240,
+      32,
+      32
+    ],
+    "hair/short/adult_m/south/work": [
+      416,
+      240,
+      32,
+      32
+    ],
+    "hair/short/child/east/idle": [
+      448,
       240,
       32,
       32
     ],
     "hair/short/child/east/walk_a": [
-      32,
+      480,
       240,
       32,
       32
     ],
     "hair/short/child/east/walk_b": [
-      64,
-      240,
+      0,
+      272,
       32,
       32
     ],
     "hair/short/child/east/work": [
-      96,
-      240,
+      32,
+      272,
       32,
       32
     ],
     "hair/short/child/south/idle": [
-      128,
-      240,
+      64,
+      272,
       32,
       32
     ],
     "hair/short/child/south/sleep": [
-      160,
-      240,
+      96,
+      272,
       32,
       16
     ],
     "hair/short/child/south/walk_a": [
-      192,
-      240,
+      128,
+      272,
       32,
       32
     ],
     "hair/short/child/south/walk_b": [
-      224,
-      240,
+      160,
+      272,
       32,
       32
     ],
     "hair/short/child/south/work": [
-      256,
-      240,
+      192,
+      272,
       32,
       32
     ],
     "hair/short/elder/east/idle": [
+      224,
+      272,
+      32,
+      32
+    ],
+    "hair/short/elder/east/walk_b": [
+      256,
+      272,
+      32,
+      32
+    ],
+    "hair/short/elder/east/work": [
       288,
-      240,
+      272,
       32,
       32
     ],
     "hair/short/elder/south/idle": [
       320,
-      240,
+      272,
       32,
       32
     ],
     "hair/short/elder/south/sleep": [
       352,
-      240,
+      272,
       32,
       16
     ],
     "hair/short/elder/south/walk_a": [
       384,
-      240,
+      272,
       32,
       32
     ],
     "hearth_0": [
       416,
-      240,
+      272,
       32,
       32
     ],
     "hearth_1": [
       448,
-      240,
+      272,
       32,
       32
     ],
     "hill_0": [
       480,
-      240,
+      272,
       32,
       32
     ],
     "hill_1": [
       0,
-      272,
+      304,
       32,
       32
     ],
     "hut": [
       32,
-      272,
+      304,
       96,
       96
     ],
     "hut_ghost": [
       128,
-      272,
+      304,
       96,
       96
     ],
     "lean_to": [
       224,
-      272,
+      304,
       32,
       48
     ],
     "log_pile_1": [
       256,
-      272,
+      304,
       32,
       32
     ],
     "log_pile_2": [
       288,
-      272,
+      304,
       32,
       32
     ],
     "log_pile_3": [
       320,
-      272,
+      304,
       32,
       32
     ],
     "mountain_0": [
       352,
-      272,
+      304,
       32,
       32
     ],
     "mountain_1": [
       384,
-      272,
+      304,
       32,
       32
     ],
     "revision1/body/base/adult_m/south/sleep": [
       416,
-      272,
+      304,
       32,
       16
     ],
     "revision1/body/base/child/south/idle": [
       448,
-      272,
+      304,
       32,
       32
     ],
     "revision1/body/base/elder/south/idle": [
       480,
-      272,
+      304,
       32,
       32
     ],
     "revision1/carry/logs/adult_m/south/idle": [
       0,
-      368,
+      400,
       32,
       32
     ],
     "revision1/hair/short/adult_m/south/sleep": [
       32,
-      368,
+      400,
       32,
       16
     ],
     "revision1/hair/short/child/south/idle": [
       64,
-      368,
+      400,
       32,
       32
     ],
     "revision1/hair/short/elder/south/idle": [
       96,
-      368,
+      400,
       32,
       32
     ],
     "revision1/log_pile_1": [
       128,
-      368,
+      400,
       32,
       32
     ],
     "revision1/log_pile_2": [
       160,
-      368,
+      400,
       32,
       32
     ],
     "revision1/log_pile_3": [
       192,
-      368,
+      400,
       32,
       32
     ],
     "revision1/shadow/base/adult_m/south/sleep": [
       224,
-      368,
+      400,
       32,
       16
     ],
     "revision1/shadow/base/child/south/idle": [
       256,
-      368,
+      400,
       32,
       32
     ],
     "revision1/shadow/base/elder/south/idle": [
       288,
-      368,
+      400,
       32,
       32
     ],
     "revision1/top/hide_wrap/adult_m/south/sleep": [
       320,
-      368,
+      400,
       32,
       16
     ],
     "revision1/top/hide_wrap/child/south/idle": [
       352,
-      368,
+      400,
       32,
       32
     ],
     "revision1/top/hide_wrap/elder/south/idle": [
       384,
-      368,
+      400,
       32,
       32
     ],
     "shadow/base/adult_f/east/idle": [
       416,
-      368,
+      400,
       32,
       32
     ],
     "shadow/base/adult_f/east/walk_a": [
       448,
-      368,
+      400,
       32,
       32
     ],
     "shadow/base/adult_f/east/walk_b": [
       480,
-      368,
+      400,
       32,
       32
     ],
     "shadow/base/adult_f/east/work": [
       0,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_f/south/idle": [
       32,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_f/south/sleep": [
       64,
-      400,
+      432,
       32,
       16
     ],
     "shadow/base/adult_f/south/walk_a": [
       96,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_f/south/walk_b": [
       128,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_f/south/work": [
       160,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/east/idle": [
       192,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/east/walk_a": [
       224,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/east/walk_b": [
       256,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/east/work": [
       288,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/south/idle": [
       320,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/south/sleep": [
       352,
-      400,
+      432,
       32,
       16
     ],
     "shadow/base/adult_m/south/walk_a": [
       384,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/south/walk_b": [
       416,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/adult_m/south/work": [
       448,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/child/east/idle": [
       480,
-      400,
+      432,
       32,
       32
     ],
     "shadow/base/child/east/walk_a": [
       0,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/child/east/walk_b": [
       32,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/child/east/work": [
       64,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/child/south/idle": [
       96,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/child/south/sleep": [
       128,
-      432,
+      464,
       32,
       16
     ],
     "shadow/base/child/south/walk_a": [
       160,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/child/south/walk_b": [
       192,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/child/south/work": [
       224,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/east/idle": [
       256,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/east/walk_a": [
       288,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/east/walk_b": [
       320,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/east/work": [
       352,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/south/idle": [
       384,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/south/sleep": [
       416,
-      432,
+      464,
       32,
       16
     ],
     "shadow/base/elder/south/walk_a": [
       448,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/south/walk_b": [
       480,
-      432,
+      464,
       32,
       32
     ],
     "shadow/base/elder/south/work": [
       0,
-      464,
+      496,
       32,
       32
     ],
     "stockpile_floor_corner": [
       32,
-      464,
+      496,
       32,
       32
     ],
     "stockpile_floor_edge": [
       64,
-      464,
+      496,
       32,
       32
     ],
     "stockpile_floor_interior": [
       96,
-      464,
+      496,
       32,
       32
     ],
     "stump": [
       128,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/adult_f/east/walk_a": [
       160,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/adult_f/east/walk_b": [
       192,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/adult_m/east/walk_a": [
       224,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/adult_m/east/walk_b": [
       256,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/adult_m/south/idle": [
       288,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/adult_m/south/work": [
       320,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/child/south/sleep": [
       352,
-      464,
+      496,
       32,
       16
     ],
     "tool/axe/child/south/walk_b": [
       384,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/elder/east/idle": [
       416,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/elder/east/walk_a": [
       448,
-      464,
+      496,
       32,
       32
     ],
     "tool/axe/elder/east/walk_b": [
       480,
-      464,
+      496,
       32,
       32
     ],
     "tool/basket/adult_m/east/idle": [
       0,
-      496,
+      528,
       32,
       32
     ],
     "tool/basket/child/east/walk_a": [
       32,
-      496,
+      528,
       32,
       32
     ],
     "tool/basket/child/east/walk_b": [
       64,
-      496,
+      528,
       32,
       32
     ],
     "tool/basket/child/south/idle": [
       96,
-      496,
+      528,
       32,
       32
     ],
     "tool/basket/child/south/walk_b": [
       128,
-      496,
+      528,
+      32,
+      32
+    ],
+    "tool/basket/elder/east/walk_b": [
+      160,
+      528,
       32,
       32
     ],
     "tool/basket/elder/south/idle": [
-      160,
-      496,
+      192,
+      528,
       32,
       32
     ],
     "tool/basket/elder/south/sleep": [
-      192,
-      496,
+      224,
+      528,
       32,
       16
     ],
     "tool/basket/elder/south/walk_a": [
-      224,
-      496,
+      256,
+      528,
       32,
       32
     ],
     "tool/hammer/adult_f/east/walk_a": [
-      256,
-      496,
+      288,
+      528,
       32,
       32
     ],
     "tool/hammer/adult_m/south/idle": [
-      288,
-      496,
+      320,
+      528,
       32,
       32
     ],
     "tool/hammer/child/east/walk_a": [
-      320,
-      496,
+      352,
+      528,
       32,
       32
     ],
     "tool/hammer/child/east/walk_b": [
-      352,
-      496,
+      384,
+      528,
       32,
       32
     ],
     "tool/hammer/elder/east/idle": [
-      384,
-      496,
+      416,
+      528,
       32,
       32
     ],
     "tool/hammer/elder/east/walk_a": [
-      416,
-      496,
+      448,
+      528,
       32,
       32
     ],
     "tool/hammer/elder/east/walk_b": [
-      448,
-      496,
+      480,
+      528,
       32,
       32
     ],
     "tool/hammer/elder/south/sleep": [
-      480,
-      496,
+      0,
+      560,
       32,
       16
     ],
     "tool/hoe/adult_f/east/idle": [
-      0,
-      528,
+      32,
+      560,
       32,
       32
     ],
     "tool/hoe/adult_m/south/idle": [
-      32,
-      528,
+      64,
+      560,
       32,
       32
     ],
     "tool/hoe/child/east/walk_a": [
-      64,
-      528,
+      96,
+      560,
       32,
       32
     ],
     "tool/hoe/child/south/walk_a": [
-      96,
-      528,
+      128,
+      560,
+      32,
+      32
+    ],
+    "tool/hoe/elder/east/idle": [
+      160,
+      560,
+      32,
+      32
+    ],
+    "tool/hoe/elder/south/idle": [
+      192,
+      560,
       32,
       32
     ],
     "tool/hoe/elder/south/sleep": [
-      128,
-      528,
+      224,
+      560,
       32,
       16
     ],
     "tool/hoe/elder/south/walk_a": [
-      160,
-      528,
+      256,
+      560,
       32,
       32
     ],
     "tool/pick/adult_f/east/walk_b": [
-      192,
-      528,
+      288,
+      560,
       32,
       32
     ],
     "tool/pick/adult_f/south/walk_a": [
-      224,
-      528,
+      320,
+      560,
       32,
       32
     ],
     "tool/pick/adult_m/east/idle": [
-      256,
-      528,
+      352,
+      560,
       32,
       32
     ],
     "tool/pick/elder/east/idle": [
-      288,
-      528,
+      384,
+      560,
+      32,
+      32
+    ],
+    "tool/pick/elder/east/walk_a": [
+      416,
+      560,
+      32,
+      32
+    ],
+    "tool/pick/elder/east/work": [
+      448,
+      560,
       32,
       32
     ],
     "top/fur_cloak/adult_f/east/idle": [
-      320,
-      528,
+      480,
+      560,
       32,
       32
     ],
     "top/fur_cloak/adult_f/east/walk_a": [
-      352,
-      528,
+      0,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_f/east/walk_b": [
-      384,
-      528,
+      32,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_f/east/work": [
-      416,
-      528,
+      64,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_f/south/idle": [
-      448,
-      528,
+      96,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_f/south/sleep": [
-      480,
-      528,
+      128,
+      592,
       32,
       16
     ],
     "top/fur_cloak/adult_f/south/walk_a": [
-      0,
-      560,
+      160,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_f/south/walk_b": [
-      32,
-      560,
+      192,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_f/south/work": [
-      64,
-      560,
+      224,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/east/idle": [
-      96,
-      560,
+      256,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/east/walk_a": [
-      128,
-      560,
+      288,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/east/walk_b": [
-      160,
-      560,
+      320,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/east/work": [
-      192,
-      560,
+      352,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/south/idle": [
-      224,
-      560,
+      384,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/south/sleep": [
-      256,
-      560,
+      416,
+      592,
       32,
       16
     ],
     "top/fur_cloak/adult_m/south/walk_a": [
-      288,
-      560,
+      448,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/south/walk_b": [
-      320,
-      560,
+      480,
+      592,
       32,
       32
     ],
     "top/fur_cloak/adult_m/south/work": [
-      352,
-      560,
+      0,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/east/idle": [
-      384,
-      560,
+      32,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/east/walk_a": [
-      416,
-      560,
+      64,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/east/walk_b": [
-      448,
-      560,
+      96,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/east/work": [
-      480,
-      560,
+      128,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/south/idle": [
-      0,
-      592,
+      160,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/south/sleep": [
-      32,
-      592,
+      192,
+      624,
       32,
       16
     ],
     "top/fur_cloak/child/south/walk_a": [
-      64,
-      592,
+      224,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/south/walk_b": [
-      96,
-      592,
+      256,
+      624,
       32,
       32
     ],
     "top/fur_cloak/child/south/work": [
-      128,
-      592,
+      288,
+      624,
       32,
       32
     ],
     "top/fur_cloak/elder/east/idle": [
-      160,
-      592,
+      320,
+      624,
       32,
       32
     ],
     "top/fur_cloak/elder/east/walk_a": [
-      192,
-      592,
+      352,
+      624,
       32,
       32
     ],
     "top/fur_cloak/elder/east/walk_b": [
-      224,
-      592,
+      384,
+      624,
       32,
       32
     ],
     "top/fur_cloak/elder/east/work": [
-      256,
-      592,
+      416,
+      624,
       32,
       32
     ],
     "top/fur_cloak/elder/south/idle": [
-      288,
-      592,
+      448,
+      624,
       32,
       32
     ],
     "top/fur_cloak/elder/south/sleep": [
-      320,
-      592,
+      480,
+      624,
       32,
       16
     ],
     "top/fur_cloak/elder/south/walk_a": [
-      352,
-      592,
+      0,
+      656,
       32,
       32
     ],
     "top/fur_cloak/elder/south/walk_b": [
-      384,
-      592,
+      32,
+      656,
       32,
       32
     ],
     "top/fur_cloak/elder/south/work": [
-      416,
-      592,
+      64,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/east/idle": [
-      448,
-      592,
+      96,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/east/walk_a": [
-      480,
-      592,
+      128,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/east/walk_b": [
-      0,
-      624,
+      160,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/east/work": [
-      32,
-      624,
+      192,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/south/idle": [
-      64,
-      624,
+      224,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/south/sleep": [
-      96,
-      624,
+      256,
+      656,
       32,
       16
     ],
     "top/hide_wrap/adult_f/south/walk_a": [
-      128,
-      624,
+      288,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/south/walk_b": [
-      160,
-      624,
+      320,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_f/south/work": [
-      192,
-      624,
+      352,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_m/east/idle": [
-      224,
-      624,
+      384,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_m/east/walk_a": [
-      256,
-      624,
+      416,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_m/east/walk_b": [
-      288,
-      624,
+      448,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_m/east/work": [
-      320,
-      624,
+      480,
+      656,
       32,
       32
     ],
     "top/hide_wrap/adult_m/south/idle": [
-      352,
-      624,
+      0,
+      688,
       32,
       32
     ],
     "top/hide_wrap/adult_m/south/sleep": [
-      384,
-      624,
+      32,
+      688,
       32,
       16
     ],
     "top/hide_wrap/adult_m/south/walk_a": [
-      416,
-      624,
+      64,
+      688,
       32,
       32
     ],
     "top/hide_wrap/adult_m/south/walk_b": [
-      448,
-      624,
+      96,
+      688,
       32,
       32
     ],
     "top/hide_wrap/adult_m/south/work": [
-      480,
-      624,
+      128,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/east/idle": [
-      0,
-      656,
+      160,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/east/walk_a": [
-      32,
-      656,
+      192,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/east/walk_b": [
-      64,
-      656,
+      224,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/east/work": [
-      96,
-      656,
+      256,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/south/idle": [
-      128,
-      656,
+      288,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/south/sleep": [
-      160,
-      656,
+      320,
+      688,
       32,
       16
     ],
     "top/hide_wrap/child/south/walk_a": [
-      192,
-      656,
+      352,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/south/walk_b": [
-      224,
-      656,
+      384,
+      688,
       32,
       32
     ],
     "top/hide_wrap/child/south/work": [
-      256,
-      656,
+      416,
+      688,
       32,
       32
     ],
     "top/hide_wrap/elder/east/idle": [
-      288,
-      656,
+      448,
+      688,
       32,
       32
     ],
     "top/hide_wrap/elder/east/walk_a": [
-      320,
-      656,
+      480,
+      688,
       32,
       32
     ],
     "top/hide_wrap/elder/east/walk_b": [
-      352,
-      656,
+      0,
+      720,
       32,
       32
     ],
     "top/hide_wrap/elder/east/work": [
-      384,
-      656,
+      32,
+      720,
       32,
       32
     ],
     "top/hide_wrap/elder/south/idle": [
-      416,
-      656,
+      64,
+      720,
       32,
       32
     ],
     "top/hide_wrap/elder/south/sleep": [
-      448,
-      656,
+      96,
+      720,
       32,
       16
     ],
     "top/hide_wrap/elder/south/walk_a": [
-      480,
-      656,
+      128,
+      720,
       32,
       32
     ],
     "top/hide_wrap/elder/south/walk_b": [
-      0,
-      688,
+      160,
+      720,
       32,
       32
     ],
     "top/hide_wrap/elder/south/work": [
-      32,
-      688,
+      192,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/east/idle": [
-      64,
-      688,
+      224,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/east/walk_a": [
-      96,
-      688,
+      256,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/east/walk_b": [
-      128,
-      688,
+      288,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/east/work": [
-      160,
-      688,
+      320,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/south/idle": [
-      192,
-      688,
+      352,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/south/sleep": [
-      224,
-      688,
+      384,
+      720,
       32,
       16
     ],
     "top/leather_vest/adult_f/south/walk_a": [
-      256,
-      688,
+      416,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/south/walk_b": [
-      288,
-      688,
+      448,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_f/south/work": [
-      320,
-      688,
+      480,
+      720,
       32,
       32
     ],
     "top/leather_vest/adult_m/east/idle": [
-      352,
-      688,
+      0,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/east/walk_a": [
-      384,
-      688,
+      32,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/east/walk_b": [
-      416,
-      688,
+      64,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/east/work": [
-      448,
-      688,
+      96,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/south/idle": [
-      480,
-      688,
+      128,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/south/sleep": [
-      0,
-      720,
+      160,
+      752,
       32,
       16
     ],
     "top/leather_vest/adult_m/south/walk_a": [
-      32,
-      720,
+      192,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/south/walk_b": [
-      64,
-      720,
+      224,
+      752,
       32,
       32
     ],
     "top/leather_vest/adult_m/south/work": [
-      96,
-      720,
+      256,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/east/idle": [
-      128,
-      720,
+      288,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/east/walk_a": [
-      160,
-      720,
+      320,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/east/walk_b": [
-      192,
-      720,
+      352,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/east/work": [
-      224,
-      720,
+      384,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/south/idle": [
-      256,
-      720,
+      416,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/south/sleep": [
-      288,
-      720,
+      448,
+      752,
       32,
       16
     ],
     "top/leather_vest/child/south/walk_a": [
-      320,
-      720,
+      480,
+      752,
       32,
       32
     ],
     "top/leather_vest/child/south/walk_b": [
-      352,
-      720,
+      0,
+      784,
       32,
       32
     ],
     "top/leather_vest/child/south/work": [
-      384,
-      720,
+      32,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/east/idle": [
-      416,
-      720,
+      64,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/east/walk_a": [
-      448,
-      720,
+      96,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/east/walk_b": [
-      480,
-      720,
+      128,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/east/work": [
-      0,
-      752,
+      160,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/south/idle": [
-      32,
-      752,
+      192,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/south/sleep": [
-      64,
-      752,
+      224,
+      784,
       32,
       16
     ],
     "top/leather_vest/elder/south/walk_a": [
-      96,
-      752,
+      256,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/south/walk_b": [
-      128,
-      752,
+      288,
+      784,
       32,
       32
     ],
     "top/leather_vest/elder/south/work": [
-      160,
-      752,
+      320,
+      784,
       32,
       32
     ],
     "top/woven_tunic/adult_f/east/idle": [
-      192,
-      752,
+      352,
+      784,
       32,
       32
     ],
     "top/woven_tunic/adult_f/east/walk_a": [
-      224,
-      752,
+      384,
+      784,
       32,
       32
     ],
     "top/woven_tunic/adult_f/east/walk_b": [
-      256,
-      752,
+      416,
+      784,
       32,
       32
     ],
     "top/woven_tunic/adult_f/east/work": [
-      288,
-      752,
+      448,
+      784,
       32,
       32
     ],
     "top/woven_tunic/adult_f/south/idle": [
-      320,
-      752,
+      480,
+      784,
       32,
       32
     ],
     "top/woven_tunic/adult_f/south/sleep": [
-      352,
-      752,
+      0,
+      816,
       32,
       16
     ],
     "top/woven_tunic/adult_f/south/walk_a": [
-      384,
-      752,
+      32,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_f/south/walk_b": [
-      416,
-      752,
+      64,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_f/south/work": [
-      448,
-      752,
+      96,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/east/idle": [
-      480,
-      752,
+      128,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/east/walk_a": [
-      0,
-      784,
+      160,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/east/walk_b": [
-      32,
-      784,
+      192,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/east/work": [
-      64,
-      784,
+      224,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/south/idle": [
-      96,
-      784,
+      256,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/south/sleep": [
-      128,
-      784,
+      288,
+      816,
       32,
       16
     ],
     "top/woven_tunic/adult_m/south/walk_a": [
-      160,
-      784,
+      320,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/south/walk_b": [
-      192,
-      784,
+      352,
+      816,
       32,
       32
     ],
     "top/woven_tunic/adult_m/south/work": [
-      224,
-      784,
+      384,
+      816,
       32,
       32
     ],
     "top/woven_tunic/child/east/idle": [
-      256,
-      784,
+      416,
+      816,
       32,
       32
     ],
     "top/woven_tunic/child/east/walk_a": [
-      288,
-      784,
+      448,
+      816,
       32,
       32
     ],
     "top/woven_tunic/child/east/walk_b": [
-      320,
-      784,
+      480,
+      816,
       32,
       32
     ],
     "top/woven_tunic/child/east/work": [
-      352,
-      784,
+      0,
+      848,
       32,
       32
     ],
     "top/woven_tunic/child/south/idle": [
-      384,
-      784,
+      32,
+      848,
       32,
       32
     ],
     "top/woven_tunic/child/south/sleep": [
-      416,
-      784,
+      64,
+      848,
       32,
       16
     ],
     "top/woven_tunic/child/south/walk_a": [
-      448,
-      784,
+      96,
+      848,
       32,
       32
     ],
     "top/woven_tunic/child/south/walk_b": [
-      480,
-      784,
+      128,
+      848,
       32,
       32
     ],
     "top/woven_tunic/child/south/work": [
-      0,
-      816,
+      160,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/east/idle": [
-      32,
-      816,
+      192,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/east/walk_a": [
-      64,
-      816,
+      224,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/east/walk_b": [
-      96,
-      816,
+      256,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/east/work": [
-      128,
-      816,
+      288,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/south/idle": [
-      160,
-      816,
+      320,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/south/sleep": [
-      192,
-      816,
+      352,
+      848,
       32,
       16
     ],
     "top/woven_tunic/elder/south/walk_a": [
-      224,
-      816,
+      384,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/south/walk_b": [
-      256,
-      816,
+      416,
+      848,
       32,
       32
     ],
     "top/woven_tunic/elder/south/work": [
-      288,
-      816,
+      448,
+      848,
       32,
       32
     ],
     "tree_birch_l": [
-      320,
-      816,
+      0,
+      880,
       64,
       64
     ],
     "tree_birch_s": [
-      384,
-      816,
+      64,
+      880,
       48,
       48
     ],
     "tree_oak_l": [
-      432,
-      816,
+      112,
+      880,
       64,
       64
     ],
     "tree_oak_s": [
-      0,
+      176,
       880,
       48,
       48
     ],
     "tree_pine_l": [
-      48,
+      224,
       880,
       64,
       64
     ],
     "tree_pine_s": [
-      112,
+      288,
       880,
       48,
       48
     ],
     "water_deep_0": [
-      160,
+      336,
       880,
       32,
       32
     ],
     "water_deep_1": [
-      192,
+      368,
       880,
       32,
       32
     ],
     "water_shallow_0": [
-      224,
+      400,
       880,
       32,
       32
     ],
     "water_shallow_1": [
-      256,
+      432,
       880,
       32,
       32
@@ -3855,6 +3981,90 @@
     "revision1/log_pile_3": [
       32,
       32
+    ],
+    "hair/short/adult_m/east/idle": [
+      32,
+      32
+    ],
+    "beard/short/child/south/idle": [
+      32,
+      32
+    ],
+    "beard/short/child/south/sleep": [
+      32,
+      16
+    ],
+    "beard/long/elder/east/idle": [
+      32,
+      32
+    ],
+    "hair/long_tied/elder/south/idle": [
+      32,
+      32
+    ],
+    "hair/bun/elder/south/idle": [
+      32,
+      32
+    ],
+    "hair/braided/elder/south/walk_a": [
+      32,
+      32
+    ],
+    "hair/bun/elder/south/walk_a": [
+      32,
+      32
+    ],
+    "hair/shaved_sides/elder/south/walk_a": [
+      32,
+      32
+    ],
+    "hair/shaved_sides/elder/east/walk_a": [
+      32,
+      32
+    ],
+    "beard/long/elder/east/walk_a": [
+      32,
+      32
+    ],
+    "hair/short/elder/east/walk_b": [
+      32,
+      32
+    ],
+    "hair/braided/elder/east/walk_b": [
+      32,
+      32
+    ],
+    "hair/short/elder/east/work": [
+      32,
+      32
+    ],
+    "beard/short/elder/east/work": [
+      32,
+      32
+    ],
+    "beard/long/elder/east/work": [
+      32,
+      32
+    ],
+    "tool/hoe/elder/south/idle": [
+      32,
+      32
+    ],
+    "tool/hoe/elder/east/idle": [
+      32,
+      32
+    ],
+    "tool/pick/elder/east/walk_a": [
+      32,
+      32
+    ],
+    "tool/pick/elder/east/work": [
+      32,
+      32
+    ],
+    "tool/basket/elder/east/walk_b": [
+      32,
+      32
     ]
   },
   "anchors": {
@@ -5389,6 +5599,90 @@
     "revision1/log_pile_3": [
       16,
       28
+    ],
+    "hair/short/adult_m/east/idle": [
+      16,
+      32
+    ],
+    "beard/short/child/south/idle": [
+      16,
+      32
+    ],
+    "beard/short/child/south/sleep": [
+      16,
+      16
+    ],
+    "beard/long/elder/east/idle": [
+      16,
+      32
+    ],
+    "hair/long_tied/elder/south/idle": [
+      16,
+      32
+    ],
+    "hair/bun/elder/south/idle": [
+      16,
+      32
+    ],
+    "hair/braided/elder/south/walk_a": [
+      16,
+      32
+    ],
+    "hair/bun/elder/south/walk_a": [
+      16,
+      32
+    ],
+    "hair/shaved_sides/elder/south/walk_a": [
+      16,
+      32
+    ],
+    "hair/shaved_sides/elder/east/walk_a": [
+      16,
+      32
+    ],
+    "beard/long/elder/east/walk_a": [
+      16,
+      32
+    ],
+    "hair/short/elder/east/walk_b": [
+      16,
+      32
+    ],
+    "hair/braided/elder/east/walk_b": [
+      16,
+      32
+    ],
+    "hair/short/elder/east/work": [
+      16,
+      32
+    ],
+    "beard/short/elder/east/work": [
+      16,
+      32
+    ],
+    "beard/long/elder/east/work": [
+      16,
+      32
+    ],
+    "tool/hoe/elder/south/idle": [
+      16,
+      32
+    ],
+    "tool/hoe/elder/east/idle": [
+      16,
+      32
+    ],
+    "tool/pick/elder/east/walk_a": [
+      16,
+      32
+    ],
+    "tool/pick/elder/east/work": [
+      16,
+      32
+    ],
+    "tool/basket/elder/east/walk_b": [
+      16,
+      32
     ]
   },
   "kinds": {
@@ -5774,7 +6068,28 @@
     "revision1/carry/logs/adult_m/south/idle": "layer",
     "revision1/log_pile_1": "object",
     "revision1/log_pile_2": "object",
-    "revision1/log_pile_3": "object"
+    "revision1/log_pile_3": "object",
+    "hair/short/adult_m/east/idle": "layer",
+    "beard/short/child/south/idle": "layer",
+    "beard/short/child/south/sleep": "layer",
+    "beard/long/elder/east/idle": "layer",
+    "hair/long_tied/elder/south/idle": "layer",
+    "hair/bun/elder/south/idle": "layer",
+    "hair/braided/elder/south/walk_a": "layer",
+    "hair/bun/elder/south/walk_a": "layer",
+    "hair/shaved_sides/elder/south/walk_a": "layer",
+    "hair/shaved_sides/elder/east/walk_a": "layer",
+    "beard/long/elder/east/walk_a": "layer",
+    "hair/short/elder/east/walk_b": "layer",
+    "hair/braided/elder/east/walk_b": "layer",
+    "hair/short/elder/east/work": "layer",
+    "beard/short/elder/east/work": "layer",
+    "beard/long/elder/east/work": "layer",
+    "tool/hoe/elder/south/idle": "layer",
+    "tool/hoe/elder/east/idle": "layer",
+    "tool/pick/elder/east/walk_a": "layer",
+    "tool/pick/elder/east/work": "layer",
+    "tool/basket/elder/east/walk_b": "layer"
   },
   "channels": {
     "outline": "141210",

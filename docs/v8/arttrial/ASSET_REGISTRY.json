@@ -14206,6 +14206,539 @@
       "outline_context": null,
       "min_component_pixels": 2,
       "status": "PARENT_REVIEWED_SCENE_REVISION_NOT_FULL_WARDROBE"
+    },
+    {
+      "name": "hair/short/adult_m/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_board_continuation/short_east_idle_cont01_layer.png",
+      "layer": "/Users/rexxa/work/arttrial-data/people/layers/hair_board_continuation/short_east_idle_cont01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/adult_m_candidate_02/east_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "min_component_pixels": 2,
+      "status": "ACCEPTED",
+      "attempt": "short_east_idle_cont01",
+      "report": "/Users/rexxa/work/arttrial-data/people/layers/hair_board_continuation/short_east_idle_cont01.report.json",
+      "visual_verdict": "ACCEPTED: three contiguous scalp-channel pixels form a tiny flat short-hair band; native gray and deterministic dark-hair tint reviewed. Zero erasure, additions, outline changes or outside-ROI changes. Standard check PASS with component size3 and minimum2."
+    },
+    {
+      "name": "beard/short/child/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/beard_short_south_idle_continuation_01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "beard",
+      "min_component_pixels": 2,
+      "status": "ACCEPTED",
+      "attempt": "beard_short_south_idle_continuation_01",
+      "report": "/Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/beard_short_south_idle_continuation_01.report.json",
+      "check": {
+        "name": "beard_short_south_idle_continuation_01",
+        "passed": true,
+        "errors": [],
+        "visible_pixels": 4,
+        "palette_compliance": 1.0,
+        "component_sizes": [
+          4
+        ],
+        "reference_delta_e": 0.0
+      },
+      "visual_verdict": {
+        "id": "beard_short_south_idle_continuation_01",
+        "status": "ACCEPTED",
+        "score": 80,
+        "reasoning": "Compact chin patches read as short facial hair after reserved-channel tint; inherited face marks, head silhouette and original body remain fixed.",
+        "mechanical_status": "MECHANICAL_PASS_PENDING_VISUAL",
+        "review_image": "/Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/mechanical_pass_review.png"
+      }
+    },
+    {
+      "name": "beard/short/child/south/sleep",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/beard_short_south_sleep_continuation_01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/child_south_sleep.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png",
+      "box": [
+        32,
+        16
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "kind": "layer",
+      "family": "beard",
+      "min_component_pixels": 2,
+      "status": "ACCEPTED",
+      "attempt": "beard_short_south_sleep_continuation_01",
+      "report": "/Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/beard_short_south_sleep_continuation_01.report.json",
+      "check": {
+        "name": "beard_short_south_sleep_continuation_01",
+        "passed": true,
+        "errors": [],
+        "visible_pixels": 6,
+        "palette_compliance": 1.0,
+        "component_sizes": [
+          6
+        ],
+        "reference_delta_e": 0.0
+      },
+      "visual_verdict": {
+        "id": "beard_short_south_sleep_continuation_01",
+        "status": "ACCEPTED",
+        "score": 80,
+        "reasoning": "Small connected beard patch stays attached to the underside of the horizontal head; readable in tinted sleeping profile with preserved body and empty bottom padding.",
+        "mechanical_status": "MECHANICAL_PASS_PENDING_VISUAL",
+        "review_image": "/Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/mechanical_pass_review.png"
+      }
+    },
+    {
+      "name": "beard/long/elder/east/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_idle_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "beard",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "2054d9e49e61e60f08ed13a13ad90ddb394584233e93b09bcd6b26b5ce8aa2d2",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_idle_continuation01.report.json",
+      "visual_reason": "Pale narrow beard descends beneath east-facing chin, dark exterior edge; body unchanged."
+    },
+    {
+      "name": "hair/long_tied/elder/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/long_tied_south_idle_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "bae6459709e4e6c4e01f10d4fb9f28e389e9bdf40edacb433ffbd879535bd107",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/long_tied_south_idle_continuation01.report.json",
+      "visual_reason": "Hair follows scalp and hangs at left side as short tied tail; body registration intact."
+    },
+    {
+      "name": "hair/bun/elder/south/idle",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/bun_south_idle_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "014cb820d301b78aabc56a02e2718bf5ee9952deb67932ead453779f73292b84",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/bun_south_idle_continuation01.report.json",
+      "visual_reason": "Distinct raised rounded tuft attached above scalp; body remains unchanged."
+    },
+    {
+      "name": "hair/braided/elder/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/braided_south_walk_a_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_walk_a.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "95b762ea272c15deec935b39b44d8186796c8da779d67b6bc2b735bdcf1eba3a",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/braided_south_walk_a_continuation01.report.json",
+      "visual_reason": "Three-level alternating pale/dark band hangs from left scalp as a short braid; no unrelated edits."
+    },
+    {
+      "name": "hair/bun/elder/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/bun_south_walk_a_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_walk_a.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "6372912b5019ae9c309bce10901dbeccaedadd4481cd7904cb4393b147a5aa9b",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/bun_south_walk_a_continuation01.report.json",
+      "visual_reason": "Raised compact scalp knot changes top silhouette; no body movement."
+    },
+    {
+      "name": "hair/shaved_sides/elder/south/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/shaved_sides_south_walk_a_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_walk_a.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "7deabef1ff83a0bf91737dbf207c2f3910d913e7512ba0237d23cc13d8bc1868",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/shaved_sides_south_walk_a_continuation01.report.json",
+      "visual_reason": "Central compact hair patch leaves grey temples bare, consistent shaved-side placement."
+    },
+    {
+      "name": "hair/shaved_sides/elder/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/shaved_sides_east_walk_a_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_a.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "6a7fc788b36935f0a54b7cf57654d1845ccab087a6a100f33f3cde709c9e10ac",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/shaved_sides_east_walk_a_continuation01.report.json",
+      "visual_reason": "Narrow pale central scalp strip leaves grey side region exposed; readable shaved-side placement without body changes."
+    },
+    {
+      "name": "beard/long/elder/east/walk_a",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_walk_a_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_a.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "beard",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "fa03d4f9687f67c1c118ee943891d374876bc9549d347cc98604c93b22c26590",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_walk_a_continuation01.report.json",
+      "visual_reason": "Pale chin band extends downward into short hanging beard with dark outer edge."
+    },
+    {
+      "name": "hair/short/elder/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/short_east_walk_b_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_b.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "5c9742a021577555ae82bed4eb3c69a19ca9e71ce157625388e6690815e25aa3",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/short_east_walk_b_continuation01.report.json",
+      "visual_reason": "Compact pale scalp cap sits within original outline; distinct hair region."
+    },
+    {
+      "name": "hair/braided/elder/east/walk_b",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/braided_east_walk_b_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_b.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "21bf37d289c310815c27c849c64ba0c85be3d246309e25d6e134b26903f7cd9d",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/braided_east_walk_b_continuation01.report.json",
+      "visual_reason": "Short stepped tail hangs behind scalp, with segmented pale marks and dark exterior."
+    },
+    {
+      "name": "hair/short/elder/east/work",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/short_east_work_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_work.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "hair",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "af5aa00ed94f417e3759a15ebe10281517505fd2db21bd890db5f802f7981b31",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/short_east_work_continuation01.report.json",
+      "visual_reason": "Compact pale band occupies top scalp inside original silhouette; no unrelated body changes."
+    },
+    {
+      "name": "beard/short/elder/east/work",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_short_east_work_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_work.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "beard",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "d0df8fd61b9c2c1651228b25310a8b14ce0da7095b9511e0903bc992e16515db",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_short_east_work_continuation01.report.json",
+      "visual_reason": "Compact pale mark on underside of chin with dark edge reads as short chin beard, no torso or arm changes."
+    },
+    {
+      "name": "beard/long/elder/east/work",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_work_continuation01_layer.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_work.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "beard",
+      "status": "ACCEPTED",
+      "min_component_pixels": 2,
+      "sha256": "65b0bafa34c3cefa80d77b857166c1aaa782420efff92fd55e00a9a74941ba55",
+      "provenance": "/Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_work_continuation01.report.json",
+      "visual_reason": "Long tapered pale beard descends from chin beside raised arm; attached and outlined, body preservation gates pass."
+    },
+    {
+      "name": "tool/hoe/elder/south/idle",
+      "candidate": "hoe_elder_south_idle_continuation_01",
+      "body": "elder",
+      "style": "hoe",
+      "direction": "south",
+      "pose": "idle",
+      "frame": "south_idle",
+      "status": "ACCEPTED",
+      "accepted": true,
+      "raw": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/raw/hoe_elder_south_idle_continuation_01.png",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_south_idle_continuation_01_layer.png",
+      "layer": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_south_idle_continuation_01_layer.png",
+      "processed": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_south_idle_continuation_01_processed.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_south_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_idle_05_strict_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "tool",
+      "min_component_pixels": 2,
+      "diagnostics": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_south_idle_continuation_01.json",
+      "prompt": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/prompts/hoe_elder_south_idle_continuation_01.json",
+      "timing": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/timing/hoe_elder_south_idle_continuation_01.json",
+      "visual_verdict": "Viewed composite and layer: long straight handle beside body and perpendicular gray hoe blade at ground end; original hand and body preserved. Readable L-shaped agricultural tool, muted stone interior."
+    },
+    {
+      "name": "tool/hoe/elder/east/idle",
+      "candidate": "hoe_elder_east_idle_continuation_01",
+      "body": "elder",
+      "style": "hoe",
+      "direction": "east",
+      "pose": "idle",
+      "frame": "east_idle",
+      "status": "ACCEPTED",
+      "accepted": true,
+      "raw": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/raw/hoe_elder_east_idle_continuation_01.png",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_east_idle_continuation_01_layer.png",
+      "layer": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_east_idle_continuation_01_layer.png",
+      "processed": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_east_idle_continuation_01_processed.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_idle.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_idle_05_strict_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "tool",
+      "min_component_pixels": 2,
+      "diagnostics": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_east_idle_continuation_01.json",
+      "prompt": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/prompts/hoe_elder_east_idle_continuation_01.json",
+      "timing": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/timing/hoe_elder_east_idle_continuation_01.json",
+      "visual_verdict": "Viewed composite and layer: warm brown diagonal handle connects original hand to perpendicular gray stone hoe blade, clearly readable at native scale."
+    },
+    {
+      "name": "tool/pick/elder/east/walk_a",
+      "candidate": "pick_elder_east_walk_a_continuation_01",
+      "body": "elder",
+      "style": "pick",
+      "direction": "east",
+      "pose": "walk_a",
+      "frame": "east_walk_a",
+      "status": "ACCEPTED",
+      "accepted": true,
+      "raw": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/raw/pick_elder_east_walk_a_continuation_01.png",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_walk_a_continuation_01_layer.png",
+      "layer": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_walk_a_continuation_01_layer.png",
+      "processed": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_walk_a_continuation_01_processed.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_a.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_idle_05_strict_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "tool",
+      "min_component_pixels": 2,
+      "diagnostics": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_walk_a_continuation_01.json",
+      "prompt": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/prompts/pick_elder_east_walk_a_continuation_01.json",
+      "timing": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/timing/pick_elder_east_walk_a_continuation_01.json",
+      "visual_verdict": "Viewed composite and layer: diagonal shaft meets the original hand and supports a curved pointed gray pick head. Coarse native detail but recognizable equipment silhouette."
+    },
+    {
+      "name": "tool/pick/elder/east/work",
+      "candidate": "pick_elder_east_work_continuation_01",
+      "body": "elder",
+      "style": "pick",
+      "direction": "east",
+      "pose": "work",
+      "frame": "east_work",
+      "status": "ACCEPTED",
+      "accepted": true,
+      "raw": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/raw/pick_elder_east_work_continuation_01.png",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_work_continuation_01_layer.png",
+      "layer": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_work_continuation_01_layer.png",
+      "processed": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_work_continuation_01_processed.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_work.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_idle_05_strict_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "tool",
+      "min_component_pixels": 2,
+      "diagnostics": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_work_continuation_01.json",
+      "prompt": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/prompts/pick_elder_east_work_continuation_01.json",
+      "timing": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/timing/pick_elder_east_work_continuation_01.json",
+      "visual_verdict": "Viewed composite and layer: raised shaft meets original extended hand and curved pointed head retains visible gray stone interior. Recognizable working pick, coarse native detail."
+    },
+    {
+      "name": "tool/basket/elder/east/walk_b",
+      "candidate": "basket_elder_east_walk_b_continuation_01",
+      "body": "elder",
+      "style": "basket",
+      "direction": "east",
+      "pose": "walk_b",
+      "frame": "east_walk_b",
+      "status": "ACCEPTED",
+      "accepted": true,
+      "raw": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/raw/basket_elder_east_walk_b_continuation_01.png",
+      "image": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/basket_elder_east_walk_b_continuation_01_layer.png",
+      "layer": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/basket_elder_east_walk_b_continuation_01_layer.png",
+      "processed": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/basket_elder_east_walk_b_continuation_01_processed.png",
+      "outline_context": "/Users/rexxa/work/arttrial-data/people/body_registry/body/elder_east_walk_b.png",
+      "reference": "/Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/axe_south_idle_05_strict_layer.png",
+      "box": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        32
+      ],
+      "kind": "layer",
+      "family": "tool",
+      "min_component_pixels": 2,
+      "diagnostics": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/basket_elder_east_walk_b_continuation_01.json",
+      "prompt": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/prompts/basket_elder_east_walk_b_continuation_01.json",
+      "timing": "/Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/timing/basket_elder_east_walk_b_continuation_01.json",
+      "visual_verdict": "Viewed composite and layer: readable golden basket cup with dark rim and arched handle at original grip."
     }
   ]
 }

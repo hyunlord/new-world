@@ -130,3 +130,24 @@ Evidence: `art/pipeline/test_compose.py`; external `preflight/tint-toggle-before
 - Choice: at final integration, normalize hair, beard, tool and body measurement families to one declared canonical image each: short/adult_m/south/idle; short/adult_f/south/walk_a beard; axe/adult_m/south/idle; body/adult_m/south/idle. Keep original producer references in external `people/canonical_reference_mapping.json`. Top already shares one hide-wrap reference.
 - Reason: measure every submitted member against a stable family colour reference without changing pixels, source acceptance or outline context. Shadows retain identity references because they are deterministic derivatives.
 - Evidence/limit: this is post-production measurement normalization, not proof that the canonical image was attached to every earlier prompt. Person edits chiefly attached their exact mannequin; the full cross-family prompt-reference discipline is PARTIAL. Historical producer scores remain available and are not rewritten as earlier decisions.
+
+## D22 — Continue missing coverage without rerunning frozen evaluations
+
+- Context: the published caf25579 checkpoint contains incomplete mandatory wardrobe keys and three incomplete board requests. Publication did not complete the original goal.
+- Choice: preserve every accepted source, the 24 requested attributes, the random six samples, both scene rounds and their scores. Run bounded missing-key batches: six board-hair candidates, 49 child hair/beard candidates, 55 elder hair/beard candidates and 32 elder tool candidates. Each lane registers its exact original body references and regions before generation. No accepted key is replaced; no body repair or relaxed extraction gate is allowed.
+- Reason: additional genuinely accepted keys can improve coverage without resampling a failed test or disguising earlier failures. The original 14-hour deadline remains unchanged.
+- Evidence: external `continuation_accounting/continuation_plan.json`, per-lane preregistrations and immutable historical ledgers/artifact snapshots under `continuation_accounting/baseline/`. The board-hair batch produced one accepted short-hair key from six calls; long-tied and braided remain missing. Batch and cumulative cost records are kept separately.
+
+## D23 — Rebuild from the immutable environment baseline
+
+- Context: after publication the repository registry contains both the original person assets and 16 versioned scene overrides. Reusing it as the environment input would carry old integrated entries into a subsequent rebuild.
+- Choice: reconstruct the external integrator's starting point from the exact Part1 registry at eaf9442d, resolving only its palette path after relocation. Add current accepted people registries and then the same 16 scene overrides in their existing separate stage.
+- Reason: the integration base must be stable and independent of its previous output. No original asset row, image or acceptance decision changes.
+- Evidence: external `preflight/environment_registry_p1.json`, `environment_registry_resolved.json` and `people/integrate_registry.py`; the unchanged pre-continuation baseline rebuild passed with 367 assets. Subsequent integration must verify all prior source pixels and frozen scene/sample hashes.
+
+## D24 — Bound the spear recovery diagnostic
+
+- Context: existing spear candidates failed body preservation, and later spear generation calls returned explicit moderation errors.
+- Choice: stop further spear generation. Test only existing raw candidates with a preregistered global isotropic scale and translation grid; do not repair local pixels, rename the requested object or substitute another provider.
+- Reason: whole-image registration can test a processing explanation while retaining the same body-preservation gate and original generated pixels.
+- Evidence: external `people/spear_scale_diagnostic/REPORT.md` and `results.json`: 378 transforms, zero passes, 1–30 erased body pixels. The best candidate also failed direct spear readability. This bounded negative result does not prove every possible global transform impossible; the required spear remains absent.

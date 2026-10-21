@@ -1,20 +1,17 @@
 {
-  "snapshot_utc": "2026-10-21T14:32:14.602318+00:00",
-  "registry_sha256": "56c5a7033eeda8643c85d75b52f5da7d0bce76af6092a2f5ae0a3540266dbee2",
-  "interpretation": "D14 coverage model, not a verbatim numerical requirement in the user brief. Full 17 variants x 4 bodies x 9 poses. Revision1 scene-only assets excluded.",
-  "required_layers": 612,
-  "accepted_layers": 235,
+  "snapshot_utc": "2026-10-21T15:06:04.078955+00:00",
+  "interpretation": "D14 coverage model, not a verbatim numerical requirement in the user brief:17 variants x4 bodies x9 poses; revision1 scene-only keys excluded.",
   "coverage_gate": false,
   "accepted_by_family": {
     "hair": {
       "required": 180,
-      "accepted": 43,
-      "missing": 137
+      "accepted": 53,
+      "missing": 127
     },
     "beard": {
       "required": 72,
-      "accepted": 11,
-      "missing": 61
+      "accepted": 17,
+      "missing": 55
     },
     "top": {
       "required": 144,
@@ -23,70 +20,12 @@
     },
     "tool": {
       "required": 216,
-      "accepted": 37,
-      "missing": 179
+      "accepted": 42,
+      "missing": 174
     }
   },
-  "all_registry_families": {
-    "hut": 1,
-    "lean_to": 1,
-    "tree_oak_s": 1,
-    "tree_oak_l": 1,
-    "tree_birch_s": 1,
-    "tree_birch_l": 1,
-    "tree_pine_s": 1,
-    "tree_pine_l": 1,
-    "log_pile_1": 1,
-    "log_pile_2": 1,
-    "log_pile_3": 1,
-    "stump": 1,
-    "deadwood": 1,
-    "hearth_0": 1,
-    "hearth_1": 1,
-    "berry_bush_full": 1,
-    "berry_bush_bare": 1,
-    "boulder": 1,
-    "stockpile_floor_corner": 1,
-    "stockpile_floor_edge": 1,
-    "stockpile_floor_interior": 1,
-    "ground_dirt_0": 1,
-    "ground_dirt_1": 1,
-    "ground_dirt_2": 1,
-    "ground_forest_floor_0": 1,
-    "ground_forest_floor_1": 1,
-    "ground_forest_floor_2": 1,
-    "water_shallow_0": 1,
-    "water_shallow_1": 1,
-    "hill_0": 1,
-    "hill_1": 1,
-    "ground_grass_0": 1,
-    "ground_grass_1": 1,
-    "ground_grass_2": 1,
-    "ground_grass_3": 1,
-    "ground_dark_grass_0": 1,
-    "ground_dark_grass_1": 1,
-    "water_deep_0": 1,
-    "water_deep_1": 1,
-    "mountain_0": 1,
-    "mountain_1": 1,
-    "bank_n": 1,
-    "bank_w": 1,
-    "bank_s": 1,
-    "bank_e": 1,
-    "bank_in_nw": 1,
-    "bank_in_sw": 1,
-    "bank_in_se": 1,
-    "bank_in_ne": 1,
-    "hut_ghost": 1,
-    "canopy_shadow": 1,
-    "body": 36,
-    "shadow": 36,
-    "top": 144,
-    "carry": 9,
-    "hair": 43,
-    "beard": 11,
-    "tool": 37
-  },
+  "required_layers": 612,
+  "accepted_layers": 256,
   "missing_layers": [
     "beard/long/adult_f/east/idle",
     "beard/long/adult_f/east/walk_a",
@@ -113,10 +52,7 @@
     "beard/long/child/south/walk_a",
     "beard/long/child/south/walk_b",
     "beard/long/child/south/work",
-    "beard/long/elder/east/idle",
-    "beard/long/elder/east/walk_a",
     "beard/long/elder/east/walk_b",
-    "beard/long/elder/east/work",
     "beard/long/elder/south/idle",
     "beard/long/elder/south/sleep",
     "beard/long/elder/south/walk_a",
@@ -138,15 +74,12 @@
     "beard/short/adult_m/south/work",
     "beard/short/child/east/idle",
     "beard/short/child/east/walk_b",
-    "beard/short/child/south/idle",
-    "beard/short/child/south/sleep",
     "beard/short/child/south/walk_a",
     "beard/short/child/south/walk_b",
     "beard/short/child/south/work",
     "beard/short/elder/east/idle",
     "beard/short/elder/east/walk_a",
     "beard/short/elder/east/walk_b",
-    "beard/short/elder/east/work",
     "beard/short/elder/south/sleep",
     "beard/short/elder/south/walk_b",
     "hair/braided/adult_f/east/idle",
@@ -176,11 +109,9 @@
     "hair/braided/child/south/work",
     "hair/braided/elder/east/idle",
     "hair/braided/elder/east/walk_a",
-    "hair/braided/elder/east/walk_b",
     "hair/braided/elder/east/work",
     "hair/braided/elder/south/idle",
     "hair/braided/elder/south/sleep",
-    "hair/braided/elder/south/walk_a",
     "hair/braided/elder/south/walk_b",
     "hair/braided/elder/south/work",
     "hair/bun/adult_f/east/idle",
@@ -207,9 +138,7 @@
     "hair/bun/elder/east/walk_a",
     "hair/bun/elder/east/walk_b",
     "hair/bun/elder/east/work",
-    "hair/bun/elder/south/idle",
     "hair/bun/elder/south/sleep",
-    "hair/bun/elder/south/walk_a",
     "hair/bun/elder/south/walk_b",
     "hair/long_tied/adult_f/east/idle",
     "hair/long_tied/adult_f/east/walk_a",
@@ -237,7 +166,6 @@
     "hair/long_tied/elder/east/walk_a",
     "hair/long_tied/elder/east/walk_b",
     "hair/long_tied/elder/east/work",
-    "hair/long_tied/elder/south/idle",
     "hair/long_tied/elder/south/sleep",
     "hair/long_tied/elder/south/walk_a",
     "hair/long_tied/elder/south/walk_b",
@@ -267,23 +195,18 @@
     "hair/shaved_sides/child/south/walk_b",
     "hair/shaved_sides/child/south/work",
     "hair/shaved_sides/elder/east/idle",
-    "hair/shaved_sides/elder/east/walk_a",
     "hair/shaved_sides/elder/east/walk_b",
     "hair/shaved_sides/elder/east/work",
     "hair/shaved_sides/elder/south/idle",
     "hair/shaved_sides/elder/south/sleep",
-    "hair/shaved_sides/elder/south/walk_a",
     "hair/shaved_sides/elder/south/walk_b",
     "hair/shaved_sides/elder/south/work",
     "hair/short/adult_f/east/walk_a",
     "hair/short/adult_f/east/walk_b",
     "hair/short/adult_f/south/sleep",
     "hair/short/adult_f/south/walk_b",
-    "hair/short/adult_m/east/idle",
     "hair/short/adult_m/east/work",
     "hair/short/elder/east/walk_a",
-    "hair/short/elder/east/walk_b",
-    "hair/short/elder/east/work",
     "hair/short/elder/south/walk_b",
     "hair/short/elder/south/work",
     "tool/axe/adult_f/east/idle",
@@ -335,7 +258,6 @@
     "tool/basket/child/south/work",
     "tool/basket/elder/east/idle",
     "tool/basket/elder/east/walk_a",
-    "tool/basket/elder/east/walk_b",
     "tool/basket/elder/east/work",
     "tool/basket/elder/south/walk_b",
     "tool/basket/elder/south/work",
@@ -390,11 +312,9 @@
     "tool/hoe/child/south/sleep",
     "tool/hoe/child/south/walk_b",
     "tool/hoe/child/south/work",
-    "tool/hoe/elder/east/idle",
     "tool/hoe/elder/east/walk_a",
     "tool/hoe/elder/east/walk_b",
     "tool/hoe/elder/east/work",
-    "tool/hoe/elder/south/idle",
     "tool/hoe/elder/south/walk_b",
     "tool/hoe/elder/south/work",
     "tool/pick/adult_f/east/idle",
@@ -421,9 +341,7 @@
     "tool/pick/child/south/walk_a",
     "tool/pick/child/south/walk_b",
     "tool/pick/child/south/work",
-    "tool/pick/elder/east/walk_a",
     "tool/pick/elder/east/walk_b",
-    "tool/pick/elder/east/work",
     "tool/pick/elder/south/idle",
     "tool/pick/elder/south/sleep",
     "tool/pick/elder/south/walk_a",
@@ -466,21 +384,134 @@
     "tool/spear/elder/south/walk_b",
     "tool/spear/elder/south/work"
   ],
-  "groups": {
-    "board": {
-      "required": 50,
-      "accepted": 46,
+  "revision1_excluded": true,
+  "board": [
+    {
+      "label_number": 1,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 2,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 3,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 4,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 5,
+      "complete": false,
       "missing": [
-        "hair/braided/adult_m/east/idle",
         "hair/long_tied/adult_m/east/idle",
-        "hair/short/adult_m/east/idle",
         "tool/spear/adult_m/east/idle"
       ]
     },
-    "scene": {
-      "required": 26,
-      "accepted": 26,
+    {
+      "label_number": 6,
+      "complete": false,
+      "missing": [
+        "hair/braided/adult_m/east/idle"
+      ]
+    },
+    {
+      "label_number": 7,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 8,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 9,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 10,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 11,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 12,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 13,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 14,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 15,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 16,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 17,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 18,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 19,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 20,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 21,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 22,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 23,
+      "complete": true,
+      "missing": []
+    },
+    {
+      "label_number": 24,
+      "complete": true,
       "missing": []
     }
-  }
+  ],
+  "complete_board_inputs": 22,
+  "registry_sha256": "07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905"
 }

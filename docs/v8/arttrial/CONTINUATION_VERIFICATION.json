@@ -1,0 +1,56 @@
+{
+  "baseline_registry": "/Users/rexxa/work/arttrial-data/continuation_accounting/baseline/docs/v8/arttrial/ASSET_REGISTRY.json",
+  "baseline_sha256": "2c42e60c90b8329845f51ee314eff12166a01aef933b407ab08780f35cf42628",
+  "registry_sha256": "07cf224a469f0a43c6c5029b890fd03013de6ff88adfe9be355252ebd337e905",
+  "baseline_count": 383,
+  "added_count": 21,
+  "submitted_count": 404,
+  "final_lanes_complete": true,
+  "completion_evidence": "Explicit operator attestation after all producers report completion; manifest existence alone is not completion.",
+  "lanes": [
+    {
+      "lane": "hair_board_continuation",
+      "manifest_present": true,
+      "sha256": "19862dfb522e28097a00a5c0d5b838267fb055b50d2bcb5716ab569627283a98",
+      "accepted_count": 1,
+      "complete_attested": true
+    },
+    {
+      "lane": "hair_child_continuation",
+      "manifest_present": true,
+      "sha256": "6098a237427226702b3cdc716dc956d2096a9fe5ca4d74406c739e739023c742",
+      "accepted_count": 2,
+      "complete_attested": true
+    },
+    {
+      "lane": "hair_elder_continuation",
+      "manifest_present": true,
+      "sha256": "8232b05153730a542e6d6090e2db9705798beab453f1f0471b68c20a555f1e2e",
+      "accepted_count": 13,
+      "complete_attested": true
+    },
+    {
+      "lane": "tools_elder_continuation",
+      "manifest_present": true,
+      "sha256": "360598e30867da971ef6df3fa7082b629701b8bf4c14a7d82415583c25eea3ac",
+      "accepted_count": 5,
+      "complete_attested": true
+    }
+  ],
+  "preservation": {
+    "source_hashes_preserved": 383,
+    "scene_hashes_preserved": 12,
+    "sample_hashes_and_recompositions_preserved": 6,
+    "attributes_sha256": "d2153a372f56e9859211be52c7fd39b2f4a4b330519c32bffaabb5613436dc9c"
+  },
+  "checks": {
+    "passed": true,
+    "asset_count": 404,
+    "source_png_bytes": 84606,
+    "sheet_png_bytes": 41745,
+    "per_file_limit_bytes": 1500000,
+    "oversized_sources": [],
+    "atlas_written": true
+  },
+  "reference_normalization": "D18 bottom-center anchors and D21 existing canonical family references; producer metadata retained; no historical prompt-reference claim."
+}

@@ -1,7 +1,7 @@
 # ART-TRIAL mechanical checks
 
 Evidence mode: FINAL (all submitted references measured).
-Scope: 383 submitted registry assets only; this is not a complete-set claim.
+Scope: 404 submitted registry assets only; this is not a complete-set claim.
 PASS denotes the checks below, not visual acceptance, semantic correctness, or integration.
 
 | Asset | Family | Result | Visible px | Palette | Components | Reference ΔE | P90 flag | Errors | Source |
@@ -15,13 +15,19 @@ PASS denotes the checks below, not visual acceptance, semantic correctness, or i
 | bank_s | banks | PASS | 1024 | 100.00% | (1024,) | 1.858 | within P90 | none | /Users/rexxa/work/arttrial-data/banks/bank_s.png |
 | bank_w | banks | PASS | 1024 | 100.00% | (1024,) | 1.858 | within P90 | none | /Users/rexxa/work/arttrial-data/banks/bank_w.png |
 | beard/long/child/east/walk_a | beard | PASS | 4 | 100.00% | (4,) | 15.537 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/beard_long_east_walk_a_01_layer.png |
-| beard/long/child/east/walk_b | beard | PASS | 5 | 100.00% | (5,) | 18.193 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/beard_long_east_walk_b_01_layer.png |
+| beard/long/child/east/walk_b | beard | PASS | 5 | 100.00% | (5,) | 18.193 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/beard_long_east_walk_b_01_layer.png |
+| beard/long/elder/east/idle | beard | PASS | 7 | 100.00% | (7,) | 26.018 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_idle_continuation01_layer.png |
+| beard/long/elder/east/walk_a | beard | PASS | 9 | 100.00% | (9,) | 16.534 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_walk_a_continuation01_layer.png |
+| beard/long/elder/east/work | beard | PASS | 16 | 100.00% | (16,) | 14.459 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_long_east_work_continuation01_layer.png |
 | beard/short/adult_f/east/walk_a | beard | PASS | 2 | 100.00% | (2,) | 8.234 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_east_walk_a_layer.png |
 | beard/short/adult_f/east/work | beard | PASS | 2 | 100.00% | (2,) | 8.234 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_east_work_layer.png |
 | beard/short/adult_f/south/walk_a | beard | PASS | 5 | 100.00% | (5,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_walk_a_layer.png |
 | beard/short/adult_f/south/work | beard | PASS | 6 | 100.00% | (6,) | 2.745 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/beard_short_south_work_layer.png |
 | beard/short/child/east/walk_a | beard | PASS | 2 | 100.00% | (2,) | 2.059 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/beard_short_east_walk_a_01_layer.png |
 | beard/short/child/east/work | beard | PASS | 2 | 100.00% | (2,) | 8.234 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/beard_short_east_work_01_layer.png |
+| beard/short/child/south/idle | beard | PASS | 4 | 100.00% | (4,) | 8.234 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/beard_short_south_idle_continuation_01_layer.png |
+| beard/short/child/south/sleep | beard | PASS | 6 | 100.00% | (6,) | 16.534 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child_continuation/beard_short_south_sleep_continuation_01_layer.png |
+| beard/short/elder/east/work | beard | PASS | 2 | 100.00% | (2,) | 20.683 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/beard_short_east_work_continuation01_layer.png |
 | beard/short/elder/south/idle | beard | PASS | 11 | 100.00% | (11,) | 5.632 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/beard_short_south_idle_01_layer.png |
 | beard/short/elder/south/walk_a | beard | PASS | 5 | 100.00% | (5,) | 13.214 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/beard_short_south_walk_a_01_layer.png |
 | beard/short/elder/south/work | beard | PASS | 7 | 100.00% | (7,) | 1.764 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/beard_short_south_work_01_layer.png |
@@ -89,6 +95,8 @@ PASS denotes the checks below, not visual acceptance, semantic correctness, or i
 | ground_grass_3 | ground | PASS | 1024 | 100.00% | (1024,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/ground/processed/ground_grass_candidate_01_tile_3.png |
 | hair/braided/adult_m/south/idle | hair | PASS | 6 | 100.00% | (5, 1) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/braided_south_idle_layer.png |
 | hair/braided/adult_m/south/walk_b | hair | PASS | 5 | 100.00% | (4, 1) | 13.252 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/braided_south_walk_b_layer.png |
+| hair/braided/elder/east/walk_b | hair | PASS | 7 | 100.00% | (7,) | 24.253 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/braided_east_walk_b_continuation01_layer.png |
+| hair/braided/elder/south/walk_a | hair | PASS | 8 | 100.00% | (8,) | 27.441 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/braided_south_walk_a_continuation01_layer.png |
 | hair/bun/adult_f/east/walk_b | hair | PASS | 2 | 100.00% | (2,) | 66.262 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/bun_east_walk_b_layer.png |
 | hair/bun/adult_f/south/walk_a | hair | PASS | 4 | 100.00% | (4,) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/bun_south_walk_a_layer.png |
 | hair/bun/adult_m/east/idle | hair | PASS | 2 | 100.00% | (2,) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/bun_east_idle_layer.png |
@@ -96,20 +104,26 @@ PASS denotes the checks below, not visual acceptance, semantic correctness, or i
 | hair/bun/adult_m/south/idle | hair | PASS | 8 | 100.00% | (8,) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/bun_south_idle_layer.png |
 | hair/bun/adult_m/south/walk_a | hair | PASS | 4 | 100.00% | (4,) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/bun_south_walk_a_layer.png |
 | hair/bun/adult_m/south/walk_b | hair | PASS | 4 | 100.00% | (4,) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/bun_south_walk_b_layer.png |
-| hair/bun/elder/south/work | hair | PASS | 7 | 100.00% | (7,) | 19.520 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/bun_south_work_01_layer.png |
+| hair/bun/elder/south/idle | hair | PASS | 8 | 100.00% | (8,) | 20.707 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/bun_south_idle_continuation01_layer.png |
+| hair/bun/elder/south/walk_a | hair | PASS | 5 | 100.00% | (5,) | 20.702 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/bun_south_walk_a_continuation01_layer.png |
+| hair/bun/elder/south/work | hair | PASS | 7 | 100.00% | (7,) | 19.520 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/bun_south_work_01_layer.png |
 | hair/long_tied/adult_f/east/walk_b | hair | PASS | 6 | 100.00% | (4, 2) | 11.044 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/long_tied_east_walk_b_layer.png |
 | hair/long_tied/adult_f/south/walk_a | hair | PASS | 7 | 100.00% | (4, 3) | 9.466 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/long_tied_south_walk_a_layer.png |
 | hair/long_tied/adult_m/east/walk_a | hair | PASS | 12 | 100.00% | (12,) | 14.491 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/long_tied_east_walk_a_layer.png |
 | hair/long_tied/adult_m/east/walk_b | hair | PASS | 12 | 100.00% | (12,) | 16.566 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/long_tied_east_walk_b_layer.png |
 | hair/long_tied/adult_m/south/idle | hair | PASS | 16 | 100.00% | (16,) | 8.797 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/long_tied_south_idle_layer.png |
+| hair/long_tied/elder/south/idle | hair | PASS | 12 | 100.00% | (12,) | 22.087 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/long_tied_south_idle_continuation01_layer.png |
 | hair/shaved_sides/adult_m/south/idle | hair | PASS | 2 | 100.00% | (2,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/shaved_sides_south_idle_layer.png |
 | hair/shaved_sides/adult_m/south/walk_a | hair | PASS | 2 | 100.00% | (2,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/shaved_sides_south_walk_a_layer.png |
 | hair/shaved_sides/child/east/walk_a | hair | PASS | 4 | 100.00% | (4,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/shaved_sides_east_walk_a_01_layer.png |
+| hair/shaved_sides/elder/east/walk_a | hair | PASS | 6 | 100.00% | (6,) | 4.233 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/shaved_sides_east_walk_a_continuation01_layer.png |
+| hair/shaved_sides/elder/south/walk_a | hair | PASS | 4 | 100.00% | (4,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/shaved_sides_south_walk_a_continuation01_layer.png |
 | hair/short/adult_f/east/idle | hair | PASS | 3 | 100.00% | (3,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_east_idle_layer.png |
 | hair/short/adult_f/east/work | hair | PASS | 3 | 100.00% | (3,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_east_work_layer.png |
 | hair/short/adult_f/south/idle | hair | PASS | 3 | 100.00% | (3,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_south_idle_retry02_layer.png |
 | hair/short/adult_f/south/walk_a | hair | PASS | 3 | 100.00% | (3,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_south_walk_a_layer.png |
 | hair/short/adult_f/south/work | hair | PASS | 4 | 100.00% | (4,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_adult_f/short_south_work_layer.png |
+| hair/short/adult_m/east/idle | hair | PASS | 3 | 100.00% | (3,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_board_continuation/short_east_idle_cont01_layer.png |
 | hair/short/adult_m/east/walk_a | hair | PASS | 3 | 100.00% | (3,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/short_east_walk_a_layer.png |
 | hair/short/adult_m/east/walk_b | hair | PASS | 4 | 100.00% | (4,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single/short_east_walk_b_layer.png |
 | hair/short/adult_m/south/idle | hair | PASS | 4 | 100.00% | (4,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_single_01_layer.png |
@@ -127,6 +141,8 @@ PASS denotes the checks below, not visual acceptance, semantic correctness, or i
 | hair/short/child/south/walk_b | hair | PASS | 8 | 100.00% | (8,) | 1.029 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/short_south_walk_b_02_layer.png |
 | hair/short/child/south/work | hair | PASS | 6 | 100.00% | (6,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_child/short_south_work_01_layer.png |
 | hair/short/elder/east/idle | hair | PASS | 5 | 100.00% | (5,) | 0.823 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/short_east_idle_04_layer.png |
+| hair/short/elder/east/walk_b | hair | PASS | 6 | 100.00% | (6,) | 1.372 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/short_east_walk_b_continuation01_layer.png |
+| hair/short/elder/east/work | hair | PASS | 2 | 100.00% | (2,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder_continuation/short_east_work_continuation01_layer.png |
 | hair/short/elder/south/idle | hair | PASS | 4 | 100.00% | (4,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/short_south_idle_reused_layer.png |
 | hair/short/elder/south/sleep | hair | PASS | 2 | 100.00% | (2,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/short_south_sleep_01_layer.png |
 | hair/short/elder/south/walk_a | hair | PASS | 6 | 100.00% | (6,) | 1.372 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/hair_elder/short_south_walk_a_01_layer.png |
@@ -214,6 +230,7 @@ PASS denotes the checks below, not visual acceptance, semantic correctness, or i
 | tool/basket/child/east/walk_b | tool | PASS | 20 | 100.00% | (18, 2) | 9.132 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_east_walk_b_01.layer.png |
 | tool/basket/child/south/idle | tool | PASS | 22 | 100.00% | (22,) | 11.231 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_south_idle_01.layer.png |
 | tool/basket/child/south/walk_b | tool | PASS | 20 | 100.00% | (20,) | 10.249 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_child/basket_south_walk_b_01.layer.png |
+| tool/basket/elder/east/walk_b | tool | PASS | 42 | 100.00% | (42,) | 10.827 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/basket_elder_east_walk_b_continuation_01_layer.png |
 | tool/basket/elder/south/idle | tool | PASS | 34 | 100.00% | (34,) | 5.258 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/basket_elder_south_idle_01_layer.png |
 | tool/basket/elder/south/sleep | tool | PASS | 28 | 100.00% | (24, 4) | 13.731 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/basket_elder_south_sleep_01_layer.png |
 | tool/basket/elder/south/walk_a | tool | PASS | 37 | 100.00% | (37,) | 14.673 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/basket_elder_south_walk_a_01_layer.png |
@@ -229,12 +246,16 @@ PASS denotes the checks below, not visual acceptance, semantic correctness, or i
 | tool/hoe/adult_m/south/idle | tool | PASS | 38 | 100.00% | (38,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/hoe_south_idle_08_strict_layer.png |
 | tool/hoe/child/east/walk_a | tool | PASS | 32 | 100.00% | (27, 5) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_child/hoe_east_walk_a_01.layer.png |
 | tool/hoe/child/south/walk_a | tool | PASS | 36 | 100.00% | (29, 7) | 1.470 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_child/hoe_south_walk_a_01.layer.png |
-| tool/hoe/elder/south/sleep | tool | PASS | 6 | 100.00% | (3, 3) | 10.551 | ABOVE_P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hoe_elder_south_sleep_01_layer.png |
+| tool/hoe/elder/east/idle | tool | PASS | 51 | 100.00% | (51,) | 5.481 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_east_idle_continuation_01_layer.png |
+| tool/hoe/elder/south/idle | tool | PASS | 39 | 100.00% | (39,) | 0.904 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/hoe_elder_south_idle_continuation_01_layer.png |
+| tool/hoe/elder/south/sleep | tool | PASS | 6 | 100.00% | (3, 3) | 10.551 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hoe_elder_south_sleep_01_layer.png |
 | tool/hoe/elder/south/walk_a | tool | PASS | 42 | 100.00% | (42,) | 0.409 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/hoe_elder_south_walk_a_01_layer.png |
 | tool/pick/adult_f/east/walk_b | tool | PASS | 30 | 100.00% | (30,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/pick_east_walk_b_01_layer.png |
 | tool/pick/adult_f/south/walk_a | tool | PASS | 27 | 100.00% | (25, 2) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_adult_f/processed/pick_south_walk_a_01_layer.png |
 | tool/pick/adult_m/east/idle | tool | PASS | 52 | 100.00% | (52,) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_single/processed/pick_east_idle_08_strict_layer.png |
 | tool/pick/elder/east/idle | tool | PASS | 60 | 100.00% | (60,) | 2.203 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder/processed/pick_elder_east_idle_01_layer.png |
+| tool/pick/elder/east/walk_a | tool | PASS | 30 | 100.00% | (27, 3) | 0.000 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_walk_a_continuation_01_layer.png |
+| tool/pick/elder/east/work | tool | PASS | 16 | 100.00% | (13, 3) | 10.551 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tools_elder_continuation/processed/pick_elder_east_work_continuation_01_layer.png |
 | top/fur_cloak/adult_f/east/idle | top | PASS | 16 | 100.00% | (16,) | 0.746 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tops_single/processed/fur_cloak_adult_f_east_idle_01_layer.png |
 | top/fur_cloak/adult_f/east/walk_a | top | PASS | 27 | 100.00% | (27,) | 0.510 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tops_single/processed/fur_cloak_adult_f_east_walk_a_01_layer.png |
 | top/fur_cloak/adult_f/east/walk_b | top | PASS | 20 | 100.00% | (20,) | 0.746 | within P90 | none | /Users/rexxa/work/arttrial-data/people/layers/tops_single/processed/fur_cloak_adult_f_east_walk_b_01_layer.png |
