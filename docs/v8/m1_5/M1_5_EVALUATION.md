@@ -29,9 +29,9 @@ Scorer: `docs/v8/m1_5/m1_5_score.py` (`python3 docs/v8/m1_5/m1_5_score.py $DATA/
 | D4 | no hunger / thirst / cold death in 3 years without orders | ≥ 30 / 32 | **32 / 32** (0 starvation, 0 dehydration, 0 exposure) | **PASS** |
 | D5 | a child born in year 1 is an adult at 15 years and has no `Child` marker after | 32 / 32 where a birth exists | **2 / 2** seeds with a birth in year 1 (2 children, both came of age at exactly 15 years); wider check: the 65 children born in years 1–2 on all 32 seeds were all adults at year 17 (0 `Child` markers on anyone ≥ 15 years) | **PASS** |
 | J1 | jobs finished / taken ≥ 0.5 with the U-script, 10 days | ≥ 28 / 32 | **32 / 32**; 0.914–1.000 (999 / 1,037 = 0.963); 0 deaths with the script; before the D18 fix 0.941–1.000 (0.980) | **PASS** |
-| P1 | benchmark ledger line written; regression vs base ≤ +10 % on tick mean, p99, RSS/agent at N = 1,000 | pass | PENDING (benchmark section) | PENDING |
-| P2 | C3 ceilings at N = 1,000 and 2,000 | PASS/MISS | PENDING | PENDING |
-| S1 | save/load round trip identical, seeds 0–7 | 8 / 8 | PENDING (Part 3) | PENDING |
+| P1 | benchmark ledger line written; regression vs base ≤ +10 % on tick mean, p99, RSS/agent at N = 1,000 | pass | `docs/perf/PERF_LEDGER.md` (base and M1.5 blocks, one interleaved session, load 6–8): N = 1,000 mean 1,790.7 → 1,787.0 µs (×0.998), p99 3,852 → 3,848 (×0.999), RSS/agent 1,993 → 2,148 B (×1.078) | **PASS** |
+| P2 | C3 ceilings at N = 1,000 and 2,000 | PASS/MISS | N = 1,000 1.79 ms ≤ 5 PASS; N = 2,000 4.29 ms ≤ 10 PASS; 2,148 B/agent ≤ 4 KiB PASS; 82 B/tile ≤ 96 PASS | reported: 4 / 4 PASS |
+| S1 | save/load round trip identical, seeds 0–7 | 8 / 8 | **8 / 8** (`save_load.rs`: 7 checkpoints, byte-identical full saves; plus baseline, deaths and births, a pregnancy and a queued birth) | **PASS** (gate step 24 pending) |
 | A1 | renderer agreement | pass | `RENDERER_AGREEMENT PASS n=10 tick=900` (Part 4; the final gate re-runs it) | PASS (gate pending) |
 | U8 | baseline identity | pass | PASS at every Part that touched `rust/**` (`$DATA/identity/p1_try1`, `p1_final`, `p2`, `p4`) | PASS (gate pending) |
 
