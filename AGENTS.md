@@ -29,6 +29,7 @@ for every coding agent; `CLAUDE.md` imports it.
 - No `.unwrap()` in production Rust you touch; return `Result`/`Option` or use a safe default.
 - Every `src/**/*.rs` starts with a `//!` header (systems: priority, interval, reads, writes, events); every `.gd` starts with a comment block (purpose, bridge methods called).
 - A change that is meant to keep behaviour must pass `tools/v8/identity.sh` before it is called behaviour-preserving.
+- The simulation contract (C1 reproducible, C2 view-independent, C3 measured budget, C4 closed-form/integer/keyed, C5 structure) is [ADR 0016](docs/decisions/0016-simulation-contract.md); each clause names its gate step.
 
 ## Skills (read before working in the area)
 
