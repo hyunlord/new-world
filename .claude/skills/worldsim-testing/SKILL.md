@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 20-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 21-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -65,7 +65,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY).
 
 | # | step | checks |
 |---|---|---|
@@ -89,6 +89,7 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 18 | `colony_determinism` | colony probe, seeds 0..4, 10 days, `tools/v8/u_script.json`, `--check-determinism` |
 | 19 | `replay` | a scripted colony run's recorded command log replays to a byte-identical summary |
 | 20 | `uid_check` | `tools/v8/check_docs_helpers.py uid` (every Godot source has its committed `.uid`) |
+| 21 | `play_check` | `tools/v8/test_play.sh`: `tools/play.sh` exit codes (unknown version 3, no Godot 2, bad argument 4) and `--headless-check` of `main`, `m1`, `v7` (0 `SCRIPT ERROR` in 300 headless frames) |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.

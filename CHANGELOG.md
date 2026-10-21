@@ -5,6 +5,24 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## V8-PLAY — 2026-10-21
+
+Screenshots of the current game for the owner and a one-command way to play any version (`docs/v8/play/PLAY_GOAL.md`, report `docs/v8/play/PLAY_REPORT.md`). No simulation or game code changed.
+
+### Added
+- `tools/play.sh [version] [--seed N] [--speed 1-4] [--no-build] [--headless-check]`: resolves Godot, plays `main`/`wip`/`m1`/`v8-0`/`v7`/any ref from its own worktree under `/Users/rexxa/work/new-world-play/`, builds and imports only when stale, logs to `/Users/rexxa/work/play-data/logs/`.
+- `tools/play/WorldSim.command`, `tools/play/WorldSim-v7.command`: double-click launchers (Desktop symlinks).
+- `tools/v8/test_play.sh` and gate step 21 `play_check` (exit codes 3/2/4; headless check of main, m1, v7).
+- `tools/v8/capture.gd --m1-set` (the owner shot set P1–P9) and `tools/v8/contact_sheet.py` (+ `test_contact_sheet.py`).
+- `docs/images/m1_contact_sheet.png` and five M1 shots; `docs/v8/play/` (goal, decisions, screen report, contact-sheet manifest, report).
+- Skill lessons (`worldsim-godot`: chronicle `NOTABLE` gap, the editor binary loads the debug library, scan-then-reset captures; `worldsim-pitfalls`: bash 3.2 and Hangul after `$var`).
+
+### Changed
+- README "빌드와 실행": the desktop launcher first, then `tools/play.sh`, the manual commands last; a "지금 화면" line.
+- `tools/v8/check_docs.sh`: requires a `docs/images/*_contact_sheet.png` linked from README.
+- End-of-pass checklist (AGENTS.md, `worldsim-docs-upkeep`): item 7, the play check and the contact sheet.
+- `worldsim-godot` procedure 4 (capture and contact sheet) and new procedure 10 (play a version); the gate has 21 steps.
+
 ## M1 — 2026-10-20
 
 The first colony the player commands (`docs/v8/m1/M1_GOAL.md`, report `docs/v8/m1/M1_REPORT.md`). The game now runs the **colony** world (192 × 192, 10 founders); the frozen **baseline** world stays the V7 game and still passes identity (ADR 0014). Orders are recorded commands (ADR 0012); people carry them out as jobs that give way to every survival need (ADR 0013).

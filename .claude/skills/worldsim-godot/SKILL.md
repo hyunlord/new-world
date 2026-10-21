@@ -94,11 +94,13 @@ smoke are this repo's validators).
 4. Exit 0 = clean; 2 = parse error or promoted warning; 3 = GDScript calls a bridge method with no `#[func]` (checks `world_sim.X(` calls and the names passed to `SimReads.read/mutate`); 4 = environment.
 5. If a run was interrupted, check `git diff project.godot` — the trap restores it, a `kill -9` does not.
 
-### 4. Windowed capture
+### 4. Windowed capture (and the owner's contact sheet)
 1. Do procedure 1.
-2. `"$GODOT_BIN" --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/capture.gd -- --out <abs dir outside the repo> [--tick 1440]`
-3. It writes `near_t<tick>.png` (first village, zoom 4) and `far_t<tick>.png` (map centre, zoom 1). Look at both images; state the tick and that a frame is "observed at a fixed time".
-4. Never commit captures except the curated `docs/images/` set (`worldsim-docs-upkeep`).
+2. `"$GODOT_BIN" --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/capture.gd -- --out <abs dir outside the repo> [--tick 1440] [--zoom 2] [--panels] [--m1-set]`
+3. Plain run: `near_t<tick>.png` (the camp hearth at `--zoom`, default 2) and `far_t<tick>.png` (map centre, 1×); `--panels` adds inspector, "why?" and chronicle frames. Look at every image; state the tick and that a frame is "observed at a fixed time".
+4. `--m1-set` is the owner set (V8-PLAY): a pass without frames finds the work tick, then `reset_world(seed)` replays the same world and saves `m1_01…m1_09` plus `m1_set.json` (each shot's tick, the order results). To add a shot: add a `_save_m1("<name>.png", world)` call at the tick it needs inside `_m1_shots` (frame with `_near(camera, tile, zoom)`; panels through `OrderTool.click_world`, keys and mouse through `Input.parse_input_event` as in procedure 9) and a line to the manifest.
+5. Contact sheet: list the shots with a one-line Korean caption in a manifest (`docs/v8/play/contact_sheet_m1.json`), then `python3 tools/v8/contact_sheet.py --manifest <json> --shots <dir> --out docs/images/<pass>_contact_sheet.png` (960×540 per shot, two per row, ≤ 4 MB). Point README's "지금 화면" line at it; `check_docs.sh` requires the link.
+6. Never commit captures except the curated `docs/images/` set (`worldsim-docs-upkeep`).
 
 ### 5. Move or rename a script (with its `.uid`)
 1. `git mv scripts/ui/old.gd scripts/ui/new.gd`
@@ -135,6 +137,12 @@ smoke are this repo's validators).
 2. Load `res://scenes/main.tscn` with a real `WorldSimNode`; await `process_frame` or real signals (`Tween.finished`), never wall-clock timers.
 3. Print one completion sentinel line (`SMOKE_DONE …`) and `quit(0)`; on any failure `push_error(...)` and `quit(1)`.
 4. Run it bounded; treat a missing sentinel or any `SCRIPT ERROR` as a failure regardless of the exit code.
+
+### 10. Play a version (the owner's launcher)
+1. `tools/play.sh [main|wip|m1|v8-0|v7|<ref>]` — Godot from `GODOT_BIN`, `tools/v8/godot_bin.sh`, Spotlight or `/Applications`; a detached worktree per version under `/Users/rexxa/work/new-world-play/<name>` (never this checkout); build only when Rust is newer than the library `sim_bridge.gdextension`'s `macos.debug` names; import only when `.godot/` is missing (twice) or older than its stamp `.godot/play_import.stamp`; then a 1920×1080 window. Log: `/Users/rexxa/work/play-data/logs/<name>-<time>.log`.
+2. `--headless-check` replaces the window with 300 headless frames and fails on any `SCRIPT ERROR` (gate step 21 runs it for main, m1 and v7 through `tools/v8/test_play.sh`).
+3. `tools/play/WorldSim.command` (main) and `WorldSim-v7.command` (v7) are the double-click launchers; they follow a `~/Desktop` symlink back to the clone and keep Terminal open on a non-zero exit.
+4. `--seed`/`--speed` are passed only when the version's `scripts/` (outside `scripts/test/`) contain `"--seed"`/`"--speed"`; no version does today.
 
 ## Lessons
 
@@ -191,3 +199,6 @@ smoke are this repo's validators).
 | 2026-10-20 | The strict check failed three M1 scripts with `Identifier not found: Locale` although the game ran them fine | the strict check parses scripts without the project's autoloads, so the autoload name is not an identifier there | reach the autoload through the tree (`get_node("/root/Locale")`) as the other panels do, and use `preload("res://scripts/core/locale.gd")` for static helpers | `docs/v8/m1/M1_DECISIONS.md` D27; `scripts/world/colony/order_tool.gd` |
 | 2026-10-20 | The colony terrain showed no camp clearing on the first frame | the terrain layer drew in its first `_process`, before the first simulation tick; buildings (the hearth) are registered on tick 1, so the hearth read was empty | keep the layer pending and redraw until the snapshot it depends on is complete (`_pending = hearth.x < 0`) | `scripts/world/colony/terrain_layer.gd` |
 | 2026-10-20 | U7 FPS read 119.99 at 2× zoom and 119.94 at 1× | the window is capped at the display refresh (120 Hz); the editor-path run loads `rust/target/debug/libsim_bridge.dylib` | report a capped FPS as "≥ bar, headroom unmeasured"; for a release measurement copy the release library to the debug path (check the SHA, restore after) | `docs/v8/m1/M1_EVALUATION.md` U7 |
+| 2026-10-21 | The chronicle panel (C) never showed "오두막이 완성됨" although `get_chronicle_since` held the HutBuilt row (kind 22) | `chronicle_panel.gd` keeps only the kinds in its `NOTABLE` list, and M1 added kind 22 to `chronicle_text.gd` but not to `NOTABLE` | add every new chronicle kind to `NOTABLE` and look at the panel in a windowed run (not fixed yet: a game change was out of V8-PLAY's scope) | `docs/v8/play/SCREEN_REPORT.md` P4; `scripts/ui/panels/chronicle_panel.gd` |
+| 2026-10-21 | Running the game for play: which library does it load? | the Godot editor binary always has the debug feature, so a non-exported run loads `.gdextension`'s `macos.debug` path (`rust/target/debug/…`), never the release one | build the profile `macos.debug` names (`tools/play.sh` reads it); measure release only by copying it to the debug path | `tools/play.sh`; `sim_bridge.gdextension` |
+| 2026-10-21 | A capture planned for "work in progress at tick 900" showed 23:00 with nobody carrying | the colony clock starts at 08:00 (tick 360 = 14:00) and the hut was finished at tick 766 | find the tick with a frameless scan pass, then `reset_world(seed)` and shoot the same world (same hut tick both passes); caption shots with the real tick and clock | `docs/v8/play/PLAY_DECISIONS.md` D2; `tools/v8/capture.gd` |

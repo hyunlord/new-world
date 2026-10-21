@@ -28,7 +28,8 @@ sim-core  ←  sim-engine  ←  sim-systems  ←  sim-bridge  (GDExtension cdyli
 Other folders: `scenes/main.tscn` (the only scene), `scripts/` (GDScript,
 section 6), `assets/` (fonts, theme, atlas, terrain sheets), `shaders/`,
 `localization/` (section 7), `tools/v8/` (gate, identity, perf, smoke,
-capture, inventory, docs checks), `docs/` (this file and the owner docs).
+capture, contact sheet, inventory, docs checks), `tools/play.sh` and `tools/play/` (play any version
+in its own worktree; the owner's double-click launchers), `docs/` (this file and the owner docs).
 
 ## 2. Data flow
 

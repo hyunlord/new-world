@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
-# V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20). Twenty steps, each logged to <log_dir>/<step>.log
+# V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21). Twenty-one steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -27,6 +27,8 @@
 #   18 colony_determinism  colony probe, seeds 0..4, 10 days, U-script, --check-determinism
 #   19 replay            a scripted colony run's recorded log replays to a byte-identical summary
 #   20 uid_check         tools/v8/check_docs_helpers.py uid (committed Godot UIDs, M1 5.3)
+#   21 play_check        tools/v8/test_play.sh: tools/play.sh exit codes (unknown version 3, no Godot 2,
+#                        bad argument 4) and --headless-check main, m1, v7 (worktrees under PLAY_ROOT)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -80,6 +82,8 @@ step 18 colony_determinism bash -c 'cd rust && cargo build --release -p sim-test
 grep -q 'DETERMINISM PASS' "$LOG/colony_determinism.log" || { echo "   colony_determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
 step 19 replay bash -c 'p=rust/target/release/worldsim_probe; $p --scene colony --seeds 5..7 --days 3 --workers 2 --commands tools/v8/u_script.json --out "$0/replay/first" --commands-out "$0/replay/log" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands "$0/replay/log/colony_s5_commands.json" --out "$0/replay/s5" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands tools/v8/u_script.json --out "$0/replay/s5_script" && cmp "$0/replay/s5/summary.json" "$0/replay/s5_script/summary.json" && echo "replay: the recorded log reproduces the scripted run byte for byte"' "$LOG"
 step 20 uid_check bash -c 'out=$(python3 tools/v8/check_docs_helpers.py uid); [[ -z "$out" ]] || { echo "$out"; exit 1; }; echo "every Godot source has its committed .uid"'
+step 21 play_check bash tools/v8/test_play.sh
+grep -c '^PLAY_TEST_PASS' "$LOG/play_check.log" | awk '{print "   play_check passed", $1, "of 6"}' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

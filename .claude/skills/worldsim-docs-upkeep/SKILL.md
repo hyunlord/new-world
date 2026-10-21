@@ -17,6 +17,7 @@ agent-facing docs are English (`docs/ARCHITECTURE.md`, `docs/decisions/*`,
 - **Do** keep `docs/ARCHITECTURE.md`'s system table generated (`python3 tools/v8/system_table.py --write`). *Reason:* `check_docs.sh` fails when it drifts from the registration code.
 - **Do** cite a commit hash or a path for every HISTORY line and every skill lesson. *Reason:* an unsourced lesson cannot be checked or retired.
 - **Don't** commit evidence images, captures or probe output under `docs/` (only ≤ 12 curated images in `docs/images/`). *Reason:* V7's `docs/` grew to 1.5 GB of evidence; raw data lives outside the repo.
+- **Do** keep one current contact sheet of the game (`docs/images/<pass>_contact_sheet.png`) linked from README. *Reason:* the owner had no picture of the V8 game after M1 replaced the whole view (V8-PLAY).
 - **Don't** edit `docs/v8/V8_DIRECTION.md` or a pass's goal file after it is committed. *Reason:* they are the dated originals; `docs/VISION.md` is the living copy.
 - **Don't** rewrite an ADR to change a decision; add a new ADR that supersedes it. *Reason:* the record of why must survive.
 
@@ -30,7 +31,8 @@ agent-facing docs are English (`docs/ARCHITECTURE.md`, `docs/decisions/*`,
 4. **ADR** (`docs/decisions/NNNN-slug.md`): one file per design decision made in the pass.
 5. **ARCHITECTURE** (`docs/ARCHITECTURE.md`): regenerate the system table; update the crate/folder maps, the bridge API groups and the GDScript layout if structure changed. Every path you name must exist.
 6. **Skills** (`.claude/skills/*/SKILL.md`): add a lesson row when a problem needed more than one attempt, a better method was found, or Godot/gdext behaved unexpectedly. Same pass, not later.
-7. Run `bash tools/v8/check_docs.sh` — it must print `docs: PASS`.
+7. `tools/play.sh --headless-check main` passes, and `docs/images/m1_contact_sheet.png` is replaced by `<pass>_contact_sheet.png` when the view changed (keep ≤ 12 images; delete the previous pass's sheet). Make the sheet with `tools/v8/capture.gd` and `tools/v8/contact_sheet.py` (`worldsim-godot`, procedure 4) and point README's "지금 화면" line at it.
+8. Run `bash tools/v8/check_docs.sh` — it must print `docs: PASS` (it also requires a `docs/images/*_contact_sheet.png` that README links).
 
 ### Writing a HISTORY line (Korean)
 

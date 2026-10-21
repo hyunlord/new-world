@@ -47,14 +47,14 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 ## The gate
 
 ```bash
-bash tools/v8/gate.sh <log_dir>        # 20 steps; every step except perf must pass
+bash tools/v8/gate.sh <log_dir>        # 21 steps; every step except perf must pass
 ```
 
 Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
 (all targets), forbidden-math grep, GDScript strict check, headless smoke,
 identity, determinism, perf (report only), bridge API, docs check,
 inventory closure, Python unit tests, M1 tests, colony determinism,
-command replay, `.uid` check. Rebuild the bridge (`cargo build -p
+command replay, `.uid` check, play check (`tools/v8/test_play.sh`). Rebuild the bridge (`cargo build -p
 sim-bridge`) before any Godot run — `cargo test` does not refresh the library
 Godot loads.
 
@@ -66,7 +66,8 @@ Godot loads.
 4. An ADR in `docs/decisions/` for each design decision.
 5. `docs/ARCHITECTURE.md`: regenerate the system table (`python3 tools/v8/system_table.py --write`), update maps if structure changed.
 6. Skills: add a lesson when a problem needed more than one attempt, a better method was found, or Godot/gdext surprised you — in the same pass.
-7. `bash tools/v8/check_docs.sh` green.
+7. `tools/play.sh --headless-check main` passes; replace `docs/images/m1_contact_sheet.png` with `<pass>_contact_sheet.png` when the view changed (≤ 12 images; delete the previous sheet).
+8. `bash tools/v8/check_docs.sh` green.
 
 Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.
 
@@ -76,4 +77,4 @@ Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.
 - Agent-facing (English): `docs/ARCHITECTURE.md`, `docs/decisions/`, `CHANGELOG.md`, this file, `.claude/skills/`.
 - Pass goals and their records: `docs/<line>/` (V8-0: `docs/v8/`; M1: `docs/v8/m1/`).
 - Deleted material and where it lives: `docs/archive/INDEX.md`.
-- Tooling: `tools/v8/` (gate, identity, perf, smoke, capture, inventory, docs checks).
+- Tooling: `tools/v8/` (gate, identity, perf, smoke, capture, contact sheet, inventory, docs checks); `tools/play.sh` and `tools/play/*.command` run any version for playing.

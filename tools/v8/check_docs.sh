@@ -16,6 +16,8 @@
 #   7. no tracked file > 5 MB (except assets/fonts/galmuri/, D27); no binary under docs/ except ≤ 12 images in docs/images/
 #   8. Godot UIDs are committed (M1 5.3): every tracked .gd/.gdshader outside a .gdignore'd
 #      folder has its tracked .uid, every tracked .uid has its source, every .tscn header has a uid
+#   9. a contact sheet of the current game exists (V8-PLAY 3): docs/images/*_contact_sheet.png, and
+#      README.md links each one by its path
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -84,6 +86,15 @@ images=$(printf '%s\n' "$bins" | grep -c '^docs/images/' || true)
 
 uids=$(python3 tools/v8/check_docs_helpers.py uid)
 [[ -z "$uids" ]] && ok "every Godot source has its committed .uid" || fail "UID problems: $(echo "$uids" | head -5 | tr '\n' ' ')"
+
+sheets=$(ls docs/images/*_contact_sheet.png 2>/dev/null || true)
+if [[ -z "$sheets" ]]; then
+    fail "no docs/images/*_contact_sheet.png (the current game's contact sheet, V8-PLAY 3)"
+else
+    for sheet in $sheets; do
+        grep -qF "($sheet)" README.md && ok "README links $sheet" || fail "README.md does not link $sheet"
+    done
+fi
 
 if (( status == 0 )); then echo "docs: PASS"; else echo "docs: FAIL"; fi
 exit "$status"
