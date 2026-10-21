@@ -7,7 +7,7 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## M1.5 — 2026-10-22
 
-The colony's own calendar and demographics, and the simulation contract (ADR 0016) that every later pass is held to (`docs/v8/m1_5/M1_5_GOAL.md`). **The colony's behaviour changes** (calendar, ages, births); the `baseline` world is bit-identical (identity PASS). The colony fixtures are re-captured at each behaviour-changing commit (`/Users/rexxa/work/m1_5-data/{p1,p4,p6}/fixtures/`). Evaluation `docs/v8/m1_5/M1_5_EVALUATION.md`, report `docs/v8/m1_5/M1_5_REPORT.md`; benchmark ledger `docs/perf/PERF_LEDGER.md` (N = 1,000: 1.79 ms; ceilings 4/4 PASS).
+The colony's own calendar and demographics, and the simulation contract (ADR 0016) that every later pass is held to (`docs/v8/m1_5/M1_5_GOAL.md`). **The colony's behaviour changes** (calendar, ages, births); the `baseline` world is bit-identical (identity PASS). The colony fixtures are re-captured at each behaviour-changing commit (`/Users/rexxa/work/m1_5-data/{p1,p4,p6}/fixtures/`). Evaluation `docs/v8/m1_5/M1_5_EVALUATION.md`, report `docs/v8/m1_5/M1_5_REPORT.md`; benchmark ledger `docs/perf/PERF_LEDGER.md` (N = 1,000: 1.79 ms; ceilings 4/4 PASS). Gate 25/25 green at `cdd4a775` (`v8/main`).
 
 ### Added
 - ADR 0016 (the simulation contract C1–C5 and its gate steps), ADR 0017 (calendar and demographics); `AGENTS.md` points at ADR 0016.

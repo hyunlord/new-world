@@ -80,8 +80,8 @@
 | P1 | 장부 줄 작성, 기준 대비 N = 1,000에서 +10 % 이하 | `docs/perf/PERF_LEDGER.md`에 기준·M1.5 두 묶음; N = 1,000 틱 평균 1,790.7 → 1,787.0 µs (×0.998), p99 3,852 → 3,848 (×0.999), 사람당 RSS 1,993 → 2,148 B (×1.078) | **통과** |
 | P2 | C3 상한 (N = 1,000, 2,000) | N = 1,000 평균 1.79 ms ≤ 5 **PASS**; N = 2,000 4.29 ms ≤ 10 **PASS**; 사람당 2,148 B ≤ 4 KiB **PASS**; 칸당 82 B ≤ 96 **PASS** | 보고 (4/4 PASS) |
 | S1 | 저장/불러오기 왕복 동일, 시드 0–7 | **8/8** (`SAVE_ROUNDTRIP PASS`) | **통과** |
-| A1 | 렌더러 일치 | `RENDERER_AGREEMENT PASS n=10 tick=900` | **통과** (최종 게이트 PENDING) |
-| U8 | baseline identity | 모든 Part에서 PASS | **통과** (최종 게이트 PENDING) |
+| A1 | 렌더러 일치 | `RENDERER_AGREEMENT PASS n=10 tick=900` (최종 게이트 23단계) | **통과** |
+| U8 | baseline identity | 모든 Part와 최종 게이트 10단계에서 PASS (228,748값 차이 0, 연대기 64개, 원시 64개, 결정성) | **통과** |
 
 화면 확인 (10.3, 창 모드, `tools/v8/capture.gd --tick 1 --panels`와 `tools/v8/save_load_check.gd --shots`): `$DATA/shots/start/near_t1.png`·`inspect_t1.png` — 위 막대 `1년 차 · 봄 1일째 · 08:06 · 낮`, 창설자 정보 `어른 · 19세`; `$DATA/shots/saveload/save_toast.png` `저장함 · 20261010-700.wsave`, `load_toast.png` `불러옴 · 20261010-700.wsave` (`SAVE_LOAD_CHECK PASS tick=700 agents=10`).
 
@@ -126,7 +126,9 @@
 - `16287ab7 v8-m1.5(p5): evaluation on seeds 200-231 (D1-D5, J1 pass); review fixes: due-day conception, faster index search` — 14개: `CHANGELOG.md`, `docs/ARCHITECTURE.md`, `docs/v8/m1_5/M1_5_DECISIONS.md`, `docs/v8/m1_5/M1_5_EVALUATION.md` (새), `docs/v8/m1_5/m1_5_score.py` (새), `rust/crates/sim-core/src/spatial.rs`, `rust/crates/sim-engine/src/lib.rs`, `rust/crates/sim-systems/src/lib.rs`, `rust/crates/sim-systems/src/runtime/agent/fertility.rs`, `rust/crates/sim-systems/src/runtime/jobs/assign.rs`, `rust/crates/sim-systems/src/runtime/jobs/mod.rs`, `rust/crates/sim-systems/src/runtime/jobs/spatial_index.rs` (지움), `rust/crates/sim-test/src/probe/demography.rs`, `rust/crates/sim-test/tests/colony_demography.rs`
 - `945a1f72 v8-m1.5(p3): save and load (C1) — exact round trip, bridge save_world/load_world, F5/F9` — 48개: `CHANGELOG.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/v8/bridge_api_m1_5.txt` (새), `docs/v8/m1_5/M1_5_DECISIONS.md`, `localization/compiled/en.json`, `localization/compiled/ko.json`, `localization/en/ui.json`, `localization/key_registry.json`, `localization/ko/ui.json`, `rust/Cargo.toml`, `rust/crates/sim-bridge/src/ffi/mod.rs`, `rust/crates/sim-bridge/src/ffi/node.rs`, `rust/crates/sim-bridge/src/ffi/save.rs` (새), `rust/crates/sim-core/Cargo.toml`, `rust/crates/sim-core/src/causal/event.rs`, `rust/crates/sim-core/src/causal/ring_buffer.rs`, `rust/crates/sim-core/src/causal/storage.rs`, `rust/crates/sim-core/src/chronicle.rs`, `rust/crates/sim-core/src/colony/mod.rs`, `rust/crates/sim-core/src/components/relationship.rs`, `rust/crates/sim-core/src/components/settlement.rs`, `rust/crates/sim-core/src/influence/channel.rs`, `rust/crates/sim-core/src/influence/grid.rs`, `rust/crates/sim-core/src/lib.rs`, `rust/crates/sim-core/src/material/category.rs`, `rust/crates/sim-core/src/material/id.rs`, `rust/crates/sim-core/src/material/registry.rs`, `rust/crates/sim-core/src/save_serde.rs` (새), `rust/crates/sim-core/src/tile/grid.rs`, `rust/crates/sim-engine/src/lib.rs`, `rust/crates/sim-systems/Cargo.toml`, `rust/crates/sim-systems/src/lib.rs`, `rust/crates/sim-systems/src/runtime/agent/beds.rs`, `rust/crates/sim-systems/src/runtime/agent/movement.rs`, `rust/crates/sim-systems/src/runtime/influence/agent_sample.rs`, `rust/crates/sim-systems/src/runtime/influence/visualization.rs`, `rust/crates/sim-systems/src/runtime/settlement/fission.rs`, `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs`, `rust/crates/sim-systems/src/runtime/settlement/shelter_planning.rs`, `rust/crates/sim-systems/src/save/mod.rs` (새), `rust/crates/sim-systems/src/save/world.rs` (새), `rust/crates/sim-test/tests/save_load.rs` (새), `scripts/core/sim_reads.gd`, `scripts/ui/hud/order_bar.gd`, `tools/v8/gate.sh`, `tools/v8/save_load_check.gd` (새), `tools/v8/save_roundtrip.sh` (새)
 - `d5b5b34b v8-m1.5(p6): code-review fixes (held workers skip the decision, due-birth fallback, save test through births), gate steps 22-25, docs and skills` — 21개: `.claude/skills/worldsim-architecture/SKILL.md`, `.claude/skills/worldsim-pitfalls/SKILL.md`, `.claude/skills/worldsim-testing/SKILL.md`, `AGENTS.md`, `CHANGELOG.md`, `docs/ARCHITECTURE.md`, `docs/HISTORY.md`, `docs/ROADMAP.md`, `docs/v8/m1_5/M1_5_DECISIONS.md`, `docs/v8/m1_5/M1_5_EVALUATION.md`, `rust/crates/sim-core/src/spatial.rs`, `rust/crates/sim-engine/src/lib.rs`, `rust/crates/sim-systems/src/runtime/decision/system.rs`, `rust/crates/sim-systems/src/runtime/jobs/assign.rs`, `rust/crates/sim-systems/src/runtime/jobs/mod.rs`, `rust/crates/sim-systems/src/runtime/jobs/seam.rs`, `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs`, `rust/crates/sim-test/tests/colony_demography.rs`, `rust/crates/sim-test/tests/save_load.rs`, `tools/v8/gate.sh`, `tools/v8/save_load_check.gd`
-- 보고서 커밋(이 파일, ROADMAP, HISTORY의 게이트 커밋 해시)은 게이트 뒤.
+- `b092b7b3 v8-m1.5(p6): benchmark ledger (base and M1.5 lines, ceilings 4/4 PASS), evaluation P1/P2/S1, the M1.5 report (gate pending)` — 4개: `CHANGELOG.md`, `docs/perf/PERF_LEDGER.md`, `docs/v8/m1_5/M1_5_EVALUATION.md`, `docs/v8/m1_5/M1_5_REPORT.md`
+- `cdd4a775 v8-m1.5(p6): gate 1 fixes — test_bridge_api reads the M1.5 list; lessons on the base path and the pinned list (D19)` — 4개: `.claude/skills/worldsim-architecture/SKILL.md`, `.claude/skills/worldsim-testing/SKILL.md`, `docs/v8/m1_5/M1_5_DECISIONS.md`, `tools/v8/test_bridge_api.py`
+- 보고서 커밋: 이 파일, `docs/ROADMAP.md`, `docs/HISTORY.md`, `CHANGELOG.md` (게이트 결과와 게이트 통과 커밋 해시).
 
 ### 리뷰 결과
 
@@ -154,8 +156,73 @@
 
 ### Gate 결과
 
-PENDING
+**게이트 2: 25단계 모두 통과 (status 0)**, 커밋 `cdd4a775` (작업 트리 깨끗함, dirty 0), 2026-10-22 01:49–02:50 KST, `bash tools/v8/gate.sh $DATA/gate2 --base-data $DATA/base/identity`. `v8/main`을 이 커밋으로 빨리감기했다.
+
+게이트 1(`b092b7b3`, `$DATA/gate1`)은 3단계가 빨갰다: identity와 perf는 기준 경로를 잘못 줌(`$DATA/base`; 기준 캡처는 `$DATA/base/identity`, 기준 perf는 아직 없었음), python_unittest는 진짜 결함(`test_bridge_api.py`가 M1 목록에 묶여 저장/불러오기 메서드에서 실패). 고치고(D19) 게이트 전체를 다시 돌렸다.
+
+```
+head cdd4a775027fcf10600afa709fa38e90b2e2b0df
+dirty 0
+started 2026-10-22 01:49:50 KST
+ 1 fmt                exit   0      0s  started 01:49:50
+ 2 bridge_build       exit   0      1s  started 01:49:50
+ 3 godot_import       exit   0      6s  started 01:49:51
+ 4 test_debug         exit   0   2177s  started 01:49:57
+   test_debug passed 1820 failed 0 ignored 0
+ 5 test_release       exit   0    131s  started 02:26:14
+   test_release passed 1820 failed 0 ignored 0
+ 6 clippy             exit   0      1s  started 02:28:25
+ 7 forbidden_math     exit   0      0s  started 02:28:26
+ 8 gdscript_strict    exit   0      6s  started 02:28:26
+ 9 smoke              exit   0     15s  started 02:28:32
+10 identity           exit   0    474s  started 02:28:47
+11 determinism        exit   0    128s  started 02:36:41
+12 perf               exit   0    554s  started 02:38:49
+   perf: OK (no mean above +10 %)
+13 bridge_api         exit   0      0s  started 02:48:03
+14 docs               exit   0      1s  started 02:48:03
+15 inventory_closure  exit   0      0s  started 02:48:04
+16 python_unittest    exit   0      1s  started 02:48:04
+17 m1_tests           exit   0     14s  started 02:48:05
+   m1_tests passed 37 failed 0
+18 colony_determinism exit   0      2s  started 02:48:19
+19 replay             exit   0      1s  started 02:48:21
+20 uid_check          exit   0      0s  started 02:48:22
+21 play_check         exit   0     12s  started 02:48:22
+   play_check passed 6 of 6
+22 schema_docs        exit   0      0s  started 02:48:34
+23 renderer_agreement exit   0      8s  started 02:48:34
+24 save_roundtrip     exit   0     10s  started 02:48:42
+25 bench              exit   0     92s  started 02:48:52
+     "ceilings": {
+   n200 tick mean (µs): 357.7 -> 343.7 (x0.961) ok
+   n200 p99 (µs): 775.0 -> 729.0 (x0.941) ok
+   n1000 tick mean (µs): 1787.0 -> 1689.3 (x0.945) ok
+   n1000 p99 (µs): 3848.0 -> 3483.0 (x0.905) ok
+   n2000 tick mean (µs): 4291.1 -> 4129.2 (x0.962) ok
+   n2000 p99 (µs): 8445.0 -> 8160.0 (x0.966) ok
+   n200_script tick mean (µs): 382.1 -> 365.0 (x0.955) ok
+   n200_script p99 (µs): 792.0 -> 729.0 (x0.920) ok
+   n200_side64 tick mean (µs): 185.8 -> 178.9 (x0.963) ok
+   n200_side64 p99 (µs): 332.0 -> 283.0 (x0.852) ok
+   RSS/agent: 2148 -> 1966 B (x0.915) ok
+   ceiling bytes_per_agent_le_4096: PASS (report only)
+   ceiling bytes_per_tile_le_96: PASS (report only)
+   ceiling n1000_mean_le_5ms: PASS (report only)
+   ceiling n2000_mean_le_10ms: PASS (report only)
+   bench: PASS
+finished 2026-10-22 02:50:24 KST status 0
+```
+
+identity: `summary: PASS: 228748 shared values, 0 differences, 0 one-sided paths` · `chronicle: PASS: 64 files` · `raw samples: PASS: 64 per-seed sample files` · `determinism: PASS`. 23단계 `RENDERER_AGREEMENT PASS n=10 tiles=3 tick=900`, 24단계 `SAVE_ROUNDTRIP PASS`, 25단계 `bench: PASS` (M1.5 장부 줄 대비; 성능 상한 4/4 PASS).
 
 git ls-remote 결과
 
-PENDING
+```
+$ git ls-remote origin v8/main v8/wip      # 게이트 직후, 보고서 커밋 전
+cdd4a775027fcf10600afa709fa38e90b2e2b0df	refs/heads/v8/main
+cdd4a775027fcf10600afa709fa38e90b2e2b0df	refs/heads/v8/wip
+```
+
+보고서 커밋(문서만) 뒤 `v8/wip`와 `v8/main`을 그 커밋으로 옮긴 결과는 최종 메시지에 적는다.
+
