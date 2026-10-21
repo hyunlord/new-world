@@ -1,0 +1,118 @@
+[
+  {
+    "concept": "01_earth_and_ash",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "SCORED",
+    "scene_id": "F",
+    "mood_rank": 6,
+    "watchability_rank": 4,
+    "scene_camera_rejected": false
+  },
+  {
+    "concept": "02_folk_woodcut",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "SCORED",
+    "scene_id": "D",
+    "mood_rank": 5,
+    "watchability_rank": 8,
+    "scene_camera_rejected": false
+  },
+  {
+    "concept": "03_watercolor_field",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "SCORED",
+    "scene_id": "B",
+    "mood_rank": 8,
+    "watchability_rank": 6,
+    "scene_camera_rejected": false
+  },
+  {
+    "concept": "04_diorama",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "SCORED",
+    "scene_id": "H",
+    "mood_rank": 1,
+    "watchability_rank": 1,
+    "scene_camera_rejected": true
+  },
+  {
+    "concept": "05_ink_and_tone",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "DIAGNOSTIC_CONTENT_MISMATCH",
+    "scene_id": "G",
+    "mood_rank": 3,
+    "watchability_rank": 2,
+    "scene_camera_rejected": false
+  },
+  {
+    "concept": "06_cave_ochre",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "DIAGNOSTIC_CONTENT_MISMATCH",
+    "scene_id": "A",
+    "mood_rank": 2,
+    "watchability_rank": 7,
+    "scene_camera_rejected": true
+  },
+  {
+    "concept": "07_storybook_gouache",
+    "forest": 3,
+    "meadow": 3,
+    "score_components": [
+      1,
+      1,
+      1
+    ],
+    "readability_status": "SCORED",
+    "scene_id": "E",
+    "mood_rank": 4,
+    "watchability_rank": 5,
+    "scene_camera_rejected": true
+  },
+  {
+    "concept": "08_cold_north",
+    "forest": null,
+    "meadow": null,
+    "score_components": null,
+    "readability_status": "NOT_VERIFIED",
+    "scene_id": "C",
+    "mood_rank": 7,
+    "watchability_rank": 3,
+    "scene_camera_rejected": false
+  }
+]

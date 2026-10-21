@@ -234,3 +234,8 @@ Reference is STYLE ONLY: match this exact style, same lighting and material trea
 ```text
 ONLY ONE CLOSEUP PORTRAIT, face and shoulders filling square canvas, woodcutter man dark hair bun, beard, natural hide wrap, 3/4 front facing. No camp scene, no inset, no full body, no other people. Plain earth pigment backdrop. Requested 512x512. Reference image STYLE ONLY, match exact medium and materials, not camera or composition. Illustrated 2D using ochre pigment, charcoal and bone-white accents, simplified but recognizable silhouettes and rough mineral-grain texture. Suggest hand-applied pigment and a restrained ritual gravity without adding symbols or changing the depicted actions. Use broad dark shadow masses and sparse light accents; keep basket, axe, logs and doorways identifiable. Fire is the warmest point wherever present. Preserve exact subject content and camera: all map subjects are straight top-down, never profile cave figures, with only a slight front-face cheat for tall objects. Natural ground remains ground, not a wall or framed mural. No text, watermark or UI.
 ```
+
+
+## Leader audit correction — C2_1
+
+The initial retained judgment above is preserved as history and superseded by this audit. C2_1 has FOUR log ends rather than the required three: **REJECTED_CONTENT_FOUR_LOGS**, `kept=false`. Original remains untouched and may appear only as diagnostic readability evidence. Strict kept total is now **8** (seven main subjects plus C1); S7 and C2 are diagnostic only. No further generation performed.

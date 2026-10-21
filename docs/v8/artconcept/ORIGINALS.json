@@ -1018,8 +1018,8 @@
       1254
     ],
     "wall_seconds": 32.735,
-    "generator_kept": true,
-    "reason": "Sole allowed cutout attempt retained with limitation: FOUR visible log ends instead of three. Axe, overhead camera, matching mineral style and flat magenta usable for readability. No retry authorized for cutout."
+    "generator_kept": false,
+    "reason": "Leader audit: four logs instead of three; rejected content, diagnostic readability only."
   },
   {
     "concept": "06_cave_ochre",
