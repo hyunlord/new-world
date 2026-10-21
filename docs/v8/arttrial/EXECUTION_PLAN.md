@@ -10,11 +10,11 @@ Raw images, rejected candidates, logs and working files: `/Users/rexxa/work/artt
 | Part | Deliverable and proof | State |
 |---|---|---|
 | 0 | English STYLE with Korean summary; reproducible 48-colour palette; all eight pipeline steps; three synthetic fixtures, negative checks; commit/push/ref equality | COMPLETE: a799b4bd; remote SHA verified |
-| 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | VERIFIED_LOCAL: 51/51 mechanical PASS; 14 tests and static gate PASS; publication pending |
-| 2 | Four bodies × two directions × four upright frames plus south sleep; generated-on-body hair/beard, tops and tools, subtraction extraction; PERSON_SPEC | PENDING |
-| 3 | Native-scale 1920×1080 scene, code and mock-up comparison; 24 labelled variations; optional night; anonymous test crops kept external | PENDING |
-| 4 | Fresh context blind test ≥8/10, variation ≥20/24, all-assets consistency, pairwise uniqueness, full cost ledger; preserve failures and at most one revision | PENDING |
-| 5 | Korean report in §9's exact headings, decision brief, changed files by commit, final remote verification | PENDING |
+| 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | COMPLETE: eaf9442d; 51/51 mechanical PASS; remote SHA verified; visual limits retained |
+| 2 | Four bodies × two directions × four upright frames plus south sleep; generated-on-body hair/beard, tops and tools, subtraction extraction; PERSON_SPEC | PUBLISHED821f702e; PARTIAL:235/612wardrobe, spear absent;383submitted assets checked |
+| 3 | Native-scale1920×1080 comparison;24labelled requests; anonymous crops | PUBLISHEDa9fec1a9; PARTIAL:21complete/3incomplete |
+| 4 | Fresh-context blind/variation, consistency and costs | EXECUTED:scene3/10→3/10FAIL;variation10/24FAIL;383/383mechanical PASS; published0b4454fc |
+| 5 | Korean report in §9's exact headings, decision brief, changed files by commit, final remote verification | REPORT WRITTEN; publication is this Part5 commit |
 
 No acceptance is inferred from generation success, metadata, or passing unit tests.
 Optional drops follow the contract order; mandatory assets and tests are never dropped.
@@ -32,14 +32,12 @@ Each milestone is committed with `v8-arttrial(pN):` intent and Lore trailers, pu
 
 Synthetic tests exercise each pipeline step, including overflow rejection, off-palette/stray-pixel rejection, channel preservation, hat subtraction and schema compatibility. Real generated assets then pass through the same steps. Record per-asset dimensions, palette/outline/alpha checks and reference ΔE distribution. A fresh reviewer receives images only with neutral identifiers; answers and scoring key are joined only after the answer is frozen. Keep generation prompts, tool outcomes, source hashes, candidate decisions and timings externally, with a compact committed provenance index.
 
-## Current checkpoint
+## Final outcome checkpoint
 
-- Palette: 48 exact colours; two rebuilds byte-match the saved JSON/PNG; one sourced skin and three declared trial skins.
-- Part 0 exact foundation: 33 tests PASS (6.067 seconds), Ruff PASS, basedpyright zero errors / zero warnings, no-excuse rules PASS. Independent audit found no remaining functional §3 blocker. Later-part modules are excluded from this exact foundation gate.
-- Real two-asset registry CLI: 2/2 mechanical pass, measured self-references, 8,031-byte atlas under external `registry-smoke/`. This is a subset probe, not the final environment atlas.
-- Cached `uvx --offline ruff` and `uvx --offline basedpyright --pythonpath /opt/homebrew/bin/python3` work without adding project dependencies. Foundation warnings were resolved with typed JSON validation and NumPy reductions, not suppressions or relaxed settings. Later modules receive their own gates.
-- Tree and wood asset generators own separate external subdirectories and selection ledgers. Parent must independently review and merge their entries.
-- People pilot: first sheet rejected for repeated walk phases; raw02 corrects them. Parent inspected direction-specific registered output: 26–27-pixel adult silhouettes, nine distinct poses, accepted provisionally as the family reference. Other three bodies are in generation.
-- Two generated short-hair variants failed strict subtraction because they erase body pixels. Both are retained as rejected geometry drift; neither is an accepted paper-doll layer. A bounded alternative attempt is running without relaxing extraction checks.
-- Environment: 51 assets packed in art/trial/sheet.png (21,520 bytes), all mechanical checks pass. Material-reduced outputs, ground failure/fallback evidence and raw candidates are external; visual limitations are preserved in ENVIRONMENT.md.
-- People: 36 bodies exist; calibrated child idle now24px in both directions. Single-frame edits have produced nine aligned hide-wrap poses; remaining layers are in progress. Raw sheet drift failures remain in the ledger.
+- Foundation and environment were published at a799b4bd and eaf9442d.
+- Part2 published821f702e:36bodies+36shadows,43hair+11beard+144tops+37tools+9carry,51environment,16versioned scene revisions;383submitted assets. Mandatory wardrobe remains235/612under D14's explicit interpretation.
+- Part3 publisheda9fec1a9: final A/B,24-request board and both labelled reading sheets.21complete/3incomplete;24distinct actual renderings. No substituted inputs.
+- Scene round1=3/10FAIL; round2=3/10FAIL; variation=10/24FAIL. One scene revision exhausted. Full responses and frozen hashes preserved.
+- Final383/383mechanical PASS; all atlas rectangles/anchors match sources exactly. Final scene/AB/ten crop files retain their frozen hashes.
+- Final65Python tests PASS11.582s; Ruff PASS; basedpyright0errors/0warnings/0notes; Rust workspace tests+clippy exit0.
+- Part4 published0b4454fcwith remote equality. Part5 contains the final report and this ledger; its exact SHA/remote result is recorded in the final response and external publication evidence. This workflow can publish the failed experiment; it does not waive missing mandatory person outputs or claim that all original acceptance criteria passed.

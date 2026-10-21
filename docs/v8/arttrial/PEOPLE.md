@@ -4,7 +4,7 @@ Status: **PARTIAL / mandatory wardrobe coverage FAIL**. Final baseline367assets 
 
 ## Scope and geometry
 
-Four generated mannequins supply36body frames: south/east × idle/walk_a/walk_b/work, plus south sleep. Upright boxes are32×32; sleep32×16. The selected child was uniformly nearest-neighbour calibrated to24px idle height within its32px box; east walk B is23px. No per-pixel anatomy repair was applied. Body-specific direction transforms and original candidates are retained externally.
+Four generated mannequins supply36body frames: south/east × idle/walk_a/walk_b/work, plus south sleep. Upright boxes are32×32; sleep32×16. The selected child used shared per-direction block-majority calibration to24px idle height within its32px box; east walk B is23px. No per-pixel anatomy repair was applied. Body-specific direction transforms and original candidates are retained externally.
 
 All person entries use the same canvas anchor `(16, box_height)`.36derived footprint shadows accompany the bodies. Anchor normalization changes metadata only, not pixels. `PERSON_SPEC.md` defines attributes, keyed choices, tint channels, directions and strict lookup.
 
