@@ -1,0 +1,462 @@
+{
+  "manifest_sha256": "d2153a372f56e9859211be52c7fd39b2f4a4b330519c32bffaabb5613436dc9c",
+  "registry_sha256": "56c5a7033eeda8643c85d75b52f5da7d0bce76af6092a2f5ae0a3540266dbee2",
+  "complete_composites": 21,
+  "incomplete_composites": 3,
+  "pairwise_distinct_rendered_images": 24,
+  "complete_24_gate": false,
+  "method": "Strict composition for complete entries. Incomplete entries draw only actually accepted layers, with visible missing-layer labels; no substitution, synthetic layer or altered requested attribute.",
+  "records": [
+    {
+      "label_number": 1,
+      "requested_keys": [
+        "shadow/base/adult_m/south/work",
+        "body/base/adult_m/south/work",
+        "top/hide_wrap/adult_m/south/work",
+        "hair/short/adult_m/south/work",
+        "tool/axe/adult_m/south/work",
+        "carry/logs/adult_m/south/work"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_m/south/work",
+        "body/base/adult_m/south/work",
+        "top/hide_wrap/adult_m/south/work",
+        "hair/short/adult_m/south/work",
+        "tool/axe/adult_m/south/work",
+        "carry/logs/adult_m/south/work"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "5aa6494f47e8053d951ad9deac80df245277303a977abd8a770144738e6ce283"
+    },
+    {
+      "label_number": 2,
+      "requested_keys": [
+        "shadow/base/adult_m/south/idle",
+        "body/base/adult_m/south/idle",
+        "top/fur_cloak/adult_m/south/idle",
+        "hair/long_tied/adult_m/south/idle",
+        "tool/hammer/adult_m/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_m/south/idle",
+        "body/base/adult_m/south/idle",
+        "top/fur_cloak/adult_m/south/idle",
+        "hair/long_tied/adult_m/south/idle",
+        "tool/hammer/adult_m/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "8502426c37cf487708e5fee2d07deaf9e82c199d7cd7dd573f59ac6ae7100daf"
+    },
+    {
+      "label_number": 3,
+      "requested_keys": [
+        "shadow/base/adult_m/south/idle",
+        "body/base/adult_m/south/idle",
+        "top/woven_tunic/adult_m/south/idle",
+        "hair/braided/adult_m/south/idle",
+        "tool/hoe/adult_m/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_m/south/idle",
+        "body/base/adult_m/south/idle",
+        "top/woven_tunic/adult_m/south/idle",
+        "hair/braided/adult_m/south/idle",
+        "tool/hoe/adult_m/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "98c6e4abca09c89adbc93ace14a42519b51db123d18deba5307ca533ae74b88d"
+    },
+    {
+      "label_number": 4,
+      "requested_keys": [
+        "shadow/base/adult_m/east/idle",
+        "body/base/adult_m/east/idle",
+        "top/hide_wrap/adult_m/east/idle",
+        "hair/short/adult_m/east/idle",
+        "tool/pick/adult_m/east/idle",
+        "carry/logs/adult_m/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_m/east/idle",
+        "body/base/adult_m/east/idle",
+        "top/hide_wrap/adult_m/east/idle",
+        "tool/pick/adult_m/east/idle",
+        "carry/logs/adult_m/east/idle"
+      ],
+      "missing_keys": [
+        "hair/short/adult_m/east/idle"
+      ],
+      "complete": false,
+      "rgba_sha256": "ea07d7ab2bbf8deda6b1c9a738636c6eeae0e38e1b4a6ff08434edb42ce76a5a"
+    },
+    {
+      "label_number": 5,
+      "requested_keys": [
+        "shadow/base/adult_m/east/idle",
+        "body/base/adult_m/east/idle",
+        "top/fur_cloak/adult_m/east/idle",
+        "hair/long_tied/adult_m/east/idle",
+        "tool/spear/adult_m/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_m/east/idle",
+        "body/base/adult_m/east/idle",
+        "top/fur_cloak/adult_m/east/idle"
+      ],
+      "missing_keys": [
+        "hair/long_tied/adult_m/east/idle",
+        "tool/spear/adult_m/east/idle"
+      ],
+      "complete": false,
+      "rgba_sha256": "dac89f41d4f5008890f5d01507b477cee32142cfb361e2ebc3c320fa04c7594f"
+    },
+    {
+      "label_number": 6,
+      "requested_keys": [
+        "shadow/base/adult_m/east/idle",
+        "body/base/adult_m/east/idle",
+        "top/leather_vest/adult_m/east/idle",
+        "hair/braided/adult_m/east/idle",
+        "tool/basket/adult_m/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_m/east/idle",
+        "body/base/adult_m/east/idle",
+        "top/leather_vest/adult_m/east/idle",
+        "tool/basket/adult_m/east/idle"
+      ],
+      "missing_keys": [
+        "hair/braided/adult_m/east/idle"
+      ],
+      "complete": false,
+      "rgba_sha256": "1a473641eb2efecc84063c1d73154351b55e3579a3a527e9bb94855d04815eac"
+    },
+    {
+      "label_number": 7,
+      "requested_keys": [
+        "shadow/base/adult_f/south/idle",
+        "body/base/adult_f/south/idle",
+        "top/hide_wrap/adult_f/south/idle",
+        "hair/short/adult_f/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_f/south/idle",
+        "body/base/adult_f/south/idle",
+        "top/hide_wrap/adult_f/south/idle",
+        "hair/short/adult_f/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "64215bc8ee48897c1d18f6c24088cb0117a01d1ef778518a976e6816df7360e6"
+    },
+    {
+      "label_number": 8,
+      "requested_keys": [
+        "shadow/base/adult_f/south/idle",
+        "body/base/adult_f/south/idle",
+        "top/hide_wrap/adult_f/south/idle",
+        "hair/short/adult_f/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_f/south/idle",
+        "body/base/adult_f/south/idle",
+        "top/hide_wrap/adult_f/south/idle",
+        "hair/short/adult_f/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "5d65096a2e451d4fccf15d8896a0f59d9905d5664e0014dbc21bcc4779d624d7"
+    },
+    {
+      "label_number": 9,
+      "requested_keys": [
+        "shadow/base/adult_f/south/idle",
+        "body/base/adult_f/south/idle",
+        "top/hide_wrap/adult_f/south/idle",
+        "hair/short/adult_f/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_f/south/idle",
+        "body/base/adult_f/south/idle",
+        "top/hide_wrap/adult_f/south/idle",
+        "hair/short/adult_f/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "6c8a8abad4da8c49d120dcf89dc38cf7b94588991c3b9edf108d494997d7dc02"
+    },
+    {
+      "label_number": 10,
+      "requested_keys": [
+        "shadow/base/adult_f/east/idle",
+        "body/base/adult_f/east/idle",
+        "top/hide_wrap/adult_f/east/idle",
+        "hair/short/adult_f/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_f/east/idle",
+        "body/base/adult_f/east/idle",
+        "top/hide_wrap/adult_f/east/idle",
+        "hair/short/adult_f/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "28befa8c41ea7dd8468a500ba6dd656d9ac1c843c9397e3e6dd69dbd30c6b32c"
+    },
+    {
+      "label_number": 11,
+      "requested_keys": [
+        "shadow/base/adult_f/east/idle",
+        "body/base/adult_f/east/idle",
+        "top/hide_wrap/adult_f/east/idle",
+        "hair/short/adult_f/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_f/east/idle",
+        "body/base/adult_f/east/idle",
+        "top/hide_wrap/adult_f/east/idle",
+        "hair/short/adult_f/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "2cf308975d8c270bcc124203788ffa2be61d1dc6919e658f754d3ae1cfed7685"
+    },
+    {
+      "label_number": 12,
+      "requested_keys": [
+        "shadow/base/adult_f/east/idle",
+        "body/base/adult_f/east/idle",
+        "top/hide_wrap/adult_f/east/idle",
+        "hair/short/adult_f/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/adult_f/east/idle",
+        "body/base/adult_f/east/idle",
+        "top/hide_wrap/adult_f/east/idle",
+        "hair/short/adult_f/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "c834b98d3f6ed978ea91cf409834dabae6b569fdbb2edc377e2d12e097cfb876"
+    },
+    {
+      "label_number": 13,
+      "requested_keys": [
+        "shadow/base/child/south/idle",
+        "body/base/child/south/idle",
+        "top/hide_wrap/child/south/idle",
+        "hair/short/child/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/child/south/idle",
+        "body/base/child/south/idle",
+        "top/hide_wrap/child/south/idle",
+        "hair/short/child/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "42151eacbafbfdeb050913e6b66d60152b9e5d0d03a44e8b3e16d965f427622e"
+    },
+    {
+      "label_number": 14,
+      "requested_keys": [
+        "shadow/base/child/south/idle",
+        "body/base/child/south/idle",
+        "top/hide_wrap/child/south/idle",
+        "hair/short/child/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/child/south/idle",
+        "body/base/child/south/idle",
+        "top/hide_wrap/child/south/idle",
+        "hair/short/child/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "65fc493bb49716dcbceb23ca07afaaf9afc8b50656d373604398106e311d8a43"
+    },
+    {
+      "label_number": 15,
+      "requested_keys": [
+        "shadow/base/child/south/idle",
+        "body/base/child/south/idle",
+        "top/hide_wrap/child/south/idle",
+        "hair/short/child/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/child/south/idle",
+        "body/base/child/south/idle",
+        "top/hide_wrap/child/south/idle",
+        "hair/short/child/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "404dfecbc67416c3194315677b29238d246c3f8f6ed44e4ffc5717d8880c8eed"
+    },
+    {
+      "label_number": 16,
+      "requested_keys": [
+        "shadow/base/child/east/idle",
+        "body/base/child/east/idle",
+        "top/hide_wrap/child/east/idle",
+        "hair/short/child/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/child/east/idle",
+        "body/base/child/east/idle",
+        "top/hide_wrap/child/east/idle",
+        "hair/short/child/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "48899354e81c706a8960c438322144f05668ac24633f631a1aa529868fe158f8"
+    },
+    {
+      "label_number": 17,
+      "requested_keys": [
+        "shadow/base/child/east/idle",
+        "body/base/child/east/idle",
+        "top/hide_wrap/child/east/idle",
+        "hair/short/child/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/child/east/idle",
+        "body/base/child/east/idle",
+        "top/hide_wrap/child/east/idle",
+        "hair/short/child/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "360a437afdb833382ce9167c1de028470ab97b7742a18b9d2bc287d72a427dfb"
+    },
+    {
+      "label_number": 18,
+      "requested_keys": [
+        "shadow/base/child/east/idle",
+        "body/base/child/east/idle",
+        "top/hide_wrap/child/east/idle",
+        "hair/short/child/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/child/east/idle",
+        "body/base/child/east/idle",
+        "top/hide_wrap/child/east/idle",
+        "hair/short/child/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "1d5467a6335fd13e9b786ad6df5c0f8829dc208c774ca580eee39803ddb765c8"
+    },
+    {
+      "label_number": 19,
+      "requested_keys": [
+        "shadow/base/elder/south/idle",
+        "body/base/elder/south/idle",
+        "top/hide_wrap/elder/south/idle",
+        "hair/short/elder/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/elder/south/idle",
+        "body/base/elder/south/idle",
+        "top/hide_wrap/elder/south/idle",
+        "hair/short/elder/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "fcf9fbb32577ebec1cac221451de22183889becd267a7893a3d31a894c3b74a9"
+    },
+    {
+      "label_number": 20,
+      "requested_keys": [
+        "shadow/base/elder/south/idle",
+        "body/base/elder/south/idle",
+        "top/hide_wrap/elder/south/idle",
+        "hair/short/elder/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/elder/south/idle",
+        "body/base/elder/south/idle",
+        "top/hide_wrap/elder/south/idle",
+        "hair/short/elder/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "ddddbc6b07c44513d6a5e7058bfec05f6e7fe048f009cf31c59a598bab2b0261"
+    },
+    {
+      "label_number": 21,
+      "requested_keys": [
+        "shadow/base/elder/south/idle",
+        "body/base/elder/south/idle",
+        "top/hide_wrap/elder/south/idle",
+        "hair/short/elder/south/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/elder/south/idle",
+        "body/base/elder/south/idle",
+        "top/hide_wrap/elder/south/idle",
+        "hair/short/elder/south/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "cb650c1d8b9941ccf850a6566ad2b0ef22999070d784d1ed3c8ec3559217b564"
+    },
+    {
+      "label_number": 22,
+      "requested_keys": [
+        "shadow/base/elder/east/idle",
+        "body/base/elder/east/idle",
+        "top/hide_wrap/elder/east/idle",
+        "hair/short/elder/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/elder/east/idle",
+        "body/base/elder/east/idle",
+        "top/hide_wrap/elder/east/idle",
+        "hair/short/elder/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "ea6957b008b3f7918508b4589fc6e65d42a06f205872d1e23b069d138765a894"
+    },
+    {
+      "label_number": 23,
+      "requested_keys": [
+        "shadow/base/elder/east/idle",
+        "body/base/elder/east/idle",
+        "top/hide_wrap/elder/east/idle",
+        "hair/short/elder/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/elder/east/idle",
+        "body/base/elder/east/idle",
+        "top/hide_wrap/elder/east/idle",
+        "hair/short/elder/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "cd56f37f29746ac5112711faea237e7e952266c107f5c21217115ccdcb130671"
+    },
+    {
+      "label_number": 24,
+      "requested_keys": [
+        "shadow/base/elder/east/idle",
+        "body/base/elder/east/idle",
+        "top/hide_wrap/elder/east/idle",
+        "hair/short/elder/east/idle"
+      ],
+      "rendered_keys": [
+        "shadow/base/elder/east/idle",
+        "body/base/elder/east/idle",
+        "top/hide_wrap/elder/east/idle",
+        "hair/short/elder/east/idle"
+      ],
+      "missing_keys": [],
+      "complete": true,
+      "rgba_sha256": "c9d5b840dd0e80fd750686eaac24d691b075d31d393e734359f31cf0ea25b1c4"
+    }
+  ]
+}

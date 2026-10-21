@@ -1,0 +1,39 @@
+{
+  "original_registry_sha256": "56c5a7033eeda8643c85d75b52f5da7d0bce76af6092a2f5ae0a3540266dbee2",
+  "revision_registry_sha256": "2c42e60c90b8329845f51ee314eff12166a01aef933b407ab08780f35cf42628",
+  "scene_sha256": "b5321dce9dc24d13e9d09f4fbc12e02eb6faf9ba0c241b8bd4e4d57204be497a",
+  "frozen_attributes_sha256": "d2153a372f56e9859211be52c7fd39b2f4a4b330519c32bffaabb5613436dc9c",
+  "overrides": [
+    "body/base/adult_m/south/sleep",
+    "hair/short/adult_m/south/sleep",
+    "top/hide_wrap/adult_m/south/sleep",
+    "shadow/base/adult_m/south/sleep",
+    "body/base/child/south/idle",
+    "hair/short/child/south/idle",
+    "top/hide_wrap/child/south/idle",
+    "shadow/base/child/south/idle",
+    "body/base/elder/south/idle",
+    "hair/short/elder/south/idle",
+    "top/hide_wrap/elder/south/idle",
+    "shadow/base/elder/south/idle",
+    "carry/logs/adult_m/south/idle",
+    "log_pile_1",
+    "log_pile_2",
+    "log_pile_3"
+  ],
+  "historical_crops": {
+    "baseline": [
+      640,
+      60,
+      1280,
+      1020
+    ],
+    "mockup": [
+      640,
+      60,
+      1280,
+      1020
+    ]
+  },
+  "limitation": "Revised body poses have only displayed short/hide_wrap layers. Original full-wardrobe keys remain unchanged; revision1 namespace is not general runtime replacement."
+}

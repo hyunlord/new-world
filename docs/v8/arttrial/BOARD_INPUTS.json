@@ -1,0 +1,939 @@
+{
+  "registered_utc": "2026-10-21T13:19:00.331651+00:00",
+  "status": "INPUTS_ONLY_NOT_RENDERED_OR_BLIND_TESTED",
+  "board_order": "body adult_m/adult_f/child/elder, direction south/east, variant0/1/2",
+  "board": [
+    {
+      "index_zero_based": 0,
+      "label_number": 1,
+      "body": "adult_m",
+      "person": {
+        "agent_id": 1000,
+        "sex": "male",
+        "age": 25,
+        "household_id": 0,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "woodcutter",
+        "carry": "logs",
+        "state": "work",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          138,
+          106,
+          58
+        ],
+        "tool": "axe"
+      }
+    },
+    {
+      "index_zero_based": 1,
+      "label_number": 2,
+      "body": "adult_m",
+      "person": {
+        "agent_id": 1001,
+        "sex": "male",
+        "age": 25,
+        "household_id": 1,
+        "hairstyle": "long_tied",
+        "skin": 1,
+        "job": "builder",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "fur_cloak",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "long_tied",
+        "hair_color": [
+          58,
+          42,
+          30
+        ],
+        "tool": "hammer"
+      }
+    },
+    {
+      "index_zero_based": 2,
+      "label_number": 3,
+      "body": "adult_m",
+      "person": {
+        "agent_id": 1002,
+        "sex": "male",
+        "age": 25,
+        "household_id": 2,
+        "hairstyle": "braided",
+        "skin": 2,
+        "job": "farmer",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "woven_tunic",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "braided",
+        "hair_color": [
+          42,
+          30,
+          22
+        ],
+        "tool": "hoe"
+      }
+    },
+    {
+      "index_zero_based": 3,
+      "label_number": 4,
+      "body": "adult_m",
+      "person": {
+        "agent_id": 1003,
+        "sex": "male",
+        "age": 25,
+        "household_id": 3,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "miner",
+        "carry": "logs",
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          90,
+          58,
+          34
+        ],
+        "tool": "pick"
+      }
+    },
+    {
+      "index_zero_based": 4,
+      "label_number": 5,
+      "body": "adult_m",
+      "person": {
+        "agent_id": 1004,
+        "sex": "male",
+        "age": 25,
+        "household_id": 4,
+        "hairstyle": "long_tied",
+        "skin": 1,
+        "job": "hunter",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "fur_cloak",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "long_tied",
+        "hair_color": [
+          42,
+          30,
+          22
+        ],
+        "tool": "spear"
+      }
+    },
+    {
+      "index_zero_based": 5,
+      "label_number": 6,
+      "body": "adult_m",
+      "person": {
+        "agent_id": 1005,
+        "sex": "male",
+        "age": 25,
+        "household_id": 5,
+        "hairstyle": "braided",
+        "skin": 2,
+        "job": "gatherer",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "leather_vest",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "braided",
+        "hair_color": [
+          58,
+          42,
+          30
+        ],
+        "tool": "basket"
+      }
+    },
+    {
+      "index_zero_based": 6,
+      "label_number": 7,
+      "body": "adult_f",
+      "person": {
+        "agent_id": 1006,
+        "sex": "female",
+        "age": 27,
+        "household_id": 0,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          90,
+          58,
+          34
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 7,
+      "label_number": 8,
+      "body": "adult_f",
+      "person": {
+        "agent_id": 1007,
+        "sex": "female",
+        "age": 27,
+        "household_id": 1,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          42,
+          30,
+          22
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 8,
+      "label_number": 9,
+      "body": "adult_f",
+      "person": {
+        "agent_id": 1008,
+        "sex": "female",
+        "age": 27,
+        "household_id": 2,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          42,
+          30,
+          22
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 9,
+      "label_number": 10,
+      "body": "adult_f",
+      "person": {
+        "agent_id": 1009,
+        "sex": "female",
+        "age": 27,
+        "household_id": 3,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          138,
+          106,
+          58
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 10,
+      "label_number": 11,
+      "body": "adult_f",
+      "person": {
+        "agent_id": 1010,
+        "sex": "female",
+        "age": 27,
+        "household_id": 4,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          138,
+          106,
+          58
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 11,
+      "label_number": 12,
+      "body": "adult_f",
+      "person": {
+        "agent_id": 1011,
+        "sex": "female",
+        "age": 27,
+        "household_id": 5,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          90,
+          58,
+          34
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 12,
+      "label_number": 13,
+      "body": "child",
+      "person": {
+        "agent_id": 1012,
+        "sex": "male",
+        "age": 10,
+        "household_id": 0,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          90,
+          58,
+          34
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 13,
+      "label_number": 14,
+      "body": "child",
+      "person": {
+        "agent_id": 1013,
+        "sex": "female",
+        "age": 10,
+        "household_id": 1,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          42,
+          30,
+          22
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 14,
+      "label_number": 15,
+      "body": "child",
+      "person": {
+        "agent_id": 1014,
+        "sex": "male",
+        "age": 10,
+        "household_id": 2,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          90,
+          58,
+          34
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 15,
+      "label_number": 16,
+      "body": "child",
+      "person": {
+        "agent_id": 1015,
+        "sex": "male",
+        "age": 10,
+        "household_id": 3,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          138,
+          106,
+          58
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 16,
+      "label_number": 17,
+      "body": "child",
+      "person": {
+        "agent_id": 1016,
+        "sex": "female",
+        "age": 10,
+        "household_id": 4,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          58,
+          42,
+          30
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 17,
+      "label_number": 18,
+      "body": "child",
+      "person": {
+        "agent_id": 1017,
+        "sex": "male",
+        "age": 10,
+        "household_id": 5,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          138,
+          106,
+          58
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 18,
+      "label_number": 19,
+      "body": "elder",
+      "person": {
+        "agent_id": 1018,
+        "sex": "male",
+        "age": 60,
+        "household_id": 0,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          232,
+          232,
+          232
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 19,
+      "label_number": 20,
+      "body": "elder",
+      "person": {
+        "agent_id": 1019,
+        "sex": "female",
+        "age": 60,
+        "household_id": 1,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          232,
+          232,
+          232
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 20,
+      "label_number": 21,
+      "body": "elder",
+      "person": {
+        "agent_id": 1020,
+        "sex": "male",
+        "age": 60,
+        "household_id": 2,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          232,
+          232,
+          232
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 21,
+      "label_number": 22,
+      "body": "elder",
+      "person": {
+        "agent_id": 1021,
+        "sex": "male",
+        "age": 60,
+        "household_id": 3,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          232,
+          232,
+          232
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 22,
+      "label_number": 23,
+      "body": "elder",
+      "person": {
+        "agent_id": 1022,
+        "sex": "female",
+        "age": 60,
+        "household_id": 4,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          232,
+          232,
+          232
+        ],
+        "tool": null
+      }
+    },
+    {
+      "index_zero_based": 23,
+      "label_number": 24,
+      "body": "elder",
+      "person": {
+        "agent_id": 1023,
+        "sex": "male",
+        "age": 60,
+        "household_id": 5,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "east",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "resolved": {
+        "hair": "short",
+        "hair_color": [
+          232,
+          232,
+          232
+        ],
+        "tool": null
+      }
+    }
+  ],
+  "random_sample": {
+    "seed": 20261021,
+    "algorithm": "random.Random(seed).sample(range(24),6)",
+    "python_version": "3.14.4",
+    "population": "ALL24; no exclusions or resampling",
+    "indices_zero_based": [
+      17,
+      12,
+      18,
+      0,
+      22,
+      19
+    ],
+    "labels_one_based": [
+      18,
+      13,
+      19,
+      1,
+      23,
+      20
+    ],
+    "sex_on_child_elder": "Ground truth remains the input even if no readable sex cue; uncertainty counts as miss."
+  },
+  "scene_roles": {
+    "carry_1": {
+      "person": {
+        "agent_id": 2000,
+        "sex": "male",
+        "age": 25,
+        "household_id": 0,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": "logs",
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        272,
+        320
+      ]
+    },
+    "carry_2": {
+      "person": {
+        "agent_id": 2001,
+        "sex": "male",
+        "age": 25,
+        "household_id": 1,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": "logs",
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        320,
+        368
+      ]
+    },
+    "chop_1": {
+      "person": {
+        "agent_id": 2002,
+        "sex": "male",
+        "age": 25,
+        "household_id": 2,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "woodcutter",
+        "carry": null,
+        "state": "work",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        88,
+        448
+      ]
+    },
+    "chop_2": {
+      "person": {
+        "agent_id": 2003,
+        "sex": "male",
+        "age": 25,
+        "household_id": 3,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "woodcutter",
+        "carry": null,
+        "state": "work",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        352,
+        480
+      ]
+    },
+    "child": {
+      "person": {
+        "agent_id": 2004,
+        "sex": "male",
+        "age": 10,
+        "household_id": 4,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        192,
+        320
+      ]
+    },
+    "elder": {
+      "person": {
+        "agent_id": 2005,
+        "sex": "male",
+        "age": 60,
+        "household_id": 5,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        384,
+        256
+      ]
+    },
+    "sleeper": {
+      "person": {
+        "agent_id": 2006,
+        "sex": "male",
+        "age": 25,
+        "household_id": 0,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "sleep",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        144,
+        208
+      ]
+    },
+    "adult_1": {
+      "person": {
+        "agent_id": 2007,
+        "sex": "female",
+        "age": 27,
+        "household_id": 1,
+        "hairstyle": "short",
+        "skin": 1,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        240,
+        240
+      ]
+    },
+    "adult_2": {
+      "person": {
+        "agent_id": 2008,
+        "sex": "female",
+        "age": 27,
+        "household_id": 2,
+        "hairstyle": "short",
+        "skin": 2,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        192,
+        416
+      ]
+    },
+    "adult_3": {
+      "person": {
+        "agent_id": 2009,
+        "sex": "female",
+        "age": 27,
+        "household_id": 3,
+        "hairstyle": "short",
+        "skin": 0,
+        "job": "none",
+        "carry": null,
+        "state": "idle",
+        "direction": "south",
+        "top": "hide_wrap",
+        "beard": null,
+        "head": null
+      },
+      "position": [
+        304,
+        544
+      ]
+    }
+  },
+  "missing_assets_policy": "Every requested generated layer must exist; no substituted body/style/pose or image fabricated to satisfy this registration. Report missing requirements instead."
+}
