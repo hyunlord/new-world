@@ -571,7 +571,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `CLAUDE.md` | KEEP | rewritten as @AGENTS.md + Claude notes (10.5) | goal 10.5 |
 | `README.md` | KEEP | rewritten in Korean + English (9.1) | goal 9.1 |
 | `addons/` | DELETE | harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it | grep editor_plugins project.godot → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 29 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
+| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 31 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
 | `assets/art/` | MIXED | files inside: 646 DELETE, 19 KEEP; see the file/exception rows. Directory rule: runtime art root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/` | MIXED | files inside: 1 DELETE, 9 KEEP; see the file/exception rows. Directory rule: runtime atlas pages + region maps loaded by art_sprite_library.gd / carry_load_layer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/region_atlas.json` | DELETE | atlas pipeline metadata; nothing at runtime reads it | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -655,9 +655,9 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `assets/sprites/wildlife/` | DELETE | unreferenced pre-art-line sprites (walls/floors are to be redrawn per VISION §6.3) | VISION §6.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/tilesets/` | DELETE | unreferenced V7 TileSet | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/ui/` | KEEP | worldsim_theme.tres: project theme (project.godot gui/theme/custom) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/v8/` | KEEP | M1 temporary tileset drawn by tools/v8/gen_temp_tiles.py | M1 goal 9.2 |
-| `assets/v8/temp/` | KEEP | M1 temporary tileset drawn by tools/v8/gen_temp_tiles.py | M1 goal 9.2 |
-| `docs/` | MIXED | files inside: 17280 DELETE, 39 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
+| `assets/v8/` | KEEP | M1 colony tile and sprite sheet drawn by tools/v8/gen_tiles.py (M1-ART) | M1 goal 9.2; M1-ART goal 5 |
+| `assets/v8/temp/` | KEEP | M1 colony tile and sprite sheet drawn by tools/v8/gen_tiles.py (M1-ART) | M1 goal 9.2; M1-ART goal 5 |
+| `docs/` | MIXED | files inside: 17280 DELETE, 55 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
 | `docs/.gitkeep` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/ARCHITECTURE.md` | KEEP | new (9.5) | goal 9.5 |
 | `docs/CHANGELOG.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
@@ -703,7 +703,9 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `docs/traits/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/v8/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/m1art/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/p3/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/play/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/worldmodel/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/worldmodel/sample/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `hooks/` | DELETE | V7 git pre-commit harness hook | goal 6.3 |
@@ -1509,7 +1511,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `sim_bridge.gdextension` | KEEP | GDExtension manifest loading libsim_bridge | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension.uid` | KEEP | the extension's committed Godot UID (M1 5.3) | M1 DECISIONS D3 |
 | `stats/` | DELETE | pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it | grep -rn 'stats/' rust scripts → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `tools/` | MIXED | files inside: 891 DELETE, 34 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
+| `tools/` | MIXED | files inside: 891 DELETE, 40 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
 | `tools/.gdignore` | KEEP | keeps Godot from importing tools/ | git ls-files at b1ca032f |
 | `tools/art/gen_terrain_atlas.py` | DELETE | one-off art script (6.3) | goal 6.3 |
 | `tools/art_pipeline/README.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
@@ -2220,6 +2222,9 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/migrate_i18n.py` | DELETE | one-off migration script (6.3) | goal 6.3 |
 | `tools/migration_verify.sh` | DELETE | one-off migration script (6.3) | goal 6.3 |
 | `tools/migration_verify_shadow_ci.sh` | DELETE | one-off migration script (6.3) | goal 6.3 |
+| `tools/play.sh` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/play/WorldSim-v7.command` | KEEP | tools root | git ls-files at b1ca032f |
+| `tools/play/WorldSim.command` | KEEP | tools root | git ls-files at b1ca032f |
 | `tools/revitalize/attribution_p18.py` | DELETE | pass-specific revitalize tooling (identity/gate/perf per pass); reusable parts copied to tools/v8 | goal 6.3 |
 | `tools/revitalize/bisect_p12.py` | DELETE | pass-specific revitalize tooling (identity/gate/perf per pass); reusable parts copied to tools/v8 | goal 6.3 |
 | `tools/revitalize/bisect_p13.py` | DELETE | pass-specific revitalize tooling (identity/gate/perf per pass); reusable parts copied to tools/v8 | goal 6.3 |
@@ -2397,19 +2402,20 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/check_docs.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/check_docs_helpers.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/compare_summaries.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/contact_sheet.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gate.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gdscript_strict_check.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/gen_temp_tiles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/gen_tiles.py` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/godot_bin.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity_removed_keys.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/inventory.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/locale_keys.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/locale_prune.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/m1_gui_test.gd` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/m1_gui_test.gd` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/perf.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/perf_summary.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/run_bounded.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -2418,13 +2424,15 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/smoke_base_counts.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/system_table.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_bridge_api.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/test_compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_contact_sheet.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
-| `tools/v8/test_gen_temp_tiles.py` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
-| `tools/v8/test_locale_trf.gd` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
-| `tools/v8/u_script.json` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
-| `tools/v8/v7_ui_deleted.txt` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
-| `tools/v8/verify_v8_0.gd` | KEEP | M1 tooling (screen check, chronicle comparison, temp tiles, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_gen_tiles.py` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_locale_trf.gd` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_play.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/u_script.json` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/v7_ui_deleted.txt` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/verify_v8_0.gd` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/worldmodel/bench_v0.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/bench_v1.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
 | `tools/worldmodel/check_z6.py` | DELETE | world-model research tooling (lives on codex/worldmodel-2026-10) | goal 3.2, 6.3 |
