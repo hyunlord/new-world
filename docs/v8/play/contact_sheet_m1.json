@@ -1,0 +1,14 @@
+[
+  {"file": "m1_01_start_2x.png", "caption": "틱 360(14:00) 시작 캠프, 2배, 명령 없음"},
+  {"file": "m1_02_orders_2x.png", "caption": "틱 361 명령 직후: 베기 15 · 비축 4×4 · 오두막 0/12"},
+  {"file": "m1_03_work_2x.png", "caption": "틱 481(16:01) 작업 중: 통나무 짐 3명, 베기 표시"},
+  {"file": "m1_03b_t900_2x.png", "caption": "틱 900(23:00) 그대로: 오두막 완성 뒤의 밤"},
+  {"file": "m1_04_hut_done_2x.png", "caption": "틱 826 오두막 완성+60: 연대기에 완성 줄 없음"},
+  {"file": "m1_05_night_2x.png", "caption": "틱 900(23:00) 밤: 오두막 안 1명, 바깥 대기"},
+  {"file": "m1_06_far_1x.png", "caption": "틱 481 1배 원경, 캠프 중앙 (지도 일부만 보임)"},
+  {"file": "m1_07_inspector.png", "caption": "틱 481 인스펙터: 지금 · 들고 있음: 통나무 5"},
+  {"file": "m1_08_why.png", "caption": "틱 481 '왜?' 패널: 빈 타일, 기록 없음"},
+  {"file": "m1_09_orderbar.png", "caption": "틱 481 F3 오두막 모드, 나무 위 빨간 유령"},
+  {"file": "v7_01_near.png", "caption": "V7(v7-final-art) 틱 1440 최대 확대 8배"},
+  {"file": "v7_02_far.png", "caption": "V7(v7-final-art) 틱 1440 원경 1배"}
+]
