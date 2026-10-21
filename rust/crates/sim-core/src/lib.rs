@@ -28,6 +28,7 @@ pub mod influence;
 pub mod material;
 pub mod rng;
 pub mod rules;
+pub mod spatial;
 pub mod tile;
 pub mod variety;
 

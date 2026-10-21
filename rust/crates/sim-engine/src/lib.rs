@@ -540,6 +540,12 @@ pub struct SimResources {
     /// queues them, `SettlementSystem` spawns them on the next tick. Always
     /// empty under any other birth rule.
     pub due_births: Vec<sim_core::components::DueBirth>,
+
+    /// M1.5 spatial indexes (ADR 0016 C3; `sim_core::spatial`): derived
+    /// state, rebuilt from the world (the colony indexes when the colony's
+    /// `overlay_version` changes, the agents' every colony tick). Never read
+    /// in the baseline world.
+    pub spatial: sim_core::spatial::SpatialIndex,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -734,6 +740,7 @@ impl SimResources {
                 ..Default::default()
             },
             due_births: Vec::new(),
+            spatial: sim_core::spatial::SpatialIndex::default(),
         }
     }
 

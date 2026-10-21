@@ -7,7 +7,7 @@ fn main() -> std::process::ExitCode {
         return std::process::ExitCode::SUCCESS;
     }
     // M1.5: the standing benchmark has its own parser (`sim_test::bench`).
-    if matches!(args[0].as_str(), "bench" | "bench-one") {
+    if matches!(args[0].as_str(), "bench" | "bench-one" | "bench-summarise") {
         return match sim_test::bench::main(&args) {
             Ok(()) => std::process::ExitCode::SUCCESS,
             Err(error) => {

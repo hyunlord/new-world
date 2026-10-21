@@ -20,8 +20,10 @@ pub mod execute;
 pub mod invariants;
 pub mod items;
 pub mod seam;
+pub mod spatial_index;
 
 pub use assign::{JobAssignSystem, JOB_ASSIGN_PRIORITY};
 pub use cancel::{cancel, finish, on_death, release_job};
 pub use execute::{JobExecuteSystem, JOB_EXECUTE_PRIORITY};
 pub use seam::{hold_for_decision, holders, settle_after_decision};
+pub use spatial_index::{SpatialIndexSystem, SPATIAL_INDEX_PRIORITY};

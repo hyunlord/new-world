@@ -318,12 +318,14 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_job_systems(engine);
 }
 
-/// Register the M1 job layer (`runtime::jobs`): `JobAssignSystem` (124) and
-/// `JobExecuteSystem` (127), both every tick and both no-ops without
-/// `rules.colony`.
+/// Register the M1 job layer (`runtime::jobs`): `JobAssignSystem` (124),
+/// `JobExecuteSystem` (127) and M1.5's `SpatialIndexSystem` (119), every tick
+/// and no-ops without `rules.colony`.
 pub fn register_job_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::jobs::JobAssignSystem::new()));
     engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
+    // M1.5: the agents' spatial index (priority 119, colony only).
+    engine.register_system(Box::new(runtime::jobs::SpatialIndexSystem));
 }
 
 /// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60),

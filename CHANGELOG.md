@@ -17,6 +17,8 @@ The colony's own calendar and demographics, and the simulation contract (ADR 001
 - Bridge reads: `get_time_snapshot` `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info` `ticks_per_year`; `get_agent_snapshot` columns `ages_years`, `infants`, `pregnant_days`.
 - UI: the top bar reads `1년 차 · 봄 1일째`; the inspector shows ages in years (`INSPECTOR_AGE_FMT` "%d세"), the infant stage (`INSPECTOR_STAGE_INFANT`) and a pregnancy (`UI_INSPECT_PREGNANT_FMT`); deaths read "{age}세에 세상을 떠남"; `UI_TIME_YEAR_FMT`.
 - Measurement: `worldsim_perf bench` / `bench-one` (`sim_test::bench`, `WorldGenConfig::colony_stress`, `tools/v8/bench_script.json`), `tools/v8/bench_ledger.py` (+ tests); the colony probe's `--chronicle-out`, `churn.json` (the decision seam counts job releases by need, kind, stage and need value in `ColonyState::release_counts`, measurement only) and a `demography` block (births per woman-year, population per year, old-age deaths, coming of age); colony runs up to 480 days.
+- Spatial index `sim_core::spatial` (`ChunkIndex`, 16 × 16 chunks, ring queries, `nearest_where` with the job layer's `(distance, y, x)` order); `SimResources.spatial`; `JobAssignSystem` finds every candidate through it (colony fixtures byte-identical before and after); `SpatialIndexSystem` (priority 119, colony only) keeps the agents' index.
+- `docs/perf/PERF_LEDGER.md`, `tools/v8/bench.sh` (the gate step `bench`), `worldsim_perf bench-summarise`.
 - Tests: `colony_demography.rs` (`calendar_derivations`, `ages_in_years`, `fertility_rate_matches_rule`, `no_births_without_partner_or_food`, `pregnancy_to_birth_household`).
 
 ### Changed

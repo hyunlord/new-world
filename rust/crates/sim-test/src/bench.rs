@@ -370,6 +370,7 @@ pub fn main(args: &[String]) -> Result<(), String> {
     let mut commands: Option<PathBuf> = None;
     let mut label: Option<String> = None;
     let mut repeats = 3u32;
+    let mut runs: Option<PathBuf> = None;
     let mut commit = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut i = 1;
     while i < args.len() {
@@ -382,6 +383,7 @@ pub fn main(args: &[String]) -> Result<(), String> {
             "--scene-label" => label = Some(value.clone()),
             "--repeats" => repeats = value.parse().map_err(|_| "invalid --repeats")?,
             "--commit" => commit = value.clone(),
+            "--runs" => runs = Some(PathBuf::from(value)),
             other => return Err(format!("unknown bench flag {other}")),
         }
         i += 2;
@@ -419,7 +421,32 @@ pub fn main(args: &[String]) -> Result<(), String> {
             );
             Ok(())
         }
-        _ => Err("usage: worldsim_perf bench --out DIR [--commands FILE] [--repeats 3] [--commit SHA]\n       worldsim_perf bench-one --scene-label LABEL --out FILE [--commands FILE]".into()),
+        "bench-summarise" => {
+            // Summarise run files written elsewhere (an interleaved session of
+            // two binaries: `bench --repeats 1` into one runs directory each).
+            let dir = runs.ok_or("bench-summarise needs --runs DIR")?;
+            let mut all: std::collections::BTreeMap<String, Vec<Value>> = Default::default();
+            let mut names: Vec<PathBuf> = std::fs::read_dir(&dir)
+                .map_err(|e| format!("{}: {e}", dir.display()))?
+                .filter_map(|e| e.ok().map(|e| e.path()))
+                .filter(|p| p.extension().is_some_and(|x| x == "json"))
+                .collect();
+            names.sort();
+            for path in names {
+                let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+                let run: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+                if let Some(label) = run["label"].as_str() {
+                    all.entry(label.to_string()).or_default().push(run);
+                }
+            }
+            if all.is_empty() {
+                return Err(format!("{}: no run files", dir.display()));
+            }
+            let summary = summarise(&all, &commit);
+            std::fs::write(&out, serde_json::to_string_pretty(&summary).map_err(|e| e.to_string())? + "\n")
+                .map_err(|e| e.to_string())
+        }
+        _ => Err("usage: worldsim_perf bench --out DIR [--commands FILE] [--repeats 3] [--commit SHA]\n       worldsim_perf bench-one --scene-label LABEL --out FILE [--commands FILE]\n       worldsim_perf bench-summarise --runs DIR --out FILE [--commit SHA]".into()),
     }
 }
 

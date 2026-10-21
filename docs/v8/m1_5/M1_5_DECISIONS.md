@@ -166,3 +166,37 @@ Round 1 meets the bar; no further knob was needed. Raw: `$DATA/calib/r0`, `r0b`,
   RSS/tile, host load, note). `tools/v8/bench_ledger.py check` compares a run with the ledger's latest pass:
   > +10 % on a scene's tick mean or p99, or on RSS/agent, fails unless `--justified TEXT` quotes the CHANGELOG.
   The C3 ceilings are reported PASS/MISS and do not fail in M1.5.
+
+## D11 — The spatial index (goal 6.2): what is indexed, and how it stays current
+
+- `sim_core::spatial::ChunkIndex<T>`: 16 × 16-tile chunks, `BTreeMap<(cy, cx), Vec<(tile, T)>>` sorted by
+  `(y, x, T)`. `ring(centre, r)` lists chunk ring r (chunks in `(cy, cx)` order); `nearest_where(centre,
+  max_radius, pred)` returns the smallest `(Chebyshev distance, y, x, T)` among entries within the radius that pass
+  the predicate — the choice `assign.rs`'s M1 `nearest` made (`min_by_key((distance, y, x))`). It stops when the
+  next chunk ring's nearest possible tile, `(r − 1) × 16 + 1`, is farther than the best, so equal distances in the
+  next ring are still compared. Unit test: 1,000 random queries (40 sets of up to 300 entries, radii 0 … u32::MAX,
+  three predicates) equal a linear scan.
+- What is indexed: the job searches' candidates — ground stacks (Deliver sources, Haul stacks), zone cells (Haul
+  destinations), chop-marked trees (Chop), and the sites (Build/Deliver, few: indexed per tick from the site view)
+  — plus the agents (`SpatialIndexSystem`, priority 119, colony only, O(N) per tick). Not indexed: the 10,000
+  unmarked trees (no job searches them; an index would be rebuilt at every felling and read by nobody).
+- How it stays current: the colony indexes are derived from `ColonyState` and rebuilt when its `overlay_version`
+  changes — every mutation of ground items, zones, designations, sites and trees already bumps that counter
+  (`commands.rs`, `jobs/items.rs`, `jobs/execute.rs`, `construction_system.rs`, worldgen). One counter instead of
+  an update at every mutation site cannot miss a site (M1's lesson: a hand-rolled move is a ledger hole); the
+  rebuild is O(stacks + cells + marks) — tens to hundreds of entries — a few hundred times a game day.
+- The agents' index has no reader in M1.5 (M2's proximity searches are the first).
+- Evidence: the M1 fixtures (seeds 100–131, 10 days, with and without the U-script) are **byte-identical** before
+  and after the index: `summary.json` (with the colony fingerprints of every day) `cmp`-equal, the 64 chronicle
+  files equal by content, `churn.json` equal (`$DATA/p1/fixtures` vs `$DATA/p2/fixtures`).
+
+## D12 — 6.3 (index use in the decision scans) dropped to M-PERF
+
+- Context: goal 6.3 is the second item of the drop order. The decision's food, water and gather scans
+  (`decision/targets.rs`: `nearest_resource_tile`, `nearest_local_food`, `nearest_gather_tile`, …) choose by
+  Manhattan distance with `(x, y)` ties over V7 `HashMap`s (`food_tiles`, `water_tiles`) that change at every meal,
+  pickup and regrowth pulse, and they run in the baseline.
+- Choice: not done. An index for them needs a Manhattan, `(x, y)`-tie variant and updates in V7 consume and regrowth
+  code that the baseline runs (identity risk), for a part of `AgentDecisionSystem` whose share of the decision cost
+  is not yet profiled. M-PERF takes it, starting with a profile of `AgentDecisionSystem` (66–86 % of the tick at
+  N = 2,000 in the trial runs).
